@@ -1,0 +1,6 @@
+*.class
+*.prc
+*.pdb
+install.exe
+*.lnk
+*.mcf
