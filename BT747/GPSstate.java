@@ -210,7 +210,7 @@ public class GPSstate extends Control {
 	 */
 	static public int logEntrySize(int p_logFormat) {
 		int z_BitMask = 0x1;
-		int z_Size = 0;
+		int z_Size = 2; // one for the '*' and one for the checksum (xor)
 		for (int i = 0; i < GPSLogCtrl.logFmtByteSizes.length; z_BitMask<<=1, i++) {
 			if((z_BitMask & p_logFormat)!=0) {
 				// Bit is set
