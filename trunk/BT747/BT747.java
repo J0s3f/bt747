@@ -21,10 +21,6 @@ public class BT747 extends MainWindow {
 	private static ProgressBar m_ProgressBar;
 	private static Label m_ProgressLabel;
 	
-	final static int C_SETTINGS_PORT_IDX = 0;  // 4 characters (hex)
-	
-	private static Settings m_Settings;
-	
 	
 	String menu[][] = {
 			{"File","Exit application"},
@@ -148,16 +144,17 @@ public class BT747 extends MainWindow {
 					new MessageBox("About BT747",
 							"Created with SuperWaba|" +
 							"|http://www.superwaba.org"+
+							"|" +
+							"|Written by Mario De Weerd" +
+							"|m.deweerd@ieee.org"+
 							"|"+
 							"|This application allows control of" +
 							"|the BT747 device." +
 							"|To have full control over bluetooth" +
 							"|it is necessary to apply a hardware" +
 							"|hack.  Please see the web for more" +
-							"|information." +
-							"|" +
-							"|Written by Mario De Weerd" +
-							"|m.deweerd@ieee.org").popupModal();
+							"|information."
+							).popupModal();
 					break;              
 				case C_MENU_ABOUT_SW:
 					new MessageBox("About SuperWaba",
