@@ -18,7 +18,7 @@ public class GPSLogCtrl extends Container {
 	GPSstate m_GPSstate;
 	Check [] chkLogFmtItems =new Check[C_LOG_FMT_COUNT];
 		
-	String [] logFmtItems = {
+	static final String [] logFmtItems = {
 		"UTC",		// = 0x00001	// 0
 		"VALID",	// = 0x00002	// 1
 		"LATITUDE",	// = 0x00004	// 2
@@ -40,6 +40,30 @@ public class GPSLogCtrl extends Container {
 		"MILISECOND",// = 0x40000	// 12
 		"DISTANCE"	// = 0x80000	// 13
 	};	
+
+	// TODO: know about all sizes.  When '0', size is unknown
+	static final int[] logFmtByteSizes = {
+			4, //"UTC",		// = 0x00001	// 0
+			2, //"VALID",	// = 0x00002	// 1
+			8, //"LATITUDE",	// = 0x00004	// 2
+			4, //"LONGITUDE",// = 0x00008	// 3
+			4, //"HEIGHT",	// = 0x00010	// 4
+			4, //"SPEED",	// = 0x00020	// 5
+			4, //"HEADING",	// = 0x00040	// 6
+			0, //"DSTA",		// = 0x00080	// 7
+			0, //"DAGE",		// = 0x00100	// 8
+			2, //"PDOP",		// = 0x00200	// 9
+			2, //"HDOP",		// = 0x00400	// A
+			2, //"VDOP",		// = 0x00800	// B
+			2, //"NSAT",		// = 0x01000	// C
+			0, //"SID",		// = 0x02000	// D
+			0, //"ELEVATION",// = 0x04000	// E
+			0, //"AZIMUTH",	// = 0x08000	// F
+			0, //"SNR",		// = 0x10000	// 10
+			2, //"RCR",		// = 0x20000	// 11
+			2, //"MILISECOND",// = 0x40000	// 12
+			8, //"DISTANCE"	// = 0x80000	// 13
+		};	
 	
 	public GPSLogCtrl(GPSstate p_GPSstate) {
 		//super("Log ON/OFF", Container.);

@@ -25,9 +25,37 @@ public class GPSstate extends Control {
 	static final boolean GPS_TEST = false;
 	
 	public GPSrxtx m_GPSrxtx=new GPSrxtx();    	
-
+	
+	// Fields to keep track of loggin status
+	private int m_StartAddr;
+	private int m_EndAddr;
+	private int m_NextReqAddr;
+	private int m_NextReadAddr;
+	private int m_Step;
+	private GPSstate m_GPSstate;
+	private boolean m_isLogging = false;       // True when dumping log
+	private boolean m_isSearchingLog = false;  // True when doing binary search
+	
+	public int logFormat = 0;
+	public int logEntrySize = 0;
+	public int logHeaderSize = 0;
+	public int logTimeInterval = 0;
+	public int logSpeedInterval = 0;
+	public int logDistanceInterval = 0;
+	public int logStatus = 0;
+	public int logRecMethod = 0;
+	public int logNbrLogPts = 0;
+	public int logMemUsed = 0;
+	public int logMemFree = 0;
+	public int logMemMax = 0;
+	
+	
+	// Number of log entries to request 'ahead'.
+	final static int C_MAX_LOG_AHEAD = 2;
+	
+	
 	private Timer linkTimer;
-
+	
 	// PMTK182 commands/replies.
 	static final int PMTK_LOG_SET   	= 1;
 	static final int PMTK_LOG_QUERY 	= 2;
@@ -40,6 +68,7 @@ public class GPSstate extends Control {
 	static final int PMTK_LOG_TBD		= 9;
 	
 	// PMTK182,1,DATA  (DATA = what parameter to set/read/replied)
+	
 	static final int PMTK_LOG_FORMAT 			= 2;
 	static final int PMTK_LOG_TIME_INTERVAL 	= 3;
 	static final int PMTK_LOG_DISTANCE_INTERVAL = 4;
@@ -85,7 +114,7 @@ public class GPSstate extends Control {
 	static final int PMTK_DT_DATUM	= 530;
 	static final int PMTK_DT_FLASH_USER_OPTION	= 590;
 	static final int PMTK_Q_VERSION	= 604;
-
+	
 	public GPSstate() {
 	}
 	
@@ -97,7 +126,7 @@ public class GPSstate extends Control {
 		m_GPSrxtx.openPort();		
 		getStatus();
 	}
-
+	
 	public void GPS_close() {
 		m_GPSrxtx.closePort();
 	}
@@ -114,7 +143,7 @@ public class GPSstate extends Control {
 		m_GPSrxtx.sendPacket("PMTK"+Convert.toString(PMTK_CMD_LOG)
 				+","+Convert.toString(PMTK_LOG_QUERY)+
 				","+Convert.toString(PMTK_LOG_FORMAT)			
-				);
+		);
 		
 		//if(GPS_TEST) {analyseNMEA(Convert.tokenizeString("PMTK001,2,3,3",','));}
 		//if(GPS_TEST) {analyseNMEA(Convert.tokenizeString("PMTK182,3,2,3F",','));}
@@ -125,12 +154,12 @@ public class GPSstate extends Control {
 				+","+Convert.toString(PMTK_LOG_REQ_DATA)
 				+","+Convert.unsigned2hex(startAddr,8)			
 				+","+Convert.unsigned2hex(size,8)			
-				);
-//		if(GPS_DEBUG) {	waba.sys.Vm.debug("PMTK"+Convert.toString(PMTK_CMD_LOG)
-//				+","+Convert.toString(PMTK_LOG_REQ_DATA)
-//				+","+Convert.unsigned2hex(startAddr,8)			
-//				+","+Convert.unsigned2hex(size,8));			
-//				}
+		);
+		//		if(GPS_DEBUG) {	waba.sys.Vm.debug("PMTK"+Convert.toString(PMTK_CMD_LOG)
+		//				+","+Convert.toString(PMTK_LOG_REQ_DATA)
+		//				+","+Convert.unsigned2hex(startAddr,8)			
+		//				+","+Convert.unsigned2hex(size,8));			
+		//				}
 	}
 	
 	public void setUsb() {
@@ -150,17 +179,6 @@ public class GPSstate extends Control {
 	}
 	
 	
-	
-	public int logFormat = 0;
-	public int logTimeInterval = 0;
-	public int logSpeedInterval = 0;
-	public int logDistanceInterval = 0;
-	public int logStatus = 0;
-	public int logRecMethod = 0;
-	public int logNbrLogPts = 0;
-	public int logMemUsed = 0;
-	public int logMemFree = 0;
-	public int logMemMax = 0;
 	
 	static public int Hex2Int(String p_Value) {
 		int p_Result=0;
@@ -184,8 +202,35 @@ public class GPSstate extends Control {
 	// TODO: Empty vector on reset of connection
 	public IntVector logUpdate=new IntVector();
 	
+	
+	
+	/**
+	 * @param p_logFormat : configuration representing format
+	 * @return Bytes taken by format.
+	 */
+	static public int logEntrySize(int p_logFormat) {
+		int z_BitMask = 0x1;
+		int z_Size = 0;
+		for (int i = 0; i < GPSLogCtrl.logFmtByteSizes.length; z_BitMask<<=1, i++) {
+			if((z_BitMask & p_logFormat)!=0) {
+				// Bit is set
+				z_Size+= GPSLogCtrl.logFmtByteSizes[i];
+			}
+		}
+		return z_Size;
+	}
+	
+	
+	static public int logHeaderSize(int p_logFormat) {
+		return 22;
+	}
+	
+	public int logEntryAddr(int p_RecordNumber) {
+		return logHeaderSize+p_RecordNumber*logEntrySize;
+	}
+	
 	public int analyseLogNmea(String[] p_nmea) {
-		if(GPS_DEBUG) {	waba.sys.Vm.debug("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
+		//if(GPS_DEBUG) {	waba.sys.Vm.debug("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
 		// Suppose that the command is ok (PMTK182)
 		
 		// Currently taking care of replies from the device only.
@@ -201,8 +246,10 @@ public class GPSstate extends Control {
 				if(p_nmea.length==4) {
 					switch( z_type ) {
 					case PMTK_LOG_FORMAT: 			// 2;
-						if(GPS_DEBUG) {	waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
+						//if(GPS_DEBUG) {	waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
 						logFormat=Hex2Int(p_nmea[3]);
+						logEntrySize=logEntrySize(logFormat);
+						logHeaderSize=logHeaderSize(logFormat);
 						logUpdate.push(logFormat);
 						break;
 					case PMTK_LOG_TIME_INTERVAL: 	// 3;
@@ -262,7 +309,7 @@ public class GPSstate extends Control {
 		}
 		return 0;
 	}
-
+	
 	static final int PMTK_ACK_INVALID = 0;
 	static final int PMTK_ACK_UNSUPPORTED = 1;
 	static final int PMTK_ACK_FAILED = 2;
@@ -275,14 +322,14 @@ public class GPSstate extends Control {
 		int z_Cmd;
 		int z_Flag;
 		int z_Result=-1;
-		if(GPS_DEBUG) {	waba.sys.Vm.debug(p_nmea[0]+","+p_nmea[1]+"\n");}
+		//if(GPS_DEBUG) {	waba.sys.Vm.debug(p_nmea[0]+","+p_nmea[1]+"\n");}
 		
 		if(p_nmea.length>=3) {
 			z_Cmd=Convert.toInt(p_nmea[1]);
 			z_Flag=Convert.toInt(p_nmea[2]);
 			int z_CmdIdx=sentCmds.find("PMTK"+p_nmea[1]);
-			if(GPS_DEBUG) {	waba.sys.Vm.debug("IDX:"+Convert.toString(z_CmdIdx)+"\n");}
-			if(GPS_DEBUG) {	waba.sys.Vm.debug("FLAG:"+Convert.toString(z_Flag)+"\n");}
+			//if(GPS_DEBUG) {	waba.sys.Vm.debug("IDX:"+Convert.toString(z_CmdIdx)+"\n");}
+			//if(GPS_DEBUG) {	waba.sys.Vm.debug("FLAG:"+Convert.toString(z_Flag)+"\n");}
 			switch (z_Flag) {
 			case PMTK_ACK_INVALID:
 				// 0: Invalid cmd or packet
@@ -310,7 +357,7 @@ public class GPSstate extends Control {
 				break;
 			default:
 				z_Result=-1;
-				break;
+			break;
 			}
 			// Remove all cmds up to 
 			for (int i = z_CmdIdx; i >= 0; i--) {
@@ -319,19 +366,7 @@ public class GPSstate extends Control {
 		}
 		return z_Result;
 	}
-
-	// Fields to keep track of loggin status
-	private int m_StartAddr;
-	private int m_EndAddr;
-	private int m_NextReqAddr;
-	private int m_NextReadAddr;
-	private int m_Step;
-	private GPSstate m_GPSstate;
-	private boolean m_isLogging = false;       // True when dumping log
-	private boolean m_isSearchingLog = false;  // True when doing binary search
 	
-	final static int C_MAX_LOG_AHEAD = 2;
-
 	static File m_logFile=new File("");
 	public void stopLog() {
 		if(m_logFile!=null  && m_logFile.isOpen()) {
@@ -339,7 +374,7 @@ public class GPSstate extends Control {
 		}
 		m_isLogging= false;
 	}
-
+	
 	public void getLogInit(int p_StartAddr, int p_EndAddr, int p_Step,String p_FileName) {
 		m_StartAddr= p_StartAddr;
 		m_EndAddr=p_EndAddr;
@@ -356,12 +391,12 @@ public class GPSstate extends Control {
 			new MessageBox("File open",
 					m_logFile.getPath()+"|"+
 					Convert.toString(m_logFile.exists())
-					).popupBlockingModal();
+			).popupBlockingModal();
 		}
 		
 	}
-
-		
+	
+	
 	// Called regurarly
 	public void getNextLogPart() {
 		if ( m_isLogging ) {
@@ -378,7 +413,7 @@ public class GPSstate extends Control {
 			}
 		}
 	}
-
+	
 	public final byte[] HexStringToBytes(final String p_Data) {
 		char[] z_Data= p_Data.toCharArray();
 		byte[] z_Result= new byte[z_Data.length];
@@ -408,7 +443,17 @@ public class GPSstate extends Control {
 		
 		return z_Result;
 	}
-
+	
+	private boolean findMinimumLogEntry= true;
+	private int binarySearchLeft = 0;
+	int curRecNumber;
+	private int p_minLogEntry;
+	private int p_maxLogEntry;
+	
+	public void initBinarySearch(double p_UTC, boolean p_min_notmax) {
+		// 
+	}
+	
 	public void	analyzeLogPart(final int p_StartAddr, final String p_Data) {
 		byte[] z_Data=HexStringToBytes(p_Data);
 		if( m_isLogging) {
@@ -420,89 +465,99 @@ public class GPSstate extends Control {
 				m_isLogging= false;
 			}
 		} else if ( m_isSearchingLog) {
-			
+			// Binary search
+			// TODO: Validate binary search, finish it.
+			// TODO: Get time from log entry & compare to move
+			while(binarySearchLeft-- > 0) {
+				// Get one log entry
+				//if(time<reftime)
+				// TODO: complete this
+				readLog(logEntryAddr(curRecNumber),logEntrySize);
+				
+			}
 		}
+		
 	}
 
-	
-	public int analyseNMEA(String[] p_nmea) {
-		int z_Cmd;
-		int z_Result;
-		//if(GPS_DEBUG) {	waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]+"\n");}
-		if(p_nmea[0].startsWith("GPZDA")) {
-			// GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
-			
-		} else if(p_nmea[0].startsWith("GPRMC")) {
-			// GPRMC,$time,$fix,$latf1,$ns,$lonf1,$ew,$knots,$bear,$date,$magnvar,$magnew,$magnfix
-		} else if(p_nmea[0].startsWith("GPSTPV")) {
-			// GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
+
+public int analyseNMEA(String[] p_nmea) {
+	int z_Cmd;
+	int z_Result;
+	//if(GPS_DEBUG) {	waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]+"\n");}
+	if(p_nmea[0].startsWith("GPZDA")) {
+		// GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
 		
-		} else if(p_nmea[0].startsWith("PMTK")) {
-			z_Cmd= Convert.toInt(p_nmea[0].substring(4));
-			
-			z_Result=-1;  // Suppose cmd not treated
-			switch(z_Cmd) {
-			case PMTK_CMD_LOG:	// CMD 182;
-				z_Result= analyseLogNmea(p_nmea);
-				break;
-			case PMTK_TEST:	// CMD  000
-			case PMTK_ACK:	// CMD  001
-				z_Result= analyseMTK_Ack(p_nmea);
-				break;
-			case PMTK_SYS_MSG:	// CMD  010
-			case PMTK_CMD_HOT_START:	// CMD  101
-			case PMTK_CMD_WARM_START:	// CMD  102
-			case PMTK_CMD_COLD_START:	// CMD  103
-			case PMTK_CMD_FULL_COLD_START:	// CMD  104
-			case PMTK_SET_NMEA_BAUD_RATE:	// CMD  251
-			case PMTK_API_SET_FIX_CTL:	// CMD  300
-			case PMTK_API_SET_DGPS_MODE:	// CMD  301
-			case PMTK_API_SET_SBAS_ENABLED:	// CMD  313
-			case PMTK_API_SET_NMEA_OUTPUT:	// CMD  314
-			case PMTK_API_SET_PWR_SAV_MODE:	// CMD  320
-			case PMTK_API_SET_DATUM:	// CMD  330
-			case PMTK_API_SET_DATUM_ADVANCE:	// CMD  331
-			case PMTK_API_SET_USER_OPTION:	// CMD  390
-			case PMTK_API_Q_FIX_CTL:	// CMD  400
-			case PMTK_API_Q_DGPS_MODE:	// CMD  401
-			case PMTK_API_Q_SBAS_ENABLED:	// CMD  413
-			case PMTK_API_Q_NMEA_OUTPUT:	// CMD  414
-			case PMTK_API_Q_PWR_SAV_MOD:	// CMD  420
-			case PMTK_API_Q_DATUM:	// CMD  430
-			case PMTK_API_Q_DATUM_ADVANCE:	// CMD  431
-			case PMTK_API_GET_USER_OPTION:	// CMD  490
-			case PMTK_DT_FIX_CTL:	// CMD  500
-			case PMTK_DT_DGPS_MODE:	// CMD  501
-			case PMTK_DT_SBAS_ENABLED:	// CMD  513
-			case PMTK_DT_NMEA_OUTPUT:	// CMD  514
-			case PMTK_DT_PWR_SAV_MODE:	// CMD  520
-			case PMTK_DT_DATUM:	// CMD  530
-			case PMTK_DT_FLASH_USER_OPTION:	// CMD  590
-			case PMTK_Q_VERSION:	// CMD  604
-				// Not handled
-				break;
-			} // End switch
-		} // End if
-		return 0;
-	} // End method
-	
-	String[] lastResponse;
-	
-	public void onEvent(Event e){
-		switch (e.type) {
-		case ControlEvent.TIMER:
-			if(m_GPSrxtx.isConnected()) {
-				lastResponse= m_GPSrxtx.getResponse();
-				if(lastResponse!=null) {
-					analyseNMEA(lastResponse);
-				}
-			} else {
-				removeTimer(linkTimer);
+	} else if(p_nmea[0].startsWith("GPRMC")) {
+		// GPRMC,$time,$fix,$latf1,$ns,$lonf1,$ew,$knots,$bear,$date,$magnvar,$magnew,$magnfix
+	} else if(p_nmea[0].startsWith("GPSTPV")) {
+		// GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
+		
+	} else if(p_nmea[0].startsWith("PMTK")) {
+		z_Cmd= Convert.toInt(p_nmea[0].substring(4));
+		
+		z_Result=-1;  // Suppose cmd not treated
+		switch(z_Cmd) {
+		case PMTK_CMD_LOG:	// CMD 182;
+			z_Result= analyseLogNmea(p_nmea);
+			break;
+		case PMTK_TEST:	// CMD  000
+		case PMTK_ACK:	// CMD  001
+			z_Result= analyseMTK_Ack(p_nmea);
+			break;
+		case PMTK_SYS_MSG:	// CMD  010
+		case PMTK_CMD_HOT_START:	// CMD  101
+		case PMTK_CMD_WARM_START:	// CMD  102
+		case PMTK_CMD_COLD_START:	// CMD  103
+		case PMTK_CMD_FULL_COLD_START:	// CMD  104
+		case PMTK_SET_NMEA_BAUD_RATE:	// CMD  251
+		case PMTK_API_SET_FIX_CTL:	// CMD  300
+		case PMTK_API_SET_DGPS_MODE:	// CMD  301
+		case PMTK_API_SET_SBAS_ENABLED:	// CMD  313
+		case PMTK_API_SET_NMEA_OUTPUT:	// CMD  314
+		case PMTK_API_SET_PWR_SAV_MODE:	// CMD  320
+		case PMTK_API_SET_DATUM:	// CMD  330
+		case PMTK_API_SET_DATUM_ADVANCE:	// CMD  331
+		case PMTK_API_SET_USER_OPTION:	// CMD  390
+		case PMTK_API_Q_FIX_CTL:	// CMD  400
+		case PMTK_API_Q_DGPS_MODE:	// CMD  401
+		case PMTK_API_Q_SBAS_ENABLED:	// CMD  413
+		case PMTK_API_Q_NMEA_OUTPUT:	// CMD  414
+		case PMTK_API_Q_PWR_SAV_MOD:	// CMD  420
+		case PMTK_API_Q_DATUM:	// CMD  430
+		case PMTK_API_Q_DATUM_ADVANCE:	// CMD  431
+		case PMTK_API_GET_USER_OPTION:	// CMD  490
+		case PMTK_DT_FIX_CTL:	// CMD  500
+		case PMTK_DT_DGPS_MODE:	// CMD  501
+		case PMTK_DT_SBAS_ENABLED:	// CMD  513
+		case PMTK_DT_NMEA_OUTPUT:	// CMD  514
+		case PMTK_DT_PWR_SAV_MODE:	// CMD  520
+		case PMTK_DT_DATUM:	// CMD  530
+		case PMTK_DT_FLASH_USER_OPTION:	// CMD  590
+		case PMTK_Q_VERSION:	// CMD  604
+			// Not handled
+			break;
+		} // End switch
+	} // End if
+	return 0;
+} // End method
+
+String[] lastResponse;
+
+public void onEvent(Event e){
+	switch (e.type) {
+	case ControlEvent.TIMER:
+		if(m_GPSrxtx.isConnected()) {
+			lastResponse= m_GPSrxtx.getResponse();
+			if(lastResponse!=null) {
+				analyseNMEA(lastResponse);
 			}
-		break;
-		
+		} else {
+			removeTimer(linkTimer);
 		}
-	}  
+	break;
 	
-	
+	}
+}  
+
+
 }

@@ -37,6 +37,8 @@ public class GPSLogGet extends Container {
 		m_GPSstate= state;
 	}
 	
+	
+	// TODO: Just some code as a reference to find a path.
 	void recursiveList(String path, Vector v)
 	{
 		if (path == null) return;
@@ -52,7 +54,8 @@ public class GPSLogGet extends Container {
 						recursiveList(path+list[i],v);
 				}
 	}
-
+	
+	// TODO: Just some code as a reference to find a path.	
 	void nonRecursiveList(String path, Vector v)
 	{
 		if (path == null) return;
@@ -68,59 +71,50 @@ public class GPSLogGet extends Container {
 					//	recursiveList(path+list[i],v);
 				}
 	}
-
+	
 	
 	/* (non-Javadoc)
 	 * @see waba.ui.Container#onStart()
+	 * TODO: Handle date fields, ...
 	 */
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
 		add(m_chkLogOnOff=new Check("Device log on(/off)"),LEFT,TOP);
-		add(new Label("Start"),LEFT,AFTER);
+		add(new Label("Start date"),LEFT,AFTER);
 		add(m_edStartDate=new Edit("99/99/9999"),AFTER,SAME);
 		m_edStartDate.setMode(Edit.DATE);
 		add(m_edEndDate  =new Edit("99/99/9999"),SAME,AFTER);
 		m_edEndDate.setMode(Edit.DATE);
-		add(new Label("End"),BEFORE,SAME);
+		add(new Label("End date"),BEFORE,SAME);
 		
 		//add(new Label("End"),BEFORE,SAME);
 		add(m_btGetLog=new Button("Get Log"),LEFT,AFTER+10);
 		add(m_btStopLog=new Button("Stop Log"),RIGHT,SAME);
-
-//		Vector v = new Vector(50);
-//		nonRecursiveList("/",v);
-//		String []files = (String[])v.toObjectArray();
-//		if (files == null)
-//			files = new String[]{"No files"};
-//		else
-//			if (files[0].charAt(1) == '[') // is it a volume label?
-//				files[0] = files[0].substring(1); // remove the preceding slash
-//		add(m_cbFile=new ComboBox(files), LEFT,AFTER);
-
-}
+	}
 	
-
+	
 	/* (non-Javadoc)
 	 * @see waba.ui.Control#onEvent(waba.ui.Event)
+	 * TODO : Make filename configureable.
 	 */
 	public void onEvent(Event event) {
 		// TODO Auto-generated method stub
 		super.onEvent(event);
-  		switch (event.type) {
-  		case ControlEvent.PRESSED:
-  			if (event.target==m_btGetLog) {
-  				// TODO: Get start log nbr and end log nbr to get
-  				// actual data from dates.
-  				//m_edStartDate;
+		switch (event.type) {
+		case ControlEvent.PRESSED:
+			if (event.target==m_btGetLog) {
+				// TODO: Get start log nbr and end log nbr to get
+				// actual data from dates.
+				//m_edStartDate;
 				//m_edEndDate;
-//  				m_GPSstate.getLogInit(0,1000,100,m_cbFile.getSelectedItem()+"Test.txt");
-  				m_GPSstate.getLogInit(0,1000,100,"/Palm/BT747log.bin");
-  				m_btGetLog.press(false);
-  				
-  			} else if (event.target==m_btStopLog) {
-  				m_GPSstate.stopLog();
-  			}
-  		}
+				//  				m_GPSstate.getLogInit(0,1000,100,m_cbFile.getSelectedItem()+"Test.txt");
+				m_GPSstate.getLogInit(0,1000,100,"/Palm/BT747log.bin");
+				m_btGetLog.press(false);
+				
+			} else if (event.target==m_btStopLog) {
+				m_GPSstate.stopLog();
+			}
+		}
 	}
 }
