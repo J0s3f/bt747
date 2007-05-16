@@ -40,6 +40,18 @@ public class BT747Settings {
 		+Convert.unsigned2hex(Baud,8)
 		+Settings.appSettings.substring(8);
 	}
+
+	public static boolean getStartupOpenPort() {
+		return Hex2Int(Settings.appSettings.substring(16,1))==1;
+	}
+	/**
+	 * @param Baudnbr The Baudnbr to set.
+	 */
+	public static void setStartupOpenPort(boolean value) {
+		Settings.appSettings=Settings.appSettings.substring(0,16)
+		+(value?"1":"0")
+		+Settings.appSettings.substring(7);
+	}
 	
 	static public int Hex2Int(String p_Value) {
 		int p_Result=0;

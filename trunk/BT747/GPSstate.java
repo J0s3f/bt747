@@ -119,6 +119,10 @@ public class GPSstate extends Control {
 	}
 	
 	public void onStart() {
+		if (BT747Settings.getStartupOpenPort()) {
+			m_GPSrxtx.openPort();		
+			getStatus();
+		}
 	}
 	
 	public void GPS_restart() {

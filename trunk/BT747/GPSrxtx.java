@@ -46,8 +46,7 @@ public class GPSrxtx extends Control {
 				spPortNbr= SerialPort.BLUETOOTH;
 			} else{
 				spPortNbr= 0;  // Should be bluetooth in WinCE
-			}
-		openPort();			
+			}			
 	}
 	
 	public void setBluetooth() {
