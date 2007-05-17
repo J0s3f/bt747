@@ -1,4 +1,7 @@
 package gps;
+
+import waba.sys.Convert;
+
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -22,7 +25,7 @@ package gps;
 /** Constants for the iBlue 747 (BT747) device
  * @author Mario De Weerd
  */
-public class BT747_dev {
+public class BT747_dev {  // dev as in device
 	
 	/** String description of the log format items of the iBlue 747
 	 * device.<br>
@@ -160,6 +163,84 @@ public class BT747_dev {
 	 * Packet success. 
 	 */
 	public static final int PMTK_ACK_SUCCEEDED = 3;
+
 	
+	// The next constants are the same as above but convered to strings.
+	public static final String PMTK_LOG_SET_STR = Convert.toString(PMTK_LOG_SET);
+	public static final String PMTK_LOG_QUERY_STR = Convert.toString(PMTK_LOG_QUERY);
+	public static final String PMTK_LOG_RESP_STR = Convert.toString(PMTK_LOG_RESP);  // REPLY
+	public static final String PMTK_LOG_ON_STR = Convert.toString(PMTK_LOG_ON);
+	public static final String PMTK_LOG_OFF_STR = Convert.toString(PMTK_LOG_OFF);
+	public static final String PMTK_LOG_ERASE_STR = Convert.toString(PMTK_LOG_ERASE);
+	public static final String PMTK_LOG_REQ_DATA_STR = Convert.toString(PMTK_LOG_REQ_DATA);
+	public static final String PMTK_LOG_RESP_DATA_STR = Convert.toString(PMTK_LOG_RESP_DATA);  // REPLY.
+	public static final String PMTK_LOG_TBD_STR = Convert.toString(PMTK_LOG_TBD);
+	
+	// PMTK182,1,DATA  (DATA_STR = Convert.toString((DATA)what parameter to set/read/replied)
+	
+	public static final String PMTK_LOG_FORMAT_STR = Convert.toString(PMTK_LOG_FORMAT);
+	public static final String PMTK_LOG_TIME_INTERVAL_STR = Convert.toString(PMTK_LOG_TIME_INTERVAL);
+	public static final String PMTK_LOG_DISTANCE_INTERVAL_STR = Convert.toString(PMTK_LOG_DISTANCE_INTERVAL);
+	public static final String PMTK_LOG_SPEED_INTERVAL_STR = Convert.toString(PMTK_LOG_SPEED_INTERVAL);
+	public static final String PMTK_LOG_REC_METHOD_STR = Convert.toString(PMTK_LOG_REC_METHOD);
+	public static final String PMTK_LOG_LOG_STATUS_STR = Convert.toString(PMTK_LOG_LOG_STATUS);
+	public static final String PMTK_LOG_MEM_USED_STR = Convert.toString(PMTK_LOG_MEM_USED);  // bit 2 = logging on/off
+	public static final String PMTK_LOG_TBD_3_STR = Convert.toString(PMTK_LOG_TBD_3);
+	public static final String PMTK_LOG_NBR_LOG_PTS_STR = Convert.toString(PMTK_LOG_NBR_LOG_PTS);
+	public static final String PMTK_LOG_TBD2_STR = Convert.toString(PMTK_LOG_TBD2);
+	
+	// Other MTK commands
+	public static final String PMTK_TEST_STR = Convert.toString(PMTK_TEST);
+	public static final String PMTK_ACK_STR = Convert.toString(PMTK_ACK);
+	public static final String PMTK_SYS_MSG_STR = Convert.toString(PMTK_SYS_MSG);
+	public static final String PMTK_CMD_HOT_START_STR = Convert.toString(PMTK_CMD_HOT_START);
+	public static final String PMTK_CMD_WARM_START_STR = Convert.toString(PMTK_CMD_WARM_START);
+	public static final String PMTK_CMD_COLD_START_STR = Convert.toString(PMTK_CMD_COLD_START);
+	public static final String PMTK_CMD_FULL_COLD_START_STR = Convert.toString(PMTK_CMD_FULL_COLD_START);
+	public static final String PMTK_CMD_LOG_STR = Convert.toString(PMTK_CMD_LOG);
+	public static final String PMTK_SET_NMEA_BAUD_RATE_STR = Convert.toString(PMTK_SET_NMEA_BAUD_RATE);
+	public static final String PMTK_API_SET_FIX_CTL_STR = Convert.toString(PMTK_API_SET_FIX_CTL);
+	public static final String PMTK_API_SET_DGPS_MODE_STR = Convert.toString(PMTK_API_SET_DGPS_MODE);
+	public static final String PMTK_API_SET_SBAS_ENABLED_STR = Convert.toString(PMTK_API_SET_SBAS_ENABLED);
+	public static final String PMTK_API_SET_NMEA_OUTPUT_STR = Convert.toString(PMTK_API_SET_NMEA_OUTPUT);
+	public static final String PMTK_API_SET_PWR_SAV_MODE_STR = Convert.toString(PMTK_API_SET_PWR_SAV_MODE);
+	public static final String PMTK_API_SET_DATUM_STR = Convert.toString(PMTK_API_SET_DATUM);
+	public static final String PMTK_API_SET_DATUM_ADVANCE_STR = Convert.toString(PMTK_API_SET_DATUM_ADVANCE);
+	public static final String PMTK_API_SET_USER_OPTION_STR = Convert.toString(PMTK_API_SET_USER_OPTION);
+	public static final String PMTK_API_Q_FIX_CTL_STR = Convert.toString(PMTK_API_Q_FIX_CTL);
+	public static final String PMTK_API_Q_DGPS_MODE_STR = Convert.toString(PMTK_API_Q_DGPS_MODE);
+	public static final String PMTK_API_Q_SBAS_ENABLED_STR = Convert.toString(PMTK_API_Q_SBAS_ENABLED);
+	public static final String PMTK_API_Q_NMEA_OUTPUT_STR = Convert.toString(PMTK_API_Q_NMEA_OUTPUT);
+	public static final String PMTK_API_Q_PWR_SAV_MOD_STR = Convert.toString(PMTK_API_Q_PWR_SAV_MOD);
+	public static final String PMTK_API_Q_DATUM_STR = Convert.toString(PMTK_API_Q_DATUM);
+	public static final String PMTK_API_Q_DATUM_ADVANCE_STR = Convert.toString(PMTK_API_Q_DATUM_ADVANCE);
+	public static final String PMTK_API_GET_USER_OPTION_STR = Convert.toString(PMTK_API_GET_USER_OPTION);
+	public static final String PMTK_DT_FIX_CTL_STR = Convert.toString(PMTK_DT_FIX_CTL);
+	public static final String PMTK_DT_DGPS_MODE_STR = Convert.toString(PMTK_DT_DGPS_MODE);
+	public static final String PMTK_DT_SBAS_ENABLED_STR = Convert.toString(PMTK_DT_SBAS_ENABLED);
+	public static final String PMTK_DT_NMEA_OUTPUT_STR = Convert.toString(PMTK_DT_NMEA_OUTPUT);
+	public static final String PMTK_DT_PWR_SAV_MODE_STR = Convert.toString(PMTK_DT_PWR_SAV_MODE);
+	public static final String PMTK_DT_DATUM_STR = Convert.toString(PMTK_DT_DATUM);
+	public static final String PMTK_DT_FLASH_USER_OPTION_STR = Convert.toString(PMTK_DT_FLASH_USER_OPTION);
+	public static final String PMTK_Q_VERSION_STR = Convert.toString(PMTK_Q_VERSION);
+
+
+	/** Parameter 1 of PMTK_ACK reply.
+	 * Packet invalid. 
+	 */
+	public static final String PMTK_ACK_INVALID_STR = Convert.toString(PMTK_ACK_INVALID);
+	/** Parameter 1 of PMTK_ACK reply.
+	 * Packet not supported by device. 
+	 */
+	public static final String PMTK_ACK_UNSUPPORTED_STR = Convert.toString(PMTK_ACK_UNSUPPORTED);
+	/** Parameter 1 of PMTK_ACK reply.
+	 * Packet supported, but action failed. 
+	 */
+	public static final String PMTK_ACK_FAILED_STR = Convert.toString(PMTK_ACK_FAILED);
+	/** Parameter 1 of PMTK_ACK reply.
+	 * Packet success. 
+	 */
+	public static final String PMTK_ACK_SUCCEEDED_STR = Convert.toString(PMTK_ACK_SUCCEEDED);
+
 
 }
