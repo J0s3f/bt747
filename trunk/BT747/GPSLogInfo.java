@@ -1,4 +1,6 @@
 import waba.ui.Container;
+
+import gps.GPSstate;
 /*
  * Created on 14 mai 2007
  *

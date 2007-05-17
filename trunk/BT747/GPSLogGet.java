@@ -8,6 +8,8 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 import waba.util.Vector;
+
+import gps.GPSstate;
 /*
  * Created on 14 mai 2007
  *
