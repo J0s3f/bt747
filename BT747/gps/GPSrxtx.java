@@ -1,10 +1,13 @@
 // Copyright (c) 2007 Mario De Weerd
 
+package gps;
+
 import waba.io.DataStream;
 import waba.io.SerialPort;
 import waba.sys.Convert;
 import waba.sys.Settings;
 import waba.ui.Control;
+import waba.ui.MessageBox;
 import waba.util.Vector;
 
 /**
@@ -16,14 +19,14 @@ import waba.util.Vector;
 public class GPSrxtx extends Control {
 	static final boolean GPS_DEBUG = false;
 	
-	int spPortNbr;
-	int spSpeed=9600;  // Does not really matter on most platforms
-	static SerialPort sp;
-	private DataStream ds;
+	protected int spPortNbr;
+	protected int spSpeed=9600;  // Does not really matter on most platforms
+	private SerialPort sp=null;
+	private DataStream ds=null;
 	
 	boolean portIsOK=false;
 	
-	Semaphore m_writeOngoing = new Semaphore(1);
+	private Semaphore m_writeOngoing = new Semaphore(1);
 	
 	
 	public  GPSrxtx() {
@@ -31,18 +34,22 @@ public class GPSrxtx extends Control {
 	}
 	
 	public void setDefaults() {
+		// Settings.platform:
+		// PalmOS, PalmOS/SDL, WindowsCE, PocketPC, MS_SmartPhone,
+		// Win32, Symbian, Linux, Posix
 		String Platform = Settings.platform;
+		
 		spPortNbr= BT747Settings.getPortnbr();
 		if(spPortNbr!=0x5555) {
 			spSpeed=BT747Settings.getBaudRate();
 		} else if ((Platform.equals("Java"))||
 				(Platform.equals("Win32"))||
+				(Platform.equals("Posix"))||
 				(Platform.equals("Linux"))) {
 			// Try USB Port
 			spPortNbr= SerialPort.USB;
 		} else
-			if ((Platform.equals("PalmOS/SDL"))||
-					(Platform.equals("PalmOS"))) {
+			if (Platform.startsWith("PalmOS")) {
 				spPortNbr= SerialPort.BLUETOOTH;
 			} else{
 				spPortNbr= 0;  // Should be bluetooth in WinCE
@@ -68,7 +75,7 @@ public class GPSrxtx extends Control {
 	}
 	
 	public boolean isConnected() {
-		return sp.isOpen();
+		return (sp!=null && sp.isOpen());
 	}
 	
 	public void closePort() {
@@ -79,21 +86,34 @@ public class GPSrxtx extends Control {
 	}
 	
 	public int openPort() {
-		closePort();
 		int result=-1;
+//		new MessageBox("SerialPort","Before close").popupBlockingModal();
+		closePort();
+//		new MessageBox("SerialPort","After close").popupBlockingModal();
 		try {
+//			new MessageBox("SerialPort","Before open").popupBlockingModal();
 			sp=new SerialPort(spPortNbr,spSpeed);
+			//sp=new SerialPort(SerialPort.BLUETOOTH,9600);
+//			new MessageBox("SerialPort","Open done").popupBlockingModal();
 			result=sp.lastError;
-			if(portIsOK= sp.isOpen()) {
+//			new MessageBox("SerialPort","Last error retrieved").popupBlockingModal();
+			portIsOK= sp.isOpen();
+//			new MessageBox("SerialPort","isOpen "+Convert.toString(portIsOK)).popupBlockingModal();			
+			if(portIsOK) {
+//				new MessageBox("SerialPort","Port is open").popupBlockingModal();
 				sp.setReadTimeout(50);//small to read data in chunks and have good resp.
+//				new MessageBox("SerialPort","Read out set").popupBlockingModal();
 				//sp.writeTimeout=20;			
 				sp.setFlowControl(true);
+//				new MessageBox("SerialPort","Flow control set").popupBlockingModal();
 				ds=new DataStream(sp);
+//				new MessageBox("SerialPort","Data stream assigned").popupBlockingModal();
 				BT747Settings.setPortnbr(spPortNbr);
 				BT747Settings.setBaudRate(spSpeed);
 			}
 		}
 		catch (Exception e) {
+			new MessageBox("SerialPort open","Unexpected exception catched").popupBlockingModal();
 			;//if(GPS_DEBUG) {waba.sys.Vm.debug("Exception when opening port\n");}; 
 		}
 		return result;
@@ -117,7 +137,7 @@ public class GPSrxtx extends Control {
 	static final int C_BUF_SIZE = 256;
 	static final int C_CMDBUF_SIZE = 256;
 	
-	int current_state = C_INITIAL_STATE;
+	private int current_state = C_INITIAL_STATE;
 	
 	byte[] read_buf  = new byte[C_BUF_SIZE];
 	char[] cmd_buf   = new char[C_CMDBUF_SIZE];
@@ -139,10 +159,10 @@ public class GPSrxtx extends Control {
 	static final int ERR_TOO_LONG= 3;
 	
 	private int lastError;
-	private static Vector vCmd = new Vector();
+	private Vector vCmd = new Vector();
 	private static final byte[] EOL_BYTES = {'\015','\012'};
 	
-	public int sendPacket(String p_Packet) {
+	public int sendPacket(final String p_Packet) {
 		// Calculate checksum
 		int z_Index= p_Packet.length();
 		byte z_Checksum= 0;
@@ -167,7 +187,7 @@ public class GPSrxtx extends Control {
 	public String[] getResponse() {
 		boolean continueReading;
 		int myError= ERR_NOERROR;
-		boolean skipError=true;
+		final boolean skipError=true;
 		continueReading = true;
 		
 		while(continueReading) {

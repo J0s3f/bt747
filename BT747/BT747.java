@@ -9,6 +9,8 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
+import gps.GPSstate;
+
 
 public class BT747 extends MainWindow {
 	private static MenuBar    m_MenuBar;

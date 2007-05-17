@@ -4,6 +4,8 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.PushButtonGroup;
 
+import gps.GPSstate;
+
 /**
  * @author Mario De Weerd
  *
