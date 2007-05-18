@@ -3,8 +3,6 @@ import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 
-import gps.BT747_dev;
-import gps.GPSstate;
 
 
 

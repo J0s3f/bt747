@@ -1,7 +1,5 @@
 // Copyright (c) 2007 Mario De Weerd
 
-package gps;
-
 import waba.io.DataStream;
 import waba.io.SerialPort;
 import waba.sys.Convert;
@@ -17,7 +15,7 @@ import waba.util.Vector;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class GPSrxtx extends Control {
-	static final boolean GPS_DEBUG = false;
+	static final boolean GPS_DEBUG = true;
 	
 	protected int spPortNbr;
 	protected int spSpeed=9600;  // Does not really matter on most platforms
@@ -32,6 +30,12 @@ public class GPSrxtx extends Control {
 	public  GPSrxtx() {
 		setDefaults();
 	}
+
+	public void setDefaults(final int port, final int speed) {
+	    spPortNbr= port;
+	    spSpeed=   speed;
+	}
+
 	
 	public void setDefaults() {
 		// Settings.platform:
@@ -39,10 +43,7 @@ public class GPSrxtx extends Control {
 		// Win32, Symbian, Linux, Posix
 		String Platform = Settings.platform;
 		
-		spPortNbr= BT747Settings.getPortnbr();
-		if(spPortNbr!=0x5555) {
-			spSpeed=BT747Settings.getBaudRate();
-		} else if ((Platform.equals("Java"))||
+		if ((Platform.equals("Java"))||
 				(Platform.equals("Win32"))||
 				(Platform.equals("Posix"))||
 				(Platform.equals("Linux"))) {
@@ -108,8 +109,6 @@ public class GPSrxtx extends Control {
 //				new MessageBox("SerialPort","Flow control set").popupBlockingModal();
 				ds=new DataStream(sp);
 //				new MessageBox("SerialPort","Data stream assigned").popupBlockingModal();
-				BT747Settings.setPortnbr(spPortNbr);
-				BT747Settings.setBaudRate(spSpeed);
 			}
 		}
 		catch (Exception e) {
@@ -204,18 +203,23 @@ public class GPSrxtx extends Control {
 					//						sb.setLength(0);
 					//						sb.append(cmd_buf,0,cmd_buf_p);
 					//						if(GPS_DEBUG) {waba.sys.Vm.debug(sb.toString()+"\n");}; 
-					continueReading = false;
-					current_state = C_START_STATE;
-					// fall through
+				    if ( ( (c==10) || (c==13))) {
+				        current_state = C_START_STATE;
+						continueReading = false;
+				    } else {
+						current_state = C_ERROR_STATE;											        
+				    }
+				    break;
 					
 				case C_INITIAL_STATE:
 				case C_START_STATE:
+					vCmd.removeAllElements();
 					if (c=='$') {
 						// First character of NMEA string found
 						current_state = C_FIELD_STATE;
 						cmd_buf_p=0;
 						cmd_idx=0;
-						vCmd.removeAllElements();
+
 						//cmd_and_param=new String()[];
 						//cmd_buf[cmd_buf_p++]= c;
 						checksum= 0;
@@ -300,6 +304,7 @@ public class GPSrxtx extends Control {
 				}
 				if(current_state == C_ERROR_STATE) {
 					current_state = C_INITIAL_STATE;
+					vCmd.removeAllElements();
 					if (!skipError) {
 						continueReading= false;
 					}
@@ -317,7 +322,9 @@ public class GPSrxtx extends Control {
 						max=C_BUF_SIZE;
 					}
 					if(max>0) {
-						bytesRead= sp.readBytes(read_buf,0,C_BUF_SIZE);
+						bytesRead= sp.readBytes(read_buf,0,max);
+//						String sb=new String(read_buf,0,bytesRead);
+//						System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
 					}
 				}
 				catch (Exception e) {

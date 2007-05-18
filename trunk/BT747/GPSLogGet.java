@@ -9,7 +9,6 @@ import waba.ui.Event;
 import waba.ui.Label;
 import waba.util.Vector;
 
-import gps.GPSstate;
 /*
  * Created on 14 mai 2007
  *
@@ -111,7 +110,8 @@ public class GPSLogGet extends Container {
 				//m_edStartDate;
 				//m_edEndDate;
 				//  				m_GPSstate.getLogInit(0,1000,100,m_cbFile.getSelectedItem()+"Test.txt");
-				m_GPSstate.getLogInit(0,1000,100,"/Palm/BT747log.bin");
+//				m_GPSstate.getLogInit(0,32*1024*1024,100,"/Palm/BT747log.bin");
+				m_GPSstate.getLogInit(0,30*1024,100,"/Palm/BT747log.bin");
 				m_btGetLog.press(false);
 				
 			} else if (event.target==m_btStopLog) {

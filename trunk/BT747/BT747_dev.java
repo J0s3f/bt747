@@ -1,5 +1,3 @@
-package gps;
-
 import waba.sys.Convert;
 
 //********************************************************************
@@ -190,9 +188,9 @@ public class BT747_dev {  // dev as in device
 	public static final String PMTK_LOG_TBD2_STR = Convert.toString(PMTK_LOG_TBD2);
 	
 	// Other MTK commands
-	public static final String PMTK_TEST_STR = Convert.toString(PMTK_TEST);
-	public static final String PMTK_ACK_STR = Convert.toString(PMTK_ACK);
-	public static final String PMTK_SYS_MSG_STR = Convert.toString(PMTK_SYS_MSG);
+	public static final String PMTK_TEST_STR = "000"; //Convert.toString(PMTK_TEST);
+	public static final String PMTK_ACK_STR = "001"; //Convert.toString(PMTK_ACK);
+	public static final String PMTK_SYS_MSG_STR = "010"; //Convert.toString(PMTK_SYS_MSG);
 	public static final String PMTK_CMD_HOT_START_STR = Convert.toString(PMTK_CMD_HOT_START);
 	public static final String PMTK_CMD_WARM_START_STR = Convert.toString(PMTK_CMD_WARM_START);
 	public static final String PMTK_CMD_COLD_START_STR = Convert.toString(PMTK_CMD_COLD_START);
