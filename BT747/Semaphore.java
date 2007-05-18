@@ -1,4 +1,3 @@
-package gps;
 /*
  * Created on 13 mai 2007
  *

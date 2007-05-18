@@ -9,8 +9,6 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
-import gps.GPSstate;
-
 
 public class BT747 extends MainWindow {
 	private static MenuBar    m_MenuBar;
@@ -23,6 +21,7 @@ public class BT747 extends MainWindow {
 	private static ProgressBar m_ProgressBar;
 	private static Label m_ProgressLabel;
 	
+	private BT747model m_model;
 	
 	String menu[][] = {
 			{"File","Exit application"},
@@ -86,11 +85,16 @@ public class BT747 extends MainWindow {
 		m_ProgressBar.setRect(RIGHT,BOTTOM,//BOTTOM,RIGHT,
 				getClientRect().width-m_ProgressLabel.getRect().width-2,
 				PREFERRED);
+		m_ProgressBar.setVisible(false);
 //		m_ProgressBar.setRect(m_ProgressLabel.getRect().x2(),m_ProgressLabel.getRect().y,//BOTTOM,RIGHT,
 //				10,//getClientRect().width-m_ProgressLabel.getRect().width,
 //				10+0*PREFERRED);
+		m_GPSstate.setProgressBar(m_ProgressBar);
 	
-		
+		// Next line is for modeling a device for debug.
+		// Doing this on the windows platform
+		// TODO: Remove for production version
+		 if (Settings.platform.equals("Java")) m_model= new BT747model();		
 		//			sp.writeBytes(buf,0,1);
 	}
 	
