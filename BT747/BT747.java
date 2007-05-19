@@ -40,7 +40,7 @@ public class BT747 extends MainWindow {
 	private static ProgressBar m_ProgressBar;
 	private static Label m_ProgressLabel;
 	
-	private BT747model m_model;
+	//private BT747model m_model;
 	
 	String menu[][] = {
 			{"File","Exit application"},
@@ -113,7 +113,7 @@ public class BT747 extends MainWindow {
 		// Next line is for modeling a device for debug.
 		// Doing this on the windows platform
 		// TODO: Remove for production version
-		 if (Settings.platform.equals("Java")) m_model= new BT747model();		
+//		 if (Settings.platform.equals("Java")) m_model= new BT747model();		
 		//			sp.writeBytes(buf,0,1);
 	}
 	
