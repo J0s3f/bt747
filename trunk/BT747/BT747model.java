@@ -40,14 +40,17 @@ public class BT747model extends Control {
     
     public int logFormat = 0x3E;
     
-    GPSrxtx m_GPSrxtx=new GPSrxtx();
+    GPSrxtx m_GPSrxtx=null;
     /**
      * 
      */
     public BT747model() {
+    }
+    public void onStart() {
+        m_GPSrxtx=new GPSrxtx();
         m_GPSrxtx.setDefaults(2,115200);
-        m_GPSrxtx.openPort();
-        addTimer(1);
+    	m_GPSrxtx.openPort();
+    	addTimer(1);
     }
     
     public void replyMTK_Ack(final String[] p_nmea) {
