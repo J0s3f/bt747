@@ -85,7 +85,7 @@ public class BT747 extends MainWindow {
 		m_ProgressBar=new ProgressBar();
 		add(m_ProgressLabel,LEFT,BOTTOM);
 		m_ProgressLabel.setRect(LEFT,BOTTOM,PREFERRED,PREFERRED);
-		//m_ProgressBar.setVisible(false);
+		m_ProgressLabel.setVisible(false);
 		//m_ProgressLabel.setVisible(false);
 		m_TabPanel.setBorderStyle(Window.NO_BORDER);
 		m_TabPanel.setRect(getClientRect().modifiedBy(0,0,0,-m_ProgressBar.getPreferredHeight()));

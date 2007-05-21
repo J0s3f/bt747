@@ -3,5 +3,6 @@
 	<classpathentry excluding="build/|dist/|icons/" path="" kind="src"/>
 	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
 	<classpathentry path="superwaba.ide.container.SuperWabaContainer/" kind="con"/>
+	<classpathentry path="win32comm.jar" kind="lib"/>
 	<classpathentry path="" kind="output"/>
 </classpath>

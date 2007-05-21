@@ -53,7 +53,7 @@ public class GPSstate extends Control {
     static final boolean GPS_TEST = false;
     static GPSstate a;
     
-    public GPSrxtx m_GPSrxtx=new GPSrxtx();    	
+    private GPSrxtx m_GPSrxtx=new GPSrxtx();    	
     ProgressBar m_ProgressBar=null;
 
     // Fields to keep track of logging status
@@ -90,14 +90,26 @@ public class GPSstate extends Control {
     static final int C_LOG_TIMEOUT_CNT = C_LOG_TIMEOUT; 
     private Timer linkTimer= null;
     
-    
+    /** Initialiser
+     * 
+     *
+     */
     public GPSstate() {
     }
     
+    /** Provide the progress bar to use (download progress)
+     * 
+     * @param pb ProgressBar
+     * @author Mario De Weerd
+     */
     public void setProgressBar(ProgressBar pb) {
         m_ProgressBar= pb;
     }
     
+    /** Some initialisation
+     * 
+     *
+     */
     public void onStart() {
         int port= BT747Settings.getPortnbr();
         if(port!=0x5555) {
@@ -154,6 +166,7 @@ public class GPSstate extends Control {
     /** open a connection on the given port number.
      * Calls getStatus to request initial parameters from the device.
      * Set up the timer to regurarly poll the connection for data.
+     * @param port Port number to open
      * @author Mario De Weerd
      */
     public void setPort(int port) {
@@ -180,6 +193,30 @@ public class GPSstate extends Control {
         }
     }
     
+    /** Set the loggin format of the device.<br>
+     * Must be followed by eraseLog.
+     * @param p_logFormat The format to set.
+     */
+    public void setLogFormat(final int p_logFormat) {
+        m_GPSrxtx.sendPacket("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_SET_STR
+                +","+BT747_dev.PMTK_LOG_FORMAT_STR
+                +","+Convert.unsigned2hex(p_logFormat,2)					
+        );
+    }
+    
+    /** erase the log - takes a while
+     * TODO: Find out a way to follow up on erasal (status)
+     * @author Mario De Weerd
+     */
+    
+    public void eraseLog() {
+        m_GPSrxtx.sendPacket("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_ERASE
+                +","+BT747_dev.PMTK_LOG_FORMAT_STR
+                +","+"1" // TODO: Convert this one to a constant					
+        );
+    }
     
     /** A single request to get information from the device's log.
      * @author Mario De Weerd
@@ -222,6 +259,7 @@ public class GPSstate extends Control {
      * Satellite information is of variant size.
      * @param p_logFormat : configuration representing format
      * @return Number of bytes needed for one record.
+     * @author Mario De Weerd
      */
     static public int logEntrySize(int p_logFormat) {
         int z_BitMask = 0x1;
@@ -235,12 +273,31 @@ public class GPSstate extends Control {
         return z_Size;
     }
     
-    
-    static public int logHeaderSize(int p_logFormat) {
-        return 22;
+    /** Get the size of the log header in the device.
+     * 
+     * @param p_logFormat The log format of the device
+     * @return Size of the header
+     * @author Mario De Weerd
+     */
+    static public final int logHeaderSize(final int p_logFormat) {
+        int bits=p_logFormat;
+        int index = 0;
+        int total = 0;
+        do {
+            if ((bits&1)!=0) {
+                total+=BT747_dev.logFmtByteSizes[index];
+            }
+            index++;
+        } while((bits>>=1) != 0);
+        return total;
     }
     
-    public int logEntryAddr(int p_RecordNumber) {
+    /** Get the (approximate) location of the given record number.
+     * The result is not exact: the position may be different.
+     * @param p_RecordNumber The record number for which to find the address
+     * @return Address for record number
+     */
+    public int logEntryAddr(final int p_RecordNumber) {
         return logHeaderSize+p_RecordNumber*logEntrySize;
     }
     

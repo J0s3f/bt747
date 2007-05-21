@@ -4,11 +4,12 @@
 	<!-- Application classpath -->
 	<path id="classpath">
 		<pathelement location="c:\SuperWabaSDK/lib/SuperWaba.jar"/>
+		<pathelement location="\BT747\win32comm.jar"/>
 	</path>
 	
 	<!-- Warp/Exegen classpath -->
 	<path id="utils">
-		<pathelement path="c:\SuperWabaSDK/utils"/>
+		<pathelement location="c:\SuperWabaSDK/lib/SuperWabaTools.jar"/>
 		<pathelement location="c:\SuperWabaSDK/lib/SuperWaba.jar"/>
 	</path>
 	
@@ -56,7 +57,7 @@
 	<!-- Execute WARP -->
 	<target name="warp" depends="jar">
 	
-		<java dir="build" classname="Warp" fork="true" classpathref="utils">
+		<java dir="build" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
 			<arg value="c"/>
 			<arg value="/c"/>
 			<arg value="BT74"/>
@@ -81,7 +82,7 @@
 	<!-- Execute EXEGEN -->
 	<target name="exegen" depends="warp, prepare-exegen">
 	
-		<java dir="build" classname="Exegen" fork="true" classpathref="utils">
+		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/c"/>
 			<arg value="BT74"/>
 			<arg value="${ant.project.name}"/>
@@ -94,7 +95,7 @@
 	<!-- Execute EXEGEN with WinCE EXE -->
 	<target name="exegen-exe" depends="warp, prepare-exegen">
 	
-		<java dir="build" classname="Exegen" fork="true" classpathref="utils">
+		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/c"/>
 			<arg value="BT74"/>
 			<arg value="/e"/>
@@ -108,7 +109,7 @@
 	<!-- Execute EXEGEN with WinCE CAB -->
 	<target name="exegen-cab" depends="warp, prepare-exegen">
 	
-		<java dir="build" classname="Exegen" fork="true" classpathref="utils">
+		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/c"/>
 			<arg value="BT74"/>
 			<arg value="/z"/>
