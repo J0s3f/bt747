@@ -52,7 +52,7 @@ public class BT747Settings {
 		return Hex2Int(Settings.appSettings.substring(8,16));
 	}
 	/**
-	 * @param Baudnbr The Baudnbr to set.
+	 * @param Baud The Baud rate to set.
 	 */
 	public static void setBaudRate(int Baud) {
 		Settings.appSettings=Settings.appSettings.substring(0,8)
@@ -64,7 +64,7 @@ public class BT747Settings {
 		return Hex2Int(Settings.appSettings.substring(16,1))==1;
 	}
 	/**
-	 * @param Baudnbr The Baudnbr to set.
+	 * @param value The default value for opening the port.
 	 */
 	public static void setStartupOpenPort(boolean value) {
 		Settings.appSettings=Settings.appSettings.substring(0,16)

@@ -24,7 +24,6 @@ import waba.sys.Convert;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
-import waba.ui.MessageBox;
 import waba.ui.ProgressBar;
 import waba.ui.Timer;
 import waba.util.IntVector;
@@ -536,6 +535,7 @@ public class GPSstate extends Control {
     public int analyseNMEA(String[] p_nmea) {
         int z_Cmd;
         int z_Result;
+        z_Result = 0;
         //if(GPS_DEBUG) {	waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]+"\n");}
         if(p_nmea[0].startsWith("GPZDA")) {
             // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
@@ -591,7 +591,7 @@ public class GPSstate extends Control {
                 break;
             } // End switch
         } // End if
-        return 0;
+        return z_Result;
     } // End method
     
     String[] lastResponse;
