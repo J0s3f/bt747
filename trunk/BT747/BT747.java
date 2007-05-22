@@ -117,25 +117,6 @@ public class BT747 extends MainWindow {
 		//			sp.writeBytes(buf,0,1);
 	}
 	
-	public void InterceptSystemKeys(){		
-		//Vm.interceptSystemKeys(Vm.SK_ALL | Vm.SK_LAUNCH);		
-		waba.sys.Vm.interceptSystemKeys(		
-				//WinCE
-				waba.sys.Vm.SK_HARD1 | 
-				waba.sys.Vm.SK_HARD2 | 
-				waba.sys.Vm.SK_HARD3 | 
-				waba.sys.Vm.SK_HARD4 | 
-				waba.sys.Vm.SK_PAGE_DOWN | 
-				waba.sys.Vm.SK_PAGE_LEFT | 
-				waba.sys.Vm.SK_PAGE_RIGHT | 
-				waba.sys.Vm.SK_PAGE_UP|		
-				//additional palmOS silkscreened keys		
-				waba.sys.Vm.SK_SYNC | // Hotsync
-				waba.sys.Vm.SK_FIND | // Search/Find
-				waba.sys.Vm.SK_CALC | // Calculator
-				waba.sys.Vm.SK_LAUNCH);//Home
-	}	
-	
 	
 	public void onEvent(Event event) {
 		//
@@ -150,8 +131,7 @@ public class BT747 extends MainWindow {
 							"You are about to exit the application|" +
 							"Confirm application exit?",
 							szExitButtonArray);				 					
-					mb.popupBlockingModal();
-					int idxExit = mb.getPressedButtonIndex();				 											
+					mb.popupBlockingModal();										
 					if (mb.getPressedButtonIndex()==0){
 						// Exit application
 						MainWindow.getMainWindow().exit(0);
@@ -194,8 +174,21 @@ public class BT747 extends MainWindow {
 							"|www.wabasoft.com").popupModal();
 					break;                  
 				case C_MENU_INFO:    					
-					new MessageBox("Info",
-							"TBD.").popupModal();
+					new MessageBox(
+                            "Disclaimer",
+                            "Software is provided 'AS IS,' without" +
+                            "|a warranty of any kind. ALL EXPRESS" +
+                            "|OR IMPLIED REPRESENTATIONS AND " +
+                            "|WARRANTIES, INCLUDING ANY IMPLIED" +
+                            "|WARRANTY OF MERCHANTABILITY," +
+                            "|FITNESS FOR A PARTICULAR PURPOSE" +
+                            "|OR NON-INFRINGEMENT, ARE HEREBY" +
+                            "|EXCLUDED. THE ENTIRE RISK ARISING " +
+                            "|OUT OF USING THE SOFTWARE IS" +
+                            "|ASSUMED BY THE USER. See the" +
+                            "|GNU General Public License for more" +
+                            "|details."
+							).popupModal();
 					break;              
 					
 				default: break;

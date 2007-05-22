@@ -125,7 +125,7 @@ public class BT747model extends Control {
     
     public int analyseNMEA(String[] p_nmea) {
         int z_Cmd;
-        int z_Result;
+        int z_Result=0;
         //if(GPS_DEBUG) {	waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]+"\n");}
         if(p_nmea[0].startsWith("PMTK")) {
             replyMTK_Ack(p_nmea);
@@ -174,7 +174,7 @@ public class BT747model extends Control {
                 break;
             } // End switch
         } // End if
-        return 0;
+        return z_Result;
     } // End method
     
     

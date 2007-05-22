@@ -26,11 +26,11 @@ import waba.ui.Control;
 import waba.ui.MessageBox;
 import waba.util.Vector;
 
-/**
+/** This class implements the low level driver of the GPS device.
+ * It extracts NMEA strings.
+ * The getResponse function should be called regurarly to get the GPS
+ * device's response.
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class GPSrxtx extends Control {
 	static final boolean GPS_DEBUG = true;
@@ -45,16 +45,28 @@ public class GPSrxtx extends Control {
 	private Semaphore m_writeOngoing = new Semaphore(1);
 	
 	
+	/** Class constructor.
+     * @author Mario De Weerd
+	 * 
+	 */
 	public  GPSrxtx() {
 		setDefaults();
 	}
 
+    /** Set the defaults for the device according to the given parameters.
+     * @author Mario De Weerd
+     * @param port
+     * @param speed
+     */
 	public void setDefaults(final int port, final int speed) {
 	    spPortNbr= port;
 	    spSpeed=   speed;
 	}
 
-	
+	/** Set the defaults of the device according to preset, guessed values.
+     * @author Mario De Weerd
+	 *
+	 */
 	public void setDefaults() {
 		// Settings.platform:
 		// PalmOS, PalmOS/SDL, WindowsCE, PocketPC, MS_SmartPhone,
@@ -75,28 +87,54 @@ public class GPSrxtx extends Control {
 			}			
 	}
 	
+    /** Set and open a bluetooth connection
+     * 
+     *
+     */
 	public void setBluetooth() {
 		spPortNbr= SerialPort.BLUETOOTH;
 		openPort();
 	}
 	
+    /** Set and open an USB connection
+     * 
+     *
+     */
 	public void setUsb() {
 		spPortNbr= SerialPort.USB;
 		openPort();
 	}
+    
+    /** Set and open a normal port (giving the port number)
+     * 
+     * @param port Port number of the port to open
+     * @return result of opening the port, 0 if success.
+     */
 	public int setPort(int port) {
 		spPortNbr= port;
 		return openPort();
 	}
 	
+    /** Get the port number (getter for spPortNbr)
+     * 
+     * @return Port number
+     */
 	public int getPort() {
 		return spPortNbr;
 	}
 	
+    /** Indicates if the device is connected or not.
+     * 
+     * @return <code>true</code> if the device is connected.
+     */
 	public boolean isConnected() {
 		return (sp!=null && sp.isOpen());
 	}
 	
+    /** Close the connection.
+     *
+     *
+     */
 	public void closePort() {
 		if (sp!= null && sp.isOpen()) {
 			portIsOK= false;
@@ -104,6 +142,10 @@ public class GPSrxtx extends Control {
 		} 
 	}
 	
+    /** Open a connection
+     * 
+     * @return status result of the opening of the serial port.
+     */
 	public int openPort() {
 		int result=-1;
 //		new MessageBox("SerialPort","Before close").popupBlockingModal();
@@ -136,6 +178,10 @@ public class GPSrxtx extends Control {
 		return result;
 	}
 	
+    /** getter to retrieve the last error report by the serial port driver.
+     * 
+     * @return last error from the SerialPort driver
+     */
 	public int error() {
 		return sp.lastError;
 	}
