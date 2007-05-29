@@ -27,14 +27,14 @@ import waba.ui.MessageBox;
 import waba.util.Vector;
 
 /** This class implements the low level driver of the GPS device.
- * It extracts NMEA strings.
+ * It extracs NMEA strings.
  * The getResponse function should be called regurarly to get the GPS
  * device's response.
  * @author Mario De Weerd
  */
 public class GPSrxtx extends Control {
 	static final boolean GPS_DEBUG = true;
-
+    
 	protected int spPortNbr;
 	protected int spSpeed=115200;  // Does not really matter on most platforms
 	private SerialPort sp=null;
@@ -46,15 +46,12 @@ public class GPSrxtx extends Control {
 	
 	
 	/** Class constructor.
-     * @author Mario De Weerd
-	 * 
 	 */
 	public  GPSrxtx() {
 		setDefaults();
 	}
 
     /** Set the defaults for the device according to the given parameters.
-     * @author Mario De Weerd
      * @param port
      * @param speed
      */
@@ -64,8 +61,6 @@ public class GPSrxtx extends Control {
 	}
 
 	/** Set the defaults of the device according to preset, guessed values.
-     * @author Mario De Weerd
-	 *
 	 */
 	public void setDefaults() {
 		// Settings.platform:
@@ -187,18 +182,18 @@ public class GPSrxtx extends Control {
 	}
 	
 	
-	static final int C_INITIAL_STATE = 0;
-	static final int C_START_STATE = 1;
-	static final int C_FIELD_STATE = 2;
-	static final int C_STAR_STATE  = 3;
-	static final int C_CHECKSUM_CHAR1_STATE = 4;
-	static final int C_CHECKSUM_CHAR2_STATE = 5;
-	static final int C_EOL_STATE = 6;
-	static final int C_ERROR_STATE = 7;
+	private final int C_INITIAL_STATE = 0;
+	private final int C_START_STATE = 1;
+	private final int C_FIELD_STATE = 2;
+	private final int C_STAR_STATE  = 3;
+	private final int C_CHECKSUM_CHAR1_STATE = 4;
+	private final int C_CHECKSUM_CHAR2_STATE = 5;
+	private final int C_EOL_STATE = 6;
+	private final int C_ERROR_STATE = 7;
 	
 	//The maximum length of each packet is restricted to 255 bytes	
-	static final int C_BUF_SIZE = 256;
-	static final int C_CMDBUF_SIZE = 256;
+	private final int C_BUF_SIZE = 256;
+	private final int C_CMDBUF_SIZE = 256;
 	
 	private int current_state = C_INITIAL_STATE;
 	

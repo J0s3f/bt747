@@ -99,7 +99,6 @@ public class GPSstate extends Control {
     /** Provide the progress bar to use (download progress)
      * 
      * @param pb ProgressBar
-     * @author Mario De Weerd
      */
     public void setProgressBar(ProgressBar pb) {
         m_ProgressBar= pb;
@@ -124,8 +123,6 @@ public class GPSstate extends Control {
     /** Restart the GPS connection
      * Will close the current connection (if still open) and
      * open it again (use the same parameters)
-     * @author Mario De Weerd
-     *
      */
     public void GPS_restart() {
         m_GPSrxtx.closePort();
@@ -134,7 +131,6 @@ public class GPSstate extends Control {
     }
     
     /** Close the GPS connection
-     * @author Mario De Weerd
      */
     public void GPS_close() {
         m_GPSrxtx.closePort();
@@ -143,7 +139,6 @@ public class GPSstate extends Control {
     /** open a Bluetooth connection
      * Calls getStatus to request initial parameters from the device.
      * Set up the timer to regurarly poll the connection for data.
-     * @author Mario De Weerd
      */
     public void setBluetooth() {
         m_GPSrxtx.setBluetooth();
@@ -154,7 +149,6 @@ public class GPSstate extends Control {
     /** open a Usb connection
      * Calls getStatus to request initial parameters from the device.
      * Set up the timer to regurarly poll the connection for data.
-     * @author Mario De Weerd
      */
     public void setUsb() {
         m_GPSrxtx.setUsb();
@@ -166,7 +160,6 @@ public class GPSstate extends Control {
      * Calls getStatus to request initial parameters from the device.
      * Set up the timer to regurarly poll the connection for data.
      * @param port Port number to open
-     * @author Mario De Weerd
      */
     public void setPort(int port) {
         m_GPSrxtx.setPort(port);
@@ -179,7 +172,6 @@ public class GPSstate extends Control {
      * The timer is used to launch functions that will check if there
      * is information on the serial connection or to send to the GPS
      * device.
-     * @author Mario De Weerd
      */
     private void setupTimer() {
         if( m_GPSrxtx.isConnected()) {
@@ -206,7 +198,6 @@ public class GPSstate extends Control {
     
     /** erase the log - takes a while
      * TODO: Find out a way to follow up on erasal (status)
-     * @author Mario De Weerd
      */
     
     public void eraseLog() {
@@ -218,7 +209,6 @@ public class GPSstate extends Control {
     }
     
     /** A single request to get information from the device's log.
-     * @author Mario De Weerd
      * @param startAddr start address of the data range requested
      * @param size      size of the data range requested
      */
@@ -239,7 +229,6 @@ public class GPSstate extends Control {
      * Will be called if the device did not respond to a log request.
      * TODO: Could be extended to all packets.
      * TODO: Implement handleLogTimeOUt
-     * @author Mario De Weerd
      */
     public void handleLogTimeOut() {
         
@@ -258,7 +247,6 @@ public class GPSstate extends Control {
      * Satellite information is of variant size.
      * @param p_logFormat : configuration representing format
      * @return Number of bytes needed for one record.
-     * @author Mario De Weerd
      */
     static public int logEntrySize(int p_logFormat) {
         int z_BitMask = 0x1;
@@ -276,7 +264,6 @@ public class GPSstate extends Control {
      * 
      * @param p_logFormat The log format of the device
      * @return Size of the header
-     * @author Mario De Weerd
      */
     static public final int logHeaderSize(final int p_logFormat) {
         int bits=p_logFormat;

@@ -1,3 +1,4 @@
+import waba.sys.Convert;
 import waba.sys.Settings;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -28,38 +29,59 @@ import waba.ui.Window;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 
-
+/** Main class (application entry)
+ * 
+ * @author Mario De Weerd
+ */
 public class BT747 extends MainWindow {
-	private static MenuBar    m_MenuBar;
-	private static TabPanel   m_TabPanel;
-	private static GPSLogCtrl m_GPSLogCtrl;
-	private static GPSLogInfo m_GPSLogInfo;
-	private static GPSLogGet m_GPSLogGet;
-	private static GPSconctrl m_GPSconctrl;
+    /** The 'GPS state'.  Used to get current GPS information and get access
+     * to it.
+     */
 	private static GPSstate    m_GPSstate;
+    /** The label next to the progressbar.  Hidden when not in use. */
+    private static Label       m_ProgressLabel;
+    /** The progress bar itself.  Hidden when not in use. */
 	private static ProgressBar m_ProgressBar;
-	private static Label m_ProgressLabel;
-	
+    
 	//private BT747model m_model;
-	
-	String menu[][] = {
+	/** The application's MenuBar */
+    private static MenuBar     m_MenuBar;
+    /** The content of the menu bar */
+	private final String menu[][] = {
 			{"File","Exit application"},
 			{"Settings","Restart connection","Stop connection"},
 			{"Info","About BT747","About SuperWaba VM","Info"}
 	};
-	static final int C_MENU_FILE_EXIT = 001;
+    /** MenuBar item for File->Exit */
+	private final int C_MENU_FILE_EXIT = 001;
+    /** MenuBar item for Settings->Restart connection */
+	private final int C_MENU_RESTART_CONNECTION = 101;
+    /** MenuBar item for Settings->Stop connection */
+	private  final int C_MENU_STOP_CONNECTION = 102;
+    /** MenuBar item for Info->About BT747 */
+	private  final int C_MENU_ABOUT = 201;
+    /** MenuBar item for Info->About Superwaba */
+	private  final int C_MENU_ABOUT_SW = 202;
+    /** MenuBar item for Info->Info */
+	private  final int C_MENU_INFO = 203;   
 	
-	static final int C_MENU_RESTART_CONNECTION = 101;
-	static final int C_MENU_STOP_CONNECTION = 102;
-	
-	static final int C_MENU_ABOUT = 201;
-	static final int C_MENU_ABOUT_SW = 202;
-	static final int C_MENU_INFO = 203;   
-	
-	String c_tpCaptions[]= {
+    /** The tab panel */
+    private static TabPanel    m_TabPanel;
+    /** The captions for the tab panel */
+    private final String c_tpCaptions[]= {
 			"Log FMT","Log Info","Log Get","Conn"
 	};
+    /** Tab Panel container - Logger control/configuration */
+    private static GPSLogCtrl  m_GPSLogCtrl;
+    /** Tab Panel container - Log information */
+    private static GPSLogInfo  m_GPSLogInfo;
+    /** Tab Panel container - Log retrieval */
+    private static GPSLogGet   m_GPSLogGet;
+    /** Tab Panel container - Connection control/configuration */
+    private static GPSconctrl  m_GPSconctrl;
 	
+    /** Initialiser of the application
+     */
 	public BT747() {
 		if(Settings.appSettings==null) {
 			Settings.appSettings=new String("00005555000000000000");
@@ -147,9 +169,9 @@ public class BT747 extends MainWindow {
 					break;
 				case C_MENU_ABOUT:
 					new MessageBox("About BT747",
-							"Created with SuperWaba|" +
+							"Created with SuperWaba" +
 							"|http://www.superwaba.org"+
-							"|" +
+							"|" +Convert.toString(Version.BUILD)+
 							"|Written by Mario De Weerd" +
 							"|m.deweerd@ieee.org"+
 							"|"+
