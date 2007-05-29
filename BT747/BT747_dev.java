@@ -51,8 +51,48 @@ public final class BT747_dev {  // dev as in device
 			"RCR",		// = 0x20000	// 11
 			"MILISECOND",// = 0x40000	// 12
 			"DISTANCE"	// = 0x80000	// 13
-	};	
-	
+	};
+    /** Index of bit for log format setting */
+    public static final int FMT_UTC_IDX =        0;
+    /** Index of bit for log format setting */
+    public static final int FMT_VALID_IDX =      1;
+    /** Index of bit for log format setting */
+    public static final int FMT_LATITUDE_IDX =   2;
+    /** Index of bit for log format setting */
+    public static final int FMT_LONGITUDE_IDX =  3;
+    /** Index of bit for log format setting */
+    public static final int FMT_HEIGHT_IDX =     4;
+    /** Index of bit for log format setting */
+    public static final int FMT_SPEED_IDX =      5;
+    /** Index of bit for log format setting */
+    public static final int FMT_HEADING_IDX =    6;
+    /** Index of bit for log format setting */
+    public static final int FMT_DSTA_IDX =       7;
+    /** Index of bit for log format setting */
+    public static final int FMT_DAGE_IDX =       8;
+    /** Index of bit for log format setting */
+    public static final int FMT_PDOP_IDX =       9;
+    /** Index of bit for log format setting */
+    public static final int FMT_HDOP_IDX =       10;
+    /** Index of bit for log format setting */
+    public static final int FMT_VDOP_IDX =       11;
+    /** Index of bit for log format setting */
+    public static final int FMT_NSAT_IDX =       12;
+    /** Index of bit for log format setting */
+    public static final int FMT_SID_IDX =        13;
+    /** Index of bit for log format setting */
+    public static final int FMT_ELEVATION_IDX =  14;
+    /** Index of bit for log format setting */
+    public static final int FMT_AZIMUTH_IDX =    15;
+    /** Index of bit for log format setting */
+    public static final int FMT_SNR_IDX =        16;
+    /** Index of bit for log format setting */
+    public static final int FMT_RCR_IDX =        17;
+    /** Index of bit for log format setting */
+    public static final int FMT_MILISECOND_IDX = 18;
+    /** Index of bit for log format setting */
+    public static final int FMT_DISTANCE_IDX =   19;
+
 	/** Size for each item of the log format of the iBlue 747.<br>
 	 * <b>The log record length is variable is satelite information
 	 * is logged:</b><br>
