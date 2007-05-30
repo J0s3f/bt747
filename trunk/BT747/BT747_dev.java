@@ -213,6 +213,8 @@ public final class BT747_dev {  // dev as in device
 	public static final String PMTK_LOG_REQ_DATA_STR = Convert.toString(PMTK_LOG_REQ_DATA);
 	public static final String PMTK_LOG_RESP_DATA_STR = Convert.toString(PMTK_LOG_RESP_DATA);  // REPLY.
 	public static final String PMTK_LOG_TBD_STR = Convert.toString(PMTK_LOG_TBD);
+
+    public static final String PMTK_LOG_ERASE_YES_STR = "1";
 	
 	// PMTK182,1,DATA  (DATA_STR = Convert.toString((DATA)what parameter to set/read/replied)
 	

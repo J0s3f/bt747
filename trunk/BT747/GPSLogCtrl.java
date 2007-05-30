@@ -158,6 +158,7 @@ public class GPSLogCtrl extends Container {
     }
 
     /** Handle events for this object.
+     * @param event The event to be interpreted.
      */
   	public void onEvent( Event event ) {
   		switch (event.type) {
@@ -168,7 +169,6 @@ public class GPSLogCtrl extends Container {
   			    	} else {
                       boolean z_updated=false;
                       for (int i=0;i<C_LOG_FMT_COUNT;i++) {
-					    // TODO: check consistency of options.
 						if (event.target==chkLogFmtItems[i]) {
                             z_updated=true;
 						}
