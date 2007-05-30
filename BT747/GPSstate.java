@@ -189,6 +189,18 @@ public class GPSstate extends Control {
      * @param p_logFormat The format to set.
      */
     public void setLogFormat(final int p_logFormat) {
+        // Ensure option consistency.
+        int logFormat;
+        logFormat= p_logFormat;
+        if((logFormat&(1<<BT747_dev.FMT_SID_IDX))==0) {
+            // If SID is not set, some other settings can not be
+            // set either.  Be sure they are disabled in that
+            // case.
+            logFormat&=~(  (1<<BT747_dev.FMT_ELEVATION_IDX)
+                          |(1<<BT747_dev.FMT_AZIMUTH_IDX)
+                          |(1<<BT747_dev.FMT_SNR_IDX)
+                        );
+        }
         m_GPSrxtx.sendPacket("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_SET_STR
                 +","+BT747_dev.PMTK_LOG_FORMAT_STR
@@ -203,8 +215,7 @@ public class GPSstate extends Control {
     public void eraseLog() {
         m_GPSrxtx.sendPacket("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_ERASE
-                +","+BT747_dev.PMTK_LOG_FORMAT_STR
-                +","+"1" // TODO: Convert this one to a constant					
+                +","+BT747_dev.PMTK_LOG_ERASE_YES_STR				
         );
     }
     

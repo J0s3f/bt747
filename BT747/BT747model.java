@@ -23,13 +23,6 @@ import waba.ui.Timer;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 
-/*
- * Created on 18 mai 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
-
 /** Implement a model of the BT747 (to run on PC).
  * 
  * @author Mario De Weerd

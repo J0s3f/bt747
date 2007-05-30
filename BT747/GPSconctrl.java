@@ -26,9 +26,6 @@ import waba.ui.PushButtonGroup;
 
 /**
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class GPSconctrl extends Container {
 	static final boolean GPS_DEBUG = true;
