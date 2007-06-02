@@ -80,6 +80,8 @@ public class BT747 extends MainWindow {
     private static GPSLogGet   m_GPSLogGet;
     /** Tab Panel container - Connection control/configuration */
     private static GPSconctrl  m_GPSconctrl;
+    
+    private static AppSettings m_settings;
 	
     /** Initialiser of the application
      */
@@ -99,7 +101,7 @@ public class BT747 extends MainWindow {
 	public void onStart() {
 		super.onStart();
 
-		m_GPSstate=new GPSstate();
+		m_GPSstate=new GPSstate(m_settings);
 		setMenuBar(m_MenuBar=new MenuBar(menu));
 
 		add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
@@ -138,6 +140,7 @@ public class BT747 extends MainWindow {
 		// TODO: Remove for production version
 //		 if (Settings.platform.equals("Java")) m_model= new BT747model();		
 		//			sp.writeBytes(buf,0,1);
+        
 	}
 	
 	

@@ -28,6 +28,7 @@ import waba.ui.ProgressBar;
 import waba.ui.Timer;
 import waba.util.IntVector;
 import waba.util.Vector;
+import gps.convert.*;
 
 
 
@@ -89,11 +90,14 @@ public class GPSstate extends Control {
     static final int C_LOG_TIMEOUT_CNT = C_LOG_TIMEOUT; 
     private Timer linkTimer= null;
     
+    private settings m_settings;
+    
     /** Initialiser
      * 
      *
      */
-    public GPSstate() {
+    public GPSstate(settings s) {
+        m_settings = s;
     }
     
     /** Provide the progress bar to use (download progress)
@@ -109,15 +113,16 @@ public class GPSstate extends Control {
      *
      */
     public void onStart() {
-        int port= BT747Settings.getPortnbr();
+        int port= m_settings.getPortnbr();
         if(port!=0x5555) {
-            m_GPSrxtx.setDefaults(port,BT747Settings.getBaudRate());
+            m_GPSrxtx.setDefaults(port,m_settings.getBaudRate());
         }
         
-        if (BT747Settings.getStartupOpenPort()) {
-            m_GPSrxtx.openPort();		
+        if (m_settings.getStartupOpenPort()) {
+            m_GPSrxtx.openPort();       
             getStatus();
         }
+
     }
     
     /** Restart the GPS connection
@@ -179,8 +184,8 @@ public class GPSstate extends Control {
             if(linkTimer!=null) removeTimer(linkTimer);
             linkTimer = addTimer(C_TIMER_PERIOD);
             // Remember defaults
-            BT747Settings.setPortnbr(m_GPSrxtx.spPortNbr);
-            BT747Settings.setBaudRate(m_GPSrxtx.spSpeed);
+            m_settings.setPortnbr(m_GPSrxtx.spPortNbr);
+            m_settings.setBaudRate(m_GPSrxtx.spSpeed);
         }
     }
     
@@ -316,7 +321,7 @@ public class GPSstate extends Control {
                 switch( z_type ) {
                 case BT747_dev.PMTK_LOG_FORMAT: 			// 2;
                     //if(GPS_DEBUG) {	waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
-                    logFormat=BT747Settings.Hex2Int(p_nmea[3]);
+                    logFormat=Conv.Hex2Int(p_nmea[3]);
                 logEntrySize=logEntrySize(logFormat);
                 logHeaderSize=logHeaderSize(logFormat);
                 logUpdate.push(logFormat);
@@ -334,15 +339,15 @@ public class GPSstate extends Control {
                     logRecMethod=Convert.toInt(p_nmea[3])/10;
                 break;
                 case BT747_dev.PMTK_LOG_LOG_STATUS:		// 7; // bit 2 = logging on/off
-                    logStatus=BT747Settings.Hex2Int(p_nmea[3]);
+                    logStatus=Conv.Hex2Int(p_nmea[3]);
                 break;
                 case BT747_dev.PMTK_LOG_MEM_USED:			// 8; 
-                    logMemUsed=BT747Settings.Hex2Int(p_nmea[3]);
+                    logMemUsed=Conv.Hex2Int(p_nmea[3]);
                 break;
                 case BT747_dev.PMTK_LOG_TBD_3:			// 9;
                     break;
                 case BT747_dev.PMTK_LOG_NBR_LOG_PTS:		// 10;
-                    logNbrLogPts=BT747Settings.Hex2Int(p_nmea[3]);
+                    logNbrLogPts=Conv.Hex2Int(p_nmea[3]);
                 break;
                 case BT747_dev.PMTK_LOG_TBD2:				// 11;
                     break;
@@ -353,7 +358,7 @@ public class GPSstate extends Control {
             case BT747_dev.PMTK_LOG_RESP_DATA:
                 // Data from the log
                 // $PMTK182,8,START_ADDRESS,DATA
-                analyzeLogPart(BT747Settings.Hex2Int(p_nmea[2]),p_nmea[3]);
+                analyzeLogPart(Conv.Hex2Int(p_nmea[2]),p_nmea[3]);
             break;
             default:
                 // Nothing - unexpected
@@ -502,7 +507,7 @@ public class GPSstate extends Control {
     }
     
     public void	analyzeLogPart(final int p_StartAddr, final String p_Data) {
-        byte[] z_Data=BT747Settings.HexStringToBytes(p_Data);
+        byte[] z_Data=Conv.HexStringToBytes(p_Data);
         if( m_isLogging) {
             if(m_NextReadAddr==p_StartAddr) {
                 m_logFile.writeBytes(z_Data,0,z_Data.length);

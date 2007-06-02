@@ -17,8 +17,9 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-package gps;
 import waba.ui.Container;
+
+import gps.GPSstate;
 /**
  * @author Mario De Weerd
   */
