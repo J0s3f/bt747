@@ -24,8 +24,8 @@
  
     <target name="build++" depends="init" description="increase build number and set release date">
         <!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
-    	<replaceregexp file="Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
-    	<replaceregexp file="Version.java" encoding="${encoding}" match="DATE = [^a]*;" replace='DATE = "${DATE_DE}";'/>	
+    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
+    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="DATE = [^a]*;" replace='DATE = "${DATE_DE}";'/>	
     </target>
 
 
