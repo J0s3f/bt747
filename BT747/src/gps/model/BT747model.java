@@ -1,8 +1,3 @@
-import waba.sys.Convert;
-import waba.ui.Control;
-import waba.ui.ControlEvent;
-import waba.ui.Event;
-import waba.ui.Timer;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -22,7 +17,13 @@ import waba.ui.Timer;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-
+package gps.model;
+import waba.sys.Convert;
+import waba.ui.Control;
+import waba.ui.ControlEvent;
+import waba.ui.Event;
+import waba.ui.Timer;
+import gps.*;
 /** Implement a model of the BT747 (to run on PC).
  * 
  * @author Mario De Weerd

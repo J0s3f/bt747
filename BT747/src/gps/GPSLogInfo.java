@@ -1,4 +1,3 @@
-import waba.ui.Container;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -18,13 +17,15 @@ import waba.ui.Container;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+package gps;
+import waba.ui.Container;
 /**
  * @author Mario De Weerd
   */
 public class GPSLogInfo extends Container {
 	GPSstate m_GPSstate;
 	
-	GPSLogInfo(GPSstate state) {
+	public GPSLogInfo(GPSstate state) {
 		m_GPSstate= state;
 	}
 

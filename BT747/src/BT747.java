@@ -1,14 +1,3 @@
-import waba.sys.Convert;
-import waba.sys.Settings;
-import waba.ui.ControlEvent;
-import waba.ui.Event;
-import waba.ui.Label;
-import waba.ui.MainWindow;
-import waba.ui.MenuBar;
-import waba.ui.MessageBox;
-import waba.ui.ProgressBar;
-import waba.ui.TabPanel;
-import waba.ui.Window;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -28,6 +17,18 @@ import waba.ui.Window;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.sys.Convert;
+import waba.sys.Settings;
+import waba.ui.ControlEvent;
+import waba.ui.Event;
+import waba.ui.Label;
+import waba.ui.MainWindow;
+import waba.ui.MenuBar;
+import waba.ui.MessageBox;
+import waba.ui.ProgressBar;
+import waba.ui.TabPanel;
+import waba.ui.Window;
+import gps.*;
 
 /** Main class (application entry)
  * 

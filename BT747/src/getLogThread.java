@@ -1,4 +1,3 @@
-import waba.sys.Thread;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -18,6 +17,8 @@ import waba.sys.Thread;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.sys.Thread;
+import gps.*;
 /**
  * @author Mario De Weerd
  */

@@ -17,17 +17,13 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-
+package gps;
 import waba.ui.Button;
 import waba.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.MessageBox;
-
-
-
-
 
 /**
  * @author Mario De Weerd

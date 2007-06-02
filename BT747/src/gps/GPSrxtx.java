@@ -17,7 +17,7 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-
+package gps;
 import waba.io.DataStream;
 import waba.io.SerialPort;
 import waba.sys.Convert;
