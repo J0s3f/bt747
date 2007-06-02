@@ -1,13 +1,3 @@
-import waba.io.File;
-import waba.ui.Button;
-import waba.ui.Check;
-import waba.ui.ComboBox;
-import waba.ui.Container;
-import waba.ui.ControlEvent;
-import waba.ui.Edit;
-import waba.ui.Event;
-import waba.ui.Label;
-import waba.util.Vector;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -27,7 +17,17 @@ import waba.util.Vector;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-
+package gps;
+import waba.io.File;
+import waba.ui.Button;
+import waba.ui.Check;
+import waba.ui.ComboBox;
+import waba.ui.Container;
+import waba.ui.ControlEvent;
+import waba.ui.Edit;
+import waba.ui.Event;
+import waba.ui.Label;
+import waba.util.Vector;
 /**
  * @author Mario De Weerd
  */
@@ -43,7 +43,7 @@ public class GPSLogGet extends Container {
 	ComboBox m_cbFile;
 	
 	
-	GPSLogGet(GPSstate state) {
+	public GPSLogGet(GPSstate state) {
 		m_GPSstate= state;
 	}
 	

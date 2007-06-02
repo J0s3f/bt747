@@ -1,8 +1,3 @@
-import waba.ui.Button;
-import waba.ui.Container;
-import waba.ui.ControlEvent;
-import waba.ui.Event;
-import waba.ui.PushButtonGroup;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -22,11 +17,18 @@ import waba.ui.PushButtonGroup;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-
+package gps;
+import waba.ui.Button;
+import waba.ui.Container;
+import waba.ui.ControlEvent;
+import waba.ui.Event;
+import waba.ui.PushButtonGroup;
+import gps.*;
 
 /**
  * @author Mario De Weerd
  */
+
 public class GPSconctrl extends Container {
 	static final boolean GPS_DEBUG = true;
 	
