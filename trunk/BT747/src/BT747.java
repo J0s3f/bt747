@@ -81,7 +81,8 @@ public class BT747 extends MainWindow {
     /** Tab Panel container - Connection control/configuration */
     private static GPSconctrl  m_GPSconctrl;
     
-    private static AppSettings m_settings;
+    // TODO: Settings should just refer to function and not need to be instantiated
+    private static AppSettings m_settings=new AppSettings();
 	
     /** Initialiser of the application
      */
@@ -114,9 +115,16 @@ public class BT747 extends MainWindow {
 		//m_ProgressLabel.setVisible(false);
 		m_TabPanel.setBorderStyle(Window.NO_BORDER);
 		m_TabPanel.setRect(getClientRect().modifiedBy(0,0,0,-m_ProgressBar.getPreferredHeight()));
-		m_TabPanel.setPanel(0,m_GPSLogCtrl = new GPSLogCtrl(m_GPSstate));
+
+        add(m_ProgressBar,RIGHT,SAME);  
+        m_ProgressBar.setRect(RIGHT,BOTTOM,//BOTTOM,RIGHT,
+                getClientRect().width-m_ProgressLabel.getRect().width-2,
+                PREFERRED);
+        m_ProgressBar.setVisible(false);
+
+        m_TabPanel.setPanel(0,m_GPSLogCtrl = new GPSLogCtrl(m_GPSstate));
 		m_TabPanel.setPanel(1,m_GPSLogInfo = new GPSLogInfo(m_GPSstate));
-		m_TabPanel.setPanel(2,m_GPSLogGet = new GPSLogGet(m_GPSstate));
+		m_TabPanel.setPanel(2,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar));
 		m_TabPanel.setPanel(3,m_GPSconctrl = new GPSconctrl(m_GPSstate));
 		updateLogThread=new updateLogFormatThread(m_GPSLogCtrl,m_GPSstate);
 		addThread(updateLogThread,false);
@@ -125,11 +133,6 @@ public class BT747 extends MainWindow {
 		//		SerialPort sp;
 		//		sp=new SerialPort(4,9600);
 		//			byte[] buf = {'H','e','l','l','o' };
-		add(m_ProgressBar,RIGHT,SAME);	
-		m_ProgressBar.setRect(RIGHT,BOTTOM,//BOTTOM,RIGHT,
-				getClientRect().width-m_ProgressLabel.getRect().width-2,
-				PREFERRED);
-		m_ProgressBar.setVisible(false);
 //		m_ProgressBar.setRect(m_ProgressLabel.getRect().x2(),m_ProgressLabel.getRect().y,//BOTTOM,RIGHT,
 //				10,//getClientRect().width-m_ProgressLabel.getRect().width,
 //				10+0*PREFERRED);

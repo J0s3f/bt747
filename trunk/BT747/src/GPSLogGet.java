@@ -26,6 +26,7 @@ import waba.ui.ControlEvent;
 import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
+import waba.ui.ProgressBar;
 import waba.util.Vector;
 
 import gps.GPSstate;
@@ -47,9 +48,12 @@ public class GPSLogGet extends Container {
     Button m_btStopLog;
 
     ComboBox m_cbFile;
+    
+    ProgressBar m_pb;
 
-    public GPSLogGet(GPSstate state) {
+    public GPSLogGet(GPSstate state, ProgressBar pb) {
         m_GPSstate = state;
+        m_pb= pb;
     }
 
     // TODO: Just some code as a reference to find a path.
@@ -61,9 +65,9 @@ public class GPSLogGet extends Container {
         if (list != null)
             for (int i = 0; i < list.length && i < 49; i++)
                 if (list[i] != null) {
-                    waba.sys.Vm.debug(list[i].toString() + "\n");
+                    waba.sys.Vm.debug(list[i].toString() + "\n"); //$NON-NLS-1$
                     v.addElement(path + list[i]);
-                    if (list[i].endsWith("/")) // is a path?
+                    if (list[i].endsWith("/")) // is a path? //$NON-NLS-1$
                         recursiveList(path + list[i], v);
                 }
     }
@@ -77,7 +81,7 @@ public class GPSLogGet extends Container {
         if (list != null)
             for (int i = 0; i < list.length && i < 49; i++)
                 if (list[i] != null) {
-                    waba.sys.Vm.debug(list[i].toString() + "\n");
+                    waba.sys.Vm.debug(list[i].toString() + "\n"); //$NON-NLS-1$
                     v.addElement(path + list[i]);
                     //if (list[i].endsWith("/")) // is a path?
                     //	recursiveList(path+list[i],v);
@@ -92,17 +96,17 @@ public class GPSLogGet extends Container {
     protected void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
-        add(m_chkLogOnOff = new Check("Device log on(/off)"), LEFT, TOP);
-        add(new Label("Start date"), LEFT, AFTER);
-        add(m_edStartDate = new Edit("99/99/9999"), AFTER, SAME);
+        add(m_chkLogOnOff = new Check("Device log on(/off)"), LEFT, TOP); //$NON-NLS-1$
+        add(new Label("Start date"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_edStartDate = new Edit("99/99/9999"), AFTER, SAME); //$NON-NLS-1$
         m_edStartDate.setMode(Edit.DATE);
-        add(m_edEndDate = new Edit("99/99/9999"), SAME, AFTER);
+        add(m_edEndDate = new Edit("99/99/9999"), SAME, AFTER); //$NON-NLS-1$
         m_edEndDate.setMode(Edit.DATE);
-        add(new Label("End date"), BEFORE, SAME);
+        add(new Label("End date"), BEFORE, SAME); 
 
         //add(new Label("End"),BEFORE,SAME);
-        add(m_btGetLog = new Button("Get Log"), LEFT, AFTER + 10);
-        add(m_btStopLog = new Button("Stop Log"), RIGHT, SAME);
+        add(m_btGetLog = new Button("Get Log"), LEFT, AFTER + 10); //$NON-NLS-1$
+        add(m_btStopLog = new Button("Stop Log"), RIGHT, SAME); //$NON-NLS-1$
     }
 
     /*
@@ -121,9 +125,9 @@ public class GPSLogGet extends Container {
                 // actual data from dates.
                 //m_edStartDate;
                 //m_edEndDate;
-                //  				m_GPSstate.getLogInit(0,1000,100,m_cbFile.getSelectedItem()+"Test.txt");
-                //				m_GPSstate.getLogInit(0,32*1024*1024,100,"/Palm/BT747log.bin");
-                m_GPSstate.getLogInit(0, 30 * 1024, 100, "/Palm/BT747log.bin");
+                //  m_GPSstate.getLogInit(0,1000,100,m_cbFile.getSelectedItem()+"Test.txt");
+                //	m_GPSstate.getLogInit(0,32*1024*1024,100,"/Palm/BT747log.bin");
+                m_GPSstate.getLogInit(0, 30 * 1024, 100, "/Palm/BT747log.bin",m_pb); //$NON-NLS-1$
                 m_btGetLog.press(false);
 
             } else if (event.target == m_btStopLog) {

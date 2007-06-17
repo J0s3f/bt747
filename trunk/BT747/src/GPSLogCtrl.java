@@ -160,6 +160,8 @@ public class GPSLogCtrl extends Container {
      */
   	public void onEvent( Event event ) {
   		switch (event.type) {
+  		    case ControlEvent.FOCUS_IN:
+                break;
 
   			case ControlEvent.PRESSED:
   			    	if (event.target==m_btChangeFormat) {
