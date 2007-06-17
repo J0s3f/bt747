@@ -26,6 +26,8 @@ import waba.ui.Control;
 import waba.ui.MessageBox;
 import waba.util.Vector;
 
+import superwaba.tools.fontgenerator.JoinFonts;
+
 /** This class implements the low level driver of the GPS device.
  * It extracs NMEA strings.
  * The getResponse function should be called regurarly to get the GPS
@@ -220,7 +222,10 @@ public class GPSrxtx extends Control {
 	private Vector vCmd = new Vector();
 	private static final byte[] EOL_BYTES = {'\015','\012'};
 	
-	public int sendPacket(final String p_Packet) {
+	public int sendPacket(final String p_Packet) {       
+        if((Settings.platform.equals("Java"))) {
+            waba.sys.Vm.debug(">"+p_Packet);
+        }        
 		// Calculate checksum
 		int z_Index= p_Packet.length();
 		byte z_Checksum= 0;
@@ -399,6 +404,15 @@ public class GPSrxtx extends Control {
 		} else {
 			vCmd.removeAllElements();
 		}
+//        if((vCmd.getCount()!=0)&&(Settings.platform.equals("Java"))) {
+//            String s=new String();
+//            s="<";
+//            waba.sys.Vm.debug("<");
+//            for (int i = 0; i < vCmd.getCount(); i++) {
+//                s+=((String[])vCmd.toObjectArray())[i];
+//            };
+//            waba.sys.Vm.debug(s);
+//        }        
 		return (String[])vCmd.toObjectArray();
 	}
 	

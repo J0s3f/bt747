@@ -450,18 +450,24 @@ public class GPSstate extends Control {
         m_isLogging= false;
     }
     
-    public void getLogInit(int p_StartAddr, int p_EndAddr, int p_Step,String p_FileName) {
+    /**
+     * @param p_StartAddr
+     * @param p_EndAddr
+     * @param p_Step
+     * @param p_FileName
+     */
+    public void getLogInit(int p_StartAddr, int p_EndAddr, int p_Step, String p_FileName, ProgressBar pb) {
         m_StartAddr= p_StartAddr;
         m_EndAddr=p_EndAddr;
         m_NextReqAddr= m_StartAddr;
         m_NextReadAddr= m_StartAddr;
         m_Step=p_Step;
         m_isLogging= true;
-        if(m_ProgressBar!=null) {
-            m_ProgressBar.min=m_StartAddr>>10;
-            m_ProgressBar.max=m_EndAddr>>10;
-            m_ProgressBar.setValue(m_NextReadAddr>>10,""," kB");
-            m_ProgressBar.setVisible(true);
+        if(pb!=null) {
+            pb.min=m_StartAddr>>10;
+            pb.max=m_EndAddr>>10;
+            pb.setValue(m_NextReadAddr>>10,""," kB");
+            pb.setVisible(true);
         }
         // Put some logging requests in the buffer
         for(int i=C_MAX_LOG_AHEAD;i>0;i--) {

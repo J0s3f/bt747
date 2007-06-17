@@ -20,6 +20,7 @@
 package gps.model;
 
 import waba.sys.Convert;
+import waba.sys.Settings;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -129,6 +130,16 @@ public class BT747model extends Control {
         // waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]+"\n");}
         if (p_nmea[0].startsWith("PMTK")) {
             replyMTK_Ack(p_nmea);
+            if((Settings.platform.equals("Java"))) {
+                String s=new String();
+                s="<";
+                waba.sys.Vm.debug("<");
+                for (int i = 0; i < p_nmea.length; i++) {
+                    s+=p_nmea[i];
+                    s+=",";
+                };
+                waba.sys.Vm.debug(s);
+            }   
             z_Cmd = Convert.toInt(p_nmea[0].substring(4));
 
             z_Result = -1; // Suppose cmd not treated
