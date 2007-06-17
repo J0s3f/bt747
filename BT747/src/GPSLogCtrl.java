@@ -161,6 +161,7 @@ public class GPSLogCtrl extends Container {
   	public void onEvent( Event event ) {
   		switch (event.type) {
   		    case ControlEvent.FOCUS_IN:
+                m_GPSstate.getStatus();
                 break;
 
   			case ControlEvent.PRESSED:

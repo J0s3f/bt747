@@ -21,6 +21,7 @@ package gps;
 
 import waba.io.File;
 import waba.sys.Convert;
+import waba.sys.Settings;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -82,11 +83,11 @@ public class GPSstate extends Control {
     
     
     // Number of log entries to request 'ahead'.
-    final static int C_MAX_LOG_AHEAD = 2;
+    final static int C_MAX_LOG_AHEAD = 5;
     
     
     static final int C_LOG_TIMEOUT  = 200; // ms
-    static final int C_TIMER_PERIOD = 50; // ms
+    static final int C_TIMER_PERIOD = 2; // ms
     static final int C_LOG_TIMEOUT_CNT = C_LOG_TIMEOUT; 
     private Timer linkTimer= null;
     
@@ -358,7 +359,12 @@ public class GPSstate extends Control {
             case BT747_dev.PMTK_LOG_RESP_DATA:
                 // Data from the log
                 // $PMTK182,8,START_ADDRESS,DATA
-                analyzeLogPart(Conv.Hex2Int(p_nmea[2]),p_nmea[3]);
+                try {
+                    analyzeLogPart(Conv.Hex2Int(p_nmea[2]), p_nmea[3]);
+                } catch (Exception e) {
+                    // During debug: array index out of bounds
+                    // TODO: handle exception
+                }
             break;
             default:
                 // Nothing - unexpected
@@ -555,6 +561,16 @@ public class GPSstate extends Control {
             // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
             
         } else if(p_nmea[0].startsWith("PMTK")) {
+//            if((Settings.platform.equals("Java"))) {
+//                String s=new String();
+//                s="<";
+//                waba.sys.Vm.debug("<");
+//                for (int i = 0; i < p_nmea.length; i++) {
+//                    s+=p_nmea[i];
+//                    s+=",";
+//                };
+//                waba.sys.Vm.debug(s);
+//            }   
             z_Cmd= Convert.toInt(p_nmea[0].substring(4));
             
             z_Result=-1;  // Suppose cmd not treated
