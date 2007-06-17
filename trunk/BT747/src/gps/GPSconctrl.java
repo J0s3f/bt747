@@ -90,7 +90,7 @@ public class GPSconctrl extends Container {
         }
     }
 
-    final String[] TestReply = { "PMTK001", "182", "2" };
+//    final String[] TestReply = { "PMTK001", "182", "2" };
 
     public void onEvent(Event event) {
         switch (event.type) {
@@ -100,17 +100,21 @@ public class GPSconctrl extends Container {
             } else if (event.target == btnRestartGps) {
                 m_GPSstate.GPS_restart();
             } else if (event.target == btnTestGps) {
-                if (GPS_DEBUG) {
-                    waba.sys.Vm.debug("TEST\n");
-                }
-                m_GPSstate.sendNMEA("PMTK182,1,6,1");
-                if (GPS_DEBUG) {
-                    waba.sys.Vm.debug("TEST_i\n");
-                }
-                m_GPSstate.analyseNMEA(TestReply);
-                if (GPS_DEBUG) {
-                    waba.sys.Vm.debug("TEST_ii\n");
-                }
+//                if (GPS_DEBUG) {
+//                    waba.sys.Vm.debug("TEST\n");
+//                }
+//                m_GPSstate.sendNMEA("PMTK182,2,7");
+//                m_GPSstate.sendNMEA("PMTK182,2,7");
+//                m_GPSstate.sendNMEA("PMTK182,2,9");
+//                m_GPSstate.sendNMEA("PMTK182,2,2");
+//                m_GPSstate.sendNMEA("PMTK182,2,3");
+//                if (GPS_DEBUG) {
+//                    waba.sys.Vm.debug("TEST_i\n");
+//                }
+//                m_GPSstate.analyseNMEA(TestReply);
+//                if (GPS_DEBUG) {
+//                    waba.sys.Vm.debug("TEST_ii\n");
+//                }
             }
             break;
         }

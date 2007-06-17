@@ -26,8 +26,6 @@ import waba.ui.Control;
 import waba.ui.MessageBox;
 import waba.util.Vector;
 
-import superwaba.tools.fontgenerator.JoinFonts;
-
 /** This class implements the low level driver of the GPS device.
  * It extracs NMEA strings.
  * The getResponse function should be called regurarly to get the GPS
@@ -145,27 +143,16 @@ public class GPSrxtx extends Control {
      */
 	public int openPort() {
 		int result=-1;
-//		new MessageBox("SerialPort","Before close").popupBlockingModal();
 		closePort();
-//		new MessageBox("SerialPort","After close").popupBlockingModal();
 		try {
-//			new MessageBox("SerialPort","Before open").popupBlockingModal();
 			sp=new SerialPort(spPortNbr,spSpeed);
-			//sp=new SerialPort(SerialPort.BLUETOOTH,9600);
-//			new MessageBox("SerialPort","Open done").popupBlockingModal();
 			result=sp.lastError;
-//			new MessageBox("SerialPort","Last error retrieved").popupBlockingModal();
 			portIsOK= sp.isOpen();
-//			new MessageBox("SerialPort","isOpen "+Convert.toString(portIsOK)).popupBlockingModal();			
 			if(portIsOK) {
-//				new MessageBox("SerialPort","Port is open").popupBlockingModal();
-				sp.setReadTimeout(50);//small to read data in chunks and have good resp.
-//				new MessageBox("SerialPort","Read out set").popupBlockingModal();
-				//sp.writeTimeout=20;			
-				sp.setFlowControl(true);
-//				new MessageBox("SerialPort","Flow control set").popupBlockingModal();
+                // Read time out gives problems on windows: data is skipped!!!O
+//				sp.setReadTimeout(50);//small to read data in chunks and have good resp.
+//				sp.setFlowControl(true);
 				ds=new DataStream(sp);
-//				new MessageBox("SerialPort","Data stream assigned").popupBlockingModal();
 			}
 		}
 		catch (Exception e) {
@@ -220,6 +207,7 @@ public class GPSrxtx extends Control {
 	
 	private int lastError;
 	private Vector vCmd = new Vector();
+    private static final String[] Empty_vCmd = {};
 	private static final byte[] EOL_BYTES = {'\015','\012'};
 	
 	public int sendPacket(final String p_Packet) {       
@@ -402,7 +390,15 @@ public class GPSrxtx extends Control {
 		}		
 		if (myError==ERR_NOERROR) {
 		} else {
-			vCmd.removeAllElements();
+//          if((vCmd.getCount()!=0)&&(Settings.platform.equals("Java"))) {
+//              String s=new String();
+//              s="-";
+//              for (int i = 0; i < vCmd.getCount(); i++) {
+//                  s+=((String[])vCmd.toObjectArray())[i];
+//              };
+//              waba.sys.Vm.debug(s);
+//          }        
+          vCmd.removeAllElements();
 		}
 //        if((vCmd.getCount()!=0)&&(Settings.platform.equals("Java"))) {
 //            String s=new String();
@@ -413,7 +409,11 @@ public class GPSrxtx extends Control {
 //            };
 //            waba.sys.Vm.debug(s);
 //        }        
-		return (String[])vCmd.toObjectArray();
+        if(current_state==C_START_STATE) {
+            return (String[])vCmd.toObjectArray();
+        } else {
+            return null;
+        }
 	}
 	
 }
