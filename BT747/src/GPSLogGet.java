@@ -18,15 +18,17 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.io.File;
+import waba.sys.Convert;
 import waba.ui.Button;
+import waba.ui.Calendar;
 import waba.ui.Check;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
-import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 import waba.ui.ProgressBar;
+import waba.util.Date;
 import waba.util.Vector;
 
 import gps.GPSstate;
@@ -39,17 +41,24 @@ public class GPSLogGet extends Container {
 
     Check m_chkLogOnOff;;
 
-    Edit m_edStartDate;
+    Button m_btStartDate;
 
-    Edit m_edEndDate;
+    Button m_btEndDate;
 
     Button m_btGetLog;
 
-    Button m_btStopLog;
+    Button m_btCancelGetLog;
 
+    Button m_btStartLog;
+
+    Button m_btStopLog;
     ComboBox m_cbFile;
     
     ProgressBar m_pb;
+    
+    private static Label       m_UsedLabel;
+    private static Label       m_RecordsLabel;
+    
 
     public GPSLogGet(GPSstate state, ProgressBar pb) {
         m_GPSstate = state;
@@ -87,6 +96,8 @@ public class GPSLogGet extends Container {
                     //	recursiveList(path+list[i],v);
                 }
     }
+    
+    
 
     /*
      * (non-Javadoc)
@@ -98,17 +109,31 @@ public class GPSLogGet extends Container {
         super.onStart();
         add(m_chkLogOnOff = new Check("Device log on(/off)"), LEFT, TOP); //$NON-NLS-1$
         add(new Label("Start date"), LEFT, AFTER); //$NON-NLS-1$
-        add(m_edStartDate = new Edit("99/99/9999"), AFTER, SAME); //$NON-NLS-1$
-        m_edStartDate.setMode(Edit.DATE);
-        add(m_edEndDate = new Edit("99/99/9999"), SAME, AFTER); //$NON-NLS-1$
-        m_edEndDate.setMode(Edit.DATE);
+        add(m_btStartDate = new Button("99/99/9999"), AFTER, SAME); //$NON-NLS-1$
+        //m_btStartDate.setMode(Edit.DATE);
+        add(m_btEndDate = new Button("99/99/9999"), SAME, AFTER); //$NON-NLS-1$
+        //m_btEndDate.setMode(Edit.DATE);
         add(new Label("End date"), BEFORE, SAME); 
 
         //add(new Label("End"),BEFORE,SAME);
         add(m_btGetLog = new Button("Get Log"), LEFT, AFTER + 10); //$NON-NLS-1$
-        add(m_btStopLog = new Button("Stop Log"), RIGHT, SAME); //$NON-NLS-1$
+        add(m_btCancelGetLog = new Button("Cancel get"), RIGHT, SAME); //$NON-NLS-1$
+//        add(m_btStartLog = new Button("Start Log"), LEFT, AFTER + 3); //$NON-NLS-1$
+//        add(m_btStopLog = new Button("Stop Log"), RIGHT, SAME); //$NON-NLS-1$
+        add(m_UsedLabel=new Label(   "Mem Used   : XXXXXXXXXXX"),LEFT, AFTER+3);
+        add(m_RecordsLabel=new Label("Nbr records: XXXXXXXXXXX"),LEFT, AFTER+3);
     }
 
+    public void updateButtons() {
+        boolean logIsActive=m_GPSstate.loggingIsActive;
+        m_chkLogOnOff.setChecked(logIsActive);
+        m_UsedLabel.setText(   "Mem Used   : "+Convert.toString(m_GPSstate.logMemUsed));
+        m_RecordsLabel.setText("Nbr records: "+Convert.toString(m_GPSstate.logNbrLogPts));
+    }
+    
+    Calendar cal;
+    Button calBt;
+    
     /*
      * (non-Javadoc)
      * 
@@ -120,19 +145,56 @@ public class GPSLogGet extends Container {
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
+            event.consumed=true;
             if (event.target == m_btGetLog) {
                 // TODO: Get start log nbr and end log nbr to get
                 // actual data from dates.
-                //m_edStartDate;
-                //m_edEndDate;
+                //m_btStartDate;
+                //m_btEndDate;
                 //  m_GPSstate.getLogInit(0,1000,100,m_cbFile.getSelectedItem()+"Test.txt");
                 //	m_GPSstate.getLogInit(0,32*1024*1024,100,"/Palm/BT747log.bin");
-                m_GPSstate.getLogInit(0, 30 * 1024, 100, "/Palm/BT747log.bin",m_pb); //$NON-NLS-1$
+                m_GPSstate.getLogInit(0, m_GPSstate.logMemUsed, 0x10000, "/Palm/BT747log.bin",m_pb); //$NON-NLS-1$
                 m_btGetLog.press(false);
-
-            } else if (event.target == m_btStopLog) {
-                m_GPSstate.stopLog();
+            } else if (event.target == m_btCancelGetLog) {
+                m_GPSstate.cancelGetLog();
+            } else if (event.target == m_chkLogOnOff) {
+                if(m_chkLogOnOff.getChecked()) {
+                    // TODO: Update button status after update (propagate some event from State
+                    m_GPSstate.startLog();
+                } else {
+                    m_GPSstate.stopLog();
+                }
+                m_GPSstate.getStatus();
+            } else if (event.target == m_btEndDate) {
+                if (cal == null) {
+                    cal = new Calendar();
+                }
+                calBt=m_btEndDate;
+                cal.popupModal();
+            } else if (event.target == m_btStartDate) {
+                if (cal == null) {
+                    cal = new Calendar();
+                }
+                calBt=m_btStartDate;
+                cal.popupModal();
+            } else if (event.target == this) {
+                updateButtons();
+            } else {
+                event.consumed=false;
             }
+            break;
+        case ControlEvent.WINDOW_CLOSED:
+            if (event.target == cal)
+            {
+                Date d = cal.getSelectedDate();
+                calBt.setText(d==null?"99/99/9999":d.toString());
+            }
+            /*cal = null;
+            Note: If your program uses the Calendar control only a few
+            times, i suggest that you set cal to null so it can get garbage
+            collected. Calendar objects waste memory and it is always a
+            good idea to save memory when possible*/
+            break;
         }
     }
 }

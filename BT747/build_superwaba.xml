@@ -27,19 +27,13 @@
 		<mkdir dir="build"/>
 		<mkdir dir="dist"/>
 		
-		<javac srcdir="C:\Projects\BT747" destdir="build" target="1.1">
+		<javac srcdir="c:\mdeweerd\workspace\BT747\src" destdir="build" target="1.1">
 			<include name="**/*.java"/>
-			<exclude name="build/"/>
-			<exclude name="dist/"/>
-			<exclude name="icons/"/>
 			<classpath refid="classpath"/>
 		</javac>
 		<copy todir="build">
-			<fileset dir="C:\Projects\BT747">
+			<fileset dir="c:\mdeweerd\workspace\BT747\src">
 				<exclude name="**/*.java"/>
-				<exclude name="build/"/>
-				<exclude name="dist/"/>
-				<exclude name="icons/"/>
 			</fileset>
 		</copy>
 	

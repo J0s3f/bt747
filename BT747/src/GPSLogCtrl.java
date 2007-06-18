@@ -100,6 +100,7 @@ public class GPSLogCtrl extends Container {
   
 	/** (User) request to change the log format.
 	 * Warns about requirement to erase the log too.
+     * TODO: Wait until change is finished
 	 */
 	public void changeLogFormat() {
         /** Object to open multiple message boxes */
@@ -160,10 +161,6 @@ public class GPSLogCtrl extends Container {
      */
   	public void onEvent( Event event ) {
   		switch (event.type) {
-  		    case ControlEvent.FOCUS_IN:
-                m_GPSstate.getStatus();
-                break;
-
   			case ControlEvent.PRESSED:
   			    	if (event.target==m_btChangeFormat) {
   			    	    changeLogFormat();

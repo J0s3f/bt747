@@ -230,6 +230,9 @@ public final class BT747_dev {  // dev as in device
     public static final String PMTK_LOG_NBR_LOG_PTS_STR = Convert.toString(PMTK_LOG_NBR_LOG_PTS);
     public static final String PMTK_LOG_TBD2_STR = Convert.toString(PMTK_LOG_TBD2);
     
+    /** Mask for bit in log status indicating that log is active */
+    public static final int PMTK_LOG_STATUS_LOGONOF_MASK= 0x02;
+    
     // Other MTK commands
     public static final String PMTK_TEST_STR = "000"; //Convert.toString(PMTK_TEST);
     public static final String PMTK_ACK_STR = "001"; //Convert.toString(PMTK_ACK);

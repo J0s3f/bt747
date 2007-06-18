@@ -6,3 +6,13 @@ install.exe
 *.lnk
 *.mcf
 *~
+log.txt
+myKeystore
+sign.bat
+signit.bat
+upload.bat
+build
+dist
+icons
+BT747.zip
+swserial.properties
