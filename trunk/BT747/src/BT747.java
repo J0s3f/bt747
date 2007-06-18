@@ -19,6 +19,7 @@
 //********************************************************************                              
 import waba.sys.Convert;
 import waba.sys.Settings;
+import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
@@ -28,7 +29,9 @@ import waba.ui.MessageBox;
 import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
-import gps.*;
+
+import gps.GPSconctrl;
+import gps.GPSstate;
 
 /** Main class (application entry)
  * 
@@ -230,9 +233,19 @@ public class BT747 extends MainWindow {
             break;
         case ControlEvent.PRESSED:
             if(event.target==m_TabPanel) {
-                if(m_TabPanel.getActiveTab()==C_LOG_CTRL_IDX) {
-                    m_GPSstate.getStatus();
-                }
+                Control c;
+                c=m_TabPanel.getChildren()[0];
+                c.postEvent(new Event(ControlEvent.PRESSED,c,0));                
+            }
+            break;
+        case ControlEvent.TIMER:
+            if(event.target==this) {
+                /* There is no timer here, set by a child (m_GPSstate) to
+                 *  indicate that status has been retrieved */
+                Control c;
+                c=m_TabPanel.getChildren()[0];
+                c.postEvent(new Event(ControlEvent.PRESSED,c,0));
+                event.consumed=true;
             }
             break;
         }

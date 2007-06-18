@@ -29,7 +29,8 @@ import waba.ui.ProgressBar;
 import waba.ui.Timer;
 import waba.util.IntVector;
 import waba.util.Vector;
-import gps.convert.*;
+
+import gps.convert.Conv;
 
 
 
@@ -81,13 +82,15 @@ public class GPSstate extends Control {
     public int logMemFree = 0;
     public int logMemMax = 0;
     
+    public boolean loggingIsActive = false;
+    
     
     // Number of log entries to request 'ahead'.
-    final static int C_MAX_LOG_AHEAD = 5;
+    final static int C_MAX_LOG_AHEAD = 1;
     
     
     static final int C_LOG_TIMEOUT  = 200; // ms
-    static final int C_TIMER_PERIOD = 2; // ms
+    static final int C_TIMER_PERIOD = 1; // ms
     static final int C_LOG_TIMEOUT_CNT = C_LOG_TIMEOUT; 
     private Timer linkTimer= null;
     
@@ -210,7 +213,7 @@ public class GPSstate extends Control {
         m_GPSrxtx.sendPacket("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_SET_STR
                 +","+BT747_dev.PMTK_LOG_FORMAT_STR
-                +","+Convert.unsigned2hex(p_logFormat,2)					
+                +","+Convert.unsigned2hex(p_logFormat,8)					
         );
     }
     
@@ -341,6 +344,9 @@ public class GPSstate extends Control {
                 break;
                 case BT747_dev.PMTK_LOG_LOG_STATUS:		// 7; // bit 2 = logging on/off
                     logStatus=Conv.Hex2Int(p_nmea[3]);
+                    loggingIsActive=((logStatus&BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK)!=0);
+                    // TODO: Generate correct event here.
+                    //getParent().postEvent(new Event(ControlEvent.TIMER,getParent(),0));
                 break;
                 case BT747_dev.PMTK_LOG_MEM_USED:			// 8; 
                     logMemUsed=Conv.Hex2Int(p_nmea[3]);
@@ -389,17 +395,59 @@ public class GPSstate extends Control {
         return 0;
     }
     
+    /** Get the current status of the device */
     public void getStatus() {
         // Request log format from device
         sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_QUERY_STR+
                 ","+BT747_dev.PMTK_LOG_FORMAT_STR			
         );
+        // Request log status from device
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+                ","+BT747_dev.PMTK_LOG_LOG_STATUS_STR           
+        );
+        // Request mem size from device
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+                ","+BT747_dev.PMTK_LOG_MEM_USED_STR           
+        );
+        // Request number of log points
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+                ","+BT747_dev.PMTK_LOG_NBR_LOG_PTS_STR          
+        );
+        // Request number of log points
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+                ","+BT747_dev.PMTK_LOG_TBD_3_STR          
+        );
+        // Request number of log points
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+                ","+BT747_dev.PMTK_LOG_TBD2_STR          
+        );
         
         //if(GPS_TEST) {analyseNMEA(Convert.tokenizeString("PMTK001,2,3,3",','));}
         //if(GPS_TEST) {analyseNMEA(Convert.tokenizeString("PMTK182,3,2,3F",','));}
     }
     
+    /** Activate the logging by the device */
+    public void startLog() {
+        // Request log format from device
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_ON           
+        );
+    }
+
+    
+    /** Stop the automatic logging of the device */
+    public void stopLog() {
+        // Request log format from device
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_OFF           
+        );
+    }
     
     // TODO: When acknowledge is missing for some commands, take appropriate action.
     public int analyseMTK_Ack(final String[]p_nmea) {
@@ -449,7 +497,7 @@ public class GPSstate extends Control {
     }
     
     static File m_logFile=new File("");
-    public void stopLog() {
+    public void cancelGetLog() {
         if(m_logFile!=null  && m_logFile.isOpen()) {
             m_logFile.close();
         }
@@ -470,9 +518,9 @@ public class GPSstate extends Control {
         m_Step=p_Step;
         m_isLogging= true;
         if(pb!=null) {
-            pb.min=m_StartAddr>>10;
-            pb.max=m_EndAddr>>10;
-            pb.setValue(m_NextReadAddr>>10,""," kB");
+            pb.min=m_StartAddr;
+            pb.max=m_EndAddr;
+            pb.setValue(m_NextReadAddr,""," b");
             pb.setVisible(true);
         }
         // Put some logging requests in the buffer
@@ -525,7 +573,7 @@ public class GPSstate extends Control {
                 m_logFile.writeBytes(z_Data,0,z_Data.length);
                 m_NextReadAddr+=z_Data.length;
                 if(m_ProgressBar!=null) {
-                    m_ProgressBar.setValue(m_NextReadAddr>>10);
+                    m_ProgressBar.setValue(m_NextReadAddr);
                 }
                 getNextLogPart();
             } else {
@@ -561,16 +609,16 @@ public class GPSstate extends Control {
             // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
             
         } else if(p_nmea[0].startsWith("PMTK")) {
-//            if((Settings.platform.equals("Java"))) {
-//                String s=new String();
-//                s="<";
-//                waba.sys.Vm.debug("<");
-//                for (int i = 0; i < p_nmea.length; i++) {
-//                    s+=p_nmea[i];
-//                    s+=",";
-//                };
-//                waba.sys.Vm.debug(s);
-//            }   
+            if((Settings.platform.equals("Java"))) {
+                String s=new String();
+                s="<";
+                waba.sys.Vm.debug("<");
+                for (int i = 0; i < p_nmea.length; i++) {
+                    s+=p_nmea[i];
+                    s+=",";
+                };
+                waba.sys.Vm.debug(s);
+            }   
             z_Cmd= Convert.toInt(p_nmea[0].substring(4));
             
             z_Result=-1;  // Suppose cmd not treated

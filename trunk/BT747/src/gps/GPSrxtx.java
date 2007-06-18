@@ -180,15 +180,14 @@ public class GPSrxtx extends Control {
 	private final int C_EOL_STATE = 6;
 	private final int C_ERROR_STATE = 7;
 	
-	//The maximum length of each packet is restricted to 255 bytes	
-	private final int C_BUF_SIZE = 256;
-	private final int C_CMDBUF_SIZE = 256;
+	//The maximum length of each packet is restricted to 255 bytes (except for logger)	
+	private final int C_BUF_SIZE = 0x1100;
+	private final int C_CMDBUF_SIZE = 0x1100;
 	
 	private int current_state = C_INITIAL_STATE;
 	
 	byte[] read_buf  = new byte[C_BUF_SIZE];
 	char[] cmd_buf   = new char[C_CMDBUF_SIZE];
-	char[] chk_buf   = new char[C_CMDBUF_SIZE];
 	
 	String[] cmd_and_param;
 	
@@ -246,8 +245,10 @@ public class GPSrxtx extends Control {
 			while(continueReading && (read_buf_p < bytesRead)) {
 				// Still bytes in read buffer to interpret
 				char c;
-				chk_buf[read_buf_p]=(char)checksum;
 				c= (char)read_buf[read_buf_p++];
+//                if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
+//                    waba.sys.Vm.debug(Convert.toString(c));
+//                }
 				switch (current_state) {
 				case C_EOL_STATE:
 					// EOL found, record is ok.
@@ -288,6 +289,9 @@ public class GPSrxtx extends Control {
 					} else if ( c == '*') {
 						current_state = C_STAR_STATE;
 						vCmd.add(new String(cmd_buf,0,cmd_buf_p));
+//                        if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
+//                            waba.sys.Vm.debug(((String[])vCmd.toObjectArray())[vCmd.getCount()-1]);
+//                        }
 					} else if ( c == ',') {
 						checksum^= c;
 						vCmd.add(new String(cmd_buf,0,cmd_buf_p));
@@ -388,16 +392,19 @@ public class GPSrxtx extends Control {
 				}
 			}
 		}		
-		if (myError==ERR_NOERROR) {
-		} else {
-//          if((vCmd.getCount()!=0)&&(Settings.platform.equals("Java"))) {
-//              String s=new String();
-//              s="-";
-//              for (int i = 0; i < vCmd.getCount(); i++) {
-//                  s+=((String[])vCmd.toObjectArray())[i];
-//              };
-//              waba.sys.Vm.debug(s);
-//          }        
+		if (myError==C_ERROR_STATE) {
+            if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
+                return (String[])vCmd.toObjectArray();                
+            }
+          if(GPS_DEBUG&&(vCmd.getCount()!=0)) {
+              String s=new String();
+              s="-";
+              waba.sys.Vm.debug(s);
+              for (int i = 0; i < vCmd.getCount(); i++) {
+                  waba.sys.Vm.debug(((String[])vCmd.toObjectArray())[i]);
+              };
+              //waba.sys.Vm.debug(s);
+          }        
           vCmd.removeAllElements();
 		}
 //        if((vCmd.getCount()!=0)&&(Settings.platform.equals("Java"))) {
@@ -410,6 +417,9 @@ public class GPSrxtx extends Control {
 //            waba.sys.Vm.debug(s);
 //        }        
         if(current_state==C_START_STATE) {
+            if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
+                return (String[])vCmd.toObjectArray();                
+            }
             return (String[])vCmd.toObjectArray();
         } else {
             return null;
