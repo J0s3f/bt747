@@ -59,7 +59,7 @@ public final class Conv {
      * @param hexStr Hexadecimal representation of bytes
      * @return list of bytes 
      */
-    public final static int Hex2Int(final String hexStr) {
+    public final static int hex2Int(final String hexStr) {
         int p_Result=0;
         for (int i = 0; i < hexStr.length(); i++) {
             int z_nibble = (byte)hexStr.charAt(i);
