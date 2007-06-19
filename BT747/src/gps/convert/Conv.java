@@ -30,34 +30,28 @@ public final class Conv {
      * @param hexStr Hexadecimal representation of bytes
      * @return list of bytes 
      */
-    public final static byte[] HexStringToBytes(final String hexStr) {
+    public final static int HexStringToBytes(final String hexStr, byte[] p_Buffer) {
         char[] z_Data = hexStr.toCharArray();
-        byte[] z_Result = new byte[z_Data.length >> 1];
+        int length=z_Data.length;
         for (int i = 0; i < z_Data.length; i += 2) {
-            char c1 = z_Data[i];
-            char c2 = z_Data[i + 1];
-            if ((c1 >= '0') && (c1 <= '9')) {
-                c1 -= '0';
-            } else if ((c1 >= 'A') && (c1 <= 'F')) {
-                c1 += -'A' + 10;
-            } else if ((c1 >= 'a') && (c1 <= 'f')) {
-                c1 += -'a' + 10;
+            int c1 = z_Data[i]&(~0x20)-'0';  // Uppercase
+            int c2 = z_Data[i + 1]&(~0x20)-'0'; // Uppercase
+            if ((c1 >= 0) && (c1 <= 9)) {
+            } else if ((c1 >= 'A'-'0') && (c1 <= 'F'-'0')) {
+                c1 += -('A'-'0') + 10;
             } else {
                 c1 = 0;
             }
-            if ((c2 >= '0') && (c2 <= '9')) {
-                c2 -= '0';
-            } else if ((c2 >= 'A') && (c2 <= 'F')) {
-                c2 += -'A' + 10;
-            } else if ((c2 >= 'a') && (c2 <= 'f')) {
-                c2 += -'a' + 10;
+            if ((c2 >= 0) && (c2 <= 9)) {
+            } else if ((c2 >= 'A'-'0') && (c2 <= 'F'-'0')) {
+                c2 += -('A'-'0') + 10;
             } else {
                 c2 = 0;
             }
-            z_Result[i >> 1] = (byte) ((c1 << 4) + c2);
+            p_Buffer[i >> 1] = (byte) ((c1 << 4) + c2);
         }
 
-        return z_Result;
+        return length;
     }
     
     /** Convert a string in hexadecimal to the corresponding int

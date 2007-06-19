@@ -33,7 +33,7 @@ import waba.util.Vector;
  * @author Mario De Weerd
  */
 public class GPSrxtx extends Control {
-	static final boolean GPS_DEBUG = true;
+	static final boolean GPS_DEBUG = false;
     
 	protected int spPortNbr;
 	protected int spSpeed=115200;  // Does not really matter on most platforms
@@ -210,7 +210,7 @@ public class GPSrxtx extends Control {
 	private static final byte[] EOL_BYTES = {'\015','\012'};
 	
 	public int sendPacket(final String p_Packet) {       
-        if((Settings.platform.equals("Java"))) {
+        if(GPS_DEBUG&&(true||(Settings.platform.equals("Java")))) {
             waba.sys.Vm.debug(">"+p_Packet);
         }        
 		// Calculate checksum
