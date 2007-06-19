@@ -146,8 +146,7 @@ public class GPSLogCtrl extends Container {
 		}
         setLogFormatControls();
 	}
-    boolean sidSet;
-    
+
     public void setLogFormatControls() {
         boolean sidSet;
         sidSet=chkLogFmtItems[BT747_dev.FMT_SID_IDX].getChecked();
