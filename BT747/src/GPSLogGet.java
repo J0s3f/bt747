@@ -74,7 +74,7 @@ public class GPSLogGet extends Container {
         if (list != null)
             for (int i = 0; i < list.length && i < 49; i++)
                 if (list[i] != null) {
-                    waba.sys.Vm.debug(list[i].toString() + "\n"); //$NON-NLS-1$
+                    waba.sys.Vm.debug(list[i] + "\n"); //$NON-NLS-1$
                     v.addElement(path + list[i]);
                     if (list[i].endsWith("/")) // is a path? //$NON-NLS-1$
                         recursiveList(path + list[i], v);
@@ -90,7 +90,7 @@ public class GPSLogGet extends Container {
         if (list != null)
             for (int i = 0; i < list.length && i < 49; i++)
                 if (list[i] != null) {
-                    waba.sys.Vm.debug(list[i].toString() + "\n"); //$NON-NLS-1$
+                    waba.sys.Vm.debug(list[i] + "\n"); //$NON-NLS-1$
                     v.addElement(path + list[i]);
                     //if (list[i].endsWith("/")) // is a path?
                     //	recursiveList(path+list[i],v);
@@ -158,6 +158,7 @@ public class GPSLogGet extends Container {
                 if(waba.sys.Settings.platform.startsWith("PalmOS")) {
                     logRequestSize=0x800;
                 }
+                logRequestSize=0x800;
                 m_GPSstate.getLogInit(0, m_GPSstate.logMemUsed-1, logRequestSize, "/Palm/BT747log.bin",m_pb); //$NON-NLS-1$
                 m_btGetLog.press(false);
             } else if (event.target == m_btCancelGetLog) {

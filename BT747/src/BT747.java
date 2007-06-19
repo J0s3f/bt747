@@ -57,17 +57,17 @@ public class BT747 extends MainWindow {
             {"Info","About BT747","About SuperWaba VM","Info"}
     };
     /** MenuBar item for File->Exit */
-    private final int C_MENU_FILE_EXIT = 001;
+    private final static int C_MENU_FILE_EXIT = 001;
     /** MenuBar item for Settings->Restart connection */
-    private final int C_MENU_RESTART_CONNECTION = 101;
+    private final static int C_MENU_RESTART_CONNECTION = 101;
     /** MenuBar item for Settings->Stop connection */
-    private  final int C_MENU_STOP_CONNECTION = 102;
+    private final static int C_MENU_STOP_CONNECTION = 102;
     /** MenuBar item for Info->About BT747 */
-    private  final int C_MENU_ABOUT = 201;
+    private final static int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
-    private  final int C_MENU_ABOUT_SW = 202;
+    private final static int C_MENU_ABOUT_SW = 202;
     /** MenuBar item for Info->Info */
-    private  final int C_MENU_INFO = 203;   
+    private final static int C_MENU_INFO = 203;   
     
     /** The tab panel */
     private static TabPanel    m_TabPanel;
@@ -92,7 +92,7 @@ public class BT747 extends MainWindow {
      */
     public BT747() {
         if(Settings.appSettings==null) {
-            Settings.appSettings=new String("00005555000000000000");
+            Settings.appSettings="00005555000000000000";
             //                               12345678901234567890
         }
         setDoubleBuffer(true);
@@ -101,7 +101,7 @@ public class BT747 extends MainWindow {
         Settings.setUIStyle(Settings.Flat);
     }
     
-    private updateLogFormatThread updateLogThread;
+    private UpdateLogFormatThread updateLogThread;
     
     public void onStart() {
         super.onStart();
@@ -130,7 +130,7 @@ public class BT747 extends MainWindow {
         m_TabPanel.setPanel(1,m_GPSLogInfo = new GPSLogInfo(m_GPSstate));
         m_TabPanel.setPanel(2,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar));
         m_TabPanel.setPanel(3,m_GPSconctrl = new GPSconctrl(m_GPSstate));
-        updateLogThread=new updateLogFormatThread(m_GPSLogCtrl,m_GPSstate);
+        updateLogThread=new UpdateLogFormatThread(m_GPSLogCtrl,m_GPSstate);
         addThread(updateLogThread,false);
         //		m_TabPanel.setPanel(1,dataEdit = new dataEdit());
         //		m_TabPanel.setPanel(2,grid = new Grid(gridCaptions,false));
