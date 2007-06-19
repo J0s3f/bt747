@@ -20,7 +20,6 @@
 package gps.model;
 
 import waba.sys.Convert;
-import waba.sys.Settings;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -106,9 +105,9 @@ public class BT747model extends Control {
             case BT747_dev.PMTK_LOG_REQ_DATA:
                 // Send data from the log
                 // $PMTK182,7,START_ADDRESS,DATA
-                StringBuffer s = new StringBuffer(Conv.Hex2Int(p_nmea[3]) * 2);
+                StringBuffer s = new StringBuffer(Conv.hex2Int(p_nmea[3]) * 2);
                 s.setLength(0);
-                for (int i = Conv.Hex2Int(p_nmea[3]) * 2; i > 0; i--) {
+                for (int i = Conv.hex2Int(p_nmea[3]) * 2; i > 0; i--) {
                     s.append('F');
                 }
                 m_GPSrxtx.sendPacket("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","

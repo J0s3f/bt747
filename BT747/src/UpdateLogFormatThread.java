@@ -18,30 +18,39 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 
-/** This class has a partial automatic update in the build script.
- * and is used to reference the version.
- * 
- * @link Original code found on 
- *      http://forum.java.sun.com/thread.jspa?forumID=31&threadID=583820
+import waba.sys.Thread;
+import gps.*;
+
+/**
  * @author Mario De Weerd
  */
-public final class Version {
+public class UpdateLogFormatThread implements Thread {
+	GPSstate m_GPSstate;
+	GPSLogCtrl m_GPSlogCtrl;
+	//static final boolean GPS_DEBUG = true;
+	
+	public UpdateLogFormatThread(GPSLogCtrl p_LogCtrl,GPSstate p_State) {
+		//if(GPS_DEBUG) {	waba.sys.Vm.debug("THREADinit:\n");}
+		m_GPSstate=  p_State;
+		m_GPSlogCtrl=p_LogCtrl;
+	}
+	
+	public void run() {
+		//if(GPS_DEBUG) {	waba.sys.Vm.debug("THREADrun:\n");}
+		if(m_GPSstate.logUpdate.getCount()!=0) {
+			int z_Val;
+			z_Val=m_GPSstate.logUpdate.peek();
+			m_GPSstate.logUpdate.clear();
+			m_GPSlogCtrl.updateLogFormat(z_Val);
+		}
+	}
+	
+	public void stopped() {
+		
+	}
+	
+	public void started() {
+		
+	}
 
-   /** Build number (timestamp with format yyyyMMddHHmmssSSS). */
-   public static final long BUILD = 20070620002802922L; //automatically set during Ant compilation!
-   /** Release date of this version (date format dd.MM.yyyy). */
-   public static final String DATE = "20.06.2007"; //automatically set during Ant compilation!
-   /**
-    * Version number of format x.y.z, with
-    * <ul>
-    * <li>x = major version
-    * <li>y = minor version
-    * <li>z = bug fix version
-    * </ul>
-    */
-   public static final String NUMBER = "0.0.2";
-   /** Minimum Java JRE version required. */
-   static public final String NUMBER_JAVAMIN = "1.4";
-   /** Title of this project. */
-   static public final String TITLE = "BT747";
-}//Version
+}

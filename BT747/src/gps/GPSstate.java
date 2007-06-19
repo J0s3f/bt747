@@ -54,7 +54,6 @@ import gps.convert.Conv;
 public class GPSstate extends Control {
     static final boolean GPS_DEBUG = false;
     static final boolean GPS_TEST = false;
-    static GPSstate a;
     
     private GPSrxtx m_GPSrxtx=new GPSrxtx();    	
     ProgressBar m_ProgressBar=null;
@@ -66,11 +65,12 @@ public class GPSstate extends Control {
     private int m_NextReqAddr;
     private int m_NextReadAddr;
     private int m_Step;
-    private GPSstate m_GPSstate;
     private boolean m_isLogging = false;       // True when dumping log
     private boolean m_isSearchingLog = false;  // True when doing binary search
     private boolean m_getFullLog= true; // If true, get the entire log (based on block head)
     private boolean m_recoverFromError= false; // When true, must recover from error
+    private boolean m_getNextLogOnNextTimer = false;
+    
     
     public int logFormat = 0;
     public int logEntrySize = 0;
@@ -218,7 +218,7 @@ public class GPSstate extends Control {
         m_GPSrxtx.sendPacket("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_SET_STR
                 +","+BT747_dev.PMTK_LOG_FORMAT_STR
-                +","+Convert.unsigned2hex(p_logFormat,8)					
+                +","+Convert.unsigned2hex(logFormat,8)					
         );
     }
     
@@ -276,7 +276,7 @@ public class GPSstate extends Control {
      * @param p_logFormat : configuration representing format
      * @return Number of bytes needed for one record.
      */
-    static public int logEntrySize(int p_logFormat) {
+    static public int logEntrySize(final int p_logFormat) {
         int z_BitMask = 0x1;
         int z_Size = 2; // one for the '*' and one for the checksum (xor)
         for (int i = 0; i < BT747_dev.logFmtByteSizes.length; z_BitMask<<=1, i++) {
@@ -333,7 +333,7 @@ public class GPSstate extends Control {
                 switch( z_type ) {
                 case BT747_dev.PMTK_LOG_FORMAT: 			// 2;
                     //if(GPS_DEBUG) {	waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
-                    logFormat=Conv.Hex2Int(p_nmea[3]);
+                    logFormat=Conv.hex2Int(p_nmea[3]);
                 logEntrySize=logEntrySize(logFormat);
                 logHeaderSize=logHeaderSize(logFormat);
                 logUpdate.push(logFormat);
@@ -351,19 +351,19 @@ public class GPSstate extends Control {
                     logRecMethod=Convert.toInt(p_nmea[3])/10;
                 break;
                 case BT747_dev.PMTK_LOG_LOG_STATUS:		// 7; // bit 2 = logging on/off
-                    logStatus=Conv.Hex2Int(p_nmea[3]);
+                    logStatus=Conv.hex2Int(p_nmea[3]);
                     loggingIsActive=((logStatus&BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK)!=0);
                     // TODO: Generate correct event here.
                     //getParent().postEvent(new Event(ControlEvent.TIMER,getParent(),0));
                 break;
                 case BT747_dev.PMTK_LOG_MEM_USED:			// 8; 
-                    logMemUsed=Conv.Hex2Int(p_nmea[3]);
+                    logMemUsed=Conv.hex2Int(p_nmea[3]);
                     logMemUsedPercent=100*logMemUsed/logMemSize;
                 break;
                 case BT747_dev.PMTK_LOG_TBD_3:			// 9;
                     break;
                 case BT747_dev.PMTK_LOG_NBR_LOG_PTS:		// 10;
-                    logNbrLogPts=Conv.Hex2Int(p_nmea[3]);
+                    logNbrLogPts=Conv.hex2Int(p_nmea[3]);
                 break;
                 case BT747_dev.PMTK_LOG_TBD2:				// 11;
                     break;
@@ -377,7 +377,7 @@ public class GPSstate extends Control {
                 
                 try {
                     logTimer=0;
-                    analyzeLogPart(Conv.Hex2Int(p_nmea[2]), p_nmea[3]);
+                    analyzeLogPart(Conv.hex2Int(p_nmea[2]), p_nmea[3]);
                 } catch (Exception e) {
                     // During debug: array index out of bounds
                     // TODO: handle exception
@@ -507,7 +507,7 @@ public class GPSstate extends Control {
         return z_Result;
     }
     
-    static File m_logFile=new File("");
+    private File m_logFile=new File("");
     public void endGetLog() {
         if(m_logFile!=null  && m_logFile.isOpen()) {
             m_logFile.close();
@@ -551,9 +551,9 @@ public class GPSstate extends Control {
         for(int i=C_MAX_LOG_AHEAD;i>0;i--) {
             getNextLogPart();
         }
-//        m_logFile=new File(p_FileName,File.CREATE);
-//        m_logFile.delete();
-        m_logFile=new File(p_FileName,File.CREATE|File.WRITE_ONLY);
+        m_logFile=new File(p_FileName,File.CREATE);
+        m_logFile.delete();
+        m_logFile=new File(p_FileName,File.CREATE);
         if(m_logFile!=null) {
             ;
 //            new MessageBox("File open",
@@ -636,13 +636,22 @@ public class GPSstate extends Control {
             getNextLogPart();
         }
     }
+    private static final int C_MAX_FILEBLOCK_WRITE = 0x200;
     public void	analyzeLogPart(final int p_StartAddr, final String p_Data) {
         int dataLength;
         dataLength=HexStringToBytes(p_Data);
         if( m_isLogging) {
             if(m_NextReadAddr==p_StartAddr) {
                 m_recoverFromError=false;
-                m_logFile.writeBytes(m_Data,0,dataLength);
+                int j=0;
+                for (int i = m_Data.length; i>0; i-=C_MAX_FILEBLOCK_WRITE) {
+                    int l=i;
+                    if(l>C_MAX_FILEBLOCK_WRITE) {
+                        l=C_MAX_FILEBLOCK_WRITE;
+                    }
+                    m_logFile.writeBytes(m_Data,j,l);
+                    j+=l;
+                }
                 m_NextReadAddr+=m_Data.length;
                 if(m_ProgressBar!=null) {
                     m_ProgressBar.setValue(m_NextReadAddr);
@@ -671,7 +680,7 @@ public class GPSstate extends Control {
                 if(m_NextReadAddr>m_EndAddr) {
                     endGetLog();
                 } else {
-                    getNextLogPart();
+                    m_getNextLogOnNextTimer=true;
                 }
             } else {
                 recoverFromLogError();
@@ -769,6 +778,11 @@ public class GPSstate extends Control {
         switch (e.type) {
         case ControlEvent.TIMER:
             if(m_GPSrxtx.isConnected()) {
+                if(m_getNextLogOnNextTimer) {
+                    // Sending command on next timer adds some delay after
+                    // the end of the previous command (reception) 
+                    getNextLogPart();
+                }
                 if(m_isLogging||m_isSearchingLog) logTimer++;  // Increase log timer to determine timeout
                 lastResponse= m_GPSrxtx.getResponse();
                 while(lastResponse!=null) {

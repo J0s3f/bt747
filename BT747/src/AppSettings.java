@@ -30,7 +30,7 @@ public class AppSettings implements gps.settings {
 	 * @return Returns the portnbr.
 	 */
 	public int getPortnbr() {
-		return Conv.Hex2Int(Settings.appSettings.substring(0,8));
+		return Conv.hex2Int(Settings.appSettings.substring(0,8));
 	}
 	/**
 	 * @param portnbr The portnbr to set.
@@ -43,7 +43,7 @@ public class AppSettings implements gps.settings {
      * @return The default baud rate
      */
 	public int getBaudRate() {
-		return Conv.Hex2Int(Settings.appSettings.substring(8,16));
+		return Conv.hex2Int(Settings.appSettings.substring(8,16));
 	}
 	/**
 	 * @param Baud The Baud rate to set as a default.
@@ -55,7 +55,7 @@ public class AppSettings implements gps.settings {
 	}
 
 	public boolean getStartupOpenPort() {
-		return Conv.Hex2Int(Settings.appSettings.substring(16,1))==1;
+		return Conv.hex2Int(Settings.appSettings.substring(16,1))==1;
 	}
 	/**
 	 * @param value The default value for opening the port.

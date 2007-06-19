@@ -171,32 +171,29 @@ public class GPSrxtx extends Control {
 	}
 	
 	
-	private final int C_INITIAL_STATE = 0;
-	private final int C_START_STATE = 1;
-	private final int C_FIELD_STATE = 2;
-	private final int C_STAR_STATE  = 3;
-	private final int C_CHECKSUM_CHAR1_STATE = 4;
-	private final int C_CHECKSUM_CHAR2_STATE = 5;
-	private final int C_EOL_STATE = 6;
-	private final int C_ERROR_STATE = 7;
+	private static final int C_INITIAL_STATE = 0;
+	private static final int C_START_STATE = 1;
+	private static final int C_FIELD_STATE = 2;
+	private static final int C_STAR_STATE  = 3;
+	private static final int C_CHECKSUM_CHAR1_STATE = 4;
+	private static final int C_CHECKSUM_CHAR2_STATE = 5;
+	private static final int C_EOL_STATE = 6;
+	private static final int C_ERROR_STATE = 7;
 	
 	//The maximum length of each packet is restricted to 255 bytes (except for logger)	
-	private final int C_BUF_SIZE = 0x1100;
-	private final int C_CMDBUF_SIZE = 0x1100;
+	private static final int C_BUF_SIZE = 0x1100;
+	private static final int C_CMDBUF_SIZE = 0x1100;
 	
-	private int current_state = C_INITIAL_STATE;
+	private static int current_state = C_INITIAL_STATE;
 	
 	byte[] read_buf  = new byte[C_BUF_SIZE];
 	char[] cmd_buf   = new char[C_CMDBUF_SIZE];
-	
-	String[] cmd_and_param;
 	
 	int read_buf_p= 0;
 	int cmd_buf_p = 0;
 	int bytesRead= 0;	
 	int checksum= 0;	
 	int read_checksum;
-	int cmd_idx;
 	
 	
 	static final int ERR_NOERROR= 0;	
@@ -204,7 +201,6 @@ public class GPSrxtx extends Control {
 	static final int ERR_INCOMPLETE= 2;
 	static final int ERR_TOO_LONG= 3;
 	
-	private int lastError;
 	private Vector vCmd = new Vector();
     private static final String[] Empty_vCmd = {};
 	private static final byte[] EOL_BYTES = {'\015','\012'};
@@ -271,7 +267,6 @@ public class GPSrxtx extends Control {
 						// First character of NMEA string found
 						current_state = C_FIELD_STATE;
 						cmd_buf_p=0;
-						cmd_idx=0;
 
 						//cmd_and_param=new String()[];
 						//cmd_buf[cmd_buf_p++]= c;
