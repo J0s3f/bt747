@@ -22,6 +22,7 @@ package gps;
 import waba.io.File;
 import waba.sys.Convert;
 import waba.sys.Settings;
+import waba.sys.Vm;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -51,7 +52,7 @@ import gps.convert.Conv;
  *
  */
 public class GPSstate extends Control {
-    static final boolean GPS_DEBUG = true;
+    static final boolean GPS_DEBUG = false;
     static final boolean GPS_TEST = false;
     static GPSstate a;
     
@@ -68,6 +69,8 @@ public class GPSstate extends Control {
     private GPSstate m_GPSstate;
     private boolean m_isLogging = false;       // True when dumping log
     private boolean m_isSearchingLog = false;  // True when doing binary search
+    private boolean m_getFullLog= true; // If true, get the entire log (based on block head)
+    private boolean m_recoverFromError= false; // When true, must recover from error
     
     public int logFormat = 0;
     public int logEntrySize = 0;
@@ -78,7 +81,9 @@ public class GPSstate extends Control {
     public int logStatus = 0;
     public int logRecMethod = 0;
     public int logNbrLogPts = 0;
+    public int logMemSize = 16*1024*1024;
     public int logMemUsed = 0;
+    public int logMemUsedPercent = 0;
     public int logMemFree = 0;
     public int logMemMax = 0;
     
@@ -89,9 +94,9 @@ public class GPSstate extends Control {
     final static int C_MAX_LOG_AHEAD = 1;
     
     
-    static final int C_LOG_TIMEOUT  = 200; // ms
-    static final int C_TIMER_PERIOD = 1; // ms
-    static final int C_LOG_TIMEOUT_CNT = C_LOG_TIMEOUT; 
+    static final int C_LOG_TIMEOUT  = 3000; // ms
+    static final int C_TIMER_PERIOD = 10; // ms
+    static final int C_LOG_TIMEOUT_CNT = C_LOG_TIMEOUT / C_TIMER_PERIOD; 
     private Timer linkTimer= null;
     
     private settings m_settings;
@@ -251,7 +256,10 @@ public class GPSstate extends Control {
      * TODO: Implement handleLogTimeOUt
      */
     public void handleLogTimeOut() {
-        
+        Vm.debug("Timeout");
+        logTimer=0;
+        m_recoverFromError=false; 
+        recoverFromLogError();
     }
     
     /** A vector monitored by a Thread to know if the logFormat has been updated.<br>
@@ -350,6 +358,7 @@ public class GPSstate extends Control {
                 break;
                 case BT747_dev.PMTK_LOG_MEM_USED:			// 8; 
                     logMemUsed=Conv.Hex2Int(p_nmea[3]);
+                    logMemUsedPercent=100*logMemUsed/logMemSize;
                 break;
                 case BT747_dev.PMTK_LOG_TBD_3:			// 9;
                     break;
@@ -365,7 +374,9 @@ public class GPSstate extends Control {
             case BT747_dev.PMTK_LOG_RESP_DATA:
                 // Data from the log
                 // $PMTK182,8,START_ADDRESS,DATA
+                
                 try {
+                    logTimer=0;
                     analyzeLogPart(Conv.Hex2Int(p_nmea[2]), p_nmea[3]);
                 } catch (Exception e) {
                     // During debug: array index out of bounds
@@ -497,11 +508,18 @@ public class GPSstate extends Control {
     }
     
     static File m_logFile=new File("");
-    public void cancelGetLog() {
+    public void endGetLog() {
         if(m_logFile!=null  && m_logFile.isOpen()) {
             m_logFile.close();
         }
         m_isLogging= false;
+        if(m_ProgressBar!=null) {
+            m_ProgressBar.setVisible(false);
+        }
+    }
+    
+    public void cancelGetLog() {
+        endGetLog();
     }
     
     /**
@@ -510,13 +528,19 @@ public class GPSstate extends Control {
      * @param p_Step
      * @param p_FileName
      */
-    public void getLogInit(int p_StartAddr, int p_EndAddr, int p_Step, String p_FileName, ProgressBar pb) {
+    public void getLogInit(
+            final int p_StartAddr,
+            final int p_EndAddr,
+            final int p_Step,
+            final String p_FileName,
+            ProgressBar pb) {
         m_StartAddr= p_StartAddr;
         m_EndAddr=p_EndAddr;
         m_NextReqAddr= m_StartAddr;
         m_NextReadAddr= m_StartAddr;
         m_Step=p_Step;
         m_isLogging= true;
+        m_ProgressBar=pb;
         if(pb!=null) {
             pb.min=m_StartAddr;
             pb.max=m_EndAddr;
@@ -527,7 +551,9 @@ public class GPSstate extends Control {
         for(int i=C_MAX_LOG_AHEAD;i>0;i--) {
             getNextLogPart();
         }
-        m_logFile=new File(p_FileName,File.CREATE);
+//        m_logFile=new File(p_FileName,File.CREATE);
+//        m_logFile.delete();
+        m_logFile=new File(p_FileName,File.CREATE|File.WRITE_ONLY);
         if(m_logFile!=null) {
             ;
 //            new MessageBox("File open",
@@ -545,13 +571,19 @@ public class GPSstate extends Control {
             
             //TODO: Stop the thread at the end.
             int z_Step;
-            z_Step=m_EndAddr-m_NextReqAddr;
-            if(z_Step>0) {
-                if(z_Step>m_Step){
-                    z_Step=m_Step;
+            if((m_NextReqAddr+(C_MAX_LOG_AHEAD-1)*m_Step)<=m_NextReadAddr) {
+                z_Step=m_EndAddr-m_NextReqAddr+1;
+                if(m_recoverFromError && z_Step>0x800) {
+                    z_Step=0x800;
+                    m_recoverFromError=true;
                 }
-                readLog(m_NextReqAddr,z_Step);
-                m_NextReqAddr+=z_Step;
+                if(z_Step>0) {
+                    if(z_Step>m_Step){
+                        z_Step=m_Step;
+                    }
+                    readLog(m_NextReqAddr,z_Step);
+                    m_NextReqAddr+=z_Step;
+                }            
             }
         }
     }
@@ -566,19 +598,83 @@ public class GPSstate extends Control {
         // 
     }
     
+    private byte[] m_Data= new byte[0x800];
+    private final int HexStringToBytes(final String hexStr) {
+        char[] z_Data = hexStr.toCharArray();
+        int length=z_Data.length/2;
+        for (int i = 0; i < z_Data.length; i += 2) {
+            int c1 = z_Data[i]-'0';  // Uppercase
+            int c2 = z_Data[i + 1]-'0'; // Uppercase
+            if (!((c1 >= 0) && (c1 <= 9))) {
+                c1&=~0x20; // Uppercase
+                if ((c1 >= 'A'-'0') && (c1 <= 'F'-'0')) {
+                    c1 += -('A'-'0') + 10;
+                } else {
+                    c1 = 0;
+                }
+            }
+            if (!((c2 >= 0) && (c2 <= 9))) {
+                c2&=~0x20; // Uppercase
+                if ((c2 >= 'A'-'0') && (c2 <= 'F'-'0')) {
+                    c2 += -('A'-'0') + 10;
+                } else {
+                    c2 = 0;
+                }
+            }
+            m_Data[i >> 1] = (byte) ((c1 << 4) + c2);
+        }
+
+        return length;
+    }
+    
+    public void recoverFromLogError() {
+        // TODO: Handle error in order of data
+        //m_isLogging= false;
+        m_NextReqAddr=m_NextReadAddr;
+        if(!m_recoverFromError) {
+            m_recoverFromError=true;
+            getNextLogPart();
+        }
+    }
     public void	analyzeLogPart(final int p_StartAddr, final String p_Data) {
-        byte[] z_Data=Conv.HexStringToBytes(p_Data);
+        int dataLength;
+        dataLength=HexStringToBytes(p_Data);
         if( m_isLogging) {
             if(m_NextReadAddr==p_StartAddr) {
-                m_logFile.writeBytes(z_Data,0,z_Data.length);
-                m_NextReadAddr+=z_Data.length;
+                m_recoverFromError=false;
+                m_logFile.writeBytes(m_Data,0,dataLength);
+                m_NextReadAddr+=m_Data.length;
                 if(m_ProgressBar!=null) {
                     m_ProgressBar.setValue(m_NextReadAddr);
                 }
-                getNextLogPart();
+                if(m_getFullLog&&((p_StartAddr-1)&0xFFFF)
+                        >((p_StartAddr-1+dataLength)&0xFFFF)) {
+                    // Block boundery (0xX0000) is inside data.
+                    int blockStart=0xFFFF&(0x10000-(p_StartAddr&0xFFFF));
+                    if(!(((m_Data[blockStart]&0xFF)==0xFF)
+                         &&((m_Data[blockStart+1]&0xFF)==0xFF))) {
+                        // This block is full, next block is still data
+                        int minEndAddr;
+                        minEndAddr= (p_StartAddr&0xFFFF0000)+0x20000-1; // This block and next one.
+                        if(minEndAddr>logMemSize-1) {
+                            minEndAddr=logMemSize-1;
+                        }
+                        if(minEndAddr>m_EndAddr) {
+                            m_EndAddr= minEndAddr;
+                            if(m_ProgressBar!=null) {
+                                m_ProgressBar.max=m_EndAddr;
+                                m_ProgressBar.repaintNow();
+                            }
+                        }
+                    }
+                }
+                if(m_NextReadAddr>m_EndAddr) {
+                    endGetLog();
+                } else {
+                    getNextLogPart();
+                }
             } else {
-                // TODO: Handle error in order of data
-                m_isLogging= false;
+                recoverFromLogError();
             }
         } else if ( m_isSearchingLog) {
             // Binary search
@@ -609,7 +705,7 @@ public class GPSstate extends Control {
             // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
             
         } else if(p_nmea[0].startsWith("PMTK")) {
-            if((Settings.platform.equals("Java"))) {
+            if(GPS_DEBUG&&((!p_nmea[1].startsWith("8"))&&(true ||Settings.platform.equals("Java")))) {
                 String s=new String();
                 s="<";
                 waba.sys.Vm.debug("<");

@@ -17,17 +17,44 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.ui.Button;
+import waba.ui.Check;
 import waba.ui.Container;
+import waba.ui.Edit;
+import waba.ui.Label;
 
 import gps.GPSstate;
 /**
  * @author Mario De Weerd
-  */
+ */
 public class GPSLogInfo extends Container {
-	GPSstate m_GPSstate;
-	
-	public GPSLogInfo(GPSstate state) {
-		m_GPSstate= state;
-	}
-
+    GPSstate m_GPSstate;
+    
+    Check m_chkTimeOnOff;
+    Check m_chkDistanceOnOff;
+    Check m_chkSpeedOnOff;
+    Label m_lbTime;
+    Label m_lbDistance;
+    Label m_lbkSpeed;
+    Edit m_edTime;
+    Edit m_edDistance;
+    Edit m_edSpeed;
+    
+    
+    public GPSLogInfo(GPSstate state) {
+        m_GPSstate= state;
+        
+    }
+    
+    protected void onStart() {
+        super.onStart();
+        add(m_chkTimeOnOff = new Check("Time    "), LEFT, TOP); //$NON-NLS-1$
+        add(m_edTime = new Edit(), AFTER, SAME); //$NON-NLS-1$
+        add(m_chkSpeedOnOff = new Check("Speed   "), LEFT, AFTER); //$NON-NLS-1$
+        add(m_edSpeed = new Edit(), AFTER, SAME); //$NON-NLS-1$
+        add(m_chkDistanceOnOff = new Check("Distance"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_edDistance = new Edit(), AFTER, SAME); //$NON-NLS-1$
+    }
+    
+    
 }
