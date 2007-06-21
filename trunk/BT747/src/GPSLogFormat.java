@@ -30,7 +30,7 @@ import gps.GPSstate;
 /**
  * @author Mario De Weerd
  */
-public class GPSLogCtrl extends Container {
+public class GPSLogFormat extends Container {
 	static final int C_LOG_FMT_COUNT = 20;
     /** The object that is used to communicate with the GPS device. */
     private GPSstate m_GPSstate;
@@ -43,7 +43,7 @@ public class GPSLogCtrl extends Container {
      * Requires Object to communicate with GPS device.
      * @param p_GPSstate Object to communicate with GPS device.
      */
-	public GPSLogCtrl(GPSstate p_GPSstate) {
+	public GPSLogFormat(GPSstate p_GPSstate) {
 		//super("Log ON/OFF", Container.);
 		m_GPSstate = p_GPSstate;
 	};
@@ -163,6 +163,11 @@ public class GPSLogCtrl extends Container {
   			case ControlEvent.PRESSED:
   			    	if (event.target==m_btChangeFormat) {
   			    	    changeLogFormat();
+                    } else if (event.target==this) {
+                        updateLogFormat(m_GPSstate.logFormat);
+                    } else if (event.target==null) {
+                        m_GPSstate.getLogFormat();
+                        event.consumed=true;
   			    	} else {
                       boolean z_updated=false;
                       for (int i=0;i<C_LOG_FMT_COUNT;i++) {

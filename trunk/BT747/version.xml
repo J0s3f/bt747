@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- An Ant build file for the GPS Position Tracking Demo
+<!-- An Ant build file for BT747
 --><project name="BT747" basedir="." default="build++">
     <property name="encoding" value="UTF-8"/>
  
@@ -26,6 +26,7 @@
         <!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
     	<replaceregexp file="src/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
     	<replaceregexp file="src/Version.java" encoding="${encoding}" match="DATE = [^a]*;" replace='DATE = "${DATE_DE}";'/>	
+    	<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\n]*" replace='SET DT=${DATE_DE}'/>	
     </target>
 
 

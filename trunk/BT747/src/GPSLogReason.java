@@ -17,17 +17,20 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.sys.Convert;
 import waba.ui.Button;
 import waba.ui.Check;
 import waba.ui.Container;
+import waba.ui.ControlEvent;
 import waba.ui.Edit;
+import waba.ui.Event;
 import waba.ui.Label;
 
 import gps.GPSstate;
 /**
  * @author Mario De Weerd
  */
-public class GPSLogInfo extends Container {
+public class GPSLogReason extends Container {
     GPSstate m_GPSstate;
     
     Check m_chkTimeOnOff;
@@ -40,11 +43,15 @@ public class GPSLogInfo extends Container {
     Edit m_edDistance;
     Edit m_edSpeed;
     
+    Button m_btSet;
     
-    public GPSLogInfo(GPSstate state) {
+    
+    public GPSLogReason(GPSstate state) {
         m_GPSstate= state;
         
     }
+    
+    private final static String C_DIGITS="0123456789";
     
     protected void onStart() {
         super.onStart();
@@ -54,7 +61,55 @@ public class GPSLogInfo extends Container {
         add(m_edSpeed = new Edit(), AFTER, SAME); //$NON-NLS-1$
         add(m_chkDistanceOnOff = new Check("Distance"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edDistance = new Edit(), AFTER, SAME); //$NON-NLS-1$
+        add(m_btSet = new Button("SET"), CENTER, AFTER+3); //$NON-NLS-1$
+        m_edSpeed.setValidChars(C_DIGITS);
+        m_edDistance.setValidChars(C_DIGITS);
+        m_edTime.setValidChars(C_DIGITS);
     }
+    
+    public void updateButtons() {
+        m_edTime.setText(Convert.toString(m_GPSstate.logTimeInterval));
+        m_edSpeed.setText(Convert.toString(m_GPSstate.logSpeedInterval));
+        m_edDistance.setText(Convert.toString(m_GPSstate.logDistanceInterval));
+    }
+
+    public void setSettings() {
+        if(m_chkTimeOnOff.getChecked()) {
+            m_GPSstate.setLogTimeInterval(Convert.toInt(m_edTime.getText()));
+        }
+        if(m_chkSpeedOnOff.getChecked()) {
+            m_GPSstate.setLogSpeedInterval(Convert.toInt(m_edSpeed.getText()));
+        }
+        if(m_chkDistanceOnOff.getChecked()) {
+            m_GPSstate.setLogDistanceInterval(Convert.toInt(m_edDistance.getText()));
+        }
+        m_GPSstate.getLogReasonStatus();
+    }
+
+    
+    public void onEvent(Event event) {
+        super.onEvent(event);
+        switch (event.type) {
+        case ControlEvent.PRESSED:
+            event.consumed=true;
+            if (event.target==m_chkTimeOnOff) {
+                
+            } else if(event.target==m_chkTimeOnOff) {
+            } else if(event.target==m_chkSpeedOnOff) {
+            } else if(event.target==m_chkDistanceOnOff) {
+            } else if(event.target==m_btSet) {
+                setSettings();
+            } else if (event.target == this) {
+                m_GPSstate.getLogReasonStatus();
+            } else if (event.target==null) {
+                updateButtons();
+            } else {
+                event.consumed=false;
+            }
+            break;
+        }
+    }
+
     
     
 }

@@ -76,10 +76,10 @@ public class BT747 extends MainWindow {
             "Log FMT","Log Info","Log Get","Conn"
     };
     /** Tab Panel container - Logger control/configuration */
-    private static GPSLogCtrl  m_GPSLogCtrl;
+    private static GPSLogFormat  m_GPSLogCtrl;
     private static int C_LOG_CTRL_IDX= 0;
     /** Tab Panel container - Log information */
-    private static GPSLogInfo  m_GPSLogInfo;
+    private static GPSLogReason  m_GPSLogInfo;
     /** Tab Panel container - Log retrieval */
     private static GPSLogGet   m_GPSLogGet;
     /** Tab Panel container - Connection control/configuration */
@@ -101,12 +101,11 @@ public class BT747 extends MainWindow {
         Settings.setUIStyle(Settings.Flat);
     }
     
-    private UpdateLogFormatThread updateLogThread;
-    
     public void onStart() {
         super.onStart();
         
         m_GPSstate=new GPSstate(m_settings);
+        m_GPSstate.SetEventPosterObject(this);
         setMenuBar(m_MenuBar=new MenuBar(menu));
         
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
@@ -126,12 +125,10 @@ public class BT747 extends MainWindow {
                 PREFERRED);
         m_ProgressBar.setVisible(false);
         
-        m_TabPanel.setPanel(C_LOG_CTRL_IDX,m_GPSLogCtrl = new GPSLogCtrl(m_GPSstate));
-        m_TabPanel.setPanel(1,m_GPSLogInfo = new GPSLogInfo(m_GPSstate));
+        m_TabPanel.setPanel(C_LOG_CTRL_IDX,m_GPSLogCtrl = new GPSLogFormat(m_GPSstate));
+        m_TabPanel.setPanel(1,m_GPSLogInfo = new GPSLogReason(m_GPSstate));
         m_TabPanel.setPanel(2,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar));
         m_TabPanel.setPanel(3,m_GPSconctrl = new GPSconctrl(m_GPSstate));
-        updateLogThread=new UpdateLogFormatThread(m_GPSLogCtrl,m_GPSstate);
-        addThread(updateLogThread,false);
         //		m_TabPanel.setPanel(1,dataEdit = new dataEdit());
         //		m_TabPanel.setPanel(2,grid = new Grid(gridCaptions,false));
         //		SerialPort sp;
@@ -244,7 +241,7 @@ public class BT747 extends MainWindow {
                  *  indicate that status has been retrieved */
                 Control c;
                 c=m_TabPanel.getChildren()[0];
-                c.postEvent(new Event(ControlEvent.PRESSED,c,0));
+                c.postEvent(new Event(ControlEvent.PRESSED,null,0));
                 event.consumed=true;
             }
             break;
