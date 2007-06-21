@@ -98,6 +98,7 @@ public class GPSstate extends Control {
     static final int C_TIMER_PERIOD = 10; // ms
     static final int C_LOG_TIMEOUT_CNT = C_LOG_TIMEOUT / C_TIMER_PERIOD; 
     private Timer linkTimer= null;
+    Control m_EventPosterObject= null;
     
     private settings m_settings;
     
@@ -107,6 +108,10 @@ public class GPSstate extends Control {
      */
     public GPSstate(settings s) {
         m_settings = s;
+    }
+
+    public void SetEventPosterObject(Control s) {
+        m_EventPosterObject = s;
     }
     
     /** Provide the progress bar to use (download progress)
@@ -315,6 +320,13 @@ public class GPSstate extends Control {
         return logHeaderSize+p_RecordNumber*logEntrySize;
     }
     
+    private void PostStatusUpdateEvent() {
+        if(m_EventPosterObject!=null) {
+            m_EventPosterObject.postEvent(new Event(ControlEvent.TIMER,m_EventPosterObject,0));
+        }
+    }
+    //getParent().postEvent(new Event(ControlEvent.TIMER,getParent(),0));
+    
     public int analyseLogNmea(String[] p_nmea) {
         //if(GPS_DEBUG) {	waba.sys.Vm.debug("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
         // Suppose that the command is ok (PMTK182)
@@ -334,36 +346,41 @@ public class GPSstate extends Control {
                 case BT747_dev.PMTK_LOG_FORMAT: 			// 2;
                     //if(GPS_DEBUG) {	waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
                     logFormat=Conv.hex2Int(p_nmea[3]);
-                logEntrySize=logEntrySize(logFormat);
-                logHeaderSize=logHeaderSize(logFormat);
-                logUpdate.push(logFormat);
+                    logEntrySize=logEntrySize(logFormat);
+                    logHeaderSize=logHeaderSize(logFormat);
+                    logUpdate.push(logFormat);
                 break;
                 case BT747_dev.PMTK_LOG_TIME_INTERVAL: 	// 3;
-                    logTimeInterval=Convert.toInt(p_nmea[3]);
+                    logTimeInterval=Convert.toInt(p_nmea[3])/10;
+                    PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_DISTANCE_INTERVAL: //4;
                     logDistanceInterval=Convert.toInt(p_nmea[3])/10;
+                    PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_SPEED_INTERVAL:	// 5;
                     logSpeedInterval=Convert.toInt(p_nmea[3])/10;
+                    PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_REC_METHOD:		// 6;
                     logRecMethod=Convert.toInt(p_nmea[3])/10;
+                    PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_LOG_STATUS:		// 7; // bit 2 = logging on/off
                     logStatus=Conv.hex2Int(p_nmea[3]);
                     loggingIsActive=((logStatus&BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK)!=0);
-                    // TODO: Generate correct event here.
-                    //getParent().postEvent(new Event(ControlEvent.TIMER,getParent(),0));
+                    PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_MEM_USED:			// 8; 
                     logMemUsed=Conv.hex2Int(p_nmea[3]);
                     logMemUsedPercent=100*logMemUsed/logMemSize;
+                    PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_TBD_3:			// 9;
                     break;
                 case BT747_dev.PMTK_LOG_NBR_LOG_PTS:		// 10;
                     logNbrLogPts=Conv.hex2Int(p_nmea[3]);
+                    PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_TBD2:				// 11;
                     break;
@@ -406,13 +423,16 @@ public class GPSstate extends Control {
         return 0;
     }
     
-    /** Get the current status of the device */
-    public void getStatus() {
+    /** Request the current log format from the device */
+    public void getLogFormat() {
         // Request log format from device
         sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_QUERY_STR+
-                ","+BT747_dev.PMTK_LOG_FORMAT_STR			
+                ","+BT747_dev.PMTK_LOG_FORMAT_STR           
         );
+    }
+    
+    public void getLogCtrlInfo() {
         // Request log status from device
         sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_QUERY_STR+
@@ -438,9 +458,75 @@ public class GPSstate extends Control {
                 +","+BT747_dev.PMTK_LOG_QUERY_STR+
                 ","+BT747_dev.PMTK_LOG_TBD2_STR          
         );
-        
-        //if(GPS_TEST) {analyseNMEA(Convert.tokenizeString("PMTK001,2,3,3",','));}
-        //if(GPS_TEST) {analyseNMEA(Convert.tokenizeString("PMTK182,3,2,3F",','));}
+    }
+    
+    public void getLogReasonStatus() {
+        /* Get log distance interval */
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+                ","+BT747_dev.PMTK_LOG_DISTANCE_INTERVAL_STR           
+        );
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+                ","+BT747_dev.PMTK_LOG_SPEED_INTERVAL_STR           
+        );
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+                ","+BT747_dev.PMTK_LOG_TIME_INTERVAL_STR       
+        );
+
+    }
+    public void setLogTimeInterval(final int value) {
+        int z_value=value;
+        if(z_value!=0 && z_value>999) {
+            z_value=999;
+        }
+        /* Get log distance interval */
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_SET_STR+
+                ","+BT747_dev.PMTK_LOG_TIME_INTERVAL_STR+           
+                ","+Convert.toString(z_value*10)           
+        );
+    }
+    
+    public void setLogDistanceInterval(final int value) {
+        int z_value=value;
+        if(z_value!=0 && z_value>9999) {
+            z_value=9999;
+        } else if(z_value!=0 && z_value<10) {
+            z_value=10;
+        }
+
+        /* Get log distance interval */
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_SET_STR+
+                ","+BT747_dev.PMTK_LOG_DISTANCE_INTERVAL_STR+           
+                ","+Convert.toString(z_value*10)           
+        );
+    }
+    
+    
+    public void setLogSpeedInterval(final int value) {
+        int z_value=value;
+        if(z_value!=0 && z_value>999) {
+            z_value=999;
+        } else if(z_value!=0 && z_value<10) {
+            z_value=10;
+        }
+        /* Get log distance interval */
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_SET_STR+
+                ","+BT747_dev.PMTK_LOG_SPEED_INTERVAL_STR+           
+                ","+Convert.toString(z_value*10)           
+        );
+    }
+    
+    
+    /** Get the current status of the device */
+    public void getStatus() {
+        getLogFormat();
+        getLogCtrlInfo();
+        getLogReasonStatus();
     }
     
     /** Activate the logging by the device */
@@ -644,6 +730,8 @@ public class GPSstate extends Control {
             if(m_NextReadAddr==p_StartAddr) {
                 m_recoverFromError=false;
                 int j=0;
+                // The Palm platform showed problems writing 0x800 blocks.
+                // This splits it in smaller blocks and solves that problem.
                 for (int i = m_Data.length; i>0; i-=C_MAX_FILEBLOCK_WRITE) {
                     int l=i;
                     if(l>C_MAX_FILEBLOCK_WRITE) {

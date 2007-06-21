@@ -184,6 +184,8 @@ public class GPSLogGet extends Container {
                 calBt=m_btStartDate;
                 cal.popupModal();
             } else if (event.target == this) {
+                m_GPSstate.getLogCtrlInfo();
+            } else if (event.target==null) {
                 updateButtons();
             } else {
                 event.consumed=false;
