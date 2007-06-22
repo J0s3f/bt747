@@ -73,17 +73,19 @@ public class BT747 extends MainWindow {
     private static TabPanel    m_TabPanel;
     /** The captions for the tab panel */
     private final String c_tpCaptions[]= {
-            "Log FMT","Log Info","Log Get","Conn"
+            "Log FMT","Ctrl","Log","Conn"
     };
     /** Tab Panel container - Logger control/configuration */
     private static GPSLogFormat  m_GPSLogCtrl;
     private static int C_LOG_CTRL_IDX= 0;
+ 
     /** Tab Panel container - Log information */
     private static GPSLogReason  m_GPSLogInfo;
     /** Tab Panel container - Log retrieval */
     private static GPSLogGet   m_GPSLogGet;
     /** Tab Panel container - Connection control/configuration */
     private static GPSconctrl  m_GPSconctrl;
+    private static int C_GPS_CONCTRL_IDX= 3;
     
     // TODO: Settings should just refer to function and not need to be instantiated
     private static AppSettings m_settings=new AppSettings();
@@ -91,6 +93,7 @@ public class BT747 extends MainWindow {
     /** Initialiser of the application
      */
     public BT747() {
+        // TODO: Initialise settings in AppSettings class
         if(Settings.appSettings==null) {
             Settings.appSettings="00005555000000000000";
             //                               12345678901234567890
@@ -127,8 +130,8 @@ public class BT747 extends MainWindow {
         
         m_TabPanel.setPanel(C_LOG_CTRL_IDX,m_GPSLogCtrl = new GPSLogFormat(m_GPSstate));
         m_TabPanel.setPanel(1,m_GPSLogInfo = new GPSLogReason(m_GPSstate));
-        m_TabPanel.setPanel(2,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar));
-        m_TabPanel.setPanel(3,m_GPSconctrl = new GPSconctrl(m_GPSstate));
+        m_TabPanel.setPanel(2,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar,m_settings));
+        m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,m_GPSconctrl = new GPSconctrl(m_GPSstate));
         //		m_TabPanel.setPanel(1,dataEdit = new dataEdit());
         //		m_TabPanel.setPanel(2,grid = new Grid(gridCaptions,false));
         //		SerialPort sp;
@@ -137,6 +140,7 @@ public class BT747 extends MainWindow {
         //		m_ProgressBar.setRect(m_ProgressLabel.getRect().x2(),m_ProgressLabel.getRect().y,//BOTTOM,RIGHT,
         //				10,//getClientRect().width-m_ProgressLabel.getRect().width,
         //				10+0*PREFERRED);
+        m_TabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
         m_GPSstate.setProgressBar(m_ProgressBar);
         
         // Next line is for modeling a device for debug.
