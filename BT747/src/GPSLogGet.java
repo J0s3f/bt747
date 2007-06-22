@@ -55,14 +55,16 @@ public class GPSLogGet extends Container {
     ComboBox m_cbFile;
     
     ProgressBar m_pb;
+    AppSettings m_appSettings;
     
     private static Label       m_UsedLabel;
     private static Label       m_RecordsLabel;
     
 
-    public GPSLogGet(GPSstate state, ProgressBar pb) {
+    public GPSLogGet(GPSstate state, ProgressBar pb, AppSettings s) {
         m_GPSstate = state;
         m_pb= pb;
+        m_appSettings= s;
     }
 
     // TODO: Just some code as a reference to find a path.
@@ -120,16 +122,18 @@ public class GPSLogGet extends Container {
         add(m_btCancelGetLog = new Button("Cancel get"), RIGHT, SAME); //$NON-NLS-1$
 //        add(m_btStartLog = new Button("Start Log"), LEFT, AFTER + 3); //$NON-NLS-1$
 //        add(m_btStopLog = new Button("Stop Log"), RIGHT, SAME); //$NON-NLS-1$
-        add(m_UsedLabel=new Label(   "Mem Used   : XXXXXXXXXXXXXXXXXX"),LEFT, AFTER+3);
-        add(m_RecordsLabel=new Label("Nbr records: XXXXXXXXXXXXXXXXXX"),LEFT, AFTER+3);
+        add(m_UsedLabel=new Label(   ""),LEFT, AFTER+3);
+        add(m_RecordsLabel=new Label(""),LEFT, AFTER+3);
     }
 
     public void updateButtons() {
         boolean logIsActive=m_GPSstate.loggingIsActive;
         m_chkLogOnOff.setChecked(logIsActive);
         m_UsedLabel.setText(   "Mem Used   : "+Convert.toString(m_GPSstate.logMemUsed)
-                +"("+Convert.toString(m_GPSstate.logMemUsedPercent));
+                +"("+Convert.toString(m_GPSstate.logMemUsedPercent)+"%)");
+        m_UsedLabel.repaintNow();
         m_RecordsLabel.setText("Nbr records: "+Convert.toString(m_GPSstate.logNbrLogPts));
+        m_RecordsLabel.repaintNow();
     }
     
     Calendar cal;
@@ -154,12 +158,18 @@ public class GPSLogGet extends Container {
                 //m_btEndDate;
                 //  m_GPSstate.getLogInit(0,1000,100,m_cbFile.getSelectedItem()+"Test.txt");
                 //	m_GPSstate.getLogInit(0,32*1024*1024,100,"/Palm/BT747log.bin");
+                // TODO: Optimize download on PalmOS.
                 int logRequestSize=0x10000;
                 if(waba.sys.Settings.platform.startsWith("PalmOS")) {
                     logRequestSize=0x800;
                 }
-                logRequestSize=0x800;
-                m_GPSstate.getLogInit(0, m_GPSstate.logMemUsed-1, logRequestSize, "/Palm/BT747log.bin",m_pb); //$NON-NLS-1$
+                //logRequestSize=0x800;
+                m_GPSstate.getLogInit(0,            /* StartPosition */
+                        m_GPSstate.logMemUsed-1,    /* EndPosition */
+                        logRequestSize,             /* Size per request */
+                        m_appSettings.getLogFile(), /* Log file name */
+                        m_pb                        /* ProgressBar */
+                        ); //$NON-NLS-1$
                 m_btGetLog.press(false);
             } else if (event.target == m_btCancelGetLog) {
                 m_GPSstate.cancelGetLog();
