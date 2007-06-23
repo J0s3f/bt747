@@ -22,7 +22,6 @@ import waba.sys.Convert;
 import waba.ui.Button;
 import waba.ui.Calendar;
 import waba.ui.Check;
-import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -48,17 +47,12 @@ public class GPSLogGet extends Container {
     Button m_btGetLog;
 
     Button m_btCancelGetLog;
-
-    Button m_btStartLog;
-
-    Button m_btStopLog;
-    ComboBox m_cbFile;
     
     ProgressBar m_pb;
     AppSettings m_appSettings;
     
-    private static Label       m_UsedLabel;
-    private static Label       m_RecordsLabel;
+    private Label       m_UsedLabel;
+    private Label       m_RecordsLabel;
     
 
     public GPSLogGet(GPSstate state, ProgressBar pb, AppSettings s) {
@@ -120,8 +114,7 @@ public class GPSLogGet extends Container {
         //add(new Label("End"),BEFORE,SAME);
         add(m_btGetLog = new Button("Get Log"), LEFT, AFTER + 10); //$NON-NLS-1$
         add(m_btCancelGetLog = new Button("Cancel get"), RIGHT, SAME); //$NON-NLS-1$
-//        add(m_btStartLog = new Button("Start Log"), LEFT, AFTER + 3); //$NON-NLS-1$
-//        add(m_btStopLog = new Button("Stop Log"), RIGHT, SAME); //$NON-NLS-1$
+
         add(m_UsedLabel=new Label(   ""),LEFT, AFTER+3);
         add(m_RecordsLabel=new Label(""),LEFT, AFTER+3);
     }

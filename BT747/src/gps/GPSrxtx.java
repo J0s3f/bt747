@@ -217,15 +217,12 @@ public class GPSrxtx extends Control {
 			z_Checksum^=(byte)p_Packet.charAt(z_Index);
 		}
 		m_writeOngoing.down();  // Semaphore - reserve link
-		try {
-			z_Result+=ds.writeByte('$');
-			z_Result+=ds.writeBytes(p_Packet.getBytes());
-			z_Result+=ds.writeByte('*');
-			z_Result+=ds.writeBytes(Convert.unsigned2hex(z_Checksum,2).getBytes());
+		z_Result+=ds.writeByte('$');
+		z_Result+=ds.writeBytes(p_Packet.getBytes());
+		z_Result+=ds.writeByte('*');
+		z_Result+=ds.writeBytes(Convert.unsigned2hex(z_Checksum,2).getBytes());
 			z_Result+=ds.writeBytes(EOL_BYTES);
-		} catch (Exception e) {
-			//e.printStackTrace();
-		}
+
 		m_writeOngoing.up();  // Semaphore - release link
 		return z_Result;
 	}
@@ -392,7 +389,7 @@ public class GPSrxtx extends Control {
                 return (String[])vCmd.toObjectArray();                
             }
           if(GPS_DEBUG&&(vCmd.getCount()!=0)) {
-              String s=new String();
+              String s;
               s="-";
               waba.sys.Vm.debug(s);
               for (int i = 0; i < vCmd.getCount(); i++) {

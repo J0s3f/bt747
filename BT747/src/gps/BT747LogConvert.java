@@ -18,7 +18,7 @@ public class BT747LogConvert {
     File m_File=null; 
     
 
-    public void ToCSV(final String fileName) {
+    public void toCSV(final String fileName) {
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY);
             if(!m_File.isOpen()) {

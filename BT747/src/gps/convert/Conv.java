@@ -30,7 +30,7 @@ public final class Conv {
      * @param hexStr Hexadecimal representation of bytes
      * @return list of bytes 
      */
-    public final static int HexStringToBytes(final String hexStr, byte[] p_Buffer) {
+    public final static int hexStringToBytes(final String hexStr, byte[] p_Buffer) {
         char[] z_Data = hexStr.toCharArray();
         int length=z_Data.length;
         for (int i = 0; i < z_Data.length; i += 2) {

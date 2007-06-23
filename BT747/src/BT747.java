@@ -108,7 +108,7 @@ public class BT747 extends MainWindow {
         super.onStart();
         
         m_GPSstate=new GPSstate(m_settings);
-        m_GPSstate.SetEventPosterObject(this);
+        m_GPSstate.setEventPosterObject(this);
         setMenuBar(m_MenuBar=new MenuBar(menu));
         
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);

@@ -28,7 +28,6 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.ProgressBar;
 import waba.ui.Timer;
-import waba.util.IntVector;
 import waba.util.Vector;
 
 import gps.convert.Conv;
@@ -57,7 +56,7 @@ public class GPSstate extends Control {
     
     private GPSrxtx m_GPSrxtx=new GPSrxtx();    	
     ProgressBar m_ProgressBar=null;
-
+    
     // Fields to keep track of logging status
     private int logTimer=0;  // Value that increases at each timer event
     private int m_StartAddr;
@@ -88,7 +87,7 @@ public class GPSstate extends Control {
     public int logMemFree = 0;
     public int logMemMax = 0;
     
-    public int logFix = 200; // Time between fixes
+    public int logFix = 0; // Time between fixes
     public int datum = 0; // Datum WGS84, TOKYO-M, TOKYO-A
     
     public boolean loggingIsActive = false;
@@ -115,8 +114,8 @@ public class GPSstate extends Control {
     public GPSstate(settings s) {
         m_settings = s;
     }
-
-    public void SetEventPosterObject(Control s) {
+    
+    public void setEventPosterObject(Control s) {
         m_EventPosterObject = s;
     }
     
@@ -142,7 +141,7 @@ public class GPSstate extends Control {
             m_GPSrxtx.openPort();       
             getStatus();
         }
-
+        
     }
     
     /** Restart the GPS connection
@@ -222,9 +221,9 @@ public class GPSstate extends Control {
             // set either.  Be sure they are disabled in that
             // case.
             logFormat&=~(  (1<<BT747_dev.FMT_ELEVATION_IDX)
-                          |(1<<BT747_dev.FMT_AZIMUTH_IDX)
-                          |(1<<BT747_dev.FMT_SNR_IDX)
-                        );
+                    |(1<<BT747_dev.FMT_AZIMUTH_IDX)
+                    |(1<<BT747_dev.FMT_SNR_IDX)
+            );
         }
         m_GPSrxtx.sendPacket("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_SET_STR
@@ -255,7 +254,7 @@ public class GPSstate extends Control {
                 +","+Convert.unsigned2hex(size,8)			
         );
         //		if(GPS_DEBUG) {	waba.sys.Vm.debug("PMTK"+Convert.toString(PMTK_CMD_LOG)
-        //				+","+Convert.toString(PMTK_LOG_REQ_DATA)
+        //				+","+Convert.toString(PMTK_LOG_Q_LOG)
         //				+","+Convert.unsigned2hex(startAddr,8)			
         //				+","+Convert.unsigned2hex(size,8));			
         //				}
@@ -272,14 +271,6 @@ public class GPSstate extends Control {
         m_recoverFromError=false; 
         recoverFromLogError();
     }
-    
-    /** A vector monitored by a Thread to know if the logFormat has been updated.<br>
-     * TODO: This method should be improved.
-     */
-    // TODO: Empty vector on reset of connection
-    public IntVector logUpdate=new IntVector();
-    
-    
     
     /** Calculate the size of one log entry.
      * <b>Only works if the satellite information is not requested.</b><br>
@@ -326,6 +317,7 @@ public class GPSstate extends Control {
         return logHeaderSize+p_RecordNumber*logEntrySize;
     }
     
+    /* TODO: Could implement specific event structure */
     private void PostStatusUpdateEvent() {
         if(m_EventPosterObject!=null) {
             m_EventPosterObject.postEvent(new Event(ControlEvent.TIMER,m_EventPosterObject,0));
@@ -341,7 +333,7 @@ public class GPSstate extends Control {
         // The other data we send ourselves
         if(p_nmea.length>2) {
             switch( Convert.toInt(p_nmea[1]) ) {
-            case BT747_dev.PMTK_LOG_RESP:
+            case BT747_dev.PMTK_LOG_DT:
                 // Parameter information
                 // TYPE = Parameter type
                 // DATA = Parameter data
@@ -352,43 +344,43 @@ public class GPSstate extends Control {
                 case BT747_dev.PMTK_LOG_FORMAT: 			// 2;
                     //if(GPS_DEBUG) {	waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
                     logFormat=Conv.hex2Int(p_nmea[3]);
-                    logEntrySize=logEntrySize(logFormat);
-                    logHeaderSize=logHeaderSize(logFormat);
-                    logUpdate.push(logFormat);
+                logEntrySize=logEntrySize(logFormat);
+                logHeaderSize=logHeaderSize(logFormat);
+                PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_TIME_INTERVAL: 	// 3;
                     logTimeInterval=Convert.toInt(p_nmea[3])/10;
-                    PostStatusUpdateEvent();
+                PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_DISTANCE_INTERVAL: //4;
                     logDistanceInterval=Convert.toInt(p_nmea[3])/10;
-                    PostStatusUpdateEvent();
+                PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_SPEED_INTERVAL:	// 5;
                     logSpeedInterval=Convert.toInt(p_nmea[3])/10;
-                    PostStatusUpdateEvent();
+                PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_REC_METHOD:		// 6;
                     logRecMethod=Convert.toInt(p_nmea[3])/10;
-                    PostStatusUpdateEvent();
+                PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_LOG_STATUS:		// 7; // bit 2 = logging on/off
                     logStatus=Conv.hex2Int(p_nmea[3]);
-                    loggingIsActive=((logStatus&BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK)!=0);
-                    PostStatusUpdateEvent();
+                loggingIsActive=((logStatus&BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK)!=0);
+                PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_MEM_USED:			// 8; 
                     logMemUsed=Conv.hex2Int(p_nmea[3]);
-                    logMemUsedPercent=
-                        (100*(logMemUsed-(0x200*((logMemUsed+0xFFFF)/0x10000))))
-                            /logMemUsefullSize;
-                    PostStatusUpdateEvent();
+                logMemUsedPercent=
+                    (100*(logMemUsed-(0x200*((logMemUsed+0xFFFF)/0x10000))))
+                    /logMemUsefullSize;
+                PostStatusUpdateEvent();
                 break;
-                case BT747_dev.PMTK_LOG_TBD_3:			// 9;
+                case BT747_dev.PMTK_LOG_TBD3:			// 9;
                     break;
                 case BT747_dev.PMTK_LOG_NBR_LOG_PTS:		// 10;
                     logNbrLogPts=Conv.hex2Int(p_nmea[3]);
-                    PostStatusUpdateEvent();
+                PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_TBD2:				// 11;
                     break;
@@ -396,7 +388,7 @@ public class GPSstate extends Control {
                 }
             }
             break;
-            case BT747_dev.PMTK_LOG_RESP_DATA:
+            case BT747_dev.PMTK_LOG_DT_LOG:
                 // Data from the log
                 // $PMTK182,8,START_ADDRESS,DATA
                 
@@ -407,7 +399,7 @@ public class GPSstate extends Control {
                     // During debug: array index out of bounds
                     // TODO: handle exception
                 }
-            break;
+                break;
             default:
                 // Nothing - unexpected
             }
@@ -456,16 +448,17 @@ public class GPSstate extends Control {
                 +","+BT747_dev.PMTK_LOG_QUERY_STR+
                 ","+BT747_dev.PMTK_LOG_NBR_LOG_PTS_STR          
         );
-        // Request number of log points
-        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
-                +","+BT747_dev.PMTK_LOG_QUERY_STR+
-                ","+BT747_dev.PMTK_LOG_TBD_3_STR          
-        );
-        // Request number of log points
-        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
-                +","+BT747_dev.PMTK_LOG_QUERY_STR+
-                ","+BT747_dev.PMTK_LOG_TBD2_STR          
-        );
+//        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+//                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+//                ","+BT747_dev.PMTK_LOG_TBD3_STR          
+//        );
+//        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+//                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+//                ","+BT747_dev.PMTK_LOG_TBD2_STR          
+//        );
+//      sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+//              +","+BT747_dev.PMTK_LOG_QUERY_STR+
+//              ","+12 );       
     }
     
     public void getLogReasonStatus() {
@@ -482,7 +475,7 @@ public class GPSstate extends Control {
                 +","+BT747_dev.PMTK_LOG_QUERY_STR+
                 ","+BT747_dev.PMTK_LOG_TIME_INTERVAL_STR       
         );
-
+        
     }
     public void setLogTimeInterval(final int value) {
         int z_value=value;
@@ -504,7 +497,7 @@ public class GPSstate extends Control {
         } else if(z_value!=0 && z_value<10) {
             z_value=10;
         }
-
+        
         /* Get log distance interval */
         sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_SET_STR+
@@ -536,7 +529,7 @@ public class GPSstate extends Control {
         } else if(z_value<200) {
             z_value=200;
         }
-
+        
         /* Set log distance interval */
         sendNMEA("PMTK"+BT747_dev.PMTK_API_SET_FIX_CTL           
                 +","+Convert.toString(z_value)
@@ -555,12 +548,12 @@ public class GPSstate extends Control {
     public void getStatus() {
         getLogFormat();
         getLogCtrlInfo();
-        getLogReasonStatus();
+        //getLogReasonStatus();
         getPowerSaveEnabled();
-        getSBASEnabled();
-        getDGPSMode();
-        getDatumMode();
-        getFixInterval();
+        //getSBASEnabled();
+        //getDGPSMode();
+        //getDatumMode();
+        //getFixInterval();
     }
     
     /** Activate the logging by the device */
@@ -570,7 +563,7 @@ public class GPSstate extends Control {
                 +","+BT747_dev.PMTK_LOG_ON           
         );
     }
-
+    
     
     /** Stop the automatic logging of the device */
     public void stopLog() {
@@ -580,18 +573,33 @@ public class GPSstate extends Control {
         );
     }
     public boolean SBASEnabled=false;
-    public boolean PowerSaveEnabled=false;
+    public boolean SBASTestEnabled=false;
+    public boolean powerSaveEnabled=false;
+    
+    public void setSBASTestEnabled(final boolean set) {
+        // Request log format from device
+        sendNMEA("PMTK"+BT747_dev.PMTK_API_SET_SBAS_TEST_STR
+                +","+(set?"0":"1")           
+        );
+    }
+    public void getSBASTestEnabled() {
+        // Request log format from device
+        sendNMEA("PMTK"+BT747_dev.PMTK_API_Q_SBAS_TEST_STR);
+    }
+    
     
     public void setSBASEnabled(final boolean set) {
         // Request log format from device
-        sendNMEA("PMTK"+BT747_dev.PMTK_API_SET_SBAS_ENABLED_STR
+        sendNMEA("PMTK"+BT747_dev.PMTK_API_SET_SBAS_STR
                 +","+(set?"1":"0")           
         );
     }
     public void getSBASEnabled() {
         // Request log format from device
-        sendNMEA("PMTK"+BT747_dev.PMTK_API_Q_SBAS_ENABLED_STR);
+        sendNMEA("PMTK"+BT747_dev.PMTK_API_Q_SBAS_STR);
     }
+    
+    
     public void setPowerSaveEnabled(final boolean set) {
         // Request log format from device
         sendNMEA("PMTK"+BT747_dev.PMTK_API_SET_PWR_SAV_MODE_STR
@@ -606,7 +614,7 @@ public class GPSstate extends Control {
         // Request log format from device
         if (mode >=0 && mode <=2) {
             sendNMEA("PMTK"+BT747_dev.PMTK_API_SET_DGPS_MODE_STR
-                +","+Convert.toString(mode)           
+                    +","+Convert.toString(mode)           
             );
         }
     }
@@ -614,12 +622,12 @@ public class GPSstate extends Control {
         // Request log format from device
         sendNMEA("PMTK"+BT747_dev.PMTK_API_Q_DGPS_MODE_STR);
     }
-
+    
     public void setDatumMode(final int mode) {
         // Request log format from device
         if (mode >=0 && mode <=2) {
             sendNMEA("PMTK"+BT747_dev.PMTK_API_SET_DATUM_STR
-                +","+Convert.toString(mode)           
+                    +","+Convert.toString(mode)           
             );
         }
     }
@@ -724,10 +732,10 @@ public class GPSstate extends Control {
         m_logFile=new File(p_FileName,File.CREATE);
         if(m_logFile!=null) {
             ;
-//            new MessageBox("File open",
-//                    m_logFile.getPath()+"|"+
-//                    Convert.toString(m_logFile.exists())
-//            ).popupBlockingModal();
+            //            new MessageBox("File open",
+            //                    m_logFile.getPath()+"|"+
+            //                    Convert.toString(m_logFile.exists())
+            //            ).popupBlockingModal();
         }
         
     }
@@ -755,11 +763,9 @@ public class GPSstate extends Control {
         }
     }
     
-    private boolean findMinimumLogEntry= true;
     private int binarySearchLeft = 0;
     int curRecNumber;
-    private int p_minLogEntry;
-    private int p_maxLogEntry;
+
     
     public void initBinarySearch(double p_UTC, boolean p_min_notmax) {
         // 
@@ -790,7 +796,7 @@ public class GPSstate extends Control {
             }
             m_Data[i >> 1] = (byte) ((c1 << 4) + c2);
         }
-
+        
         return length;
     }
     
@@ -830,7 +836,7 @@ public class GPSstate extends Control {
                     // Block boundery (0xX0000) is inside data.
                     int blockStart=0xFFFF&(0x10000-(p_StartAddr&0xFFFF));
                     if(!(((m_Data[blockStart]&0xFF)==0xFF)
-                         &&((m_Data[blockStart+1]&0xFF)==0xFF))) {
+                            &&((m_Data[blockStart+1]&0xFF)==0xFF))) {
                         // This block is full, next block is still data
                         int minEndAddr;
                         minEndAddr= (p_StartAddr&0xFFFF0000)+0x20000-1; // This block and next one.
@@ -883,7 +889,7 @@ public class GPSstate extends Control {
             
         } else if(p_nmea[0].startsWith("PMTK")) {
             if(GPS_DEBUG&&((!p_nmea[1].startsWith("8"))&&(true ||Settings.platform.equals("Java")))) {
-                String s=new String();
+                String s;
                 s="<";
                 waba.sys.Vm.debug("<");
                 for (int i = 0; i < p_nmea.length; i++) {
@@ -920,7 +926,7 @@ public class GPSstate extends Control {
                 break;
             case BT747_dev.PMTK_API_SET_DGPS_MODE:	// CMD  301
                 break;
-            case BT747_dev.PMTK_API_SET_SBAS_ENABLED:	// CMD  313
+            case BT747_dev.PMTK_API_SET_SBAS:	// CMD  313
                 break;
             case BT747_dev.PMTK_API_SET_NMEA_OUTPUT:	// CMD  314
                 break;
@@ -936,7 +942,7 @@ public class GPSstate extends Control {
                 break;
             case BT747_dev.PMTK_API_Q_DGPS_MODE:	// CMD  401
                 break;
-            case BT747_dev.PMTK_API_Q_SBAS_ENABLED:	// CMD  413
+            case BT747_dev.PMTK_API_Q_SBAS:	// CMD  413
                 break;
             case BT747_dev.PMTK_API_Q_NMEA_OUTPUT:	// CMD  414
                 break;
@@ -946,37 +952,48 @@ public class GPSstate extends Control {
                 break;
             case BT747_dev.PMTK_API_Q_DATUM_ADVANCE:	// CMD  431
                 break;
-            case BT747_dev.PMTK_API_GET_USER_OPTION:	// CMD  490
+            case BT747_dev.PMTK_API_Q_GET_USER_OPTION:	// CMD  490
                 break;
             case BT747_dev.PMTK_DT_FIX_CTL:	// CMD  500
                 if(p_nmea.length>=2) {
                     logFix=Convert.toInt(p_nmea[1]);
-                }
+                };
                 break;
             case BT747_dev.PMTK_DT_DGPS_MODE:	// CMD  501
                 if(p_nmea.length==2) {
                     dgps_mode=Convert.toInt(p_nmea[1]);
-                }
+                };
+                PostStatusUpdateEvent();
                 break;
-            case BT747_dev.PMTK_DT_SBAS_ENABLED:	// CMD  513
+            case BT747_dev.PMTK_DT_SBAS:	// CMD  513
                 if(p_nmea.length==2) {
                     SBASEnabled=(p_nmea[1].equals("1"));
-                }
+                };
+                PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_NMEA_OUTPUT:	// CMD  514
                 break;
+            case BT747_dev.PMTK_DT_SBAS_TEST:    // CMD  513
+                if(p_nmea.length==2) {
+                    SBASTestEnabled=(p_nmea[1].equals("0"));
+                };
+                PostStatusUpdateEvent();
+                break;            
             case BT747_dev.PMTK_DT_PWR_SAV_MODE:	// CMD  520
                 if(p_nmea.length==2) {
-                    PowerSaveEnabled=(p_nmea[1].equals("1"));
-                }
+                    powerSaveEnabled=(p_nmea[1].equals("1"));
+                };
+                PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_DATUM:	// CMD  530
                 if(p_nmea.length==2) {
                     datum=Convert.toInt(p_nmea[1]);
-                }
+                };
+                PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_FLASH_USER_OPTION:	// CMD  590
-                break;
+                PostStatusUpdateEvent();
+            break;
             case BT747_dev.PMTK_Q_VERSION:	// CMD  604
                 // Not handled
                 break;

@@ -62,7 +62,7 @@ public class BT747model extends Control {
     public int replyLogNmea(final String[] p_nmea) {
         if (p_nmea.length > 2) {
             switch (Convert.toInt(p_nmea[1])) {
-            case BT747_dev.PMTK_LOG_QUERY:
+            case BT747_dev.PMTK_LOG_Q:
                 // Parameter information
                 // TYPE = Parameter type
                 // DATA = Parameter data
@@ -92,7 +92,7 @@ public class BT747model extends Control {
                         break;
                     case BT747_dev.PMTK_LOG_MEM_USED: // 8;
                         break;
-                    case BT747_dev.PMTK_LOG_TBD_3: // 9;
+                    case BT747_dev.PMTK_LOG_TBD3: // 9;
                         break;
                     case BT747_dev.PMTK_LOG_NBR_LOG_PTS: // 10;
                         break;
@@ -102,7 +102,7 @@ public class BT747model extends Control {
                     }
                 }
                 break;
-            case BT747_dev.PMTK_LOG_REQ_DATA:
+            case BT747_dev.PMTK_LOG_Q_LOG:
                 // Send data from the log
                 // $PMTK182,7,START_ADDRESS,DATA
                 StringBuffer s = new StringBuffer(Conv.hex2Int(p_nmea[3]) * 2);
@@ -111,7 +111,7 @@ public class BT747model extends Control {
                     s.append('F');
                 }
                 m_GPSrxtx.sendPacket("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                        + BT747_dev.PMTK_LOG_RESP_DATA + "," + p_nmea[2] // Address
+                        + BT747_dev.PMTK_LOG_DT_LOG + "," + p_nmea[2] // Address
                         + "," + s);
                 break;
             default:
@@ -148,7 +148,7 @@ public class BT747model extends Control {
             case BT747_dev.PMTK_SET_NMEA_BAUD_RATE: // CMD 251
             case BT747_dev.PMTK_API_SET_FIX_CTL: // CMD 300
             case BT747_dev.PMTK_API_SET_DGPS_MODE: // CMD 301
-            case BT747_dev.PMTK_API_SET_SBAS_ENABLED: // CMD 313
+            case BT747_dev.PMTK_API_SET_SBAS: // CMD 313
             case BT747_dev.PMTK_API_SET_NMEA_OUTPUT: // CMD 314
             case BT747_dev.PMTK_API_SET_PWR_SAV_MODE: // CMD 320
             case BT747_dev.PMTK_API_SET_DATUM: // CMD 330
@@ -156,15 +156,15 @@ public class BT747model extends Control {
             case BT747_dev.PMTK_API_SET_USER_OPTION: // CMD 390
             case BT747_dev.PMTK_API_Q_FIX_CTL: // CMD 400
             case BT747_dev.PMTK_API_Q_DGPS_MODE: // CMD 401
-            case BT747_dev.PMTK_API_Q_SBAS_ENABLED: // CMD 413
+            case BT747_dev.PMTK_API_Q_SBAS: // CMD 413
             case BT747_dev.PMTK_API_Q_NMEA_OUTPUT: // CMD 414
             case BT747_dev.PMTK_API_Q_PWR_SAV_MOD: // CMD 420
             case BT747_dev.PMTK_API_Q_DATUM: // CMD 430
             case BT747_dev.PMTK_API_Q_DATUM_ADVANCE: // CMD 431
-            case BT747_dev.PMTK_API_GET_USER_OPTION: // CMD 490
+            case BT747_dev.PMTK_API_Q_GET_USER_OPTION: // CMD 490
             case BT747_dev.PMTK_DT_FIX_CTL: // CMD 500
             case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
-            case BT747_dev.PMTK_DT_SBAS_ENABLED: // CMD 513
+            case BT747_dev.PMTK_DT_SBAS: // CMD 513
             case BT747_dev.PMTK_DT_NMEA_OUTPUT: // CMD 514
             case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
             case BT747_dev.PMTK_DT_DATUM: // CMD 530
