@@ -113,7 +113,7 @@ public class BT747LogConvert {
                                         okInBuffer=indexInBuffer;
                                         foundRecord=true;
                                         recCount++;
-                                        System.out.println(recCount);
+                                        //System.out.println(recCount);
                                         foundAnyRecord=true;
                                         //TODO: Handle record (here or further)
                                         break;

@@ -107,7 +107,7 @@ public final class BT747_dev {  // dev as in device
             4, //"UTC",     // = 0x00001    // 0
             2, //"VALID",   // = 0x00002    // 1
             8, //"LATITUDE",    // = 0x00004    // 2
-            4, //"LONGITUDE",// = 0x00008   // 3
+            8, //"LONGITUDE",// = 0x00008   // 3
             4, //"HEIGHT",  // = 0x00010    // 4
             4, //"SPEED",   // = 0x00020    // 5
             4, //"HEADING", // = 0x00040    // 6
@@ -299,5 +299,21 @@ public final class BT747_dev {  // dev as in device
      */
     public static final String PMTK_ACK_SUCCEEDED_STR = Convert.toString(PMTK_ACK_SUCCEEDED);
     
-    
+    /** Get the size of the log header in the device.
+     * 
+     * @param p_logFormat The log format of the device
+     * @return Size of the header
+     */
+    static public final int logRecordMinSize(final int p_logFormat) {
+        int bits=p_logFormat;
+        int index = 0;
+        int total = 0;
+        do {
+            if ((bits&1)!=0) {
+                total+=logFmtByteSizes[index];
+            }
+            index++;
+        } while((bits>>=1) != 0);
+        return total;
+    }    
 }
