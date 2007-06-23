@@ -7,6 +7,7 @@
   		<tstamp>
     		<format property="DATE" pattern="yyyyMMdd"/>
     		<format property="DATE_DE" pattern="dd.MM.yyyy"/>
+    		<format property="DATE_UND" pattern="dd_MM_yyyy"/>
     		<format property="DATE_TIME" pattern="yyyyMMdd_HHmmss"/>
     		<format property="DATETIME_DE" pattern="dd.MM.yyyy HH:mm:ss"/>
     		<format property="TIMESTAMP" pattern="yyyyMMddHHmmssSSS"/>
@@ -26,7 +27,7 @@
         <!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
     	<replaceregexp file="src/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
     	<replaceregexp file="src/Version.java" encoding="${encoding}" match="DATE = [^a]*;" replace='DATE = "${DATE_DE}";'/>	
-    	<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\n]*" replace='SET DT=${DATE_DE}'/>	
+    	<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\n]*" replace='SET DT=${DATE_UND}'/>	
     </target>
 
 

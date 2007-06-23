@@ -25,8 +25,6 @@ import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Edit;
 import waba.ui.Event;
-import waba.ui.Label;
-import waba.ui.PopList;
 
 import gps.GPSstate;
 /**
@@ -52,6 +50,7 @@ public class GPSLogReason extends Container {
      */
     Check m_chkPowerSaveOnOff;
     Check m_chkSBASOnOff;
+    Check m_chkSBASTestOnOff;
     private final String[] strDGPSMode= {"No DGPS", "RTCM","WAAS"};
     ComboBox m_cbDGPSMode;
     private final String[] strDatumMode= {"WGS84", "TOKYO-M","TOKYO-A"};
@@ -63,32 +62,31 @@ public class GPSLogReason extends Container {
         
     }
     
-    private final static String C_DIGITS="0123456789";
-    
     protected void onStart() {
         super.onStart();
-        add(m_chkTimeOnOff = new Check("Time    "), LEFT, TOP); //$NON-NLS-1$
+        add(m_chkTimeOnOff      = new Check("Time (s)    "), LEFT, TOP); //$NON-NLS-1$
         add(m_edTime = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(m_chkSpeedOnOff = new Check("Speed   "), LEFT, AFTER); //$NON-NLS-1$
+        add(m_chkSpeedOnOff     = new Check("Speed (km/h)"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edSpeed = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(m_chkDistanceOnOff = new Check("Distance"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_chkDistanceOnOff  = new Check("Distance (m)"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edDistance = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(m_chkFixOnOff = new Check("Fix Ctrl"), LEFT,AFTER); //$NON-NLS-1$
+        add(m_chkFixOnOff = new Check("Fix (ms)"), LEFT,AFTER); //$NON-NLS-1$
         add(m_edFix = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        m_edSpeed.setValidChars(C_DIGITS);
-        m_edDistance.setValidChars(C_DIGITS);
-        m_edTime.setValidChars(C_DIGITS);
+        m_edSpeed.setValidChars(Edit.numbersSet);
+        m_edDistance.setValidChars(Edit.numbersSet);
+        m_edTime.setValidChars(Edit.numbersSet);
         add(m_chkSBASOnOff = new Check("SBAS"), LEFT, AFTER+3); //$NON-NLS-1$
         m_cbDGPSMode=new ComboBox();
         m_cbDGPSMode.add(strDGPSMode);
         add(m_cbDGPSMode, AFTER, SAME);
-        if(ENABLE_PWR_SAVE_CONTROL) {
-            add(m_chkPowerSaveOnOff = new Check("Power Save (Internal)"), LEFT, AFTER+3); //$NON-NLS-1$
-        }
+        add(m_chkSBASTestOnOff = new Check("Incl. Test SBAS"), RIGHT, SAME); //$NON-NLS-1$
         m_cbDatumMode=new ComboBox();
         m_cbDatumMode.setEnabled(false);
         m_cbDatumMode.add(strDatumMode);
-        add(m_cbDatumMode, LEFT, AFTER);
+        add(m_cbDatumMode, LEFT, AFTER+3);
+        if(ENABLE_PWR_SAVE_CONTROL) {
+            add(m_chkPowerSaveOnOff = new Check("Power Save (Internal)"), LEFT, AFTER+3); //$NON-NLS-1$
+        }
 
 
         add(m_btSet = new Button("SET"), CENTER, AFTER+3); //$NON-NLS-1$
@@ -119,11 +117,13 @@ public class GPSLogReason extends Container {
             m_edFix.setText(Convert.toString(m_GPSstate.logFix));
         }
         m_chkSBASOnOff.setChecked(m_GPSstate.SBASEnabled);
+        m_chkSBASTestOnOff.setChecked(m_GPSstate.SBASTestEnabled);
         m_cbDGPSMode.select(m_GPSstate.dgps_mode);
         if(ENABLE_PWR_SAVE_CONTROL) {
-            m_chkPowerSaveOnOff.setChecked(m_GPSstate.PowerSaveEnabled);
+            m_chkPowerSaveOnOff.setChecked(m_GPSstate.powerSaveEnabled);
         }
         m_cbDatumMode.select(m_GPSstate.datum);
+        
     }
 
     public void setSettings() {
@@ -171,11 +171,18 @@ public class GPSLogReason extends Container {
                 setSettings();
             } else if (event.target == this) {
                 m_GPSstate.getLogReasonStatus();
+                m_GPSstate.getFixInterval();
+                m_GPSstate.getSBASEnabled();
+                m_GPSstate.getSBASTestEnabled();
+                m_GPSstate.getDGPSMode();
             } else if (event.target==null) {
                 updateButtons();
             } else if (event.target==m_chkSBASOnOff) {
                 m_GPSstate.setSBASEnabled(m_chkSBASOnOff.getChecked());
                 m_GPSstate.getSBASEnabled();
+            } else if (event.target==m_chkSBASTestOnOff) {
+                m_GPSstate.setSBASTestEnabled(m_chkSBASTestOnOff.getChecked());
+                m_GPSstate.getSBASTestEnabled();
             } else if (event.target==m_chkPowerSaveOnOff) {
                 m_GPSstate.setPowerSaveEnabled(m_chkPowerSaveOnOff.getChecked());
                 m_GPSstate.getPowerSaveEnabled();
