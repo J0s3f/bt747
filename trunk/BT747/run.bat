@@ -7,11 +7,12 @@ set JAVA_HOME=c:\j2sdk1.4.2_14
 set CLASSPATH=c:\projects\bt747\win32comm.jar;.;%CLASSPATH%;;c:\superwabasdk\lib\superwaba.jar
 
 rem start java waba.applet.Applet
-cd build
+cd c:\mdeweerd\workspace\BT747\build
+copy ..\.debuggerDefaults .
 rem debugn.bat  waba.applet.Applet BT747
-java -showversion
+rem java -showversion
 rem java waba.applet.Applet BT747
-..\debugn.bat  waba.applet.Applet BT747
+call ..\debugn.bat  waba.applet.Applet BT747
 set PATH=%ORGPATH%
 rem c:\j2sdk1.4.2_14\bin\java.exe -classpath .;c:\mdeweerd\/bt747;c:\superwabasdk\lib\superwaba.jar waba.applet.Applet BT747
-
+pause
