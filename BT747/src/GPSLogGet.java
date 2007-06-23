@@ -30,7 +30,9 @@ import waba.ui.ProgressBar;
 import waba.util.Date;
 import waba.util.Vector;
 
+import gps.BT747LogConvert;
 import gps.GPSstate;
+import gps.settings;
 
 /**
  * @author Mario De Weerd
@@ -47,6 +49,8 @@ public class GPSLogGet extends Container {
     Button m_btGetLog;
 
     Button m_btCancelGetLog;
+
+    Button m_btToCSV;
     
     ProgressBar m_pb;
     AppSettings m_appSettings;
@@ -114,6 +118,8 @@ public class GPSLogGet extends Container {
         //add(new Label("End"),BEFORE,SAME);
         add(m_btGetLog = new Button("Get Log"), LEFT, AFTER + 10); //$NON-NLS-1$
         add(m_btCancelGetLog = new Button("Cancel get"), RIGHT, SAME); //$NON-NLS-1$
+
+        add(m_btToCSV = new Button("To CSV"), LEFT, AFTER + 5); //$NON-NLS-1$
 
         add(m_UsedLabel=new Label(   ""),LEFT, AFTER+3);
         add(m_RecordsLabel=new Label(""),LEFT, AFTER+3);
@@ -186,6 +192,10 @@ public class GPSLogGet extends Container {
                 }
                 calBt=m_btStartDate;
                 cal.popupModal();
+            } else if (event.target==m_btToCSV) {
+                /* TODO: Recover the logFormat from a file or so */
+                BT747LogConvert.toCSV(m_appSettings.getLogFile(),m_GPSstate.logFormat);
+                Convert.toString(3);
             } else if (event.target == this) {
                 m_GPSstate.getLogCtrlInfo();
             } else if (event.target==null) {

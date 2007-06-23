@@ -73,7 +73,7 @@ public class GPSstate extends Control {
     
     public int logFormat = 0;
     public int logEntrySize = 0;
-    public int logHeaderSize = 0;
+    public int logRecordMaxSize = 0;
     public int logTimeInterval = 0;
     public int logSpeedInterval = 0;
     public int logDistanceInterval = 0;
@@ -290,31 +290,13 @@ public class GPSstate extends Control {
         return z_Size;
     }
     
-    /** Get the size of the log header in the device.
-     * 
-     * @param p_logFormat The log format of the device
-     * @return Size of the header
-     */
-    static public final int logHeaderSize(final int p_logFormat) {
-        int bits=p_logFormat;
-        int index = 0;
-        int total = 0;
-        do {
-            if ((bits&1)!=0) {
-                total+=BT747_dev.logFmtByteSizes[index];
-            }
-            index++;
-        } while((bits>>=1) != 0);
-        return total;
-    }
-    
     /** Get the (approximate) location of the given record number.
      * The result is not exact: the position may be different.
      * @param p_RecordNumber The record number for which to find the address
      * @return Address for record number
      */
     public int logEntryAddr(final int p_RecordNumber) {
-        return logHeaderSize+p_RecordNumber*logEntrySize;
+        return logRecordMaxSize+p_RecordNumber*logEntrySize;
     }
     
     /* TODO: Could implement specific event structure */
@@ -345,7 +327,7 @@ public class GPSstate extends Control {
                     //if(GPS_DEBUG) {	waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
                     logFormat=Conv.hex2Int(p_nmea[3]);
                 logEntrySize=logEntrySize(logFormat);
-                logHeaderSize=logHeaderSize(logFormat);
+                logRecordMaxSize=BT747_dev.logRecordMinSize(logFormat);
                 PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_TIME_INTERVAL: 	// 3;
@@ -547,9 +529,9 @@ public class GPSstate extends Control {
     /** Get the current status of the device */
     public void getStatus() {
         getLogFormat();
-        getLogCtrlInfo();
+        //getLogCtrlInfo();
         //getLogReasonStatus();
-        getPowerSaveEnabled();
+        //getPowerSaveEnabled();
         //getSBASEnabled();
         //getDGPSMode();
         //getDatumMode();
