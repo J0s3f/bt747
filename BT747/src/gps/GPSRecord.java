@@ -16,32 +16,53 @@
 //***  This is a proprietary development environment based in      ***
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
-//********************************************************************                              
+//********************************************************************       
+package gps;
 
-/** This class has a partial automatic update in the build script.
- * and is used to reference the version.
- * 
- * @link Original code found on 
- *      http://forum.java.sun.com/thread.jspa?forumID=31&threadID=583820
+/** Structure to hold GPS data for one point
  * @author Mario De Weerd
  */
-public final class Version {
+public class GPSRecord {
+    public int  utc;
+    public int  valid;
+    public double latitude;
+    public double longitude;
+    public float  height;
+    public float  speed;
+    public int  heading;
+    public int  dsta;
+    public int  dage;
+    public int  pdop;
+    public int  hdop;
+    public int  vdop;
+    // TODO: Add structures for NSAT, ...
+    public int  rcr;  /** Recorder reason */
+    public int  milisecond;
+    public double distance;
 
-   /** Build number (timestamp with format yyyyMMddHHmmssSSS). */
-   public static final long BUILD = 20070624231617382L; //automatically set during Ant compilation!
-   /** Release date of this version (date format dd.MM.yyyy). */
-   public static final String DATE = "24.06.2007"; //automatically set during Ant compilation!
-   /**
-    * Version number of format x.y.z, with
-    * <ul>
-    * <li>x = major version
-    * <li>y = minor version
-    * <li>z = bug fix version
-    * </ul>
-    */
-   public static final String NUMBER = "0.5.0";
-   /** Minimum Java JRE version required. */
-   static public final String NUMBER_JAVAMIN = "1.4";
-   /** Title of this project. */
-   static public final String TITLE = "BT747";
-}//Version
+    public GPSRecord() {} {
+    }
+    
+    /**
+     * 
+     */
+    public GPSRecord(GPSRecord r) {
+        this.utc= r.utc;
+        this.valid= r.valid;
+        this.latitude= r.latitude;
+        this.longitude= r.longitude;
+        this.height= r.height;
+        this.speed= r.speed;
+        this.heading= r.heading;
+        this.dsta= r.dsta;
+        this.dage= r.dage;
+        this.pdop= r.pdop;
+        this.hdop= r.hdop;
+        this.vdop= r.vdop;
+        // TODO: Add structures for NSAT, ...
+        this.rcr= r.rcr;
+        this.milisecond= r.milisecond;
+        this.distance= r.distance;
+    }
+    
+}
