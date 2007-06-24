@@ -126,6 +126,11 @@ public final class BT747_dev {  // dev as in device
             8, //"DISTANCE" // = 0x80000    // 13
     };  
     
+    public static final int RCR_TIME_MASK=       0x01;
+    public static final int RCR_SPEED_MASK=      0x02;
+    public static final int RCR_DISTANCE_MASK=   0x04;
+    public static final int RCR_BUTTON_MASK=     0x08;
+    
     // PMTK182 commands/replies.
     /** Set a parameter concerning the log */
     public static final int PMTK_LOG_SET    = 1;

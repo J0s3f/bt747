@@ -992,7 +992,8 @@ public class GPSstate extends Control {
             if(m_GPSrxtx.isConnected()) {
                 if(m_getNextLogOnNextTimer) {
                     // Sending command on next timer adds some delay after
-                    // the end of the previous command (reception) 
+                    // the end of the previous command (reception)
+                    m_getNextLogOnNextTimer=false;
                     getNextLogPart();
                 }
                 if(m_isLogging||m_isSearchingLog) logTimer++;  // Increase log timer to determine timeout

@@ -31,6 +31,9 @@ import waba.util.Date;
 import waba.util.Vector;
 
 import gps.BT747LogConvert;
+import gps.GPSCSVFile;
+import gps.GPSFile;
+import gps.GPSRecord;
 import gps.GPSstate;
 import gps.settings;
 
@@ -193,8 +196,12 @@ public class GPSLogGet extends Container {
                 calBt=m_btStartDate;
                 cal.popupModal();
             } else if (event.target==m_btToCSV) {
+                GPSCSVFile gpsFile=new GPSCSVFile();
+                // TODO: should get logformat associated with inputfile
+                gpsFile.initialiseFile("/palm/GPSDATA", ".csv",BT747LogConvert.getLogFormatRecord(m_GPSstate.logFormat));
                 /* TODO: Recover the logFormat from a file or so */
-                BT747LogConvert.toCSV(m_appSettings.getLogFile(),m_GPSstate.logFormat);
+                BT747LogConvert.toCSV(m_appSettings.getLogFile(),m_GPSstate.logFormat,gpsFile);
+                gpsFile.finaliseFile();
                 Convert.toString(3);
             } else if (event.target == this) {
                 m_GPSstate.getLogCtrlInfo();
