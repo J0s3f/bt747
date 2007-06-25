@@ -31,4 +31,7 @@ public interface GPSFile {
     public void writeRecord(GPSRecord r);
     
     public void finaliseFile();
+    
+    public boolean nextPass();
+
 }
