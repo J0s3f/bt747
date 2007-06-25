@@ -8,6 +8,7 @@ package gps;
 
 import waba.io.File;
 import waba.sys.Convert;
+import waba.sys.Vm;
 
 /**
  * @author Mario De Weerd
@@ -25,6 +26,7 @@ public final class BT747LogConvert {
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY);
             if(!m_File.isOpen()) {
+                Vm.debug("Could not open "+fileName);
                 m_File=null;
             } else {
                 final int C_BUF_SIZE=0x800;

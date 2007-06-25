@@ -45,19 +45,18 @@ public class GPSKMLFile implements GPSFile {
      */
     public void initialiseFile(String basename, String ext, GPSRecord f) {
         // TODO Auto-generated method stub
-        if(File.isAvailable()) {
-            m_File=new File(basename+ext);
-            if(m_File.exists()) {
-                m_File.delete();
-            }
-            m_File=new File(basename+ext,File.CREATE|File.WRITE_ONLY);
-            if(!m_File.isOpen()) {
-                m_File=null;
-            } else {
-                activeFields= new GPSRecord(f);
-                m_recCount=0;
-                writeHeader();
-            }
+        m_File=new File(basename+ext);
+        if(m_File.exists()) {
+            m_File.delete();
+        }
+        m_File=new File(basename+ext,File.CREATE);
+        if(!m_File.isOpen()) {
+            waba.sys.Vm.debug("Could not open "+basename+ext);
+            m_File=null;
+        } else {
+            activeFields= new GPSRecord(f);
+            m_recCount=0;
+            writeHeader();
         }
     }
     
