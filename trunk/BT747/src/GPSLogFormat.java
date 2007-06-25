@@ -165,10 +165,10 @@ public class GPSLogFormat extends Container {
             if (event.target==m_btChangeFormat) {
                 changeLogFormat();
             } else if (event.target==this) {
-                updateLogFormat(m_GPSstate.logFormat);
-            } else if (event.target==null) {
                 m_GPSstate.getLogFormat();
                 event.consumed=true;
+            } else if (event.target==null) {
+                updateLogFormat(m_GPSstate.logFormat);
             } else {
                 boolean z_updated=false;
                 for (int i=0;i<C_LOG_FMT_COUNT;i++) {

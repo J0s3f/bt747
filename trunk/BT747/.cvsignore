@@ -17,3 +17,5 @@ icons
 BT747*.zip
 swserial.properties
 .netrc
+.settings
+bin

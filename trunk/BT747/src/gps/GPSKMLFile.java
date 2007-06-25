@@ -32,6 +32,9 @@ public class GPSKMLFile implements GPSFile {
     int m_recCount;
     private GPSRecord activeFields;
     
+    public boolean nextPass() {
+        return false;
+    }    
     /**
      * 
      */
@@ -339,7 +342,34 @@ public class GPSKMLFile implements GPSFile {
                     rec+="IDX: ";
                     rec+=Convert.toString(m_recCount);
                 }
-                rec+="</name>\r\n";        
+                rec+="</name>\r\n";
+                
+                
+            if((activeFields.utc!=0)) {
+                rec+="<TimeStamp><when>";
+                if(activeFields.utc!=0) {
+                    Time t=utcTime(s.utc);
+                    
+                    rec+=Convert.toString(t.year)+"-"
+                    +( t.month<10?"0":"")+Convert.toString(t.month)+"-"
+                    +(   t.day<10?"0":"")+Convert.toString(t.day)+"T"
+                    +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
+                    +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
+                    +(t.second<10?"0":"")+Convert.toString(t.second)
+                    ;
+                    if(activeFields.milisecond!=0) {
+                        rec+=".";
+                        rec+=(s.milisecond<100)?"0":"";
+                        rec+=(s.milisecond<10)?"0":"";
+                        rec+=Convert.toString(s.milisecond);
+                    }
+                    rec+="Z";
+                }
+                rec+="</when></TimeStamp>\r\n";
+            }
+
+            
+            
                 
                 rec+="<styleUrl>";
                 if(activeFields.rcr!=0) {
@@ -402,19 +432,19 @@ public class GPSKMLFile implements GPSFile {
                         rec+="B";
                     }
                 }
-                if(activeFields.utc!=0) {
-                    Time t=utcTime(s.utc);
-                    
-                    rec+="<br />DATE: ";
-                    rec+=Convert.toString(t.year)+"/"
-                    +( t.month<10?"0":"")+Convert.toString(t.month)+"/"
-                    +(   t.day<10?"0":"")+Convert.toString(t.day)+"<br />"
-                    +"TIME: "
-                    +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
-                    +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-                    +(t.second<10?"0":"")+Convert.toString(t.second)
-                    ;
-                }
+//                if(activeFields.utc!=0) {
+//                    Time t=utcTime(s.utc);
+//                    
+//                    rec+="<br />DATE: ";
+//                    rec+=Convert.toString(t.year)+"/"
+//                    +( t.month<10?"0":"")+Convert.toString(t.month)+"/"
+//                    +(   t.day<10?"0":"")+Convert.toString(t.day)+"<br />"
+//                    +"TIME: "
+//                    +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
+//                    +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
+//                    +(t.second<10?"0":"")+Convert.toString(t.second)
+//                    ;
+//                }
                 if(activeFields.valid!=0) {
                     rec+="<br />VALID: ";
                     switch(s.valid) {

@@ -41,6 +41,9 @@ public class GPSCSVFile implements GPSFile {
         // TODO Auto-generated constructor stub
     }
     
+    public boolean nextPass() {
+        return false;
+    }
     /* (non-Javadoc)
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
