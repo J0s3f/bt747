@@ -18,7 +18,7 @@ import waba.sys.Convert;
 public final class BT747LogConvert {
     
     
-    public final static void toCSV(final String fileName, final int logFormat,
+    public final static void toGPSFile(final String fileName, final int logFormat,
             final GPSFile gpsFile) {
         File m_File=null; 
         GPSRecord gpsRec=new GPSRecord();
@@ -171,21 +171,23 @@ public final class BT747LogConvert {
                                                 ;
                                             gpsRec.height=Convert.toFloatBitwise(height);
                                         }
-                                        if((logFormat&(1<<BT747_dev.FMT_SPEED_IDX))!=0) { 
-                                            gpsRec.speed=Convert.toFloatBitwise(
-                                                    (0xFF&bytes[recIdx++])<<0
-                                                    |(0xFF&bytes[recIdx++])<<8
-                                                    |(0xFF&bytes[recIdx++])<<16
-                                                    |(0xFF&bytes[recIdx++])<<24)
-                                                    ;
-                                        }
-                                        if((logFormat&(1<<BT747_dev.FMT_HEADING_IDX))!=0) { 
-                                            gpsRec.heading=
+                                        if((logFormat&(1<<BT747_dev.FMT_SPEED_IDX))!=0) {
+                                            int speed=
                                                 (0xFF&bytes[recIdx++])<<0
                                                 |(0xFF&bytes[recIdx++])<<8
                                                 |(0xFF&bytes[recIdx++])<<16
                                                 |(0xFF&bytes[recIdx++])<<24
                                                 ;
+                                            gpsRec.speed=Convert.toFloatBitwise(speed);
+                                        }
+                                        if((logFormat&(1<<BT747_dev.FMT_HEADING_IDX))!=0) { 
+                                            int heading=
+                                                (0xFF&bytes[recIdx++])<<0
+                                                |(0xFF&bytes[recIdx++])<<8
+                                                |(0xFF&bytes[recIdx++])<<16
+                                                |(0xFF&bytes[recIdx++])<<24
+                                                ;
+                                            gpsRec.heading=Convert.toFloatBitwise(heading);
                                         }
                                         if((logFormat&(1<<BT747_dev.FMT_DSTA_IDX))!=0) { 
                                             gpsRec.dsta=
@@ -241,15 +243,15 @@ public final class BT747LogConvert {
                                         }
                                         if((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0) { 
                                             long distance=
-                                            (0xFFL&bytes[recIdx++])<<0
-                                            |(0xFFL&bytes[recIdx++])<<8
-                                            |(0xFFL&bytes[recIdx++])<<16
-                                            |(0xFFL&bytes[recIdx++])<<24
-                                            |(0xFFL&bytes[recIdx++])<<32
-                                            |(0xFFL&bytes[recIdx++])<<40
-                                            |(0xFFL&bytes[recIdx++])<<48
-                                            |(0xFFL&bytes[recIdx++])<<56
-                                            ;
+                                                (0xFFL&bytes[recIdx++])<<0
+                                                |(0xFFL&bytes[recIdx++])<<8
+                                                |(0xFFL&bytes[recIdx++])<<16
+                                                |(0xFFL&bytes[recIdx++])<<24
+                                                |(0xFFL&bytes[recIdx++])<<32
+                                                |(0xFFL&bytes[recIdx++])<<40
+                                                |(0xFFL&bytes[recIdx++])<<48
+                                                |(0xFFL&bytes[recIdx++])<<56
+                                                ;
                                             gpsRec.distance=Convert.longBitsToDouble(distance);
                                         }
                                         gpsFile.writeRecord(gpsRec);

@@ -29,7 +29,7 @@ public class GPSRecord {
     public double longitude;
     public float  height;
     public float  speed;
-    public int  heading;
+    public float  heading;
     public int  dsta;
     public int  dage;
     public int  pdop;
