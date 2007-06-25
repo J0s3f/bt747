@@ -22,6 +22,7 @@ package gps;
 import waba.io.File;
 import waba.sys.Convert;
 import waba.sys.Time;
+import waba.sys.Vm;
 import waba.util.Date;
 
 /**Class to write a CSV file.
@@ -45,20 +46,19 @@ public class GPSCSVFile implements GPSFile {
      */
     public void initialiseFile(String basename, String ext, GPSRecord f) {
         // TODO Auto-generated method stub
-        if(File.isAvailable()) {
-            m_File=new File(basename+ext);
-            if(m_File.exists()) {
-                m_File.delete();
-            }
-            m_File=new File(basename+ext,File.CREATE|File.WRITE_ONLY);
-            if(!m_File.isOpen()) {
-                m_File=null;
-            } else {
-                activeFields= new GPSRecord(f);
-                m_recCount=0;
-                writeHeader();
-            }
+        m_File=new File(basename+ext);
+        if(m_File.exists()) {
+            m_File.delete();
         }
+        m_File=new File(basename+ext,File.CREATE);
+        if(!m_File.isOpen()) {
+            waba.sys.Vm.debug("Could not open "+basename+ext);
+            m_File=null;
+        } else {
+            activeFields= new GPSRecord(f);
+            m_recCount=0;
+            writeHeader();
+            }
     }
     
     public void writeHeader() {
