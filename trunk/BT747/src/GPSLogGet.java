@@ -32,6 +32,8 @@ import waba.util.Vector;
 
 import gps.BT747LogConvert;
 import gps.GPSCSVFile;
+import gps.GPSFile;
+import gps.GPSGPXFile;
 import gps.GPSKMLFile;
 import gps.GPSstate;
 
@@ -53,6 +55,8 @@ public class GPSLogGet extends Container {
 
     Button m_btToCSV;
     Button m_btToKML;
+    Button m_btToGPX;
+
     
     ProgressBar m_pb;
     AppSettings m_appSettings;
@@ -122,6 +126,7 @@ public class GPSLogGet extends Container {
         add(m_btCancelGetLog = new Button("Cancel get"), RIGHT, SAME); //$NON-NLS-1$
 
         add(m_btToCSV = new Button("To CSV"), LEFT, AFTER + 5); //$NON-NLS-1$
+        add(m_btToGPX = new Button("To GPX"), CENTER, SAME); //$NON-NLS-1$
         add(m_btToKML = new Button("To KML"), RIGHT, SAME); //$NON-NLS-1$
 
         add(m_UsedLabel=new Label(   ""),LEFT, AFTER+3);
@@ -195,21 +200,30 @@ public class GPSLogGet extends Container {
                 }
                 calBt=m_btStartDate;
                 cal.popupModal();
-            } else if (event.target==m_btToCSV) {
-                GPSCSVFile gpsCsvFile=new GPSCSVFile();
+            } else if (event.target==m_btToCSV
+                    ||event.target==m_btToKML
+                    ||event.target==m_btToGPX) {
+                String ext="";
+                GPSFile gpsFile=null;
+
+                if(event.target==m_btToCSV) {
+                    gpsFile=new GPSCSVFile();
+                    ext=".csv";
+                }
+                if(event.target==m_btToKML) {
+                    gpsFile=new GPSKMLFile();
+                    ext=".kml";
+                }
+                if(event.target==m_btToGPX) {
+                    gpsFile=new GPSGPXFile();
+                    ext=".gpx";
+                }
+                    
                 // TODO: should get logformat associated with inputfile
-                gpsCsvFile.initialiseFile("/Palm/GPSDATA", ".csv",BT747LogConvert.getLogFormatRecord(m_GPSstate.logFormat));
+                gpsFile.initialiseFile("/Palm/GPSDATA", ext,BT747LogConvert.getLogFormatRecord(m_GPSstate.logFormat));
                 /* TODO: Recover the logFormat from a file or so */
-                BT747LogConvert.toGPSFile(m_appSettings.getLogFile(),m_GPSstate.logFormat,gpsCsvFile);
-                gpsCsvFile.finaliseFile();
-                Convert.toString(3);
-            } else if (event.target==m_btToKML) {
-                GPSKMLFile gpsKmlFile=new GPSKMLFile();
-                // TODO: should get logformat associated with inputfile
-                gpsKmlFile.initialiseFile("/Palm/GPSDATA", ".kml",BT747LogConvert.getLogFormatRecord(m_GPSstate.logFormat));
-                /* TODO: Recover the logFormat from a file or so */
-                BT747LogConvert.toGPSFile(m_appSettings.getLogFile(),m_GPSstate.logFormat,gpsKmlFile);
-                gpsKmlFile.finaliseFile();
+                BT747LogConvert.toGPSFile(m_appSettings.getLogFile(),m_GPSstate.logFormat,gpsFile);
+                gpsFile.finaliseFile();
                 Convert.toString(3);
             } else if (event.target == this) {
                 m_GPSstate.getLogCtrlInfo();
