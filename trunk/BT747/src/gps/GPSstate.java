@@ -529,13 +529,17 @@ public class GPSstate extends Control {
     /** Get the current status of the device */
     public void getStatus() {
         getLogFormat();
-        //getLogCtrlInfo();
+        getLogCtrlInfo();
         //getLogReasonStatus();
         //getPowerSaveEnabled();
         //getSBASEnabled();
         //getDGPSMode();
         //getDatumMode();
         //getFixInterval();
+    }
+    
+    public void getLogOnOffStatus() {
+        getLogCtrlInfo();
     }
     
     /** Activate the logging by the device */
