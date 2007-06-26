@@ -28,6 +28,8 @@ package gps;
 public interface GPSFile {
     public void initialiseFile(final String basename, final String ext, GPSRecord f);
     
+    public void setFilter(GPSFilter filter);
+    
     public void writeRecord(GPSRecord r);
     
     public void finaliseFile();

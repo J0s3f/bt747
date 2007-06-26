@@ -42,6 +42,11 @@ public class GPSKMLFile implements GPSFile {
         super();
         // TODO Auto-generated constructor stub
     }
+
+    GPSFilter m_Filter=null;
+    public void setFilter(GPSFilter filter) {
+        m_Filter=filter;
+    }
     
     /* (non-Javadoc)
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
@@ -325,7 +330,7 @@ public class GPSKMLFile implements GPSFile {
         String rec="";
         m_recCount++;
         if(activeFields!=null) {
-            if(activeFields.valid!=0&&s.valid!=1) {
+            if(m_Filter.doFilter(s)) {
                 
                 rec+="<Placemark>\r\n";
                 

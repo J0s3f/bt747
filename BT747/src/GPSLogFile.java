@@ -16,32 +16,19 @@
 //***  This is a proprietary development environment based in      ***
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
-//********************************************************************                              
+//********************************************************************
+import waba.ui.Container;
 
-/** This class has a partial automatic update in the build script.
- * and is used to reference the version.
+/** The purpose of this container is to configure file settings
  * 
- * @link Original code found on 
- *      http://forum.java.sun.com/thread.jspa?forumID=31&threadID=583820
  * @author Mario De Weerd
  */
-public final class Version {
+public class GPSLogFile extends Container {
+    
+    AppSettings m_settings;
+    
+    GPSLogFile(AppSettings settings) {
+        m_settings=settings;
+    }
 
-   /** Build number (timestamp with format yyyyMMddHHmmssSSS). */
-   public static final long BUILD = 20070626235824743L; //automatically set during Ant compilation!
-   /** Release date of this version (date format dd.MM.yyyy). */
-   public static final String DATE = "26.06.2007"; //automatically set during Ant compilation!
-   /**
-    * Version number of format x.y.z, with
-    * <ul>
-    * <li>x = major version
-    * <li>y = minor version
-    * <li>z = bug fix version
-    * </ul>
-    */
-   public static final String NUMBER = "0.6";
-   /** Minimum Java JRE version required. */
-   static public final String NUMBER_JAVAMIN = "1.4";
-   /** Title of this project. */
-   static public final String TITLE = "BT747";
-}//Version
+}

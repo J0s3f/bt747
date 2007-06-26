@@ -33,6 +33,7 @@ import waba.util.Vector;
 import gps.BT747LogConvert;
 import gps.GPSCSVFile;
 import gps.GPSFile;
+import gps.GPSFilter;
 import gps.GPSGPXFile;
 import gps.GPSKMLFile;
 import gps.GPSstate;
@@ -46,8 +47,10 @@ public class GPSLogGet extends Container {
     Check m_chkLogOnOff;;
 
     Button m_btStartDate;
+    Date m_StartDate=new Date(1,1,1983);
 
     Button m_btEndDate;
+    Date m_EndDate=new Date();
 
     Button m_btGetLog;
 
@@ -56,19 +59,25 @@ public class GPSLogGet extends Container {
     Button m_btToCSV;
     Button m_btToKML;
     Button m_btToGPX;
-
     
+    final static int JULIAN_DAY_1_1_1970=18263;   
     ProgressBar m_pb;
     AppSettings m_appSettings;
     
     private Label       m_UsedLabel;
     private Label       m_RecordsLabel;
-    
 
-    public GPSLogGet(GPSstate state, ProgressBar pb, AppSettings s) {
+    GPSFilter m_Filter;
+
+    public int dateToUTCepoch1970(final Date d) {
+        return (d.getJulianDay()-JULIAN_DAY_1_1_1970)*24*60*60;
+    }
+    
+    public GPSLogGet(GPSstate state, ProgressBar pb, AppSettings s, GPSFilter filter) {
         m_GPSstate = state;
         m_pb= pb;
         m_appSettings= s;
+        m_Filter=filter;
     }
 
     // TODO: Just some code as a reference to find a path.
@@ -115,9 +124,9 @@ public class GPSLogGet extends Container {
         super.onStart();
         add(m_chkLogOnOff = new Check("Device log on(/off)"), LEFT, TOP); //$NON-NLS-1$
         add(new Label("Start date"), LEFT, AFTER); //$NON-NLS-1$
-        add(m_btStartDate = new Button("99/99/9999"), AFTER, SAME); //$NON-NLS-1$
+        add(m_btStartDate = new Button(m_StartDate.getDate()), AFTER, SAME); //$NON-NLS-1$
         //m_btStartDate.setMode(Edit.DATE);
-        add(m_btEndDate = new Button("99/99/9999"), SAME, AFTER); //$NON-NLS-1$
+        add(m_btEndDate = new Button(m_EndDate.getDate()), SAME, AFTER); //$NON-NLS-1$
         //m_btEndDate.setMode(Edit.DATE);
         add(new Label("End date"), BEFORE, SAME); 
 
@@ -145,6 +154,7 @@ public class GPSLogGet extends Container {
     
     Calendar cal;
     Button calBt;
+    Date calDate;
     
     /*
      * (non-Javadoc)
@@ -219,6 +229,9 @@ public class GPSLogGet extends Container {
                     ext=".gpx";
                 }
                     
+                m_Filter.startDate=dateToUTCepoch1970(m_StartDate);
+                m_Filter.endDate=dateToUTCepoch1970(m_EndDate);
+                gpsFile.setFilter(m_Filter);
                 // TODO: should get logformat associated with inputfile
                 gpsFile.initialiseFile("/Palm/GPSDATA", ext,BT747LogConvert.getLogFormatRecord(m_GPSstate.logFormat));
                 /* TODO: Recover the logFormat from a file or so */
@@ -238,7 +251,12 @@ public class GPSLogGet extends Container {
             if (event.target == cal)
             {
                 Date d = cal.getSelectedDate();
-                calBt.setText(d==null?"99/99/9999":d.toString());
+                if(d!=null) {
+                    calBt.setText(d.toString());
+                    // Can't change the value of the date, changing all
+                    m_StartDate=new Date(m_btStartDate.getText());
+                    m_EndDate=new Date(m_btEndDate.getText());
+                }
             }
             /*cal = null;
             Note: If your program uses the Calendar control only a few

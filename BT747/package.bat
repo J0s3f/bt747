@@ -1,5 +1,5 @@
 del BT747*.zip
-SET DT=25_06_2007
+SET DT=20070626_235824
 
 zip -r BT747_%DT%.zip src dist license.txt README.txt -xi src/CVS/\* \*/CVS/\*
 rem curl -v -u anonymous:m.deweerd@ieee.org --upload-file BT747_%DT%.zip ftp://upload.sourceforge.net/incoming
