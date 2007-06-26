@@ -22,7 +22,6 @@ package gps;
 import waba.io.File;
 import waba.sys.Convert;
 import waba.sys.Time;
-import waba.sys.Vm;
 import waba.util.Date;
 
 /**Class to write a CSV file.
@@ -39,6 +38,12 @@ public class GPSCSVFile implements GPSFile {
     public GPSCSVFile() {
         super();
         // TODO Auto-generated constructor stub
+    }
+    
+    GPSFilter m_Filter=null;
+    
+    public void setFilter(GPSFilter filter) {
+        m_Filter=filter;
     }
     
     public boolean nextPass() {
@@ -179,7 +184,7 @@ public class GPSCSVFile implements GPSFile {
         m_recCount++;
         rec+=Convert.toString(m_recCount);
         
-        if(activeFields!=null) {
+        if(activeFields!=null && m_Filter.doFilter(s)) {
             if(activeFields.rcr!=0) {
                 rec+=",";
                 if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {

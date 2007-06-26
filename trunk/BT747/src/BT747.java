@@ -30,6 +30,7 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
+import gps.GPSFilter;
 import gps.GPSconctrl;
 import gps.GPSstate;
 
@@ -73,19 +74,27 @@ public class BT747 extends MainWindow {
     private static TabPanel    m_TabPanel;
     /** The captions for the tab panel */
     private final String c_tpCaptions[]= {
-            "Log FMT","Ctrl","Log","Conn"
+            "Log FMT","Ctrl","Log","File","Filter","Conn",
     };
     /** Tab Panel container - Logger control/configuration */
     private static GPSLogFormat  m_GPSLogCtrl;
     private static int C_LOG_CTRL_IDX= 0;
+    
+    private GPSFilter m_GPSFilter=new GPSFilter();
  
     /** Tab Panel container - Log information */
     private static GPSLogReason  m_GPSLogInfo;
     /** Tab Panel container - Log retrieval */
     private static GPSLogGet   m_GPSLogGet;
+    /** Tab Panel container - Log file settings (name,...) */
+    private static GPSLogFile  m_GPSLogFile;
+    private static int C_GPS_FILECTRL_IDX= 3;
+    /** Tab Panel container - Log filter settings (other than date)*/
+    private static GPSLogFilter m_GPSLogFilter;
+    private static int C_GPS_FILTERCTRL_IDX= 4;
     /** Tab Panel container - Connection control/configuration */
     private static GPSconctrl  m_GPSconctrl;
-    private static int C_GPS_CONCTRL_IDX= 3;
+    private static int C_GPS_CONCTRL_IDX= 5;
     
     // TODO: Settings should just refer to function and not need to be instantiated
     private static AppSettings m_settings=new AppSettings();
@@ -130,7 +139,9 @@ public class BT747 extends MainWindow {
         
         m_TabPanel.setPanel(C_LOG_CTRL_IDX,m_GPSLogCtrl = new GPSLogFormat(m_GPSstate));
         m_TabPanel.setPanel(1,m_GPSLogInfo = new GPSLogReason(m_GPSstate));
-        m_TabPanel.setPanel(2,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar,m_settings));
+        m_TabPanel.setPanel(2,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar,m_settings,m_GPSFilter));
+        m_TabPanel.setPanel(C_GPS_FILECTRL_IDX,m_GPSLogFile = new GPSLogFile(m_settings));
+        m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX,m_GPSLogFilter = new GPSLogFilter(m_GPSFilter));
         m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,m_GPSconctrl = new GPSconctrl(m_GPSstate));
         //		m_TabPanel.setPanel(1,dataEdit = new dataEdit());
         //		m_TabPanel.setPanel(2,grid = new Grid(gridCaptions,false));
