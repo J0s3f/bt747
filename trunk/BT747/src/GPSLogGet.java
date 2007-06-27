@@ -60,7 +60,9 @@ public class GPSLogGet extends Container {
     Button m_btToKML;
     Button m_btToGPX;
     
-    final static int JULIAN_DAY_1_1_1970=18263;   
+    Check m_chkIncremental;
+    
+    final static int JULIAN_DAY_1_1_1970=18264;   
     ProgressBar m_pb;
     AppSettings m_appSettings;
     
@@ -123,6 +125,8 @@ public class GPSLogGet extends Container {
         // TODO Auto-generated method stub
         super.onStart();
         add(m_chkLogOnOff = new Check("Device log on(/off)"), LEFT, TOP); //$NON-NLS-1$
+        add(m_chkIncremental = new Check("Incremental"), RIGHT, SAME); //$NON-NLS-1$
+        m_chkIncremental.setChecked(true);
         add(new Label("Start date"), LEFT, AFTER); //$NON-NLS-1$
         add(m_btStartDate = new Button(m_StartDate.getDate()), AFTER, SAME); //$NON-NLS-1$
         //m_btStartDate.setMode(Edit.DATE);
@@ -185,6 +189,7 @@ public class GPSLogGet extends Container {
                         m_GPSstate.logMemUsed-1,    /* EndPosition */
                         logRequestSize,             /* Size per request */
                         m_appSettings.getLogFile(), /* Log file name */
+                        m_chkIncremental.getChecked(), /* Incremental download */
                         m_pb                        /* ProgressBar */
                         ); //$NON-NLS-1$
                 m_btGetLog.press(false);
@@ -230,7 +235,7 @@ public class GPSLogGet extends Container {
                 }
                     
                 m_Filter.startDate=dateToUTCepoch1970(m_StartDate);
-                m_Filter.endDate=dateToUTCepoch1970(m_EndDate);
+                m_Filter.endDate=dateToUTCepoch1970(m_EndDate)+(24*60*60-1);
                 gpsFile.setFilter(m_Filter);
                 // TODO: should get logformat associated with inputfile
                 gpsFile.initialiseFile("/Palm/GPSDATA", ext,BT747LogConvert.getLogFormatRecord(m_GPSstate.logFormat));
