@@ -66,6 +66,8 @@ public class GPSstate extends Control {
     private int m_Step;
     private boolean m_isLogging = false;       // True when dumping log
     private boolean m_isSearchingLog = false;  // True when doing binary search
+    private boolean m_isSearchingEnd = false;  // True when doing binary search
+    private boolean m_isCheckingLog = false;  // True when doing binary search
     private boolean m_getFullLog= true; // If true, get the entire log (based on block head)
     private boolean m_recoverFromError= false; // When true, must recover from error
     private boolean m_getNextLogOnNextTimer = false;
@@ -430,17 +432,17 @@ public class GPSstate extends Control {
                 +","+BT747_dev.PMTK_LOG_QUERY_STR+
                 ","+BT747_dev.PMTK_LOG_NBR_LOG_PTS_STR          
         );
-//        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
-//                +","+BT747_dev.PMTK_LOG_QUERY_STR+
-//                ","+BT747_dev.PMTK_LOG_TBD3_STR          
-//        );
-//        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
-//                +","+BT747_dev.PMTK_LOG_QUERY_STR+
-//                ","+BT747_dev.PMTK_LOG_TBD2_STR          
-//        );
-//      sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
-//              +","+BT747_dev.PMTK_LOG_QUERY_STR+
-//              ","+12 );       
+        //        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+        //                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+        //                ","+BT747_dev.PMTK_LOG_TBD3_STR          
+        //        );
+        //        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+        //                +","+BT747_dev.PMTK_LOG_QUERY_STR+
+        //                ","+BT747_dev.PMTK_LOG_TBD2_STR          
+        //        );
+        //      sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+        //              +","+BT747_dev.PMTK_LOG_QUERY_STR+
+        //              ","+12 );       
     }
     
     public void getLogReasonStatus() {
@@ -695,13 +697,14 @@ public class GPSstate extends Control {
             final int p_EndAddr,
             final int p_Step,
             final String p_FileName,
+            final boolean incremental,  // True if incremental read
             ProgressBar pb) {
+        m_isLogging= false;
         m_StartAddr= p_StartAddr;
-        m_EndAddr=p_EndAddr;
+        m_EndAddr=((p_EndAddr+0xFFFF)&0xFFFF0000)-1;
         m_NextReqAddr= m_StartAddr;
         m_NextReadAddr= m_StartAddr;
         m_Step=p_Step;
-        m_isLogging= true;
         m_ProgressBar=pb;
         if(pb!=null) {
             pb.min=m_StartAddr;
@@ -709,13 +712,25 @@ public class GPSstate extends Control {
             pb.setValue(m_NextReadAddr,""," b");
             pb.setVisible(true);
         }
-        // Put some logging requests in the buffer
-        for(int i=C_MAX_LOG_AHEAD;i>0;i--) {
+        if(incremental) {
+            m_isCheckingLog=true;
+            reOpenLog(p_FileName);
+            if(m_logFile!=null) {
+                readLog(0x200,0x200);  // Read 200 bytes, just past header.
+            }
+        }
+        if(m_logFile==null) {
+            // File could not be opened or is not incremental.
+            openNewLog(p_FileName);
+            m_isLogging=true;
             getNextLogPart();
         }
-        m_logFile=new File(p_FileName,File.CREATE);
+    }
+    
+    private void openNewLog(final String fileName) {
+        m_logFile=new File(fileName,File.CREATE|File.DONT_OPEN);
         m_logFile.delete();
-        m_logFile=new File(p_FileName,File.CREATE);
+        m_logFile=new File(fileName,File.CREATE);
         if(m_logFile!=null) {
             ;
             //            new MessageBox("File open",
@@ -723,7 +738,17 @@ public class GPSstate extends Control {
             //                    Convert.toString(m_logFile.exists())
             //            ).popupBlockingModal();
         }
-        
+    }
+    
+    private void reOpenLog(final String fileName) {
+        m_logFile=new File(fileName,File.CREATE | File.READ_WRITE);
+        if(m_logFile!=null) {
+            ;
+            //            new MessageBox("File open",
+            //                    m_logFile.getPath()+"|"+
+            //                    Convert.toString(m_logFile.exists())
+            //            ).popupBlockingModal();
+        }
     }
     
     
@@ -747,14 +772,6 @@ public class GPSstate extends Control {
                 }            
             }
         }
-    }
-    
-    private int binarySearchLeft = 0;
-    int curRecNumber;
-
-    
-    public void initBinarySearch(double p_UTC, boolean p_min_notmax) {
-        // 
     }
     
     private byte[] m_Data= new byte[0x800];
@@ -798,14 +815,14 @@ public class GPSstate extends Control {
     private static final int C_MAX_FILEBLOCK_WRITE = 0x200;
     public void	analyzeLogPart(final int p_StartAddr, final String p_Data) {
         int dataLength;
-        dataLength=HexStringToBytes(p_Data);
+        dataLength=HexStringToBytes(p_Data); // Fills m_data
         if( m_isLogging) {
             if(m_NextReadAddr==p_StartAddr) {
                 m_recoverFromError=false;
                 int j=0;
                 // The Palm platform showed problems writing 0x800 blocks.
                 // This splits it in smaller blocks and solves that problem.
-                for (int i = m_Data.length; i>0; i-=C_MAX_FILEBLOCK_WRITE) {
+                for (int i = dataLength; i>0; i-=C_MAX_FILEBLOCK_WRITE) {
                     int l=i;
                     if(l>C_MAX_FILEBLOCK_WRITE) {
                         l=C_MAX_FILEBLOCK_WRITE;
@@ -817,8 +834,10 @@ public class GPSstate extends Control {
                 if(m_ProgressBar!=null) {
                     m_ProgressBar.setValue(m_NextReadAddr);
                 }
-                if(m_getFullLog&&((p_StartAddr-1)&0xFFFF)
-                        >((p_StartAddr-1+dataLength)&0xFFFF)) {
+                if(m_getFullLog
+                   &&
+                   (((p_StartAddr-1+dataLength)&0xFFFF0000)>=p_StartAddr)
+                   ) {
                     // Block boundery (0xX0000) is inside data.
                     int blockStart=0xFFFF&(0x10000-(p_StartAddr&0xFFFF));
                     if(!(((m_Data[blockStart]&0xFF)==0xFF)
@@ -846,17 +865,41 @@ public class GPSstate extends Control {
             } else {
                 recoverFromLogError();
             }
-        } else if ( m_isSearchingLog) {
-            // Binary search
-            // TODO: Validate binary search, finish it.
-            // TODO: Get time from log entry & compare to move
-            while(binarySearchLeft-- > 0) {
-                // Get one log entry
-                //if(time<reftime)
-                // TODO: complete this
-                readLog(logEntryAddr(curRecNumber),logEntrySize);
-                
+        } else if ( m_isCheckingLog) {
+            // The block we got should be the block to check
+            byte[] m_localdata=new byte[dataLength];
+            int result;
+            boolean success=false;
+            m_logFile.setPos(p_StartAddr);
+            result=m_logFile.readBytes(m_localdata,0, dataLength);
+            if(result==dataLength) {
+                success=true;
+                for(int i=dataLength-1;i>=0;i--) {
+                    if(m_Data[i]!=m_localdata[i]) {
+                        // The log is not the same, data is different
+                        success=false;
+                        break; // Exit from the loop
+                    }
+                }
             }
+            if(success) {
+                // Downloaded data seems to correspond - start incremental download
+                // TODO: Could find exact position at the end of the log to continue
+                // download.  Currently starting with last full block (0x10000)
+                m_NextReadAddr=((m_logFile.getSize()-1) & 0xFFFF0000);
+                m_NextReqAddr=m_NextReadAddr;
+                m_logFile.setPos(m_NextReadAddr);
+                m_isCheckingLog=false;
+                m_isLogging=true;
+                getNextLogPart();
+            } else {
+                // Log is not the same - delete the log and reopen.
+                String fileName=m_logFile.getPath();
+                openNewLog(fileName);
+                m_isLogging=true;
+                getNextLogPart();
+            }
+            
         }
     }
     
