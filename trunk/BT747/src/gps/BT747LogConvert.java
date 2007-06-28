@@ -19,8 +19,8 @@ import waba.sys.Vm;
 public final class BT747LogConvert {
     private File m_File=null;     
     
-    public final void parseFile(final int logFormat,
-            final GPSFile gpsFile) {
+    public final void parseFile(final GPSFile gpsFile) {
+        int logFormat=3;
         GPSRecord gpsRec=new GPSRecord();
         final int C_BUF_SIZE=0x800;
         byte[] bytes=new byte[C_BUF_SIZE];
@@ -30,8 +30,8 @@ public final class BT747LogConvert {
         int recCount;
         int bufIdx;
         int fileSize;
-        int minRecordSize=BT747_dev.logRecordMinSize(logFormat);
-        int maxRecordSize=minRecordSize; /* TODO: Determine correct value */
+        int minRecordSize=16;
+        int maxRecordSize=16;
         recCount=0;
         offset=0;
         nextAddrToRead=0;
@@ -42,7 +42,9 @@ public final class BT747LogConvert {
             
             // Determine size to read
             if((nextAddrToRead&0xFFFF)<0x200) {
+                // Read the header
                 nextAddrToRead=(nextAddrToRead&0xFFFF0000)|0x200;
+                nextAddrToRead=(nextAddrToRead&0xFFFF0000);
             }
             int endOfBlock=(nextAddrToRead&0xFFFF0000)|0xFFFF;
             sizeToRead=endOfBlock+1-nextAddrToRead;
@@ -59,11 +61,32 @@ public final class BT747LogConvert {
             
             // Read the bytes
             int readResult;
-            m_File.setPos(nextAddrToRead);
-            readResult=m_File.readBytes(bytes, 0, sizeToRead);
-            nextAddrToRead+=sizeToRead;
-            int offsetInBuffer=0;
             boolean continueInBuffer=true;
+            int offsetInBuffer=0;
+
+            m_File.setPos(nextAddrToRead);
+            if((nextAddrToRead&0xFFFF)==0) {
+                if(sizeToRead>=20) {
+                    // Read header (20 bytes is enough)
+                    readResult=m_File.readBytes(bytes, 0, 20);
+                int newLogFormat=   (0xFF&bytes[2])<<0
+                            |(0xFF&bytes[3])<<8
+                            |(0xFF&bytes[4])<<16
+                            |(0xFF&bytes[5])<<24;
+                if(newLogFormat!=logFormat) {
+                    logFormat=newLogFormat;
+                    gpsFile.writeLogFmtHeader(BT747LogConvert.getLogFormatRecord(logFormat));
+                    minRecordSize=BT747_dev.logRecordMinSize(logFormat);
+                    maxRecordSize=minRecordSize; /* TODO: Determine correct value */
+                }
+                }
+                nextAddrToRead+=0x200;
+                continueInBuffer=false;
+            } else {
+                readResult=m_File.readBytes(bytes, 0, sizeToRead);
+                nextAddrToRead+=sizeToRead;
+            }
+            
             
             // A block of bytes has been read, read the records
             while(continueInBuffer) {
@@ -83,6 +106,27 @@ public final class BT747LogConvert {
                             &&((0xFF&bytes[offsetInBuffer+14])==0xBB)
                             &&((0xFF&bytes[offsetInBuffer+15])==0xBB)
                     ) {
+                        int value=
+                            (0xFF&bytes[offsetInBuffer+8])<<0
+                            |(0xFF&bytes[offsetInBuffer+9])<<8
+                            |(0xFF&bytes[offsetInBuffer+10])<<16
+                            |(0xFF&bytes[offsetInBuffer+11])<<24
+                            ;
+                        // There is a special operation here
+                        switch(0xFF&bytes[offsetInBuffer+7]) {
+                        case 0x02: // logBitMaskChange
+                         logFormat= value;
+                            break;
+                        case 0x03: // log Period change
+                            break;
+                        case 0x04: // log distance change
+                            break;
+                        case 0x05: // log speed change
+                            break;
+                        case 0x07: // value: 0x0106= logger on  0x0107= logger off 0x104=??
+                            break;
+                        }
+                            
                         // No data: on/off
                         offsetInBuffer+=16;
                     } else {
@@ -280,8 +324,7 @@ public final class BT747LogConvert {
             }
         } /* nextAddrToRead<fileSize */
     }
-    public final void toGPSFile(final String fileName, final int logFormat,
-            final GPSFile gpsFile) {
+    public final void toGPSFile(final String fileName, final GPSFile gpsFile) {
         GPSRecord gpsRec=new GPSRecord();
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY);
@@ -290,7 +333,7 @@ public final class BT747LogConvert {
                 m_File=null;
             } else {
                 do {
-                    parseFile(logFormat,gpsFile);
+                    parseFile(gpsFile);
                 } while (gpsFile.nextPass());
             }
             

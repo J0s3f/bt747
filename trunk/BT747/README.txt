@@ -30,4 +30,5 @@ set CLASSPATH=c:\pathtowin32comm\win32comm.jar;.;%CLASSPATH%;;c:\superwabasdk\li
 java waba.applet.Applet BT747
 ---------------- end of example ----------------
 
+You can also try to run the 'run_ex.bat' command script.
 

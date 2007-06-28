@@ -672,11 +672,19 @@ public class GPSstate extends Control {
     }
     
     private File m_logFile=new File("");
-    public void endGetLog() {
-        if(m_logFile!=null  && m_logFile.isOpen()) {
-            m_logFile.close();
+    public void closeLog() {
+        try {
+            if(m_logFile!=null  && m_logFile.isOpen()) {
+                Vm.debug("CloseLog");
+                m_logFile.close();
+            }
         }
+        catch (Exception e) {
+        }
+    }
+    public void endGetLog() {
         m_isLogging= false;
+        closeLog();
         if(m_ProgressBar!=null) {
             m_ProgressBar.setVisible(false);
         }
@@ -700,6 +708,7 @@ public class GPSstate extends Control {
             final boolean incremental,  // True if incremental read
             ProgressBar pb) {
         m_isLogging= false;
+        m_isCheckingLog=false;
         m_StartAddr= p_StartAddr;
         m_EndAddr=((p_EndAddr+0xFFFF)&0xFFFF0000)-1;
         m_NextReqAddr= m_StartAddr;
@@ -713,42 +722,62 @@ public class GPSstate extends Control {
             pb.setVisible(true);
         }
         if(incremental) {
-            m_isCheckingLog=true;
-            reOpenLog(p_FileName);
-            if(m_logFile!=null) {
+            reOpenLogRead(p_FileName);
+            if(m_logFile!=null&&m_logFile.isOpen()) {
                 readLog(0x200,0x200);  // Read 200 bytes, just past header.
+                m_isCheckingLog=true;
             }
         }
-        if(m_logFile==null) {
+        if(!m_isCheckingLog) {
             // File could not be opened or is not incremental.
             openNewLog(p_FileName);
             m_isLogging=true;
-            getNextLogPart();
+            m_getNextLogOnNextTimer=true;
         }
     }
     
     private void openNewLog(final String fileName) {
-        m_logFile=new File(fileName,File.CREATE|File.DONT_OPEN);
-        m_logFile.delete();
-        m_logFile=new File(fileName,File.CREATE);
-        if(m_logFile!=null) {
-            ;
-            //            new MessageBox("File open",
-            //                    m_logFile.getPath()+"|"+
-            //                    Convert.toString(m_logFile.exists())
-            //            ).popupBlockingModal();
+        if(m_logFile!=null&&m_logFile.isOpen()) {m_logFile.close();}
+        try {
+            m_logFile=new File(fileName);
+            if(m_logFile.exists()) {
+                m_logFile.delete();
+            }
+        } catch (Exception e) {
+            Vm.debug("Exception new log delete");
         }
+        Vm.debug("new log: delete lasterror "+Convert.toString(m_logFile.lastError));
+        try {
+            m_logFile=new File(fileName,File.CREATE);
+            m_logFile.close();
+            m_logFile=new File(fileName,File.READ_WRITE);
+        } catch (Exception e) {
+            Vm.debug("Exception new log create");
+        }
+        Vm.debug("new log: create lasterror "+Convert.toString(m_logFile.lastError));
     }
     
-    private void reOpenLog(final String fileName) {
-        m_logFile=new File(fileName,File.CREATE | File.READ_WRITE);
-        if(m_logFile!=null) {
-            ;
-            //            new MessageBox("File open",
-            //                    m_logFile.getPath()+"|"+
-            //                    Convert.toString(m_logFile.exists())
-            //            ).popupBlockingModal();
+    
+    private void reOpenLogRead(final String fileName) {
+        closeLog();
+        try {
+            m_logFile=new File(fileName,File.READ_ONLY);
+        } catch (Exception e) {
+            Vm.debug("Exception reopen log read");
         }
+        Vm.debug("new log: reopen log read "+Convert.toString(m_logFile.lastError));
+        
+    }
+    
+    private void reOpenLogWrite(final String fileName) {
+        closeLog();
+        try {
+            m_logFile=new File(fileName,File.READ_WRITE);
+        } catch (Exception e) {
+            Vm.debug("Exception reopen log write");
+        }
+        Vm.debug("new log: reopen log write "+Convert.toString(m_logFile.lastError));
+        
     }
     
     
@@ -809,7 +838,7 @@ public class GPSstate extends Control {
         m_NextReqAddr=m_NextReadAddr;
         if(!m_recoverFromError) {
             m_recoverFromError=true;
-            getNextLogPart();
+            m_getNextLogOnNextTimer=true;
         }
     }
     private static final int C_MAX_FILEBLOCK_WRITE = 0x200;
@@ -827,7 +856,10 @@ public class GPSstate extends Control {
                     if(l>C_MAX_FILEBLOCK_WRITE) {
                         l=C_MAX_FILEBLOCK_WRITE;
                     }
-                    m_logFile.writeBytes(m_Data,j,l);
+                    if(m_logFile.writeBytes(m_Data,j,l)==-1) {
+                        Vm.debug("Problem during anaLog: "+Convert.toString(m_logFile.lastError));
+                        cancelGetLog();
+                    };
                     j+=l;
                 }
                 m_NextReadAddr+=m_Data.length;
@@ -835,9 +867,9 @@ public class GPSstate extends Control {
                     m_ProgressBar.setValue(m_NextReadAddr);
                 }
                 if(m_getFullLog
-                   &&
-                   (((p_StartAddr-1+dataLength)&0xFFFF0000)>=p_StartAddr)
-                   ) {
+                        &&
+                        (((p_StartAddr-1+dataLength)&0xFFFF0000)>=p_StartAddr)
+                ) {
                     // Block boundery (0xX0000) is inside data.
                     int blockStart=0xFFFF&(0x10000-(p_StartAddr&0xFFFF));
                     if(!(((m_Data[blockStart]&0xFF)==0xFF)
@@ -863,43 +895,49 @@ public class GPSstate extends Control {
                     m_getNextLogOnNextTimer=true;
                 }
             } else {
-                recoverFromLogError();
+                //recoverFromLogError();  // Let the timeout handle it
             }
         } else if ( m_isCheckingLog) {
-            // The block we got should be the block to check
-            byte[] m_localdata=new byte[dataLength];
-            int result;
-            boolean success=false;
-            m_logFile.setPos(p_StartAddr);
-            result=m_logFile.readBytes(m_localdata,0, dataLength);
-            if(result==dataLength) {
-                success=true;
-                for(int i=dataLength-1;i>=0;i--) {
-                    if(m_Data[i]!=m_localdata[i]) {
-                        // The log is not the same, data is different
-                        success=false;
-                        break; // Exit from the loop
+            if(p_StartAddr==0x0200) {
+                // The block we got should be the block to check
+                byte[] m_localdata=new byte[dataLength];
+                int result;
+                boolean success=false;
+                m_logFile.setPos(p_StartAddr);
+                result=m_logFile.readBytes(m_localdata,0, dataLength);
+                if(result==dataLength) {
+                    success=true;
+                    for(int i=dataLength-1;i>=0;i--) {
+                        if(m_Data[i]!=m_localdata[i]) {
+                            // The log is not the same, data is different
+                            success=false;
+                            break; // Exit from the loop
+                        }
                     }
                 }
-            }
-            if(success) {
-                // Downloaded data seems to correspond - start incremental download
-                // TODO: Could find exact position at the end of the log to continue
-                // download.  Currently starting with last full block (0x10000)
-                m_NextReadAddr=((m_logFile.getSize()-1) & 0xFFFF0000);
-                m_NextReqAddr=m_NextReadAddr;
-                m_logFile.setPos(m_NextReadAddr);
-                m_isCheckingLog=false;
-                m_isLogging=true;
-                getNextLogPart();
-            } else {
-                // Log is not the same - delete the log and reopen.
                 String fileName=m_logFile.getPath();
-                openNewLog(fileName);
-                m_isLogging=true;
-                getNextLogPart();
+                if(success) {
+                    // Downloaded data seems to correspond - start incremental download
+                    // TODO: Could find exact position at the end of the log to continue
+                    // download.  Currently starting with last full block (0x10000)
+                    reOpenLogWrite(fileName);
+                    m_NextReqAddr=((m_logFile.getSize()-1) & 0xFFFF0000);
+                    if(m_NextReadAddr<m_NextReqAddr) {
+                        m_NextReadAddr=m_NextReqAddr;
+                    } else {
+                        m_NextReqAddr=m_NextReadAddr;
+                    }
+                    m_logFile.setPos(m_NextReadAddr);
+                    m_isCheckingLog=false;
+                    m_isLogging=true;
+                    m_getNextLogOnNextTimer=true;
+                } else {
+                    // Log is not the same - delete the log and reopen.
+                    openNewLog(fileName);
+                    m_isLogging=true;
+                    m_getNextLogOnNextTimer=true;
+                }
             }
-            
         }
     }
     
