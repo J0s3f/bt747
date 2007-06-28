@@ -52,7 +52,7 @@ public class GPSCSVFile implements GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(String basename, String ext, GPSRecord f) {
+    public void initialiseFile(String basename, String ext) {
         // TODO Auto-generated method stub
         m_File=new File(basename+ext);
         if(m_File.exists()) {
@@ -63,13 +63,12 @@ public class GPSCSVFile implements GPSFile {
             waba.sys.Vm.debug("Could not open "+basename+ext);
             m_File=null;
         } else {
-            activeFields= new GPSRecord(f);
             m_recCount=0;
-            writeHeader();
-            }
+        }
     }
     
-    public void writeHeader() {
+    public void writeLogFmtHeader(final GPSRecord f) {
+        activeFields= new GPSRecord(f);
         //INDEX,RCR,DATE,TIME,VALID,LATITUDE,N/S,LONGITUDE,E/W,HEIGHT,SPEED,
         writeTxt("INDEX");
         if(activeFields.rcr!=0) {

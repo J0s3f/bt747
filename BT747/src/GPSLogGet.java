@@ -238,10 +238,10 @@ public class GPSLogGet extends Container {
                 m_Filter.endDate=dateToUTCepoch1970(m_EndDate)+(24*60*60-1);
                 gpsFile.setFilter(m_Filter);
                 // TODO: should get logformat associated with inputfile
-                gpsFile.initialiseFile("/Palm/GPSDATA", ext,BT747LogConvert.getLogFormatRecord(m_GPSstate.logFormat));
+                gpsFile.initialiseFile("/Palm/GPSDATA", ext);
                 /* TODO: Recover the logFormat from a file or so */
                 BT747LogConvert lc=new BT747LogConvert();
-                lc.toGPSFile(m_appSettings.getLogFile(),m_GPSstate.logFormat,gpsFile);
+                lc.toGPSFile(m_appSettings.getLogFile(),gpsFile);
                 gpsFile.finaliseFile();
                 Convert.toString(3);
             } else if (event.target == this) {
