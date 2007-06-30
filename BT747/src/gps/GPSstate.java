@@ -203,7 +203,7 @@ public class GPSstate implements Thread {
             // Check if old timer still present (for safety)
             // TODO: check if old thread is still present
             //if(linkTimer!=null) removeTimer(linkTimer);
-            MainWindow.getMainWindow().addThread(this, true);
+            MainWindow.getMainWindow().addThread(this, false);
 
             // Remember defaults
             m_settings.setPortnbr(m_GPSrxtx.spPortNbr);
