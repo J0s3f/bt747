@@ -240,17 +240,21 @@ public class GPSrxtx {
                 z_Checksum^=(byte)p_Packet.charAt(z_Index);
             }
             m_writeOngoing.down();  // Semaphore - reserve link
-            z_Result+=ds.writeByte('$');
-            z_Result+=ds.writeBytes(p_Packet.getBytes());
-            z_Result+=ds.writeByte('*');
-            z_Result+=ds.writeBytes(Convert.unsigned2hex(z_Checksum,2).getBytes());
-            z_Result+=ds.writeBytes(EOL_BYTES);
-            if(GPS_FILE_LOG&&(m_debugFile!=null)) {
-                m_debugFile.writeBytes(">>>>".getBytes(), 0, 4);
-                m_debugFile.writeBytes(p_Packet.getBytes(), 0, p_Packet.length());
-                m_debugFile.writeBytes("*".getBytes(), 0, 1);
-                m_debugFile.writeBytes(Convert.unsigned2hex(z_Checksum,2).getBytes(),0,2);
-                m_debugFile.writeBytes(EOL_BYTES,0,2);
+            try {
+                z_Result+=ds.writeByte('$');
+                z_Result+=ds.writeBytes(p_Packet.getBytes());
+                z_Result+=ds.writeByte('*');
+                z_Result+=ds.writeBytes(Convert.unsigned2hex(z_Checksum,2).getBytes());
+                z_Result+=ds.writeBytes(EOL_BYTES);
+                if(GPS_FILE_LOG&&(m_debugFile!=null)) {
+                    m_debugFile.writeBytes(">>>>".getBytes(), 0, 4);
+                    m_debugFile.writeBytes(p_Packet.getBytes(), 0, p_Packet.length());
+                    m_debugFile.writeBytes("*".getBytes(), 0, 1);
+                    m_debugFile.writeBytes(Convert.unsigned2hex(z_Checksum,2).getBytes(),0,2);
+                    m_debugFile.writeBytes(EOL_BYTES,0,2);
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
             }
             
             m_writeOngoing.up();  // Semaphore - release link

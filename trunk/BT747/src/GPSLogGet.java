@@ -182,7 +182,7 @@ public class GPSLogGet extends Container {
                 // TODO: Optimize download on PalmOS.
                 int logRequestSize=0x10000;
                 if(waba.sys.Settings.platform.startsWith("PalmOS")) {
-                    logRequestSize=0x140;
+                    logRequestSize=0x200;
                 }
                 //logRequestSize=0x100;
                 //logRequestSize=0x800;
