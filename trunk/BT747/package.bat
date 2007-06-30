@@ -1,6 +1,7 @@
 del BT747*.zip
-SET DT=20070626_235824
+SET DT=20070629_004717
 
-zip -r BT747_%DT%.zip src dist license.txt README.txt -xi src/CVS/\* \*/CVS/\*
-rem curl -v -u anonymous:m.deweerd@ieee.org --upload-file BT747_%DT%.zip ftp://upload.sourceforge.net/incoming
+SET EXTRA_FILES=run_ex.bat webstart/Waba_only.jar win32comm.jar
+
+zip -r BT747_%DT%.zip  %EXTRA_FILES% src dist license.txt README.txt -xi src/CVS/\* \*/CVS/\*
 curl --ftp-pasv --ftp-skip-pasv-ip -u anonymous:m.deweerd@ieee.org -T BT747_%DT%.zip ftp://upload.sourceforge.net/incoming/BT747_%DT%.zip

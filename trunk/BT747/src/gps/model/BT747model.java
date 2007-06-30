@@ -50,7 +50,7 @@ public class BT747model extends Control {
         m_GPSrxtx = new GPSrxtx();
         m_GPSrxtx.setDefaults(2, 115200);
         m_GPSrxtx.openPort();
-        addTimer(1);
+        addTimer(10); // Palm minimum timer resolution= 10 ms
     }
 
     public void replyMTK_Ack(final String[] p_nmea) {
