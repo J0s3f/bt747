@@ -58,7 +58,7 @@ public class GPSstate extends Control {
     ProgressBar m_ProgressBar=null;
     
     // Fields to keep track of logging status
-    private int logTimer=0;  // Value that increases at each timer event
+    private int logTimer=Vm.getTimeStamp();  // Value that increases at each timer event
     private int m_StartAddr;
     private int m_EndAddr;
     private int m_NextReqAddr;
@@ -102,7 +102,7 @@ public class GPSstate extends Control {
     
     
     static final int C_LOG_TIMEOUT  = 3000; // ms
-    static final int C_TIMER_PERIOD = 10; // ms
+    static final int C_TIMER_PERIOD = 2; // ms
     static final int C_LOG_TIMEOUT_CNT = C_LOG_TIMEOUT / C_TIMER_PERIOD; 
     private Timer linkTimer= null;
     Control m_EventPosterObject= null;
@@ -269,7 +269,7 @@ public class GPSstate extends Control {
      */
     public void handleLogTimeOut() {
         Vm.debug("Timeout");
-        logTimer=0;
+        logTimer=Vm.getTimeStamp();
         m_recoverFromError=false; 
         recoverFromLogError();
     }
@@ -377,7 +377,8 @@ public class GPSstate extends Control {
                 // $PMTK182,8,START_ADDRESS,DATA
                 
                 try {
-                    logTimer=0;
+                    logTimer=Vm.getTimeStamp();
+//                    waba.sys.Vm.debug("Before AnalyzeLog:"+p_nmea[3].length());
                     analyzeLogPart(Conv.hex2Int(p_nmea[2]), p_nmea[3]);
                 } catch (Exception e) {
                     // During debug: array index out of bounds
@@ -841,10 +842,11 @@ public class GPSstate extends Control {
             m_getNextLogOnNextTimer=true;
         }
     }
-    private static final int C_MAX_FILEBLOCK_WRITE = 0x200;
+    private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
     public void	analyzeLogPart(final int p_StartAddr, final String p_Data) {
         int dataLength;
         dataLength=HexStringToBytes(p_Data); // Fills m_data
+//        Vm.debug("Got "+Convert.toString(p_Data.length())+"): "+Convert.toString(dataLength));
         if( m_isLogging) {
             if(m_NextReadAddr==p_StartAddr) {
                 m_recoverFromError=false;
@@ -856,13 +858,21 @@ public class GPSstate extends Control {
                     if(l>C_MAX_FILEBLOCK_WRITE) {
                         l=C_MAX_FILEBLOCK_WRITE;
                     }
-                    if(m_logFile.writeBytes(m_Data,j,l)==-1) {
+                    Vm.debug("Writing("+Convert.toString(p_StartAddr)+"): "+Convert.toString(j)+" "+Convert.toString(l));
+                    if(m_logFile.writeBytes(m_Data,j,l)!=l) {
                         Vm.debug("Problem during anaLog: "+Convert.toString(m_logFile.lastError));
                         cancelGetLog();
                     };
                     j+=l;
                 }
-                m_NextReadAddr+=m_Data.length;
+                m_NextReadAddr+=dataLength;
+                if(dataLength!=0x800 && dataLength!=m_Step) {
+                    // Workaround
+                    // If data return is different from requested size or 0x800,
+                    // This is probably going over bluetooth.
+                    m_NextReqAddr=m_NextReadAddr;
+                    getNextLogPart();  // Request it now (do not wait for timer)
+                }
                 if(m_ProgressBar!=null) {
                     m_ProgressBar.setValue(m_NextReadAddr);
                 }
@@ -1081,13 +1091,12 @@ public class GPSstate extends Control {
                     m_getNextLogOnNextTimer=false;
                     getNextLogPart();
                 }
-                if(m_isLogging||m_isSearchingLog) logTimer++;  // Increase log timer to determine timeout
                 lastResponse= m_GPSrxtx.getResponse();
                 while(lastResponse!=null) {
                     analyseNMEA(lastResponse);
                     lastResponse= m_GPSrxtx.getResponse();
                 }
-                if((m_isLogging||m_isSearchingLog)&& (logTimer>C_LOG_TIMEOUT_CNT)) {
+                if((m_isLogging||m_isSearchingLog)&& ((Vm.getTimeStamp()-logTimer)>=C_LOG_TIMEOUT)) {
                     handleLogTimeOut();  // On time out resend request packet.
                 }
             } else {
@@ -1098,6 +1107,29 @@ public class GPSstate extends Control {
         
         }
     }  
+    /* (non-Javadoc)
+     * @see waba.sys.Thread#run()
+     */
+    public void run() {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see waba.sys.Thread#started()
+     */
+    public void started() {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see waba.sys.Thread#stopped()
+     */
+    public void stopped() {
+        // TODO Auto-generated method stub
+
+    }
     
     
 }

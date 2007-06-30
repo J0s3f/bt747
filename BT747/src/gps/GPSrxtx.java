@@ -19,9 +19,11 @@
 //********************************************************************                              
 package gps;
 import waba.io.DataStream;
+import waba.io.File;
 import waba.io.SerialPort;
 import waba.sys.Convert;
 import waba.sys.Settings;
+import waba.sys.Vm;
 import waba.ui.Control;
 import waba.ui.MessageBox;
 import waba.util.Vector;
@@ -33,7 +35,10 @@ import waba.util.Vector;
  * @author Mario De Weerd
  */
 public class GPSrxtx extends Control {
-    static final boolean GPS_DEBUG = !Settings.onDevice;
+    private static final boolean GPS_DEBUG = false; //!Settings.onDevice;
+    private static final boolean GPS_FILE_LOG = false;  // When true log communication to file for debug
+    private File m_debugFile=null;
+    private final static String C_DEBUG_FILE="/Palm/gpsRAW.txt";
     
     protected int spPortNbr;
     protected int spSpeed=115200;  // Does not really matter on most platforms
@@ -144,14 +149,30 @@ public class GPSrxtx extends Control {
     public int openPort() {
         int result=-1;
         closePort();
+        if(GPS_FILE_LOG&&(m_debugFile==null)) {
+            try {
+                new File(C_DEBUG_FILE).delete();
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            try {
+                // Having some trouble on Palm - doing it like this.
+                new File(C_DEBUG_FILE,File.CREATE).close();
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            m_debugFile=new File(C_DEBUG_FILE,File.READ_WRITE);
+        }
+
         try {
             sp=new SerialPort(spPortNbr,spSpeed);
             result=sp.lastError;
             portIsOK= sp.isOpen();
             if(portIsOK) {
                 // Read time out gives problems on windows: data is skipped!!!O
+                sp.setReadTimeout(0);//small to read data in chunks and have good resp.
                 //				sp.setReadTimeout(50);//small to read data in chunks and have good resp.
-                //				sp.setFlowControl(true);
+                //sp.setFlowControl(true);
                 ds=new DataStream(sp);
             }
         }
@@ -179,6 +200,7 @@ public class GPSrxtx extends Control {
     private static final int C_CHECKSUM_CHAR2_STATE = 5;
     private static final int C_EOL_STATE = 6;
     private static final int C_ERROR_STATE = 7;
+    private static final int C_FOUND_STATE = 8;
     
     //The maximum length of each packet is restricted to 255 bytes (except for logger)	
     private static final int C_BUF_SIZE = 0x1100;
@@ -186,14 +208,14 @@ public class GPSrxtx extends Control {
     
     private static int current_state = C_INITIAL_STATE;
     
-    byte[] read_buf  = new byte[C_BUF_SIZE];
-    char[] cmd_buf   = new char[C_CMDBUF_SIZE];
+    private byte[] read_buf  = new byte[C_BUF_SIZE];
+    private char[] cmd_buf   = new char[C_CMDBUF_SIZE];
     
-    int read_buf_p= 0;
-    int cmd_buf_p = 0;
-    int bytesRead= 0;	
-    int checksum= 0;	
-    int read_checksum;
+    private int read_buf_p= 0;
+    private int cmd_buf_p = 0;
+    private int bytesRead= 0;	
+    private int checksum= 0;	
+    private int read_checksum;
     
     
     static final int ERR_NOERROR= 0;	
@@ -209,7 +231,7 @@ public class GPSrxtx extends Control {
         if((ds!=null)&&(ds.isOpen())) {
             if(GPS_DEBUG) {
                 waba.sys.Vm.debug(">"+p_Packet);
-            }        
+            }
             // Calculate checksum
             int z_Index= p_Packet.length();
             byte z_Checksum= 0;
@@ -223,6 +245,13 @@ public class GPSrxtx extends Control {
             z_Result+=ds.writeByte('*');
             z_Result+=ds.writeBytes(Convert.unsigned2hex(z_Checksum,2).getBytes());
             z_Result+=ds.writeBytes(EOL_BYTES);
+            if(GPS_FILE_LOG&&(m_debugFile!=null)) {
+                m_debugFile.writeBytes(">>>>".getBytes(), 0, 4);
+                m_debugFile.writeBytes(p_Packet.getBytes(), 0, p_Packet.length());
+                m_debugFile.writeBytes("*".getBytes(), 0, 1);
+                m_debugFile.writeBytes(Convert.unsigned2hex(z_Checksum,2).getBytes(),0,2);
+                m_debugFile.writeBytes(EOL_BYTES,0,2);
+            }
             
             m_writeOngoing.up();  // Semaphore - release link
             return z_Result;
@@ -235,7 +264,19 @@ public class GPSrxtx extends Control {
         boolean continueReading;
         int myError= ERR_NOERROR;
         final boolean skipError=true;
-        continueReading = true;
+        continueReading = sp.isOpen();
+        try {
+            if(GPS_FILE_LOG&&(m_debugFile!=null)) {
+                String q="\r\n:"+Convert.toString(Vm.getTimeStamp())+":";
+                m_debugFile.writeBytes(q.getBytes(),0,q.length());
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+        if(current_state==C_FOUND_STATE) {
+            current_state=C_START_STATE;
+        }
         
         while(continueReading) {
             
@@ -254,13 +295,14 @@ public class GPSrxtx extends Control {
                     //						sb.append(cmd_buf,0,cmd_buf_p);
                     //						if(GPS_DEBUG) {waba.sys.Vm.debug(sb.toString()+"\n");}; 
                     if ( ( (c==10) || (c==13))) {
-                        current_state = C_START_STATE;
+                        current_state = C_FOUND_STATE;
                         continueReading = false;
                     } else {
                         current_state = C_ERROR_STATE;											        
                     }
                     break;
                     
+                case C_FOUND_STATE:
                 case C_INITIAL_STATE:
                 case C_START_STATE:
                     vCmd.removeAllElements();
@@ -385,22 +427,27 @@ public class GPSrxtx extends Control {
                 }
                 if(bytesRead==0) {
                     continueReading=false;
+                } else {
+                    if(GPS_FILE_LOG&&(m_debugFile!=null)) {
+                        String q="("+Convert.toString(Vm.getTimeStamp())+")";
+                        m_debugFile.writeBytes(q.getBytes(),0,q.length());
+                        m_debugFile.writeBytes(read_buf, 0, bytesRead);
+                    }
                 }
             }
         }		
         if (myError==C_ERROR_STATE) {
-            if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
-                return (String[])vCmd.toObjectArray();                
-            }
-            if(GPS_DEBUG&&(vCmd.getCount()!=0)) {
-                String s;
-                s="-";
-                waba.sys.Vm.debug(s);
-                for (int i = 0; i < vCmd.getCount(); i++) {
-                    waba.sys.Vm.debug(((String[])vCmd.toObjectArray())[i]);
-                };
-                //waba.sys.Vm.debug(s);
-            }        
+//            waba.sys.Vm.debug("Error on reception");
+//
+//            if(GPS_DEBUG&&(vCmd.getCount()!=0)) {
+//                String s;
+//                s="-";
+//                waba.sys.Vm.debug(s);
+//                for (int i = 0; i < vCmd.getCount(); i++) {
+//                    waba.sys.Vm.debug(((String[])vCmd.toObjectArray())[i]);
+//                };
+//                //waba.sys.Vm.debug(s);
+//            }        
             vCmd.removeAllElements();
         }
         //        if((vCmd.getCount()!=0)&&(Settings.platform.equals("Java"))) {
@@ -412,10 +459,15 @@ public class GPSrxtx extends Control {
         //            };
         //            waba.sys.Vm.debug(s);
         //        }        
-        if(current_state==C_START_STATE) {
-            if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
-                return (String[])vCmd.toObjectArray();                
-            }
+        if(current_state==C_FOUND_STATE) {
+//            if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
+////                return (String[])vCmd.toObjectArray();                
+////            }
+//                for (int i = 0; i < vCmd.getCount(); i++) {
+//                    waba.sys.Vm.debug("Rec:"+Convert.toString( ((String[])vCmd.toObjectArray())[i].length()));
+//                };
+//            }
+
             return (String[])vCmd.toObjectArray();
         } else {
             return null;
