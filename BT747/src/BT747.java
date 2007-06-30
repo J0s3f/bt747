@@ -103,10 +103,6 @@ public class BT747 extends MainWindow {
      */
     public BT747() {
         // TODO: Initialise settings in AppSettings class
-        if(Settings.appSettings==null) {
-            Settings.appSettings="00005555000000000000";
-            //                               12345678901234567890
-        }
         waba.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);

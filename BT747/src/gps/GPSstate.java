@@ -862,9 +862,12 @@ public class GPSstate implements Thread {
                             l=C_MAX_FILEBLOCK_WRITE;
                         }
 //                        Vm.debug("Writing("+Convert.toString(p_StartAddr)+"): "+Convert.toString(j)+" "+Convert.toString(l));
-                        if(m_logFile.writeBytes(m_Data,j,l)!=l) {
+                        
+                        int q;
+                        if((q=m_logFile.writeBytes(m_Data,j,l))!=l) {
 //                            Vm.debug("Problem during anaLog: "+Convert.toString(m_logFile.lastError));
                             cancelGetLog();
+                            Vm.debug(Convert.toString(q));
                         };
                         j+=l;
                     }
