@@ -47,7 +47,7 @@ public class GPSconctrl extends Container {
     static final int C_CHN_0 = 2;
 
     static final String[] txtChannel = { "BLUETOOTH", "USB", "0", "1", "2",
-            "3", "4", "5", "6", "7" };
+            "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14","15"};
 
     public GPSconctrl(GPSstate p_GPSstate) {
         m_GPSstate = p_GPSstate;
@@ -61,7 +61,7 @@ public class GPSconctrl extends Container {
                 C_CHN_BLUETOOTH, // Default selected - get this from rxtx
                 -1, // gap
                 6, // inside gap
-                1, // rows
+                2, // rows
                 false, // all same width
                 PushButtonGroup.NORMAL);
         add(btnChannelSelect, CENTER, AFTER + 2);
