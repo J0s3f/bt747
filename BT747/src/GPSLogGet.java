@@ -182,13 +182,14 @@ public class GPSLogGet extends Container {
                 // TODO: Optimize download on PalmOS.
                 int logRequestSize=0x10000;
                 if(waba.sys.Settings.platform.startsWith("PalmOS")) {
-                    logRequestSize=0x800;
+                    logRequestSize=0x140;
                 }
+                //logRequestSize=0x100;
                 //logRequestSize=0x800;
                 m_GPSstate.getLogInit(0,            /* StartPosition */
                         m_GPSstate.logMemUsed-1,    /* EndPosition */
                         logRequestSize,             /* Size per request */
-                        m_appSettings.getLogFile(), /* Log file name */
+                        m_appSettings.getLogFilePath(), /* Log file name */
                         m_chkIncremental.getChecked(), /* Incremental download */
                         m_pb                        /* ProgressBar */
                         ); //$NON-NLS-1$
@@ -238,10 +239,10 @@ public class GPSLogGet extends Container {
                 m_Filter.endDate=dateToUTCepoch1970(m_EndDate)+(24*60*60-1);
                 gpsFile.setFilter(m_Filter);
                 // TODO: should get logformat associated with inputfile
-                gpsFile.initialiseFile("/Palm/GPSDATA", ext);
+                gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext);
                 /* TODO: Recover the logFormat from a file or so */
                 BT747LogConvert lc=new BT747LogConvert();
-                lc.toGPSFile(m_appSettings.getLogFile(),gpsFile);
+                lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile);
                 gpsFile.finaliseFile();
                 Convert.toString(3);
             } else if (event.target == this) {

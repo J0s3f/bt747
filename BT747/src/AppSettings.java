@@ -69,18 +69,42 @@ public class AppSettings implements gps.settings {
     /** The location of the logFile
      * 
      */
-    protected String logFile="/Palm/BT747log.bin";
+    protected String baseDirPath="/Palm";
+    protected String logFile="BT747log.bin";
+    protected String reportFileBase="GPSDATA";
 
     /**
-     * @return Returns the logFile.
+     * @return Returns the logFile full path.
      */
+    public String getLogFilePath() {
+        return baseDirPath+"/"+logFile;
+    }
+
     public String getLogFile() {
         return logFile;
     }
+    
     /**
      * @param logFile The logFile to set.
      */
     public void setLogFile(String logFile) {
         this.logFile = logFile;
+    }
+    
+    public String getBaseDirPath() {
+        return baseDirPath;
+    }
+    public void setBaseDirPath(String baseDirPath) {
+        this.baseDirPath = baseDirPath;
+    }
+    public String getReportFileBase() {
+        return reportFileBase;
+    }
+    public void setReportFileBase(String reportFileBase) {
+        this.reportFileBase = reportFileBase;
+    }
+
+    public String getReportFileBasePath() {
+        return this.baseDirPath+"/"+reportFileBase;
     }
 }

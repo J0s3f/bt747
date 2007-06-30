@@ -192,8 +192,8 @@ public class BT747 extends MainWindow {
                     m_GPSstate.GPS_close();
                     break;
                 case C_MENU_ABOUT:
-                    new MessageBox("About BT747",
-                            "Created with SuperWaba" +
+                    new MessageBox("About BT747 V"+Version.NUMBER,
+                            " Created with SuperWaba" +
                             "|http://www.superwaba.org"+
                             "|" +Convert.toString(Version.BUILD)+
                             "|Written by Mario De Weerd" +
@@ -201,10 +201,9 @@ public class BT747 extends MainWindow {
                             "|"+
                             "|This application allows control of" +
                             "|the BT747 device." +
-                            "|To have full control over bluetooth" +
-                            "|it is necessary to apply a hardware" +
-                            "|hack.  Please see the web for more" +
-                            "|information."
+                            "|Full control using bluetooth is enabled" +
+                            "|by applying a hardware hack.  " +
+                            "|You can find information on the web."
                     ).popupModal();
                     break;              
                 case C_MENU_ABOUT_SW:
