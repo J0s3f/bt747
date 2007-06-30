@@ -22,10 +22,12 @@ package gps;
 import waba.io.File;
 import waba.sys.Convert;
 import waba.sys.Settings;
+import waba.sys.Thread;
 import waba.sys.Vm;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
+import waba.ui.MainWindow;
 import waba.ui.ProgressBar;
 import waba.ui.Timer;
 import waba.util.Vector;
@@ -50,7 +52,7 @@ import gps.convert.Conv;
  * @see GPSrxtx
  *
  */
-public class GPSstate extends Control {
+public class GPSstate implements Thread {
     static final boolean GPS_DEBUG = !Settings.onDevice;
     static final boolean GPS_TEST = false;
     
@@ -82,7 +84,7 @@ public class GPSstate extends Control {
     public int logStatus = 0;
     public int logRecMethod = 0;
     public int logNbrLogPts = 0;
-    public int logMemSize = 16*1024*1024/8; //16Mb
+    public int logMemSize = 16*1024*1024/8; //16Mb -> 2MB
     public int logMemUsefullSize = (int)(logMemSize*0.875); //16Mb
     public int logMemUsed = 0;
     public int logMemUsedPercent = 0;
@@ -101,10 +103,7 @@ public class GPSstate extends Control {
     final static int C_MAX_LOG_AHEAD = 1;
     
     
-    static final int C_LOG_TIMEOUT  = 3000; // ms
-    static final int C_TIMER_PERIOD = 2; // ms
-    static final int C_LOG_TIMEOUT_CNT = C_LOG_TIMEOUT / C_TIMER_PERIOD; 
-    private Timer linkTimer= null;
+    static final int C_LOG_TIMEOUT  = 2500; // ms
     Control m_EventPosterObject= null;
     
     private settings m_settings;
@@ -202,8 +201,10 @@ public class GPSstate extends Control {
     private void setupTimer() {
         if( m_GPSrxtx.isConnected()) {
             // Check if old timer still present (for safety)
-            if(linkTimer!=null) removeTimer(linkTimer);
-            linkTimer = addTimer(C_TIMER_PERIOD);
+            // TODO: check if old thread is still present
+            //if(linkTimer!=null) removeTimer(linkTimer);
+            MainWindow.getMainWindow().addThread(this, true);
+
             // Remember defaults
             m_settings.setPortnbr(m_GPSrxtx.spPortNbr);
             m_settings.setBaudRate(m_GPSrxtx.spSpeed);
@@ -268,7 +269,7 @@ public class GPSstate extends Control {
      * TODO: Implement handleLogTimeOUt
      */
     public void handleLogTimeOut() {
-        Vm.debug("Timeout");
+//        Vm.debug("Timeout");
         logTimer=Vm.getTimeStamp();
         m_recoverFromError=false; 
         recoverFromLogError();
@@ -676,7 +677,7 @@ public class GPSstate extends Control {
     public void closeLog() {
         try {
             if(m_logFile!=null  && m_logFile.isOpen()) {
-                Vm.debug("CloseLog");
+//                Vm.debug("CloseLog");
                 m_logFile.close();
             }
         }
@@ -745,17 +746,15 @@ public class GPSstate extends Control {
                 m_logFile.delete();
             }
         } catch (Exception e) {
-            Vm.debug("Exception new log delete");
+//            Vm.debug("Exception new log delete");
         }
-        Vm.debug("new log: delete lasterror "+Convert.toString(m_logFile.lastError));
         try {
             m_logFile=new File(fileName,File.CREATE);
             m_logFile.close();
             m_logFile=new File(fileName,File.READ_WRITE);
         } catch (Exception e) {
-            Vm.debug("Exception new log create");
+//            Vm.debug("Exception new log create");
         }
-        Vm.debug("new log: create lasterror "+Convert.toString(m_logFile.lastError));
     }
     
     
@@ -764,9 +763,8 @@ public class GPSstate extends Control {
         try {
             m_logFile=new File(fileName,File.READ_ONLY);
         } catch (Exception e) {
-            Vm.debug("Exception reopen log read");
+//            Vm.debug("Exception reopen log read");
         }
-        Vm.debug("new log: reopen log read "+Convert.toString(m_logFile.lastError));
         
     }
     
@@ -775,10 +773,8 @@ public class GPSstate extends Control {
         try {
             m_logFile=new File(fileName,File.READ_WRITE);
         } catch (Exception e) {
-            Vm.debug("Exception reopen log write");
+//            Vm.debug("Exception reopen log write");
         }
-        Vm.debug("new log: reopen log write "+Convert.toString(m_logFile.lastError));
-        
     }
     
     
@@ -851,50 +847,51 @@ public class GPSstate extends Control {
             if(m_NextReadAddr==p_StartAddr) {
                 m_recoverFromError=false;
                 int j=0;
+                
                 // The Palm platform showed problems writing 0x800 blocks.
                 // This splits it in smaller blocks and solves that problem.
-                for (int i = dataLength; i>0; i-=C_MAX_FILEBLOCK_WRITE) {
-                    int l=i;
-                    if(l>C_MAX_FILEBLOCK_WRITE) {
-                        l=C_MAX_FILEBLOCK_WRITE;
-                    }
-                    Vm.debug("Writing("+Convert.toString(p_StartAddr)+"): "+Convert.toString(j)+" "+Convert.toString(l));
-                    if(m_logFile.writeBytes(m_Data,j,l)!=l) {
-                        Vm.debug("Problem during anaLog: "+Convert.toString(m_logFile.lastError));
-                        cancelGetLog();
-                    };
-                    j+=l;
-                }
-                m_NextReadAddr+=dataLength;
-                if(dataLength!=0x800 && dataLength!=m_Step) {
-                    // Workaround
-                    // If data return is different from requested size or 0x800,
-                    // This is probably going over bluetooth.
-                    m_NextReqAddr=m_NextReadAddr;
-                    getNextLogPart();  // Request it now (do not wait for timer)
-                }
-                if(m_ProgressBar!=null) {
-                    m_ProgressBar.setValue(m_NextReadAddr);
-                }
-                if(m_getFullLog
-                        &&
-                        (((p_StartAddr-1+dataLength)&0xFFFF0000)>=p_StartAddr)
-                ) {
-                    // Block boundery (0xX0000) is inside data.
-                    int blockStart=0xFFFF&(0x10000-(p_StartAddr&0xFFFF));
-                    if(!(((m_Data[blockStart]&0xFF)==0xFF)
-                            &&((m_Data[blockStart+1]&0xFF)==0xFF))) {
-                        // This block is full, next block is still data
-                        int minEndAddr;
-                        minEndAddr= (p_StartAddr&0xFFFF0000)+0x20000-1; // This block and next one.
-                        if(minEndAddr>logMemSize-1) {
-                            minEndAddr=logMemSize-1;
+                if(dataLength!=0x800 && ((m_NextReadAddr+dataLength)!=m_NextReqAddr)) {
+                    // Received data is not the right size - transmission error.
+                    //  Can happen on Palm over BT.
+                    getNextLogPart();
+                } else {
+                    // Data seems ok
+                    for (int i = dataLength; i>0; i-=C_MAX_FILEBLOCK_WRITE) {
+                        int l=i;
+                        if(l>C_MAX_FILEBLOCK_WRITE) {
+                            l=C_MAX_FILEBLOCK_WRITE;
                         }
-                        if(minEndAddr>m_EndAddr) {
-                            m_EndAddr= minEndAddr;
-                            if(m_ProgressBar!=null) {
-                                m_ProgressBar.max=m_EndAddr;
-                                m_ProgressBar.repaintNow();
+//                        Vm.debug("Writing("+Convert.toString(p_StartAddr)+"): "+Convert.toString(j)+" "+Convert.toString(l));
+                        if(m_logFile.writeBytes(m_Data,j,l)!=l) {
+//                            Vm.debug("Problem during anaLog: "+Convert.toString(m_logFile.lastError));
+                            cancelGetLog();
+                        };
+                        j+=l;
+                    }
+                    m_NextReadAddr+=dataLength;
+                    if(m_ProgressBar!=null) {
+                        m_ProgressBar.setValue(m_NextReadAddr);
+                    }
+                    if(m_getFullLog
+                            &&
+                            (((p_StartAddr-1+dataLength)&0xFFFF0000)>=p_StartAddr)
+                    ) {
+                        // Block boundery (0xX0000) is inside data.
+                        int blockStart=0xFFFF&(0x10000-(p_StartAddr&0xFFFF));
+                        if(!(((m_Data[blockStart]&0xFF)==0xFF)
+                                &&((m_Data[blockStart+1]&0xFF)==0xFF))) {
+                            // This block is full, next block is still data
+                            int minEndAddr;
+                            minEndAddr= (p_StartAddr&0xFFFF0000)+0x20000-1; // This block and next one.
+                            if(minEndAddr>logMemSize-1) {
+                                minEndAddr=logMemSize-1;
+                            }
+                            if(minEndAddr>m_EndAddr) {
+                                m_EndAddr= minEndAddr;
+                                if(m_ProgressBar!=null) {
+                                    m_ProgressBar.max=m_EndAddr;
+                                    m_ProgressBar.repaintNow();
+                                }
                             }
                         }
                     }
@@ -905,7 +902,7 @@ public class GPSstate extends Control {
                     m_getNextLogOnNextTimer=true;
                 }
             } else {
-                //recoverFromLogError();  // Let the timeout handle it
+                //recoverFromLogError();  // Let the timeout handle it to avoid repeated requests
             }
         } else if ( m_isCheckingLog) {
             if(p_StartAddr==0x0200) {
@@ -965,7 +962,7 @@ public class GPSstate extends Control {
             // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
             
         } else if(p_nmea[0].startsWith("PMTK")) {
-            if(GPS_DEBUG&&((!p_nmea[1].startsWith("8"))&&(true ||Settings.platform.equals("Java")))) {
+            if(GPS_DEBUG&&(!p_nmea[1].startsWith("8"))) {
                 String s;
                 s="<";
                 waba.sys.Vm.debug("<");
@@ -1084,25 +1081,6 @@ public class GPSstate extends Control {
     public void onEvent(Event e){
         switch (e.type) {
         case ControlEvent.TIMER:
-            if(m_GPSrxtx.isConnected()) {
-                if(m_getNextLogOnNextTimer) {
-                    // Sending command on next timer adds some delay after
-                    // the end of the previous command (reception)
-                    m_getNextLogOnNextTimer=false;
-                    getNextLogPart();
-                }
-                lastResponse= m_GPSrxtx.getResponse();
-                while(lastResponse!=null) {
-                    analyseNMEA(lastResponse);
-                    lastResponse= m_GPSrxtx.getResponse();
-                }
-                if((m_isLogging||m_isSearchingLog)&& ((Vm.getTimeStamp()-logTimer)>=C_LOG_TIMEOUT)) {
-                    handleLogTimeOut();  // On time out resend request packet.
-                }
-            } else {
-                removeTimer(linkTimer);
-                linkTimer=null;
-            }
         break;
         
         }
@@ -1112,7 +1090,26 @@ public class GPSstate extends Control {
      */
     public void run() {
         // TODO Auto-generated method stub
-
+        if(m_GPSrxtx.isConnected()) {
+            if(m_getNextLogOnNextTimer) {
+                // Sending command on next timer adds some delay after
+                // the end of the previous command (reception)
+                m_getNextLogOnNextTimer=false;
+                getNextLogPart();
+            }
+            lastResponse= m_GPSrxtx.getResponse();
+            while(lastResponse!=null) {
+                analyseNMEA(lastResponse);
+                lastResponse= m_GPSrxtx.getResponse();
+            }
+            if((m_isLogging||m_isSearchingLog)&& ((Vm.getTimeStamp()-logTimer)>=C_LOG_TIMEOUT)) {
+                handleLogTimeOut();  // On time out resend request packet.
+            }
+        } else {
+            MainWindow.getMainWindow().removeThread(this);
+            //removeTimer(linkTimer);
+            //linkTimer=null;
+        }
     }
 
     /* (non-Javadoc)
@@ -1130,6 +1127,4 @@ public class GPSstate extends Control {
         // TODO Auto-generated method stub
 
     }
-    
-    
 }

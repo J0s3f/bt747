@@ -34,7 +34,7 @@ import waba.util.Vector;
  * device's response.
  * @author Mario De Weerd
  */
-public class GPSrxtx extends Control {
+public class GPSrxtx {
     private static final boolean GPS_DEBUG = false; //!Settings.onDevice;
     private static final boolean GPS_FILE_LOG = false;  // When true log communication to file for debug
     private File m_debugFile=null;
@@ -410,28 +410,30 @@ public class GPSrxtx extends Control {
             if(continueReading) {
                 read_buf_p= 0;
                 bytesRead=  0;
-                try {
-                    int max= sp.readCheck();
-                    if(max>C_BUF_SIZE) {
-                        max=C_BUF_SIZE;
+                if(sp.isOpen()) {
+                    try {
+                        int max= sp.readCheck();
+                        if(max>C_BUF_SIZE) {
+                            max=C_BUF_SIZE;
+                        }
+                        if(max>0) {
+                            bytesRead= sp.readBytes(read_buf,0,max);
+                            //						String sb=new String(read_buf,0,bytesRead);
+                            //						System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
+                        }
                     }
-                    if(max>0) {
-                        bytesRead= sp.readBytes(read_buf,0,max);
-                        //						String sb=new String(read_buf,0,bytesRead);
-                        //						System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
+                    catch (Exception e) {
+                        // new MessageBox("Waiting","Exception").popupBlockingModal();
+                        bytesRead= 0;
                     }
-                }
-                catch (Exception e) {
-                    // new MessageBox("Waiting","Exception").popupBlockingModal();
-                    bytesRead= 0;
-                }
-                if(bytesRead==0) {
-                    continueReading=false;
-                } else {
-                    if(GPS_FILE_LOG&&(m_debugFile!=null)) {
-                        String q="("+Convert.toString(Vm.getTimeStamp())+")";
-                        m_debugFile.writeBytes(q.getBytes(),0,q.length());
-                        m_debugFile.writeBytes(read_buf, 0, bytesRead);
+                    if(bytesRead==0) {
+                        continueReading=false;
+                    } else {
+                        if(GPS_FILE_LOG&&(m_debugFile!=null)) {
+                            String q="("+Convert.toString(Vm.getTimeStamp())+")";
+                            m_debugFile.writeBytes(q.getBytes(),0,q.length());
+                            m_debugFile.writeBytes(read_buf, 0, bytesRead);
+                        }
                     }
                 }
             }

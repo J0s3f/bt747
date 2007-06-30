@@ -17,7 +17,12 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
+import waba.ui.Button;
 import waba.ui.Container;
+import waba.ui.ControlEvent;
+import waba.ui.Edit;
+import waba.ui.Event;
+import waba.ui.Label;
 
 /** The purpose of this container is to configure file settings
  * 
@@ -29,6 +34,34 @@ public class GPSLogFile extends Container {
     
     GPSLogFile(AppSettings settings) {
         m_settings=settings;
+    }
+    
+    Edit m_edBaseDirName;
+
+    private Button m_btChangeSettings;
+    
+    protected void onStart() {
+        add(new Label("Base dir:"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_edBaseDirName = new Edit(""), AFTER, SAME); //$NON-NLS-1$
+
+        m_btChangeSettings=new Button("Set values");
+        add(m_btChangeSettings,CENTER,AFTER+5);
+
+        updateValues();
+    }
+    
+    private void updateValues() {
+        m_edBaseDirName.setText(m_settings.getBaseDirPath());
+    }
+
+    public void onEvent( Event event ) {
+        switch (event.type) {
+        case ControlEvent.PRESSED:
+            if (event.target==m_btChangeSettings) {
+                m_settings.setBaseDirPath(m_edBaseDirName.getText());
+            }
+        break;
+        }
     }
 
 }
