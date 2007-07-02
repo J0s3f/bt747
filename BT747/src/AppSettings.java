@@ -51,8 +51,12 @@ public class AppSettings implements gps.settings {
     }
     
     public void init() {
-        String mVersion=getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
-        if(mVersion.charAt(1)!='.') {
+        String mVersion;
+        if(Settings.appSettings==null||Settings.appSettings.length()<100) {
+            Settings.appSettings=new String(new byte[2048]);
+        }
+        mVersion=getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
+        if((mVersion.length()<2)||(mVersion.charAt(1)!='.')) {
             defaultSettings();
             setStringOpt("0.01",C_VERSION_IDX, C_VERSION_SIZE);
         } else {

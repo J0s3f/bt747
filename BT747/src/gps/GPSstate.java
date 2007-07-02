@@ -98,6 +98,7 @@ public class GPSstate implements Thread {
     
     public int dgps_mode=0;
     
+    private byte[] m_Data= new byte[0x800];  // buffer used for reading data.
     
     // Number of log entries to request 'ahead'.
     final static int C_MAX_LOG_AHEAD = 1;
@@ -696,6 +697,8 @@ public class GPSstate implements Thread {
         endGetLog();
     }
     
+    private final static int C_BLOCKVERIF_START = 0x200; 
+    private final static int C_BLOCKVERIF_SIZE  = 0x200;    
     /**
      * @param p_StartAddr
      * @param p_EndAddr
@@ -726,8 +729,65 @@ public class GPSstate implements Thread {
         if(incremental) {
             reOpenLogRead(p_FileName);
             if(m_logFile!=null&&m_logFile.isOpen()) {
-                readLog(0x200,0x200);  // Read 200 bytes, just past header.
-                m_isCheckingLog=true;
+                // There is a file with data.
+                if (m_logFile.getSize()>=(C_BLOCKVERIF_START+C_BLOCKVERIF_SIZE)){
+                    // There are enough bytes in the saved file.
+                    
+                    // Find first incomplete block
+                    int blockHeadPos=0;
+                    boolean continueLoop;
+                    do {
+                        byte[] bytes=new byte[2];
+                        m_logFile.setPos(blockHeadPos);
+                        continueLoop=(m_logFile.readBytes(bytes, 0, 2)==2);
+                        if(continueLoop) {
+                            // Break the loop if this block was incomplete.
+                            continueLoop=!(((bytes[0]&0xFF)==0xFF)
+                                    &&((bytes[1]&0xFF)==0xFF));
+                        }
+                        if(continueLoop) {
+                            // This block is fully filled
+                            blockHeadPos+=0x10000;
+                            continueLoop=(blockHeadPos<=(m_logFile.getSize()&0xFFFF0000));
+                        }
+                    } while(continueLoop);
+                    
+
+                    if(blockHeadPos>m_logFile.getSize()) {
+                        // All blocks already had data - continue from end of file.
+                        m_NextReadAddr=m_logFile.getSize();
+                        m_NextReqAddr=m_NextReadAddr;
+                    } else {
+                        // Start just past block header
+                        m_NextReadAddr=blockHeadPos+0x200;
+                        do {
+                            // Find a block 
+                            m_logFile.setPos(m_NextReadAddr);
+                            continueLoop=((m_logFile.readBytes(m_Data, 0, 0x200)==0x200));
+                            if(continueLoop) {
+                                boolean allFF=true;
+                                // Check if all FFs in the file.
+                                for (int i = 0; allFF&&(i < 0x200); i++) {
+                                    allFF=((m_Data[i]&0xFF)==0xFF);
+                                }
+                                continueLoop=!allFF;
+                                if(continueLoop) {
+                                    m_NextReadAddr+=0x200;
+                                }
+                            }
+                        } while (continueLoop);
+                        m_NextReadAddr-=0x200;
+                        m_NextReqAddr=m_NextReadAddr;
+                        
+                        //TODO: should read 2 bytes in header once rest of block was loaded
+                        // in order to have precise header information
+                        // -> We can not load this value from memory know as we might
+                        //    corrupt the data (0xFFFF present if restarting download)
+                    }
+                    
+                    readLog(C_BLOCKVERIF_START,C_BLOCKVERIF_SIZE);  // Read 200 bytes, just past header.
+                    m_isCheckingLog=true;
+                }
             }
         }
         if(!m_isCheckingLog) {
@@ -800,7 +860,6 @@ public class GPSstate implements Thread {
         }
     }
     
-    private byte[] m_Data= new byte[0x800];
     private final int HexStringToBytes(final String hexStr) {
         char[] z_Data = hexStr.toCharArray();
         int length=z_Data.length/2;
@@ -908,7 +967,7 @@ public class GPSstate implements Thread {
                 //recoverFromLogError();  // Let the timeout handle it to avoid repeated requests
             }
         } else if ( m_isCheckingLog) {
-            if(p_StartAddr==0x0200) {
+            if((p_StartAddr==C_BLOCKVERIF_START) && (dataLength==C_BLOCKVERIF_SIZE)) {
                 // The block we got should be the block to check
                 byte[] m_localdata=new byte[dataLength];
                 int result;
@@ -931,12 +990,12 @@ public class GPSstate implements Thread {
                     // TODO: Could find exact position at the end of the log to continue
                     // download.  Currently starting with last full block (0x10000)
                     reOpenLogWrite(fileName);
-                    m_NextReqAddr=((m_logFile.getSize()-1) & 0xFFFF0000);
-                    if(m_NextReadAddr<m_NextReqAddr) {
-                        m_NextReadAddr=m_NextReqAddr;
-                    } else {
-                        m_NextReqAddr=m_NextReadAddr;
-                    }
+//                    m_NextReqAddr=((m_logFile.getSize()-1) & 0xFFFF0000);
+//                    if(m_NextReadAddr<m_NextReqAddr) {
+//                        m_NextReadAddr=m_NextReqAddr;
+//                    } else {
+//                        m_NextReqAddr=m_NextReadAddr;
+//                    }
                     m_logFile.setPos(m_NextReadAddr);
                     m_isCheckingLog=false;
                     m_isLogging=true;
@@ -945,6 +1004,8 @@ public class GPSstate implements Thread {
                     // Log is not the same - delete the log and reopen.
                     openNewLog(fileName);
                     m_isLogging=true;
+                    m_NextReadAddr=0;
+                    m_NextReadAddr=0;
                     m_getNextLogOnNextTimer=true;
                 }
             }

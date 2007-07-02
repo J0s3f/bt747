@@ -75,7 +75,7 @@ public class GPSKMLFile implements GPSFile {
         header ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"+
         "<kml xmlns=\"http://earth.google.com/kml/2.0\">\r\n"+
         "<Document>\r\n"+
-        "  <name>My Trip</name>\r\n"+
+        "  <name>i-Blue 747</name>\r\n"+
         "    <open>1</open>\r\n"+
         "  <Style id=\"TimeStamp0\">\r\n"+
         "    <IconStyle>\r\n"+
@@ -272,7 +272,7 @@ public class GPSKMLFile implements GPSFile {
     }
     
     private final static int DAYS_BETWEEN_1970_1983=4748;
-    public Time utcTime(int utc_int) {
+    public Time utcTime(final int utc_int) {
         long utc=utc_int&0xFFFFFFFFL;
         Time t=new Time();
         t.second=(int)utc%60;
