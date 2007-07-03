@@ -17,26 +17,22 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-package gps;
-
 import waba.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.PushButtonGroup;
 
+import gps.GPSstate;
+
 /**
  * @author Mario De Weerd
  */
 
 public class GPSconctrl extends Container {
-    static final boolean GPS_DEBUG = true;
-
     PushButtonGroup btnChannelSelect;
 
     Button btnRestartGps;
-
-    Button btnTestGps;
 
     GPSstate m_GPSstate;
 
@@ -70,10 +66,6 @@ public class GPSconctrl extends Container {
         btnRestartGps = new Button("Reset COM port");
         btnRestartGps.setGap(5);
         add(btnRestartGps, RIGHT - 5, BOTTOM - 5);
-
-        btnTestGps = new Button("Send Test");
-        btnTestGps.setGap(5);
-        add(btnTestGps, LEFT - 5, BOTTOM - 5);
     }
 
     private void GPS_setChannel(int channel) {
@@ -90,8 +82,6 @@ public class GPSconctrl extends Container {
         }
     }
 
-//    final String[] TestReply = { "PMTK001", "182", "2" };
-
     public void onEvent(Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
@@ -99,22 +89,6 @@ public class GPSconctrl extends Container {
                 GPS_setChannel(btnChannelSelect.getSelected());
             } else if (event.target == btnRestartGps) {
                 m_GPSstate.GPS_restart();
-            } else if (event.target == btnTestGps) {
-//                if (GPS_DEBUG) {
-//                    waba.sys.Vm.debug("TEST\n");
-//                }
-//                m_GPSstate.sendNMEA("PMTK182,2,7");
-//                m_GPSstate.sendNMEA("PMTK182,2,7");
-//                m_GPSstate.sendNMEA("PMTK182,2,9");
-//                m_GPSstate.sendNMEA("PMTK182,2,2");
-//                m_GPSstate.sendNMEA("PMTK182,2,3");
-//                if (GPS_DEBUG) {
-//                    waba.sys.Vm.debug("TEST_i\n");
-//                }
-//                m_GPSstate.analyseNMEA(TestReply);
-//                if (GPS_DEBUG) {
-//                    waba.sys.Vm.debug("TEST_ii\n");
-//                }
             }
             break;
         }

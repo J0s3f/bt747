@@ -140,8 +140,7 @@ public class GPSstate implements Thread {
         }
         
         if (m_settings.getStartupOpenPort()) {
-            m_GPSrxtx.openPort();       
-            getStatus();
+            GPS_connect();
         }
         
     }
@@ -152,8 +151,20 @@ public class GPSstate implements Thread {
      */
     public void GPS_restart() {
         m_GPSrxtx.closePort();
-        m_GPSrxtx.openPort();		
-        getStatus();
+        GPS_connect();
+    }
+    
+    private void GPS_connect() {
+        m_GPSrxtx.openPort();
+        GPS_postConnect();
+    }
+
+    private void GPS_postConnect() {
+        if(m_GPSrxtx.isConnected()) {
+            PostStatusEvent(GpsEvent.CONNECTED);
+            getStatus();
+            setupTimer();
+        }
     }
     
     /** Close the GPS connection
@@ -168,8 +179,7 @@ public class GPSstate implements Thread {
      */
     public void setBluetooth() {
         m_GPSrxtx.setBluetooth();
-        getStatus();
-        setupTimer();
+        GPS_postConnect();
     }
     
     /** open a Usb connection
@@ -178,8 +188,7 @@ public class GPSstate implements Thread {
      */
     public void setUsb() {
         m_GPSrxtx.setUsb();
-        getStatus();
-        setupTimer();
+        GPS_postConnect();
     }
     
     /** open a connection on the given port number.
@@ -189,8 +198,7 @@ public class GPSstate implements Thread {
      */
     public void setPort(int port) {
         m_GPSrxtx.setPort(port);
-        getStatus();
-        setupTimer();
+        GPS_postConnect();
     }
     
     /** Start the timer
@@ -306,11 +314,17 @@ public class GPSstate implements Thread {
     /* TODO: Could implement specific event structure */
     private void PostStatusUpdateEvent() {
         if(m_EventPosterObject!=null) {
-            m_EventPosterObject.postEvent(new Event(ControlEvent.TIMER,m_EventPosterObject,0));
+            m_EventPosterObject.postEvent(new Event(GpsEvent.DATA_UPDATE, m_EventPosterObject,0));
         }
     }
     //getParent().postEvent(new Event(ControlEvent.TIMER,getParent(),0));
-    
+
+    private void PostStatusEvent(final int event) {
+        if(m_EventPosterObject!=null) {
+            m_EventPosterObject.postEvent(new Event(event, m_EventPosterObject,0));
+        }
+    }
+
     public int analyseLogNmea(String[] p_nmea) {
         //if(GPS_DEBUG) {	waba.sys.Vm.debug("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
         // Suppose that the command is ok (PMTK182)

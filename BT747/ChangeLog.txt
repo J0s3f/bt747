@@ -1,3 +1,7 @@
+Version 0.77.6
+
+* Solved 'bug' concerning Gps status update propagation by introducing specific events.
+
 Version 0.77.5
 
 * Implemented more finegrained incremental download.
