@@ -1,0 +1,48 @@
+Version 0.77.5
+
+* Implemented more finegrained incremental download.
+
+Version 0.77.4
+
+* Fixed problem when saved option string was empty (resulted in reset).
+
+Version 0.77.3 
+* Fixed problem when launching first time (no saved options)
+
+Version 0.77.2
+* File setting configuration and memorization.
+* Palm download chunck size adjustment
+
+Version 0.77.1
+
+* The PalmOS BT buffer seems 'small' and overruns happened going unnoticed by the SW.
+  Now downloading smaller packets & matching size downloaded.
+* It is possible to set the base directory for file operations.
+* Added more ports to connect to.
+
+Version 0.76
+
+* Fixed incremental logging partially, but still problems to make it work on Palm
+   (works on PC) - something to do with read/write capabilities of files on PalmOS.
+* The log can now be converted correctly without being connected - the log format
+  information is retrieved from the log file itself.
+* Added a '.bat' script to launch on windows.
+
+Version 0.75
+
+* Incremental download of log added
+* Date filter : corrected calculation of internal UTC date.
+
+Version 0.7
+
+* Added log filtering capability.
+
+Version 0.6
+
+* Added conversion to 'gpx' format;
+* Solved issue retrieving log format when clicking on tab;
+* Kml format slightly improved so that Google Earth recognizes the time.
+
+Version 0.51
+
+* Added conversion to KML
