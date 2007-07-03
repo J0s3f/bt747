@@ -37,6 +37,7 @@ import gps.GPSFilter;
 import gps.GPSGPXFile;
 import gps.GPSKMLFile;
 import gps.GPSstate;
+import gps.GpsEvent;
 
 /**
  * @author Mario De Weerd
@@ -247,12 +248,15 @@ public class GPSLogGet extends Container {
                 Convert.toString(3);
             } else if (event.target == this) {
                 m_GPSstate.getLogCtrlInfo();
-            } else if (event.target==null) {
-                updateButtons();
             } else {
                 event.consumed=false;
             }
             break;
+        case GpsEvent.DATA_UPDATE:
+            if(event.target==this) {
+                updateButtons();
+                event.consumed=true;
+            }
         case ControlEvent.WINDOW_CLOSED:
             if (event.target == cal)
             {

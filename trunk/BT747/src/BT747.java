@@ -31,8 +31,8 @@ import waba.ui.TabPanel;
 import waba.ui.Window;
 
 import gps.GPSFilter;
-import gps.GPSconctrl;
 import gps.GPSstate;
+import gps.GpsEvent;
 
 /** Main class (application entry)
  * 
@@ -84,8 +84,10 @@ public class BT747 extends MainWindow {
  
     /** Tab Panel container - Log information */
     private static GPSLogReason  m_GPSLogInfo;
+    private static int C_GPS_LOGINFO_IDX= 1;    
     /** Tab Panel container - Log retrieval */
     private static GPSLogGet   m_GPSLogGet;
+    private static int C_GPS_LOGGET_IDX= 2;
     /** Tab Panel container - Log file settings (name,...) */
     private static GPSLogFile  m_GPSLogFile;
     private static int C_GPS_FILECTRL_IDX= 3;
@@ -135,8 +137,8 @@ public class BT747 extends MainWindow {
         m_ProgressBar.setVisible(false);
         
         m_TabPanel.setPanel(C_LOG_CTRL_IDX,m_GPSLogCtrl = new GPSLogFormat(m_GPSstate));
-        m_TabPanel.setPanel(1,m_GPSLogInfo = new GPSLogReason(m_GPSstate));
-        m_TabPanel.setPanel(2,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar,m_settings,m_GPSFilter));
+        m_TabPanel.setPanel(C_GPS_LOGINFO_IDX,m_GPSLogInfo = new GPSLogReason(m_GPSstate));
+        m_TabPanel.setPanel(C_GPS_LOGGET_IDX,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar,m_settings,m_GPSFilter));
         m_TabPanel.setPanel(C_GPS_FILECTRL_IDX,m_GPSLogFile = new GPSLogFile(m_settings));
         m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX,m_GPSLogFilter = new GPSLogFilter(m_GPSFilter));
         m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,m_GPSconctrl = new GPSconctrl(m_GPSstate));
@@ -246,21 +248,18 @@ public class BT747 extends MainWindow {
                 c.postEvent(new Event(ControlEvent.PRESSED,c,0));                
             }
             break;
-        case ControlEvent.TIMER:
+        case GpsEvent.DATA_UPDATE:
             if(event.target==this) {
-                /* There is no timer here, set by a child (m_GPSstate) to
-                 *  indicate that status has been retrieved */
                 Control c;
                 c=m_TabPanel.getChildren()[0];
-                c.postEvent(new Event(ControlEvent.PRESSED,null,0));
+                c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
                 event.consumed=true;
             }
             break;
+        case GpsEvent.CONNECTED:
+            m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
+            event.consumed=true;
         }
     }
-    
-    //        public void onPaint(Graphics g) {
-    //
-    //        }       
     
 }

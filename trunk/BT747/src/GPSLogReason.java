@@ -27,6 +27,7 @@ import waba.ui.Edit;
 import waba.ui.Event;
 
 import gps.GPSstate;
+import gps.GpsEvent;
 /**
  * @author Mario De Weerd
  */
@@ -87,10 +88,10 @@ public class GPSLogReason extends Container {
         if(ENABLE_PWR_SAVE_CONTROL) {
             add(m_chkPowerSaveOnOff = new Check("Power Save (Internal)"), LEFT, AFTER+3); //$NON-NLS-1$
         }
-
-
+        
+        
         add(m_btSet = new Button("SET"), CENTER, AFTER+3); //$NON-NLS-1$
-
+        
         
     }
     
@@ -125,7 +126,7 @@ public class GPSLogReason extends Container {
         m_cbDatumMode.select(m_GPSstate.datum);
         
     }
-
+    
     public void setSettings() {
         if(m_chkTimeOnOff.getChecked()) {
             m_GPSstate.setLogTimeInterval(Convert.toInt(m_edTime.getText()));
@@ -148,54 +149,57 @@ public class GPSLogReason extends Container {
         }
         m_GPSstate.getLogReasonStatus();
     }
-
+    
     
     public void onEvent(Event event) {
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
             event.consumed=true;
-            if(event.target==m_chkTimeOnOff) {
-                m_edTime.setEnabled(m_chkTimeOnOff.getChecked());
-                m_edTime.repaintNow();
-            } else if(event.target==m_chkSpeedOnOff) {
-                m_edSpeed.setEnabled(m_chkSpeedOnOff.getChecked());
-                m_edSpeed.repaintNow();
-            } else if(event.target==m_chkDistanceOnOff) {
-                m_edDistance.setEnabled(m_chkDistanceOnOff.getChecked());
-                m_edDistance.repaintNow();
-            } else if(event.target==m_chkFixOnOff) {
-                m_edFix.setEnabled(m_chkFixOnOff.getChecked());
-                m_edFix.repaintNow();
-            } else if(event.target==m_btSet) {
-                setSettings();
-            } else if (event.target == this) {
-                m_GPSstate.getLogReasonStatus();
-                m_GPSstate.getFixInterval();
-                m_GPSstate.getSBASEnabled();
-                m_GPSstate.getSBASTestEnabled();
-                m_GPSstate.getDGPSMode();
-            } else if (event.target==null) {
+        if(event.target==m_chkTimeOnOff) {
+            m_edTime.setEnabled(m_chkTimeOnOff.getChecked());
+            m_edTime.repaintNow();
+        } else if(event.target==m_chkSpeedOnOff) {
+            m_edSpeed.setEnabled(m_chkSpeedOnOff.getChecked());
+            m_edSpeed.repaintNow();
+        } else if(event.target==m_chkDistanceOnOff) {
+            m_edDistance.setEnabled(m_chkDistanceOnOff.getChecked());
+            m_edDistance.repaintNow();
+        } else if(event.target==m_chkFixOnOff) {
+            m_edFix.setEnabled(m_chkFixOnOff.getChecked());
+            m_edFix.repaintNow();
+        } else if(event.target==m_btSet) {
+            setSettings();
+        } else if (event.target == this) {
+            m_GPSstate.getLogReasonStatus();
+            m_GPSstate.getFixInterval();
+            m_GPSstate.getSBASEnabled();
+            m_GPSstate.getSBASTestEnabled();
+            m_GPSstate.getDGPSMode();
+        } else if (event.target==m_chkSBASOnOff) {
+            m_GPSstate.setSBASEnabled(m_chkSBASOnOff.getChecked());
+            m_GPSstate.getSBASEnabled();
+        } else if (event.target==m_chkSBASTestOnOff) {
+            m_GPSstate.setSBASTestEnabled(m_chkSBASTestOnOff.getChecked());
+            m_GPSstate.getSBASTestEnabled();
+        } else if (event.target==m_chkPowerSaveOnOff) {
+            m_GPSstate.setPowerSaveEnabled(m_chkPowerSaveOnOff.getChecked());
+            m_GPSstate.getPowerSaveEnabled();
+        } else if (event.target==m_cbDGPSMode) {
+            m_GPSstate.setDGPSMode(m_cbDGPSMode.getSelectedIndex());
+            m_GPSstate.getDGPSMode();
+        } else {
+            event.consumed=false;
+        }
+        break;
+        case GpsEvent.DATA_UPDATE:
+            if(event.target==this) {
                 updateButtons();
-            } else if (event.target==m_chkSBASOnOff) {
-                m_GPSstate.setSBASEnabled(m_chkSBASOnOff.getChecked());
-                m_GPSstate.getSBASEnabled();
-            } else if (event.target==m_chkSBASTestOnOff) {
-                m_GPSstate.setSBASTestEnabled(m_chkSBASTestOnOff.getChecked());
-                m_GPSstate.getSBASTestEnabled();
-            } else if (event.target==m_chkPowerSaveOnOff) {
-                m_GPSstate.setPowerSaveEnabled(m_chkPowerSaveOnOff.getChecked());
-                m_GPSstate.getPowerSaveEnabled();
-            } else if (event.target==m_cbDGPSMode) {
-                m_GPSstate.setDGPSMode(m_cbDGPSMode.getSelectedIndex());
-                m_GPSstate.getDGPSMode();
-            } else {
-                event.consumed=false;
+                event.consumed=true;
             }
-            break;
         }
     }
-
+    
     
     
 }

@@ -26,6 +26,7 @@ import waba.ui.MessageBox;
 
 import gps.BT747_dev;
 import gps.GPSstate;
+import gps.GpsEvent;
 
 /**
  * @author Mario De Weerd
@@ -167,8 +168,6 @@ public class GPSLogFormat extends Container {
             } else if (event.target==this) {
                 m_GPSstate.getLogFormat();
                 event.consumed=true;
-            } else if (event.target==null) {
-                updateLogFormat(m_GPSstate.logFormat);
             } else {
                 boolean z_updated=false;
                 for (int i=0;i<C_LOG_FMT_COUNT;i++) {
@@ -182,6 +181,11 @@ public class GPSLogFormat extends Container {
             }
         
         break;
+        case GpsEvent.DATA_UPDATE:
+            if(event.target==this) {
+                updateLogFormat(m_GPSstate.logFormat);
+                event.consumed=true;
+            }
         }
     }
 }
