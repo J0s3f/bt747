@@ -32,3 +32,25 @@ java waba.applet.Applet BT747
 
 You can also try to run the 'run_ex.bat' command script.
 
+
+=========== PPC installation ================
+
+The following 'script' indicates what was done to make it work in the PPC emulator:
+
+I installed the PPC emulator on my PC.
+I localized the time setting (Paris).
+I defined the shared folder to some directory on my PC.
+I copied the superwaba cab file and the BT747 cab file to this directory.
+I installed Superwaba on the emulator (from the 'storage card')
+I installed BT747 on the emulator ('from the storage card').
+I mapped serial port 0 to COM4 (where the BT747 is on).
+I launched BT747 (application).
+I was able to connect to the device in the PPC emulator by clicking on '1'.
+The application jumped to the log tab (as expected).
+It showed the memory used and nbr of records used in this tab.
+I set the 'Output dir' in the 'File' tab to '/Storage Card' (pointing to the shared directory actually).
+I clicked 'Get log' on the 'Log' tab.
+I cancelled 'Get log' (because the memory on my BT747 is almost full so it takes a while).
+I clicked 'To GPX'. ... Conversion takes a while.
+I set today's date as start date (I logged some GPS points today). Much faster (less to write).
+I open the kml on windows -> opens google earth with expected points.

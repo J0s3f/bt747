@@ -17,6 +17,7 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.io.File;
 import waba.sys.Convert;
 import waba.sys.Settings;
 
@@ -68,7 +69,18 @@ public class AppSettings implements gps.settings {
     public void defaultSettings() {
         setPortnbr(0);
         setBaudRate(115200);
-        setBaseDirPath("/Palm");
+        if (waba.sys.Settings.platform.startsWith("Palm")) {
+            setBaseDirPath("/Palm");
+        } else if ( waba.sys.Settings.platform.startsWith("WindowsCE")
+                ||waba.sys.Settings.platform.startsWith("PocketPC")
+                ||waba.sys.Settings.platform.startsWith("MS_SmartPhone") 
+                )
+        {
+            setBaseDirPath(File.getCardVolume().getPath());
+        } else {
+            setBaseDirPath("/BT747");
+        }
+ 
         setLogFile("BT747log.bin");
         setReportFileBase("GPSDATA");
         setStartupOpenPort(false);

@@ -1,3 +1,8 @@
+Version 0.77.7
+
+* Following feedback from users, setting download chunck size to 0x200 by default.
+* On PPC and WinCE devices, improved the default setting of the output directory.
+
 Version 0.77.6
 
 * Solved 'bug' concerning Gps status update propagation by introducing specific events.
