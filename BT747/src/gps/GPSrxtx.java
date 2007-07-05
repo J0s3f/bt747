@@ -228,7 +228,7 @@ public class GPSrxtx {
     private static final byte[] EOL_BYTES = {'\015','\012'};
     
     public int sendPacket(final String p_Packet) {       
-        if((ds!=null)&&(ds.isOpen())) {
+        if((sp!=null)&&(sp.isOpen())) {
             if(GPS_DEBUG) {
                 waba.sys.Vm.debug(">"+p_Packet);
             }
