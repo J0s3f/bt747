@@ -26,7 +26,7 @@ On windows, I launch the BT747.jar like this:
 -------------- start of example ----------------
 set PATH=c:\j2sdk1.4.2_14\bin;%PATH%
 set JAVA_HOME=c:\j2sdk1.4.2_14
-set CLASSPATH=c:\pathtowin32comm\win32comm.jar;.;%CLASSPATH%;;c:\superwabasdk\lib\superwaba.jar
+set CLASSPATH=c:\pathtowin32comm\win32comm.jar;c:\pathtowin32comm\build\BT747.jar;.;%CLASSPATH%;;c:\superwabasdk\lib\superwaba.jar
 java waba.applet.Applet BT747
 ---------------- end of example ----------------
 
