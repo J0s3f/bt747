@@ -33,6 +33,11 @@ public interface settings {
      * @return The default baud rate
      */
     public int getBaudRate();
+
+    /**
+     * @return The default baud rate
+     */
+    public int getDownloadTimeOut();
    
     /**
      * @param Baud The Baud rate to set as a default.

@@ -103,8 +103,6 @@ public class GPSstate implements Thread {
     // Number of log entries to request 'ahead'.
     final static int C_MAX_LOG_AHEAD = 1;
     
-    
-    static final int C_LOG_TIMEOUT  = 2500; // ms
     Control m_EventPosterObject= null;
     
     private settings m_settings;
@@ -1180,7 +1178,7 @@ public class GPSstate implements Thread {
                 analyseNMEA(lastResponse);
                 lastResponse= m_GPSrxtx.getResponse();
             }
-            if((m_isLogging||m_isSearchingLog)&& ((Vm.getTimeStamp()-logTimer)>=C_LOG_TIMEOUT)) {
+            if((m_isLogging||m_isSearchingLog)&& ((Vm.getTimeStamp()-logTimer)>=m_settings.getDownloadTimeOut())) {
                 handleLogTimeOut();  // On time out resend request packet.
             }
         } else {

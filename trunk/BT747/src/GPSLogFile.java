@@ -17,6 +17,7 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
+import waba.sys.Convert;
 import waba.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -39,6 +40,8 @@ public class GPSLogFile extends Container {
     Edit m_edBaseDirName;
     Edit m_edLogFileName;
     Edit m_edReportBaseName;
+    Edit m_edChunkSize;
+    Edit m_edTimeout;
 
     private Button m_btChangeSettings;
     private Button m_btDefaultSettings;
@@ -51,6 +54,13 @@ public class GPSLogFile extends Container {
         add(new Label("Report :"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edReportBaseName = new Edit(""), AFTER, SAME); //$NON-NLS-1$
 
+        add(new Label("Chunk :"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_edChunkSize = new Edit(""), AFTER, SAME); //$NON-NLS-1$
+        m_edChunkSize.setValidChars(Edit.numbersSet);
+        add(new Label("Read timeout (ms) :"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_edTimeout = new Edit(""), AFTER, SAME); //$NON-NLS-1$
+        m_edTimeout.setValidChars(Edit.numbersSet);
+        
         m_btChangeSettings=new Button("Set values");
         add(m_btChangeSettings,CENTER,AFTER+5);
         m_btDefaultSettings=new Button("Default settings");
@@ -63,6 +73,8 @@ public class GPSLogFile extends Container {
         m_edBaseDirName.setText(m_settings.getBaseDirPath());
         m_edReportBaseName.setText(m_settings.getReportFileBase());
         m_edLogFileName.setText(m_settings.getLogFile());
+        m_edChunkSize.setText(Convert.toString(m_settings.getChunkSize()));
+        m_edTimeout.setText(Convert.toString(m_settings.getDownloadTimeOut()));
     }
 
     public void onEvent( Event event ) {
@@ -72,6 +84,8 @@ public class GPSLogFile extends Container {
                 m_settings.setBaseDirPath(m_edBaseDirName.getText());
                 m_settings.setLogFile(m_edLogFileName.getText());
                 m_settings.setReportFileBase(m_edReportBaseName.getText());
+                m_settings.setChunkSize(Convert.toInt(m_edChunkSize.getText()));
+                m_settings.setDownloadTimeOut(Convert.toInt(m_edTimeout.getText()));
             } else if (event.target==m_btDefaultSettings) {
                 m_settings.defaultSettings();
                 updateValues();

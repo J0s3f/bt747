@@ -181,17 +181,7 @@ public class GPSLogGet extends Container {
                 //  m_GPSstate.getLogInit(0,1000,100,m_cbFile.getSelectedItem()+"Test.txt");
                 //	m_GPSstate.getLogInit(0,32*1024*1024,100,"/Palm/BT747log.bin");
                 // TODO: Optimize download on PalmOS.
-                int logRequestSize=0x200; // Short by default
-                if(waba.sys.Settings.platform.startsWith("Java")
-                   ||waba.sys.Settings.platform.startsWith("Linux")
-                   ||waba.sys.Settings.platform.startsWith("Posix")
-                   ||waba.sys.Settings.platform.startsWith("Win32")
-                   ){
-                    // Long only on machines that are most likely PC like
-                    logRequestSize=0x10000;
-                }
-                //logRequestSize=0x100;
-                //logRequestSize=0x800;
+                int logRequestSize=m_appSettings.getChunkSize(); // Short by default
                 m_GPSstate.getLogInit(0,            /* StartPosition */
                         m_GPSstate.logMemUsed-1,    /* EndPosition */
                         logRequestSize,             /* Size per request */
