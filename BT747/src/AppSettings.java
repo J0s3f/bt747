@@ -42,6 +42,10 @@ public class AppSettings implements gps.settings {
     private final static int C_LOGFILE_SIZE=40;
     private final static int C_OPENSTARTUP_IDX=C_LOGFILE_IDX+C_LOGFILE_SIZE;
     private final static int C_OPENSTARTUP_SIZE=40;
+    private final static int C_CHUNKSIZE_IDX=C_OPENSTARTUP_IDX+C_OPENSTARTUP_SIZE;
+    private final static int C_CHUNKSIZE_SIZE=8;
+    private final static int C_DOWNLOADTIMEOUT_IDX=C_CHUNKSIZE_IDX+C_CHUNKSIZE_SIZE;
+    private final static int C_DOWNLOADTIMEOUT_SIZE=8;
 
     private String baseDirPath;
     private String logFile;
@@ -72,11 +76,15 @@ public class AppSettings implements gps.settings {
         if (waba.sys.Settings.platform.startsWith("Palm")) {
             setBaseDirPath("/Palm");
         } else if ( waba.sys.Settings.platform.startsWith("WindowsCE")
-                ||waba.sys.Settings.platform.startsWith("PocketPC")
-                ||waba.sys.Settings.platform.startsWith("MS_SmartPhone") 
+                ||waba.sys.Settings.platform.startsWith("PocketPC") 
                 )
         {
-            setBaseDirPath(File.getCardVolume().getPath());
+            File f=File.getCardVolume();
+            if(f!=null) {
+                setBaseDirPath("/EnterYourDir");
+            } else {
+                setBaseDirPath(f.getPath());
+            }
         } else {
             setBaseDirPath("/BT747");
         }
@@ -84,6 +92,8 @@ public class AppSettings implements gps.settings {
         setLogFile("BT747log.bin");
         setReportFileBase("GPSDATA");
         setStartupOpenPort(false);
+        setChunkSize(waba.sys.Settings.onDevice?0x200:0x10000);
+        setDownloadTimeOut( (waba.sys.Settings.onDevice?0x200:0x10000) >>5);
         getSettings();
     }
 
@@ -155,6 +165,41 @@ public class AppSettings implements gps.settings {
         setOpt(Convert.unsigned2hex(Baud,8),C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
 	}
 
+    /**
+     * @return The default chunk size
+     */
+    public int getChunkSize() {
+        // ChunkSize must be multiple of 2 
+        int chunkSize=Conv.hex2Int(getStringOpt(C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE))&0xFFFFFFFE;
+        if (chunkSize<16) {
+            chunkSize=0x200;
+        }
+        return chunkSize;
+    }
+    /**
+     * @param ChunkSize The ChunkSize  to set as a default.
+     */
+    public void setChunkSize(int ChunkSize) {
+        setOpt(Convert.unsigned2hex(ChunkSize,8),C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE);
+    }
+
+    /**
+    * @return The default chunk size
+    */
+   public int getDownloadTimeOut() {
+       int DownloadTimeOut=Conv.hex2Int(getStringOpt(C_DOWNLOADTIMEOUT_IDX, C_DOWNLOADTIMEOUT_SIZE));
+       if (DownloadTimeOut<=0) {
+           DownloadTimeOut=0x200;
+       }
+       return DownloadTimeOut;
+   }
+   /**
+    * @param DownloadTimeOut The DownloadTimeOut  to set as a default.
+    */
+   public void setDownloadTimeOut(int DownloadTimeOut) {
+       setOpt(Convert.unsigned2hex(DownloadTimeOut,C_DOWNLOADTIMEOUT_SIZE),C_DOWNLOADTIMEOUT_IDX, C_DOWNLOADTIMEOUT_SIZE);
+   }
+   
 	public boolean getStartupOpenPort() {
 		return Conv.hex2Int(getStringOpt(C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE))==1;
 	}

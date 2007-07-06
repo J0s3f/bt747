@@ -1,3 +1,9 @@
+Version 0.77.8
+
+* Problem with default directory setting solved (null pointer)
+* Download chunk size and timeout are configurable (for finetuning)
+
+
 Version 0.77.7
 
 * Following feedback from users, setting download chunck size to 0x200 by default.
