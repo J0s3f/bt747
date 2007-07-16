@@ -180,7 +180,6 @@ public class GPSGPXFile implements GPSFile {
      */
     public void writeRecord(GPSRecord s) {
         boolean prevField=false;
-        String rec="";
         m_recCount++;
         if(activeFields!=null) {
             if(!m_Filter.doFilter(s)) {
@@ -190,6 +189,7 @@ public class GPSGPXFile implements GPSFile {
                     writeTxt("</trkseg></trk><trk><trkseg>");
                 }
             } else {
+                String rec="";
                 m_newTrack=false;
                 //                "  <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 //                "    <ele>12.863281</ele>"+

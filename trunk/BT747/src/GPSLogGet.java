@@ -36,6 +36,7 @@ import gps.GPSFile;
 import gps.GPSFilter;
 import gps.GPSGPXFile;
 import gps.GPSKMLFile;
+import gps.GPSPLTFile;
 import gps.GPSstate;
 import gps.GpsEvent;
 
@@ -60,6 +61,7 @@ public class GPSLogGet extends Container {
     Button m_btToCSV;
     Button m_btToKML;
     Button m_btToGPX;
+    Button m_btToPLT;
     
     Check m_chkIncremental;
     
@@ -143,6 +145,10 @@ public class GPSLogGet extends Container {
         add(m_btToGPX = new Button("To GPX"), CENTER, SAME); //$NON-NLS-1$
         add(m_btToKML = new Button("To KML"), RIGHT, SAME); //$NON-NLS-1$
 
+        add(m_btToPLT = new Button("To PLT"), LEFT, AFTER + 5); //$NON-NLS-1$
+//        add(m_btToGPX = new Button("To GPX"), CENTER, SAME); //$NON-NLS-1$
+//        add(m_btToKML = new Button("To KML"), RIGHT, SAME); //$NON-NLS-1$
+
         add(m_UsedLabel=new Label(   ""),LEFT, AFTER+3);
         add(m_RecordsLabel=new Label(""),LEFT, AFTER+3);
     }
@@ -150,6 +156,7 @@ public class GPSLogGet extends Container {
     public void updateButtons() {
         boolean logIsActive=m_GPSstate.loggingIsActive;
         m_chkLogOnOff.setChecked(logIsActive);
+        m_chkLogOnOff.repaintNow();
         m_UsedLabel.setText(   "Mem Used   : "+Convert.toString(m_GPSstate.logMemUsed)
                 +"("+Convert.toString(m_GPSstate.logMemUsedPercent)+"%)");
         m_UsedLabel.repaintNow();
@@ -214,6 +221,7 @@ public class GPSLogGet extends Container {
                 cal.popupModal();
             } else if (event.target==m_btToCSV
                     ||event.target==m_btToKML
+                    ||event.target==m_btToPLT
                     ||event.target==m_btToGPX) {
                 String ext="";
                 GPSFile gpsFile=null;
@@ -225,6 +233,10 @@ public class GPSLogGet extends Container {
                 if(event.target==m_btToKML) {
                     gpsFile=new GPSKMLFile();
                     ext=".kml";
+                }
+                if(event.target==m_btToPLT) {
+                    gpsFile=new GPSPLTFile();
+                    ext=".plt";
                 }
                 if(event.target==m_btToGPX) {
                     gpsFile=new GPSGPXFile();

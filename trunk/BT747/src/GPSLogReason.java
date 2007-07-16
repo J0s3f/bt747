@@ -122,9 +122,21 @@ public class GPSLogReason extends Container {
         m_cbDGPSMode.select(m_GPSstate.dgps_mode);
         if(ENABLE_PWR_SAVE_CONTROL) {
             m_chkPowerSaveOnOff.setChecked(m_GPSstate.powerSaveEnabled);
+            m_chkPowerSaveOnOff.repaintNow();
         }
         m_cbDatumMode.select(m_GPSstate.datum);
-        
+        m_chkTimeOnOff.repaintNow();
+        m_edTime.repaintNow();
+        m_chkSpeedOnOff.repaintNow();
+        m_edSpeed.repaintNow();
+        m_chkDistanceOnOff.repaintNow();
+        m_edDistance.repaintNow();
+        m_chkFixOnOff.repaintNow();
+        m_edFix.repaintNow();
+        m_chkSBASOnOff.repaintNow();
+        m_chkSBASTestOnOff.repaintNow();
+        m_cbDGPSMode.repaintNow();
+        m_cbDatumMode.repaintNow();
     }
     
     public void setSettings() {

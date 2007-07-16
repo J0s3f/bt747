@@ -1,3 +1,10 @@
+Version 0.77.9
+
+* Added connection version to connection page
+* Correct logic concerning null pointer (hopefully this works!).
+* Added repaint for all items that were potentially updated after reception of data.
+* Added initial version to write Ozi PLT file.
+
 Version 0.77.8
 
 * Problem with default directory setting solved (null pointer)

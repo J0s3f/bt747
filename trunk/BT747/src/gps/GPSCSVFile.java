@@ -179,11 +179,10 @@ public class GPSCSVFile implements GPSFile {
      */
     public void writeRecord(GPSRecord s) {
         boolean prevField=false;
-        String rec="";
         m_recCount++;
-        rec+=Convert.toString(m_recCount);
         
         if(activeFields!=null && m_Filter.doFilter(s)) {
+            String rec=Convert.toString(m_recCount);
             if(activeFields.rcr!=0) {
                 rec+=",";
                 if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {

@@ -80,7 +80,7 @@ public class AppSettings implements gps.settings {
                 )
         {
             File f=File.getCardVolume();
-            if(f!=null) {
+            if(f==null) {
                 setBaseDirPath("/EnterYourDir");
             } else {
                 setBaseDirPath(f.getPath());
