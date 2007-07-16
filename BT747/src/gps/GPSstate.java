@@ -702,6 +702,7 @@ public class GPSstate implements Thread {
         closeLog();
         if(m_ProgressBar!=null) {
             m_ProgressBar.setVisible(false);
+            m_ProgressBar.repaintNow();
         }
     }
     
@@ -1178,7 +1179,13 @@ public class GPSstate implements Thread {
                 analyseNMEA(lastResponse);
                 lastResponse= m_GPSrxtx.getResponse();
             }
-            if((m_isLogging||m_isSearchingLog)&& ((Vm.getTimeStamp()-logTimer)>=m_settings.getDownloadTimeOut())) {
+            if( (m_isLogging||m_isSearchingLog)
+                &&
+                ( (sentCmds.getCount()==0) // All acks or responses received.
+                  ||
+                  ((Vm.getTimeStamp()-logTimer)>=m_settings.getDownloadTimeOut())
+                )
+               ) {
                 handleLogTimeOut();  // On time out resend request packet.
             }
         } else {

@@ -21,6 +21,7 @@ import waba.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
+import waba.ui.Label;
 import waba.ui.PushButtonGroup;
 
 import gps.GPSstate;
@@ -66,6 +67,7 @@ public class GPSconctrl extends Container {
         btnRestartGps = new Button("Reset COM port");
         btnRestartGps.setGap(5);
         add(btnRestartGps, RIGHT - 5, BOTTOM - 5);
+        add(new Label("Version:"+Version.NUMBER+"("+Version.DATE+")"), LEFT, BEFORE); //$NON-NLS-1$)
     }
 
     private void GPS_setChannel(int channel) {

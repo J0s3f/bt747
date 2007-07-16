@@ -329,10 +329,10 @@ public class GPSKMLFile implements GPSFile {
      */
     public void writeRecord(GPSRecord s) {
         boolean prevField=false;
-        String rec="";
         m_recCount++;
         if(activeFields!=null) {
             if(m_Filter.doFilter(s)) {
+                String rec="";
                 
                 rec+="<Placemark>\r\n";
                 
