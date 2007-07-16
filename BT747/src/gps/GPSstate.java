@@ -235,7 +235,7 @@ public class GPSstate implements Thread {
                     |(1<<BT747_dev.FMT_SNR_IDX)
             );
         }
-        m_GPSrxtx.sendPacket("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_SET_STR
                 +","+BT747_dev.PMTK_LOG_FORMAT_STR
                 +","+Convert.unsigned2hex(logFormat,8)					
@@ -247,7 +247,7 @@ public class GPSstate implements Thread {
      */
     
     public void eraseLog() {
-        m_GPSrxtx.sendPacket("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_ERASE
                 +","+BT747_dev.PMTK_LOG_ERASE_YES_STR				
         );
@@ -258,7 +258,7 @@ public class GPSstate implements Thread {
      * @param size      size of the data range requested
      */
     public void readLog(final int startAddr, final int size) {
-        m_GPSrxtx.sendPacket("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_REQ_DATA_STR
                 +","+Convert.unsigned2hex(startAddr,8)			
                 +","+Convert.unsigned2hex(size,8)			
@@ -654,7 +654,15 @@ public class GPSstate implements Thread {
                 // ACK is variable length, can have parameters of cmd.
                 z_MatchString+=","+p_nmea[i];
             }
-            int z_CmdIdx=sentCmds.find(z_MatchString);
+            int z_CmdIdx=-1;
+            for (int i = 0; i < sentCmds.getCount(); i++) {
+              if(((String)sentCmds.items[i]).startsWith(z_MatchString)) {
+                  z_CmdIdx=i;
+                  break;
+              }
+                
+            }
+            //sentCmds.find(z_MatchString);
             //if(GPS_DEBUG) {	waba.sys.Vm.debug("IDX:"+Convert.toString(z_CmdIdx)+"\n");}
             //if(GPS_DEBUG) {	waba.sys.Vm.debug("FLAG:"+Convert.toString(z_Flag)+"\n");}
             switch (z_Flag) {
@@ -1181,7 +1189,7 @@ public class GPSstate implements Thread {
             }
             if( (m_isLogging||m_isSearchingLog)
                 &&
-                ( (sentCmds.getCount()==0) // All acks or responses received.
+                ( (m_isLogging&&(sentCmds.getCount()==0)) // All acks or responses received.
                   ||
                   ((Vm.getTimeStamp()-logTimer)>=m_settings.getDownloadTimeOut())
                 )
