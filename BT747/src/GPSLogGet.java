@@ -47,6 +47,7 @@ public class GPSLogGet extends Container {
     GPSstate m_GPSstate;
 
     Check m_chkLogOnOff;;
+    Check m_chkLogOverwriteStop;;
 
     Button m_btStartDate;
     Date m_StartDate=new Date(1,1,1983);
@@ -83,40 +84,7 @@ public class GPSLogGet extends Container {
         m_pb= pb;
         m_appSettings= s;
         m_Filter=filter;
-    }
-
-    // TODO: Just some code as a reference to find a path.
-    void recursiveList(String path, Vector v) {
-        if (path == null)
-            return;
-        File file = new File(path);
-        String[] list = file.listFiles();
-        if (list != null)
-            for (int i = 0; i < list.length && i < 49; i++)
-                if (list[i] != null) {
-                    waba.sys.Vm.debug(list[i] + "\n"); //$NON-NLS-1$
-                    v.addElement(path + list[i]);
-                    if (list[i].endsWith("/")) // is a path? //$NON-NLS-1$
-                        recursiveList(path + list[i], v);
-                }
-    }
-
-    // TODO: Just some code as a reference to find a path.
-    void nonRecursiveList(String path, Vector v) {
-        if (path == null)
-            return;
-        File file = new File(path);
-        String[] list = file.listFiles();
-        if (list != null)
-            for (int i = 0; i < list.length && i < 49; i++)
-                if (list[i] != null) {
-                    waba.sys.Vm.debug(list[i] + "\n"); //$NON-NLS-1$
-                    v.addElement(path + list[i]);
-                    //if (list[i].endsWith("/")) // is a path?
-                    //	recursiveList(path+list[i],v);
-                }
-    }
-    
+    } 
     
 
     /*
@@ -130,6 +98,7 @@ public class GPSLogGet extends Container {
         add(m_chkLogOnOff = new Check("Device log on(/off)"), LEFT, TOP); //$NON-NLS-1$
         add(m_chkIncremental = new Check("Incremental"), RIGHT, SAME); //$NON-NLS-1$
         m_chkIncremental.setChecked(true);
+        add(m_chkLogOverwriteStop = new Check("Log overwrite(/stop) when full"), LEFT, AFTER); //$NON-NLS-1$
         add(new Label("Start date"), LEFT, AFTER); //$NON-NLS-1$
         add(m_btStartDate = new Button(m_StartDate.getDate()), AFTER, SAME); //$NON-NLS-1$
         //m_btStartDate.setMode(Edit.DATE);
@@ -138,14 +107,14 @@ public class GPSLogGet extends Container {
         add(new Label("End date"), BEFORE, SAME); 
 
         //add(new Label("End"),BEFORE,SAME);
-        add(m_btGetLog = new Button("Get Log"), LEFT, AFTER + 10); //$NON-NLS-1$
+        add(m_btGetLog = new Button("Get Log"), LEFT, AFTER + 5); //$NON-NLS-1$
         add(m_btCancelGetLog = new Button("Cancel get"), RIGHT, SAME); //$NON-NLS-1$
 
         add(m_btToCSV = new Button("To CSV"), LEFT, AFTER + 5); //$NON-NLS-1$
         add(m_btToGPX = new Button("To GPX"), CENTER, SAME); //$NON-NLS-1$
         add(m_btToKML = new Button("To KML"), RIGHT, SAME); //$NON-NLS-1$
 
-        add(m_btToPLT = new Button("To PLT"), LEFT, AFTER + 5); //$NON-NLS-1$
+        add(m_btToPLT = new Button("To PLT"), LEFT, AFTER + 2); //$NON-NLS-1$
 //        add(m_btToGPX = new Button("To GPX"), CENTER, SAME); //$NON-NLS-1$
 //        add(m_btToKML = new Button("To KML"), RIGHT, SAME); //$NON-NLS-1$
 
@@ -154,9 +123,10 @@ public class GPSLogGet extends Container {
     }
 
     public void updateButtons() {
-        boolean logIsActive=m_GPSstate.loggingIsActive;
-        m_chkLogOnOff.setChecked(logIsActive);
+        m_chkLogOnOff.setChecked(m_GPSstate.loggingIsActive);
         m_chkLogOnOff.repaintNow();
+        m_chkLogOverwriteStop.setChecked(m_GPSstate.logFullOverwrite);
+        m_chkLogOverwriteStop.repaintNow();
         m_UsedLabel.setText(   "Mem Used   : "+Convert.toString(m_GPSstate.logMemUsed)
                 +"("+Convert.toString(m_GPSstate.logMemUsedPercent)+"%)");
         m_UsedLabel.repaintNow();
@@ -193,6 +163,7 @@ public class GPSLogGet extends Container {
                         m_GPSstate.logMemUsed-1,    /* EndPosition */
                         logRequestSize,             /* Size per request */
                         m_appSettings.getLogFilePath(), /* Log file name */
+                        m_appSettings.getCard(),    /* Card for file operations */
                         m_chkIncremental.getChecked(), /* Incremental download */
                         m_pb                        /* ProgressBar */
                         ); //$NON-NLS-1$
@@ -207,6 +178,9 @@ public class GPSLogGet extends Container {
                     m_GPSstate.stopLog();
                 }
                 m_GPSstate.getLogOnOffStatus();
+            } else if (event.target == m_chkLogOverwriteStop) {
+                    m_GPSstate.setLogOverwrite(m_chkLogOverwriteStop.getChecked());
+                m_GPSstate.getLogOverwrite();
             } else if (event.target == m_btEndDate) {
                 if (cal == null) {
                     cal = new Calendar();
@@ -247,10 +221,10 @@ public class GPSLogGet extends Container {
                 m_Filter.endDate=dateToUTCepoch1970(m_EndDate)+(24*60*60-1);
                 gpsFile.setFilter(m_Filter);
                 // TODO: should get logformat associated with inputfile
-                gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext);
+                gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard());
                 /* TODO: Recover the logFormat from a file or so */
                 BT747LogConvert lc=new BT747LogConvert();
-                lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile);
+                lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile,m_appSettings.getCard());
                 gpsFile.finaliseFile();
                 Convert.toString(3);
             } else if (event.target == this) {

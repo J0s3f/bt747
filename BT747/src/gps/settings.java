@@ -33,6 +33,11 @@ public interface settings {
      * @return The default baud rate
      */
     public int getBaudRate();
+    /**
+     * @return The card to read/write
+     */
+    public int getCard();
+
 
     /**
      * @return The default baud rate

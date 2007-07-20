@@ -1,3 +1,10 @@
+Version 0.77.10
+
+* Added configuration option 'overwrite/stop'
+* Added card selection functionality for Palm devices.
+* Allow floating point entry for time interval.  Usefull for 5Hz logging (set time
+  interval to 0.2s and fix to 200 ms).
+
 Version 0.77.9
 
 * Added connection version to connection page

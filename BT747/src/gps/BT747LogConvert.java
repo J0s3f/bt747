@@ -324,10 +324,10 @@ public final class BT747LogConvert {
             }
         } /* nextAddrToRead<fileSize */
     }
-    public final void toGPSFile(final String fileName, final GPSFile gpsFile) {
+    public final void toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
         GPSRecord gpsRec=new GPSRecord();
         if(File.isAvailable()) {
-            m_File=new File(fileName,File.READ_ONLY);
+            m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
                 Vm.debug("Could not open "+fileName);
                 m_File=null;

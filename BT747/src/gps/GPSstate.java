@@ -66,9 +66,8 @@ public class GPSstate implements Thread {
     private int m_NextReqAddr;
     private int m_NextReadAddr;
     private int m_Step;
+
     private boolean m_isLogging = false;       // True when dumping log
-    private boolean m_isSearchingLog = false;  // True when doing binary search
-    private boolean m_isSearchingEnd = false;  // True when doing binary search
     private boolean m_isCheckingLog = false;  // True when doing binary search
     private boolean m_getFullLog= true; // If true, get the entire log (based on block head)
     private boolean m_recoverFromError= false; // When true, must recover from error
@@ -95,6 +94,7 @@ public class GPSstate implements Thread {
     public int datum = 0; // Datum WGS84, TOKYO-M, TOKYO-A
     
     public boolean loggingIsActive = false;
+    public boolean logFullOverwrite = false;   // When true, overwrite log when device is full
     
     public int dgps_mode=0;
     
@@ -347,7 +347,7 @@ public class GPSstate implements Thread {
                 PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_TIME_INTERVAL: 	// 3;
-                    logTimeInterval=Convert.toInt(p_nmea[3])/10;
+                    logTimeInterval=Convert.toInt(p_nmea[3]);
                 PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_DISTANCE_INTERVAL: //4;
@@ -359,12 +359,15 @@ public class GPSstate implements Thread {
                 PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_REC_METHOD:		// 6;
-                    logRecMethod=Convert.toInt(p_nmea[3])/10;
+                    logFullOverwrite=(Convert.toInt(p_nmea[3])==1);
                 PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_LOG_STATUS:		// 7; // bit 2 = logging on/off
-                    logStatus=Conv.hex2Int(p_nmea[3]);
-                loggingIsActive=((logStatus&BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK)!=0);
+                    logStatus=Convert.toInt(p_nmea[3]);
+                    loggingIsActive=( 
+                           ((logStatus&BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK)!=0)
+                          );
+
                 PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_MEM_USED:			// 8; 
@@ -433,6 +436,7 @@ public class GPSstate implements Thread {
     
     public void getLogCtrlInfo() {
         // Request log status from device
+        sendNMEA("PMTK182,2,12");
         sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_QUERY_STR+
                 ","+BT747_dev.PMTK_LOG_LOG_STATUS_STR           
@@ -457,7 +461,8 @@ public class GPSstate implements Thread {
         //        );
         //      sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
         //              +","+BT747_dev.PMTK_LOG_QUERY_STR+
-        //              ","+12 );       
+        //              ","+12 );
+        getLogOverwrite();
     }
     
     public void getLogReasonStatus() {
@@ -485,7 +490,7 @@ public class GPSstate implements Thread {
         sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_SET_STR+
                 ","+BT747_dev.PMTK_LOG_TIME_INTERVAL_STR+           
-                ","+Convert.toString(z_value*10)           
+                ","+Convert.toString(z_value)           
         );
     }
     
@@ -578,6 +583,24 @@ public class GPSstate implements Thread {
     public boolean SBASEnabled=false;
     public boolean SBASTestEnabled=false;
     public boolean powerSaveEnabled=false;
+
+    public void setLogOverwrite(final boolean set) {
+        // Request log format from device
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_SET_STR
+                +","+BT747_dev.PMTK_LOG_REC_METHOD_STR
+                +","+(set?"1":"2")           
+        );
+    }
+
+    public void getLogOverwrite() {
+        // Request log format from device
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_QUERY_STR
+                +","+BT747_dev.PMTK_LOG_REC_METHOD_STR
+        );
+    }
+
     
     public void setSBASTestEnabled(final boolean set) {
         // Request log format from device
@@ -695,6 +718,7 @@ public class GPSstate implements Thread {
     }
     
     private File m_logFile=new File("");
+    private int m_logFileCard=-1;
     public void closeLog() {
         try {
             if(m_logFile!=null  && m_logFile.isOpen()) {
@@ -731,6 +755,7 @@ public class GPSstate implements Thread {
             final int p_EndAddr,
             final int p_Step,
             final String p_FileName,
+            final int Card,
             final boolean incremental,  // True if incremental read
             ProgressBar pb) {
         m_isLogging= false;
@@ -748,7 +773,7 @@ public class GPSstate implements Thread {
             pb.setVisible(true);
         }
         if(incremental) {
-            reOpenLogRead(p_FileName);
+            reOpenLogRead(p_FileName,Card);
             if(m_logFile!=null&&m_logFile.isOpen()) {
                 // There is a file with data.
                 if (m_logFile.getSize()>=(C_BLOCKVERIF_START+C_BLOCKVERIF_SIZE)){
@@ -769,6 +794,7 @@ public class GPSstate implements Thread {
                         if(continueLoop) {
                             // This block is fully filled
                             blockHeadPos+=0x10000;
+                            m_ProgressBar.setValue(blockHeadPos);
                             continueLoop=(blockHeadPos<=(m_logFile.getSize()&0xFFFF0000));
                         }
                     } while(continueLoop);
@@ -813,16 +839,17 @@ public class GPSstate implements Thread {
         }
         if(!m_isCheckingLog) {
             // File could not be opened or is not incremental.
-            openNewLog(p_FileName);
+            openNewLog(p_FileName,Card);
             m_isLogging=true;
             m_getNextLogOnNextTimer=true;
         }
     }
     
-    private void openNewLog(final String fileName) {
+    private void openNewLog(final String fileName, final int Card) {
         if(m_logFile!=null&&m_logFile.isOpen()) {m_logFile.close();}
         try {
-            m_logFile=new File(fileName);
+            m_logFile=new File(fileName,File.DONT_OPEN,Card);
+            m_logFileCard=Card;
             if(m_logFile.exists()) {
                 m_logFile.delete();
             }
@@ -830,29 +857,33 @@ public class GPSstate implements Thread {
 //            Vm.debug("Exception new log delete");
         }
         try {
-            m_logFile=new File(fileName,File.CREATE);
+            m_logFile=new File(fileName,File.CREATE,Card);
+            m_logFileCard=Card;
             m_logFile.close();
-            m_logFile=new File(fileName,File.READ_WRITE);
+            m_logFile=new File(fileName,File.READ_WRITE,Card);
+            m_logFileCard=Card;
         } catch (Exception e) {
 //            Vm.debug("Exception new log create");
         }
     }
     
     
-    private void reOpenLogRead(final String fileName) {
+    private void reOpenLogRead(final String fileName,final int Card) {
         closeLog();
         try {
-            m_logFile=new File(fileName,File.READ_ONLY);
+            m_logFile=new File(fileName,File.READ_ONLY,Card);
+            m_logFileCard=Card;
         } catch (Exception e) {
 //            Vm.debug("Exception reopen log read");
         }
         
     }
     
-    private void reOpenLogWrite(final String fileName) {
+    private void reOpenLogWrite(final String fileName,final int Card) {
         closeLog();
         try {
-            m_logFile=new File(fileName,File.READ_WRITE);
+            m_logFile=new File(fileName,File.READ_WRITE,Card);
+            m_logFileCard=Card;
         } catch (Exception e) {
 //            Vm.debug("Exception reopen log write");
         }
@@ -1010,7 +1041,7 @@ public class GPSstate implements Thread {
                     // Downloaded data seems to correspond - start incremental download
                     // TODO: Could find exact position at the end of the log to continue
                     // download.  Currently starting with last full block (0x10000)
-                    reOpenLogWrite(fileName);
+                    reOpenLogWrite(fileName,m_logFileCard);
 //                    m_NextReqAddr=((m_logFile.getSize()-1) & 0xFFFF0000);
 //                    if(m_NextReadAddr<m_NextReqAddr) {
 //                        m_NextReadAddr=m_NextReqAddr;
@@ -1023,7 +1054,7 @@ public class GPSstate implements Thread {
                     m_getNextLogOnNextTimer=true;
                 } else {
                     // Log is not the same - delete the log and reopen.
-                    openNewLog(fileName);
+                    openNewLog(fileName,m_logFileCard);
                     m_isLogging=true;
                     m_NextReadAddr=0;
                     m_NextReadAddr=0;
@@ -1187,7 +1218,7 @@ public class GPSstate implements Thread {
                 analyseNMEA(lastResponse);
                 lastResponse= m_GPSrxtx.getResponse();
             }
-            if( (m_isLogging||m_isSearchingLog)
+            if( (m_isLogging)
                 &&
                 ( (m_isLogging&&(sentCmds.getCount()==0)) // All acks or responses received.
                   ||
