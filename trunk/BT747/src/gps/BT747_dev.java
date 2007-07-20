@@ -249,6 +249,7 @@ public final class BT747_dev {  // dev as in device
     public static final String PMTK_LOG_TBD2_STR = Convert.toString(PMTK_LOG_TBD2);
     
     /** Mask for bit in log status indicating that log is active */
+    public static final int PMTK_LOG_STATUS_LOGSTOP_OVER_MASK= 0x04;
     public static final int PMTK_LOG_STATUS_LOGONOF_MASK= 0x02;
     
     // Other MTK commands

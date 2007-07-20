@@ -46,6 +46,8 @@ public class AppSettings implements gps.settings {
     private final static int C_CHUNKSIZE_SIZE=8;
     private final static int C_DOWNLOADTIMEOUT_IDX=C_CHUNKSIZE_IDX+C_CHUNKSIZE_SIZE;
     private final static int C_DOWNLOADTIMEOUT_SIZE=8;
+    private final static int C_CARD_IDX=C_DOWNLOADTIMEOUT_IDX+C_DOWNLOADTIMEOUT_SIZE;
+    private final static int C_CARD_SIZE=4;
 
     private String baseDirPath;
     private String logFile;
@@ -75,6 +77,7 @@ public class AppSettings implements gps.settings {
         setBaudRate(115200);
         if (waba.sys.Settings.platform.startsWith("Palm")) {
             setBaseDirPath("/Palm");
+            setCard(-1);
         } else if ( waba.sys.Settings.platform.startsWith("WindowsCE")
                 ||waba.sys.Settings.platform.startsWith("PocketPC") 
                 )
@@ -198,6 +201,23 @@ public class AppSettings implements gps.settings {
     */
    public void setDownloadTimeOut(int DownloadTimeOut) {
        setOpt(Convert.unsigned2hex(DownloadTimeOut,C_DOWNLOADTIMEOUT_SIZE),C_DOWNLOADTIMEOUT_IDX, C_DOWNLOADTIMEOUT_SIZE);
+   }
+
+   /**
+    * @return The default chunk size
+    */
+   public int getCard() {
+       int Card=Conv.hex2Int(getStringOpt(C_CARD_IDX, C_CARD_SIZE));
+       if (Card<=0) {
+           Card=0x200;
+       }
+       return Card;
+   }
+   /**
+    * @param Card The Card  to set as a default.
+    */
+   public void setCard(int Card) {
+       setOpt(Convert.unsigned2hex(Card,C_CARD_SIZE),C_CARD_IDX, C_CARD_SIZE);
    }
    
 	public boolean getStartupOpenPort() {

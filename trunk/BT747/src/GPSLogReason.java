@@ -75,7 +75,7 @@ public class GPSLogReason extends Container {
         add(m_edFix = new Edit(), AFTER, SAME); //$NON-NLS-1$
         m_edSpeed.setValidChars(Edit.numbersSet);
         m_edDistance.setValidChars(Edit.numbersSet);
-        m_edTime.setValidChars(Edit.numbersSet);
+        m_edTime.setValidChars(Edit.numbersSet+".");
         add(m_chkSBASOnOff = new Check("SBAS"), LEFT, AFTER+3); //$NON-NLS-1$
         m_cbDGPSMode=new ComboBox();
         m_cbDGPSMode.add(strDGPSMode);
@@ -100,7 +100,7 @@ public class GPSLogReason extends Container {
         m_chkTimeOnOff.setChecked(m_GPSstate.logTimeInterval!=0);
         m_edTime.setEnabled(m_GPSstate.logTimeInterval!=0);
         if(m_GPSstate.logTimeInterval!=0) {
-            m_edTime.setText(Convert.toString(m_GPSstate.logTimeInterval));
+            m_edTime.setText(Convert.toString(((float)m_GPSstate.logTimeInterval)/10,1));
         }
         m_chkSpeedOnOff.setChecked(m_GPSstate.logSpeedInterval!=0);
         m_edSpeed.setEnabled(m_GPSstate.logSpeedInterval!=0);
@@ -141,7 +141,7 @@ public class GPSLogReason extends Container {
     
     public void setSettings() {
         if(m_chkTimeOnOff.getChecked()) {
-            m_GPSstate.setLogTimeInterval(Convert.toInt(m_edTime.getText()));
+            m_GPSstate.setLogTimeInterval((int)(10*Convert.toFloat(m_edTime.getText())));
         } else {
             m_GPSstate.setLogTimeInterval(0);
         }

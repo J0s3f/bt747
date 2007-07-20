@@ -26,7 +26,7 @@ package gps;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public interface GPSFile {
-    public void initialiseFile(final String basename, final String ext);
+    public void initialiseFile(final String basename, final String ext, final int Card);
 
     public void writeLogFmtHeader(GPSRecord f);
     

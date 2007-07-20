@@ -51,13 +51,13 @@ public class GPSKMLFile implements GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(String basename, String ext) {
+    public void initialiseFile(final String basename, final String ext, final int Card) {
         // TODO Auto-generated method stub
-        m_File=new File(basename+ext);
+        m_File=new File(basename+ext,File.DONT_OPEN,Card);
         if(m_File.exists()) {
             m_File.delete();
         }
-        m_File=new File(basename+ext,File.CREATE);
+        m_File=new File(basename+ext,File.CREATE,Card);
         if(!m_File.isOpen()) {
             waba.sys.Vm.debug("Could not open "+basename+ext);
             m_File=null;
