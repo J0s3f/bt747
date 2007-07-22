@@ -74,7 +74,7 @@ public class BT747 extends MainWindow {
     private static TabPanel    m_TabPanel;
     /** The captions for the tab panel */
     private final String c_tpCaptions[]= {
-            "Log FMT","Ctrl","Log","File","Filter","Conn",
+            "FMT","Ctrl","Log","File","Filter","Conn","Flsh"
     };
     /** Tab Panel container - Logger control/configuration */
     private static GPSLogFormat  m_GPSLogCtrl;
@@ -97,6 +97,9 @@ public class BT747 extends MainWindow {
     /** Tab Panel container - Connection control/configuration */
     private static GPSconctrl  m_GPSconctrl;
     private static int C_GPS_CONCTRL_IDX= 5;
+    /** Tab Panel container - Flash settings */
+    private static GPSFlashOption  m_GPSFlash;
+    private static int C_GPS_FLASH_IDX= 6;
     
     // TODO: Settings should just refer to function and not need to be instantiated
     private static AppSettings m_settings=new AppSettings();
@@ -142,6 +145,7 @@ public class BT747 extends MainWindow {
         m_TabPanel.setPanel(C_GPS_FILECTRL_IDX,m_GPSLogFile = new GPSLogFile(m_settings));
         m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX,m_GPSLogFilter = new GPSLogFilter(m_GPSFilter));
         m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,m_GPSconctrl = new GPSconctrl(m_GPSstate));
+        m_TabPanel.setPanel(C_GPS_FLASH_IDX,m_GPSFlash = new GPSFlashOption(m_GPSstate));
         //		m_TabPanel.setPanel(1,dataEdit = new dataEdit());
         //		m_TabPanel.setPanel(2,grid = new Grid(gridCaptions,false));
         //		SerialPort sp;

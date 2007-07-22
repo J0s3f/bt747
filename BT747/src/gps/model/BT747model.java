@@ -162,14 +162,15 @@ public class BT747model extends Control {
             case BT747_dev.PMTK_API_Q_DATUM: // CMD 430
             case BT747_dev.PMTK_API_Q_DATUM_ADVANCE: // CMD 431
             case BT747_dev.PMTK_API_Q_GET_USER_OPTION: // CMD 490
-            case BT747_dev.PMTK_DT_FIX_CTL: // CMD 500
-            case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
-            case BT747_dev.PMTK_DT_SBAS: // CMD 513
-            case BT747_dev.PMTK_DT_NMEA_OUTPUT: // CMD 514
-            case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
-            case BT747_dev.PMTK_DT_DATUM: // CMD 530
-            case BT747_dev.PMTK_DT_FLASH_USER_OPTION: // CMD 590
+//            case BT747_dev.PMTK_DT_FIX_CTL: // CMD 500
+//            case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
+//            case BT747_dev.PMTK_DT_SBAS: // CMD 513
+//            case BT747_dev.PMTK_DT_NMEA_OUTPUT: // CMD 514
+//            case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
+//            case BT747_dev.PMTK_DT_DATUM: // CMD 530
+//            case BT747_dev.PMTK_DT_FLASH_USER_OPTION: // CMD 590
             case BT747_dev.PMTK_Q_VERSION: // CMD 604
+            default:
                 // Not handled
                 break;
             } // End switch
