@@ -1,3 +1,7 @@
+Version 0.77.11
+
+* Added read of flash options (did not activate writing them since not possible it seems)
+
 Version 0.77.10
 
 * Added configuration option 'overwrite/stop'

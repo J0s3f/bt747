@@ -278,7 +278,12 @@ public class GPSstate implements Thread {
     public void handleLogTimeOut() {
 //        Vm.debug("Timeout");
         logTimer=Vm.getTimeStamp();
-        m_recoverFromError=false; 
+        m_recoverFromError=false;
+        
+        // Remove all log request from sent commands list.
+        while(removeFromSentCmds("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
+                +","+BT747_dev.PMTK_LOG_REQ_DATA_STR+","));
+        
         recoverFromLogError();
     }
     
@@ -662,6 +667,51 @@ public class GPSstate implements Thread {
         sendNMEA("PMTK"+BT747_dev.PMTK_API_Q_DATUM_STR);
     }
     
+    public void setFlashUserOption(final boolean lock,
+            final int updateRate,
+            final int baudRate,
+            final int GLL_Period,
+            final int RMC_Period,
+            final int VTG_Period,
+            final int GSA_Period,
+            final int GSV_Period,
+            final int GGA_Period,
+            final int ZDA_Period,
+            final int MCHN_Period) {
+        // Request log format from device
+        sendNMEA("PMTK"+BT747_dev.PMTK_API_SET_USER_OPTION
+                +","+"0" //Lock: currently ignore parameter
+                +","+ GLL_Period
+                +","+ RMC_Period
+                +","+ VTG_Period
+                +","+ GSA_Period
+                +","+ GSV_Period
+                +","+ GGA_Period
+                +","+ ZDA_Period
+                +","+ MCHN_Period);
+
+    }
+    public void getFlashUserOption() {
+        // Request log format from device
+        sendNMEA("PMTK"+BT747_dev.PMTK_API_GET_USER_OPTION_STR);
+    }
+    
+    final boolean removeFromSentCmds(final String match) {
+        int z_CmdIdx=-1;
+        for (int i = 0; i < sentCmds.getCount(); i++) {
+          if(((String)sentCmds.items[i]).startsWith(match)) {
+              z_CmdIdx=i;
+              break;
+          }
+            
+        }
+        // Remove all cmds up to 
+        for (int i= z_CmdIdx; i >= 0; i--) {
+            sentCmds.del(0);
+        }
+        return z_CmdIdx!=-1;
+    }
+    
     // TODO: When acknowledge is missing for some commands, take appropriate action.
     public int analyseMTK_Ack(final String[]p_nmea) {
         // PMTK001,Cmd,Flag
@@ -677,14 +727,7 @@ public class GPSstate implements Thread {
                 // ACK is variable length, can have parameters of cmd.
                 z_MatchString+=","+p_nmea[i];
             }
-            int z_CmdIdx=-1;
-            for (int i = 0; i < sentCmds.getCount(); i++) {
-              if(((String)sentCmds.items[i]).startsWith(z_MatchString)) {
-                  z_CmdIdx=i;
-                  break;
-              }
-                
-            }
+            removeFromSentCmds(z_MatchString);
             //sentCmds.find(z_MatchString);
             //if(GPS_DEBUG) {	waba.sys.Vm.debug("IDX:"+Convert.toString(z_CmdIdx)+"\n");}
             //if(GPS_DEBUG) {	waba.sys.Vm.debug("FLAG:"+Convert.toString(z_Flag)+"\n");}
@@ -708,10 +751,6 @@ public class GPSstate implements Thread {
             default:
                 z_Result=-1;
             break;
-            }
-            // Remove all cmds up to 
-            for (int i= z_CmdIdx; i >= 0; i--) {
-                sentCmds.del(0);
             }
         }
         return z_Result;
@@ -819,6 +858,7 @@ public class GPSstate implements Thread {
                                 }
                                 continueLoop=!allFF;
                                 if(continueLoop) {
+                                    m_ProgressBar.setValue(m_NextReadAddr);
                                     m_NextReadAddr+=0x200;
                                 }
                             }
@@ -1064,6 +1104,19 @@ public class GPSstate implements Thread {
         }
     }
     
+    // Flash user option values
+    public int userOptionTimesLeft;
+    public int dtUpdateRate;
+    public int dtBaudRate;
+    public int dtGLL_Period;
+    public int dtRMC_Period;
+    public int dtVTG_Period;
+    public int dtGSA_Period;
+    public int dtGSV_Period;
+    public int dtGGA_Period;
+    public int dtZDA_Period;
+    public int dtMCHN_Period;
+    
     public int analyseNMEA(String[] p_nmea) {
         int z_Cmd;
         int z_Result;
@@ -1102,48 +1155,48 @@ public class GPSstate implements Thread {
             break;
             case BT747_dev.PMTK_SYS_MSG:	// CMD  010
                 break;
-            case BT747_dev.PMTK_CMD_HOT_START:	// CMD  101
-                break;
-            case BT747_dev.PMTK_CMD_WARM_START:	// CMD  102
-                break;
-            case BT747_dev.PMTK_CMD_COLD_START:	// CMD  103
-                break;
-            case BT747_dev.PMTK_CMD_FULL_COLD_START:	// CMD  104
-                break;
-            case BT747_dev.PMTK_SET_NMEA_BAUD_RATE:	// CMD  251
-                break;
-            case BT747_dev.PMTK_API_SET_FIX_CTL:	// CMD  300
-                break;
-            case BT747_dev.PMTK_API_SET_DGPS_MODE:	// CMD  301
-                break;
-            case BT747_dev.PMTK_API_SET_SBAS:	// CMD  313
-                break;
-            case BT747_dev.PMTK_API_SET_NMEA_OUTPUT:	// CMD  314
-                break;
-            case BT747_dev.PMTK_API_SET_PWR_SAV_MODE:	// CMD  320
-                break;
-            case BT747_dev.PMTK_API_SET_DATUM:	// CMD  330
-                break;
-            case BT747_dev.PMTK_API_SET_DATUM_ADVANCE:	// CMD  331
-                break;
-            case BT747_dev.PMTK_API_SET_USER_OPTION:	// CMD  390
-                break;
-            case BT747_dev.PMTK_API_Q_FIX_CTL:	// CMD  400
-                break;
-            case BT747_dev.PMTK_API_Q_DGPS_MODE:	// CMD  401
-                break;
-            case BT747_dev.PMTK_API_Q_SBAS:	// CMD  413
-                break;
-            case BT747_dev.PMTK_API_Q_NMEA_OUTPUT:	// CMD  414
-                break;
-            case BT747_dev.PMTK_API_Q_PWR_SAV_MOD:	// CMD  420
-                break;
-            case BT747_dev.PMTK_API_Q_DATUM:	// CMD  430
-                break;
-            case BT747_dev.PMTK_API_Q_DATUM_ADVANCE:	// CMD  431
-                break;
-            case BT747_dev.PMTK_API_Q_GET_USER_OPTION:	// CMD  490
-                break;
+//            case BT747_dev.PMTK_CMD_HOT_START:	// CMD  101
+//                break;
+//            case BT747_dev.PMTK_CMD_WARM_START:	// CMD  102
+//                break;
+//            case BT747_dev.PMTK_CMD_COLD_START:	// CMD  103
+//                break;
+//            case BT747_dev.PMTK_CMD_FULL_COLD_START:	// CMD  104
+//                break;
+//            case BT747_dev.PMTK_SET_NMEA_BAUD_RATE:	// CMD  251
+//                break;
+//            case BT747_dev.PMTK_API_SET_FIX_CTL:	// CMD  300
+//                break;
+//            case BT747_dev.PMTK_API_SET_DGPS_MODE:	// CMD  301
+//                break;
+//            case BT747_dev.PMTK_API_SET_SBAS:	// CMD  313
+//                break;
+//            case BT747_dev.PMTK_API_SET_NMEA_OUTPUT:	// CMD  314
+//                break;
+//            case BT747_dev.PMTK_API_SET_PWR_SAV_MODE:	// CMD  320
+//                break;
+//            case BT747_dev.PMTK_API_SET_DATUM:	// CMD  330
+//                break;
+//            case BT747_dev.PMTK_API_SET_DATUM_ADVANCE:	// CMD  331
+//                break;
+//            case BT747_dev.PMTK_API_SET_USER_OPTION:	// CMD  390
+//                break;
+//            case BT747_dev.PMTK_API_Q_FIX_CTL:	// CMD  400
+//                break;
+//            case BT747_dev.PMTK_API_Q_DGPS_MODE:	// CMD  401
+//                break;
+//            case BT747_dev.PMTK_API_Q_SBAS:	// CMD  413
+//                break;
+//            case BT747_dev.PMTK_API_Q_NMEA_OUTPUT:	// CMD  414
+//                break;
+//            case BT747_dev.PMTK_API_Q_PWR_SAV_MOD:	// CMD  420
+//                break;
+//            case BT747_dev.PMTK_API_Q_DATUM:	// CMD  430
+//                break;
+//            case BT747_dev.PMTK_API_Q_DATUM_ADVANCE:	// CMD  431
+//                break;
+//            case BT747_dev.PMTK_API_Q_GET_USER_OPTION:	// CMD  490
+//                break;
             case BT747_dev.PMTK_DT_FIX_CTL:	// CMD  500
                 if(p_nmea.length>=2) {
                     logFix=Convert.toInt(p_nmea[1]);
@@ -1182,10 +1235,25 @@ public class GPSstate implements Thread {
                 PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_FLASH_USER_OPTION:	// CMD  590
+            
+                userOptionTimesLeft=Convert.toInt(p_nmea[1]);
+                dtUpdateRate=Convert.toInt(p_nmea[2]);
+                dtBaudRate=Convert.toInt(p_nmea[3]);
+                dtGLL_Period=Convert.toInt(p_nmea[4]);
+                dtRMC_Period=Convert.toInt(p_nmea[5]);
+                dtVTG_Period=Convert.toInt(p_nmea[6]);
+                dtGSA_Period=Convert.toInt(p_nmea[7]);
+                dtGSV_Period=Convert.toInt(p_nmea[8]);
+                dtGGA_Period=Convert.toInt(p_nmea[9]);
+                dtZDA_Period=Convert.toInt(p_nmea[10]);
+                dtMCHN_Period=Convert.toInt(p_nmea[11]);
+
                 PostStatusUpdateEvent();
             break;
             case BT747_dev.PMTK_Q_VERSION:	// CMD  604
                 // Not handled
+                break;
+            default:
                 break;
             } // End switch
         } // End if
@@ -1220,7 +1288,7 @@ public class GPSstate implements Thread {
             }
             if( (m_isLogging)
                 &&
-                ( (m_isLogging&&(sentCmds.getCount()==0)) // All acks or responses received.
+                ( (sentCmds.getCount()==0) // All acks or responses received.
                   ||
                   ((Vm.getTimeStamp()-logTimer)>=m_settings.getDownloadTimeOut())
                 )
@@ -1229,6 +1297,9 @@ public class GPSstate implements Thread {
             }
         } else {
             MainWindow.getMainWindow().removeThread(this);
+            if(m_isLogging) {
+                endGetLog();
+            }
             //removeTimer(linkTimer);
             //linkTimer=null;
         }
