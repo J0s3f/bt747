@@ -1,3 +1,7 @@
+Version 0.77.13
+
+* Added UTC offset field.  This will change the output time and midnight time for date selection.
+
 Version 0.77.12
 
 * Handling more field.  Now all are handled except the variable fields concerning satelite

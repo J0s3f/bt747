@@ -17,7 +17,8 @@ import waba.sys.Vm;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public final class BT747LogConvert {
-    private File m_File=null;     
+    private File m_File=null;
+    private long timeOffsetSeconds=0;
     
     public final void parseFile(final GPSFile gpsFile) {
         int logFormat=3;
@@ -167,6 +168,7 @@ public final class BT747LogConvert {
                                         |(0xFF&bytes[recIdx++])<<16
                                         |(0xFF&bytes[recIdx++])<<24
                                         ;
+                                    gpsRec.utc+=timeOffsetSeconds;
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_VALID_IDX))!=0) { 
                                     gpsRec.valid=
@@ -334,6 +336,12 @@ public final class BT747LogConvert {
             }
         } /* nextAddrToRead<fileSize */
     }
+    
+    public final void setTimeOffset(long offset) {
+        timeOffsetSeconds= offset;
+    }
+    
+    
     public final void toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
         GPSRecord gpsRec=new GPSRecord();
         if(File.isAvailable()) {

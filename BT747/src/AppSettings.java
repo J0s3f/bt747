@@ -48,6 +48,8 @@ public class AppSettings implements gps.settings {
     private final static int C_DOWNLOADTIMEOUT_SIZE=8;
     private final static int C_CARD_IDX=C_DOWNLOADTIMEOUT_IDX+C_DOWNLOADTIMEOUT_SIZE;
     private final static int C_CARD_SIZE=4;
+    private final static int C_TIMEOFFSETHOURS_IDX=C_CARD_IDX+C_CARD_SIZE;
+    private final static int C_TIMEOFFSETHOURS_SIZE=4;
 
     private String baseDirPath;
     private String logFile;
@@ -218,6 +220,23 @@ public class AppSettings implements gps.settings {
     */
    public void setCard(int Card) {
        setOpt(Convert.unsigned2hex(Card,C_CARD_SIZE),C_CARD_IDX, C_CARD_SIZE);
+   }
+   
+   /**
+    * @return The default chunk size
+    */
+   public int getTimeOffsetHours() {
+       int timeOffsetHours=Conv.hex2Int(getStringOpt(C_TIMEOFFSETHOURS_IDX, C_TIMEOFFSETHOURS_SIZE));
+       if(timeOffsetHours>100) {
+           timeOffsetHours-=0x10000;
+       }
+       return timeOffsetHours;
+   }
+   /**
+    * @param timeOffsetHours The TIMEOFFSETHOURS  to set as a default.
+    */
+   public void setTimeOffsetHours(int timeOffsetHours) {
+       setOpt(Convert.unsigned2hex(timeOffsetHours,C_TIMEOFFSETHOURS_SIZE),C_TIMEOFFSETHOURS_IDX, C_TIMEOFFSETHOURS_SIZE);
    }
    
 	public boolean getStartupOpenPort() {

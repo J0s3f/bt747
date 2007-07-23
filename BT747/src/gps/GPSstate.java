@@ -1131,11 +1131,15 @@ public class GPSstate implements Thread {
             // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
             
         } else if(p_nmea[0].startsWith("PMTK")) {
-            if(GPS_DEBUG&&(!p_nmea[1].startsWith("8"))) {
+            if(GPS_DEBUG) {
                 String s;
+                int length=p_nmea.length;
+                if(p_nmea[1].startsWith("8")) {
+                    length=3;
+                }
                 s="<";
                 waba.sys.Vm.debug("<");
-                for (int i = 0; i < p_nmea.length; i++) {
+                for (int i = 0; i < length; i++) {
                     s+=p_nmea[i];
                     s+=",";
                 };
@@ -1275,7 +1279,7 @@ public class GPSstate implements Thread {
     public void run() {
         // TODO Auto-generated method stub
         if(m_GPSrxtx.isConnected()) {
-            if(m_getNextLogOnNextTimer) {
+            if(m_getNextLogOnNextTimer&&(sentCmds.getCount()==0)) {
                 // Sending command on next timer adds some delay after
                 // the end of the previous command (reception)
                 m_getNextLogOnNextTimer=false;
@@ -1288,11 +1292,12 @@ public class GPSstate implements Thread {
             }
             if( (m_isLogging)
                 &&
-                ( ((!m_recoverFromError)&&(sentCmds.getCount()==0)) // All acks or responses received.
+                ( ((!m_getNextLogOnNextTimer)&&(!m_recoverFromError)&&(sentCmds.getCount()==0)) // All acks or responses received.
                   ||
                   ((Vm.getTimeStamp()-logTimer)>=m_settings.getDownloadTimeOut())
                 )
                ) {
+                Vm.debug(""+Vm.getTimeStamp()+","+logTimer);
                 handleLogTimeOut();  // On time out resend request packet.
             }
         } else {
