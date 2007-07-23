@@ -17,18 +17,17 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import waba.io.File;
 import waba.sys.Convert;
 import waba.ui.Button;
 import waba.ui.Calendar;
 import waba.ui.Check;
+import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
 import waba.ui.ProgressBar;
 import waba.util.Date;
-import waba.util.Vector;
 
 import gps.BT747LogConvert;
 import gps.GPSCSVFile;
@@ -63,9 +62,16 @@ public class GPSLogGet extends Container {
     Button m_btToKML;
     Button m_btToGPX;
     Button m_btToPLT;
+
+    ComboBox m_cbTimeOffsetHours;
+    private final static String[] offsetStr = {
+            "-12", "-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1",
+            "+0",
+            "+1","+2","+3","+4","+5","+6","+7","+8","+9","+10","+11","+12"
+    };
     
     Check m_chkIncremental;
-    
+  
     final static int JULIAN_DAY_1_1_1970=18264;   
     ProgressBar m_pb;
     AppSettings m_appSettings;
@@ -105,6 +111,14 @@ public class GPSLogGet extends Container {
         add(m_btEndDate = new Button(m_EndDate.getDate()), SAME, AFTER); //$NON-NLS-1$
         //m_btEndDate.setMode(Edit.DATE);
         add(new Label("End date"), BEFORE, SAME); 
+        add(m_cbTimeOffsetHours=new ComboBox(offsetStr),RIGHT, SAME);
+        int offsetIdx=m_appSettings.getTimeOffsetHours()+12;
+        if(offsetIdx>24) {
+            m_appSettings.setTimeOffsetHours(0);
+            offsetIdx=12;
+        }
+        m_cbTimeOffsetHours.select(offsetIdx);
+        add(new Label("UTC"), BEFORE, SAME); 
 
         //add(new Label("End"),BEFORE,SAME);
         add(m_btGetLog = new Button("Get Log"), LEFT, AFTER + 5); //$NON-NLS-1$
@@ -178,6 +192,14 @@ public class GPSLogGet extends Container {
                     m_GPSstate.stopLog();
                 }
                 m_GPSstate.getLogOnOffStatus();
+            } else if (event.target == m_cbTimeOffsetHours) {
+                // Work around superwaba bug
+                String tmp=(String)m_cbTimeOffsetHours.getSelectedItem();
+                if(tmp.charAt(0)=='+') {
+                    m_appSettings.setTimeOffsetHours(Convert.toInt((String)tmp.substring(1)));
+                } else {
+                    m_appSettings.setTimeOffsetHours(Convert.toInt(tmp));
+                }
             } else if (event.target == m_chkLogOverwriteStop) {
                     m_GPSstate.setLogOverwrite(m_chkLogOverwriteStop.getChecked());
                 m_GPSstate.getLogOverwrite();
@@ -224,6 +246,7 @@ public class GPSLogGet extends Container {
                 gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard());
                 /* TODO: Recover the logFormat from a file or so */
                 BT747LogConvert lc=new BT747LogConvert();
+                lc.setTimeOffset(m_appSettings.getTimeOffsetHours()*3600);
                 lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile,m_appSettings.getCard());
                 gpsFile.finaliseFile();
                 Convert.toString(3);
