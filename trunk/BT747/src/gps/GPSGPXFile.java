@@ -333,19 +333,19 @@ public class GPSGPXFile implements GPSFile {
                     //                    <hdop> xsd:decimal </hdop> [0..1] ?
                     if((activeFields.hdop!=0)) {
                         rec+="<hdop>";
-                        rec+=Convert.toString(s.hdop); 
+                        rec+=Convert.toString(s.hdop/100.0,2); 
                         rec+="</hdop>\r\n";
                     }
                     //                    <vdop> xsd:decimal </vdop> [0..1] ?
                     if((activeFields.vdop!=0)) {
-                        rec+="vdop>";
-                        rec+=Convert.toString(s.vdop); 
+                        rec+="<vdop>";
+                        rec+=Convert.toString(s.vdop/100.0,2); 
                         rec+="</vdop>\r\n";
                     }
                     //              <pdop> xsd:decimal </pdop> [0..1] ?
                     if((activeFields.pdop!=0)) {
-                        rec+="</pdop>";
-                        rec+=Convert.toString(s.pdop); 
+                        rec+="<pdop>";
+                        rec+=Convert.toString(s.pdop/100.0,2); 
                         rec+="</pdop>\r\n";
                     }
                     //                    <ageofdgpsdata> xsd:decimal </ageofdgpsdata> [0..1] ?
@@ -365,12 +365,12 @@ public class GPSGPXFile implements GPSFile {
                     
                     if((activeFields.speed!=0)) {
                         rec+="<speed>";
-                        rec+=floatToString(s.speed);
+                        rec+=Convert.toString(s.speed,3);
                         rec+="</speed>\r\n";
                     }
                     if((activeFields.distance!=0)) {
                         rec+="<distance>";
-                        rec+=Convert.toString(s.distance)+" m\r\n"; 
+                        rec+=Convert.toString(s.distance,2); //+" m\r\n" 
                         rec+="</distance>\r\n";
                     }
                     

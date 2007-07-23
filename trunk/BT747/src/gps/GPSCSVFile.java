@@ -110,9 +110,12 @@ public class GPSCSVFile implements GPSFile {
         if(activeFields.vdop!=0) {
             writeTxt(",VDOP");
         }
-        if(activeFields.milisecond!=0) {
-            writeTxt(",MILISECOND");
+        if(activeFields.vdop!=0) {
+            writeTxt(",NSAT (USED/VIEW)");
         }
+//        if(activeFields.milisecond!=0) {
+//            writeTxt(",MILISECOND");
+//        }
         if(activeFields.distance!=0) {
             writeTxt(",DISTANCE");
         }
@@ -142,36 +145,6 @@ public class GPSCSVFile implements GPSFile {
     
     private void writeTxt(final String s) {
         m_File.writeBytes(s.getBytes(),0,s.length());
-    }
-    
-    // TODO: Should do something similar for  double 
-    private final String floatToString(final float f) {
-        String s="";
-        if(((f>=0.0)&&(f<1.0))||((f<0.0)&&(f>-1.0))) {
-            float myf = 0;
-            if (myf<0.0) {
-                myf=-f;
-                s="-";
-            } else {
-                myf=f;
-            }
-            int m=(int)(myf*1000.0+0.499999999999);
-            
-            if(m==0) {
-                s+="0.000";
-            } else if (m <10) {
-                s+="0.00";
-                s+=Convert.toString(m);
-            } else if (m <100) {
-                s+="0.0";
-                s+=Convert.toString(m);
-            } else {
-                s+="0."+Convert.toString(m);
-            }
-        } else {
-            s=Convert.toString(f,3);
-        }
-        return s;
     }
     
     /* (non-Javadoc)
@@ -207,8 +180,12 @@ public class GPSCSVFile implements GPSFile {
                 +(   t.day<10?"0":"")+Convert.toString(t.day)+","
                 +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
                 +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-                +(t.second<10?"0":"")+Convert.toString(t.second)
-                ;
+                +(t.second<10?"0":"");
+                if(activeFields.milisecond==0) {
+                    rec+=Convert.toString(t.second);
+                } else {
+                    rec+=Convert.toString((float)t.second+s.milisecond/1000.0,3);
+                }
             }
             if(activeFields.valid!=0) {
                 rec+=",";
@@ -266,15 +243,15 @@ public class GPSCSVFile implements GPSFile {
             }
             if(activeFields.height!=0) {
                 rec+=",";
-                rec+=floatToString(s.height)+" m";
+                rec+=Convert.toString(s.height,3)+" m";
             }
             if(activeFields.speed!=0) {
                 rec+=",";
-                rec+=floatToString(s.speed)+" km/h";
+                rec+=Convert.toString(s.speed,3)+" km/h";
             }
             if(activeFields.heading!=0) {
                 rec+=",";
-                rec+=Convert.toString(s.heading);
+                rec+=Convert.toString(s.heading,6);
             }
             if(activeFields.dsta!=0) {
                 rec+=",";
@@ -286,23 +263,25 @@ public class GPSCSVFile implements GPSFile {
             }
             if(activeFields.pdop!=0) {
                 rec+=",";
-                rec+=Convert.toString(s.pdop); 
+                rec+=Convert.toString(s.pdop/100.0,2); 
             }
             if(activeFields.hdop!=0) {
                 rec+=",";
-                rec+=Convert.toString(s.hdop); 
+                rec+=Convert.toString(s.hdop/100.0,2); 
             }
             if(activeFields.vdop!=0) {
                 rec+=",";
-                rec+=Convert.toString(s.vdop); 
+                rec+=Convert.toString(s.vdop/100.0,2); 
             }
-            if(activeFields.milisecond!=0) {
+            if(activeFields.nsat!=0) {
                 rec+=",";
-                rec+=Convert.toString(s.milisecond); 
+                rec+=Convert.toString((s.nsat&0xFF00)>>8); 
+                rec+="("+Convert.toString(s.nsat&0xFF)+")"; 
             }
             if(activeFields.distance!=0) {
                 rec+=",";
-                rec+=Convert.toString(s.distance); 
+                rec+=Convert.toString(s.distance,2);
+                rec+=" m";
             }
             rec+=",";
             rec+="\r\n";

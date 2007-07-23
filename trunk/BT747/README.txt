@@ -2,23 +2,45 @@ BT747 on SuperWaba
 
 This project is under development.
 
+========= WINDOWS INSTRUCTIONS =================
+To run on 'windows', you should install WIN32COMM for java to get things going rapidly.
+You need to install Java 1.4.X too.
+
+Find some instructions (for another java version) here:
+http://www.cs.uml.edu/~fredm/courses/91.305-fall04/javasetup.shtml
+
+Basically, download this zip:
+http://www.cs.uml.edu/~fredm/courses/91.305/software/JDK118-javaxcomm.zip
+
+And install the files under java1.4.X insteady of the proposed java version.
+
+Sun still has the files here:
+http://javashoplm.sun.com/ECom/docs/Welcome.jsp?StoreId=22&PartDetailId=7235-javacomm-2.0-spec-oth-JSpec&SiteId=JSC&TransactionId=noreg 
+=========================================================
+
+
+
 It is hosted in http://sourceforge.net/projects/bt747.  That is where you can contact the author, ... .
 
 You can find binaries in the 'dist' directory:
   - Palm  (BT747.prc, BT747.pdb)
   - WinCE (Untested: BT747_Install.BAT)
+  
+The following file is in the 'build' directory:
   - BT747.jar
 
 You can find sources in the 'src' directory.
 
 Symbian does not support Bluetooth, so the binaries are not included.
-The "BT747.jar" might work on Mac, if the "rxtx" module is properly installed (can't try)
+The "BT747.jar" might work on Mac, if the "rxtx" module is properly installed (http://www.rxtx.org).
 
+On Linux, also install 'rxtx'.
 
 You will need to install/unzip SuperWaba on the platform you want to run BT747 on.
 
 You can find SuperWaba installation files at http://www.superwaba.org/install
 
+=============== WINDOWS (again) =====================
 To run the BT747.jar, you need to install the "win32comm" driver or "rxtx" and use java 1.4.X.
 
 On windows, I launch the BT747.jar like this:

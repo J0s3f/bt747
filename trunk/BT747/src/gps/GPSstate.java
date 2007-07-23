@@ -334,6 +334,7 @@ public class GPSstate implements Thread {
         
         // Currently taking care of replies from the device only.
         // The other data we send ourselves
+        logTimer=Vm.getTimeStamp();  // Reset timeout
         if(p_nmea.length>2) {
             switch( Convert.toInt(p_nmea[1]) ) {
             case BT747_dev.PMTK_LOG_DT:
@@ -399,7 +400,6 @@ public class GPSstate implements Thread {
                 // $PMTK182,8,START_ADDRESS,DATA
                 
                 try {
-                    logTimer=Vm.getTimeStamp();
 //                    waba.sys.Vm.debug("Before AnalyzeLog:"+p_nmea[3].length());
                     analyzeLogPart(Conv.hex2Int(p_nmea[2]), p_nmea[3]);
                 } catch (Exception e) {
@@ -1288,7 +1288,7 @@ public class GPSstate implements Thread {
             }
             if( (m_isLogging)
                 &&
-                ( (sentCmds.getCount()==0) // All acks or responses received.
+                ( ((!m_recoverFromError)&&(sentCmds.getCount()==0)) // All acks or responses received.
                   ||
                   ((Vm.getTimeStamp()-logTimer)>=m_settings.getDownloadTimeOut())
                 )
