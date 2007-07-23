@@ -238,6 +238,8 @@ public final class BT747LogConvert {
                                     gpsRec.dage=
                                         (0xFF&bytes[recIdx++])<<0
                                         |(0xFF&bytes[recIdx++])<<8
+                                        |(0xFF&bytes[recIdx++])<<16
+                                        |(0xFF&bytes[recIdx++])<<24
                                         ;
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_PDOP_IDX))!=0) { 
@@ -259,8 +261,16 @@ public final class BT747LogConvert {
                                         ;
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_NSAT_IDX))!=0) { 
+                                    gpsRec.nsat=
+                                        (0xFF&bytes[recIdx++])<<0
+                                        |(0xFF&bytes[recIdx++])<<8
+                                        ;
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) { 
+                                    gpsRec.sid=
+                                        (0xFF&bytes[recIdx++])<<0
+                                        |(0xFF&bytes[recIdx++])<<8
+                                        ;
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_ELEVATION_IDX))!=0) { 
                                 }
@@ -382,10 +392,10 @@ public final class BT747LogConvert {
             gpsRec.vdop=-1;
         }
         if((logFormat&(1<<BT747_dev.FMT_NSAT_IDX))!=0) { 
-            //gpsRec.nsat=-1;
+            gpsRec.nsat=-1;
         }
         if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) { 
-            //gpsRec.=-1;
+            gpsRec.sid=-1;
         }
         if((logFormat&(1<<BT747_dev.FMT_ELEVATION_IDX))!=0) { 
             //gpsRec.=-1;

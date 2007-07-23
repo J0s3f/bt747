@@ -362,22 +362,18 @@ public class GPSKMLFile implements GPSFile {
                     +(   t.day<10?"0":"")+Convert.toString(t.day)+"T"
                     +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
                     +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-                    +(t.second<10?"0":"")+Convert.toString(t.second)
+                    +(t.second<10?"0":"")
                     ;
-                    if(activeFields.milisecond!=0) {
-                        rec+=".";
-                        rec+=(s.milisecond<100)?"0":"";
-                        rec+=(s.milisecond<10)?"0":"";
-                        rec+=Convert.toString(s.milisecond);
+                    if(activeFields.milisecond==0) {
+                        rec+=Convert.toString(t.second);
+                    } else {
+                        rec+=Convert.toString((float)t.second+s.milisecond/1000.0,3);
                     }
                     rec+="Z";
                 }
                 rec+="</when></TimeStamp>\r\n";
             }
 
-            
-            
-                
                 rec+="<styleUrl>";
                 if(activeFields.rcr!=0) {
                     String style="";
@@ -528,23 +524,19 @@ public class GPSKMLFile implements GPSFile {
                 }
                 if(activeFields.pdop!=0) {
                     rec+="<br />PDOP: ";
-                    rec+=Convert.toString(s.pdop); 
+                    rec+=Convert.toString(s.pdop/100.0,2); 
                 }
                 if(activeFields.hdop!=0) {
                     rec+="<br />HDOP: ";
-                    rec+=Convert.toString(s.hdop); 
+                    rec+=Convert.toString(s.hdop/100.0,2); 
                 }
                 if(activeFields.vdop!=0) {
                     rec+="<br />VDOP: ";
-                    rec+=Convert.toString(s.vdop); 
-                }
-                if(activeFields.milisecond!=0) {
-                    rec+="<br />MS: ";
-                    rec+=Convert.toString(s.milisecond); 
+                    rec+=Convert.toString(s.vdop/100.0,2); 
                 }
                 if(activeFields.distance!=0) {
                     rec+="<br />DISTANCE: ";
-                    rec+=Convert.toString(s.distance); 
+                    rec+=Convert.toString(s.distance,2); 
                 }
                 
                 rec+="]]>";

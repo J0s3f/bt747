@@ -1,3 +1,9 @@
+Version 0.77.12
+
+* Handling more field.  Now all are handled except the variable fields concerning satelite
+  information.
+* Some (supposed) improvement on data download from device.  This is difficult to validate.
+
 Version 0.77.11
 
 * Added read of flash options (did not activate writing them since not possible it seems)
