@@ -87,10 +87,10 @@ public class GPSCSVFile implements GPSFile {
             writeTxt(",LONGITUDE,E/W");
         }
         if(activeFields.height!=0) {
-            writeTxt(",HEIGHT");
+            writeTxt(",HEIGHT(m)");
         }
         if(activeFields.speed!=0) {
-            writeTxt(",SPEED");
+            writeTxt(",SPEED(km/h)");
         }
         if(activeFields.heading!=0) {
             writeTxt(",HEADING");
@@ -117,7 +117,7 @@ public class GPSCSVFile implements GPSFile {
 //            writeTxt(",MILISECOND");
 //        }
         if(activeFields.distance!=0) {
-            writeTxt(",DISTANCE");
+            writeTxt(",DISTANCE(m)");
         }
         writeTxt(",");
         writeTxt("\r\n");
@@ -243,11 +243,11 @@ public class GPSCSVFile implements GPSFile {
             }
             if(activeFields.height!=0) {
                 rec+=",";
-                rec+=Convert.toString(s.height,3)+" m";
+                rec+=Convert.toString(s.height,3);
             }
             if(activeFields.speed!=0) {
                 rec+=",";
-                rec+=Convert.toString(s.speed,3)+" km/h";
+                rec+=Convert.toString(s.speed,3);
             }
             if(activeFields.heading!=0) {
                 rec+=",";
@@ -281,7 +281,6 @@ public class GPSCSVFile implements GPSFile {
             if(activeFields.distance!=0) {
                 rec+=",";
                 rec+=Convert.toString(s.distance,2);
-                rec+=" m";
             }
             rec+=",";
             rec+="\r\n";

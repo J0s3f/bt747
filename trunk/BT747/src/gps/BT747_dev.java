@@ -201,7 +201,13 @@ public final class BT747_dev {  // dev as in device
     public static final int PMTK_DT_DATUM               = 530;
     public static final int PMTK_DT_FLASH_USER_OPTION   = 590;
     /* Special requests * SW ? */
+    public static final int PMTK_Q_DGPS_INFO            = 602;
     public static final int PMTK_Q_VERSION              = 604;
+    public static final int PMTK_Q_RELEASE              = 605;
+
+    public static final int PMTK_DT_DGPS_INFO            = 702;
+    public static final int PMTK_DT_VERSION              = 704;
+    public static final int PMTK_DT_RELEASE              = 705;
     
     
     /** Parameter 1 of PMTK_ACK reply.
@@ -289,6 +295,8 @@ public final class BT747_dev {  // dev as in device
     public static final String PMTK_DT_DATUM_STR = Convert.toString(PMTK_DT_DATUM);
     public static final String PMTK_DT_FLASH_USER_OPTION_STR = Convert.toString(PMTK_DT_FLASH_USER_OPTION);
     public static final String PMTK_Q_VERSION_STR = Convert.toString(PMTK_Q_VERSION);
+    public static final String PMTK_Q_RELEASE_STR = Convert.toString(PMTK_Q_RELEASE);
+    public static final String PMTK_Q_DGPS_INFO_STR = Convert.toString(PMTK_Q_DGPS_INFO);
     
     
     /** Parameter 1 of PMTK_ACK reply.

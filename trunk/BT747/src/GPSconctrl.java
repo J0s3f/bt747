@@ -25,17 +25,23 @@ import waba.ui.Label;
 import waba.ui.PushButtonGroup;
 
 import gps.GPSstate;
+import gps.GpsEvent;
 
 /**
  * @author Mario De Weerd
  */
 
 public class GPSconctrl extends Container {
-    PushButtonGroup btnChannelSelect;
+    private PushButtonGroup btnChannelSelect;
 
-    Button btnRestartGps;
+    private Button btnRestartGps;
 
-    GPSstate m_GPSstate;
+    private GPSstate m_GPSstate;
+    
+    private Label lbFirmwareMainVersion;
+    private Label lbFirmwareName;
+    private Label lbModel;
+    
 
     static final int C_CHN_BLUETOOTH = 0;
 
@@ -43,7 +49,7 @@ public class GPSconctrl extends Container {
 
     static final int C_CHN_0 = 2;
 
-    static final String[] txtChannel = { "BLUETOOTH", "USB", "0", "1", "2",
+    private static final String[] txtChannel = { "BLUETOOTH", "USB", "0", "1", "2",
             "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14","15"};
 
     public GPSconctrl(GPSstate p_GPSstate) {
@@ -68,6 +74,9 @@ public class GPSconctrl extends Container {
         btnRestartGps.setGap(5);
         add(btnRestartGps, RIGHT - 5, BOTTOM - 5);
         add(new Label("Version:"+Version.NUMBER+"("+Version.DATE+")"), LEFT, BEFORE); //$NON-NLS-1$)
+        add(lbFirmwareMainVersion=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
+        add(lbFirmwareName=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
+        add(lbModel=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
     }
 
     private void GPS_setChannel(int channel) {
@@ -83,16 +92,33 @@ public class GPSconctrl extends Container {
             break;
         }
     }
+    
+    private void updateButtons() {
+        lbFirmwareMainVersion.setText(((m_GPSstate.MainVersion.length()!=0)?"MainVersion:":"")+m_GPSstate.MainVersion);
+        lbFirmwareName.setText(((m_GPSstate.FirmwareVersion.length()!=0)?"Firmware:":"")+m_GPSstate.FirmwareVersion);
+        lbModel.setText(((m_GPSstate.Model.length()!=0)?"Model:":"")+m_GPSstate.Model);
+        lbFirmwareMainVersion.repaintNow();
+        lbFirmwareName.repaintNow();
+        lbModel.repaintNow();
+    }
 
     public void onEvent(Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == btnChannelSelect) {
                 GPS_setChannel(btnChannelSelect.getSelected());
+            } else if (event.target==this) {
+                m_GPSstate.getDeviceInfo();
+                event.consumed=true;
+                break;
             } else if (event.target == btnRestartGps) {
                 m_GPSstate.GPS_restart();
             }
-            break;
+        case GpsEvent.DATA_UPDATE:
+            if(event.target==this) {
+                updateButtons();
+                event.consumed=true;
+            }
         }
     }
 
