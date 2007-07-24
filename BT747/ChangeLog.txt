@@ -1,3 +1,13 @@
+Version 0.77.14
+
+* Correction of calculation for percentage of memory used.
+* Getting device firmware version & model.
+* Improved log download on portable device (Palm).
+   -> Command acknowledge taken into consideration
+   -> Timeout implementation on 'check log'
+* PLT format revisited (from http://www.oziphototool.com/fileformats.html)
+* CSV format: units no longer mentioned in fields, only in header.
+
 Version 0.77.13
 
 * Added UTC offset field.  This will change the output time and midnight time for date selection.

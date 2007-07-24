@@ -53,7 +53,7 @@ import gps.convert.Conv;
  *
  */
 public class GPSstate implements Thread {
-    static final boolean GPS_DEBUG = !Settings.onDevice;
+    static final boolean GPS_DEBUG = (!Settings.onDevice);
     static final boolean GPS_TEST = false;
     
     private GPSrxtx m_GPSrxtx=new GPSrxtx();    	
@@ -83,8 +83,8 @@ public class GPSstate implements Thread {
     public int logStatus = 0;
     public int logRecMethod = 0;
     public int logNbrLogPts = 0;
-    public int logMemSize = 16*1024*1024/8; //16Mb -> 2MB
-    public int logMemUsefullSize = (int)(logMemSize*0.875); //16Mb
+    public final int logMemSize = 16*1024*1024/8; //16Mb -> 2MB
+    public final int logMemUsefullSize = (int)((logMemSize>>16)*(0x10000-0x200)); //16Mb
     public int logMemUsed = 0;
     public int logMemUsedPercent = 0;
     public int logMemFree = 0;
@@ -99,9 +99,6 @@ public class GPSstate implements Thread {
     public int dgps_mode=0;
     
     private byte[] m_Data= new byte[0x800];  // buffer used for reading data.
-    
-    // Number of log entries to request 'ahead'.
-    final static int C_MAX_LOG_AHEAD = 1;
     
     Control m_EventPosterObject= null;
     
@@ -242,6 +239,13 @@ public class GPSstate implements Thread {
         );
     }
     
+    
+    public void getDeviceInfo() {
+        sendNMEA("PMTK"+BT747_dev.PMTK_Q_VERSION_STR
+        );
+        sendNMEA("PMTK"+BT747_dev.PMTK_Q_RELEASE_STR
+        );
+    }
     /** erase the log - takes a while
      * TODO: Find out a way to follow up on erasal (status)
      */
@@ -270,6 +274,10 @@ public class GPSstate implements Thread {
         //				}
     }
     
+    private void requestCheckBlock() {
+        readLog(C_BLOCKVERIF_START,C_BLOCKVERIF_SIZE);  // Read 200 bytes, just past header.
+    }
+    
     /** Handle time outs on log requests
      * Will be called if the device did not respond to a log request.
      * TODO: Could be extended to all packets.
@@ -278,13 +286,18 @@ public class GPSstate implements Thread {
     public void handleLogTimeOut() {
 //        Vm.debug("Timeout");
         logTimer=Vm.getTimeStamp();
-        m_recoverFromError=false;
+
         
         // Remove all log request from sent commands list.
         while(removeFromSentCmds("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
                 +","+BT747_dev.PMTK_LOG_REQ_DATA_STR+","));
         
-        recoverFromLogError();
+        if(m_isCheckingLog) {
+            requestCheckBlock();
+        } else {
+            m_recoverFromError=false;
+            recoverFromLogError();
+        }
     }
     
     /** Calculate the size of one log entry.
@@ -419,7 +432,7 @@ public class GPSstate implements Thread {
     Vector sentCmds = new Vector();	// List of sent commands
     static final int C_MAX_SENT_COMMANDS = 10;  // Max commands to put in list
     
-    public int sendNMEA(final String p_Cmd) {
+    public void sendNMEA(final String p_Cmd) {
         if(p_Cmd.startsWith("PMTK")) {
             sentCmds.add(p_Cmd);
         }
@@ -427,7 +440,9 @@ public class GPSstate implements Thread {
         if(sentCmds.getCount()>C_MAX_SENT_COMMANDS) {
             sentCmds.del(0);
         }
-        return 0;
+        if(GPS_DEBUG) {
+            Vm.debug(p_Cmd);
+        }
     }
     
     /** Request the current log format from the device */
@@ -723,11 +738,18 @@ public class GPSstate implements Thread {
             String z_MatchString;
             z_Flag=Convert.toInt(p_nmea[p_nmea.length-1]); // Last parameter
             z_MatchString="PMTK"+p_nmea[1];
-            for (int i = 2; i < p_nmea.length-2; i++) {
+            for (int i = 2; i < p_nmea.length-1; i++) {
                 // ACK is variable length, can have parameters of cmd.
                 z_MatchString+=","+p_nmea[i];
             }
+//            if(GPS_DEBUG) {
+//                Vm.debug("Before:"+sentCmds.getCount()+" "+z_MatchString);
+//            }
+
             removeFromSentCmds(z_MatchString);
+//            if(GPS_DEBUG) {
+//                Vm.debug("After:"+sentCmds.getCount());
+//            }
             //sentCmds.find(z_MatchString);
             //if(GPS_DEBUG) {	waba.sys.Vm.debug("IDX:"+Convert.toString(z_CmdIdx)+"\n");}
             //if(GPS_DEBUG) {	waba.sys.Vm.debug("FLAG:"+Convert.toString(z_Flag)+"\n");}
@@ -872,7 +894,7 @@ public class GPSstate implements Thread {
                         //    corrupt the data (0xFFFF present if restarting download)
                     }
                     
-                    readLog(C_BLOCKVERIF_START,C_BLOCKVERIF_SIZE);  // Read 200 bytes, just past header.
+                    requestCheckBlock();
                     m_isCheckingLog=true;
                 }
             }
@@ -936,7 +958,7 @@ public class GPSstate implements Thread {
             //Vm.debug("NextLogPart");
             //TODO: Stop the thread at the end.
             int z_Step;
-            if((m_NextReqAddr+(C_MAX_LOG_AHEAD-1)*m_Step)<=m_NextReadAddr) {
+            if(m_NextReqAddr<=m_NextReadAddr) {
                 z_Step=m_EndAddr-m_NextReqAddr+1;
                 if(m_recoverFromError && z_Step>0x800) {
                     z_Step=0x800;
@@ -993,7 +1015,7 @@ public class GPSstate implements Thread {
     public void	analyzeLogPart(final int p_StartAddr, final String p_Data) {
         int dataLength;
         dataLength=HexStringToBytes(p_Data); // Fills m_data
-//        Vm.debug("Got "+Convert.toString(p_Data.length())+"): "+Convert.toString(dataLength));
+//        Vm.debug("Got "+p_StartAddr+" "+Convert.toString(p_Data.length())+"): "+Convert.toString(dataLength));
         if( m_isLogging) {
             if(m_NextReadAddr==p_StartAddr) {
                 m_recoverFromError=false;
@@ -1076,6 +1098,7 @@ public class GPSstate implements Thread {
                         }
                     }
                 }
+                m_isCheckingLog=false;
                 String fileName=m_logFile.getPath();
                 if(success) {
                     // Downloaded data seems to correspond - start incremental download
@@ -1089,7 +1112,6 @@ public class GPSstate implements Thread {
 //                        m_NextReqAddr=m_NextReadAddr;
 //                    }
                     m_logFile.setPos(m_NextReadAddr);
-                    m_isCheckingLog=false;
                     m_isLogging=true;
                     m_getNextLogOnNextTimer=true;
                 } else {
@@ -1116,6 +1138,10 @@ public class GPSstate implements Thread {
     public int dtGGA_Period;
     public int dtZDA_Period;
     public int dtMCHN_Period;
+
+    public String MainVersion="";
+    public String Model="";
+    public String FirmwareVersion="";
     
     public int analyseNMEA(String[] p_nmea) {
         int z_Cmd;
@@ -1134,16 +1160,15 @@ public class GPSstate implements Thread {
             if(GPS_DEBUG) {
                 String s;
                 int length=p_nmea.length;
-                if(p_nmea[1].startsWith("8")) {
+                if(p_nmea[1].charAt(0)=='8') {
                     length=3;
                 }
                 s="<";
-                waba.sys.Vm.debug("<");
                 for (int i = 0; i < length; i++) {
                     s+=p_nmea[i];
                     s+=",";
                 };
-                waba.sys.Vm.debug(s);
+                Vm.debug(s);
             }   
             z_Cmd= Convert.toInt(p_nmea[0].substring(4));
             
@@ -1159,48 +1184,6 @@ public class GPSstate implements Thread {
             break;
             case BT747_dev.PMTK_SYS_MSG:	// CMD  010
                 break;
-//            case BT747_dev.PMTK_CMD_HOT_START:	// CMD  101
-//                break;
-//            case BT747_dev.PMTK_CMD_WARM_START:	// CMD  102
-//                break;
-//            case BT747_dev.PMTK_CMD_COLD_START:	// CMD  103
-//                break;
-//            case BT747_dev.PMTK_CMD_FULL_COLD_START:	// CMD  104
-//                break;
-//            case BT747_dev.PMTK_SET_NMEA_BAUD_RATE:	// CMD  251
-//                break;
-//            case BT747_dev.PMTK_API_SET_FIX_CTL:	// CMD  300
-//                break;
-//            case BT747_dev.PMTK_API_SET_DGPS_MODE:	// CMD  301
-//                break;
-//            case BT747_dev.PMTK_API_SET_SBAS:	// CMD  313
-//                break;
-//            case BT747_dev.PMTK_API_SET_NMEA_OUTPUT:	// CMD  314
-//                break;
-//            case BT747_dev.PMTK_API_SET_PWR_SAV_MODE:	// CMD  320
-//                break;
-//            case BT747_dev.PMTK_API_SET_DATUM:	// CMD  330
-//                break;
-//            case BT747_dev.PMTK_API_SET_DATUM_ADVANCE:	// CMD  331
-//                break;
-//            case BT747_dev.PMTK_API_SET_USER_OPTION:	// CMD  390
-//                break;
-//            case BT747_dev.PMTK_API_Q_FIX_CTL:	// CMD  400
-//                break;
-//            case BT747_dev.PMTK_API_Q_DGPS_MODE:	// CMD  401
-//                break;
-//            case BT747_dev.PMTK_API_Q_SBAS:	// CMD  413
-//                break;
-//            case BT747_dev.PMTK_API_Q_NMEA_OUTPUT:	// CMD  414
-//                break;
-//            case BT747_dev.PMTK_API_Q_PWR_SAV_MOD:	// CMD  420
-//                break;
-//            case BT747_dev.PMTK_API_Q_DATUM:	// CMD  430
-//                break;
-//            case BT747_dev.PMTK_API_Q_DATUM_ADVANCE:	// CMD  431
-//                break;
-//            case BT747_dev.PMTK_API_Q_GET_USER_OPTION:	// CMD  490
-//                break;
             case BT747_dev.PMTK_DT_FIX_CTL:	// CMD  500
                 if(p_nmea.length>=2) {
                     logFix=Convert.toInt(p_nmea[1]);
@@ -1254,15 +1237,26 @@ public class GPSstate implements Thread {
 
                 PostStatusUpdateEvent();
             break;
-            case BT747_dev.PMTK_Q_VERSION:	// CMD  604
-                // Not handled
+            case BT747_dev.PMTK_DT_DGPS_INFO:  // CMD  702
+                /* Not handled */
                 break;
+            case BT747_dev.PMTK_DT_VERSION:  // CMD  704
+                MainVersion = p_nmea[1]+"."+p_nmea[2]+"."+p_nmea[3];
+                PostStatusUpdateEvent();
+                break;
+            case BT747_dev.PMTK_DT_RELEASE:	// CMD  705
+                FirmwareVersion = p_nmea[1];
+                Model= p_nmea[2];
+                PostStatusUpdateEvent();
+                break;
+
             default:
                 break;
             } // End switch
         } // End if
         return z_Result;
     } // End method
+    
     
     String[] lastResponse;
     
@@ -1277,27 +1271,33 @@ public class GPSstate implements Thread {
      * @see waba.sys.Thread#run()
      */
     public void run() {
+        int loops_to_go=5;
         // TODO Auto-generated method stub
         if(m_GPSrxtx.isConnected()) {
             if(m_getNextLogOnNextTimer&&(sentCmds.getCount()==0)) {
                 // Sending command on next timer adds some delay after
                 // the end of the previous command (reception)
                 m_getNextLogOnNextTimer=false;
+//                if(GPS_DEBUG) {
+//                    Vm.debug("Next Timer Get");
+//                }
                 getNextLogPart();
             }
-            lastResponse= m_GPSrxtx.getResponse();
-            while(lastResponse!=null) {
-                analyseNMEA(lastResponse);
+            do {
                 lastResponse= m_GPSrxtx.getResponse();
-            }
-            if( (m_isLogging)
+                if(lastResponse!=null) analyseNMEA(lastResponse);
+            } while((loops_to_go-->0) &&lastResponse!=null);
+            if( (m_isLogging||m_isCheckingLog)
                 &&
                 ( ((!m_getNextLogOnNextTimer)&&(!m_recoverFromError)&&(sentCmds.getCount()==0)) // All acks or responses received.
                   ||
                   ((Vm.getTimeStamp()-logTimer)>=m_settings.getDownloadTimeOut())
                 )
                ) {
-                Vm.debug(""+Vm.getTimeStamp()+","+logTimer);
+//                if(GPS_DEBUG) {
+//                    Vm.debug("TimeOut");
+//                    Vm.debug(""+Vm.getTimeStamp()+","+logTimer);
+//                }
                 handleLogTimeOut();  // On time out resend request packet.
             }
         } else {

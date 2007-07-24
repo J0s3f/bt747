@@ -1,5 +1,5 @@
 del BT747*.zip
-SET DT=20070722_234344
+SET DT=20070725_011704
 
 SET EXTRA_FILES=run_ex.bat webstart/Waba_only.jar win32comm.jar
 
