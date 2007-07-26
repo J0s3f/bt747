@@ -1,3 +1,9 @@
+Version 0.77.15
+
+* Not really tested dev version!!!  Purpose deliver latest version on the web before 3 weeks leave.
+* Should solve filtering bug when RCR or VALID field missing.
+* Some (unnoticeable) bugs resolved.
+
 Version 0.77.14
 
 * Correction of calculation for percentage of memory used.
