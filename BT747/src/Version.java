@@ -39,7 +39,7 @@ public final class Version {
     * <li>z = bug fix version
     * </ul>
     */
-   public static final String NUMBER = "0.77.14";
+   public static final String NUMBER = "0.77.15";
    /** Minimum Java JRE version required. */
    static public final String NUMBER_JAVAMIN = "1.4";
    /** Title of this project. */

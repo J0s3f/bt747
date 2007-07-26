@@ -13,11 +13,36 @@ package gps;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class GPSFilter {
-    public int startDate=0; // Seconds since 1/1/1970
+    private int startDate=0; // Seconds since 1/1/1970
     // TODO: could fix problem with negative values for date.
-    public int endDate=0x7FFFFFFF; // Seconds since 1/1/1970
-    public int validMask=0xFFFFFFFE; // Valid mask
-    public int rcrMask=0xFFFFFFFF;
+    private int endDate=0x7FFFFFFF; // Seconds since 1/1/1970
+    private int validMask=0xFFFFFFFE; // Valid mask
+    private int rcrMask=0xFFFFFFFF;
+
+    public int getEndDate() {
+        return endDate;
+    }
+    public void setEndDate(int endDate) {
+        this.endDate = endDate;
+    }
+    public int getRcrMask() {
+        return rcrMask;
+    }
+    public void setRcrMask(int rcrMask) {
+        this.rcrMask = rcrMask;
+    }
+    public int getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(int startDate) {
+        this.startDate = startDate;
+    }
+    public int getValidMask() {
+        return validMask;
+    }
+    public void setValidMask(int validMask) {
+        this.validMask = validMask;
+    }
     
     public boolean doFilter(GPSRecord r) {
         // Filter the record information

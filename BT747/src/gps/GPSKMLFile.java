@@ -294,36 +294,6 @@ public class GPSKMLFile implements GPSFile {
         m_File.writeBytes(s.getBytes(),0,s.length());
     }
     
-    // TODO: Should do something similar for  double 
-    private final String floatToString(final float f) {
-        String s="";
-        if(((f>=0.0)&&(f<1.0))||((f<0.0)&&(f>-1.0))) {
-            float myf = 0;
-            if (myf<0.0) {
-                myf=-f;
-                s="-";
-            } else {
-                myf=f;
-            }
-            int m=(int)(myf*1000.0+0.499999999999);
-            
-            if(m==0) {
-                s+="0.000";
-            } else if (m <10) {
-                s+="0.00";
-                s+=Convert.toString(m);
-            } else if (m <100) {
-                s+="0.0";
-                s+=Convert.toString(m);
-            } else {
-                s+="0."+Convert.toString(m);
-            }
-        } else {
-            s=Convert.toString(f,3);
-        }
-        return s;
-    }
-    
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
@@ -413,7 +383,7 @@ public class GPSKMLFile implements GPSFile {
                 }
                 rec+=",";
                 if(activeFields.height!=0) {
-                    rec+=floatToString(s.height);
+                    rec+=Convert.toString(s.height,3);
                 }
                 rec+="</coordinates>";
                 rec+="</Point>\n";
@@ -504,11 +474,11 @@ public class GPSKMLFile implements GPSFile {
                 }
                 if(activeFields.height!=0) {
                     rec+="<br />HEIGHT: ";
-                    rec+=floatToString(s.height)+" m";
+                    rec+=Convert.toString(s.height,3)+" m";
                 }
                 if(activeFields.speed!=0) {
                     rec+="<br />SPEED: ";
-                    rec+=floatToString(s.speed)+" km/h";
+                    rec+=Convert.toString(s.speed,3)+" km/h";
                 }
                 if(activeFields.heading!=0) {
                     rec+="<br />HEADING: ";
