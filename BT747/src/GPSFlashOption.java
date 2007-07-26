@@ -31,23 +31,23 @@ import gps.GpsEvent;
  * @author Mario De Weerd
  */
 public class GPSFlashOption extends Container {
-    final private boolean ENABLE_PWR_SAVE_CONTROL=false;
-    GPSstate m_GPSstate;
+    final private static boolean ENABLE_PWR_SAVE_CONTROL=false;
+    private GPSstate m_GPSstate;
     
-    Edit m_userOptionTimesLeft;
-    Edit m_edUpdateRate;
-    Edit m_edBaudRate;
-    Edit m_edGLL_Period;
-    Edit m_edRMC_Period;
-    Edit m_edVTG_Period;
-    Edit m_edGSA_Period;
-    Edit m_edGSV_Period;
-    Edit m_edGGA_Period;
-    Edit m_edZDA_Period;
-    Edit m_edMCHN_Period;
+    private Edit m_userOptionTimesLeft;
+    private Edit m_edUpdateRate;
+    private Edit m_edBaudRate;
+    private Edit m_edGLL_Period;
+    private Edit m_edRMC_Period;
+    private Edit m_edVTG_Period;
+    private Edit m_edGSA_Period;
+    private Edit m_edGSV_Period;
+    private Edit m_edGGA_Period;
+    private Edit m_edZDA_Period;
+    private Edit m_edMCHN_Period;
     
     
-    Button m_btSet;
+    private Button m_btSet;
     
     public GPSFlashOption(GPSstate state) {
         m_GPSstate= state;
@@ -80,7 +80,8 @@ public class GPSFlashOption extends Container {
         add(new Label("MCHN Per"),AFTER,SAME);
         add(m_edMCHN_Period= new Edit(),AFTER,SAME);
         
-        //add(m_btSet = new Button("SET"), CENTER, AFTER+3); //$NON-NLS-1$
+        m_btSet = new Button("SET");
+        //add(m_btSet, CENTER, AFTER+3); //$NON-NLS-1$
         
         
     }

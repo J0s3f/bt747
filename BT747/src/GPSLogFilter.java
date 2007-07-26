@@ -14,56 +14,53 @@
 //***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
+//***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
 import waba.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
-import waba.ui.MessageBox;
 
 import gps.BT747_dev;
 import gps.GPSFilter;
 
-/** The purpose of this container is to set the log filter settings
+/** The purpose of this container is to set the log filter settings.
  */
 public class GPSLogFilter extends Container {
-    GPSFilter m_logFilter;
+    private GPSFilter m_logFilter;
 
-    
-    
     /**
      * 
      */
-    public GPSLogFilter(GPSFilter logFilter) {
-        m_logFilter= logFilter;
+    public GPSLogFilter(final GPSFilter logFilter) {
+        m_logFilter = logFilter;
     }
-    
+
     private String[] strValid= {
-            "No fix","SPS","DGPS","PPS","RTK","FRTK","Estimate","Manual","Sim"};
-    
-    private final int C_VALID_COUNT=9;
+            "No fix", "SPS", "DGPS", "PPS", "RTK", "FRTK", "Estimate", "Manual", "Sim"};
+
+    private final static int C_VALID_COUNT=9;
     private Check [] chkValid =new Check[C_VALID_COUNT];
 
     public void onStart() {
         // Add all tick buttons.
-        for (int i=0;i<C_VALID_COUNT;i++) {
-            chkValid[i]= new Check(strValid[i]);
-            add( chkValid[i],
-                    ((i==0)?LEFT:((i==((C_VALID_COUNT/2)))? getClientRect().width/2:SAME)),
-                    ((i==0) ||i==((C_VALID_COUNT/2)))? TOP:AFTER-1
+        for (int i = 0; i < C_VALID_COUNT; i++) {
+            chkValid[i] = new Check(strValid[i]);
+            add(chkValid[i],
+                ((i==0) ? LEFT :((i == ((C_VALID_COUNT / 2))) ? getClientRect().width/2:SAME)),
+                ((i==0) || (i == ((C_VALID_COUNT / 2)))) ? TOP:AFTER-1
             );
             chkValid[i].setEnabled(true);
         }
         // Add all tick buttons.
-        for (int i=0;i<BT747_dev.C_RCR_COUNT;i++) {
+        for (int i=0; i<BT747_dev.C_RCR_COUNT; i++) {
             chkRCR[i]= new Check(BT747_dev.C_STR_RCR[i]);
             add( chkRCR[i], LEFT, AFTER);
             chkRCR[i].setEnabled(true);
         }
     }
-    
+
     /** Get the format set by the user in the user interface. */
     public int getValid() {
         int bitMask=1;
@@ -86,7 +83,7 @@ public class GPSLogFilter extends Container {
         //if(GPS_DEBUG) {   waba.sys.Vm.debug("UPD:"+Convert.unsigned2hex(p_logFormat,2)+"\n");}
         
         
-        for (int i=0;i<C_VALID_COUNT;i++) {
+        for (int i=0; i<C_VALID_COUNT; i++) {
             chkValid[i].setChecked((valid & bitMask)!=0);
             chkValid[i].repaintNow();
             bitMask<<=1;
@@ -133,8 +130,8 @@ public class GPSLogFilter extends Container {
         case ControlEvent.PRESSED:
             if (event.target==this) {
                 // Tab is selected
-                setValid(m_logFilter.validMask);
-                setRCR(m_logFilter.rcrMask);
+                setValid(m_logFilter.getValidMask());
+                setRCR(m_logFilter.getRcrMask());
                 event.consumed=true;
             } else if (event.target==null) {
                 // Update from GPSState
@@ -147,7 +144,7 @@ public class GPSLogFilter extends Container {
                     }
                 }
                 if(z_updated) {
-                    m_logFilter.validMask=getValid();
+                    m_logFilter.setValidMask(getValid());
                 }
                 z_updated=false;
                 for (int i=0;i<BT747_dev.C_RCR_COUNT;i++) {
@@ -156,7 +153,7 @@ public class GPSLogFilter extends Container {
                     }
                 }
                 if(z_updated) {
-                    m_logFilter.rcrMask=getRCR();
+                    m_logFilter.setRcrMask(getRCR());
                 }
             }
         

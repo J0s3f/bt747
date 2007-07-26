@@ -148,9 +148,8 @@ public class GPSLogGet extends Container {
         m_RecordsLabel.repaintNow();
     }
     
-    Calendar cal;
-    Button calBt;
-    Date calDate;
+    private Calendar cal;
+    private Button calBt;
     
     /*
      * (non-Javadoc)
@@ -239,8 +238,8 @@ public class GPSLogGet extends Container {
                     ext=".gpx";
                 }
                     
-                m_Filter.startDate=dateToUTCepoch1970(m_StartDate);
-                m_Filter.endDate=dateToUTCepoch1970(m_EndDate)+(24*60*60-1);
+                m_Filter.setStartDate(dateToUTCepoch1970(m_StartDate));
+                m_Filter.setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
                 gpsFile.setFilter(m_Filter);
                 // TODO: should get logformat associated with inputfile
                 gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard());
@@ -261,6 +260,7 @@ public class GPSLogGet extends Container {
                 updateButtons();
                 event.consumed=true;
             }
+            break;
         case ControlEvent.WINDOW_CLOSED:
             if (event.target == cal)
             {
