@@ -32,30 +32,30 @@ import gps.GpsEvent;
  * @author Mario De Weerd
  */
 public class GPSLogReason extends Container {
-    final private boolean ENABLE_PWR_SAVE_CONTROL=false;
-    GPSstate m_GPSstate;
+    final private static boolean ENABLE_PWR_SAVE_CONTROL=false;
+    private GPSstate m_GPSstate;
     
-    Check m_chkTimeOnOff;
-    Check m_chkDistanceOnOff;
-    Check m_chkSpeedOnOff;
-    Check m_chkFixOnOff;
-    Edit m_edTime;
-    Edit m_edDistance;
-    Edit m_edSpeed;
-    Edit m_edFix;
+    private Check m_chkTimeOnOff;
+    private Check m_chkDistanceOnOff;
+    private Check m_chkSpeedOnOff;
+    private Check m_chkFixOnOff;
+    private Edit m_edTime;
+    private Edit m_edDistance;
+    private Edit m_edSpeed;
+    private Edit m_edFix;
     
-    Button m_btSet;
+    private Button m_btSet;
     
     /* TODO: Move these buttons:
      * 
      */
-    Check m_chkPowerSaveOnOff;
-    Check m_chkSBASOnOff;
-    Check m_chkSBASTestOnOff;
-    private final String[] strDGPSMode= {"No DGPS", "RTCM","WAAS"};
-    ComboBox m_cbDGPSMode;
-    private final String[] strDatumMode= {"WGS84", "TOKYO-M","TOKYO-A"};
-    ComboBox m_cbDatumMode;
+    private Check m_chkPowerSaveOnOff;
+    private Check m_chkSBASOnOff;
+    private Check m_chkSBASTestOnOff;
+    private final static String[] strDGPSMode= {"No DGPS", "RTCM","WAAS"};
+    private ComboBox m_cbDGPSMode;
+    private final static String[] strDatumMode= {"WGS84", "TOKYO-M","TOKYO-A"};
+    private ComboBox m_cbDatumMode;
     
     
     public GPSLogReason(GPSstate state) {
@@ -194,7 +194,7 @@ public class GPSLogReason extends Container {
         } else if (event.target==m_chkSBASTestOnOff) {
             m_GPSstate.setSBASTestEnabled(m_chkSBASTestOnOff.getChecked());
             m_GPSstate.getSBASTestEnabled();
-        } else if (event.target==m_chkPowerSaveOnOff) {
+        } else if (ENABLE_PWR_SAVE_CONTROL && (event.target==m_chkPowerSaveOnOff)) {
             m_GPSstate.setPowerSaveEnabled(m_chkPowerSaveOnOff.getChecked());
             m_GPSstate.getPowerSaveEnabled();
         } else if (event.target==m_cbDGPSMode) {

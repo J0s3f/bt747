@@ -94,9 +94,9 @@ public class GPSconctrl extends Container {
     }
     
     private void updateButtons() {
-        lbFirmwareMainVersion.setText(((m_GPSstate.MainVersion.length()!=0)?"MainVersion:":"")+m_GPSstate.MainVersion);
-        lbFirmwareName.setText(((m_GPSstate.FirmwareVersion.length()!=0)?"Firmware:":"")+m_GPSstate.FirmwareVersion);
-        lbModel.setText(((m_GPSstate.Model.length()!=0)?"Model:":"")+m_GPSstate.Model);
+        lbFirmwareMainVersion.setText(((m_GPSstate.getMainVersion().length()!=0)?"MainVersion:":"")+m_GPSstate.getMainVersion());
+        lbFirmwareName.setText(((m_GPSstate.getFirmwareVersion().length()!=0)?"Firmware:":"")+m_GPSstate.getFirmwareVersion());
+        lbModel.setText(((m_GPSstate.getModel().length()!=0)?"Model:":"")+m_GPSstate.getModel());
         lbFirmwareMainVersion.repaintNow();
         lbFirmwareName.repaintNow();
         lbModel.repaintNow();
@@ -110,10 +110,10 @@ public class GPSconctrl extends Container {
             } else if (event.target==this) {
                 m_GPSstate.getDeviceInfo();
                 event.consumed=true;
-                break;
             } else if (event.target == btnRestartGps) {
                 m_GPSstate.GPS_restart();
             }
+            break;
         case GpsEvent.DATA_UPDATE:
             if(event.target==this) {
                 updateButtons();

@@ -39,6 +39,7 @@ public class GPSLogFormat extends Container {
     private Check [] chkLogFmtItems =new Check[C_LOG_FMT_COUNT];
     /** The button that requests to change the log format of the device */
     private Button m_btChangeFormat;
+    private Button m_btErase;
     
     /** Initialiser of this Container.<br>
      * Requires Object to communicate with GPS device.
@@ -67,8 +68,9 @@ public class GPSLogFormat extends Container {
         setLogFormatControls();
         
         // Add button confirming change of log format.
-        m_btChangeFormat=new Button("Change Log Format");
-        add(m_btChangeFormat,CENTER,AFTER+5);
+        m_btChangeFormat=new Button("Change Format");
+        add(m_btChangeFormat,RIGHT,AFTER+5);
+        add(m_btErase=new Button("Erase"),RIGHT,SAME);
     }
     
     /** Message warning user about impact of changing log format */
@@ -87,6 +89,17 @@ public class GPSLogFormat extends Container {
         "|reformatting your device." +
         "|" +
         "|LOG FORMAT CHANGE & ERASE?";
+    /** Message warning user about impact of changing log format */
+    private static final String C_msgEraseWarningFormat = 
+        "You are about to" +
+        "|erase your device." +
+        "|" +
+        "|LOG ERASE?";
+    private static final String C_msgEraseWarningFormat2 =
+        "This is your last chance to avoid" +
+        "|reformatting your device." +
+        "|" +
+        "|LOG ERASE?";
     
     /** Options for the first warning message */
     private static final String[] C_YesCancel = {
@@ -114,6 +127,25 @@ public class GPSLogFormat extends Container {
             if(m_mb.getPressedButtonIndex()==1) {
                 // Set format and reset log
                 m_GPSstate.setLogFormat(getSelectedLogFormat());
+                m_GPSstate.eraseLog();
+            }
+        }
+    }
+    
+    /** (User) request to change the log format.
+     * Warns about requirement to erase the log too.
+     * TODO: Wait until change is finished
+     */
+    public void eraseLogFormat() {
+        /** Object to open multiple message boxes */
+        MessageBox m_mb; 
+        m_mb=new MessageBox(C_Attention,C_msgEraseWarningFormat,C_YesCancel);
+        m_mb.popupBlockingModal();
+        if(m_mb.getPressedButtonIndex()==0) {
+            m_mb=new MessageBox(C_Attention,C_msgEraseWarningFormat2,C_CancelConfirm);
+            m_mb.popupBlockingModal();
+            if(m_mb.getPressedButtonIndex()==1) {
+                // Erase log
                 m_GPSstate.eraseLog();
             }
         }
@@ -165,6 +197,8 @@ public class GPSLogFormat extends Container {
         case ControlEvent.PRESSED:
             if (event.target==m_btChangeFormat) {
                 changeLogFormat();
+            } else if (event.target==m_btErase) {
+                eraseLogFormat();
             } else if (event.target==this) {
                 m_GPSstate.getLogFormat();
                 event.consumed=true;
