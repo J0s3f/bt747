@@ -24,7 +24,6 @@ import waba.io.SerialPort;
 import waba.sys.Convert;
 import waba.sys.Settings;
 import waba.sys.Vm;
-import waba.ui.Control;
 import waba.ui.MessageBox;
 import waba.util.Vector;
 
@@ -45,7 +44,7 @@ public class GPSrxtx {
     private SerialPort sp=null;
     private DataStream ds=null;
     
-    boolean portIsOK=false;
+    private boolean portIsOK=false;
     
     private Semaphore m_writeOngoing = new Semaphore(1);
     

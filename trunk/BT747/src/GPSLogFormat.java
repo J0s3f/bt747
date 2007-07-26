@@ -69,7 +69,7 @@ public class GPSLogFormat extends Container {
         
         // Add button confirming change of log format.
         m_btChangeFormat=new Button("Change Format");
-        add(m_btChangeFormat,RIGHT,AFTER+5);
+        add(m_btChangeFormat,LEFT,AFTER+5);
         add(m_btErase=new Button("Erase"),RIGHT,SAME);
     }
     

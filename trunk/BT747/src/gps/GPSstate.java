@@ -29,7 +29,6 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.MainWindow;
 import waba.ui.ProgressBar;
-import waba.ui.Timer;
 import waba.util.Vector;
 
 import gps.convert.Conv;
@@ -1139,9 +1138,9 @@ public class GPSstate implements Thread {
     public int dtZDA_Period;
     public int dtMCHN_Period;
 
-    public String MainVersion="";
-    public String Model="";
-    public String FirmwareVersion="";
+    private String mainVersion="";
+    private String model="";
+    private String firmwareVersion="";
     
     public int analyseNMEA(String[] p_nmea) {
         int z_Cmd;
@@ -1241,12 +1240,12 @@ public class GPSstate implements Thread {
                 /* Not handled */
                 break;
             case BT747_dev.PMTK_DT_VERSION:  // CMD  704
-                MainVersion = p_nmea[1]+"."+p_nmea[2]+"."+p_nmea[3];
+                mainVersion = p_nmea[1]+"."+p_nmea[2]+"."+p_nmea[3];
                 PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_RELEASE:	// CMD  705
-                FirmwareVersion = p_nmea[1];
-                Model= p_nmea[2];
+                firmwareVersion = p_nmea[1];
+                model= p_nmea[2];
                 PostStatusUpdateEvent();
                 break;
 
@@ -1324,5 +1323,14 @@ public class GPSstate implements Thread {
     public void stopped() {
         // TODO Auto-generated method stub
 
+    }
+    public String getFirmwareVersion() {
+        return firmwareVersion;
+    }
+    public String getMainVersion() {
+        return mainVersion;
+    }
+    public String getModel() {
+        return model;
     }
 }
