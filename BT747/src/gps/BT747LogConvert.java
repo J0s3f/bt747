@@ -169,12 +169,16 @@ public final class BT747LogConvert {
                                         |(0xFF&bytes[recIdx++])<<24
                                         ;
                                     gpsRec.utc+=timeOffsetSeconds;
+                                } else {
+                                    gpsRec.utc= 1000;  // Value after earliest date
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_VALID_IDX))!=0) { 
                                     gpsRec.valid=
                                         (0xFF&bytes[recIdx++])<<0
                                         |(0xFF&bytes[recIdx++])<<8
                                         ;
+                                } else {
+                                    gpsRec.valid = 0xFFFF;
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_LATITUDE_IDX))!=0) {
                                     long latitude=
@@ -285,12 +289,17 @@ public final class BT747LogConvert {
                                         (0xFF&bytes[recIdx++])<<0
                                         |(0xFF&bytes[recIdx++])<<8
                                         ;
+                                } else
+                                {
+                                    gpsRec.rcr=0xFFFF;  // For filter
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0) { 
                                     gpsRec.milisecond=
                                         (0xFF&bytes[recIdx++])<<0
                                         |(0xFF&bytes[recIdx++])<<8
                                         ;
+                                } else {
+                                    gpsRec.milisecond=0;
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0) { 
                                     long distance=
