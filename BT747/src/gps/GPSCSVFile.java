@@ -223,21 +223,19 @@ public class GPSCSVFile implements GPSFile {
             }
             if(activeFields.latitude!=0) {
                 rec+=",";
+                rec+=Convert.toString(s.latitude,6);
                 if(s.latitude>=0) {
-                    rec+=Convert.toString(s.latitude,6);
                     rec+=",N";
                 } else {
-                    rec+=Convert.toString(-s.latitude,6);
                     rec+=",S";
                 }
             }
             if(activeFields.longitude!=0) {
                 rec+=",";
+                rec+=Convert.toString(s.longitude,6);
                 if(s.longitude>=0) {
-                    rec+=Convert.toString(s.longitude,6);
                     rec+=",E";
                 } else {
-                    rec+=Convert.toString(-s.longitude,6);
                     rec+=",W";
                 }
             }

@@ -1,5 +1,5 @@
 del BT747*.zip
-SET DT=20070727_010513
+SET DT=20070815_190159
 
 SET EXTRA_FILES=run_ex.bat webstart/Waba_only.jar win32comm.jar win32/javax.comm.properties win32com.dll
 

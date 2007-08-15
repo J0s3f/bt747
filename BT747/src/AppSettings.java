@@ -50,6 +50,7 @@ public class AppSettings implements gps.settings {
     private final static int C_CARD_SIZE=4;
     private final static int C_TIMEOFFSETHOURS_IDX=C_CARD_IDX+C_CARD_SIZE;
     private final static int C_TIMEOFFSETHOURS_SIZE=4;
+    private final static int C_DEFAULT_DEVICE_TIMEOUT=3500; // ms
 
     private String baseDirPath;
     private String logFile;
@@ -98,7 +99,7 @@ public class AppSettings implements gps.settings {
         setReportFileBase("GPSDATA");
         setStartupOpenPort(false);
         setChunkSize(waba.sys.Settings.onDevice?0x200:0x10000);
-        setDownloadTimeOut( (waba.sys.Settings.onDevice?0x200:0x10000) >>5);
+        setDownloadTimeOut( C_DEFAULT_DEVICE_TIMEOUT );
         getSettings();
     }
 
