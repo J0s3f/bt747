@@ -35,6 +35,7 @@ public class GPSGPXFile implements GPSFile {
     private boolean m_isWayType;
     private GPSRecord activeFields;
     private boolean m_newTrack=true;
+    private StringBuffer rec=new StringBuffer(1024);  // reused stringbuffer
     
     /**
      * 
@@ -144,37 +145,7 @@ public class GPSGPXFile implements GPSFile {
     private void writeTxt(final String s) {
         m_File.writeBytes(s.getBytes(),0,s.length());
     }
-    
-    // TODO: Should do something similar for  double 
-    private final String floatToString(final float f) {
-        String s="";
-        if(((f>=0.0)&&(f<1.0))||((f<0.0)&&(f>-1.0))) {
-            float myf = 0;
-            if (myf<0.0) {
-                myf=-f;
-                s="-";
-            } else {
-                myf=f;
-            }
-            int m=(int)(myf*1000.0+0.499999999999);
-            
-            if(m==0) {
-                s+="0.000";
-            } else if (m <10) {
-                s+="0.00";
-                s+=Convert.toString(m);
-            } else if (m <100) {
-                s+="0.0";
-                s+=Convert.toString(m);
-            } else {
-                s+="0."+Convert.toString(m);
-            }
-        } else {
-            s=Convert.toString(f,3);
-        }
-        return s;
-    }
-    
+       
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
@@ -189,7 +160,8 @@ public class GPSGPXFile implements GPSFile {
                     writeTxt("</trkseg></trk><trk><trkseg>");
                 }
             } else {
-                String rec="";
+                //StringBuffer rec=new StringBuffer(1024);
+                rec.setLength(0);
                 m_newTrack=false;
                 //                "  <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 //                "    <ele>12.863281</ele>"+
@@ -201,61 +173,61 @@ public class GPSGPXFile implements GPSFile {
                 // lat="latitudeType [1] ?"
                 // lon="longitudeType [1] ?">
                 if(m_isWayType) {
-                    rec+="<wpt ";
+                    rec.append("<wpt ");
                 } else {
-                    rec+="<trkpt ";
+                    rec.append("<trkpt ");
                 }
                 if(activeFields.latitude!=0) {
-                    rec+="lat=\"";
-                    rec+=Convert.toString(s.latitude,6);
-                    rec+="\" ";
+                    rec.append("lat=\"");
+                    rec.append(Convert.toString(s.latitude,6));
+                    rec.append("\" ");
                 }
                 if(activeFields.longitude!=0) {
-                    rec+="lon=\"";
-                    rec+=Convert.toString(s.longitude,6);
-                    rec+="\"";
+                    rec.append("lon=\"");
+                    rec.append(Convert.toString(s.longitude,6));
+                    rec.append("\"");
                 }
-                rec+=" >\r\n";
+                rec.append(" >\r\n");
                 //
 //                if(m_isWayType) {
-//                    rec+="<name>"+Convert.toString(m_recCount)+"</name>\r\n";
+//                    rec.append("<name>"+Convert.toString(m_recCount)+"</name>\r\n");
 //                }
                 //                    <ele> xsd:decimal </ele> [0..1] ?  (elevation in meters)
                 
                 // <time> xsd:dateTime </time> [0..1] ? //2005-05-16T11:49:06Z
                 if((activeFields.utc!=0)) {
-                    rec+="<time>";
+                    rec.append("<time>");
                     if(activeFields.utc!=0) {
                         Time t=utcTime(s.utc);
                         
-                        rec+=Convert.toString(t.year)+"-"
+                        rec.append(Convert.toString(t.year)+"-"
                         +( t.month<10?"0":"")+Convert.toString(t.month)+"-"
                         +(   t.day<10?"0":"")+Convert.toString(t.day)+"T"
                         +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
                         +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
                         +(t.second<10?"0":"")+Convert.toString(t.second)
-                        ;
+                        );
                         if(activeFields.milisecond!=0) {
-                            rec+=".";
-                            rec+=(s.milisecond<100)?"0":"";
-                            rec+=(s.milisecond<10)?"0":"";
-                            rec+=Convert.toString(s.milisecond);
+                            rec.append(".");
+                            rec.append((s.milisecond<100)?"0":"");
+                            rec.append((s.milisecond<10)?"0":"");
+                            rec.append(Convert.toString(s.milisecond));
                         }
-                        rec+="Z";
+                        rec.append("Z");
                     }
-                    rec+="</time>\r\n";
+                    rec.append("</time>\r\n");
                 }
                 //                    <magvar> degreesType </magvar> [0..1] ?
                 if(m_isWayType&&(activeFields.heading!=0)) {
-                    rec+="<magvar>";
-                    rec+=Convert.toString(s.heading);
-                    rec+="</magvar>\r\n";
+                    rec.append("<magvar>");
+                    rec.append(Convert.toString(s.heading));
+                    rec.append("</magvar>\r\n");
                 }
                 //                    <geoidheight> xsd:decimal </geoidheight> [0..1] ?
                 if((activeFields.height!=0)) {
-                    rec+="<geoidheight>";
-                    rec+=floatToString(s.height);
-                    rec+="</geoidheight>\r\n";
+                    rec.append("<geoidheight>");
+                    rec.append(Convert.toString(s.height,3));
+                    rec.append("</geoidheight>\r\n");
                 }
                 
                 //                    <name> xsd:string </name> [0..1] ?
@@ -284,9 +256,9 @@ public class GPSGPXFile implements GPSFile {
                         //                    if(style.length()!=1) {
                         //                        style="M";
                         //                    }
-                        rec+="<type>";
-                        rec+=style;
-                        rec+="</type>\r\n";
+                        rec.append("<type>");
+                        rec.append(style);
+                        rec.append("</type>\r\n");
                     }
                     
                     //                    <fix> fixType </fix> [0..1] ?
@@ -324,69 +296,69 @@ public class GPSGPXFile implements GPSFile {
                             //tmp+="Unknown mode";
                         }
                         if(tmp.length()!=0) {
-                            rec+="<fix>";
-                            rec+=tmp;
-                            rec+="</fix>\r\n";
+                            rec.append("<fix>");
+                            rec.append(tmp);
+                            rec.append("</fix>\r\n");
                         }
                     }
                     //                    <sat> xsd:nonNegativeInteger </sat> [0..1] ?
                     //                    <hdop> xsd:decimal </hdop> [0..1] ?
                     if((activeFields.hdop!=0)) {
-                        rec+="<hdop>";
-                        rec+=Convert.toString(s.hdop/100.0,2); 
-                        rec+="</hdop>\r\n";
+                        rec.append("<hdop>");
+                        rec.append(Convert.toString(s.hdop/100.0,2)); 
+                        rec.append("</hdop>\r\n");
                     }
                     //                    <vdop> xsd:decimal </vdop> [0..1] ?
                     if((activeFields.vdop!=0)) {
-                        rec+="<vdop>";
-                        rec+=Convert.toString(s.vdop/100.0,2); 
-                        rec+="</vdop>\r\n";
+                        rec.append("<vdop>");
+                        rec.append(Convert.toString(s.vdop/100.0,2)); 
+                        rec.append("</vdop>\r\n");
                     }
                     //              <pdop> xsd:decimal </pdop> [0..1] ?
                     if((activeFields.pdop!=0)) {
-                        rec+="<pdop>";
-                        rec+=Convert.toString(s.pdop/100.0,2); 
-                        rec+="</pdop>\r\n";
+                        rec.append("<pdop>");
+                        rec.append(Convert.toString(s.pdop/100.0,2)); 
+                        rec.append("</pdop>\r\n");
                     }
                     //                    <ageofdgpsdata> xsd:decimal </ageofdgpsdata> [0..1] ?
                     if((activeFields.dage!=0)) {
-                        rec+="<ageofdgpsdata>";
-                        rec+=Convert.toString(s.dage); 
-                        rec+="</ageofdgpsdata>\r\n";
+                        rec.append("<ageofdgpsdata>");
+                        rec.append(Convert.toString(s.dage)); 
+                        rec.append("</ageofdgpsdata>\r\n");
                     }
                     
                     //                    <dgpsid> dgpsStationType </dgpsid> [0..1] ?
                     if((activeFields.dsta!=0)) {
-                        rec+="<dgpsid>";
-                        rec+=Convert.toString(s.dsta); 
-                        rec+="</dgpsid>\r\n";
+                        rec.append("<dgpsid>");
+                        rec.append(Convert.toString(s.dsta)); 
+                        rec.append("</dgpsid>\r\n");
                     }
                     //                    <extensions> extensionsType </extensions> [0..1] ?                
                     
                     if((activeFields.speed!=0)) {
-                        rec+="<speed>";
-                        rec+=Convert.toString(s.speed,3);
-                        rec+="</speed>\r\n";
+                        rec.append("<speed>");
+                        rec.append(Convert.toString(s.speed,3));
+                        rec.append("</speed>\r\n");
                     }
                     if((activeFields.distance!=0)) {
-                        rec+="<distance>";
-                        rec+=Convert.toString(s.distance,2); //+" m\r\n" 
-                        rec+="</distance>\r\n";
+                        rec.append("<distance>");
+                        rec.append(Convert.toString(s.distance,2)); //+" m\r\n" 
+                        rec.append("</distance>\r\n");
                     }
                     
-                    rec+="<cmt>";
-                    rec+="<![CDATA[";
+                    rec.append("<cmt>");
+                    rec.append("<![CDATA[");
                     //              <pdop> xsd:decimal </pdop> [0..1] ?
-                    rec+="]]>";
-                    rec+="</cmt>\r\n";
+                    rec.append("]]>");
+                    rec.append("</cmt>\r\n");
                 }
                 if(m_isWayType) {
-                    rec+="</wpt>\r\n";
+                    rec.append("</wpt>\r\n");
                 } else {
-                    rec+="</trkpt>\r\n";
+                    rec.append("</trkpt>\r\n");
                 }
                 
-                writeTxt(rec);
+                writeTxt(rec.toString());
                 
             }
         } // activeFields!=null

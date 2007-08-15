@@ -1,3 +1,9 @@
+Version 0.77.16
+
+* Solved problem regarding timeout on first request.  Fixes double requests for same data and speed up download.
+* CSV: LAT/LON values no longer converted to positive values.  In that manner paths can be shown
+  directly in an excel graph.
+
 Version 0.77.15
 
 * Not really tested dev version!!!  Purpose deliver latest version on the web before 3 weeks leave.

@@ -59,7 +59,7 @@ public class GPSstate implements Thread {
     ProgressBar m_ProgressBar=null;
     
     // Fields to keep track of logging status
-    private int logTimer=Vm.getTimeStamp();  // Value that increases at each timer event
+    private int logTimer=0;
     private int m_StartAddr;
     private int m_EndAddr;
     private int m_NextReqAddr;
@@ -70,7 +70,6 @@ public class GPSstate implements Thread {
     private boolean m_isCheckingLog = false;  // True when doing binary search
     private boolean m_getFullLog= true; // If true, get the entire log (based on block head)
     private boolean m_recoverFromError= false; // When true, must recover from error
-    private boolean m_getNextLogOnNextTimer = false;
     
     
     public int logFormat = 0;
@@ -277,28 +276,10 @@ public class GPSstate implements Thread {
         readLog(C_BLOCKVERIF_START,C_BLOCKVERIF_SIZE);  // Read 200 bytes, just past header.
     }
     
-    /** Handle time outs on log requests
-     * Will be called if the device did not respond to a log request.
-     * TODO: Could be extended to all packets.
-     * TODO: Implement handleLogTimeOUt
-     */
-    public void handleLogTimeOut() {
-//        Vm.debug("Timeout");
+    private void resetLogTimeOut() {
         logTimer=Vm.getTimeStamp();
-
-        
-        // Remove all log request from sent commands list.
-        while(removeFromSentCmds("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
-                +","+BT747_dev.PMTK_LOG_REQ_DATA_STR+","));
-        
-        if(m_isCheckingLog) {
-            requestCheckBlock();
-        } else {
-            m_recoverFromError=false;
-            recoverFromLogError();
-        }
     }
-    
+       
     /** Calculate the size of one log entry.
      * <b>Only works if the satellite information is not requested.</b><br>
      * Satellite information is of variant size.
@@ -346,7 +327,7 @@ public class GPSstate implements Thread {
         
         // Currently taking care of replies from the device only.
         // The other data we send ourselves
-        logTimer=Vm.getTimeStamp();  // Reset timeout
+        resetLogTimeOut();  // Reset timeout
         if(p_nmea.length>2) {
             switch( Convert.toInt(p_nmea[1]) ) {
             case BT747_dev.PMTK_LOG_DT:
@@ -430,8 +411,24 @@ public class GPSstate implements Thread {
     
     Vector sentCmds = new Vector();	// List of sent commands
     static final int C_MAX_SENT_COMMANDS = 10;  // Max commands to put in list
+    Vector toSendCmds = new Vector(); // List of sent commands
+    static final int C_MAX_TOSEND_COMMANDS = 10;  // Max commands to put in list
+    static final int C_MAX_CMDS_SENT = 4;
     
     public void sendNMEA(final String p_Cmd) {
+        int cmdsWaiting;
+        cmdsWaiting=sentCmds.getCount();
+        if(cmdsWaiting==0) {
+            //  All sent commands were acknowledged, send cmd immediately
+            doSendNMEA(p_Cmd);
+        } else if (cmdsWaiting<C_MAX_TOSEND_COMMANDS) {
+             // Ok to buffer more cmds
+            toSendCmds.add(p_Cmd);
+        }
+    }
+
+    private void doSendNMEA(final String p_Cmd) {
+        resetLogTimeOut();
         if(p_Cmd.startsWith("PMTK")) {
             sentCmds.add(p_Cmd);
         }
@@ -443,6 +440,23 @@ public class GPSstate implements Thread {
             Vm.debug(p_Cmd);
         }
     }
+    
+    private void checkSendCmdFromQueue() {
+        int cTime=Vm.getTimeStamp();
+        if((sentCmds.getCount()!=0)
+                &&(cTime-logTimer)>=m_settings.getDownloadTimeOut()) {
+            // TimeOut!!
+            sentCmds.del(0);
+            logTimer=cTime;
+        }
+        if((toSendCmds.getCount()!=0)
+                &&(sentCmds.getCount()<C_MAX_CMDS_SENT)) {
+            // No more commands waiting for acknowledge
+            doSendNMEA((String)toSendCmds.items[0]);
+            toSendCmds.del(0);
+        }
+    }
+    
     
     /** Request the current log format from the device */
     public void getLogFormat() {
@@ -721,6 +735,9 @@ public class GPSstate implements Thread {
         }
         // Remove all cmds up to 
         for (int i= z_CmdIdx; i >= 0; i--) {
+//          if(GPS_DEBUG) {
+//            Vm.debug("Remove:"+(String)sentCmds.items[0]);
+//          }
             sentCmds.del(0);
         }
         return z_CmdIdx!=-1;
@@ -902,7 +919,6 @@ public class GPSstate implements Thread {
             // File could not be opened or is not incremental.
             openNewLog(p_FileName,Card);
             m_isLogging=true;
-            m_getNextLogOnNextTimer=true;
         }
     }
     
@@ -957,6 +973,7 @@ public class GPSstate implements Thread {
             //Vm.debug("NextLogPart");
             //TODO: Stop the thread at the end.
             int z_Step;
+            //resetLogTimeOut();  // Reset timeout because requesting new part.
             if(m_NextReqAddr<=m_NextReadAddr) {
                 z_Step=m_EndAddr-m_NextReqAddr+1;
                 if(m_recoverFromError && z_Step>0x800) {
@@ -970,6 +987,23 @@ public class GPSstate implements Thread {
                     m_NextReqAddr+=z_Step;
                 }            
             }
+        }
+    }
+
+    // Called when no outstanding requests
+    public void getLogPart() {
+        if ( m_isLogging ) {
+            //Vm.debug("NextLogPart");
+            //TODO: Stop the thread at the end.
+            int z_Step;
+            //resetLogTimeOut();  // Reset timeout because requesting new part.
+            if(m_NextReqAddr>m_NextReadAddr) {
+                recoverFromLogError();
+            } else {
+                getNextLogPart();
+            }
+        } else if ( m_isCheckingLog ) {
+            requestCheckBlock();
         }
     }
     
@@ -1007,7 +1041,6 @@ public class GPSstate implements Thread {
         m_NextReqAddr=m_NextReadAddr;
         if(!m_recoverFromError) {
             m_recoverFromError=true;
-            m_getNextLogOnNextTimer=true;
         }
     }
     private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
@@ -1073,11 +1106,9 @@ public class GPSstate implements Thread {
                 }
                 if(m_NextReadAddr>m_EndAddr) {
                     endGetLog();
-                } else {
-                    m_getNextLogOnNextTimer=true;
                 }
             } else {
-                //recoverFromLogError();  // Let the timeout handle it to avoid repeated requests
+                recoverFromLogError();
             }
         } else if ( m_isCheckingLog) {
             if((p_StartAddr==C_BLOCKVERIF_START) && (dataLength==C_BLOCKVERIF_SIZE)) {
@@ -1112,14 +1143,12 @@ public class GPSstate implements Thread {
 //                    }
                     m_logFile.setPos(m_NextReadAddr);
                     m_isLogging=true;
-                    m_getNextLogOnNextTimer=true;
                 } else {
                     // Log is not the same - delete the log and reopen.
                     openNewLog(fileName,m_logFileCard);
                     m_isLogging=true;
                     m_NextReadAddr=0;
                     m_NextReadAddr=0;
-                    m_getNextLogOnNextTimer=true;
                 }
             }
         }
@@ -1273,32 +1302,16 @@ public class GPSstate implements Thread {
         int loops_to_go=5;
         // TODO Auto-generated method stub
         if(m_GPSrxtx.isConnected()) {
-            if(m_getNextLogOnNextTimer&&(sentCmds.getCount()==0)) {
+            if((m_isLogging||m_isCheckingLog)&&(sentCmds.getCount()==0)&&(toSendCmds.getCount()==0)) {
                 // Sending command on next timer adds some delay after
                 // the end of the previous command (reception)
-                m_getNextLogOnNextTimer=false;
-//                if(GPS_DEBUG) {
-//                    Vm.debug("Next Timer Get");
-//                }
-                getNextLogPart();
+                getLogPart();
             }
             do {
                 lastResponse= m_GPSrxtx.getResponse();
                 if(lastResponse!=null) analyseNMEA(lastResponse);
+                checkSendCmdFromQueue();
             } while((loops_to_go-->0) &&lastResponse!=null);
-            if( (m_isLogging||m_isCheckingLog)
-                &&
-                ( ((!m_getNextLogOnNextTimer)&&(!m_recoverFromError)&&(sentCmds.getCount()==0)) // All acks or responses received.
-                  ||
-                  ((Vm.getTimeStamp()-logTimer)>=m_settings.getDownloadTimeOut())
-                )
-               ) {
-//                if(GPS_DEBUG) {
-//                    Vm.debug("TimeOut");
-//                    Vm.debug(""+Vm.getTimeStamp()+","+logTimer);
-//                }
-                handleLogTimeOut();  // On time out resend request packet.
-            }
         } else {
             MainWindow.getMainWindow().removeThread(this);
             if(m_isLogging) {
