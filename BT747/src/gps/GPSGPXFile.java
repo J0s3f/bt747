@@ -225,9 +225,9 @@ public class GPSGPXFile implements GPSFile {
                 }
                 //                    <geoidheight> xsd:decimal </geoidheight> [0..1] ?
                 if((activeFields.height!=0)) {
-                    rec.append("<geoidheight>");
+                    rec.append("<ele>");
                     rec.append(Convert.toString(s.height,3));
-                    rec.append("</geoidheight>\r\n");
+                    rec.append("</ele>\r\n");
                 }
                 
                 //                    <name> xsd:string </name> [0..1] ?
@@ -266,16 +266,16 @@ public class GPSGPXFile implements GPSFile {
                         String tmp="";
                         switch(s.valid) {
                         case 0x0001: 
-                            tmp+="'none'"; //"No fix";
+                            tmp+="none"; //"No fix";
                             break;
                         case 0x0002:
-                            tmp+= "'3d'"; //"SPS";
+                            tmp+= "3d"; //"SPS";
                             break;
                         case 0x0004:
-                            tmp+="'dgps'";
+                            tmp+="dgps";
                             break;
                         case 0x0008:
-                            tmp+="'pps'"; // Military signal
+                            tmp+="pps"; // Military signal
                             break;
                         case 0x0010:
                             //tmp+="RTK";
@@ -346,11 +346,12 @@ public class GPSGPXFile implements GPSFile {
                         rec.append("</distance>\r\n");
                     }
                     
-                    rec.append("<cmt>");
-                    rec.append("<![CDATA[");
-                    //              <pdop> xsd:decimal </pdop> [0..1] ?
-                    rec.append("]]>");
-                    rec.append("</cmt>\r\n");
+                    // No comments, so commented out.
+//                    rec.append("<cmt>");
+//                    rec.append("<![CDATA[");
+//                    //              <pdop> xsd:decimal </pdop> [0..1] ?
+//                    rec.append("]]>");
+//                    rec.append("</cmt>\r\n");
                 }
                 if(m_isWayType) {
                     rec.append("</wpt>\r\n");

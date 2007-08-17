@@ -73,7 +73,7 @@ public class GPSconctrl extends Container {
         btnRestartGps = new Button("Reset COM port");
         btnRestartGps.setGap(5);
         add(btnRestartGps, RIGHT - 5, BOTTOM - 5);
-        add(new Label("Version:"+Version.NUMBER+"("+Version.DATE+")"), LEFT, BEFORE); //$NON-NLS-1$)
+        add(new Label("This SW: V"+Version.NUMBER+"("+Version.DATE+")"), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbFirmwareMainVersion=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbFirmwareName=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbModel=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
@@ -94,7 +94,7 @@ public class GPSconctrl extends Container {
     }
     
     private void updateButtons() {
-        lbFirmwareMainVersion.setText(((m_GPSstate.getMainVersion().length()!=0)?"MainVersion:":"")+m_GPSstate.getMainVersion());
+        lbFirmwareMainVersion.setText(((m_GPSstate.getMainVersion().length()!=0)?"Main:":"")+m_GPSstate.getMainVersion());
         lbFirmwareName.setText(((m_GPSstate.getFirmwareVersion().length()!=0)?"Firmware:":"")+m_GPSstate.getFirmwareVersion());
         lbModel.setText(((m_GPSstate.getModel().length()!=0)?"Model:":"")+m_GPSstate.getModel());
         lbFirmwareMainVersion.repaintNow();

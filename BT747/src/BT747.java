@@ -111,7 +111,7 @@ public class BT747 extends MainWindow {
         waba.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
-        setTitle("BT747");
+        setTitle("i-Blue 747/757 / BT-Q1000");
         Settings.setUIStyle(Settings.Flat);
     }
     
