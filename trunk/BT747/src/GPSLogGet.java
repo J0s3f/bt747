@@ -35,6 +35,7 @@ import gps.GPSFile;
 import gps.GPSFilter;
 import gps.GPSGPXFile;
 import gps.GPSKMLFile;
+import gps.GPSNMEAFile;
 import gps.GPSPLTFile;
 import gps.GPSstate;
 import gps.GpsEvent;
@@ -62,6 +63,7 @@ public class GPSLogGet extends Container {
     Button m_btToKML;
     Button m_btToGPX;
     Button m_btToPLT;
+    Button m_btToNMEA;
 
     ComboBox m_cbTimeOffsetHours;
     private final static String[] offsetStr = {
@@ -130,7 +132,7 @@ public class GPSLogGet extends Container {
 
         add(m_btToPLT = new Button("To PLT"), LEFT, AFTER + 2); //$NON-NLS-1$
 //        add(m_btToGPX = new Button("To GPX"), CENTER, SAME); //$NON-NLS-1$
-//        add(m_btToKML = new Button("To KML"), RIGHT, SAME); //$NON-NLS-1$
+        add(m_btToNMEA = new Button("To NMEA"), RIGHT, SAME); //$NON-NLS-1$
 
         add(m_UsedLabel=new Label(   ""),LEFT, AFTER+3);
         add(m_RecordsLabel=new Label(""),LEFT, AFTER+3);
@@ -217,7 +219,8 @@ public class GPSLogGet extends Container {
             } else if (event.target==m_btToCSV
                     ||event.target==m_btToKML
                     ||event.target==m_btToPLT
-                    ||event.target==m_btToGPX) {
+                    ||event.target==m_btToGPX
+                    ||event.target==m_btToNMEA) {
                 String ext="";
                 GPSFile gpsFile=null;
 
@@ -236,6 +239,10 @@ public class GPSLogGet extends Container {
                 if(event.target==m_btToGPX) {
                     gpsFile=new GPSGPXFile();
                     ext=".gpx";
+                }
+                if(event.target==m_btToNMEA) {
+                    gpsFile=new GPSNMEAFile();
+                    ext=".nmea";
                 }
                     
                 m_Filter.setStartDate(dateToUTCepoch1970(m_StartDate));
