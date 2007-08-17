@@ -261,22 +261,22 @@ public class GPSNMEAFile implements GPSFile {
                 String tmp="";
                 switch(s.valid) {
                 case 0x0001: 
-                    tmp+="0"; //"No fix";
+                    tmp="0"; //"No fix";
                     break;
                 case 0x0002:
-                    tmp+="1"; //"SPS";
+                    tmp="1"; //"SPS";
                     break;
                 case 0x0004:
-                    tmp+="2";
+                    tmp="2"; // DGPS
                     break;
                 case 0x0008:
-                    tmp+="3"; // Military signal
+                    tmp="3"; // PPS, Military signal
                     break;
                 case 0x0010:
-                    //tmp+="RTK";
+                    tmp="4";
                     break;
                 case 0x0020:
-                    //tmp+="FRTK";
+                    tmp="5";
                     break;
                 case 0x0040:
                     //tmp+= "Estimated mode";
