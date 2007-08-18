@@ -1,6 +1,20 @@
-BT747 on SuperWaba
-
 This project is under development.
+
+Due to similarity this SW written with a iBlue 747 device should work with the following
+devices:
+- i-Blue 747
+- i-Bleu 757
+- Qstarz BT-Q1000
+- i.Trek Z1
+
+It can also be used to configure a number of devices with the MTK chipset.
+The log capabilities of the SW will then be useless for you.
+
+Further in this readme are instructions for installing on:
+- Windows
+- PPC
+- Linux
+- Palm
 
 ========= WINDOWS INSTRUCTIONS =================
 To run on 'windows', you should install WIN32COMM for java to get things going rapidly.
@@ -54,6 +68,10 @@ java waba.applet.Applet BT747
 
 You can also try to run the 'run_ex.bat' command script.
 
+=========== Palm installation ================
+1. Install superwaba (http://www.superwaba.org/install
+2. Install the BT747.prc and BT747.pdb file on your device.
+
 
 =========== PPC installation ================
 
@@ -76,3 +94,14 @@ I cancelled 'Get log' (because the memory on my BT747 is almost full so it takes
 I clicked 'To GPX'. ... Conversion takes a while.
 I set today's date as start date (I logged some GPS points today). Much faster (less to write).
 I open the kml on windows -> opens google earth with expected points.
+
+
+============= Linux ============================
+I am currently in the process of downloading a Linux CD that includes Java.
+I debugged on puppy linux using another java virtual machine that ultimately fails but helped
+to solved a number of problems.
+
+A script is proposed in run_linux.sh.  There are complementary files in the Linux directory and the webstart directory.
+In the Linux directory, you may need to modify swserial.properties.
+Currently it maps the USB connection to '/dev/ttyUSB0' so clicking on USB in the application
+will try to open that device where your GPS datalogger is most likely located.
