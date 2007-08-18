@@ -25,8 +25,12 @@ import gps.convert.Conv;
 
 /**
  * @author Mario De Weerd
+ * @author Herbert Geus (initial code for saving settings on WindowsCE)
   */
 public class AppSettings implements gps.settings {
+    static private final String CONFIG_FILE_NAME = waba.sys.Settings.platform.startsWith("Win32") ?
+            "SettingsBT747.pdb" : 
+            "/My Documents/BT747/SettingsBT747.pdb"; 
 
     private final static int C_PORTNBR_IDX=0;
     private final static int C_PORTNBR_SIZE=8;
@@ -64,6 +68,31 @@ public class AppSettings implements gps.settings {
         String mVersion;
         if(Settings.appSettings==null||Settings.appSettings.length()<100) {
             Settings.appSettings=new String(new byte[2048]);
+            if ( waba.sys.Settings.platform.startsWith("WindowsCE")
+                    || waba.sys.Settings.platform.startsWith("PocketPC")
+                    ||(waba.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice) 
+            )
+            {
+                int readLength = 0;
+                
+                //waba.sys.Vm.debug("on Device "+waba.sys.Settings.platform);
+                //waba.sys.Vm.debug("loading config file "+CONFIG_FILE_NAME);
+                File m_prefFile = new File("");
+                try {
+                    m_prefFile = new File(CONFIG_FILE_NAME,File.READ_ONLY);
+                } catch (Exception e) {
+                    //            Vm.debug("Exception new log create");
+                }
+                readLength = m_prefFile.getSize();
+                if (readLength >= 100)
+                {
+                    byte[] appSettingsArray = new byte[2048];
+                    
+                    m_prefFile.readBytes(appSettingsArray, 0, readLength);
+                    Settings.appSettings = new String(appSettingsArray);
+                }
+                m_prefFile.close();
+            }
         }
         mVersion=getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
         if((mVersion.length()<2)||(mVersion.charAt(1)!='.')) {
@@ -101,6 +130,36 @@ public class AppSettings implements gps.settings {
         setChunkSize(waba.sys.Settings.onDevice?0x200:0x10000);
         setDownloadTimeOut( C_DEFAULT_DEVICE_TIMEOUT );
         getSettings();
+    }
+    
+    public void saveSettings() {
+        if ( waba.sys.Settings.platform.startsWith("WindowsCE")
+                || waba.sys.Settings.platform.startsWith("PocketPC")
+                ||(waba.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice) 
+                )
+        {
+//            waba.sys.Vm.debug("on Device "+waba.sys.Settings.platform);
+//            waba.sys.Vm.debug("saving config file "+CONFIG_FILE_NAME);
+            File m_prefFile=new File("");
+            try {
+                m_prefFile=new File(CONFIG_FILE_NAME,File.DONT_OPEN);
+                if(m_prefFile.exists()) {
+                    m_prefFile.delete();
+                }
+            } catch (Exception e) {
+//                Vm.debug("Exception new log delete");
+            }
+            try {
+                m_prefFile=new File(CONFIG_FILE_NAME,File.CREATE);
+                m_prefFile.close();
+                m_prefFile=new File(CONFIG_FILE_NAME,File.READ_WRITE);
+            } catch (Exception e) {
+//                Vm.debug("Exception new log create");
+            }
+            m_prefFile.writeBytes(Settings.appSettings.getBytes(), 0, Settings.appSettings.length());
+            m_prefFile.close();
+//            waba.sys.Vm.debug("saved config file length "+Settings.appSettings.length());
+        }
     }
 
     public void getSettings() {

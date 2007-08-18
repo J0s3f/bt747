@@ -151,14 +151,20 @@ public class GPSGPXFile implements GPSFile {
      */
     public void writeRecord(GPSRecord s) {
         boolean prevField=false;
+        String timeStr="";
+        String fixStr="";
+        String rcrStr="";
+        String hdopStr="";
+        String nsatStr="";
+
         m_recCount++;
         if(activeFields!=null) {
             if(!m_Filter.doFilter(s)) {
                 // filtered
                 if(!m_isWayType&&!m_newTrack) {
                     m_newTrack=true;
-                    writeTxt("</trkseg></trk><trk><trkseg>");
-                }
+                    writeTxt("</trkseg></trk>");
+                    writeTxt("<trk><trkseg>");                }
             } else {
                 //StringBuffer rec=new StringBuffer(1024);
                 rec.setLength(0);
@@ -199,21 +205,23 @@ public class GPSGPXFile implements GPSFile {
                     rec.append("<time>");
                     if(activeFields.utc!=0) {
                         Time t=utcTime(s.utc);
+
                         
-                        rec.append(Convert.toString(t.year)+"-"
+                        timeStr+=Convert.toString(t.year)+"-"
                         +( t.month<10?"0":"")+Convert.toString(t.month)+"-"
                         +(   t.day<10?"0":"")+Convert.toString(t.day)+"T"
                         +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
                         +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
                         +(t.second<10?"0":"")+Convert.toString(t.second)
-                        );
+                        ;
                         if(activeFields.milisecond!=0) {
-                            rec.append(".");
-                            rec.append((s.milisecond<100)?"0":"");
-                            rec.append((s.milisecond<10)?"0":"");
-                            rec.append(Convert.toString(s.milisecond));
+                            timeStr+=".";
+                            timeStr+=(s.milisecond<100)?"0":"";
+                            timeStr+=(s.milisecond<10)?"0":"";
+                            timeStr+=Convert.toString(s.milisecond);
                         }
-                        rec.append("Z");
+                        timeStr+="Z";
+                        rec.append(timeStr);
                     }
                     rec.append("</time>\r\n");
                 }
@@ -231,6 +239,19 @@ public class GPSGPXFile implements GPSFile {
                 }
                 
                 //                    <name> xsd:string </name> [0..1] ?
+                rec.append("<name>");
+                if(m_isWayType) {
+                    rec.append("wpt-");
+                } else {
+                    rec.append("trkpt-");
+                }
+                if((activeFields.utc!=0)) {
+                    rec.append(timeStr);
+            } else {
+               rec.append(Convert.toString(m_recCount));
+            }
+            rec.append("</name>\r\n");
+
                 //                    <cmt> xsd:string </cmt> [0..1] ?
                 //                    <desc> xsd:string </desc> [0..1] ?
                 //                    <src> xsd:string </src> [0..1] ? // Source of data
@@ -240,42 +261,40 @@ public class GPSGPXFile implements GPSFile {
                 //                    <type> xsd:string </type> [0..1] ?
                 if(m_isWayType) {
                     if((activeFields.rcr!=0)) {
-                        String style="";
                         if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
-                            style+="T";
+                            rcrStr+="T";
                         }
                         if((s.rcr&BT747_dev.RCR_SPEED_MASK)!=0) {
-                            style+="S";
+                            rcrStr+="S";
                         }
                         if((s.rcr&BT747_dev.RCR_DISTANCE_MASK)!=0) {
-                            style+="D";
+                            rcrStr+="D";
                         }
                         if((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
-                            style+="B";
+                            rcrStr+="B";
                         }
                         //                    if(style.length()!=1) {
                         //                        style="M";
                         //                    }
                         rec.append("<type>");
-                        rec.append(style);
+                        rec.append(rcrStr);
                         rec.append("</type>\r\n");
                     }
                     
                     //                    <fix> fixType </fix> [0..1] ?
                     if((activeFields.valid!=0)) {
-                        String tmp="";
                         switch(s.valid) {
                         case 0x0001: 
-                            tmp+="none"; //"No fix";
+                            fixStr+="none"; //"No fix";
                             break;
                         case 0x0002:
-                            tmp+= "3d"; //"SPS";
+                            fixStr+= "3d"; //"SPS";
                             break;
                         case 0x0004:
-                            tmp+="dgps";
+                            fixStr+="dgps";
                             break;
                         case 0x0008:
-                            tmp+="pps"; // Military signal
+                            fixStr+="pps"; // Military signal
                             break;
                         case 0x0010:
                             //tmp+="RTK";
@@ -295,17 +314,18 @@ public class GPSGPXFile implements GPSFile {
                         default:
                             //tmp+="Unknown mode";
                         }
-                        if(tmp.length()!=0) {
+                        if(fixStr.length()!=0) {
                             rec.append("<fix>");
-                            rec.append(tmp);
+                            rec.append(fixStr);
                             rec.append("</fix>\r\n");
                         }
                     }
                     //                    <sat> xsd:nonNegativeInteger </sat> [0..1] ?
                     //                    <hdop> xsd:decimal </hdop> [0..1] ?
                     if((activeFields.hdop!=0)) {
+                        hdopStr=Convert.toString(s.hdop/100.0,2);
                         rec.append("<hdop>");
-                        rec.append(Convert.toString(s.hdop/100.0,2)); 
+                        rec.append(hdopStr); 
                         rec.append("</hdop>\r\n");
                     }
                     //                    <vdop> xsd:decimal </vdop> [0..1] ?
@@ -321,6 +341,15 @@ public class GPSGPXFile implements GPSFile {
                         rec.append("</pdop>\r\n");
                     }
                     //                    <ageofdgpsdata> xsd:decimal </ageofdgpsdata> [0..1] ?
+                    if((activeFields.nsat!=0)) {
+                        nsatStr+=Convert.toString(s.nsat/256); 
+                        nsatStr+="(";
+                        nsatStr+=Convert.toString(s.nsat%256); 
+                        nsatStr+=")";
+                        rec.append("<nsat>");
+                        rec.append(nsatStr);
+                        rec.append("</nsat>\r\n");
+                    }
                     if((activeFields.dage!=0)) {
                         rec.append("<ageofdgpsdata>");
                         rec.append(Convert.toString(s.dage)); 
@@ -340,6 +369,7 @@ public class GPSGPXFile implements GPSFile {
                         rec.append(Convert.toString(s.speed,3));
                         rec.append("</speed>\r\n");
                     }
+                    
                     if((activeFields.distance!=0)) {
                         rec.append("<distance>");
                         rec.append(Convert.toString(s.distance,2)); //+" m\r\n" 
@@ -347,11 +377,12 @@ public class GPSGPXFile implements GPSFile {
                     }
                     
                     // No comments, so commented out.
-//                    rec.append("<cmt>");
+                    rec.append("<cmt>");
+                    rec.append(fixStr+","+rcrStr+","+hdopStr+","+nsatStr);
 //                    rec.append("<![CDATA[");
 //                    //              <pdop> xsd:decimal </pdop> [0..1] ?
 //                    rec.append("]]>");
-//                    rec.append("</cmt>\r\n");
+                    rec.append("</cmt>\r\n");
                 }
                 if(m_isWayType) {
                     rec.append("</wpt>\r\n");
