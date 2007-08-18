@@ -1,6 +1,7 @@
 Version 0.77.17
 * Modified display of device version and application SW version for better information.
 * Added NMEA output format (readable by locr SW).
+* Added script and instructions for launching on Linux - partially validated.
 
 Version 0.77.16
 

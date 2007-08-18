@@ -108,57 +108,48 @@ public class GPSNMEAFile implements GPSFile {
     private void writeTxt(final String s) {
         m_File.writeBytes(s.getBytes(),0,s.length());
     }
+    
+    private void writeNMEA(final String s) {
+        int z_Checksum=0;
+        for (int i = rec.length()-1; i >= 0 ; i--) {
+            z_Checksum^=(byte)s.charAt(i);
+        }
+        writeTxt("$");
+        writeTxt(s);
+        writeTxt("*"+Convert.unsigned2hex(z_Checksum,2)+"\r\n");
+    }
        
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
     public void writeRecord(GPSRecord s) {
-//        Example of NMEA $GPGGA sentence:
-//
-//            $GPGGA,121505,4807.038,N,01131.324,E,1,08,0,9,133.4,M,46.9,M,,*42
-//
-//            - $GPGGA is the NMEA 0183 sentence ID for the GPS fix data.
-//            - 121505 is the fix taken at 12:15:05 UTC
-//            - 4807.038, N is latitude 48d 07.038'N
-//            - 01131.324,E is longitude 11d 31.324'E
-//            - 1 is the fix quality. The fix quality can have a value between 0 and 3, defined as follows
-//                - 0=no fix
-//                - 1=GPS or standard positioning service (SPS) fix
-//                - 2=DGPS fix
-//                - 3=Precise positioning service (PPS) fix
-//            - 08 is the number of SV's being tracked
-//            - 0.9 is the horizontal dilution of position (HDOP)
-//            - 133.4,M is the altitude, in meters, above mean sea level
-//            - 46.9,M is the height of the geoid (mean sea level) above the WGS84 ellipsoid
-//            - (empty field) is the DGPS station ID number
-//            - *42 is the checksum field
-            
-            
         boolean prevField=false;
+        Time t=null;
+        String timeStr="";
+        String dateStr;
         m_recCount++;
         if(activeFields!=null && m_Filter.doFilter(s)) {
             int z_Checksum;
     
             if((activeFields.utc!=0)) {
+                /* Write GPZDA sentence if time is available
+                 */
                 rec.setLength(0);
                 rec.append("GPZDA,");
                 
                 // DATE & TIME
-                Time t=utcTime(s.utc);
+                t=utcTime(s.utc);
                 
-                rec.append(
-                        (  t.hour<10?"0":"")+Convert.toString(t.hour)
+                timeStr=(  t.hour<10?"0":"")+Convert.toString(t.hour)
                         +(t.minute<10?"0":"")+Convert.toString(t.minute)
-                        +(t.second<10?"0":"")+Convert.toString(t.second)
-                );
+                        +(t.second<10?"0":"")+Convert.toString(t.second);
                 if(activeFields.milisecond!=0) {
-                    rec.append(".");
-                    rec.append((s.milisecond<100)?"0":"");
-                    rec.append((s.milisecond<10)?"0":"");
-                    rec.append(Convert.toString(s.milisecond));
-                } else {
-                    rec.append(".000");
-                }
+                    timeStr+="."+
+                    ((s.milisecond<100)?"0":"")
+                    +((s.milisecond<10)?"0":"")
+                    +(Convert.toString(s.milisecond));
+                } 
+                rec.append(timeStr);
                 rec.append(
                         ","
                         +(   t.day<10?"0":"")+Convert.toString(t.day)+","
@@ -166,15 +157,7 @@ public class GPSNMEAFile implements GPSFile {
                         +Convert.toString(t.year)+",,"
                 );
 
-                z_Checksum=0;
-                for (int i = rec.length()-1; i >= 0 ; i--) {
-                    z_Checksum^=(byte)rec.charAt(i);
-                }
-                rec.append("*");
-                rec.append(Convert.unsigned2hex(z_Checksum,2));
-                rec.append("\r\n");
-                writeTxt("$");
-                writeTxt(rec.toString());
+                writeNMEA(rec.toString());
             }
 
 
@@ -185,19 +168,7 @@ public class GPSNMEAFile implements GPSFile {
             rec.append("GPGGA,");
             
             if((activeFields.utc!=0)) {
-                Time t=utcTime(s.utc);
-                
-                rec.append(
-                (  t.hour<10?"0":"")+Convert.toString(t.hour)
-                +(t.minute<10?"0":"")+Convert.toString(t.minute)
-                +(t.second<10?"0":"")+Convert.toString(t.second)
-                );
-                if(activeFields.milisecond!=0) {
-                    rec.append(".");
-                    rec.append((s.milisecond<100)?"0":"");
-                    rec.append((s.milisecond<10)?"0":"");
-                    rec.append(Convert.toString(s.milisecond));
-                }
+                rec.append(timeStr);
             }
             rec.append(",");
 
@@ -326,15 +297,7 @@ public class GPSNMEAFile implements GPSFile {
                 rec.append(Convert.toString(s.dsta)); 
             }
             
-            z_Checksum=0;
-            for (int i = rec.length()-1; i >= 0 ; i--) {
-                z_Checksum^=(byte)rec.charAt(i);
-            }
-            rec.append("*");
-            rec.append(Convert.unsigned2hex(z_Checksum,2));
-            rec.append("\r\n");
-            writeTxt("$");
-            writeTxt(rec.toString());
+            writeNMEA(rec.toString());
             
 //            eg4. $GPRMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,ddmmyy,x.x,a*hh
 //            1    = UTC of position fix
@@ -354,20 +317,8 @@ public class GPSNMEAFile implements GPSFile {
             rec.append("GPRMC,");
             
             if((activeFields.utc!=0)) {
-                Time t=utcTime(s.utc);
-                
 //              1    = UTC of position fix
-                rec.append(
-                (  t.hour<10?"0":"")+Convert.toString(t.hour)
-                +(t.minute<10?"0":"")+Convert.toString(t.minute)
-                +(t.second<10?"0":"")+Convert.toString(t.second)
-                );
-                if(activeFields.milisecond!=0) {
-                    rec.append(".");
-                    rec.append((s.milisecond<100)?"0":"");
-                    rec.append((s.milisecond<10)?"0":"");
-                    rec.append(Convert.toString(s.milisecond));
-                }
+                rec.append(timeStr);
             }
             
 //          2    = Data status (V=navigation receiver warning)
@@ -455,8 +406,6 @@ public class GPSNMEAFile implements GPSFile {
             rec.append(",");
             if((activeFields.utc!=0)) {
                 // DATE & TIME
-                Time t=utcTime(s.utc);
-                
                 rec.append(
                          (   t.day<10?"0":"")+Convert.toString(t.day)
                         +( t.month<10?"0":"")+Convert.toString(t.month)
@@ -465,16 +414,7 @@ public class GPSNMEAFile implements GPSFile {
             }
             rec.append(",,");
     
-            z_Checksum=0;
-            for (int i = rec.length()-1; i >= 0 ; i--) {
-                z_Checksum^=(byte)rec.charAt(i);
-            }
-            rec.append("*");
-            rec.append(Convert.unsigned2hex(z_Checksum,2));
-            rec.append("\r\n");
-            writeTxt("$");
-            writeTxt(rec.toString());
-            
+            writeNMEA(rec.toString());
         } // activeFields!=null
     }
         
