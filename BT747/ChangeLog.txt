@@ -1,3 +1,7 @@
+Version 0.77.18
+* Updates to gpx format
+* Setting saved on ppc (wince) OS.  Must click on 'set values button' in 'File' tab for the moment to save the settings.
+
 Version 0.77.17
 * Modified display of device version and application SW version for better information.
 * Added NMEA output format (readable by locr SW).

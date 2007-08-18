@@ -105,3 +105,8 @@ A script is proposed in run_linux.sh.  There are complementary files in the Linu
 In the Linux directory, you may need to modify swserial.properties.
 Currently it maps the USB connection to '/dev/ttyUSB0' so clicking on USB in the application
 will try to open that device where your GPS datalogger is most likely located.
+
+
+============ Contributors ======================
+Mario De Weerd (main coder)
+Herbert Geus
