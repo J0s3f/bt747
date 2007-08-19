@@ -28,6 +28,7 @@ import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.MainWindow;
+import waba.ui.MessageBox;
 import waba.ui.ProgressBar;
 import waba.util.Vector;
 
@@ -953,6 +954,9 @@ public class GPSstate implements Thread {
             m_logFileCard=Card;
         } catch (Exception e) {
 //            Vm.debug("Exception new log create");
+        }
+        if((m_logFile==null)|| !m_logFile.isOpen()) {
+            (new MessageBox("Error","Could not open|"+fileName)).popupBlockingModal();                                   
         }
     }
     

@@ -1,3 +1,6 @@
+Version 0.77.21
+* Added popup message when file for download could not be opened.
+
 Version 0.77.20
 * Added new tab with some functions frequently requested on forums (fix freq.) and some not
   available on other tabs (hot/warm/cold start).
