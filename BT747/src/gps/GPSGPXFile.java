@@ -381,10 +381,10 @@ public class GPSGPXFile extends GPSFile {
                     
                     // No comments, so commented out.
                     rec.append("<cmt>");
-                    rec.append("<![CDATA[");
                     rec.append(fixStr+","+rcrStr+","+hdopStr+","+nsatStr);
+//                    rec.append("<![CDATA[");
 //                    //              <pdop> xsd:decimal </pdop> [0..1] ?
-                    rec.append("]]>");
+//                    rec.append("]]>");
                     rec.append("</cmt>\r\n");
                 }
                 if(m_isWayType) {
