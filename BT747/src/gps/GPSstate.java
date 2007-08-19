@@ -213,7 +213,7 @@ public class GPSstate implements Thread {
         }
     }
     
-    /** Set the loggin format of the device.<br>
+    /** Set the logging format of the device.<br>
      * Must be followed by eraseLog.
      * @param p_logFormat The format to set.
      */
@@ -236,7 +236,19 @@ public class GPSstate implements Thread {
                 +","+Convert.unsigned2hex(logFormat,8)					
         );
     }
-    
+
+    public void doHotStart() {
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_HOT_START_STR);
+    }
+    public void doWarmStart() {
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_WARM_START_STR);
+    }
+    public void doColdStart() {
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_COLD_START_STR);
+    }
+    public void doFullColdStart() {
+        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_FULL_COLD_START_STR);
+    }
     
     public void getDeviceInfo() {
         sendNMEA("PMTK"+BT747_dev.PMTK_Q_VERSION_STR
