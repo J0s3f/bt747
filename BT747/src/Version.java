@@ -28,9 +28,9 @@
 public final class Version {
 
    /** Build number (timestamp with format yyyyMMddHHmmssSSS). */
-   public static final long BUILD = 20070818220707378L; //automatically set during Ant compilation!
+   public static final long BUILD = 20070819123603836L; //automatically set during Ant compilation!
    /** Release date of this version (date format dd.MM.yyyy). */
-   public static final String DATE = "18.08.2007"; //automatically set during Ant compilation!
+   public static final String DATE = "19.08.2007"; //automatically set during Ant compilation!
    /**
     * Version number of format x.y.z, with
     * <ul>

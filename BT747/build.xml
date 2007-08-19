@@ -2,6 +2,24 @@
 <project name="BT747" basedir="." default="all">
 
     <property name="superwaba_root" value="c:\SuperWabaSDK"/>
+	<!-- Name of the main class -->
+	<property name="mainClass" value="BT747"/>
+	<!-- Main dirs -->
+    <property name="srcDir" value="src"/>
+    <property name="buildDir" value="build"/>
+    <property name="libDir" value="lib"/>
+
+	<!-- Other files/dirs in lib dir -->
+
+  	<property name="proguardDir" value="${libDir}/proguard"/>
+    <property name="proguardLib" value="${superwaba_root}/utils/tools/obfuscators/proguard.jar"/>	
+	
+	<!-- Others -->
+	<property name="java12compiler" value="${java12home}/bin/javac"/>
+
+	<!-- Allow any user specific values to override the defaults -->
+    <property file="build.properties"/>
+	
 	<!-- Application classpath -->
 	<path id="classpath">
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
@@ -47,8 +65,8 @@
     <target name="updatedate" depends="initdate" description="increase build number and set release date">
         <!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
     	<replaceregexp file="src/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
-    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="DATE = [^a]*;" replace='DATE = "${DATE_DE}";'/>	
-    	<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\n]*" replace='SET DT=${DATE_TIME}'/>	
+    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";'/>	
+    	<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${DATE_TIME}'/>	
     </target>
     	
 	<!-- Compile -->
@@ -80,16 +98,26 @@
 	</target>
 
 
-	<target name="proguard" >
+	<target name="proguard" depends="jar">
+		<move file="${buildDir}/${ant.project.name}.jar" tofile="${buildDir}/${ant.project.name}_unopt.jar"/>
 	
-		<java dir="build" jar="${superwaba_root}/utils/tools/obfuscators/proguard.jar" fork="true">
-		   <arg line="-injars ${ant.project.name}.jar"/>
+		<java classname="proguard.ProGuard" fork="yes">
+            <classpath>
+              <pathelement path="${proguardLib}"/>
+            </classpath>
+			<arg line="-injars ${buildDir}/${ant.project.name}_unopt.jar"/>
+			<arg line="-outjars ${buildDir}/${ant.project.name}.jar"/>
+			<arg line="-libraryjars ${java.home}/lib/rt.jar${path.separator}${superwaba_root}/lib/SuperWaba.jar"/>
+			<arg line="-keep public class ${mainClass}"/>
+			<arg line="-allowaccessmodification"/>
+			<arg line="-overloadaggressively"/>
+			<arg line="-defaultpackage a"/>
 		</java>
 	
 	</target>
 
 	<!-- Execute WARP -->
-	<target name="warp" depends="jar">
+	<target name="warp" depends="proguard">
 	
 		<java dir="build" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
 			<arg value="c"/>
@@ -178,6 +206,7 @@
 			<fileset dir="build">
 				<include name="${ant.project.name}.prc"/>
 				<include name="**/*.exe"/>
+				<include name="*.exe"/>
 			</fileset>
 			
 		</move>
@@ -194,13 +223,32 @@
 				<include name="*.CAB"/>
 				<include name="*.ini"/>
 				<include name="*.bat"/>
+				<include name="*.exe"/>
 			</fileset>
 			
 		</move>
 		
 	</target>
-	
-	<target name="all" depends="all-exegen-cab"/>
+
+	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
+	<target name="all-exegen-types" depends="exegen, exegen-exe, exegen-cab, all-warp">
+		
+		<move todir="dist">
+			
+			<fileset dir="build">
+				<include name="${ant.project.name}.prc"/>
+				<include name="**/*.exe"/>
+				<include name="*.CAB"/>
+				<include name="*.ini"/>
+				<include name="*.bat"/>
+				<include name="*.exe"/>
+			</fileset>
+			
+		</move>
+		
+	</target>
+
+	<target name="all" depends="all-exegen-types"/>
 
 	<target name="warp-help">
 		<java dir="build" classname="superwaba.tools.Warp" fork="true" classpathref="utils">

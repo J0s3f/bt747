@@ -112,8 +112,6 @@ public class GPSLogFile extends Container {
                 if(Settings.platform.startsWith("Palm")) {
                     m_settings.setCard(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
                 }
-                // TODO: Do this in settings itself.
-                m_settings.saveSettings();
             } else if (event.target==m_btDefaultSettings) {
                 m_settings.defaultSettings();
                 updateValues();

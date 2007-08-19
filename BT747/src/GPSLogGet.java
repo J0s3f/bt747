@@ -81,17 +81,17 @@ public class GPSLogGet extends Container {
     private Label       m_UsedLabel;
     private Label       m_RecordsLabel;
 
-    GPSFilter m_Filter;
+    GPSFilter[] m_Filters;
 
     public int dateToUTCepoch1970(final Date d) {
         return (d.getJulianDay()-JULIAN_DAY_1_1_1970)*24*60*60;
     }
     
-    public GPSLogGet(GPSstate state, ProgressBar pb, AppSettings s, GPSFilter filter) {
+    public GPSLogGet(GPSstate state, ProgressBar pb, AppSettings s, GPSFilter[] filters) {
         m_GPSstate = state;
         m_pb= pb;
         m_appSettings= s;
-        m_Filter=filter;
+        m_Filters=filters;
     } 
     
 
@@ -245,9 +245,11 @@ public class GPSLogGet extends Container {
                     ext=".nmea";
                 }
                     
-                m_Filter.setStartDate(dateToUTCepoch1970(m_StartDate));
-                m_Filter.setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
-                gpsFile.setFilter(m_Filter);
+                for (int i = 0; i < m_Filters.length; i++) {
+                    m_Filters[i].setStartDate(dateToUTCepoch1970(m_StartDate));
+                    m_Filters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
+                }
+                gpsFile.setFilters(m_Filters);
                 // TODO: should get logformat associated with inputfile
                 gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard());
                 /* TODO: Recover the logFormat from a file or so */
