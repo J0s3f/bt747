@@ -78,28 +78,29 @@ public class BT747 extends MainWindow {
     };
     /** Tab Panel container - Logger control/configuration */
     private static GPSLogFormat  m_GPSLogCtrl;
-    private static int C_LOG_CTRL_IDX= 0;
+    private static final int C_LOG_CTRL_IDX= 0;
     
-    private GPSFilter m_GPSFilter=new GPSFilter();
+    private static final int C_NBR_FILTERS=2;
+    private GPSFilter[] m_GPSFilter=new GPSFilter[2];
  
     /** Tab Panel container - Log information */
     private static GPSLogReason  m_GPSLogInfo;
-    private static int C_GPS_LOGINFO_IDX= 1;    
+    private static final int C_GPS_LOGINFO_IDX= 1;    
     /** Tab Panel container - Log retrieval */
     private static GPSLogGet   m_GPSLogGet;
-    private static int C_GPS_LOGGET_IDX= 2;
+    private static final int C_GPS_LOGGET_IDX= 2;
     /** Tab Panel container - Log file settings (name,...) */
     private static GPSLogFile  m_GPSLogFile;
-    private static int C_GPS_FILECTRL_IDX= 3;
+    private static final int C_GPS_FILECTRL_IDX= 3;
     /** Tab Panel container - Log filter settings (other than date)*/
     private static GPSLogFilter m_GPSLogFilter;
-    private static int C_GPS_FILTERCTRL_IDX= 4;
+    private static final int C_GPS_FILTERCTRL_IDX= 4;
     /** Tab Panel container - Connection control/configuration */
     private static GPSconctrl  m_GPSconctrl;
-    private static int C_GPS_CONCTRL_IDX= 5;
+    private static final int C_GPS_CONCTRL_IDX= 5;
     /** Tab Panel container - Flash settings */
     private static GPSFlashOption  m_GPSFlash;
-    private static int C_GPS_FLASH_IDX= 6;
+    private static final int C_GPS_FLASH_IDX= 6;
     
     // TODO: Settings should just refer to function and not need to be instantiated
     private static AppSettings m_settings=new AppSettings();
@@ -113,6 +114,9 @@ public class BT747 extends MainWindow {
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle("i-Blue 747/757 / BT-Q1000");
         Settings.setUIStyle(Settings.Flat);
+        for (int i = 0; i < m_GPSFilter.length; i++) {
+            m_GPSFilter[i]=new GPSFilter();
+        }
     }
     
     public void onStart() {
@@ -143,7 +147,7 @@ public class BT747 extends MainWindow {
         m_TabPanel.setPanel(C_GPS_LOGINFO_IDX,m_GPSLogInfo = new GPSLogReason(m_GPSstate));
         m_TabPanel.setPanel(C_GPS_LOGGET_IDX,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar,m_settings,m_GPSFilter));
         m_TabPanel.setPanel(C_GPS_FILECTRL_IDX,m_GPSLogFile = new GPSLogFile(m_settings));
-        m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX,m_GPSLogFilter = new GPSLogFilter(m_GPSFilter));
+        m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX,m_GPSLogFilter = new GPSLogFilter(m_settings, m_GPSFilter));
         m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,m_GPSconctrl = new GPSconctrl(m_GPSstate));
         m_TabPanel.setPanel(C_GPS_FLASH_IDX,m_GPSFlash = new GPSFlashOption(m_GPSstate));
         //		m_TabPanel.setPanel(1,dataEdit = new dataEdit());
@@ -266,4 +270,7 @@ public class BT747 extends MainWindow {
         }
     }
     
+    public void onExit() {
+        m_settings.saveSettings();
+    }
 }

@@ -1,3 +1,8 @@
+Version 0.77.19
+* On ppc (wincs), settings now saved on program exit.
+* Log point filtering now separated for waypts and trkpts.
+* Optimizing with proguard (resulting in smaller object files)
+
 Version 0.77.18
 * Updates to gpx format
 * Setting saved on ppc (wince) OS.  Must click on 'set values button' in 'File' tab for the moment to save the settings.

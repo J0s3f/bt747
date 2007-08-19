@@ -54,6 +54,20 @@ public class AppSettings implements gps.settings {
     private final static int C_CARD_SIZE=4;
     private final static int C_TIMEOFFSETHOURS_IDX=C_CARD_IDX+C_CARD_SIZE;
     private final static int C_TIMEOFFSETHOURS_SIZE=4;
+    private final static int C_WAYPT_RCR_IDX=C_TIMEOFFSETHOURS_IDX+C_TIMEOFFSETHOURS_SIZE;
+    private final static int C_WAYPT_RCR_SIZE=4;
+    private final static int C_WAYPT_VALID_IDX=C_WAYPT_RCR_IDX+C_WAYPT_RCR_SIZE;
+    private final static int C_WAYPT_VALID_SIZE=4;
+    private final static int C_TRKPT_RCR_IDX=C_WAYPT_VALID_IDX+C_WAYPT_VALID_SIZE;
+    private final static int C_TRKPT_RCR_SIZE=4;
+    private final static int C_TRKPT_VALID_IDX=C_TRKPT_RCR_IDX+C_TRKPT_RCR_SIZE;
+    private final static int C_TRKPT_VALID_SIZE=4;
+    private final static int C_NEXT_IDX=C_TRKPT_VALID_IDX+C_TRKPT_VALID_SIZE;
+    
+    // Next lines just to add new items faster using replace functions
+    private final static int C_NEXT_SIZE=4;
+    private final static int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
+    
     private final static int C_DEFAULT_DEVICE_TIMEOUT=3500; // ms
 
     private String baseDirPath;
@@ -97,11 +111,14 @@ public class AppSettings implements gps.settings {
         mVersion=getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
         if((mVersion.length()<2)||(mVersion.charAt(1)!='.')) {
             defaultSettings();
-            setStringOpt("0.01",C_VERSION_IDX, C_VERSION_SIZE);
+        } else if( Convert.toFloat(mVersion)<0.02f) {
+            // Added filter defaults in version 0.02
+            setFilterDefaults();
         } else {
             //defaultSettings();
             getSettings();
         }
+        setStringOpt("0.02",C_VERSION_IDX, C_VERSION_SIZE);
     }
     
     public void defaultSettings() {
@@ -129,7 +146,16 @@ public class AppSettings implements gps.settings {
         setStartupOpenPort(false);
         setChunkSize(waba.sys.Settings.onDevice?0x200:0x10000);
         setDownloadTimeOut( C_DEFAULT_DEVICE_TIMEOUT );
+        setFilterDefaults();
+ 
         getSettings();
+    }
+    
+    private void setFilterDefaults() {
+        setTrkPtValid(0xFFFFFFFE);
+        setTrkPtRCR(0xFFFFFFFF);
+        setWayPtValid(0xFFFFFFFE);
+        setWayPtRCR(0x00000008);
     }
     
     public void saveSettings() {
@@ -178,6 +204,10 @@ public class AppSettings implements gps.settings {
         ;
     }
 
+    private final void setIntOpt(final int src, final int idx, final int size) {
+        setOpt(Convert.unsigned2hex(src,size),idx,size);
+    }
+
     private final void setStringOpt(final String src, final int idx, final int size) {
         Settings.appSettings=
             Settings.appSettings.substring(0,idx)
@@ -190,7 +220,7 @@ public class AppSettings implements gps.settings {
         ;
     }
 
-    private String getStringOpt(final int idx, final int size) {
+    private final String getStringOpt(final int idx, final int size) {
         String s;
         int i;
         if(idx+size>Settings.appSettings.length()) {
@@ -215,7 +245,7 @@ public class AppSettings implements gps.settings {
 	 * @param portnbr The portnbr to set.
 	 */
 	public void setPortnbr(int portnbr) {
-	    setOpt(Convert.unsigned2hex(portnbr,8),C_PORTNBR_IDX,C_PORTNBR_SIZE);
+	    setIntOpt(portnbr,C_PORTNBR_IDX,C_PORTNBR_SIZE);
 	}
     /**
      * @return The default baud rate
@@ -227,7 +257,7 @@ public class AppSettings implements gps.settings {
 	 * @param Baud The Baud rate to set as a default.
 	 */
 	public void setBaudRate(int Baud) {
-        setOpt(Convert.unsigned2hex(Baud,8),C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
+        setIntOpt(Baud,C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
 	}
 
     /**
@@ -245,7 +275,7 @@ public class AppSettings implements gps.settings {
      * @param ChunkSize The ChunkSize  to set as a default.
      */
     public void setChunkSize(int ChunkSize) {
-        setOpt(Convert.unsigned2hex(ChunkSize,8),C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE);
+        setIntOpt(ChunkSize,C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE);
     }
 
     /**
@@ -262,7 +292,7 @@ public class AppSettings implements gps.settings {
     * @param DownloadTimeOut The DownloadTimeOut  to set as a default.
     */
    public void setDownloadTimeOut(int DownloadTimeOut) {
-       setOpt(Convert.unsigned2hex(DownloadTimeOut,C_DOWNLOADTIMEOUT_SIZE),C_DOWNLOADTIMEOUT_IDX, C_DOWNLOADTIMEOUT_SIZE);
+       setIntOpt(DownloadTimeOut,C_DOWNLOADTIMEOUT_IDX, C_DOWNLOADTIMEOUT_SIZE);
    }
 
    /**
@@ -279,7 +309,7 @@ public class AppSettings implements gps.settings {
     * @param Card The Card  to set as a default.
     */
    public void setCard(int Card) {
-       setOpt(Convert.unsigned2hex(Card,C_CARD_SIZE),C_CARD_IDX, C_CARD_SIZE);
+       setIntOpt(Card,C_CARD_IDX, C_CARD_SIZE);
    }
    
    /**
@@ -296,7 +326,7 @@ public class AppSettings implements gps.settings {
     * @param timeOffsetHours The TIMEOFFSETHOURS  to set as a default.
     */
    public void setTimeOffsetHours(int timeOffsetHours) {
-       setOpt(Convert.unsigned2hex(timeOffsetHours,C_TIMEOFFSETHOURS_SIZE),C_TIMEOFFSETHOURS_IDX, C_TIMEOFFSETHOURS_SIZE);
+       setIntOpt(timeOffsetHours,C_TIMEOFFSETHOURS_IDX, C_TIMEOFFSETHOURS_SIZE);
    }
    
 	public boolean getStartupOpenPort() {
@@ -351,4 +381,47 @@ public class AppSettings implements gps.settings {
     public String getReportFileBasePath() {
         return this.baseDirPath+"/"+reportFileBase;
     }
+
+    public int getWayPtRCR() {
+        return Conv.hex2Int(getStringOpt(C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE));
+    }
+    /**
+     * @param value The default value for opening the port.
+     */
+    public void setWayPtRCR(int value) {
+        setIntOpt(value,C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
+    }
+    
+    public int getWayPtValid() {
+        return Conv.hex2Int(getStringOpt(C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE));
+    }
+    /**
+     * @param value The default value for opening the port.
+     */
+    public void setWayPtValid(int value) {
+        setIntOpt(value,C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
+    }
+
+    public int getTrkPtRCR() {
+        return Conv.hex2Int(getStringOpt(C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE));
+    }
+
+    /**
+     * @param value The default value for opening the port.
+     */
+    public void setTrkPtRCR(int value) {
+        setIntOpt(value,C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
+    }
+    
+    public int getTrkPtValid() {
+        return Conv.hex2Int(getStringOpt(C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE));
+    }
+    /**
+     * @param value The default value for opening the port.
+     */
+    public void setTrkPtValid(int value) {
+        setIntOpt(value,C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
+    }
+
+
 }
