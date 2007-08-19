@@ -27,7 +27,7 @@ import waba.util.Date;
 /**Class to write a KML file.
  * @author Mario De Weerd
  */
-public class GPSKMLFile implements GPSFile {
+public class GPSKMLFile extends GPSFile {
     File m_File=null;
     int m_recCount;
     private GPSRecord activeFields;
@@ -43,9 +43,9 @@ public class GPSKMLFile implements GPSFile {
         // TODO Auto-generated constructor stub
     }
 
-    GPSFilter m_Filter=null;
-    public void setFilter(GPSFilter filter) {
-        m_Filter=filter;
+    GPSFilter[] m_Filters=null;
+    public void setFilters(GPSFilter[] filters) {
+        m_Filters=filters;
     }
     
     /* (non-Javadoc)
@@ -301,7 +301,7 @@ public class GPSKMLFile implements GPSFile {
         boolean prevField=false;
         m_recCount++;
         if(activeFields!=null) {
-            if(m_Filter.doFilter(s)) {
+            if(m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
                 String rec="";
                 
                 rec+="<Placemark>\r\n";

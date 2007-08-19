@@ -27,7 +27,7 @@ import waba.util.Date;
 /**Class to write a GPX file.
  * @author Mario De Weerd
  */
-public class GPSGPXFile implements GPSFile {
+public class GPSGPXFile extends GPSFile {
     private File m_File=null;
     private int m_recCount;
     private int m_nbrOfPassesToGo;
@@ -36,6 +36,7 @@ public class GPSGPXFile implements GPSFile {
     private GPSRecord activeFields;
     private boolean m_newTrack=true;
     private StringBuffer rec=new StringBuffer(1024);  // reused stringbuffer
+    private int m_currentFilter;
     
     /**
      * 
@@ -45,10 +46,10 @@ public class GPSGPXFile implements GPSFile {
         // TODO Auto-generated constructor stub
     }
 
-    GPSFilter m_Filter=null;
+    GPSFilter[] m_Filters=null;
     
-    public void setFilter(GPSFilter filter) {
-        m_Filter=filter;
+    public void setFilters(GPSFilter[] filters) {
+        m_Filters=filters;
     }
 
     /* (non-Javadoc)
@@ -68,6 +69,7 @@ public class GPSGPXFile implements GPSFile {
             m_recCount=0;
             m_nbrOfPassesToGo=1;
             m_pttype="way";
+            m_currentFilter=GPSFilter.C_WAYPT_IDX;
             m_isWayType=true;
             writeFileHeader();
             writeDataHeader();
@@ -83,6 +85,7 @@ public class GPSGPXFile implements GPSFile {
             m_nbrOfPassesToGo--;
             m_pttype="trk";
             m_isWayType=false;
+            m_currentFilter=GPSFilter.C_TRKPT_IDX;
             writeDataHeader();
             return true;
         } else {
@@ -159,7 +162,7 @@ public class GPSGPXFile implements GPSFile {
 
         m_recCount++;
         if(activeFields!=null) {
-            if(!m_Filter.doFilter(s)) {
+            if(!m_Filters[m_currentFilter].doFilter(s)) {
                 // filtered
                 if(!m_isWayType&&!m_newTrack) {
                     m_newTrack=true;

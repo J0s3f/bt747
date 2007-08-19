@@ -25,17 +25,17 @@ package gps;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public interface GPSFile {
-    public void initialiseFile(final String basename, final String ext, final int Card);
+public abstract class GPSFile {
+    public void initialiseFile(final String basename, final String ext, final int Card) {};
 
-    public void writeLogFmtHeader(GPSRecord f);
+    public void writeLogFmtHeader(GPSRecord f) {};
     
-    public void setFilter(GPSFilter filter);
+    public void setFilters(GPSFilter[] filters){};
     
-    public void writeRecord(GPSRecord r);
+    public void writeRecord(GPSRecord r){};
     
-    public void finaliseFile();
+    public void finaliseFile(){};
     
-    public boolean nextPass();
+    public boolean nextPass(){return false;};
 
 }

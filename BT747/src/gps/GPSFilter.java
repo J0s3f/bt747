@@ -18,6 +18,9 @@ public class GPSFilter {
     private int endDate=0x7FFFFFFF; // Seconds since 1/1/1970
     private int validMask=0xFFFFFFFE; // Valid mask
     private int rcrMask=0xFFFFFFFF;
+    
+    public final static int C_TRKPT_IDX=0;
+    public final static int C_WAYPT_IDX=1;
 
     public int getEndDate() {
         return endDate;
