@@ -27,7 +27,7 @@ import waba.util.Date;
 /**Class to write a GPX file.
  * @author Mario De Weerd
  */
-public class GPSNMEAFile implements GPSFile {
+public class GPSNMEAFile extends GPSFile {
     private File m_File=null;
     private int m_recCount;
     private GPSRecord activeFields;
@@ -42,10 +42,10 @@ public class GPSNMEAFile implements GPSFile {
         // TODO Auto-generated constructor stub
     }
 
-    GPSFilter m_Filter=null;
+    GPSFilter[] m_Filters=null;
     
-    public void setFilter(GPSFilter filter) {
-        m_Filter=filter;
+    public void setFilters(GPSFilter[] filters) {
+        m_Filters=filters;
     }
 
     /* (non-Javadoc)
@@ -128,7 +128,7 @@ public class GPSNMEAFile implements GPSFile {
         String timeStr="";
         String dateStr;
         m_recCount++;
-        if(activeFields!=null && m_Filter.doFilter(s)) {
+        if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             int z_Checksum;
     
             if((activeFields.utc!=0)) {

@@ -27,7 +27,7 @@ import waba.util.Date;
 /**Class to write a PLT file (OZI).
  * @author Mario De Weerd
  */
-public class GPSPLTFile implements GPSFile {
+public class GPSPLTFile extends GPSFile {
     File m_File=null;
     int m_recCount;
     private GPSRecord activeFields;
@@ -40,10 +40,10 @@ public class GPSPLTFile implements GPSFile {
         // TODO Auto-generated constructor stub
     }
     
-    GPSFilter m_Filter=null;
+    GPSFilter[] m_Filters=null;
     
-    public void setFilter(GPSFilter filter) {
-        m_Filter=filter;
+    public void setFilters(GPSFilter[] filters) {
+        m_Filters=filters;
     }
     
     public boolean nextPass() {
@@ -145,7 +145,7 @@ public class GPSPLTFile implements GPSFile {
         m_recCount++;
         //rec+=Convert.toString(m_recCount);
         
-        if(activeFields!=null && m_Filter.doFilter(s)) {
+        if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             String rec="";
 
 //          Field 1 : Latitude - decimal degrees.
