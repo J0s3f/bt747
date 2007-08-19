@@ -1,5 +1,5 @@
 Version 0.77.19
-* On ppc (wincs), settings now saved on program exit.
+* On ppc (wince), settings now saved on program exit.
 * Log point filtering now separated for waypts and trkpts.
 * Optimizing with proguard (resulting in smaller object files)
 
