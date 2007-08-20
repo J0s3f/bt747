@@ -1,5 +1,9 @@
 Version 0.77.21
 * Added popup message when file for download could not be opened.
+* GPX: filename now includes date.  If 'one file per day' is checked, then there are as many
+  files as there are days logged.
+* Resolved bug concerning retrieving settings when upgrading.
+* The trkpts in the gpx file now also include the comments.
 
 Version 0.77.20
 * Added new tab with some functions frequently requested on forums (fix freq.) and some not

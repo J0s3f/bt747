@@ -52,7 +52,7 @@ public class GPSCSVFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(final String basename, final String ext, final int Card) {
+    public void initialiseFile(final String basename, final String ext, final int Card, boolean oneFilePerDay) {
         // TODO Auto-generated method stub
         m_File=new File(basename+ext, File.DONT_OPEN, Card);
         if(m_File.exists()) {
