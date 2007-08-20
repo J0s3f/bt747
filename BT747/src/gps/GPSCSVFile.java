@@ -19,56 +19,15 @@
 //********************************************************************  
 package gps;
 
-import waba.io.File;
 import waba.sys.Convert;
 import waba.sys.Time;
-import waba.util.Date;
 
 /**Class to write a CSV file.
  * @author Mario De Weerd
  */
 public class GPSCSVFile extends GPSFile {
-    File m_File=null;
-    int m_recCount;
-    private GPSRecord activeFields;
-    
-    /**
-     * 
-     */
-    public GPSCSVFile() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    GPSFilter[] m_Filter=null;
-    
-    public void setFilters(GPSFilter[] filters) {
-        m_Filter=filters;
-    }
-    
-    public boolean nextPass() {
-        return false;
-    }
-    /* (non-Javadoc)
-     * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
-     */
-    public void initialiseFile(final String basename, final String ext, final int Card, boolean oneFilePerDay) {
-        // TODO Auto-generated method stub
-        m_File=new File(basename+ext, File.DONT_OPEN, Card);
-        if(m_File.exists()) {
-            m_File.delete();
-        }
-        m_File=new File(basename+ext,File.CREATE, Card);
-        if(!m_File.isOpen()) {
-            waba.sys.Vm.debug("Could not open "+basename+ext);
-            m_File=null;
-        } else {
-            m_recCount=0;
-        }
-    }
-    
     public void writeLogFmtHeader(final GPSRecord f) {
-        activeFields= new GPSRecord(f);
+        super.writeLogFmtHeader(f);
         //INDEX,RCR,DATE,TIME,VALID,LATITUDE,N/S,LONGITUDE,E/W,HEIGHT,SPEED,
         writeTxt("INDEX");
         if(activeFields.rcr!=0) {
@@ -124,37 +83,14 @@ public class GPSCSVFile extends GPSFile {
         //"NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
     }
     
-    private final static int DAYS_BETWEEN_1970_1983=4748;
-    public Time utcTime(int utc_int) {
-        long utc=utc_int&0xFFFFFFFFL;
-        Time t=new Time();
-        t.second=(int)utc%60;
-        utc/=60;
-        t.minute=(int)utc%60;
-        utc/=60;
-        t.hour=(int)utc%24;
-        utc/=24;
-        // Now days since 1/1/1970
-        Date d= new Date(1,1,1983); //Minimum = 1983
-        d.advance(((int)utc)-DAYS_BETWEEN_1970_1983);
-        t.year=d.getYear();
-        t.month=d.getMonth();
-        t.day=d.getDay();
-        return t;
-    }
-    
-    private void writeTxt(final String s) {
-        m_File.writeBytes(s.getBytes(),0,s.length());
-    }
-    
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
     public void writeRecord(GPSRecord s) {
+        super.writeRecord(s);
         boolean prevField=false;
-        m_recCount++;
         
-        if(activeFields!=null && m_Filter[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
+        if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             String rec=Convert.toString(m_recCount);
             if(activeFields.rcr!=0) {
                 rec+=",";
@@ -284,18 +220,6 @@ public class GPSCSVFile extends GPSFile {
             rec+="\r\n";
             writeTxt(rec);
         } // activeFields!=null
-    }
-    
-    /* (non-Javadoc)
-     * @see gps.GPSFile#FinaliseFile()
-     */
-    public void finaliseFile() {
-        // TODO Auto-generated method stub
-        if(m_File!=null) {
-            m_File.close();
-            m_File=null;
-        }
-        
     }
     
 }

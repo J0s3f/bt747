@@ -19,53 +19,12 @@
 //********************************************************************  
 package gps;
 
-import waba.io.File;
 import waba.sys.Convert;
-import waba.sys.Time;
-import waba.util.Date;
 
 /**Class to write a PLT file (OZI).
  * @author Mario De Weerd
  */
 public class GPSPLTFile extends GPSFile {
-    File m_File=null;
-    int m_recCount;
-    private GPSRecord activeFields;
-    
-    /**
-     * 
-     */
-    public GPSPLTFile() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    GPSFilter[] m_Filters=null;
-    
-    public void setFilters(GPSFilter[] filters) {
-        m_Filters=filters;
-    }
-    
-    public boolean nextPass() {
-        return false;
-    }
-    /* (non-Javadoc)
-     * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
-     */
-    public void initialiseFile(final String basename, final String ext, final int Card, boolean oneFilePerDay) {
-        // TODO Auto-generated method stub
-        m_File=new File(basename+ext,File.DONT_OPEN,Card);
-        if(m_File.exists()) {
-            m_File.delete();
-        }
-        m_File=new File(basename+ext,File.CREATE, Card);
-        if(!m_File.isOpen()) {
-            waba.sys.Vm.debug("Could not open "+basename+ext);
-            m_File=null;
-        } else {
-            m_recCount=0;
-        }
-    }
     
 //    Track File (.plt) 
 //    Line 1 : File type and version information
@@ -89,7 +48,7 @@ public class GPSPLTFile extends GPSFile {
 
     
     public void writeLogFmtHeader(final GPSRecord f) {
-        activeFields= new GPSRecord(f);
+        super.writeLogFmtHeader(f);
         writeTxt("BT747 Track Point File http://sf.net/projects/bt747 Version 0.77\r\n"
                 +"WGS 84\r\n"
                 +"Altitude is in feet\r\n"
@@ -100,28 +59,6 @@ public class GPSPLTFile extends GPSFile {
         //"NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
     }
     
-    private final static int DAYS_BETWEEN_1970_1983=4748;
-    public Time utcTime(int utc_int) {
-        long utc=utc_int&0xFFFFFFFFL;
-        Time t=new Time();
-        t.second=(int)utc%60;
-        utc/=60;
-        t.minute=(int)utc%60;
-        utc/=60;
-        t.hour=(int)utc%24;
-        utc/=24;
-        // Now days since 1/1/1970
-        Date d= new Date(1,1,1983); //Minimum = 1983
-        d.advance(((int)utc)-DAYS_BETWEEN_1970_1983);
-        t.year=d.getYear();
-        t.month=d.getMonth();
-        t.day=d.getDay();
-        return t;
-    }
-    
-    private void writeTxt(final String s) {
-        m_File.writeBytes(s.getBytes(),0,s.length());
-    }
     
 //  Trackpoint data 
     //
@@ -141,8 +78,8 @@ public class GPSPLTFile extends GPSFile {
      * @see gps.GPSFile#WriteRecord()
      */
     public void writeRecord(GPSRecord s) {
+        super.writeRecord(s);
         boolean prevField=false;
-        m_recCount++;
         //rec+=Convert.toString(m_recCount);
         
         if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
@@ -174,7 +111,6 @@ public class GPSPLTFile extends GPSFile {
 //          Field 6 : Date as a string 
 //          Field 7 : Time as a string
             if(activeFields.utc!=0) {
-                Time t=utcTime(s.utc);
                 rec+=Convert.toString(
                         (s.utc+(activeFields.milisecond!=0?(s.milisecond/1000.0):0))
                         /86400.0+25569,  //Days since 30/12/1899
@@ -201,18 +137,5 @@ public class GPSPLTFile extends GPSFile {
             rec+="\r\n";
             writeTxt(rec);
         } // activeFields!=null
-    }
-    
-    /* (non-Javadoc)
-     * @see gps.GPSFile#FinaliseFile()
-     */
-    public void finaliseFile() {
-        // TODO Auto-generated method stub
-        if(m_File!=null) {
-            m_File.close();
-            m_File=null;
-        }
-        
-    }
-    
+    }    
 }
