@@ -62,7 +62,9 @@ public class AppSettings implements gps.settings {
     private final static int C_TRKPT_RCR_SIZE=4;
     private final static int C_TRKPT_VALID_IDX=C_TRKPT_RCR_IDX+C_TRKPT_RCR_SIZE;
     private final static int C_TRKPT_VALID_SIZE=4;
-    private final static int C_NEXT_IDX=C_TRKPT_VALID_IDX+C_TRKPT_VALID_SIZE;
+    private final static int C_ONEFILEPERDAY_IDX=C_TRKPT_VALID_IDX+C_TRKPT_VALID_SIZE;
+    private final static int C_ONEFILEPERDAY_SIZE=1;
+    private final static int C_NEXT_IDX=C_ONEFILEPERDAY_IDX+C_ONEFILEPERDAY_SIZE;
     
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
@@ -111,14 +113,18 @@ public class AppSettings implements gps.settings {
         mVersion=getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
         if((mVersion.length()<2)||(mVersion.charAt(1)!='.')) {
             defaultSettings();
-        } else if( Convert.toFloat(mVersion)<0.02f) {
-            // Added filter defaults in version 0.02
-            setFilterDefaults();
-        } else {
-            //defaultSettings();
+        } else { 
             getSettings();
+            if( Convert.toFloat(mVersion)<0.02f) {
+                // Added filter defaults in version 0.02
+                setFilterDefaults();
+            } 
+            if( Convert.toFloat(mVersion)<0.03f) {
+                // Added one file per day functionality in 0.03
+                setOneFilePerDay(false);
+            }
         }
-        setStringOpt("0.02",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.03",C_VERSION_IDX, C_VERSION_SIZE);
     }
     
     public void defaultSettings() {
@@ -422,6 +428,17 @@ public class AppSettings implements gps.settings {
     public void setTrkPtValid(int value) {
         setIntOpt(value,C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
     }
+
+    public boolean getOneFilePerDay() {
+        return Conv.hex2Int(getStringOpt(C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE))==1;
+    }
+    /**
+     * @param value The default value for opening the port.
+     */
+    public void setOneFilePerDay(boolean value) {
+        setStringOpt((value?"1":"0"),C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
+    }
+    
 
 
 }

@@ -46,8 +46,8 @@ import gps.GpsEvent;
 public class GPSLogGet extends Container {
     GPSstate m_GPSstate;
 
-    Check m_chkLogOnOff;;
-    Check m_chkLogOverwriteStop;;
+    Check m_chkLogOnOff;
+    Check m_chkLogOverwriteStop;
 
     Button m_btStartDate;
     Date m_StartDate=new Date(1,1,1983);
@@ -73,6 +73,8 @@ public class GPSLogGet extends Container {
     };
     
     Check m_chkIncremental;
+
+    Check m_chkOneFilePerDay;
   
     final static int JULIAN_DAY_1_1_1970=18264;   
     ProgressBar m_pb;
@@ -107,12 +109,14 @@ public class GPSLogGet extends Container {
         add(m_chkIncremental = new Check("Incremental"), RIGHT, SAME); //$NON-NLS-1$
         m_chkIncremental.setChecked(true);
         add(m_chkLogOverwriteStop = new Check("Log overwrite(/stop) when full"), LEFT, AFTER); //$NON-NLS-1$
-        add(new Label("Start date"), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label("Date range"), LEFT, AFTER); //$NON-NLS-1$
         add(m_btStartDate = new Button(m_StartDate.getDate()), AFTER, SAME); //$NON-NLS-1$
         //m_btStartDate.setMode(Edit.DATE);
-        add(m_btEndDate = new Button(m_EndDate.getDate()), SAME, AFTER); //$NON-NLS-1$
+        add(m_btEndDate = new Button(m_EndDate.getDate()), RIGHT, SAME); //$NON-NLS-1$
         //m_btEndDate.setMode(Edit.DATE);
-        add(new Label("End date"), BEFORE, SAME); 
+        add(m_chkOneFilePerDay = new Check("One file per day"), LEFT, AFTER);
+        m_chkOneFilePerDay.setChecked(m_appSettings.getOneFilePerDay());
+
         add(m_cbTimeOffsetHours=new ComboBox(offsetStr),RIGHT, SAME);
         int offsetIdx=m_appSettings.getTimeOffsetHours()+12;
         if(offsetIdx>24) {
@@ -136,6 +140,7 @@ public class GPSLogGet extends Container {
 
         add(m_UsedLabel=new Label(   ""),LEFT, AFTER+3);
         add(m_RecordsLabel=new Label(""),LEFT, AFTER+3);
+        
     }
 
     public void updateButtons() {
@@ -204,6 +209,8 @@ public class GPSLogGet extends Container {
             } else if (event.target == m_chkLogOverwriteStop) {
                     m_GPSstate.setLogOverwrite(m_chkLogOverwriteStop.getChecked());
                 m_GPSstate.getLogOverwrite();
+            } else if (event.target == m_chkOneFilePerDay) {
+                m_appSettings.setOneFilePerDay(m_chkLogOverwriteStop.getChecked());
             } else if (event.target == m_btEndDate) {
                 if (cal == null) {
                     cal = new Calendar();
@@ -251,7 +258,8 @@ public class GPSLogGet extends Container {
                 }
                 gpsFile.setFilters(m_Filters);
                 // TODO: should get logformat associated with inputfile
-                gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard());
+                gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard(),
+                        m_appSettings.getOneFilePerDay());
                 /* TODO: Recover the logFormat from a file or so */
                 BT747LogConvert lc=new BT747LogConvert();
                 lc.setTimeOffset(m_appSettings.getTimeOffsetHours()*3600);
