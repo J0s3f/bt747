@@ -19,63 +19,21 @@
 //********************************************************************  
 package gps;
 
-import waba.io.File;
 import waba.sys.Convert;
 import waba.sys.Time;
-import waba.util.Date;
 
 /**Class to write a KML file.
  * @author Mario De Weerd
  */
 public class GPSKMLFile extends GPSFile {
-    File m_File=null;
-    int m_recCount;
-    private GPSRecord activeFields;
-    
-    public boolean nextPass() {
-        return false;
-    }    
-    /**
-     * 
-     */
-    public GPSKMLFile() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+    private StringBuffer rec=new StringBuffer(1024);  // reused stringbuffer
 
-    GPSFilter[] m_Filters=null;
-    public void setFilters(GPSFilter[] filters) {
-        m_Filters=filters;
-    }
-    
-    /* (non-Javadoc)
-     * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
-     */
-    public void initialiseFile(final String basename, final String ext, final int Card, boolean oneFilePerDay) {
-        // TODO Auto-generated method stub
-        m_File=new File(basename+ext,File.DONT_OPEN,Card);
-        if(m_File.exists()) {
-            m_File.delete();
-        }
-        m_File=new File(basename+ext,File.CREATE,Card);
-        if(!m_File.isOpen()) {
-            waba.sys.Vm.debug("Could not open "+basename+ext);
-            m_File=null;
-        } else {
-            m_recCount=0;
-            writeHeader();
-        }
-    }
-    public void writeLogFmtHeader(final GPSRecord f) {
-        activeFields= new GPSRecord(f);
-    }
-    
-    public void writeHeader() {
+    public void writeFileHeader(final String name) {
         String header;
         header ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"+
         "<kml xmlns=\"http://earth.google.com/kml/2.0\">\r\n"+
         "<Document>\r\n"+
-        "  <name>i-Blue 747</name>\r\n"+
+        "  <name>i-Blue 747"+name+"</name>\r\n"+
         "    <open>1</open>\r\n"+
         "  <Style id=\"TimeStamp0\">\r\n"+
         "    <IconStyle>\r\n"+
@@ -271,80 +229,54 @@ public class GPSKMLFile extends GPSFile {
         writeTxt(header);
     }
     
-    private final static int DAYS_BETWEEN_1970_1983=4748;
-    public Time utcTime(final int utc_int) {
-        long utc=utc_int&0xFFFFFFFFL;
-        Time t=new Time();
-        t.second=(int)utc%60;
-        utc/=60;
-        t.minute=(int)utc%60;
-        utc/=60;
-        t.hour=(int)utc%24;
-        utc/=24;
-        // Now days since 1/1/1970
-        Date d= new Date(1,1,1983); //Minimum = 1983
-        d.advance(((int)utc)-DAYS_BETWEEN_1970_1983);
-        t.year=d.getYear();
-        t.month=d.getMonth();
-        t.day=d.getDay();
-        return t;
-    }
-    
-    private void writeTxt(final String s) {
-        m_File.writeBytes(s.getBytes(),0,s.length());
-    }
-    
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
     public void writeRecord(GPSRecord s) {
-        boolean prevField=false;
-        m_recCount++;
+        super.writeRecord(s);
+
         if(activeFields!=null) {
+            rec.setLength(0);
             if(m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
-                String rec="";
+                rec.append("<Placemark>\r\n");
                 
-                rec+="<Placemark>\r\n";
-                
-                rec+="<name>";
+                rec.append("<name>");
                 if(activeFields.utc!=0) {
-                    Time t=utcTime(s.utc);
-                    
-                    rec+="TIME: "
+                    rec.append("TIME: "
                         +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
                         +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
                         +(t.second<10?"0":"")+Convert.toString(t.second)
-                        ;
+                        );
                 } else {
-                    rec+="IDX: ";
-                    rec+=Convert.toString(m_recCount);
+                    rec.append("IDX: ");
+                    rec.append(Convert.toString(m_recCount));
                 }
-                rec+="</name>\r\n";
+                rec.append("</name>\r\n");
                 
                 
             if((activeFields.utc!=0)) {
-                rec+="<TimeStamp><when>";
+                rec.append("<TimeStamp><when>");
                 if(activeFields.utc!=0) {
                     Time t=utcTime(s.utc);
                     
-                    rec+=Convert.toString(t.year)+"-"
+                    rec.append(Convert.toString(t.year)+"-"
                     +( t.month<10?"0":"")+Convert.toString(t.month)+"-"
                     +(   t.day<10?"0":"")+Convert.toString(t.day)+"T"
                     +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
                     +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
                     +(t.second<10?"0":"")
-                    ;
+                    );
                     if(activeFields.milisecond==0) {
-                        rec+=Convert.toString(t.second);
+                        rec.append(Convert.toString(t.second));
                     } else {
-                        rec+=Convert.toString((float)t.second+s.milisecond/1000.0,3);
+                        rec.append(Convert.toString((float)t.second+s.milisecond/1000.0,3));
                     }
-                    rec+="Z";
+                    rec.append("Z");
                 }
-                rec+="</when></TimeStamp>\r\n";
+                rec.append("</when></TimeStamp>\r\n");
             }
 
-                rec+="<styleUrl>";
+                rec.append("<styleUrl>");
                 if(activeFields.rcr!=0) {
                     String style="";
                     if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
@@ -362,159 +294,159 @@ public class GPSKMLFile extends GPSFile {
                     if(style.length()!=1) {
                         style="M";
                     }
-                    rec+="#Style";
-                    rec+=style;
+                    rec.append("#Style");
+                    rec.append(style);
                 }
-                rec+="</styleUrl>\r\n";
+                rec.append("</styleUrl>\r\n");
                 
                 
-                rec+="<Point>\n";
-                rec+="<coordinates>";
+                rec.append("<Point>\r\n");
+                rec.append("<coordinates>");
                 if(activeFields.longitude!=0) {
-                    rec+=Convert.toString(s.longitude,6);
+                    rec.append(Convert.toString(s.longitude,6));
                 } else {
-                    rec+="0";
+                    rec.append("0");
                 }
-                rec+=",";
+                rec.append(",");
                 if(activeFields.latitude!=0) {
-                    rec+=Convert.toString(s.latitude,6);
+                    rec.append(Convert.toString(s.latitude,6));
                 } else {
-                    rec+="0";
+                    rec.append("0");
                 }
-                rec+=",";
+                rec.append(",");
                 if(activeFields.height!=0) {
-                    rec+=Convert.toString(s.height,3);
+                    rec.append(Convert.toString(s.height,3));
                 }
-                rec+="</coordinates>";
-                rec+="</Point>\n";
+                rec.append("</coordinates>");
+                rec.append("</Point>\r\n");
                 
-                rec+="<description>";
-                rec+="<![CDATA[";
+                rec.append("<description>");
+                rec.append("<![CDATA[");
                 if(activeFields.rcr!=0) {
-                    rec+="RCR: ";
+                    rec.append("RCR: ");
                     if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
-                        rec+="T";
+                        rec.append("T");
                     }
                     if((s.rcr&BT747_dev.RCR_SPEED_MASK)!=0) {
-                        rec+="S";
+                        rec.append("S");
                     }
                     if((s.rcr&BT747_dev.RCR_DISTANCE_MASK)!=0) {
-                        rec+="D";
+                        rec.append("D");
                     }
                     if((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
-                        rec+="B";
+                        rec.append("B");
                     }
                 }
 //                if(activeFields.utc!=0) {
 //                    Time t=utcTime(s.utc);
 //                    
-//                    rec+="<br />DATE: ";
-//                    rec+=Convert.toString(t.year)+"/"
+//                    rec.append("<br />DATE: ");
+//                    rec.append(Convert.toString(t.year)+"/"
 //                    +( t.month<10?"0":"")+Convert.toString(t.month)+"/"
 //                    +(   t.day<10?"0":"")+Convert.toString(t.day)+"<br />"
 //                    +"TIME: "
 //                    +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
 //                    +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
 //                    +(t.second<10?"0":"")+Convert.toString(t.second)
-//                    ;
+//                    );
 //                }
                 if(activeFields.valid!=0) {
-                    rec+="<br />VALID: ";
+                    rec.append("<br />VALID: ");
                     switch(s.valid) {
                     case 0x0001: 
-                        rec+="No fix";
+                        rec.append("No fix");
                         break;
                     case 0x0002:
-                        rec+= "SPS";
+                        rec.append( "SPS");
                         break;
                     case 0x0004:
-                        rec+="DGPS";
+                        rec.append("DGPS");
                         break;
                     case 0x0008:
-                        rec+="PPS";
+                        rec.append("PPS");
                         break;
                     case 0x0010:
-                        rec+="RTK";
+                        rec.append("RTK");
                         break;
                     case 0x0020:
-                        rec+="FRTK";
+                        rec.append("FRTK");
                         break;
                     case 0x0040:
-                        rec+= "Estimated mode";
+                        rec.append( "Estimated mode");
                         break;
                     case 0x0080:
-                        rec+= "Manual input mode";
+                        rec.append( "Manual input mode");
                         break;
                     case 0x0100:
-                        rec+= "Simulator mode";
+                        rec.append( "Simulator mode");
                         break;
                     default:
-                        rec+="Unknown mode";
+                        rec.append("Unknown mode");
                     }
                 }
                 if(activeFields.latitude!=0) {
-                    rec+="<br />LATITUDE: ";
+                    rec.append("<br />LATITUDE: ");
                     if(s.latitude>=0) {
-                        rec+=Convert.toString(s.latitude,6);
-                        rec+=" N";
+                        rec.append(Convert.toString(s.latitude,6));
+                        rec.append(" N");
                     } else {
-                        rec+=Convert.toString(-s.latitude,6);
-                        rec+=" S";
+                        rec.append(Convert.toString(-s.latitude,6));
+                        rec.append(" S");
                     }
                 }
                 if(activeFields.longitude!=0) {
-                    rec+="<br />LONGITUDE: ";
+                    rec.append("<br />LONGITUDE: ");
                     if(s.longitude>=0) {
-                        rec+=Convert.toString(s.longitude,6);
-                        rec+=" E";
+                        rec.append(Convert.toString(s.longitude,6));
+                        rec.append(" E");
                     } else {
-                        rec+=Convert.toString(-s.longitude,6);
-                        rec+=" W";
+                        rec.append(Convert.toString(-s.longitude,6));
+                        rec.append(" W");
                     }
                 }
                 if(activeFields.height!=0) {
-                    rec+="<br />HEIGHT: ";
-                    rec+=Convert.toString(s.height,3)+" m";
+                    rec.append("<br />HEIGHT: ");
+                    rec.append(Convert.toString(s.height,3)+" m");
                 }
                 if(activeFields.speed!=0) {
-                    rec+="<br />SPEED: ";
-                    rec+=Convert.toString(s.speed,3)+" km/h";
+                    rec.append("<br />SPEED: ");
+                    rec.append(Convert.toString(s.speed,3)+" km/h");
                 }
                 if(activeFields.heading!=0) {
-                    rec+="<br />HEADING: ";
-                    rec+=Convert.toString(s.heading);
+                    rec.append("<br />HEADING: ");
+                    rec.append(Convert.toString(s.heading));
                 }
                 if(activeFields.dsta!=0) {
-                    rec+="<br />DSTA: ";
-                    rec+=Convert.toString(s.dsta); 
+                    rec.append("<br />DSTA: ");
+                    rec.append(Convert.toString(s.dsta)); 
                 }
                 if(activeFields.dage!=0) {
-                    rec+="<br />DAGE: ";
-                    rec+=Convert.toString(s.dage); 
+                    rec.append("<br />DAGE: ");
+                    rec.append(Convert.toString(s.dage)); 
                 }
                 if(activeFields.pdop!=0) {
-                    rec+="<br />PDOP: ";
-                    rec+=Convert.toString(s.pdop/100.0,2); 
+                    rec.append("<br />PDOP: ");
+                    rec.append(Convert.toString(s.pdop/100.0,2)); 
                 }
                 if(activeFields.hdop!=0) {
-                    rec+="<br />HDOP: ";
-                    rec+=Convert.toString(s.hdop/100.0,2); 
+                    rec.append("<br />HDOP: ");
+                    rec.append(Convert.toString(s.hdop/100.0,2)); 
                 }
                 if(activeFields.vdop!=0) {
-                    rec+="<br />VDOP: ";
-                    rec+=Convert.toString(s.vdop/100.0,2); 
+                    rec.append("<br />VDOP: ");
+                    rec.append(Convert.toString(s.vdop/100.0,2)); 
                 }
                 if(activeFields.distance!=0) {
-                    rec+="<br />DISTANCE: ";
-                    rec+=Convert.toString(s.distance,2); 
+                    rec.append("<br />DISTANCE: ");
+                    rec.append(Convert.toString(s.distance,2)); 
                 }
                 
-                rec+="]]>";
-                rec+="</description>";
-                rec+="</Placemark>\r\n";
+                rec.append("]]>");
+                rec.append("</description>");
+                rec.append("</Placemark>\r\n");
                 
-                rec+="\r\n";
-                writeTxt(rec);
+                rec.append("\r\n");
+                writeTxt(rec.toString());
                 
             }
         } // activeFields!=null
@@ -531,10 +463,8 @@ public class GPSKMLFile extends GPSFile {
             "</Document>\r\n"+
             "</kml>";
             writeTxt(footer);
-            m_File.close();
-            m_File=null;
         }
-        
+        super.finaliseFile();
     }
     
 }
