@@ -210,7 +210,7 @@ public class GPSLogGet extends Container {
                     m_GPSstate.setLogOverwrite(m_chkLogOverwriteStop.getChecked());
                 m_GPSstate.getLogOverwrite();
             } else if (event.target == m_chkOneFilePerDay) {
-                m_appSettings.setOneFilePerDay(m_chkLogOverwriteStop.getChecked());
+                m_appSettings.setOneFilePerDay(m_chkOneFilePerDay.getChecked());
             } else if (event.target == m_btEndDate) {
                 if (cal == null) {
                     cal = new Calendar();

@@ -217,8 +217,8 @@ public class AppSettings implements gps.settings {
     private final void setStringOpt(final String src, final int idx, final int size) {
         Settings.appSettings=
             Settings.appSettings.substring(0,idx)
-        +src.substring(0, (src.length()<(size-1))?src.length():size-1)
-        +"\0"
+        +src.substring(0, (src.length()<(size-1))?src.length():size)
+        +(src.length()<(size-1)?"\0":"")
         +((src.length()<(size-1))?new String(new byte[size-src.length()-1]):"")
         +((Settings.appSettings.length()>idx+size)?
                 Settings.appSettings.substring(idx+size,Settings.appSettings.length())
