@@ -58,6 +58,15 @@ public class GPSPLTFile extends GPSFile {
                 );
         //"NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
     }
+
+    /**
+     * Returns true when the record is used by the format.
+     * 
+     * Override parent class because only the trackpoint filter is used.
+     */
+    protected boolean recordIsNeeded(GPSRecord s) {
+        return m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+    }
     
     
 //  Trackpoint data 

@@ -1,3 +1,13 @@
+Version 0.77.23
+* Solved some bugs related to the file splitting per date & improved function to avoid files without elements.
+* Added feature to change log format without erasing the device.  The resulting log can
+  not be read by the original application delivered with the device, but this program
+  can read the log.
+* Worked around a problem when satellite specific data is logged (sid, ele, snr, azimuth).
+  The amount of data varies with the number of satelites - this is now covered for.
+  The data is not interpreted though and not written to any output file (sorry, but I do
+  not need that function and this is volunteering!).
+
 Version 0.77.22
 * All formats now have a filename including the date.
 * Method reuse in file output classes (resulting in smaller footprint)

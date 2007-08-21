@@ -67,25 +67,40 @@ public abstract class GPSFile {
         m_Filters=filters;
     };
     
+    /**
+     * Returns true when the record is used by the format.
+     * Checks all the filters by default.
+     *
+     */
+    protected boolean recordIsNeeded(GPSRecord s) {
+        boolean result=false;
+        for (int i = m_Filters.length-1; i >=0 ; i--) {
+            if(m_Filters[i].doFilter(s)) {
+                result=true;
+                break;
+            }
+        }
+        return result;
+    }
+    
     public void writeRecord(GPSRecord s){
         String extraExt;    // Extra extension for log file
         boolean newDate=false;
+        int dateref=0;
         
         m_recCount++;
 
         if(activeFields.utc!=0) {
             t=utcTime(s.utc);  // Initialisation needed later too!
             if(m_oneFilePerDay) {
-                int dateref=(t.year<<14)+(t.month<<7)+t.day; // year * 16384 + month * 128 + day
+                dateref=(t.year<<14)+(t.month<<7)+t.day; // year * 16384 + month * 128 + day
                 newDate=(dateref>m_prevdate);
-                if(newDate) {
-                    m_prevdate=dateref;
-                }
             }
         }
 
-        if((m_FirstRecord||((m_oneFilePerDay&&newDate)&&activeFields.utc!=0))) {
+        if((m_oneFilePerDay&&newDate)&&activeFields.utc!=0&&recordIsNeeded(s)) {
             boolean createOK=true;
+            m_prevdate=dateref;
             if(activeFields.utc!=0) {
                 if(t.year>2000) {
                     extraExt="-"+Convert.toString(t.year)

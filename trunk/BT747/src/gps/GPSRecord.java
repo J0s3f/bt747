@@ -36,7 +36,6 @@ public class GPSRecord {
     public int  hdop;
     public int  vdop;
     public int nsat;
-    public int sid;
     // TODO: Add structures for NSAT, ...
     public int  rcr;  /** Recorder reason */
     public int  milisecond;
@@ -62,7 +61,7 @@ public class GPSRecord {
         this.hdop= r.hdop;
         this.vdop= r.vdop;
         this.nsat= r.nsat;
-        this.sid= r.sid;
+        //this.sid= r.sid;
         // TODO: Add structures for NSAT, ...
         this.rcr= r.rcr;
         this.milisecond= r.milisecond;
