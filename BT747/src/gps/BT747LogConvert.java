@@ -33,6 +33,7 @@ public final class BT747LogConvert {
         int fileSize;
         int minRecordSize=16;
         int maxRecordSize=16;
+        int nsatrec=0;
         recCount=0;
         offset=0;
         nextAddrToRead=0;
@@ -64,22 +65,23 @@ public final class BT747LogConvert {
             int readResult;
             boolean continueInBuffer=true;
             int offsetInBuffer=0;
+            int newLogFormat;
 
             m_File.setPos(nextAddrToRead);
             if((nextAddrToRead&0xFFFF)==0) {
                 if(sizeToRead>=20) {
                     // Read header (20 bytes is enough)
                     readResult=m_File.readBytes(bytes, 0, 20);
-                int newLogFormat=   (0xFF&bytes[2])<<0
-                            |(0xFF&bytes[3])<<8
-                            |(0xFF&bytes[4])<<16
-                            |(0xFF&bytes[5])<<24;
-                if(newLogFormat!=logFormat) {
-                    logFormat=newLogFormat;
-                    gpsFile.writeLogFmtHeader(BT747LogConvert.getLogFormatRecord(logFormat));
-                    minRecordSize=BT747_dev.logRecordMinSize(logFormat);
-                    maxRecordSize=minRecordSize; /* TODO: Determine correct value */
-                }
+                    newLogFormat=   (0xFF&bytes[2])<<0
+                    |(0xFF&bytes[3])<<8
+                    |(0xFF&bytes[4])<<16
+                    |(0xFF&bytes[5])<<24;
+                    if(newLogFormat!=logFormat) {
+                        logFormat=newLogFormat;
+                        gpsFile.writeLogFmtHeader(BT747LogConvert.getLogFormatRecord(logFormat));
+                        minRecordSize=BT747_dev.logRecordMinSize(logFormat);
+                        maxRecordSize=BT747_dev.logRecordMaxSize(logFormat);
+                    }
                 }
                 nextAddrToRead+=0x200;
                 continueInBuffer=false;
@@ -116,7 +118,13 @@ public final class BT747LogConvert {
                         // There is a special operation here
                         switch(0xFF&bytes[offsetInBuffer+7]) {
                         case 0x02: // logBitMaskChange
-                         logFormat= value;
+                            newLogFormat= value;
+                            if(newLogFormat!=logFormat) {
+                                logFormat=newLogFormat;
+                                gpsFile.writeLogFmtHeader(BT747LogConvert.getLogFormatRecord(logFormat));
+                                minRecordSize=BT747_dev.logRecordMinSize(logFormat);
+                                maxRecordSize=BT747_dev.logRecordMaxSize(logFormat);
+                            }
                             break;
                         case 0x03: // log Period change
                             break;
@@ -153,9 +161,13 @@ public final class BT747LogConvert {
                                     &&((checkSum&0xFF)==(0xFF&bytes[indexInBuffer+1]))) {
                                 indexInBuffer+=2; // Point just past end ('*' and checksum).
                                 int recIdx=offsetInBuffer;
+
                                 offsetInBuffer=indexInBuffer;
                                 okInBuffer=indexInBuffer;
                                 foundRecord=true;
+                                int rcrIdx=offsetInBuffer-2-((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?2:0)+ 
+                                        (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?2:0)+ 
+                                        (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?8:0));
                                 recCount++;
                                 //System.out.println(recCount);
                                 foundAnyRecord=true;
@@ -271,19 +283,17 @@ public final class BT747LogConvert {
                                         (0xFF&bytes[recIdx++])<<0
                                         |(0xFF&bytes[recIdx++])<<8
                                         ;
+                                    nsatrec=gpsRec.nsat>>8;
                                 }
-                                if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) { 
-                                    gpsRec.sid=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        ;
+                                if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) {
                                 }
-                                if((logFormat&(1<<BT747_dev.FMT_ELEVATION_IDX))!=0) { 
+                                if((logFormat&(1<<BT747_dev.FMT_ELEVATION_IDX))!=0) {
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_AZIMUTH_IDX))!=0) { 
                                 }
                                 if((logFormat&(1<<BT747_dev.FMT_SNR_IDX))!=0) { 
                                 }
+                                recIdx=rcrIdx;  // Sat information limit is rcrIdx
                                 if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
                                     gpsRec.rcr=
                                         (0xFF&bytes[recIdx++])<<0
@@ -320,7 +330,7 @@ public final class BT747LogConvert {
                             } else {
                                 checkSum^=0xFF&bytes[indexInBuffer++];
                             }
-                        } while(!foundRecord&&(indexInBuffer<maxRecordSize));
+                        } while(!foundRecord&&(indexInBuffer<maxRecordSize+offsetInBuffer+2));
                         if(!foundRecord) {
                             // Should have found a re
                             checkForOnOff=false;
@@ -412,7 +422,7 @@ public final class BT747LogConvert {
             gpsRec.nsat=-1;
         }
         if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) { 
-            gpsRec.sid=-1;
+            //gpsRec.sid=-1;
         }
         if((logFormat&(1<<BT747_dev.FMT_ELEVATION_IDX))!=0) { 
             //gpsRec.=-1;
