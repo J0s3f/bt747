@@ -20,7 +20,6 @@
 package gps;
 
 import waba.sys.Convert;
-import waba.sys.Time;
 
 /**Class to write a KML file.
  * @author Mario De Weerd
@@ -257,8 +256,6 @@ public class GPSKMLFile extends GPSFile {
             if((activeFields.utc!=0)) {
                 rec.append("<TimeStamp><when>");
                 if(activeFields.utc!=0) {
-                    Time t=utcTime(s.utc);
-                    
                     rec.append(Convert.toString(t.year)+"-"
                     +( t.month<10?"0":"")+Convert.toString(t.month)+"-"
                     +(   t.day<10?"0":"")+Convert.toString(t.day)+"T"

@@ -69,9 +69,10 @@ public class GPSCSVFile extends GPSFile {
         if(activeFields.vdop!=0) {
             writeTxt(",VDOP");
         }
-        if(activeFields.vdop!=0) {
+        if(activeFields.nsat!=0) {
             writeTxt(",NSAT (USED/VIEW)");
         }
+        // SAT INFO NOT HANDLED
 //        if(activeFields.milisecond!=0) {
 //            writeTxt(",MILISECOND");
 //        }
@@ -81,6 +82,15 @@ public class GPSCSVFile extends GPSFile {
         writeTxt(",");
         writeTxt("\r\n");
         //"NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
+    }
+
+    /**
+     * Returns true when the record is used by the format.
+     * 
+     * Override parent class because only the trackpoint filter is used.
+     */
+    protected boolean recordIsNeeded(GPSRecord s) {
+        return m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
     }
     
     /* (non-Javadoc)

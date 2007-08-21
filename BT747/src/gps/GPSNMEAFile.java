@@ -36,7 +36,16 @@ public class GPSNMEAFile extends GPSFile {
         writeTxt(s);
         writeTxt("*"+Convert.unsigned2hex(z_Checksum,2)+"\r\n");
     }
-       
+
+    /**
+     * Returns true when the record is used by the format.
+     * 
+     * Override parent class because only the trackpoint filter is used.
+     */
+    protected boolean recordIsNeeded(GPSRecord s) {
+        return m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+    }
+
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */

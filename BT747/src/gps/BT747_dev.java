@@ -79,6 +79,7 @@ public final class BT747_dev {  // dev as in device
     public static final int FMT_VDOP_IDX =       11;
     /** Index of bit for log format setting */
     public static final int FMT_NSAT_IDX =       12;
+    public static final int FMT_MAX_SATS = 32; // Guess (maximum)
     /** Index of bit for log format setting */
     public static final int FMT_SID_IDX =        13;
     /** Index of bit for log format setting */
@@ -332,4 +333,18 @@ public final class BT747_dev {  // dev as in device
         } while((bits>>=1) != 0);
         return total;
     }    
+
+    static public final int logRecordMaxSize(final int p_logFormat) {
+        int cnt=0;
+        
+        if((p_logFormat&(1<<FMT_NSAT_IDX))!=0) {
+            cnt+=(p_logFormat&(1<<FMT_SID_IDX))!=0?logFmtByteSizes[FMT_SID_IDX]:0;
+            cnt+=(p_logFormat&(1<<FMT_ELEVATION_IDX))!=0?logFmtByteSizes[FMT_ELEVATION_IDX]:0;
+            cnt+=(p_logFormat&(1<<FMT_AZIMUTH_IDX))!=0?logFmtByteSizes[FMT_AZIMUTH_IDX]:0;
+            cnt+=(p_logFormat&(1<<FMT_SNR_IDX))!=0?logFmtByteSizes[FMT_SNR_IDX]:0;
+            cnt*=FMT_MAX_SATS-1;
+        }
+        return cnt+logRecordMinSize(p_logFormat);
+    }    
+
 }

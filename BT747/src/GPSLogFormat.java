@@ -17,6 +17,7 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.sys.Settings;
 import waba.ui.Button;
 import waba.ui.Check;
 import waba.ui.Container;
@@ -32,12 +33,13 @@ import gps.GpsEvent;
  * @author Mario De Weerd
  */
 public class GPSLogFormat extends Container {
-    static final int C_LOG_FMT_COUNT = 20;
+    private static final int C_LOG_FMT_COUNT = 20;
     /** The object that is used to communicate with the GPS device. */
     private GPSstate m_GPSstate;
     /** The tickboxes for the format items */
     private Check [] chkLogFmtItems =new Check[C_LOG_FMT_COUNT];
     /** The button that requests to change the log format of the device */
+    private Button m_btChangeFormatErase;
     private Button m_btChangeFormat;
     private Button m_btErase;
     
@@ -54,8 +56,6 @@ public class GPSLogFormat extends Container {
      * 
      */
     public void onStart () {
-        super.onStart();
-        
         // Add all tick buttons.
         for (int i=0;i<C_LOG_FMT_COUNT;i++) {
             chkLogFmtItems[i]= new Check(BT747_dev.logFmtItems[i]);
@@ -68,45 +68,55 @@ public class GPSLogFormat extends Container {
         setLogFormatControls();
         
         // Add button confirming change of log format.
-        m_btChangeFormat=new Button("Change Format");
-        add(m_btChangeFormat,LEFT,AFTER+5);
+        m_btChangeFormatErase=new Button("Set & erase");
+        add(m_btChangeFormatErase,LEFT,AFTER+5);
+        add(m_btChangeFormat=new Button("Set (no erase)"),CENTER,SAME);
         add(m_btErase=new Button("Erase"),RIGHT,SAME);
     }
+
+    private static final String C_msgWarningFormatIncompatibilityRisk =
+        "You are about to set the format of your device without " +
+        "erasing the log.|Some output formats (CSV) will not be possible.|" +
+        "Other programs may not be able to interpret" +
+        "the data in your device!!!!|" +
+        "Do you agree to this incompatibility?";
     
     /** Message warning user about impact of changing log format */
-    private static final String C_msgWarningFormat = 
+    private static final String C_msgWarningFormatAndErase = 
         "You are about to change the" +
         "|logging format of your device." +
-        "|" +
-        "|It is required to ERASE the log" +
-        "|content on the device after this" +
-        "|operation." +
+        "|and" +
+        "|ERASE the log" +
         "|" +
         "|LOG FORMAT CHANGE & ERASE?";
     /** Message warning the user again about the impact of a log format change */	        
-    private static final String C_msgWarningFormat2 =
+    private static final String C_msgWarningFormatAndErase2 =
         "This is your last chance to avoid" +
-        "|reformatting your device." +
+        "|erasing your device." +
         "|" +
         "|LOG FORMAT CHANGE & ERASE?";
     /** Message warning user about impact of changing log format */
-    private static final String C_msgEraseWarningFormat = 
+    private static final String C_msgEraseWarning = 
         "You are about to" +
         "|erase your device." +
         "|" +
         "|LOG ERASE?";
-    private static final String C_msgEraseWarningFormat2 =
+    private static final String C_msgEraseWarning2 =
         "This is your last chance to avoid" +
-        "|reformatting your device." +
+        "|erasing your device." +
         "|" +
         "|LOG ERASE?";
     
     /** Options for the first warning message */
-    private static final String[] C_YesCancel = {
+    private static final String[] C_EraseOrCancel = {
             "Erase", "Cancel"
     };
+    /** Options for the first warning message */
+    private static final String[] C_YesrCancel = {
+            "Yes", "Cancel"
+    };
     /** Options for the second warning message - reverse order on purpose */
-    private static final String[] C_CancelConfirm = {
+    private static final String[] C_CancelConfirmErase = {
             "Cancel", "Confirm erase"
     };
     /** String saying "Attention" (used multiple times) */
@@ -116,13 +126,13 @@ public class GPSLogFormat extends Container {
      * Warns about requirement to erase the log too.
      * TODO: Wait until change is finished
      */
-    public void changeLogFormat() {
+    private void changeLogFormatAndErase() {
         /** Object to open multiple message boxes */
         MessageBox m_mb; 
-        m_mb=new MessageBox(C_Attention,C_msgWarningFormat,C_YesCancel);
+        m_mb=new MessageBox(C_Attention,C_msgWarningFormatAndErase,C_EraseOrCancel);
         m_mb.popupBlockingModal();
         if(m_mb.getPressedButtonIndex()==0) {
-            m_mb=new MessageBox(C_Attention,C_msgWarningFormat2,C_CancelConfirm);
+            m_mb=new MessageBox(C_Attention,C_msgWarningFormatAndErase2,C_CancelConfirmErase);
             m_mb.popupBlockingModal();
             if(m_mb.getPressedButtonIndex()==1) {
                 // Set format and reset log
@@ -131,18 +141,35 @@ public class GPSLogFormat extends Container {
             }
         }
     }
-    
+
+    /** (User) request to change the log format.
+     * The log is not erased and may be incompatible with other applications
+     */
+    private void changeLogFormat() {
+        /** Object to open multiple message boxes */
+        MessageBox m_mb; 
+        m_mb=new MessageBox(C_Attention,
+                waba.sys.Convert.insertLineBreak(Settings.screenWidth-6,
+                        '|',
+                        getFontMetrics(getFont()),
+                        C_msgWarningFormatIncompatibilityRisk),C_YesrCancel);
+        m_mb.popupBlockingModal();
+        if(m_mb.getPressedButtonIndex()==0) {
+            m_GPSstate.setLogFormat(getSelectedLogFormat());
+        }
+    }
+
     /** (User) request to change the log format.
      * Warns about requirement to erase the log too.
      * TODO: Wait until change is finished
      */
-    public void eraseLogFormat() {
+    private void eraseLogFormat() {
         /** Object to open multiple message boxes */
         MessageBox m_mb; 
-        m_mb=new MessageBox(C_Attention,C_msgEraseWarningFormat,C_YesCancel);
+        m_mb=new MessageBox(C_Attention,C_msgEraseWarning,C_EraseOrCancel);
         m_mb.popupBlockingModal();
         if(m_mb.getPressedButtonIndex()==0) {
-            m_mb=new MessageBox(C_Attention,C_msgEraseWarningFormat2,C_CancelConfirm);
+            m_mb=new MessageBox(C_Attention,C_msgEraseWarning2,C_CancelConfirmErase);
             m_mb.popupBlockingModal();
             if(m_mb.getPressedButtonIndex()==1) {
                 // Erase log
@@ -152,7 +179,7 @@ public class GPSLogFormat extends Container {
     }
     
     /** Get the format set by the user in the user interface. */
-    public int getSelectedLogFormat() {
+    private int getSelectedLogFormat() {
         int bitMask=1;
         int logFormat=0;
         for (int i=0;i<C_LOG_FMT_COUNT;i++) {
@@ -168,7 +195,7 @@ public class GPSLogFormat extends Container {
      * This is typically done when the device responded with the current settings.
      * @param p_logFormat LogFormat to set
      */
-    public void updateLogFormat(final int p_logFormat) {
+    private void updateLogFormat(final int p_logFormat) {
         int bitMask=1;
         //if(GPS_DEBUG) {	waba.sys.Vm.debug("UPD:"+Convert.unsigned2hex(p_logFormat,2)+"\n");}
         
@@ -181,7 +208,7 @@ public class GPSLogFormat extends Container {
         setLogFormatControls();
     }
     
-    public void setLogFormatControls() {
+    private void setLogFormatControls() {
         boolean sidSet;
         sidSet=chkLogFmtItems[BT747_dev.FMT_SID_IDX].getChecked();
         chkLogFmtItems[BT747_dev.FMT_ELEVATION_IDX].setEnabled(sidSet);
@@ -192,10 +219,12 @@ public class GPSLogFormat extends Container {
     /** Handle events for this object.
      * @param event The event to be interpreted.
      */
-    public void onEvent( Event event ) {
+     public void onEvent( Event event ) {
         switch (event.type) {
         case ControlEvent.PRESSED:
-            if (event.target==m_btChangeFormat) {
+            if (event.target==m_btChangeFormatErase) {
+                changeLogFormatAndErase();
+            } else if (event.target==m_btChangeFormat) {
                 changeLogFormat();
             } else if (event.target==m_btErase) {
                 eraseLogFormat();
