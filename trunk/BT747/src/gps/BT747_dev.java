@@ -117,7 +117,7 @@ public final class BT747_dev {  // dev as in device
             2, //"HDOP",        // = 0x00400    // A
             2, //"VDOP",        // = 0x00800    // B
             2, //"NSAT",        // = 0x01000    // C
-            2, //"SID",     // = 0x02000    // D
+            4, //"SID",     // = 0x02000    // D
             2, //"ELEVATION",// = 0x04000   // E
             2, //"AZIMUTH", // = 0x08000    // F
             2, //"SNR",     // = 0x10000    // 10
@@ -337,8 +337,8 @@ public final class BT747_dev {  // dev as in device
     static public final int logRecordMaxSize(final int p_logFormat) {
         int cnt=0;
         
-        if((p_logFormat&(1<<FMT_NSAT_IDX))!=0) {
-            cnt+=(p_logFormat&(1<<FMT_SID_IDX))!=0?logFmtByteSizes[FMT_SID_IDX]:0;
+        if((p_logFormat&(1<<FMT_SID_IDX))!=0) {
+            cnt+=logFmtByteSizes[FMT_SID_IDX];
             cnt+=(p_logFormat&(1<<FMT_ELEVATION_IDX))!=0?logFmtByteSizes[FMT_ELEVATION_IDX]:0;
             cnt+=(p_logFormat&(1<<FMT_AZIMUTH_IDX))!=0?logFmtByteSizes[FMT_AZIMUTH_IDX]:0;
             cnt+=(p_logFormat&(1<<FMT_SNR_IDX))!=0?logFmtByteSizes[FMT_SNR_IDX]:0;

@@ -264,7 +264,6 @@ public class GPSLogGet extends Container {
                 BT747LogConvert lc=new BT747LogConvert();
                 lc.setTimeOffset(m_appSettings.getTimeOffsetHours()*3600);
                 lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile,m_appSettings.getCard());
-                gpsFile.finaliseFile();
                 Convert.toString(3);
             } else if (event.target == this) {
                 m_GPSstate.getLogCtrlInfo();

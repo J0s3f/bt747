@@ -70,7 +70,7 @@ public class GPSLogFormat extends Container {
         // Add button confirming change of log format.
         m_btChangeFormatErase=new Button("Set & erase");
         add(m_btChangeFormatErase,LEFT,AFTER+5);
-        add(m_btChangeFormat=new Button("Set (no erase)"),CENTER,SAME);
+        add(m_btChangeFormat=new Button("Set (no erase)"),AFTER+10,SAME);
         add(m_btErase=new Button("Erase"),RIGHT,SAME);
     }
 
