@@ -26,61 +26,81 @@ import waba.sys.Time;
  * @author Mario De Weerd
  */
 public class GPSCSVFile extends GPSFile {
-    public void writeLogFmtHeader(final GPSRecord f) {
-        super.writeLogFmtHeader(f);
+    private StringBuffer rec=new StringBuffer(1024);  // reused stringbuffer
+    private char fieldSep=',';
+    private char satSeperator=';';
+    
+    public boolean needPassToFindFieldsActivatedInLog() {
+        return true;
+    }
+    
+
+    protected void writeFileHeader(String Name) {
         //INDEX,RCR,DATE,TIME,VALID,LATITUDE,N/S,LONGITUDE,E/W,HEIGHT,SPEED,
         writeTxt("INDEX");
-        if(activeFields.rcr!=0) {
-            writeTxt(",RCR");
+        if(activeFileFields.rcr!=0) {
+            writeTxt(fieldSep+"RCR");
         }
-        if(activeFields.utc!=0) {
-            writeTxt(",DATE,TIME");
+        if(activeFileFields.utc!=0) {
+            writeTxt(fieldSep+"DATE"+fieldSep+"TIME");
         }
-        if(activeFields.valid!=0) {
-            writeTxt(",VALID");
+        if(activeFileFields.valid!=0) {
+            writeTxt(fieldSep+"VALID");
         }
-        if(activeFields.latitude!=0) {
-            writeTxt(",LATITUDE,N/S");
+        if(activeFileFields.latitude!=0) {
+            writeTxt(fieldSep+"LATITUDE"+fieldSep+"N/S");
         }
-        if(activeFields.longitude!=0) {
-            writeTxt(",LONGITUDE,E/W");
+        if(activeFileFields.longitude!=0) {
+            writeTxt(fieldSep+"LONGITUDE"+fieldSep+"E/W");
         }
-        if(activeFields.height!=0) {
-            writeTxt(",HEIGHT(m)");
+        if(activeFileFields.height!=0) {
+            writeTxt(fieldSep+"HEIGHT(m)");
         }
-        if(activeFields.speed!=0) {
-            writeTxt(",SPEED(km/h)");
+        if(activeFileFields.speed!=0) {
+            writeTxt(fieldSep+"SPEED(km/h)");
         }
-        if(activeFields.heading!=0) {
-            writeTxt(",HEADING");
+        if(activeFileFields.heading!=0) {
+            writeTxt(fieldSep+"HEADING");
         }
-        if(activeFields.dsta!=0) {
-            writeTxt(",DSTA");
+        if(activeFileFields.dsta!=0) {
+            writeTxt(fieldSep+"DSTA");
         }
-        if(activeFields.dage!=0) {
-            writeTxt(",DAGE");
+        if(activeFileFields.dage!=0) {
+            writeTxt(fieldSep+"DAGE");
         }
-        if(activeFields.pdop!=0) {
-            writeTxt(",PDOP");
+        if(activeFileFields.pdop!=0) {
+            writeTxt(fieldSep+"PDOP");
         }
-        if(activeFields.hdop!=0) {
-            writeTxt(",HDOP");
+        if(activeFileFields.hdop!=0) {
+            writeTxt(fieldSep+"HDOP");
         }
-        if(activeFields.vdop!=0) {
-            writeTxt(",VDOP");
+        if(activeFileFields.vdop!=0) {
+            writeTxt(fieldSep+"VDOP");
         }
-        if(activeFields.nsat!=0) {
-            writeTxt(",NSAT (USED/VIEW)");
+        if(activeFileFields.nsat!=0) {
+            writeTxt(fieldSep+"NSAT (USED/VIEW)");
         }
         // SAT INFO NOT HANDLED
-//        if(activeFields.milisecond!=0) {
-//            writeTxt(",MILISECOND");
+//        if(activeFileFields.milisecond!=0) {
+//            writeTxt(fieldSep+"MILISECOND");
 //        }
-        if(activeFields.distance!=0) {
-            writeTxt(",DISTANCE(m)");
+        if(activeFileFields.distance!=0) {
+            writeTxt(fieldSep+"DISTANCE(m)");
         }
-        writeTxt(",");
-        writeTxt("\r\n");
+        if(activeFileFields.sid!=null) {
+            writeTxt(fieldSep+"SAT INFO (SID");
+            if(activeFileFields.ele!=null) {
+                writeTxt("-ELE");
+            }
+            if(activeFileFields.azi!=null) {
+                writeTxt("-AZI");
+            }
+            if(activeFileFields.snr!=null) {
+                writeTxt("-SNR");
+            }
+            writeTxt(")");
+        }
+        writeTxt(fieldSep+"\r\n");
         //"NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
     }
 
@@ -101,134 +121,217 @@ public class GPSCSVFile extends GPSFile {
         boolean prevField=false;
         
         if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
-            String rec=Convert.toString(m_recCount);
+            rec.setLength(0);
+            rec.append(Convert.toString(m_recCount));
+            if(activeFileFields.rcr!=0) {
+                rec.append(fieldSep);
+            }
             if(activeFields.rcr!=0) {
-                rec+=",";
                 if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
-                    rec+="T";
+                    rec.append("T");
                 }
                 if((s.rcr&BT747_dev.RCR_SPEED_MASK)!=0) {
-                    rec+="S";
+                    rec.append("S");
                 }
                 if((s.rcr&BT747_dev.RCR_DISTANCE_MASK)!=0) {
-                    rec+="D";
+                    rec.append("D");
                 }
                 if((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
-                    rec+="B";
+                    rec.append("B");
                 }
             }
             if(activeFields.utc!=0) {
                 Time t=utcTime(s.utc);
                 
                 
-                rec+=","+Convert.toString(t.year)+"/"
+                rec.append(fieldSep+Convert.toString(t.year)+"/"
                 +( t.month<10?"0":"")+Convert.toString(t.month)+"/"
-                +(   t.day<10?"0":"")+Convert.toString(t.day)+","
+                +(   t.day<10?"0":"")+Convert.toString(t.day)+fieldSep
                 +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
                 +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-                +(t.second<10?"0":"");
+                +(t.second<10?"0":""));
                 if(activeFields.milisecond==0) {
-                    rec+=Convert.toString(t.second);
+                    rec.append(Convert.toString(t.second));
                 } else {
-                    rec+=Convert.toString((float)t.second+s.milisecond/1000.0,3);
+                    rec.append(Convert.toString((float)t.second+s.milisecond/1000.0,3));
                 }
+            } else if(activeFileFields.utc!=0) {
+                rec.append(fieldSep+fieldSep);
             }
+
             if(activeFields.valid!=0) {
-                rec+=",";
+                rec.append(fieldSep);
                 switch(s.valid) {
                 case 0x0001: 
-                    rec+="No fix";
+                    rec.append("No fix");
                     break;
                 case 0x0002:
-                    rec+= "SPS";
+                    rec.append( "SPS");
                     break;
                 case 0x0004:
-                    rec+="DGPS";
+                    rec.append("DGPS");
                     break;
                 case 0x0008:
-                    rec+="PPS";
+                    rec.append("PPS");
                     break;
                 case 0x0010:
-                    rec+="RTK";
+                    rec.append("RTK");
                     break;
                 case 0x0020:
-                    rec+="FRTK";
+                    rec.append("FRTK");
                     break;
                 case 0x0040:
-                    rec+= "Estimated mode";
+                    rec.append( "Estimated mode");
                     break;
                 case 0x0080:
-                    rec+= "Manual input mode";
+                    rec.append( "Manual input mode");
                     break;
                 case 0x0100:
-                    rec+= "Simulator mode";
+                    rec.append( "Simulator mode");
                     break;
                 default:
-                    rec+="Unknown mode";
+                    rec.append("Unknown mode");
                 }
+            } else if(activeFileFields.valid!=0) {
+                rec.append(fieldSep);
             }
+
             if(activeFields.latitude!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.latitude,6);
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.latitude,6));
                 if(s.latitude>=0) {
-                    rec+=",N";
+                    rec.append(fieldSep+"N");
                 } else {
-                    rec+=",S";
+                    rec.append(fieldSep+"S");
                 }
+            } else if(activeFileFields.latitude!=0) {
+                rec.append(fieldSep+fieldSep);
             }
             if(activeFields.longitude!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.longitude,6);
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.longitude,6));
                 if(s.longitude>=0) {
-                    rec+=",E";
+                    rec.append(fieldSep+"E");
                 } else {
-                    rec+=",W";
+                    rec.append(fieldSep+"W");
                 }
+            } else if(activeFileFields.longitude!=0) {
+                rec.append(fieldSep+fieldSep);
             }
             if(activeFields.height!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.height,3);
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.height,3));
+            } else if(activeFileFields.height!=0) {
+                rec.append(fieldSep);
             }
             if(activeFields.speed!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.speed,3);
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.speed,3));
+            } else if(activeFileFields.speed!=0) {
+                rec.append(fieldSep);
             }
             if(activeFields.heading!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.heading,6);
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.heading,6));
+            } else if(activeFileFields.heading!=0) {
+                rec.append(fieldSep);
             }
             if(activeFields.dsta!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.dsta); 
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.dsta)); 
+            } else if(activeFileFields.dsta!=0) {
+                rec.append(fieldSep);
             }
             if(activeFields.dage!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.dage); 
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.dage)); 
+            } else if(activeFileFields.dage!=0) {
+                rec.append(fieldSep);
             }
             if(activeFields.pdop!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.pdop/100.0,2); 
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.pdop/100.0,2)); 
+            } else if(activeFileFields.pdop!=0) {
+                rec.append(fieldSep);
             }
             if(activeFields.hdop!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.hdop/100.0,2); 
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.hdop/100.0,2)); 
+            } else if(activeFileFields.hdop!=0) {
+                rec.append(fieldSep);
             }
             if(activeFields.vdop!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.vdop/100.0,2); 
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.vdop/100.0,2)); 
+            } else if(activeFileFields.vdop!=0) {
+                rec.append(fieldSep);
             }
             if(activeFields.nsat!=0) {
-                rec+=",";
-                rec+=Convert.toString((s.nsat&0xFF00)>>8); 
-                rec+="("+Convert.toString(s.nsat&0xFF)+")"; 
+                rec.append(fieldSep);
+                rec.append(Convert.toString((s.nsat&0xFF00)>>8)); 
+                rec.append("("+Convert.toString(s.nsat&0xFF)+")"); 
+            } else if(activeFileFields.nsat!=0) {
+                rec.append(fieldSep);
             }
             if(activeFields.distance!=0) {
-                rec+=",";
-                rec+=Convert.toString(s.distance,2);
+                rec.append(fieldSep);
+                rec.append(Convert.toString(s.distance,2));
+            } else if(activeFileFields.distance!=0) {
+                rec.append(fieldSep);
             }
-            rec+=",";
-            rec+="\r\n";
-            writeTxt(rec);
+            if(activeFileFields.sid!=null) {
+                int j=0;
+                rec.append(fieldSep);
+                if(activeFields.sid!=null) {
+                    for(int i=s.sid.length-1;i>=0;i--) {
+                        if(j!=0) {
+                            rec.append(satSeperator);
+                        }
+                        if(s.sidinuse[j]) {
+                            rec.append('#');
+                        }
+                        if(s.sid[j]<10) {
+                            rec.append('0');
+                        }
+                        rec.append(s.sid[j]);
+                        if(activeFileFields.ele!=null) {
+                            rec.append('-');
+                            if(activeFields.ele!=null) {
+                                if(s.ele[j]<10) {
+                                    rec.append('0');
+                                }
+                                rec.append(s.ele[j]);
+                            }
+                        }
+                        if(activeFileFields.azi!=null) {
+                            rec.append('-');
+                            if(activeFields.azi!=null) {
+                                if(s.azi[j]<100) {
+                                    rec.append('0');
+                                    if(s.azi[j]<10) {
+                                        rec.append('0');
+                                    }
+                                }
+                                rec.append(s.azi[j]);
+                            }
+                        }
+                        if(activeFileFields.snr!=null) {
+                            rec.append('-');
+                            if(activeFields.snr!=null) {
+                                if(s.snr[j]<10) {
+                                    rec.append('0');
+                                }
+                                rec.append(s.snr[j]);
+                            }
+                        }
+                        j++;
+                    }
+                }
+            }
+            rec.append(fieldSep);
+                
+            rec.append("\r\n");
+            writeTxt(rec.toString());
         } // activeFields!=null
     }
     

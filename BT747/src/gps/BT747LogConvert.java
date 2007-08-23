@@ -19,9 +19,11 @@ import waba.sys.Vm;
 public final class BT747LogConvert {
     private File m_File=null;
     private long timeOffsetSeconds=0;
+    protected boolean passToFindFieldsActivatedInLog= false;
+    protected int activeFileFields=0;
     
     public final void parseFile(final GPSFile gpsFile) {
-        int logFormat=3;
+        int logFormat=0;
         GPSRecord gpsRec=new GPSRecord();
         final int C_BUF_SIZE=0x800;
         byte[] bytes=new byte[C_BUF_SIZE];
@@ -34,7 +36,8 @@ public final class BT747LogConvert {
         int minRecordSize=16;
         int maxRecordSize=16;
         int nsatrec=0;
-        recCount=0;
+        int satidx;
+        int idx;        recCount=0;
         offset=0;
         nextAddrToRead=0;
         fileSize=m_File.getSize();
@@ -78,7 +81,10 @@ public final class BT747LogConvert {
                     |(0xFF&bytes[5])<<24;
                     if(newLogFormat!=logFormat) {
                         logFormat=newLogFormat;
-                        gpsFile.writeLogFmtHeader(BT747LogConvert.getLogFormatRecord(logFormat));
+                        activeFileFields|=logFormat;
+                        if(!passToFindFieldsActivatedInLog) {
+                            gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
+                        }
                         minRecordSize=BT747_dev.logRecordMinSize(logFormat);
                         maxRecordSize=BT747_dev.logRecordMaxSize(logFormat);
                     }
@@ -121,7 +127,10 @@ public final class BT747LogConvert {
                             newLogFormat= value;
                             if(newLogFormat!=logFormat) {
                                 logFormat=newLogFormat;
-                                gpsFile.writeLogFmtHeader(BT747LogConvert.getLogFormatRecord(logFormat));
+                                activeFileFields|=logFormat;
+                                if(!passToFindFieldsActivatedInLog) {
+                                    gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
+                                }
                                 minRecordSize=BT747_dev.logRecordMinSize(logFormat);
                                 maxRecordSize=BT747_dev.logRecordMaxSize(logFormat);
                             }
@@ -161,170 +170,205 @@ public final class BT747LogConvert {
                                     &&((checkSum&0xFF)==(0xFF&bytes[indexInBuffer+1]))) {
                                 indexInBuffer+=2; // Point just past end ('*' and checksum).
                                 int recIdx=offsetInBuffer;
-
+                                
                                 offsetInBuffer=indexInBuffer;
                                 okInBuffer=indexInBuffer;
                                 foundRecord=true;
-                                int rcrIdx=offsetInBuffer-2-((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?2:0)+ 
+                                int rcrIdx=offsetInBuffer-2-((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?8:0)+ 
                                         (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?2:0)+ 
-                                        (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?8:0));
+                                        (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?2:0));
                                 recCount++;
                                 //System.out.println(recCount);
                                 foundAnyRecord=true;
                                 //TODO: Handle record (here or further)
                                 /* Handle record */
-                                if((logFormat&(1<<BT747_dev.FMT_UTC_IDX))!=0) {
-                                    gpsRec.utc=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        |(0xFF&bytes[recIdx++])<<16
-                                        |(0xFF&bytes[recIdx++])<<24
-                                        ;
-                                    gpsRec.utc+=timeOffsetSeconds;
-                                } else {
-                                    gpsRec.utc= 1000;  // Value after earliest date
+                                if(!passToFindFieldsActivatedInLog) {
+                                    // Only interpret fiels if not looking for logFormat changes only
+                                    if((logFormat&(1<<BT747_dev.FMT_UTC_IDX))!=0) {
+                                        gpsRec.utc=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            |(0xFF&bytes[recIdx++])<<16
+                                            |(0xFF&bytes[recIdx++])<<24
+                                            ;
+                                        gpsRec.utc+=timeOffsetSeconds;
+                                    } else {
+                                        gpsRec.utc= 1000;  // Value after earliest date
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_VALID_IDX))!=0) { 
+                                        gpsRec.valid=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            ;
+                                    } else {
+                                        gpsRec.valid = 0xFFFF;
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_LATITUDE_IDX))!=0) {
+                                        long latitude=
+                                            (0xFFL&bytes[recIdx++])<<0
+                                            |(0xFFL&bytes[recIdx++])<<8
+                                            |(0xFFL&bytes[recIdx++])<<16
+                                            |(0xFFL&bytes[recIdx++])<<24
+                                            |(0xFFL&bytes[recIdx++])<<32
+                                            |(0xFFL&bytes[recIdx++])<<40
+                                            |(0xFFL&bytes[recIdx++])<<48
+                                            |(0xFFL&bytes[recIdx++])<<56
+                                            ;
+                                        gpsRec.latitude=Convert.longBitsToDouble(latitude);
+                                        
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_LONGITUDE_IDX))!=0) { 
+                                        long longitude=
+                                            (0xFFL&bytes[recIdx++])<<0
+                                            |(0xFFL&bytes[recIdx++])<<8
+                                            |(0xFFL&bytes[recIdx++])<<16
+                                            |(0xFFL&bytes[recIdx++])<<24
+                                            |(0xFFL&bytes[recIdx++])<<32
+                                            |(0xFFL&bytes[recIdx++])<<40
+                                            |(0xFFL&bytes[recIdx++])<<48
+                                            |(0xFFL&bytes[recIdx++])<<56
+                                            ;
+                                        gpsRec.longitude=Convert.longBitsToDouble(longitude);
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_HEIGHT_IDX))!=0) { 
+                                        int height=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            |(0xFF&bytes[recIdx++])<<16
+                                            |(0xFF&bytes[recIdx++])<<24
+                                            ;
+                                        gpsRec.height=Convert.toFloatBitwise(height);
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_SPEED_IDX))!=0) {
+                                        int speed=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            |(0xFF&bytes[recIdx++])<<16
+                                            |(0xFF&bytes[recIdx++])<<24
+                                            ;
+                                        gpsRec.speed=Convert.toFloatBitwise(speed);
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_HEADING_IDX))!=0) { 
+                                        int heading=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            |(0xFF&bytes[recIdx++])<<16
+                                            |(0xFF&bytes[recIdx++])<<24
+                                            ;
+                                        gpsRec.heading=Convert.toFloatBitwise(heading);
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_DSTA_IDX))!=0) { 
+                                        gpsRec.dsta=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            ;
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_DAGE_IDX))!=0) { 
+                                        gpsRec.dage=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            |(0xFF&bytes[recIdx++])<<16
+                                            |(0xFF&bytes[recIdx++])<<24
+                                            ;
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_PDOP_IDX))!=0) { 
+                                        gpsRec.pdop=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            ;
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_HDOP_IDX))!=0) { 
+                                        gpsRec.hdop=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            ;
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_VDOP_IDX))!=0) { 
+                                        gpsRec.vdop=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            ;
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_NSAT_IDX))!=0) { 
+                                        gpsRec.nsat=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            ;
+                                    }
+                                    idx=0;
+                                    satidx=0;
+                                    if(rcrIdx-recIdx>0) {
+                                        idx=(0xFF&bytes[recIdx+2])<<0
+                                            |(0xFF&bytes[recIdx+3])<<8;
+                                        gpsRec.sid=new int[idx];
+                                        gpsRec.sidinuse=new boolean[idx];
+                                        gpsRec.ele=new int[idx];
+                                        gpsRec.azi=new int[idx];
+                                        gpsRec.snr=new int[idx];
+                                    }
+                                    while (idx-->0) {
+                                        if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) {
+                                            gpsRec.sid[satidx]=
+                                                (0xFF&bytes[recIdx++])<<0;
+                                            gpsRec.sidinuse[satidx]=
+                                                ((0xFF&bytes[recIdx++])<<0)!=0;
+                                            int satcnt=
+                                                (0xFF&bytes[recIdx++])<<0
+                                                |(0xFF&bytes[recIdx++])<<8;
+                                        }
+                                        if((logFormat&(1<<BT747_dev.FMT_ELEVATION_IDX))!=0) {
+                                            gpsRec.ele[satidx]=
+                                                (0xFF&bytes[recIdx++])<<0
+                                                |(0xFF&bytes[recIdx++])<<8
+                                                ;
+                                        }
+                                        if((logFormat&(1<<BT747_dev.FMT_AZIMUTH_IDX))!=0) { 
+                                            gpsRec.azi[satidx]=
+                                                (0xFF&bytes[recIdx++])<<0
+                                                |(0xFF&bytes[recIdx++])<<8
+                                                ;
+                                        }
+                                        if((logFormat&(1<<BT747_dev.FMT_SNR_IDX))!=0) { 
+                                            gpsRec.snr[satidx]=
+                                                (0xFF&bytes[recIdx++])<<0
+                                                |(0xFF&bytes[recIdx++])<<8
+                                                ;
+                                        }
+                                        satidx++;
+                                    }
+                                    recIdx=rcrIdx;  // Sat information limit is rcrIdx
+                                    if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
+                                        gpsRec.rcr=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            ;
+                                    } else
+                                    {
+                                        gpsRec.rcr=0xFFFF;  // For filter
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0) { 
+                                        gpsRec.milisecond=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            ;
+                                    } else {
+                                        gpsRec.milisecond=0;
+                                    }
+                                    if((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0) { 
+                                        long distance=
+                                            (0xFFL&bytes[recIdx++])<<0
+                                            |(0xFFL&bytes[recIdx++])<<8
+                                            |(0xFFL&bytes[recIdx++])<<16
+                                            |(0xFFL&bytes[recIdx++])<<24
+                                            |(0xFFL&bytes[recIdx++])<<32
+                                            |(0xFFL&bytes[recIdx++])<<40
+                                            |(0xFFL&bytes[recIdx++])<<48
+                                            |(0xFFL&bytes[recIdx++])<<56
+                                            ;
+                                        gpsRec.distance=Convert.longBitsToDouble(distance);
+                                    }
+                                    gpsFile.writeRecord(gpsRec);
                                 }
-                                if((logFormat&(1<<BT747_dev.FMT_VALID_IDX))!=0) { 
-                                    gpsRec.valid=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        ;
-                                } else {
-                                    gpsRec.valid = 0xFFFF;
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_LATITUDE_IDX))!=0) {
-                                    long latitude=
-                                        (0xFFL&bytes[recIdx++])<<0
-                                        |(0xFFL&bytes[recIdx++])<<8
-                                        |(0xFFL&bytes[recIdx++])<<16
-                                        |(0xFFL&bytes[recIdx++])<<24
-                                        |(0xFFL&bytes[recIdx++])<<32
-                                        |(0xFFL&bytes[recIdx++])<<40
-                                        |(0xFFL&bytes[recIdx++])<<48
-                                        |(0xFFL&bytes[recIdx++])<<56
-                                        ;
-                                    gpsRec.latitude=Convert.longBitsToDouble(latitude);
-                                    
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_LONGITUDE_IDX))!=0) { 
-                                    long longitude=
-                                        (0xFFL&bytes[recIdx++])<<0
-                                        |(0xFFL&bytes[recIdx++])<<8
-                                        |(0xFFL&bytes[recIdx++])<<16
-                                        |(0xFFL&bytes[recIdx++])<<24
-                                        |(0xFFL&bytes[recIdx++])<<32
-                                        |(0xFFL&bytes[recIdx++])<<40
-                                        |(0xFFL&bytes[recIdx++])<<48
-                                        |(0xFFL&bytes[recIdx++])<<56
-                                        ;
-                                    gpsRec.longitude=Convert.longBitsToDouble(longitude);
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_HEIGHT_IDX))!=0) { 
-                                    int height=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        |(0xFF&bytes[recIdx++])<<16
-                                        |(0xFF&bytes[recIdx++])<<24
-                                        ;
-                                    gpsRec.height=Convert.toFloatBitwise(height);
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_SPEED_IDX))!=0) {
-                                    int speed=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        |(0xFF&bytes[recIdx++])<<16
-                                        |(0xFF&bytes[recIdx++])<<24
-                                        ;
-                                    gpsRec.speed=Convert.toFloatBitwise(speed);
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_HEADING_IDX))!=0) { 
-                                    int heading=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        |(0xFF&bytes[recIdx++])<<16
-                                        |(0xFF&bytes[recIdx++])<<24
-                                        ;
-                                    gpsRec.heading=Convert.toFloatBitwise(heading);
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_DSTA_IDX))!=0) { 
-                                    gpsRec.dsta=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        ;
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_DAGE_IDX))!=0) { 
-                                    gpsRec.dage=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        |(0xFF&bytes[recIdx++])<<16
-                                        |(0xFF&bytes[recIdx++])<<24
-                                        ;
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_PDOP_IDX))!=0) { 
-                                    gpsRec.pdop=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        ;
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_HDOP_IDX))!=0) { 
-                                    gpsRec.hdop=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        ;
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_VDOP_IDX))!=0) { 
-                                    gpsRec.vdop=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        ;
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_NSAT_IDX))!=0) { 
-                                    gpsRec.nsat=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        ;
-                                    nsatrec=gpsRec.nsat>>8;
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) {
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_ELEVATION_IDX))!=0) {
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_AZIMUTH_IDX))!=0) { 
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_SNR_IDX))!=0) { 
-                                }
-                                recIdx=rcrIdx;  // Sat information limit is rcrIdx
-                                if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
-                                    gpsRec.rcr=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        ;
-                                } else
-                                {
-                                    gpsRec.rcr=0xFFFF;  // For filter
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0) { 
-                                    gpsRec.milisecond=
-                                        (0xFF&bytes[recIdx++])<<0
-                                        |(0xFF&bytes[recIdx++])<<8
-                                        ;
-                                } else {
-                                    gpsRec.milisecond=0;
-                                }
-                                if((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0) { 
-                                    long distance=
-                                        (0xFFL&bytes[recIdx++])<<0
-                                        |(0xFFL&bytes[recIdx++])<<8
-                                        |(0xFFL&bytes[recIdx++])<<16
-                                        |(0xFFL&bytes[recIdx++])<<24
-                                        |(0xFFL&bytes[recIdx++])<<32
-                                        |(0xFFL&bytes[recIdx++])<<40
-                                        |(0xFFL&bytes[recIdx++])<<48
-                                        |(0xFFL&bytes[recIdx++])<<56
-                                        ;
-                                    gpsRec.distance=Convert.longBitsToDouble(distance);
-                                }
-                                gpsFile.writeRecord(gpsRec);
                                 /* End handling record */
                                 break;
                             } else {
@@ -369,9 +413,17 @@ public final class BT747LogConvert {
                 Vm.debug("Could not open "+fileName);
                 m_File=null;
             } else {
+                passToFindFieldsActivatedInLog=gpsFile.needPassToFindFieldsActivatedInLog();
+                if(passToFindFieldsActivatedInLog) {
+                    activeFileFields=0;
+                    parseFile(gpsFile);
+                    gpsFile.setActiveFileFields(getLogFormatRecord(activeFileFields));
+                }
+                passToFindFieldsActivatedInLog=false;
                 do {
                     parseFile(gpsFile);
                 } while (gpsFile.nextPass());
+                gpsFile.finaliseFile();
             }
             
             if(m_File!=null) {
@@ -422,16 +474,17 @@ public final class BT747LogConvert {
             gpsRec.nsat=-1;
         }
         if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) { 
-            //gpsRec.sid=-1;
+            gpsRec.sid=new int[0];
+            gpsRec.sidinuse=new boolean[0];
         }
         if((logFormat&(1<<BT747_dev.FMT_ELEVATION_IDX))!=0) { 
-            //gpsRec.=-1;
+            gpsRec.ele=new int[0];
         }
         if((logFormat&(1<<BT747_dev.FMT_AZIMUTH_IDX))!=0) { 
-            //gpsRec.=-1;
+            gpsRec.azi=new int[0];
         }
         if((logFormat&(1<<BT747_dev.FMT_SNR_IDX))!=0) { 
-            //gpsRec.s=-1;
+            gpsRec.snr=new int[0];
         }
         if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
             gpsRec.rcr=-1;

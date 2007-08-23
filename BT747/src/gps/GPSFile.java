@@ -35,6 +35,7 @@ public abstract class GPSFile {
     protected int m_recCount;
     protected boolean m_oneFilePerDay;
     protected GPSRecord activeFields;
+    protected GPSRecord activeFileFields;
 
     protected boolean m_FirstRecord;
     protected String m_basename;
@@ -58,7 +59,11 @@ public abstract class GPSFile {
         m_card=Card;
         m_oneFilePerDay=oneFilePerDay;
     };
-
+    
+    public void setActiveFileFields(final GPSRecord full) {
+        activeFileFields=full;
+    }
+    
     public void writeLogFmtHeader(final GPSRecord f) {
         activeFields= new GPSRecord(f);
     };
@@ -205,4 +210,9 @@ public abstract class GPSFile {
             
         }
     }
+    
+    public boolean needPassToFindFieldsActivatedInLog() {
+        return false;
+    }
+
 }

@@ -36,7 +36,13 @@ public class GPSRecord {
     public int  hdop;
     public int  vdop;
     public int nsat;
-    // TODO: Add structures for NSAT, ...
+    
+    public int[] sid;
+    public boolean[] sidinuse;
+    public int[] ele;
+    public int[] azi;
+    public int[] snr;
+
     public int  rcr;  /** Recorder reason */
     public int  milisecond;
     public double distance;
@@ -61,6 +67,19 @@ public class GPSRecord {
         this.hdop= r.hdop;
         this.vdop= r.vdop;
         this.nsat= r.nsat;
+        if(r.sid!=null) {
+            this.sid=(int[])r.sid.clone();
+            this.sidinuse=(boolean[])r.sidinuse.clone();
+            if (r.ele!=null) {
+                this.ele=(int[])r.ele.clone();
+            }
+            if (r.azi!=null) {
+                this.azi=(int[])r.azi.clone();
+            }
+            if (r.snr!=null) {
+                this.snr=(int[])r.snr.clone();
+            }
+        }
         //this.sid= r.sid;
         // TODO: Add structures for NSAT, ...
         this.rcr= r.rcr;

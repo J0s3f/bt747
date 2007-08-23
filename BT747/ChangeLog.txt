@@ -1,3 +1,8 @@
+Version 0.95
+* Bug fix (incorrect log interpretation when RCR and Distance not both logged)
+* Satellite information now decoded from log.
+* Satellite information written to CSV file.
+
 Version 0.77.23
 * Solved some bugs related to the file splitting per date & improved function to avoid files without elements.
 * Added feature to change log format without erasing the device.  The resulting log can
