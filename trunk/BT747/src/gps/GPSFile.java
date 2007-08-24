@@ -45,7 +45,7 @@ public abstract class GPSFile {
     protected int C_NUMBER_OF_PASSES=1;
 
     protected File m_File=null;
-    protected Time t=null;        // Time from log, already transformed
+    protected Time t=new Time();      // Time from log, already transformed
     
 
     protected int m_prevdate=0;
@@ -96,14 +96,14 @@ public abstract class GPSFile {
         m_recCount++;
 
         if(activeFields.utc!=0) {
-            t=utcTime(s.utc);  // Initialisation needed later too!
+            setTime(s.utc);  // Initialisation needed later too!
             if(m_oneFilePerDay) {
                 dateref=(t.year<<14)+(t.month<<7)+t.day; // year * 16384 + month * 128 + day
                 newDate=(dateref>m_prevdate);
             }
         }
 
-        if((m_oneFilePerDay&&newDate)&&activeFields.utc!=0&&recordIsNeeded(s)) {
+        if((((m_oneFilePerDay&&newDate)&&activeFields.utc!=0)||m_FirstRecord)&&recordIsNeeded(s)) {
             boolean createOK=true;
             m_prevdate=dateref;
             if(activeFields.utc!=0) {
@@ -185,9 +185,10 @@ public abstract class GPSFile {
     }
 
     private final static int DAYS_BETWEEN_1970_1983=4748;
-    protected Time utcTime(int utc_int) {
-        long utc=utc_int&0xFFFFFFFFL;
-        Time t=new Time();
+    private final void setTime(final int utc_int) {
+        //long utc=utc_int&0xFFFFFFFFL;
+        int utc=utc_int;
+        //Time t=new Time();
         t.second=(int)utc%60;
         utc/=60;
         t.minute=(int)utc%60;
@@ -200,7 +201,6 @@ public abstract class GPSFile {
         t.year=d.getYear();
         t.month=d.getMonth();
         t.day=d.getDay();
-        return t;
     }
     
     protected void writeTxt(final String s) {
