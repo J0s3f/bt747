@@ -64,8 +64,6 @@ public class GPSNMEAFile extends GPSFile {
                 rec.append("GPZDA,");
                 
                 // DATE & TIME
-                t=utcTime(s.utc);
-                
                 timeStr=(  t.hour<10?"0":"")+Convert.toString(t.hour)
                         +(t.minute<10?"0":"")+Convert.toString(t.minute)
                         +(t.second<10?"0":"")+Convert.toString(t.second);

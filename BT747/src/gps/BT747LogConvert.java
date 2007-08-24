@@ -143,6 +143,8 @@ public final class BT747LogConvert {
                             break;
                         case 0x07: // value: 0x0106= logger on  0x0107= logger off 0x104=??
                             break;
+                        default:
+                            break; // Added to set SW breakpoint to discover other records.
                         }
                             
                         // No data: on/off

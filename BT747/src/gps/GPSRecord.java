@@ -68,16 +68,33 @@ public class GPSRecord {
         this.vdop= r.vdop;
         this.nsat= r.nsat;
         if(r.sid!=null) {
-            this.sid=(int[])r.sid.clone();
-            this.sidinuse=(boolean[])r.sidinuse.clone();
+            // Object method clone() does not work on device for arrays.
+            // Doing explicit copy until better method found.
+            int i = r.sid.length;
+            this.sid=new int[i];
+            this.sidinuse=new boolean[i];
             if (r.ele!=null) {
-                this.ele=(int[])r.ele.clone();
+                this.ele=new int[i];
             }
             if (r.azi!=null) {
-                this.azi=(int[])r.azi.clone();
+                this.azi=new int[i];
             }
             if (r.snr!=null) {
-                this.snr=(int[])r.snr.clone();
+                this.snr=new int[i];
+            }
+            
+            for(i-=1;i>=0;i--) {
+                this.sid[i]=r.sid[i];
+                this.sidinuse[i]=r.sidinuse[i];
+                if (r.ele!=null) {
+                    this.ele[i]=r.ele[i];
+                }
+                if (r.azi!=null) {
+                    this.azi[i]=r.azi[i];
+                }
+                if (r.snr!=null) {
+                    this.snr[i]=r.snr[i];
+                }
             }
         }
         //this.sid= r.sid;

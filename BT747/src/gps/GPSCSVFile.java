@@ -27,8 +27,8 @@ import waba.sys.Time;
  */
 public class GPSCSVFile extends GPSFile {
     private StringBuffer rec=new StringBuffer(1024);  // reused stringbuffer
-    private char fieldSep=',';
-    private char satSeperator=';';
+    private final char fieldSep=',';  // For future parameterisation
+    private final char satSeperator=';';   // For future parameterisation
     
     public boolean needPassToFindFieldsActivatedInLog() {
         return true;
@@ -36,71 +36,73 @@ public class GPSCSVFile extends GPSFile {
     
 
     protected void writeFileHeader(String Name) {
+        rec.setLength(0);
         //INDEX,RCR,DATE,TIME,VALID,LATITUDE,N/S,LONGITUDE,E/W,HEIGHT,SPEED,
-        writeTxt("INDEX");
+        rec.append("INDEX");
         if(activeFileFields.rcr!=0) {
-            writeTxt(fieldSep+"RCR");
+            rec.append(fieldSep+"RCR");
         }
         if(activeFileFields.utc!=0) {
-            writeTxt(fieldSep+"DATE"+fieldSep+"TIME");
+            rec.append(fieldSep+"DATE"+fieldSep+"TIME");
         }
         if(activeFileFields.valid!=0) {
-            writeTxt(fieldSep+"VALID");
+            rec.append(fieldSep+"VALID");
         }
         if(activeFileFields.latitude!=0) {
-            writeTxt(fieldSep+"LATITUDE"+fieldSep+"N/S");
+            rec.append(fieldSep+"LATITUDE"+fieldSep+"N/S");
         }
         if(activeFileFields.longitude!=0) {
-            writeTxt(fieldSep+"LONGITUDE"+fieldSep+"E/W");
+            rec.append(fieldSep+"LONGITUDE"+fieldSep+"E/W");
         }
         if(activeFileFields.height!=0) {
-            writeTxt(fieldSep+"HEIGHT(m)");
+            rec.append(fieldSep+"HEIGHT(m)");
         }
         if(activeFileFields.speed!=0) {
-            writeTxt(fieldSep+"SPEED(km/h)");
+            rec.append(fieldSep+"SPEED(km/h)");
         }
         if(activeFileFields.heading!=0) {
-            writeTxt(fieldSep+"HEADING");
+            rec.append(fieldSep+"HEADING");
         }
         if(activeFileFields.dsta!=0) {
-            writeTxt(fieldSep+"DSTA");
+            rec.append(fieldSep+"DSTA");
         }
         if(activeFileFields.dage!=0) {
-            writeTxt(fieldSep+"DAGE");
+            rec.append(fieldSep+"DAGE");
         }
         if(activeFileFields.pdop!=0) {
-            writeTxt(fieldSep+"PDOP");
+            rec.append(fieldSep+"PDOP");
         }
         if(activeFileFields.hdop!=0) {
-            writeTxt(fieldSep+"HDOP");
+            rec.append(fieldSep+"HDOP");
         }
         if(activeFileFields.vdop!=0) {
-            writeTxt(fieldSep+"VDOP");
+            rec.append(fieldSep+"VDOP");
         }
         if(activeFileFields.nsat!=0) {
-            writeTxt(fieldSep+"NSAT (USED/VIEW)");
+            rec.append(fieldSep+"NSAT (USED/VIEW)");
         }
         // SAT INFO NOT HANDLED
 //        if(activeFileFields.milisecond!=0) {
-//            writeTxt(fieldSep+"MILISECOND");
+//            rec.append(fieldSep+"MILISECOND");
 //        }
         if(activeFileFields.distance!=0) {
-            writeTxt(fieldSep+"DISTANCE(m)");
+            rec.append(fieldSep+"DISTANCE(m)");
         }
         if(activeFileFields.sid!=null) {
-            writeTxt(fieldSep+"SAT INFO (SID");
+            rec.append(fieldSep+"SAT INFO (SID");
             if(activeFileFields.ele!=null) {
-                writeTxt("-ELE");
+                rec.append("-ELE");
             }
             if(activeFileFields.azi!=null) {
-                writeTxt("-AZI");
+                rec.append("-AZI");
             }
             if(activeFileFields.snr!=null) {
-                writeTxt("-SNR");
+                rec.append("-SNR");
             }
-            writeTxt(")");
+            rec.append(")");
         }
-        writeTxt(fieldSep+"\r\n");
+        rec.append(fieldSep+"\r\n");
+        writeTxt(rec.toString());
         //"NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
     }
 
@@ -141,9 +143,6 @@ public class GPSCSVFile extends GPSFile {
                 }
             }
             if(activeFields.utc!=0) {
-                Time t=utcTime(s.utc);
-                
-                
                 rec.append(fieldSep+Convert.toString(t.year)+"/"
                 +( t.month<10?"0":"")+Convert.toString(t.month)+"/"
                 +(   t.day<10?"0":"")+Convert.toString(t.day)+fieldSep
@@ -156,7 +155,8 @@ public class GPSCSVFile extends GPSFile {
                     rec.append(Convert.toString((float)t.second+s.milisecond/1000.0,3));
                 }
             } else if(activeFileFields.utc!=0) {
-                rec.append(fieldSep+fieldSep);
+                rec.append(fieldSep);
+                rec.append(fieldSep);
             }
 
             if(activeFields.valid!=0) {
@@ -205,7 +205,8 @@ public class GPSCSVFile extends GPSFile {
                     rec.append(fieldSep+"S");
                 }
             } else if(activeFileFields.latitude!=0) {
-                rec.append(fieldSep+fieldSep);
+                rec.append(fieldSep);
+                rec.append(fieldSep);
             }
             if(activeFields.longitude!=0) {
                 rec.append(fieldSep);
@@ -216,7 +217,8 @@ public class GPSCSVFile extends GPSFile {
                     rec.append(fieldSep+"W");
                 }
             } else if(activeFileFields.longitude!=0) {
-                rec.append(fieldSep+fieldSep);
+                rec.append(fieldSep);
+                rec.append(fieldSep);
             }
             if(activeFields.height!=0) {
                 rec.append(fieldSep);
