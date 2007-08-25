@@ -116,4 +116,4 @@ This is experimental
 
 ============ Contributors ======================
 Mario De Weerd (main coder)
-Herbert Geus
+Herbert Geus (save settings on WinCE, KML waypoints addition, feedback on application)

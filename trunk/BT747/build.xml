@@ -85,7 +85,7 @@
 			<include name="**/*.java"/>
 			<exclude name="gps/model/*"/>
 			<exclude name="gps/port/GPSLinuxPort.java"/>
-			<classpath refid="xclasspath"/>
+			<classpath refid="classpath"/>
 		</javac>
 		<copy todir="build">
 			<fileset dir="src">
