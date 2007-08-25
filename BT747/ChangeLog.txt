@@ -4,6 +4,7 @@ Version 0.95.2
   Experimental and untested.
 * Bug fix: no more file was written when 'one file per day' was not selected.
 * Performance improvement (profiled File output writing)
+* KML format change (waypoints added).
 
 
 Version 0.95.1
