@@ -9,6 +9,7 @@ package gps;
 import waba.io.File;
 import waba.sys.Convert;
 import waba.sys.Vm;
+import waba.ui.MessageBox;
 
 /**
  * @author Mario De Weerd
@@ -413,6 +414,7 @@ public final class BT747LogConvert {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
                 Vm.debug("Could not open "+fileName);
+                (new MessageBox("Error","Could not open|"+fileName)).popupBlockingModal();                                   
                 m_File=null;
             } else {
                 passToFindFieldsActivatedInLog=gpsFile.needPassToFindFieldsActivatedInLog();

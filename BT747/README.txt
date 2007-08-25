@@ -97,6 +97,8 @@ I open the kml on windows -> opens google earth with expected points.
 
 
 ============= Linux ============================
+Solution 1:
+
 I am currently in the process of downloading a Linux CD that includes Java.
 I debugged on puppy linux using another java virtual machine that ultimately fails but helped
 to solved a number of problems.
@@ -106,6 +108,11 @@ In the Linux directory, you may need to modify swserial.properties.
 Currently it maps the USB connection to '/dev/ttyUSB0' so clicking on USB in the application
 will try to open that device where your GPS datalogger is most likely located.
 
+
+Solution 2:
+A specific JAR file has been created that should work specifically with RXTX.
+It is located in the Linux directory and should be used instead of the original one.
+This is experimental
 
 ============ Contributors ======================
 Mario De Weerd (main coder)

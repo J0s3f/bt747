@@ -18,14 +18,13 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 package gps;
-import waba.io.DataStream;
-import waba.io.File;
-import waba.io.SerialPort;
 import waba.sys.Convert;
 import waba.sys.Settings;
 import waba.sys.Vm;
-import waba.ui.MessageBox;
 import waba.util.Vector;
+
+import gps.port.GPSPort;
+import gps.port.GPSWabaPort;
 
 /** This class implements the low level driver of the GPS device.
  * It extracs NMEA strings.
@@ -35,16 +34,8 @@ import waba.util.Vector;
  */
 public class GPSrxtx {
     private static final boolean GPS_DEBUG = false; //!Settings.onDevice;
-    private static final boolean GPS_FILE_LOG = false;  // When true log communication to file for debug
-    private File m_debugFile=null;
-    private final static String C_DEBUG_FILE="/Palm/gpsRAW.txt";
     
-    protected int spPortNbr;
-    protected int spSpeed=115200;  // Does not really matter on most platforms
-    private SerialPort sp=null;
-    private DataStream ds=null;
-    
-    private boolean portIsOK=false;
+    private GPSPort gpsPort;
     
     private Semaphore m_writeOngoing = new Semaphore(1);
     
@@ -52,6 +43,7 @@ public class GPSrxtx {
     /** Class constructor.
      */
     public  GPSrxtx() {
+        gpsPort=new GPSWabaPort(); // TODO: select according to OS.
         setDefaults();
     }
     
@@ -60,8 +52,8 @@ public class GPSrxtx {
      * @param speed
      */
     public void setDefaults(final int port, final int speed) {
-        spPortNbr= port;
-        spSpeed=   speed;
+        gpsPort.setPort(port);
+        gpsPort.setSpeed(speed);
     }
     
     /** Set the defaults of the device according to preset, guessed values.
@@ -77,117 +69,49 @@ public class GPSrxtx {
                 (Platform.equals("Posix"))||
                 (Platform.equals("Linux"))) {
             // Try USB Port
-            spPortNbr= SerialPort.USB;
+            gpsPort.setUSB();
         } else
             if (Platform.startsWith("PalmOS")) {
-                spPortNbr= SerialPort.BLUETOOTH;
+                gpsPort.setBlueTooth();
             } else{
-                spPortNbr= 0;  // Should be bluetooth in WinCE
+                gpsPort.setPort(0);  // Should be bluetooth in WinCE
             }			
     }
     
-    /** Set and open a bluetooth connection
-     * 
-     *
-     */
-    public void setBluetooth() {
-        spPortNbr= SerialPort.BLUETOOTH;
-        openPort();
+    public void setBluetoothAndOpen() {
+        gpsPort.setBlueTooth();
+        gpsPort.openPort();
+    }
+
+    public final void setUSBAndOpen() {
+        gpsPort.setUSB();
+        gpsPort.openPort();
     }
     
-    /** Set and open an USB connection
-     * 
-     *
-     */
-    public void setUsb() {
-        spPortNbr= SerialPort.USB;
-        openPort();
+    public final void closePort() {
+        gpsPort.closePort();
     }
+
+    public final void openPort() {
+        gpsPort.openPort();
+    }
+
     
     /** Set and open a normal port (giving the port number)
      * 
      * @param port Port number of the port to open
      * @return result of opening the port, 0 if success.
      */
-    public int setPort(int port) {
-        spPortNbr= port;
-        return openPort();
+    public int setPortAndOpen(int port) {
+        gpsPort.setPort(port);
+        return gpsPort.openPort();
     }
     
-    /** Get the port number (getter for spPortNbr)
-     * 
-     * @return Port number
-     */
     public int getPort() {
-        return spPortNbr;
+        return gpsPort.getPort();
     }
-    
-    /** Indicates if the device is connected or not.
-     * 
-     * @return <code>true</code> if the device is connected.
-     */
-    public boolean isConnected() {
-        return (sp!=null && sp.isOpen());
-    }
-    
-    /** Close the connection.
-     *
-     *
-     */
-    public void closePort() {
-        if (sp!= null && sp.isOpen()) {
-            portIsOK= false;
-            ds.close();
-        } 
-    }
-    
-    /** Open a connection
-     * 
-     * @return status result of the opening of the serial port.
-     */
-    public int openPort() {
-        int result=-1;
-        closePort();
-        if(GPS_FILE_LOG&&(m_debugFile==null)) {
-            try {
-                new File(C_DEBUG_FILE).delete();
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-            try {
-                // Having some trouble on Palm - doing it like this.
-                new File(C_DEBUG_FILE,File.CREATE).close();
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-            m_debugFile=new File(C_DEBUG_FILE,File.READ_WRITE);
-        }
-
-        try {
-            sp=new SerialPort(spPortNbr,spSpeed);
-            result=sp.lastError;
-            portIsOK= sp.isOpen();
-            if(portIsOK) {
-                // Read time out gives problems on windows: data is skipped!!!O
-                sp.setReadTimeout(0);//small to read data in chunks and have good resp.
-                //				sp.setReadTimeout(50);//small to read data in chunks and have good resp.
-                //sp.setFlowControl(true);
-                ds=new DataStream(sp);
-            }
-        }
-        catch (Exception e) {
-            new MessageBox("SerialPort open","Unexpected exception catched").popupBlockingModal();
-            ;//if(GPS_DEBUG) {waba.sys.Vm.debug("Exception when opening port\n");}; 
-        }
-        return result;
-    }
-    
-    /** getter to retrieve the last error report by the serial port driver.
-     * 
-     * @return last error from the SerialPort driver
-     */
-    public int error() {
-        return sp.lastError;
+    public int getSpeed() {
+        return gpsPort.getSpeed();
     }
     
     
@@ -224,10 +148,16 @@ public class GPSrxtx {
     
     private Vector vCmd = new Vector();
     private static final String[] Empty_vCmd = {};
-    private static final byte[] EOL_BYTES = {'\015','\012'};
+    private static final char[] EOL_BYTES = {'\015','\012'};
     
-    public int sendPacket(final String p_Packet) {       
-        if((sp!=null)&&(sp.isOpen())) {
+    StringBuffer rec= new StringBuffer(256);
+    
+    public final boolean isConnected() {
+        return (gpsPort!=null)&&gpsPort.isConnected();
+    }
+    
+    public void sendPacket(final String p_Packet) {       
+        if(isConnected()) {
             if(GPS_DEBUG) {
                 waba.sys.Vm.debug(">"+p_Packet);
             }
@@ -239,27 +169,16 @@ public class GPSrxtx {
                 z_Checksum^=(byte)p_Packet.charAt(z_Index);
             }
             m_writeOngoing.down();  // Semaphore - reserve link
-            try {
-                z_Result+=ds.writeByte('$');
-                z_Result+=ds.writeBytes(p_Packet.getBytes());
-                z_Result+=ds.writeByte('*');
-                z_Result+=ds.writeBytes(Convert.unsigned2hex(z_Checksum,2).getBytes());
-                z_Result+=ds.writeBytes(EOL_BYTES);
-                if(GPS_FILE_LOG&&(m_debugFile!=null)) {
-                    m_debugFile.writeBytes(">>>>".getBytes(), 0, 4);
-                    m_debugFile.writeBytes(p_Packet.getBytes(), 0, p_Packet.length());
-                    m_debugFile.writeBytes("*".getBytes(), 0, 1);
-                    m_debugFile.writeBytes(Convert.unsigned2hex(z_Checksum,2).getBytes(),0,2);
-                    m_debugFile.writeBytes(EOL_BYTES,0,2);
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
+
+            rec.setLength(0);
+            rec.append('$');
+            rec.append(p_Packet);
+            rec.append('*');
+            rec.append(Convert.unsigned2hex(z_Checksum,2));
+            rec.append(EOL_BYTES);
+            gpsPort.write(rec.toString());
             
             m_writeOngoing.up();  // Semaphore - release link
-            return z_Result;
-        } else {
-            return -1;
         }
     }
     
@@ -267,14 +186,11 @@ public class GPSrxtx {
         boolean continueReading;
         int myError= ERR_NOERROR;
         final boolean skipError=true;
-        continueReading = sp.isOpen();
-        try {
-            if(GPS_FILE_LOG&&(m_debugFile!=null)) {
-                String q="\r\n:"+Convert.toString(Vm.getTimeStamp())+":";
-                m_debugFile.writeBytes(q.getBytes(),0,q.length());
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
+        continueReading = gpsPort.isConnected();
+
+        if(gpsPort.debugActive()) {
+            // Test to avoid unnecessary lost time
+            gpsPort.writeDebug("\r\n:"+Convert.toString(Vm.getTimeStamp())+":");
         }
 
         if(current_state==C_FOUND_STATE) {
@@ -413,14 +329,14 @@ public class GPSrxtx {
             if(continueReading) {
                 read_buf_p= 0;
                 bytesRead=  0;
-                if(sp.isOpen()) {
+                if(isConnected()) {
                     try {
-                        int max= sp.readCheck();
+                        int max= gpsPort.readCheck();
                         if(max>C_BUF_SIZE) {
                             max=C_BUF_SIZE;
                         }
                         if(max>0) {
-                            bytesRead= sp.readBytes(read_buf,0,max);
+                            bytesRead= gpsPort.readBytes(read_buf,0,max);
                             //						String sb=new String(read_buf,0,bytesRead);
                             //						System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
                         }
@@ -432,10 +348,10 @@ public class GPSrxtx {
                     if(bytesRead==0) {
                         continueReading=false;
                     } else {
-                        if(GPS_FILE_LOG&&(m_debugFile!=null)) {
+                        if(gpsPort.debugActive()) {
                             String q="("+Convert.toString(Vm.getTimeStamp())+")";
-                            m_debugFile.writeBytes(q.getBytes(),0,q.length());
-                            m_debugFile.writeBytes(read_buf, 0, bytesRead);
+                            gpsPort.writeDebug(q.getBytes(),0,q.length());
+                            gpsPort.writeDebug(read_buf, 0, bytesRead);
                         }
                     }
                 }

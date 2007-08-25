@@ -1,3 +1,11 @@
+Version 0.95.2
+* Added specific target for Linux (serial port opening in entirely new class).
+  A linux specific 'jar' file has been created (in the Linux directory).
+  Experimental and untested.
+* Bug fix: no more file was written when 'one file per day' was not selected.
+* Performance improvement (profiled File output writing)
+
+
 Version 0.95.1
 * Bug fix (on device): clone() method does not exist for arrays - replaced y explicit copy.
   User effect: java exception when converting to output format on device (solved).

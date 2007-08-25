@@ -172,7 +172,7 @@ public class GPSstate implements Thread {
      * Set up the timer to regurarly poll the connection for data.
      */
     public void setBluetooth() {
-        m_GPSrxtx.setBluetooth();
+        m_GPSrxtx.setBluetoothAndOpen();
         GPS_postConnect();
     }
     
@@ -181,7 +181,7 @@ public class GPSstate implements Thread {
      * Set up the timer to regurarly poll the connection for data.
      */
     public void setUsb() {
-        m_GPSrxtx.setUsb();
+        m_GPSrxtx.setUSBAndOpen();
         GPS_postConnect();
     }
     
@@ -191,7 +191,7 @@ public class GPSstate implements Thread {
      * @param port Port number to open
      */
     public void setPort(int port) {
-        m_GPSrxtx.setPort(port);
+        m_GPSrxtx.setPortAndOpen(port);
         GPS_postConnect();
     }
     
@@ -209,8 +209,8 @@ public class GPSstate implements Thread {
             MainWindow.getMainWindow().addThread(this, false);
 
             // Remember defaults
-            m_settings.setPortnbr(m_GPSrxtx.spPortNbr);
-            m_settings.setBaudRate(m_GPSrxtx.spSpeed);
+            m_settings.setPortnbr(m_GPSrxtx.getPort());
+            m_settings.setBaudRate(m_GPSrxtx.getSpeed());
         }
     }
     
@@ -1191,15 +1191,16 @@ public class GPSstate implements Thread {
         int z_Cmd;
         int z_Result;
         z_Result = 0;
-        //if(GPS_DEBUG) {	waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]+"\n");}
-        if(p_nmea[0].startsWith("GPZDA")) {
-            // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
-            
-        } else if(p_nmea[0].startsWith("GPRMC")) {
-            // GPRMC,$time,$fix,$latf1,$ns,$lonf1,$ew,$knots,$bear,$date,$magnvar,$magnew,$magnfix
-        } else if(p_nmea[0].startsWith("GPSTPV")) {
-            // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
-            
+        //if(GPS_DEBUG&&!p_nmea[0].startsWith("G")) {	waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]);}
+        if(p_nmea[0].startsWith("G")) {
+            // Commented - not interpreted.
+//            if(p_nmea[0].startsWith("GPZDA")) {
+//                // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
+//            } else if(p_nmea[0].startsWith("GPRMC")) {
+//                // GPRMC,$time,$fix,$latf1,$ns,$lonf1,$ew,$knots,$bear,$date,$magnvar,$magnew,$magnfix
+//            } else if(p_nmea[0].startsWith("GPSTPV")) {
+//                // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
+//            }                
         } else if(p_nmea[0].startsWith("PMTK")) {
             if(GPS_DEBUG) {
                 String s;
