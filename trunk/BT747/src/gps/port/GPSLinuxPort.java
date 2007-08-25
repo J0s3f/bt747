@@ -4,11 +4,24 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package gps;
+package gps.port;
 
-import waba.io.DataStream;
+import gnu.io.CommPort;
+import gnu.io.CommPortIdentifier;
+import gnu.io.NoSuchPortException;
+import gnu.io.PortInUseException;
+import gnu.io.SerialPort;
+import gnu.io.UnsupportedCommOperationException;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.Exception;
+
 import waba.io.File;
-import waba.ui.MessageBox;
+import waba.sys.Convert;
+import waba.sys.Settings;
+import waba.sys.Vm;
+import waba.util.Vector;
 
 /**
  * @author Mario De Weerd
@@ -16,9 +29,10 @@ import waba.ui.MessageBox;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class GPSWabaPort extends GPSPort {
-    private waba.io.SerialPort sp=null;
+public class GPSLinuxPort extends GPSPort {
+    private SerialPort sp=null;
 
+    private OutputStream ds;
     private boolean portIsOK=false;  
 
     /** Indicates if the device is connected or not.
@@ -26,7 +40,7 @@ public class GPSWabaPort extends GPSPort {
      * @return <code>true</code> if the device is connected.
      */
     public boolean isConnected() {
-        return (sp!=null && sp.isOpen());
+        return (sp!=null);
     }
     
     /** Close the connection.
@@ -34,9 +48,16 @@ public class GPSWabaPort extends GPSPort {
     *
     */
    public void closePort() {
-       if (sp!= null && sp.isOpen()) {
+       if (sp!= null) {
            portIsOK= false;
-           ds.close();
+           //ds.close();
+         try {
+               ds.close();
+           } catch (Exception e) {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+           }
+
        } 
    }
    
@@ -47,37 +68,40 @@ public class GPSWabaPort extends GPSPort {
    public int openPort() {
        int result=-1;
        closePort();
-       if(GPS_FILE_LOG&&(m_debugFile==null)) {
-           try {
-               new File(C_DEBUG_FILE).delete();
-           } catch (Exception e) {
-               // TODO: handle exception
-           }
-           try {
-               // Having some trouble on Palm - doing it like this.
-               new File(C_DEBUG_FILE,File.CREATE).close();
-           } catch (Exception e) {
-               // TODO: handle exception
-           }
-           m_debugFile=new File(C_DEBUG_FILE,File.READ_WRITE);
-       }
-
        try {
-           sp=new waba.io.SerialPort(spPortNbr,spSpeed);
-           result=sp.lastError;
-           portIsOK= sp.isOpen();
-           if(portIsOK) {
-               // Read time out gives problems on windows: data is skipped!!!O
-               sp.setReadTimeout(0);//small to read data in chunks and have good resp.
-               //               sp.setReadTimeout(50);//small to read data in chunks and have good resp.
-               //sp.setFlowControl(true);
-               ds=new DataStream(sp);
+           CommPortIdentifier portIdentifier;
+               portIdentifier = CommPortIdentifier.getPortIdentifier("/dev/ttyUSB"+spPortNbr);
+           if(portIdentifier.isCurrentlyOwned())
+           {
+               System.out.println("Error: Port is currently in use");
+           } else
+           {
+               CommPort commPort = portIdentifier.open(getClass().getName(), 2000);
+               if(commPort instanceof SerialPort)
+               {
+                   SerialPort serialPort = (SerialPort)commPort;
+                   sp = serialPort;
+                   serialPort.setSerialPortParams(0x1c200, 8, 1, 0);
+                   ds = sp.getOutputStream();
+               } else
+               {
+                   System.out.println("Error: Only serial ports are handled by this example.");
+               }
            }
-       }
-       catch (Exception e) {
-           new MessageBox("waba.io.SerialPort open","Unexpected exception catched").popupBlockingModal();
-           ;//if(GPS_DEBUG) {waba.sys.Vm.debug("Exception when opening port\n");}; 
-       }
+           } catch (NoSuchPortException e) {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+           } catch (PortInUseException e) {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+           } catch (UnsupportedCommOperationException e) {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+           } catch (IOException e) {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+           }
+
        return result;
    }    
 
@@ -87,7 +111,7 @@ public class GPSWabaPort extends GPSPort {
     *
     */
    public void setBluetooth() {
-       spPortNbr= waba.io.SerialPort.BLUETOOTH;
+       spPortNbr= 0;
    }
    
    /** Set an USB connection
@@ -95,22 +119,26 @@ public class GPSWabaPort extends GPSPort {
     *
     */
    public void setUSB() {
-       spPortNbr= waba.io.SerialPort.USB;
+       spPortNbr= 0;
    }
    
    /** getter to retrieve the last error report by the serial port driver.
     * 
-    * @return last error from the waba.io.SerialPort driver
+    * @return last error from the SerialPort driver
     */
    public int error() {
-       return sp.lastError;
+       return 0;
    }
 
    
    public void write(final String s) {
        byte[] b=s.getBytes();
        int l=b.length;
-       sp.writeBytes(b,0,l);
+       try {
+           ds.write(b);
+       } catch (Exception e) {
+           // TODO: handle exception
+       }
        if(GPS_FILE_LOG&&(m_debugFile!=null)) {
            m_debugFile.writeBytes(b,0,l);
        }
@@ -118,13 +146,23 @@ public class GPSWabaPort extends GPSPort {
    
    public int readCheck() {
        if(sp!=null) {
-           return sp.readCheck();
+           try {
+               return sp.getInputStream().available();//getInputStream().available();
+        } catch (Exception e) {
+            // TODO: handle exception
+            return 0;
+        }
        } else {
-           return -1;
+           return 0;
        }
    }
    
    public int readBytes(byte[]b,int start, int max) {
-       return sp.readBytes(b, start, max);
+       try {
+           return sp.getInputStream().read(b, start, max);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return 0;
+        }
    }
 }

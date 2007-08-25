@@ -23,9 +23,14 @@
 	<!-- Application classpath -->
 	<path id="classpath">
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
-		<pathelement location="\BT747\win32comm.jar"/>
+		<pathelement location="win32comm.jar"/>
 	</path>
-	
+
+	<path id="linuxclasspath">
+		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
+		<pathelement location="webstart/RXTXcomm.jar"/>
+	</path>
+
 	<!-- Warp/Exegen classpath -->
 	<path id="utils">
 		<pathelement location="${superwaba_root}/lib/SuperWabaTools.jar"/>
@@ -36,6 +41,7 @@
 	<target name="clean">
 	
 		<delete dir="build"/>
+		<delete dir="linuxbuild"/>
 		<delete dir="dist"/>
 		
 	</target>
@@ -75,19 +81,47 @@
 		<mkdir dir="build"/>
 		<mkdir dir="dist"/>
 		
-		<javac srcdir="c:\mdeweerd\workspace\BT747\src" destdir="build" target="1.1" optimize="true">
+		<javac srcdir="src" destdir="build" target="1.1" optimize="true">
 			<include name="**/*.java"/>
 			<exclude name="gps/model/*"/>
-			<classpath refid="classpath"/>
+			<exclude name="gps/port/GPSLinuxPort.java"/>
+			<classpath refid="xclasspath"/>
 		</javac>
 		<copy todir="build">
-			<fileset dir="c:\mdeweerd\workspace\BT747\src">
+			<fileset dir="src">
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
 	
 	</target>
+
+	<target name="linuxbuild" depends="clean, updatedate">
 	
+		<mkdir dir="linuxbuild"/>
+		<delete dir="linuxsrc"/>
+		<mkdir dir="linuxsrc"/>
+		<mkdir dir="Linux"/>
+
+
+		<copy todir="linuxsrc">
+			<fileset dir="src">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+    	<replace file="linuxsrc/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSLinuxPort" />
+
+		<javac srcdir="linuxsrc" destdir="linuxbuild" target="1.1" optimize="true" classpathref="linuxclasspath">
+			<include name="**/*.java"/>
+			<exclude name="gps/GPSWabaPort.java*"/>
+			<exclude name="gps/model/*"/>
+		</javac>
+		<copy todir="linuxbuild">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	
+	</target>
 	<!-- Package classes -->
 	<target name="jar" depends="build">
 	
@@ -97,6 +131,19 @@
 	
 	</target>
 
+	<target name="linuxjar" depends="linuxbuild">
+	
+		<jar jarfile="linuxbuild/${ant.project.name}.jar">
+			<fileset dir="linuxbuild" includes="**/*.class"/>
+		</jar>
+		<copy todir="Linux">
+			<fileset dir="linuxbuild">
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
+		
+	
+	</target>
 
 	<target name="proguard" depends="jar">
 		<move file="${buildDir}/${ant.project.name}.jar" tofile="${buildDir}/${ant.project.name}_unopt.jar"/>
@@ -146,6 +193,7 @@
 	
 		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/INST"/>
+			<!-- <arg value="/SIS"/> -->
 			<arg value="/c"/>
 			<arg value="BT74"/>
 			<arg value="${ant.project.name}"/>
@@ -231,7 +279,7 @@
 	</target>
 
 	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
-	<target name="all-exegen-types" depends="exegen, exegen-exe, exegen-cab, all-warp">
+	<target name="all-exegen-types" depends="exegen, exegen-exe, exegen-cab, linuxjar, all-warp">
 		
 		<move todir="dist">
 			

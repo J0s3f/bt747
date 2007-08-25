@@ -32,7 +32,7 @@ import waba.sys.Vm;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public abstract class GPSPort {
-    public DataStream ds=null;
+    protected DataStream ds=null;
 
     protected int spPortNbr;
     protected int spSpeed=115200;  // Does not really matter on most platforms
