@@ -937,26 +937,27 @@ public class GPSstate implements Thread {
     
     private void openNewLog(final String fileName, final int Card) {
         if(m_logFile!=null&&m_logFile.isOpen()) {m_logFile.close();}
-        try {
-            m_logFile=new File(fileName,File.DONT_OPEN,Card);
-            m_logFileCard=Card;
-            if(m_logFile.exists()) {
-                m_logFile.delete();
-            }
-        } catch (Exception e) {
-//            Vm.debug("Exception new log delete");
+
+        m_logFile=new File(fileName,waba.io.File.DONT_OPEN,Card);
+        m_logFileCard=Card;
+        if(m_logFile.exists()) {
+            m_logFile.delete();
+            //(new MessageBox("Error","Deleted|"+fileName+" ("+Card+")"+"|"+m_logFile.lastError)).popupBlockingModal();                                   
         }
-        try {
-            m_logFile=new File(fileName,File.CREATE,Card);
-            m_logFileCard=Card;
-            m_logFile.close();
-            m_logFile=new File(fileName,File.READ_WRITE,Card);
-            m_logFileCard=Card;
-        } catch (Exception e) {
-//            Vm.debug("Exception new log create");
-        }
-        if((m_logFile==null)|| !m_logFile.isOpen()) {
-            (new MessageBox("Error","Could not open|"+fileName)).popupBlockingModal();                                   
+
+        m_logFile=new File(fileName,waba.io.File.CREATE,Card);
+        // lastError 10530 = Read only
+        //(new MessageBox("Error","Created|"+fileName+" ("+Card+")"+"|"+m_logFile.lastError)).popupBlockingModal();                                   
+        m_logFileCard=Card;
+        m_logFile.close();
+        //(new MessageBox("Error","Closed|"+fileName+" ("+Card+")"+"|"+m_logFile.lastError)).popupBlockingModal();                                   
+        m_logFile=new File(fileName,waba.io.File.READ_WRITE,Card);
+        m_logFileCard=Card;
+        //(new MessageBox("Error","Read write|"+fileName+" ("+Card+")"+"|"+m_logFile.lastError)).popupBlockingModal();                                   
+
+        if((m_logFile==null)|| !(m_logFile.isOpen())) {
+            (new MessageBox("Error","Could not open|"+fileName+" ("+Card+")" +
+                    "|Check path & if Card is writeable")).popupBlockingModal();                                   
         }
     }
     

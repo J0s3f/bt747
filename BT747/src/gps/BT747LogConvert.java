@@ -414,7 +414,7 @@ public final class BT747LogConvert {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
                 Vm.debug("Could not open "+fileName);
-                (new MessageBox("Error","Could not open|"+fileName)).popupBlockingModal();                                   
+                (new MessageBox("Error","Could not open|"+fileName+"|"+m_File.lastError)).popupBlockingModal();                                   
                 m_File=null;
             } else {
                 passToFindFieldsActivatedInLog=gpsFile.needPassToFindFieldsActivatedInLog();
