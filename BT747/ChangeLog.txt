@@ -1,3 +1,7 @@
+Version 0.95.3
+* KML format got improved: Track added (with extrusion) to show a line in stead of points.
+* Some extra error messages in case of file problems.
+
 Version 0.95.2
 * Added specific target for Linux (serial port opening in entirely new class).
   A linux specific 'jar' file has been created (in the Linux directory).
