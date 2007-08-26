@@ -1,5 +1,5 @@
 del BT747*.zip
-SET DT=20070825_224931
+SET DT=20070826_132321
 
 SET EXTRA_FILES=run_ex.bat run_linux.sh webstart/Waba_only.jar win32comm.jar win32/javax.comm.properties win32com.dll Linux/BT747.jar Linux/javax.comm.properties Linux/swserial.properties Linux/librxtxSerial.so Linux/librxtxParallel.so  webstart/comm.jar webstart/RXTXcomm.jar build.xml .project .classpath
 
