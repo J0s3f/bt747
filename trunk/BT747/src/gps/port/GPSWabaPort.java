@@ -86,7 +86,7 @@ public class GPSWabaPort extends GPSPort {
     * 
     *
     */
-   public void setBluetooth() {
+   public void setBlueTooth() {
        spPortNbr= waba.io.SerialPort.BLUETOOTH;
    }
    

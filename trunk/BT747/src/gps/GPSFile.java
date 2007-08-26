@@ -185,9 +185,9 @@ public abstract class GPSFile {
                 : File.READ_WRITE, m_card);
         if (!m_File.isOpen()) {
             // TODO: provide a single message to the user)
-            waba.sys.Vm.debug("Could not open " + fileName);
-            (new MessageBox("Error", "Could not open|" + fileName))
-                        .popupBlockingModal();
+            waba.sys.Vm.debug("Could not open " + fileName+"|"+m_File.lastError);
+            (new MessageBox("Error", "Could not open|" + fileName+"|"+m_File.lastError))
+                        .popupModal();
             m_File = null;
         } else {
             if (createNewFile) {

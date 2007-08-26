@@ -28,7 +28,7 @@
 public final class Version {
 
    /** Build number (timestamp with format yyyyMMddHHmmssSSS). */
-   public static final long BUILD = 20070825191341861L; //automatically set during Ant compilation!
+   public static final long BUILD = 20070825224931986L; //automatically set during Ant compilation!
    /** Release date of this version (date format dd.MM.yyyy). */
    public static final String DATE = "25.08.2007"; //automatically set during Ant compilation!
    /**
@@ -39,7 +39,7 @@ public final class Version {
     * <li>z = bug fix version
     * </ul>
     */
-   public static final String NUMBER = "0.95.1";
+   public static final String NUMBER = "0.95.2";
    /** Minimum Java JRE version required. */
    static public final String NUMBER_JAVAMIN = "1.4";
    /** Title of this project. */

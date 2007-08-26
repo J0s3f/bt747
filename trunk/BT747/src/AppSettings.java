@@ -130,9 +130,9 @@ public class AppSettings implements gps.settings {
     public void defaultSettings() {
         setPortnbr(0);
         setBaudRate(115200);
+        setCard(-1);
         if (waba.sys.Settings.platform.startsWith("Palm")) {
             setBaseDirPath("/Palm");
-            setCard(-1);
         } else if ( waba.sys.Settings.platform.startsWith("WindowsCE")
                 ||waba.sys.Settings.platform.startsWith("PocketPC") 
                 )
@@ -306,8 +306,8 @@ public class AppSettings implements gps.settings {
     */
    public int getCard() {
        int Card=Conv.hex2Int(getStringOpt(C_CARD_IDX, C_CARD_SIZE));
-       if (Card<=0) {
-           Card=0x200;
+       if (Card<=0||Card>255) {
+           Card=-1;
        }
        return Card;
    }
