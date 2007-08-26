@@ -46,9 +46,6 @@ public class GPSLogReason extends Container {
     
     private Button m_btSet;
     
-    /* TODO: Move these buttons:
-     * 
-     */
     private Check m_chkPowerSaveOnOff;
     private Check m_chkSBASOnOff;
     private Check m_chkSBASTestOnOff;

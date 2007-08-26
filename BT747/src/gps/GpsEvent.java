@@ -8,11 +8,9 @@ package gps;
 
 import waba.ui.Event;
 
-/**
+/** Defines some events for the gps package
+ * 
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class GpsEvent extends Event {
     

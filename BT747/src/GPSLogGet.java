@@ -100,10 +100,9 @@ public class GPSLogGet extends Container {
     /*
      * (non-Javadoc)
      * 
-     * @see waba.ui.Container#onStart() TODO: Handle date fields, ...
+     * @see waba.ui.Container#onStart() 
      */
     protected void onStart() {
-        // TODO Auto-generated method stub
         super.onStart();
         add(m_chkLogOnOff = new Check("Device log on(/off)"), LEFT, TOP); //$NON-NLS-1$
         add(m_chkIncremental = new Check("Incremental"), RIGHT, SAME); //$NON-NLS-1$
@@ -161,23 +160,15 @@ public class GPSLogGet extends Container {
     /*
      * (non-Javadoc)
      * 
-     * @see waba.ui.Control#onEvent(waba.ui.Event) TODO : Make filename
+     * @see waba.ui.Control#onEvent(waba.ui.Event)
      *      configureable.
      */
     public void onEvent(Event event) {
-        // TODO Auto-generated method stub
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
             event.consumed=true;
             if (event.target == m_btGetLog) {
-                // TODO: Get start log nbr and end log nbr to get
-                // actual data from dates.
-                //m_btStartDate;
-                //m_btEndDate;
-                //  m_GPSstate.getLogInit(0,1000,100,m_cbFile.getSelectedItem()+"Test.txt");
-                //	m_GPSstate.getLogInit(0,32*1024*1024,100,"/Palm/BT747log.bin");
-                // TODO: Optimize download on PalmOS.
                 int logRequestSize=m_appSettings.getChunkSize(); // Short by default
                 m_GPSstate.getLogInit(0,            /* StartPosition */
                         m_GPSstate.logMemUsed-1,    /* EndPosition */
@@ -257,10 +248,8 @@ public class GPSLogGet extends Container {
                     m_Filters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
                 }
                 gpsFile.setFilters(m_Filters);
-                // TODO: should get logformat associated with inputfile
                 gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard(),
                         m_appSettings.getOneFilePerDay());
-                /* TODO: Recover the logFormat from a file or so */
                 BT747LogConvert lc=new BT747LogConvert();
                 lc.setTimeOffset(m_appSettings.getTimeOffsetHours()*3600);
                 lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile,m_appSettings.getCard());

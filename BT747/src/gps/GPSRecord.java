@@ -97,8 +97,6 @@ public class GPSRecord {
                 }
             }
         }
-        //this.sid= r.sid;
-        // TODO: Add structures for NSAT, ...
         this.rcr= r.rcr;
         this.milisecond= r.milisecond;
         this.distance= r.distance;

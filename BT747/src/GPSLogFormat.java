@@ -124,7 +124,7 @@ public class GPSLogFormat extends Container {
     
     /** (User) request to change the log format.
      * Warns about requirement to erase the log too.
-     * TODO: Wait until change is finished
+     * TODO: Wait until erase is finished
      */
     private void changeLogFormatAndErase() {
         /** Object to open multiple message boxes */
@@ -161,7 +161,7 @@ public class GPSLogFormat extends Container {
 
     /** (User) request to change the log format.
      * Warns about requirement to erase the log too.
-     * TODO: Wait until change is finished
+     * TODO: Wait until erase is finished
      */
     private void eraseLogFormat() {
         /** Object to open multiple message boxes */

@@ -1,9 +1,22 @@
-/*
- * Created on 22 juin 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+//********************************************************************
+//***                           BT 747                             ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
+//***  for more details.                                           ***
+//***  *********************************************************** ***
+//***  The application was written using the SuperWaba toolset.    ***
+//***  This is a proprietary development environment based in      ***
+//***  part on the Waba development environment developed by       ***                                   
+//***  WabaSoft, Inc.                                              ***
+//********************************************************************  
 package gps;
 
 import waba.io.File;
@@ -11,11 +24,12 @@ import waba.sys.Convert;
 import waba.sys.Vm;
 import waba.ui.MessageBox;
 
-/**
+/** This class is used to convert the binary log to a new format.
+ * Basically this class interprets the log and creates a {@link GPSRecord}.
+ * The {@link GPSRecord} is then sent to the {@link GPSFile} class object to write it
+ * to the output.
+ * 
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public final class BT747LogConvert {
     private File m_File=null;
@@ -28,21 +42,16 @@ public final class BT747LogConvert {
         GPSRecord gpsRec=new GPSRecord();
         final int C_BUF_SIZE=0x800;
         byte[] bytes=new byte[C_BUF_SIZE];
-        int offset;
         int sizeToRead;
         int nextAddrToRead;
         int recCount;
-        int bufIdx;
         int fileSize;
         int minRecordSize=16;
         int maxRecordSize=16;
-        int nsatrec=0;
         int satidx;
         int idx;        recCount=0;
-        offset=0;
         nextAddrToRead=0;
         fileSize=m_File.getSize();
-        boolean endOfBlockInBuffer=false;                
         while(nextAddrToRead<fileSize) {
             int okInBuffer=-1; // Last ending position in buffer
             
@@ -56,13 +65,9 @@ public final class BT747LogConvert {
             sizeToRead=endOfBlock+1-nextAddrToRead;
             if(sizeToRead>C_BUF_SIZE) {
                 sizeToRead=C_BUF_SIZE;
-                endOfBlockInBuffer=false;
-            } else {
-                endOfBlockInBuffer=true;
             }
-            if((sizeToRead+nextAddrToRead)>fileSize) { // TODO: check formula
+            if((sizeToRead+nextAddrToRead)>fileSize) {
                 sizeToRead=fileSize-nextAddrToRead;
-                endOfBlockInBuffer=false;
             }
             
             // Read the bytes
@@ -76,6 +81,9 @@ public final class BT747LogConvert {
                 if(sizeToRead>=20) {
                     // Read header (20 bytes is enough)
                     readResult=m_File.readBytes(bytes, 0, 20);
+                    if(readResult!=20) {
+                        (new MessageBox("Error","Problem reading|"+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
+                    }
                     newLogFormat=   (0xFF&bytes[2])<<0
                     |(0xFF&bytes[3])<<8
                     |(0xFF&bytes[4])<<16
@@ -94,6 +102,9 @@ public final class BT747LogConvert {
                 continueInBuffer=false;
             } else {
                 readResult=m_File.readBytes(bytes, 0, sizeToRead);
+                if(readResult!=sizeToRead) {
+                    (new MessageBox("Error","Problem reading|"+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
+                }
                 nextAddrToRead+=sizeToRead;
             }
             
@@ -183,7 +194,6 @@ public final class BT747LogConvert {
                                 recCount++;
                                 //System.out.println(recCount);
                                 foundAnyRecord=true;
-                                //TODO: Handle record (here or further)
                                 /* Handle record */
                                 if(!passToFindFieldsActivatedInLog) {
                                     // Only interpret fiels if not looking for logFormat changes only
@@ -315,9 +325,14 @@ public final class BT747LogConvert {
                                                 (0xFF&bytes[recIdx++])<<0;
                                             gpsRec.sidinuse[satidx]=
                                                 ((0xFF&bytes[recIdx++])<<0)!=0;
-                                            int satcnt=
-                                                (0xFF&bytes[recIdx++])<<0
-                                                |(0xFF&bytes[recIdx++])<<8;
+                                            if(false) {
+                                            	// satcnt is not used - skipping with iffalse)
+                                                int satcnt=
+                                                    (0xFF&bytes[recIdx++])<<0
+                                                    |(0xFF&bytes[recIdx++])<<8;
+                                            } else {
+                                            	recIdx+=2;
+                                            }
                                         }
                                         if((logFormat&(1<<BT747_dev.FMT_ELEVATION_IDX))!=0) {
                                             gpsRec.ele[satidx]=
@@ -409,7 +424,6 @@ public final class BT747LogConvert {
     
     
     public final void toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
-        GPSRecord gpsRec=new GPSRecord();
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {

@@ -24,21 +24,13 @@ import waba.ui.Event;
 import waba.ui.MessageBox;
 
 import gps.GPSstate;
-/*
- * Created on 19 août 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 
-/**
+/** Implement some buttons to easily do more complex operations
+ * or to do some things not done in other tabs.
+ * 
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class GPSLogEasy extends Container {
-      final private static boolean ENABLE_PWR_SAVE_CONTROL=false;
       private GPSstate m_GPSstate;
       
       private Button m_btSet5Hz;

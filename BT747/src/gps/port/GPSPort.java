@@ -22,8 +22,6 @@ package gps.port;
 
 import waba.io.DataStream;
 import waba.io.File;
-import waba.sys.Convert;
-import waba.sys.Vm;
 
 /**
  * @author Mario De Weerd
@@ -95,7 +93,7 @@ public abstract class GPSPort {
             try {
                 m_debugFile.writeBytes(b,0,l);
             } catch (Exception e) {
-                // TODO: handle exception
+            	//e.printStackTrace();
             }
         }
     }
@@ -105,7 +103,7 @@ public abstract class GPSPort {
             try {
                 m_debugFile.writeBytes(b,index,len);
             } catch (Exception e) {
-                // TODO: handle exception
+            	//e.printStackTrace();
             }
         }
     }

@@ -203,9 +203,6 @@ public class GPSstate implements Thread {
      */
     private void setupTimer() {
         if( m_GPSrxtx.isConnected()) {
-            // Check if old timer still present (for safety)
-            // TODO: check if old thread is still present
-            //if(linkTimer!=null) removeTimer(linkTimer);
             MainWindow.getMainWindow().addThread(this, false);
 
             // Remember defaults
@@ -258,7 +255,7 @@ public class GPSstate implements Thread {
         );
     }
     /** erase the log - takes a while
-     * TODO: Find out a way to follow up on erasal (status)
+     * TODO: Find out a way to follow up on erasal (status) (check response on cmd)
      */
     
     public void eraseLog() {
@@ -320,13 +317,11 @@ public class GPSstate implements Thread {
         return logRecordMaxSize+p_RecordNumber*logEntrySize;
     }
     
-    /* TODO: Could implement specific event structure */
     private void PostStatusUpdateEvent() {
         if(m_EventPosterObject!=null) {
             m_EventPosterObject.postEvent(new Event(GpsEvent.DATA_UPDATE, m_EventPosterObject,0));
         }
     }
-    //getParent().postEvent(new Event(ControlEvent.TIMER,getParent(),0));
 
     private void PostStatusEvent(final int event) {
         if(m_EventPosterObject!=null) {
@@ -1053,8 +1048,6 @@ public class GPSstate implements Thread {
     }
     
     public void recoverFromLogError() {
-        // TODO: Handle error in order of data
-        //m_isLogging= false;
         m_NextReqAddr=m_NextReadAddr;
         if(!m_recoverFromError) {
             m_recoverFromError=true;
@@ -1149,8 +1142,6 @@ public class GPSstate implements Thread {
                 String fileName=m_logFile.getPath();
                 if(success) {
                     // Downloaded data seems to correspond - start incremental download
-                    // TODO: Could find exact position at the end of the log to continue
-                    // download.  Currently starting with last full block (0x10000)
                     reOpenLogWrite(fileName,m_logFileCard);
 //                    m_NextReqAddr=((m_logFile.getSize()-1) & 0xFFFF0000);
 //                    if(m_NextReadAddr<m_NextReqAddr) {
@@ -1318,7 +1309,6 @@ public class GPSstate implements Thread {
      */
     public void run() {
         int loops_to_go=5;
-        // TODO Auto-generated method stub
         if(m_GPSrxtx.isConnected()) {
             if((m_isLogging||m_isCheckingLog)&&(sentCmds.getCount()==0)&&(toSendCmds.getCount()==0)) {
                 // Sending command on next timer adds some delay after
@@ -1344,7 +1334,6 @@ public class GPSstate implements Thread {
      * @see waba.sys.Thread#started()
      */
     public void started() {
-        // TODO Auto-generated method stub
 
     }
 
@@ -1352,7 +1341,6 @@ public class GPSstate implements Thread {
      * @see waba.sys.Thread#stopped()
      */
     public void stopped() {
-        // TODO Auto-generated method stub
 
     }
     public String getFirmwareVersion() {

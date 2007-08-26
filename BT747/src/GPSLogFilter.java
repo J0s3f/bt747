@@ -34,10 +34,6 @@ public class GPSLogFilter extends Container {
     private int currentLogFilter=0;
     private AppSettings m_settings;
 
-    /**
-     * @param settings TODO
-     * 
-     */
     public GPSLogFilter(AppSettings settings, final GPSFilter[] logFilters) {
         m_logFilters = logFilters;
         m_settings=settings;

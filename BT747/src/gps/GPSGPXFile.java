@@ -36,7 +36,6 @@ public class GPSGPXFile extends GPSFile {
      */
     public GPSGPXFile() {
         super();
-        // TODO Auto-generated constructor stub
         C_NUMBER_OF_PASSES=2;
     }
 
