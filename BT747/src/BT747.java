@@ -105,13 +105,11 @@ public class BT747 extends MainWindow {
     private static GPSFlashOption  m_GPSFlash;
     private static final int C_GPS_FLASH_IDX= 7;
     
-    // TODO: Settings should just refer to function and not need to be instantiated
     private static AppSettings m_settings=new AppSettings();
     
     /** Initialiser of the application
      */
     public BT747() {
-        // TODO: Initialise settings in AppSettings class
         waba.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
@@ -167,7 +165,6 @@ public class BT747 extends MainWindow {
         
         // Next line is for modeling a device for debug.
         // Doing this on the windows platform
-        // TODO: Remove for production version
         //		 if (Settings.platform.equals("Java")) m_model= new BT747model();		
         //			sp.writeBytes(buf,0,1);
         

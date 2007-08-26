@@ -34,8 +34,6 @@ import gps.convert.*;
  */
 public class BT747model extends Control {
 
-    Timer linkTimer = null;
-
     public int logFormat = 0x3E;
 
     GPSrxtx m_GPSrxtx = null;
@@ -189,8 +187,6 @@ public class BT747model extends Control {
                     analyseNMEA(lastResponse);
                 }
             } else {
-                removeTimer(linkTimer);
-                linkTimer = null;
             }
             break;
 

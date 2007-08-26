@@ -107,7 +107,7 @@ public class GPSLinuxPort extends GPSPort {
     * 
     *
     */
-   public void setBluetooth() {
+   public void setBlueTooth() {
        spPortNbr= 0;
    }
    

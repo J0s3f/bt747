@@ -362,7 +362,6 @@ public class GPSGPXFile extends GPSFile {
      * @see gps.GPSFile#FinaliseFile()
      */
     public void finaliseFile() {
-        // TODO Auto-generated method stub
         if(m_File!=null) {
             String footer;
             writeDataFooter();
