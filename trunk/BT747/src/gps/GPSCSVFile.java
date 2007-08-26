@@ -20,9 +20,9 @@
 package gps;
 
 import waba.sys.Convert;
-import waba.sys.Time;
 
 /**Class to write a CSV file.
+ * 
  * @author Mario De Weerd
  */
 public class GPSCSVFile extends GPSFile {

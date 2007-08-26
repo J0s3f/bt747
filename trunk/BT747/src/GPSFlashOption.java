@@ -31,7 +31,6 @@ import gps.GpsEvent;
  * @author Mario De Weerd
  */
 public class GPSFlashOption extends Container {
-    final private static boolean ENABLE_PWR_SAVE_CONTROL=false;
     private GPSstate m_GPSstate;
     
     private Edit m_userOptionTimesLeft;

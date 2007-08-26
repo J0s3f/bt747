@@ -6,11 +6,14 @@
  */
 package gps;
 
-/**
+/** This class implements a filter for a {@link GPSRecord}.
+ * 
+ * A {@link GPSRecord} can be presented to the doFilter method and
+ * it will indicate whether the record must be kept or not.
+ * 
+ * This class simplifies setting filter options in the application.
+ * 
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class GPSFilter {
     private int startDate=0; // Seconds since 1/1/1970

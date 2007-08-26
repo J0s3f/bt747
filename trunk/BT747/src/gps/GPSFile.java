@@ -28,8 +28,9 @@ import waba.util.Date;
 /**
  * @author Mario De Weerd
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * This abstract class defines the 'interface' with the BT747LogConvert class.
+ * Derived classes will be able to write the desired output in the formats they
+ * implement.
  */
 public abstract class GPSFile {
     protected GPSFilter[] m_Filters = null;
@@ -152,7 +153,6 @@ public abstract class GPSFile {
     };
 
     public void finaliseFile() {
-        // TODO Auto-generated method stub
         if (m_File != null) {
             m_File.close();
             m_File = null;
@@ -184,7 +184,6 @@ public abstract class GPSFile {
         m_File = new File(fileName, createNewFile ? File.CREATE
                 : File.READ_WRITE, m_card);
         if (!m_File.isOpen()) {
-            // TODO: provide a single message to the user)
             waba.sys.Vm.debug("Could not open " + fileName+"|"+m_File.lastError);
             (new MessageBox("Error", "Could not open|" + fileName+"|"+m_File.lastError))
                         .popupModal();
