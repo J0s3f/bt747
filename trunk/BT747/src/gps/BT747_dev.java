@@ -103,7 +103,7 @@ public final class BT747_dev {  // dev as in device
      * Entries are in order.  The entry position corresponds to the
      * bit position in the log format 'byte'.
      */
-    protected static final int[] logFmtByteSizes = {
+    public static final int[] logFmtByteSizes = {
             4, //"UTC",     // = 0x00001    // 0
             2, //"VALID",   // = 0x00002    // 1
             8, //"LATITUDE",    // = 0x00004    // 2

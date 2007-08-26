@@ -43,7 +43,7 @@ public class GPSrxtx {
     /** Class constructor.
      */
     public  GPSrxtx() {
-        gpsPort=new GPSWabaPort(); // TODO: select according to OS.
+        gpsPort=new GPSWabaPort(); // TODO: select according to OS (done during compile currently).
         setDefaults();
     }
     

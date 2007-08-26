@@ -24,6 +24,8 @@ import waba.sys.Convert;
 import waba.sys.Vm;
 import waba.ui.MessageBox;
 
+import gps.convert.Conv;
+
 /** This class is used to convert the binary log to a new format.
  * Basically this class interprets the log and creates a {@link GPSRecord}.
  * The {@link GPSRecord} is then sent to the {@link GPSFile} class object to write it
@@ -36,6 +38,7 @@ public final class BT747LogConvert {
     private long timeOffsetSeconds=0;
     protected boolean passToFindFieldsActivatedInLog= false;
     protected int activeFileFields=0;
+    private boolean noGeoid=false; // If true,remove geoid difference from height
     
     public final void parseFile(final GPSFile gpsFile) {
         int logFormat=0;
@@ -251,6 +254,12 @@ public final class BT747LogConvert {
                                             |(0xFF&bytes[recIdx++])<<24
                                             ;
                                         gpsRec.height=Convert.toFloatBitwise(height);
+                                        if(noGeoid
+                                                &&((logFormat&(1<<BT747_dev.FMT_LATITUDE_IDX))!=0)
+                                                &&((logFormat&(1<<BT747_dev.FMT_LONGITUDE_IDX))!=0)
+                                                ) {
+                                            gpsRec.height-=Conv.wgs84_separation(gpsRec.latitude, gpsRec.longitude);
+                                        }
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_SPEED_IDX))!=0) {
                                         int speed=
@@ -420,6 +429,10 @@ public final class BT747LogConvert {
     
     public final void setTimeOffset(long offset) {
         timeOffsetSeconds= offset;
+    }
+    
+    public final void setNoGeoid(boolean b) {
+        noGeoid=b;
     }
     
     

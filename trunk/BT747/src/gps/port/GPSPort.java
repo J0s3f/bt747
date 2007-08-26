@@ -23,11 +23,10 @@ package gps.port;
 import waba.io.DataStream;
 import waba.io.File;
 
-/**
+/** abstract class defining interface for serial port implementation.
+ * Allows differentiation according to platform.
+ * 
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public abstract class GPSPort {
     protected DataStream ds=null;

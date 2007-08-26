@@ -64,7 +64,9 @@ public class AppSettings implements gps.settings {
     private final static int C_TRKPT_VALID_SIZE=4;
     private final static int C_ONEFILEPERDAY_IDX=C_TRKPT_VALID_IDX+C_TRKPT_VALID_SIZE;
     private final static int C_ONEFILEPERDAY_SIZE=1;
-    private final static int C_NEXT_IDX=C_ONEFILEPERDAY_IDX+C_ONEFILEPERDAY_SIZE;
+    private final static int C_NOGEOID_IDX=C_ONEFILEPERDAY_IDX+C_ONEFILEPERDAY_SIZE;
+    private final static int C_NOGEOID_SIZE=4;
+    private final static int C_NEXT_IDX=C_NOGEOID_IDX+C_NOGEOID_SIZE;
     
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
@@ -123,8 +125,12 @@ public class AppSettings implements gps.settings {
                 // Added one file per day functionality in 0.03
                 setOneFilePerDay(false);
             }
+            if( Convert.toFloat(mVersion)<0.04f) {
+                // Added one file per day functionality in 0.03
+                setNoGeoid(false);
+            }
         }
-        setStringOpt("0.03",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.04",C_VERSION_IDX, C_VERSION_SIZE);
     }
     
     public void defaultSettings() {
@@ -153,7 +159,8 @@ public class AppSettings implements gps.settings {
         setChunkSize(waba.sys.Settings.onDevice?0x200:0x10000);
         setDownloadTimeOut( C_DEFAULT_DEVICE_TIMEOUT );
         setFilterDefaults();
- 
+        setOneFilePerDay(false);
+        setNoGeoid(false);
         getSettings();
     }
     
@@ -439,6 +446,14 @@ public class AppSettings implements gps.settings {
         setStringOpt((value?"1":"0"),C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
     }
     
-
+    public boolean getNoGeoid() {
+        return Conv.hex2Int(getStringOpt(C_NOGEOID_IDX, C_NOGEOID_SIZE))==1;
+    }
+    /**
+     * @param value The default value for opening the port.
+     */
+    public void setNoGeoid(boolean value) {
+        setStringOpt((value?"1":"0"),C_NOGEOID_IDX, C_NOGEOID_SIZE);
+    }
 
 }

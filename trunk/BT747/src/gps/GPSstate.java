@@ -982,10 +982,7 @@ public class GPSstate implements Thread {
     // Called regurarly
     public void getNextLogPart() {
         if ( m_isLogging ) {
-            //Vm.debug("NextLogPart");
-            //TODO: Stop the thread at the end.
             int z_Step;
-            //resetLogTimeOut();  // Reset timeout because requesting new part.
             if(m_NextReqAddr<=m_NextReadAddr) {
                 z_Step=m_EndAddr-m_NextReqAddr+1;
                 if(m_recoverFromError && z_Step>0x800) {
@@ -1005,10 +1002,7 @@ public class GPSstate implements Thread {
     // Called when no outstanding requests
     public void getLogPart() {
         if ( m_isLogging ) {
-            //Vm.debug("NextLogPart");
-            //TODO: Stop the thread at the end.
             int z_Step;
-            //resetLogTimeOut();  // Reset timeout because requesting new part.
             if(m_NextReqAddr>m_NextReadAddr) {
                 recoverFromLogError();
             } else {

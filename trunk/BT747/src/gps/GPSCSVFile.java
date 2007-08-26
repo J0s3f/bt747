@@ -21,6 +21,10 @@ package gps;
 
 import waba.sys.Convert;
 
+import sun.awt.windows.WGlobalCursorManager;
+
+import gps.convert.Conv;
+
 /**Class to write a CSV file.
  * 
  * @author Mario De Weerd
@@ -223,6 +227,12 @@ public class GPSCSVFile extends GPSFile {
             if(activeFields.height!=0) {
                 rec.append(fieldSep);
                 rec.append(Convert.toString(s.height,3));
+                // Add field concerning geoid separation.
+//                if(activeFields.latitude!=0 && activeFields.longitude!=0) {
+//                    rec.append(fieldSep);
+//                    rec.append(Convert.toString(gps.convert.Conv.wgs84_separation(s.latitude,s.longitude),3));
+//                }
+                
             } else if(activeFileFields.height!=0) {
                 rec.append(fieldSep);
             }

@@ -56,7 +56,7 @@ public class GPSLogGet extends Container {
     Date m_EndDate=new Date();
 
     Button m_btGetLog;
-
+    Check m_chkNoGeoid;
     Button m_btCancelGetLog;
 
     Button m_btToCSV;
@@ -113,9 +113,9 @@ public class GPSLogGet extends Container {
         //m_btStartDate.setMode(Edit.DATE);
         add(m_btEndDate = new Button(m_EndDate.getDate()), RIGHT, SAME); //$NON-NLS-1$
         //m_btEndDate.setMode(Edit.DATE);
-        add(m_chkOneFilePerDay = new Check("One file per day"), LEFT, AFTER);
-        m_chkOneFilePerDay.setChecked(m_appSettings.getOneFilePerDay());
 
+        add(m_btGetLog = new Button("Get Log"), LEFT, AFTER+2); //$NON-NLS-1$
+        add(m_btCancelGetLog = new Button("Cancel get"), AFTER+5, SAME); //$NON-NLS-1$
         add(m_cbTimeOffsetHours=new ComboBox(offsetStr),RIGHT, SAME);
         int offsetIdx=m_appSettings.getTimeOffsetHours()+12;
         if(offsetIdx>24) {
@@ -126,8 +126,10 @@ public class GPSLogGet extends Container {
         add(new Label("UTC"), BEFORE, SAME); 
 
         //add(new Label("End"),BEFORE,SAME);
-        add(m_btGetLog = new Button("Get Log"), LEFT, AFTER + 5); //$NON-NLS-1$
-        add(m_btCancelGetLog = new Button("Cancel get"), RIGHT, SAME); //$NON-NLS-1$
+        add(m_chkOneFilePerDay = new Check("One file/ day"), LEFT, AFTER+2);
+        m_chkOneFilePerDay.setChecked(m_appSettings.getOneFilePerDay());
+        add(m_chkNoGeoid = new Check("hght - geiod diff"), AFTER+5, SAME); //$NON-NLS-1$
+        m_chkNoGeoid.setChecked(m_appSettings.getNoGeoid());
 
         add(m_btToCSV = new Button("To CSV"), LEFT, AFTER + 5); //$NON-NLS-1$
         add(m_btToGPX = new Button("To GPX"), CENTER, SAME); //$NON-NLS-1$
@@ -183,7 +185,6 @@ public class GPSLogGet extends Container {
                 m_GPSstate.cancelGetLog();
             } else if (event.target == m_chkLogOnOff) {
                 if(m_chkLogOnOff.getChecked()) {
-                    // TODO: Update button status after update (propagate some event from State
                     m_GPSstate.startLog();
                 } else {
                     m_GPSstate.stopLog();
@@ -202,6 +203,8 @@ public class GPSLogGet extends Container {
                 m_GPSstate.getLogOverwrite();
             } else if (event.target == m_chkOneFilePerDay) {
                 m_appSettings.setOneFilePerDay(m_chkOneFilePerDay.getChecked());
+            } else if (event.target == m_chkNoGeoid) {
+                m_appSettings.setNoGeoid(m_chkNoGeoid.getChecked());
             } else if (event.target == m_btEndDate) {
                 if (cal == null) {
                     cal = new Calendar();
@@ -252,6 +255,7 @@ public class GPSLogGet extends Container {
                         m_appSettings.getOneFilePerDay());
                 BT747LogConvert lc=new BT747LogConvert();
                 lc.setTimeOffset(m_appSettings.getTimeOffsetHours()*3600);
+                lc.setNoGeoid(m_appSettings.getNoGeoid());
                 lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile,m_appSettings.getCard());
             } else if (event.target == this) {
                 m_GPSstate.getLogCtrlInfo();
