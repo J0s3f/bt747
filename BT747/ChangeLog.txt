@@ -1,3 +1,7 @@
+Version 0.95.5
+* Increased limits on fix setting (fix frequency slower than 1Hz now possible) and on 
+  log reason settings (speed as low as 1km/h and distance as low as 1 m).
+
 Version 0.95.4
 * Added tickbox to remove difference between WGS84 and geoid (Mean Sea Level, MSL) from
   the logged height (as it was added by the logger).

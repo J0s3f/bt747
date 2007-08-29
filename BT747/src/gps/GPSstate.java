@@ -539,8 +539,8 @@ public class GPSstate implements Thread {
         int z_value=value;
         if(z_value!=0 && z_value>9999) {
             z_value=9999;
-        } else if(z_value!=0 && z_value<10) {
-            z_value=10;
+        } else if(z_value!=0 && z_value<1) {
+            z_value=1;
         }
         
         /* Get log distance interval */
@@ -556,8 +556,8 @@ public class GPSstate implements Thread {
         int z_value=value;
         if(z_value!=0 && z_value>999) {
             z_value=999;
-        } else if(z_value!=0 && z_value<10) {
-            z_value=10;
+        } else if(z_value!=0 && z_value<1) {
+            z_value=1;
         }
         /* Get log distance interval */
         sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
@@ -569,8 +569,8 @@ public class GPSstate implements Thread {
     
     public void setFixInterval(final int value) {
         int z_value=value;
-        if(z_value>1000) {
-            z_value=1000;
+        if(z_value>30000) {
+            z_value=30000;
         } else if(z_value<200) {
             z_value=200;
         }
@@ -1156,6 +1156,26 @@ public class GPSstate implements Thread {
         }
     }
     
+    
+    final void analyzeGPGGA(final String[] p_nmea) {
+        // Partial decode to compare height with calculated geoid.
+        GPSRecord gps=new GPSRecord();
+        if(p_nmea.length==15) {
+            gps.latitude=(Convert.toDouble(p_nmea[2].substring(0, 2))+Convert.toDouble(p_nmea[2].substring(2))/60)
+                *(p_nmea[3].equals("N")?1:-1);
+            gps.longitude=(Convert.toDouble(p_nmea[4].substring(0, 3))+Convert.toDouble(p_nmea[4].substring(3))/60)
+            *(p_nmea[5].equals("E")?1:-1);
+            gps.height=Convert.toFloat(p_nmea[9]);
+            float gps_geoid=Convert.toFloat(p_nmea[11]);
+            double geoid=Conv.wgs84_separation(gps.latitude, gps.longitude);
+            if(GPS_DEBUG) {
+                Vm.debug("geoid GPS: "+Convert.toString(gps_geoid,3)
+                        + " geoid calc:"+Convert.toString(geoid)
+                        );
+            }
+        }
+    }
+    
     // Flash user option values
     public int userOptionTimesLeft;
     public int dtUpdateRate;
@@ -1173,14 +1193,17 @@ public class GPSstate implements Thread {
     private String model="";
     private String firmwareVersion="";
     
-    public int analyseNMEA(String[] p_nmea) {
+    public int analyseNMEA(final String[] p_nmea) {
         int z_Cmd;
         int z_Result;
         z_Result = 0;
         //if(GPS_DEBUG&&!p_nmea[0].startsWith("G")) {	waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]);}
         if(p_nmea[0].startsWith("G")) {
             // Commented - not interpreted.
-//            if(p_nmea[0].startsWith("GPZDA")) {
+//          if(p_nmea[0].startsWith("GPGGA")) {
+//              analyzeGPGGA(p_nmea);
+//          }
+//            else if(p_nmea[0].startsWith("GPZDA")) {
 //                // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
 //            } else if(p_nmea[0].startsWith("GPRMC")) {
 //                // GPRMC,$time,$fix,$latf1,$ns,$lonf1,$ew,$knots,$bear,$date,$magnvar,$magnew,$magnfix
