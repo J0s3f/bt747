@@ -37,6 +37,27 @@ public class GPSLinuxPort extends GPSPort {
     private SerialPort sp=null;
 
     private OutputStream ds;
+    private String portPrefix=""; 
+    /**
+     * 
+     */
+    public GPSLinuxPort() {
+        // TODO Auto-generated constructor stub
+        super();
+        
+        String os_name;
+
+        os_name=java.lang.System.getProperty("os.name");
+
+        if(os_name.startsWith("Windows")) {
+            portPrefix="COM";
+        } else if(os_name.startsWith("Linux")) {
+            portPrefix="/dev/ttyUSB";
+        } else if(os_name.startsWith("Mac")) {
+            portPrefix="/dev/tty.iBt-GPS-SPPslave-";
+        }
+        portPrefix=java.lang.System.getProperty("bt747_prefix",portPrefix);
+    }
 
     /** Indicates if the device is connected or not.
      * 
@@ -58,7 +79,6 @@ public class GPSLinuxPort extends GPSPort {
            } catch (Exception e) {
                e.printStackTrace();
            }
-
        } 
    }
    
@@ -71,7 +91,7 @@ public class GPSLinuxPort extends GPSPort {
        closePort();
        try {
            CommPortIdentifier portIdentifier;
-               portIdentifier = CommPortIdentifier.getPortIdentifier("/dev/ttyUSB"+spPortNbr);
+               portIdentifier = CommPortIdentifier.getPortIdentifier(portPrefix+spPortNbr);
            if(portIdentifier.isCurrentlyOwned())
            {
                System.out.println("Error: Port is currently in use");
