@@ -17,11 +17,15 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.io.SerialPort;
+import waba.sys.Convert;
 import waba.ui.Button;
+import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
+import waba.ui.PopList;
 import waba.ui.PushButtonGroup;
 
 import gps.GPSstate;
@@ -32,46 +36,60 @@ import gps.GpsEvent;
  */
 
 public class GPSconctrl extends Container {
-    private PushButtonGroup btnChannelSelect;
+    //private PushButtonGroup btnChannelSelect;
 
     private Button btnRestartGps;
+    private Button btnStopGps;
+    private Button btnBluetooth;
+    private Button btnUSB;
+    private Button btnConnectPort;
 
     private GPSstate m_GPSstate;
     
     private Label lbFirmwareMainVersion;
     private Label lbFirmwareName;
     private Label lbModel;
+    ComboBox m_cbPorts;
+
     
 
-    static final int C_CHN_BLUETOOTH = 0;
+    private final static int C_MAX_PORTNBR = 32;
+    private AppSettings m_Settings;
 
-    static final int C_CHN_USB = 1;
-
-    static final int C_CHN_0 = 2;
-
-    private static final String[] txtChannel = { "BLUETOOTH", "USB", "0", "1", "2",
-            "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14","15"};
-
-    public GPSconctrl(GPSstate p_GPSstate) {
+    public GPSconctrl(GPSstate p_GPSstate, AppSettings settings) {
         m_GPSstate = p_GPSstate;
+        m_Settings = settings;
     }
 
     public void onStart() {
 
-        // Button group to select channel type
-        btnChannelSelect = new PushButtonGroup(txtChannel, // Names
-                true, // At least one
-                C_CHN_BLUETOOTH, // Default selected - get this from rxtx
-                -1, // gap
-                6, // inside gap
-                2, // rows
-                false, // all same width
-                PushButtonGroup.NORMAL);
-        add(btnChannelSelect, CENTER, AFTER + 2);
-        //gpsTimer = addTimer(100);
+        btnBluetooth=new Button("BLUETOOTH");
+        btnUSB=new Button("USB");
+        btnConnectPort=new Button("Connect Port Nbr");
+        
+        String[] portNbrs=new String[C_MAX_PORTNBR+1]; 
+        for(int i=0; i<=C_MAX_PORTNBR;i++) {
+            portNbrs[i]=Convert.toString(i);
+        }
+        m_cbPorts=new ComboBox(portNbrs);
+        
+        int portNbr=m_Settings.getPortnbr();
 
-        btnRestartGps = new Button("Reset COM port");
+        add(btnBluetooth,LEFT,TOP);
+        add(btnUSB,RIGHT,SAME);
+        add(btnConnectPort,LEFT,AFTER+2);
+        add(m_cbPorts,AFTER+3, SAME);
+        if(m_Settings.getPortnbr()<C_MAX_PORTNBR) {
+            m_cbPorts.select(portNbr);
+        }
+        repaintNow();
+
+
+        btnRestartGps = new Button("(Re)open COM port");
         btnRestartGps.setGap(5);
+        btnRestartGps = new Button("Close port");
+        btnRestartGps.setGap(5);
+        add(btnStopGps, LEFT + 5, BOTTOM - 5);
         add(btnRestartGps, RIGHT - 5, BOTTOM - 5);
         add(new Label("This SW: V"+Version.NUMBER+"("+Version.DATE+")"), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbFirmwareMainVersion=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
@@ -81,14 +99,16 @@ public class GPSconctrl extends Container {
 
     private void GPS_setChannel(int channel) {
         switch (channel) {
-        case C_CHN_BLUETOOTH:
+        case SerialPort.BLUETOOTH:
             m_GPSstate.setBluetooth();
+            btnBluetooth.press(true);
             break;
-        case C_CHN_USB:
+        case SerialPort.USB:
             m_GPSstate.setUsb();
+            btnUSB.press(true);
             break;
         default:
-            m_GPSstate.setPort(channel - C_CHN_0);
+            m_GPSstate.setPort(channel);
             break;
         }
     }
@@ -105,11 +125,19 @@ public class GPSconctrl extends Container {
     public void onEvent(Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
-            if (event.target == btnChannelSelect) {
-                GPS_setChannel(btnChannelSelect.getSelected());
+            if (event.target == btnBluetooth) {
+                GPS_setChannel(SerialPort.BLUETOOTH);
+            } else if (event.target == btnConnectPort) {
+                GPS_setChannel(Convert.toInt(((String)m_cbPorts.getSelectedItem())));
+            } else if (event.target == btnUSB) {
+                GPS_setChannel(SerialPort.USB);
+            } else if (event.target == m_cbPorts) {
+                
             } else if (event.target==this) {
                 m_GPSstate.getDeviceInfo();
                 event.consumed=true;
+            } else if (event.target == btnStopGps) {
+                m_GPSstate.GPS_close();
             } else if (event.target == btnRestartGps) {
                 m_GPSstate.GPS_restart();
             }
