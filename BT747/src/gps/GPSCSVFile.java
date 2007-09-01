@@ -244,7 +244,7 @@ public class GPSCSVFile extends GPSFile {
             }
             if(activeFields.heading!=0) {
                 rec.append(fieldSep);
-                rec.append(Convert.toString(s.heading,6));
+                rec.append(Convert.toString((double)s.heading,6));
             } else if(activeFileFields.heading!=0) {
                 rec.append(fieldSep);
             }
@@ -318,12 +318,12 @@ public class GPSCSVFile extends GPSFile {
                         if(activeFileFields.azi!=null) {
                             rec.append('-');
                             if(activeFields.azi!=null) {
-                                if(s.azi[j]<100) {
-                                    rec.append('0');
+//                                if(s.azi[j]<100) {
+//                                    rec.append('0');
                                     if(s.azi[j]<10) {
                                         rec.append('0');
                                     }
-                                }
+//                                }
                                 rec.append(s.azi[j]);
                             }
                         }

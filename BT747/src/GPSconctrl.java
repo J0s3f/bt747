@@ -87,11 +87,11 @@ public class GPSconctrl extends Container {
 
         btnRestartGps = new Button("(Re)open COM port");
         btnRestartGps.setGap(5);
-        btnRestartGps = new Button("Close port");
-        btnRestartGps.setGap(5);
+        btnStopGps = new Button("Close port");
+        btnStopGps.setGap(5);
         add(btnStopGps, LEFT + 5, BOTTOM - 5);
         add(btnRestartGps, RIGHT - 5, BOTTOM - 5);
-        add(new Label("This SW: V"+Version.NUMBER+"("+Version.DATE+")"), LEFT, BEFORE); //$NON-NLS-1$)
+        add(new Label("This SW: V"+Version.VERSION_NUMBER+"("+Version.DATE+")"), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbFirmwareMainVersion=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbFirmwareName=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbModel=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)

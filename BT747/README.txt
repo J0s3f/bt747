@@ -16,7 +16,25 @@ Further in this readme are instructions for installing on:
 - Linux
 - Palm
 
+========= General (for pure rxtx/all systems) ===========
+# Change the port prefix by adding the following option to the java invocation:
+#     (the example is for ports like /dev/ttyUSB0)
+#  -Dbt747_prefix="/dev/ttyUSB" 
+java -Dbt747_prefix="/dev/ttyUSB" waba.applet.Applet BT747
+=========================================
+
 ========= WINDOWS INSTRUCTIONS =================
+There are two different methods to make it work on windows:
+a. Using RXTX directly
+b. Using WIN32COMM
+
+============== Windows: Using RXTX directly ===================
+You need the full package or install rxtx yourself.
+
+The 'RUN_RXTX.bat' file should work (or need minor adaptations).
+===============================================================
+
+============== Windows: Using WIN32COMM ===================
 To run on 'windows', you should install WIN32COMM for java to get things going rapidly.
 You need to install Java 1.4.X too.
 
@@ -39,9 +57,9 @@ It is hosted in http://sourceforge.net/projects/bt747.  That is where you can co
 You can find binaries in the 'dist' directory:
   - Palm  (BT747.prc, BT747.pdb)
   - WinCE (Untested: BT747_Install.BAT)
+  - BT747.jar       (version using win32comm)
+  - BT747_rxtx.jar  (version using rxtx)
   
-The following file is in the 'build' directory:
-  - BT747.jar
 
 You can find sources in the 'src' directory.
 
@@ -97,22 +115,8 @@ I open the kml on windows -> opens google earth with expected points.
 
 
 ============= Linux ============================
-Solution 1:
-
-I am currently in the process of downloading a Linux CD that includes Java.
-I debugged on puppy linux using another java virtual machine that ultimately fails but helped
-to solved a number of problems.
-
-A script is proposed in run_linux.sh.  There are complementary files in the Linux directory and the webstart directory.
-In the Linux directory, you may need to modify swserial.properties.
-Currently it maps the USB connection to '/dev/ttyUSB0' so clicking on USB in the application
-will try to open that device where your GPS datalogger is most likely located.
-
-
-Solution 2:
-A specific JAR file has been created that should work specifically with RXTX.
-It is located in the Linux directory and should be used instead of the original one.
-This is experimental
+A specific JAR file has been created that should work specifically with RXTX (BT747_rxtx.jar).
+Use 'run_rxtx.sh'.  It has not been validated on Linux, but it might work and at least provides the template.
 
 ============ Contributors ======================
 Mario De Weerd (main coder)

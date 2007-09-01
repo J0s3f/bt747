@@ -199,7 +199,7 @@ public class BT747 extends MainWindow {
                     m_GPSstate.GPS_close();
                     break;
                 case C_MENU_ABOUT:
-                    new MessageBox("About BT747 V"+Version.NUMBER,
+                    new MessageBox("About BT747 V"+Version.VERSION_NUMBER,
                             " Created with SuperWaba" +
                             "|http://www.superwaba.org"+
                             "|" +Convert.toString(Version.BUILD)+

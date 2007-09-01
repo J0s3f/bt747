@@ -327,7 +327,17 @@ public final class BT747_dev {  // dev as in device
         int total = 0;
         do {
             if ((bits&1)!=0) {
-                total+=logFmtByteSizes[index];
+                switch (index) {
+                case FMT_ELEVATION_IDX:
+                case FMT_AZIMUTH_IDX:
+                case FMT_SNR_IDX:
+                    // These fields do not contribute to the minimum size
+                    break;
+                default:
+                    // Other fields contribute
+                    total+=logFmtByteSizes[index];
+                    break;
+                }
             }
             index++;
         } while((bits>>=1) != 0);
