@@ -1,32 +1,20 @@
 <?xml version="1.0"?>
+
 <project name="BT747" basedir="." default="all">
+	<!-- Local properties (not in version control/local override) -->
+	<!-- Allows any user specific values to override the defaults -->
+	<property file="build.properties" />
+	<!-- Default properties (in version control) -->
+	<property file="default.properties" />
 
-    <property name="superwaba_root" value="c:\SuperWabaSDK"/>
-	<!-- Name of the main class -->
-	<property name="mainClass" value="BT747"/>
-	<!-- Main dirs -->
-    <property name="srcDir" value="src"/>
-    <property name="buildDir" value="build"/>
-    <property name="libDir" value="lib"/>
 
-	<!-- Other files/dirs in lib dir -->
-
-  	<property name="proguardDir" value="${libDir}/proguard"/>
-    <property name="proguardLib" value="${superwaba_root}/utils/tools/obfuscators/proguard.jar"/>	
-	
-	<!-- Others -->
-	<property name="java12compiler" value="${java12home}/bin/javac"/>
-
-	<!-- Allow any user specific values to override the defaults -->
-    <property file="build.properties"/>
-	
 	<!-- Application classpath -->
 	<path id="classpath">
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
 		<pathelement location="win32comm.jar"/>
 	</path>
 
-	<path id="linuxclasspath">
+	<path id="rxtxclasspath">
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
 		<pathelement location="webstart/RXTXcomm.jar"/>
 	</path>
@@ -41,7 +29,7 @@
 	<target name="clean">
 	
 		<delete dir="build"/>
-		<delete dir="linuxbuild"/>
+		<delete dir="rxtxbuild"/>
 		<delete dir="dist"/>
 		
 	</target>
@@ -72,7 +60,8 @@
         <!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
     	<replaceregexp file="src/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
     	<replaceregexp file="src/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";'/>	
-    	<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${DATE_TIME}'/>	
+    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";'/>	
+    	<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}'/>	
     </target>
     	
 	<!-- Compile -->
@@ -84,7 +73,7 @@
 		<javac srcdir="src" destdir="build" target="1.1" optimize="true">
 			<include name="**/*.java"/>
 			<exclude name="gps/model/*"/>
-			<exclude name="gps/port/GPSLinuxPort.java"/>
+			<exclude name="gps/port/GPSRxTxPort.java"/>
 			<classpath refid="classpath"/>
 		</javac>
 		<copy todir="build">
@@ -95,27 +84,25 @@
 	
 	</target>
 
-	<target name="linuxbuild" depends="clean, updatedate">
+	<target name="rxtxbuild" depends="clean, updatedate">
 	
-		<mkdir dir="linuxbuild"/>
-		<delete dir="linuxsrc"/>
-		<mkdir dir="linuxsrc"/>
-		<mkdir dir="Linux"/>
+		<mkdir dir="rxtxbuild"/>
+		<delete dir="rxtxsrc"/>
+		<mkdir dir="rxtxsrc"/>
 
-
-		<copy todir="linuxsrc">
+		<copy todir="rxtxsrc">
 			<fileset dir="src">
 				<include name="**/*.java"/>
 			</fileset>
 		</copy>
-    	<replace file="linuxsrc/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSLinuxPort" />
+    	<replace file="rxtxsrc/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort" />
 
-		<javac srcdir="linuxsrc" destdir="linuxbuild" target="1.1" optimize="true" classpathref="linuxclasspath">
+		<javac srcdir="rxtxsrc" destdir="rxtxbuild" target="1.1" optimize="true" classpathref="rxtxclasspath">
 			<include name="**/*.java"/>
 			<exclude name="gps/GPSWabaPort.java*"/>
 			<exclude name="gps/model/*"/>
 		</javac>
-		<copy todir="linuxbuild">
+		<copy todir="rxtxbuild">
 			<fileset dir="src">
 				<exclude name="**/*.java"/>
 			</fileset>
@@ -131,13 +118,13 @@
 	
 	</target>
 
-	<target name="linuxjar" depends="linuxbuild">
+	<target name="rxtxjar" depends="rxtxbuild">
 	
-		<jar jarfile="linuxbuild/${ant.project.name}.jar">
-			<fileset dir="linuxbuild" includes="**/*.class"/>
+		<jar jarfile="rxtxbuild/${ant.project.name}_rxtx.jar">
+			<fileset dir="rxtxbuild" includes="**/*.class"/>
 		</jar>
-		<copy todir="Linux">
-			<fileset dir="linuxbuild">
+		<copy todir="dist">
+			<fileset dir="rxtxbuild">
 				<include name="**/*.jar"/>
 			</fileset>
 		</copy>
@@ -279,7 +266,7 @@
 	</target>
 
 	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
-	<target name="all-exegen-types" depends="exegen, exegen-exe, exegen-cab, linuxjar, all-warp">
+	<target name="all-exegen-types" depends="exegen, exegen-exe, exegen-cab, rxtxjar, all-warp">
 		
 		<move todir="dist">
 			
@@ -290,6 +277,7 @@
 				<include name="*.ini"/>
 				<include name="*.bat"/>
 				<include name="*.exe"/>
+				<include name="${ant.project.name}.jar"/>
 			</fileset>
 			
 		</move>

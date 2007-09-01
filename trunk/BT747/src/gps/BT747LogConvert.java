@@ -34,14 +34,60 @@ import gps.convert.Conv;
  * @author Mario De Weerd
  */
 public final class BT747LogConvert {
+    private int minRecordSize;
+    private int maxRecordSize;
+    private int logFormat;
     private File m_File=null;
     private long timeOffsetSeconds=0;
     protected boolean passToFindFieldsActivatedInLog= false;
     protected int activeFileFields=0;
     private boolean noGeoid=false; // If true,remove geoid difference from height
+
+    private int rcrIdxOffset;
+    private int satIdxOffset;
+    private int satRecSize;
     
+    private final void updateLogFormat(final GPSFile gpsFile,final int newLogFormat) {
+        int bits=newLogFormat;
+        int index = 0;
+        int total = 0;
+        
+        satRecSize=0;
+        logFormat=newLogFormat;
+        activeFileFields|=logFormat;
+        if(!passToFindFieldsActivatedInLog) {
+            gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
+        }
+        minRecordSize=BT747_dev.logRecordMinSize(logFormat);
+        maxRecordSize=BT747_dev.logRecordMaxSize(logFormat);
+        
+        do {
+            if ((bits&1)!=0) {
+                switch (index) {
+                case BT747_dev.FMT_SID_IDX:
+                case BT747_dev.FMT_ELEVATION_IDX:
+                case BT747_dev.FMT_AZIMUTH_IDX:
+                case BT747_dev.FMT_SNR_IDX:
+                    satRecSize+=BT747_dev.logFmtByteSizes[index];
+                    break;
+                case BT747_dev.FMT_RCR_IDX:
+                case BT747_dev.FMT_MILISECOND_IDX:
+                case BT747_dev.FMT_DISTANCE_IDX:
+                
+                // These fields do not contribute to the sat offset
+                    break;
+                default:
+                    // Other fields contribute
+                    total+=BT747_dev.logFmtByteSizes[index];
+                break;
+                }
+            }
+            index++;
+        } while((bits>>=1) != 0);
+        satIdxOffset=total;
+    }    
+
     public final void parseFile(final GPSFile gpsFile) {
-        int logFormat=0;
         GPSRecord gpsRec=new GPSRecord();
         final int C_BUF_SIZE=0x800;
         byte[] bytes=new byte[C_BUF_SIZE];
@@ -49,10 +95,12 @@ public final class BT747LogConvert {
         int nextAddrToRead;
         int recCount;
         int fileSize;
-        int minRecordSize=16;
-        int maxRecordSize=16;
+        int satCntIdx;
+        int satcnt;
         int satidx;
-        int idx;        recCount=0;
+        int idx;
+        recCount=0;
+        logFormat=0;
         nextAddrToRead=0;
         fileSize=m_File.getSize();
         while(nextAddrToRead<fileSize) {
@@ -92,13 +140,7 @@ public final class BT747LogConvert {
                     |(0xFF&bytes[4])<<16
                     |(0xFF&bytes[5])<<24;
                     if(newLogFormat!=logFormat) {
-                        logFormat=newLogFormat;
-                        activeFileFields|=logFormat;
-                        if(!passToFindFieldsActivatedInLog) {
-                            gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
-                        }
-                        minRecordSize=BT747_dev.logRecordMinSize(logFormat);
-                        maxRecordSize=BT747_dev.logRecordMaxSize(logFormat);
+                        updateLogFormat(gpsFile, newLogFormat);
                     }
                 }
                 nextAddrToRead+=0x200;
@@ -118,6 +160,8 @@ public final class BT747LogConvert {
                 // Skipping on/off parts
                 boolean checkForOnOff=true;
                 while(checkForOnOff&&(sizeToRead-16>offsetInBuffer)) {
+                    // As long as this log entry is possible and 
+                    //  bytes in buffer are sufficient.
                     if(   ((0xFF&bytes[offsetInBuffer+0])==0xAA)
                             &&((0xFF&bytes[offsetInBuffer+1])==0xAA)
                             &&((0xFF&bytes[offsetInBuffer+2])==0xAA)
@@ -141,13 +185,7 @@ public final class BT747LogConvert {
                         case 0x02: // logBitMaskChange
                             newLogFormat= value;
                             if(newLogFormat!=logFormat) {
-                                logFormat=newLogFormat;
-                                activeFileFields|=logFormat;
-                                if(!passToFindFieldsActivatedInLog) {
-                                    gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
-                                }
-                                minRecordSize=BT747_dev.logRecordMinSize(logFormat);
-                                maxRecordSize=BT747_dev.logRecordMaxSize(logFormat);
+                                updateLogFormat(gpsFile, newLogFormat);
                             }
                             break;
                         case 0x03: // log Period change
@@ -172,14 +210,38 @@ public final class BT747LogConvert {
                 checkForOnOff=true;
                 boolean foundRecord=false;
                 boolean foundAnyRecord=false;
+                int satRecords;
                 // Now look for data
                 do {
                     foundRecord=false;
-                    while(checkForOnOff&&(sizeToRead>offsetInBuffer+maxRecordSize+2)) {
+                    
+                    while(checkForOnOff&&(sizeToRead>offsetInBuffer+minRecordSize+2)) {
+                        // As long as record may fit in data still to read.
+//                        System.out.println("Limit: "+(offsetInBuffer+maxRecordSize));
                         int indexInBuffer=offsetInBuffer;
                         int checkSum=0;
                         foundRecord=false;
-                        while(indexInBuffer<minRecordSize+offsetInBuffer) {
+                        satcnt=0;
+                        satCntIdx=0;
+                        satRecords=0;
+                        if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) {
+                            satCntIdx=offsetInBuffer-2+satIdxOffset+2;
+                            satcnt=(0xFF&bytes[satCntIdx+2])<<0
+                            |(0xFF&bytes[satCntIdx+3])<<8;
+                            if(satcnt>32) {
+                                // TODO: handle error
+                                satcnt=32;
+                            }
+                            if(satcnt!=0) {
+                                satRecords=satcnt*satRecSize-8;
+                            }
+                        }
+
+//                        java.lang.System.out.print(recCount);
+//                        java.lang.System.out.println(" ");
+                        
+//                        System.out.println("Limit2: "+minRecordSize+" "+satRecords+" "+offsetInBuffer+" "+satRecords+" "+(minRecordSize+satRecords+offsetInBuffer));
+                        while((indexInBuffer<minRecordSize+satRecords+offsetInBuffer)&&(indexInBuffer<sizeToRead-2)) {
                             checkSum^=bytes[indexInBuffer++];
                         }
                         do {
@@ -191,6 +253,8 @@ public final class BT747LogConvert {
                                 offsetInBuffer=indexInBuffer;
                                 okInBuffer=indexInBuffer;
                                 foundRecord=true;
+
+
                                 int rcrIdx=offsetInBuffer-2-((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?8:0)+ 
                                         (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?2:0)+ 
                                         (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?2:0));
@@ -320,6 +384,12 @@ public final class BT747LogConvert {
                                     idx=0;
                                     satidx=0;
                                     if(rcrIdx-recIdx>0) {
+//                                        java.lang.System.out.print(satCntIdx);
+//                                        java.lang.System.out.print(" ");
+//                                        java.lang.System.out.print(recIdx);
+//                                        java.lang.System.out.print(" ");
+//                                        java.lang.System.out.println(" ");
+
                                         idx=(0xFF&bytes[recIdx+2])<<0
                                             |(0xFF&bytes[recIdx+3])<<8;
                                         gpsRec.sid=new int[idx];
@@ -327,6 +397,11 @@ public final class BT747LogConvert {
                                         gpsRec.ele=new int[idx];
                                         gpsRec.azi=new int[idx];
                                         gpsRec.snr=new int[idx];
+//                                        java.lang.System.out.print(idx);
+//                                        java.lang.System.out.print(" ");
+                                        if(idx==0) {
+                                            recIdx+=4;
+                                        }
                                     }
                                     while (idx-->0) {
                                         if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) {
@@ -334,11 +409,13 @@ public final class BT747LogConvert {
                                                 (0xFF&bytes[recIdx++])<<0;
                                             gpsRec.sidinuse[satidx]=
                                                 ((0xFF&bytes[recIdx++])<<0)!=0;
-                                            if(false) {
+                                            if(true) {
                                             	// satcnt is not used - skipping with iffalse)
-                                                int satcnt=
+                                                satcnt=
                                                     (0xFF&bytes[recIdx++])<<0
                                                     |(0xFF&bytes[recIdx++])<<8;
+//                                                java.lang.System.out.print(satcnt);
+//                                                java.lang.System.out.print(" ");
                                             } else {
                                             	recIdx+=2;
                                             }
@@ -363,6 +440,7 @@ public final class BT747LogConvert {
                                         }
                                         satidx++;
                                     }
+//                                    java.lang.System.out.println();
                                     recIdx=rcrIdx;  // Sat information limit is rcrIdx
                                     if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
                                         gpsRec.rcr=
@@ -401,7 +479,7 @@ public final class BT747LogConvert {
                             } else {
                                 checkSum^=0xFF&bytes[indexInBuffer++];
                             }
-                        } while(!foundRecord&&(indexInBuffer<maxRecordSize+offsetInBuffer+2));
+                        } while(!foundRecord&&(indexInBuffer<maxRecordSize+offsetInBuffer+2)&&(indexInBuffer<sizeToRead-2));
                         if(!foundRecord) {
                             // Should have found a re
                             checkForOnOff=false;

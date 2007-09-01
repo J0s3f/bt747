@@ -33,7 +33,7 @@ import java.lang.Exception;
 /** This class implements the serial port for rxtx (on Linux)
  * @author Mario De Weerd
  */
-public class GPSLinuxPort extends GPSPort {
+public class GPSRxTxPort extends GPSPort {
     private SerialPort sp=null;
 
     private OutputStream ds;
@@ -41,7 +41,7 @@ public class GPSLinuxPort extends GPSPort {
     /**
      * 
      */
-    public GPSLinuxPort() {
+    public GPSRxTxPort() {
         // TODO Auto-generated constructor stub
         super();
         
@@ -90,6 +90,7 @@ public class GPSLinuxPort extends GPSPort {
        int result=-1;
        closePort();
        try {
+           System.out.println("Info: trying to open "+portPrefix+spPortNbr);
            CommPortIdentifier portIdentifier;
                portIdentifier = CommPortIdentifier.getPortIdentifier(portPrefix+spPortNbr);
            if(portIdentifier.isCurrentlyOwned())

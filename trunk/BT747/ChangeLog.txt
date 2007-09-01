@@ -1,6 +1,13 @@
 Version 0.95.6
 * Changed interface of connection tab.
-* RxTx: different port name according to OS (Windows, Linux, Mac)
+* RxTx: different port name according to OS (Windows, Linux, Mac).  This allows direct
+  use of RXTX on windows (and other systems) and should result in less installation
+  hassle.
+* Problems when interpreting satelite information solved:
+ - data log specification problem;
+ - last record of block;
+ - false end of record identification.
+* Moved BT747.jar and BT747_rxtx.jar to dist dir, this impact startup scripts.
 
 
 Version 0.95.5
