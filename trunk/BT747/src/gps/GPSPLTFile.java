@@ -108,7 +108,7 @@ public class GPSPLTFile extends GPSFile {
             rec+="0,"; // Normal for the moment - could detect break later ...
 //          Field 4 : Altitude in feet (-777 if not valid)
             if(activeFields.height!=0) {
-                rec+=Convert.toString((int)(s.height*39.37));
+                rec+=Convert.toString((int)(s.height*3.2808398950131233595800524934383));
             } else {
                 rec+="-777";
             }
