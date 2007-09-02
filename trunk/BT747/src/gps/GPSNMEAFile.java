@@ -224,17 +224,17 @@ public class GPSNMEAFile extends GPSFile {
             writeNMEA(rec.toString());
             
 //            eg4. $GPRMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,ddmmyy,x.x,a*hh
-//            1    = UTC of position fix
-//            2    = Data status (V=navigation receiver warning)
-//            3    = Latitude of fix
-//            4    = N or S
-//            5    = Longitude of fix
-//            6    = E or W
-//            7    = Speed over ground in knots
-//            8    = Track made good in degrees True
-//            9    = UT date
-//            10   = Magnetic variation degrees (Easterly var. subtracts from true course)
-//            11   = E or W
+//            1    = UTC of position fix (hhmmss.ss)
+//            2    = Data status (V=navigation receiver warning) (A)
+//            3    = Latitude of fix (llll.ll)
+//            4    = N or S (a)
+//            5    = Longitude of fix (yyyyy.yy)
+//            6    = E or W (a)
+//            7    = Speed over ground in knots (x.x)
+//            8    = Track made good in degrees True (x.x)
+//            9    = UT date (ddmmyy)
+//            10   = Magnetic variation degrees (Easterly var. subtracts from true course) (x.x)
+//            11   = E or W (a)
 //            12   = Checksum
 
             rec.setLength(0);
@@ -321,7 +321,7 @@ public class GPSNMEAFile extends GPSFile {
 //          11   = E or W
 //          12   = Checksum
             if(activeFields.speed!=0) {
-                rec.append(Convert.toString(s.speed*1.945945945945946,2));
+                rec.append(Convert.toString(s.speed*0.53995680345572354211663066954644,2));
             }
             rec.append(",");
             if(activeFields.heading!=0) {

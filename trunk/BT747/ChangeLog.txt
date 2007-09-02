@@ -1,3 +1,7 @@
+Version 0.95.7
+* NMEA format: speed written in knots was wrong conversion from speed in km/h
+ (almost double instead of half).  Corrected.
+
 Version 0.95.6
 * Changed interface of connection tab.
 * RxTx: different port name according to OS (Windows, Linux, Mac).  This allows direct
