@@ -1,3 +1,7 @@
+Version 0.95.9
+* Added functionality to read and change the NMEA string settings of the device.
+
+
 Version 0.95.8
 * PLT: conversion to height in feet was incorrect. Corrected.
 
