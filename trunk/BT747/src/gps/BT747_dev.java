@@ -103,7 +103,7 @@ public final class BT747_dev {  // dev as in device
      * Entries are in order.  The entry position corresponds to the
      * bit position in the log format 'byte'.
      */
-    public static final int[] logFmtByteSizes = {
+    public static final int logFmtByteSizes[] = {
             4, //"UTC",     // = 0x00001    // 0
             2, //"VALID",   // = 0x00002    // 1
             8, //"LATITUDE",    // = 0x00004    // 2
@@ -175,6 +175,9 @@ public final class BT747_dev {  // dev as in device
     public static final int PMTK_API_SET_FIX_CTL        = 300;
     public static final int PMTK_API_SET_DGPS_MODE      = 301;
     public static final int PMTK_API_SET_SBAS           = 313;
+    /**
+     * Define NMEA output string periods.
+     */
     public static final int PMTK_API_SET_NMEA_OUTPUT    = 314;
     public static final int PMTK_API_SET_SBAS_TEST      = 319;
     public static final int PMTK_API_SET_PWR_SAV_MODE   = 320;
@@ -344,6 +347,10 @@ public final class BT747_dev {  // dev as in device
         return total;
     }    
 
+    /**
+     * @param p_logFormat  
+     * @return
+     */
     static public final int logRecordMaxSize(final int p_logFormat) {
         int cnt=0;
         
@@ -355,6 +362,51 @@ public final class BT747_dev {  // dev as in device
             cnt*=FMT_MAX_SATS-1;
         }
         return cnt+logRecordMinSize(p_logFormat);
-    }    
+    }
+    
+    /** Next entries are elated to <code>PMTK_API_Q_NMEA_OUTPUT</code> and similar.
+     * 
+     */
+    
+    /**
+     * Number of NMEA sentence types
+     */
+    public static final int C_NMEA_SEN_COUNT = 19;
+    public static final String NMEA_strings [] = {
+            "GLL", //             0 // GPGLL interval - Geographic Position - Latitude longitude 
+            "RMC", //             1 // GPRMC interval - Recommended Min. specic GNSS sentence 
+            "VTG", //             2 / / GPVTG interval - Course Over Ground and Ground Speed 
+            "GGA", //             3 / / GPGGA interval - GPS Fix Data 
+            "GSA", //             4 / / GPGSA interval - GNSS DOPS and Active Satellites 
+            "GSV", //             5 / / GPGSV interval - GNSS Satellites in View 
+            "GRS", //             6 / / GPGRS interval - GNSS Range Residuals 
+            "GST", //             7 // GPGST interval - GNSS Pseudorange Error Statistics
+            "?8", // 8
+            "?9", // 9
+            "?10", // 10
+            "?11", // 11
+            "?12",  //12
+            "MALM", //             13 // PMTKALM interval - GPS almanac information 
+            "MEPH", //             14 // PMTKEPH interval - GPS ephemeris information 
+            "MDGP", //             15 // PMTKDGP interval - GPS differential correction information 
+            "MDBG", //             16 // PMTKDBG interval – MTK debug information 
+            "ZDA",  //             17 // GPZDA interval – Time & Date 
+            "MCHN", //             18 // PMTKCHN interval – GPS channel status 
+    };
+    public static final int NMEA_SEN_GLL_IDX  =     0; // GPGLL interval - Geographic Position - Latitude longitude 
+    public static final int NMEA_SEN_RMC_IDX  =     1; // GPRMC interval - Recommended Min. specic GNSS sentence 
+    public static final int NMEA_SEN_VTG_IDX  =     2; // GPVTG interval - Course Over Ground and Ground Speed 
+    public static final int NMEA_SEN_GGA_IDX  =     3; // GPGGA interval - GPS Fix Data 
+    public static final int NMEA_SEN_GSA_IDX  =     4; // GPGSA interval - GNSS DOPS and Active Satellites 
+    public static final int NMEA_SEN_GSV_IDX  =     5; // GPGSV interval - GNSS Satellites in View 
+    public static final int NMEA_SEN_GRS_IDX  =     6; // GPGRS interval - GNSS Range Residuals 
+    public static final int NMEA_SEN_GST_IDX  =     7; // GPGST interval - GNSS Pseudorange Error Statistics 
+    public static final int NMEA_SEN_MALM_IDX =     13; // PMTKALM interval - GPS almanac information 
+    public static final int NMEA_SEN_MEPH_IDX =     14; // PMTKEPH interval - GPS ephemeris information 
+    public static final int NMEA_SEN_MDGP_IDX =     15; // PMTKDGP interval - GPS differential correction information 
+    public static final int NMEA_SEN_MDBG_IDX =     16; // PMTKDBG interval – MTK debug information 
+    public static final int NMEA_SEN_ZDA_IDX  =     17; // GPZDA interval – Time & Date 
+    public static final int NMEA_SEN_MCHN_IDX =     18; // PMTKCHN interval – GPS channel status 
 
+    
 }

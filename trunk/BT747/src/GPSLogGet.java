@@ -113,15 +113,16 @@ public class GPSLogGet extends Container {
         //m_btStartDate.setMode(Edit.DATE);
         add(m_btEndDate = new Button(m_EndDate.getDate()), RIGHT, SAME); //$NON-NLS-1$
         //m_btEndDate.setMode(Edit.DATE);
-
         add(m_btGetLog = new Button("Get Log"), LEFT, AFTER+2); //$NON-NLS-1$
         add(m_btCancelGetLog = new Button("Cancel get"), AFTER+5, SAME); //$NON-NLS-1$
-        add(m_cbTimeOffsetHours=new ComboBox(offsetStr),RIGHT, SAME);
+
         int offsetIdx=m_appSettings.getTimeOffsetHours()+12;
         if(offsetIdx>24) {
             m_appSettings.setTimeOffsetHours(0);
             offsetIdx=12;
         }
+        m_cbTimeOffsetHours=new ComboBox(offsetStr);
+        add(m_cbTimeOffsetHours,RIGHT, SAME);
         m_cbTimeOffsetHours.select(offsetIdx);
         add(new Label("UTC"), BEFORE, SAME); 
 

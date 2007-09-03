@@ -703,6 +703,37 @@ public class GPSstate implements Thread {
         sendNMEA("PMTK"+BT747_dev.PMTK_API_Q_DATUM_STR);
     }
     
+    public void getNMEAPeriods() {
+        sendNMEA("PMTK"+BT747_dev.PMTK_API_Q_NMEA_OUTPUT);
+    }
+    
+    
+    public void setNMEAPeriods(final int periods[]) {
+        StringBuffer sb = new StringBuffer(255);
+        sb.setLength(0);
+        sb.append("PMTK"+BT747_dev.PMTK_API_SET_NMEA_OUTPUT);
+        for (int i = 0; i < periods.length; i++) {
+            sb.append(',');
+            sb.append(periods[i]);
+        }
+        sendNMEA(sb.toString());
+    }
+    
+    public void setNMEADefaultPeriods() {
+        int[] Periods = new int[BT747_dev.C_NMEA_SEN_COUNT];
+        
+        for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
+            Periods[i]=0;
+        }
+        Periods[BT747_dev.NMEA_SEN_RMC_IDX]=1;
+        Periods[BT747_dev.NMEA_SEN_GGA_IDX]=1;
+        Periods[BT747_dev.NMEA_SEN_GSA_IDX]=1;
+        Periods[BT747_dev.NMEA_SEN_GSV_IDX]=1;
+        Periods[BT747_dev.NMEA_SEN_MDBG_IDX]=1;
+        setNMEAPeriods(Periods);
+        getNMEAPeriods();
+    }
+    
     public void setFlashUserOption(final boolean lock,
             final int updateRate,
             final int baudRate,
@@ -1193,6 +1224,8 @@ public class GPSstate implements Thread {
     private String model="";
     private String firmwareVersion="";
     
+    public int NMEA_periods[]=new int[BT747_dev.C_NMEA_SEN_COUNT];
+    
     public int analyseNMEA(final String[] p_nmea) {
         int z_Cmd;
         int z_Result;
@@ -1256,6 +1289,12 @@ public class GPSstate implements Thread {
                 PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_NMEA_OUTPUT:	// CMD  514
+                if(p_nmea.length-1 == BT747_dev.C_NMEA_SEN_COUNT) {
+                    for(int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
+                        NMEA_periods[i]=Convert.toInt(p_nmea[i+1]);
+                    }
+                }
+                PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_SBAS_TEST:    // CMD  513
                 if(p_nmea.length==2) {
