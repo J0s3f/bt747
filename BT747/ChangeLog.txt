@@ -1,3 +1,6 @@
+Version 0.95.10
+* Implemented 'GMAPS' output format : HTML file that will show trail on google maps.
+
 Version 0.95.9
 * Added functionality to read and change the NMEA string settings of the device.
 
