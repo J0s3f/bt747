@@ -123,6 +123,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
                 "     map.addControl(new GLargeMapControl());\r\n" + 
                 "     map.addControl(new GMapTypeControl());\r\n" + 
                 "     map.addControl(new GScaleControl());\r\n" +
+                "     map.addControl(new GOverviewMapControl());\r\n" +
                 "     if (window.attachEvent) {\r\n" + 
                 "       window.attachEvent(\"onresize\", function() {this.map.onResize()} );\r\n" + 
                 "     } else {\r\n" + 
