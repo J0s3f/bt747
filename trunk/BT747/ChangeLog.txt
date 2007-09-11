@@ -1,3 +1,6 @@
+Version 0.95.11
+* Added waypoints to Google Map output format and points are now 'encoded'.
+
 Version 0.95.10
 * Implemented 'GMAPS' output format : HTML file that will show trail on google maps.
 

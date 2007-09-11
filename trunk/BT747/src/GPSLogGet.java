@@ -34,6 +34,7 @@ import gps.GPSCSVFile;
 import gps.GPSFile;
 import gps.GPSFilter;
 import gps.GPSGPXFile;
+import gps.GPSGmapsHTMLEncodedFile;
 import gps.GPSGmapsHTMLFile;
 import gps.GPSKMLFile;
 import gps.GPSNMEAFile;
@@ -250,7 +251,7 @@ public class GPSLogGet extends Container {
                     ext=".nmea";
                 }
                 if(event.target==m_btToGMAP) {
-                    gpsFile=new GPSGmapsHTMLFile();
+                    gpsFile=new GPSGmapsHTMLEncodedFile();
                     ext=".html";
                 }
                     
