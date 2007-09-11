@@ -121,3 +121,17 @@ Use 'run_rxtx.sh'.  It has not been validated on Linux, but it might work and at
 ============ Contributors ======================
 Mario De Weerd (main coder)
 Herbert Geus (save settings on WinCE, KML waypoints addition, feedback on application)
+
+
+============ GMAPS PolylineEncoder =============
+Taken from http://facstaff.unca.edu/mcmcclur/GoogleMaps/EncodePolyline/ and
+adapted for SuperWaba:
+/**
+ * Reimplementation of Mark McClures Javascript PolylineEncoder
+ * All the mathematical logic is more or less copied by McClure
+ *  
+ * @author Mark Rambow
+ * @e-mail markrambow[at]gmail[dot]com
+ * @version 0.1
+ * 
+ */

@@ -20,21 +20,28 @@
 package gps;
 
 import waba.sys.Convert;
+import waba.util.Hashtable;
+
+import gps.tracks.PolylineEncoder;
+import gps.tracks.Track;
+import gps.tracks.Trackpoint;
 
 /**Class to write a GPX file.
  * @author Mario De Weerd
  */
-public class GPSGmapsHTMLFile extends GPSFile {
+public class GPSGmapsHTMLEncodedFile extends GPSFile {
     private StringBuffer rec=new StringBuffer(1024);  // reused stringbuffer
 
     private boolean m_isWayType;
     private boolean m_newTrack=true;
     private int m_currentFilter;
     
+    Track track;
+    
     /**
      * 
      */
-    public GPSGmapsHTMLFile() {
+    public GPSGmapsHTMLEncodedFile() {
         super();
         C_NUMBER_OF_PASSES=2;
     }
@@ -46,6 +53,8 @@ public class GPSGmapsHTMLFile extends GPSFile {
         super.initialiseFile(basename, ext, Card, oneFilePerDay);
         m_currentFilter=GPSFilter.C_WAYPT_IDX;
         m_isWayType=true;
+        
+        track=new Track();
     }
     
     
@@ -74,13 +83,13 @@ public class GPSGmapsHTMLFile extends GPSFile {
         header ="<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n" + 
                 "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\r\n" + 
                 "<head>\r\n" + 
-                "<title>KML to Google Maps converter using PHP </title>\r\n" + 
+                "<title>"+Name+
+                "</title>\r\n" + 
                 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n" + 
                 "<meta name=\"description\" content=\"test - powered by Google Maps\" />\r\n" + 
                 "\r\n" + 
                 "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp\" type=\"text/javascript\">\r\n" + 
                 "</script>\r\n" + 
-                "\r\n" + 
                 "<style type=\"text/css\">\r\n" + 
                 "             v\\:* {\r\n" + 
                 "             behavior:url(#default#VML);\r\n" + 
@@ -104,42 +113,42 @@ public class GPSGmapsHTMLFile extends GPSFile {
                 "<div id=\"map\"> </div>\r\n" + 
                 "\r\n" + 
                 "<script type=\"text/javascript\">\r\n" + 
-                "//<![CDATA[             // check for compatibility\r\n" + 
+                "//<![CDATA[ \r\n" +             // check for compatibility 
                 "\r\n" + 
-                "if (GBrowserIsCompatible()) {                 // call the info window opener for the given index\r\n" + 
+                "if (GBrowserIsCompatible()) {\r\n" +                 // call the info window opener for the given index 
                 "\r\n" + 
-                "  function makeOpenerCaller(i) {\r\n" + 
-                "     return function() { showMarkerInfo(i); };\r\n" + 
-                "\r\n" + 
-                "  }                 // open an info window\r\n" + 
+                "  function makeOpenerCaller(i) {" + 
+                "     return function() { showMarkerInfo(i); };" + 
+                "  }\r\n" +                 // open an info window 
                 "\r\n" + 
                 "  function showMarkerInfo(i) {\r\n" + 
                 "     markers[i].openInfoWindowHtml(infoHtmls[i]);\r\n" + 
-                "  }                 // create the map\r\n" + 
-                "\r\n" + 
-                "     var map = new GMap2(document.getElementById(\"map\"));\r\n" + 
-                "     map.setCenter(new GLatLng(0,0));\r\n" + 
-                "     map.setMapType(G_SATELLITE_MAP);\r\n" +
+                "  }\r\n" +                 // create the map 
+                "\r\n" +
+                
+//                "var blueIcon = new GIcon(G_DEFAULT_ICON);" +
+//                "blueIcon.image = \"http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png\";" +
+//                "markerOptions = { icon:blueIcon };" + // Set up our GMarkerOptions object
+                
+                "     var map = new GMap2(document.getElementById(\"map\"));\r\n" +
+                "     map.setCenter(new GLatLng(0,0));\r\n" +
+               // "var mgrOptions = { borderPadding: 50, maxZoom: 15, trackMarkers: true };\r\n" + 
+                "var mgr = new GMarkerManager(map);\r\n" + 
+                "     map.setMapType(G_SATELLITE_MAP);\r\n" + 
                 "     map.enableScrollWheelZoom();\r\n" +
                 "     map.addControl(new GLargeMapControl());\r\n" + 
                 "     map.addControl(new GMapTypeControl());\r\n" + 
                 "     map.addControl(new GScaleControl());\r\n" +
                 "     map.addControl(new GOverviewMapControl());\r\n" +
-                "     if (window.attachEvent) {\r\n" + 
-                "       window.attachEvent(\"onresize\", function() {this.map.onResize()} );\r\n" + 
-                "     } else {\r\n" + 
-                "       window.addEventListener(\"resize\", function() {this.map.onResize()} , false);\r\n" + 
-                "     }                 // add a polyline overlay\r\n" + 
-                "     var points = new Array();" +
-                "points=[];" +
+//                "     if (window.attachEvent) {\r\n" + 
+//                "       window.attachEvent(\"onresize\", function() {this.map.onResize()} );\r\n" + 
+//                "     } else {\r\n" + 
+//                "       window.addEventListener(\"resize\", function() {this.map.onResize()} , false);\r\n" + 
+//                "     }\r\n" +                // add a polyline overlay 
                 "";
                 //"points.push(new GPoint(3.11492833333333,45.75697))";
         //map.addOverlay(new GPolyline(points,"#960000",2,.75));
         writeTxt(header);
-        minlat=9999;
-        maxlat=-9999;
-        minlon=9999;
-        maxlon=-9999;
     }
     
     private double minlat;
@@ -151,17 +160,75 @@ public class GPSGmapsHTMLFile extends GPSFile {
         String header;
         if(m_isWayType) {
         } else {
-            header="points=[];";
             m_newTrack=true;
-            writeTxt(header);
+            minlat=9999;
+            maxlat=-9999;
+            minlon=9999;
+            maxlon=-9999;
         }
+    }
+    
+    protected void endTrack() {
+        PolylineEncoder a= new PolylineEncoder();
+        Hashtable res;
+        if(false) {
+            res = a.createEncodings(track, 17, 4);
+        } else {
+            res = a.dpEncode(track);
+        }
+        String tmp;
+        tmp=(String)res.get("encodedPoints");
+        
+        
+        if(tmp.length()>=2) {
+            rec.setLength(0);
+            rec.append("map.addOverlay(new GPolyline.fromEncoded({\r\n" + 
+                    "  color: \"#0000ff\",\r\n" + 
+                    "  weight: 4,\r\n" + 
+                    "  opacity: 0.8,\r\n" + 
+            "  points: \"");
+            rec.append(tmp);
+            rec.append("\",\r\n" +               
+            "  levels: \"");
+            rec.append(res.get("encodedLevels"));
+            
+            rec.append("\",\r\n" + 
+                    "  zoomFactor: 2,\r\n" + 
+                    "  numLevels: 18\r\n" + 
+            "}));\r\n") 
+            ;
+            //writeTxt(PolylineEncoder.replace(rec.toString(),"\\", "\\\\"));
+            writeTxt(rec.toString());
+            rec.setLength(0);
+        }
+
+        //System.out.println(rec.toString());
+
+        track=new Track();
     }
     
     protected void writeDataFooter() {
         String header;
         if(m_isWayType) {
+            if(track.size()!=0) {
+                rec.setLength(0);
+                rec.append("mgr.addMarkers([");
+                for(int i=track.size()-1;i>=0;i--) {
+                    rec.append("new GMarker(new GLatLng(");
+                    rec.append(Convert.toString(track.get(i).getLatDouble(),5));
+                    rec.append(',');
+                    rec.append(Convert.toString(track.get(i).getLonDouble(),5));
+                    rec.append("))");
+                    if(i!=0) {
+                        rec.append(',');
+                    }
+                }
+                rec.append("],0);mgr.refresh();\r\n");
+                writeTxt(rec.toString());
+            }
+            track=new Track();
         } else {
-            writeTxt("map.addOverlay(new GPolyline(points,\"#0000FF\",2,.75));\r\n");
+            endTrack();
         }
     }
        
@@ -178,8 +245,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
                 // Break the track in the output file
                 if(!m_isWayType&&!m_newTrack&&!m_FirstRecord) {
                     m_newTrack=true;
-                    writeTxt("map.addOverlay(new GPolyline(points,\"#0000FF\",2,.75));\r\n");
-                    writeTxt("points=[];");              
+                    endTrack();
                     //"points.push(new GPoint(3.11492833333333,45.75697))";
                     //map.addOverlay(new GPolyline(points,"#960000",2,.75));
                 }
@@ -211,11 +277,13 @@ public class GPSGmapsHTMLFile extends GPSFile {
 //                    rec.append("<trkpt ");
 //                }
                 if(activeFields.latitude!=0 && activeFields.longitude!=0) {
-                    rec.append("points.push(new GLatLng(");
-                    rec.append(Convert.toString(s.latitude,6));
-                    rec.append(',');
-                    rec.append(Convert.toString(s.longitude,6));
-                    rec.append("));");
+//                    rec.append("points.push(new GLatLng(");
+//                    rec.append(Convert.toString(s.latitude,6));
+//                    rec.append(',');
+//                    rec.append(Convert.toString(s.longitude,6));
+//                    rec.append("));");
+//                    
+                    track.addTrackpoint(new Trackpoint(s.latitude,s.longitude));
                     
                     if(s.latitude<minlat) {
                         minlat=s.latitude;
