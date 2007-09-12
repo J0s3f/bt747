@@ -168,7 +168,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         }
     }
     
-    protected void endTrack() {
+    protected void endTrack(final String hexColor) {
         PolylineEncoder a= new PolylineEncoder();
         Hashtable res;
         if(false) {
@@ -183,7 +183,9 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         if(tmp.length()>=2) {
             rec.setLength(0);
             rec.append("map.addOverlay(new GPolyline.fromEncoded({\r\n" + 
-                    "  color: \"#0000ff\",\r\n" + 
+                    "  color: \"#");
+            rec.append(hexColor);
+            rec.append("\",\r\n" + 
                     "  weight: 4,\r\n" + 
                     "  opacity: 0.8,\r\n" + 
             "  points: \"");
@@ -228,7 +230,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             }
             track=new Track();
         } else {
-            endTrack();
+            endTrack("0000FF");
         }
     }
        
@@ -245,7 +247,11 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 // Break the track in the output file
                 if(!m_isWayType&&!m_newTrack&&!m_FirstRecord) {
                     m_newTrack=true;
-                    endTrack();
+                    if(track.size()!=0) {
+                        Trackpoint t=track.get(track.size()-1);
+                        endTrack("0000FF");
+                        track.addTrackpoint(t);
+                    }
                     //"points.push(new GPoint(3.11492833333333,45.75697))";
                     //map.addOverlay(new GPolyline(points,"#960000",2,.75));
                 }
@@ -261,7 +267,20 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 
                 //StringBuffer rec=new StringBuffer(1024);
                 rec.setLength(0);
-                m_newTrack=false;
+                if(m_newTrack) {
+                    m_newTrack=false;
+                    if(activeFields.latitude!=0 && activeFields.longitude!=0) {
+                        if(s.utc-m_prevtime<m_TrackSepTime) {
+                            track.addTrackpoint(new Trackpoint(s.latitude,s.longitude));
+                            endTrack("FF0000");
+                        }
+                    }
+                    track=new Track();
+                }
+                
+                if((activeFields.utc!=0)) {
+                    m_prevtime=s.utc;
+                }
                 //                "  <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 //                "    <ele>12.863281</ele>"+
                 //                "    <time>2005-05-16T11:49:06Z</time>"+
@@ -305,7 +324,6 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                //                    <ele> xsd:decimal </ele> [0..1] ?  (elevation in meters)
 //                
 //                // <time> xsd:dateTime </time> [0..1] ? //2005-05-16T11:49:06Z
-//                if((activeFields.utc!=0)) {
 //                    rec.append("<time>");
 //                    if(activeFields.utc!=0) {
 //                        timeStr+=Convert.toString(t.year)+"-"

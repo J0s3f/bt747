@@ -60,6 +60,9 @@ public abstract class GPSFile {
     protected Time t = new Time(); // Time from log, already transformed
 
     protected int m_prevdate = 0;
+    protected int m_prevtime = 0;
+    protected boolean m_sepTrack=false;
+    protected int m_TrackSepTime=60*60; // Time needed between points to separate segments.
 
     public void initialiseFile(final String basename, final String ext,
             final int Card, boolean oneFilePerDay) {
