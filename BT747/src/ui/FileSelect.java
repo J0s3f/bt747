@@ -4,6 +4,7 @@ import waba.io.File;
 import waba.ui.ComboBox;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
+import waba.ui.ListBox;
 import waba.ui.Window;
 import waba.util.Vector;
 /*
@@ -24,7 +25,7 @@ public class FileSelect extends Window {
     private String root="";
     private String relPath="";
     private int cardSlot = -1;
-    private ComboBox cb;
+    private ListBox cb;
     private int defaultIdx;
     private boolean dirOnly=false;
 
@@ -76,24 +77,14 @@ public class FileSelect extends Window {
         buildWindow();
     }
     
-    /* (non-Javadoc)
-     * @see waba.ui.Window#postPopup()
-     */
-    protected void postPopup() {
-        // TODO Auto-generated method stub
-        super.postPopup();
-//        cb.popupPop();
-//        cb.requestFocus();
-    }
-    
     private void buildWindow() {
         Rect r=new Rect();
         //r.set(getParentWindow().getClientRect());
         //setRect(r.modifiedBy(2, 2, -4, -4)); // same gap in all corners
         filePopList(root+relPath);
         add(cb);
-        r=getAbsoluteRect().modifiedBy(4,20,-8,0);
-        r.height=cb.getPreferredHeight();
+        r=getAbsoluteRect().modifiedBy(4,26,-8,-38);
+        //r.height=cb.getPreferredHeight();
         cb.setRect(r);
         cb.select(defaultIdx);
         cb.enableHorizScroll();
@@ -137,7 +128,7 @@ public class FileSelect extends Window {
         int firstFoundIndex=1;
         if(path.length()>0) {
             int offset;
-            offset=path.substring(0, path.length()-1).lastIndexOf('/',path.length()-1);
+            offset=path.lastIndexOf('/',path.length()-2);
             if(offset>=0) {
                 v.add(path.substring(0, offset+1));
                 firstFoundIndex++;
@@ -153,7 +144,7 @@ public class FileSelect extends Window {
         if(cb!=null) {
             remove(cb);
         }
-        cb=new ComboBox(files);
+        cb=new ListBox(files);
         defaultIdx=firstFoundIndex-1;
     }
     

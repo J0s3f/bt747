@@ -313,7 +313,7 @@ public class AppSettings implements gps.settings {
     */
    public int getCard() {
        int Card=Conv.hex2Int(getStringOpt(C_CARD_IDX, C_CARD_SIZE));
-       if (Card<=0||Card>255) {
+       if (Card<=0||Card>=255) {
            Card=-1;
        }
        return Card;
