@@ -19,6 +19,7 @@
 //********************************************************************                              
 import waba.sys.Convert;
 import waba.sys.Settings;
+import waba.ui.Button;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -60,6 +61,8 @@ public class BT747 extends MainWindow {
     /** MenuBar item for File->Exit */
     private final static int C_MENU_FILE_EXIT = 001;
     /** MenuBar item for Settings->Restart connection */
+//    private final static int C_MENU_CONNECTION_SETTINGS = 101;
+//    /** MenuBar item for Settings->Restart connection */
     private final static int C_MENU_RESTART_CONNECTION = 101;
     /** MenuBar item for Settings->Stop connection */
     private final static int C_MENU_STOP_CONNECTION = 102;
@@ -107,10 +110,14 @@ public class BT747 extends MainWindow {
     
     private static AppSettings m_settings=new AppSettings();
     
+    private int orgAutoOnOff;
+    
     /** Initialiser of the application
      */
     public BT747() {
         waba.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
+        orgAutoOnOff=waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off causing BT trouble
+
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle("i-Blue 747/757 / BT-Q1000");
@@ -274,5 +281,6 @@ public class BT747 extends MainWindow {
     
     public void onExit() {
         m_settings.saveSettings();
+        waba.sys.Vm.setDeviceAutoOff(orgAutoOnOff); // Avoid auto-off causing BT trouble
     }
 }
