@@ -2,6 +2,7 @@ Version 0.95.13
 * Application will no longer switch off automatically on Palm devices - this avoids some (timeout)
   trouble on Palm devices and avoid autooff during download.
 * Path to log directory can now be set from pull-down list.
+* Validated operation on Linux system (PCLinuxOS) and adjusted 'run_rxtx.sh' script.
 
 Version 0.95.12
 * Google maps: when tracks are separated due to a trackpoint that is 'lost', track segments
