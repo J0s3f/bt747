@@ -86,6 +86,9 @@ public class GPSLogFile extends Container {
                 }
             }
             v.add("-1");
+            if(Card==-1) {
+                idx=v.size()-1;
+            }
             add(new Label("Card/Volume:"), LEFT, AFTER); //$NON-NLS-1$
             add( m_cbVolumes= new ComboBox((String[])v.toObjectArray()), AFTER,SAME);
             m_cbVolumes.select(idx);
