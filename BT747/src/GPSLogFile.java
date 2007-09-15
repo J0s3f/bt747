@@ -17,6 +17,8 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
+import ui.FileSelect;
+
 import waba.io.File;
 import waba.sys.Convert;
 import waba.sys.Settings;
@@ -42,6 +44,7 @@ public class GPSLogFile extends Container {
     }
     
     Edit m_edBaseDirName;
+    Button m_btSelectBaseDirName;
     Edit m_edLogFileName;
     Edit m_edReportBaseName;
     Edit m_edChunkSize;
@@ -52,8 +55,12 @@ public class GPSLogFile extends Container {
     private Button m_btDefaultSettings;
     
     protected void onStart() {
-        add(new Label("Output dir:"), LEFT, AFTER); //$NON-NLS-1$
-        add(m_edBaseDirName = new Edit(""), AFTER, SAME); //$NON-NLS-1$
+        Label tmp;
+        add(tmp=new Label("Output dir:"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_btSelectBaseDirName=new Button("+"), RIGHT, SAME);
+        m_edBaseDirName = new Edit("");
+        add(m_edBaseDirName); //$NON-NLS-1$
+        m_edBaseDirName.setRect(AFTER, SAME,FILL-m_btSelectBaseDirName.getSize().width(),PREFERRED,tmp);
         add(new Label("LogFile:"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edLogFileName = new Edit(""), AFTER, SAME); //$NON-NLS-1$
         add(new Label("Report :"), LEFT, AFTER); //$NON-NLS-1$
@@ -113,6 +120,15 @@ public class GPSLogFile extends Container {
                 if(Settings.platform.startsWith("Palm")) {
                     m_settings.setCard(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
                 }
+            } else if (event.target==m_btSelectBaseDirName) {
+                FileSelect fs=new FileSelect();
+                fs.setPath(m_edBaseDirName.getText());
+                if(Settings.platform.startsWith("Palm")) {
+                    fs.setCardSlot(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
+                }
+                fs.setDirOnly(true);
+                fs.popupBlockingModal();
+                m_edBaseDirName.setText(fs.getPath());
             } else if (event.target==m_btDefaultSettings) {
                 m_settings.defaultSettings();
                 updateValues();

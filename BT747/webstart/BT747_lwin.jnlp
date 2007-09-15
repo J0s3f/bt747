@@ -1,5 +1,5 @@
 <jnlp href="BT747_lwin.jnlp" 
-	codebase="file:///Projects/BT747/build/">
+	codebase="file:///mdeweerd/workspace/BT747/webstart">
   <information>
     <title>BT747</title>
     <vendor>Mario De Weerd (GNU GPL license)</vendor>
