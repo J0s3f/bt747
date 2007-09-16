@@ -172,7 +172,7 @@ public class AppSettings implements gps.settings {
     }
     
     public void saveSettings() {
-        if ( waba.sys.Settings.platform.startsWith("WindowsCE")
+        if (       waba.sys.Settings.platform.startsWith("WindowsCE")
                 || waba.sys.Settings.platform.startsWith("PocketPC")
                 ||(waba.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice) 
                 )
@@ -180,6 +180,15 @@ public class AppSettings implements gps.settings {
 //            waba.sys.Vm.debug("on Device "+waba.sys.Settings.platform);
 //            waba.sys.Vm.debug("saving config file "+CONFIG_FILE_NAME);
             File m_prefFile=new File("");
+            try {
+                File m_Dir=new File(CONFIG_FILE_NAME.substring(0, CONFIG_FILE_NAME.lastIndexOf('/')),
+                                    File.DONT_OPEN);
+                if(!m_Dir.exists()) {
+                    m_Dir.createDir();
+                }
+            } catch (Exception e) {
+//                Vm.debug("Exception new log delete");
+            }
             try {
                 m_prefFile=new File(CONFIG_FILE_NAME,File.DONT_OPEN);
                 if(m_prefFile.exists()) {
@@ -192,11 +201,11 @@ public class AppSettings implements gps.settings {
                 m_prefFile=new File(CONFIG_FILE_NAME,File.CREATE);
                 m_prefFile.close();
                 m_prefFile=new File(CONFIG_FILE_NAME,File.READ_WRITE);
+                m_prefFile.writeBytes(Settings.appSettings.getBytes(), 0, Settings.appSettings.length());
+                m_prefFile.close();
             } catch (Exception e) {
 //                Vm.debug("Exception new log create");
             }
-            m_prefFile.writeBytes(Settings.appSettings.getBytes(), 0, Settings.appSettings.length());
-            m_prefFile.close();
 //            waba.sys.Vm.debug("saved config file length "+Settings.appSettings.length());
         }
     }
