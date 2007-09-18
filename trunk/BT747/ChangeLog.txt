@@ -1,3 +1,14 @@
+Version 0.96.1
+* Revisited log download algorithm.  Now requests can be queued.
+  This was efficient over bluetooth where download was about 54k/second with the following settings on Palm:
+    - Chunk size=220
+    - Log ahead request=3
+    - Timeout=3500
+    - Fix = 500 ms
+    - NMEA Output:
+       RMC=1
+       GGA=GSA=GSV=2
+
 Version 0.95.14
 * PPC/WinCE: Create 'My Documents/BT747' directory if it does not exist to save the application settings.
 

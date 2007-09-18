@@ -43,7 +43,6 @@ public final class BT747LogConvert {
     protected int activeFileFields=0;
     private boolean noGeoid=false; // If true,remove geoid difference from height
 
-    private int rcrIdxOffset;
     private int satIdxOffset;
     private int satRecSize;
     

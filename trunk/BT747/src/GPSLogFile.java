@@ -50,12 +50,16 @@ public class GPSLogFile extends Container {
     Edit m_edChunkSize;
     Edit m_edTimeout;
     ComboBox m_cbVolumes;
+    ComboBox m_cblogReqAhead;
+    private static final String []C_LOG_REQ_AHEAD= {"0","1","2","3","4","5"};
+    
 
     private Button m_btChangeSettings;
     private Button m_btDefaultSettings;
     
     protected void onStart() {
         Label tmp;
+        int idx;
         add(tmp=new Label("Output dir:"), LEFT, AFTER); //$NON-NLS-1$
         add(m_btSelectBaseDirName=new Button("+"), RIGHT, SAME);
         m_edBaseDirName = new Edit("");
@@ -69,6 +73,13 @@ public class GPSLogFile extends Container {
         add(new Label("Chunk :"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edChunkSize = new Edit(""), AFTER, SAME); //$NON-NLS-1$
         m_edChunkSize.setValidChars(Edit.numbersSet);
+        add(new Label("Chunk ahead request:"), LEFT, AFTER);
+        add(m_cblogReqAhead=new ComboBox(C_LOG_REQ_AHEAD),AFTER,SAME);
+        idx=m_settings.getLogRequestAhead();
+        if(idx>m_cblogReqAhead.size()-1) {
+            idx=m_cblogReqAhead.size()-1;
+        }
+        m_cblogReqAhead.select(idx);
         add(new Label("Read timeout (ms) :"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edTimeout = new Edit(""), AFTER, SAME); //$NON-NLS-1$
         m_edTimeout.setValidChars(Edit.numbersSet);
@@ -76,7 +87,6 @@ public class GPSLogFile extends Container {
         if(Settings.platform.startsWith("Palm")) {
             Vector v = new Vector(50);
             int Card=m_settings.getCard();
-            int idx=0;
             for (int i = 0; i < 255; i++) {
                 if (File.isCardInserted(i)) {
                     v.add(""+i);
@@ -93,8 +103,9 @@ public class GPSLogFile extends Container {
             add( m_cbVolumes= new ComboBox((String[])v.toObjectArray()), AFTER,SAME);
             m_cbVolumes.select(idx);
         }
+        
 
-        m_btChangeSettings=new Button("Set values");
+        m_btChangeSettings=new Button("Apply&Set the above values");
         add(m_btChangeSettings,CENTER,AFTER+5);
         m_btDefaultSettings=new Button("Default settings");
         add(m_btDefaultSettings,CENTER,AFTER+5);
@@ -123,6 +134,8 @@ public class GPSLogFile extends Container {
                 if(Settings.platform.startsWith("Palm")) {
                     m_settings.setCard(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
                 }
+                m_settings.setLogRequestAhead(Convert.toInt((String)m_cblogReqAhead.getSelectedItem()));
+                m_settings.saveSettings(); // Explicitally save settings
             } else if (event.target==m_btSelectBaseDirName) {
                 FileSelect fs=new FileSelect();
                 fs.setPath(m_edBaseDirName.getText());

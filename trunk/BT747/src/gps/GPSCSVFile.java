@@ -21,18 +21,14 @@ package gps;
 
 import waba.sys.Convert;
 
-import sun.awt.windows.WGlobalCursorManager;
-
-import gps.convert.Conv;
-
 /**Class to write a CSV file.
  * 
  * @author Mario De Weerd
  */
 public class GPSCSVFile extends GPSFile {
     private StringBuffer rec=new StringBuffer(1024);  // reused stringbuffer
-    private final char fieldSep=',';  // For future parameterisation
-    private final char satSeperator=';';   // For future parameterisation
+    private static final char fieldSep=',';  // For future parameterisation
+    private static final char satSeperator=';';   // For future parameterisation
     
     public boolean needPassToFindFieldsActivatedInLog() {
         return true;

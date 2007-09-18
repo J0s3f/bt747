@@ -25,8 +25,6 @@ import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
-import waba.ui.PopList;
-import waba.ui.PushButtonGroup;
 
 import gps.GPSstate;
 import gps.GpsEvent;

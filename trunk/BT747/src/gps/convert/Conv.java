@@ -32,9 +32,9 @@ public final class Conv {
      */
     public final static int hexStringToBytes(final String hexStr, byte[] p_Buffer) {
         char[] z_Data = hexStr.toCharArray();
-        int length=z_Data.length;
+        int length=z_Data.length&0xFFFFFFFE;
         byte z_Byte;
-        for (int i = 0; i < z_Data.length; i += 2) {
+        for (int i = 0; i < length; i += 2) {
             switch (z_Data[i])
             {
                 case '0': z_Byte = (byte)0x00;break;
@@ -172,7 +172,8 @@ public final class Conv {
 //    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-    private final static double bilinear(final double x1,
+    private final static double bilinear(
+            final double x1,
             final double y1,
             final double x2,
             final double y2,
@@ -184,20 +185,20 @@ public final class Conv {
             final double z22)
     {
         double delta;
-
-        if (y1 == y2 && x1 == x2 ) return (z11);
-        if (y1 == y2 && x1 != x2 ) return (z22*(x-x1)+z11*(x2-x))/(x2-x1);
-        if (x1 == x2 && y1 != y2 ) return (z22*(y-y1)+z11*(y2-y))/(y2-y1);
-
+        
+        if (y1 == y2 && x1 == x2) return (z11);
+        if (y1 == y2 && x1 != x2) return (z22*(x-x1)+z11*(x2-x))/(x2-x1);
+        if (x1 == x2 && y1 != y2) return (z22*(y-y1)+z11*(y2-y))/(y2-y1);
+        
         delta=(y2-y1)*(x2-x1);
-
+        
         return (z22*(y-y1)*(x-x1)+z12*(y2-y)*(x-x1)+z21*(y-y1)*(x2-x)+z11*(y2-y)*(x2-x))/delta;
-       }
+    }
 
     
-    static final int GEOID_ROW = 19;
-    static final int GEOID_COL = 37;
-    final static int geoid_delta[]={
+    private static final int GEOID_ROW = 19;
+    private static final int GEOID_COL = 37;
+    private final static int geoid_delta[]={
             /* 90S */ -30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30, -30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,
             /* 80S */ -53,-54,-55,-52,-48,-42,-38,-38,-29,-26,-26,-24,-23,-21,-19,-16,-12, -8, -4, -1,  1,  4,  4,  6,  5,  4,   2, -6,-15,-24,-33,-40,-48,-50,-53,-52,-53,
             /* 70S */ -61,-60,-61,-55,-49,-44,-38,-31,-25,-16, -6,  1,  4,  5,  4,  2,  6, 12, 16, 16, 17, 21, 20, 26, 26, 22,  16, 10, -1,-16,-29,-36,-46,-55,-54,-59,-61,
@@ -220,7 +221,7 @@ public final class Conv {
 
     /* return geoid separtion (MSL - WGS84) in meters, given a lat/lot in degrees */
     /*@ +charint @*/
-    public static final double wgs84_separation(double lat, double lon)
+    public static final double wgs84_separation(final double lat, final double lon)
     {
     /*@ -charint @*/
         int ilat, ilon;
@@ -235,13 +236,13 @@ public final class Conv {
         ilon2=(ilon < GEOID_COL-1)? ilon+1:ilon;
 
         return bilinear(
-        ilon1*10.-180.,ilat1*10.-90.,
-        ilon2*10.-180.,ilat2*10.-90.,
-        lon,           lat,
-        (double)geoid_delta[ilon1+ilat1*GEOID_COL],
-        (double)geoid_delta[ilon2+ilat1*GEOID_COL],
-        (double)geoid_delta[ilon1+ilat2*GEOID_COL],
-        (double)geoid_delta[ilon2+ilat2*GEOID_COL]
+                ilon1*10.-180.,ilat1*10.-90.,
+                ilon2*10.-180.,ilat2*10.-90.,
+                lon,           lat,
+                (double)geoid_delta[ilon1+ilat1*GEOID_COL],
+                (double)geoid_delta[ilon2+ilat1*GEOID_COL],
+                (double)geoid_delta[ilon1+ilat2*GEOID_COL],
+                (double)geoid_delta[ilon2+ilat2*GEOID_COL]
         );
     }
 
