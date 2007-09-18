@@ -66,13 +66,16 @@ public class AppSettings implements gps.settings {
     private final static int C_ONEFILEPERDAY_SIZE=1;
     private final static int C_NOGEOID_IDX=C_ONEFILEPERDAY_IDX+C_ONEFILEPERDAY_SIZE;
     private final static int C_NOGEOID_SIZE=4;
-    private final static int C_NEXT_IDX=C_NOGEOID_IDX+C_NOGEOID_SIZE;
+    private final static int C_LOGAHEAD_IDX=C_NOGEOID_IDX+C_NOGEOID_SIZE;
+    private final static int C_LOGAHEAD_SIZE=1;
+    private final static int C_NEXT_IDX=C_LOGAHEAD_IDX+C_LOGAHEAD_SIZE;
     
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
     private final static int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
     
     private final static int C_DEFAULT_DEVICE_TIMEOUT=3500; // ms
+    private final static int C_DEFAULT_LOG_REQUEST_AHEAD=3;
 
     private String baseDirPath;
     private String logFile;
@@ -129,8 +132,12 @@ public class AppSettings implements gps.settings {
                 // Added one file per day functionality in 0.03
                 setNoGeoid(false);
             }
+            if( Convert.toFloat(mVersion)<0.05f) {
+                // Added one file per day functionality in 0.03
+                setLogRequestAhead(C_DEFAULT_LOG_REQUEST_AHEAD);
+            }
         }
-        setStringOpt("0.04",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.05",C_VERSION_IDX, C_VERSION_SIZE);
     }
     
     public void defaultSettings() {
@@ -156,11 +163,12 @@ public class AppSettings implements gps.settings {
         setLogFile("BT747log.bin");
         setReportFileBase("GPSDATA");
         setStartupOpenPort(false);
-        setChunkSize(waba.sys.Settings.onDevice?0x200:0x10000);
+        setChunkSize(waba.sys.Settings.onDevice?220:0x10000);
         setDownloadTimeOut( C_DEFAULT_DEVICE_TIMEOUT );
         setFilterDefaults();
         setOneFilePerDay(false);
         setNoGeoid(false);
+        setLogRequestAhead(C_DEFAULT_LOG_REQUEST_AHEAD);
         getSettings();
     }
     
@@ -230,6 +238,12 @@ public class AppSettings implements gps.settings {
         setOpt(Convert.unsigned2hex(src,size),idx,size);
     }
 
+    private final int getIntOpt(final int idx, final int size) {
+        return Conv.hex2Int(getStringOpt(idx,size));
+    }
+    
+    
+
     private final void setStringOpt(final String src, final int idx, final int size) {
         Settings.appSettings=
             Settings.appSettings.substring(0,idx)
@@ -261,7 +275,7 @@ public class AppSettings implements gps.settings {
 	 * @return Returns the portnbr.
 	 */
 	public int getPortnbr() {
-		return Conv.hex2Int(getStringOpt(C_PORTNBR_IDX, C_PORTNBR_SIZE));
+		return getIntOpt(C_PORTNBR_IDX, C_PORTNBR_SIZE);
 	}
 	/**
 	 * @param portnbr The portnbr to set.
@@ -273,7 +287,7 @@ public class AppSettings implements gps.settings {
      * @return The default baud rate
      */
 	public int getBaudRate() {
-		return Conv.hex2Int(getStringOpt(C_BAUDRATE_IDX, C_BAUDRATE_SIZE));
+		return getIntOpt(C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
 	}
 	/**
 	 * @param Baud The Baud rate to set as a default.
@@ -287,7 +301,7 @@ public class AppSettings implements gps.settings {
      */
     public int getChunkSize() {
         // ChunkSize must be multiple of 2 
-        int chunkSize=Conv.hex2Int(getStringOpt(C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE))&0xFFFFFFFE;
+        int chunkSize=getIntOpt(C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE)&0xFFFFFFFE;
         if (chunkSize<16) {
             chunkSize=0x200;
         }
@@ -304,7 +318,7 @@ public class AppSettings implements gps.settings {
     * @return The default chunk size
     */
    public int getDownloadTimeOut() {
-       int DownloadTimeOut=Conv.hex2Int(getStringOpt(C_DOWNLOADTIMEOUT_IDX, C_DOWNLOADTIMEOUT_SIZE));
+       int DownloadTimeOut=getIntOpt(C_DOWNLOADTIMEOUT_IDX, C_DOWNLOADTIMEOUT_SIZE);
        if (DownloadTimeOut<=0) {
            DownloadTimeOut=0x200;
        }
@@ -321,7 +335,7 @@ public class AppSettings implements gps.settings {
     * @return The default chunk size
     */
    public int getCard() {
-       int Card=Conv.hex2Int(getStringOpt(C_CARD_IDX, C_CARD_SIZE));
+       int Card=getIntOpt(C_CARD_IDX, C_CARD_SIZE);
        if (Card<=0||Card>=255) {
            Card=-1;
        }
@@ -338,7 +352,7 @@ public class AppSettings implements gps.settings {
     * @return The default chunk size
     */
    public int getTimeOffsetHours() {
-       int timeOffsetHours=Conv.hex2Int(getStringOpt(C_TIMEOFFSETHOURS_IDX, C_TIMEOFFSETHOURS_SIZE));
+       int timeOffsetHours=getIntOpt(C_TIMEOFFSETHOURS_IDX, C_TIMEOFFSETHOURS_SIZE);
        if(timeOffsetHours>100) {
            timeOffsetHours-=0x10000;
        }
@@ -352,7 +366,7 @@ public class AppSettings implements gps.settings {
    }
    
 	public boolean getStartupOpenPort() {
-		return Conv.hex2Int(getStringOpt(C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE))==1;
+		return getIntOpt(C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE)==1;
 	}
 	/**
 	 * @param value The default value for opening the port.
@@ -405,7 +419,7 @@ public class AppSettings implements gps.settings {
     }
 
     public int getWayPtRCR() {
-        return Conv.hex2Int(getStringOpt(C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE));
+        return getIntOpt(C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
     }
     /**
      * @param value The default value for opening the port.
@@ -415,7 +429,7 @@ public class AppSettings implements gps.settings {
     }
     
     public int getWayPtValid() {
-        return Conv.hex2Int(getStringOpt(C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE));
+        return getIntOpt(C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
     }
     /**
      * @param value The default value for opening the port.
@@ -425,7 +439,7 @@ public class AppSettings implements gps.settings {
     }
 
     public int getTrkPtRCR() {
-        return Conv.hex2Int(getStringOpt(C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE));
+        return getIntOpt(C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
     }
 
     /**
@@ -436,7 +450,7 @@ public class AppSettings implements gps.settings {
     }
     
     public int getTrkPtValid() {
-        return Conv.hex2Int(getStringOpt(C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE));
+        return getIntOpt(C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
     }
     /**
      * @param value The default value for opening the port.
@@ -444,9 +458,9 @@ public class AppSettings implements gps.settings {
     public void setTrkPtValid(int value) {
         setIntOpt(value,C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
     }
-
+    
     public boolean getOneFilePerDay() {
-        return Conv.hex2Int(getStringOpt(C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE))==1;
+        return getIntOpt(C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE)==1;
     }
     /**
      * @param value The default value for opening the port.
@@ -456,13 +470,23 @@ public class AppSettings implements gps.settings {
     }
     
     public boolean getNoGeoid() {
-        return Conv.hex2Int(getStringOpt(C_NOGEOID_IDX, C_NOGEOID_SIZE))==1;
+        return getIntOpt(C_NOGEOID_IDX, C_NOGEOID_SIZE)==1;
     }
     /**
      * @param value The default value for opening the port.
      */
     public void setNoGeoid(boolean value) {
         setStringOpt((value?"1":"0"),C_NOGEOID_IDX, C_NOGEOID_SIZE);
+    }
+
+    public int getLogRequestAhead() {
+        return getIntOpt(C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
+    }
+    /**
+     * @param value The default value for opening the port.
+     */
+    public void setLogRequestAhead(int value) {
+        setIntOpt(value,C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
     }
 
 }

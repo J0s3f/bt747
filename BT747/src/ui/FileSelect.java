@@ -63,7 +63,11 @@ public class FileSelect extends Window {
     }
     
     public String getPath() {
-        return root+relPath;
+        if(relPath.endsWith("/")) {
+            return root+relPath.substring(0,relPath.length()-1);
+        } else {
+            return root+relPath;
+        }
     }
     
     public void setCardSlot(int card) {

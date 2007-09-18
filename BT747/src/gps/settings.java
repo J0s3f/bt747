@@ -61,4 +61,11 @@ public interface settings {
      */
     public void setStartupOpenPort(boolean value);
 
+    /**
+     * Get the number of chunks to read ahead.
+     * @return
+     */
+    public int getLogRequestAhead();
+
+
 }

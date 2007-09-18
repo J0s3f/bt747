@@ -25,6 +25,7 @@ import waba.sys.Settings;
 import waba.sys.Thread;
 import waba.sys.Vm;
 import waba.ui.Control;
+import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.MainWindow;
 import waba.ui.MessageBox;
@@ -51,21 +52,29 @@ import gps.convert.Conv;
  * @see GPSrxtx
  *
  */
-/**
- * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
-public class GPSstate implements Thread {
+public class GPSstateOld implements Thread {
     static final boolean GPS_DEBUG = (!Settings.onDevice);
+    static final boolean GPS_TEST = false;
     
     private GPSrxtx m_GPSrxtx=new GPSrxtx();    	
     ProgressBar m_ProgressBar=null;
     
+    // Fields to keep track of logging status
+    private int logTimer=0;
+    private int m_StartAddr;
+    private int m_EndAddr;
+    private int m_NextReqAddr;
+    private int m_NextReadAddr;
+    private int m_Step;
+
+    private boolean m_isLogging = false;       // True when dumping log
+    private boolean m_isCheckingLog = false;  // True when doing binary search
     private boolean m_getFullLog= true; // If true, get the entire log (based on block head)
+    private boolean m_recoverFromError= false; // When true, must recover from error
+    
     
     public int logFormat = 0;
+    public int logEntrySize = 0;
     public int logRecordMaxSize = 0;
     public int logTimeInterval = 0;
     public int logSpeedInterval = 0;
@@ -88,36 +97,17 @@ public class GPSstate implements Thread {
     
     public int dgps_mode=0;
     
+    private byte[] m_Data= new byte[0x800];  // buffer used for reading data.
     
     Control m_EventPosterObject= null;
     
     private settings m_settings;
-
-    // Flash user option values
-    public int userOptionTimesLeft;
-    public int dtUpdateRate;
-    public int dtBaudRate;
-    public int dtGLL_Period;
-    public int dtRMC_Period;
-    public int dtVTG_Period;
-    public int dtGSA_Period;
-    public int dtGSV_Period;
-    public int dtGGA_Period;
-    public int dtZDA_Period;
-    public int dtMCHN_Period;
-
-    private String mainVersion="";
-    private String model="";
-    private String firmwareVersion="";
-    
-    public int NMEA_periods[]=new int[BT747_dev.C_NMEA_SEN_COUNT];
-
     
     /** Initialiser
      * 
      *
      */
-    public GPSstate(settings s) {
+    public GPSstateOld(settings s) {
         m_settings = s;
     }
     
@@ -292,6 +282,41 @@ public class GPSstate implements Thread {
         //				}
     }
     
+    private void requestCheckBlock() {
+        readLog(C_BLOCKVERIF_START,C_BLOCKVERIF_SIZE);  // Read 200 bytes, just past header.
+    }
+    
+    private void resetLogTimeOut() {
+        logTimer=Vm.getTimeStamp();
+    }
+       
+    /** Calculate the size of one log entry.
+     * <b>Only works if the satellite information is not requested.</b><br>
+     * Satellite information is of variant size.
+     * @param p_logFormat : configuration representing format
+     * @return Number of bytes needed for one record.
+     */
+    static public int logEntrySize(final int p_logFormat) {
+        int z_BitMask = 0x1;
+        int z_Size = 2; // one for the '*' and one for the checksum (xor)
+        for (int i = 0; i < BT747_dev.logFmtByteSizes.length; z_BitMask<<=1, i++) {
+            if((z_BitMask & p_logFormat)!=0) {
+                // Bit is set
+                z_Size+= BT747_dev.logFmtByteSizes[i];
+            }
+        }
+        return z_Size;
+    }
+    
+    /** Get the (approximate) location of the given record number.
+     * The result is not exact: the position may be different.
+     * @param p_RecordNumber The record number for which to find the address
+     * @return Address for record number
+     */
+    public int logEntryAddr(final int p_RecordNumber) {
+        return logRecordMaxSize+p_RecordNumber*logEntrySize;
+    }
+    
     private void PostStatusUpdateEvent() {
         if(m_EventPosterObject!=null) {
             m_EventPosterObject.postEvent(new Event(GpsEvent.DATA_UPDATE, m_EventPosterObject,0));
@@ -304,6 +329,92 @@ public class GPSstate implements Thread {
         }
     }
 
+    public int analyseLogNmea(String[] p_nmea) {
+        //if(GPS_DEBUG) {	waba.sys.Vm.debug("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
+        // Suppose that the command is ok (PMTK182)
+        
+        // Currently taking care of replies from the device only.
+        // The other data we send ourselves
+        resetLogTimeOut();  // Reset timeout
+        if(p_nmea.length>2) {
+            switch( Convert.toInt(p_nmea[1]) ) {
+            case BT747_dev.PMTK_LOG_DT:
+                // Parameter information
+                // TYPE = Parameter type
+                // DATA = Parameter data
+                // $PMTK182,3,TYPE,DATA
+                int z_type= Convert.toInt(p_nmea[2]);
+            if(p_nmea.length==4) {
+                switch( z_type ) {
+                case BT747_dev.PMTK_LOG_FORMAT: 			// 2;
+                    //if(GPS_DEBUG) {	waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
+                    logFormat=Conv.hex2Int(p_nmea[3]);
+                logEntrySize=logEntrySize(logFormat);
+                logRecordMaxSize=BT747_dev.logRecordMinSize(logFormat);
+                PostStatusUpdateEvent();
+                break;
+                case BT747_dev.PMTK_LOG_TIME_INTERVAL: 	// 3;
+                    logTimeInterval=Convert.toInt(p_nmea[3]);
+                PostStatusUpdateEvent();
+                break;
+                case BT747_dev.PMTK_LOG_DISTANCE_INTERVAL: //4;
+                    logDistanceInterval=Convert.toInt(p_nmea[3])/10;
+                PostStatusUpdateEvent();
+                break;
+                case BT747_dev.PMTK_LOG_SPEED_INTERVAL:	// 5;
+                    logSpeedInterval=Convert.toInt(p_nmea[3])/10;
+                PostStatusUpdateEvent();
+                break;
+                case BT747_dev.PMTK_LOG_REC_METHOD:		// 6;
+                    logFullOverwrite=(Convert.toInt(p_nmea[3])==1);
+                PostStatusUpdateEvent();
+                break;
+                case BT747_dev.PMTK_LOG_LOG_STATUS:		// 7; // bit 2 = logging on/off
+                    logStatus=Convert.toInt(p_nmea[3]);
+                    loggingIsActive=( 
+                           ((logStatus&BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK)!=0)
+                          );
+
+                PostStatusUpdateEvent();
+                break;
+                case BT747_dev.PMTK_LOG_MEM_USED:			// 8; 
+                    logMemUsed=Conv.hex2Int(p_nmea[3]);
+                logMemUsedPercent=
+                    (100*(logMemUsed-(0x200*((logMemUsed+0xFFFF)/0x10000))))
+                    /logMemUsefullSize;
+                PostStatusUpdateEvent();
+                break;
+                case BT747_dev.PMTK_LOG_TBD3:			// 9;
+                    break;
+                case BT747_dev.PMTK_LOG_NBR_LOG_PTS:		// 10;
+                    logNbrLogPts=Conv.hex2Int(p_nmea[3]);
+                PostStatusUpdateEvent();
+                break;
+                case BT747_dev.PMTK_LOG_TBD2:				// 11;
+                    break;
+                default:
+                }
+            }
+            break;
+            case BT747_dev.PMTK_LOG_DT_LOG:
+                // Data from the log
+                // $PMTK182,8,START_ADDRESS,DATA
+                
+                try {
+//                    waba.sys.Vm.debug("Before AnalyzeLog:"+p_nmea[3].length());
+                    analyzeLogPart(Conv.hex2Int(p_nmea[2]), p_nmea[3]);
+                } catch (Exception e) {
+                    // During debug: array index out of bounds
+                    // TODO: handle exception
+                }
+                break;
+            default:
+                // Nothing - unexpected
+            }
+        }
+        return 0; // Done.
+        
+    }
     static final int C_SEND_BUF_SIZE = 5;
     
     Vector sentCmds = new Vector();	// List of sent commands
@@ -722,6 +833,359 @@ public class GPSstate implements Thread {
         return z_Result;
     }
     
+    private File m_logFile=new File("");
+    private int m_logFileCard=-1;
+    public void closeLog() {
+        try {
+            if(m_logFile!=null  && m_logFile.isOpen()) {
+//                Vm.debug("CloseLog");
+                m_logFile.close();
+            }
+        }
+        catch (Exception e) {
+        }
+    }
+    public void endGetLog() {
+        m_isLogging= false;
+        closeLog();
+        if(m_ProgressBar!=null) {
+            m_ProgressBar.setVisible(false);
+            m_ProgressBar.repaintNow();
+        }
+    }
+    
+    public void cancelGetLog() {
+        endGetLog();
+    }
+    
+    private final static int C_BLOCKVERIF_START = 0x200; 
+    private final static int C_BLOCKVERIF_SIZE  = 0x200;    
+    /**
+     * @param p_StartAddr
+     * @param p_EndAddr
+     * @param p_Step
+     * @param p_FileName
+     */
+    public void getLogInit(
+            final int p_StartAddr,
+            final int p_EndAddr,
+            final int p_Step,
+            final String p_FileName,
+            final int Card,
+            final boolean incremental,  // True if incremental read
+            ProgressBar pb) {
+        m_isLogging= false;
+        m_isCheckingLog=false;
+        m_StartAddr= p_StartAddr;
+        m_EndAddr=((p_EndAddr+0xFFFF)&0xFFFF0000)-1;
+        m_NextReqAddr= m_StartAddr;
+        m_NextReadAddr= m_StartAddr;
+        m_Step=p_Step;
+        m_ProgressBar=pb;
+        if(pb!=null) {
+            pb.min=m_StartAddr;
+            pb.max=m_EndAddr;
+            pb.setValue(m_NextReadAddr,""," b");
+            pb.setVisible(true);
+        }
+        if(incremental) {
+            reOpenLogRead(p_FileName,Card);
+            if(m_logFile!=null&&m_logFile.isOpen()) {
+                // There is a file with data.
+                if (m_logFile.getSize()>=(C_BLOCKVERIF_START+C_BLOCKVERIF_SIZE)){
+                    // There are enough bytes in the saved file.
+                    
+                    // Find first incomplete block
+                    int blockHeadPos=0;
+                    boolean continueLoop;
+                    do {
+                        byte[] bytes=new byte[2];
+                        m_logFile.setPos(blockHeadPos);
+                        continueLoop=(m_logFile.readBytes(bytes, 0, 2)==2);
+                        if(continueLoop) {
+                            // Break the loop if this block was incomplete.
+                            continueLoop=!(((bytes[0]&0xFF)==0xFF)
+                                    &&((bytes[1]&0xFF)==0xFF));
+                        }
+                        if(continueLoop) {
+                            // This block is fully filled
+                            blockHeadPos+=0x10000;
+                            m_ProgressBar.setValue(blockHeadPos);
+                            continueLoop=(blockHeadPos<=(m_logFile.getSize()&0xFFFF0000));
+                        }
+                    } while(continueLoop);
+                    
+
+                    if(blockHeadPos>m_logFile.getSize()) {
+                        // All blocks already had data - continue from end of file.
+                        m_NextReadAddr=m_logFile.getSize();
+                        m_NextReqAddr=m_NextReadAddr;
+                    } else {
+                        // Start just past block header
+                        m_NextReadAddr=blockHeadPos+0x200;
+                        do {
+                            // Find a block 
+                            m_logFile.setPos(m_NextReadAddr);
+                            continueLoop=((m_logFile.readBytes(m_Data, 0, 0x200)==0x200));
+                            if(continueLoop) {
+                                boolean allFF=true;
+                                // Check if all FFs in the file.
+                                for (int i = 0; allFF&&(i < 0x200); i++) {
+                                    allFF=((m_Data[i]&0xFF)==0xFF);
+                                }
+                                continueLoop=!allFF;
+                                if(continueLoop) {
+                                    m_ProgressBar.setValue(m_NextReadAddr);
+                                    m_NextReadAddr+=0x200;
+                                }
+                            }
+                        } while (continueLoop);
+                        m_NextReadAddr-=0x200;
+                        m_NextReqAddr=m_NextReadAddr;
+                        
+                        //TODO: should read 2 bytes in header once rest of block was loaded
+                        // in order to have precise header information
+                        // -> We can not load this value from memory know as we might
+                        //    corrupt the data (0xFFFF present if restarting download)
+                    }
+                    
+                    requestCheckBlock();
+                    m_isCheckingLog=true;
+                }
+            }
+        }
+        if(!m_isCheckingLog) {
+            // File could not be opened or is not incremental.
+            openNewLog(p_FileName,Card);
+            m_isLogging=true;
+        }
+    }
+    
+    private void openNewLog(final String fileName, final int Card) {
+        if(m_logFile!=null&&m_logFile.isOpen()) {m_logFile.close();}
+
+        m_logFile=new File(fileName,waba.io.File.DONT_OPEN,Card);
+        m_logFileCard=Card;
+        if(m_logFile.exists()) {
+            m_logFile.delete();
+            //(new MessageBox("Error","Deleted|"+fileName+" ("+Card+")"+"|"+m_logFile.lastError)).popupBlockingModal();                                   
+        }
+
+        m_logFile=new File(fileName,waba.io.File.CREATE,Card);
+        // lastError 10530 = Read only
+        //(new MessageBox("Error","Created|"+fileName+" ("+Card+")"+"|"+m_logFile.lastError)).popupBlockingModal();                                   
+        m_logFileCard=Card;
+        m_logFile.close();
+        //(new MessageBox("Error","Closed|"+fileName+" ("+Card+")"+"|"+m_logFile.lastError)).popupBlockingModal();                                   
+        m_logFile=new File(fileName,waba.io.File.READ_WRITE,Card);
+        m_logFileCard=Card;
+        //(new MessageBox("Error","Read write|"+fileName+" ("+Card+")"+"|"+m_logFile.lastError)).popupBlockingModal();                                   
+
+        if((m_logFile==null)|| !(m_logFile.isOpen())) {
+            (new MessageBox("Error","Could not open|"+fileName+" ("+Card+")" +
+                    "|Check path & if Card is writeable")).popupBlockingModal();                                   
+        }
+    }
+    
+    
+    private void reOpenLogRead(final String fileName,final int Card) {
+        closeLog();
+        try {
+            m_logFile=new File(fileName,File.READ_ONLY,Card);
+            m_logFileCard=Card;
+        } catch (Exception e) {
+//            Vm.debug("Exception reopen log read");
+        }
+        
+    }
+    
+    private void reOpenLogWrite(final String fileName,final int Card) {
+        closeLog();
+        try {
+            m_logFile=new File(fileName,File.READ_WRITE,Card);
+            m_logFileCard=Card;
+        } catch (Exception e) {
+//            Vm.debug("Exception reopen log write");
+        }
+    }
+    
+    
+    // Called regurarly
+    public void getNextLogPart() {
+        if ( m_isLogging ) {
+            int z_Step;
+            if(m_NextReqAddr<=m_NextReadAddr) {
+                z_Step=m_EndAddr-m_NextReqAddr+1;
+                if(m_recoverFromError && z_Step>0x800) {
+                    z_Step=0x800;
+                }
+                if(z_Step>0) {
+                    if(z_Step>m_Step){
+                        z_Step=m_Step;
+                    }
+                    readLog(m_NextReqAddr,z_Step);
+                    m_NextReqAddr+=z_Step;
+                }            
+            }
+        }
+    }
+
+    // Called when no outstanding requests
+    public void getLogPart() {
+        if ( m_isLogging ) {
+            int z_Step;
+            if(m_NextReqAddr>m_NextReadAddr) {
+                recoverFromLogError();
+            } else {
+                getNextLogPart();
+            }
+        } else if ( m_isCheckingLog ) {
+            requestCheckBlock();
+        }
+    }
+    
+    private final int HexStringToBytes(final String hexStr) {
+        char[] z_Data = hexStr.toCharArray();
+        int length=z_Data.length/2;
+        for (int i = 0; i < z_Data.length; i += 2) {
+            int c1 = z_Data[i]-'0';  // Uppercase
+            int c2 = z_Data[i + 1]-'0'; // Uppercase
+            if (!((c1 >= 0) && (c1 <= 9))) {
+                c1&=~0x20; // Uppercase
+                if ((c1 >= 'A'-'0') && (c1 <= 'F'-'0')) {
+                    c1 += -('A'-'0') + 10;
+                } else {
+                    c1 = 0;
+                }
+            }
+            if (!((c2 >= 0) && (c2 <= 9))) {
+                c2&=~0x20; // Uppercase
+                if ((c2 >= 'A'-'0') && (c2 <= 'F'-'0')) {
+                    c2 += -('A'-'0') + 10;
+                } else {
+                    c2 = 0;
+                }
+            }
+            m_Data[i >> 1] = (byte) ((c1 << 4) + c2);
+        }
+        
+        return length;
+    }
+    
+    public void recoverFromLogError() {
+        m_NextReqAddr=m_NextReadAddr;
+        if(!m_recoverFromError) {
+            m_recoverFromError=true;
+        }
+    }
+    private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
+    public void	analyzeLogPart(final int p_StartAddr, final String p_Data) {
+        int dataLength;
+        dataLength=HexStringToBytes(p_Data); // Fills m_data
+//        Vm.debug("Got "+p_StartAddr+" "+Convert.toString(p_Data.length())+"): "+Convert.toString(dataLength));
+        if( m_isLogging) {
+            if(m_NextReadAddr==p_StartAddr) {
+                m_recoverFromError=false;
+                int j=0;
+                
+                // The Palm platform showed problems writing 0x800 blocks.
+                // This splits it in smaller blocks and solves that problem.
+                if(dataLength!=0x800 && ((m_NextReadAddr+dataLength)!=m_NextReqAddr)) {
+                    // Received data is not the right size - transmission error.
+                    //  Can happen on Palm over BT.
+                    getNextLogPart();
+                } else {
+                    // Data seems ok
+                    for (int i = dataLength; i>0; i-=C_MAX_FILEBLOCK_WRITE) {
+                        int l=i;
+                        if(l>C_MAX_FILEBLOCK_WRITE) {
+                            l=C_MAX_FILEBLOCK_WRITE;
+                        }
+//                        Vm.debug("Writing("+Convert.toString(p_StartAddr)+"): "+Convert.toString(j)+" "+Convert.toString(l));
+                        
+                        int q;
+                        if((q=m_logFile.writeBytes(m_Data,j,l))!=l) {
+//                            Vm.debug("Problem during anaLog: "+Convert.toString(m_logFile.lastError));
+                            cancelGetLog();
+                            Vm.debug(Convert.toString(q));
+                        };
+                        j+=l;
+                    }
+                    m_NextReadAddr+=dataLength;
+                    if(m_ProgressBar!=null) {
+                        m_ProgressBar.setValue(m_NextReadAddr);
+                    }
+                    if(m_getFullLog
+                            &&
+                            (((p_StartAddr-1+dataLength)&0xFFFF0000)>=p_StartAddr)
+                    ) {
+                        // Block boundery (0xX0000) is inside data.
+                        int blockStart=0xFFFF&(0x10000-(p_StartAddr&0xFFFF));
+                        if(!(((m_Data[blockStart]&0xFF)==0xFF)
+                                &&((m_Data[blockStart+1]&0xFF)==0xFF))) {
+                            // This block is full, next block is still data
+                            int minEndAddr;
+                            minEndAddr= (p_StartAddr&0xFFFF0000)+0x20000-1; // This block and next one.
+                            if(minEndAddr>logMemSize-1) {
+                                minEndAddr=logMemSize-1;
+                            }
+                            if(minEndAddr>m_EndAddr) {
+                                m_EndAddr= minEndAddr;
+                                if(m_ProgressBar!=null) {
+                                    m_ProgressBar.max=m_EndAddr;
+                                    m_ProgressBar.repaintNow();
+                                }
+                            }
+                        }
+                    }
+                }
+                if(m_NextReadAddr>m_EndAddr) {
+                    endGetLog();
+                }
+            } else {
+                recoverFromLogError();
+            }
+        } else if ( m_isCheckingLog) {
+            if((p_StartAddr==C_BLOCKVERIF_START) && (dataLength==C_BLOCKVERIF_SIZE)) {
+                // The block we got should be the block to check
+                byte[] m_localdata=new byte[dataLength];
+                int result;
+                boolean success=false;
+                m_logFile.setPos(p_StartAddr);
+                result=m_logFile.readBytes(m_localdata,0, dataLength);
+                if(result==dataLength) {
+                    success=true;
+                    for(int i=dataLength-1;i>=0;i--) {
+                        if(m_Data[i]!=m_localdata[i]) {
+                            // The log is not the same, data is different
+                            success=false;
+                            break; // Exit from the loop
+                        }
+                    }
+                }
+                m_isCheckingLog=false;
+                String fileName=m_logFile.getPath();
+                if(success) {
+                    // Downloaded data seems to correspond - start incremental download
+                    reOpenLogWrite(fileName,m_logFileCard);
+//                    m_NextReqAddr=((m_logFile.getSize()-1) & 0xFFFF0000);
+//                    if(m_NextReadAddr<m_NextReqAddr) {
+//                        m_NextReadAddr=m_NextReqAddr;
+//                    } else {
+//                        m_NextReqAddr=m_NextReadAddr;
+//                    }
+                    m_logFile.setPos(m_NextReadAddr);
+                    m_isLogging=true;
+                } else {
+                    // Log is not the same - delete the log and reopen.
+                    openNewLog(fileName,m_logFileCard);
+                    m_isLogging=true;
+                    m_NextReadAddr=0;
+                    m_NextReadAddr=0;
+                }
+            }
+        }
+    }
     
     
     final void analyzeGPGGA(final String[] p_nmea) {
@@ -743,6 +1207,24 @@ public class GPSstate implements Thread {
         }
     }
     
+    // Flash user option values
+    public int userOptionTimesLeft;
+    public int dtUpdateRate;
+    public int dtBaudRate;
+    public int dtGLL_Period;
+    public int dtRMC_Period;
+    public int dtVTG_Period;
+    public int dtGSA_Period;
+    public int dtGSV_Period;
+    public int dtGGA_Period;
+    public int dtZDA_Period;
+    public int dtMCHN_Period;
+
+    private String mainVersion="";
+    private String model="";
+    private String firmwareVersion="";
+    
+    public int NMEA_periods[]=new int[BT747_dev.C_NMEA_SEN_COUNT];
     
     public int analyseNMEA(final String[] p_nmea) {
         int z_Cmd;
@@ -867,35 +1349,27 @@ public class GPSstate implements Thread {
         } // End if
         return z_Result;
     } // End method
-
-    public String getFirmwareVersion() {
-        return firmwareVersion;
-    }
-    public String getMainVersion() {
-        return mainVersion;
-    }
-    public String getModel() {
-        return model;
-    }
-
     
-    /****************************************************************************
-     * Thread methods implementation
-     */
-
+    
+    String[] lastResponse;
+    
+    public void onEvent(Event e){
+        switch (e.type) {
+        case ControlEvent.TIMER:
+        break;
+        
+        }
+    }  
     /* (non-Javadoc)
      * @see waba.sys.Thread#run()
      */
     public void run() {
-        String[] lastResponse;
         int loops_to_go=5;
         if(m_GPSrxtx.isConnected()) {
-            if((m_logState!=C_LOG_NOLOGGING)&&(sentCmds.getCount()==0)&&(toSendCmds.getCount()==0)) {
+            if((m_isLogging||m_isCheckingLog)&&(sentCmds.getCount()==0)&&(toSendCmds.getCount()==0)) {
                 // Sending command on next timer adds some delay after
                 // the end of the previous command (reception)
-                getLogPartNoOutstandingRequests();
-            } else if (m_logState==C_LOG_ACTIVE) {
-                getNextLogPart();
+                getLogPart();
             }
             do {
                 lastResponse= m_GPSrxtx.getResponse();
@@ -904,9 +1378,11 @@ public class GPSstate implements Thread {
             } while((loops_to_go-->0) &&lastResponse!=null);
         } else {
             MainWindow.getMainWindow().removeThread(this);
-            if(m_logState!=C_LOG_NOLOGGING) {
+            if(m_isLogging) {
                 endGetLog();
             }
+            //removeTimer(linkTimer);
+            //linkTimer=null;
         }
     }
 
@@ -923,482 +1399,13 @@ public class GPSstate implements Thread {
     public void stopped() {
 
     }
-    
-    
-    /***********************************************************************
-     * LOGGING FUNCTIONALITY
-     ***********************************************************************/
-    // Fields to keep track of logging status
-    private int logTimer=0;
-    private int m_StartAddr;
-    private int m_EndAddr;
-    private int m_NextReqAddr;
-    private int m_NextReadAddr;
-    private int m_Step;
-
-    /** File handle for binary log being downloaded. */
-    private File m_logFile=new File("");
-    /** Card (for Palm) of binary log file.  Defaults to last card in device. */
-    private int m_logFileCard=-1;
-
-    // States for log reception state machine.
-    private static final int C_LOG_NOLOGGING = 0;
-    private static final int C_LOG_CHECK = 1;
-    private static final int C_LOG_ACTIVE = 2;
-    private static final int C_LOG_RECOVER = 3;
-
-    private int m_logState = C_LOG_NOLOGGING;
-    
-    private int m_logRequestAhead=0;
-    
-    /** Start of block position to verify if log in device corresponds
-     * to log in file.
-     */
-    private final static int C_BLOCKVERIF_START = 0x200; 
-    /** Size of block to validate that log in device is log in file. */
-    private final static int C_BLOCKVERIF_SIZE  = 0x200;    
-
-    private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
-
-    private byte[] m_Data= new byte[0x800];  // buffer used for reading data.
-
-
-    /** Request the block to validate that log in device is log in file.
-     */
-    private void requestCheckBlock() {
-        readLog(C_BLOCKVERIF_START,C_BLOCKVERIF_SIZE);  // Read 200 bytes, just past header.
+    public String getFirmwareVersion() {
+        return firmwareVersion;
     }
-    
-    /** Resets the condition to determine if a log request timeout occurs.
-     */
-    private final void resetLogTimeOut() {
-        logTimer=Vm.getTimeStamp();
+    public String getMainVersion() {
+        return mainVersion;
     }
-       
-    private void closeLog() {
-        try {
-            if(m_logFile!=null  && m_logFile.isOpen()) {
-                m_logFile.close();
-            }
-        }
-        catch (Exception e) {
-        }
+    public String getModel() {
+        return model;
     }
-    private void endGetLog() {
-        m_logState=C_LOG_NOLOGGING;
-        closeLog();
-        if(m_ProgressBar!=null) {
-            m_ProgressBar.setVisible(false);
-            m_ProgressBar.getParentWindow().repaintNow();
-        }
-    }
-    
-    public void cancelGetLog() {
-        endGetLog();
-    }
-    
-    /**
-     * @param p_StartAddr
-     * @param p_EndAddr
-     * @param p_Step
-     * @param p_FileName
-     */
-    public void getLogInit(
-            final int p_StartAddr,
-            final int p_EndAddr,
-            final int p_Step,
-            final String p_FileName,
-            final int Card,
-            final boolean incremental,  // True if incremental read
-            final ProgressBar pb) {
-        m_StartAddr= p_StartAddr;
-        m_EndAddr=((p_EndAddr+0xFFFF)&0xFFFF0000)-1;
-        m_NextReqAddr= m_StartAddr;
-        m_NextReadAddr= m_StartAddr;
-        m_Step=p_Step;
-        m_ProgressBar=pb;
-        if(pb!=null) {
-            pb.min=m_StartAddr;
-            pb.max=m_EndAddr;
-            pb.setValue(m_NextReadAddr,""," b");
-            pb.setVisible(true);
-        }
-        if(m_Step>0x800) {
-            m_logRequestAhead=0;
-        } else {
-            m_logRequestAhead=m_settings.getLogRequestAhead();
-        }
-            
-        if(incremental) {
-            reOpenLogRead(p_FileName,Card);
-            if(m_logFile!=null&&m_logFile.isOpen()) {
-                // There is a file with data.
-                if (m_logFile.getSize()>=(C_BLOCKVERIF_START+C_BLOCKVERIF_SIZE)){
-                    // There are enough bytes in the saved file.
-                    
-                    // Find first incomplete block
-                    int blockHeadPos=0;
-                    boolean continueLoop;
-                    do {
-                        byte[] bytes=new byte[2];
-                        m_logFile.setPos(blockHeadPos);
-                        continueLoop=(m_logFile.readBytes(bytes, 0, 2)==2);
-                        if(continueLoop) {
-                            // Break the loop if this block was incomplete.
-                            continueLoop=!(((bytes[0]&0xFF)==0xFF)
-                                    &&((bytes[1]&0xFF)==0xFF));
-                        }
-                        if(continueLoop) {
-                            // This block is fully filled
-                            blockHeadPos+=0x10000;
-                            m_ProgressBar.setValue(blockHeadPos);
-                            continueLoop=(blockHeadPos<=(m_logFile.getSize()&0xFFFF0000));
-                        }
-                    } while(continueLoop);
-                    
-
-                    if(blockHeadPos>m_logFile.getSize()) {
-                        // All blocks already had data - continue from end of file.
-                        m_NextReadAddr=m_logFile.getSize();
-                        m_NextReqAddr=m_NextReadAddr;
-                    } else {
-                        // Start just past block header
-                        m_NextReadAddr=blockHeadPos+0x200;
-                        do {
-                            // Find a block 
-                            m_logFile.setPos(m_NextReadAddr);
-                            continueLoop=((m_logFile.readBytes(m_Data, 0, 0x200)==0x200));
-                            if(continueLoop) {
-                                continueLoop=true;
-                                // Check if all FFs in the file.
-                                for (int i = 0; (!continueLoop)&&(i < 0x200); i++) {
-                                    continueLoop=!((m_Data[i]&0xFF)==0xFF);
-                                }
-                                if(continueLoop) {
-                                    m_ProgressBar.setValue(m_NextReadAddr);
-                                    m_NextReadAddr+=0x200;
-                                }
-                            }
-                        } while (continueLoop);
-                        m_NextReadAddr-=0x200;
-                        m_NextReqAddr=m_NextReadAddr;
-                        
-                        //TODO: should read 2 bytes in header once rest of block was loaded
-                        // in order to have precise header information
-                        // -> We can not load this value from memory know as we might
-                        //    corrupt the data (0xFFFF present if restarting download)
-                    }
-                    
-                    requestCheckBlock();
-                    m_logState=C_LOG_CHECK;
-                }
-            }
-        }
-        if(!(m_logState==C_LOG_CHECK)) {
-            // File could not be opened or is not incremental.
-            openNewLog(p_FileName,Card);
-            m_logState=C_LOG_ACTIVE;
-        }
-    }
-    
-    private void openNewLog(final String fileName, final int Card) {
-        if(m_logFile!=null&&m_logFile.isOpen()) {m_logFile.close();}
-
-        m_logFile=new File(fileName,waba.io.File.DONT_OPEN,Card);
-        m_logFileCard=Card;
-        if(m_logFile.exists()) {
-            m_logFile.delete();
-        }
-
-        m_logFile=new File(fileName,waba.io.File.CREATE,Card);
-        // lastError 10530 = Read only
-        m_logFileCard=Card;
-        m_logFile.close();
-        m_logFile=new File(fileName,waba.io.File.READ_WRITE,Card);
-        m_logFileCard=Card;
-
-        if((m_logFile==null)|| !(m_logFile.isOpen())) {
-            (new MessageBox("Error","Could not open|"+fileName+" ("+Card+")" +
-                    "|Check path & if Card is writeable")).popupBlockingModal();                                   
-        }
-    }
-    
-    
-    private void reOpenLogRead(final String fileName,final int Card) {
-        closeLog();
-        try {
-            m_logFile=new File(fileName,File.READ_ONLY,Card);
-            m_logFileCard=Card;
-        } catch (Exception e) {
-//            Vm.debug("Exception reopen log read");
-        }
-    }
-    
-    private void reOpenLogWrite(final String fileName,final int Card) {
-        closeLog();
-        try {
-            m_logFile=new File(fileName,File.READ_WRITE,Card);
-            m_logFileCard=Card;
-        } catch (Exception e) {
-//            Vm.debug("Exception reopen log write");
-        }
-    }
-    
-    
-    // Called regurarly
-    private void getNextLogPart() {
-        if ( m_logState != C_LOG_NOLOGGING ) {
-            int z_Step;
-            z_Step=m_EndAddr-m_NextReqAddr+1;
-         
-            switch(m_logState) {
-            case C_LOG_ACTIVE:
-                if(m_NextReqAddr>m_NextReadAddr+m_Step*m_logRequestAhead) {
-                    z_Step=0;
-                }
-                break;
-            case C_LOG_RECOVER:
-                if(m_NextReqAddr>m_NextReadAddr) {
-                    z_Step=0;
-                } else if(z_Step>0x800) {
-                    z_Step=0x800;
-                }
-                break;
-            default:
-                z_Step=0;
-            }
-
-            if(z_Step>0) {
-                if(z_Step>m_Step) {
-                    z_Step=m_Step;
-                }
-                readLog(m_NextReqAddr,z_Step);
-                m_NextReqAddr+=z_Step;
-                if(m_logState==C_LOG_ACTIVE) {
-                    getNextLogPart();  // Recursive to get requests 'ahead'
-                }
-            }            
-        }
-    }
-
-    // Called when no outstanding requests
-    private void getLogPartNoOutstandingRequests() {
-        switch(m_logState) {
-        case C_LOG_ACTIVE:
-        case C_LOG_RECOVER:
-            m_NextReqAddr=m_NextReadAddr;
-            getNextLogPart();
-            break;
-        case C_LOG_CHECK:
-            requestCheckBlock();
-        }
-    }
-    
-    private void recoverFromLogError() {
-        m_NextReqAddr=m_NextReadAddr;
-        m_logState=C_LOG_RECOVER;
-    }
-
-    private void analyzeLogPart(final int p_StartAddr, final String p_Data) {
-        int dataLength;
-        dataLength=Conv.hexStringToBytes(p_Data, m_Data)/2; // Fills m_data
-//        Vm.debug("Got "+p_StartAddr+" "+Convert.toString(p_Data.length())+"): "+Convert.toString(dataLength));
-        switch(m_logState) {
-        case C_LOG_ACTIVE:
-        case C_LOG_RECOVER:
-            if(m_NextReadAddr==p_StartAddr) {
-                m_logState=C_LOG_ACTIVE;
-                int j=0;
-                
-                // The Palm platform showed problems writing 0x800 blocks.
-                // This splits it in smaller blocks and solves that problem.
-                if(dataLength!=0x800
-                   && dataLength!=m_Step
-                   && ((m_NextReadAddr+dataLength)!=m_NextReqAddr)) {
-                    // Received data is not the right size - transmission error.
-                    //  Can happen on Palm over BT.
-                    m_logState=C_LOG_RECOVER;
-                } else {
-                    // Data seems ok
-                    for (int i = dataLength; i>0; i-=C_MAX_FILEBLOCK_WRITE) {
-                        int l=i;
-                        if(l>C_MAX_FILEBLOCK_WRITE) {
-                            l=C_MAX_FILEBLOCK_WRITE;
-                        }
-//                        Vm.debug("Writing("+Convert.toString(p_StartAddr)+"): "+Convert.toString(j)+" "+Convert.toString(l));
-                        
-                        int q;
-                        if((q=m_logFile.writeBytes(m_Data,j,l))!=l) {
-//                            Vm.debug("Problem during anaLog: "+Convert.toString(m_logFile.lastError));
-                            cancelGetLog();
-//                            Vm.debug(Convert.toString(q));
-                        };
-                        j+=l;
-                    }
-                    m_NextReadAddr+=dataLength;
-                    if(m_ProgressBar!=null) {
-                        m_ProgressBar.setValue(m_NextReadAddr);
-                    }
-                    if(m_getFullLog
-                            &&
-                            (((p_StartAddr-1+dataLength)&0xFFFF0000)>=p_StartAddr)
-                    ) {
-                        // Block boundery (0xX0000) is inside data.
-                        int blockStart=0xFFFF&(0x10000-(p_StartAddr&0xFFFF));
-                        if(!(((m_Data[blockStart]&0xFF)==0xFF)
-                                &&((m_Data[blockStart+1]&0xFF)==0xFF))) {
-                            // This block is full, next block is still data
-                            int minEndAddr;
-                            minEndAddr= (p_StartAddr&0xFFFF0000)+0x20000-1; // This block and next one.
-                            if(minEndAddr>logMemSize-1) {
-                                minEndAddr=logMemSize-1;
-                            }
-                            if(minEndAddr>m_EndAddr) {
-                                m_EndAddr= minEndAddr;
-                                if(m_ProgressBar!=null) {
-                                    m_ProgressBar.max=m_EndAddr;
-                                    m_ProgressBar.repaintNow();
-                                }
-                            }
-                        }
-                    }
-                }
-                if(m_NextReadAddr>m_EndAddr) {
-                    endGetLog();
-                } else {
-                    getNextLogPart();
-                }
-            } else {
-                recoverFromLogError();
-            }
-            break;
-        case C_LOG_CHECK:
-            if((p_StartAddr==C_BLOCKVERIF_START) && (dataLength==C_BLOCKVERIF_SIZE)) {
-                // The block we got should be the block to check
-                byte[] m_localdata=new byte[dataLength];
-                int result;
-                boolean success=false;
-                m_logFile.setPos(p_StartAddr);
-                result=m_logFile.readBytes(m_localdata,0, dataLength);
-                if(result==dataLength) {
-                    success=true;
-                    for(int i=dataLength-1;i>=0;i--) {
-                        if(m_Data[i]!=m_localdata[i]) {
-                            // The log is not the same, data is different
-                            success=false;
-                            break; // Exit from the loop
-                        }
-                    }
-                }
-
-                String fileName=m_logFile.getPath();
-                if(success) {
-                    // Downloaded data seems to correspond - start incremental download
-                    reOpenLogWrite(fileName,m_logFileCard);
-                    m_logFile.setPos(m_NextReadAddr);
-                } else {
-                    // Log is not the same - delete the log and reopen.
-                    openNewLog(fileName,m_logFileCard);
-                    m_NextReadAddr=0;
-                    m_NextReadAddr=0;
-                }
-                m_logState=C_LOG_ACTIVE;
-            }
-        }  // Switch m_logState
-    }
-    
-    
-    /**
-     * @param nmea  Elements of the NMEA packet to analyze.<br>
-     * Example:  PMTK182,3,4<br>
-     *   nmea[0]  PMTK182<br>
-     *   nmea[1]  3<br>
-     *   nmea[2]  4
-     * @return
-     */
-    private int analyseLogNmea(final String[] nmea) {
-        //if(GPS_DEBUG) {   waba.sys.Vm.debug("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
-        // Suppose that the command is ok (PMTK182)
-        
-        // Currently taking care of replies from the device only.
-        // The other data we send ourselves
-        resetLogTimeOut();  // Reset timeout
-        if(nmea.length>2) {
-            switch( Convert.toInt(nmea[1]) ) {
-            case BT747_dev.PMTK_LOG_DT:
-                // Parameter information
-                // TYPE = Parameter type
-                // DATA = Parameter data
-                // $PMTK182,3,TYPE,DATA
-                int z_type= Convert.toInt(nmea[2]);
-            if(nmea.length==4) {
-                switch( z_type ) {
-                case BT747_dev.PMTK_LOG_FORMAT:             // 2;
-                    //if(GPS_DEBUG) {   waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
-                    logFormat=Conv.hex2Int(nmea[3]);
-                logRecordMaxSize=BT747_dev.logRecordMinSize(logFormat);
-                PostStatusUpdateEvent();
-                break;
-                case BT747_dev.PMTK_LOG_TIME_INTERVAL:  // 3;
-                    logTimeInterval=Convert.toInt(nmea[3]);
-                PostStatusUpdateEvent();
-                break;
-                case BT747_dev.PMTK_LOG_DISTANCE_INTERVAL: //4;
-                    logDistanceInterval=Convert.toInt(nmea[3])/10;
-                PostStatusUpdateEvent();
-                break;
-                case BT747_dev.PMTK_LOG_SPEED_INTERVAL: // 5;
-                    logSpeedInterval=Convert.toInt(nmea[3])/10;
-                PostStatusUpdateEvent();
-                break;
-                case BT747_dev.PMTK_LOG_REC_METHOD:     // 6;
-                    logFullOverwrite=(Convert.toInt(nmea[3])==1);
-                PostStatusUpdateEvent();
-                break;
-                case BT747_dev.PMTK_LOG_LOG_STATUS:     // 7; // bit 2 = logging on/off
-                    logStatus=Convert.toInt(nmea[3]);
-                    loggingIsActive=( 
-                           ((logStatus&BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK)!=0)
-                          );
-
-                PostStatusUpdateEvent();
-                break;
-                case BT747_dev.PMTK_LOG_MEM_USED:           // 8; 
-                    logMemUsed=Conv.hex2Int(nmea[3]);
-                logMemUsedPercent=
-                    (100*(logMemUsed-(0x200*((logMemUsed+0xFFFF)/0x10000))))
-                    /logMemUsefullSize;
-                PostStatusUpdateEvent();
-                break;
-                case BT747_dev.PMTK_LOG_TBD3:           // 9;
-                    break;
-                case BT747_dev.PMTK_LOG_NBR_LOG_PTS:        // 10;
-                    logNbrLogPts=Conv.hex2Int(nmea[3]);
-                PostStatusUpdateEvent();
-                break;
-                case BT747_dev.PMTK_LOG_TBD2:               // 11;
-                    break;
-                default:
-                }
-            }
-            break;
-            case BT747_dev.PMTK_LOG_DT_LOG:
-                // Data from the log
-                // $PMTK182,8,START_ADDRESS,DATA
-                
-                try {
-//                    waba.sys.Vm.debug("Before AnalyzeLog:"+p_nmea[3].length());
-                    analyzeLogPart(Conv.hex2Int(nmea[2]), nmea[3]);
-                } catch (Exception e) {
-                    // During debug: array index out of bounds
-                    // TODO: handle exception
-                }
-                break;
-            default:
-                // Nothing - unexpected
-            }
-        }
-        return 0; // Done.
-        
-    }   
 }

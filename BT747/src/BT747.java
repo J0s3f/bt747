@@ -19,7 +19,6 @@
 //********************************************************************                              
 import waba.sys.Convert;
 import waba.sys.Settings;
-import waba.ui.Button;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -104,8 +103,7 @@ public class BT747 extends MainWindow {
     /** Tab Panel container - Connection control/configuration */
     private static GPSconctrl  m_GPSconctrl;
     private static final int C_GPS_CONCTRL_IDX= 6;
-    /** Tab Panel container - Flash settings */
-    private static GPSFlashOption  m_GPSFlash;
+    /** Tab Panel container - Other settings */
     private static final int C_GPS_FLASH_IDX= 7;
     
     private static AppSettings m_settings=new AppSettings();

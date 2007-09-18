@@ -35,7 +35,6 @@ import gps.GPSFile;
 import gps.GPSFilter;
 import gps.GPSGPXFile;
 import gps.GPSGmapsHTMLEncodedFile;
-import gps.GPSGmapsHTMLFile;
 import gps.GPSKMLFile;
 import gps.GPSNMEAFile;
 import gps.GPSPLTFile;
