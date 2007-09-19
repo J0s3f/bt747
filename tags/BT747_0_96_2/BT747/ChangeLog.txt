@@ -1,0 +1,243 @@
+Version 0.96.2
+* A bug in the incremental download was introduced in 0.96.1.  The end of valid data was incorrectly identified.
+  Corrected in this update.
+  
+Version 0.96.1
+* Revisited log download algorithm.  Now requests can be queued.
+  This was efficient over bluetooth where download was about 54k/second with the following settings on Palm:
+    - Chunk size=220
+    - Log ahead request=3
+    - Timeout=3500
+    - Fix = 500 ms
+    - NMEA Output:
+       RMC=1
+       GGA=GSA=GSV=2
+
+Version 0.95.14
+* PPC/WinCE: Create 'My Documents/BT747' directory if it does not exist to save the application settings.
+
+Version 0.95.13
+* Application will no longer switch off automatically on Palm devices - this avoids some (timeout)
+  trouble on Palm devices and avoid autooff during download.
+* Path to log directory can now be set from pull-down list.
+* Validated operation on Linux system (PCLinuxOS) and adjusted 'run_rxtx.sh' script.
+
+Version 0.95.12
+* Google maps: when tracks are separated due to a trackpoint that is 'lost', track segments
+  are interconnected with red line.
+
+
+Version 0.95.11
+* Added waypoints to Google Map output format and points are now 'encoded'.
+
+Version 0.95.10
+* Implemented 'GMAPS' output format : HTML file that will show trail on google maps.
+
+Version 0.95.9
+* Added functionality to read and change the NMEA string settings of the device.
+
+
+Version 0.95.8
+* PLT: conversion to height in feet was incorrect. Corrected.
+
+
+Version 0.95.7
+* NMEA format: speed written in knots was wrong conversion from speed in km/h
+ (almost double instead of half).  Corrected.
+
+Version 0.95.6
+* Changed interface of connection tab.
+* RxTx: different port name according to OS (Windows, Linux, Mac).  This allows direct
+  use of RXTX on windows (and other systems) and should result in less installation
+  hassle.
+* Problems when interpreting satelite information solved:
+ - data log specification problem;
+ - last record of block;
+ - false end of record identification.
+* Moved BT747.jar and BT747_rxtx.jar to dist dir, this impact startup scripts.
+
+
+Version 0.95.5
+* Increased limits on fix setting (fix frequency slower than 1Hz now possible) and on 
+  log reason settings (speed as low as 1km/h and distance as low as 1 m).
+
+Version 0.95.4
+* Added tickbox to remove difference between WGS84 and geoid (Mean Sea Level, MSL) from
+  the logged height (as it was added by the logger).
+
+Version 0.95.3
+* KML format got improved: Track added (with extrusion) to show a line in stead of points.
+* Some extra error messages in case of file problems.
+
+Version 0.95.2
+* Added specific target for Linux (serial port opening in entirely new class).
+  A linux specific 'jar' file has been created (in the Linux directory).
+  Experimental and untested.
+* Bug fix: no more file was written when 'one file per day' was not selected.
+* Performance improvement (profiled File output writing)
+* KML format change (waypoints added).
+
+
+Version 0.95.1
+* Bug fix (on device): clone() method does not exist for arrays - replaced y explicit copy.
+  User effect: java exception when converting to output format on device (solved).
+* Bug fix: no more file was written when 'one file per day' was not selected.
+* Performance improvement (profiled File output writing)
+
+Version 0.95
+* Bug fix (incorrect log interpretation when RCR and Distance not both logged)
+* Satellite information now decoded from log.
+* Satellite information written to CSV file.
+
+Version 0.77.23
+* Solved some bugs related to the file splitting per date & improved function to avoid files without elements.
+* Added feature to change log format without erasing the device.  The resulting log can
+  not be read by the original application delivered with the device, but this program
+  can read the log.
+* Worked around a problem when satellite specific data is logged (sid, ele, snr, azimuth).
+  The amount of data varies with the number of satelites - this is now covered for.
+  The data is not interpreted though and not written to any output file (sorry, but I do
+  not need that function and this is volunteering!).
+
+Version 0.77.22
+* All formats now have a filename including the date.
+* Method reuse in file output classes (resulting in smaller footprint)
+
+Version 0.77.21
+* Added popup message when file for download could not be opened.
+* GPX: filename now includes date.  If 'one file per day' is checked, then there are as many
+  files as there are days logged.
+* Resolved bug concerning retrieving settings when upgrading.
+* The trkpts in the gpx file now also include the comments.
+
+Version 0.77.20
+* Added new tab with some functions frequently requested on forums (fix freq.) and some not
+  available on other tabs (hot/warm/cold start).
+
+Version 0.77.19
+* On ppc (wince), settings now saved on program exit.
+* Log point filtering now separated for waypts and trkpts.
+* Optimizing with proguard (resulting in smaller object files)
+
+Version 0.77.18
+* Updates to gpx format
+* Setting saved on ppc (wince) OS.  Must click on 'set values button' in 'File' tab for the moment to save the settings.
+
+Version 0.77.17
+* Modified display of device version and application SW version for better information.
+* Added NMEA output format (readable by locr SW).
+* Added script and instructions for launching on Linux - partially validated.
+
+Version 0.77.16
+
+* Solved problem regarding timeout on first request.  Fixes double requests for same data and speed up download.
+* CSV: LAT/LON values no longer converted to positive values.  In that manner paths can be shown
+  directly in an excel graph.
+
+Version 0.77.15
+
+* Not really tested dev version!!!  Purpose deliver latest version on the web before 3 weeks leave.
+* Should solve filtering bug when RCR or VALID field missing.
+* Some (unnoticeable) bugs resolved.
+
+Version 0.77.14
+
+* Correction of calculation for percentage of memory used.
+* Getting device firmware version & model.
+* Improved log download on portable device (Palm).
+   -> Command acknowledge taken into consideration
+   -> Timeout implementation on 'check log'
+* PLT format revisited (from http://www.oziphototool.com/fileformats.html)
+* CSV format: units no longer mentioned in fields, only in header.
+
+Version 0.77.13
+
+* Added UTC offset field.  This will change the output time and midnight time for date selection.
+
+Version 0.77.12
+
+* Handling more field.  Now all are handled except the variable fields concerning satelite
+  information.
+* Some (supposed) improvement on data download from device.  This is difficult to validate.
+
+Version 0.77.11
+
+* Added read of flash options (did not activate writing them since not possible it seems)
+
+Version 0.77.10
+
+* Added configuration option 'overwrite/stop'
+* Added card selection functionality for Palm devices.
+* Allow floating point entry for time interval.  Usefull for 5Hz logging (set time
+  interval to 0.2s and fix to 200 ms).
+
+Version 0.77.9
+
+* Added connection version to connection page
+* Correct logic concerning null pointer (hopefully this works!).
+* Added repaint for all items that were potentially updated after reception of data.
+* Added initial version to write Ozi PLT file.
+
+Version 0.77.8
+
+* Problem with default directory setting solved (null pointer)
+* Download chunk size and timeout are configurable (for finetuning)
+
+
+Version 0.77.7
+
+* Following feedback from users, setting download chunck size to 0x200 by default.
+* On PPC and WinCE devices, improved the default setting of the output directory.
+
+Version 0.77.6
+
+* Solved 'bug' concerning Gps status update propagation by introducing specific events.
+
+Version 0.77.5
+
+* Implemented more finegrained incremental download.
+
+Version 0.77.4
+
+* Fixed problem when saved option string was empty (resulted in reset).
+
+Version 0.77.3 
+* Fixed problem when launching first time (no saved options)
+
+Version 0.77.2
+* File setting configuration and memorization.
+* Palm download chunck size adjustment
+
+Version 0.77.1
+
+* The PalmOS BT buffer seems 'small' and overruns happened going unnoticed by the SW.
+  Now downloading smaller packets & matching size downloaded.
+* It is possible to set the base directory for file operations.
+* Added more ports to connect to.
+
+Version 0.76
+
+* Fixed incremental logging partially, but still problems to make it work on Palm
+   (works on PC) - something to do with read/write capabilities of files on PalmOS.
+* The log can now be converted correctly without being connected - the log format
+  information is retrieved from the log file itself.
+* Added a '.bat' script to launch on windows.
+
+Version 0.75
+
+* Incremental download of log added
+* Date filter : corrected calculation of internal UTC date.
+
+Version 0.7
+
+* Added log filtering capability.
+
+Version 0.6
+
+* Added conversion to 'gpx' format;
+* Solved issue retrieving log format when clicking on tab;
+* Kml format slightly improved so that Google Earth recognizes the time.
+
+Version 0.51
+
+* Added conversion to KML
