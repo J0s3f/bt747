@@ -1,3 +1,7 @@
+Version 0.96.2
+* A bug in the incremental download was introduced in 0.96.1.  The end of valid data was incorrectly identified.
+  Corrected in this update.
+  
 Version 0.96.1
 * Revisited log download algorithm.  Now requests can be queued.
   This was efficient over bluetooth where download was about 54k/second with the following settings on Palm:
