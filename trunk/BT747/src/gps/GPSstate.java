@@ -1069,9 +1069,8 @@ public class GPSstate implements Thread {
                             m_logFile.setPos(m_NextReadAddr);
                             continueLoop=((m_logFile.readBytes(m_Data, 0, 0x200)==0x200));
                             if(continueLoop) {
-                                continueLoop=true;
                                 // Check if all FFs in the file.
-                                for (int i = 0; (!continueLoop)&&(i < 0x200); i++) {
+                                for (int i = 0; continueLoop&&(i < 0x200); i++) {
                                     continueLoop=!((m_Data[i]&0xFF)==0xFF);
                                 }
                                 if(continueLoop) {
