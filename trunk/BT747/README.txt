@@ -21,6 +21,8 @@ Further in this readme are instructions for installing on:
 #     (the example is for ports like /dev/ttyUSB0)
 #  -Dbt747_prefix="/dev/ttyUSB" 
 java -Dbt747_prefix="/dev/ttyUSB" waba.applet.Applet BT747
+# The port can be overridden entirely with the next option:
+#  -Dbt747_port="/dev/ttyUSB0"
 =========================================
 
 ========= WINDOWS INSTRUCTIONS =================

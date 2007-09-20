@@ -19,6 +19,8 @@
 //********************************************************************  
 package gps.port;
 
+import waba.sys.Convert;
+
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
@@ -28,7 +30,6 @@ import gnu.io.UnsupportedCommOperationException;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.Exception;
 
 /** This class implements the serial port for rxtx (on Linux)
  * @author Mario De Weerd
@@ -37,7 +38,8 @@ public class GPSRxTxPort extends GPSPort {
     private SerialPort sp=null;
 
     private OutputStream ds;
-    private String portPrefix=""; 
+    private String portPrefix="";
+    private boolean hasPortNbr=true;
     /**
      * 
      */
@@ -54,7 +56,9 @@ public class GPSRxTxPort extends GPSPort {
         } else if(os_name.startsWith("Linux")) {
             portPrefix="/dev/ttyUSB";
         } else if(os_name.startsWith("Mac")) {
-            portPrefix="/dev/tty.iBt-GPS-SPPslave-";
+            //portPrefix="/dev/tty.iBt-GPS-SPPslave-";
+            portPrefix="/dev/cu.SLAB_USBtoUART";
+            hasPortNbr=false;
         }
         portPrefix=java.lang.System.getProperty("bt747_prefix",portPrefix);
     }
@@ -88,11 +92,16 @@ public class GPSRxTxPort extends GPSPort {
     */
    public int openPort() {
        int result=-1;
+       String portStr;
+       portStr=java.lang.System.getProperty("bt747_port",
+               portPrefix+(hasPortNbr?Convert.toString(spPortNbr):""));
+       
        closePort();
+       
        try {
-           System.out.println("Info: trying to open "+portPrefix+spPortNbr);
+           System.out.println("Info: trying to open "+portStr);
            CommPortIdentifier portIdentifier;
-               portIdentifier = CommPortIdentifier.getPortIdentifier(portPrefix+spPortNbr);
+               portIdentifier = CommPortIdentifier.getPortIdentifier(portStr);
            if(portIdentifier.isCurrentlyOwned())
            {
                System.out.println("Error: Port is currently in use");
