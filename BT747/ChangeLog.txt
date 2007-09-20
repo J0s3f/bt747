@@ -1,3 +1,7 @@
+Version 0.96.3
+* A change for Macintosh: The mac does not need a port number, so port number omitted.
+  Added possibility to override port name completely.
+
 Version 0.96.2
 * A bug in the incremental download was introduced in 0.96.1.  The end of valid data was incorrectly identified.
   Corrected in this update.
