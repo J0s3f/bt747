@@ -1,3 +1,6 @@
+* Moved to ProGuard 4.0.1 (jar file optimization)
+* Some optimizations in settings code.
+
 Version 1.00
 * Version 0.96.3 has been out for long enough.  I consider the application as stable enough to call it 1.00. 
 * Added some extra error messages being propagated to the end user (file open/creation).

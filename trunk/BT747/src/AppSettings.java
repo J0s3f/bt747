@@ -87,15 +87,18 @@ public class AppSettings implements gps.settings {
         init();
     }
     
+    private boolean isWin32LikeDevice() {
+        return waba.sys.Settings.platform.startsWith("WindowsCE")
+        || waba.sys.Settings.platform.startsWith("PocketPC")
+        ||(waba.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice);
+    }
+    
     public void init() {
         String mVersion;
+        int VersionX100=0;
         if(Settings.appSettings==null||Settings.appSettings.length()<100) {
             Settings.appSettings=new String(new byte[2048]);
-            if ( waba.sys.Settings.platform.startsWith("WindowsCE")
-                    || waba.sys.Settings.platform.startsWith("PocketPC")
-                    ||(waba.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice) 
-            )
-            {
+            if ( isWin32LikeDevice() ) {
                 int readLength = 0;
                 
                 //waba.sys.Vm.debug("on Device "+waba.sys.Settings.platform);
@@ -118,65 +121,61 @@ public class AppSettings implements gps.settings {
             }
         }
         mVersion=getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
-        if((mVersion.length()<2)||(mVersion.charAt(1)!='.')) {
-            defaultSettings();
-        } else { 
+        if((mVersion.length()==4)&&(mVersion.charAt(1)=='.')) {
             getSettings();
-            int VersionX100=Convert.toInt(mVersion.charAt(0)+mVersion.substring(2,4));
+            VersionX100=Convert.toInt(mVersion.charAt(0)+mVersion.substring(2,4));
+        }  
+        updateSettings(VersionX100);
+    }
+    
+    private void updateSettings(final int versionX100) {
+        switch(versionX100) {
+        case 0:
+            setPortnbr(0);
+            setBaudRate(115200);
+            setCard(-1);
+            if (waba.sys.Settings.platform.startsWith("Palm")) {
+                setBaseDirPath("/Palm");
+            } else if ( isWin32LikeDevice() ) {
+                File f=File.getCardVolume();
+                if(f==null) {
+                    setBaseDirPath("/EnterYourDir");
+                } else {
+                    setBaseDirPath(f.getPath());
+                }
+            } else {
+                setBaseDirPath("/BT747");
+            }
             
-            if( VersionX100<2) {
-                // Added filter defaults in version 0.02
-                setFilterDefaults();
-            } 
-            if( VersionX100<3) {
-                // Added one file per day functionality in 0.03
-                setOneFilePerDay(false);
-            }
-            if( VersionX100<4) {
-                // Added one file per day functionality in 0.03
-                setNoGeoid(false);
-            }
-            if( VersionX100<5) {
-                // Added one file per day functionality in 0.03
-                setLogRequestAhead(C_DEFAULT_LOG_REQUEST_AHEAD);
-            }
-            if( VersionX100<6) {
-                setNMEAset(0x0002000A);
-            }
+            setLogFile("BT747log.bin");
+            setReportFileBase("GPSDATA");
+            setStartupOpenPort(false);
+            setChunkSize(waba.sys.Settings.onDevice?220:0x10000);
+            setDownloadTimeOut( C_DEFAULT_DEVICE_TIMEOUT );
+            /* fall through */
+        case 1: 
+            setFilterDefaults();
+            /* fall through */
+        case 2:
+            /* fall through */
+            setOneFilePerDay(false);
+            /* fall through */
+        case 3:
+            setNoGeoid(false);
+            /* fall through */
+        case 4:
+            setLogRequestAhead(C_DEFAULT_LOG_REQUEST_AHEAD);
+            /* fall through */
+        case 5:
+            setNMEAset(0x0002000A);
+            /* fall through */
         }
         setStringOpt("0.06",C_VERSION_IDX, C_VERSION_SIZE);
+        getSettings();
     }
     
     public void defaultSettings() {
-        setPortnbr(0);
-        setBaudRate(115200);
-        setCard(-1);
-        if (waba.sys.Settings.platform.startsWith("Palm")) {
-            setBaseDirPath("/Palm");
-        } else if ( waba.sys.Settings.platform.startsWith("WindowsCE")
-                ||waba.sys.Settings.platform.startsWith("PocketPC") 
-                )
-        {
-            File f=File.getCardVolume();
-            if(f==null) {
-                setBaseDirPath("/EnterYourDir");
-            } else {
-                setBaseDirPath(f.getPath());
-            }
-        } else {
-            setBaseDirPath("/BT747");
-        }
- 
-        setLogFile("BT747log.bin");
-        setReportFileBase("GPSDATA");
-        setStartupOpenPort(false);
-        setChunkSize(waba.sys.Settings.onDevice?220:0x10000);
-        setDownloadTimeOut( C_DEFAULT_DEVICE_TIMEOUT );
-        setFilterDefaults();
-        setOneFilePerDay(false);
-        setNoGeoid(false);
-        setLogRequestAhead(C_DEFAULT_LOG_REQUEST_AHEAD);
-        getSettings();
+        updateSettings(0);
     }
     
     private void setFilterDefaults() {
@@ -187,11 +186,7 @@ public class AppSettings implements gps.settings {
     }
     
     public void saveSettings() {
-        if (       waba.sys.Settings.platform.startsWith("WindowsCE")
-                || waba.sys.Settings.platform.startsWith("PocketPC")
-                ||(waba.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice) 
-                )
-        {
+        if ( isWin32LikeDevice() ) {
 //            waba.sys.Vm.debug("on Device "+waba.sys.Settings.platform);
 //            waba.sys.Vm.debug("saving config file "+CONFIG_FILE_NAME);
             File m_prefFile=new File("");

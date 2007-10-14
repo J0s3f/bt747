@@ -1,5 +1,5 @@
 del BT747*.zip
-SET DT=1.00
+SET DT=1.01
 
 SET FILES=ChangeLog.txt src dist license.txt README.txt  build.xml .project .classpath default.properties
 SET FILES=%FILES% run_ex.bat run_rxtx.bat run_rxtx.sh
