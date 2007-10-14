@@ -3,7 +3,7 @@ This project is under development.
 Due to similarity this SW written with a iBlue 747 device should work with the following
 devices:
 - i-Blue 747
-- i-Bleu 757
+- i-Blue 757
 - Qstarz BT-Q1000
 - i.Trek Z1
 
@@ -15,6 +15,11 @@ Further in this readme are instructions for installing on:
 - PPC
 - Linux
 - Palm
+- Max
+
+Instructions are a bit of a 'mess'.  Most of the time, the application will work
+with one of the startup scripts without any need for modification.
+Instructions were built during the early versions of this tool.
 
 ========= General (for pure rxtx/all systems) ===========
 # Change the port prefix by adding the following option to the java invocation:
@@ -34,11 +39,13 @@ b. Using WIN32COMM
 You need the full package or install rxtx yourself.
 
 The 'RUN_RXTX.bat' file should work (or need minor adaptations).
+
+This works immediately in most cases.
 ===============================================================
 
 ============== Windows: Using WIN32COMM ===================
-To run on 'windows', you should install WIN32COMM for java to get things going rapidly.
-You need to install Java 1.4.X too.
+You can also use WIN32COMM for java on windows.
+In that case, you may need to install Java 1.4.X too.
 
 Find some instructions (for another java version) here:
 http://www.cs.uml.edu/~fredm/courses/91.305-fall04/javasetup.shtml
@@ -66,9 +73,6 @@ You can find binaries in the 'dist' directory:
 You can find sources in the 'src' directory.
 
 Symbian does not support Bluetooth, so the binaries are not included.
-The "BT747.jar" might work on Mac, if the "rxtx" module is properly installed (http://www.rxtx.org).
-
-On Linux, also install 'rxtx'.
 
 You will need to install/unzip SuperWaba on the platform you want to run BT747 on.
 
@@ -92,6 +96,17 @@ You can also try to run the 'run_ex.bat' command script.
 1. Install superwaba (http://www.superwaba.org/install
 2. Install the BT747.prc and BT747.pdb file on your device.
 
+
+=========== Mac installation ==================
+Currently, there is no script proposed for mac, but the 'run_rxtx.sh' is an example.
+By default, the program should connect to the USB port, but you can have it connect
+to the bluetooth port if you set the port to '/dev/tty.iBT-GPS-SPPslave-1' if you
+specify the following parameter to Java:
+
+-Dbt747_port="/dev/tty.iBT-GPS-SPPslave-1"
+
+To connect over usb, you can get the driver from
+http://www.silabs.com/tgwWebApp/public/web_content/products/Microcontrollers/USB/en/mcu_vcp.htm
 
 =========== PPC installation ================
 
