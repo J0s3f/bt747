@@ -1,3 +1,9 @@
+Version 1.00
+* Version 0.96.3 has been out for long enough.  I consider the application as stable enough to call it 1.00. 
+* Added some extra error messages being propagated to the end user (file open/creation).
+* It is now possible to select the NMEA strings to be written to the output file  (Other tab -> NMEA File tab).
+* The device type (Model) is identified by its commercial name (or commercial equivalent).
+
 Version 0.96.3
 * A change for Macintosh: The mac does not need a port number, so port number omitted.
   Added possibility to override port name completely.

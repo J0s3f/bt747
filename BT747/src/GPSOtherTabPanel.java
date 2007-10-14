@@ -30,17 +30,21 @@ public class GPSOtherTabPanel extends Container {
     private TabPanel m_TabPanel;
     private GPSFlashOption  m_GPSFlash;
     private GPSNMEAOutput m_GPSNMEAOutput;
+    private GPSFileNMEAOutputSel m_GPSNMEAFile;
     private GPSstate m_GPSstate;
+    private AppSettings m_settings;
     
     private final String c_tpCaptions[]= {
-            "Flsh","NMEA Output"
+            "Flsh","NMEA Output","NMEA File"
     };
     
     /**
+     * @param settings TODO
      * 
      */
-    public GPSOtherTabPanel(final GPSstate state) {
+    public GPSOtherTabPanel(final GPSstate state, AppSettings settings) {
         m_GPSstate=state;
+        m_settings=settings;
     }
     
     /**
@@ -53,6 +57,7 @@ public class GPSOtherTabPanel extends Container {
         // TODO Auto-generated method stub
         m_TabPanel.setPanel(0,m_GPSFlash = new GPSFlashOption(m_GPSstate));
         m_TabPanel.setPanel(1,m_GPSNMEAOutput = new GPSNMEAOutput(m_GPSstate));
+        m_TabPanel.setPanel(2,m_GPSNMEAFile = new GPSFileNMEAOutputSel(m_settings));
     }
     public void onEvent(Event event) {
         //

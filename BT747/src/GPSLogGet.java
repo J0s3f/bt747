@@ -247,6 +247,7 @@ public class GPSLogGet extends Container {
                 }
                 if(event.target==m_btToNMEA) {
                     gpsFile=new GPSNMEAFile();
+                    ((GPSNMEAFile)gpsFile).setNMEAoutput(m_appSettings.getNMEAset());
                     ext=".nmea";
                 }
                 if(event.target==m_btToGMAP) {

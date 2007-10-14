@@ -68,7 +68,9 @@ public class AppSettings implements gps.settings {
     private final static int C_NOGEOID_SIZE=4;
     private final static int C_LOGAHEAD_IDX=C_NOGEOID_IDX+C_NOGEOID_SIZE;
     private final static int C_LOGAHEAD_SIZE=1;
-    private final static int C_NEXT_IDX=C_LOGAHEAD_IDX+C_LOGAHEAD_SIZE;
+    private final static int C_NMEASET_IDX=C_LOGAHEAD_IDX+C_LOGAHEAD_SIZE;
+    private final static int C_NMEASET_SIZE=8;
+    private final static int C_NEXT_IDX=C_NMEASET_IDX+C_NMEASET_SIZE;
     
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
@@ -120,24 +122,29 @@ public class AppSettings implements gps.settings {
             defaultSettings();
         } else { 
             getSettings();
-            if( Convert.toFloat(mVersion)<0.02f) {
+            int VersionX100=Convert.toInt(mVersion.charAt(0)+mVersion.substring(2,4));
+            
+            if( VersionX100<2) {
                 // Added filter defaults in version 0.02
                 setFilterDefaults();
             } 
-            if( Convert.toFloat(mVersion)<0.03f) {
+            if( VersionX100<3) {
                 // Added one file per day functionality in 0.03
                 setOneFilePerDay(false);
             }
-            if( Convert.toFloat(mVersion)<0.04f) {
+            if( VersionX100<4) {
                 // Added one file per day functionality in 0.03
                 setNoGeoid(false);
             }
-            if( Convert.toFloat(mVersion)<0.05f) {
+            if( VersionX100<5) {
                 // Added one file per day functionality in 0.03
                 setLogRequestAhead(C_DEFAULT_LOG_REQUEST_AHEAD);
             }
+            if( VersionX100<6) {
+                setNMEAset(0x0002000A);
+            }
         }
-        setStringOpt("0.05",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.06",C_VERSION_IDX, C_VERSION_SIZE);
     }
     
     public void defaultSettings() {
@@ -489,4 +496,13 @@ public class AppSettings implements gps.settings {
         setIntOpt(value,C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
     }
 
+    public int getNMEAset() {
+        return getIntOpt(C_NMEASET_IDX, C_NMEASET_SIZE);
+    }
+    /**
+     * @param value The default value for opening the port.
+     */
+    public void setNMEAset(int value) {
+        setIntOpt(value,C_NMEASET_IDX, C_NMEASET_SIZE);
+    }
 }

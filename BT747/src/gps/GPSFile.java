@@ -82,7 +82,7 @@ public abstract class GPSFile {
     public void writeLogFmtHeader(final GPSRecord f) {
         activeFields = new GPSRecord(f);
     };
-
+    
     public void setFilters(final GPSFilter[] filters) {
         m_Filters = filters;
     };

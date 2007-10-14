@@ -14,7 +14,7 @@
 //***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
+//***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 package gps;
@@ -73,8 +73,7 @@ public class GPSstate implements Thread {
     public int logStatus = 0;
     public int logRecMethod = 0;
     public int logNbrLogPts = 0;
-    public final int logMemSize = 16*1024*1024/8; //16Mb -> 2MB
-    public final int logMemUsefullSize = (int)((logMemSize>>16)*(0x10000-0x200)); //16Mb
+    public int logMemSize = 16*1024*1024/8; //16Mb -> 2MB
     public int logMemUsed = 0;
     public int logMemUsedPercent = 0;
     public int logMemFree = 0;
@@ -147,6 +146,10 @@ public class GPSstate implements Thread {
             GPS_connect();
         }
         
+    }
+    
+    private final int logMemUsefullSize() {
+        return (int)((logMemSize>>16)*(0x10000-0x200)); //16Mb
     }
     
     /** Restart the GPS connection
@@ -874,8 +877,46 @@ public class GPSstate implements Thread {
     public String getMainVersion() {
         return mainVersion;
     }
+    
+    private final String modelName() {
+        int md=Conv.hex2Int(model);
+        String mdStr;
+        logMemSize = 16*1024*1024/8; //16Mb -> 2MB
+        switch(md) {
+        case 0x0000:
+        case 0x0001:
+        case 0x0013:
+        case 0x0051:
+            // Can also be Polaris iBT-GPS or Holux M1000
+            mdStr="iBlue 737/Qstartz 810";
+            break;
+        case 0x0002:
+            mdStr="Qstartz 815";
+            break;
+        case 0x001B:
+            mdStr="iBlue 747";
+            break;
+        case 0x001D:
+            mdStr="Konet BGL-32";
+            break;
+        case 0x0131:
+            mdStr="EB-85A";
+            break;        
+        case 0x1388:
+            mdStr="757/ZI v1";
+            logMemSize = 8*1024*1024/8; //16Mb -> 2MB
+            break;
+        case 0x5202:
+            mdStr="757/ZI v2";
+            logMemSize = 8*1024*1024/8; //16Mb -> 2MB
+            break;
+        default:
+            mdStr="Unknown";
+        }
+        return mdStr;
+    }
     public String getModel() {
-        return model;
+        return model+" ("+modelName()+')';
     }
 
     
@@ -1237,6 +1278,7 @@ public class GPSstate implements Thread {
                     m_NextReadAddr+=dataLength;
                     if(m_ProgressBar!=null) {
                         m_ProgressBar.setValue(m_NextReadAddr);
+                        m_ProgressBar.repaintNow();
                     }
                     if(m_getFullLog
                             &&
@@ -1366,7 +1408,7 @@ public class GPSstate implements Thread {
                     logMemUsed=Conv.hex2Int(nmea[3]);
                 logMemUsedPercent=
                     (100*(logMemUsed-(0x200*((logMemUsed+0xFFFF)/0x10000))))
-                    /logMemUsefullSize;
+                    /logMemUsefullSize();
                 PostStatusUpdateEvent();
                 break;
                 case BT747_dev.PMTK_LOG_TBD3:           // 9;
