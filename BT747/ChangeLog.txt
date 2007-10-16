@@ -1,5 +1,7 @@
+Version 1.01
 * Moved to ProGuard 4.0.1 (jar file optimization)
 * Some optimizations in settings code.
+* If not selecting ZDA, time for NMEA strings was incorrect.
 
 Version 1.00
 * Version 0.96.3 has been out for long enough.  I consider the application as stable enough to call it 1.00. 
