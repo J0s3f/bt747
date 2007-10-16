@@ -59,17 +59,10 @@ public class GPSNMEAFile extends GPSFile {
         super.writeRecord(s);
         boolean prevField=false;
         String timeStr="";
-        String dateStr;
         if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             int z_Checksum;
             
-            if((activeFields.utc!=0)&&((m_NMEAout&(1<<BT747_dev.NMEA_SEN_ZDA_IDX))!=0)) {
-                /* Write GPZDA sentence if time is available
-                 */
-                rec.setLength(0);
-                rec.append("GPZDA,");
-                
-                // DATE & TIME
+            if((activeFields.utc!=0)) {
                 timeStr=(  t.hour<10?"0":"")+Convert.toString(t.hour)
                 +(t.minute<10?"0":"")+Convert.toString(t.minute)
                 +(t.second<10?"0":"")+Convert.toString(t.second);
@@ -79,6 +72,15 @@ public class GPSNMEAFile extends GPSFile {
                     +((s.milisecond<10)?"0":"")
                     +(Convert.toString(s.milisecond));
                 } 
+            }
+            
+            if((activeFields.utc!=0)&&((m_NMEAout&(1<<BT747_dev.NMEA_SEN_ZDA_IDX))!=0)) {
+                /* Write GPZDA sentence if time is available
+                 */
+                rec.setLength(0);
+                rec.append("GPZDA,");
+                
+                // DATE & TIME
                 rec.append(timeStr);
                 rec.append(
                         ","
