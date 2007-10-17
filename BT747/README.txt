@@ -1,4 +1,4 @@
-This project is under development.
+This project is now stable..
 
 Due to similarity this SW written with a iBlue 747 device should work with the following
 devices:
@@ -7,7 +7,7 @@ devices:
 - Qstarz BT-Q1000
 - i.Trek Z1
 
-It can also be used to configure a number of devices with the MTK chipset.
+It can also be used to configure a other devices with the MTK chipset.
 The log capabilities of the SW will then be useless for you.
 
 Further in this readme are instructions for installing on:
@@ -15,11 +15,14 @@ Further in this readme are instructions for installing on:
 - PPC
 - Linux
 - Palm
-- Max
+- Mac OS
 
 Instructions are a bit of a 'mess'.  Most of the time, the application will work
 with one of the startup scripts without any need for modification.
 Instructions were built during the early versions of this tool.
+
+If you have suggestions to improve this README, leave a message on the forum or
+a tracker at sourceforge: http://sf.net/projects/bt747.
 
 ========= General (for pure rxtx/all systems) ===========
 # Change the port prefix by adding the following option to the java invocation:

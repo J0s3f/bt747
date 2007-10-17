@@ -90,6 +90,7 @@ public class GPSNMEAFile extends GPSFile {
                 );
                 
                 writeNMEA(rec.toString());
+                rec.setLength(0);
             }
             
             
@@ -231,6 +232,7 @@ public class GPSNMEAFile extends GPSFile {
                 }
                 
                 writeNMEA(rec.toString());
+                rec.setLength(0);
             }
             
             //            eg4. $GPRMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,ddmmyy,x.x,a*hh
@@ -351,6 +353,7 @@ public class GPSNMEAFile extends GPSFile {
                 rec.append(",,");
                 
                 writeNMEA(rec.toString());
+                rec.setLength(0);
             }
         } // activeFields!=null
     }

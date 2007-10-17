@@ -145,8 +145,10 @@
 			<arg line="-keep public class ${mainClass}"/>
 			<arg line="-allowaccessmodification"/>
 			<arg line="-overloadaggressively"/>
+			<!--
 			<arg line="-repackageclasses"/>
 			<arg line="-optimizationpasses 3"/>
+			-->
 		</java>
 	
 	</target>
