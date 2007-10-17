@@ -11,11 +11,11 @@ It can also be used to configure a other devices with the MTK chipset.
 The log capabilities of the SW will then be useless for you.
 
 Further in this readme are instructions for installing on:
-- Windows
-- PPC
-- Linux
-- Palm
-- Mac OS
+- Windows (reported working)
+- PocketPC (reported working)
+- Linux   (reported working)
+- Palm    (reported working)
+- Mac OS  (reported working)
 
 Instructions are a bit of a 'mess'.  Most of the time, the application will work
 with one of the startup scripts without any need for modification.
@@ -101,7 +101,14 @@ You can also try to run the 'run_ex.bat' command script.
 
 
 =========== Mac installation ==================
-Currently, there is no script proposed for mac, but the 'run_rxtx.sh' is an example.
+A user mentionned his successful experience in the project forum:
+https://sourceforge.net/forum/message.php?msg_id=4571837
+
+Basically, you need a '/var/lock' directory, install the driver and a good script.
+All is in the forum.
+
+A sample script for MacOS is in the distribution (bt747_macosX.command),
+and there is also the above link to the forum.
 By default, the program should connect to the USB port, but you can have it connect
 to the bluetooth port if you set the port to '/dev/tty.iBT-GPS-SPPslave-1' if you
 specify the following parameter to Java:
@@ -111,7 +118,7 @@ specify the following parameter to Java:
 To connect over usb, you can get the driver from
 http://www.silabs.com/tgwWebApp/public/web_content/products/Microcontrollers/USB/en/mcu_vcp.htm
 
-=========== PPC installation ================
+=========== PocketPC / PPC installation ================
 
 The following 'script' indicates what was done to make it work in the PPC emulator:
 
