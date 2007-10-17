@@ -1,8 +1,9 @@
 del BT747*.zip
-SET DT=1.01
+SET DT=1.02
 
 SET FILES=ChangeLog.txt src dist license.txt README.txt  build.xml .project .classpath default.properties
 SET FILES=%FILES% run_ex.bat run_rxtx.bat run_rxtx.sh
+SET FILES=%FILES% bt747_macosX.command
 SET FILES=%FILES% webstart/Waba_only.jar win32comm.jar win32/javax.comm.properties win32com.dll  webstart/comm.jar webstart/RXTXcomm.jar
 SET RXTXFILES=%FILES% rxtx-2.1-7-bins-r2
 
