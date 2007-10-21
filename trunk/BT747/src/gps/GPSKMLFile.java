@@ -34,6 +34,7 @@ public class GPSKMLFile extends GPSFile {
   private boolean m_isPathType;
   private int m_currentFilter;
   private String m_name;
+  private int m_AltitudeMode=0; // 0 = altitude.
   
   /**
    * 
@@ -304,11 +305,9 @@ public class GPSKMLFile extends GPSFile {
       } else {
           header=
                 "  <Folder>\r\n"+
-//              "  <name>My Path</name>\r\n"+
                 "  <name>My Tracks</name>\r\n"+
                 "  <open>0</open>\r\n"+
                 "  <Placemark>\r\n"+
-//              "    <name>Path-"+m_name+"</name>\r\n"+
                 "    <name>Track-"+m_name+"</name>\r\n"+
                 "    <Style>\r\n"+
                 "      <LineStyle>\r\n"+
@@ -419,25 +418,19 @@ public class GPSKMLFile extends GPSFile {
                     rec.append("</styleUrl>\r\n");
                     
                     
-                    rec.append("<Point>\r\n");
-                    rec.append("<coordinates>");
-                    if(activeFields.longitude!=0) {
+                    if((activeFields.longitude!=0)&&(activeFields.latitude!=0)) {
+                        rec.append("<Point>\r\n");
+                        rec.append("<coordinates>");
                         rec.append(Convert.toString(s.longitude,6));
-                    } else {
-                        rec.append("0");
-                    }
-                    rec.append(",");
-                    if(activeFields.latitude!=0) {
+                        rec.append(",");
                         rec.append(Convert.toString(s.latitude,6));
-                    } else {
-                        rec.append("0");
+                        if(activeFields.height!=0) {
+                            rec.append(",");
+                            rec.append(Convert.toString(s.height,3));
+                        }
+                        rec.append("</coordinates>");
+                        rec.append("</Point>\r\n");
                     }
-                    rec.append(",");
-                    if(activeFields.height!=0) {
-                        rec.append(Convert.toString(s.height,3));
-                    }
-                    rec.append("</coordinates>");
-                    rec.append("</Point>\r\n");
                     
                     rec.append("<description>");
                     rec.append("<![CDATA[");
@@ -575,24 +568,36 @@ public class GPSKMLFile extends GPSFile {
                     rec.append("\r\n");
                     writeTxt(rec.toString());
             } else if (m_isPathType) {
+                rec.setLength(0);
+                if(activeFields.longitude!=0&&activeFields.latitude!=0) {
+                    if((activeFields.height!=0)!=(m_AltitudeMode==0)) {
+                        rec.append("</coordinates>");
+                        rec.append(
+                        "    </LineString><LineString>\r\n"+
+                        "    <extrude>1</extrude>\r\n"+
+                        "    <tessellate>1</tessellate>\r\n"+
+                        "    <altitudeMode>");
+                        if(activeFields.height!=0) {
+                            m_AltitudeMode=0;
+                            //clampToGround, relativeToGround, absolute
+                            rec.append("absolute");
+                        } else {
+                            rec.append("clampToGround");
+                            m_AltitudeMode=1;
+                        }
+                        rec.append("</altitudeMode><coordinates>\r\n");
+                    }
                     rec.append("        ");
-                if(activeFields.longitude!=0) {
-                        rec.append(Convert.toString(s.longitude,6));
-                    } else {
-                        rec.append("0");
-                    }
+                    rec.append(Convert.toString(s.longitude,6));
                     rec.append(",");
-                    if(activeFields.latitude!=0) {
-                        rec.append(Convert.toString(s.latitude,6));
-                    } else {
-                        rec.append("0");
-                    }
-                    rec.append(",");
+                    rec.append(Convert.toString(s.latitude,6));
                     if(activeFields.height!=0) {
+                        rec.append(",");
                         rec.append(Convert.toString(s.height,3));
                     }
                     rec.append("\r\n");
                     writeTxt(rec.toString());
+                }
             }
               
           }
