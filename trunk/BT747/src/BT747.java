@@ -54,7 +54,7 @@ public class BT747 extends MainWindow {
     /** The content of the menu bar */
     private final String menu[][] = {
             {"File","Exit application"},
-            {"Settings","Restart connection","Stop connection"},
+            {"Settings","Restart connection","Stop connection","-",MenuBar.UNCHECKED+"Debug",MenuBar.UNCHECKED+"Stats"},
             {"Info","About BT747","About SuperWaba VM","Info"}
     };
     /** MenuBar item for File->Exit */
@@ -65,6 +65,10 @@ public class BT747 extends MainWindow {
     private final static int C_MENU_RESTART_CONNECTION = 101;
     /** MenuBar item for Settings->Stop connection */
     private final static int C_MENU_STOP_CONNECTION = 102;
+    /** MenuBar item for Settings->Debug */
+    private final static int C_MENU_DEBUG_ACTIVE = 104;
+    /** MenuBar item for Settings->Conn. Stats */
+    private final static int C_MENU_STATS_ACTIVE = 105;
     /** MenuBar item for Info->About BT747 */
     private final static int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
@@ -203,6 +207,12 @@ public class BT747 extends MainWindow {
                     break;
                 case C_MENU_STOP_CONNECTION:
                     m_GPSstate.GPS_close();
+                    break;
+                case C_MENU_DEBUG_ACTIVE:
+                    m_GPSstate.setDebug(m_MenuBar.isChecked(C_MENU_DEBUG_ACTIVE));
+                    break;
+                case C_MENU_STATS_ACTIVE:
+                    m_GPSstate.setStats(m_MenuBar.isChecked(C_MENU_STATS_ACTIVE));
                     break;
                 case C_MENU_ABOUT:
                     new MessageBox("About BT747 V"+Version.VERSION_NUMBER,
