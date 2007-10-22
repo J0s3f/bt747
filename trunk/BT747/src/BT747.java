@@ -54,7 +54,8 @@ public class BT747 extends MainWindow {
     /** The content of the menu bar */
     private final String menu[][] = {
             {"File","Exit application"},
-            {"Settings","Restart connection","Stop connection","-",MenuBar.UNCHECKED+"Debug",MenuBar.UNCHECKED+"Stats"},
+            {"Settings","Restart connection","Stop connection",
+                "-",MenuBar.UNCHECKED+"Debug",MenuBar.UNCHECKED+"Stats",MenuBar.UNCHECKED+"GPX UTC offset 0"},
             {"Info","About BT747","About SuperWaba VM","Info"}
     };
     /** MenuBar item for File->Exit */
@@ -69,6 +70,8 @@ public class BT747 extends MainWindow {
     private final static int C_MENU_DEBUG_ACTIVE = 104;
     /** MenuBar item for Settings->Conn. Stats */
     private final static int C_MENU_STATS_ACTIVE = 105;
+    /** MenuBar item for Settings->GPX UTC 0 */
+    private final static int C_MENU_GPX_UTC0 = 106;
     /** MenuBar item for Info->About BT747 */
     private final static int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
@@ -135,7 +138,7 @@ public class BT747 extends MainWindow {
         m_GPSstate=new GPSstate(m_settings);
         m_GPSstate.setEventPosterObject(this);
         setMenuBar(m_MenuBar=new MenuBar(menu));
-        
+
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
         // Progress bar to show download progress (separate thread)
         m_ProgressLabel=new Label("Download");
@@ -177,7 +180,8 @@ public class BT747 extends MainWindow {
         // Doing this on the windows platform
         //		 if (Settings.platform.equals("Java")) m_model= new BT747model();		
         //			sp.writeBytes(buf,0,1);
-        
+        m_MenuBar.setChecked(C_MENU_GPX_UTC0,m_settings.getGpxUTC0());
+
     }
     
     
@@ -213,6 +217,9 @@ public class BT747 extends MainWindow {
                     break;
                 case C_MENU_STATS_ACTIVE:
                     m_GPSstate.setStats(m_MenuBar.isChecked(C_MENU_STATS_ACTIVE));
+                    break;
+                case C_MENU_GPX_UTC0:
+                    m_settings.setGpxUTC0(m_MenuBar.isChecked(C_MENU_GPX_UTC0));
                     break;
                 case C_MENU_ABOUT:
                     new MessageBox("About BT747 V"+Version.VERSION_NUMBER,
