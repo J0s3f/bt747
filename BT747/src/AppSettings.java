@@ -70,7 +70,9 @@ public class AppSettings implements gps.settings {
     private final static int C_LOGAHEAD_SIZE=1;
     private final static int C_NMEASET_IDX=C_LOGAHEAD_IDX+C_LOGAHEAD_SIZE;
     private final static int C_NMEASET_SIZE=8;
-    private final static int C_NEXT_IDX=C_NMEASET_IDX+C_NMEASET_SIZE;
+    private final static int C_GPXUTC0_IDX=C_NMEASET_IDX+C_NMEASET_SIZE;
+    private final static int C_GPXUTC0_SIZE=1;
+    private final static int C_NEXT_IDX=C_GPXUTC0_IDX+C_GPXUTC0_SIZE;
     
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
@@ -169,8 +171,11 @@ public class AppSettings implements gps.settings {
         case 5:
             setNMEAset(0x0002000A);
             /* fall through */
+        case 6:
+            setGpxUTC0(false);
+            /* fall through */
         }
-        setStringOpt("0.06",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.07",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
@@ -500,4 +505,16 @@ public class AppSettings implements gps.settings {
     public void setNMEAset(int value) {
         setIntOpt(value,C_NMEASET_IDX, C_NMEASET_SIZE);
     }
+
+
+    public boolean getGpxUTC0() {
+        return getIntOpt(C_GPXUTC0_IDX, C_GPXUTC0_SIZE)==1;
+    }
+    /**
+     * @param value The default value for opening the port.
+     */
+    public void setGpxUTC0(boolean value) {
+        setStringOpt((value?"1":"0"),C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
+    }
+
 }

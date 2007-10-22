@@ -228,6 +228,9 @@ public class GPSLogGet extends Container {
                     ||event.target==m_btToNMEA) {
                 String ext="";
                 GPSFile gpsFile=null;
+                BT747LogConvert lc=new BT747LogConvert();
+                lc.setTimeOffset(m_appSettings.getTimeOffsetHours()*3600);
+                lc.setNoGeoid(m_appSettings.getNoGeoid());
 
                 if(event.target==m_btToCSV) {
                     gpsFile=new GPSCSVFile();
@@ -244,6 +247,10 @@ public class GPSLogGet extends Container {
                 if(event.target==m_btToGPX) {
                     gpsFile=new GPSGPXFile();
                     ext=".gpx";
+                    // Force offset to 0 if selected in menu.
+                    if(m_appSettings.getGpxUTC0()) {
+                        lc.setTimeOffset(0);
+                    }
                 }
                 if(event.target==m_btToNMEA) {
                     gpsFile=new GPSNMEAFile();
@@ -262,9 +269,6 @@ public class GPSLogGet extends Container {
                 gpsFile.setFilters(m_Filters);
                 gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard(),
                         m_appSettings.getOneFilePerDay());
-                BT747LogConvert lc=new BT747LogConvert();
-                lc.setTimeOffset(m_appSettings.getTimeOffsetHours()*3600);
-                lc.setNoGeoid(m_appSettings.getNoGeoid());
                 lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile,m_appSettings.getCard());
             } else if (event.target == this) {
                 m_GPSstate.getLogCtrlInfo();

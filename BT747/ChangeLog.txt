@@ -1,3 +1,6 @@
+Version 1.05
+* Added possiblity to force UTC offset in GPX format to 0 regardless of UTC setting.
+
 Version 1.04
 * Filter condition changed: now no longer selecting points when all conditions 'deselected'.
 * Debug activation added in menu (and stats activation added, but not useable yet).
