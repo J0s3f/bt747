@@ -58,7 +58,7 @@ import gps.convert.Conv;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class GPSstate implements Thread {
-    static final boolean GPS_DEBUG = (!Settings.onDevice);
+    private boolean GPS_DEBUG = false; //(!Settings.onDevice);
     
     private GPSrxtx m_GPSrxtx=new GPSrxtx();    	
     ProgressBar m_ProgressBar=null;
@@ -111,6 +111,8 @@ public class GPSstate implements Thread {
     
     public int NMEA_periods[]=new int[BT747_dev.C_NMEA_SEN_COUNT];
 
+    private boolean GPS_STATS = false; //(!Settings.onDevice);
+
     
     /** Initialiser
      * 
@@ -120,6 +122,14 @@ public class GPSstate implements Thread {
         m_settings = s;
     }
     
+    public void setDebug(boolean dbg) {
+        GPS_DEBUG = dbg;
+    }
+
+    public void setStats(boolean stats) {
+        GPS_STATS = stats;
+    }
+
     public void setEventPosterObject(Control s) {
         m_EventPosterObject = s;
     }

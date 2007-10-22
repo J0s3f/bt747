@@ -1,3 +1,7 @@
+Version 1.04
+* Filter condition changed: now no longer selecting points when all conditions 'deselected'.
+* Debug activation added in menu (and stats activation added, but not useable yet).
+
 Version 1.03
 * When no height was logged, problem in KML format (empty height) string resulting in bad
   display -> solved.

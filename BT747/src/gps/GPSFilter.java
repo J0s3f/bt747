@@ -67,8 +67,8 @@ public class GPSFilter {
         // Filter the record information
         boolean z_Result;
         z_Result=(r.utc>=startDate) && (r.utc<=endDate)
-                &&((validMask==0)||(r.valid&validMask)!=0)
-                &&((rcrMask==0)||(r.rcr&rcrMask)!=0);
+                &&((r.valid&validMask)!=0)
+                &&((r.rcr&rcrMask)!=0);
         
         return z_Result;
     }
