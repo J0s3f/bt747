@@ -19,6 +19,7 @@
 //********************************************************************                              
 import waba.io.SerialPort;
 import waba.sys.Convert;
+import waba.sys.Vm;
 import waba.ui.Button;
 import waba.ui.ComboBox;
 import waba.ui.Container;
@@ -26,8 +27,10 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
 
+import gps.GPSRecord;
 import gps.GPSstate;
 import gps.GpsEvent;
+import gps.convert.Conv;
 
 /**
  * @author Mario De Weerd
@@ -43,6 +46,10 @@ public class GPSconctrl extends Container {
     private Button btnConnectPort;
 
     private GPSstate m_GPSstate;
+
+    private Label lbLat;  // GPS information
+    private Label lbLon; // GPS information
+    private Label lbGeoid; // GPS information
     
     private Label lbFirmwareMainVersion;
     private Label lbFirmwareName;
@@ -81,6 +88,10 @@ public class GPSconctrl extends Container {
             m_cbPorts.select(portNbr);
         }
         repaintNow();
+        
+        add(lbLat=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
+        add(lbLon=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
+        add(lbGeoid=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
 
 
         btnRestartGps = new Button("(Re)open COM port");
@@ -119,6 +130,17 @@ public class GPSconctrl extends Container {
         lbFirmwareName.repaintNow();
         lbModel.repaintNow();
     }
+    
+    private void updateGPSData(final GPSRecord gps) {
+        lbLat.setText("Lat:"+Convert.toString(gps.latitude,5)+" - Hght:"+Convert.toString(gps.height,3));
+        lbLon.setText("Lon:"+Convert.toString(gps.longitude,5));
+        lbGeoid.setText("Geoid:"+Convert.toString(gps.geoid,3)+"(calc:"+
+                Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)+")");
+
+        lbLat.repaintNow();
+        lbLon.repaintNow();
+        lbGeoid.repaintNow();
+    }
 
     public void onEvent(Event event) {
         switch (event.type) {
@@ -145,7 +167,13 @@ public class GPSconctrl extends Container {
                 updateButtons();
                 event.consumed=true;
             }
+            break;
+        case GpsEvent.GPGGA:
+            GpsEvent e=(GpsEvent) event;
+            updateGPSData(e.gps);
+        break;
         }
+        
     }
 
 }

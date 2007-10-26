@@ -311,6 +311,14 @@ public class GPSstate implements Thread {
         }
     }
 
+    private void PostGpsEvent(final int type, GPSRecord gps) {
+        if(m_EventPosterObject!=null) {
+            GpsEvent e=new GpsEvent(type, m_EventPosterObject,0);
+            e.gps=gps;
+            m_EventPosterObject.postEvent(e);
+        }
+    }
+    
     private void PostStatusEvent(final int event) {
         if(m_EventPosterObject!=null) {
             m_EventPosterObject.postEvent(new Event(event, m_EventPosterObject,0));
@@ -746,13 +754,14 @@ public class GPSstate implements Thread {
             gps.longitude=(Convert.toDouble(p_nmea[4].substring(0, 3))+Convert.toDouble(p_nmea[4].substring(3))/60)
             *(p_nmea[5].equals("E")?1:-1);
             gps.height=Convert.toFloat(p_nmea[9]);
-            float gps_geoid=Convert.toFloat(p_nmea[11]);
-            double geoid=Conv.wgs84_separation(gps.latitude, gps.longitude);
+            gps.geoid=Convert.toFloat(p_nmea[11]);
             if(GPS_DEBUG) {
-                Vm.debug("geoid GPS: "+Convert.toString(gps_geoid,3)
+                double geoid=Conv.wgs84_separation(gps.latitude, gps.longitude);
+                Vm.debug("geoid GPS: "+Convert.toString(gps.geoid,3)
                         + " geoid calc:"+Convert.toString(geoid)
                         );
             }
+            PostGpsEvent(GpsEvent.GPGGA, gps);
         }
     }
     
@@ -764,9 +773,9 @@ public class GPSstate implements Thread {
         //if(GPS_DEBUG&&!p_nmea[0].startsWith("G")) {	waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]);}
         if(p_nmea[0].startsWith("G")) {
             // Commented - not interpreted.
-//          if(p_nmea[0].startsWith("GPGGA")) {
-//              analyzeGPGGA(p_nmea);
-//          }
+            if(p_nmea[0].startsWith("GPGGA")) {
+                analyzeGPGGA(p_nmea);
+            }
 //            else if(p_nmea[0].startsWith("GPZDA")) {
 //                // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
 //            } else if(p_nmea[0].startsWith("GPRMC")) {
