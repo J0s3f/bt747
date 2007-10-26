@@ -288,6 +288,15 @@ public class BT747 extends MainWindow {
                 event.consumed=true;
             }
             break;
+        case GpsEvent.GPGGA:
+            if(event.target==this) {
+                Control c;
+                c=m_TabPanel.getChildren()[0];
+                event.target=c;
+                c.postEvent(event);
+                event.consumed=true;
+            }
+            break;
         case GpsEvent.CONNECTED:
             m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
             event.consumed=true;

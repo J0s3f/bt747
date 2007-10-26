@@ -247,7 +247,11 @@ public class GPSNMEAFile extends GPSFile {
             //            9    = UT date (ddmmyy)
             //            10   = Magnetic variation degrees (Easterly var. subtracts from true course) (x.x)
             //            11   = E or W (a)
+            //          Transystem extrafield: A=Autonomous, D=DGPS
             //            12   = Checksum
+            // From the device (position values changed, so checksum incorrect):
+            //$GPRMC,hhmmss.ss, A,llll.ll,  a,yyyyy.yy,  a,x.x,   x.x ,ddmmyy,x.x,a*hh
+            //$GPRMC,190633.500,A,4800.0000,N,00200.0000,E,0.31,123.10,261007,,,A*68
             
             if((m_NMEAout&(1<<BT747_dev.NMEA_SEN_RMC_IDX))!=0) { 
                 
@@ -351,7 +355,12 @@ public class GPSNMEAFile extends GPSFile {
                     );
                 }
                 rec.append(",,");
-                
+                // Extra field on transystem
+                if((activeFields.valid!=0&&(s.valid==0x0004))) {
+                    rec.append(",D");
+                } else {
+                    rec.append(",A");
+                }
                 writeNMEA(rec.toString());
                 rec.setLength(0);
             }
