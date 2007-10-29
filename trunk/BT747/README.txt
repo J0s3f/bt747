@@ -16,6 +16,7 @@ Further in this readme are instructions for installing on:
 - Linux   (reported working)
 - Palm    (reported working)
 - Mac OS  (reported working)
+- Debian  (over bluetooth, reported working)
 
 Instructions are a bit of a 'mess'.  Most of the time, the application will work
 with one of the startup scripts without any need for modification.
@@ -31,6 +32,9 @@ a tracker at sourceforge: http://sf.net/projects/bt747.
 java -Dbt747_prefix="/dev/ttyUSB" waba.applet.Applet BT747
 # The port can be overridden entirely with the next option:
 #  -Dbt747_port="/dev/ttyUSB0"
+# Another (or extra way) of forcing the port is the next option,
+# one use apparently needed to do so to force the bluetooth port:
+# -Dgnu.io.rxtx.SerialPorts=/dev/rfcomm0
 =========================================
 
 ========= WINDOWS INSTRUCTIONS =================
@@ -38,15 +42,20 @@ There are two different methods to make it work on windows:
 a. Using RXTX directly
 b. Using WIN32COMM
 
+===============================================================
 ============== Windows: Using RXTX directly ===================
+===============================================================
+== PROBABLY THE BEST FIRST TRY ON WINDOWS =====================
+===============================================================
 You need the full package or install rxtx yourself.
 
-The 'RUN_RXTX.bat' file should work (or need minor adaptations).
-
-This works immediately in most cases.
+Once unziped, click on the 'RUN_rxtx.bat' file.  That should
+work in most cases.
 ===============================================================
 
+===============================================================
 ============== Windows: Using WIN32COMM ===================
+===============================================================
 You can also use WIN32COMM for java on windows.
 In that case, you may need to install Java 1.4.X too.
 
@@ -81,7 +90,12 @@ You will need to install/unzip SuperWaba on the platform you want to run BT747 o
 
 You can find SuperWaba installation files at http://www.superwaba.org/install
 
+===============================================================
 =============== WINDOWS (again) =====================
+===============================================================
+=> these instruction are left here in case the simpler ones do not work.
+=> If you do need these, the best thing is to go to the project site and leave a note in a tracker or the help forum.
+
 To run the BT747.jar, you need to install the "win32comm" driver or "rxtx" and use java 1.4.X.
 
 On windows, I launch the BT747.jar like this:
@@ -144,6 +158,28 @@ I open the kml on windows -> opens google earth with expected points.
 ============= Linux ============================
 A specific JAR file has been created that should work specifically with RXTX (BT747_rxtx.jar).
 Use 'run_rxtx.sh'.  It has not been validated on Linux, but it might work and at least provides the template.
+
+============= Debian over bluetooth ============
+I struggled a while with gnu.io.NoSuchPortException when opening the port, but finally got it to run. 
+ 
+Connecting and binding the gps unit was done like this: 
+hcitool cc 00:xx:xx:xx:xx:xx 
+rfcomm bind /dev/rfcomm0 00:xx:xx:xx:xx:xx 
+ 
+ 
+My run_rxtx.sh looks like this: 
+----------------------- 
+MYROOTPATH=. 
+ 
+SERPORT=/dev/rfcomm0 
+ 
+RXTXLIBPATH=${MYROOTPATH}/rxtx-2.1-7-bins-r2/Linux/i686-unknown-linux-gnu 
+export CLASSPATH=webstart/Waba_only.jar:dist/BT747_rxtx.jar:rxtx-2.1-7-bins-r2/RXTXcomm.jar 
+ 
+java -Dgnu.io.rxtx.SerialPorts=${SERPORT} -Dbt747_port=${SERPORT} -Djava.library.path=${RXTXLIBPATH} waba.applet.Applet /w 320 /h 320 /scale 1 /bpp 8 BT747 
+----------------------- 
+ 
+I had to add the '-Dgnu.io.rxtx.SerialPorts=${SERPORT}' to get rid of the NoSuchPortException, but now it works. 
 
 ============ Contributors ======================
 Mario De Weerd (main coder)

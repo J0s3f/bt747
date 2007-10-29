@@ -755,12 +755,12 @@ public class GPSstate implements Thread {
             *(p_nmea[5].equals("E")?1:-1);
             gps.height=Convert.toFloat(p_nmea[9]);
             gps.geoid=Convert.toFloat(p_nmea[11]);
-            if(GPS_DEBUG) {
-                double geoid=Conv.wgs84_separation(gps.latitude, gps.longitude);
-                Vm.debug("geoid GPS: "+Convert.toString(gps.geoid,3)
-                        + " geoid calc:"+Convert.toString(geoid)
-                        );
-            }
+//            if(GPS_DEBUG) {
+//                double geoid=Conv.wgs84_separation(gps.latitude, gps.longitude);
+//                Vm.debug("geoid GPS: "+Convert.toString(gps.geoid,3)
+//                        + " geoid calc:"+Convert.toString(geoid)
+//                        );
+//            }
             PostGpsEvent(GpsEvent.GPGGA, gps);
         }
     }
