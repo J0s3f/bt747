@@ -72,7 +72,9 @@ public class AppSettings implements gps.settings {
     private final static int C_NMEASET_SIZE=8;
     private final static int C_GPXUTC0_IDX=C_NMEASET_IDX+C_NMEASET_SIZE;
     private final static int C_GPXUTC0_SIZE=1;
-    private final static int C_NEXT_IDX=C_GPXUTC0_IDX+C_GPXUTC0_SIZE;
+    private final static int C_TRKSEP_IDX=C_GPXUTC0_IDX+C_GPXUTC0_SIZE;
+    private final static int C_TRKSEP_SIZE=4;
+    private final static int C_NEXT_IDX=C_TRKSEP_IDX+C_TRKSEP_SIZE;
     
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
@@ -160,7 +162,7 @@ public class AppSettings implements gps.settings {
             /* fall through */
         case 2:
             /* fall through */
-            setOneFilePerDay(false);
+            setOneFilePerDay(0);
             /* fall through */
         case 3:
             setNoGeoid(false);
@@ -174,8 +176,11 @@ public class AppSettings implements gps.settings {
         case 6:
             setGpxUTC0(false);
             /* fall through */
+        case 7:
+            setTrkSep(60);
+            /* fall through */
         }
-        setStringOpt("0.07",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.08",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
@@ -462,18 +467,18 @@ public class AppSettings implements gps.settings {
     /**
      * @param value The default value for opening the port.
      */
-    public void setTrkPtValid(int value) {
+    public void setTrkPtValid(final int value) {
         setIntOpt(value,C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
     }
     
-    public boolean getOneFilePerDay() {
-        return getIntOpt(C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE)==1;
+    public int getFileSeparationFreq() {
+        return getIntOpt(C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
     }
     /**
      * @param value The default value for opening the port.
      */
-    public void setOneFilePerDay(boolean value) {
-        setStringOpt((value?"1":"0"),C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
+    public void setOneFilePerDay(final int value) {
+        setIntOpt(value,C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
     }
     
     public boolean getNoGeoid() {
@@ -482,7 +487,7 @@ public class AppSettings implements gps.settings {
     /**
      * @param value The default value for opening the port.
      */
-    public void setNoGeoid(boolean value) {
+    public void setNoGeoid(final boolean value) {
         setStringOpt((value?"1":"0"),C_NOGEOID_IDX, C_NOGEOID_SIZE);
     }
 
@@ -499,10 +504,8 @@ public class AppSettings implements gps.settings {
     public int getNMEAset() {
         return getIntOpt(C_NMEASET_IDX, C_NMEASET_SIZE);
     }
-    /**
-     * @param value The default value for opening the port.
-     */
-    public void setNMEAset(int value) {
+
+    public void setNMEAset(final int value) {
         setIntOpt(value,C_NMEASET_IDX, C_NMEASET_SIZE);
     }
 
@@ -510,11 +513,17 @@ public class AppSettings implements gps.settings {
     public boolean getGpxUTC0() {
         return getIntOpt(C_GPXUTC0_IDX, C_GPXUTC0_SIZE)==1;
     }
-    /**
-     * @param value The default value for opening the port.
-     */
-    public void setGpxUTC0(boolean value) {
+
+    public void setGpxUTC0(final boolean value) {
         setStringOpt((value?"1":"0"),C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
+    }
+
+    public int getTrkSep() {
+        return getIntOpt(C_TRKSEP_IDX, C_TRKSEP_SIZE);
+    }
+
+    public void setTrkSep(final int value) {
+        setIntOpt(value,C_TRKSEP_IDX, C_TRKSEP_SIZE);
     }
 
 }

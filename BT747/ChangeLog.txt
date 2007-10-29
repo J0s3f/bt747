@@ -1,6 +1,7 @@
 Version 1.07
 * Added path browsing capability to 'LogFile' entry on Filetab.  This allows easy opening of
   previously saved raw data file.
+* Added functionality to separate files based on track time separation.
 
 Version 1.06
 * GPRMC NMEA string made similar to the one coming from device (extra field indicating autonomous or DGPS).

@@ -24,6 +24,7 @@ import waba.ui.Check;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
+import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 import waba.ui.ProgressBar;
@@ -66,6 +67,8 @@ public class GPSLogGet extends Container {
     Button m_btToPLT;
     Button m_btToNMEA;
     Button m_btToGMAP;
+    
+    Edit m_edTrkSep;
 
     ComboBox m_cbTimeOffsetHours;
     private final static String[] offsetStr = {
@@ -74,9 +77,15 @@ public class GPSLogGet extends Container {
             "+1","+2","+3","+4","+5","+6","+7","+8","+9","+10","+11","+12"
     };
     
+    
     Check m_chkIncremental;
 
-    Check m_chkOneFilePerDay;
+    ComboBox m_chkOneFilePerDay;
+    private final static String[] fileStr = {
+            "One file",
+            "One file/ day",
+            "One file/ trk"
+    };
   
     final static int JULIAN_DAY_1_1_1970=18264;   
     ProgressBar m_pb;
@@ -118,6 +127,14 @@ public class GPSLogGet extends Container {
         add(m_btGetLog = new Button("Get Log"), LEFT, AFTER+2); //$NON-NLS-1$
         add(m_btCancelGetLog = new Button("Cancel get"), AFTER+5, SAME); //$NON-NLS-1$
 
+        add(new Label("Trk sep:"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_edTrkSep = new Edit("00000"), AFTER, SAME); //$NON-NLS-1$
+        m_edTrkSep.setValidChars(Edit.numbersSet);
+        add(new Label("min"), AFTER, SAME); //$NON-NLS-1$
+        m_edTrkSep.setText(Convert.toString(m_appSettings.getTrkSep()));
+        m_edTrkSep.alignment=RIGHT;
+
+        
         int offsetIdx=m_appSettings.getTimeOffsetHours()+12;
         if(offsetIdx>24) {
             m_appSettings.setTimeOffsetHours(0);
@@ -126,11 +143,13 @@ public class GPSLogGet extends Container {
         m_cbTimeOffsetHours=new ComboBox(offsetStr);
         add(m_cbTimeOffsetHours,RIGHT, SAME);
         m_cbTimeOffsetHours.select(offsetIdx);
-        add(new Label("UTC"), BEFORE, SAME); 
+        add(new Label("UTC"), BEFORE, SAME);
+        
+
 
         //add(new Label("End"),BEFORE,SAME);
-        add(m_chkOneFilePerDay = new Check("One file/ day"), LEFT, AFTER+2);
-        m_chkOneFilePerDay.setChecked(m_appSettings.getOneFilePerDay());
+        add(m_chkOneFilePerDay = new ComboBox(fileStr), LEFT, AFTER+2);
+        m_chkOneFilePerDay.select(m_appSettings.getFileSeparationFreq());
         add(m_chkNoGeoid = new Check("hght - geiod diff"), AFTER+5, SAME); //$NON-NLS-1$
         m_chkNoGeoid.setChecked(m_appSettings.getNoGeoid());
 
@@ -205,7 +224,7 @@ public class GPSLogGet extends Container {
                     m_GPSstate.setLogOverwrite(m_chkLogOverwriteStop.getChecked());
                 m_GPSstate.getLogOverwrite();
             } else if (event.target == m_chkOneFilePerDay) {
-                m_appSettings.setOneFilePerDay(m_chkOneFilePerDay.getChecked());
+                m_appSettings.setOneFilePerDay(m_chkOneFilePerDay.getSelectedIndex());
             } else if (event.target == m_chkNoGeoid) {
                 m_appSettings.setNoGeoid(m_chkNoGeoid.getChecked());
             } else if (event.target == m_btEndDate) {
@@ -268,7 +287,8 @@ public class GPSLogGet extends Container {
                 }
                 gpsFile.setFilters(m_Filters);
                 gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard(),
-                        m_appSettings.getOneFilePerDay());
+                        m_appSettings.getFileSeparationFreq());
+                gpsFile.setTrackSepTime(m_appSettings.getTrkSep()*60);
                 lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile,m_appSettings.getCard());
             } else if (event.target == this) {
                 m_GPSstate.getLogCtrlInfo();
@@ -276,6 +296,13 @@ public class GPSLogGet extends Container {
                 event.consumed=false;
             }
             break;
+        case ControlEvent.FOCUS_OUT:
+            if (event.target == m_edTrkSep) {
+                m_appSettings.setTrkSep(Convert.toInt(m_edTrkSep.getText()));
+                m_edTrkSep.setText(Convert.toString(m_appSettings.getTrkSep()));
+            }
+            break;
+
         case GpsEvent.DATA_UPDATE:
             if(event.target==this) {
                 updateButtons();

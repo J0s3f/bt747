@@ -30,6 +30,7 @@ public class GPSGPXFile extends GPSFile {
     private boolean m_isWayType;
     private boolean m_newTrack=true;
     private int m_currentFilter;
+    private String m_TrackName="";
     
     /**
      * 
@@ -42,7 +43,7 @@ public class GPSGPXFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(final String basename, final String ext, final int Card, boolean oneFilePerDay) {
+    public void initialiseFile(final String basename, final String ext, final int Card, int oneFilePerDay) {
         super.initialiseFile(basename, ext, Card, oneFilePerDay);
         m_currentFilter=GPSFilter.C_WAYPT_IDX;
         m_isWayType=true;
@@ -52,7 +53,7 @@ public class GPSGPXFile extends GPSFile {
     
     public boolean nextPass() {
         if(m_nbrOfPassesToGo>0) {
-            if(m_oneFilePerDay) {
+            if(m_multipleFiles) {
                 closeFile();
             }
             m_nbrOfPassesToGo--;
@@ -60,7 +61,7 @@ public class GPSGPXFile extends GPSFile {
             m_prevdate=0;
             m_isWayType=false;
             m_currentFilter=GPSFilter.C_TRKPT_IDX;
-            if(!m_oneFilePerDay) {
+            if(!m_multipleFiles) {
                 writeDataHeader();
             }
             return true;
@@ -100,6 +101,10 @@ public class GPSGPXFile extends GPSFile {
         } else {
             header=
                 "</trkseg>"+
+                "<name>";
+            header+=m_TrackName;
+            header+=
+                "</name>" +
                 "</trk>"+
                 "\r\n";
             writeTxt(header);
@@ -118,9 +123,8 @@ public class GPSGPXFile extends GPSFile {
                 // The track is interrupted by a removed log item.
                 // Break the track in the output file
                 if(!m_isWayType&&!m_newTrack&&!m_FirstRecord) {
-                    m_newTrack=true;
-                    writeTxt("</trkseg></trk>");
-                    writeTxt("<trk><trkseg>");              
+                    writeDataFooter();
+                    writeDataHeader();
                 }
             } else {
                 // This log item is to be transcribed in the output file.
@@ -134,7 +138,6 @@ public class GPSGPXFile extends GPSFile {
 
                 //StringBuffer rec=new StringBuffer(1024);
                 rec.setLength(0);
-                m_newTrack=false;
                 //                "  <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 //                "    <ele>12.863281</ele>"+
                 //                "    <time>2005-05-16T11:49:06Z</time>"+
@@ -208,8 +211,14 @@ public class GPSGPXFile extends GPSFile {
                 } else {
                     rec.append("trkpt-");
                 }
+                if(m_newTrack) {
+                    m_TrackName="#"+Convert.toString(m_recCount)+"#";
+                }
                 if((activeFields.utc!=0)) {
                     rec.append(timeStr);
+                    if(m_newTrack) {
+                        m_TrackName+=" "+timeStr;
+                    }
                 } else {
                     rec.append(Convert.toString(m_recCount));
                 }
@@ -351,8 +360,9 @@ public class GPSGPXFile extends GPSFile {
                 } else {
                     rec.append("</trkpt>\r\n");
                 }
-                
                 writeTxt(rec.toString());
+
+                m_newTrack=false;
                 
             }
         } // activeFields!=null
