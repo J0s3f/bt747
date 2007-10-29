@@ -1,7 +1,6 @@
 package ui;
 import waba.fx.Rect;
 import waba.io.File;
-import waba.ui.ComboBox;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.ListBox;
@@ -55,18 +54,33 @@ public class FileSelect extends Window {
     }
     
     public void setPath(final String path) {
-        if(path.endsWith("/")) {
-            relPath=new String(path);
-        } else {
+        if(dirOnly&&!path.endsWith("/")) {
             relPath=new String(path+"/");
+        } else {
+            relPath=new String(path);
         }
     }
-    
+
+    public void setRoot(final String path) {
+        if(path.endsWith("/")) {
+            root=new String(path);
+        } else {
+            root=new String(path+"/");
+        }
+    }
     public String getPath() {
         if(relPath.endsWith("/")) {
             return root+relPath.substring(0,relPath.length()-1);
         } else {
             return root+relPath;
+        }
+    }
+
+    public String getRelPath() {
+        if(relPath.endsWith("/")) {
+            return relPath.substring(0,relPath.length()-1);
+        } else {
+            return relPath;
         }
     }
     
@@ -85,7 +99,7 @@ public class FileSelect extends Window {
         Rect r=new Rect();
         //r.set(getParentWindow().getClientRect());
         //setRect(r.modifiedBy(2, 2, -4, -4)); // same gap in all corners
-        filePopList(root+relPath);
+        filePopList(root,relPath);
         add(cb);
         r=getAbsoluteRect().modifiedBy(4,26,-8,-38);
         //r.height=cb.getPreferredHeight();
@@ -98,13 +112,15 @@ public class FileSelect extends Window {
     }
     
     
-    private final int buildFileList(final String path,
+    private final int buildFileList(
+            final String root,
+            final String path,
             Vector v,
             final int depth,
             final int maxitems) {
        int added=0;
        if (path == null||(depth <=0)) return added;
-       File file = new File(path,File.DONT_OPEN,cardSlot);
+       File file = new File(root+path,File.DONT_OPEN,cardSlot);
        String []list = file.listFiles();
         if (list != null) {
             for (int i =0; i < list.length; i++) {
@@ -119,7 +135,7 @@ public class FileSelect extends Window {
             if(added<maxitems) {
                 for (int i =0; i < list.length; i++) {
                     if (list[i].endsWith("/")&&(depth>1)&&(added<maxitems)) {// is a path?
-                        added+=buildFileList(path+list[i],v,depth-1,maxitems-added);
+                        added+=buildFileList(root,path+list[i],v,depth-1,maxitems-added);
                     }
                 }
             }
@@ -127,19 +143,34 @@ public class FileSelect extends Window {
         return added;
     }
 
-    private void filePopList(final String path) {
+    private void filePopList(
+            final String root,
+            final String path) {
         Vector v = new Vector(50);
+        String basePath="";
         int firstFoundIndex=1;
+        if(!dirOnly) {
+            v.add("../");
+        }
         if(path.length()>0) {
             int offset;
             offset=path.lastIndexOf('/',path.length()-2);
             if(offset>=0) {
-                v.add(path.substring(0, offset+1));
+                v.add(basePath=path.substring(0, offset+1));
                 firstFoundIndex++;
+            } else {
+                if (!dirOnly) {
+                    v.add("./");
+                }
             }
         }
         v.add(path);
-        int added=buildFileList(root+relPath,v,2,15);
+        File file = new File(root+path,File.DONT_OPEN,cardSlot);
+        if((!dirOnly)&&file.isDir()) {
+            basePath=path+"/";
+        }
+        
+        int added=buildFileList(root,dirOnly?relPath:basePath,v,2,15);
         String []files = (String[])v.toObjectArray();
         if (added!=0 && files[firstFoundIndex].charAt(1) == '[') { // is it a volume label?
             files[firstFoundIndex] = files[firstFoundIndex].substring(1); // remove the preceding slash

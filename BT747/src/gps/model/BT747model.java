@@ -23,9 +23,10 @@ import waba.sys.Convert;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
-import waba.ui.Timer;
-import gps.*;
-import gps.convert.*;
+
+import gps.BT747_dev;
+import gps.GPSrxtx;
+import gps.convert.Conv;
 
 /**
  * Implement a model of the BT747 (to run on PC).

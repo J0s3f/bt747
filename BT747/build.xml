@@ -132,7 +132,23 @@
 	
 	</target>
 
+	<taskdef name="proguard" classpath="${proguardLib}" 
+	    classname="proguard.ant.ProGuardTask"/>
 	<target name="proguard" depends="jar">
+		<move file="${buildDir}/${ant.project.name}.jar" tofile="${buildDir}/${ant.project.name}_unopt.jar"/>
+		<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="true" 
+		  	allowaccessmodification="true"
+		    printusage="false"
+		  	overloadaggressively="true" verbose="true" ignorewarnings="true">
+		    <keep name="${mainClass}" /> 
+		    <libraryjar file="${java.home}/lib/rt.jar" />
+		    <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+		    <injar path="${buildDir}/${ant.project.name}_unopt.jar" />
+		    <outjar path="${buildDir}/${ant.project.name}.jar" />
+		</proguard>
+	</target>
+
+	<target name="proguardxx" depends="jar">
 		<move file="${buildDir}/${ant.project.name}.jar" tofile="${buildDir}/${ant.project.name}_unopt.jar"/>
 	
 		<java classname="proguard.ProGuard" fork="yes">

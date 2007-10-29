@@ -46,6 +46,7 @@ public class GPSLogFile extends Container {
     Edit m_edBaseDirName;
     Button m_btSelectBaseDirName;
     Edit m_edLogFileName;
+    Button m_btSelectLogFileName;
     Edit m_edReportBaseName;
     Edit m_edChunkSize;
     Edit m_edTimeout;
@@ -60,13 +61,21 @@ public class GPSLogFile extends Container {
     protected void onStart() {
         Label tmp;
         int idx;
+        
+        // OUTPUT DIRECTORY AND "+" button
         add(tmp=new Label("Output dir:"), LEFT, AFTER); //$NON-NLS-1$
         add(m_btSelectBaseDirName=new Button("+"), RIGHT, SAME);
         m_edBaseDirName = new Edit("");
         add(m_edBaseDirName); //$NON-NLS-1$
         m_edBaseDirName.setRect(AFTER, SAME,FILL-m_btSelectBaseDirName.getSize().width(),PREFERRED,tmp);
-        add(new Label("LogFile:"), LEFT, AFTER); //$NON-NLS-1$
-        add(m_edLogFileName = new Edit(""), AFTER, SAME); //$NON-NLS-1$
+        
+        // RAW DATA FILE
+        add(tmp=new Label("LogFile:"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_btSelectLogFileName=new Button("+"), RIGHT, SAME);
+        m_edLogFileName = new Edit("");
+        add(m_edLogFileName);
+        m_edLogFileName.setRect(AFTER, SAME,FILL-m_btSelectLogFileName.getSize().width(),PREFERRED,tmp);
+        
         add(new Label("Report :"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edReportBaseName = new Edit(""), AFTER, SAME); //$NON-NLS-1$
 
@@ -138,13 +147,23 @@ public class GPSLogFile extends Container {
                 m_settings.saveSettings(); // Explicitally save settings
             } else if (event.target==m_btSelectBaseDirName) {
                 FileSelect fs=new FileSelect();
+                fs.setDirOnly(true);
                 fs.setPath(m_edBaseDirName.getText());
                 if(Settings.platform.startsWith("Palm")) {
                     fs.setCardSlot(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
                 }
-                fs.setDirOnly(true);
                 fs.popupBlockingModal();
                 m_edBaseDirName.setText(fs.getPath());
+            } else if (event.target==m_btSelectLogFileName) {
+                FileSelect fs=new FileSelect();
+                fs.setRoot(m_edBaseDirName.getText());
+                fs.setPath(m_edLogFileName.getText());
+                //fs.setDirOnly(false);   //Default
+                if(Settings.platform.startsWith("Palm")) {
+                    fs.setCardSlot(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
+                }
+                fs.popupBlockingModal();
+                m_edLogFileName.setText(fs.getRelPath());
             } else if (event.target==m_btDefaultSettings) {
                 m_settings.defaultSettings();
                 updateValues();
