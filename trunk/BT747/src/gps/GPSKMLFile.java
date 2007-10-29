@@ -47,7 +47,7 @@ public class GPSKMLFile extends GPSFile {
   /* (non-Javadoc)
    * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
    */
-  public void initialiseFile(final String basename, final String ext, final int Card, boolean oneFilePerDay) {
+  public void initialiseFile(final String basename, final String ext, final int Card, int oneFilePerDay) {
       super.initialiseFile(basename, ext, Card, oneFilePerDay);
       m_currentFilter=GPSFilter.C_WAYPT_IDX;
       m_isWayType=true;
@@ -59,13 +59,13 @@ public class GPSKMLFile extends GPSFile {
   
   public boolean nextPass() {
       if(m_nbrOfPassesToGo>0) {
-          if(m_oneFilePerDay) {
+          if(m_multipleFiles) {
               closeFile();
           }
           m_nbrOfPassesToGo--;
           m_recCount=0;
           m_prevdate=0;
-          if(!m_oneFilePerDay) {
+          if(!m_multipleFiles) {
             writeDataFooter();
           }
           if (m_isWayType) {
@@ -76,7 +76,7 @@ public class GPSKMLFile extends GPSFile {
             m_isPathType=true;
           }
           m_currentFilter=GPSFilter.C_TRKPT_IDX;
-          if(!m_oneFilePerDay) {
+          if(!m_multipleFiles) {
               writeDataHeader();
           }
           return true;

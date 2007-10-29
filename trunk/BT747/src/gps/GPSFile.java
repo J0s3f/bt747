@@ -22,6 +22,7 @@ package gps;
 import waba.io.File;
 import waba.sys.Convert;
 import waba.sys.Time;
+import waba.sys.Vm;
 import waba.ui.MessageBox;
 import waba.util.Date;
 
@@ -63,18 +64,40 @@ public abstract class GPSFile {
     protected int m_prevtime = 0;
     protected boolean m_sepTrack=false;
     protected int m_TrackSepTime=60*60; // Time needed between points to separate segments.
+    
+    protected boolean m_oneFilePerTrack=false;
+    protected boolean m_multipleFiles=false;
 
     public void initialiseFile(final String basename, final String ext,
-            final int Card, boolean oneFilePerDay) {
+            final int Card, int fileSeparationFreq) {
         m_FirstRecord = true;
         m_recCount = 0;
         m_nbrOfPassesToGo = C_NUMBER_OF_PASSES - 1;
         m_ext = ext;
         m_basename = basename;
         m_card = Card;
-        m_oneFilePerDay = oneFilePerDay;
+        m_oneFilePerDay= false;
+        m_oneFilePerTrack=false;
+        switch(fileSeparationFreq) {
+        case 1:
+            m_oneFilePerDay= true;
+            m_multipleFiles=true;
+            break;
+        case 2:
+            m_oneFilePerTrack=true;
+            m_multipleFiles=true;
+            break;
+        }
     };
+    
+    public void setOneFilePerTrack(final boolean oneFilePerTrack) {
+        m_oneFilePerTrack=oneFilePerTrack;
+    }
 
+    public void setTrackSepTime(final int time) {
+        m_TrackSepTime=time;
+    }
+    
     public void setActiveFileFields(final GPSRecord full) {
         activeFileFields = full;
     }
@@ -119,18 +142,32 @@ public abstract class GPSFile {
                                                                    // 128 + day
                 newDate = (dateref > m_prevdate);
             }
+
         }
 
-        if ((((m_oneFilePerDay && newDate) && activeFields.utc != 0) || m_FirstRecord)
-                && recordIsNeeded(s)) {
+        if ( ( (((m_oneFilePerDay && newDate) && activeFields.utc != 0) || m_FirstRecord)
+                ||
+                (m_oneFilePerTrack && activeFields.utc != 0 
+                        && (s.utc>m_prevtime+m_TrackSepTime))
+             )
+             && recordIsNeeded(s)
+           ) {
             boolean createOK = true;
             m_prevdate = dateref;
+
             if (activeFields.utc != 0) {
                 if (t.year > 2000) {
                     extraExt = "-" + Convert.toString(t.year)
                             + (t.month < 10 ? "0" : "")
                             + Convert.toString(t.month)
                             + (t.day < 10 ? "0" : "") + Convert.toString(t.day);
+                    if(m_oneFilePerTrack) {
+                        extraExt+= "_"
+                            + (t.hour < 10 ? "0" : "")
+                            + Convert.toString(t.hour)
+                            + (t.minute < 10 ? "0" : "")
+                            + Convert.toString(t.minute);
+                    }
                 } else {
                     extraExt = "";
                     createOK = false;
@@ -141,8 +178,10 @@ public abstract class GPSFile {
             if (!m_FirstRecord && (extraExt.length() != 0)) {
                 // newDate -> close previous file
                 if (m_nbrOfPassesToGo == 0) {
+//                    Vm.debug("Finalize:"+m_File.getPath());
                     finaliseFile();
                 } else {
+//                    Vm.debug("Close"+m_File.getPath());
                     closeFile();
                 }
             } else {
@@ -152,6 +191,10 @@ public abstract class GPSFile {
             if (createOK) {
                 createFile(extraExt);
             }
+        }
+        
+        if (activeFields.utc != 0 && recordIsNeeded(s)) {
+            m_prevtime = s.utc;
         }
     };
 

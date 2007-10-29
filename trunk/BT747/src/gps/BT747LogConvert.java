@@ -105,6 +105,9 @@ public final class BT747LogConvert {
         while(nextAddrToRead<fileSize) {
             int okInBuffer=-1; // Last ending position in buffer
             
+            /********************************************************************
+             * Read data from the raw data file into the local buffer.
+             */
             // Determine size to read
             if((nextAddrToRead&0xFFFF)<0x200) {
                 // Read the header
@@ -120,14 +123,19 @@ public final class BT747LogConvert {
                 sizeToRead=fileSize-nextAddrToRead;
             }
             
-            // Read the bytes
+            /* Read the bytes from the file */
             int readResult;
             boolean continueInBuffer=true;
             int offsetInBuffer=0;
             int newLogFormat;
 
             m_File.setPos(nextAddrToRead);
+            
             if((nextAddrToRead&0xFFFF)==0) {
+                /******************************
+                 * This is the header.
+                 * Only 20 bytes are read - just enough to get the log format.  
+                 */
                 if(sizeToRead>=20) {
                     // Read header (20 bytes is enough)
                     readResult=m_File.readBytes(bytes, 0, 20);
@@ -145,6 +153,9 @@ public final class BT747LogConvert {
                 nextAddrToRead+=0x200;
                 continueInBuffer=false;
             } else {
+                /*******************************
+                 * Not reading header - reading data.
+                 */
                 readResult=m_File.readBytes(bytes, 0, sizeToRead);
                 if(readResult!=sizeToRead) {
                     (new MessageBox("Error","Problem reading|"+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
@@ -153,12 +164,17 @@ public final class BT747LogConvert {
             }
             
             
+            /***************************************************************************
+             * Interpret the data read in the Buffer as long as the records are complete
+             */
             // A block of bytes has been read, read the records
             while(continueInBuffer) {
                 
-                // Skipping on/off parts
-                boolean checkForOnOff=true;
-                while(checkForOnOff&&(sizeToRead-16>offsetInBuffer)) {
+                /******************************************************
+                 * Read special operations section (if any)
+                 */
+                boolean lookForRecord=true;
+                while(lookForRecord&&(sizeToRead-16>offsetInBuffer)) {
                     // As long as this log entry is possible and 
                     //  bytes in buffer are sufficient.
                     if(   ((0xFF&bytes[offsetInBuffer+0])==0xAA)
@@ -202,27 +218,32 @@ public final class BT747LogConvert {
                         // No data: on/off
                         offsetInBuffer+=16;
                     } else {
-                        checkForOnOff=false;
+                        lookForRecord=false;
                     }
                 }
+                lookForRecord=true;
                 
-                checkForOnOff=true;
+                /*********************************************
+                 * Read data section(s) (if any)
+                 */
                 boolean foundRecord=false;
                 boolean foundAnyRecord=false;
                 int satRecords;
-                // Now look for data
                 do {
                     foundRecord=false;
                     
-                    while(checkForOnOff&&(sizeToRead>offsetInBuffer+minRecordSize+2)) {
+                    while(lookForRecord&&(sizeToRead>offsetInBuffer+minRecordSize+2)) {
                         // As long as record may fit in data still to read.
-//                        System.out.println("Limit: "+(offsetInBuffer+maxRecordSize));
                         int indexInBuffer=offsetInBuffer;
                         int checkSum=0;
                         foundRecord=false;
                         satcnt=0;
                         satCntIdx=0;
                         satRecords=0;
+                        
+                        /***************************************
+                         * Get some satellite record information.
+                         */
                         if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) {
                             satCntIdx=offsetInBuffer-2+satIdxOffset+2;
                             satcnt=(0xFF&bytes[satCntIdx+2])<<0
@@ -239,10 +260,16 @@ public final class BT747LogConvert {
 //                        java.lang.System.out.print(recCount);
 //                        java.lang.System.out.println(" ");
                         
-//                        System.out.println("Limit2: "+minRecordSize+" "+satRecords+" "+offsetInBuffer+" "+satRecords+" "+(minRecordSize+satRecords+offsetInBuffer));
+                        /*******************************************
+                         * Skip minimum number of bytes in a record.
+                         */
                         while((indexInBuffer<minRecordSize+satRecords+offsetInBuffer)&&(indexInBuffer<sizeToRead-2)) {
                             checkSum^=bytes[indexInBuffer++];
                         }
+                        
+                        /*******************************************
+                         * Skip until potential length found.
+                         */
                         do {
                             if((bytes[indexInBuffer]=='*')
                                     &&((checkSum&0xFF)==(0xFF&bytes[indexInBuffer+1]))) {
@@ -260,7 +287,9 @@ public final class BT747LogConvert {
                                 recCount++;
                                 //System.out.println(recCount);
                                 foundAnyRecord=true;
-                                /* Handle record */
+                                /******************************************
+                                 * Get all the information in the record.
+                                 */
                                 if(!passToFindFieldsActivatedInLog) {
                                     // Only interpret fiels if not looking for logFormat changes only
                                     if((logFormat&(1<<BT747_dev.FMT_UTC_IDX))!=0) {
@@ -383,12 +412,6 @@ public final class BT747LogConvert {
                                     idx=0;
                                     satidx=0;
                                     if(rcrIdx-recIdx>0) {
-//                                        java.lang.System.out.print(satCntIdx);
-//                                        java.lang.System.out.print(" ");
-//                                        java.lang.System.out.print(recIdx);
-//                                        java.lang.System.out.print(" ");
-//                                        java.lang.System.out.println(" ");
-
                                         idx=(0xFF&bytes[recIdx+2])<<0
                                             |(0xFF&bytes[recIdx+3])<<8;
                                         gpsRec.sid=new int[idx];
@@ -396,8 +419,6 @@ public final class BT747LogConvert {
                                         gpsRec.ele=new int[idx];
                                         gpsRec.azi=new int[idx];
                                         gpsRec.snr=new int[idx];
-//                                        java.lang.System.out.print(idx);
-//                                        java.lang.System.out.print(" ");
                                         if(idx==0) {
                                             recIdx+=4;
                                         }
@@ -413,8 +434,6 @@ public final class BT747LogConvert {
                                                 satcnt=
                                                     (0xFF&bytes[recIdx++])<<0
                                                     |(0xFF&bytes[recIdx++])<<8;
-//                                                java.lang.System.out.print(satcnt);
-//                                                java.lang.System.out.print(" ");
                                             } else {
                                             	recIdx+=2;
                                             }
@@ -439,7 +458,6 @@ public final class BT747LogConvert {
                                         }
                                         satidx++;
                                     }
-//                                    java.lang.System.out.println();
                                     recIdx=rcrIdx;  // Sat information limit is rcrIdx
                                     if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
                                         gpsRec.rcr=
@@ -479,11 +497,7 @@ public final class BT747LogConvert {
                                 checkSum^=0xFF&bytes[indexInBuffer++];
                             }
                         } while(!foundRecord&&(indexInBuffer<maxRecordSize+offsetInBuffer+2)&&(indexInBuffer<sizeToRead-2));
-                        if(!foundRecord) {
-                            // Should have found a re
-                            checkForOnOff=false;
-                            checkForOnOff=foundRecord;
-                        }
+                        lookForRecord=foundRecord;
                     }
                 } while(foundRecord);
                 if(!foundAnyRecord) {
@@ -517,7 +531,6 @@ public final class BT747LogConvert {
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
-                Vm.debug("Could not open "+fileName);
                 (new MessageBox("Error","Could not open|"+fileName+"|"+m_File.lastError)).popupBlockingModal();                                   
                 m_File=null;
             } else {

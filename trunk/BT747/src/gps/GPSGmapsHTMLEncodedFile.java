@@ -49,7 +49,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(final String basename, final String ext, final int Card, boolean oneFilePerDay) {
+    public void initialiseFile(final String basename, final String ext, final int Card, int oneFilePerDay) {
         super.initialiseFile(basename, ext, Card, oneFilePerDay);
         m_currentFilter=GPSFilter.C_WAYPT_IDX;
         m_isWayType=true;
@@ -61,7 +61,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     
     public boolean nextPass() {
         if(m_nbrOfPassesToGo>0) {
-            if(m_oneFilePerDay) {
+            if(m_multipleFiles) {
                 closeFile();
             }
             m_nbrOfPassesToGo--;
@@ -69,7 +69,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             m_prevdate=0;
             m_isWayType=false;
             m_currentFilter=GPSFilter.C_TRKPT_IDX;
-            if(!m_oneFilePerDay) {
+            if(!m_multipleFiles) {
                 writeDataHeader();
             }
             return true;
@@ -233,6 +233,9 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             endTrack("0000FF");
         }
     }
+
+    private int m_PreviousTime = 0;
+
        
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
@@ -270,7 +273,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 if(m_newTrack) {
                     m_newTrack=false;
                     if(activeFields.latitude!=0 && activeFields.longitude!=0) {
-                        if(s.utc-m_prevtime<m_TrackSepTime) {
+                        if(s.utc-m_PreviousTime<m_TrackSepTime) {
                             track.addTrackpoint(new Trackpoint(s.latitude,s.longitude));
                             endTrack("FF0000");
                         }
@@ -279,7 +282,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 }
                 
                 if((activeFields.utc!=0)) {
-                    m_prevtime=s.utc;
+                    m_PreviousTime=s.utc;
                 }
                 //                "  <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 //                "    <ele>12.863281</ele>"+
