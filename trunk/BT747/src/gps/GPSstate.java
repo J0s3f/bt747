@@ -923,11 +923,15 @@ public class GPSstate implements Thread {
             break;        
         case 0x1388:
             mdStr="757/ZI v1";
-            logMemSize = 8*1024*1024/8; //16Mb -> 2MB
+            logMemSize = 8*1024*1024/8; //8Mb -> 1MB
             break;
         case 0x5202:
             mdStr="757/ZI v2";
-            logMemSize = 8*1024*1024/8; //16Mb -> 2MB
+            logMemSize = 8*1024*1024/8; //8Mb -> 1MB
+            break;
+        case 0x8300:
+            mdStr="Qstartz BT-1200";
+            logMemSize = 32*1024*1024/8; //32Mb -> 4MB
             break;
         default:
             mdStr="Unknown";
