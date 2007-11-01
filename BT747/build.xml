@@ -5,8 +5,9 @@
 	
 	<!-- Default properties (in version control) -->
 	<property file="default.properties" />
-	<!-- Allows any user specific values to override the defaults -->
 	<property file="build.properties" />
+	<!-- Allows any user specific values to override the defaults -->
+	<property file="local.properties" />
 
 
 	<!-- Application classpath -->
