@@ -2,10 +2,11 @@
 
 <project name="BT747" basedir="." default="all">
 	<!-- Local properties (not in version control/local override) -->
-	<!-- Allows any user specific values to override the defaults -->
-	<property file="build.properties" />
+	
 	<!-- Default properties (in version control) -->
 	<property file="default.properties" />
+	<!-- Allows any user specific values to override the defaults -->
+	<property file="build.properties" />
 
 
 	<!-- Application classpath -->
