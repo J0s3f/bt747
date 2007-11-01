@@ -36,3 +36,4 @@ n.bat
 DocUpload.bat
 BT747_GPSDataloggerControl*.pdf
 build.properties
+local.properties
