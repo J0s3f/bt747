@@ -298,7 +298,7 @@ public class GPSNMEAFile extends GPSFile {
                     l *= 60;
                     // TODO: check if bug when a number like 9.9999999
                     rec.append( ((l<10)?"0":"")
-                            + Convert.toString(l,4)
+                            + Convert.toString(l,6)
                     );
                     rec.append(sl);
                 } else {
@@ -325,7 +325,7 @@ public class GPSNMEAFile extends GPSFile {
                     l *= 60;
                     // TODO: check if bug when a number like 9.9999999
                     rec.append( ((l<10)?"0":"")
-                            + Convert.toString(l,4)
+                            + Convert.toString(l,6)
                     );
                     rec.append(sl);
                 } else {
@@ -339,7 +339,7 @@ public class GPSNMEAFile extends GPSFile {
                 //          11   = E or W
                 //          12   = Checksum
                 if(activeFields.speed!=0) {
-                    rec.append(Convert.toString(s.speed*0.53995680345572354211663066954644,2));
+                    rec.append(Convert.toString(s.speed*0.53995680345572354211663066954644,3));
                 }
                 rec.append(",");
                 if(activeFields.heading!=0) {

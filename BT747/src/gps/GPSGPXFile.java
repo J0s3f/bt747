@@ -154,12 +154,12 @@ public class GPSGPXFile extends GPSFile {
                 }
                 if(activeFields.latitude!=0) {
                     rec.append("lat=\"");
-                    rec.append(Convert.toString(s.latitude,6));
+                    rec.append(Convert.toString(s.latitude,8));
                     rec.append("\" ");
                 }
                 if(activeFields.longitude!=0) {
                     rec.append("lon=\"");
-                    rec.append(Convert.toString(s.longitude,6));
+                    rec.append(Convert.toString(s.longitude,8));
                     rec.append("\"");
                 }
                 rec.append(" >\r\n");
@@ -337,7 +337,7 @@ public class GPSGPXFile extends GPSFile {
                 
                 if((activeFields.speed!=0)) {
                     rec.append("<speed>");
-                    rec.append(Convert.toString(s.speed,3));
+                    rec.append(Convert.toString(s.speed*(1000/3600),4));  // must be meters/second
                     rec.append("</speed>\r\n");
                 }
                 
