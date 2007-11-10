@@ -1,0 +1,324 @@
+<?xml version="1.0"?>
+
+<project name="BT747" basedir="." default="all">
+	<!-- Local properties (not in version control/local override) -->
+	<property file="local.properties" />
+	
+	<!-- Allows any user specific values to override the defaults -->
+	<property file="build.properties" />
+
+	<!-- Default properties (in version control) -->
+	<property file="default.properties" />
+
+
+	<!-- Application classpath -->
+	<path id="classpath">
+		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
+		<pathelement location="win32comm.jar"/>
+	</path>
+
+	<path id="rxtxclasspath">
+		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
+		<pathelement location="webstart/RXTXcomm.jar"/>
+	</path>
+
+	<!-- Warp/Exegen classpath -->
+	<path id="utils">
+		<pathelement location="${superwaba_root}/lib/SuperWabaTools.jar"/>
+		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
+	</path>
+	
+	<!-- Clean directories and files -->
+	<target name="clean">
+	
+		<delete dir="build"/>
+		<delete dir="rxtxbuild"/>
+		<delete dir="dist"/>
+		
+	</target>
+	
+	<!-- Update date -->
+    <property name="encoding" value="UTF-8"/>
+    <target name="initdate">
+  		<tstamp>
+    		<format property="DATE" pattern="yyyyMMdd"/>
+    		<format property="DATE_DE" pattern="dd.MM.yyyy"/>
+    		<format property="DATE_UND" pattern="dd_MM_yyyy"/>
+    		<format property="DATE_TIME" pattern="yyyyMMdd_HHmmss"/>
+    		<format property="DATETIME_DE" pattern="dd.MM.yyyy HH:mm:ss"/>
+    		<format property="TIMESTAMP" pattern="yyyyMMddHHmmssSSS"/>
+    	</tstamp>
+    	
+    	<echo level="info">
+	        Project: ${ant.project.name} (${basedir})
+	    	Build file: ${ant.file}
+	        Java: ${java.version} ${java.vendor}
+	        OS: ${os.name} ${os.version} ${os.arch}
+	       	${ant.version} (Java: ${ant.java.version})
+	       	Time: ${DATETIME_DE}
+    	</echo>
+    </target>
+ 
+    <target name="updatedate" depends="initdate" description="increase build number and set release date">
+        <!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
+    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
+    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";'/>	
+    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";'/>	
+    	<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}'/>	
+    </target>
+    	
+	<!-- Compile -->
+	<target name="build" depends="clean, updatedate">
+	
+		<mkdir dir="build"/>
+		<mkdir dir="dist"/>
+		
+		<javac srcdir="src" destdir="build" target="1.1" optimize="true">
+			<include name="**/*.java"/>
+			<exclude name="gps/model/*"/>
+			<exclude name="gps/port/GPSRxTxPort.java"/>
+			<classpath refid="classpath"/>
+		</javac>
+		<copy todir="build">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	
+	</target>
+
+	<target name="rxtxbuild" depends="clean, updatedate">
+	
+		<mkdir dir="rxtxbuild"/>
+		<delete dir="rxtxsrc"/>
+		<mkdir dir="rxtxsrc"/>
+
+		<copy todir="rxtxsrc">
+			<fileset dir="src">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+    	<replace file="rxtxsrc/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort" />
+
+		<javac srcdir="rxtxsrc" destdir="rxtxbuild" target="1.1" optimize="true" classpathref="rxtxclasspath">
+			<include name="**/*.java"/>
+			<exclude name="gps/GPSWabaPort.java*"/>
+			<exclude name="gps/model/*"/>
+		</javac>
+		<copy todir="rxtxbuild">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	
+	</target>
+	<!-- Package classes -->
+	<target name="jar" depends="build">
+	
+		<jar jarfile="build/${ant.project.name}.jar">
+			<fileset dir="build" includes="**/*.class"/>
+		</jar>
+	
+	</target>
+
+	<target name="rxtxjar" depends="rxtxbuild">
+	
+		<jar jarfile="rxtxbuild/${ant.project.name}_rxtx.jar">
+			<fileset dir="rxtxbuild" includes="**/*.class"/>
+		</jar>
+		<copy todir="dist">
+			<fileset dir="rxtxbuild">
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
+		
+	
+	</target>
+
+	<taskdef name="proguard" classpath="${proguardLib}" 
+	    classname="proguard.ant.ProGuardTask"/>
+	<target name="proguard" depends="jar">
+		<move file="${buildDir}/${ant.project.name}.jar" tofile="${buildDir}/${ant.project.name}_unopt.jar"/>
+		<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="true" 
+		  	allowaccessmodification="true"
+		    printusage="false"
+		  	overloadaggressively="true" verbose="true" ignorewarnings="true">
+		    <keep name="${mainClass}" /> 
+		    <libraryjar file="${java.home}/lib/rt.jar" />
+		    <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+		    <injar path="${buildDir}/${ant.project.name}_unopt.jar" />
+		    <outjar path="${buildDir}/${ant.project.name}.jar" />
+		</proguard>
+	</target>
+
+	<target name="proguardxx" depends="jar">
+		<move file="${buildDir}/${ant.project.name}.jar" tofile="${buildDir}/${ant.project.name}_unopt.jar"/>
+	
+		<java classname="proguard.ProGuard" fork="yes">
+            <classpath>
+              <pathelement path="${proguardLib}"/>
+            </classpath>
+			<arg line="-injars ${buildDir}/${ant.project.name}_unopt.jar"/>
+			<arg line="-outjars ${buildDir}/${ant.project.name}.jar"/>
+			<arg line="-libraryjars ${java.home}/lib/rt.jar${path.separator}${superwaba_root}/lib/SuperWaba.jar"/>
+			<arg line="-keep public class ${mainClass}"/>
+			<arg line="-allowaccessmodification"/>
+			<arg line="-overloadaggressively"/>
+			<!--
+			<arg line="-repackageclasses"/>
+			<arg line="-optimizationpasses 3"/>
+			-->
+		</java>
+	
+	</target>
+
+	<!-- Execute WARP -->
+	<target name="warp" depends="proguard">
+	
+		<java dir="build" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
+			<arg value="c"/>
+			<arg value="/c"/>
+			<arg value="BT74"/>
+			<arg value="${ant.project.name}"/>
+			<arg value="${ant.project.name}.jar"/>
+		</java>
+	
+	</target>
+	
+	<!-- Prepare EXEGEN execution -->
+	<target name="prepare-exegen">
+		
+		<mkdir dir="icons"/>
+		<copy todir="build">
+			<fileset dir="icons">
+				<include name="*.bmp"/>
+			</fileset>
+		</copy>
+	
+	</target>
+	
+	<!-- Execute EXEGEN -->
+	<target name="exegen" depends="warp, prepare-exegen">
+	
+		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
+			<arg value="/INST"/>
+			<!-- <arg value="/SIS"/> -->
+			<arg value="/c"/>
+			<arg value="BT74"/>
+			<arg value="${ant.project.name}"/>
+			<arg value=""/>
+			<arg value="${ant.project.name}"/>
+		</java>
+	
+	</target>
+	
+	<!-- Execute EXEGEN with WinCE EXE -->
+	<target name="exegen-exe" depends="warp, prepare-exegen">
+	
+		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
+			<arg value="/c"/>
+			<arg value="BT74"/>
+			<arg value="/e"/>
+			<arg value="${ant.project.name}"/>
+			<arg value=""/>
+			<arg value="${ant.project.name}"/>
+		</java>
+	
+	</target>
+	
+	<!-- Execute EXEGEN with WinCE CAB -->
+	<target name="exegen-cab" depends="warp, prepare-exegen">
+	
+		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
+			<arg value="/c"/>
+			<arg value="BT74"/>
+			<arg value="/z"/>
+			<arg value="${ant.project.name}"/>
+			<arg value=""/>
+			<arg value="${ant.project.name}"/>
+		</java>
+	
+	</target>
+	
+	<!-- Execute WARP and populate distribution directory -->
+	<target name="all-warp" depends="warp">
+		
+		<move file="build/${ant.project.name}.pdb" todir="dist"/>
+		
+	</target>
+	
+	<!-- Execute EXEGEN and populate distribution directory -->
+	<target name="all-exegen" depends="exegen, all-warp">
+		
+		<move todir="dist" file="build/${ant.project.name}.prc"/>
+		<move todir="dist" file="build/install.exe"/>
+		
+	</target>
+	
+	<!-- Execute EXEGEN with WinCE EXE and populate distribution directory -->
+	<target name="all-exegen-exe" depends="exegen-exe, all-warp">
+		
+		<move todir="dist">
+			
+			<fileset dir="build">
+				<include name="${ant.project.name}.prc"/>
+				<include name="**/*.exe"/>
+				<include name="*.exe"/>
+			</fileset>
+			
+		</move>
+		
+	</target>
+	
+	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
+	<target name="all-exegen-cab" depends="exegen-cab, all-warp">
+		
+		<move todir="dist">
+			
+			<fileset dir="build">
+				<include name="${ant.project.name}.prc"/>
+				<include name="*.CAB"/>
+				<include name="*.ini"/>
+				<include name="*.bat"/>
+				<include name="*.exe"/>
+			</fileset>
+			
+		</move>
+		
+	</target>
+
+	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
+	<target name="all-exegen-types" depends="exegen, exegen-exe, exegen-cab, rxtxjar, all-warp">
+		
+		<move todir="dist">
+			
+			<fileset dir="build">
+				<include name="${ant.project.name}.prc"/>
+				<include name="**/*.exe"/>
+				<include name="*.CAB"/>
+				<include name="*.ini"/>
+				<include name="*.bat"/>
+				<include name="*.exe"/>
+				<include name="${ant.project.name}.jar"/>
+			</fileset>
+			
+		</move>
+		
+	</target>
+
+	<target name="all" depends="all-exegen-types"/>
+
+	<target name="warp-help">
+		<java dir="build" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
+			<arg value="/?"/>
+		</java>
+	</target>
+
+	<target name="exegen-help">
+		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
+			<arg value="/?"/>
+		</java>
+	</target>
+
+
+</project>
