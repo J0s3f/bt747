@@ -21,7 +21,6 @@ package gps;
 
 import waba.io.File;
 import waba.sys.Convert;
-import waba.sys.Settings;
 import waba.sys.Thread;
 import waba.sys.Vm;
 import waba.ui.Control;
@@ -298,11 +297,6 @@ public class GPSstate implements Thread {
                 +","+Convert.unsigned2hex(startAddr,8)			
                 +","+Convert.unsigned2hex(size,8)			
         );
-        //		if(GPS_DEBUG) {	waba.sys.Vm.debug("PMTK"+Convert.toString(PMTK_CMD_LOG)
-        //				+","+Convert.toString(PMTK_LOG_Q_LOG)
-        //				+","+Convert.unsigned2hex(startAddr,8)			
-        //				+","+Convert.unsigned2hex(size,8));			
-        //				}
     }
     
     private void PostStatusUpdateEvent() {
@@ -332,11 +326,12 @@ public class GPSstate implements Thread {
     Vector toSendCmds = new Vector(); // List of sent commands
     static final int C_MAX_TOSEND_COMMANDS = 10;  // Max commands to put in list
     static final int C_MAX_CMDS_SENT = 4;
+    static final int C_MIN_TIME_BETWEEN_CMDS = 10;
     
     public void sendNMEA(final String p_Cmd) {
         int cmdsWaiting;
         cmdsWaiting=sentCmds.getCount();
-        if(cmdsWaiting==0) {
+        if((cmdsWaiting==0) && (Vm.getTimeStamp()>nextCmdSendTime)) {
             //  All sent commands were acknowledged, send cmd immediately
             doSendNMEA(p_Cmd);
         } else if (cmdsWaiting<C_MAX_TOSEND_COMMANDS) {
@@ -344,6 +339,8 @@ public class GPSstate implements Thread {
             toSendCmds.add(p_Cmd);
         }
     }
+    
+    private int nextCmdSendTime=0;
 
     private void doSendNMEA(final String p_Cmd) {
         resetLogTimeOut();
@@ -351,6 +348,7 @@ public class GPSstate implements Thread {
             sentCmds.add(p_Cmd);
         }
         m_GPSrxtx.sendPacket(p_Cmd);
+        nextCmdSendTime=Vm.getTimeStamp()+C_MIN_TIME_BETWEEN_CMDS;
         if(sentCmds.getCount()>C_MAX_SENT_COMMANDS) {
             sentCmds.del(0);
         }
@@ -402,17 +400,6 @@ public class GPSstate implements Thread {
                 +","+BT747_dev.PMTK_LOG_QUERY_STR+
                 ","+BT747_dev.PMTK_LOG_NBR_LOG_PTS_STR          
         );
-        //        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
-        //                +","+BT747_dev.PMTK_LOG_QUERY_STR+
-        //                ","+BT747_dev.PMTK_LOG_TBD3_STR          
-        //        );
-        //        sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
-        //                +","+BT747_dev.PMTK_LOG_QUERY_STR+
-        //                ","+BT747_dev.PMTK_LOG_TBD2_STR          
-        //        );
-        //      sendNMEA("PMTK"+BT747_dev.PMTK_CMD_LOG_STR
-        //              +","+BT747_dev.PMTK_LOG_QUERY_STR+
-        //              ","+12 );
         getLogOverwrite();
     }
     
@@ -1128,6 +1115,7 @@ public class GPSstate implements Thread {
                     } else {
                         // Start just past block header
                         m_NextReadAddr=blockHeadPos+0x200;
+                        continueLoop=true;
                         do {
                             // Find a block 
                             m_logFile.setPos(m_NextReadAddr);
@@ -1135,8 +1123,9 @@ public class GPSstate implements Thread {
                             if(continueLoop) {
                                 // Check if all FFs in the file.
                                 for (int i = 0; continueLoop&&(i < 0x200); i++) {
-                                    continueLoop=!((m_Data[i]&0xFF)==0xFF);
+                                    continueLoop=((m_Data[i]&0xFF)==0xFF);
                                 }
+                                continueLoop=!continueLoop;  // Continue if something else than 0xFF found.
                                 if(continueLoop) {
                                     m_ProgressBar.setValue(m_NextReadAddr);
                                     m_NextReadAddr+=0x200;
@@ -1360,13 +1349,27 @@ public class GPSstate implements Thread {
                     // Downloaded data seems to correspond - start incremental download
                     reOpenLogWrite(fileName,m_logFileCard);
                     m_logFile.setPos(m_NextReadAddr);
+                    m_logState=C_LOG_ACTIVE;
                 } else {
                     // Log is not the same - delete the log and reopen.
-                    openNewLog(fileName,m_logFileCard);
-                    m_NextReadAddr=0;
-                    m_NextReadAddr=0;
+                    MessageBox mb;
+                    String [] mbStr={"Overwrite","Abort download"};
+                    mb = new MessageBox("Attention",
+                            "The DATA in the device does NOT|" +
+                            "correspond to the DATA previously|" +
+                            "downloaded.|" +
+                            "Do you wish to overwrite the DATA?",
+                            mbStr);                                 
+                    mb.popupBlockingModal();                                        
+                    if (mb.getPressedButtonIndex()==0){
+                        openNewLog(fileName,m_logFileCard);
+                        m_NextReadAddr=0;
+                        m_NextReadAddr=0;
+                        m_logState=C_LOG_ACTIVE;
+                    } else {
+                        cancelGetLog();
+                    }
                 }
-                m_logState=C_LOG_ACTIVE;
             }
         }  // Switch m_logState
     }

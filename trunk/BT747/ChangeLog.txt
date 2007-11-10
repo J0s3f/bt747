@@ -1,3 +1,10 @@
+Version 1.08
+* Fixed problem in incremental download (usefull data detection had an error => too much data redownloaded).
+* GPX format: speed was in km/h and has to be in m/s -> solved.
+* Incremental download: if data is different than before, user confirmation is requested.
+  This way the user can still change the raw data filename (avoid overwriting previous data by mistake).
+* NMEA format: more precision added (2 extra digits for position and one extra digit for speed).
+
 Version 1.07
 * Added path browsing capability to 'LogFile' entry on Filetab.  This allows easy opening of
   previously saved raw data file.
