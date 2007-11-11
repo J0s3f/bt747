@@ -290,6 +290,7 @@ public final class BT747LogConvert {
                                 /******************************************
                                  * Get all the information in the record.
                                  */
+                                gpsRec.recCount=recCount;
                                 if(!passToFindFieldsActivatedInLog) {
                                     // Only interpret fiels if not looking for logFormat changes only
                                     if((logFormat&(1<<BT747_dev.FMT_UTC_IDX))!=0) {

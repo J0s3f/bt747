@@ -1,3 +1,8 @@
+Version 1.10
+* Advanced filtering added (filtering on PDOP, VDOP, HDOP, speed, distance, record number.
+  A new subtab in the filter tab added.  Advanced filtering must be set to 'active' in that
+  tab to enable the filtering.
+
 Version 1.09
 * Correction to speed in GPX format (was always 0 after the change for 1.08.
 * Incremental download: small improvement.

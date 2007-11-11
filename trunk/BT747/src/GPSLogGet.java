@@ -41,6 +41,7 @@ import gps.GPSNMEAFile;
 import gps.GPSPLTFile;
 import gps.GPSstate;
 import gps.GpsEvent;
+import gps.settings;
 
 /**
  * @author Mario De Weerd
@@ -95,16 +96,23 @@ public class GPSLogGet extends Container {
     private Label       m_RecordsLabel;
 
     GPSFilter[] m_Filters;
+    GPSFilter[] m_FiltersAdv;
 
     public int dateToUTCepoch1970(final Date d) {
         return (d.getJulianDay()-JULIAN_DAY_1_1_1970)*24*60*60;
     }
     
-    public GPSLogGet(GPSstate state, ProgressBar pb, AppSettings s, GPSFilter[] filters) {
+    public GPSLogGet(
+            GPSstate state,
+            ProgressBar pb,
+            AppSettings s,
+            GPSFilter[] filters,
+            GPSFilter[] filtersAdv ) {
         m_GPSstate = state;
         m_pb= pb;
         m_appSettings= s;
         m_Filters=filters;
+        m_FiltersAdv=filtersAdv;
     } 
     
 
@@ -248,6 +256,12 @@ public class GPSLogGet extends Container {
                 String ext="";
                 GPSFile gpsFile=null;
                 BT747LogConvert lc=new BT747LogConvert();
+                GPSFilter[] usedFilters;
+                if(m_appSettings.getAdvFilterActive()) {
+                    usedFilters=m_FiltersAdv;
+                } else {
+                    usedFilters=m_Filters;
+                }
                 lc.setTimeOffset(m_appSettings.getTimeOffsetHours()*3600);
                 lc.setNoGeoid(m_appSettings.getNoGeoid());
 
@@ -280,12 +294,13 @@ public class GPSLogGet extends Container {
                     gpsFile=new GPSGmapsHTMLEncodedFile();
                     ext=".html";
                 }
+
                     
-                for (int i = 0; i < m_Filters.length; i++) {
+                for (int i = 0; i < usedFilters.length; i++) {
                     m_Filters[i].setStartDate(dateToUTCepoch1970(m_StartDate));
                     m_Filters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
                 }
-                gpsFile.setFilters(m_Filters);
+                gpsFile.setFilters(usedFilters);
                 gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard(),
                         m_appSettings.getFileSeparationFreq());
                 gpsFile.setTrackSepTime(m_appSettings.getTrkSep()*60);
