@@ -124,6 +124,18 @@ public final class BT747_dev {  // dev as in device
             2, //"RCR",     // = 0x20000    // 11
             2, //"MILISECOND",// = 0x40000  // 12
             8, //"DISTANCE" // = 0x80000    // 13
+            0, // 14
+            0, // 15
+            0, // 16
+            0, // 17
+            0, // 18
+            0, // 19
+            0, // 1A
+            0, // 1B
+            0, // 1C
+            0, // 1D
+            0, // 1E
+            0, // 1F
     };  
     
     public static final int RCR_TIME_MASK=       0x01;
