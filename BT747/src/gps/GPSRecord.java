@@ -48,6 +48,7 @@ public class GPSRecord {
     public double distance;
     
     public float geoid; // Value returned by GPS.
+    public int recCount;
 
     public GPSRecord() {} {
     }
@@ -103,6 +104,7 @@ public class GPSRecord {
         this.milisecond= r.milisecond;
         this.distance= r.distance;
         this.geoid=r.geoid;
+        this.recCount=r.recCount;
     }
     
 }

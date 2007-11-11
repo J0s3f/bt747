@@ -31,11 +31,14 @@ import gps.GPSFilter;
  */
 public class GPSLogFilter extends Container {
     private GPSFilter[] m_logFilters;
+    private GPSFilter[] m_logFiltersAdv;
     private int currentLogFilter=0;
     private AppSettings m_settings;
 
-    public GPSLogFilter(AppSettings settings, final GPSFilter[] logFilters) {
+    public GPSLogFilter(AppSettings settings, final GPSFilter[] logFilters,
+            final GPSFilter[] logFiltersAdv) {
         m_logFilters = logFilters;
+        m_logFiltersAdv = logFiltersAdv;
         m_settings=settings;
     }
 
@@ -47,12 +50,21 @@ public class GPSLogFilter extends Container {
     private final static int C_VALID_COUNT=9;
     private Check [] chkValid =new Check[C_VALID_COUNT];
     private PushButtonGroup pbPtType;
+    
+    private void getSettings(GPSFilter[] logFilters) {
+        logFilters[GPSFilter.C_TRKPT_IDX].setRcrMask(m_settings.getTrkPtRCR());
+        logFilters[GPSFilter.C_TRKPT_IDX].setValidMask(m_settings.getTrkPtValid());
+        logFilters[GPSFilter.C_WAYPT_IDX].setRcrMask(m_settings.getWayPtRCR());
+        logFilters[GPSFilter.C_WAYPT_IDX].setValidMask(m_settings.getWayPtValid());
+    };
+    
+    private void getSettings() {
+        getSettings(m_logFilters);
+        getSettings(m_logFiltersAdv);
+    }
 
     public void onStart() {
-        m_logFilters[GPSFilter.C_TRKPT_IDX].setRcrMask(m_settings.getTrkPtRCR());
-        m_logFilters[GPSFilter.C_TRKPT_IDX].setValidMask(m_settings.getTrkPtValid());
-        m_logFilters[GPSFilter.C_WAYPT_IDX].setRcrMask(m_settings.getWayPtRCR());
-        m_logFilters[GPSFilter.C_WAYPT_IDX].setValidMask(m_settings.getWayPtValid());
+        getSettings();
         C_PB_TYPE_NAMES[GPSFilter.C_TRKPT_IDX]="TrkPt";
         C_PB_TYPE_NAMES[GPSFilter.C_WAYPT_IDX]="WayPt";
         add(pbPtType=
@@ -198,6 +210,7 @@ public class GPSLogFilter extends Container {
                         break;
                     }
                 }
+                getSettings();
             }
         break;
         }

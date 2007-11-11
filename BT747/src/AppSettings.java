@@ -74,8 +74,29 @@ public class AppSettings implements gps.settings {
     private final static int C_GPXUTC0_SIZE=1;
     private final static int C_TRKSEP_IDX=C_GPXUTC0_IDX+C_GPXUTC0_SIZE;
     private final static int C_TRKSEP_SIZE=4;
-    private final static int C_NEXT_IDX=C_TRKSEP_IDX+C_TRKSEP_SIZE;
-    
+    private final static int C_ADVFILTACTIVE_IDX=C_TRKSEP_IDX+C_TRKSEP_SIZE;
+    private final static int C_ADVFILTACTIVE_SIZE=1;
+    private final static int C_minDist_IDX=C_ADVFILTACTIVE_IDX+C_ADVFILTACTIVE_SIZE;
+    private final static int C_minDist_SIZE=8;
+    private final static int C_maxDist_IDX=C_minDist_IDX+C_minDist_SIZE;
+    private final static int C_maxDist_SIZE=8;
+    private final static int C_minSpeed_IDX=C_maxDist_IDX+C_maxDist_SIZE;
+    private final static int C_minSpeed_SIZE=8;
+    private final static int C_maxSpeed_IDX=C_minSpeed_IDX+C_minSpeed_SIZE;
+    private final static int C_maxSpeed_SIZE=8;
+    private final static int C_maxHDOP_IDX=C_maxSpeed_IDX+C_maxSpeed_SIZE;
+    private final static int C_maxHDOP_SIZE=8;
+    private final static int C_maxPDOP_IDX=C_maxHDOP_IDX+C_maxHDOP_SIZE;
+    private final static int C_maxPDOP_SIZE=8;
+    private final static int C_maxVDOP_IDX=C_maxPDOP_IDX+C_maxPDOP_SIZE;
+    private final static int C_maxVDOP_SIZE=8;
+    private final static int C_minRecCount_IDX=C_maxVDOP_IDX+C_maxVDOP_SIZE;
+    private final static int C_minRecCount_SIZE=8;
+    private final static int C_maxRecCount_IDX=C_minRecCount_IDX+C_minRecCount_SIZE;
+    private final static int C_maxRecCount_SIZE=8;
+    private final static int C_minNSAT_IDX=C_maxRecCount_IDX+C_maxRecCount_SIZE;
+    private final static int C_minNSAT_SIZE=4;
+    private final static int C_NEXT_IDX=C_minNSAT_IDX+C_minNSAT_SIZE;
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
     private final static int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -179,8 +200,20 @@ public class AppSettings implements gps.settings {
         case 7:
             setTrkSep(60);
             /* fall through */
+        case 8:
+            setFilterMinRecCount(0);
+            setFilterMaxRecCount(0);
+            setFilterMinSpeed(0);
+            setFilterMaxSpeed(0);
+            setFilterMinDist(0);
+            setFilterMaxDist(0);
+            setFilterMaxPDOP(0);
+            setFilterMaxHDOP(0);
+            setFilterMaxVDOP(0);
+            setFilterMinNSAT(0);
+            /* fall through */
         }
-        setStringOpt("0.08",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.09",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
@@ -253,8 +286,14 @@ public class AppSettings implements gps.settings {
     private final int getIntOpt(final int idx, final int size) {
         return Conv.hex2Int(getStringOpt(idx,size));
     }
-    
-    
+
+    private final void setFloatOpt(final float src, final int idx, final int size) {
+        setOpt(Convert.unsigned2hex(Convert.toIntBitwise(src),size),idx,size);
+    }
+
+    private final float getFloatOpt(final int idx, final int size) {
+        return Convert.toFloatBitwise(Conv.hex2Int(getStringOpt(idx,size)));
+    }
 
     private final void setStringOpt(final String src, final int idx, final int size) {
         Settings.appSettings=
@@ -491,6 +530,16 @@ public class AppSettings implements gps.settings {
         setStringOpt((value?"1":"0"),C_NOGEOID_IDX, C_NOGEOID_SIZE);
     }
 
+    public boolean getAdvFilterActive() {
+        return getIntOpt(C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE)==1;
+    }
+    /**
+     * @param value The default value for opening the port.
+     */
+    public void setAdvFilterActive(final boolean value) {
+        setStringOpt((value?"1":"0"),C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
+    }
+
     public int getLogRequestAhead() {
         return getIntOpt(C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
     }
@@ -524,6 +573,128 @@ public class AppSettings implements gps.settings {
 
     public void setTrkSep(final int value) {
         setIntOpt(value,C_TRKSEP_IDX, C_TRKSEP_SIZE);
+    }
+
+    /**
+     * @return Returns the maxDist.
+     */
+    public float getFilterMaxDist() {
+        return getFloatOpt(C_maxDist_IDX, C_maxDist_SIZE);
+    }
+    /**
+     * @param maxDist The maxDist to setFilter.
+     */
+    public void setFilterMaxDist(float maxDist) {
+        setFloatOpt(maxDist,C_maxDist_IDX, C_maxDist_SIZE);
+    }
+    /**
+     * @return Returns the maxHDOP.
+     */
+    public float getFilterMaxHDOP() {
+        return getFloatOpt(C_maxHDOP_IDX, C_maxHDOP_SIZE);
+    }
+    
+    /**
+     * @param maxHDOP The maxHDOP to setFilter.
+     */
+    public void setFilterMaxHDOP(float maxHDOP) {
+        setFloatOpt(maxHDOP,C_maxHDOP_IDX, C_maxHDOP_SIZE);
+    }
+    /**
+     * @return Returns the maxPDOP.
+     */
+    public float getFilterMaxPDOP() {
+        return getFloatOpt(C_maxPDOP_IDX, C_maxPDOP_SIZE);
+    }
+    /**
+     * @param maxPDOP The maxPDOP to setFilter.
+     */
+    public void setFilterMaxPDOP(float maxPDOP) {
+        setFloatOpt(maxPDOP,C_maxPDOP_IDX, C_maxPDOP_SIZE);
+    }
+    /**
+     * @return Returns the maxRecCnt.
+     */
+    public int getFilterMaxRecCount() {
+        return getIntOpt(C_maxRecCount_IDX, C_maxRecCount_SIZE);
+    }
+    /**
+     * @param maxRecCnt The maxRecCnt to setFilter.
+     */
+    public void setFilterMaxRecCount(int maxRecCnt) {
+        setIntOpt(maxRecCnt,C_maxRecCount_IDX, C_maxRecCount_SIZE);
+    }
+    /**
+     * @return Returns the maxSpeed.
+     */
+    public float getFilterMaxSpeed() {
+        return getFloatOpt(C_maxSpeed_IDX, C_maxSpeed_SIZE);
+    }
+    /**
+     * @param maxSpeed The maxSpeed to setFilter.
+     */
+    public void setFilterMaxSpeed(float maxSpeed) {
+        setFloatOpt(maxSpeed,C_maxSpeed_IDX, C_maxSpeed_SIZE);
+    }
+    /**
+     * @return Returns the maxVDOP.
+     */
+    public float getFilterMaxVDOP() {
+        return getFloatOpt(C_maxVDOP_IDX, C_maxVDOP_SIZE);
+    }
+    /**
+     * @param maxVDOP The maxVDOP to setFilter.
+     */
+    public void setFilterMaxVDOP(float maxVDOP) {
+        setFloatOpt(maxVDOP,C_maxVDOP_IDX, C_maxVDOP_SIZE);
+    }
+    /**
+     * @return Returns the minDist.
+     */
+    public float getFilterMinDist() {
+        return getFloatOpt(C_minDist_IDX, C_minDist_SIZE);
+    }
+    /**
+     * @param minDist The minDist to setFilter.
+     */
+    public void setFilterMinDist(float minDist) {
+        setFloatOpt(minDist,C_minDist_IDX, C_minDist_SIZE);
+    }
+    /**
+     * @return Returns the minNSAT.
+     */
+    public int getFilterMinNSAT() {
+        return getIntOpt(C_minNSAT_IDX, C_minNSAT_SIZE);
+    }
+    /**
+     * @param minNSAT The minNSAT to setFilter.
+     */
+    public void setFilterMinNSAT(int minNSAT) {
+        setIntOpt(minNSAT,C_minNSAT_IDX, C_minNSAT_SIZE);
+    }
+    /**
+     * @return Returns the minRecCnt.
+     */
+    public int getFilterMinRecCount() {
+        return getIntOpt(C_minRecCount_IDX, C_minRecCount_SIZE);
+    }
+    /**
+     * @param minRecCnt The minRecCnt to setFilter.
+     */
+    public void setFilterMinRecCount(int minRecCnt) {
+        setIntOpt(minRecCnt,C_minRecCount_IDX, C_minRecCount_SIZE);
+    }
+    /**
+     * @return Returns the minSpeed.
+     */
+    public float getFilterMinSpeed() {
+        return getFloatOpt(C_minSpeed_IDX, C_minSpeed_SIZE);
+    }
+    /**
+     * @param minSpeed The minSpeed to setFilter.
+     */
+    public void setFilterMinSpeed(float minSpeed) {
+        setFloatOpt(minSpeed,C_minSpeed_IDX, C_minSpeed_SIZE);
     }
 
 }
