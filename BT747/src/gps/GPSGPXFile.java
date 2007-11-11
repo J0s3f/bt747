@@ -337,7 +337,7 @@ public class GPSGPXFile extends GPSFile {
                 
                 if((activeFields.speed!=0)) {
                     rec.append("<speed>");
-                    rec.append(Convert.toString(s.speed*(1000/3600),4));  // must be meters/second
+                    rec.append(Convert.toString(s.speed/3.6,4));  // must be meters/second
                     rec.append("</speed>\r\n");
                 }
                 

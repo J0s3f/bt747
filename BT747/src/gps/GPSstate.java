@@ -1326,6 +1326,7 @@ public class GPSstate implements Thread {
             }
             break;
         case C_LOG_CHECK:
+            m_logState=C_LOG_NOLOGGING;  // Default.
             if((p_StartAddr==C_BLOCKVERIF_START) && (dataLength==C_BLOCKVERIF_SIZE)) {
                 // The block we got should be the block to check
                 byte[] m_localdata=new byte[dataLength];
@@ -1360,14 +1361,14 @@ public class GPSstate implements Thread {
                             "downloaded.|" +
                             "Do you wish to overwrite the DATA?",
                             mbStr);                                 
-                    mb.popupBlockingModal();                                        
+                    mb.popupBlockingModal();      
                     if (mb.getPressedButtonIndex()==0){
                         openNewLog(fileName,m_logFileCard);
                         m_NextReadAddr=0;
                         m_NextReadAddr=0;
                         m_logState=C_LOG_ACTIVE;
                     } else {
-                        cancelGetLog();
+                        endGetLog();
                     }
                 }
             }

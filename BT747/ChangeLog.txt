@@ -1,3 +1,7 @@
+Version 1.09
+* Correction to speed in GPX format (was always 0 after the change for 1.08.
+* Incremental download: small improvement.
+
 Version 1.08
 * Fixed problem in incremental download (usefull data detection had an error => too much data redownloaded).
 * GPX format: speed was in km/h and has to be in m/s -> solved.
