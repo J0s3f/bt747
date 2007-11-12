@@ -1,14 +1,9 @@
-import waba.ui.Button;
 import waba.ui.Check;
-import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
-import waba.ui.Label;
 
 import gps.BT747_dev;
-import gps.GPSstate;
-import gps.GpsEvent;
 
 /*
  * Created on 3 sept. 2007

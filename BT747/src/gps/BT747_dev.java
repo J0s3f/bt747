@@ -18,7 +18,7 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 package gps;
-import waba.sys.Convert;
+import bt747.sys.Convert;
 
 
 /** Constants for the iBlue 747 (BT747) device

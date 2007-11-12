@@ -17,7 +17,7 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import waba.sys.Convert;
+import bt747.sys.Convert;
 import waba.sys.Settings;
 import waba.ui.Control;
 import waba.ui.ControlEvent;

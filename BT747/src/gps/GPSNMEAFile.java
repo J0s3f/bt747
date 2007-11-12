@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps;
 
-import waba.sys.Convert;
+import bt747.sys.Convert;
 
 /**Class to write a GPX file.
  * @author Mario De Weerd
@@ -63,9 +63,9 @@ public class GPSNMEAFile extends GPSFile {
             int z_Checksum;
             
             if((activeFields.utc!=0)) {
-                timeStr=(  t.hour<10?"0":"")+Convert.toString(t.hour)
-                +(t.minute<10?"0":"")+Convert.toString(t.minute)
-                +(t.second<10?"0":"")+Convert.toString(t.second);
+                timeStr=(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())
+                +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())
+                +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond());
                 if(activeFields.milisecond!=0) {
                     timeStr+="."+
                     ((s.milisecond<100)?"0":"")
@@ -84,9 +84,9 @@ public class GPSNMEAFile extends GPSFile {
                 rec.append(timeStr);
                 rec.append(
                         ","
-                        +(   t.day<10?"0":"")+Convert.toString(t.day)+","
-                        +( t.month<10?"0":"")+Convert.toString(t.month)+","
-                        +Convert.toString(t.year)+",,"
+                        +(   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+","
+                        +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+","
+                        +Convert.toString(t.getYear())+",,"
                 );
                 
                 writeNMEA(rec.toString());
@@ -349,9 +349,9 @@ public class GPSNMEAFile extends GPSFile {
                 if((activeFields.utc!=0)) {
                     // DATE & TIME
                     rec.append(
-                            (   t.day<10?"0":"")+Convert.toString(t.day)
-                            +( t.month<10?"0":"")+Convert.toString(t.month)
-                            +(((t.year%100)<10)?"0":"")+Convert.toString(t.year%100)
+                            (   t.getDay()<10?"0":"")+Convert.toString(t.getDay())
+                            +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())
+                            +(((t.getYear()%100)<10)?"0":"")+Convert.toString(t.getYear()%100)
                     );
                 }
                 rec.append(",,");

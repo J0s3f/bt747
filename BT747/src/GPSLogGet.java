@@ -17,7 +17,6 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import waba.sys.Convert;
 import waba.ui.Button;
 import waba.ui.Calendar;
 import waba.ui.Check;
@@ -41,7 +40,8 @@ import gps.GPSNMEAFile;
 import gps.GPSPLTFile;
 import gps.GPSstate;
 import gps.GpsEvent;
-import gps.settings;
+
+import bt747.sys.Convert;
 
 /**
  * @author Mario De Weerd

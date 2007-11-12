@@ -18,7 +18,7 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.io.File;
-import waba.sys.Convert;
+import bt747.sys.Convert;
 import waba.sys.Settings;
 
 import gps.convert.Conv;
@@ -162,7 +162,7 @@ public class AppSettings implements gps.settings {
             if (waba.sys.Settings.platform.startsWith("Palm")) {
                 setBaseDirPath("/Palm");
             } else if ( isWin32LikeDevice() ) {
-                File f=File.getCardVolume();
+                File f=bt747.io.File.getCardVolume();
                 if(f==null) {
                     setBaseDirPath("/EnterYourDir");
                 } else {
@@ -201,6 +201,7 @@ public class AppSettings implements gps.settings {
             setTrkSep(60);
             /* fall through */
         case 8:
+            setAdvFilterActive(false);
             setFilterMinRecCount(0);
             setFilterMaxRecCount(0);
             setFilterMinSpeed(0);

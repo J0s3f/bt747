@@ -7,5 +7,6 @@
 	<classpathentry path="webstart/RXTXcomm.jar" kind="lib"/>
 	<classpathentry path="webstart/comm.jar" kind="lib"/>
 	<classpathentry path="webstart/RXTX_linux_x86.jar" kind="lib"/>
+	<classpathentry path="src_forwaba" kind="src"/>
 	<classpathentry path="bin" kind="output"/>
 </classpath>

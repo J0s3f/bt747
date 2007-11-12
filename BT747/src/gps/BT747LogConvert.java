@@ -19,9 +19,8 @@
 //********************************************************************  
 package gps;
 
-import waba.io.File;
-import waba.sys.Convert;
-import waba.sys.Vm;
+import bt747.io.File;
+import bt747.sys.Convert;
 import waba.ui.MessageBox;
 
 import gps.convert.Conv;

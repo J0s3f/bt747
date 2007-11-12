@@ -18,7 +18,7 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.io.SerialPort;
-import waba.sys.Convert;
+import bt747.sys.Convert;
 import waba.sys.Vm;
 import waba.ui.Button;
 import waba.ui.ComboBox;

@@ -73,6 +73,10 @@
 		<mkdir dir="build"/>
 		<mkdir dir="dist"/>
 		
+		<javac srcdir="src_forwaba" destdir="build" target="1.1" optimize="true">
+			<include name="**/*.java"/>
+			<classpath refid="classpath"/>
+		</javac>
 		<javac srcdir="src" destdir="build" target="1.1" optimize="true">
 			<include name="**/*.java"/>
 			<exclude name="gps/model/*"/>
@@ -95,6 +99,9 @@
 
 		<copy todir="rxtxsrc">
 			<fileset dir="src">
+				<include name="**/*.java"/>
+			</fileset>
+			<fileset dir="src_forwaba">
 				<include name="**/*.java"/>
 			</fileset>
 		</copy>

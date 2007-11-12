@@ -9,7 +9,7 @@
  */
 package gps.tracks;
 
-import waba.sys.Convert;
+import bt747.sys.Convert;
 import waba.util.Hashtable;
 import waba.util.Vector;
 

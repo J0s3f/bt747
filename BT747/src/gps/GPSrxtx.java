@@ -18,7 +18,7 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 package gps;
-import waba.sys.Convert;
+import bt747.sys.Convert;
 import waba.sys.Settings;
 import waba.sys.Vm;
 import waba.util.Vector;

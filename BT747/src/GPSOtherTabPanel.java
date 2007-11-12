@@ -1,11 +1,7 @@
-import waba.sys.Convert;
-import waba.sys.Settings;
 import waba.ui.Container;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
-import waba.ui.MainWindow;
-import waba.ui.MessageBox;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
