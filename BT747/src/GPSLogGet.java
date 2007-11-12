@@ -284,6 +284,7 @@ public class GPSLogGet extends Container {
                     if(m_appSettings.getGpxUTC0()) {
                         lc.setTimeOffset(0);
                     }
+                    ((GPSGPXFile)gpsFile).setTrkSegSplitOnlyWhenSmall(m_appSettings.getGpxTrkSegWhenBig());
                 }
                 if(event.target==m_btToNMEA) {
                     gpsFile=new GPSNMEAFile();

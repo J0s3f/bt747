@@ -96,11 +96,13 @@ public class AppSettings implements gps.settings {
     private final static int C_maxRecCount_SIZE=8;
     private final static int C_minNSAT_IDX=C_maxRecCount_IDX+C_maxRecCount_SIZE;
     private final static int C_minNSAT_SIZE=4;
-    private final static int C_NEXT_IDX=C_minNSAT_IDX+C_minNSAT_SIZE;
+    private final static int C_GPXTRKSEGBIG_IDX=C_minNSAT_IDX+C_minNSAT_SIZE;
+    private final static int C_GPXTRKSEGBIG_SIZE=1;
+    private final static int C_NEXT_IDX=C_GPXTRKSEGBIG_IDX+C_GPXTRKSEGBIG_SIZE;
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
     private final static int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
-    
+
     private final static int C_DEFAULT_DEVICE_TIMEOUT=3500; // ms
     private final static int C_DEFAULT_LOG_REQUEST_AHEAD=3;
 
@@ -213,8 +215,11 @@ public class AppSettings implements gps.settings {
             setFilterMaxVDOP(0);
             setFilterMinNSAT(0);
             /* fall through */
+        case 9:
+            setGpxTrkSegWhenBig(false);
+            /* fall through */
         }
-        setStringOpt("0.09",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.10",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
@@ -566,6 +571,13 @@ public class AppSettings implements gps.settings {
 
     public void setGpxUTC0(final boolean value) {
         setStringOpt((value?"1":"0"),C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
+    }
+    public boolean getGpxTrkSegWhenBig() {
+        return getIntOpt(C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE)==1;
+    }
+
+    public void setGpxTrkSegWhenBig(final boolean value) {
+        setStringOpt((value?"1":"0"),C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
     }
 
     public int getTrkSep() {

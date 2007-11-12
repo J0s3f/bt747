@@ -31,6 +31,7 @@ public class GPSGPXFile extends GPSFile {
     private boolean m_newTrack=true;
     private int m_currentFilter;
     private String m_TrackName="";
+    private boolean m_TrkSegSplitOnlyWhenSmall=false;
     
     /**
      * 
@@ -110,10 +111,20 @@ public class GPSGPXFile extends GPSFile {
             writeTxt(header);
         }
     }
-       
+
+    protected void writeTrkSegSplit() {
+        String header;
+        if(m_isWayType) {
+        } else {
+            header="</trkseg><trkseg>";
+            writeTxt(header);
+        }
+    }
+
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
+    final private static char []zeros = "0000000".toCharArray();
     public void writeRecord(GPSRecord s) {
         super.writeRecord(s);
 
@@ -123,8 +134,13 @@ public class GPSGPXFile extends GPSFile {
                 // The track is interrupted by a removed log item.
                 // Break the track in the output file
                 if(!m_isWayType&&!m_newTrack&&!m_FirstRecord) {
-                    writeDataFooter();
-                    writeDataHeader();
+                    if(m_TrkSegSplitOnlyWhenSmall
+                       &&((activeFields.utc==0)||(m_prevtime+m_TrackSepTime>s.utc))) {
+                        writeTrkSegSplit();
+                    } else {
+                        writeDataFooter();
+                        writeDataHeader();
+                    }
                 }
             } else {
                 // This log item is to be transcribed in the output file.
@@ -212,7 +228,14 @@ public class GPSGPXFile extends GPSFile {
                     rec.append("trkpt-");
                 }
                 if(m_newTrack) {
-                    m_TrackName="#"+Convert.toString(m_recCount)+"#";
+                    StringBuffer tx=new StringBuffer();
+                    String tmp=Convert.toString(m_recCount);
+                    int nZeros=5-tmp.length();
+                    if(nZeros<0) {
+                        nZeros=0;
+                    }
+                    tx.append(zeros,0,nZeros);
+                    m_TrackName="#"+tx.toString()+Convert.toString(m_recCount)+"#";
                 }
                 if((activeFields.utc!=0)) {
                     rec.append(timeStr);
@@ -337,7 +360,7 @@ public class GPSGPXFile extends GPSFile {
                 
                 if((activeFields.speed!=0)) {
                     rec.append("<speed>");
-                    rec.append(Convert.toString(s.speed/3.6,4));  // must be meters/second
+                    rec.append(Convert.toString(s.speed/3.6f,4));  // must be meters/second
                     rec.append("</speed>\r\n");
                 }
                 
@@ -383,4 +406,16 @@ public class GPSGPXFile extends GPSFile {
         
     }
     
+    /**
+     * @return Returns the m_TrkSegSplitOnlyWhenSmall.
+     */
+    public boolean isTrkSegSplitOnlyWhenSmall() {
+        return m_TrkSegSplitOnlyWhenSmall;
+    }
+    /**
+     * @param trkSegSplitOnlyWhenSmall The m_TrkSegSplitOnlyWhenSmall to set.
+     */
+    public void setTrkSegSplitOnlyWhenSmall(boolean trkSegSplitOnlyWhenSmall) {
+        m_TrkSegSplitOnlyWhenSmall = trkSegSplitOnlyWhenSmall;
+    }
 }

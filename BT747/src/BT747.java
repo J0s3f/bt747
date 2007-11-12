@@ -56,7 +56,11 @@ public class BT747 extends MainWindow {
     private final String menu[][] = {
             {"File","Exit application"},
             {"Settings","Restart connection","Stop connection",
-                "-",MenuBar.UNCHECKED+"Debug",MenuBar.UNCHECKED+"Stats",MenuBar.UNCHECKED+"GPX UTC offset 0"},
+                "-",
+                MenuBar.UNCHECKED+"Debug",
+                MenuBar.UNCHECKED+"Stats",
+                MenuBar.UNCHECKED+"GPX UTC offset 0",
+                MenuBar.UNCHECKED+"GPX Trkseg when small"},
             {"Info","About BT747","About SuperWaba VM","Info"}
     };
     /** MenuBar item for File->Exit */
@@ -73,6 +77,8 @@ public class BT747 extends MainWindow {
     private final static int C_MENU_STATS_ACTIVE = 105;
     /** MenuBar item for Settings->GPX UTC 0 */
     private final static int C_MENU_GPX_UTC0 = 106;
+    /** MenuBar item for Settings->GPX Trk Sep when big only */
+    private final static int C_MENU_GPX_TRKSEG_BIGONLY = 107;
     /** MenuBar item for Info->About BT747 */
     private final static int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
@@ -185,6 +191,8 @@ public class BT747 extends MainWindow {
         //			sp.writeBytes(buf,0,1);
         m_MenuBar.setChecked(C_MENU_GPX_UTC0,m_settings.getGpxUTC0());
 
+        m_MenuBar.setChecked(C_MENU_GPX_TRKSEG_BIGONLY,m_settings.getGpxTrkSegWhenBig());
+
     }
     
     
@@ -223,6 +231,9 @@ public class BT747 extends MainWindow {
                     break;
                 case C_MENU_GPX_UTC0:
                     m_settings.setGpxUTC0(m_MenuBar.isChecked(C_MENU_GPX_UTC0));
+                    break;
+                case C_MENU_GPX_TRKSEG_BIGONLY:
+                    m_settings.setGpxTrkSegWhenBig(m_MenuBar.isChecked(C_MENU_GPX_TRKSEG_BIGONLY));
                     break;
                 case C_MENU_ABOUT:
                     new MessageBox("About BT747 V"+Version.VERSION_NUMBER,
