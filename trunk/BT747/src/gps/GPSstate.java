@@ -19,8 +19,8 @@
 //********************************************************************                              
 package gps;
 
-import waba.io.File;
-import waba.sys.Convert;
+import bt747.io.File;
+import bt747.sys.Convert;
 import waba.sys.Thread;
 import waba.sys.Vm;
 import waba.ui.Control;
@@ -326,7 +326,7 @@ public class GPSstate implements Thread {
     Vector toSendCmds = new Vector(); // List of sent commands
     static final int C_MAX_TOSEND_COMMANDS = 10;  // Max commands to put in list
     static final int C_MAX_CMDS_SENT = 4;
-    static final int C_MIN_TIME_BETWEEN_CMDS = 10;
+    static final int C_MIN_TIME_BETWEEN_CMDS = 30;
     
     public void sendNMEA(final String p_Cmd) {
         int cmdsWaiting;
@@ -366,7 +366,8 @@ public class GPSstate implements Thread {
             logTimer=cTime;
         }
         if((toSendCmds.getCount()!=0)
-                &&(sentCmds.getCount()<C_MAX_CMDS_SENT)) {
+                &&(sentCmds.getCount()<C_MAX_CMDS_SENT)
+                && (Vm.getTimeStamp()>nextCmdSendTime)) {
             // No more commands waiting for acknowledge
             doSendNMEA((String)toSendCmds.items[0]);
             toSendCmds.del(0);

@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps.port;
 
-import waba.sys.Convert;
+import bt747.sys.Convert;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;

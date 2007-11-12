@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps;
 
-import waba.sys.Convert;
+import bt747.sys.Convert;
 
 /**Class to write a PLT file (OZI).
  * @author Mario De Weerd
@@ -126,13 +126,13 @@ public class GPSPLTFile extends GPSFile {
                         7);  // 7 fractional digits
                 rec+=",";
                 rec+=
-                    ( t.month<10?"0":"")+Convert.toString(t.month)+"/"
-                    +(   t.day<10?"0":"")+Convert.toString(t.day)+"/"
-                    +Convert.toString(t.year)
+                    ( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
+                    +(   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+"/"
+                    +Convert.toString(t.getYear())
                     +","
-                    +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
-                    +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-                    +(t.second<10?"0":"")+Convert.toString(t.second)
+                    +(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
+                    +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())+":"
+                    +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
                     ;
                 if(activeFields.milisecond!=0) {
                     rec+=".";

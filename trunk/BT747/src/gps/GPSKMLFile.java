@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps;
 
-import waba.sys.Convert;
+import bt747.sys.Convert;
 
 /**Class to write a KML file.
 * @author Mario De Weerd
@@ -363,9 +363,9 @@ public class GPSKMLFile extends GPSFile {
                     rec.append("<name>");
                     if(activeFields.utc!=0) {
                         rec.append("TIME: "
-                            +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
-                            +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-                            +(t.second<10?"0":"")+Convert.toString(t.second)
+                            +(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
+                            +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())+":"
+                            +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
                             );
                     } else {
                         rec.append("IDX: ");
@@ -377,17 +377,17 @@ public class GPSKMLFile extends GPSFile {
                 if((activeFields.utc!=0)) {
                     rec.append("<TimeStamp><when>");
                     if(activeFields.utc!=0) {
-                        rec.append(Convert.toString(t.year)+"-"
-                        +( t.month<10?"0":"")+Convert.toString(t.month)+"-"
-                        +(   t.day<10?"0":"")+Convert.toString(t.day)+"T"
-                        +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
-                        +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-                        +(t.second<10?"0":"")
+                        rec.append(Convert.toString(t.getYear())+"-"
+                        +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"-"
+                        +(   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+"T"
+                        +(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
+                        +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())+":"
+                        +(t.getSecond()<10?"0":"")
                         );
                         if(activeFields.milisecond==0) {
-                            rec.append(Convert.toString(t.second));
+                            rec.append(Convert.toString(t.getSecond()));
                         } else {
-                            rec.append(Convert.toString((float)t.second+s.milisecond/1000.0,3));
+                            rec.append(Convert.toString((float)t.getSecond()+s.milisecond/1000.0,3));
                         }
                         rec.append("Z");
                     }
@@ -436,9 +436,9 @@ public class GPSKMLFile extends GPSFile {
                     rec.append("<![CDATA[");
                     if(activeFields.utc!=0) {
                         rec.append("DATE: ");
-                        rec.append(Convert.toString(t.year)+"-"
-                        +( t.month<10?"0":"")+Convert.toString(t.month)+"-"
-                        +(   t.day<10?"0":"")+Convert.toString(t.day)
+                        rec.append(Convert.toString(t.getYear())+"-"
+                        +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"-"
+                        +(   t.getDay()<10?"0":"")+Convert.toString(t.getDay())
                         );
                     }
                     if(activeFields.rcr!=0) {
@@ -460,13 +460,13 @@ public class GPSKMLFile extends GPSFile {
     //                    Time t=utcTime(s.utc);
     //                    
     //                    rec.append("<br />DATE: ");
-    //                    rec.append(Convert.toString(t.year)+"/"
-    //                    +( t.month<10?"0":"")+Convert.toString(t.month)+"/"
-    //                    +(   t.day<10?"0":"")+Convert.toString(t.day)+"<br />"
+    //                    rec.append(Convert.toString(t.getYear())+"/"
+    //                    +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
+    //                    +(   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+"<br />"
     //                    +"TIME: "
-    //                    +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
-    //                    +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-    //                    +(t.second<10?"0":"")+Convert.toString(t.second)
+    //                    +(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
+    //                    +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())+":"
+    //                    +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
     //                    );
     //                }
                     if(activeFields.valid!=0) {

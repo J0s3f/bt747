@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps;
 
-import waba.sys.Convert;
+import bt747.sys.Convert;
 
 /**Class to write a CSV file.
  * 
@@ -143,16 +143,16 @@ public class GPSCSVFile extends GPSFile {
                 }
             }
             if(activeFields.utc!=0) {
-                rec.append(fieldSep+Convert.toString(t.year)+"/"
-                +( t.month<10?"0":"")+Convert.toString(t.month)+"/"
-                +(   t.day<10?"0":"")+Convert.toString(t.day)+fieldSep
-                +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
-                +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-                +(t.second<10?"0":""));
+                rec.append(fieldSep+Convert.toString(t.getYear())+"/"
+                +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
+                +(   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+fieldSep
+                +(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
+                +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())+":"
+                +(t.getSecond()<10?"0":""));
                 if(activeFields.milisecond==0) {
-                    rec.append(Convert.toString(t.second));
+                    rec.append(Convert.toString(t.getSecond()));
                 } else {
-                    rec.append(Convert.toString((float)t.second+s.milisecond/1000.0,3));
+                    rec.append(Convert.toString((float)t.getSecond()+s.milisecond/1000.0,3));
                 }
             } else if(activeFileFields.utc!=0) {
                 rec.append(fieldSep);

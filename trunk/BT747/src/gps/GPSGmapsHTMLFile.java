@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps;
 
-import waba.sys.Convert;
+import bt747.sys.Convert;
 
 /**Class to write a GPX file.
  * @author Mario De Weerd

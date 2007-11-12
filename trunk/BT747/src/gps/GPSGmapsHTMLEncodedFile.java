@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps;
 
-import waba.sys.Convert;
+import bt747.sys.Convert;
 import waba.util.Hashtable;
 
 import gps.tracks.PolylineEncoder;

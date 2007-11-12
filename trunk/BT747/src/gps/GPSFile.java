@@ -19,10 +19,9 @@
 //********************************************************************       
 package gps;
 
-import waba.io.File;
-import waba.sys.Convert;
-import waba.sys.Time;
-import waba.sys.Vm;
+import bt747.io.File;
+import bt747.sys.Convert;
+import bt747.sys.Time;
 import waba.ui.MessageBox;
 import waba.util.Date;
 
@@ -136,7 +135,7 @@ public abstract class GPSFile {
         if (activeFields.utc != 0) {
             setTime(s.utc); // Initialisation needed later too!
             if (m_oneFilePerDay) {
-                dateref = (t.year << 14) + (t.month << 7) + t.day; // year *
+                dateref = (t.getYear() << 14) + (t.getMonth() << 7) + t.getDay(); // year *
                                                                    // 16384 +
                                                                    // month *
                                                                    // 128 + day
@@ -156,17 +155,17 @@ public abstract class GPSFile {
             m_prevdate = dateref;
 
             if (activeFields.utc != 0) {
-                if (t.year > 2000) {
-                    extraExt = "-" + Convert.toString(t.year)
-                            + (t.month < 10 ? "0" : "")
-                            + Convert.toString(t.month)
-                            + (t.day < 10 ? "0" : "") + Convert.toString(t.day);
+                if (t.getYear() > 2000) {
+                    extraExt = "-" + Convert.toString(t.getYear())
+                            + (t.getMonth() < 10 ? "0" : "")
+                            + Convert.toString(t.getMonth())
+                            + (t.getDay() < 10 ? "0" : "") + Convert.toString(t.getDay());
                     if(m_oneFilePerTrack) {
                         extraExt+= "_"
-                            + (t.hour < 10 ? "0" : "")
-                            + Convert.toString(t.hour)
-                            + (t.minute < 10 ? "0" : "")
-                            + Convert.toString(t.minute);
+                            + (t.getHour() < 10 ? "0" : "")
+                            + Convert.toString(t.getHour())
+                            + (t.getMinute() < 10 ? "0" : "")
+                            + Convert.toString(t.getMinute());
                     }
                 } else {
                     extraExt = "";
@@ -259,18 +258,18 @@ public abstract class GPSFile {
         //long utc=utc_int&0xFFFFFFFFL;
         int utc = utc_int;
         //Time t=new Time();
-        t.second = (int) utc % 60;
+        t.setSecond((int) utc % 60);
         utc /= 60;
-        t.minute = (int) utc % 60;
+        t.setMinute((int) utc % 60);
         utc /= 60;
-        t.hour = (int) utc % 24;
+        t.setHour((int) utc % 24);
         utc /= 24;
         // Now days since 1/1/1970
         Date d = new Date(1, 1, 1983); //Minimum = 1983
         d.advance(((int) utc) - DAYS_BETWEEN_1970_1983);
-        t.year = d.getYear();
-        t.month = d.getMonth();
-        t.day = d.getDay();
+        t.setYear(d.getYear());
+        t.setMonth(d.getMonth());
+        t.setDay(d.getDay());
     }
 
     protected void writeTxt(final String s) {

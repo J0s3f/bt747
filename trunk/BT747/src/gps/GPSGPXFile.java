@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps;
 
-import waba.sys.Convert;
+import bt747.sys.Convert;
 
 /**Class to write a GPX file.
  * @author Mario De Weerd
@@ -173,12 +173,12 @@ public class GPSGPXFile extends GPSFile {
                 if((activeFields.utc!=0)) {
                     rec.append("<time>");
                     if(activeFields.utc!=0) {
-                        timeStr+=Convert.toString(t.year)+"-"
-                        +( t.month<10?"0":"")+Convert.toString(t.month)+"-"
-                        +(   t.day<10?"0":"")+Convert.toString(t.day)+"T"
-                        +(  t.hour<10?"0":"")+Convert.toString(t.hour)+":"
-                        +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
-                        +(t.second<10?"0":"")+Convert.toString(t.second)
+                        timeStr+=Convert.toString(t.getYear())+"-"
+                        +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"-"
+                        +(   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+"T"
+                        +(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
+                        +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())+":"
+                        +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
                         ;
                         if(activeFields.milisecond!=0) {
                             timeStr+=".";

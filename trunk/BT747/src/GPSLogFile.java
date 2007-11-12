@@ -19,8 +19,8 @@
 //********************************************************************
 import ui.FileSelect;
 
-import waba.io.File;
-import waba.sys.Convert;
+import bt747.io.File;
+import bt747.sys.Convert;
 import waba.sys.Settings;
 import waba.ui.Button;
 import waba.ui.ComboBox;

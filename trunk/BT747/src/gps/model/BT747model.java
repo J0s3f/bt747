@@ -19,7 +19,7 @@
 //********************************************************************                              
 package gps.model;
 
-import waba.sys.Convert;
+import bt747.sys.Convert;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
