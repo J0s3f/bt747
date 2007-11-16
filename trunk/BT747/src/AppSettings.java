@@ -28,9 +28,16 @@ import gps.convert.Conv;
  * @author Herbert Geus (initial code for saving settings on WindowsCE)
   */
 public class AppSettings implements gps.settings {
-    static private final String CONFIG_FILE_NAME = waba.sys.Settings.platform.startsWith("Win32") ?
+    static private final String CONFIG_FILE_NAME =
+        //#if RXTX java.lang.System.getProperty("bt747_settings",
+
+        (waba.sys.Settings.platform.startsWith("Win32")
+         //#if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")  
+         ) ?
             "SettingsBT747.pdb" : 
-            "/My Documents/BT747/SettingsBT747.pdb"; 
+            "/My Documents/BT747/SettingsBT747.pdb"
+         //#if RXTX )
+         ; 
 
     private final static int C_PORTNBR_IDX=0;
     private final static int C_PORTNBR_SIZE=8;
@@ -112,20 +119,28 @@ public class AppSettings implements gps.settings {
     
     public AppSettings() {
         init();
+        waba.sys.Vm.debug(CONFIG_FILE_NAME);
+        //#if RXTX waba.sys.Vm.debug(java.lang.System.getProperty("bt747_settings"));
     }
     
     private boolean isWin32LikeDevice() {
         return waba.sys.Settings.platform.startsWith("WindowsCE")
         || waba.sys.Settings.platform.startsWith("PocketPC")
-        ||(waba.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice);
+        ||(waba.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice)
+        ;
     }
     
     public void init() {
         String mVersion;
         int VersionX100=0;
-        if(Settings.appSettings==null||Settings.appSettings.length()<100) {
+        if(Settings.appSettings==null||Settings.appSettings.length()<100
+            //#if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
+          ) {
             Settings.appSettings=new String(new byte[2048]);
-            if ( isWin32LikeDevice() ) {
+            if ( isWin32LikeDevice()
+                    //#if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")  
+                    //#if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
+                    ) {
                 int readLength = 0;
                 
                 //waba.sys.Vm.debug("on Device "+waba.sys.Settings.platform);
@@ -144,7 +159,11 @@ public class AppSettings implements gps.settings {
                     m_prefFile.readBytes(appSettingsArray, 0, readLength);
                     Settings.appSettings = new String(appSettingsArray);
                 }
-                m_prefFile.close();
+                try {
+                    m_prefFile.close();
+                } catch (Exception e) {
+                    
+                }
             }
         }
         mVersion=getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
@@ -235,7 +254,10 @@ public class AppSettings implements gps.settings {
     }
     
     public void saveSettings() {
-        if ( isWin32LikeDevice() ) {
+        if ( isWin32LikeDevice()
+                //#if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")  
+                //#if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
+                ) {
 //            waba.sys.Vm.debug("on Device "+waba.sys.Settings.platform);
 //            waba.sys.Vm.debug("saving config file "+CONFIG_FILE_NAME);
             File m_prefFile=new File("");

@@ -1,3 +1,10 @@
+Version 1.12
+* Correction in advanced filter for NSAT filtering.
+* Changes that should be 'invisible' to the user: calls to the superwaba environment pushed
+  into a separate package for the 'core' of the program.  This prepares for J2ME implementation.
+* Added functionality to be able to define the configuration file on the command line
+  in 'RXTX' mode.
+
 Version 1.11
 * Added extra option to no longer separate in different tracks in GPX mode when new menu option is set.
 

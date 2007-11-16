@@ -20,7 +20,7 @@
 package gps;
 
 import bt747.sys.Convert;
-import waba.util.Hashtable;
+import bt747.util.Hashtable;
 
 import gps.tracks.PolylineEncoder;
 import gps.tracks.Track;

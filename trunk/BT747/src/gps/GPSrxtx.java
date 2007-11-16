@@ -19,9 +19,9 @@
 //********************************************************************                              
 package gps;
 import bt747.sys.Convert;
-import waba.sys.Settings;
-import waba.sys.Vm;
-import waba.util.Vector;
+import bt747.sys.Settings;
+import bt747.sys.Vm;
+import bt747.util.Vector;
 
 import gps.port.GPSPort;
 import gps.port.GPSWabaPort;

@@ -8,6 +8,9 @@ CLASSPATH=${RXTXPATH}/RXTXcomm.jar:webstart/Waba_only.jar:dist/BT747_rxtx.jar:.:
 # Change the port prefix by adding the following option to the java invocation:
 #     (the example is for ports like /dev/ttyUSB0)
 #  -Dbt747_prefix="/dev/ttyUSB" 
+#
+# It is possible to define the path to the configuration file
+#       -Dbt747_settings="bt747settings.pdb"
 
 
 #strace -e trace=file -f -o trace.log

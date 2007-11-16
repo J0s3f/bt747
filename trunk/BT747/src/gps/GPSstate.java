@@ -19,18 +19,19 @@
 //********************************************************************                              
 package gps;
 
-import bt747.io.File;
-import bt747.sys.Convert;
-import waba.sys.Thread;
-import waba.sys.Vm;
-import waba.ui.Control;
-import waba.ui.Event;
-import waba.ui.MainWindow;
-import waba.ui.MessageBox;
 import waba.ui.ProgressBar;
-import waba.util.Vector;
 
 import gps.convert.Conv;
+
+import bt747.generic.EventPosterObject;
+import bt747.generic.Generic;
+import bt747.io.File;
+import bt747.sys.Convert;
+import bt747.sys.Thread;
+import bt747.sys.Vm;
+import bt747.ui.Event;
+import bt747.ui.MessageBox;
+import bt747.util.Vector;
 
 
 
@@ -87,7 +88,8 @@ public class GPSstate implements Thread {
     public int dgps_mode=0;
     
     
-    Control m_EventPosterObject= null;
+    EventPosterObject m_EventPosterObject= null;
+    
     
     private settings m_settings;
 
@@ -129,8 +131,8 @@ public class GPSstate implements Thread {
         GPS_STATS = stats;
     }
 
-    public void setEventPosterObject(Control s) {
-        m_EventPosterObject = s;
+    public void setEventPosterObject(EventPosterObject s) {
+        m_EventPosterObject=s;
     }
     
     /** Provide the progress bar to use (download progress)
@@ -225,7 +227,7 @@ public class GPSstate implements Thread {
      */
     private void setupTimer() {
         if( m_GPSrxtx.isConnected()) {
-            MainWindow.getMainWindow().addThread(this, false);
+            Generic.addThread(this, false);
 
             // Remember defaults
             m_settings.setPortnbr(m_GPSrxtx.getPort());
@@ -301,13 +303,13 @@ public class GPSstate implements Thread {
     
     private void PostStatusUpdateEvent() {
         if(m_EventPosterObject!=null) {
-            m_EventPosterObject.postEvent(new Event(GpsEvent.DATA_UPDATE, m_EventPosterObject,0));
+            m_EventPosterObject.postEvent(new Event(GpsEvent.DATA_UPDATE, null,0));
         }
     }
 
     private void PostGpsEvent(final int type, GPSRecord gps) {
         if(m_EventPosterObject!=null) {
-            GpsEvent e=new GpsEvent(type, m_EventPosterObject,0);
+            GpsEvent e=new GpsEvent(type, null,0);
             e.gps=gps;
             m_EventPosterObject.postEvent(e);
         }
@@ -315,7 +317,7 @@ public class GPSstate implements Thread {
     
     private void PostStatusEvent(final int event) {
         if(m_EventPosterObject!=null) {
-            m_EventPosterObject.postEvent(new Event(event, m_EventPosterObject,0));
+            m_EventPosterObject.postEvent(new Event(event, null,0));
         }
     }
 
@@ -955,7 +957,7 @@ public class GPSstate implements Thread {
                 checkSendCmdFromQueue();
             } while((loops_to_go-->0) &&lastResponse!=null);
         } else {
-            MainWindow.getMainWindow().removeThread(this);
+            Generic.removeThread(this);
             if(m_logState!=C_LOG_NOLOGGING) {
                 endGetLog();
             }
