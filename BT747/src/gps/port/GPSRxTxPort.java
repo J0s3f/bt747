@@ -40,6 +40,7 @@ public class GPSRxTxPort extends GPSPort {
     private OutputStream ds;
     private String portPrefix="";
     private boolean hasPortNbr=true;
+    public static String os_name=java.lang.System.getProperty("os.name");  
     /**
      * 
      */
@@ -47,10 +48,6 @@ public class GPSRxTxPort extends GPSPort {
         // TODO Auto-generated constructor stub
         super();
         
-        String os_name;
-
-        os_name=java.lang.System.getProperty("os.name");
-
         if(os_name.startsWith("Windows")) {
             portPrefix="COM";
         } else if(os_name.startsWith("Linux")) {

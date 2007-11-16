@@ -10,7 +10,7 @@
 
 package gps.tracks;
 
-import waba.util.Vector;
+import bt747.util.Vector;
 
 public class Track {
 

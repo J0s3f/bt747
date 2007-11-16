@@ -106,6 +106,7 @@
 			</fileset>
 		</copy>
     	<replace file="rxtxsrc/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort" />
+		<replace file="rxtxsrc/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
 
 		<javac srcdir="rxtxsrc" destdir="rxtxbuild" target="1.1" optimize="true" classpathref="rxtxclasspath">
 			<include name="**/*.java"/>

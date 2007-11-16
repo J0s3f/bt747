@@ -145,7 +145,7 @@ public class BT747 extends MainWindow {
         super.onStart();
         
         m_GPSstate=new GPSstate(m_settings);
-        m_GPSstate.setEventPosterObject(this);
+        m_GPSstate.setEventPosterObject(new bt747.generic.EventPosterObject(this));
         setMenuBar(m_MenuBar=new MenuBar(menu));
 
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
@@ -295,7 +295,7 @@ public class BT747 extends MainWindow {
             }
             break;
         case GpsEvent.DATA_UPDATE:
-            if(event.target==this) {
+            if(event.target==null) {
                 Control c;
                 c=m_TabPanel.getChildren()[0];
                 c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
@@ -303,7 +303,7 @@ public class BT747 extends MainWindow {
             }
             break;
         case GpsEvent.GPGGA:
-            if(event.target==this) {
+            if(event.target==null) {
                 Control c;
                 c=m_TabPanel.getChildren()[0];
                 event.target=c;

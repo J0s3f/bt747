@@ -22,8 +22,8 @@ package gps;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Time;
-import waba.ui.MessageBox;
-import waba.util.Date;
+import bt747.ui.MessageBox;
+import bt747.util.Date;
 
 /**
  * @author Mario De Weerd

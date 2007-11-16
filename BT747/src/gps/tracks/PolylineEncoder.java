@@ -10,8 +10,8 @@
 package gps.tracks;
 
 import bt747.sys.Convert;
-import waba.util.Hashtable;
-import waba.util.Vector;
+import bt747.util.Hashtable;
+import bt747.util.Vector;
 
 
 public class PolylineEncoder {

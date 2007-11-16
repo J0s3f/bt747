@@ -26,15 +26,23 @@ If you have suggestions to improve this README, leave a message on the forum or
 a tracker at sourceforge: http://sf.net/projects/bt747.
 
 ========= General (for pure rxtx/all systems) ===========
-# Change the port prefix by adding the following option to the java invocation:
-#     (the example is for ports like /dev/ttyUSB0)
-#  -Dbt747_prefix="/dev/ttyUSB" 
+ Change the port prefix by adding the following option to the java invocation:
+     (the example is for ports like /dev/ttyUSB0)
+
+  -Dbt747_prefix="/dev/ttyUSB" 
+
 java -Dbt747_prefix="/dev/ttyUSB" waba.applet.Applet BT747
-# The port can be overridden entirely with the next option:
-#  -Dbt747_port="/dev/ttyUSB0"
-# Another (or extra way) of forcing the port is the next option,
-# one use apparently needed to do so to force the bluetooth port:
-# -Dgnu.io.rxtx.SerialPorts=/dev/rfcomm0
+  The port can be overridden entirely with the next option:
+
+ -Dbt747_port="/dev/ttyUSB0"
+
+  Another (or extra way) of forcing the port is the next option,
+  one use apparently needed to do so to force the bluetooth port:
+  -Dgnu.io.rxtx.SerialPorts=/dev/rfcomm0
+
+
+It is also possible to set the path to the saved settings file (for the RXTX version):
+  -Dbt747_settings="/another/yourpath"
 =========================================
 
 ========= WINDOWS INSTRUCTIONS =================

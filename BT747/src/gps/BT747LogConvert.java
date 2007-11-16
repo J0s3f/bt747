@@ -21,7 +21,7 @@ package gps;
 
 import bt747.io.File;
 import bt747.sys.Convert;
-import waba.ui.MessageBox;
+import bt747.ui.MessageBox;
 
 import gps.convert.Conv;
 

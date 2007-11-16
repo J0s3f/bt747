@@ -38,7 +38,10 @@ public abstract class GPSPort {
 
     protected File m_debugFile=null;
     protected final static String C_DEBUG_FILE="/Palm/gpsRAW.txt";
-
+    
+    // Hooked reference to java os string h ere to avoid creating extra classes and
+    // exceptions in compilation flow.
+    public static String os_name="unknown";  
 
     public GPSPort() {}
     
