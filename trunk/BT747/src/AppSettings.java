@@ -105,7 +105,9 @@ public class AppSettings implements gps.settings {
     private final static int C_minNSAT_SIZE=4;
     private final static int C_GPXTRKSEGBIG_IDX=C_minNSAT_IDX+C_minNSAT_SIZE;
     private final static int C_GPXTRKSEGBIG_SIZE=1;
-    private final static int C_NEXT_IDX=C_GPXTRKSEGBIG_IDX+C_GPXTRKSEGBIG_SIZE;
+    private final static int C_DECODEGPS_IDX=C_GPXTRKSEGBIG_IDX+C_GPXTRKSEGBIG_SIZE;
+    private final static int C_DECODEGPS_SIZE=4;
+    private final static int C_NEXT_IDX=C_DECODEGPS_IDX+C_DECODEGPS_SIZE;
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
     private final static int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -237,8 +239,11 @@ public class AppSettings implements gps.settings {
         case 9:
             setGpxTrkSegWhenBig(false);
             /* fall through */
+        case 10:
+            setGpsDecode(true);
+            /* fall through */
         }
-        setStringOpt("0.10",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.11",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
@@ -313,6 +318,14 @@ public class AppSettings implements gps.settings {
 
     private final int getIntOpt(final int idx, final int size) {
         return Conv.hex2Int(getStringOpt(idx,size));
+    }
+
+    private final void setBooleanOpt(final boolean value, final int idx, final int size) {
+        setStringOpt((value?"1":"0"),idx, size);
+    }
+
+    private final boolean getBooleanOpt(final int idx, final int size) {
+        return getIntOpt(idx, size)==1;
     }
 
     private final void setFloatOpt(final float src, final int idx, final int size) {
@@ -445,13 +458,13 @@ public class AppSettings implements gps.settings {
    }
    
 	public boolean getStartupOpenPort() {
-		return getIntOpt(C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE)==1;
+		return getBooleanOpt(C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
 	}
 	/**
 	 * @param value The default value for opening the port.
 	 */
 	public void setStartupOpenPort(boolean value) {
-        setStringOpt((value?"1":"0"),C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
+        setBooleanOpt(value,C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
 	}
 	
     /** The location of the logFile
@@ -549,23 +562,23 @@ public class AppSettings implements gps.settings {
     }
     
     public boolean getNoGeoid() {
-        return getIntOpt(C_NOGEOID_IDX, C_NOGEOID_SIZE)==1;
+        return getBooleanOpt(C_NOGEOID_IDX, C_NOGEOID_SIZE);
     }
     /**
      * @param value The default value for opening the port.
      */
     public void setNoGeoid(final boolean value) {
-        setStringOpt((value?"1":"0"),C_NOGEOID_IDX, C_NOGEOID_SIZE);
+        setBooleanOpt(value,C_NOGEOID_IDX, C_NOGEOID_SIZE);
     }
 
     public boolean getAdvFilterActive() {
-        return getIntOpt(C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE)==1;
+        return getBooleanOpt(C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
     }
     /**
      * @param value The default value for opening the port.
      */
     public void setAdvFilterActive(final boolean value) {
-        setStringOpt((value?"1":"0"),C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
+        setBooleanOpt(value,C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
     }
 
     public int getLogRequestAhead() {
@@ -588,18 +601,25 @@ public class AppSettings implements gps.settings {
 
 
     public boolean getGpxUTC0() {
-        return getIntOpt(C_GPXUTC0_IDX, C_GPXUTC0_SIZE)==1;
+        return getBooleanOpt(C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
     }
 
     public void setGpxUTC0(final boolean value) {
-        setStringOpt((value?"1":"0"),C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
+        setBooleanOpt(value,C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
+    }
+    public boolean getGpsDecode() {
+        return getBooleanOpt(C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
+    }
+
+    public void setGpsDecode(final boolean value) {
+        setBooleanOpt(value,C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
     }
     public boolean getGpxTrkSegWhenBig() {
-        return getIntOpt(C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE)==1;
+        return getBooleanOpt(C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
     }
 
     public void setGpxTrkSegWhenBig(final boolean value) {
-        setStringOpt((value?"1":"0"),C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
+        setBooleanOpt(value,C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
     }
 
     public int getTrkSep() {

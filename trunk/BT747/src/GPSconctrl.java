@@ -18,8 +18,6 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.io.SerialPort;
-import bt747.sys.Convert;
-import waba.sys.Vm;
 import waba.ui.Button;
 import waba.ui.ComboBox;
 import waba.ui.Container;
@@ -27,10 +25,14 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
 
+import gps.GPSFile;
 import gps.GPSRecord;
 import gps.GPSstate;
 import gps.GpsEvent;
 import gps.convert.Conv;
+
+import bt747.sys.Convert;
+import bt747.sys.Time;
 
 /**
  * @author Mario De Weerd
@@ -131,9 +133,30 @@ public class GPSconctrl extends Container {
         lbModel.repaintNow();
     }
     
+    private String TimeStr="";
+    
+    private void updateRMCData(final GPSRecord gps) {
+        if(gps.utc>0) {
+            Time t = new Time();
+            GPSFile.setUTCTime(t, gps.utc);
+            TimeStr="  - Time:"+
+            //Convert.toString(
+//                    t.getYear())+"/"
+//            +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
+//            +(   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+" "
+             (  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
+            +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())+":"
+            +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
+            ;
+
+        }
+    }
+    
     private void updateGPSData(final GPSRecord gps) {
+
         lbLat.setText("Lat:"+Convert.toString(gps.latitude,5)+" - Hght:"+Convert.toString(gps.height,3));
-        lbLon.setText("Lon:"+Convert.toString(gps.longitude,5));
+        lbLon.setText("Lon:"+Convert.toString(gps.longitude,5)+
+                TimeStr);
         lbGeoid.setText("Geoid:"+Convert.toString(gps.geoid,3)+"(calc:"+
                 Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)+")");
 
@@ -169,8 +192,12 @@ public class GPSconctrl extends Container {
             }
             break;
         case GpsEvent.GPGGA:
-            GpsEvent e=(GpsEvent) event;
-            updateGPSData(e.gps);
+            GpsEvent eb=(GpsEvent) event;
+            updateGPSData(eb.gps);
+            break;
+        case GpsEvent.GPRMC:
+            GpsEvent ec=(GpsEvent) event;
+            updateRMCData(ec.gps);
         break;
         }
         

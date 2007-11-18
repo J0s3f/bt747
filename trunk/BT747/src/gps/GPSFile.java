@@ -133,7 +133,7 @@ public abstract class GPSFile {
         m_recCount++;
 
         if (activeFields.utc != 0) {
-            setTime(s.utc); // Initialisation needed later too!
+            setUTCTime(t, s.utc); // Initialisation needed later too!
             if (m_oneFilePerDay) {
                 dateref = (t.getYear() << 14) + (t.getMonth() << 7) + t.getDay(); // year *
                                                                    // 16384 +
@@ -254,7 +254,7 @@ public abstract class GPSFile {
 
     private final static int DAYS_BETWEEN_1970_1983 = 4748;
 
-    private final void setTime(final int utc_int) {
+    public static final void setUTCTime(Time t, final int utc_int) {
         //long utc=utc_int&0xFFFFFFFFL;
         int utc = utc_int;
         //Time t=new Time();
