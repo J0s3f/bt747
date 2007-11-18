@@ -60,7 +60,8 @@ public class BT747 extends MainWindow {
                 MenuBar.UNCHECKED+"Debug",
                 MenuBar.UNCHECKED+"Stats",
                 MenuBar.UNCHECKED+"GPX UTC offset 0",
-                MenuBar.UNCHECKED+"GPX Trkseg when small"},
+                MenuBar.UNCHECKED+"GPX Trkseg when small",
+                MenuBar.UNCHECKED+"GPS Decode active"},
             {"Info","About BT747","About SuperWaba VM","Info"}
     };
     /** MenuBar item for File->Exit */
@@ -79,6 +80,8 @@ public class BT747 extends MainWindow {
     private final static int C_MENU_GPX_UTC0 = 106;
     /** MenuBar item for Settings->GPX Trk Sep when big only */
     private final static int C_MENU_GPX_TRKSEG_BIGONLY = 107;
+    /** MenuBar item for Settings->GPS Decode Active*/
+    private final static int C_MENU_GPS_DECODE_ACTIVE = 108;
     /** MenuBar item for Info->About BT747 */
     private final static int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
@@ -193,6 +196,9 @@ public class BT747 extends MainWindow {
 
         m_MenuBar.setChecked(C_MENU_GPX_TRKSEG_BIGONLY,m_settings.getGpxTrkSegWhenBig());
 
+        m_MenuBar.setChecked(C_MENU_GPS_DECODE_ACTIVE,m_settings.getGpsDecode());
+        m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
+
     }
     
     
@@ -234,6 +240,10 @@ public class BT747 extends MainWindow {
                     break;
                 case C_MENU_GPX_TRKSEG_BIGONLY:
                     m_settings.setGpxTrkSegWhenBig(m_MenuBar.isChecked(C_MENU_GPX_TRKSEG_BIGONLY));
+                    break;
+                case C_MENU_GPS_DECODE_ACTIVE:
+                    m_settings.setGpsDecode(m_MenuBar.isChecked(C_MENU_GPS_DECODE_ACTIVE));
+                    m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
                     break;
                 case C_MENU_ABOUT:
                     new MessageBox("About BT747 V"+Version.VERSION_NUMBER,
@@ -302,6 +312,7 @@ public class BT747 extends MainWindow {
                 event.consumed=true;
             }
             break;
+        case GpsEvent.GPRMC:
         case GpsEvent.GPGGA:
             if(event.target==null) {
                 Control c;

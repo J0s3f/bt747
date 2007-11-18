@@ -18,6 +18,8 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import bt747.sys.Convert;
+import bt747.ui.MessageBox;
+
 import waba.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -62,6 +64,8 @@ public class GPSFlashOption extends Container {
         add(m_edUpdateRate= new Edit(),AFTER,SAME);
         add(new Label("Baud Rate"),LEFT,AFTER);
         add(m_edBaudRate= new Edit(),AFTER,SAME);
+        m_edBaudRate.setEditable(false);  // To protect the user
+        m_edBaudRate.setEnabled(false);
         add(new Label("GLL Per"),LEFT,AFTER);
         add(m_edGLL_Period= new Edit(),AFTER,SAME);
         add(new Label("RMC Per"),AFTER,SAME);
@@ -80,8 +84,7 @@ public class GPSFlashOption extends Container {
         add(m_edMCHN_Period= new Edit(),AFTER,SAME);
         
         m_btSet = new Button("SET");
-        //add(m_btSet, CENTER, AFTER+3); //$NON-NLS-1$
-        
+        add(m_btSet, CENTER, AFTER+3); //$NON-NLS-1$
         
     }
     
@@ -115,6 +118,32 @@ public class GPSFlashOption extends Container {
     }
     
     public void setSettings() {
+        MessageBox mb;
+        String [] mbStr={"Write Flash","Abort"};
+        mb = new MessageBox("Attention",
+                "The number of writes to the flash|" +
+                "is limited and a change in settings|" +
+                "could render your device inoperable|" +
+                "(e.g., a baud rate change)|" +
+                "ABORT by clicking abort!!",
+                mbStr);                                 
+        mb.popupBlockingModal();      
+        if (mb.getPressedButtonIndex()==0){
+            m_GPSstate.setFlashUserOption(
+                    false, // lock
+                    Convert.toInt(m_edUpdateRate.getText()),
+                    Convert.toInt(m_edBaudRate.getText()),
+                    Convert.toInt(m_edGLL_Period.getText()),
+                    Convert.toInt(m_edRMC_Period.getText()),
+                    Convert.toInt(m_edVTG_Period.getText()),
+                    Convert.toInt(m_edGSA_Period.getText()),
+                    Convert.toInt(m_edGSV_Period.getText()),
+                    Convert.toInt(m_edGGA_Period.getText()),
+                    Convert.toInt(m_edZDA_Period.getText()),
+                    Convert.toInt(m_edMCHN_Period.getText())
+            );
+        }
+                
     }
     
     
