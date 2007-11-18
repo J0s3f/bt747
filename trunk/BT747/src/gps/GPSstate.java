@@ -733,12 +733,21 @@ public class GPSstate implements Thread {
         return z_Result;
     }
     
-    
+
+    final void analyzeGPRMC(final String[] p_nmea) {
+        GPSRecord gps=new GPSRecord();
+        if(p_nmea.length>=11) {
+            gps.utc=Convert.toInt(p_nmea[1].substring(0, 2))*3600+
+            Convert.toInt(p_nmea[1].substring(2, 4))*60+
+            Convert.toInt(p_nmea[1].substring(4, 6));
+            PostGpsEvent(GpsEvent.GPRMC, gps);
+        }
+    }
     
     final void analyzeGPGGA(final String[] p_nmea) {
         // Partial decode to compare height with calculated geoid.
         GPSRecord gps=new GPSRecord();
-        if(p_nmea.length==15) {
+        if(p_nmea.length>=15) {
             gps.latitude=(Convert.toDouble(p_nmea[2].substring(0, 2))+Convert.toDouble(p_nmea[2].substring(2))/60)
                 *(p_nmea[3].equals("N")?1:-1);
             gps.longitude=(Convert.toDouble(p_nmea[4].substring(0, 3))+Convert.toDouble(p_nmea[4].substring(3))/60)
@@ -755,16 +764,19 @@ public class GPSstate implements Thread {
         }
     }
     
+    boolean gpsDecode=true;
     
     public int analyseNMEA(final String[] p_nmea) {
         int z_Cmd;
         int z_Result;
         z_Result = 0;
         //if(GPS_DEBUG&&!p_nmea[0].startsWith("G")) {	waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]);}
-        if(p_nmea[0].startsWith("G")) {
+        if(gpsDecode&&p_nmea[0].startsWith("G")) {
             // Commented - not interpreted.
             if(p_nmea[0].startsWith("GPGGA")) {
                 analyzeGPGGA(p_nmea);
+            } else if(p_nmea[0].startsWith("GPRMC")) {
+                analyzeGPRMC(p_nmea);
             }
 //            else if(p_nmea[0].startsWith("GPZDA")) {
 //                // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
@@ -1472,4 +1484,16 @@ public class GPSstate implements Thread {
         return 0; // Done.
         
     }   
+    /**
+     * @return Returns the gpsDecode.
+     */
+    public boolean isGpsDecode() {
+        return gpsDecode;
+    }
+    /**
+     * @param gpsDecode The gpsDecode to set.
+     */
+    public void setGpsDecode(boolean gpsDecode) {
+        this.gpsDecode = gpsDecode;
+    }
 }
