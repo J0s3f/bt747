@@ -1,3 +1,10 @@
+Version 1.13
+* MacOSX startup script corrected (line endings, line split)
+* Added possiblity to disable GPS NMEA String decoding (on Con tab).  Could have some
+  impact on performance.
+* Added possibility to write values to Flash (other tab) as some devices have a
+  timesleft value other than 0.
+
 Version 1.12
 * Correction in advanced filter for NSAT filtering.
 * Changes that should be 'invisible' to the user: calls to the superwaba environment pushed
