@@ -306,13 +306,18 @@ public class GPSstate implements Thread {
             m_EventPosterObject.postEvent(new Event(GpsEvent.DATA_UPDATE, null,0));
         }
     }
+    
+    private Event gpsEvent= new GpsEvent(0,null,0);
 
-    private void PostGpsEvent(final int type, GPSRecord gps) {
+    private void PostGpsEvent(final int type) {
         if(m_EventPosterObject!=null) {
-            GpsEvent e=new GpsEvent(type, null,0);
-            e.gps=gps;
-            m_EventPosterObject.postEvent(e);
+            gpsEvent.type= type;
+            gpsEvent.consumed=false;
+            m_EventPosterObject.postEvent(gpsEvent);
         }
+    }
+    public final GPSRecord getGpsRecord() {
+        return gps;
     }
     
     private void PostStatusEvent(final int event) {
@@ -733,14 +738,14 @@ public class GPSstate implements Thread {
         return z_Result;
     }
     
+    GPSRecord gps=new GPSRecord();
 
     final void analyzeGPRMC(final String[] p_nmea) {
-        GPSRecord gps=new GPSRecord();
         if(p_nmea.length>=11) {
             gps.utc=Convert.toInt(p_nmea[1].substring(0, 2))*3600+
             Convert.toInt(p_nmea[1].substring(2, 4))*60+
             Convert.toInt(p_nmea[1].substring(4, 6));
-            PostGpsEvent(GpsEvent.GPRMC, gps);
+            PostGpsEvent(GpsEvent.GPRMC);
         }
     }
     
@@ -760,7 +765,7 @@ public class GPSstate implements Thread {
 //                        + " geoid calc:"+Convert.toString(geoid)
 //                        );
 //            }
-            PostGpsEvent(GpsEvent.GPGGA, gps);
+            PostGpsEvent(GpsEvent.GPGGA);
         }
     }
     
@@ -771,7 +776,9 @@ public class GPSstate implements Thread {
         int z_Result;
         z_Result = 0;
         //if(GPS_DEBUG&&!p_nmea[0].startsWith("G")) {	waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]);}
-        if(gpsDecode&&p_nmea[0].startsWith("G")) {
+        if(gpsDecode&&
+           (m_logState == C_LOG_NOLOGGING) // Not during log download for performance.
+           &&p_nmea[0].startsWith("G")) {
             // Commented - not interpreted.
             if(p_nmea[0].startsWith("GPGGA")) {
                 analyzeGPGGA(p_nmea);

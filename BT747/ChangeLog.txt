@@ -1,3 +1,6 @@
+Version 1.14
+* Changed 'magvar' in 'course' for the 'heading' value in the 'gpx' format.
+
 Version 1.13
 * MacOSX startup script corrected (line endings, line split)
 * Added possiblity to disable GPS NMEA String decoding (on Con tab).  Could have some
