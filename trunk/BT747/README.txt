@@ -167,6 +167,14 @@ I open the kml on windows -> opens google earth with expected points.
 A specific JAR file has been created that should work specifically with RXTX (BT747_rxtx.jar).
 Use 'run_rxtx.sh'.  It has not been validated on Linux, but it might work and at least provides the template.
 
+On some systems (Ubuntu), you may need to install (or you could install) 'librxtx-java'.
+
+In that case you should (can) change run_rxtx.sh:
+
+RXTXPATH=/usr/lib
+RXTXLIBPATH=/usr/lib
+CLASSPATH=/usr/share/java/RXTXcomm.jar:webstart/Waba_only.jar:dist/BT747_rxtx.jar:.:$CLASSPATH
+
 ============= Debian over bluetooth ============
 I struggled a while with gnu.io.NoSuchPortException when opening the port, but finally got it to run. 
  

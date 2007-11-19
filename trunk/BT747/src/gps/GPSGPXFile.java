@@ -209,9 +209,9 @@ public class GPSGPXFile extends GPSFile {
                 }
                 //                    <magvar> degreesType </magvar> [0..1] ?
                 if((activeFields.heading!=0)) {
-                    rec.append("<magvar>");
+                    rec.append("<course>");
                     rec.append(Convert.toString(s.heading));
-                    rec.append("</magvar>\r\n");
+                    rec.append("</course>\r\n");
                 }
                 //                    <geoidheight> xsd:decimal </geoidheight> [0..1] ?
                 if((activeFields.height!=0)) {

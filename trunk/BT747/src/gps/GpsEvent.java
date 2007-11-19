@@ -26,13 +26,11 @@ import bt747.ui.Event;
  * @author Mario De Weerd
  */
 public class GpsEvent extends Event {
-    
     public static final int DATA_UPDATE = 1001;
     public static final int CONNECTED   = 1002;
     public static final int GPRMC       = 1003;
     public static final int GPGGA       = 1004;
     
-    public GPSRecord gps;
     
     public GpsEvent(int type, Object target, int timeStamp)
     {
