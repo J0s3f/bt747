@@ -1,0 +1,55 @@
+README file for the MTKBabel program
+
+MTKBabel is a Perl program to operate the i-Blue 747 GPS data logger.
+It should work also with other GPS devices based on the MediaTek MTK
+chipset. It is free software released under the GPL license.
+
+The main capabilities are:
+
+  * Command line interface
+  * Save data log in GPX and raw binary format
+  * Change logging triggers: time, distance, speed
+  * Change log format
+  * START/STOP logging
+  * Set OVERWRITE or STOP method on memory full
+  * Erase the internal memory
+
+The progam is written in Perl, and it was tested on Linux via USB
+connection. One goal is easy portability to C and small RAM footprint.
+
+Run mtkbabel -h for a brief help screen.
+
+In order to run the mtkbabel program you should have installed a
+standard Perl distribution, plus the following libraries:
+
+  * Device::SerialPort
+  * Date::Format
+
+Check if your operating system provides a package for them, or refer
+to the cpan(1) manual page.
+
+You can install the packages using the following commands if you have a correct perl system:
+perl -MCPAN -e 'install Device::SerialPort'
+perl -MCPAN -e 'install Date::Format'
+
+
+KNOWN BUGS
+
+* Floating point numbers
+
+Convesion of floating point numbers (64 bit doubles and 32 bit
+floats) from MTK binary format to GPX text is done with the Perl
+unpack() function.
+
+This seems to work properly on the GNU/Linux i386 architecture,
+(I think both uses IEEE 754 encoding). It fails - at least - on my
+Arm box, with an XScale processor.
+
+The functions mtk2double() mtk2float() should be rewritten using
+some math library or in pure Perl.
+
+* GPX 1.1 compliance
+
+The generated GPX files are not fully xml compliant: some extra values
+logged by the MTK chip are inserted as extra tags, not defined by the
+GPX 1.1 standard.
