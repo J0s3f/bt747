@@ -29,8 +29,8 @@ Check if your operating system provides a package for them, or refer
 to the cpan(1) manual page.
 
 You can install the packages using the following commands if you have a correct perl system:
-perl -MCPAN -e 'install Device::SerialPort'
-perl -MCPAN -e 'install Date::Format'
+perl -MCPAN -e "install Device::SerialPort"
+perl -MCPAN -e "install Date::Format"
 
 
 KNOWN BUGS
