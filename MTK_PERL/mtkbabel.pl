@@ -27,6 +27,7 @@
 use strict;
 # Use the getopts() function.
 use Getopt::Std;
+use File::Basename;
 use vars qw($opt_b $opt_d $opt_E $opt_f $opt_h $opt_l $opt_m $opt_o $opt_p $opt_r $opt_t $opt_w $opt_x);
 # Install the libdevice-serialport-perl Debian package.
 use Device::SerialPort;
@@ -43,8 +44,7 @@ my $LOG_NOTICE  = 5;
 my $LOG_INFO    = 6;
 my $LOG_DEBUG   = 7;
 
-my $NAME = `basename "$0"`;
-chomp($NAME);
+my $NAME = basename($0);
 
 # Size in bytes of data types.
 my $SIZEOF_BYTE   = 1;
