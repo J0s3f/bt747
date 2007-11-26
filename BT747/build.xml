@@ -33,6 +33,7 @@
 	
 		<delete dir="build"/>
 		<delete dir="rxtxbuild"/>
+		<delete dir="filebuild"/>
 		<delete dir="dist"/>
 		
 	</target>
@@ -61,9 +62,9 @@
  
     <target name="updatedate" depends="initdate" description="increase build number and set release date">
         <!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
-    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
-    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";'/>	
-    	<replaceregexp file="src/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";'/>	
+    	<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
+    	<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";'/>	
+    	<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";'/>	
     	<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}'/>	
     </target>
     	
@@ -110,7 +111,7 @@
 
 		<javac srcdir="rxtxsrc" destdir="rxtxbuild" target="1.1" optimize="true" classpathref="rxtxclasspath">
 			<include name="**/*.java"/>
-			<exclude name="gps/GPSWabaPort.java*"/>
+			<exclude name="gps/port/GPSWabaPort.java*"/>
 			<exclude name="gps/model/*"/>
 		</javac>
 		<copy todir="rxtxbuild">
@@ -120,6 +121,38 @@
 		</copy>
 	
 	</target>
+
+	<target name="filebuild" depends="clean, updatedate">
+	
+		<mkdir dir="filebuild"/>
+		<delete dir="filesrc"/>
+		<mkdir dir="filesrc"/>
+
+		<copy todir="filesrc">
+			<fileset dir="src">
+				<include name="**/*.java"/>
+			</fileset>
+			<fileset dir="src_forwaba">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+    	<replace file="filesrc/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSFilePort" />
+		<replace file="filesrc/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
+
+		<javac srcdir="filesrc" destdir="filebuild" target="1.1" optimize="true" classpathref="classpath">
+			<include name="**/*.java"/>
+			<exclude name="gps/port/GPSWabaPort.java*"/>
+			<exclude name="gps/port/GPSRxTxPort.java*"/>
+			<exclude name="gps/model/*"/>
+		</javac>
+		<copy todir="filebuild">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	
+	</target>
+
 	<!-- Package classes -->
 	<target name="jar" depends="build">
 	
@@ -143,6 +176,20 @@
 	
 	</target>
 
+	<target name="filejar" depends="filebuild">
+	
+		<jar jarfile="filebuild/${ant.project.name}_file.jar">
+			<fileset dir="filebuild" includes="**/*.class"/>
+		</jar>
+		<copy todir="dist">
+			<fileset dir="filebuild">
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
+		
+	
+	</target>
+	
 	<taskdef name="proguard" classpath="${proguardLib}" 
 	    classname="proguard.ant.ProGuardTask"/>
 	<target name="proguard" depends="jar">

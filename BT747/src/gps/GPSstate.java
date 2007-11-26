@@ -313,6 +313,7 @@ public class GPSstate implements Thread {
         if(m_EventPosterObject!=null) {
             gpsEvent.type= type;
             gpsEvent.consumed=false;
+            gpsEvent.target=null;
             m_EventPosterObject.postEvent(gpsEvent);
         }
     }
@@ -751,21 +752,24 @@ public class GPSstate implements Thread {
     
     final void analyzeGPGGA(final String[] p_nmea) {
         // Partial decode to compare height with calculated geoid.
-        GPSRecord gps=new GPSRecord();
         if(p_nmea.length>=15) {
-            gps.latitude=(Convert.toDouble(p_nmea[2].substring(0, 2))+Convert.toDouble(p_nmea[2].substring(2))/60)
+            try {
+                gps.latitude=(Convert.toDouble(p_nmea[2].substring(0, 2))+Convert.toDouble(p_nmea[2].substring(2))/60)
                 *(p_nmea[3].equals("N")?1:-1);
-            gps.longitude=(Convert.toDouble(p_nmea[4].substring(0, 3))+Convert.toDouble(p_nmea[4].substring(3))/60)
-            *(p_nmea[5].equals("E")?1:-1);
-            gps.height=Convert.toFloat(p_nmea[9]);
-            gps.geoid=Convert.toFloat(p_nmea[11]);
-//            if(GPS_DEBUG) {
-//                double geoid=Conv.wgs84_separation(gps.latitude, gps.longitude);
-//                Vm.debug("geoid GPS: "+Convert.toString(gps.geoid,3)
-//                        + " geoid calc:"+Convert.toString(geoid)
-//                        );
-//            }
-            PostGpsEvent(GpsEvent.GPGGA);
+                gps.longitude=(Convert.toDouble(p_nmea[4].substring(0, 3))+Convert.toDouble(p_nmea[4].substring(3))/60)
+                *(p_nmea[5].equals("E")?1:-1);
+                gps.height=Convert.toFloat(p_nmea[9]);
+                gps.geoid=Convert.toFloat(p_nmea[11]);
+                //            if(GPS_DEBUG) {
+                //                double geoid=Conv.wgs84_separation(gps.latitude, gps.longitude);
+                //                Vm.debug("geoid GPS: "+Convert.toString(gps.geoid,3)
+                //                        + " geoid calc:"+Convert.toString(geoid)
+                //                        );
+                //            }
+                PostGpsEvent(GpsEvent.GPGGA);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
         }
     }
     
@@ -925,7 +929,7 @@ public class GPSstate implements Thread {
             mdStr="iBlue 747";
             break;
         case 0x001D:
-            mdStr="Konet BGL-32";
+            mdStr="BT-Q1000 / BGL-32";
             break;
         case 0x0131:
             mdStr="EB-85A";
@@ -956,29 +960,34 @@ public class GPSstate implements Thread {
      * Thread methods implementation
      */
 
+    private int nextRun=0;
     /* (non-Javadoc)
      * @see waba.sys.Thread#run()
      */
     public void run() {
         String[] lastResponse;
-        int loops_to_go=5;
-        if(m_GPSrxtx.isConnected()) {
-            if((m_logState!=C_LOG_NOLOGGING)&&(sentCmds.getCount()==0)&&(toSendCmds.getCount()==0)) {
-                // Sending command on next timer adds some delay after
-                // the end of the previous command (reception)
-                getLogPartNoOutstandingRequests();
-            } else if (m_logState==C_LOG_ACTIVE) {
-                getNextLogPart();
-            }
-            do {
-                lastResponse= m_GPSrxtx.getResponse();
-                if(lastResponse!=null) analyseNMEA(lastResponse);
-                checkSendCmdFromQueue();
-            } while((loops_to_go-->0) &&lastResponse!=null);
-        } else {
-            Generic.removeThread(this);
-            if(m_logState!=C_LOG_NOLOGGING) {
-                endGetLog();
+
+        if(Vm.getTimeStamp()>=nextRun) {
+            nextRun=Vm.getTimeStamp()+10;
+            int loops_to_go=0;  // Setting to 0 for more responsiveness
+            if(m_GPSrxtx.isConnected()) {
+                if((m_logState!=C_LOG_NOLOGGING)&&(sentCmds.getCount()==0)&&(toSendCmds.getCount()==0)) {
+                    // Sending command on next timer adds some delay after
+                    // the end of the previous command (reception)
+                    getLogPartNoOutstandingRequests();
+                } else if (m_logState==C_LOG_ACTIVE) {
+                    getNextLogPart();
+                }
+                do {
+                    lastResponse= m_GPSrxtx.getResponse();
+                    if(lastResponse!=null) analyseNMEA(lastResponse);
+                    checkSendCmdFromQueue();
+                } while((loops_to_go-->0) &&lastResponse!=null);
+            } else {
+                Generic.removeThread(this);
+                if(m_logState!=C_LOG_NOLOGGING) {
+                    endGetLog();
+                }
             }
         }
     }

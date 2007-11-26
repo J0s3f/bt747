@@ -44,6 +44,7 @@ public class GPSrxtx {
      */
     public  GPSrxtx() {
         gpsPort=new GPSWabaPort(); // TODO: select according to OS (done during compile currently).
+//        gpsPort=new gps.port.GPSFilePort(); // TODO: select according to OS (done during compile currently).
         setDefaults();
     }
     
@@ -184,6 +185,7 @@ public class GPSrxtx {
     
     public String[] getResponse() {
         boolean continueReading;
+        boolean readAgain=true;
         int myError= ERR_NOERROR;
         final boolean skipError=true;
         continueReading = gpsPort.isConnected();
@@ -330,20 +332,23 @@ public class GPSrxtx {
                 read_buf_p= 0;
                 bytesRead=  0;
                 if(isConnected()) {
-                    try {
-                        int max= gpsPort.readCheck();
-                        if(max>C_BUF_SIZE) {
-                            max=C_BUF_SIZE;
+                    if(readAgain) {
+                        readAgain=false;
+                        try {
+                            int max= gpsPort.readCheck();
+                            if(max>C_BUF_SIZE) {
+                                max=C_BUF_SIZE;
+                            }
+                            if(max>0) {
+                                bytesRead= gpsPort.readBytes(read_buf,0,max);
+                                //						String sb=new String(read_buf,0,bytesRead);
+                                //						System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
+                            }
                         }
-                        if(max>0) {
-                            bytesRead= gpsPort.readBytes(read_buf,0,max);
-                            //						String sb=new String(read_buf,0,bytesRead);
-                            //						System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
+                        catch (Exception e) {
+                            // new MessageBox("Waiting","Exception").popupBlockingModal();
+                            bytesRead= 0;
                         }
-                    }
-                    catch (Exception e) {
-                        // new MessageBox("Waiting","Exception").popupBlockingModal();
-                        bytesRead= 0;
                     }
                     if(bytesRead==0) {
                         continueReading=false;

@@ -39,3 +39,7 @@ build.properties
 local.properties
 WinExe
 comp.sh
+bt_unzip
+tmp.txt
+java.hprof.txt
+filesrc

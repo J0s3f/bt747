@@ -1,3 +1,6 @@
+Version 1.15
+* Reading GPS in 10ms intervals only - hopefully resolves 'speed' issue on MacOS.
+
 Version 1.14
 * Changed 'magvar' in 'course' for the 'heading' value in the 'gpx' format.
 

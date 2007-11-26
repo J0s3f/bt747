@@ -31,6 +31,7 @@ import gps.GPSstate;
 import gps.GpsEvent;
 import gps.convert.Conv;
 
+import bt747.Version;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 

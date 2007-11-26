@@ -17,34 +17,34 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************  
+
+// This is a trial to access the device port through input streams.
+// For the moment unsuccessfull.
 package gps.port;
 
-import bt747.sys.Convert;
-
-import gnu.io.CommPort;
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.SerialPort;
-import gnu.io.UnsupportedCommOperationException;
-
+import java.io.*;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/** This class implements the serial port for rxtx (on Linux)
+import bt747.sys.Convert;
+
+/** This class implements the serial port by accessing the file as 
+ * a port.
  * @author Mario De Weerd
  */
-public class GPSRxTxPort extends GPSPort {
-    private SerialPort sp=null;
+public class GPSFilePort extends GPSPort {
+    private RandomAccessFile portfile=null;
+    private InputStream spIn=null;
+    private OutputStream spOut=null;
+    private InputStreamReader br=null;
 
-    private OutputStream ds;
     private String portPrefix="";
     private boolean hasPortNbr=true;
     public static String os_name=java.lang.System.getProperty("os.name");  
     /**
      * 
      */
-    public GPSRxTxPort() {
+    public GPSFilePort() {
         // TODO Auto-generated constructor stub
         super();
         
@@ -58,6 +58,10 @@ public class GPSRxTxPort extends GPSPort {
             hasPortNbr=false;
         }
         portPrefix=java.lang.System.getProperty("bt747_prefix",portPrefix);
+//        if(m_debugFile.exists()) {
+//            m_debugFile.delete();
+//        }
+        m_debugFile=new waba.io.File(C_DEBUG_FILE,waba.io.File.CREATE);
     }
 
     /** Indicates if the device is connected or not.
@@ -65,7 +69,11 @@ public class GPSRxTxPort extends GPSPort {
      * @return <code>true</code> if the device is connected.
      */
     public boolean isConnected() {
-        return (sp!=null);
+        return myIsConnected();
+    }
+    
+    private boolean myIsConnected() {
+        return (portfile!=null);
     }
     
     /** Close the connection.
@@ -73,7 +81,7 @@ public class GPSRxTxPort extends GPSPort {
     *
     */
    public void closePort() {
-       if (sp!= null) {
+       if (myIsConnected()) {
            //ds.close();
          try {
                ds.close();
@@ -97,36 +105,27 @@ public class GPSRxTxPort extends GPSPort {
        
        try {
            System.out.println("Info: trying to open "+portStr);
-           CommPortIdentifier portIdentifier;
-               portIdentifier = CommPortIdentifier.getPortIdentifier(portStr);
-           if(portIdentifier.isCurrentlyOwned())
-           {
-               System.out.println("Error: Port is currently in use");
-           } else
-           {
-               CommPort commPort = portIdentifier.open(getClass().getName(), 2000);
-               if(commPort instanceof SerialPort)
-               {
-                   SerialPort serialPort = (SerialPort)commPort;
-                   sp = serialPort;
-                   serialPort.setSerialPortParams(0x1c200, 8, 1, 0);
-                   ds = sp.getOutputStream();
-                   result=0;
-               } else
-               {
-                   sp=null;
-                   ds=null;
-                   System.out.println("Error: Only serial ports are handled by this example.");
-               }
-           }
-           } catch (NoSuchPortException e) {
-               e.printStackTrace();
-           } catch (PortInUseException e) {
-               e.printStackTrace();
-           } catch (UnsupportedCommOperationException e) {
-               e.printStackTrace();
+           portfile=new RandomAccessFile(portStr,"rw");
+//           if(portfile.canRead()) {
+//               spIn = new FileInputStream(portfile);
+//               br=new InputStreamReader(spIn);
+//           }
+//           if(portfile.canWrite()) {
+//           //    spOut = new FileOutputStream(portfile);
+//           }
+//           if(spIn==null) { // || spOut==null) {
+//               result=-1;
+//               spIn=null;
+//               spOut=null;
+//               portfile=null;
+//           }
+           //spOut = new FileOutputStream(portStr);
+           result=0;
            } catch (IOException e) {
                e.printStackTrace();
+               spIn=null;
+               spOut=null;
+               portfile=null;
            }
 
        return result;
@@ -162,7 +161,9 @@ public class GPSRxTxPort extends GPSPort {
        byte[] b=s.getBytes();
        int l=b.length;
        try {
-           ds.write(b);
+           if(spOut!=null) {
+               spOut.write(b);
+           }
        } catch (Exception e) {
            e.printStackTrace();
        }
@@ -172,9 +173,10 @@ public class GPSRxTxPort extends GPSPort {
    }
    
    public int readCheck() {
-       if(sp!=null) {
+       if(myIsConnected()) {
            try {
-               return sp.getInputStream().available();//getInputStream().available();
+//               return br.ready()?1:0;
+               return (int) 4096;
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -186,7 +188,7 @@ public class GPSRxTxPort extends GPSPort {
    
    public int readBytes(byte[]b,int start, int max) {
        try {
-           return sp.getInputStream().read(b, start, max);
+           return portfile.read(b, start, max);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
