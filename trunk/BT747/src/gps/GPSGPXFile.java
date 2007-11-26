@@ -74,7 +74,9 @@ public class GPSGPXFile extends GPSFile {
     protected void writeFileHeader(final String Name) {
         String header;
         header ="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>"+
-        "<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" creator=\"BT747\" version=\"1.0\" "+
+        "<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" creator=\"BT747\" version=\"" +
+        bt747.Version.VERSION_NUMBER +
+        "\" "+
         "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "+
         "    xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">" +
         "<name>" +
@@ -337,12 +339,12 @@ public class GPSGPXFile extends GPSFile {
                 //                    <ageofdgpsdata> xsd:decimal </ageofdgpsdata> [0..1] ?
                 if((activeFields.nsat!=0)) {
                     nsatStr+=Convert.toString(s.nsat/256); 
-                    nsatStr+="(";
-                    nsatStr+=Convert.toString(s.nsat%256); 
-                    nsatStr+=")";
-                    rec.append("<nsat>");
-                    rec.append(nsatStr);
-                    rec.append("</nsat>\r\n");
+                    rec.append("<sat>");
+                    rec.append(nsatStr);  // Sat used
+                    rec.append("</sat>\r\n");
+//                    nsatStr+="(";
+//                    nsatStr+=Convert.toString(s.nsat%256); 
+//                    nsatStr+=")";
                 }
                 if((activeFields.dage!=0)) {
                     rec.append("<ageofdgpsdata>");

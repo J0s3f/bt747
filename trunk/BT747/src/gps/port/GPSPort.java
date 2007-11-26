@@ -34,7 +34,7 @@ public abstract class GPSPort {
     protected int spPortNbr;
     protected int spSpeed=115200;  // Does not really matter on most platforms
     
-    public static final boolean GPS_FILE_LOG = false;  // When true log communication to file for debug
+    public static final boolean GPS_FILE_LOG = true;//false;  // When true log communication to file for debug
 
     protected File m_debugFile=null;
     protected final static String C_DEBUG_FILE="/Palm/gpsRAW.txt";

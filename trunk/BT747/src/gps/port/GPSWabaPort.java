@@ -83,11 +83,16 @@ public class GPSWabaPort extends GPSPort {
                //               sp.setReadTimeout(50);//small to read data in chunks and have good resp.
                //sp.setFlowControl(true);
                ds=new DataStream(sp);
+           } else {
+               sp=null;
+               ds=null;
            }
        }
        catch (Exception e) {
            new MessageBox("waba.io.SerialPort open","Unexpected exception catched").popupBlockingModal();
            ;//if(GPS_DEBUG) {waba.sys.Vm.debug("Exception when opening port\n");}; 
+           sp=null;
+           ds=null;
        }
        return result;
    }    
