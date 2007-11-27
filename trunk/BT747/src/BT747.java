@@ -199,6 +199,9 @@ public class BT747 extends MainWindow {
 
         m_MenuBar.setChecked(C_MENU_GPS_DECODE_ACTIVE,m_settings.getGpsDecode());
         m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
+        
+        
+        addTimer(this, 55);
 
     }
     
