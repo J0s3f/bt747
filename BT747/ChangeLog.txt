@@ -1,3 +1,6 @@
+Version 1.16
+* Added a timer to the applciation to see if this solves the MacOS GUI lag issue.
+
 Version 1.15
 * Reading GPS in 10ms intervals only - hopefully resolves 'speed' issue on MacOS.
 
