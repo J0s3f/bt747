@@ -18,8 +18,8 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.sys.Settings;
-import waba.ui.Button;
-import waba.ui.Check;
+import bt747.ui.Button;
+import bt747.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -202,7 +202,7 @@ public class GPSLogFormat extends Container {
         
         for (int i=0;i<C_LOG_FMT_COUNT;i++) {
             chkLogFmtItems[i].setChecked((p_logFormat & bitMask)!=0);
-            chkLogFmtItems[i].repaintNow();
+//            chkLogFmtItems[i].repaintNow();
             bitMask<<=1;
         }
         setLogFormatControls();

@@ -1,4 +1,4 @@
-import waba.ui.Check;
+import bt747.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -61,7 +61,7 @@ public class GPSFileNMEAOutputSel extends Container {
                     (NMEAset&bit)!=0
                     );
             bit <<=1;
-            chkNMEAItems[i].repaintNow();
+            //chkNMEAItems[i].repaintNow();
         }
     }
 

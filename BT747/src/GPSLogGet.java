@@ -17,9 +17,9 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import waba.ui.Button;
+import bt747.ui.Button;
 import waba.ui.Calendar;
-import waba.ui.Check;
+import bt747.ui.Check;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -176,14 +176,14 @@ public class GPSLogGet extends Container {
 
     public void updateButtons() {
         m_chkLogOnOff.setChecked(m_GPSstate.loggingIsActive);
-        m_chkLogOnOff.repaintNow();
+//        m_chkLogOnOff.repaintNow();
         m_chkLogOverwriteStop.setChecked(m_GPSstate.logFullOverwrite);
-        m_chkLogOverwriteStop.repaintNow();
+//        m_chkLogOverwriteStop.repaintNow();
         m_UsedLabel.setText(   "Mem Used   : "+Convert.toString(m_GPSstate.logMemUsed)
                 +"("+Convert.toString(m_GPSstate.logMemUsedPercent)+"%)");
-        m_UsedLabel.repaintNow();
+//        m_UsedLabel.repaintNow();
         m_RecordsLabel.setText("Nbr records: "+Convert.toString(m_GPSstate.logNbrLogPts));
-        m_RecordsLabel.repaintNow();
+//        m_RecordsLabel.repaintNow();
     }
     
     private Calendar cal;

@@ -18,8 +18,8 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import bt747.sys.Convert;
-import waba.ui.Button;
-import waba.ui.Check;
+import bt747.ui.Button;
+import bt747.ui.Check;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -119,21 +119,21 @@ public class GPSLogReason extends Container {
         m_cbDGPSMode.select(m_GPSstate.dgps_mode);
         if(ENABLE_PWR_SAVE_CONTROL) {
             m_chkPowerSaveOnOff.setChecked(m_GPSstate.powerSaveEnabled);
-            m_chkPowerSaveOnOff.repaintNow();
+//            m_chkPowerSaveOnOff.repaintNow();
         }
         m_cbDatumMode.select(m_GPSstate.datum);
-        m_chkTimeOnOff.repaintNow();
-        m_edTime.repaintNow();
-        m_chkSpeedOnOff.repaintNow();
-        m_edSpeed.repaintNow();
-        m_chkDistanceOnOff.repaintNow();
-        m_edDistance.repaintNow();
-        m_chkFixOnOff.repaintNow();
-        m_edFix.repaintNow();
-        m_chkSBASOnOff.repaintNow();
-        m_chkSBASTestOnOff.repaintNow();
-        m_cbDGPSMode.repaintNow();
-        m_cbDatumMode.repaintNow();
+//        m_chkTimeOnOff.repaintNow();
+//        m_edTime.repaintNow();
+//        m_chkSpeedOnOff.repaintNow();
+//        m_edSpeed.repaintNow();
+//        m_chkDistanceOnOff.repaintNow();
+//        m_edDistance.repaintNow();
+//        m_chkFixOnOff.repaintNow();
+//        m_edFix.repaintNow();
+//        m_chkSBASOnOff.repaintNow();
+//        m_chkSBASTestOnOff.repaintNow();
+//        m_cbDGPSMode.repaintNow();
+//        m_cbDatumMode.repaintNow();
     }
     
     public void setSettings() {
@@ -167,16 +167,16 @@ public class GPSLogReason extends Container {
             event.consumed=true;
         if(event.target==m_chkTimeOnOff) {
             m_edTime.setEnabled(m_chkTimeOnOff.getChecked());
-            m_edTime.repaintNow();
+//            m_edTime.repaintNow();
         } else if(event.target==m_chkSpeedOnOff) {
             m_edSpeed.setEnabled(m_chkSpeedOnOff.getChecked());
-            m_edSpeed.repaintNow();
+//            m_edSpeed.repaintNow();
         } else if(event.target==m_chkDistanceOnOff) {
             m_edDistance.setEnabled(m_chkDistanceOnOff.getChecked());
-            m_edDistance.repaintNow();
+//            m_edDistance.repaintNow();
         } else if(event.target==m_chkFixOnOff) {
             m_edFix.setEnabled(m_chkFixOnOff.getChecked());
-            m_edFix.repaintNow();
+//            m_edFix.repaintNow();
         } else if(event.target==m_btSet) {
             setSettings();
         } else if (event.target == this) {

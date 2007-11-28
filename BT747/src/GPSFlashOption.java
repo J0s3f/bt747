@@ -20,7 +20,7 @@
 import bt747.sys.Convert;
 import bt747.ui.MessageBox;
 
-import waba.ui.Button;
+import bt747.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Edit;
@@ -103,17 +103,17 @@ public class GPSFlashOption extends Container {
         m_edMCHN_Period.setText(Convert.toString(m_GPSstate.dtMCHN_Period));
         
         
-        m_userOptionTimesLeft.repaintNow();
-        m_edUpdateRate.repaintNow();
-        m_edBaudRate.repaintNow();
-        m_edGLL_Period.repaintNow();
-        m_edRMC_Period.repaintNow();
-        m_edVTG_Period.repaintNow();
-        m_edGSA_Period.repaintNow();
-        m_edGSV_Period.repaintNow();
-        m_edGGA_Period.repaintNow();
-        m_edZDA_Period.repaintNow();
-        m_edMCHN_Period.repaintNow();
+//        m_userOptionTimesLeft.repaintNow();
+//        m_edUpdateRate.repaintNow();
+//        m_edBaudRate.repaintNow();
+//        m_edGLL_Period.repaintNow();
+//        m_edRMC_Period.repaintNow();
+//        m_edVTG_Period.repaintNow();
+//        m_edGSA_Period.repaintNow();
+//        m_edGSV_Period.repaintNow();
+//        m_edGGA_Period.repaintNow();
+//        m_edZDA_Period.repaintNow();
+//        m_edMCHN_Period.repaintNow();
 
     }
     
