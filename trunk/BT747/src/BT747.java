@@ -209,6 +209,11 @@ public class BT747 extends MainWindow {
     public void onEvent(Event event) {
         //
         switch (event.type) {
+        case ControlEvent.TIMER:
+            if (!Settings.onDevice  &&  event.target==this) {
+                this._doPaint();
+                event.consumed=true;
+            }
         case ControlEvent.WINDOW_CLOSED:
             if (event.target==menubar) {
                 switch (m_MenuBar.getSelectedMenuItem()) {

@@ -22,7 +22,7 @@ import ui.FileSelect;
 import bt747.io.File;
 import bt747.sys.Convert;
 import waba.sys.Settings;
-import waba.ui.Button;
+import bt747.ui.Button;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;

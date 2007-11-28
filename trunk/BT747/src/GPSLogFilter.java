@@ -17,7 +17,7 @@
 //***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
-import waba.ui.Check;
+import bt747.ui.Check;
 import waba.ui.Container;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
@@ -118,7 +118,7 @@ public class GPSLogFilter extends Container {
         
         for (int i=0; i<C_VALID_COUNT; i++) {
             chkValid[i].setChecked((valid & bitMask)!=0);
-            chkValid[i].repaintNow();
+//            chkValid[i].repaintNow();
             bitMask<<=1;
         }
     }
@@ -149,7 +149,7 @@ public class GPSLogFilter extends Container {
         
         for (int i=0;i<BT747_dev.C_RCR_COUNT;i++) {
             chkRCR[i].setChecked((valid & bitMask)!=0);
-            chkRCR[i].repaintNow();
+//            chkRCR[i].repaintNow();
             bitMask<<=1;
         }
     }

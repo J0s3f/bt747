@@ -1071,7 +1071,7 @@ public class GPSstate implements Thread {
         closeLog();
         if(m_ProgressBar!=null) {
             m_ProgressBar.setVisible(false);
-            m_ProgressBar.getParentWindow().repaintNow();
+            //m_ProgressBar.getParentWindow().repaintNow();
         }
     }
     
@@ -1321,7 +1321,7 @@ public class GPSstate implements Thread {
                     m_NextReadAddr+=dataLength;
                     if(m_ProgressBar!=null) {
                         m_ProgressBar.setValue(m_NextReadAddr);
-                        m_ProgressBar.repaintNow();
+                        //m_ProgressBar.repaintNow();
                     }
                     if(m_getFullLog
                             &&
@@ -1341,7 +1341,7 @@ public class GPSstate implements Thread {
                                 m_EndAddr= minEndAddr;
                                 if(m_ProgressBar!=null) {
                                     m_ProgressBar.max=m_EndAddr;
-                                    m_ProgressBar.repaintNow();
+                                    //m_ProgressBar.repaintNow();
                                 }
                             }
                         }

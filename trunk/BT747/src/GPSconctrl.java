@@ -18,7 +18,7 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.io.SerialPort;
-import waba.ui.Button;
+import bt747.ui.Button;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -90,7 +90,7 @@ public class GPSconctrl extends Container {
         if(m_Settings.getPortnbr()<C_MAX_PORTNBR) {
             m_cbPorts.select(portNbr);
         }
-        repaintNow();
+        //repaintNow();
         
         add(lbLat=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
         add(lbLon=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
@@ -129,9 +129,9 @@ public class GPSconctrl extends Container {
         lbFirmwareMainVersion.setText(((m_GPSstate.getMainVersion().length()!=0)?"Main:":"")+m_GPSstate.getMainVersion());
         lbFirmwareName.setText(((m_GPSstate.getFirmwareVersion().length()!=0)?"Firmware:":"")+m_GPSstate.getFirmwareVersion());
         lbModel.setText(((m_GPSstate.getModel().length()!=0)?"Model:":"")+m_GPSstate.getModel());
-        lbFirmwareMainVersion.repaintNow();
-        lbFirmwareName.repaintNow();
-        lbModel.repaintNow();
+        //lbFirmwareMainVersion.repaintNow();
+        //lbFirmwareName.repaintNow();
+        //lbModel.repaintNow();
     }
     
     private String TimeStr="";
@@ -161,9 +161,9 @@ public class GPSconctrl extends Container {
         lbGeoid.setText("Geoid:"+Convert.toString(gps.geoid,3)+"(calc:"+
                 Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)+")");
 
-        lbLat.repaintNow();
-        lbLon.repaintNow();
-        lbGeoid.repaintNow();
+        //lbLat.repaintNow();
+        //lbLon.repaintNow();
+        //lbGeoid.repaintNow();
     }
 
     public void onEvent(Event event) {

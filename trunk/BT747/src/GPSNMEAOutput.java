@@ -1,4 +1,4 @@
-import waba.ui.Button;
+import bt747.ui.Button;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -64,7 +64,7 @@ public class GPSNMEAOutput extends Container {
     private void updatePeriods() {
         for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
             chkNMEAItems[i].select(m_GPSstate.NMEA_periods[i]);
-            chkNMEAItems[i].repaintNow();
+//            chkNMEAItems[i].repaintNow();
         }
     }
 

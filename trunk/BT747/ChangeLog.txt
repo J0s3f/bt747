@@ -1,3 +1,9 @@
+Version 1.17.X  - BETA
+* Yet another update to try and solve the MacOS lag problem.
+
+Version 1.17
+* Yet another update to try and solve the MacOS lag problem.
+
 Version 1.16
 * Added a timer to the applciation to see if this solves the MacOS GUI lag issue.
 
