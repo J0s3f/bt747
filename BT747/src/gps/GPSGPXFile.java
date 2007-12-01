@@ -53,6 +53,7 @@ public class GPSGPXFile extends GPSFile {
     
     
     public boolean nextPass() {
+        super.nextPass();
         if(m_nbrOfPassesToGo>0) {
             if(m_multipleFiles) {
                 closeFile();

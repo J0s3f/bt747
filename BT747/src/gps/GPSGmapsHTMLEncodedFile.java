@@ -60,6 +60,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     
     
     public boolean nextPass() {
+        super.nextPass();
         if(m_nbrOfPassesToGo>0) {
             if(m_multipleFiles) {
                 closeFile();
@@ -252,7 +253,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     m_newTrack=true;
                     if(track.size()!=0) {
                         Trackpoint t=track.get(track.size()-1);
-                        endTrack("0000FF");
+                        endTrack(goodTrackColor);
                         track.addTrackpoint(t);
                     }
                     //"points.push(new GPoint(3.11492833333333,45.75697))";
@@ -275,7 +276,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     if(activeFields.latitude!=0 && activeFields.longitude!=0) {
                         if(s.utc-m_PreviousTime<m_TrackSepTime) {
                             track.addTrackpoint(new Trackpoint(s.latitude,s.longitude));
-                            endTrack("FF0000");
+                            endTrack(badTrackColor);
                         }
                     }
                     track=new Track();

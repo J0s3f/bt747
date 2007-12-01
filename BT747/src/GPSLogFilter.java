@@ -87,9 +87,28 @@ public class GPSLogFilter extends Container {
             chkValid[i].setEnabled(true);
         }
         // Add all tick buttons.
+        int x=LEFT;
+        int y=SAME;
+        Control rel=null;
+        final int RCR_COL=4;
         for (int i=0; i<BT747_dev.C_RCR_COUNT; i++) {
             chkRCR[i]= new Check(BT747_dev.C_STR_RCR[i]);
-            add( chkRCR[i], LEFT, AFTER);
+            //add( chkRCR[i], LEFT, AFTER);
+            if(i == 0) {
+                x=LEFT;
+            } else if((i%(BT747_dev.C_RCR_COUNT / RCR_COL)) ==0) {
+                x=getClientRect().width*(i/(BT747_dev.C_RCR_COUNT / RCR_COL))/RCR_COL+8;
+            }
+
+            if((i%(BT747_dev.C_RCR_COUNT / RCR_COL)) ==0) {
+                rel=(Control)chkValid[C_VALID_COUNT-1];
+                y=AFTER+6;
+            } else {
+                y=AFTER-1;
+            }
+            add(chkRCR[i],x,y,rel);
+                            
+            rel=chkRCR[i];
             chkRCR[i].setEnabled(true);
         }
     }

@@ -66,6 +66,9 @@ public abstract class GPSFile {
     
     protected boolean m_oneFilePerTrack=false;
     protected boolean m_multipleFiles=false;
+    
+    protected String badTrackColor="FF0000";
+    protected String goodTrackColor="0000FF";
 
     public void initialiseFile(final String basename, final String ext,
             final int Card, int fileSeparationFreq) {
@@ -134,7 +137,7 @@ public abstract class GPSFile {
 
         if (activeFields.utc != 0) {
             setUTCTime(t, s.utc); // Initialisation needed later too!
-            if (m_oneFilePerDay) {
+            if (m_oneFilePerDay||m_oneFilePerTrack) {
                 dateref = (t.getYear() << 14) + (t.getMonth() << 7) + t.getDay(); // year *
                                                                    // 16384 +
                                                                    // month *
@@ -206,6 +209,7 @@ public abstract class GPSFile {
 
     public boolean nextPass() {
         m_prevdate = 0;
+        m_FirstRecord=true;
         return false;
     };
 
@@ -286,4 +290,28 @@ public abstract class GPSFile {
         return false;
     }
 
+    /**
+     * @return Returns the badTrackColor.
+     */
+    public String getBadTrackColor() {
+        return badTrackColor;
+    }
+    /**
+     * @param badTrackColor The badTrackColor to set.
+     */
+    public void setBadTrackColor(String badTrackColor) {
+        this.badTrackColor = badTrackColor;
+    }
+    /**
+     * @return Returns the goodTrackColor.
+     */
+    public String getGoodTrackColor() {
+        return goodTrackColor;
+    }
+    /**
+     * @param goodTrackColor The goodTrackColor to set.
+     */
+    public void setGoodTrackColor(String goodTrackColor) {
+        this.goodTrackColor = goodTrackColor;
+    }
 }

@@ -110,6 +110,7 @@ public class GPSconctrl extends Container {
         add(lbFirmwareName=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbModel=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbFlashInfo=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
+        updateButtons();
     }
 
     private void GPS_setChannel(int channel) {

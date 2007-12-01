@@ -1,6 +1,10 @@
 Version 1.18
 * Yet another update to try and solve the MacOS lag problem.
-* Mor information shown on the connection tab (Flash Information & logger version)
+* More information shown on the connection tab (Flash Information & logger version)
+* Added possibility to log a point with a specific reason other than speed, distance, time, button, ..
+* Added possibility to change value for color of invalid tracks (currently in GMAP format)
+* Solved bug releated to trackpoints not being written to the first file in certain output formats.
+
 
 Version 1.17.X  - BETA
 * Yet another update to try and solve the MacOS lag problem.

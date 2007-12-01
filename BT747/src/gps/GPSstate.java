@@ -487,6 +487,14 @@ public class GPSstate implements Thread {
 
     }
 
+    public void logImmediate(final int value) {
+        /* Get log distance interval */
+        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
+                + BT747_dev.PMTK_LOG_SET_STR + ","
+                + BT747_dev.PMTK_LOG_USER + ","
+                + Convert.toString(value));
+    }
+
     public void setLogTimeInterval(final int value) {
         int z_value = value;
         if (z_value != 0 && z_value > 999) {
@@ -1006,7 +1014,7 @@ public class GPSstate implements Thread {
     }
 
     public String getModel() {
-        return model + " (" + modelName() + ')';
+        return model.length()!=0?model + " (" + modelName() + ')':"";
     }
 
     private void analyseFlashManuProdID() {

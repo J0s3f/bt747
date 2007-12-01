@@ -17,13 +17,17 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************  
-import bt747.ui.Button;
 import waba.ui.Container;
+import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
+import waba.ui.Label;
 import waba.ui.MessageBox;
 
+import gps.BT747_dev;
 import gps.GPSstate;
+
+import bt747.ui.Button;
 
 /** Implement some buttons to easily do more complex operations
  * or to do some things not done in other tabs.
@@ -39,6 +43,10 @@ public class GPSLogEasy extends Container {
       private Button m_btWarmStart;
       private Button m_btColdStart;
       private Button m_btFullColdStart;
+
+      private Button [] chkRCR =new Button[BT747_dev.C_RCR_COUNT];
+      
+      private Label lbLogUserTxt;
       
       public GPSLogEasy(GPSstate state) {
           m_GPSstate= state;
@@ -51,6 +59,33 @@ public class GPSLogEasy extends Container {
           add(m_btWarmStart = new Button("Warm start"), CENTER, SAME); //$NON-NLS-1$
           add(m_btColdStart = new Button("Cold start"), RIGHT, SAME); //$NON-NLS-1$
           add(m_btFullColdStart = new Button("Factory reset"), CENTER, AFTER+2); //$NON-NLS-1$
+
+          add(lbLogUserTxt=new Label("Click to log a point with reason:"),LEFT,AFTER+2);
+          // Add all tick buttons.
+          int x=LEFT;
+          int y=SAME;
+          Control rel=null;
+          final int RCR_COL=4;
+          for (int i=0; i<BT747_dev.C_RCR_COUNT; i++) {
+              chkRCR[i]= new Button(BT747_dev.C_STR_RCR[i]);
+              //add( chkRCR[i], LEFT, AFTER);
+              if(i == 0) {
+                  x=LEFT;
+              } else if((i%(BT747_dev.C_RCR_COUNT / RCR_COL)) ==0) {
+                  x=getClientRect().width*(i/(BT747_dev.C_RCR_COUNT / RCR_COL))/RCR_COL+8;
+              }
+
+              if((i%(BT747_dev.C_RCR_COUNT / RCR_COL)) ==0) {
+                  rel=lbLogUserTxt;
+                  y=AFTER+6;
+              } else {
+                  y=AFTER-1;
+              }
+              add(chkRCR[i],x,y,rel);
+                              
+              rel=chkRCR[i];
+              chkRCR[i].setEnabled(true);
+          }
       }
       
       
@@ -85,6 +120,12 @@ public class GPSLogEasy extends Container {
                   m_GPSstate.doFullColdStart();
               }
           } else {
+              for (int i=0;i<BT747_dev.C_RCR_COUNT;i++) {
+                  if (event.target==chkRCR[i]) {
+                      m_GPSstate.logImmediate(1<<i);
+                  }
+              }
+
               event.consumed=false;
           }
           break;
