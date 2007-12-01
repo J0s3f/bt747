@@ -298,6 +298,20 @@ public class GPSstate implements Thread {
                 + BT747_dev.PMTK_LOG_FORMAT_STR + ","
                 + Convert.unsigned2hex(logFormat, 8));
     }
+    
+    MessageBox mbErase=null;
+    private final String [] eraseWait = { "Cancel waiting" };
+    private void waitEraseDone() {
+        mbErase=new MessageBox("Waiting until erase done",
+                "Wait until the erase is done.|" +
+                "You can cancel waiting (at your risk)",
+                eraseWait
+                );
+        mbErase.popupModal();
+        m_logState=C_LOG_ERASE_STATE;
+        readLogFlashStatus();
+    }
+
 
     public void doHotStart() {
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_HOT_START_STR);
@@ -328,9 +342,12 @@ public class GPSstate implements Thread {
      */
 
     public void eraseLog() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_ERASE + ","
-                + BT747_dev.PMTK_LOG_ERASE_YES_STR);
+        if(m_GPSrxtx.isConnected()) { 
+            sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
+                    + BT747_dev.PMTK_LOG_ERASE + ","
+                    + BT747_dev.PMTK_LOG_ERASE_YES_STR);
+            waitEraseDone();
+        }
     }
 
     /**
@@ -405,7 +422,8 @@ public class GPSstate implements Thread {
     public void sendNMEA(final String p_Cmd) {
         int cmdsWaiting;
         cmdsWaiting = sentCmds.getCount();
-        if ((cmdsWaiting == 0) && (Vm.getTimeStamp() > nextCmdSendTime)) {
+        if ((logStatus!=C_LOG_ERASE_STATE)
+                &&(cmdsWaiting == 0) && (Vm.getTimeStamp() > nextCmdSendTime)) {
             //  All sent commands were acknowledged, send cmd immediately
             doSendNMEA(p_Cmd);
         } else if (cmdsWaiting < C_MAX_TOSEND_COMMANDS) {
@@ -433,18 +451,20 @@ public class GPSstate implements Thread {
 
     private void checkSendCmdFromQueue() {
         int cTime = Vm.getTimeStamp();
-        if ((sentCmds.getCount() != 0)
-                && (cTime - logTimer) >= m_settings.getDownloadTimeOut()) {
-            // TimeOut!!
-            sentCmds.del(0);
-            logTimer = cTime;
-        }
-        if ((toSendCmds.getCount() != 0)
-                && (sentCmds.getCount() < C_MAX_CMDS_SENT)
-                && (Vm.getTimeStamp() > nextCmdSendTime)) {
-            // No more commands waiting for acknowledge
-            doSendNMEA((String) toSendCmds.items[0]);
-            toSendCmds.del(0);
+        if(logStatus!=C_LOG_ERASE_STATE) {
+            if ((sentCmds.getCount() != 0)
+                    && (cTime - logTimer) >= m_settings.getDownloadTimeOut()) {
+                // TimeOut!!
+                sentCmds.del(0);
+                logTimer = cTime;
+            }
+            if ((toSendCmds.getCount() != 0)
+                    && (sentCmds.getCount() < C_MAX_CMDS_SENT)
+                    && (Vm.getTimeStamp() > nextCmdSendTime)) {
+                // No more commands waiting for acknowledge
+                doSendNMEA((String) toSendCmds.items[0]);
+                toSendCmds.del(0);
+            }
         }
     }
 
@@ -485,6 +505,14 @@ public class GPSstate implements Thread {
                 + BT747_dev.PMTK_LOG_QUERY_STR + ","
                 + BT747_dev.PMTK_LOG_TIME_INTERVAL_STR);
 
+    }
+
+    public void readLogFlashStatus() {
+        /* Get flash status - immediate (not in output buffer) */
+        /* Needed for erase */
+        doSendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
+                + BT747_dev.PMTK_LOG_QUERY_STR + ","
+                + BT747_dev.PMTK_LOG_FLASH_STAT_STR);
     }
 
     public void logImmediate(final int value) {
@@ -535,6 +563,7 @@ public class GPSstate implements Thread {
                 + BT747_dev.PMTK_LOG_SPEED_INTERVAL_STR + ","
                 + Convert.toString(z_value * 10));
     }
+    
 
     public void setFixInterval(final int value) {
         int z_value = value;
@@ -1069,7 +1098,9 @@ public class GPSstate implements Thread {
             nextRun = Vm.getTimeStamp() + 10;
             int loops_to_go = 0; // Setting to 0 for more responsiveness
             if (m_GPSrxtx.isConnected()) {
-                if ((m_logState != C_LOG_NOLOGGING)
+                //Vm.debug(Convert.toString(m_logState));
+                if (((m_logState != C_LOG_NOLOGGING)
+                        &&(m_logState!= C_LOG_ERASE_STATE))
                         && (sentCmds.getCount() == 0)
                         && (toSendCmds.getCount() == 0)) {
                     // Sending command on next timer adds some delay after
@@ -1077,6 +1108,16 @@ public class GPSstate implements Thread {
                     getLogPartNoOutstandingRequests();
                 } else if (m_logState == C_LOG_ACTIVE) {
                     getNextLogPart();
+                } else if (m_logState == C_LOG_ERASE_STATE) {
+                    if(mbErase!=null) {
+                        if(!mbErase.isPopped()) {
+                            mbErase=null;
+                            m_logState=C_LOG_NOLOGGING;
+                        } else if((Vm.getTimeStamp()-logTimer)>m_settings.getDownloadTimeOut()) {
+                            readLogFlashStatus();
+                        }
+ 
+                    }
                 }
                 do {
                     lastResponse = m_GPSrxtx.getResponse();
@@ -1141,6 +1182,8 @@ public class GPSstate implements Thread {
     private static final int C_LOG_ACTIVE = 2;
 
     private static final int C_LOG_RECOVER = 3;
+
+    private static final int C_LOG_ERASE_STATE = 4;
 
     private int m_logState = C_LOG_NOLOGGING;
 
@@ -1560,6 +1603,20 @@ public class GPSstate implements Thread {
                 int z_type = Convert.toInt(nmea[2]);
                 if (nmea.length == 4) {
                     switch (z_type) {
+                    case BT747_dev.PMTK_LOG_FLASH_STAT:
+                        if(m_logState==C_LOG_ERASE_STATE) {
+                            switch(Convert.toInt(nmea[3])) {
+                                case 1:
+                                    m_logState=C_LOG_NOLOGGING;
+                                    if(mbErase!=null) {
+                                        mbErase.unpop();
+                                        mbErase=null;
+                                    }
+                                    break;
+                            }
+                        }
+                    break;
+
                     case BT747_dev.PMTK_LOG_FORMAT: // 2;
                         //if(GPS_DEBUG) {
                         // waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
@@ -1588,7 +1645,6 @@ public class GPSstate implements Thread {
                                                         // on/off
                         logStatus = Convert.toInt(nmea[3]);
                         loggingIsActive = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
-
                         PostStatusUpdateEvent();
                         break;
                     case BT747_dev.PMTK_LOG_MEM_USED: // 8;

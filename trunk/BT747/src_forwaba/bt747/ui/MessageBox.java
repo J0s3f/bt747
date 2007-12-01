@@ -46,4 +46,29 @@ public final class MessageBox extends waba.ui.MessageBox {
         // TODO Auto-generated constructor stub
     }
 
+    private boolean popped=false;
+    
+    
+    /**
+     * @return Returns the popped.
+     */
+    public boolean isPopped() {
+        return popped;
+    }
+    /* (non-Javadoc)
+     * @see waba.ui.Window#onPopup()
+     */
+    protected void onPopup() {
+        // TODO Auto-generated method stub
+        super.onPopup();
+        popped=true;
+    }
+    /* (non-Javadoc)
+     * @see waba.ui.Window#onUnpop()
+     */
+    protected void onUnpop() {
+        // TODO Auto-generated method stub
+        super.onUnpop();
+        popped=false;
+    }
 }
