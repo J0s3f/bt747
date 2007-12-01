@@ -91,11 +91,11 @@ public class BT747model extends Control {
                         break;
                     case BT747_dev.PMTK_LOG_MEM_USED: // 8;
                         break;
-                    case BT747_dev.PMTK_LOG_TBD3: // 9;
+                    case BT747_dev.PMTK_LOG_INIT: // 9;
                         break;
                     case BT747_dev.PMTK_LOG_NBR_LOG_PTS: // 10;
                         break;
-                    case BT747_dev.PMTK_LOG_TBD2: // 11;
+                    case BT747_dev.PMTK_LOG_FLASH_SECTORS: // 11;
                         break;
                     default:
                     }

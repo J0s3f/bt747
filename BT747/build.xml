@@ -63,6 +63,7 @@
     <target name="updatedate" depends="initdate" description="increase build number and set release date">
         <!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
     	<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
+    	<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match='BUILD_STR = \"[0-9]+\";' replace='BUILD_STR = "${TIMESTAMP}";'/>
     	<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";'/>	
     	<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";'/>	
     	<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}'/>	
