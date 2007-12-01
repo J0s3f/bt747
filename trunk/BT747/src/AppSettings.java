@@ -119,6 +119,9 @@ public class AppSettings implements gps.settings {
     private String logFile;
     private String reportFileBase;
     
+    private boolean solveMacLagProblem=false;
+    
+    
     public AppSettings() {
         init();
         waba.sys.Vm.debug(CONFIG_FILE_NAME);
@@ -168,6 +171,10 @@ public class AppSettings implements gps.settings {
                 }
             }
         }
+//      #if RXTX if(Convert.toInt(java.lang.System.getProperty("bt747_Mac_solvelag",os_name.startsWith("Mac")?"1":"0"))==1) {
+//      #if RXTX         solveMacLagProblem=true;
+//      #if RXTX     }
+
         mVersion=getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
         if((mVersion.length()==4)&&(mVersion.charAt(1)=='.')) {
             getSettings();
@@ -752,4 +759,16 @@ public class AppSettings implements gps.settings {
         setFloatOpt(minSpeed,C_minSpeed_IDX, C_minSpeed_SIZE);
     }
 
+    /**
+     * @return Returns the solveMacLagProblem.
+     */
+    public boolean isSolveMacLagProblem() {
+        return solveMacLagProblem;
+    }
+    /**
+     * @param solveMacLagProblem The solveMacLagProblem to set.
+     */
+    public void setSolveMacLagProblem(boolean solveMacLagProblem) {
+        this.solveMacLagProblem = solveMacLagProblem;
+    }
 }

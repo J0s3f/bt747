@@ -54,6 +54,8 @@ public class GPSconctrl extends Container {
     private Label lbLon; // GPS information
     private Label lbGeoid; // GPS information
     
+    private Label lbVersion;
+    private Label lbFlashInfo;
     private Label lbFirmwareMainVersion;
     private Label lbFirmwareName;
     private Label lbModel;
@@ -74,6 +76,9 @@ public class GPSconctrl extends Container {
         btnBluetooth=new Button("BLUETOOTH");
         btnUSB=new Button("USB");
         btnConnectPort=new Button("Connect Port Nbr");
+        btnStopGps = new Button("Close port");
+        btnRestartGps = new Button("(Re)open port");
+//        btnRestartGps.setGap(5);
         
         String[] portNbrs=new String[C_MAX_PORTNBR+1]; 
         for(int i=0; i<=C_MAX_PORTNBR;i++) {
@@ -84,29 +89,27 @@ public class GPSconctrl extends Container {
         int portNbr=m_Settings.getPortnbr();
 
         add(btnBluetooth,LEFT,TOP);
+//        add(btnRestartGps, RIGHT - 5, BOTTOM - 5);
+        add(btnRestartGps, AFTER + 10, SAME);
         add(btnUSB,RIGHT,SAME);
         add(btnConnectPort,LEFT,AFTER+2);
         add(m_cbPorts,AFTER+3, SAME);
+        add(btnStopGps, RIGHT, SAME);
         if(m_Settings.getPortnbr()<C_MAX_PORTNBR) {
             m_cbPorts.select(portNbr);
         }
         //repaintNow();
         
-        add(lbLat=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
+        add(lbLat=new Label(""), LEFT, AFTER+2); //$NON-NLS-1$)
         add(lbLon=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
         add(lbGeoid=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
 
 
-        btnRestartGps = new Button("(Re)open COM port");
-        btnRestartGps.setGap(5);
-        btnStopGps = new Button("Close port");
-        btnStopGps.setGap(5);
-        add(btnStopGps, LEFT + 5, BOTTOM - 5);
-        add(btnRestartGps, RIGHT - 5, BOTTOM - 5);
-        add(new Label("This SW: V"+Version.VERSION_NUMBER+"("+Version.DATE+")"), LEFT, BEFORE); //$NON-NLS-1$)
+        add(lbVersion=new Label(""), LEFT, BOTTOM - 5); //$NON-NLS-1$)
         add(lbFirmwareMainVersion=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbFirmwareName=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbModel=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
+        add(lbFlashInfo=new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
     }
 
     private void GPS_setChannel(int channel) {
@@ -126,9 +129,16 @@ public class GPSconctrl extends Container {
     }
     
     private void updateButtons() {
+        lbVersion.setText("V"+Version.VERSION_NUMBER+"("+Version.DATE+")   "+m_GPSstate.getMtkLogVersion());
         lbFirmwareMainVersion.setText(((m_GPSstate.getMainVersion().length()!=0)?"Main:":"")+m_GPSstate.getMainVersion());
         lbFirmwareName.setText(((m_GPSstate.getFirmwareVersion().length()!=0)?"Firmware:":"")+m_GPSstate.getFirmwareVersion());
         lbModel.setText(((m_GPSstate.getModel().length()!=0)?"Model:":"")+m_GPSstate.getModel());
+        lbFlashInfo.setText(((m_GPSstate.getFlashManuProdID()!=0)
+                ?
+                        "FlashInfo:"+Convert.unsigned2hex(m_GPSstate.getFlashManuProdID(),8)
+                        +" "+m_GPSstate.getFlashDesc()
+                        :""
+                            ));
         //lbFirmwareMainVersion.repaintNow();
         //lbFirmwareName.repaintNow();
         //lbModel.repaintNow();

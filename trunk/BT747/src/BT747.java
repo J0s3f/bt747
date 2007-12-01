@@ -210,10 +210,10 @@ public class BT747 extends MainWindow {
         //
         switch (event.type) {
         case ControlEvent.TIMER:
-            if (!Settings.onDevice  &&  event.target==this) {
+            if (m_settings.isSolveMacLagProblem() &&  event.target==this) {
                 this._doPaint();
-                event.consumed=true;
             }
+            break;
         case ControlEvent.WINDOW_CLOSED:
             if (event.target==menubar) {
                 switch (m_MenuBar.getSelectedMenuItem()) {
@@ -258,7 +258,7 @@ public class BT747 extends MainWindow {
                     new MessageBox("About BT747 V"+Version.VERSION_NUMBER,
                             " Created with SuperWaba" +
                             "|http://www.superwaba.org"+
-                            "|" +Convert.toString(Version.BUILD)+
+                            "|" +Version.BUILD_STR +
                             "|Written by Mario De Weerd" +
                             "|m.deweerd@ieee.org"+
                             "|"+

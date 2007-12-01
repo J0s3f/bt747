@@ -158,10 +158,15 @@ public final class BT747_dev {  // dev as in device
     public static final int PMTK_LOG_ERASE  = 6;
     public static final int PMTK_LOG_Q_LOG  = 7;
     public static final int PMTK_LOG_DT_LOG = 8;  // REPLY.
-    public static final int PMTK_LOG_TBD    = 9;
+    public static final int PMTK_LOG_INIT    = 9;
+    public static final int PMTK_LOG_ENABLE  = 10;
+    public static final int PMTK_LOG_DISABLE = 11;
+    public static final int PMTK_LOG_WRITE   = 12;
     
     // PMTK182,1,DATA  (DATA = what parameter to set/read/replied)
+    // PMTK182,1,DATA,CMD  (DATA = what parameter to set/read/replied, CMD = extra param)
     
+    public static final int PMTK_LOG_USER           = 1;  // User initiated log point, takes RCR as param.
     public static final int PMTK_LOG_FORMAT         = 2;
     public static final int PMTK_LOG_TIME_INTERVAL  = 3;
     public static final int PMTK_LOG_DISTANCE_INTERVAL = 4;
@@ -169,9 +174,10 @@ public final class BT747_dev {  // dev as in device
     public static final int PMTK_LOG_REC_METHOD     = 6;
     public static final int PMTK_LOG_LOG_STATUS     = 7;
     public static final int PMTK_LOG_MEM_USED       = 8;  // bit 2 = logging on/off
-    public static final int PMTK_LOG_TBD3           = 9;
+    public static final int PMTK_LOG_FLASH          = 9;  // Requires extra param
     public static final int PMTK_LOG_NBR_LOG_PTS    = 10;
-    public static final int PMTK_LOG_TBD2           = 11;
+    public static final int PMTK_LOG_FLASH_SECTORS  = 11;
+    public static final int PMTK_LOG_VERSION        = 12;
     
     // Other MTK commands
     public static final int PMTK_TEST                   = 000;
@@ -252,7 +258,7 @@ public final class BT747_dev {  // dev as in device
     public static final String PMTK_LOG_ERASE_STR = Convert.toString(PMTK_LOG_ERASE);
     public static final String PMTK_LOG_REQ_DATA_STR = Convert.toString(PMTK_LOG_Q_LOG);
     public static final String PMTK_LOG_RESP_DATA_STR = Convert.toString(PMTK_LOG_DT_LOG);  // REPLY.
-    public static final String PMTK_LOG_TBD_STR = Convert.toString(PMTK_LOG_TBD);
+    public static final String PMTK_LOG_INIT_STR = Convert.toString(PMTK_LOG_INIT);
     
     public static final String PMTK_LOG_ERASE_YES_STR = "1";
     
@@ -265,9 +271,10 @@ public final class BT747_dev {  // dev as in device
     public static final String PMTK_LOG_REC_METHOD_STR = Convert.toString(PMTK_LOG_REC_METHOD);
     public static final String PMTK_LOG_LOG_STATUS_STR = Convert.toString(PMTK_LOG_LOG_STATUS);
     public static final String PMTK_LOG_MEM_USED_STR = Convert.toString(PMTK_LOG_MEM_USED);  // bit 2 = logging on/off
-    public static final String PMTK_LOG_TBD3_STR = Convert.toString(PMTK_LOG_TBD3);
+    public static final String PMTK_LOG_FLASH_STR = Convert.toString(PMTK_LOG_FLASH);
     public static final String PMTK_LOG_NBR_LOG_PTS_STR = Convert.toString(PMTK_LOG_NBR_LOG_PTS);
-    public static final String PMTK_LOG_TBD2_STR = Convert.toString(PMTK_LOG_TBD2);
+    public static final String PMTK_LOG_FLASH_SECTORS_STR = Convert.toString(PMTK_LOG_FLASH_SECTORS);
+    public static final String PMTK_LOG_VERSION_STR = Convert.toString(PMTK_LOG_VERSION);
     
     /** Mask for bit in log status indicating that log is active */
     public static final int PMTK_LOG_STATUS_LOGSTOP_OVER_MASK= 0x04;
@@ -421,4 +428,39 @@ public final class BT747_dev {  // dev as in device
     public static final int NMEA_SEN_MCHN_IDX =     18; // PMTKCHN interval – GPS channel status 
 
     
+    public static final int SPI_Y2_MAN_ID_MASK =  0xff00;
+    public static final int SPI_Y2_DEV_ID_MASK =  0x00ff;
+    
+
+    /* SPI flash manufacturer ID's */
+    public static final int SPI_MAN_ID_AMD                = 0x01;
+    public static final int SPI_MAN_ID_FUJITSU            = 0x04;
+    public static final int SPI_MAN_ID_ST_M25P10          = 0x10;
+    public static final int SPI_MAN_ID_ST_M25P20          = 0x11;
+    public static final int SPI_MAN_ID_EON                = 0x1C;
+    public static final int SPI_MAN_ID_MITSUBISHI         = 0x1C;
+    public static final int SPI_MAN_ID_ATMEL              = 0x1F;
+    public static final int SPI_MAN_ID_STMICROELECTRONICS = 0x20;
+    public static final int SPI_MAN_ID_CATALYST           = 0x31;
+    public static final int SPI_MAN_ID_SYNCMOS            = 0x40;
+    public static final int SPI_MAN_ID_INTEL              = 0x89;
+    public static final int SPI_MAN_ID_HYUNDAI            = 0xAD;
+    public static final int SPI_MAN_ID_SST                = 0xBF;  // Silicon Storage Technology
+    public static final int SPI_MAN_ID_MACRONIX           = 0xC2; // MX
+    public static final int SPI_MAN_ID_WINBOND            = 0xDA;
+    
+//    #define MX_29F002              0xB0
+//    +/* MX25L chips are SPI, first byte of device id is memory type,
+//    +   second byte of device id is log(bitsize)-9 */
+//    +#define MX_25L512              0x2010  /* 2^19 kbit or 2^16 kByte */
+//    +#define MX_25L1005             0x2011
+//    +#define MX_25L2005             0x2012
+//    +#define MX_25L4005             0x2013  /* MX25L4005{,A} */
+//    +#define MX_25L8005             0x2014
+//    +#define MX_25L1605             0x2015  /* MX25L1605{,A,D} */
+//    +#define MX_25L3205             0x2016  /* MX25L3205{,A} */
+//    +#define MX_25L6405             0x2017  /* MX25L3205{,D} */
+//    +#define MX_25L1635D            0x2415
+//    +#define MX_25L3235D            0x2416
+
 }
