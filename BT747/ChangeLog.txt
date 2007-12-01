@@ -1,3 +1,9 @@
+Version 1.19
+* Added a popup when erasing that disappears when the erase is finished.
+* Lag delay resolution on MacOS resolved - popups will flicker on MacOS though.
+  This looks very much like a SuperWaba problem - maybe it will get analysed so
+  that flicker on MacOS can be made to disappear.  At least the lag is gone.
+
 Version 1.18
 * Yet another update to try and solve the MacOS lag problem.
 * More information shown on the connection tab (Flash Information & logger version)
