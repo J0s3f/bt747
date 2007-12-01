@@ -171,9 +171,9 @@ public class AppSettings implements gps.settings {
                 }
             }
         }
-//      #if RXTX if(Convert.toInt(java.lang.System.getProperty("bt747_Mac_solvelag",os_name.startsWith("Mac")?"1":"0"))==1) {
-//      #if RXTX         solveMacLagProblem=true;
-//      #if RXTX     }
+        //#if RXTX if(Convert.toInt(java.lang.System.getProperty("bt747_Mac_solvelag",java.lang.System.getProperty("os.name").startsWith("Mac")?"1":"0"))==1) {
+        //#if RXTX         solveMacLagProblem=true;
+        //#if RXTX     }
 
         mVersion=getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
         if((mVersion.length()==4)&&(mVersion.charAt(1)=='.')) {
