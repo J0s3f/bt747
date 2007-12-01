@@ -143,8 +143,12 @@ public final class BT747_dev {  // dev as in device
     public static final int RCR_DISTANCE_MASK=   0x04;
     public static final int RCR_BUTTON_MASK=     0x08;
     
-    public static final String[]C_STR_RCR = { "Time", "Speed", "Distance", "Button"};
-    public static final int C_RCR_COUNT = 4;
+    public static final String[]C_STR_RCR = { "Time", "Speed", "Distance", "Button",
+    "App1","App2","App3","App4",
+    "App5","App6","App7","App8",
+    "App9","App10","App11","App12"
+    };
+    public static final int C_RCR_COUNT = 16;
     
     // PMTK182 commands/replies.
     /** Set a parameter concerning the log */

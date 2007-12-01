@@ -107,7 +107,9 @@ public class AppSettings implements gps.settings {
     private final static int C_GPXTRKSEGBIG_SIZE=1;
     private final static int C_DECODEGPS_IDX=C_GPXTRKSEGBIG_IDX+C_GPXTRKSEGBIG_SIZE;
     private final static int C_DECODEGPS_SIZE=4;
-    private final static int C_NEXT_IDX=C_DECODEGPS_IDX+C_DECODEGPS_SIZE;
+    private final static int C_COLOR_INVALIDTRACK_IDX=C_DECODEGPS_IDX+C_DECODEGPS_SIZE;
+    private final static int C_COLOR_INVALIDTRACK_SIZE=8;
+    private final static int C_NEXT_IDX=C_COLOR_INVALIDTRACK_IDX+C_COLOR_INVALIDTRACK_SIZE;
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
     private final static int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -249,8 +251,11 @@ public class AppSettings implements gps.settings {
         case 10:
             setGpsDecode(true);
             /* fall through */
+        case 11:
+            setColorInvalidTrack("FF0000");
+            /* fall through */
         }
-        setStringOpt("0.11",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.12",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
@@ -755,10 +760,19 @@ public class AppSettings implements gps.settings {
     /**
      * @param minSpeed The minSpeed to setFilter.
      */
-    public void setFilterMinSpeed(float minSpeed) {
+    public void setFilterMinSpeed(final float minSpeed) {
         setFloatOpt(minSpeed,C_minSpeed_IDX, C_minSpeed_SIZE);
     }
 
+    public String getColorInvalidTrack() {
+        return getStringOpt(C_COLOR_INVALIDTRACK_IDX, C_COLOR_INVALIDTRACK_SIZE);
+    }
+    
+    public void setColorInvalidTrack(final String colorInvalidTrack) {
+        setStringOpt(colorInvalidTrack, C_COLOR_INVALIDTRACK_IDX, C_COLOR_INVALIDTRACK_SIZE);
+    }
+
+    
     /**
      * @return Returns the solveMacLagProblem.
      */

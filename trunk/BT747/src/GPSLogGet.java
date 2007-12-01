@@ -78,6 +78,16 @@ public class GPSLogGet extends Container {
             "+1","+2","+3","+4","+5","+6","+7","+8","+9","+10","+11","+12"
     };
     
+    ComboBox m_cbColors;
+    private final static String[] colors = {
+            "FF0000",
+            "0000FF",
+            "800000",
+            "000080",
+            "00FF00",
+            "008000"
+    };
+    
     
     Check m_chkIncremental;
 
@@ -133,8 +143,12 @@ public class GPSLogGet extends Container {
         add(m_btEndDate = new Button(m_EndDate.getDate()), RIGHT, SAME); //$NON-NLS-1$
         //m_btEndDate.setMode(Edit.DATE);
         add(m_btGetLog = new Button("Get Log"), LEFT, AFTER+2); //$NON-NLS-1$
-        add(m_btCancelGetLog = new Button("Cancel get"), AFTER+5, SAME); //$NON-NLS-1$
+        add(m_btCancelGetLog = new Button("Cancel"), AFTER+5, SAME); //$NON-NLS-1$
 
+        m_cbColors=new ComboBox(colors);
+        add(m_cbColors,RIGHT, SAME);
+        add(new Label("No Fix Color"), BEFORE, SAME);
+        
         add(new Label("Trk sep:"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edTrkSep = new Edit("00000"), AFTER, SAME); //$NON-NLS-1$
         m_edTrkSep.setValidChars(Edit.numbersSet);
@@ -172,6 +186,14 @@ public class GPSLogGet extends Container {
         add(m_UsedLabel=new Label(   ""),LEFT, AFTER+3);
         add(m_RecordsLabel=new Label(""),LEFT, AFTER+3);
         
+        String s=m_appSettings.getColorInvalidTrack();
+        m_cbColors.select(0);
+        for (int i = 0; i < m_cbColors.size()-1; i++) {
+            if(s.equals((String)m_cbColors.getItemAt(i))) {
+                m_cbColors.select(i);
+                break;
+            }
+        }
     }
 
     public void updateButtons() {
@@ -220,6 +242,8 @@ public class GPSLogGet extends Container {
                     m_GPSstate.stopLog();
                 }
                 m_GPSstate.getLogOnOffStatus();
+            } else if (event.target == m_cbColors) {
+                m_appSettings.setColorInvalidTrack((String)m_cbColors.getSelectedItem());
             } else if (event.target == m_cbTimeOffsetHours) {
                 // Work around superwaba bug
                 String tmp=(String)m_cbTimeOffsetHours.getSelectedItem();
@@ -297,6 +321,7 @@ public class GPSLogGet extends Container {
                 }
 
                     
+                gpsFile.setBadTrackColor(m_appSettings.getColorInvalidTrack());
                 for (int i = 0; i < usedFilters.length; i++) {
                     m_Filters[i].setStartDate(dateToUTCepoch1970(m_StartDate));
                     m_Filters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
