@@ -6,6 +6,8 @@
  */
 package bt747.ui;
 
+
+
 /**
  * @author Mario De Weerd
  *
@@ -62,6 +64,7 @@ public final class MessageBox extends waba.ui.MessageBox {
         // TODO Auto-generated method stub
         super.onPopup();
         popped=true;
+//        ((btMainAppInterf)MainWindow.getMainWindow()).IncrementPopups();
     }
     /* (non-Javadoc)
      * @see waba.ui.Window#onUnpop()
@@ -69,6 +72,8 @@ public final class MessageBox extends waba.ui.MessageBox {
     protected void onUnpop() {
         // TODO Auto-generated method stub
         super.onUnpop();
+        
+//        ((btMainAppInterf)MainWindow.getMainWindow()).DecrementPopups();
         popped=false;
     }
 }

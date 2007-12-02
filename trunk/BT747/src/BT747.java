@@ -17,10 +17,6 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import bt747.Version;
-import bt747.sys.Convert;
-import bt747.sys.Vm;
-
 import waba.sys.Settings;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
@@ -28,7 +24,6 @@ import waba.ui.Event;
 import waba.ui.Label;
 import waba.ui.MainWindow;
 import waba.ui.MenuBar;
-import waba.ui.MessageBox;
 import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
@@ -37,6 +32,9 @@ import gps.GPSFilter;
 import gps.GPSFilterAdvanced;
 import gps.GPSstate;
 import gps.GpsEvent;
+
+import bt747.Version;
+import bt747.ui.MessageBox;
 
 /** Main class (application entry)
  * 
@@ -207,12 +205,11 @@ public class BT747 extends MainWindow {
 
     }
     
-    
     public void onEvent(Event event) {
         //
         switch (event.type) {
         case ControlEvent.TIMER:
-            if (m_settings.isSolveMacLagProblem() &&  event.target==this) {
+            if ((topMost==this)&&m_settings.isSolveMacLagProblem() &&  event.target==this) {
                 this._doPaint();
             }
             break;
