@@ -132,7 +132,9 @@ public class BT747 extends MainWindow {
     /** Initialiser of the application
      */
     public BT747() {
-        waba.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
+        if(Settings.onDevice) {
+            waba.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
+        }
         orgAutoOnOff=waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off causing BT trouble
 
         setDoubleBuffer(true);

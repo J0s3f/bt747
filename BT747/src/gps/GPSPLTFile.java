@@ -47,9 +47,9 @@ public class GPSPLTFile extends GPSFile {
 //
 
     
-    public void writeLogFmtHeader(final GPSRecord f) {
-        super.writeLogFmtHeader(f);
-        writeTxt("BT747 Track Point File http://sf.net/projects/bt747 Version 0.77\r\n"
+    public void writeFileHeader(final String s) {
+        super.writeFileHeader(s);
+        writeTxt("BT747 Track Point File http://sf.net/projects/bt747 Version "+bt747.Version.VERSION_NUMBER+"\r\n"
                 +"WGS 84\r\n"
                 +"Altitude is in feet\r\n"
                 +"Reserved 3\r\n"
