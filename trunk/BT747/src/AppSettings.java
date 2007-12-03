@@ -126,7 +126,7 @@ public class AppSettings implements gps.settings {
     
     public AppSettings() {
         init();
-        waba.sys.Vm.debug(CONFIG_FILE_NAME);
+        //waba.sys.Vm.debug(CONFIG_FILE_NAME);
         //#if RXTX waba.sys.Vm.debug(java.lang.System.getProperty("bt747_settings"));
     }
     

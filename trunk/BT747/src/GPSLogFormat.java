@@ -75,10 +75,10 @@ public class GPSLogFormat extends Container {
     }
 
     private static final String C_msgWarningFormatIncompatibilityRisk =
-        "You are about to set the format of your device without " +
-        "erasing the log.|Some output formats (CSV) will not be possible.|" +
-        "Other programs may not be able to interpret" +
-        "the data in your device!!!!|" +
+        "You will change the format of your device without " +
+        "erasing the log.|" +
+        "Other software might not understand " +
+        "the data in your device!||" +
         "Do you agree to this incompatibility?";
     
     /** Message warning user about impact of changing log format */

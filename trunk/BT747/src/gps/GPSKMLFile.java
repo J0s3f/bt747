@@ -60,15 +60,15 @@ public class GPSKMLFile extends GPSFile {
   public boolean nextPass() {
       super.nextPass();
       if(m_nbrOfPassesToGo>0) {
-          if(m_multipleFiles) {
-              closeFile();
-          }
+//          if(m_multipleFiles) {
+//              closeFile();  // Close every time - if single file, it gets reopened.
+//          }
           m_nbrOfPassesToGo--;
           m_recCount=0;
           m_prevdate=0;
-          if(!m_multipleFiles) {
-            writeDataFooter();
-          }
+//          if(!m_multipleFiles) {
+//            writeDataFooter();
+//          }
           if (m_isWayType) {
             m_isWayType=false;
             m_isTrackType=true;
@@ -77,9 +77,9 @@ public class GPSKMLFile extends GPSFile {
             m_isPathType=true;
           }
           m_currentFilter=GPSFilter.C_TRKPT_IDX;
-          if(!m_multipleFiles) {
-              writeDataHeader();
-          }
+//          if(!m_multipleFiles) {
+//              writeDataHeader();
+//          }
           return true;
       } else {
           return false;

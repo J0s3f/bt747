@@ -62,17 +62,17 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     public boolean nextPass() {
         super.nextPass();
         if(m_nbrOfPassesToGo>0) {
-            if(m_multipleFiles) {
-                closeFile();
-            }
+//            if(m_multipleFiles) {
+//                closeFile();
+//            }
             m_nbrOfPassesToGo--;
             m_recCount=0;
             m_prevdate=0;
             m_isWayType=false;
             m_currentFilter=GPSFilter.C_TRKPT_IDX;
-            if(!m_multipleFiles) {
-                writeDataHeader();
-            }
+//            if(!m_multipleFiles) {
+//                writeDataHeader();
+//            }
             return true;
         } else {
             return false;
@@ -546,8 +546,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     "</body>\r\n" + 
                     "</html>";
             writeTxt(footer);
-            m_File.close();
-            m_File=null;
+            closeFile();
         }
         
     }

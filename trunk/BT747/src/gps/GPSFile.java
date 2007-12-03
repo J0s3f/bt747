@@ -22,6 +22,7 @@ package gps;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Time;
+import bt747.sys.Vm;
 import bt747.ui.MessageBox;
 import bt747.util.Date;
 
@@ -210,6 +211,13 @@ public abstract class GPSFile {
     public boolean nextPass() {
         m_prevdate = 0;
         m_FirstRecord=true;
+        if(m_nbrOfPassesToGo==0) {
+            // Last Pass done
+            finaliseFile();
+        } else {
+            // More passes to go.
+            closeFile();
+        }
         return false;
     };
 
@@ -253,7 +261,12 @@ public abstract class GPSFile {
 
     protected void closeFile() {
         writeDataFooter();
-        m_File.close();
+        try {
+            m_File.close();
+        } catch (Exception e) {
+            // TODO: handle exception
+            Vm.debug("Closing failed (closeFile) - probably a bug.");
+        }
     }
 
     private final static int DAYS_BETWEEN_1970_1983 = 4748;
@@ -280,6 +293,8 @@ public abstract class GPSFile {
         try {
             if (m_File != null) {
                 m_File.writeBytes(s.getBytes(), 0, s.length());
+            } else {
+                Vm.debug("Writing to closed file");
             }
         } catch (Exception e) {
 

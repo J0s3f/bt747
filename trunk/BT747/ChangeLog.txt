@@ -1,3 +1,10 @@
+Version 1.20
+* Solved several problems related to multiple and single file creation.
+
+Version 1.19.1
+* Added an extra condition for MacOS to solve the flicker with menus and popups.
+  The program seems to behave normally on that OS now.
+
 Version 1.19
 * Added a popup when erasing that disappears when the erase is finished.
 * Lag delay resolution on MacOS resolved - popups will flicker on MacOS though.
