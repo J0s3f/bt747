@@ -457,9 +457,8 @@ public class GPSGmapsHTMLFile extends GPSFile {
                     "</body>\r\n" + 
                     "</html>";
             writeTxt(footer);
-            m_File.close();
-            m_File=null;
         }
+        super.finaliseFile();
         
     }
     

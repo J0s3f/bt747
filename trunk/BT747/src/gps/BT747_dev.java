@@ -19,6 +19,7 @@
 //********************************************************************                              
 package gps;
 import bt747.sys.Convert;
+import bt747.sys.Vm;
 
 
 /** Constants for the iBlue 747 (BT747) device
@@ -142,11 +143,24 @@ public final class BT747_dev {  // dev as in device
     public static final int RCR_SPEED_MASK=      0x02;
     public static final int RCR_DISTANCE_MASK=   0x04;
     public static final int RCR_BUTTON_MASK=     0x08;
+    public static final int RCR_APP1_MASK=     0x0010;
+    public static final int RCR_APP2_MASK=     0x0020;
+    public static final int RCR_APP3_MASK=     0x0040;
+    public static final int RCR_APP4_MASK=     0x0080;
+    public static final int RCR_APP5_MASK=     0x0100;
+    public static final int RCR_APP6_MASK=     0x0200;
+    public static final int RCR_APP7_MASK=     0x0400;
+    public static final int RCR_APP8_MASK=     0x0800;
+    public static final int RCR_APP9_MASK=     0x1000;
+    public static final int RCR_APPX_MASK=    0x2000;
+    public static final int RCR_APPY_MASK=    0x4000;
+    public static final int RCR_APPZ_MASK=    0x8000;
+    public static final int RCR_ALL_APP_MASK=  0xFFF0;
     
     public static final String[]C_STR_RCR = { "Time", "Speed", "Distance", "Button",
     "App1","App2","App3","App4",
     "App5","App6","App7","App8",
-    "App9","App10","App11","App12"
+    "App9","AppX","AppY","AppZ"
     };
     public static final int C_RCR_COUNT = 16;
     
@@ -364,12 +378,17 @@ public final class BT747_dev {  // dev as in device
                     break;
                 default:
                     // Other fields contribute
-                    total+=logFmtByteSizes[index];
+                    try {
+                        total+=logFmtByteSizes[index];
+                    } catch (Exception e) {
+                        // TODO: Check when this happens.
+                        Vm.debug("Bad log format");
+                    }
                     break;
                 }
             }
             index++;
-        } while((bits>>=1) != 0);
+        } while((bits>>>=1) != 0);
         return total;
     }    
 

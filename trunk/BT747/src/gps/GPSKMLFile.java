@@ -397,7 +397,8 @@ public class GPSKMLFile extends GPSFile {
     
                     rec.append("<styleUrl>");
                     if(activeFields.rcr!=0) {
-                        String style="";
+                        String style=getRCRstr(s);
+                        
                         if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
                             style+="T";
                         }
@@ -410,7 +411,7 @@ public class GPSKMLFile extends GPSFile {
                         if((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
                             style+="B";
                         }
-                        if(style.length()!=1) {
+                        if(style.length()>1 || ((s.rcr&BT747_dev.RCR_ALL_APP_MASK)!=0)) {
                             style="M";
                         }
                         rec.append("#Style");

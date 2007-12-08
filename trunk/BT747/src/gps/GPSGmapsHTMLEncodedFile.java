@@ -546,8 +546,8 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     "</body>\r\n" + 
                     "</html>";
             writeTxt(footer);
-            closeFile();
         }
+        super.finaliseFile();
         
     }
     

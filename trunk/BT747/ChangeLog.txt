@@ -1,3 +1,8 @@
+Version 1.21
+* Advanced filter was not set up correctly - correctly.
+* Index out of range could occur when estimating size of a record due to signed
+  bit shift - solved (unsigned bit shift).
+
 Version 1.20
 * Solved several problems related to multiple and single file creation.
 

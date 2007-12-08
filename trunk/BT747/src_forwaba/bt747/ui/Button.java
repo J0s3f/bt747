@@ -7,8 +7,6 @@
 package bt747.ui;
 
 import waba.fx.Image;
-import waba.ui.Event;
-import waba.ui.PenEvent;
 
 /**
  * @author Mario De Weerd

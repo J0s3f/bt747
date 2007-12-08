@@ -129,18 +129,7 @@ public class GPSCSVFile extends GPSFile {
                 rec.append(fieldSep);
             }
             if(activeFields.rcr!=0) {
-                if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
-                    rec.append("T");
-                }
-                if((s.rcr&BT747_dev.RCR_SPEED_MASK)!=0) {
-                    rec.append("S");
-                }
-                if((s.rcr&BT747_dev.RCR_DISTANCE_MASK)!=0) {
-                    rec.append("D");
-                }
-                if((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
-                    rec.append("B");
-                }
+                rec.append(getRCRstr(s));
             }
             if(activeFields.utc!=0) {
                 rec.append(fieldSep+Convert.toString(t.getYear())+"/"

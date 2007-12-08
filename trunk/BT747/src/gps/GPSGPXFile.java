@@ -258,23 +258,8 @@ public class GPSGPXFile extends GPSFile {
                 //                    <sym> xsd:string </sym> [0..1] ?
                 //                    <type> xsd:string </type> [0..1] ?
                 if((activeFields.rcr!=0)) {
-                    if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
-                        rcrStr+="T";
-                    }
-                    if((s.rcr&BT747_dev.RCR_SPEED_MASK)!=0) {
-                        rcrStr+="S";
-                    }
-                    if((s.rcr&BT747_dev.RCR_DISTANCE_MASK)!=0) {
-                        rcrStr+="D";
-                    }
-                    if((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
-                        rcrStr+="B";
-                    }
-                    //                    if(style.length()!=1) {
-                    //                        style="M";
-                    //                    }
                     rec.append("<type>");
-                    rec.append(rcrStr);
+                    rec.append(getRCRstr(s));
                     rec.append("</type>\r\n");
                 }
                 
@@ -403,8 +388,7 @@ public class GPSGPXFile extends GPSFile {
             writeDataFooter();
             footer= "</gpx>";
             writeTxt(footer);
-            m_File.close();
-            m_File=null;
+            closeFile();
         }
         
     }
