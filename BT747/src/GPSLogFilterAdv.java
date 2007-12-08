@@ -152,32 +152,38 @@ public class GPSLogFilterAdv extends Container {
 
     }
     
-    public void setSettings() {
+    private void setFilters() {
         for (int i = 0; i < m_gpsFilters.length; i++) {
             GPSFilterAdvanced filter = m_gpsFilters[i];
-            filter.setMinRecCnt(Convert.toInt(m_minRecCount.getText()));
-            filter.setMaxRecCount(Convert.toInt(m_maxRecCount.getText()));
-            filter.setMinSpeed(Convert.toFloat(m_minSpeed.getText()));
-            filter.setMaxSpeed(Convert.toFloat(m_maxSpeed.getText()));
-            filter.setMinDist(Convert.toFloat(m_minDist.getText()));
-            filter.setMaxDist(Convert.toFloat(m_maxDist.getText()));
-            filter.setMaxPDOP((int)(Convert.toFloat(m_maxPDOP.getText())*100));
-            filter.setMaxHDOP((int)(Convert.toFloat(m_maxHDOP.getText())*100));
-            filter.setMaxVDOP((int)(Convert.toFloat(m_maxVDOP.getText())*100));
-            filter.setMinNSAT(Convert.toInt(m_minNSAT.getText()));
+            filter.setMinRecCount(m_settings.getFilterMinRecCount());
+            filter.setMaxRecCount(m_settings.getFilterMaxRecCount());
+            filter.setMinSpeed(m_settings.getFilterMinSpeed());
+            filter.setMaxSpeed(m_settings.getFilterMaxSpeed());
+            filter.setMinDist(m_settings.getFilterMinDist());
+            filter.setMaxDist(m_settings.getFilterMaxDist());
+            filter.setMaxPDOP((int)(m_settings.getFilterMaxPDOP()*100));
+            filter.setMaxHDOP((int)(m_settings.getFilterMaxHDOP()*100));
+            filter.setMaxVDOP((int)(m_settings.getFilterMaxVDOP()*100));
+            filter.setMinNSAT(m_settings.getFilterMinNSAT());
         }
-        GPSFilterAdvanced filter = m_gpsFilters[0];
-        m_settings.setFilterMinRecCount(filter.getMinRecCnt());
-        m_settings.setFilterMaxRecCount(filter.getMaxRecCount());
-        m_settings.setFilterMinSpeed(filter.getMinSpeed());
-        m_settings.setFilterMaxSpeed(filter.getMaxSpeed());
-        m_settings.setFilterMinDist(filter.getMinDist());
-        m_settings.setFilterMaxDist(filter.getMaxDist());
-        m_settings.setFilterMaxPDOP((float)filter.getMaxPDOP()/100f);
-        m_settings.setFilterMaxHDOP(filter.getMaxHDOP()/100f);
-        m_settings.setFilterMaxVDOP(filter.getMaxVDOP()/100f);
-        m_settings.setFilterMinNSAT(filter.getMinNSAT());
+    }
+
+    
+    public void setSettings() {
+
+        m_settings.setFilterMinRecCount(Convert.toInt(m_minRecCount.getText()));
+        m_settings.setFilterMaxRecCount(Convert.toInt(m_maxRecCount.getText()));
+        m_settings.setFilterMinSpeed(Convert.toFloat(m_minSpeed.getText()));
+        m_settings.setFilterMaxSpeed(Convert.toFloat(m_maxSpeed.getText()));
+        m_settings.setFilterMinDist(Convert.toFloat(m_minDist.getText()));
+        m_settings.setFilterMaxDist(Convert.toFloat(m_maxDist.getText()));
+        m_settings.setFilterMaxPDOP((Convert.toFloat(m_maxPDOP.getText())));
+        m_settings.setFilterMaxHDOP((Convert.toFloat(m_maxHDOP.getText())));
+        m_settings.setFilterMaxVDOP((Convert.toFloat(m_maxVDOP.getText())));
+        m_settings.setFilterMinNSAT(Convert.toInt(m_minNSAT.getText()));
+
         m_settings.saveSettings();
+        setFilters();
     }
 
     public void getSettings() {
@@ -194,6 +200,7 @@ public class GPSLogFilterAdv extends Container {
             m_maxVDOP.setText(Convert.toString(m_settings.getFilterMaxVDOP(),2));
             m_minNSAT.setText(Convert.toString(m_settings.getFilterMinNSAT()));
         }
+        setFilters();
     }
     
     public void clearSettings() {

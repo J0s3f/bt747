@@ -81,7 +81,7 @@ public final class BT747LogConvert {
                 }
             }
             index++;
-        } while((bits>>=1) != 0);
+        } while((bits>>>=1) != 0);
         satIdxOffset=total;
     }    
 

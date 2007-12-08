@@ -55,17 +55,17 @@ public class FileSelect extends Window {
     
     public void setPath(final String path) {
         if(dirOnly&&!path.endsWith("/")) {
-            relPath=new String(path+"/");
+            relPath=path+"/";
         } else {
-            relPath=new String(path);
+            relPath=path;
         }
     }
 
     public void setRoot(final String path) {
         if(path.endsWith("/")) {
-            root=new String(path);
+            root=path;
         } else {
-            root=new String(path+"/");
+            root=path+"/";
         }
     }
     public String getPath() {

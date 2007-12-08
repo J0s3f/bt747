@@ -45,16 +45,16 @@ public class GPSFilterAdvanced extends GPSFilter {
         // Filter the record information
         boolean z_Result;
         z_Result=super.doFilter(r)
-            &&((r.recCount<=0)||((minRecCount<0)||(r.recCount>=minRecCount)))
-            &&((r.recCount<=0)||((maxRecCount<0)||(r.recCount<=maxRecCount)))
-            &&((r.speed<=0)||((minSpeed<0)||(r.speed>=minSpeed)))
-            &&((r.speed<=0)||((maxSpeed<0)||(r.speed<=maxSpeed)))
-            &&((r.distance<=0)||((minDist<0)||(r.distance>=minDist)))
-            &&((r.distance<=0)||((maxDist<0)||(r.distance<=maxDist)))
-            &&((r.pdop<=0)||((maxPDOP<0)||(r.pdop<=maxPDOP)))
-            &&((r.hdop<=0)||((maxHDOP<0)||(r.hdop<=maxHDOP)))
-            &&((r.vdop<=0)||((maxVDOP<0)||(r.vdop<=maxVDOP)))
-            &&((r.nsat<0)||((minNSAT<0)||(((r.nsat&0xFF00)>>8)<=minNSAT)))
+            &&((r.recCount<=0)||((minRecCount<=0)||(r.recCount>=minRecCount)))
+            &&((r.recCount<=0)||((maxRecCount<=0)||(r.recCount<=maxRecCount)))
+            &&((r.speed<=0)||((minSpeed<=0)||(r.speed>=minSpeed)))
+            &&((r.speed<=0)||((maxSpeed<=0)||(r.speed<=maxSpeed)))
+            &&((r.distance<=0)||((minDist<=0)||(r.distance>=minDist)))
+            &&((r.distance<=0)||((maxDist<=0)||(r.distance<=maxDist)))
+            &&((r.pdop<=0)||((maxPDOP<=0)||(r.pdop<=maxPDOP)))
+            &&((r.hdop<=0)||((maxHDOP<=0)||(r.hdop<=maxHDOP)))
+            &&((r.vdop<=0)||((maxVDOP<=0)||(r.vdop<=maxVDOP)))
+            &&((r.nsat<0)||((minNSAT<=0)||(((r.nsat&0xFF00)>>8)<=minNSAT)))
             ;
         
         return z_Result;
@@ -165,7 +165,7 @@ public class GPSFilterAdvanced extends GPSFilter {
     /**
      * @param minRecCnt The minRecCnt to set.
      */
-    public void setMinRecCnt(int minRecCnt) {
+    public void setMinRecCount(int minRecCnt) {
         this.minRecCount = minRecCnt;
     }
     /**
