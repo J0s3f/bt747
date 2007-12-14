@@ -1074,6 +1074,15 @@ public class GPSstate implements Thread {
 
             }
             break;
+        case BT747_dev.SPI_MAN_ID_EON:
+            if ((DevType == 0x20)) { // || (DevType == 0x24)) {
+                // Supposing the same rule as macronix.
+                // Example device: EN25P16
+                logMemSize = 0x1 << ((FlashManuProdID >> 8) & 0xFF);
+                FlashDesc = "(EON," + logMemSize / (1024 * 1024) + "MB)";
+
+            }
+            break;
 
         default:
             break;
