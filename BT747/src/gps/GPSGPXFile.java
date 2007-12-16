@@ -388,8 +388,8 @@ public class GPSGPXFile extends GPSFile {
             writeDataFooter();
             footer= "</gpx>";
             writeTxt(footer);
-            closeFile();
         }
+        super.finaliseFile();
         
     }
     

@@ -1,3 +1,10 @@
+Version 1.22.1
+* Solution provided in 1.22 resulted in KML format generation problems.
+  Solution is improved.
+
+Version 1.22
+* Extra 'DataFooter' was written at end of file (at least for the GPX format) - solved.
+
 Version 1.21.1
 * Added flash device type (no functional changes)
 

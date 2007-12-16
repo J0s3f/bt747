@@ -141,6 +141,7 @@ public class BT747 extends MainWindow {
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle("i-Blue 747/757 / BT-Q1000");
         Settings.setUIStyle(Settings.Flat);
+        Settings.keyboardFocusTraversable = true;
         for (int i = 0; i < m_GPSFilter.length; i++) {
             m_GPSFilter[i]=new GPSFilter();
             m_GPSFilterAdv[i]=new GPSFilterAdvanced();
