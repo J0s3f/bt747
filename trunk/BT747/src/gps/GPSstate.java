@@ -1019,7 +1019,7 @@ public class GPSstate implements Thread {
             mdStr = "iBlue 747";
             break;
         case 0x001D:
-            mdStr = "BT-Q1000 / BGL-32";
+            mdStr = "747/Q1000/BGL-32";
             break;
         case 0x0131:
             mdStr = "EB-85A";
