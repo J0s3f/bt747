@@ -54,7 +54,7 @@ public class GPSFilterAdvanced extends GPSFilter {
             &&((r.pdop<=0)||((maxPDOP<=0)||(r.pdop<=maxPDOP)))
             &&((r.hdop<=0)||((maxHDOP<=0)||(r.hdop<=maxHDOP)))
             &&((r.vdop<=0)||((maxVDOP<=0)||(r.vdop<=maxVDOP)))
-            &&((r.nsat<0)||((minNSAT<=0)||(((r.nsat&0xFF00)>>8)<=minNSAT)))
+            &&((r.nsat<0)||((minNSAT<=0)||(((r.nsat&0xFF00)>>8)>=minNSAT)))
             ;
         
         return z_Result;

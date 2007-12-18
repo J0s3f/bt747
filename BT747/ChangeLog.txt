@@ -1,3 +1,6 @@
+Version 1.23
+* NSAT advanced filter logic was inverted - corrected
+
 Version 1.22
 * Solution provided in 1.21.2 resulted in KML format generation problems.
   Solution is improved.
