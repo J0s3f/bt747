@@ -1,3 +1,8 @@
+Version 1.24.1
+* Added new button on the 'Easy tab': Forced erase.  This will reformat the log and reset
+  any statistics regarding bad sectors.
+* Added initial delay to check if erase was successfull.
+
 Version 1.23
 * NSAT advanced filter logic was inverted - corrected
 

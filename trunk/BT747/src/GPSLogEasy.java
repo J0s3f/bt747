@@ -45,6 +45,8 @@ public class GPSLogEasy extends Container {
       private Button m_btFullColdStart;
 
       private Button [] chkRCR =new Button[BT747_dev.C_RCR_COUNT];
+
+      private Button m_btForceErase;
       
       private Label lbLogUserTxt;
       
@@ -58,7 +60,9 @@ public class GPSLogEasy extends Container {
           add(m_btHotStart = new Button("Hot start"), LEFT, AFTER+10); //$NON-NLS-1$
           add(m_btWarmStart = new Button("Warm start"), CENTER, SAME); //$NON-NLS-1$
           add(m_btColdStart = new Button("Cold start"), RIGHT, SAME); //$NON-NLS-1$
-          add(m_btFullColdStart = new Button("Factory reset"), CENTER, AFTER+2); //$NON-NLS-1$
+          add(m_btFullColdStart = new Button("Factory reset"), LEFT, AFTER+2); //$NON-NLS-1$
+
+          add(m_btForceErase = new Button("Forced erase"), RIGHT, SAME); //$NON-NLS-1$
 
           add(lbLogUserTxt=new Label("Click to log a point with reason:"),LEFT,AFTER+2);
           // Add all tick buttons.
@@ -119,6 +123,8 @@ public class GPSLogEasy extends Container {
                   // Exit application
                   m_GPSstate.doFullColdStart();
               }
+          } else if (event.target==m_btForceErase) {
+              m_GPSstate.recoveryEraseLog();
           } else {
               for (int i=0;i<BT747_dev.C_RCR_COUNT;i++) {
                   if (event.target==chkRCR[i]) {

@@ -96,6 +96,9 @@ public class GPSstate implements Thread {
     public int datum = 0; // Datum WGS84, TOKYO-M, TOKYO-A
 
     public boolean loggingIsActive = false;
+    public boolean loggerIsFull = false;
+    public boolean loggerNeedsInit = false;
+    public boolean loggerIsDisabled = false;
 
     public boolean logFullOverwrite = false; // When true, overwrite log when
                                              // device is full
@@ -146,6 +149,8 @@ public class GPSstate implements Thread {
     public int NMEA_periods[] = new int[BT747_dev.C_NMEA_SEN_COUNT];
 
     private boolean GPS_STATS = false; //(!Settings.onDevice);
+    
+    private final int C_LOGERASE_TIMEOUT = 2000; // Timeout between log status requests for erase.
 
     /**
      * Initialiser
@@ -309,7 +314,8 @@ public class GPSstate implements Thread {
                 );
         mbErase.popupModal();
         m_logState=C_LOG_ERASE_STATE;
-        readLogFlashStatus();
+        resetLogTimeOut();
+        //readLogFlashStatus();  - Will be done after timeout
     }
 
 
@@ -349,6 +355,18 @@ public class GPSstate implements Thread {
             waitEraseDone();
         }
     }
+
+    
+    public void recoveryEraseLog() {
+        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
+                + BT747_dev.PMTK_LOG_ENABLE ); // TODO: STR
+        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
+                + BT747_dev.PMTK_LOG_INIT ); // TODO: STR
+        eraseLog();
+    }
+//        public static final int PMTK_LOG_ENABLE  = 10;
+//        public static final int PMTK_LOG_DISABLE = 11;
+
 
     /**
      * A single request to get information from the device's log.
@@ -406,7 +424,7 @@ public class GPSstate implements Thread {
     }
 
     static final int C_SEND_BUF_SIZE = 5;
-
+    
     Vector sentCmds = new Vector(); // List of sent commands
 
     static final int C_MAX_SENT_COMMANDS = 10; // Max commands to put in list
@@ -1122,7 +1140,7 @@ public class GPSstate implements Thread {
                         if(!mbErase.isPopped()) {
                             mbErase=null;
                             m_logState=C_LOG_NOLOGGING;
-                        } else if((Vm.getTimeStamp()-logTimer)>m_settings.getDownloadTimeOut()) {
+                        } else if((Vm.getTimeStamp()-logTimer)>C_LOGERASE_TIMEOUT) {
                             readLogFlashStatus();
                         }
  
@@ -1654,6 +1672,10 @@ public class GPSstate implements Thread {
                                                         // on/off
                         logStatus = Convert.toInt(nmea[3]);
                         loggingIsActive = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
+                        loggerIsFull    = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
+                        loggerNeedsInit = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
+                        loggerIsDisabled = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
+
                         PostStatusUpdateEvent();
                         break;
                     case BT747_dev.PMTK_LOG_MEM_USED: // 8;
