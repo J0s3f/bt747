@@ -298,8 +298,13 @@ public final class BT747_dev {  // dev as in device
     public static final String PMTK_LOG_VERSION_STR = Convert.toString(PMTK_LOG_VERSION);
     
     /** Mask for bit in log status indicating that log is active */
-    public static final int PMTK_LOG_STATUS_LOGSTOP_OVER_MASK= 0x04;
-    public static final int PMTK_LOG_STATUS_LOGONOF_MASK= 0x02;
+    public static final int PMTK_LOG_STATUS_LOGISFULL_MASK= 0x800;  // bit 11
+    public static final int PMTK_LOG_STATUS_LOGMUSTINIT_MASK= 0x400;  // bit 10
+    public static final int PMTK_LOG_STATUS_LOGDISABLED_MASK= 0x200;  // bit 9
+    public static final int PMTK_LOG_STATUS_LOGENABLED_MASK= 0x100;  // bit 8
+    public static final int PMTK_LOG_STATUS_LOGSTOP_OVER_MASK= 0x04; // bit 2
+    public static final int PMTK_LOG_STATUS_LOGONOF_MASK= 0x02; // bit 1
+
     
     // Other MTK commands
     public static final String PMTK_TEST_STR = "000"; //Convert.toString(PMTK_TEST);
