@@ -1,3 +1,6 @@
+Version 1.25
+* Updated the UTC range to go up to +14.
+
 Version 1.24.1
 * Added new button on the 'Easy tab': Forced erase.  This will reformat the log and reset
   any statistics regarding bad sectors.
