@@ -22,6 +22,10 @@
 		<pathelement location="webstart/RXTXcomm.jar"/>
 	</path>
 
+	<path id="symbianclasspath">
+		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
+	</path>
+
 	<!-- Warp/Exegen classpath -->
 	<path id="utils">
 		<pathelement location="${superwaba_root}/lib/SuperWabaTools.jar"/>
@@ -83,6 +87,7 @@
 			<include name="**/*.java"/>
 			<exclude name="gps/model/*"/>
 			<exclude name="gps/port/GPSRxTxPort.java"/>
+			<exclude name="gps/port/GPSWabaSocketPort.java*"/>
 			<classpath refid="classpath"/>
 		</javac>
 		<copy todir="build">
@@ -113,6 +118,7 @@
 		<javac srcdir="rxtxsrc" destdir="rxtxbuild" target="1.1" optimize="true" classpathref="rxtxclasspath">
 			<include name="**/*.java"/>
 			<exclude name="gps/port/GPSWabaPort.java*"/>
+			<exclude name="gps/port/GPSWabaSocketPort.java*"/>
 			<exclude name="gps/model/*"/>
 		</javac>
 		<copy todir="rxtxbuild">
@@ -123,6 +129,38 @@
 	
 	</target>
 
+	<target name="symbianbuild" depends="clean, updatedate">
+	
+		<mkdir dir="symbianbuild"/>
+		<delete dir="symbiansrc"/>
+		<mkdir dir="symbiansrc"/>
+
+		<copy todir="symbiansrc">
+			<fileset dir="src">
+				<include name="**/*.java"/>
+				<exclude name="gps/port/GPSWabaPort.java"/>
+				<exclude name="gps/port/GPSFilePort.java"/>
+				<exclude name="gps/port/GPSRxTxPort.java"/>
+			</fileset>
+			<fileset dir="src_forwaba">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+    	<replace file="symbiansrc/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSWabaSocketPort" />
+
+		<javac srcdir="symbiansrc" destdir="symbianbuild" target="1.1" optimize="true" classpathref="symbianclasspath">
+			<include name="**/*.java"/>
+			<exclude name="gps/model/*"/>
+		</javac>
+		<copy todir="symbianbuild">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	
+	</target>
+
+	
 	<target name="filebuild" depends="clean, updatedate">
 	
 		<mkdir dir="filebuild"/>
@@ -170,6 +208,21 @@
 		</jar>
 		<copy todir="dist">
 			<fileset dir="rxtxbuild">
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
+		
+	
+	</target>
+
+	
+	<target name="symbianjar" depends="symbianbuild">
+	
+		<jar jarfile="symbianbuild/${ant.project.name}_symbian.jar">
+			<fileset dir="symbianbuild" includes="**/*.class"/>
+		</jar>
+		<copy todir="dist">
+			<fileset dir="symbianbuild">
 				<include name="**/*.jar"/>
 			</fileset>
 		</copy>
@@ -240,6 +293,22 @@
 		</java>
 	
 	</target>
+
+	<!-- Execute WARP -->
+	<target name="symbianwarp" depends="symbianjar">
+	
+		<java dir="symbianbuild" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
+			<arg value="c"/>
+			<arg value="/x"/>
+			<arg value="GPSFilePort"/>
+			<arg value="/c"/>
+			<arg value="BT74"/>
+			<arg value="${ant.project.name}"/>
+			<arg value="${ant.project.name}_symbian.jar"/>
+		</java>
+	
+	</target>
+
 	
 	<!-- Prepare EXEGEN execution -->
 	<target name="prepare-exegen">
@@ -252,7 +321,18 @@
 		</copy>
 	
 	</target>
+
+	<target name="symbianprepare-exegen">
+		
+		<mkdir dir="icons"/>
+		<copy todir="symbianbuild">
+			<fileset dir="icons">
+				<include name="*.bmp"/>
+			</fileset>
+		</copy>
 	
+	</target>
+
 	<!-- Execute EXEGEN -->
 	<target name="exegen" depends="warp, prepare-exegen">
 	
@@ -267,6 +347,22 @@
 		</java>
 	
 	</target>
+
+	<!-- Execute EXEGEN -->
+	<target name="symbianexegen" depends="symbianwarp, symbianprepare-exegen">
+	
+		<java dir="symbianbuild" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
+			<!-- <arg value="/INST"/> -->
+			<arg value="/SIS"/>
+			<arg value="/c"/>
+			<arg value="BT74"/>
+			<arg value="${ant.project.name}"/>
+			<arg value=""/>
+			<arg value="${ant.project.name}"/>
+		</java>
+	
+	</target>
+
 	
 	<!-- Execute EXEGEN with WinCE EXE -->
 	<target name="exegen-exe" depends="warp, prepare-exegen">
