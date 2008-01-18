@@ -114,6 +114,9 @@ public class GPSrxtx {
     public int getSpeed() {
         return gpsPort.getSpeed();
     }
+    public void setSpeed(int speed) {
+        gpsPort.setSpeed(speed);
+    }
     
     
     private static final int C_INITIAL_STATE = 0;
