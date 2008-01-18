@@ -265,6 +265,10 @@ public class GPSstate implements Thread {
         GPS_postConnect();
     }
 
+    public void setSpeed(int speed) {
+        m_GPSrxtx.setSpeed(speed);
+    }
+
     /**
      * Start the timer To be called once the port is opened. The timer is used
      * to launch functions that will check if there is information on the serial

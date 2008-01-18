@@ -112,7 +112,7 @@ public class GPSRxTxPort extends GPSPort {
                {
                    SerialPort serialPort = (SerialPort)commPort;
                    sp = serialPort;
-                   serialPort.setSerialPortParams(0x1c200, 8, 1, 0);
+                   serialPort.setSerialPortParams(getSpeed(), 8, 1, 0);
                    ds = sp.getOutputStream();
                    result=0;
                } else

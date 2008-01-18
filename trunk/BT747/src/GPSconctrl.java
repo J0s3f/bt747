@@ -45,7 +45,7 @@ public class GPSconctrl extends Container {
     private Button btnRestartGps;
     private Button btnStopGps;
     private Button btnBluetooth;
-    private Button btnUSB;
+//    private Button btnUSB;
     private Button btnConnectPort;
 
     private GPSstate m_GPSstate;
@@ -61,7 +61,11 @@ public class GPSconctrl extends Container {
     private Label lbModel;
     ComboBox m_cbPorts;
 
-    
+    ComboBox m_cbBaud;
+    private final static String[] BaudRates = {
+            "115200", "38400"
+    };
+  
 
     private final static int C_MAX_PORTNBR = 32;
     private AppSettings m_Settings;
@@ -74,7 +78,7 @@ public class GPSconctrl extends Container {
     public void onStart() {
 
         btnBluetooth=new Button("BLUETOOTH");
-        btnUSB=new Button("USB");
+//        btnUSB=new Button("USB");
         btnConnectPort=new Button("Connect Port Nbr");
         btnStopGps = new Button("Close port");
         btnRestartGps = new Button("(Re)open port");
@@ -88,10 +92,15 @@ public class GPSconctrl extends Container {
         
         int portNbr=m_Settings.getPortnbr();
 
+        String baudRate=Convert.toString(m_Settings.getBaudRate());
+        m_cbBaud=new ComboBox(BaudRates);
+
+        
         add(btnBluetooth,LEFT,TOP);
 //        add(btnRestartGps, RIGHT - 5, BOTTOM - 5);
         add(btnRestartGps, AFTER + 10, SAME);
-        add(btnUSB,RIGHT,SAME);
+//        add(btnUSB,RIGHT,SAME);
+        add(m_cbBaud,RIGHT,SAME);
         add(btnConnectPort,LEFT,AFTER+2);
         add(m_cbPorts,AFTER+3, SAME);
         add(btnStopGps, RIGHT, SAME);
@@ -99,7 +108,17 @@ public class GPSconctrl extends Container {
             m_cbPorts.select(portNbr);
         }
         //repaintNow();
-        
+        m_cbBaud.select(0);
+        for (int i = 0; i < m_cbBaud.size(); i++) {
+            if(baudRate.equals((String)m_cbBaud.getItemAt(i))) {
+                m_cbBaud.select(i);
+                break;
+            }
+        }
+        // Set a default setting
+        if(!baudRate.equals((String)m_cbBaud.getSelectedItem())) {
+            m_Settings.setBaudRate(Convert.toInt(baudRate));
+        }        
         add(lbLat=new Label(""), LEFT, AFTER+2); //$NON-NLS-1$)
         add(lbLon=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
         add(lbGeoid=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
@@ -119,10 +138,10 @@ public class GPSconctrl extends Container {
             m_GPSstate.setBluetooth();
             btnBluetooth.press(true);
             break;
-        case SerialPort.USB:
-            m_GPSstate.setUsb();
-            btnUSB.press(true);
-            break;
+//        case SerialPort.USB:
+//            m_GPSstate.setUsb();
+//            btnUSB.press(true);
+//            break;
         default:
             m_GPSstate.setPort(channel);
             break;
@@ -183,9 +202,12 @@ public class GPSconctrl extends Container {
             if (event.target == btnBluetooth) {
                 GPS_setChannel(SerialPort.BLUETOOTH);
             } else if (event.target == btnConnectPort) {
+                m_GPSstate.setSpeed(Convert.toInt((String)m_cbBaud.getSelectedItem()));
                 GPS_setChannel(Convert.toInt(((String)m_cbPorts.getSelectedItem())));
-            } else if (event.target == btnUSB) {
-                GPS_setChannel(SerialPort.USB);
+//            } else if (event.target == btnUSB) {
+//                GPS_setChannel(SerialPort.USB);
+            } else if (event.target == m_cbBaud) {
+               //m_Settings.setBaudRate(Convert.toInt((String)m_cbBaud.getSelectedItem()));
             } else if (event.target == m_cbPorts) {
                 
             } else if (event.target==this) {

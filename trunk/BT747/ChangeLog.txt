@@ -1,3 +1,10 @@
+Version 1.27
+* Selected port number was not correctly recovered from settings.
+
+Version 1.26
+* Possibility to change baud rate setting.
+* Removed 'USB' button, no longer usefull (other means exists)
+
 Version 1.25
 * Updated the UTC range to go up to +14.
 
