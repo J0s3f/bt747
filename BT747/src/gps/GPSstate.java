@@ -1037,6 +1037,9 @@ public class GPSstate implements Thread {
         case 0x0002:
             mdStr = "Qstartz 815";
             break;
+        case 0x0005:
+            mdStr = "Holux M-241";
+            break;
         case 0x001B:
             mdStr = "iBlue 747";
             break;
