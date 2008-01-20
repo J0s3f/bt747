@@ -235,15 +235,19 @@ public final class Conv {
         ilat2=(ilat < GEOID_ROW-1)? ilat+1:ilat;
         ilon2=(ilon < GEOID_COL-1)? ilon+1:ilon;
 
-        return bilinear(
-                ilon1*10.-180.,ilat1*10.-90.,
-                ilon2*10.-180.,ilat2*10.-90.,
-                lon,           lat,
-                (double)geoid_delta[ilon1+ilat1*GEOID_COL],
-                (double)geoid_delta[ilon2+ilat1*GEOID_COL],
-                (double)geoid_delta[ilon1+ilat2*GEOID_COL],
-                (double)geoid_delta[ilon2+ilat2*GEOID_COL]
-        );
+        try {
+            return bilinear(
+                    ilon1*10.-180.,ilat1*10.-90.,
+                    ilon2*10.-180.,ilat2*10.-90.,
+                    lon,           lat,
+                    (double)geoid_delta[ilon1+ilat1*GEOID_COL],
+                    (double)geoid_delta[ilon2+ilat1*GEOID_COL],
+                    (double)geoid_delta[ilon1+ilat2*GEOID_COL],
+                    (double)geoid_delta[ilon2+ilat2*GEOID_COL]
+            );
+        } catch (Exception e) {
+            return -999;
+        }
     }
 
 }
