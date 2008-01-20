@@ -304,6 +304,7 @@ public final class BT747LogConvert {
                         // As long as record may fit in data still to read.
                         int indexInBuffer=offsetInBuffer;
                         int checkSum=0;
+                        int allFF=0xFF; // If 0xFF, all bytes are FF.
                         foundRecord=false;
                         satcnt=0;
                         satCntIdx=0;
@@ -332,6 +333,7 @@ public final class BT747LogConvert {
                          * Skip minimum number of bytes in a record.
                          */
                         while((indexInBuffer<minRecordSize+satRecords+offsetInBuffer)&&(indexInBuffer<sizeToRead-2)) {
+                            allFF&=bytes[indexInBuffer];
                             checkSum^=bytes[indexInBuffer++];
                         }
                         
@@ -364,6 +366,7 @@ public final class BT747LogConvert {
                                 recCount++;
                                 //System.out.println(recCount);
                                 foundAnyRecord=true;
+                               if(allFF!=0xFF) {
                                 /******************************************
                                  * Get all the information in the record.
                                  */
@@ -598,17 +601,19 @@ public final class BT747LogConvert {
                                     }
                                     gpsFile.writeRecord(gpsRec);
                                 }
+                               }
                                 /* End handling record */
                                 break;
                             } else {
+                                allFF&=bytes[indexInBuffer];
                                 checkSum^=0xFF&bytes[indexInBuffer++];
                             }
-                        } while(!foundRecord&&(indexInBuffer<maxRecordSize+offsetInBuffer+2)&&(indexInBuffer<sizeToRead-2));
+                        } while(!foundRecord&&(indexInBuffer<maxRecordSize+offsetInBuffer+(holux?1:2))&&(indexInBuffer<sizeToRead-2));
                         lookForRecord=foundRecord;
                     }
                 } while(foundRecord);
                 if(!foundAnyRecord) {
-                    if(sizeToRead>offsetInBuffer+maxRecordSize+2) {
+                    if(sizeToRead>offsetInBuffer+maxRecordSize+(holux?1:2)) {
                         // Did not find any record - expected at least one.
                         // Try to recover.
                         offsetInBuffer++;
