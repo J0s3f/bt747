@@ -52,7 +52,8 @@ public final class BT747_dev {  // dev as in device
             "SNR",      // = 0x10000    // 10
             "RCR",      // = 0x20000    // 11
             "MILISECOND",// = 0x40000   // 12
-            "DISTANCE"  // = 0x80000    // 13
+            "DISTANCE",  // = 0x80000    // 13
+            "HOLUX DEVICE"
     };
     /** Index of bit for log format setting */
     public static final int FMT_UTC_IDX =        0;
@@ -95,6 +96,8 @@ public final class BT747_dev {  // dev as in device
     public static final int FMT_MILISECOND_IDX = 18;
     /** Index of bit for log format setting */
     public static final int FMT_DISTANCE_IDX =   19;
+    /** Index of bit for log format setting */
+    public static final int FMT_HOLUX_LOW_PRECISION_IDX =   31;
     
     /** Size for each item of the log format of the iBlue 747.<br>
      * <b>The log record length is variable is satelite information
@@ -136,7 +139,7 @@ public final class BT747_dev {  // dev as in device
             0, // 1C
             0, // 1D
             0, // 1E
-            0, // 1F
+            0, // 1F  // Holux Low precision
     };  
     
     public static final int RCR_TIME_MASK=       0x01;
