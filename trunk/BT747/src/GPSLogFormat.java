@@ -25,6 +25,8 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.MessageBox;
 
+import org.omg.PortableInterceptor.LOCATION_FORWARD;
+
 import gps.BT747_dev;
 import gps.GPSstate;
 import gps.GpsEvent;
@@ -33,7 +35,7 @@ import gps.GpsEvent;
  * @author Mario De Weerd
  */
 public class GPSLogFormat extends Container {
-    private static final int C_LOG_FMT_COUNT = 20;
+    private static final int C_LOG_FMT_COUNT = 21;
     /** The object that is used to communicate with the GPS device. */
     private GPSstate m_GPSstate;
     /** The tickboxes for the format items */
@@ -182,11 +184,15 @@ public class GPSLogFormat extends Container {
     private int getSelectedLogFormat() {
         int bitMask=1;
         int logFormat=0;
-        for (int i=0;i<C_LOG_FMT_COUNT;i++) {
+        for (int i=0;i<C_LOG_FMT_COUNT-1;i++) {
             if(chkLogFmtItems[i].getChecked()) {
                 logFormat|=bitMask;
             }
             bitMask<<=1;
+        }
+        // Special case : low precision
+        if(chkLogFmtItems[C_LOG_FMT_COUNT-1].getChecked()) {
+            logFormat|=(1<<BT747_dev.FMT_HOLUX_LOW_PRECISION_IDX);
         }
         return logFormat;
     }
@@ -200,11 +206,13 @@ public class GPSLogFormat extends Container {
         //if(GPS_DEBUG) {	waba.sys.Vm.debug("UPD:"+Convert.unsigned2hex(p_logFormat,2)+"\n");}
         
         
-        for (int i=0;i<C_LOG_FMT_COUNT;i++) {
+        for (int i=0;i<C_LOG_FMT_COUNT-1;i++) {
             chkLogFmtItems[i].setChecked((p_logFormat & bitMask)!=0);
 //            chkLogFmtItems[i].repaintNow();
             bitMask<<=1;
         }
+        chkLogFmtItems[C_LOG_FMT_COUNT-1]
+                       .setChecked((p_logFormat&(1<<BT747_dev.FMT_HOLUX_LOW_PRECISION_IDX))!=0);
         setLogFormatControls();
     }
     

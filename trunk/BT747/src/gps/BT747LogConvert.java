@@ -59,7 +59,7 @@ public final class BT747LogConvert {
         }
         minRecordSize=BT747_dev.logRecordMinSize(logFormat);
         maxRecordSize=BT747_dev.logRecordMaxSize(logFormat);
-        holux=(logFormat&0x80000000)!=0;
+        //holux=(logFormat&0x80000000)!=0;
         do {
             if ((bits&1)!=0) {
                 switch (index) {
@@ -283,7 +283,10 @@ public final class BT747LogConvert {
 //                            }
                             
                         // No data: on/off
-                        holux = true; // currently set like this - for debug
+                        if(!holux) {
+                            holux = true; // currently set like this
+                            updateLogFormat(gpsFile, logFormat);
+                        }
                         offsetInBuffer+=16;
                     } else {
                         lookForRecord=false;
