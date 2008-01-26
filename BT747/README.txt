@@ -7,6 +7,10 @@ devices:
 - Qstarz BT-Q1000
 - i.Trek Z1
 
+It also works for the following devices that have a slightly different log format:
+- Holux GR-241;
+- Holux M-241.
+
 It can also be used to configure a other devices with the MTK chipset.
 The log capabilities of the SW will then be useless for you.
 
@@ -137,6 +141,18 @@ specify the following parameter to Java:
 
 -Dbt747_port="/dev/tty.iBT-GPS-SPPslave-1"
 
+To connect to a Holux M-241 device using bluetooth, you can do this (information from Richard Akerman):
+On MacOS, the known port for a Holux M-241 device is to be set like this (case sensitive): 
+	-Dbt747_port="/dev/tty.HOLUX_M-241-SPPSlave-1" .
+
+You can also set it like this:
+	-Dbt747_prefix="/dev/tty.HOLUX_M-241-SPPSlave-" .
+and select port one in the program interface.
+
+
+As you can see, the device name depends on the device type, so it should
+not be to difficult to find the sorrect path for your device.
+
 To connect over usb, you can get the driver from
 http://www.silabs.com/tgwWebApp/public/web_content/products/Microcontrollers/USB/en/mcu_vcp.htm
 
@@ -200,6 +216,7 @@ I had to add the '-Dgnu.io.rxtx.SerialPorts=${SERPORT}' to get rid of the NoSuch
 ============ Contributors ======================
 Mario De Weerd (main coder)
 Herbert Geus (save settings on WinCE, KML waypoints addition, feedback on application)
+Richard Akerman (information regarding connection on MacOS to a Holux M-241 device)
 
 
 ============ GMAPS PolylineEncoder =============
