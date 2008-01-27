@@ -25,8 +25,6 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.MessageBox;
 
-import org.omg.PortableInterceptor.LOCATION_FORWARD;
-
 import gps.BT747_dev;
 import gps.GPSstate;
 import gps.GpsEvent;

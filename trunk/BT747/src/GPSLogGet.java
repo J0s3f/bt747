@@ -17,9 +17,8 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import bt747.ui.Button;
+import waba.fx.Color;
 import waba.ui.Calendar;
-import bt747.ui.Check;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -42,6 +41,8 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.sys.Convert;
+import bt747.ui.Button;
+import bt747.ui.Check;
 
 /**
  * @author Mario De Weerd
@@ -282,6 +283,10 @@ public class GPSLogGet extends Container {
                 GPSFile gpsFile=null;
                 BT747LogConvert lc=new BT747LogConvert();
                 GPSFilter[] usedFilters;
+                Button z_Button=((Button)event.target);
+                Color BackupBackColor=z_Button.getBackColor();
+                z_Button.setBackColor(Color.GREEN);
+                z_Button.repaintNow();
                 if(m_appSettings.getAdvFilterActive()) {
                     usedFilters=m_FiltersAdv;
                 } else {
@@ -332,6 +337,8 @@ public class GPSLogGet extends Container {
                         m_appSettings.getFileSeparationFreq());
                 gpsFile.setTrackSepTime(m_appSettings.getTrkSep()*60);
                 lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile,m_appSettings.getCard());
+                z_Button.setBackColor(BackupBackColor);
+                z_Button.repaintNow();
             } else if (event.target == this) {
                 m_GPSstate.getLogCtrlInfo();
             } else {

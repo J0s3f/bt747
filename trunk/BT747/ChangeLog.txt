@@ -1,6 +1,6 @@
 Version 1.29
 * Using other technique to determine if log is from a holux (M-241) device.
-
+* Buttons turning green during conversion.
 
 Version 1.28
 * Support for Holux M-241 added - the log is slightly different from the other devices
