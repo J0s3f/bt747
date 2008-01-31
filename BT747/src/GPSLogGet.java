@@ -30,6 +30,7 @@ import waba.util.Date;
 
 import gps.BT747LogConvert;
 import gps.GPSCSVFile;
+import gps.GPSCompoGPSTrkFile;
 import gps.GPSFile;
 import gps.GPSFilter;
 import gps.GPSGPXFile;
@@ -66,6 +67,7 @@ public class GPSLogGet extends Container {
     Button m_btToCSV;
     Button m_btToKML;
     Button m_btToGPX;
+    Button m_btToTRK;
     Button m_btToPLT;
     Button m_btToNMEA;
     Button m_btToGMAP;
@@ -178,8 +180,9 @@ public class GPSLogGet extends Container {
         m_chkNoGeoid.setChecked(m_appSettings.getNoGeoid());
 
         add(m_btToCSV = new Button("To CSV"), LEFT, AFTER + 5); //$NON-NLS-1$
-        add(m_btToGPX = new Button("To GPX"), CENTER, SAME); //$NON-NLS-1$
+        add(m_btToGPX = new Button("To GPX"), AFTER + 5 , SAME); //$NON-NLS-1$
         add(m_btToKML = new Button("To KML"), RIGHT, SAME); //$NON-NLS-1$
+        add(m_btToTRK = new Button("To TRK"), BEFORE - 5, SAME); //$NON-NLS-1$
 
         add(m_btToPLT = new Button("To PLT"), LEFT, AFTER + 2); //$NON-NLS-1$
         add(m_btToGMAP = new Button("To GMAP"), CENTER, SAME); //$NON-NLS-1$
@@ -277,6 +280,7 @@ public class GPSLogGet extends Container {
                     ||event.target==m_btToKML
                     ||event.target==m_btToPLT
                     ||event.target==m_btToGPX
+                    ||event.target==m_btToTRK
                     ||event.target==m_btToGMAP
                     ||event.target==m_btToNMEA) {
                 String ext="";
@@ -298,6 +302,10 @@ public class GPSLogGet extends Container {
                 if(event.target==m_btToCSV) {
                     gpsFile=new GPSCSVFile();
                     ext=".csv";
+                }
+                if(event.target==m_btToTRK) {
+                    gpsFile=new GPSCompoGPSTrkFile();
+                    ext=".TRK";
                 }
                 if(event.target==m_btToKML) {
                     gpsFile=new GPSKMLFile();

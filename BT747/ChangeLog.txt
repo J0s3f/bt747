@@ -1,3 +1,7 @@
+Version 1.30
+* CompeGPS 'TRK' format added
+* Extra NMEA strings added to NMEA format (GSA,GSV)
+
 Version 1.29
 * Using other technique to determine if log is from a holux (M-241) device.
 * Buttons turning green during conversion.
