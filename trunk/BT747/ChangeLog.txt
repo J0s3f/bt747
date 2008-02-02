@@ -1,3 +1,8 @@
+Version 1.31
+* Ignoring NMEA data done at an earlier stage while downloading - hopefully improves
+  performance on PDA devices.
+* Focus highlighting made configureable and disabled by default on some devices.
+
 Version 1.30
 * CompeGPS 'TRK' format added
 * Extra NMEA strings added to NMEA format (GSA,GSV)
