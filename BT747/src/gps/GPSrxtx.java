@@ -39,6 +39,8 @@ public class GPSrxtx {
     
     private Semaphore m_writeOngoing = new Semaphore(1);
     
+    private boolean ignoreNMEA=false;
+    
     
     /** Class constructor.
      */
@@ -207,10 +209,10 @@ public class GPSrxtx {
             while(continueReading && (read_buf_p < bytesRead)) {
                 // Still bytes in read buffer to interpret
                 char c;
-                c= (char)read_buf[read_buf_p++];
-                //                if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
-                //                    waba.sys.Vm.debug(Convert.toString(c));
-                //                }
+                c= (char)read_buf[read_buf_p++];  // Next character from buffer
+                // if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
+                //       waba.sys.Vm.debug(Convert.toString(c));
+                // }
                 switch (current_state) {
                 case C_EOL_STATE:
                     // EOL found, record is ok.
@@ -221,6 +223,10 @@ public class GPSrxtx {
                     if ( ( (c==10) || (c==13))) {
                         current_state = C_FOUND_STATE;
                         continueReading = false;
+                        if(ignoreNMEA) {
+                            // Skip NMEA strings if requested.
+                           continueReading=((String)vCmd.items[0]).startsWith("GP");
+                        }
                     } else {
                         current_state = C_ERROR_STATE;											        
                     }
@@ -403,4 +409,16 @@ public class GPSrxtx {
         }
     }
     
+    /**
+     * @return Returns the ignoreNMEA.
+     */
+    public boolean isIgnoreNMEA() {
+        return ignoreNMEA;
+    }
+    /**
+     * @param ignoreNMEA The ignoreNMEA to set.
+     */
+    public void setIgnoreNMEA(boolean ignoreNMEA) {
+        this.ignoreNMEA = ignoreNMEA;
+    }
 }

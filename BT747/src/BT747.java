@@ -58,11 +58,15 @@ public class BT747 extends MainWindow {
             {"File","Exit application"},
             {"Settings","Restart connection","Stop connection",
                 "-",
-                MenuBar.UNCHECKED+"Debug",
-                MenuBar.UNCHECKED+"Stats",
                 MenuBar.UNCHECKED+"GPX UTC offset 0",
                 MenuBar.UNCHECKED+"GPX Trkseg when small",
-                MenuBar.UNCHECKED+"GPS Decode active"},
+                MenuBar.UNCHECKED+"GPS Decode active",
+                "-",
+                MenuBar.UNCHECKED+"Focus Highlight",
+                "-",
+                MenuBar.UNCHECKED+"Debug",
+                MenuBar.UNCHECKED+"Stats"
+            },
             {"Info","About BT747","About SuperWaba VM","Info"}
     };
     /** MenuBar item for File->Exit */
@@ -73,16 +77,18 @@ public class BT747 extends MainWindow {
     private final static int C_MENU_RESTART_CONNECTION = 101;
     /** MenuBar item for Settings->Stop connection */
     private final static int C_MENU_STOP_CONNECTION = 102;
-    /** MenuBar item for Settings->Debug */
-    private final static int C_MENU_DEBUG_ACTIVE = 104;
-    /** MenuBar item for Settings->Conn. Stats */
-    private final static int C_MENU_STATS_ACTIVE = 105;
     /** MenuBar item for Settings->GPX UTC 0 */
-    private final static int C_MENU_GPX_UTC0 = 106;
+    private final static int C_MENU_GPX_UTC0 = 104;
     /** MenuBar item for Settings->GPX Trk Sep when big only */
-    private final static int C_MENU_GPX_TRKSEG_BIGONLY = 107;
+    private final static int C_MENU_GPX_TRKSEG_BIGONLY = 105;
     /** MenuBar item for Settings->GPS Decode Active*/
-    private final static int C_MENU_GPS_DECODE_ACTIVE = 108;
+    private final static int C_MENU_GPS_DECODE_ACTIVE = 106;
+    /** MenuBar item for Settings->Debug */
+    private final static int C_MENU_FOCUS_HIGHLIGHT = 108;
+    /** MenuBar item for Settings->Debug */
+    private final static int C_MENU_DEBUG_ACTIVE = 110;
+    /** MenuBar item for Settings->Conn. Stats */
+    private final static int C_MENU_STATS_ACTIVE = 111;
     /** MenuBar item for Info->About BT747 */
     private final static int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
@@ -139,9 +145,9 @@ public class BT747 extends MainWindow {
 
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
-        setTitle("i-Blue 747/757 / BT-Q1000");
+        setTitle("BT747 - MTK Logger Control");
         Settings.setUIStyle(Settings.Flat);
-        Settings.keyboardFocusTraversable = true;
+        Settings.keyboardFocusTraversable = m_settings.isTraversableFocus();
         for (int i = 0; i < m_GPSFilter.length; i++) {
             m_GPSFilter[i]=new GPSFilter();
             m_GPSFilterAdv[i]=new GPSFilterAdvanced();
@@ -239,6 +245,10 @@ public class BT747 extends MainWindow {
                     break;
                 case C_MENU_STOP_CONNECTION:
                     m_GPSstate.GPS_close();
+                    break;
+                case C_MENU_FOCUS_HIGHLIGHT:
+                    m_settings.setTraversableFocus(m_MenuBar.isChecked(C_MENU_FOCUS_HIGHLIGHT));
+                    Settings.keyboardFocusTraversable = m_settings.isTraversableFocus();
                     break;
                 case C_MENU_DEBUG_ACTIVE:
                     m_GPSstate.setDebug(m_MenuBar.isChecked(C_MENU_DEBUG_ACTIVE));

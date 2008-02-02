@@ -1032,10 +1032,10 @@ public class GPSstate implements Thread {
         case 0x0013:
         case 0x0051:
             // Can also be Polaris iBT-GPS or Holux M1000
-            mdStr = "iBlue 737/Qstartz 810";
+            mdStr = "iBlue 737/Qstarz 810";
             break;
         case 0x0002:
-            mdStr = "Qstartz 815";
+            mdStr = "Qstarz 815";
             break;
         case 0x0005:
             mdStr = "Holux M-241";
@@ -1058,7 +1058,7 @@ public class GPSstate implements Thread {
             logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
             break;
         case 0x8300:
-            mdStr = "Qstartz BT-1200";
+            mdStr = "Qstarz BT-1200";
             logMemSize = 32 * 1024 * 1024 / 8; //32Mb -> 4MB
             break;
         default:
@@ -1147,6 +1147,7 @@ public class GPSstate implements Thread {
                         if(!mbErase.isPopped()) {
                             mbErase=null;
                             m_logState=C_LOG_NOLOGGING;
+                            m_GPSrxtx.setIgnoreNMEA(!gpsDecode);
                         } else if((Vm.getTimeStamp()-logTimer)>C_LOGERASE_TIMEOUT) {
                             readLogFlashStatus();
                         }
@@ -1373,6 +1374,7 @@ public class GPSstate implements Thread {
                     m_logState = C_LOG_CHECK;
                 }
             }
+            m_GPSrxtx.setIgnoreNMEA((!gpsDecode)||(m_logState!=C_LOG_NOLOGGING));
         }
         if (!(m_logState == C_LOG_CHECK)) {
             // File could not be opened or is not incremental.
@@ -1740,8 +1742,9 @@ public class GPSstate implements Thread {
      * @param gpsDecode
      *            The gpsDecode to set.
      */
-    public void setGpsDecode(boolean gpsDecode) {
+    public void setGpsDecode(final boolean gpsDecode) {
         this.gpsDecode = gpsDecode;
+        m_GPSrxtx.setIgnoreNMEA((!this.gpsDecode)||(m_logState!=C_LOG_NOLOGGING));
     }
 
     /**

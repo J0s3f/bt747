@@ -109,7 +109,9 @@ public class AppSettings implements gps.settings {
     private final static int C_DECODEGPS_SIZE=4;
     private final static int C_COLOR_INVALIDTRACK_IDX=C_DECODEGPS_IDX+C_DECODEGPS_SIZE;
     private final static int C_COLOR_INVALIDTRACK_SIZE=8;
-    private final static int C_NEXT_IDX=C_COLOR_INVALIDTRACK_IDX+C_COLOR_INVALIDTRACK_SIZE;
+    private final static int C_ISTRAVERSABLE_IDX=C_COLOR_INVALIDTRACK_IDX+C_COLOR_INVALIDTRACK_SIZE;
+    private final static int C_ISTRAVERSABLE_SIZE=4;
+    private final static int C_NEXT_IDX=C_ISTRAVERSABLE_IDX+C_ISTRAVERSABLE_SIZE;
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
     private final static int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -254,8 +256,11 @@ public class AppSettings implements gps.settings {
         case 11:
             setColorInvalidTrack("FF0000");
             /* fall through */
+        case 12:
+            setTraversableFocus(Settings.onDevice&&(!waba.sys.Settings.platform.startsWith("Palm")));
+            /* fall through */
         }
-        setStringOpt("0.12",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.13",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
@@ -785,4 +790,18 @@ public class AppSettings implements gps.settings {
     public void setSolveMacLagProblem(boolean solveMacLagProblem) {
         this.solveMacLagProblem = solveMacLagProblem;
     }
+
+    /**
+     * @return Returns the solveMacLagProblem.
+     */
+    public boolean isTraversableFocus() {
+        return getBooleanOpt(C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE);
+    }
+    /**
+     * @param traversableFocus The traversableFocus to set.
+     */
+    public void setTraversableFocus(boolean traversableFocus) {
+        setBooleanOpt(traversableFocus, C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE);
+    }
+
 }
