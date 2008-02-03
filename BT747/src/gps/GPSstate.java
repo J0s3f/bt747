@@ -151,6 +151,8 @@ public class GPSstate implements Thread {
     private boolean GPS_STATS = false; //(!Settings.onDevice);
     
     private final int C_LOGERASE_TIMEOUT = 2000; // Timeout between log status requests for erase.
+    
+    private boolean holux=false; // True if Holux M-241 device detected
 
     /**
      * Initialiser
@@ -200,7 +202,7 @@ public class GPSstate implements Thread {
 
     }
 
-    private final int logMemUsefullSize() {
+    public final int logMemUsefullSize() {
         return (int) ((logMemSize >> 16) * (0x10000 - 0x200)); //16Mb
     }
 
@@ -1026,6 +1028,7 @@ public class GPSstate implements Thread {
         int md = Conv.hex2Int(model);
         String mdStr;
         logMemSize = 16 * 1024 * 1024 / 8; //16Mb -> 2MB
+        holux= false;
         switch (md) {
         case 0x0000:
         case 0x0001:
@@ -1039,6 +1042,7 @@ public class GPSstate implements Thread {
             break;
         case 0x0005:
             mdStr = "Holux M-241";
+            holux=true;
             break;
         case 0x001B:
             mdStr = "iBlue 747";
@@ -1658,7 +1662,7 @@ public class GPSstate implements Thread {
                         // waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
                         logFormat = Conv.hex2Int(nmea[3]);
                         logRecordMaxSize = BT747_dev
-                                .logRecordMinSize(logFormat);
+                                .logRecordMinSize(logFormat, false);
                         PostStatusUpdateEvent();
                         break;
                     case BT747_dev.PMTK_LOG_TIME_INTERVAL: // 3;
@@ -1779,5 +1783,17 @@ public class GPSstate implements Thread {
      */
     public void setMtkLogVersion(String mtkLogVersion) {
         MtkLogVersion = mtkLogVersion;
+    }
+    /**
+     * @return Returns the holux.
+     */
+    public boolean isHolux() {
+        return holux;
+    }
+    /**
+     * @param holux The holux to set.
+     */
+    public void setHolux(boolean holux) {
+        this.holux = holux;
     }
 }

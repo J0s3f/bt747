@@ -53,7 +53,7 @@ public final class BT747_dev {  // dev as in device
             "RCR",      // = 0x20000    // 11
             "MILISECOND",// = 0x40000   // 12
             "DISTANCE",  // = 0x80000    // 13
-            "HOLUX DEVICE"
+            "HOLUX M-241" // =0x80000000
     };
     /** Index of bit for log format setting */
     public static final int FMT_UTC_IDX =        0;
@@ -141,7 +141,42 @@ public final class BT747_dev {  // dev as in device
             0, // 1E
             0, // 1F  // Holux Low precision
     };  
-    
+
+    public static final int logFmtByteSizesHolux[] = {
+            4, //"UTC",     // = 0x00001    // 0
+            2, //"VALID",   // = 0x00002    // 1
+            4, //"LATITUDE",    // = 0x00004    // 2
+            4, //"LONGITUDE",// = 0x00008   // 3
+            3, //"HEIGHT",  // = 0x00010    // 4
+            4, //"SPEED",   // = 0x00020    // 5
+            4, //"HEADING", // = 0x00040    // 6
+            2, //"DSTA",        // = 0x00080    // 7
+            4, //"DAGE",        // = 0x00100    // 8
+            2, //"PDOP",        // = 0x00200    // 9
+            2, //"HDOP",        // = 0x00400    // A
+            2, //"VDOP",        // = 0x00800    // B
+            2, //"NSAT",        // = 0x01000    // C
+            4, //"SID",     // = 0x02000    // D
+            2, //"ELEVATION",// = 0x04000   // E
+            2, //"AZIMUTH", // = 0x08000    // F
+            2, //"SNR",     // = 0x10000    // 10
+            2, //"RCR",     // = 0x20000    // 11
+            2, //"MILISECOND",// = 0x40000  // 12
+            8, //"DISTANCE" // = 0x80000    // 13
+            0, // 14
+            0, // 15
+            0, // 16
+            0, // 17
+            0, // 18
+            0, // 19
+            0, // 1A
+            0, // 1B
+            0, // 1C
+            0, // 1D
+            0, // 1E
+            0, // 1F  // Holux Low precision
+    };  
+
     public static final int RCR_TIME_MASK=       0x01;
     public static final int RCR_SPEED_MASK=      0x02;
     public static final int RCR_DISTANCE_MASK=   0x04;
@@ -368,14 +403,21 @@ public final class BT747_dev {  // dev as in device
     public static final String PMTK_ACK_SUCCEEDED_STR = Convert.toString(PMTK_ACK_SUCCEEDED);
     
     /** Get the size of the log header in the device.
-     * 
      * @param p_logFormat The log format of the device
+     * @param holux TODO
+     * 
      * @return Size of the header
      */
-    static public final int logRecordMinSize(final int p_logFormat) {
+    static public final int logRecordMinSize(final int p_logFormat, final boolean holux) {
         int bits=p_logFormat;
         int index = 0;
         int total = 0;
+        int[] byteSizes;
+        if(holux) {
+            byteSizes= logFmtByteSizesHolux;
+        } else {
+            byteSizes= logFmtByteSizes;
+        }
         do {
             if ((bits&1)!=0) {
                 switch (index) {
@@ -387,7 +429,7 @@ public final class BT747_dev {  // dev as in device
                 default:
                     // Other fields contribute
                     try {
-                        total+=logFmtByteSizes[index];
+                        total+=byteSizes[index];
                     } catch (Exception e) {
                         // TODO: Check when this happens.
                         Vm.debug("Bad log format");
@@ -402,21 +444,32 @@ public final class BT747_dev {  // dev as in device
 
     /**
      * @param p_logFormat  
+     * @param p_Holux TODO
      * @return
      */
-    static public final int logRecordMaxSize(final int p_logFormat) {
+    static public final int logRecordSize(final int p_logFormat, final boolean holux, final int sats) {
         int cnt=0;
-        
+        int[] byteSizes;
+        if(holux) {
+            byteSizes= logFmtByteSizesHolux;
+        } else {
+            byteSizes= logFmtByteSizes;
+        }        
         if((p_logFormat&(1<<FMT_SID_IDX))!=0) {
-            cnt+=logFmtByteSizes[FMT_SID_IDX];
-            cnt+=(p_logFormat&(1<<FMT_ELEVATION_IDX))!=0?logFmtByteSizes[FMT_ELEVATION_IDX]:0;
-            cnt+=(p_logFormat&(1<<FMT_AZIMUTH_IDX))!=0?logFmtByteSizes[FMT_AZIMUTH_IDX]:0;
-            cnt+=(p_logFormat&(1<<FMT_SNR_IDX))!=0?logFmtByteSizes[FMT_SNR_IDX]:0;
-            cnt*=FMT_MAX_SATS-1;
+            cnt+=byteSizes[FMT_SID_IDX];
+            cnt+=(p_logFormat&(1<<FMT_ELEVATION_IDX))!=0?byteSizes[FMT_ELEVATION_IDX]:0;
+            cnt+=(p_logFormat&(1<<FMT_AZIMUTH_IDX))!=0?byteSizes[FMT_AZIMUTH_IDX]:0;
+            cnt+=(p_logFormat&(1<<FMT_SNR_IDX))!=0?byteSizes[FMT_SNR_IDX]:0;
+            cnt*=sats-1;
         }
-        return cnt+logRecordMinSize(p_logFormat);
+        return cnt+logRecordMinSize(p_logFormat, false);
     }
     
+    static public final int logRecordMaxSize(final int p_logFormat, final boolean holux) {
+        return logRecordSize(p_logFormat, holux, FMT_MAX_SATS);
+    }
+
+        
     /** Next entries are elated to <code>PMTK_API_Q_NMEA_OUTPUT</code> and similar.
      * 
      */

@@ -23,6 +23,7 @@ import bt747.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
+import waba.ui.Label;
 import waba.ui.MessageBox;
 
 import gps.BT747_dev;
@@ -42,6 +43,8 @@ public class GPSLogFormat extends Container {
     private Button m_btChangeFormatErase;
     private Button m_btChangeFormat;
     private Button m_btErase;
+    
+    private Label m_lbEstNbrRecords;
     
     /** Initialiser of this Container.<br>
      * Requires Object to communicate with GPS device.
@@ -65,13 +68,16 @@ public class GPSLogFormat extends Container {
             );
             chkLogFmtItems[i].setEnabled(true);
         }
-        setLogFormatControls();
+        m_lbEstNbrRecords=new Label("0000000 records estimated");
+        add(m_lbEstNbrRecords,LEFT,AFTER);
+        m_lbEstNbrRecords.setText("");
         
         // Add button confirming change of log format.
         m_btChangeFormatErase=new Button("Set & erase");
         add(m_btChangeFormatErase,LEFT,AFTER+5);
         add(m_btChangeFormat=new Button("Set (no erase)"),AFTER+10,SAME);
         add(m_btErase=new Button("Erase"),RIGHT,SAME);
+        setLogFormatControls();
     }
 
     private static final String C_msgWarningFormatIncompatibilityRisk =
@@ -220,6 +226,21 @@ public class GPSLogFormat extends Container {
         chkLogFmtItems[BT747_dev.FMT_ELEVATION_IDX].setEnabled(sidSet);
         chkLogFmtItems[BT747_dev.FMT_AZIMUTH_IDX].setEnabled(sidSet);
         chkLogFmtItems[BT747_dev.FMT_SNR_IDX].setEnabled(sidSet);
+        
+        int count;
+        m_lbEstNbrRecords.setText("");
+        try {
+            int size=BT747_dev.logRecordSize(getSelectedLogFormat(), m_GPSstate.isHolux(),12);
+            if(m_GPSstate.isHolux()) {
+                size+=1;
+            } else {
+                size+=2;
+            }
+            count= m_GPSstate.logMemUsefullSize()/size;
+            m_lbEstNbrRecords.setText(count+" records estimated");
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
     
     /** Handle events for this object.
