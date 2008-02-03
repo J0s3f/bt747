@@ -32,7 +32,7 @@ import gps.convert.Conv;
  * 
  * @author Mario De Weerd
  */
-public final class BT747LogConvert {
+public final class BT747LogConvert implements GPSLogConvert {
     private int minRecordSize;
     private int maxRecordSize;
     private int logFormat;
@@ -575,7 +575,7 @@ public final class BT747LogConvert {
                                             ;
                                     } else
                                     {
-                                        gpsRec.rcr=0xFFFF;  // For filter
+                                        gpsRec.rcr=0x0001;  // For filter
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0) { 
                                         gpsRec.milisecond=
