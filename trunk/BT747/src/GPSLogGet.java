@@ -36,10 +36,12 @@ import gps.GPSFilter;
 import gps.GPSGPXFile;
 import gps.GPSGmapsHTMLEncodedFile;
 import gps.GPSKMLFile;
+import gps.GPSLogConvert;
 import gps.GPSNMEAFile;
 import gps.GPSPLTFile;
 import gps.GPSstate;
 import gps.GpsEvent;
+import gps.HoluxTrlLogConvert;
 
 import bt747.sys.Convert;
 import bt747.ui.Button;
@@ -285,7 +287,13 @@ public class GPSLogGet extends Container {
                     ||event.target==m_btToNMEA) {
                 String ext="";
                 GPSFile gpsFile=null;
-                BT747LogConvert lc=new BT747LogConvert();
+                //GPSLogConvert lc;
+                GPSLogConvert lc;
+                if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".trl")) {
+                    lc=new HoluxTrlLogConvert();
+                } else {
+                    lc=new BT747LogConvert();
+                }
                 GPSFilter[] usedFilters;
                 Button z_Button=((Button)event.target);
                 Color BackupBackColor=z_Button.getBackColor();
