@@ -1,3 +1,6 @@
+Version 1.32
+* Added estimation of number of records to log Format Tab.
+
 Version 1.31
 * Ignoring NMEA data done at an earlier stage while downloading - hopefully improves
   performance on PDA devices.

@@ -50,42 +50,38 @@ public final class BT747LogConvert {
         int bits=newLogFormat;
         int index = 0;
         int total = 0;
+        int [] byteSizes;
         
+        if(holux) {
+            byteSizes= BT747_dev.logFmtByteSizesHolux;
+        } else {
+            byteSizes= BT747_dev.logFmtByteSizes;
+        }
         satRecSize=0;
         logFormat=newLogFormat;
         activeFileFields|=logFormat;
         if(!passToFindFieldsActivatedInLog) {
             gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
         }
-        minRecordSize=BT747_dev.logRecordMinSize(logFormat);
-        maxRecordSize=BT747_dev.logRecordMaxSize(logFormat);
+        minRecordSize=BT747_dev.logRecordMinSize(logFormat, holux);
+        maxRecordSize=BT747_dev.logRecordMaxSize(logFormat, holux);
         //holux=(logFormat&0x80000000)!=0;
         do {
             if ((bits&1)!=0) {
                 switch (index) {
                 case BT747_dev.FMT_LATITUDE_IDX:
                 case BT747_dev.FMT_LONGITUDE_IDX:
-                    total+=BT747_dev.logFmtByteSizes[index];
-                    if(holux) {
-                        total-=4;
-                        minRecordSize-=4;
-                        maxRecordSize-=4;
-                    }
+                    total+=byteSizes[index];
                     break;
                 case BT747_dev.FMT_HEIGHT_IDX:
-                    total+=BT747_dev.logFmtByteSizes[index];
-                    if(holux) {
-                        total-=1;
-                        minRecordSize-=1;
-                        maxRecordSize-=1;
-                    }
+                    total+=byteSizes[index];
                     break;
                     
                 case BT747_dev.FMT_SID_IDX:
                 case BT747_dev.FMT_ELEVATION_IDX:
                 case BT747_dev.FMT_AZIMUTH_IDX:
                 case BT747_dev.FMT_SNR_IDX:
-                    satRecSize+=BT747_dev.logFmtByteSizes[index];
+                    satRecSize+=byteSizes[index];
                     break;
                 case BT747_dev.FMT_RCR_IDX:
                 case BT747_dev.FMT_MILISECOND_IDX:
@@ -95,7 +91,7 @@ public final class BT747LogConvert {
                     break;
                 default:
                     // Other fields contribute
-                    total+=BT747_dev.logFmtByteSizes[index];
+                    total+=byteSizes[index];
                 break;
                 }
             }
