@@ -1,3 +1,7 @@
+Version 1.34
+* Back to using the log format bit #31 to identify the log as a Holux specific log.
+  The 'HOLUXGR241LOGGER' string is not necessarily in the log!
+
 Version 1.33
 * If binary file has '.trl' extension, it will be interpreted as a Holux tracklog file.
   Careful: the application can not generate such a file!
