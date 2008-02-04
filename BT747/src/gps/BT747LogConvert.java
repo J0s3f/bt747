@@ -63,9 +63,11 @@ public final class BT747LogConvert implements GPSLogConvert {
         if(!passToFindFieldsActivatedInLog) {
             gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
         }
+        if((logFormat&0x80000000)!=0) {
+            holux=true;
+        }
         minRecordSize=BT747_dev.logRecordMinSize(logFormat, holux);
         maxRecordSize=BT747_dev.logRecordMaxSize(logFormat, holux);
-        //holux=(logFormat&0x80000000)!=0;
         do {
             if ((bits&1)!=0) {
                 switch (index) {
