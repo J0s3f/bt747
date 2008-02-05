@@ -1,3 +1,7 @@
+Version 1.35
+* Extra sanity check on a record to ensure that it is valid.
+* Also writing WPT file when writing TRK file (CompeGPS).
+
 Version 1.34
 * Back to using the log format bit #31 to identify the log as a Holux specific log.
   The 'HOLUXGR241LOGGER' string is not necessarily in the log!

@@ -372,6 +372,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                                  * Get all the information in the record.
                                  */
                                 gpsRec.recCount=recCount;
+                                boolean valid =true;
                                 if(!passToFindFieldsActivatedInLog) {
                                     // Only interpret fiels if not looking for logFormat changes only
                                     if((logFormat&(1<<BT747_dev.FMT_UTC_IDX))!=0) {
@@ -381,6 +382,9 @@ public final class BT747LogConvert implements GPSLogConvert {
                                             |(0xFF&bytes[recIdx++])<<16
                                             |(0xFF&bytes[recIdx++])<<24
                                             ;
+                                        if(gpsRec.utc==0xFFFFFFFF) {
+                                            valid=false;
+                                        }
                                         gpsRec.utc+=timeOffsetSeconds;
                                     } else {
                                         gpsRec.utc= 1000;  // Value after earliest date
@@ -415,6 +419,10 @@ public final class BT747LogConvert implements GPSLogConvert {
                                                 ;
                                             gpsRec.latitude=Convert.toFloatBitwise(latitude);
                                         }
+                                        if(gpsRec.latitude>90.00
+                                           ||gpsRec.latitude<-90.00) {
+                                            valid=false;
+                                        }
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_LONGITUDE_IDX))!=0) {
                                         if(!holux) {
@@ -438,6 +446,10 @@ public final class BT747LogConvert implements GPSLogConvert {
                                                 ;
                                             gpsRec.longitude=Convert.toFloatBitwise(longitude);//*1.0;
                                         }
+                                        if(gpsRec.longitude>180.00
+                                                ||gpsRec.latitude<-180.00) {
+                                                 valid=false;
+                                             }
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_HEIGHT_IDX))!=0) { 
                                         if(!holux) {
@@ -600,7 +612,9 @@ public final class BT747LogConvert implements GPSLogConvert {
                                             ;
                                         gpsRec.distance=Convert.longBitsToDouble(distance);
                                     }
-                                    gpsFile.writeRecord(gpsRec);
+                                    if(valid) {
+                                        gpsFile.writeRecord(gpsRec);
+                                    }
                                 }
                                }
                                 /* End handling record */
