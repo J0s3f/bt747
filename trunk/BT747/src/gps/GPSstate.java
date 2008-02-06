@@ -154,6 +154,8 @@ public class GPSstate implements Thread {
     
     private boolean holux=false; // True if Holux M-241 device detected
 
+    private String holuxName="";
+    
     /**
      * Initialiser
      * 
@@ -720,6 +722,23 @@ public class GPSstate implements Thread {
         sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_NMEA_OUTPUT);
     }
 
+    
+    public void requestHoluxName() {
+        sendNMEA(BT747_dev.HOLUX_MAIN_CMD + BT747_dev.HOLUX_API_Q_NAME);
+    }
+
+    /**
+     * @param holuxName The holuxName to set.
+     */
+    public void setHoluxName(String holuxName) {
+        sendNMEA(BT747_dev.HOLUX_MAIN_CMD + BT747_dev.HOLUX_API_SET_NAME+
+                ","+holuxName);
+        sendNMEA(BT747_dev.HOLUX_MAIN_CMD + BT747_dev.HOLUX_API_CONFIRM_NAME);
+        sendNMEA(BT747_dev.HOLUX_MAIN_CMD + BT747_dev.HOLUX_API_CONFIRM_NAME);
+        requestHoluxName();
+    }
+
+
     public void setNMEAPeriods(final int periods[]) {
         StringBuffer sb = new StringBuffer(255);
         sb.setLength(0);
@@ -1012,6 +1031,31 @@ public class GPSstate implements Thread {
             default:
                 break;
             } // End switch
+        } else if (p_nmea[0].equals("HOLUX001")) {
+            z_Result = -1; // Suppose cmd not treated
+            if (GPS_DEBUG) {
+                String s;
+                int length = p_nmea.length;
+
+                s = "<";
+                for (int i = 0; i < length; i++) {
+                    s += p_nmea[i];
+                    s += ",";
+                }
+                ;
+                Vm.debug(s);
+            }
+            z_Cmd = Convert.toInt(p_nmea[1]);
+
+            z_Result = -1; // Suppose cmd not treated
+            switch (z_Cmd) {
+                case BT747_dev.HOLUX_API_DT_NAME:
+                    if (p_nmea.length==3) {
+                        this.holuxName=p_nmea[2];
+                        PostStatusUpdateEvent();
+                    };
+                    break;
+            }
         } // End if
         return z_Result;
     } // End method
@@ -1795,5 +1839,11 @@ public class GPSstate implements Thread {
      */
     public void setHolux(boolean holux) {
         this.holux = holux;
+    }
+    /**
+     * @return Returns the holuxName.
+     */
+    public String getHoluxName() {
+        return holuxName;
     }
 }

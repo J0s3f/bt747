@@ -1,3 +1,8 @@
+Version 1.36
+* Added Holux specific functionality (Name setting) - untested.
+* Resolved bug regarding satellite information in NMEA output format when no satellite info
+ is available.
+
 Version 1.35
 * Extra sanity check on a record to ensure that it is valid.
 * Also writing WPT file when writing TRK file (CompeGPS).
