@@ -472,6 +472,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                                         if(noGeoid
                                                 &&((logFormat&(1<<BT747_dev.FMT_LATITUDE_IDX))!=0)
                                                 &&((logFormat&(1<<BT747_dev.FMT_LONGITUDE_IDX))!=0)
+                                                &&valid
                                                 ) {
                                             gpsRec.height-=Conv.wgs84_separation(gpsRec.latitude, gpsRec.longitude);
                                         }

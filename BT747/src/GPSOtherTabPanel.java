@@ -27,11 +27,12 @@ public class GPSOtherTabPanel extends Container {
     private GPSFlashOption  m_GPSFlash;
     private GPSNMEAOutput m_GPSNMEAOutput;
     private GPSFileNMEAOutputSel m_GPSNMEAFile;
+    private GPSHoluxSpecific m_GPSHolux;
     private GPSstate m_GPSstate;
     private AppSettings m_settings;
     
     private final String c_tpCaptions[]= {
-            "Flsh","NMEA Output","NMEA File"
+            "Flsh","NMEA Output","NMEA File","Holux"
     };
     
     /**
@@ -54,6 +55,7 @@ public class GPSOtherTabPanel extends Container {
         m_TabPanel.setPanel(0,m_GPSFlash = new GPSFlashOption(m_GPSstate));
         m_TabPanel.setPanel(1,m_GPSNMEAOutput = new GPSNMEAOutput(m_GPSstate));
         m_TabPanel.setPanel(2,m_GPSNMEAFile = new GPSFileNMEAOutputSel(m_settings));
+        m_TabPanel.setPanel(3,m_GPSHolux = new GPSHoluxSpecific(m_settings,m_GPSstate));
     }
     public void onEvent(Event event) {
         //

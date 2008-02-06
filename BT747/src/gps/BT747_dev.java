@@ -401,6 +401,21 @@ public final class BT747_dev {  // dev as in device
      * Packet success. 
      */
     public static final String PMTK_ACK_SUCCEEDED_STR = Convert.toString(PMTK_ACK_SUCCEEDED);
+
+    
+    
+    /**********************************
+     * Holux specific
+     */
+
+    public static final String HOLUX_MAIN_CMD = "HOLUX241,";
+    public static final int HOLUX_API_SET_NAME  = 4;
+    public static final int HOLUX_API_Q_NAME  = 5;
+    public static final int HOLUX_API_CONFIRM_NAME  = 6; // Not sure what this is.
+
+    public static final int HOLUX_API_DT_NAME  = 5;
+    
+    
     
     /** Get the size of the log header in the device.
      * @param p_logFormat The log format of the device
