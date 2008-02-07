@@ -47,7 +47,7 @@ public class GPSHoluxSpecific extends Container {
         
         lbHoluxName= new Label("Holux Name:");
         add(lbHoluxName,LEFT,TOP);
-        add(edHoluxName= new Edit(""),LEFT,AFTER);
+        add(edHoluxName= new Edit(""),AFTER,SAME);
         add(btSet=new Button("Set"),CENTER,AFTER+5);
     }
     
