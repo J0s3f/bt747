@@ -42,8 +42,15 @@
         
     </target>
     
-    <target name="run">
-        
+    <target name="run_rxtx" depends="rxtxjar">
+        <java classname="waba.applet.Applet" fork="true">
+            <classpath>
+                <pathelement path="webstart/waba_only.jar"/>
+                <pathelement path="rxtx-2.1-7-bins-r2/RXTXcomm.jar"/>
+                <pathelement path="dist/BT747_rxtx.jar"/>
+            </classpath>
+            <arg line="/w 320 /h 320 /scale 1 /bpp 8 BT747"/>
+        </java>
     </target>
     
     <!-- Update date -->
@@ -199,7 +206,7 @@
     <!-- Package classes -->
     <target name="jar" depends="build">
         
-        <jar jarfile="build/${ant.project.name}.jar">
+        <jar jarfile="build/${ant.project.name}.jar" compress="true">
             <fileset dir="build" includes="**/*.class"/>
         </jar>
         
@@ -207,7 +214,7 @@
     
     <target name="rxtxjar" depends="rxtxbuild">
         
-        <jar jarfile="rxtxbuild/${ant.project.name}_rxtx.jar">
+        <jar jarfile="rxtxbuild/${ant.project.name}_rxtx.jar" compress="true">
             <fileset dir="rxtxbuild" includes="**/*.class"/>
         </jar>
         <copy todir="dist">
@@ -222,7 +229,7 @@
     
     <target name="symbianjar" depends="symbianbuild">
         
-        <jar jarfile="symbianbuild/${ant.project.name}_symbian.jar">
+        <jar jarfile="symbianbuild/${ant.project.name}_symbian.jar" compress="true">
             <fileset dir="symbianbuild" includes="**/*.class"/>
         </jar>
         <copy todir="dist">
@@ -236,7 +243,7 @@
     
     <target name="filejar" depends="filebuild">
         
-        <jar jarfile="filebuild/${ant.project.name}_file.jar">
+        <jar jarfile="filebuild/${ant.project.name}_file.jar" compress="true">
             <fileset dir="filebuild" includes="**/*.class"/>
         </jar>
         <copy todir="dist">
