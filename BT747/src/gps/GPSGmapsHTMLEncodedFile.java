@@ -252,9 +252,9 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 if(!m_isWayType&&!m_newTrack&&!m_FirstRecord) {
                     m_newTrack=true;
                     if(track.size()!=0) {
-                        Trackpoint t=track.get(track.size()-1);
+                        Trackpoint tp=track.get(track.size()-1);
                         endTrack(goodTrackColor);
-                        track.addTrackpoint(t);
+                        track.addTrackpoint(tp);
                     }
                     //"points.push(new GPoint(3.11492833333333,45.75697))";
                     //map.addOverlay(new GPolyline(points,"#960000",2,.75));
@@ -264,7 +264,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 
                 String timeStr="";  // String that will represent time
                 String fixStr="";   // String that will represent fix type
-                String rcrStr="";   // String that will represent log reason
+                String rcrlStr="";   // String that will represent log reason
                 String hdopStr="";  // String that will represent HDOP
                 String nsatStr="";  // String that will represent number of sats
                 
@@ -288,7 +288,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 //                "  <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 //                "    <ele>12.863281</ele>"+
                 //                "    <time>2005-05-16T11:49:06Z</time>"+
-                //                "    <name>Cala Sant Vicenç - Mallorca</name>"+
+                //                "    <name>Cala Sant Vicenï¿½ - Mallorca</name>"+
                 //                "    <sym>City</sym>"+
                 //                "  </wpt>"+
                 

@@ -48,8 +48,6 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
     
     private boolean noGeoid=false; // If true,remove geoid difference from height
     
-    private int satIdxOffset;
-    private int satRecSize;
     
     public final void parseFile(final GPSFile gpsFile) {
         GPSRecord gpsRec=new GPSRecord();
@@ -59,10 +57,6 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         int nextAddrToRead;
         int recCount;
         int fileSize;
-        int satCntIdx;
-        int satcnt;
-        int satidx;
-        int idx;
         
         if(!passToFindFieldsActivatedInLog) {
             gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));

@@ -21,7 +21,7 @@
 package gps.port;
 
 import waba.io.DataStream;
-import waba.io.File;
+import bt747.io.File;
 
 /** abstract class defining interface for serial port implementation.
  * Allows differentiation according to platform.

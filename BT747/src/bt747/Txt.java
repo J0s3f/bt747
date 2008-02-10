@@ -1,6 +1,6 @@
 package bt747;
 
-import waba.sys.Settings;
+import bt747.sys.Settings;
 
 /**
  * @author Mario De Weerd
