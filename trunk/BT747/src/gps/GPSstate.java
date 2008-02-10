@@ -297,19 +297,19 @@ public class GPSstate implements Thread {
      */
     public void setLogFormat(final int p_logFormat) {
         // Ensure option consistency.
-        int logFormat;
-        logFormat = p_logFormat;
-        if ((logFormat & (1 << BT747_dev.FMT_SID_IDX)) == 0) {
+        int logFmt;
+        logFmt = p_logFormat;
+        if ((logFmt & (1 << BT747_dev.FMT_SID_IDX)) == 0) {
             // If SID is not set, some other settings can not be
             // set either. Be sure they are disabled in that
             // case.
-            logFormat &= ~((1 << BT747_dev.FMT_ELEVATION_IDX)
+            logFmt &= ~((1 << BT747_dev.FMT_ELEVATION_IDX)
                     | (1 << BT747_dev.FMT_AZIMUTH_IDX) | (1 << BT747_dev.FMT_SNR_IDX));
         }
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_SET_STR + ","
                 + BT747_dev.PMTK_LOG_FORMAT_STR + ","
-                + Convert.unsigned2hex(logFormat, 8));
+                + Convert.unsigned2hex(logFmt, 8));
     }
     
     MessageBox mbErase=null;
@@ -933,7 +933,6 @@ public class GPSstate implements Thread {
                     s += p_nmea[i];
                     s += ",";
                 }
-                ;
                 Vm.debug(s);
             }
             z_Cmd = Convert.toInt(p_nmea[0].substring(4));
@@ -1042,7 +1041,6 @@ public class GPSstate implements Thread {
                     s += p_nmea[i];
                     s += ",";
                 }
-                ;
                 Vm.debug(s);
             }
             z_Cmd = Convert.toInt(p_nmea[1]);
@@ -1566,7 +1564,6 @@ public class GPSstate implements Thread {
                             cancelGetLog();
                             //                            Vm.debug(Convert.toString(q));
                         }
-                        ;
                         j += l;
                     }
                     m_NextReadAddr += dataLength;

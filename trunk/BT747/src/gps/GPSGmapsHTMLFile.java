@@ -189,7 +189,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
                 
                 String timeStr="";  // String that will represent time
                 String fixStr="";   // String that will represent fix type
-                String rcrStr="";   // String that will represent log reason
+                String rcrlStr="";   // String that will represent log reason
                 String hdopStr="";  // String that will represent HDOP
                 String nsatStr="";  // String that will represent number of sats
                 
@@ -200,7 +200,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
                 //                "  <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 //                "    <ele>12.863281</ele>"+
                 //                "    <time>2005-05-16T11:49:06Z</time>"+
-                //                "    <name>Cala Sant Vicenç - Mallorca</name>"+
+                //                "    <name>Cala Sant Vicenï¿½ - Mallorca</name>"+
                 //                "    <sym>City</sym>"+
                 //                "  </wpt>"+
                 

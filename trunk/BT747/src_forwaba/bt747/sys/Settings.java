@@ -14,4 +14,5 @@ package bt747.sys;
  */
 final public class Settings {
     public static String platform = waba.sys.Settings.platform;
+    public static String versionStr = waba.sys.Settings.versionStr;
 }
