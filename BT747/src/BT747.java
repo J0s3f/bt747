@@ -33,7 +33,7 @@ import gps.GPSFilterAdvanced;
 import gps.GPSstate;
 import gps.GpsEvent;
 
-import bt747.Version;
+import bt747.Txt;
 import bt747.ui.MessageBox;
 
 /** Main class (application entry)
@@ -55,19 +55,25 @@ public class BT747 extends MainWindow {
     private static MenuBar     m_MenuBar;
     /** The content of the menu bar */
     private final String menu[][] = {
-            {"File","Exit application"},
-            {"Settings","Restart connection","Stop connection",
-                "-",
-                MenuBar.UNCHECKED+"GPX UTC offset 0",
-                MenuBar.UNCHECKED+"GPX Trkseg when small",
-                MenuBar.UNCHECKED+"GPS Decode active",
-                "-",
-                MenuBar.UNCHECKED+"Focus Highlight",
-                "-",
-                MenuBar.UNCHECKED+"Debug",
-                MenuBar.UNCHECKED+"Stats"
+            {   Txt.S_FILE,
+                Txt.S_EXIT_APPLICATION},  
+            {   Txt.S_SETTINGS,
+                 Txt.S_RESTART_CONNECTION,
+                 Txt.S_STOP_CONNECTION,
+                "-", 
+                MenuBar.UNCHECKED+Txt.S_GPX_UTC_OFFSET_0, 
+                MenuBar.UNCHECKED+Txt.S_GPX_TRKSEG_WHEN_SMALL, 
+                MenuBar.UNCHECKED+Txt.S_GPS_DECODE_ACTIVE, 
+                "-", 
+                MenuBar.UNCHECKED+Txt.S_FOCUS_HIGHLIGHT, 
+                "-", 
+                MenuBar.UNCHECKED+Txt.S_DEBUG, 
+                MenuBar.UNCHECKED+Txt.S_STATS 
             },
-            {"Info","About BT747","About SuperWaba VM","Info"}
+            {   Txt.S_INFO,
+                Txt.S_ABOUT_BT747,
+                Txt.S_ABOUT_SUPERWABA,
+                Txt.S_INFO}    
     };
     /** MenuBar item for File->Exit */
     private final static int C_MENU_FILE_EXIT = 001;
@@ -100,7 +106,7 @@ public class BT747 extends MainWindow {
     private static TabPanel    m_TabPanel;
     /** The captions for the tab panel */
     private final String c_tpCaptions[]= {
-            "FMT","Ctrl","Log","File","Fltr","Easy","Con","Othr"
+            "FMT","Ctrl","Log","File","Fltr","Easy","Con","Othr"        
     };
     /** Tab Panel container - Logger control/configuration */
     private static GPSLogFormat  m_GPSLogCtrl;
@@ -145,7 +151,7 @@ public class BT747 extends MainWindow {
 
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
-        setTitle("BT747 - MTK Logger Control");
+        setTitle(Txt.S_TITLE); 
         Settings.setUIStyle(Settings.Flat);
         Settings.keyboardFocusTraversable = m_settings.isTraversableFocus();
         for (int i = 0; i < m_GPSFilter.length; i++) {
@@ -163,7 +169,7 @@ public class BT747 extends MainWindow {
 
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
         // Progress bar to show download progress (separate thread)
-        m_ProgressLabel=new Label("Download");
+        m_ProgressLabel=new Label(Txt.LB_DOWNLOAD); 
         m_ProgressBar=new ProgressBar();
         add(m_ProgressLabel,LEFT,BOTTOM);
         m_ProgressLabel.setRect(LEFT,BOTTOM,PREFERRED,PREFERRED);
@@ -227,10 +233,10 @@ public class BT747 extends MainWindow {
                 switch (m_MenuBar.getSelectedMenuItem()) {
                 case C_MENU_FILE_EXIT:
                     MessageBox mb;
-                    String []szExitButtonArray = {"Yes","No"};
-                    mb = new MessageBox("Attention",
-                            "You are about to exit the application|" +
-                            "Confirm application exit?",
+                    String []szExitButtonArray = {Txt.YES,Txt.NO};  
+                    mb = new MessageBox(
+                            Txt.TITLE_ATTENTION,
+                            Txt.CONFIRM_APP_EXIT, 
                             szExitButtonArray);				 					
                     mb.popupBlockingModal();										
                     if (mb.getPressedButtonIndex()==0){
@@ -267,47 +273,18 @@ public class BT747 extends MainWindow {
                     m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
                     break;
                 case C_MENU_ABOUT:
-                    new MessageBox("About BT747 V"+Version.VERSION_NUMBER,
-                            " Created with SuperWaba" +
-                            "|http://www.superwaba.org"+
-                            "|" +Version.BUILD_STR +
-                            "|Written by Mario De Weerd" +
-                            "|m.deweerd@ieee.org"+
-                            "|"+
-                            "|This application allows control of" +
-                            "|the BT747 device." +
-                            "|Full control using bluetooth is enabled" +
-                            "|by applying a hardware hack.  " +
-                            "|You can find information on the web."
+                    new MessageBox(Txt.ABOUT_TITLE,
+                            Txt.ABOUT_TXT
                     ).popupModal();
                     break;              
                 case C_MENU_ABOUT_SW:
-                    new MessageBox("About SuperWaba",
-                            "SuperWaba Virtual Machine "+ Settings.versionStr +
-                            "|Copyright (c)2000-2007" +
-                            "|Guilherme Campos Hazan" +
-                            "|www.superwaba.com|" +
-                            "|" +
-                            "SuperWaba is an enhanced version" +
-                            "|of the Waba Virtual Machine" +
-                            "|Copyright (c) 1998,1999 WabaSoft" +
-                    "|www.wabasoft.com").popupModal();
+                    new MessageBox(Txt.ABOUT_SUPERWABA_TITLE,
+                            Txt.ABOUT_SUPERWABA_TXT).popupModal(); 
                     break;                  
                 case C_MENU_INFO:    					
                     new MessageBox(
-                            "Disclaimer",
-                            "Software is provided 'AS IS,' without" +
-                            "|a warranty of any kind. ALL EXPRESS" +
-                            "|OR IMPLIED REPRESENTATIONS AND " +
-                            "|WARRANTIES, INCLUDING ANY IMPLIED" +
-                            "|WARRANTY OF MERCHANTABILITY," +
-                            "|FITNESS FOR A PARTICULAR PURPOSE" +
-                            "|OR NON-INFRINGEMENT, ARE HEREBY" +
-                            "|EXCLUDED. THE ENTIRE RISK ARISING " +
-                            "|OUT OF USING THE SOFTWARE IS" +
-                            "|ASSUMED BY THE USER. See the" +
-                            "|GNU General Public License for more" +
-                            "|details."
+                            Txt.DISCLAIMER_TITLE,
+                            Txt.DISCLAIMER_TXT
                     ).popupModal();
                     break;              
                     
