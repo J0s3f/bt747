@@ -18,7 +18,6 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.io.SerialPort;
-import bt747.ui.Button;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -31,9 +30,11 @@ import gps.GPSstate;
 import gps.GpsEvent;
 import gps.convert.Conv;
 
+import bt747.Txt;
 import bt747.Version;
 import bt747.sys.Convert;
 import bt747.sys.Time;
+import bt747.ui.Button;
 
 /**
  * @author Mario De Weerd
@@ -77,11 +78,11 @@ public class GPSconctrl extends Container {
 
     public void onStart() {
 
-        btnBluetooth=new Button("BLUETOOTH");
+        btnBluetooth=new Button(Txt.BT_BLUETOOTH);
 //        btnUSB=new Button("USB");
-        btnConnectPort=new Button("Connect Port Nbr");
-        btnStopGps = new Button("Close port");
-        btnRestartGps = new Button("(Re)open port");
+        btnConnectPort=new Button(Txt.BT_CONNECT_PRT);
+        btnStopGps = new Button(Txt.BT_CLOSE_PRT);
+        btnRestartGps = new Button(Txt.BT_REOPEN_PRT);
 //        btnRestartGps.setGap(5);
         
         String[] portNbrs=new String[C_MAX_PORTNBR+1]; 
@@ -150,12 +151,12 @@ public class GPSconctrl extends Container {
     
     private void updateButtons() {
         lbVersion.setText("V"+Version.VERSION_NUMBER+"("+Version.DATE+")   "+m_GPSstate.getMtkLogVersion());
-        lbFirmwareMainVersion.setText(((m_GPSstate.getMainVersion().length()!=0)?"Main:":"")+m_GPSstate.getMainVersion());
-        lbFirmwareName.setText(((m_GPSstate.getFirmwareVersion().length()!=0)?"Firmware:":"")+m_GPSstate.getFirmwareVersion());
-        lbModel.setText(((m_GPSstate.getModel().length()!=0)?"Model:":"")+m_GPSstate.getModel());
+        lbFirmwareMainVersion.setText(((m_GPSstate.getMainVersion().length()!=0)?Txt.MAIN:"")+m_GPSstate.getMainVersion());
+        lbFirmwareName.setText(((m_GPSstate.getFirmwareVersion().length()!=0)?Txt.FIRMWARE:"")+m_GPSstate.getFirmwareVersion());
+        lbModel.setText(((m_GPSstate.getModel().length()!=0)?Txt.MODEL:"")+m_GPSstate.getModel());
         lbFlashInfo.setText(((m_GPSstate.getFlashManuProdID()!=0)
                 ?
-                        "FlashInfo:"+Convert.unsigned2hex(m_GPSstate.getFlashManuProdID(),8)
+                        Txt.FLASHINFO+Convert.unsigned2hex(m_GPSstate.getFlashManuProdID(),8)
                         +" "+m_GPSstate.getFlashDesc()
                         :""
                             ));
@@ -170,7 +171,7 @@ public class GPSconctrl extends Container {
         if(gps.utc>0) {
             Time t = new Time();
             GPSFile.setUTCTime(t, gps.utc);
-            TimeStr="  - Time:"+
+            TimeStr=Txt.TIME_SEP+
             //Convert.toString(
 //                    t.getYear())+"/"
 //            +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
@@ -185,10 +186,10 @@ public class GPSconctrl extends Container {
     
     private void updateGPSData(final GPSRecord gps) {
 
-        lbLat.setText("Lat:"+Convert.toString(gps.latitude,5)+" - Hght:"+Convert.toString(gps.height,3));
-        lbLon.setText("Lon:"+Convert.toString(gps.longitude,5)+
+        lbLat.setText(Txt.LAT+Convert.toString(gps.latitude,5)+Txt.HGHT_SEP+Convert.toString(gps.height,3));
+        lbLon.setText(Txt.LON+Convert.toString(gps.longitude,5)+
                 TimeStr);
-        lbGeoid.setText("Geoid:"+Convert.toString(gps.geoid,3)+"(calc:"+
+        lbGeoid.setText(Txt.GEOID+Convert.toString(gps.geoid,3)+Txt.CALC+
                 Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)+")");
 
         //lbLat.repaintNow();

@@ -1,3 +1,23 @@
+//********************************************************************
+//***                           BT 747                             ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
+//***  for more details.                                           ***
+//***  *********************************************************** ***
+//***  The application was written using the SuperWaba toolset.    ***
+//***  This is a proprietary development environment based in      ***
+//***  part on the Waba development environment developed by       ***                                   
+//***  WabaSoft, Inc.                                              ***
+//********************************************************************                              
+
 import waba.ui.Container;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
@@ -8,11 +28,11 @@ import waba.ui.Window;
 import gps.GPSstate;
 import gps.GpsEvent;
 
+import bt747.Txt;
+
 /*
  * Created on 3 sept. 2007
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 
 /**
@@ -32,7 +52,10 @@ public class GPSOtherTabPanel extends Container {
     private AppSettings m_settings;
     
     private final String c_tpCaptions[]= {
-            "Flsh","NMEA Output","NMEA File","Holux"
+            Txt.TAB_FLSH,
+            Txt.TAB_NMEA_OUT,
+            Txt.TAB_NMEA_FILE,
+            Txt.TAB_HOLUX
     };
     
     /**

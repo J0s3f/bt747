@@ -23,6 +23,7 @@ import waba.ui.ProgressBar;
 
 import gps.convert.Conv;
 
+import bt747.Txt;
 import bt747.generic.EventPosterObject;
 import bt747.generic.Generic;
 import bt747.io.File;
@@ -313,11 +314,11 @@ public class GPSstate implements Thread {
     }
     
     MessageBox mbErase=null;
-    private final String [] eraseWait = { "Cancel waiting" };
+    private final String [] eraseWait = { Txt.CANCEL_WAITING };
     private void waitEraseDone() {
-        mbErase=new MessageBox("Waiting until erase done",
-                "Wait until the erase is done.|" +
-                "You can cancel waiting (at your risk)",
+        mbErase=new MessageBox(
+                Txt.TITLE_WAITING_ERASE,
+                Txt.TXT_WAITING_ERASE,
                 eraseWait
                 );
         mbErase.popupModal();
@@ -1108,7 +1109,7 @@ public class GPSstate implements Thread {
             logMemSize = 32 * 1024 * 1024 / 8; //32Mb -> 4MB
             break;
         default:
-            mdStr = "Unknown";
+            mdStr = Txt.UNKNOWN;
         }
         return mdStr;
     }
@@ -1448,8 +1449,10 @@ public class GPSstate implements Thread {
         m_logFileCard = Card;
 
         if ((m_logFile == null) || !(m_logFile.isOpen())) {
-            (new MessageBox("Error", "Could not open|" + fileName + " (" + Card
-                    + ")" + "|Check path & if Card is writeable"))
+            (new MessageBox(
+                    Txt.ERROR,
+                    Txt.COULD_NOT_OPEN + fileName + " (" + Card
+                    + ")" + Txt.CHK_PATH))
                     .popupBlockingModal();
         }
     }
@@ -1636,12 +1639,10 @@ public class GPSstate implements Thread {
                 } else {
                     // Log is not the same - delete the log and reopen.
                     MessageBox mb;
-                    String[] mbStr = { "Overwrite", "Abort download" };
-                    mb = new MessageBox("Attention",
-                            "The DATA in the device does NOT|"
-                                    + "correspond to the DATA previously|"
-                                    + "downloaded.|"
-                                    + "Do you wish to overwrite the DATA?",
+                    String[] mbStr = { Txt.OVERWRITE, Txt.ABORT_DOWNLOAD };
+                    mb = new MessageBox(
+                            Txt.TITLE_ATTENTION,
+                            Txt.DATA_NOT_SAME,
                             mbStr);
                     mb.popupBlockingModal();
                     if (mb.getPressedButtonIndex() == 0) {
@@ -1749,7 +1750,7 @@ public class GPSstate implements Thread {
                     case BT747_dev.PMTK_LOG_FLASH_SECTORS: // 11;
                         break;
                     case BT747_dev.PMTK_LOG_VERSION: // 12:
-                        MtkLogVersion="Logger: V"+Convert.toString(Convert.toInt(nmea[3])/100f,2);
+                        MtkLogVersion=Txt.LOGGER+"V"+Convert.toString(Convert.toInt(nmea[3])/100f,2);
                         break;
                     default:
                     }

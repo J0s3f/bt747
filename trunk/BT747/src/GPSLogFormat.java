@@ -18,8 +18,6 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.sys.Settings;
-import bt747.ui.Button;
-import bt747.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -29,6 +27,10 @@ import waba.ui.MessageBox;
 import gps.BT747_dev;
 import gps.GPSstate;
 import gps.GpsEvent;
+
+import bt747.Txt;
+import bt747.ui.Button;
+import bt747.ui.Check;
 
 /**
  * @author Mario De Weerd
@@ -68,65 +70,31 @@ public class GPSLogFormat extends Container {
             );
             chkLogFmtItems[i].setEnabled(true);
         }
-        m_lbEstNbrRecords=new Label("0000000 records estimated");
+        m_lbEstNbrRecords=new Label("0000000"+Txt.REC_ESTIMATED);
         add(m_lbEstNbrRecords,LEFT,AFTER);
         m_lbEstNbrRecords.setText("");
         
         // Add button confirming change of log format.
-        m_btChangeFormatErase=new Button("Set & erase");
+        m_btChangeFormatErase=new Button(Txt.SET_ERASE);
         add(m_btChangeFormatErase,LEFT,AFTER+5);
-        add(m_btChangeFormat=new Button("Set (no erase)"),AFTER+10,SAME);
-        add(m_btErase=new Button("Erase"),RIGHT,SAME);
+        add(m_btChangeFormat=new Button(Txt.SET_NOERASE),AFTER+10,SAME);
+        add(m_btErase=new Button(Txt.ERASE),RIGHT,SAME);
         setLogFormatControls();
     }
-
-    private static final String C_msgWarningFormatIncompatibilityRisk =
-        "You will change the format of your device without " +
-        "erasing the log.|" +
-        "Other software might not understand " +
-        "the data in your device!||" +
-        "Do you agree to this incompatibility?";
-    
-    /** Message warning user about impact of changing log format */
-    private static final String C_msgWarningFormatAndErase = 
-        "You are about to change the" +
-        "|logging format of your device." +
-        "|and" +
-        "|ERASE the log" +
-        "|" +
-        "|LOG FORMAT CHANGE & ERASE?";
-    /** Message warning the user again about the impact of a log format change */	        
-    private static final String C_msgWarningFormatAndErase2 =
-        "This is your last chance to avoid" +
-        "|erasing your device." +
-        "|" +
-        "|LOG FORMAT CHANGE & ERASE?";
-    /** Message warning user about impact of changing log format */
-    private static final String C_msgEraseWarning = 
-        "You are about to" +
-        "|erase your device." +
-        "|" +
-        "|LOG ERASE?";
-    private static final String C_msgEraseWarning2 =
-        "This is your last chance to avoid" +
-        "|erasing your device." +
-        "|" +
-        "|LOG ERASE?";
     
     /** Options for the first warning message */
     private static final String[] C_EraseOrCancel = {
-            "Erase", "Cancel"
+            Txt.ERASE, Txt.CANCEL
     };
     /** Options for the first warning message */
     private static final String[] C_YesrCancel = {
-            "Yes", "Cancel"
+            Txt.YES, Txt.CANCEL
     };
     /** Options for the second warning message - reverse order on purpose */
     private static final String[] C_CancelConfirmErase = {
-            "Cancel", "Confirm erase"
+            Txt.CANCEL, Txt.CONFIRM_ERASE
     };
-    /** String saying "Attention" (used multiple times) */
-    private static final String C_Attention = "Attention";
+
     
     /** (User) request to change the log format.
      * Warns about requirement to erase the log too.
@@ -135,10 +103,16 @@ public class GPSLogFormat extends Container {
     private void changeLogFormatAndErase() {
         /** Object to open multiple message boxes */
         MessageBox m_mb; 
-        m_mb=new MessageBox(C_Attention,C_msgWarningFormatAndErase,C_EraseOrCancel);
+        m_mb=new MessageBox(
+                Txt.TITLE_ATTENTION,
+                Txt.C_msgWarningFormatAndErase,
+                C_EraseOrCancel);
         m_mb.popupBlockingModal();
         if(m_mb.getPressedButtonIndex()==0) {
-            m_mb=new MessageBox(C_Attention,C_msgWarningFormatAndErase2,C_CancelConfirmErase);
+            m_mb=new MessageBox(
+                    Txt.TITLE_ATTENTION,
+                    Txt.C_msgWarningFormatAndErase2,
+                    C_CancelConfirmErase);
             m_mb.popupBlockingModal();
             if(m_mb.getPressedButtonIndex()==1) {
                 // Set format and reset log
@@ -154,11 +128,11 @@ public class GPSLogFormat extends Container {
     private void changeLogFormat() {
         /** Object to open multiple message boxes */
         MessageBox m_mb; 
-        m_mb=new MessageBox(C_Attention,
+        m_mb=new MessageBox(Txt.TITLE_ATTENTION,
                 waba.sys.Convert.insertLineBreak(Settings.screenWidth-6,
                         '|',
                         getFontMetrics(getFont()),
-                        C_msgWarningFormatIncompatibilityRisk),C_YesrCancel);
+                        Txt.C_msgWarningFormatIncompatibilityRisk),C_YesrCancel);
         m_mb.popupBlockingModal();
         if(m_mb.getPressedButtonIndex()==0) {
             m_GPSstate.setLogFormat(getSelectedLogFormat());
@@ -172,10 +146,16 @@ public class GPSLogFormat extends Container {
     private void eraseLogFormat() {
         /** Object to open multiple message boxes */
         MessageBox m_mb; 
-        m_mb=new MessageBox(C_Attention,C_msgEraseWarning,C_EraseOrCancel);
+        m_mb=new MessageBox(
+                Txt.TITLE_ATTENTION,
+                Txt.C_msgEraseWarning,
+                C_EraseOrCancel);
         m_mb.popupBlockingModal();
         if(m_mb.getPressedButtonIndex()==0) {
-            m_mb=new MessageBox(C_Attention,C_msgEraseWarning2,C_CancelConfirmErase);
+            m_mb=new MessageBox(
+                    Txt.TITLE_ATTENTION,
+                    Txt.C_msgEraseWarning2,
+                    C_CancelConfirmErase);
             m_mb.popupBlockingModal();
             if(m_mb.getPressedButtonIndex()==1) {
                 // Erase log
@@ -237,7 +217,7 @@ public class GPSLogFormat extends Container {
                 size+=2;
             }
             count= m_GPSstate.logMemUsefullSize()/size;
-            m_lbEstNbrRecords.setText(count+" records estimated");
+            m_lbEstNbrRecords.setText(count+Txt.REC_ESTIMATED);
         } catch (Exception e) {
             // TODO: handle exception
         }

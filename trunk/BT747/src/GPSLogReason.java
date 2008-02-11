@@ -17,9 +17,6 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import bt747.sys.Convert;
-import bt747.ui.Button;
-import bt747.ui.Check;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -28,6 +25,11 @@ import waba.ui.Event;
 
 import gps.GPSstate;
 import gps.GpsEvent;
+
+import bt747.Txt;
+import bt747.sys.Convert;
+import bt747.ui.Button;
+import bt747.ui.Check;
 /**
  * @author Mario De Weerd
  */
@@ -49,7 +51,7 @@ public class GPSLogReason extends Container {
     private Check m_chkPowerSaveOnOff;
     private Check m_chkSBASOnOff;
     private Check m_chkSBASTestOnOff;
-    private final static String[] strDGPSMode= {"No DGPS", "RTCM","WAAS"};
+    private final static String[] strDGPSMode= {Txt.NO_DGPS, Txt.RTCM,Txt.WAAS};
     private ComboBox m_cbDGPSMode;
     private final static String[] strDatumMode= {"WGS84", "TOKYO-M","TOKYO-A"};
     private ComboBox m_cbDatumMode;
@@ -62,13 +64,13 @@ public class GPSLogReason extends Container {
     
     protected void onStart() {
         super.onStart();
-        add(m_chkTimeOnOff      = new Check("Time (s)    "), LEFT, TOP); //$NON-NLS-1$
+        add(m_chkTimeOnOff      = new Check(Txt.RCR_TIME), LEFT, TOP); //$NON-NLS-1$
         add(m_edTime = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(m_chkSpeedOnOff     = new Check("Speed (km/h)"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_chkSpeedOnOff     = new Check(Txt.RCR_SPD), LEFT, AFTER); //$NON-NLS-1$
         add(m_edSpeed = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(m_chkDistanceOnOff  = new Check("Distance (m)"), LEFT, AFTER); //$NON-NLS-1$
+        add(m_chkDistanceOnOff  = new Check(Txt.RCR_DIST), LEFT, AFTER); //$NON-NLS-1$
         add(m_edDistance = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(m_chkFixOnOff = new Check("Fix (ms)"), LEFT,AFTER); //$NON-NLS-1$
+        add(m_chkFixOnOff = new Check(Txt.FIX_PER), LEFT,AFTER); //$NON-NLS-1$
         add(m_edFix = new Edit(), AFTER, SAME); //$NON-NLS-1$
         m_edSpeed.setValidChars(Edit.numbersSet);
         m_edDistance.setValidChars(Edit.numbersSet);
@@ -77,17 +79,17 @@ public class GPSLogReason extends Container {
         m_cbDGPSMode=new ComboBox();
         m_cbDGPSMode.add(strDGPSMode);
         add(m_cbDGPSMode, AFTER, SAME);
-        add(m_chkSBASTestOnOff = new Check("Incl. Test SBAS"), RIGHT, SAME); //$NON-NLS-1$
+        add(m_chkSBASTestOnOff = new Check(Txt.INCL_TST_SBAS), RIGHT, SAME); //$NON-NLS-1$
         m_cbDatumMode=new ComboBox();
         m_cbDatumMode.setEnabled(false);
         m_cbDatumMode.add(strDatumMode);
         add(m_cbDatumMode, LEFT, AFTER+3);
         if(ENABLE_PWR_SAVE_CONTROL) {
-            add(m_chkPowerSaveOnOff = new Check("Power Save (Internal)"), LEFT, AFTER+3); //$NON-NLS-1$
+            add(m_chkPowerSaveOnOff = new Check(Txt.PWR_SAVE_INTRNL), LEFT, AFTER+3); //$NON-NLS-1$
         }
         
         
-        add(m_btSet = new Button("SET"), CENTER, AFTER+3); //$NON-NLS-1$
+        add(m_btSet = new Button(Txt.SET), CENTER, AFTER+3); //$NON-NLS-1$
         
         
     }

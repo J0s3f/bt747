@@ -10,6 +10,7 @@
     <!-- Default properties (in version control) -->
     <property file="default.properties" />
     
+	<property name="dist" value="dist"/>
     
     <!-- Application classpath -->
     <path id="classpath">
@@ -38,7 +39,7 @@
         <delete dir="build"/>
         <delete dir="rxtxbuild"/>
         <delete dir="filebuild"/>
-        <delete dir="dist"/>
+        <delete dir="${dist}"/>
         
     </target>
     
@@ -47,7 +48,7 @@
             <classpath>
                 <pathelement path="webstart/waba_only.jar"/>
                 <pathelement path="rxtx-2.1-7-bins-r2/RXTXcomm.jar"/>
-                <pathelement path="dist/BT747_rxtx.jar"/>
+                <pathelement path="${dist}/BT747_rxtx.jar"/>
             </classpath>
             <arg line="/w 320 /h 320 /scale 1 /bpp 8 BT747"/>
         </java>
@@ -75,7 +76,15 @@
         </echo>
     </target>
     
-    <target name="updatedate" depends="initdate" description="increase build number and set release date">
+	<target name="updatelang" if="lang">
+        <replaceregexp file="src/bt747/Txt.java" encoding="${encoding}" match="extends Txt_.." replace="extends Txt_${lang}"/>
+        <replaceregexp file="package.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}'/>	
+	</target>
+	<target name="defaultlang" unless="lang.set">
+        <replaceregexp file="src/bt747/Txt.java" encoding="${encoding}" match="extends Txt_.." replace="extends Txt_en"/>
+        <replaceregexp file="package.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=en'/>	
+	</target>
+    <target name="updatedate" depends="initdate,defaultlang,updatelang" description="increase build number and set release date">
         <!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
         <replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
         <replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match='BUILD_STR = \"[0-9]+\";' replace='BUILD_STR = "${TIMESTAMP}";'/>
@@ -83,12 +92,18 @@
         <replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";'/>	
         <replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}'/>	
     </target>
+	
+	<target name="all-es">
+		<antcall target="all">
+			<param name="lang" value="es"/>
+		</antcall>
+	</target>
     
     <!-- Compile -->
     <target name="build" depends="clean, updatedate">
         
         <mkdir dir="build"/>
-        <mkdir dir="dist"/>
+        <mkdir dir="${dist}"/>
         
         <javac srcdir="src_forwaba" destdir="build" target="1.1" optimize="true" source="1.2">
             <include name="**/*.java"/>
@@ -217,7 +232,7 @@
         <jar jarfile="rxtxbuild/${ant.project.name}_rxtx.jar" compress="true">
             <fileset dir="rxtxbuild" includes="**/*.class"/>
         </jar>
-        <copy todir="dist">
+        <copy todir="${dist}">
             <fileset dir="rxtxbuild">
                 <include name="**/*.jar"/>
             </fileset>
@@ -232,7 +247,7 @@
         <jar jarfile="symbianbuild/${ant.project.name}_symbian.jar" compress="true">
             <fileset dir="symbianbuild" includes="**/*.class"/>
         </jar>
-        <copy todir="dist">
+        <copy todir="${dist}">
             <fileset dir="symbianbuild">
                 <include name="**/*.jar"/>
             </fileset>
@@ -246,13 +261,11 @@
         <jar jarfile="filebuild/${ant.project.name}_file.jar" compress="true">
             <fileset dir="filebuild" includes="**/*.class"/>
         </jar>
-        <copy todir="dist">
+        <copy todir="${dist}">
             <fileset dir="filebuild">
                 <include name="**/*.jar"/>
             </fileset>
         </copy>
-        
-        
     </target>
     
     <taskdef name="proguard" classpath="${proguardLib}" 
@@ -260,9 +273,9 @@
     <target name="proguard" depends="jar">
         <move file="${buildDir}/${ant.project.name}.jar" tofile="${buildDir}/${ant.project.name}_unopt.jar"/>
         <proguard shrink="true" defaultpackage="" optimize="true" obfuscate="true" 
-    allowaccessmodification="true"
-    printusage="false"
-    overloadaggressively="true" verbose="true" ignorewarnings="true">
+	    allowaccessmodification="true"
+	    printusage="false"
+	    overloadaggressively="true" verbose="true" ignorewarnings="true">
             <keep name="${mainClass}" /> 
             <libraryjar file="${java.home}/lib/rt.jar" />
             <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
@@ -406,22 +419,22 @@
     <!-- Execute WARP and populate distribution directory -->
     <target name="all-warp" depends="warp">
         
-        <move file="build/${ant.project.name}.pdb" todir="dist"/>
+        <move file="build/${ant.project.name}.pdb" todir="${dist}"/>
         
     </target>
     
     <!-- Execute EXEGEN and populate distribution directory -->
     <target name="all-exegen" depends="exegen, all-warp">
         
-        <move todir="dist" file="build/${ant.project.name}.prc"/>
-        <move todir="dist" file="build/install.exe"/>
+        <move todir="${dist}" file="build/${ant.project.name}.prc"/>
+        <move todir="${dist}" file="build/install.exe"/>
         
     </target>
     
     <!-- Execute EXEGEN with WinCE EXE and populate distribution directory -->
     <target name="all-exegen-exe" depends="exegen-exe, all-warp">
         
-        <move todir="dist">
+        <move todir="${dist}">
             
             <fileset dir="build">
                 <include name="${ant.project.name}.prc"/>
@@ -436,7 +449,7 @@
     <!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
     <target name="all-exegen-cab" depends="exegen-cab, all-warp">
         
-        <move todir="dist">
+        <move todir="${dist}">
             
             <fileset dir="build">
                 <include name="${ant.project.name}.prc"/>
@@ -453,7 +466,7 @@
     <!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
     <target name="all-exegen-types" depends="exegen, exegen-exe, exegen-cab, rxtxjar, all-warp">
         
-        <move todir="dist">
+        <move todir="${dist}">
             
             <fileset dir="build">
                 <include name="${ant.project.name}.prc"/>
