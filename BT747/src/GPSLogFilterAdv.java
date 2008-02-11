@@ -17,8 +17,6 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import bt747.sys.Convert;
-import bt747.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Edit;
@@ -28,6 +26,10 @@ import waba.ui.PushButtonGroup;
 
 import gps.GPSFilterAdvanced;
 import gps.GpsEvent;
+
+import bt747.Txt;
+import bt747.sys.Convert;
+import bt747.ui.Button;
 /**
  * @author Mario De Weerd
  */
@@ -51,7 +53,10 @@ public class GPSLogFilterAdv extends Container {
     private Button m_btClear;
 
     private PushButtonGroup pbPtType;
-    private String[] C_PB_TYPE_NAMES= {"ACTIVE","INACTIVE"};
+    private String[] C_PB_TYPE_NAMES= {
+            Txt.ACTIVE,
+            Txt.INACTIVE
+            };
     
     private AppSettings m_settings;
     
@@ -64,28 +69,28 @@ public class GPSLogFilterAdv extends Container {
         super.onStart();
         
         add(m_minRecCount= new Edit(),LEFT, SAME);
-        add(new Label("<= record Nbr <= "),CENTER,SAME);
+        add(new Label(Txt.FLTR_REC),CENTER,SAME);
         add(m_maxRecCount= new Edit(),RIGHT, SAME);
         
         add(m_minSpeed= new Edit(),LEFT, AFTER);
-        add(new Label("<= speed <= "),CENTER,SAME);
+        add(new Label(Txt.FLTR_SPD),CENTER,SAME);
         add(m_maxSpeed= new Edit(),RIGHT, SAME);
         
         add(m_minDist= new Edit(),LEFT, AFTER);
-        add(new Label("<= distance <= "),CENTER,SAME);
+        add(new Label(Txt.FLTR_DST),CENTER,SAME);
         add(m_maxDist= new Edit(),RIGHT, SAME);
         
-        add(new Label("PDOP <= "),CENTER,AFTER);
+        add(new Label(Txt.FLTR_PDOP),CENTER,AFTER);
         add(m_maxPDOP= new Edit(),RIGHT, SAME);
 
-        add(new Label("HDOP <= "),CENTER,AFTER);
+        add(new Label(Txt.FLTR_HDOP),CENTER,AFTER);
         add(m_maxHDOP= new Edit(),RIGHT, SAME);
         
-        add(new Label("VDOP <= "),CENTER,AFTER);
+        add(new Label(Txt.FLTR_VDOP),CENTER,AFTER);
         add(m_maxVDOP= new Edit(),RIGHT, SAME);
         
         add(m_minNSAT= new Edit(),LEFT, AFTER);
-        add(new Label("<= NSAT"),CENTER,SAME);
+        add(new Label(Txt.FLTR_NSAT),CENTER,SAME);
 
         String allowedKeys;
         allowedKeys=Edit.numbersSet+"-";
@@ -104,9 +109,9 @@ public class GPSLogFilterAdv extends Container {
         add(new Label("Values of 0 are ignored"),CENTER,AFTER);
 
         
-        m_btSet = new Button("SET");
+        m_btSet = new Button(Txt.SET);
         add(m_btSet, LEFT, AFTER+3); //$NON-NLS-1$
-        m_btClear = new Button("CLEAR");
+        m_btClear = new Button(Txt.CLEAR);
         add(m_btClear, AFTER, SAME); //$NON-NLS-1$
 
         add(pbPtType=

@@ -19,6 +19,7 @@
 //********************************************************************       
 package gps;
 
+import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Time;
@@ -241,8 +242,8 @@ public abstract class GPSFile {
         m_File = new File(fileName, createNewFile ? File.CREATE
                 : File.READ_WRITE, m_card);
         if (!m_File.isOpen()) {
-            bt747.sys.Vm.debug("Could not open " + fileName+"|"+m_File.lastError);
-            (new MessageBox("Error", "Could not open|" + fileName+"|"+m_File.lastError))
+            bt747.sys.Vm.debug(Txt.COULD_NOT_OPEN + fileName+"|"+m_File.lastError);
+            (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName+"|"+m_File.lastError))
                         .popupModal();
             m_File = null;
         } else {
@@ -265,7 +266,7 @@ public abstract class GPSFile {
             m_File.close();
         } catch (Exception e) {
             // TODO: handle exception
-            Vm.debug("Closing failed (closeFile) - probably a bug.");
+            Vm.debug(Txt.CLOSE_FAILED);
         }
     }
 
@@ -330,7 +331,7 @@ public abstract class GPSFile {
             if (m_File != null) {
                 m_File.writeBytes(s.getBytes(), 0, s.length());
             } else {
-                Vm.debug("Writing to closed file");
+                Vm.debug(Txt.WRITING_CLOSED);
             }
         } catch (Exception e) {
 

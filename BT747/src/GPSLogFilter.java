@@ -17,7 +17,6 @@
 //***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
-import bt747.ui.Check;
 import waba.ui.Container;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
@@ -26,6 +25,9 @@ import waba.ui.PushButtonGroup;
 
 import gps.BT747_dev;
 import gps.GPSFilter;
+
+import bt747.Txt;
+import bt747.ui.Check;
 
 /** The purpose of this container is to set the log filter settings.
  */
@@ -42,8 +44,7 @@ public class GPSLogFilter extends Container {
         m_settings=settings;
     }
 
-    private String[] strValid= {
-            "No fix", "SPS", "DGPS", "PPS", "RTK", "FRTK", "Estimate", "Manual", "Sim"};
+    private String[] strValid= Txt.STR_VALID;
     private String[] C_PB_TYPE_NAMES=new String[2];
 
 
@@ -65,8 +66,8 @@ public class GPSLogFilter extends Container {
 
     public void onStart() {
         getSettings();
-        C_PB_TYPE_NAMES[GPSFilter.C_TRKPT_IDX]="TrkPt";
-        C_PB_TYPE_NAMES[GPSFilter.C_WAYPT_IDX]="WayPt";
+        C_PB_TYPE_NAMES[GPSFilter.C_TRKPT_IDX]=Txt.TRKPT;
+        C_PB_TYPE_NAMES[GPSFilter.C_WAYPT_IDX]=Txt.WAYPT;
         add(pbPtType=
             new PushButtonGroup(
                     C_PB_TYPE_NAMES, // labes for buttons

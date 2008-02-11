@@ -19,11 +19,12 @@
 //********************************************************************  
 package gps;
 
+import gps.convert.Conv;
+
+import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.ui.MessageBox;
-
-import gps.convert.Conv;
 
 /** This class is used to convert the binary log to a new format.
  * Basically this class interprets the log and creates a {@link GPSRecord}.
@@ -89,7 +90,9 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
              */
             readResult=m_File.readBytes(bytes, 0, sizeToRead);
             if(readResult!=sizeToRead) {
-                (new MessageBox("Error","Problem reading|"+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
+                (new MessageBox(
+                        Txt.ERROR,
+                        Txt.PROBLEM_READING+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
             }
             nextAddrToRead+=sizeToRead;
             
@@ -177,7 +180,9 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
-                (new MessageBox("Error","Could not open|"+fileName+"|"+m_File.lastError)).popupBlockingModal();                                   
+                (new MessageBox(
+                        Txt.ERROR,
+                        Txt.COULD_NOT_OPEN+fileName+"|"+m_File.lastError)).popupBlockingModal();                                   
                 m_File=null;
             } else {
                 passToFindFieldsActivatedInLog=gpsFile.needPassToFindFieldsActivatedInLog();

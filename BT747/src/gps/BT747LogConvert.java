@@ -19,11 +19,12 @@
 //********************************************************************  
 package gps;
 
+import gps.convert.Conv;
+
+import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.ui.MessageBox;
-
-import gps.convert.Conv;
 
 /** This class is used to convert the binary log to a new format.
  * Basically this class interprets the log and creates a {@link GPSRecord}.
@@ -158,12 +159,22 @@ public final class BT747LogConvert implements GPSLogConvert {
                     // Read header (20 bytes is enough)
                     readResult=m_File.readBytes(bytes, 0, 20);
                     if(readResult!=20) {
-                        (new MessageBox("Error","Problem reading|"+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
+                        (new MessageBox(
+                                Txt.ERROR,
+                                Txt.PROBLEM_READING+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
                     }
                     newLogFormat=   (0xFF&bytes[2])<<0
                     |(0xFF&bytes[3])<<8
                     |(0xFF&bytes[4])<<16
                     |(0xFF&bytes[5])<<24;
+                    if(newLogFormat==0xFFFFFFFF) {
+                        // TODO: Treat error
+                        if(logFormat==0) {
+                            newLogFormat=0x8000001D; // Supposing holux M-241
+                        } else {
+                            newLogFormat=logFormat;
+                        }
+                    }
                     if(newLogFormat!=logFormat) {
                         updateLogFormat(gpsFile, newLogFormat);
                     }
@@ -176,7 +187,9 @@ public final class BT747LogConvert implements GPSLogConvert {
                  */
                 readResult=m_File.readBytes(bytes, 0, sizeToRead);
                 if(readResult!=sizeToRead) {
-                    (new MessageBox("Error","Problem reading|"+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
+                    (new MessageBox(
+                            Txt.ERROR,
+                            Txt.PROBLEM_READING+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
                 }
                 nextAddrToRead+=sizeToRead;
             }
@@ -659,7 +672,9 @@ public final class BT747LogConvert implements GPSLogConvert {
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
-                (new MessageBox("Error","Could not open|"+fileName+"|"+m_File.lastError)).popupBlockingModal();                                   
+                (new MessageBox(
+                        Txt.ERROR,
+                        Txt.COULD_NOT_OPEN+fileName+"|"+m_File.lastError)).popupBlockingModal();                                   
                 m_File=null;
             } else {
                 passToFindFieldsActivatedInLog=gpsFile.needPassToFindFieldsActivatedInLog();

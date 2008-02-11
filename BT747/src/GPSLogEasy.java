@@ -24,9 +24,12 @@ import waba.ui.Event;
 import waba.ui.Label;
 import waba.ui.MessageBox;
 
+import javax.swing.border.TitledBorder;
+
 import gps.BT747_dev;
 import gps.GPSstate;
 
+import bt747.Txt;
 import bt747.ui.Button;
 
 /** Implement some buttons to easily do more complex operations
@@ -55,16 +58,16 @@ public class GPSLogEasy extends Container {
       }
       
       protected void onStart() {
-          add(m_btSet5Hz = new Button("5Hz fix and log"), CENTER, AFTER+3); //$NON-NLS-1$
-          add(m_btSet2Hz = new Button("2Hz fix (avoid static nav)"), CENTER, AFTER+3); //$NON-NLS-1$
-          add(m_btHotStart = new Button("Hot start"), LEFT, AFTER+10); //$NON-NLS-1$
-          add(m_btWarmStart = new Button("Warm start"), CENTER, SAME); //$NON-NLS-1$
-          add(m_btColdStart = new Button("Cold start"), RIGHT, SAME); //$NON-NLS-1$
-          add(m_btFullColdStart = new Button("Factory reset"), LEFT, AFTER+2); //$NON-NLS-1$
+          add(m_btSet5Hz = new Button(Txt.BT_5HZ_FIX), CENTER, AFTER+3); //$NON-NLS-1$
+          add(m_btSet2Hz = new Button(Txt.BT_2HZ_FIX), CENTER, AFTER+3); //$NON-NLS-1$
+          add(m_btHotStart = new Button(Txt.BT_HOT), LEFT, AFTER+10); //$NON-NLS-1$
+          add(m_btWarmStart = new Button(Txt.BT_WARM), CENTER, SAME); //$NON-NLS-1$
+          add(m_btColdStart = new Button(Txt.BT_COLD), RIGHT, SAME); //$NON-NLS-1$
+          add(m_btFullColdStart = new Button(Txt.BT_FACT_RESET), LEFT, AFTER+2); //$NON-NLS-1$
 
-          add(m_btForceErase = new Button("Forced erase"), RIGHT, SAME); //$NON-NLS-1$
+          add(m_btForceErase = new Button(Txt.BT_FORCED_ERASE), RIGHT, SAME); //$NON-NLS-1$
 
-          add(lbLogUserTxt=new Label("Click to log a point with reason:"),LEFT,AFTER+2);
+          add(lbLogUserTxt=new Label(Txt.BT_PT_WITH_REASON),LEFT,AFTER+2);
           // Add all tick buttons.
           int x=LEFT;
           int y=SAME;
@@ -111,12 +114,9 @@ public class GPSLogEasy extends Container {
               m_GPSstate.doWarmStart();
           } else if (event.target==m_btFullColdStart) {
               MessageBox mb;
-              String []szExitButtonArray = {"Yes","No"};
-              mb = new MessageBox("Attention",
-                      "You are about to perform a factory|" +
-                      "reset of your GPS Logger Device.|"+
-                      "||Do you confirm this reset at|"+
-                      "your own risk ???",
+              String []szExitButtonArray = {Txt.YES,Txt.NO};
+              mb = new MessageBox(Txt.TITLE_ATTENTION,
+                      Txt.CONFIRM_FACT_RESET,
                       szExitButtonArray);                                   
               mb.popupBlockingModal();                                      
               if (mb.getPressedButtonIndex()==0){

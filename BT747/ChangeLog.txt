@@ -1,3 +1,10 @@
+Version 1.37
+* Somewhat more tolerant if header is all 0xFF (in case of holux);
+* "Externalised" <<all>> interface strings to separate class for translation
+* Added target for spanish translation in Ant build file
+* Set up an environment in netbeans (for trial)
+* Included 'forgotten' source directory in distribution, and added netbeans.
+
 Version 1.36
 * Added Holux specific functionality (Name setting) - untested.
 * Resolved bug regarding satellite information in NMEA output format when no satellite info

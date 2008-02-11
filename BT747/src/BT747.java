@@ -106,7 +106,14 @@ public class BT747 extends MainWindow {
     private static TabPanel    m_TabPanel;
     /** The captions for the tab panel */
     private final String c_tpCaptions[]= {
-            "FMT","Ctrl","Log","File","Fltr","Easy","Con","Othr"        
+            Txt.C_FMT,
+            Txt.C_CTRL,
+            Txt.C_LOG,
+            Txt.C_FILE,
+            Txt.C_FLTR,
+            Txt.C_EASY,
+            Txt.C_CON,
+            Txt.C_OTHR
     };
     /** Tab Panel container - Logger control/configuration */
     private static GPSLogFormat  m_GPSLogCtrl;
@@ -214,7 +221,6 @@ public class BT747 extends MainWindow {
 
         m_MenuBar.setChecked(C_MENU_GPS_DECODE_ACTIVE,m_settings.getGpsDecode());
         m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
-        
         
         addTimer(this, 55);
 
