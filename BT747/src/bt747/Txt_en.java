@@ -334,6 +334,24 @@ public class Txt_en {
     public static final String WRITING_CLOSED =
         "Writing to closed file";
         
+    // Flash option
+    public static final String TIMESLEFT = "TimesLeft";
+    public static final String UPDATERATE = "Update Rate (Hz)";
+    public static final String BAUDRATE = "Baud Rate";
+    public static final String WRITEFLASH = "Write Flash";
+    public static final String ABORT = "Abort";
+    public static final String TXT_FLASH_LIMITED_WRITES=
+        "The number of writes to the flash|" +
+        "is limited and a change in settings|" +
+        "could render your device inoperable|" +
+        "(e.g., a baud rate change)|" +
+        "ABORT by clicking abort!!";
+    public static final String PERIOD_ABBREV = "Per";
+    
+    // Forgotton in Advanced track filter
+    public static final String IGNORE_0VALUES
+        = "Values of 0 are ignored";
+    
 }
 
 

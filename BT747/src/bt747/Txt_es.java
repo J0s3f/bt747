@@ -4,6 +4,7 @@ import bt747.sys.Settings;
 
 /**
  * @author Mario De Weerd
+ * traducido por (translated by) Allsts. allststr@terra.es
  *
  ** Class to provide language specific strings.
  */
@@ -18,15 +19,15 @@ public class Txt_es {
     public final static String S_STOP_CONNECTION = "Detener conexión";
     public final static String S_GPX_UTC_OFFSET_0= "Fijar UTC a 0 en GPX";
     public final static String S_GPX_TRKSEG_WHEN_SMALL = "No dividir tracks GPX";
-    public final static String S_GPS_DECODE_ACTIVE= "Activar decodificación GPS";
-    public final static String S_FOCUS_HIGHLIGHT= "Auto posicionarse en selección";
+    public final static String S_GPS_DECODE_ACTIVE= "Decodificar datos GPS";
+    public final static String S_FOCUS_HIGHLIGHT= "Autoposición en selección";
     public final static String S_DEBUG= "Mensajes adicionales";
     public final static String S_STATS= "Estadísticas";
     public final static String S_INFO= "Info";
     public final static String S_ABOUT_BT747= "Acerca de BT747";
     public final static String S_ABOUT_SUPERWABA= "Acerca de SuperWaba VM";
     
-    public final static String S_TITLE= "BT747 - Control de Logger MTK";
+    public final static String S_TITLE= "BT747 - Control Logger MTK";
 
     
     public final static String LB_DOWNLOAD= "Descargar";
@@ -51,12 +52,13 @@ public class Txt_es {
         "|" +Version.BUILD_STR + 
         "|creado por Mario De Weerd" + 
         "|m.deweerd@ieee.org"+ 
-        "|"+ 
         "|Esta aplicación permite controlar" + 
         "|dispositivos BT747." + 
-        "|Permite un control total por bluetooth" + 
-        "|aplicando un hardware hack.  " + 
-        "|Puedes encontrar información en la web."; 
+        "|Permite el control por bluetooth" + 
+        "|del GPS con un hardware hack.  " + 
+        "|Más información en la web." +
+        "|Traducido por Allsts" + 
+        "|allststr@terra.es"; 
 
     
     public final static String ABOUT_SUPERWABA_TITLE=
@@ -89,30 +91,30 @@ public class Txt_es {
         "|details." ;
 
     // TAB identification
-    public final static String C_FMT  = "FMT";
+    public final static String C_FMT  = "Fmt";
     public final static String C_CTRL = "Ctrl";
     public final static String C_LOG  = "Log";
-    public final static String C_FILE = "Archivo";
+    public final static String C_FILE = "Arch";
     public final static String C_FLTR = "Fltr";
     public final static String C_EASY = "Fácil";
     public final static String C_CON  = "Con";
     public final static String C_OTHR = "Otros";
 
     // Conctrl strings
-    public final static String BT_BLUETOOTH = "BLUETOOTH";
-    public final static String BT_CONNECT_PRT = "Conectar con puerto núm";
+    public final static String BT_BLUETOOTH = "Bluetooth";
+    public final static String BT_CONNECT_PRT = "Puerto COM";
     public final static String BT_CLOSE_PRT = "Cerrar puerto";
     public final static String BT_REOPEN_PRT  = "(Re)abrir puerto";
     public final static String MAIN = "Principal:";
-    public final static String FIRMWARE = "Firmware:";
-    public final static String MODEL = "Modelo:";
-    public final static String FLASHINFO = "InfoFlash:";
-    public final static String TIME_SEP = "  - Hora:";
-    public final static String LAT = "Lat:";
-    public final static String LON = "Lon:";
-    public final static String GEOID = "Geoid:";
-    public final static String CALC = "(calc:";
-    public final static String HGHT_SEP = " - Alt:";
+    public final static String FIRMWARE = "Firmware: ";
+    public final static String MODEL = "Modelo: ";
+    public final static String FLASHINFO = "InfoFlash: ";
+    public final static String TIME_SEP = "  - Hora: ";
+    public final static String LAT = "Lat: ";
+    public final static String LON = "Lon: ";
+    public final static String GEOID = "Geoide: ";
+    public final static String CALC = " (calc: ";
+    public final static String HGHT_SEP = " - Alt: ";
     
     // Filters tab panel
     public final static String STANDARD = "Standard";
@@ -121,7 +123,7 @@ public class Txt_es {
     
     // BT747_dev class
     public static final String[]C_STR_RCR = {
-            "Tiempo", "Velocidad", "Distancia", "Botón",
+            "Tiempo", "Velocid", "Distanc", "Botón",
             "App1","App2","App3","App4",
             "App5","App6","App7","App8",
             "App9","AppX","AppY","AppZ"
@@ -160,9 +162,9 @@ public class Txt_es {
     // EASY TAB
     public static final String BT_5HZ_FIX = "Fijar y grabar a 5Hz";
     public static final String BT_2HZ_FIX = "Fijar a 2Hz";
-    public static final String BT_HOT = "Inicio en caliente";
-    public static final String BT_WARM = "Inicio templado";
-    public static final String BT_COLD = "Inicio en frío";
+    public static final String BT_HOT = "Rein Cali";
+    public static final String BT_WARM = "Rein Temp";
+    public static final String BT_COLD = "Rein Frío";
     public static final String BT_FACT_RESET = "Valores de fábrica";
     public static final String BT_FORCED_ERASE = "Forzar borrado";
     public static final String BT_PT_WITH_REASON = "Click para grabar un punto por...";
@@ -170,7 +172,7 @@ public class Txt_es {
     public static final String CONFIRM_FACT_RESET =
             "Vas a volver a los valores de|" +
             "fábrica de tu GPS DataLogger.|"+
-            "||¿Confirmas este cambio bajo|"+
+            "|¿Confirmas este cambio bajo|"+
             "tu responsabilidad ?";    
     
     // File tab
@@ -182,11 +184,11 @@ public class Txt_es {
     public static final String READ_TIMEOUT = "Tiempo max. lectura (ms) :";
     public static final String CARD_VOL = "Tarjeta/Volumen:";
     public static final String APPLY_SET = "Guardar y Aplicar los ajustes";
-    public static final String DEFAULT_SET = "Config por defecto";
+    public static final String DEFAULT_SET = "Configuración por defecto";
 
     // Log filter
     public static final String[] STR_VALID= {
-            "Sin fijar",
+            "Sin Fijar",
             "SPS",
             "DGPS",
             "PPS",
@@ -194,7 +196,7 @@ public class Txt_es {
             "FRTK",
             "Estimado",
             "Manual",
-            "Sim"};
+            "Simulación"};
 
     public static final String TRKPT = "TrkPt";
     public static final String WAYPT = "WayPt";
@@ -210,21 +212,22 @@ public class Txt_es {
     public static final String FLTR_VDOP = "VDOP <= ";
     public static final String FLTR_NSAT = "<= NSAT";
     
-    public static final String CLEAR = "BORRAR";
+    public static final String CLEAR = "Borrar";
     
     // Log format
     public static final String REC_ESTIMATED = " puntos estimados";
     public static final String SET_ERASE = "Guardar y borrar";
-    public static final String SET_NOERASE = "Guardar (no borrar)";
+    public static final String SET_NOERASE = "Guardar";
     public static final String ERASE = "Borrar";
     public static final String CONFIRM_ERASE = "Confirmar borrado";
     
     public static final String C_msgWarningFormatIncompatibilityRisk =
         "Vas a cambiar el formato de tu dispositivo " +
         "sin borrar el log.|" +
-        "Otros porgramas pueden no entender " +
+        "Otros programas|" +
+        "pueden no entender|" +
         "los datos de tu dispositivo!||" +
-        "¿Aceptas esta incopativilidad?";
+        "¿Aceptas esta incompativilidad?";
     
     /** Message warning user about impact of changing log format */
     public static final String C_msgWarningFormatAndErase = 
@@ -261,9 +264,9 @@ public class Txt_es {
     public static final String LOG_OVRWR_FULL = "Sobreescribir log(/stop) al llenarse";
     public static final String DATE_RANGE = "Rango Fecha";
     public static final String GET_LOG = "Bajar Log";
-    public static final String CANCEL_GET = "Cancelar";
-    public static final String NOFIX_COL = "Color No fijados";
-    public static final String TRK_SEP = "Sep Trk:";
+    public static final String CANCEL_GET = "Cancel";
+    public static final String NOFIX_COL = "Color no fij";
+    public static final String TRK_SEP = "Separar Track:";
     public static final String MIN = "min";
     public static final String UTC = "UTC";
     public static final String HGHT_GEOID_DIFF = "Ref Alt Geoide";
@@ -273,9 +276,9 @@ public class Txt_es {
     public static final String TO_TRK = "A TRK";
     public static final String TO_PLT = "A PLT";
     public static final String TO_GMAP= "A GMAP";
-    public static final String TO_NMEA= "A NMEÄ";
-    public static final String MEM_USED = "Mem Usada   : ";
-    public static final String NBR_RECORDS = "Puntos grabados: ";
+    public static final String TO_NMEA= "A NMEA";
+    public static final String MEM_USED = "Memoria Usada: ";
+    public static final String NBR_RECORDS = "Puntos Grabados: ";
     
     
     //Log reason
@@ -285,18 +288,18 @@ public class Txt_es {
     public static final String RCR_TIME = "Tiempo (s)    ";
     public static final String RCR_SPD  = "Velocidad (km/h)";
     public static final String RCR_DIST = "Distancia (m)";
-    public static final String FIX_PER = "Fijar (ms)";
+    public static final String FIX_PER = "Fijar cada (ms)";
     public static final String INCL_TST_SBAS = "Incl. Sat. Prueba";
     public static final String PWR_SAVE_INTRNL = "Guardar energía (Interno)";
 
     // NMEA OUTPUT
-    public static final String DEFAULTS = "Por defecto";
+    public static final String DEFAULTS = "Por defec";
     
     
     // Other tabs
     public static final String TAB_FLSH = "Flsh";
-    public static final String TAB_NMEA_OUT = "Salida NMEA";
-    public static final String TAB_NMEA_FILE = "Archivo NMEA";
+    public static final String TAB_NMEA_OUT = "Datos NMEA";
+    public static final String TAB_NMEA_FILE = "Arch NMEA";
     public static final String TAB_HOLUX = "Holux";
     
     
@@ -312,19 +315,20 @@ public class Txt_es {
         "Espere a que el borrado finalice";
     public static final String TXT_WAITING_ERASE =
         "Espere a que el borrado finalice.|" +
-        "Puedes cancelar la espera (bajo tu responsabilidad)";
+        "Cancelar (Bajo tu responsabilidad)";
     
     public static final String UNKNOWN = "Desconocido";
     public static final String CHK_PATH =
-        "|Revisa el destino y si la tarjeta permite escritura";
+        "|Revisa el destino y si la|" +
+	"tarjeta permite la escritura";
     
     public static final String OVERWRITE = "Sobreescribir";
     public static final String ABORT_DOWNLOAD = "Abortar descarga";
     public static final String DATA_NOT_SAME = 
     "Los DATOS en este dispositivo NO|"
-    + "corresponden a los DATOS previamente|"
-    + "descargados.|"
-    + "¿Deseas sobreescribir los DATOS?";
+    + "corresponden a los DATOS|"
+    + "previamente descargados.|"
+    + "¿Sobreescribir los DATOS?";
     public static final String LOGGER = "Grabador: ";  // For logger SW version
     
     
@@ -333,5 +337,24 @@ public class Txt_es {
         "Error al cerrar (cerrar Archivo).";
     public static final String WRITING_CLOSED =
         "Escribiendo en archivo cerrado";
+
+
+    // Flash option
+    public static final String TIMESLEFT = "Cambios Restantes";
+    public static final String UPDATERATE = "Frecuencia (Hz)";
+    public static final String BAUDRATE = "Baud Rate";
+    public static final String WRITEFLASH = "Grabar Flash";
+    public static final String ABORT = "Abortar";
+    public static final String TXT_FLASH_LIMITED_WRITES=
+        "El número de cambios restantes es|" +
+        "limitada y cambiar la configuración|" +
+        "puede inutilizar el dispositivo|" +
+        "(p.e., un cambio de baud rate)|" +
+        "ABORTAR clicando abortar!!";
+    public static final String PERIOD_ABBREV = "Per";
+
+    // Forgotton in Advanced track filter
+    public static final String IGNORE_0VALUES
+        = "Los valores 0 son ignorados";
 
 }
