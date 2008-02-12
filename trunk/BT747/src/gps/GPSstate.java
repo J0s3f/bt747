@@ -100,7 +100,10 @@ public class GPSstate implements Thread {
     public boolean loggerIsFull = false;
     public boolean loggerNeedsInit = false;
     public boolean loggerIsDisabled = false;
+    public boolean forcedErase= false;
 
+    public boolean loggingIsActiveBeforeDownload = false;
+    
     public boolean logFullOverwrite = false; // When true, overwrite log when
                                              // device is full
 
@@ -367,11 +370,30 @@ public class GPSstate implements Thread {
 
     
     public void recoveryEraseLog() {
+        // Get some information (when debug mode active)
+        stopLog(); // Stop logging for this operation
+        getLogStatus(); // Check status
+        readLogFlashSectorStatus(); // Get flash sector information from device
+// TODO:
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_ENABLE ); // TODO: STR
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_INIT ); // TODO: STR
+                + BT747_dev.PMTK_LOG_ENABLE );
+
+        getLogStatus(); // Check status
+        
+        forcedErase= true;
         eraseLog();
+
+    }
+    
+    private void postRecoveryEraseLog() {
+        getLogStatus();
+        readLogFlashSectorStatus(); // Get flash sector information from device
+
+        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
+                + BT747_dev.PMTK_LOG_INIT );        
+        
+        readLogFlashSectorStatus(); // Get flash sector information from device
+        getLogStatus();
     }
 //        public static final int PMTK_LOG_ENABLE  = 10;
 //        public static final int PMTK_LOG_DISABLE = 11;
@@ -503,12 +525,16 @@ public class GPSstate implements Thread {
                 + BT747_dev.PMTK_LOG_FORMAT_STR);
     }
 
-    public void getLogCtrlInfo() {
-        // Request log status from device
-        sendNMEA("PMTK182,2,12");
+    
+    public void getLogStatus() {
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_QUERY_STR + ","
                 + BT747_dev.PMTK_LOG_LOG_STATUS_STR);
+    }
+    public void getLogCtrlInfo() {
+        // Request log status from device
+        sendNMEA("PMTK182,2,12");
+        getLogStatus();
         // Request mem size from device
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_QUERY_STR + ","
@@ -540,6 +566,14 @@ public class GPSstate implements Thread {
         doSendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_QUERY_STR + ","
                 + BT747_dev.PMTK_LOG_FLASH_STAT_STR);
+    }
+
+    public void readLogFlashSectorStatus() {
+        /* Get flash status - immediate (not in output buffer) */
+        /* Needed for erase */
+        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
+                + BT747_dev.PMTK_LOG_QUERY_STR + ","
+                + BT747_dev.PMTK_LOG_FLASH_SECTORS_STR);
     }
 
     public void logImmediate(final int value) {
@@ -1315,6 +1349,9 @@ public class GPSstate implements Thread {
             m_ProgressBar.setVisible(false);
             //m_ProgressBar.getParentWindow().repaintNow();
         }
+        if(loggingIsActiveBeforeDownload) {
+            startLog();
+        }
     }
 
     public void cancelGetLog() {
@@ -1331,6 +1368,11 @@ public class GPSstate implements Thread {
             final int p_Step, final String p_FileName, final int Card,
             final boolean incremental, // True if incremental read
             final ProgressBar pb) {
+        if(logStatus==C_LOG_NOLOGGING) {
+            loggingIsActiveBeforeDownload = loggingIsActive;
+            stopLog();
+        }
+
         m_StartAddr = p_StartAddr;
         m_EndAddr = ((p_EndAddr + 0xFFFF) & 0xFFFF0000) - 1;
         m_NextReqAddr = m_StartAddr;
@@ -1693,6 +1735,10 @@ public class GPSstate implements Thread {
                                     if(mbErase!=null) {
                                         mbErase.unpop();
                                         mbErase=null;
+                                    }
+                                    if(forcedErase) {
+                                        forcedErase=false;
+                                        postRecoveryEraseLog();
                                     }
                                     break;
                             }

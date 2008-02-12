@@ -1,3 +1,7 @@
+Version 1.38
+* Spanish translation!
+* Some changes to the forced erase procedure.
+
 Version 1.37
 * Somewhat more tolerant if header is all 0xFF (in case of holux);
 * "Externalised" <<all>> interface strings to separate class for translation

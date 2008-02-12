@@ -95,6 +95,38 @@ public class GPSLogEasy extends Container {
           }
       }
       
+      /** Options for the first warning message */
+      private static final String[] C_EraseOrCancel = {
+              Txt.ERASE, Txt.CANCEL
+      };
+      /** Options for the second warning message - reverse order on purpose */
+      private static final String[] C_CancelConfirmErase = {
+              Txt.CANCEL, Txt.CONFIRM_ERASE
+      };
+
+      
+      private void forceErase() {
+          /** Object to open multiple message boxes */
+          MessageBox m_mb; 
+          m_mb=new MessageBox(
+                  Txt.TITLE_ATTENTION,
+                  Txt.C_msgEraseWarning,
+                  C_EraseOrCancel);
+          m_mb.popupBlockingModal();
+          if(m_mb.getPressedButtonIndex()==0) {
+              m_mb=new MessageBox(
+                      Txt.TITLE_ATTENTION,
+                      Txt.C_msgEraseWarning2,
+                      C_CancelConfirmErase);
+              m_mb.popupBlockingModal();
+              if(m_mb.getPressedButtonIndex()==1) {
+                  // Erase log
+                  m_GPSstate.recoveryEraseLog();
+              }
+          }
+      }
+      
+      
       
       public void onEvent(Event event) {
           super.onEvent(event);
@@ -124,7 +156,7 @@ public class GPSLogEasy extends Container {
                   m_GPSstate.doFullColdStart();
               }
           } else if (event.target==m_btForceErase) {
-              m_GPSstate.recoveryEraseLog();
+              forceErase();
           } else {
               for (int i=0;i<BT747_dev.C_RCR_COUNT;i++) {
                   if (event.target==chkRCR[i]) {

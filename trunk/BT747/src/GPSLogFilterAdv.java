@@ -106,7 +106,7 @@ public class GPSLogFilterAdv extends Container {
         m_maxHDOP.setValidChars(allowedKeys);
         m_maxVDOP.setValidChars(allowedKeys);
 
-        add(new Label("Values of 0 are ignored"),CENTER,AFTER);
+        add(new Label(Txt.IGNORE_0VALUES),CENTER,AFTER);
 
         
         m_btSet = new Button(Txt.SET);
