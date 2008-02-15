@@ -93,10 +93,21 @@
         <replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}'/>	
     </target>
 	
+	<target name="package">
+		<exec command="package.bat" failifexecutionfails="false"/>
+	</target>
+	
 	<target name="all-es">
 		<antcall target="all">
 			<param name="lang" value="es"/>
 		</antcall>
+		<antcall target="package"/>
+	</target>
+	<target name="all-de">
+		<antcall target="all">
+			<param name="lang" value="de"/>
+		</antcall>
+		<antcall target="package"/>
 	</target>
     
     <!-- Compile -->

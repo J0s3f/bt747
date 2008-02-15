@@ -356,5 +356,8 @@ public class Txt_es {
     // Forgotton in Advanced track filter
     public static final String IGNORE_0VALUES
         = "Los valores 0 son ignorados";
-
+    public static final String STORE_SETTINGS =
+        "Guardar conf";
+    public static final String RESTORE_SETTINGS =
+        "Restaurar conf";
 }

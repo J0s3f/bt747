@@ -1,5 +1,5 @@
-SET DT=1.38
-SET APP_LANG=es
+SET DT=1.39
+SET APP_LANG=en
 del BT747*_%LANG%_*.zip
 dos2unix *.sh
 dos2unix *.command

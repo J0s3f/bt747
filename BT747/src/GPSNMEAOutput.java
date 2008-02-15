@@ -31,13 +31,6 @@ import gps.GpsEvent;
 import bt747.Txt;
 import bt747.ui.Button;
 
-/*
- * Created on 3 sept. 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
-
 /**
  * @author Mario De Weerd
  *

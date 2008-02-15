@@ -7,7 +7,7 @@ import bt747.sys.Settings;
  *
  ** Class to provide language specific strings.
  */
-public class Txt_en {
+public class Txt_fr {
     
     // BT747 class
     public final static String S_FILE = "File";
@@ -75,18 +75,37 @@ public class Txt_en {
     public final static String DISCLAIMER_TITLE=
         "Disclaimer";
     public final static String DISCLAIMER_TXT=
-        "Software is provided 'AS IS,' without" + 
-        "|a warranty of any kind. ALL EXPRESS" + 
-        "|OR IMPLIED REPRESENTATIONS AND " + 
-        "|WARRANTIES, INCLUDING ANY IMPLIED" + 
-        "|WARRANTY OF MERCHANTABILITY," + 
-        "|FITNESS FOR A PARTICULAR PURPOSE" + 
-        "|OR NON-INFRINGEMENT, ARE HEREBY" + 
-        "|EXCLUDED. THE ENTIRE RISK ARISING " + 
-        "|OUT OF USING THE SOFTWARE IS" + 
-        "|ASSUMED BY THE USER. See the" + 
-        "|GNU General Public License for more" + 
-        "|details." ;
+        "Ce logiciel est fourni par les titu-" +
+        "|laires et les participants" +
+        "|\"TEL QUEL\" ET TOUTES LES GARANTIES" +
+        "|EXPLICITES OU IMPLICITES, Y COMPRIS," +
+        "|MAIS NON LIMITÉES A CELLES-CI, LES" +
+        "|GARANTIES IMPLICITES DE COMMERCIA-" +
+        "|LISATION ET D\'ADÉQUATION À UN USAGE"+
+        "|PARTICULIER SONT DÉNIÉES. EN AUCUN" +
+        "|CAS LES TITULAIRES DU COPYRIGHT OU" +
+        "|LES PARTICIPANTS NE PEUVENT ÊTRE" +
+        "|TENUS POUR RESPONSABLE DES DOMMAGES" +
+        "|DIRECTS, INDIRECTS, FORTUITS," +
+        "|PARTICULIERS, EXEMPLAIRES OU" +
+        "|CONSÉCUTIFS À UNE ACTION (Y COMPRIS," +
+        "|MAIS NON LIMITÉS À CEUX-CI," +
+        "|L'ACQUISITION DE MARCHANDISES OU" +
+        "|DE SERVICES DE REMPLACEMENT; LES" +
+        "|PERTES D'UTILISATIONS, DE DONNÉES" +
+        "OU FINANCIÈRES; OU L'INTERRUPTION" +
+        "D'ACTIVITÉS) DE QUELQUE MANIÈRE QUE" +
+        "|CES DOMMAGES SOIENT CAUSÉS ET CECI" +
+        "|POUR TOUTES LES THÉORIES DE" +
+        "|RESPONSABILITÉS, QUE CE SOIT DANS" +
+        "|UN CONTRAT, POUR DES RESPONSABILITÉS" +
+        "| STRICTES OU DES PRÉJUDICES (Y" +
+        "|COMPRIS DUS À UNE NÉGLIGENCE OU" +
+        "|AUTRE CHOSE) SURVENANT DE QUELQUE" +
+        "|MANIÈRE QUE CE SOIT EN DEHORS DE" +
+        "|L'UTILISATION DE CE LOGICIEL, MÊME" +
+        "|EN CAS D\'AVERTISSEMENT DE LA" +
+        "|POSSIBILITÉ DE TELS DOMMAGES.";
 
     // TAB identification
     public final static String C_FMT  = "FMT";
@@ -158,8 +177,8 @@ public class Txt_en {
     public static final String SET = "SET";
 
     // EASY TAB
-    public static final String BT_5HZ_FIX = "5Hz fix + log";
-    public static final String BT_2HZ_FIX = "2Hz fix";
+    public static final String BT_5HZ_FIX = "5Hz fix and log";
+    public static final String BT_2HZ_FIX = "2Hz fix (avoid static nav)";
     public static final String BT_HOT = "Hot start";
     public static final String BT_WARM = "Warm start";
     public static final String BT_COLD = "Cold start";
@@ -351,11 +370,6 @@ public class Txt_en {
     // Forgotton in Advanced track filter
     public static final String IGNORE_0VALUES
         = "Values of 0 are ignored";
-    
-    public static final String STORE_SETTINGS =
-        "Store settings";
-    public static final String RESTORE_SETTINGS =
-        "Restore settings";
     
 }
 
