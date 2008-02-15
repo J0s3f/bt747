@@ -1,3 +1,6 @@
+Version 1.39
+* Settings of device can now be saved and restored (after battery removal for example)
+
 Version 1.38
 * Spanish translation!
 * Some changes to the forced erase procedure.

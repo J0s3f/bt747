@@ -38,23 +38,14 @@ import bt747.util.Vector;
  * Created on 12 mai 2007
  */
 
-/** GPSstate maintains a higher level state of communication with the
- * GPS device.
- * It currently contains very specific commands for the BT747 device
- * but that could change in the future by extending GPSstate with
- * such features in a derived class.
- * As the initial development is for the BT747, we do not care for now.
- * 
+/**
+ * GPSstate maintains a higher level state of communication with the GPS device.
+ * It currently contains very specific commands MTK loggers but that could change
+ * in the future by extending GPSstate with such features in a derived class.
  * 
  * @author Mario De Weerd
  * @see GPSrxtx
  *
- */
-/**
- * @author Mario De Weerd
- * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
  */
 public class GPSstate implements Thread {
     private boolean GPS_DEBUG = false; //(!Settings.onDevice);
@@ -229,6 +220,7 @@ public class GPSstate implements Thread {
     private void GPS_postConnect() {
         if (m_GPSrxtx.isConnected()) {
             PostStatusEvent(GpsEvent.CONNECTED);
+            dataOK=0;
             getStatus();
             setupTimer();
         }
@@ -462,7 +454,7 @@ public class GPSstate implements Thread {
 
     Vector toSendCmds = new Vector(); // List of sent commands
 
-    static final int C_MAX_TOSEND_COMMANDS = 10; // Max commands to put in list
+    static final int C_MAX_TOSEND_COMMANDS = 20; // Max commands to put in list
 
     static final int C_MAX_CMDS_SENT = 4;
 
@@ -480,6 +472,8 @@ public class GPSstate implements Thread {
             toSendCmds.add(p_Cmd);
         }
     }
+    
+    
 
     private int nextCmdSendTime = 0;
 
@@ -577,7 +571,6 @@ public class GPSstate implements Thread {
     }
 
     public void logImmediate(final int value) {
-        /* Get log distance interval */
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_SET_STR + ","
                 + BT747_dev.PMTK_LOG_USER + ","
@@ -589,7 +582,6 @@ public class GPSstate implements Thread {
         if (z_value != 0 && z_value > 999) {
             z_value = 999;
         }
-        /* Get log distance interval */
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_SET_STR + ","
                 + BT747_dev.PMTK_LOG_TIME_INTERVAL_STR + ","
@@ -988,20 +980,20 @@ public class GPSstate implements Thread {
                 if (p_nmea.length >= 2) {
                     logFix = Convert.toInt(p_nmea[1]);
                 }
-                ;
+                dataOK|=C_OK_FIX;
                 break;
             case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
                 if (p_nmea.length == 2) {
                     dgps_mode = Convert.toInt(p_nmea[1]);
                 }
-                ;
+                dataOK|=C_OK_DGPS;
                 PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_SBAS: // CMD 513
                 if (p_nmea.length == 2) {
                     SBASEnabled = (p_nmea[1].equals("1"));
                 }
-                ;
+                dataOK|=C_OK_SBAS;
                 PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_NMEA_OUTPUT: // CMD 514
@@ -1010,13 +1002,14 @@ public class GPSstate implements Thread {
                         NMEA_periods[i] = Convert.toInt(p_nmea[i + 1]);
                     }
                 }
+                dataOK|=C_OK_NMEA;
                 PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_SBAS_TEST: // CMD 513
                 if (p_nmea.length == 2) {
                     SBASTestEnabled = (p_nmea[1].equals("0"));
                 }
-                ;
+                dataOK|=C_OK_SBAS_TEST;
                 PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
@@ -1030,7 +1023,7 @@ public class GPSstate implements Thread {
                 if (p_nmea.length == 2) {
                     datum = Convert.toInt(p_nmea[1]);
                 }
-                ;
+                dataOK|=C_OK_DATUM;
                 PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_FLASH_USER_OPTION: // CMD 590
@@ -1699,7 +1692,24 @@ public class GPSstate implements Thread {
             }
         } // Switch m_logState
     }
+    public static final int C_OK_FIX        = 0x0001;
+    public static final int C_OK_DGPS       = 0x0002;
+    public static final int C_OK_SBAS       = 0x0004;
+    public static final int C_OK_NMEA       = 0x0008;
+    public static final int C_OK_SBAS_TEST  = 0x0010;
+    public static final int C_OK_DATUM      = 0x0020;
+    public static final int C_OK_TIME       = 0x0040;
+    public static final int C_OK_SPEED      = 0x0080;
+    public static final int C_OK_DIST       = 0x0100;
+    public static final int C_OK_FORMAT     = 0x0200;
+    
+    
 
+    private int dataOK = 0;
+    
+    public boolean isDataOK(final int mask) {
+        return ( (dataOK & mask)== mask );
+    }
     /**
      * @param nmea
      *            Elements of the NMEA packet to analyze. <br>
@@ -1751,18 +1761,22 @@ public class GPSstate implements Thread {
                         logFormat = Conv.hex2Int(nmea[3]);
                         logRecordMaxSize = BT747_dev
                                 .logRecordMinSize(logFormat, false);
+                        dataOK|=C_OK_FORMAT;
                         PostStatusUpdateEvent();
                         break;
                     case BT747_dev.PMTK_LOG_TIME_INTERVAL: // 3;
                         logTimeInterval = Convert.toInt(nmea[3]);
+                    dataOK|=C_OK_TIME;
                         PostStatusUpdateEvent();
                         break;
                     case BT747_dev.PMTK_LOG_DISTANCE_INTERVAL: //4;
                         logDistanceInterval = Convert.toInt(nmea[3]) / 10;
+                    dataOK|=C_OK_DIST;
                         PostStatusUpdateEvent();
                         break;
                     case BT747_dev.PMTK_LOG_SPEED_INTERVAL: // 5;
                         logSpeedInterval = Convert.toInt(nmea[3]) / 10;
+                        dataOK|=C_OK_SPEED;
                         PostStatusUpdateEvent();
                         break;
                     case BT747_dev.PMTK_LOG_REC_METHOD: // 6;

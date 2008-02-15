@@ -111,7 +111,27 @@ public class AppSettings implements gps.settings {
     private final static int C_COLOR_INVALIDTRACK_SIZE=8;
     private final static int C_ISTRAVERSABLE_IDX=C_COLOR_INVALIDTRACK_IDX+C_COLOR_INVALIDTRACK_SIZE;
     private final static int C_ISTRAVERSABLE_SIZE=4;
-    private final static int C_NEXT_IDX=C_ISTRAVERSABLE_IDX+C_ISTRAVERSABLE_SIZE;
+    private final static int C_SETTING1_TIME_IDX=C_ISTRAVERSABLE_IDX+C_ISTRAVERSABLE_SIZE;
+    private final static int C_SETTING1_TIME_SIZE=8;
+    private final static int C_SETTING1_SPEED_IDX=C_SETTING1_TIME_IDX+C_SETTING1_TIME_SIZE;
+    private final static int C_SETTING1_SPEED_SIZE=8;
+    private final static int C_SETTING1_DIST_IDX=C_SETTING1_SPEED_IDX+C_SETTING1_SPEED_SIZE;
+    private final static int C_SETTING1_DIST_SIZE=8;
+    private final static int C_SETTING1_FIX_IDX=C_SETTING1_DIST_IDX+C_SETTING1_DIST_SIZE;
+    private final static int C_SETTING1_FIX_SIZE=8;
+    private final static int C_SETTING1_NMEA_IDX=C_SETTING1_FIX_IDX+C_SETTING1_FIX_SIZE;
+    private final static int C_SETTING1_NMEA_SIZE=20;
+    private final static int C_SETTING1_DGPS_IDX=C_SETTING1_NMEA_IDX+C_SETTING1_NMEA_SIZE;
+    private final static int C_SETTING1_DGPS_SIZE=8;
+    private final static int C_SETTING1_TEST_IDX=C_SETTING1_DGPS_IDX+C_SETTING1_DGPS_SIZE;
+    private final static int C_SETTING1_TEST_SIZE=2;
+    private final static int C_SETTING1_LOG_OVR_IDX=C_SETTING1_TEST_IDX+C_SETTING1_TEST_SIZE;
+    private final static int C_SETTING1_LOG_OVR_SIZE=1;
+    private final static int C_SETTING1_LOG_FORMAT_IDX=C_SETTING1_LOG_OVR_IDX+C_SETTING1_LOG_OVR_SIZE;
+    private final static int C_SETTING1_LOG_FORMAT_SIZE=8;
+    private final static int C_SETTING1_SBAS_IDX=C_SETTING1_LOG_FORMAT_IDX+C_SETTING1_LOG_FORMAT_SIZE;
+    private final static int C_SETTING1_SBAS_SIZE=1;
+    private final static int C_NEXT_IDX=C_SETTING1_SBAS_IDX+C_SETTING1_SBAS_SIZE;
     // Next lines just to add new items faster using replace functions
     private final static int C_NEXT_SIZE=4;
     private final static int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -356,8 +376,8 @@ public class AppSettings implements gps.settings {
     private final void setStringOpt(final String src, final int idx, final int size) {
         Settings.appSettings=
             Settings.appSettings.substring(0,idx)
-        +src.substring(0, (src.length()<(size-1))?src.length():size)
-        +(src.length()<(size-1)?"\0":"")
+        +src.substring(0, (src.length()<size)?src.length():size)
+        +(src.length()<size?"\0":"")
         +((src.length()<(size-1))?new String(new byte[size-src.length()-1]):"")
         +((Settings.appSettings.length()>idx+size)?
                 Settings.appSettings.substring(idx+size,Settings.appSettings.length())
@@ -802,6 +822,83 @@ public class AppSettings implements gps.settings {
      */
     public void setTraversableFocus(boolean traversableFocus) {
         setBooleanOpt(traversableFocus, C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE);
+    }
+    
+    //  - Log conditions;
+    //      - Time, Speed, Distance[3x 4 byte]
+    //  - Log format;              [4 byte]
+    //  - Fix period               [4 byte]
+    //  - SBAS / TEST SBAS         [byte, byte]
+    //  - Log overwrite/STOP       [byte, byte]
+    //  - NMEA output              [18 byte]
+    //  - Total: 42 byte
+
+    
+    public void setTimeConditionSetting1(final int value) {
+        setIntOpt(value, C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE);
+    }
+    
+    public int getTimeConditionSetting1() {
+        return getIntOpt(C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE);
+    }
+    
+    public void setSpeedConditionSetting1(final int value) {
+        setIntOpt(value, C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
+    }
+    
+    public int getSpeedConditionSetting1() {
+        return getIntOpt(C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
+    }
+    public void setDistConditionSetting1(final int value) {
+        setIntOpt(value, C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
+    }
+    public int getDistConditionSetting1() {
+        return getIntOpt(C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
+    }
+    public void setFixSetting1(final int value) {
+        setIntOpt(value, C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
+    }
+    public int getFixSetting1() {
+        return getIntOpt(C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
+    }
+    public void setLogFormatConditionSetting1(final int value) {
+        setIntOpt(value, C_SETTING1_LOG_FORMAT_IDX, C_SETTING1_LOG_FORMAT_SIZE);
+    }
+    public int getLogFormatSetting1() {
+        return getIntOpt(C_SETTING1_LOG_FORMAT_IDX, C_SETTING1_LOG_FORMAT_SIZE);
+    }
+    public void setSBASSetting1(final boolean value) {
+        setBooleanOpt(value, C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
+    }
+    public boolean getSBASSetting1() {
+        return getBooleanOpt(C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
+    }
+    public void setDGPSSetting1(final int value) {
+        setIntOpt(value, C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
+    }
+    public int getDPGSSetting1() {
+        return getIntOpt(C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
+    }
+
+    public boolean getTestSBASSetting1() {
+        return getBooleanOpt(C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
+    }
+    public void setTestSBASSetting1(final boolean value) {
+        setBooleanOpt(value, C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
+    }
+
+    public boolean getLogOverwriteSetting1() {
+        return getBooleanOpt(C_SETTING1_LOG_OVR_IDX, C_SETTING1_LOG_OVR_SIZE);
+    }
+    public void setLogOverwriteSetting1(final boolean value) {
+        setBooleanOpt(value, C_SETTING1_LOG_OVR_IDX, C_SETTING1_LOG_OVR_SIZE);
+    }
+    
+    public String getNMEASetting1() {
+        return getStringOpt(C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
+    }
+    public void setNMEASetting1(final String value) {
+        setStringOpt(value,C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
     }
 
 }

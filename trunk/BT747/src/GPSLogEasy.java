@@ -28,6 +28,8 @@ import javax.swing.border.TitledBorder;
 
 import gps.BT747_dev;
 import gps.GPSstate;
+import gps.GpsEvent;
+import gps.settings;
 
 import bt747.Txt;
 import bt747.ui.Button;
@@ -42,6 +44,8 @@ public class GPSLogEasy extends Container {
       
       private Button m_btSet5Hz;
       private Button m_btSet2Hz;
+      private Button m_btStore;
+      private Button m_btRestore;
       private Button m_btHotStart;
       private Button m_btWarmStart;
       private Button m_btColdStart;
@@ -53,13 +57,20 @@ public class GPSLogEasy extends Container {
       
       private Label lbLogUserTxt;
       
-      public GPSLogEasy(GPSstate state) {
+      private AppSettings m_settings;
+      
+      public GPSLogEasy(GPSstate state, AppSettings settings) {
           m_GPSstate= state;
+          m_settings = settings;
       }
       
       protected void onStart() {
-          add(m_btSet5Hz = new Button(Txt.BT_5HZ_FIX), CENTER, AFTER+3); //$NON-NLS-1$
-          add(m_btSet2Hz = new Button(Txt.BT_2HZ_FIX), CENTER, AFTER+3); //$NON-NLS-1$
+          add(m_btSet5Hz = new Button(Txt.BT_5HZ_FIX), LEFT, AFTER+3); //$NON-NLS-1$
+          add(m_btSet2Hz = new Button(Txt.BT_2HZ_FIX), RIGHT, SAME); //$NON-NLS-1$
+          add(m_btStore = new Button(Txt.STORE_SETTINGS), LEFT, AFTER+3); //$NON-NLS-1$
+//          m_btStore.setEnabled(false);
+          enableStore();
+          add(m_btRestore = new Button(Txt.RESTORE_SETTINGS), RIGHT, SAME); //$NON-NLS-1$
           add(m_btHotStart = new Button(Txt.BT_HOT), LEFT, AFTER+10); //$NON-NLS-1$
           add(m_btWarmStart = new Button(Txt.BT_WARM), CENTER, SAME); //$NON-NLS-1$
           add(m_btColdStart = new Button(Txt.BT_COLD), RIGHT, SAME); //$NON-NLS-1$
@@ -127,46 +138,132 @@ public class GPSLogEasy extends Container {
       }
       
       
+      // "Volatile" settings of the MTK loggers:
+      //  - Log conditions;
+      //      - Time, Speed, Distance[3x 4 byte]
+      //  - Log format;              [4 byte]
+      //  - Fix period               [4 byte]
+      //  - SBAS /DGPS / TEST SBAS         [byte, byte, byte]
+      //  - Log overwrite/STOP       [byte, byte]
+      //  - NMEA output              [18 byte]
+      private void StoreSetting1() {
+          m_settings.setTimeConditionSetting1(m_GPSstate.logTimeInterval);
+          m_settings.setDistConditionSetting1(m_GPSstate.logDistanceInterval);
+          m_settings.setSpeedConditionSetting1(m_GPSstate.logSpeedInterval);
+          m_settings.setLogFormatConditionSetting1(m_GPSstate.logFormat);
+          m_settings.setFixSetting1(m_GPSstate.logFix);
+          m_settings.setSBASSetting1(m_GPSstate.SBASEnabled);
+          m_settings.setDGPSSetting1(m_GPSstate.dgps_mode);
+          m_settings.setTestSBASSetting1(m_GPSstate.SBASTestEnabled);
+          m_settings.setLogOverwriteSetting1(m_GPSstate.logFullOverwrite);
+          String NMEA="";
+          for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
+              NMEA+=(m_GPSstate.NMEA_periods[i]);
+          }
+          m_settings.setNMEASetting1(NMEA);
+      }
+      
+      private void RestoreSetting1() {
+          m_GPSstate.setLogTimeInterval(m_settings.getTimeConditionSetting1());
+          m_GPSstate.setLogDistanceInterval(m_settings.getDistConditionSetting1());
+          m_GPSstate.setLogSpeedInterval(m_settings.getSpeedConditionSetting1());
+          m_GPSstate.setLogFormat(m_settings.getLogFormatSetting1());
+          m_GPSstate.setFixInterval(m_settings.getFixSetting1());
+          m_GPSstate.setSBASEnabled(m_settings.getSBASSetting1());
+          m_GPSstate.setSBASTestEnabled(m_settings.getTestSBASSetting1());
+          m_GPSstate.setDGPSMode(m_settings.getDPGSSetting1());
+          m_GPSstate.setLogOverwrite(m_settings.getLogOverwriteSetting1());
+        
+          String NMEA=m_settings.getNMEASetting1();
+          int[] Periods = new int[BT747_dev.C_NMEA_SEN_COUNT];
+          
+          for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
+              Periods[i]=(int)(NMEA.charAt(i)-'0');
+          }
+          m_GPSstate.setNMEAPeriods(Periods);
+          m_GPSstate.getNMEAPeriods();
+      }
+
+      private void getSettings() {
+          m_GPSstate.getLogReasonStatus();
+          m_GPSstate.getLogFormat();
+          m_GPSstate.getFixInterval();
+          m_GPSstate.getSBASEnabled();
+          m_GPSstate.getSBASTestEnabled();
+          m_GPSstate.getDGPSMode();
+          m_GPSstate.getLogOverwrite();
+          m_GPSstate.getNMEAPeriods();
+      }
+      
+
+      private void enableStore() {
+          m_btStore.setEnabled(m_GPSstate.isDataOK(
+                  GPSstate.C_OK_FIX        |
+                  GPSstate.C_OK_DGPS       |
+                  GPSstate.C_OK_SBAS       |
+                  GPSstate.C_OK_NMEA       |
+                  GPSstate.C_OK_SBAS_TEST  |
+                  // GPSstate.C_OK_SBAS_DATUM |
+                  GPSstate.C_OK_TIME       |
+                  GPSstate.C_OK_SPEED      |
+                  GPSstate.C_OK_DIST       |
+                  GPSstate.C_OK_FORMAT)
+          );
+      }
       
       public void onEvent(Event event) {
           super.onEvent(event);
           switch (event.type) {
           case ControlEvent.PRESSED:
               event.consumed=true;
-          if(event.target==m_btSet2Hz) {
-              m_GPSstate.setFixInterval(500);
-          } else if (event.target==m_btSet5Hz) {
-              m_GPSstate.setLogTimeInterval(2);
-              m_GPSstate.setFixInterval(200);
-          } else if (event.target==m_btHotStart) {
-              m_GPSstate.doHotStart();
-          } else if (event.target==m_btColdStart) {
-              m_GPSstate.doColdStart();
-          } else if (event.target==m_btWarmStart) {
-              m_GPSstate.doWarmStart();
-          } else if (event.target==m_btFullColdStart) {
-              MessageBox mb;
-              String []szExitButtonArray = {Txt.YES,Txt.NO};
-              mb = new MessageBox(Txt.TITLE_ATTENTION,
-                      Txt.CONFIRM_FACT_RESET,
-                      szExitButtonArray);                                   
-              mb.popupBlockingModal();                                      
-              if (mb.getPressedButtonIndex()==0){
-                  // Exit application
-                  m_GPSstate.doFullColdStart();
-              }
-          } else if (event.target==m_btForceErase) {
-              forceErase();
-          } else {
-              for (int i=0;i<BT747_dev.C_RCR_COUNT;i++) {
-                  if (event.target==chkRCR[i]) {
-                      m_GPSstate.logImmediate(1<<i);
+              if(event.target==this) {
+                  getSettings();
+              } else if(event.target==m_btSet2Hz) {
+                  m_GPSstate.setFixInterval(500);
+              } else if (event.target==m_btSet5Hz) {
+                  m_GPSstate.setLogTimeInterval(2);
+                  m_GPSstate.setFixInterval(200);
+              } else if (event.target==m_btStore) {
+                  StoreSetting1();
+              } else if (event.target==m_btRestore) {
+                  RestoreSetting1();
+              } else if (event.target==m_btHotStart) {
+                  m_GPSstate.doHotStart();
+              } else if (event.target==m_btColdStart) {
+                  m_GPSstate.doColdStart();
+              } else if (event.target==m_btWarmStart) {
+                  m_GPSstate.doWarmStart();
+              } else if (event.target==m_btFullColdStart) {
+                  MessageBox mb;
+                  String []szExitButtonArray = {Txt.YES,Txt.NO};
+                  mb = new MessageBox(Txt.TITLE_ATTENTION,
+                          Txt.CONFIRM_FACT_RESET,
+                          szExitButtonArray);                                   
+                  mb.popupBlockingModal();                                      
+                  if (mb.getPressedButtonIndex()==0){
+                      // Exit application
+                      m_GPSstate.doFullColdStart();
                   }
+              } else if (event.target==m_btForceErase) {
+                  forceErase();
+              } else {
+                  for (int i=0;i<BT747_dev.C_RCR_COUNT;i++) {
+                      if (event.target==chkRCR[i]) {
+                          m_GPSstate.logImmediate(1<<i);
+                      }
+                  }
+                  
+                  event.consumed=false;
               }
-
-              event.consumed=false;
-          }
-          break;
+              break;
+          case GpsEvent.DATA_UPDATE:
+              if(event.target==this) {
+                  enableStore();
+              }
+                  
+              //                  updateLogFormat(m_GPSstate.logFormat);
+              event.consumed=true;
+              break;
       }
   }
 }

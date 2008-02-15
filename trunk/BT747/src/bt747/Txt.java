@@ -5,6 +5,6 @@ package bt747;
  *
  ** Class to provide language specific strings.
  */
-public final class Txt extends Txt_es {
+public final class Txt extends Txt_en {
 
 }
