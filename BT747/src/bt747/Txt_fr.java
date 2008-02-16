@@ -372,6 +372,8 @@ public class Txt_fr {
     // Forgotton in Advanced track filter
     public static final String IGNORE_0VALUES
         = "Values of 0 are ignored";
+
+    public final static String METERS_ABBR = "m";
     
 }
 

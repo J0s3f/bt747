@@ -21,11 +21,11 @@ public class Txt_zh {
     }
     
     // BT747 class
-    public final static String S_FILE = "\u4e00a\u4e01\u4e02\u4e03"; // Should become "File";
+    public final static String S_FILE = "File";
     public final static String S_EXIT_APPLICATION = "Exit application";
     
-    public final static String S_SETTINGS = "Settings";
-    public final static String S_RESTART_CONNECTION = "Restart connection";
+    public final static String S_SETTINGS = "\u8BBE\u7F6E"; 
+    public final static String S_RESTART_CONNECTION = "\u91CD\u65B0\u8FDE\u63A5"; 
     public final static String S_STOP_CONNECTION = "Stop connection";
     public final static String S_GPX_UTC_OFFSET_0= "GPX UTC offset 0";
     public final static String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg when small";
@@ -124,6 +124,8 @@ public class Txt_zh {
     public final static String GEOID = "Geoid:";
     public final static String CALC = "(calc:";
     public final static String HGHT_SEP = " - Hght:";
+    public final static String METERS_ABBR = "m";
+
     
     // Filters tab panel
     public final static String STANDARD = "Standard";
@@ -367,6 +369,7 @@ public class Txt_zh {
         "Store settings";
     public static final String RESTORE_SETTINGS =
         "Restore settings";
+    
     
 }
 

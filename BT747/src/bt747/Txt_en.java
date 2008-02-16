@@ -115,6 +115,8 @@ public class Txt_en {
     public final static String GEOID = "Geoid:";
     public final static String CALC = "(calc:";
     public final static String HGHT_SEP = " - Hght:";
+    public final static String METERS_ABBR = "m";
+
     
     // Filters tab panel
     public final static String STANDARD = "Standard";

@@ -1,5 +1,7 @@
 package bt747;
 
+import waba.fx.Image;
+
 import bt747.sys.Settings;
 
 /**
@@ -18,11 +20,11 @@ public class Txt_de {
     public final static String S_SETTINGS = "Einstellungen";
     public final static String S_RESTART_CONNECTION = "Verbindung neu starten";
     public final static String S_STOP_CONNECTION = "Verbindung unterbrechen";
-    public final static String S_GPX_UTC_OFFSET_0= "GPX UTC offset 0";
-    public final static String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg when small";
+    public final static String S_GPX_UTC_OFFSET_0= "GPX UTC Offset 0";
+    public final static String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg wenn klein";
     public final static String S_GPS_DECODE_ACTIVE= "GPS Dekodierung aktiv";
     public final static String S_FOCUS_HIGHLIGHT= "Focus Highlight";
-    public final static String S_DEBUG= "Debug";  //TODO: translate to german
+    public final static String S_DEBUG= "Debug";
     public final static String S_STATS= "Stats";
     public final static String S_INFO= "Info";
     public final static String S_ABOUT_BT747= "Über BT747";
@@ -31,7 +33,7 @@ public class Txt_de {
     public final static String S_TITLE= "BT747 - MTK Logger Control";
 
 
-    public final static String LB_DOWNLOAD= "Download";  //TODO: translate to german
+    public final static String LB_DOWNLOAD= "Download"; 
 
     public final static String TITLE_ATTENTION = "Achtung";
     public final static String CONFIRM_APP_EXIT = "Sie versuchen die Anwendung zu beenden|" +
@@ -48,17 +50,17 @@ public class Txt_de {
     public final static String ABOUT_TITLE=
         "Über BT747 V"+Version.VERSION_NUMBER;
     public final static String ABOUT_TXT=
-        "Created with SuperWaba" +  //TODO: translate to german
+        "Erstellt mit SuperWaba" + 
         "|http://www.superwaba.org"+
         "|" +Version.BUILD_STR +
-        "|Written by Mario De Weerd" +  //TODO: translate to german
+        "|von Mario De Weerd" +
         "|m.deweerd@ieee.org"+
-        "|"+
         "|Diese Anw. erlaubt die Kontrolle" +
         "|über den iBlue 747 Empfänger." +
         "|Volle Kontr. per Bluetooth kann per" +
         "|Hardwaremod. erreicht werden. " +
-        "|Weitere Informationen im Internet.";
+        "|Weitere Informationen im Internet." +
+        "|Übersetzung von Dirk Haase";
 
 
     public final static String ABOUT_SUPERWABA_TITLE=
@@ -92,31 +94,31 @@ public class Txt_de {
         "|details." ;
 
     // TAB identification
-    public final static String C_FMT  = "FMT";
-    public final static String C_CTRL = "Ctrl";
+    public final static String C_FMT  = "Fmt"; // "Format";
+    public final static String C_CTRL = "Int"; //"Intervall"; // Ctrl
     public final static String C_LOG  = "Log";
-    public final static String C_FILE = "File";  //TODO: translate to german
-    public final static String C_FLTR = "Fltr";
-    public final static String C_EASY = "Easy";  //TODO: translate to german
-    public final static String C_CON  = "Con";  //TODO: translate to german
-    public final static String C_OTHR = "Othr";  //TODO: translate to german
+    public final static String C_FILE = "Dat"; //"Datei"; 
+    public final static String C_FLTR = "Fltr"; // "Filter";
+    public final static String C_EASY = "Enfch"; //"Einfach";
+    public final static String C_CON  = "Verb"; //"Verbindung"; 
+    public final static String C_OTHR = "Sons"; //"Sonstiges"; 
 
     // Conctrl strings
-    public final static String BT_BLUETOOTH = "BLUETOOTH";
+    public final static String BT_BLUETOOTH = "Bluetooth";
     public final static String BT_CONNECT_PRT = "Port verbinden";
     public final static String BT_CLOSE_PRT = "Port schließen";
     public final static String BT_REOPEN_PRT  = "Port öffnen";
-    public final static String MAIN = "Main:";  //TODO: translate to german
-    public final static String FIRMWARE = "Firmware:";  //TODO: translate to german
-    public final static String MODEL = "Model:";
-    public final static String FLASHINFO = "FlashInfo:";
-    public final static String TIME_SEP = "  - Zeit:";
-    public final static String LAT = "Breite:";
-    public final static String LON = "Länge:";
-    public final static String GEOID = "Geoid:";
-    public final static String CALC = "(calc:";
+    public final static String MAIN = "Main: ";  //TODO: translate to german
+    public final static String FIRMWARE = "Firmware: "; 
+    public final static String MODEL = "Model: ";
+    public final static String FLASHINFO = "FlashInfo: ";
+    public final static String TIME_SEP = "  - Zeit :";
+    public final static String LAT = "Breite: ";
+    public final static String LON = "Länge: ";
+    public final static String GEOID = "Geoid: ";
+    public final static String CALC = "(berechn.: ";
     public final static String HGHT_SEP = " - Höhe:";
-
+    public final static String METERS_ABBR = "m";
     // Filters tab panel
     public final static String STANDARD = "Standard";
     public final static String ADVANCED = "Erweitert";
@@ -136,7 +138,7 @@ public class Txt_de {
         "GEO. LÄNGE",  // = 0x00008    // 3
         "HÖHE",        // = 0x00010    // 4
         "GESCHW.",     // = 0x00020    // 5
-        "HEADING",  // = 0x00040    // 6  //TODO: translate to german
+        "RICHTUNG",  // = 0x00040    // 6 
         "DSTA",     // = 0x00080    // 7
         "DAGE",     // = 0x00100    // 8
         "PDOP",     // = 0x00200    // 9
@@ -158,7 +160,7 @@ public class Txt_de {
     // Holux specific
     public static final String HOLUX_NAME = "Holux Name";
 
-    public static final String SET = "SET";  //TODO: translate to german ?
+    public static final String SET = "Setzen";  //TODO*: translate to german ?
 
     // EASY TAB
     public static final String BT_5HZ_FIX = "5Hz fix und log";
@@ -179,17 +181,17 @@ public class Txt_de {
     // File tab
     public static final String OUTPUT_DIR = "Ausgabe-Verzeichnis:";
     public static final String LOGFILE = "Log-Datei:";
-    public static final String REPORT = "Report :";  //TODO: translate to german
-    public static final String CHUNK = "Chunk :";  //TODO: translate to german
-    public static final String CHUNK_AHEAD = "Chunk ahead request:";  //TODO: translate to german
-    public static final String READ_TIMEOUT = "Read timeout (ms) :";  //TODO: translate to german
+    public static final String REPORT = "Bericht :";  
+    public static final String CHUNK = "Blockgröße :";
+    public static final String CHUNK_AHEAD = "Blockgröße Wiederholung:";
+    public static final String READ_TIMEOUT = "Lese-Zeitbeschränkung (ms) :";
     public static final String CARD_VOL = "Karte/Laufwerk:";
     public static final String APPLY_SET = "Werte übernehmen";
     public static final String DEFAULT_SET = "Voreinstellungen";
 
     // Log filter
     public static final String[] STR_VALID= {
-            "No fix",  //TODO: translate to german
+            "Kein Fix",
             "SPS",
             "DGPS",
             "PPS",
@@ -199,8 +201,8 @@ public class Txt_de {
             "Manual",
             "Sim"};
 
-    public static final String TRKPT = "TrkPt";  //TODO: translate to german
-    public static final String WAYPT = "WayPt";  //TODO: translate to german
+    public static final String TRKPT = "TrkPt";
+    public static final String WAYPT = "WayPt";
 
     // Advanced log filter
     public static final String ACTIVE = "AKTIV";
@@ -217,8 +219,8 @@ public class Txt_de {
 
     // Log format
     public static final String REC_ESTIMATED = " geschätzte Datensätze";
-    public static final String SET_ERASE = "Setzen + Löschen";
-    public static final String SET_NOERASE = "Nur Setzen";
+    public static final String SET_ERASE = "Setzen&Löschen";
+    public static final String SET_NOERASE = "Nur setzen";
     public static final String ERASE = "Löschen";
     public static final String CONFIRM_ERASE = "Löschen bestätigen";
 
@@ -227,7 +229,7 @@ public class Txt_de {
         "Log-Speicher zu löschen.|" +
         "Andere Software kann möglicherweise nicht mit " +
         "Daten arbeiten!||" +
-        "Sind sie damit einverstanden?";  // TODO: check addition of 'n'
+        "Sind sie damit einverstanden?"; 
 
     /** Message warning user about impact of changing log format */
     public static final String C_msgWarningFormatAndErase =
@@ -337,17 +339,18 @@ public class Txt_de {
         "Schreiben in geschlossene Datei";
 
     // Flash option
-    public static final String TIMESLEFT = "TimesLeft";  //TODO: translate to german
-    public static final String UPDATERATE = "Update Rate (Hz)";  //TODO: translate to german
-    public static final String BAUDRATE = "Baud Rate";  //TODO: translate to german
-    public static final String WRITEFLASH = "Write Flash";  //TODO: translate to german
-    public static final String ABORT = "Abort";  //TODO: translate to german
+    public static final String TIMESLEFT = "Verbleib. Zeit";  
+    public static final String UPDATERATE = "Wiederhol. Rate (Hz)";
+    public static final String BAUDRATE = "Baudrate"; 
+    public static final String WRITEFLASH = "Schreibe Flash"; 
+    public static final String ABORT = "Über";  
     public static final String TXT_FLASH_LIMITED_WRITES=
-        "The number of writes to the flash|" +
-        "is limited and a change in settings|" +
-        "could render your device inoperable|" +
-        "(e.g., a baud rate change)|" +
-        "ABORT by clicking abort!!";  //TODO: translate to german
+        "Die Anzahl der Schreibvorgänge des|" +
+        "des Flash-Speichers ist begrent und|" +
+        "eine Änderung der Einstellungen kann|" +
+        "das Gerät unbrauchbar machen.|" +
+        "(z.B., eine Änderung der Baudrate)|" +
+        "ABBRECHEN durch klicken auf Abbrechen!!";
     public static final String PERIOD_ABBREV = "Per";
 
     // Forgotten in Advanced track filter
@@ -355,8 +358,7 @@ public class Txt_de {
         = "0-Werte werden ignoriert.";
 
     public static final String STORE_SETTINGS =
-        "Conf Speichern";  // To save device settings
+        "Konf. speichern";  // To save device settings
     public static final String RESTORE_SETTINGS =
-        "Conf Herstellen";  // To restore device settings
-
+        "Konf. laden";  // To restore device settings
 }
