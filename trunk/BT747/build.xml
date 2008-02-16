@@ -109,6 +109,12 @@
 		</antcall>
 		<antcall target="package"/>
 	</target>
+	<target name="all-zh">
+		<antcall target="all">
+			<param name="lang" value="zh"/>
+		</antcall>
+		<antcall target="package"/>
+	</target>
     
     <!-- Compile -->
     <target name="build" depends="clean, updatedate">

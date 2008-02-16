@@ -901,4 +901,7 @@ public class AppSettings implements gps.settings {
         setStringOpt(value,C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
     }
 
+    public boolean isStoredSetting1() {
+        return getNMEASetting1().length()>15;
+    }
 }
