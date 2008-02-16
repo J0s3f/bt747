@@ -186,11 +186,14 @@ public class GPSconctrl extends Container {
     
     private void updateGPSData(final GPSRecord gps) {
 
-        lbLat.setText(Txt.LAT+Convert.toString(gps.latitude,5)+Txt.HGHT_SEP+Convert.toString(gps.height,3));
+        lbLat.setText(Txt.LAT+Convert.toString(gps.latitude,5)
+                +Txt.HGHT_SEP+Convert.toString(gps.height,3)
+                +Txt.METERS_ABBR);
         lbLon.setText(Txt.LON+Convert.toString(gps.longitude,5)+
                 TimeStr);
-        lbGeoid.setText(Txt.GEOID+Convert.toString(gps.geoid,3)+Txt.CALC+
-                Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)+")");
+        lbGeoid.setText(Txt.GEOID+Convert.toString(gps.geoid,3)+Txt.METERS_ABBR+Txt.CALC+
+                Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)
+                +Txt.METERS_ABBR+")");
 
         //lbLat.repaintNow();
         //lbLon.repaintNow();

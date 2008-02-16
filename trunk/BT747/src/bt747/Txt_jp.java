@@ -367,6 +367,8 @@ public class Txt_jp {
         "Store settings";
     public static final String RESTORE_SETTINGS =
         "Restore settings";
+
+    public final static String METERS_ABBR = "m";
     
 }
 

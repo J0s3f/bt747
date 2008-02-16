@@ -362,4 +362,6 @@ public class Txt_es {
         "Guardar conf";
     public static final String RESTORE_SETTINGS =
         "Restaurar conf";
+
+    public final static String METERS_ABBR = "m";
 }
