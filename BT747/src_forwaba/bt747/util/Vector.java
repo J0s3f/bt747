@@ -30,12 +30,24 @@ public class Vector extends waba.util.Vector {
         // TODO Auto-generated constructor stub
     }
 
-    /**
-     * @param startingWith
-     */
-    public Vector(Object[] startingWith) {
-        super(startingWith);
-        // TODO Auto-generated constructor stub
+//    /**
+//     * @param startingWith
+//     */
+//    public Vector(Object[] startingWith) {
+//        super(startingWith);
+//        // TODO Auto-generated constructor stub
+//    }
+
+    public final void addElement(Object obj) {
+        // TODO Auto-generated method stub
+        super.add(obj);
     }
+    
+    public final Object elementAt(int i) {
+        return items[i];
+    }
+    
+    
+    
 
 }

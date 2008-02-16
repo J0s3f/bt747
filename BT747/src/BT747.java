@@ -156,6 +156,7 @@ public class BT747 extends MainWindow {
         }
         orgAutoOnOff=waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off causing BT trouble
 
+        Txt.init();
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle(Txt.S_TITLE); 

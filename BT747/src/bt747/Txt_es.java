@@ -9,7 +9,9 @@ import bt747.sys.Settings;
  ** Class to provide language specific strings.
  */
 public class Txt_es {
-    
+    public static void init() {
+    }
+        
     // BT747 class
     public final static String S_FILE = "Archivo";
     public final static String S_EXIT_APPLICATION = "Salir";

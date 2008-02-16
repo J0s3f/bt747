@@ -14,9 +14,16 @@
   <resources>
     <j2se version="1.4"/>
     <jar href="Waba_only.jar" />
-    <jar href="BT747.jar" />
     <jar href="comm.jar" />
     <jar href="win32comm.jar" />
+  </resources>
+
+  <resources locale="en_FR">
+    <jar href="BT747__Lfr.jar" />
+  </resources>
+  <resources>
+    <j2se version="1.4"/>
+    <jar href="BT747.jar" />
   </resources>
   <resources os="Mac OS X" >
     <nativelib href="RXTX_macosx.jar" download="eager"/>

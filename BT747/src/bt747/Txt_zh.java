@@ -1,5 +1,8 @@
 package bt747;
 
+import waba.fx.Font;
+import waba.ui.MainWindow;
+
 import bt747.sys.Settings;
 
 /**
@@ -7,12 +10,18 @@ import bt747.sys.Settings;
  *
  ** Class to provide language specific strings.
  */
-public class Txt_en {
+public class Txt_zh {
+    
+    /**
+     * 
+     */
     public static void init() {
+        MainWindow.defaultFont = new Font("UFFChi", Font.PLAIN, 12);
+        waba.sys.Convert.setDefaultConverter("UTF8");
     }
     
     // BT747 class
-    public final static String S_FILE = "File";
+    public final static String S_FILE = "\u4e00a\u4e01\u4e02\u4e03"; // Should become "File";
     public final static String S_EXIT_APPLICATION = "Exit application";
     
     public final static String S_SETTINGS = "Settings";
