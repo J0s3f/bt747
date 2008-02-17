@@ -18,7 +18,7 @@
     <jar href="win32comm.jar" />
   </resources>
 
-  <resources locale="en_FR">
+  <resources locale="fr_FR">
     <jar href="BT747__Lfr.jar" />
   </resources>
   <resources>
