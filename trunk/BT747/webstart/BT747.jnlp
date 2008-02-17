@@ -1,22 +1,30 @@
+<?xml version="1.0"?>
 <jnlp href="BT747.jnlp" 
 	codebase="http://bt747.sourceforge.net/">
   <information>
     <title>BT747</title>
     <vendor>Mario De Weerd (GNU GPL license)</vendor>
-    
+    <icon kind="splash" href="http://sflogo.sourceforge.net/sflogo.php?group_id=196368&amp;type=4" width="125" height="37" />    
     <offline-allowed />
+
   </information>
   
   <security>
     <all-permissions />
   </security>
-  
+
+  <!-- main resource -->  
   <resources>
     <j2se version="1.4+"/>
     <jar href="Waba_only.jar" />
     <jar href="BT747_rxtx.jar" />
     <jar href="RXTXcomm.jar" />
   </resources>
+
+  <resources locale="en_FR">
+    <jar href="BT747__Lde.jar" />
+  </resources>  
+
   <resources os="Mac OS X" >
     <nativelib href="RXTX_macosx.jar" download="eager"/>
   </resources>
