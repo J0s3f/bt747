@@ -34,7 +34,7 @@ import bt747.ui.Check;
  * @author Mario De Weerd
  */
 public class GPSLogReason extends Container {
-    final private static boolean ENABLE_PWR_SAVE_CONTROL=false;
+    private static final boolean ENABLE_PWR_SAVE_CONTROL=false;
     private GPSstate m_GPSstate;
     
     private Check m_chkTimeOnOff;
@@ -51,9 +51,9 @@ public class GPSLogReason extends Container {
     private Check m_chkPowerSaveOnOff;
     private Check m_chkSBASOnOff;
     private Check m_chkSBASTestOnOff;
-    private final static String[] strDGPSMode= {Txt.NO_DGPS, Txt.RTCM,Txt.WAAS};
+    private static final String[] strDGPSMode= {Txt.NO_DGPS, Txt.RTCM,Txt.WAAS};
     private ComboBox m_cbDGPSMode;
-    private final static String[] strDatumMode= {"WGS84", "TOKYO-M","TOKYO-A"};
+    private static final String[] strDatumMode= {"WGS84", "TOKYO-M","TOKYO-A"};
     private ComboBox m_cbDatumMode;
     
     

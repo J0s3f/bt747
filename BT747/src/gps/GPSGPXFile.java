@@ -127,7 +127,7 @@ public class GPSGPXFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    final private static char []zeros = "0000000".toCharArray();
+    private static final char []zeros = "0000000".toCharArray();
     public void writeRecord(GPSRecord s) {
         super.writeRecord(s);
 

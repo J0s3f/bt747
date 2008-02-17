@@ -1,7 +1,5 @@
 package bt747;
 
-import waba.fx.Image;
-
 import bt747.sys.Settings;
 
 /**
@@ -14,42 +12,42 @@ public class Txt_de {
     }
 
     // BT747 class
-    public final static String S_FILE = "Datei";
-    public final static String S_EXIT_APPLICATION = "Ende";
+    public static final String S_FILE = "Datei";
+    public static final String S_EXIT_APPLICATION = "Ende";
 
-    public final static String S_SETTINGS = "Einstellungen";
-    public final static String S_RESTART_CONNECTION = "Verbindung neu starten";
-    public final static String S_STOP_CONNECTION = "Verbindung unterbrechen";
-    public final static String S_GPX_UTC_OFFSET_0= "GPX UTC Offset 0";
-    public final static String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg wenn klein";
-    public final static String S_GPS_DECODE_ACTIVE= "GPS Dekodierung aktiv";
-    public final static String S_FOCUS_HIGHLIGHT= "Focus Highlight";
-    public final static String S_DEBUG= "Debug";
-    public final static String S_STATS= "Stats";
-    public final static String S_INFO= "Info";
-    public final static String S_ABOUT_BT747= "Über BT747";
-    public final static String S_ABOUT_SUPERWABA= "Über SuperWaba VM";
+    public static final String S_SETTINGS = "Einstellungen";
+    public static final String S_RESTART_CONNECTION = "Verbindung neu starten";
+    public static final String S_STOP_CONNECTION = "Verbindung unterbrechen";
+    public static final String S_GPX_UTC_OFFSET_0= "GPX UTC Offset 0";
+    public static final String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg wenn klein";
+    public static final String S_GPS_DECODE_ACTIVE= "GPS Dekodierung aktiv";
+    public static final String S_FOCUS_HIGHLIGHT= "Focus Highlight";
+    public static final String S_DEBUG= "Debug";
+    public static final String S_STATS= "Stats";
+    public static final String S_INFO= "Info";
+    public static final String S_ABOUT_BT747= "Über BT747";
+    public static final String S_ABOUT_SUPERWABA= "Über SuperWaba VM";
 
-    public final static String S_TITLE= "BT747 - MTK Logger Control";
+    public static final String S_TITLE= "BT747 - MTK Logger Control";
 
 
-    public final static String LB_DOWNLOAD= "Download"; 
+    public static final String LB_DOWNLOAD= "Download"; 
 
-    public final static String TITLE_ATTENTION = "Achtung";
-    public final static String CONFIRM_APP_EXIT = "Sie versuchen die Anwendung zu beenden|" +
+    public static final String TITLE_ATTENTION = "Achtung";
+    public static final String CONFIRM_APP_EXIT = "Sie versuchen die Anwendung zu beenden|" +
                                                   "Sind sie sicher?";
 
-    public final static String YES=
+    public static final String YES=
         "Ja";
-    public final static String NO=
+    public static final String NO=
         "Nein";
-    public final static String CANCEL=
+    public static final String CANCEL=
         "Abbruch";
 
 
-    public final static String ABOUT_TITLE=
+    public static final String ABOUT_TITLE=
         "Über BT747 V"+Version.VERSION_NUMBER;
-    public final static String ABOUT_TXT=
+    public static final String ABOUT_TXT=
         "Erstellt mit SuperWaba" + 
         "|http://www.superwaba.org"+
         "|" +Version.BUILD_STR +
@@ -63,9 +61,9 @@ public class Txt_de {
         "|Übersetzung von Dirk Haase";
 
 
-    public final static String ABOUT_SUPERWABA_TITLE=
+    public static final String ABOUT_SUPERWABA_TITLE=
         "Über SuperWaba";
-    public final static String ABOUT_SUPERWABA_TXT=
+    public static final String ABOUT_SUPERWABA_TXT=
         "SuperWaba Virtual Machine "+ Settings.versionStr +
         "|Copyright (c)2000-2007" +
         "|Guilherme Campos Hazan" +
@@ -76,9 +74,9 @@ public class Txt_de {
         "|Copyright (c) 1998,1999 WabaSoft" +
         "|www.wabasoft.com";
 
-    public final static String DISCLAIMER_TITLE=
+    public static final String DISCLAIMER_TITLE=
         "Disclaimer";
-    public final static String DISCLAIMER_TXT=
+    public static final String DISCLAIMER_TXT=
         "bt747 wird zur Verfügung gestellt," +
         "|wie sie ist, ohne Garantie irgendw. Art." +
         "|ALL EXPRESS" +
@@ -94,34 +92,34 @@ public class Txt_de {
         "|details." ;
 
     // TAB identification
-    public final static String C_FMT  = "Fmt"; // "Format";
-    public final static String C_CTRL = "Int"; //"Intervall"; // Ctrl
-    public final static String C_LOG  = "Log";
-    public final static String C_FILE = "Dat"; //"Datei"; 
-    public final static String C_FLTR = "Fltr"; // "Filter";
-    public final static String C_EASY = "Enfch"; //"Einfach";
-    public final static String C_CON  = "Verb"; //"Verbindung"; 
-    public final static String C_OTHR = "Sons"; //"Sonstiges"; 
+    public static final String C_FMT  = "Fmt"; // "Format";
+    public static final String C_CTRL = "Int"; //"Intervall"; // Ctrl
+    public static final String C_LOG  = "Log";
+    public static final String C_FILE = "Dat"; //"Datei"; 
+    public static final String C_FLTR = "Fltr"; // "Filter";
+    public static final String C_EASY = "Enfch"; //"Einfach";
+    public static final String C_CON  = "Verb"; //"Verbindung"; 
+    public static final String C_OTHR = "Sons"; //"Sonstiges"; 
 
     // Conctrl strings
-    public final static String BT_BLUETOOTH = "Bluetooth";
-    public final static String BT_CONNECT_PRT = "Port verbinden";
-    public final static String BT_CLOSE_PRT = "Port schließen";
-    public final static String BT_REOPEN_PRT  = "Port öffnen";
-    public final static String MAIN = "Main: ";  //TODO: translate to german
-    public final static String FIRMWARE = "Firmware: "; 
-    public final static String MODEL = "Model: ";
-    public final static String FLASHINFO = "FlashInfo: ";
-    public final static String TIME_SEP = "  - Zeit :";
-    public final static String LAT = "Breite: ";
-    public final static String LON = "Länge: ";
-    public final static String GEOID = "Geoid: ";
-    public final static String CALC = "(berechn.: ";
-    public final static String HGHT_SEP = " - Höhe:";
-    public final static String METERS_ABBR = "m";
+    public static final String BT_BLUETOOTH = "Bluetooth";
+    public static final String BT_CONNECT_PRT = "Port verbinden";
+    public static final String BT_CLOSE_PRT = "Port schließen";
+    public static final String BT_REOPEN_PRT  = "Port öffnen";
+    public static final String MAIN = "Main: ";  //TODO: translate to german
+    public static final String FIRMWARE = "Firmware: "; 
+    public static final String MODEL = "Model: ";
+    public static final String FLASHINFO = "FlashInfo: ";
+    public static final String TIME_SEP = "  - Zeit :";
+    public static final String LAT = "Breite: ";
+    public static final String LON = "Länge: ";
+    public static final String GEOID = "Geoid: ";
+    public static final String CALC = "(berechn.: ";
+    public static final String HGHT_SEP = " - Höhe:";
+    public static final String METERS_ABBR = "m";
     // Filters tab panel
-    public final static String STANDARD = "Standard";
-    public final static String ADVANCED = "Erweitert";
+    public static final String STANDARD = "Standard";
+    public static final String ADVANCED = "Erweitert";
 
 
     // BT747_dev class

@@ -63,12 +63,12 @@ public class GPSconctrl extends Container {
     ComboBox m_cbPorts;
 
     ComboBox m_cbBaud;
-    private final static String[] BaudRates = {
+    private static final String[] BaudRates = {
             "115200", "38400"
     };
   
 
-    private final static int C_MAX_PORTNBR = 32;
+    private static final int C_MAX_PORTNBR = 32;
     private AppSettings m_Settings;
 
     public GPSconctrl(GPSstate p_GPSstate, AppSettings settings) {

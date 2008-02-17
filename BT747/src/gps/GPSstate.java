@@ -1302,10 +1302,10 @@ public class GPSstate implements Thread {
      * Start of block position to verify if log in device corresponds to log in
      * file.
      */
-    private final static int C_BLOCKVERIF_START = 0x200;
+    private static final int C_BLOCKVERIF_START = 0x200;
 
     /** Size of block to validate that log in device is log in file. */
-    private final static int C_BLOCKVERIF_SIZE = 0x200;
+    private static final int C_BLOCKVERIF_SIZE = 0x200;
 
     private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
 
