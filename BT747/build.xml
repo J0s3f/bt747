@@ -380,10 +380,9 @@
         <java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
             <arg value="/INST"/>
             <!-- <arg value="/SIS"/> -->
-            <arg value="/SH"/>
-        	<arg value="/c"/>
+        	<!-- <arg value="/SH"/> -->
         	<arg value="/V"/>  <arg value="${build_version}"/>
-            <arg value="BT74"/>
+        	<arg value="/c"/>  <arg value="BT74"/>
             <arg value="${ant.project.name}"/>
             <arg value=""/>
             <arg value="${ant.project.name}"/>
