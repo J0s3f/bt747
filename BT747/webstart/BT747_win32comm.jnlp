@@ -3,6 +3,7 @@
   <information>
     <title>BT747</title>
     <vendor>Mario De Weerd (GNU GPL license)</vendor>
+    <icon kind="splash" href="http://sflogo.sourceforge.net/sflogo.php?group_id=196368&amp;type=4" width="125" height="37" />    
     
     <offline-allowed />
   </information>
