@@ -1,9 +1,11 @@
 SETLOCAL
 SET DT=1.39
-SET APP_LANG=zh
+SET APP_LANG=en
 del BT747*_%LANG%_*.zip
 dos2unix *.sh
 dos2unix *.command
+
+SET FILES=
 
 if %APP_LANG%==zh SET FILES=%FILES% UFFChi_H.pdb UFFChi_L.pdb
 if %APP_LANG%==zh SET APP_LANG=zh_beta
@@ -14,7 +16,7 @@ if %APP_LANG%==jp SET APP_LANG=jp_beta
 if %APP_LANG%==ko SET FILES=%FILES% UFFKor_H.pdb UFFKor_L.pdb
 if %APP_LANG%==ko SET APP_LANG=ko_beta
 
-SET FILES=ChangeLog.txt src* dist license.txt README.txt  build.xml .project .classpath default.properties nbproject 
+SET FILES=%FILES% ChangeLog.txt src* dist license.txt README.txt  build.xml .project .classpath default.properties nbproject 
 SET FILES=%FILES% 5SW.pdb
 SET FILES=%FILES% run_ex.bat run_rxtx.bat run_rxtx.sh
 SET FILES=%FILES% bt747_macosX.command

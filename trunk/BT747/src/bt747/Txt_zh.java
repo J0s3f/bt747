@@ -23,6 +23,9 @@ public class Txt_zh {
     
     // BT747 class
     
+    // It is possible to write the language tokens directly and then convert
+    // to UTF format using http://code.cside.com/3rdpage/us/javaUnicode/converter.html 
+    //public static final String S_FILE = "??";
     public static final String S_FILE = "\u6587\u4EF6";
     public static final String S_EXIT_APPLICATION = "\u51FA\u53E3\u5E94\u7528";
 
