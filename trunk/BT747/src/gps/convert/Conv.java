@@ -30,7 +30,7 @@ public final class Conv {
      * @param hexStr Hexadecimal representation of bytes
      * @return list of bytes 
      */
-    public final static int hexStringToBytes(final String hexStr, byte[] p_Buffer) {
+    public static final int hexStringToBytes(final String hexStr, byte[] p_Buffer) {
         char[] z_Data = hexStr.toCharArray();
         int length=z_Data.length&0xFFFFFFFE;
         byte z_Byte;
@@ -97,7 +97,7 @@ public final class Conv {
      * @param hexStr Hexadecimal representation of bytes
      * @return list of bytes 
      */
-    public final static int hex2Int(final String hexStr) {
+    public static final int hex2Int(final String hexStr) {
         int p_Result=0;
         for (int i = 0; i < hexStr.length(); i++) {
             int z_nibble;
@@ -172,7 +172,7 @@ public final class Conv {
 //    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-    private final static double bilinear(
+    private static final double bilinear(
             final double x1,
             final double y1,
             final double x2,
@@ -198,7 +198,7 @@ public final class Conv {
     
     private static final int GEOID_ROW = 19;
     private static final int GEOID_COL = 37;
-    private final static int geoid_delta[]={
+    private static final int geoid_delta[]={
             /* 90S */ -30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30, -30,-30,-30,-30,-30,-30,-30,-30,-30,-30,-30,
             /* 80S */ -53,-54,-55,-52,-48,-42,-38,-38,-29,-26,-26,-24,-23,-21,-19,-16,-12, -8, -4, -1,  1,  4,  4,  6,  5,  4,   2, -6,-15,-24,-33,-40,-48,-50,-53,-52,-53,
             /* 70S */ -61,-60,-61,-55,-49,-44,-38,-31,-25,-16, -6,  1,  4,  5,  4,  2,  6, 12, 16, 16, 17, 21, 20, 26, 26, 22,  16, 10, -1,-16,-29,-36,-46,-55,-54,-59,-61,

@@ -115,7 +115,7 @@ public class GPSPLTFile extends GPSFile {
             rec+=",";
 //          Field 5 : Date - see Date Format below, if blank a preset date will be used
 //          TDateTime value is the number of days that have passed since 12/30/1899.
-            //private final static int DAYS_BETWEEN_19700101_18991230=4748;
+            //private static final int DAYS_BETWEEN_19700101_18991230=4748;
             
 //          Field 6 : Date as a string 
 //          Field 7 : Time as a string

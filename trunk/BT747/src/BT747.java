@@ -54,7 +54,7 @@ public class BT747 extends MainWindow {
     /** The application's MenuBar */
     private static MenuBar     m_MenuBar;
     /** The content of the menu bar */
-    private final String menu[][] = {
+    private static final String menu[][] = {
             {   Txt.S_FILE,
                 Txt.S_EXIT_APPLICATION},  
             {   Txt.S_SETTINGS,
@@ -76,31 +76,31 @@ public class BT747 extends MainWindow {
                 Txt.S_INFO}    
     };
     /** MenuBar item for File->Exit */
-    private final static int C_MENU_FILE_EXIT = 001;
+    private static final int C_MENU_FILE_EXIT = 001;
     /** MenuBar item for Settings->Restart connection */
-//    private final static int C_MENU_CONNECTION_SETTINGS = 101;
+//    private static final int C_MENU_CONNECTION_SETTINGS = 101;
 //    /** MenuBar item for Settings->Restart connection */
-    private final static int C_MENU_RESTART_CONNECTION = 101;
+    private static final int C_MENU_RESTART_CONNECTION = 101;
     /** MenuBar item for Settings->Stop connection */
-    private final static int C_MENU_STOP_CONNECTION = 102;
+    private static final int C_MENU_STOP_CONNECTION = 102;
     /** MenuBar item for Settings->GPX UTC 0 */
-    private final static int C_MENU_GPX_UTC0 = 104;
+    private static final int C_MENU_GPX_UTC0 = 104;
     /** MenuBar item for Settings->GPX Trk Sep when big only */
-    private final static int C_MENU_GPX_TRKSEG_BIGONLY = 105;
+    private static final int C_MENU_GPX_TRKSEG_BIGONLY = 105;
     /** MenuBar item for Settings->GPS Decode Active*/
-    private final static int C_MENU_GPS_DECODE_ACTIVE = 106;
+    private static final int C_MENU_GPS_DECODE_ACTIVE = 106;
     /** MenuBar item for Settings->Debug */
-    private final static int C_MENU_FOCUS_HIGHLIGHT = 108;
+    private static final int C_MENU_FOCUS_HIGHLIGHT = 108;
     /** MenuBar item for Settings->Debug */
-    private final static int C_MENU_DEBUG_ACTIVE = 110;
+    private static final int C_MENU_DEBUG_ACTIVE = 110;
     /** MenuBar item for Settings->Conn. Stats */
-    private final static int C_MENU_STATS_ACTIVE = 111;
+    private static final int C_MENU_STATS_ACTIVE = 111;
     /** MenuBar item for Info->About BT747 */
-    private final static int C_MENU_ABOUT = 201;
+    private static final int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
-    private final static int C_MENU_ABOUT_SW = 202;
+    private static final int C_MENU_ABOUT_SW = 202;
     /** MenuBar item for Info->Info */
-    private final static int C_MENU_INFO = 203;   
+    private static final int C_MENU_INFO = 203;   
     
     /** The tab panel */
     private static TabPanel    m_TabPanel;

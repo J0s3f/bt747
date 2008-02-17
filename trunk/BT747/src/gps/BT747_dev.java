@@ -398,7 +398,7 @@ public final class BT747_dev {  // dev as in device
      * 
      * @return Size of the header
      */
-    static public final int logRecordMinSize(final int p_logFormat, final boolean holux) {
+    public static final int logRecordMinSize(final int p_logFormat, final boolean holux) {
         int bits=p_logFormat;
         int index = 0;
         int total = 0;
@@ -437,7 +437,7 @@ public final class BT747_dev {  // dev as in device
      * @param p_Holux TODO
      * @return
      */
-    static public final int logRecordSize(final int p_logFormat, final boolean holux, final int sats) {
+    public static final int logRecordSize(final int p_logFormat, final boolean holux, final int sats) {
         int cnt=0;
         int[] byteSizes;
         if(holux) {
@@ -455,7 +455,7 @@ public final class BT747_dev {  // dev as in device
         return cnt+logRecordMinSize(p_logFormat, false);
     }
     
-    static public final int logRecordMaxSize(final int p_logFormat, final boolean holux) {
+    public static final int logRecordMaxSize(final int p_logFormat, final boolean holux) {
         return logRecordSize(p_logFormat, holux, FMT_MAX_SATS);
     }
 

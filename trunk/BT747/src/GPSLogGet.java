@@ -78,7 +78,7 @@ public class GPSLogGet extends Container {
     Edit m_edTrkSep;
 
     ComboBox m_cbTimeOffsetHours;
-    private final static String[] offsetStr = {
+    private static final String[] offsetStr = {
             "-12", "-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1",
             "+0",
             "+1","+2","+3","+4","+5","+6","+7","+8","+9","+10","+11","+12",
@@ -86,7 +86,7 @@ public class GPSLogGet extends Container {
     };
     
     ComboBox m_cbColors;
-    private final static String[] colors = {
+    private static final String[] colors = {
             "FF0000",
             "0000FF",
             "800000",
@@ -99,13 +99,13 @@ public class GPSLogGet extends Container {
     Check m_chkIncremental;
 
     ComboBox m_chkOneFilePerDay;
-    private final static String[] fileStr = {
+    private static final String[] fileStr = {
             Txt.ONE_FILE,
             Txt.ONE_FILE_DAY,
             Txt.ONE_FILE_TRK
     };
   
-    final static int JULIAN_DAY_1_1_1970=18264;   
+    static final int JULIAN_DAY_1_1_1970=18264;   
     ProgressBar m_pb;
     AppSettings m_appSettings;
     

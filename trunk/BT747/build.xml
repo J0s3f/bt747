@@ -94,7 +94,7 @@
     </target>
 	
 	<target name="package">
-		<exec command="package.bat" failifexecutionfails="false"/>
+		<exec executable="package.bat" failifexecutionfails="false"/>
 	</target>
 	
 	<target name="all-es">
