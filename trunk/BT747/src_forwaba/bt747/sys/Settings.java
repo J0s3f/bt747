@@ -13,6 +13,6 @@ package bt747.sys;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 final public class Settings {
-    public static String platform = waba.sys.Settings.platform;
-    public static String versionStr = waba.sys.Settings.versionStr;
+    public static final String platform = waba.sys.Settings.platform;
+    public static final String versionStr = waba.sys.Settings.versionStr;
 }

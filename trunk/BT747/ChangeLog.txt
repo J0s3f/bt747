@@ -1,5 +1,14 @@
+Version 1.40
+* Deactivating device logging automatically during download.
+  The original setting is restored after download.
+  Some users reported a positive effect of disabling logging during download.
+* Changed GMAP format to be able to activate/de-activate parts of the track.
+
 Version 1.39
 * Settings of device can now be saved and restored (after battery removal for example)
+* German translation
+* French translation
+* Chinese translation (automatic -> beta)
 
 Version 1.38
 * Spanish translation!

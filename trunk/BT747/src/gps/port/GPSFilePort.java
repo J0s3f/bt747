@@ -40,7 +40,7 @@ public class GPSFilePort extends GPSPort {
 
     private String portPrefix="";
     private boolean hasPortNbr=true;
-    public static String os_name=java.lang.System.getProperty("os.name");  
+    public static final String os_name=java.lang.System.getProperty("os.name");  
     /**
      * 
      */

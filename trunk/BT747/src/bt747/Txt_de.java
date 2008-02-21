@@ -324,8 +324,8 @@ public class Txt_de {
     public static final String ABORT_DOWNLOAD = "Laden abbrechen";
     public static final String DATA_NOT_SAME =
     "Die DATEN vom Logger stimmen NICHT mit|"
-    + "den zuvor geladenen DATEN|"
-    + "überein.|"
+    + "den zuvor geladenen DATEN überein.|"
+    + "|"
     + "Sollen die DATEN überschrieben werden?";
     public static final String LOGGER = "Logger: ";  // For logger SW version
 
@@ -344,7 +344,7 @@ public class Txt_de {
     public static final String ABORT = "Über";  
     public static final String TXT_FLASH_LIMITED_WRITES=
         "Die Anzahl der Schreibvorgänge des|" +
-        "des Flash-Speichers ist begrent und|" +
+        "des Flash-Speichers ist begrenzt und|" +
         "eine Änderung der Einstellungen kann|" +
         "das Gerät unbrauchbar machen.|" +
         "(z.B., eine Änderung der Baudrate)|" +

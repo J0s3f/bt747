@@ -6,7 +6,8 @@ set MYROOTPATH=%CD%
 set PATH=%JAVA_HOME%\bin;%PATH%
 set CLASSPATH=win32comm.jar;%CD%\webstart\waba_only.jar;%CD%\dist\BT747.jar;%CLASSPATH%
 
-java waba.applet.Applet /w 320 /h 320 /scale 1 /bpp 8 BT747
+REM change javaw to java in next line to see startup and debug messages
+START javaw waba.applet.Applet /w 320 /h 320 /scale 1 /bpp 8 BT747
 set PATH=%ORGPATH%
 REM pause
 
