@@ -102,10 +102,6 @@ public class GPSCompoGPSTrkFile extends GPSFile {
 //        -27.348610, 153.055867,0,-777,36169.6307194, 09-Jan-99, 3:08:14 
     
     
-    private static final String[] C_MONTHS = {
-            "JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"
-    };
-    
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */

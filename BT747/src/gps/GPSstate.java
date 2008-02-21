@@ -162,6 +162,7 @@ public class GPSstate implements Thread {
 
     public void setDebug(boolean dbg) {
         GPS_DEBUG = dbg;
+        m_GPSrxtx.setDebug(dbg);
     }
 
     public void setStats(boolean stats) {
@@ -199,6 +200,9 @@ public class GPSstate implements Thread {
 
     }
 
+    /**
+     * @return The usefull bytes int the log.
+     */
     public final int logMemUsefullSize() {
         return (int) ((logMemSize >> 16) * (0x10000 - 0x200)); //16Mb
     }
@@ -487,9 +491,9 @@ public class GPSstate implements Thread {
         if (sentCmds.getCount() > C_MAX_SENT_COMMANDS) {
             sentCmds.del(0);
         }
-        if (GPS_DEBUG) {
-            Vm.debug(p_Cmd);
-        }
+//        if (GPS_DEBUG) {
+//            Vm.debug(p_Cmd);
+//        }
     }
 
     private void checkSendCmdFromQueue() {
@@ -1108,7 +1112,7 @@ public class GPSstate implements Thread {
             mdStr = "iBlue 737/Qstarz 810";
             break;
         case 0x0002:
-            mdStr = "Qstarz 815";
+            mdStr = "Qstarz 815/iBlue 747";
             break;
         case 0x0005:
             mdStr = "Holux M-241";
@@ -1335,6 +1339,7 @@ public class GPSstate implements Thread {
         }
     }
 
+    
     private void endGetLog() {
         m_logState = C_LOG_NOLOGGING;
         closeLog();
@@ -1344,6 +1349,7 @@ public class GPSstate implements Thread {
         }
         if(loggingIsActiveBeforeDownload) {
             startLog();
+            getLogOnOffStatus();
         }
     }
 
@@ -1361,9 +1367,11 @@ public class GPSstate implements Thread {
             final int p_Step, final String p_FileName, final int Card,
             final boolean incremental, // True if incremental read
             final ProgressBar pb) {
-        if(logStatus==C_LOG_NOLOGGING) {
+        if(m_logState==C_LOG_NOLOGGING) {
+            // Disable device logging while downloading
             loggingIsActiveBeforeDownload = loggingIsActive;
             stopLog();
+            getLogOnOffStatus();
         }
 
         m_StartAddr = p_StartAddr;
@@ -1512,7 +1520,7 @@ public class GPSstate implements Thread {
         }
     }
 
-    // Called regurarly
+    // Called regularly
     private void getNextLogPart() {
         if (m_logState != C_LOG_NOLOGGING) {
             int z_Step;
@@ -1692,6 +1700,17 @@ public class GPSstate implements Thread {
             }
         } // Switch m_logState
     }
+    
+    
+    
+    /**
+     * <code>dataOK</code> indicates if all volatile data from the device
+     * has been fetched.  This is usefull to know if the settings can be
+     * backed up.
+     */
+    private int dataOK = 0;
+
+    // The next lines indicate bit fields of <code>dataOK</code>
     public static final int C_OK_FIX        = 0x0001;
     public static final int C_OK_DGPS       = 0x0002;
     public static final int C_OK_SBAS       = 0x0004;
@@ -1702,11 +1721,7 @@ public class GPSstate implements Thread {
     public static final int C_OK_SPEED      = 0x0080;
     public static final int C_OK_DIST       = 0x0100;
     public static final int C_OK_FORMAT     = 0x0200;
-    
-    
 
-    private int dataOK = 0;
-    
     public boolean isDataOK(final int mask) {
         return ( (dataOK & mask)== mask );
     }
@@ -1834,9 +1849,16 @@ public class GPSstate implements Thread {
             }
         }
         return 0; // Done.
-
     }
 
+    
+    /********************************************************************
+     * Getters and Setters
+     * 
+     */
+    
+    
+    
     /**
      * @return Returns the gpsDecode.
      */
@@ -1846,7 +1868,8 @@ public class GPSstate implements Thread {
 
     /**
      * @param gpsDecode
-     *            The gpsDecode to set.
+     *            Activate gps decoding if true, do not decode if false.
+     * This may improve performance.
      */
     public void setGpsDecode(final boolean gpsDecode) {
         this.gpsDecode = gpsDecode;
@@ -1868,24 +1891,12 @@ public class GPSstate implements Thread {
     }
 
     /**
-     * @param flashDesc
-     *            The flashDesc to set.
-     */
-    public void setFlashDesc(String flashDesc) {
-        FlashDesc = flashDesc;
-    }
-    /**
      * @return Returns the mtkLogVersion.
      */
     public String getMtkLogVersion() {
         return MtkLogVersion;
     }
-    /**
-     * @param mtkLogVersion The mtkLogVersion to set.
-     */
-    public void setMtkLogVersion(String mtkLogVersion) {
-        MtkLogVersion = mtkLogVersion;
-    }
+
     /**
      * @return Returns the holux.
      */
@@ -1893,7 +1904,7 @@ public class GPSstate implements Thread {
         return holux;
     }
     /**
-     * @param holux The holux to set.
+     * @param holux Indicates if this device needs special holux decoding.
      */
     public void setHolux(boolean holux) {
         this.holux = holux;

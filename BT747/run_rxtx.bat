@@ -10,6 +10,8 @@ set PATH=%MYSYSTEMRXTXBINS%;%CD%;%JAVA_HOME%\bin;%PATH%
 set CLASSPATH=%RXTXPATH%\RXTXcomm.jar;webstart\waba_only.jar;dist\BT747_rxtx.jar;%CLASSPATH%
 
 REM java -Dbt747_prefix="COM" -Dbt747_settings="bt747settings.pdb" waba.applet.Applet BT747
-start java waba.applet.Applet  /w 320 /h 320 /scale 1 /bpp 8 BT747
+
+REM Change javaw to java in next line to see startup and debug messages
+start javaw waba.applet.Applet  /w 320 /h 320 /scale 1 /bpp 8 BT747
 
 endlocal

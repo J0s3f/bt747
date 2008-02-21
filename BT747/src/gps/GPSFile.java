@@ -71,6 +71,12 @@ public abstract class GPSFile {
     
     protected String badTrackColor="FF0000";
     protected String goodTrackColor="0000FF";
+    
+    protected static final String[] C_MONTHS = {
+            "JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"
+    };
+    
+
 
     public void initialiseFile(final String basename, final String ext,
             final int Card, int fileSeparationFreq) {

@@ -24,12 +24,9 @@ import waba.ui.Event;
 import waba.ui.Label;
 import waba.ui.MessageBox;
 
-import javax.swing.border.TitledBorder;
-
 import gps.BT747_dev;
 import gps.GPSstate;
 import gps.GpsEvent;
-import gps.settings;
 
 import bt747.Txt;
 import bt747.ui.Button;

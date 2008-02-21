@@ -33,7 +33,7 @@ import gps.port.GPSWabaPort;
  * @author Mario De Weerd
  */
 public class GPSrxtx {
-    private static final boolean GPS_DEBUG = false; //!Settings.onDevice;
+    private boolean GPS_DEBUG = false; //!Settings.onDevice;
     
     private GPSPort gpsPort;
     
@@ -164,9 +164,6 @@ public class GPSrxtx {
     
     public void sendPacket(final String p_Packet) {       
         if(isConnected()) {
-            if(GPS_DEBUG) {
-                waba.sys.Vm.debug(">"+p_Packet);
-            }
             // Calculate checksum
             int z_Index= p_Packet.length();
             byte z_Checksum= 0;
@@ -181,9 +178,11 @@ public class GPSrxtx {
             rec.append(p_Packet);
             rec.append('*');
             rec.append(Convert.unsigned2hex(z_Checksum,2));
+            if(GPS_DEBUG) {
+                waba.sys.Vm.debug(">"+rec.toString());
+            }
             rec.append(EOL_BYTES);
             gpsPort.write(rec.toString());
-            
             m_writeOngoing.up();  // Semaphore - release link
         }
     }
@@ -350,8 +349,8 @@ public class GPSrxtx {
                             }
                             if(max>0) {
                                 bytesRead= gpsPort.readBytes(read_buf,0,max);
-                                //						String sb=new String(read_buf,0,bytesRead);
-                                //						System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
+                                // String sb=new String(read_buf,0,bytesRead);
+                                // System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
                             }
                         }
                         catch (Exception e) {
@@ -420,5 +419,12 @@ public class GPSrxtx {
      */
     public void setIgnoreNMEA(boolean ignoreNMEA) {
         this.ignoreNMEA = ignoreNMEA;
+    }
+
+    /**
+     * @param gps_debug The gPS_DEBUG to set.
+     */
+    public void setDebug(final boolean gps_debug) {
+        GPS_DEBUG = gps_debug;
     }
 }
