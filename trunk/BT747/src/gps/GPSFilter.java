@@ -63,10 +63,10 @@ public class GPSFilter {
         this.validMask = validMask;
     }
     
-    public boolean doFilter(GPSRecord r) {
+    public boolean doFilter(final GPSRecord r) {
         // Filter the record information
         boolean z_Result;
-        z_Result=(r.utc>=startDate) && (r.utc<=endDate)
+        z_Result=((r.utc < 1001)||((r.utc>=startDate) && (r.utc<=endDate)))
                 &&((r.valid&validMask)!=0)
                 &&((r.rcr&rcrMask)!=0);
         

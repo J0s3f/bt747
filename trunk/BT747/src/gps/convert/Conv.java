@@ -250,4 +250,90 @@ public final class Conv {
         }
     }
 
+    
+
+    // Lifted from kismet
+    //
+    //  Faust Code to convert rad to deg and find the distance between two points
+    //  on the globe.  Thanks, Faust.
+    // const float M_PI = 3.14159;
+    
+    public static final double rad2deg(double x) { /*FOLD00*/
+          return x*Math.PI/180.0;
+    }
+    
+    public static final double earth_distance(
+            final double lat1,
+            final double lon1,
+            final double lat2,
+            final double lon2) { /*FOLD00*/
+        
+        /*
+         double calcedR1 = calcR(lat1);
+         double calcedR2 = calcR(lat2);
+         
+         double sinradi1 = sin(rad2deg(90-lat1));
+         double sinradi2 = sin(rad2deg(90-lat2));
+         
+         double x1 = calcedR1 * cos(rad2deg(lon1)) * sinradi1;
+         double x2 = calcedR2 * cos(rad2deg(lon2)) * sinradi2;
+         double y1 = calcedR1 * sin(rad2deg(lon1)) * sinradi1;
+         double y2 = calcedR2 * sin(rad2deg(lon2)) * sinradi2;
+         double z1 = calcedR1 * cos(rad2deg(90-lat1));
+         double z2 = calcedR2 * cos(rad2deg(90-lat2));
+         
+         double calcedR = calcR((double)(lat1+lat2)) / 2;
+         double a = acos((x1*x2 + y1*y2 + z1*z2)/square(calcedR));
+         */
+        
+        double x1 = calcR(lat1) * Math.cos(rad2deg(lon1)) * Math.sin(rad2deg(90-lat1));
+        double x2 = calcR(lat2) * Math.cos(rad2deg(lon2)) * Math.sin(rad2deg(90-lat2));
+        double y1 = calcR(lat1) * Math.sin(rad2deg(lon1)) * Math.sin(rad2deg(90-lat1));
+        double y2 = calcR(lat2) * Math.sin(rad2deg(lon2)) * Math.sin(rad2deg(90-lat2));
+        double z1 = calcR(lat1) * Math.cos(rad2deg(90-lat1));
+        double z2 = calcR(lat2) * Math.cos(rad2deg(90-lat2));
+        double a = Math.acos((x1*x2 + y1*y2 + z1*z2)/Math.pow(calcR((double) (lat1+lat2)/2),2));
+        
+        return calcR((double) (lat1+lat2) / 2) * a;
+    }
+
+    
+
+    //  Lifted from gpsdrive 1.7
+    //  CalcR gets the radius of the earth at a particular latitude
+    //  calcxy finds the x and y positions on a 1280x1024 image of a certian scale
+    //   centered on a given lat/lon.
+    
+    //  This pulls the "real radius" of a lat, instead of a global guesstimate
+    public static final double calcR (final double p_lat) /*FOLD00*/
+    {
+        double a = 6378.137, r, sc, x, y, z;
+        double e2 = 0.081082 * 0.081082;
+        double lat;
+        /*
+         the radius of curvature of an ellipsoidal Earth in the plane of the
+         meridian is given by
+         
+         R' = a * (1 - e^2) / (1 - e^2 * (sin(lat))^2)^(3/2)
+         
+         where a is the equatorial radius,
+         b is the polar radius, and
+         e is the eccentricity of the ellipsoid = sqrt(1 - b^2/a^2)
+         
+         a = 6378 km (3963 mi) Equatorial radius (surface to center distance)
+         b = 6356.752 km (3950 mi) Polar radius (surface to center distance)
+         e = 0.081082 Eccentricity
+         */
+        
+        lat = p_lat * Math.PI / 180.0;
+        sc = Math.sin (lat);
+        x = a * (1.0 - e2);
+        z = 1.0 - e2 * sc * sc;
+        y = Math.pow (z, 1.5);
+        r = x / y;
+        
+        r = r * 1000.0;
+        return r;
+    }
+
 }

@@ -130,6 +130,8 @@ public class GPSstate implements Thread {
     private String mainVersion = "";
 
     private String model = "";
+    
+    private String device = "";
 
     private String firmwareVersion = "";
 
@@ -650,6 +652,7 @@ public class GPSstate implements Thread {
         //getDGPSMode();
         //getDatumMode();
         //getFixInterval();
+        requestHoluxName(); // Mainly here to identify Holux device
     }
 
     public void getLogOnOffStatus() {
@@ -1056,6 +1059,12 @@ public class GPSstate implements Thread {
             case BT747_dev.PMTK_DT_RELEASE: // CMD 705
                 firmwareVersion = p_nmea[1];
                 model = p_nmea[2];
+                if(p_nmea.length>=4) {
+                    device=p_nmea[3];
+                    firmwareVersion += " ("+device+")";
+                } else {
+                    device="";
+                }
                 PostStatusUpdateEvent();
                 break;
 
@@ -1063,6 +1072,7 @@ public class GPSstate implements Thread {
                 break;
             } // End switch
         } else if (p_nmea[0].equals("HOLUX001")) {
+            holux=true;
             z_Result = -1; // Suppose cmd not treated
             if (GPS_DEBUG) {
                 String s;
@@ -1115,8 +1125,7 @@ public class GPSstate implements Thread {
             mdStr = "Qstarz 815/iBlue 747";
             break;
         case 0x0005:
-            mdStr = "Holux M-241";
-            holux=true;
+            mdStr = "Holux M-241/QT-1000P";
             break;
         case 0x001B:
             mdStr = "iBlue 747";
@@ -1129,18 +1138,24 @@ public class GPSstate implements Thread {
             break;
         case 0x1388:
             mdStr = "757/ZI v1";
-            logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
+//            logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
             break;
         case 0x5202:
             mdStr = "757/ZI v2";
-            logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
+//            logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
             break;
         case 0x8300:
             mdStr = "Qstarz BT-1200";
-            logMemSize = 32 * 1024 * 1024 / 8; //32Mb -> 4MB
+//            logMemSize = 32 * 1024 * 1024 / 8; //32Mb -> 4MB
             break;
         default:
             mdStr = Txt.UNKNOWN;
+        }
+        // Recognition based on 'device'
+        if (device.length()==0) {
+            //Do nothing
+        } else if(device.equals("QST1000P")) {
+            mdStr = "Qstarz BT-1000P";
         }
         return mdStr;
     }

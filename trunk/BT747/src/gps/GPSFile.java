@@ -57,7 +57,7 @@ public abstract class GPSFile {
 
     protected int C_NUMBER_OF_PASSES = 1;
 
-    protected File m_File = null;
+    private File m_File = null;
 
     protected Time t = new Time(); // Time from log, already transformed
 
@@ -65,9 +65,12 @@ public abstract class GPSFile {
     protected int m_prevtime = 0;
     protected boolean m_sepTrack=false;
     protected int m_TrackSepTime=60*60; // Time needed between points to separate segments.
+    protected int filesCreated=0;
     
     protected boolean m_oneFilePerTrack=false;
     protected boolean m_multipleFiles=false;
+    
+    protected boolean recordNbrInLogs=false;
     
     protected String badTrackColor="FF0000";
     protected String goodTrackColor="0000FF";
@@ -136,7 +139,7 @@ public abstract class GPSFile {
         return result;
     }
 
-    public void writeRecord(GPSRecord s) {
+    public void writeRecord(final GPSRecord s) {
         String extraExt; // Extra extension for log file
         boolean newDate = false;
         int dateref = 0;
@@ -223,7 +226,9 @@ public abstract class GPSFile {
             finaliseFile();
         } else {
             // More passes to go.
-            closeFile();
+            if(isOpen()) {
+                closeFile();
+            }
         }
         return false;
     };
@@ -253,6 +258,7 @@ public abstract class GPSFile {
                         .popupModal();
             m_File = null;
         } else {
+            filesCreated+=1;
             if (createNewFile) {
                 // New file
                 writeFileHeader("GPS" + extra_ext); // First time this file is
@@ -274,6 +280,10 @@ public abstract class GPSFile {
             // TODO: handle exception
             Vm.debug(Txt.CLOSE_FAILED);
         }
+    }
+    
+    protected boolean isOpen() {
+        return m_File!=null;
     }
 
     private static final int DAYS_BETWEEN_1970_1983 = 4748;
@@ -371,5 +381,23 @@ public abstract class GPSFile {
      */
     public void setGoodTrackColor(String goodTrackColor) {
         this.goodTrackColor = goodTrackColor;
+    }
+    /**
+     * @return Returns the filesCreated.
+     */
+    public int getFilesCreated() {
+        return filesCreated;
+    }
+    /**
+     * @return Returns the recordNbrInLogs.
+     */
+    public boolean isRecordNbrInLogs() {
+        return recordNbrInLogs;
+    }
+    /**
+     * @param recordNbrInLogs The recordNbrInLogs to set.
+     */
+    public void setRecordNbrInLogs(boolean recordNbrInLogs) {
+        this.recordNbrInLogs = recordNbrInLogs;
     }
 }

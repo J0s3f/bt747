@@ -309,13 +309,13 @@ public class Txt_de {
 
 
     // GPS State
-    public static final String CANCEL_WAITING = "Schreiben abgebrochen";
+    public static final String CANCEL_WAITING = "Löschen abbrechen";
     public static final String TITLE_WAITING_ERASE =
         "Warten bis Löschen beendet";
     public static final String TXT_WAITING_ERASE =
         "Warten bis Löschen beendet.|" +
-        "Sie können das Warten auf eigenes Risiko abbrechen";
-
+        "Sie können das Warten auf eigenes|" +
+        "Risiko abbrechen";
     public static final String UNKNOWN = "Unbekannt";
     public static final String CHK_PATH =
         "|Prüfen ob Pfad und Karte beschreibbar";
@@ -359,4 +359,17 @@ public class Txt_de {
         "Konf. speichern";  // To save device settings
     public static final String RESTORE_SETTINGS =
         "Konf. laden";  // To restore device settings
-}
+    public static final String WARNING =
+        "Warning";
+    public static final String NO_FILES_WERE_CREATED =
+        "No output files were created!" +
+        "||" +
+        "This usually means that either:" +
+        "|- The filter did not select any points" +
+        "|- The log does not contain any data" +
+        "|" +
+        "|Try selecting all points." +
+        "|If that does not work," +
+        "| it may be a bug.";
+    public static final String ADD_RECORD_NUMBER =
+        "Record nbr info in logs";}

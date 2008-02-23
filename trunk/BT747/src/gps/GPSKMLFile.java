@@ -350,7 +350,7 @@ public class GPSKMLFile extends GPSFile {
   /* (non-Javadoc)
    * @see gps.GPSFile#WriteRecord()
    */
-  public void writeRecord(GPSRecord s) {
+  public void writeRecord(final GPSRecord s) {
       super.writeRecord(s);
 
       if(activeFields!=null) {
@@ -436,6 +436,11 @@ public class GPSKMLFile extends GPSFile {
                     
                     rec.append("<description>");
                     rec.append("<![CDATA[");
+                    if(recordNbrInLogs) {
+                        rec.append("IDX: ");
+                        rec.append(Convert.toString(m_recCount));
+                        rec.append("<br/>");
+                    }
                     if(activeFields.utc!=0) {
                         rec.append("DATE: ");
                         rec.append(Convert.toString(t.getYear())+"-"
@@ -560,7 +565,8 @@ public class GPSKMLFile extends GPSFile {
                     }
                     if(activeFields.distance!=0) {
                         rec.append("<br />DISTANCE: ");
-                        rec.append(Convert.toString(s.distance,2)); 
+                        rec.append(Convert.toString(s.distance,2));
+                        rec.append(" m");
                     }
                     
                     rec.append("]]>");
@@ -610,7 +616,7 @@ public class GPSKMLFile extends GPSFile {
    * @see gps.GPSFile#FinaliseFile()
    */
   public void finaliseFile() {
-      if(m_File!=null) {
+      if(this.isOpen()) {
           String footer;
           writeDataFooter();            
           footer=

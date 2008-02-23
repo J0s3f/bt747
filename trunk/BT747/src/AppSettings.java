@@ -17,6 +17,7 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.io.DataStream;
 import waba.io.File;
 import bt747.sys.Convert;
 import waba.sys.Settings;
@@ -131,7 +132,9 @@ public class AppSettings implements gps.settings {
     private static final int C_SETTING1_LOG_FORMAT_SIZE=8;
     private static final int C_SETTING1_SBAS_IDX=C_SETTING1_LOG_FORMAT_IDX+C_SETTING1_LOG_FORMAT_SIZE;
     private static final int C_SETTING1_SBAS_SIZE=1;
-    private static final int C_NEXT_IDX=C_SETTING1_SBAS_IDX+C_SETTING1_SBAS_SIZE;
+    private static final int C_RECORDNBR_IN_LOGS_IDX=C_SETTING1_SBAS_IDX+C_SETTING1_SBAS_SIZE;
+    private static final int C_RECORDNBR_IN_LOGS_SIZE=4;
+    private static final int C_NEXT_IDX=C_RECORDNBR_IN_LOGS_IDX+C_RECORDNBR_IN_LOGS_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE=4;
     private static final int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -279,8 +282,11 @@ public class AppSettings implements gps.settings {
         case 12:
             setTraversableFocus(Settings.onDevice&&(!waba.sys.Settings.platform.startsWith("Palm")));
             /* fall through */
+        case 13:
+            setRecordNbrInLogs(false);
+            /* fall through */
         }
-        setStringOpt("0.13",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.14",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
@@ -901,7 +907,68 @@ public class AppSettings implements gps.settings {
         setStringOpt(value,C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
     }
 
+    public boolean getRecordNbrInLogs() {
+        return getBooleanOpt(C_RECORDNBR_IN_LOGS_IDX, C_RECORDNBR_IN_LOGS_SIZE);
+    }
+    public void setRecordNbrInLogs(final boolean value) {
+        setBooleanOpt(value, C_RECORDNBR_IN_LOGS_IDX, C_RECORDNBR_IN_LOGS_SIZE);
+    }
+
+    
     public boolean isStoredSetting1() {
         return getNMEASetting1().length()>15;
+    }
+    
+    /** Look for the google map site key in a file called "gmapkey.txt"
+     * Will look in the output dir first, then in the source dir, then
+     * in the settings dir.
+     * @return
+     */
+    public static final String C_GMAP_KEY_FILENAME="gmapkey.txt";
+    public String getGoogleMapKey() {
+        String path="";
+        String gkey="";
+        boolean notok=true;
+        int i=3;
+        while (notok && i >=0) {
+            switch (i--) {
+            case 0:
+                path= CONFIG_FILE_NAME;
+                break;
+            case 1:
+                path=getBaseDirPath()+"/";
+                break;
+            case 2:
+                path=getLogFilePath();
+                break;
+            case 3:
+                path=getReportFileBasePath();
+                break;
+            }
+            path= path.substring(0, path.lastIndexOf('/'));
+            
+            File gmap=new File(path+"/"+C_GMAP_KEY_FILENAME,File.READ_ONLY);
+            
+            if(gmap.isOpen()) {
+                byte[] b= new byte[100];
+                int len;
+                len=gmap.readBytes(b, 0, 99);
+                gmap.close();
+                if(len!=0) {
+                    gkey=new String(b,0,len);
+                    int min;
+                    min=gkey.indexOf(10);
+                    if(min!=0) {
+                        gkey=gkey.substring(0, min);
+                    };
+                    min=gkey.indexOf(13);
+                    if(min!=0) {
+                        gkey=gkey.substring(0, min);
+                    };
+                    notok=false;
+                }
+            }
+        }
+        return gkey;
     }
 }

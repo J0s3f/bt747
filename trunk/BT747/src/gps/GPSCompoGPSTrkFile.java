@@ -108,7 +108,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
     private StringBuffer rec=new StringBuffer(1024);
     private StringBuffer wrec=new StringBuffer(1024);
 
-    public void writeRecord(GPSRecord s) {
+    public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         boolean prevField=false;
         //rec+=Convert.toString(m_recCount);

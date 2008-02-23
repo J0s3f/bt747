@@ -83,10 +83,10 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         }
     }
     
-    private String m_keyCode="";  // Google key code for web
+    private String googleKeyCode="";  // Google key code for web
     private String keyCode() {
-        if(m_keyCode.length()!=0) {
-            return ";key="+m_keyCode;
+        if(googleKeyCode.length()!=0) {
+            return ";key="+googleKeyCode;
         }
         return ""; // default
     }
@@ -345,7 +345,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(GPSRecord s) {
+    public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
         if(activeFields!=null) {
@@ -630,7 +630,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
      * @see gps.GPSFile#FinaliseFile()
      */
     public void finaliseFile() {
-        if(m_File!=null) {
+        if(this.isOpen()) {
             String footer;
             writeDataFooter();
             footer=  "clickString();\r\n" +
@@ -660,4 +660,16 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         
     }
     
+    /**
+     * @return Returns the googleKeyCode.
+     */
+    public String getGoogleKeyCode() {
+        return googleKeyCode;
+    }
+    /**
+     * @param googleKeyCode The googleKeyCode to set.
+     */
+    public void setGoogleKeyCode(String googleKeyCode) {
+        this.googleKeyCode = googleKeyCode;
+    }
 }
