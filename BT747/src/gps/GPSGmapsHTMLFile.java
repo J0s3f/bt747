@@ -169,7 +169,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(GPSRecord s) {
+    public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
         if(activeFields!=null) {
@@ -433,7 +433,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
      * @see gps.GPSFile#FinaliseFile()
      */
     public void finaliseFile() {
-        if(m_File!=null) {
+        if(this.isOpen()) {
             String footer;
             writeDataFooter();
             footer= "map.setCenter(new GLatLng(" +

@@ -1,8 +1,14 @@
+Version 1.41
+* Some changes in device recognition (given new device info with BT-Q1000).
+* Possibility to add record number in logs (gpx, kml).
+* A warning message is provided when no records were selected.
+
 Version 1.40
 * Deactivating device logging automatically during download.
   The original setting is restored after download.
   Some users reported a positive effect of disabling logging during download.
 * Changed GMAP format to be able to activate/de-activate parts of the track.
+* Possibility to set key for Google Map file through 'gmapkey.txt' file.
 
 Version 1.39
 * Settings of device can now be saved and restored (after battery removal for example)

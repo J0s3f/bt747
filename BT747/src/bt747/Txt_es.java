@@ -364,4 +364,18 @@ public class Txt_es {
         "Restaurar conf";
 
     public static final String METERS_ABBR = "m";
-}
+
+    public static final String WARNING =
+        "Warning";
+    public static final String NO_FILES_WERE_CREATED =
+        "No output files were created!" +
+        "||" +
+        "This usually means that either:" +
+        "|- The filter did not select any points" +
+        "|- The log does not contain any data" +
+        "|" +
+        "|Try selecting all points." +
+        "|If that does not work," +
+        "| it may be a bug.";
+    public static final String ADD_RECORD_NUMBER =
+        "Record nbr info in logs";}

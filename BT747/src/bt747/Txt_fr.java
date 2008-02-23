@@ -385,6 +385,20 @@ public class Txt_fr {
     public static final String RESTORE_SETTINGS =
         "Restaurer conf.";
     
+    public static final String WARNING =
+        "Alerte";
+    public static final String NO_FILES_WERE_CREATED =
+        "Aucun fichier de sortie!" +
+        "||" +
+        "Habituellement les causes sont:" +
+        "|- Les filtres son trop strictes" +
+        "|- Il n'y a pas de données dans le log" +
+        "|" +
+        "|Essayez la selection de tous les points" +
+        "|Si cela ne donne pas de succès," +
+        "|il y a peut-être un bug";
+    public static final String ADD_RECORD_NUMBER =
+        "Record nbr info in logs";    
 }
 
 

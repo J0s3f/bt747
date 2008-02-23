@@ -42,6 +42,7 @@ import gps.GPSPLTFile;
 import gps.GPSstate;
 import gps.GpsEvent;
 import gps.HoluxTrlLogConvert;
+import gps.settings;
 
 import bt747.Txt;
 import bt747.sys.Convert;
@@ -340,14 +341,17 @@ public class GPSLogGet extends Container {
                 }
                 if(event.target==m_btToGMAP) {
                     gpsFile=new GPSGmapsHTMLEncodedFile();
+                    ((GPSGmapsHTMLEncodedFile)gpsFile).setGoogleKeyCode(
+                            m_appSettings.getGoogleMapKey());
                     ext=".html";
                 }
 
-                    
+
+                gpsFile.setRecordNbrInLogs(m_appSettings.getRecordNbrInLogs());
                 gpsFile.setBadTrackColor(m_appSettings.getColorInvalidTrack());
                 for (int i = 0; i < usedFilters.length; i++) {
-                    m_Filters[i].setStartDate(dateToUTCepoch1970(m_StartDate));
-                    m_Filters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
+                    usedFilters[i].setStartDate(dateToUTCepoch1970(m_StartDate));
+                    usedFilters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
                 }
                 gpsFile.setFilters(usedFilters);
                 gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard(),

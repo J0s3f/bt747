@@ -688,6 +688,11 @@ public final class BT747LogConvert implements GPSLogConvert {
                     parseFile(gpsFile);
                 } while (gpsFile.nextPass());
                 gpsFile.finaliseFile();
+                if(gpsFile.getFilesCreated()==0) {
+                    (new MessageBox(
+                            Txt.WARNING,
+                            Txt.NO_FILES_WERE_CREATED)).popupBlockingModal();                                   
+                }
             }
             
             if(m_File!=null) {

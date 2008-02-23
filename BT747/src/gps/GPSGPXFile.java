@@ -361,6 +361,9 @@ public class GPSGPXFile extends GPSFile {
                 // No comments, so commented out.
                 rec.append("<cmt>");
                 rec.append("<![CDATA[");
+                if(recordNbrInLogs) {
+                    rec.append("#"+m_recCount+",");
+                }
                 rec.append(fixStr+","+rcrStr+","+hdopStr+","+nsatStr);
                 //                    //              <pdop> xsd:decimal </pdop> [0..1] ?
                 rec.append("]]>");
@@ -383,7 +386,7 @@ public class GPSGPXFile extends GPSFile {
      * @see gps.GPSFile#FinaliseFile()
      */
     public void finaliseFile() {
-        if(m_File!=null) {
+        if(this.isOpen()) {
             String footer;
             writeDataFooter();
             footer= "</gpx>";

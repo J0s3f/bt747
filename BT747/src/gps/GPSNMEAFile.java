@@ -55,7 +55,7 @@ public class GPSNMEAFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(GPSRecord s) {
+    public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         boolean prevField=false;
         String timeStr="";

@@ -64,6 +64,7 @@ public class BT747 extends MainWindow {
                 MenuBar.UNCHECKED+Txt.S_GPX_UTC_OFFSET_0, 
                 MenuBar.UNCHECKED+Txt.S_GPX_TRKSEG_WHEN_SMALL, 
                 MenuBar.UNCHECKED+Txt.S_GPS_DECODE_ACTIVE, 
+                MenuBar.UNCHECKED+Txt.ADD_RECORD_NUMBER, 
                 "-", 
                 MenuBar.UNCHECKED+Txt.S_FOCUS_HIGHLIGHT, 
                 "-", 
@@ -89,12 +90,14 @@ public class BT747 extends MainWindow {
     private static final int C_MENU_GPX_TRKSEG_BIGONLY = 105;
     /** MenuBar item for Settings->GPS Decode Active*/
     private static final int C_MENU_GPS_DECODE_ACTIVE = 106;
+    /** MenuBar item for Settings->Record number in logs*/
+    private static final int C_MENU_RECORDNMBR_IN_LOGS = 107;
     /** MenuBar item for Settings->Debug */
-    private static final int C_MENU_FOCUS_HIGHLIGHT = 108;
+    private static final int C_MENU_FOCUS_HIGHLIGHT = 109;
     /** MenuBar item for Settings->Debug */
-    private static final int C_MENU_DEBUG_ACTIVE = 110;
+    private static final int C_MENU_DEBUG_ACTIVE = 111;
     /** MenuBar item for Settings->Conn. Stats */
-    private static final int C_MENU_STATS_ACTIVE = 111;
+    private static final int C_MENU_STATS_ACTIVE = 112;
     /** MenuBar item for Info->About BT747 */
     private static final int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
@@ -222,7 +225,9 @@ public class BT747 extends MainWindow {
 
         m_MenuBar.setChecked(C_MENU_GPS_DECODE_ACTIVE,m_settings.getGpsDecode());
         m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
-        
+
+        m_MenuBar.setChecked(C_MENU_RECORDNMBR_IN_LOGS,m_settings.getRecordNbrInLogs());
+
         addTimer(this, 55);
 
     }
@@ -278,6 +283,9 @@ public class BT747 extends MainWindow {
                 case C_MENU_GPS_DECODE_ACTIVE:
                     m_settings.setGpsDecode(m_MenuBar.isChecked(C_MENU_GPS_DECODE_ACTIVE));
                     m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
+                    break;
+                case C_MENU_RECORDNMBR_IN_LOGS:
+                    m_settings.setRecordNbrInLogs(m_MenuBar.isChecked(C_MENU_GPS_DECODE_ACTIVE));
                     break;
                 case C_MENU_ABOUT:
                     new MessageBox(Txt.ABOUT_TITLE,
