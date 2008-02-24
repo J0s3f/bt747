@@ -360,16 +360,17 @@ public class Txt_de {
     public static final String RESTORE_SETTINGS =
         "Konf. laden";  // To restore device settings
     public static final String WARNING =
-        "Warning";
+        "Warnung";
     public static final String NO_FILES_WERE_CREATED =
-        "No output files were created!" +
+        "Es wurde keine Ausgabe-Datei erzeugt!" +
         "||" +
-        "This usually means that either:" +
-        "|- The filter did not select any points" +
-        "|- The log does not contain any data" +
+        "Dies kann folgende Ursachen haben:" +
+        "|- der Filter hat nicht alle Punkte gewählt" +
+        "|- das Log enthält keine Daten" +
         "|" +
-        "|Try selecting all points." +
-        "|If that does not work," +
-        "| it may be a bug.";
+        "|Versuchen Sie alle Punkte zu wählen." +
+        "|Wenn dies nicht funktioniert," +
+        "| ist es möglicherweise ein Fehler/Bug.";
     public static final String ADD_RECORD_NUMBER =
-        "Record nbr info in logs";}
+        "Rekord-Nummer im Log";
+}

@@ -1,6 +1,6 @@
 SETLOCAL
-SET DT=1.40_beta
-SET APP_LANG=de
+SET DT=1.41_beta
+SET APP_LANG=en
 del BT747*_%LANG%_*.zip
 dos2unix *.sh
 dos2unix *.command
