@@ -2,6 +2,7 @@ Version 1.41
 * Some changes in device recognition (given new device info with BT-Q1000).
 * Possibility to add record number in logs (gpx, kml).
 * A warning message is provided when no records were selected.
+* Date filter was not taken into account for advanced filter - solved.
 
 Version 1.40
 * Deactivating device logging automatically during download.

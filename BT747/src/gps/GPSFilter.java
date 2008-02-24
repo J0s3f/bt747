@@ -30,7 +30,7 @@ package gps;
  */
 public class GPSFilter {
     private int startDate=0; // Seconds since 1/1/1970
-    // TODO: could fix problem with negative values for date.
+    // TODO: could fix potential problem with negative values for date.
     private int endDate=0x7FFFFFFF; // Seconds since 1/1/1970
     private int validMask=0xFFFFFFFE; // Valid mask
     private int rcrMask=0xFFFFFFFF;
