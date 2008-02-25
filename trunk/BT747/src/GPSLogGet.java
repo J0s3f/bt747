@@ -297,6 +297,7 @@ public class GPSLogGet extends Container {
                     lc=new CSVLogConvert();
                 } else {
                     lc=new BT747LogConvert();
+                    ((BT747LogConvert)lc).setHolux(m_appSettings.getForceHolux241());
                 }
                 GPSFilter[] usedFilters;
                 Button z_Button=((Button)event.target);

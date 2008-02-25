@@ -134,7 +134,9 @@ public class AppSettings implements gps.settings {
     private static final int C_SETTING1_SBAS_SIZE=1;
     private static final int C_RECORDNBR_IN_LOGS_IDX=C_SETTING1_SBAS_IDX+C_SETTING1_SBAS_SIZE;
     private static final int C_RECORDNBR_IN_LOGS_SIZE=4;
-    private static final int C_NEXT_IDX=C_RECORDNBR_IN_LOGS_IDX+C_RECORDNBR_IN_LOGS_SIZE;
+    private static final int C_HOLUX241_IDX=C_RECORDNBR_IN_LOGS_IDX+C_RECORDNBR_IN_LOGS_SIZE;
+    private static final int C_HOLUX241_SIZE=1;
+    private static final int C_NEXT_IDX=C_HOLUX241_IDX+C_HOLUX241_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE=4;
     private static final int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -285,8 +287,11 @@ public class AppSettings implements gps.settings {
         case 13:
             setRecordNbrInLogs(false);
             /* fall through */
+        case 14:
+            setForceHolux241(false);
+            /* fall through */
         }
-        setStringOpt("0.14",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.15",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
@@ -912,6 +917,13 @@ public class AppSettings implements gps.settings {
     }
     public void setRecordNbrInLogs(final boolean value) {
         setBooleanOpt(value, C_RECORDNBR_IN_LOGS_IDX, C_RECORDNBR_IN_LOGS_SIZE);
+    }
+
+    public boolean getForceHolux241() {
+        return getBooleanOpt(C_HOLUX241_IDX, C_HOLUX241_SIZE);
+    }
+    public void setForceHolux241(final boolean value) {
+        setBooleanOpt(value, C_HOLUX241_IDX, C_HOLUX241_SIZE);
     }
 
     
