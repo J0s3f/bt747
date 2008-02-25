@@ -4,6 +4,7 @@ Version 1.41
 * A warning message is provided when no records were selected.
 * Date filter was not taken into account for advanced filter - solved.
 * CSV files can be read now - satellite information not interpreted yet.
+* Added option to force 'Holux 241' format and improved interpretation of Holux M241 format.
 
 Version 1.40
 * Deactivating device logging automatically during download.

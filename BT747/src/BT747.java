@@ -69,7 +69,8 @@ public class BT747 extends MainWindow {
                 MenuBar.UNCHECKED+Txt.S_FOCUS_HIGHLIGHT, 
                 "-", 
                 MenuBar.UNCHECKED+Txt.S_DEBUG, 
-                MenuBar.UNCHECKED+Txt.S_STATS 
+                MenuBar.UNCHECKED+Txt.S_STATS, 
+                MenuBar.UNCHECKED+"Holux 241" 
             },
             {   Txt.S_INFO,
                 Txt.S_ABOUT_BT747,
@@ -98,6 +99,8 @@ public class BT747 extends MainWindow {
     private static final int C_MENU_DEBUG_ACTIVE = 111;
     /** MenuBar item for Settings->Conn. Stats */
     private static final int C_MENU_STATS_ACTIVE = 112;
+    /** MenuBar item for Settings->Conn. Stats */
+    private static final int C_MENU_HOLUX_241 = 113;
     /** MenuBar item for Info->About BT747 */
     private static final int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
@@ -227,6 +230,7 @@ public class BT747 extends MainWindow {
         m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
 
         m_MenuBar.setChecked(C_MENU_RECORDNMBR_IN_LOGS,m_settings.getRecordNbrInLogs());
+        m_MenuBar.setChecked(C_MENU_HOLUX_241,m_settings.getForceHolux241());
 
         addTimer(this, 55);
 
@@ -273,6 +277,9 @@ public class BT747 extends MainWindow {
                     break;
                 case C_MENU_STATS_ACTIVE:
                     m_GPSstate.setStats(m_MenuBar.isChecked(C_MENU_STATS_ACTIVE));
+                    break;
+                case C_MENU_HOLUX_241:
+                    m_settings.setForceHolux241(m_MenuBar.isChecked(C_MENU_HOLUX_241));
                     break;
                 case C_MENU_GPX_UTC0:
                     m_settings.setGpxUTC0(m_MenuBar.isChecked(C_MENU_GPX_UTC0));

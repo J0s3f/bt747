@@ -24,6 +24,7 @@ import gps.convert.Conv;
 import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
+import bt747.sys.Vm;
 import bt747.ui.MessageBox;
 
 /** This class is used to convert the binary log to a new format.
@@ -64,7 +65,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         if(!passToFindFieldsActivatedInLog) {
             gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
         }
-        if((logFormat&0x80000000)!=0) {
+        if((logFormat&0x80000000L)!=0) {
             holux=true;
         }
         minRecordSize=BT747_dev.logRecordMinSize(logFormat, holux);
@@ -115,7 +116,6 @@ public final class BT747LogConvert implements GPSLogConvert {
         int satcnt;
         int satidx;
         int idx;
-        holux=false;
         
         recCount=0;
         logFormat=0;
@@ -374,9 +374,20 @@ public final class BT747LogConvert implements GPSLogConvert {
                                 foundRecord=true;
 
 
-                                int rcrIdx=offsetInBuffer-2-((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?8:0)+ 
-                                        (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?2:0)+ 
-                                        (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?2:0));
+                                int rcrIdx;
+                                if(!holux) {
+                                    rcrIdx=offsetInBuffer-2-
+                                            ((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?
+                                                                   BT747_dev.logFmtByteSizes[BT747_dev.FMT_DISTANCE_IDX]:0)+ 
+                                            (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?BT747_dev.logFmtByteSizes[BT747_dev.FMT_MILISECOND_IDX]:0)+ 
+                                            (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?BT747_dev.logFmtByteSizes[BT747_dev.FMT_RCR_IDX]:0));
+                                } else {
+                                    rcrIdx=offsetInBuffer-1-
+                                    ((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?
+                                                           BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_DISTANCE_IDX]:0)+ 
+                                    (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_MILISECOND_IDX]:0)+ 
+                                    (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_RCR_IDX]:0));
+                               }
                                 recCount++;
                                 //System.out.println(recCount);
                                 foundAnyRecord=true;
@@ -491,13 +502,13 @@ public final class BT747LogConvert implements GPSLogConvert {
                                         }
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_SPEED_IDX))!=0) {
-                                        int speed=
-                                            (0xFF&bytes[recIdx++])<<0
-                                            |(0xFF&bytes[recIdx++])<<8
-                                            |(0xFF&bytes[recIdx++])<<16
-                                            |(0xFF&bytes[recIdx++])<<24
-                                            ;
-                                        gpsRec.speed=Convert.toFloatBitwise(speed);
+                                            int speed=
+                                                (0xFF&bytes[recIdx++])<<0
+                                                |(0xFF&bytes[recIdx++])<<8
+                                                |(0xFF&bytes[recIdx++])<<16
+                                                |(0xFF&bytes[recIdx++])<<24
+                                                ;
+                                            gpsRec.speed=Convert.toFloatBitwise(speed);
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_HEADING_IDX))!=0) { 
                                         int heading=
@@ -595,6 +606,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                                         }
                                         satidx++;
                                     }
+                                    //Vm.debug("Offset1:"+recIdx+" "+rcrIdx);
                                     recIdx=rcrIdx;  // Sat information limit is rcrIdx
                                     if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
                                         gpsRec.rcr=
@@ -626,6 +638,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                                             ;
                                         gpsRec.distance=Convert.longBitsToDouble(distance);
                                     }
+                                    //Vm.debug("Offset:"+recIdx+" "+offsetInBuffer);
                                     if(valid) {
                                         gpsFile.writeRecord(gpsRec);
                                     }
@@ -769,5 +782,10 @@ public final class BT747LogConvert implements GPSLogConvert {
         return gpsRec;
     }
     
-    
+    /**
+     * @param holux The holux to set.
+     */
+    public void setHolux(boolean holux) {
+        this.holux = holux;
+    }
 }
