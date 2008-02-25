@@ -3,6 +3,7 @@ Version 1.41
 * Possibility to add record number in logs (gpx, kml).
 * A warning message is provided when no records were selected.
 * Date filter was not taken into account for advanced filter - solved.
+* CSV files can be read now - satellite information not interpreted yet.
 
 Version 1.40
 * Deactivating device logging automatically during download.

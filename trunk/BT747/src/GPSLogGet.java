@@ -29,6 +29,7 @@ import waba.ui.ProgressBar;
 import waba.util.Date;
 
 import gps.BT747LogConvert;
+import gps.CSVLogConvert;
 import gps.GPSCSVFile;
 import gps.GPSCompoGPSTrkFile;
 import gps.GPSFile;
@@ -42,7 +43,6 @@ import gps.GPSPLTFile;
 import gps.GPSstate;
 import gps.GpsEvent;
 import gps.HoluxTrlLogConvert;
-import gps.settings;
 
 import bt747.Txt;
 import bt747.sys.Convert;
@@ -293,6 +293,8 @@ public class GPSLogGet extends Container {
                 GPSLogConvert lc;
                 if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".trl")) {
                     lc=new HoluxTrlLogConvert();
+                } else if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".csv")) {
+                    lc=new CSVLogConvert();
                 } else {
                     lc=new BT747LogConvert();
                 }
