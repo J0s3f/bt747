@@ -126,7 +126,7 @@ public class GPSCSVFile extends GPSFile {
         
         if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             rec.setLength(0);
-            rec.append(Convert.toString(m_recCount));
+            rec.append(Convert.toString(s.recCount));
             if(activeFileFields.rcr!=0) {
                 rec.append(fieldSep);
             }
