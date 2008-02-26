@@ -70,7 +70,6 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                closeFile();
 //            }
             m_nbrOfPassesToGo--;
-            m_recCount=0;
             m_prevdate=0;
             m_isWayType=false;
             m_currentFilter=GPSFilter.C_TRKPT_IDX;

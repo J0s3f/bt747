@@ -37,8 +37,6 @@ import bt747.util.Date;
 public abstract class GPSFile {
     protected GPSFilter[] m_Filters = null;
 
-    protected int m_recCount;
-
     protected boolean m_oneFilePerDay;
 
     protected GPSRecord activeFields;
@@ -84,7 +82,6 @@ public abstract class GPSFile {
     public void initialiseFile(final String basename, final String ext,
             final int Card, int fileSeparationFreq) {
         m_FirstRecord = true;
-        m_recCount = 0;
         m_nbrOfPassesToGo = C_NUMBER_OF_PASSES - 1;
         m_ext = ext;
         m_basename = basename;
@@ -143,8 +140,6 @@ public abstract class GPSFile {
         String extraExt; // Extra extension for log file
         boolean newDate = false;
         int dateref = 0;
-
-        m_recCount++;
 
         if (activeFields.utc != 0) {
             setUTCTime(t, s.utc); // Initialisation needed later too!

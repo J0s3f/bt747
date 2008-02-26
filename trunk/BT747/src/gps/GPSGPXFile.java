@@ -59,7 +59,6 @@ public class GPSGPXFile extends GPSFile {
 //                closeFile();
 //            }
             m_nbrOfPassesToGo--;
-            m_recCount=0;
             m_prevdate=0;
             m_isWayType=false;
             m_currentFilter=GPSFilter.C_TRKPT_IDX;
@@ -232,13 +231,13 @@ public class GPSGPXFile extends GPSFile {
                 }
                 if(m_newTrack) {
                     StringBuffer tx=new StringBuffer();
-                    String tmp=Convert.toString(m_recCount);
+                    String tmp=Convert.toString(s.recCount);
                     int nZeros=5-tmp.length();
                     if(nZeros<0) {
                         nZeros=0;
                     }
                     tx.append(zeros,0,nZeros);
-                    m_TrackName="#"+tx.toString()+Convert.toString(m_recCount)+"#";
+                    m_TrackName="#"+tx.toString()+Convert.toString(s.recCount)+"#";
                 }
                 if((activeFields.utc!=0)) {
                     rec.append(timeStr);
@@ -246,7 +245,7 @@ public class GPSGPXFile extends GPSFile {
                         m_TrackName+=" "+timeStr;
                     }
                 } else {
-                    rec.append(Convert.toString(m_recCount));
+                    rec.append(Convert.toString(s.recCount));
                 }
                 rec.append("</name>\r\n");
                 
@@ -362,7 +361,7 @@ public class GPSGPXFile extends GPSFile {
                 rec.append("<cmt>");
                 rec.append("<![CDATA[");
                 if(recordNbrInLogs) {
-                    rec.append("#"+m_recCount+",");
+                    rec.append("#"+s.recCount+",");
                 }
                 rec.append(fixStr+","+rcrStr+","+hdopStr+","+nsatStr);
                 //                    //              <pdop> xsd:decimal </pdop> [0..1] ?

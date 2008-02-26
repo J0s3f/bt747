@@ -246,6 +246,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                             int curLogFormat=0;
                             // Defaults
                             gpsRec=new GPSRecord();  // Value after earliest date
+                            gpsRec.recCount=++recCount;
                             
                             while(records[field_nbr]!=FMT_NO_FIELD) {
                                 String field=Fields[field_nbr];
@@ -269,6 +270,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         break;
                                     case FMT_REC_NBR:
                                         gpsRec.recCount=Convert.toInt(Fields[field_nbr]);
+                                        recCount=gpsRec.recCount;
                                         break;
                                     case FMT_DATE:
                                     {

@@ -111,7 +111,6 @@ public class GPSCompoGPSTrkFile extends GPSFile {
     public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         boolean prevField=false;
-        //rec+=Convert.toString(m_recCount);
         boolean trackpt;
         boolean waypt;
         trackpt=!m_isWayType&&m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
@@ -173,7 +172,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
             if(waypt) {
                 wrec.setLength(0);
                 wrec.append("W  ");
-                wrec.append("waypt-"+m_recCount); // name
+                wrec.append("waypt-"+s.recCount); // name
                 wrec.append(rec.substring(2));
             }
             rec.append("s ");
@@ -219,7 +218,6 @@ public class GPSCompoGPSTrkFile extends GPSFile {
     public boolean nextPass() {
         super.nextPass();
         if(!m_isWayType) {
-            m_recCount=0;
             m_prevdate=0;
             m_isWayType=true;
             m_ext=".WPT";

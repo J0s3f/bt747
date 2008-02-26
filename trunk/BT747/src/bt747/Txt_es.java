@@ -79,18 +79,33 @@ public class Txt_es {
     public static final String DISCLAIMER_TITLE=
         "Renuncia";
     public static final String DISCLAIMER_TXT=
-        "Software is provided 'AS IS,' without" + 
-        "|a warranty of any kind. ALL EXPRESS" + 
-        "|OR IMPLIED REPRESENTATIONS AND " + 
-        "|WARRANTIES, INCLUDING ANY IMPLIED" + 
-        "|WARRANTY OF MERCHANTABILITY," + 
-        "|FITNESS FOR A PARTICULAR PURPOSE" + 
-        "|OR NON-INFRINGEMENT, ARE HEREBY" + 
-        "|EXCLUDED. THE ENTIRE RISK ARISING " + 
-        "|OUT OF USING THE SOFTWARE IS" + 
-        "|ASSUMED BY THE USER. See the" + 
-        "|GNU General Public License for more" + 
-        "|details." ;
+        "El programa se proporciona 'COMO" + 
+        "|ESTA',sin garantía de ningún tipo." + 
+        "|Todas las representaciones expresas" + 
+        "|o implícitas y las garantías," + 
+        "|incluyendo cualquier garantía de" + 
+        "|comerciabilidad, adecuación para un" + 
+        "|uso particular o no-infringimiento" + 
+        "|están aquí excluidas. Los riesgros" + 
+        "|que surgan por emplear este" + 
+        "|programa serán asumidos por el" + 
+        "|usuario. Ver la licencia pública" + 
+        "|general (GNU) para más detalles." +
+        "|" +
+        "TODAS LAS REPRESENTACIONES EXPRESAS" +
+        "|OF IMPLÍCITAS Y LAS GARANTÍAS," +
+        "|INCLUYENDO CUALQUIER GARANTÍA" +
+        "|IMPLÍCITA DE COMERCIABILIDAD," +
+        "|ADECUACION (QUE SEA ADECUADO" +
+        "|O TENGA LAS CARACTERISTICAS" +
+        "|NECESARIAS) PARA UN USO PARTICULAR" +
+        "|O NO-INFRINGIMIENTO, ESTÁN AQUÍ" +
+        "|EXCLUIDAS.  LOS RIESGOS QUE SURJAN" +
+        "|POR UTILIZAR EL SOFTWARE SERAN" +
+        "|ASUMIDOS POR EL USUARIO.  VER LA" +
+        "|LICENCIA PUBLICA GENERAL GNU PARA MAS DETALLE" ;
+
+
 
     // TAB identification
     public static final String C_FMT  = "Fmt";

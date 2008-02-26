@@ -64,7 +64,6 @@ public class GPSKMLFile extends GPSFile {
 //              closeFile();  // Close every time - if single file, it gets reopened.
 //          }
           m_nbrOfPassesToGo--;
-          m_recCount=0;
           m_prevdate=0;
 //          if(!m_multipleFiles) {
 //            writeDataFooter();
@@ -370,7 +369,7 @@ public class GPSKMLFile extends GPSFile {
                             );
                     } else {
                         rec.append("IDX: ");
-                        rec.append(Convert.toString(m_recCount));
+                        rec.append(Convert.toString(s.recCount));
                     }
                     rec.append("</name>\r\n");
                     
@@ -438,7 +437,7 @@ public class GPSKMLFile extends GPSFile {
                     rec.append("<![CDATA[");
                     if(recordNbrInLogs) {
                         rec.append("IDX: ");
-                        rec.append(Convert.toString(m_recCount));
+                        rec.append(Convert.toString(s.recCount));
                         rec.append("<br/>");
                     }
                     if(activeFields.utc!=0) {
