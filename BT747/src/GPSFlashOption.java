@@ -17,6 +17,10 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import bt747.sys.Convert;
+import bt747.ui.MessageBox;
+
+import bt747.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Edit;
@@ -25,11 +29,6 @@ import waba.ui.Label;
 
 import gps.GPSstate;
 import gps.GpsEvent;
-
-import bt747.Txt;
-import bt747.sys.Convert;
-import bt747.ui.Button;
-import bt747.ui.MessageBox;
 /**
  * @author Mario De Weerd
  */
@@ -58,33 +57,33 @@ public class GPSFlashOption extends Container {
     protected void onStart() {
         super.onStart();
         
-        add(new Label(Txt.TIMESLEFT),LEFT,TOP);
+        add(new Label("TimesLeft"),LEFT,TOP);
         add(m_userOptionTimesLeft= new Edit(),AFTER,SAME);
         m_userOptionTimesLeft.setEnabled(false);
-        add(new Label(Txt.UPDATERATE),LEFT,AFTER);
+        add(new Label("Update Rate (Hz)"),LEFT,AFTER);
         add(m_edUpdateRate= new Edit(),AFTER,SAME);
-        add(new Label(Txt.BAUDRATE),LEFT,AFTER);
+        add(new Label("Baud Rate"),LEFT,AFTER);
         add(m_edBaudRate= new Edit(),AFTER,SAME);
         m_edBaudRate.setEditable(false);  // To protect the user
         m_edBaudRate.setEnabled(false);
-        add(new Label("GLL " + Txt.PERIOD_ABBREV),LEFT,AFTER);
+        add(new Label("GLL Per"),LEFT,AFTER);
         add(m_edGLL_Period= new Edit(),AFTER,SAME);
-        add(new Label("RMC " + Txt.PERIOD_ABBREV),AFTER,SAME);
+        add(new Label("RMC Per"),AFTER,SAME);
         add(m_edRMC_Period= new Edit(),AFTER,SAME);
-        add(new Label("VTG " + Txt.PERIOD_ABBREV),LEFT,AFTER);
+        add(new Label("VTG Per"),LEFT,AFTER);
         add(m_edVTG_Period= new Edit(),AFTER,SAME);
-        add(new Label("GSA " + Txt.PERIOD_ABBREV),AFTER,SAME);
+        add(new Label("GSA Per"),AFTER,SAME);
         add(m_edGSA_Period= new Edit(),AFTER,SAME);
-        add(new Label("GSV " + Txt.PERIOD_ABBREV),LEFT,AFTER);
+        add(new Label("GSV Per"),LEFT,AFTER);
         add(m_edGSV_Period= new Edit(),AFTER,SAME);
-        add(new Label("GGA " + Txt.PERIOD_ABBREV),AFTER,SAME);
+        add(new Label("GGA Per"),AFTER,SAME);
         add(m_edGGA_Period= new Edit(),AFTER,SAME);
-        add(new Label("ZDA " + Txt.PERIOD_ABBREV),LEFT,AFTER);
+        add(new Label("ZDA Per"),LEFT,AFTER);
         add(m_edZDA_Period= new Edit(),AFTER,SAME);
-        add(new Label("MCHN " + Txt.PERIOD_ABBREV),AFTER,SAME);
+        add(new Label("MCHN Per"),AFTER,SAME);
         add(m_edMCHN_Period= new Edit(),AFTER,SAME);
         
-        m_btSet = new Button(Txt.SET);
+        m_btSet = new Button("SET");
         add(m_btSet, CENTER, AFTER+3); //$NON-NLS-1$
         
     }
@@ -120,9 +119,13 @@ public class GPSFlashOption extends Container {
     
     public void setSettings() {
         MessageBox mb;
-        String [] mbStr={Txt.WRITEFLASH,Txt.ABORT};
-        mb = new MessageBox(Txt.TITLE_ATTENTION,
-                Txt.TXT_FLASH_LIMITED_WRITES,
+        String [] mbStr={"Write Flash","Abort"};
+        mb = new MessageBox("Attention",
+                "The number of writes to the flash|" +
+                "is limited and a change in settings|" +
+                "could render your device inoperable|" +
+                "(e.g., a baud rate change)|" +
+                "ABORT by clicking abort!!",
                 mbStr);                                 
         mb.popupBlockingModal();      
         if (mb.getPressedButtonIndex()==0){

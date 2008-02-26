@@ -18,7 +18,6 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 package gps;
-import bt747.Txt;
 import bt747.sys.Convert;
 import bt747.sys.Vm;
 
@@ -33,7 +32,29 @@ public final class BT747_dev {  // dev as in device
      * Entries are in order.  The entry position corresponds to the
      * bit position in the log format 'byte'.
      */
-    public static final String [] logFmtItems = Txt.logFmtItems;
+    public static final String [] logFmtItems = {
+            "UTC",      // = 0x00001    // 0
+            "VALID",    // = 0x00002    // 1
+            "LATITUDE", // = 0x00004    // 2
+            "LONGITUDE",// = 0x00008    // 3
+            "HEIGHT",   // = 0x00010    // 4
+            "SPEED",    // = 0x00020    // 5
+            "HEADING",  // = 0x00040    // 6
+            "DSTA",     // = 0x00080    // 7
+            "DAGE",     // = 0x00100    // 8
+            "PDOP",     // = 0x00200    // 9
+            "HDOP",     // = 0x00400    // A
+            "VDOP",     // = 0x00800    // B
+            "NSAT",     // = 0x01000    // C
+            "SID",      // = 0x02000    // D
+            "ELEVATION",// = 0x04000    // E
+            "AZIMUTH",  // = 0x08000    // F
+            "SNR",      // = 0x10000    // 10
+            "RCR",      // = 0x20000    // 11
+            "MILISECOND",// = 0x40000   // 12
+            "DISTANCE",  // = 0x80000    // 13
+            "HOLUX M-241" // =0x80000000
+    };
     /** Index of bit for log format setting */
     public static final int FMT_UTC_IDX =        0;
     /** Index of bit for log format setting */
@@ -174,7 +195,11 @@ public final class BT747_dev {  // dev as in device
     public static final int RCR_APPZ_MASK=    0x8000;
     public static final int RCR_ALL_APP_MASK=  0xFFF0;
     
-    public static final String[]C_STR_RCR = Txt.C_STR_RCR;
+    public static final String[]C_STR_RCR = { "Time", "Speed", "Distance", "Button",
+    "App1","App2","App3","App4",
+    "App5","App6","App7","App8",
+    "App9","AppX","AppY","AppZ"
+    };
     public static final int C_RCR_COUNT = 16;
     
     // PMTK182 commands/replies.
@@ -376,21 +401,6 @@ public final class BT747_dev {  // dev as in device
      * Packet success. 
      */
     public static final String PMTK_ACK_SUCCEEDED_STR = Convert.toString(PMTK_ACK_SUCCEEDED);
-
-    
-    
-    /**********************************
-     * Holux specific
-     */
-
-    public static final String HOLUX_MAIN_CMD = "HOLUX241,";
-    public static final int HOLUX_API_SET_NAME  = 4;
-    public static final int HOLUX_API_Q_NAME  = 5;
-    public static final int HOLUX_API_CONFIRM_NAME  = 6; // Not sure what this is.
-
-    public static final int HOLUX_API_DT_NAME  = 5;
-    
-    
     
     /** Get the size of the log header in the device.
      * @param p_logFormat The log format of the device
@@ -398,7 +408,7 @@ public final class BT747_dev {  // dev as in device
      * 
      * @return Size of the header
      */
-    public static final int logRecordMinSize(final int p_logFormat, final boolean holux) {
+    static public final int logRecordMinSize(final int p_logFormat, final boolean holux) {
         int bits=p_logFormat;
         int index = 0;
         int total = 0;
@@ -422,7 +432,7 @@ public final class BT747_dev {  // dev as in device
                         total+=byteSizes[index];
                     } catch (Exception e) {
                         // TODO: Check when this happens.
-                        Vm.debug(Txt.C_BAD_LOG_FORMAT);
+                        Vm.debug("Bad log format");
                     }
                     break;
                 }
@@ -437,7 +447,7 @@ public final class BT747_dev {  // dev as in device
      * @param p_Holux TODO
      * @return
      */
-    public static final int logRecordSize(final int p_logFormat, final boolean holux, final int sats) {
+    static public final int logRecordSize(final int p_logFormat, final boolean holux, final int sats) {
         int cnt=0;
         int[] byteSizes;
         if(holux) {
@@ -455,7 +465,7 @@ public final class BT747_dev {  // dev as in device
         return cnt+logRecordMinSize(p_logFormat, false);
     }
     
-    public static final int logRecordMaxSize(final int p_logFormat, final boolean holux) {
+    static public final int logRecordMaxSize(final int p_logFormat, final boolean holux) {
         return logRecordSize(p_logFormat, holux, FMT_MAX_SATS);
     }
 

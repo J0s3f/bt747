@@ -55,7 +55,7 @@ public class GPSNMEAFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public void writeRecord(GPSRecord s) {
         super.writeRecord(s);
         boolean prevField=false;
         String timeStr="";
@@ -460,7 +460,7 @@ public class GPSNMEAFile extends GPSFile {
 //                15   = Position Dilution of Precision (PDOP)
 //                16   = Horizontal Dilution of Precision (HDOP)
 //                17   = Vertical Dilution of Precision (VDOP)
-                if((s.sid!=null)&&(m_NMEAout&(1<<BT747_dev.NMEA_SEN_GSA_IDX))!=0) {
+                if((m_NMEAout&(1<<BT747_dev.NMEA_SEN_GSA_IDX))!=0) {
                     rec.setLength(0);
                     rec.append("GPGSA,A,");
                     if((activeFields.valid!=0)) {

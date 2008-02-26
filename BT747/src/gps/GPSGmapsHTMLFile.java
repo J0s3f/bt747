@@ -57,6 +57,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
 //                closeFile();
 //            }
             m_nbrOfPassesToGo--;
+            m_recCount=0;
             m_prevdate=0;
             m_isWayType=false;
             m_currentFilter=GPSFilter.C_TRKPT_IDX;
@@ -168,7 +169,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public void writeRecord(GPSRecord s) {
         super.writeRecord(s);
 
         if(activeFields!=null) {
@@ -188,7 +189,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
                 
                 String timeStr="";  // String that will represent time
                 String fixStr="";   // String that will represent fix type
-                String rcrlStr="";   // String that will represent log reason
+                String rcrStr="";   // String that will represent log reason
                 String hdopStr="";  // String that will represent HDOP
                 String nsatStr="";  // String that will represent number of sats
                 
@@ -199,7 +200,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
                 //                "  <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 //                "    <ele>12.863281</ele>"+
                 //                "    <time>2005-05-16T11:49:06Z</time>"+
-                //                "    <name>Cala Sant Vicenï¿½ - Mallorca</name>"+
+                //                "    <name>Cala Sant Vicenç - Mallorca</name>"+
                 //                "    <sym>City</sym>"+
                 //                "  </wpt>"+
                 
@@ -432,7 +433,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
      * @see gps.GPSFile#FinaliseFile()
      */
     public void finaliseFile() {
-        if(this.isOpen()) {
+        if(m_File!=null) {
             String footer;
             writeDataFooter();
             footer= "map.setCenter(new GLatLng(" +

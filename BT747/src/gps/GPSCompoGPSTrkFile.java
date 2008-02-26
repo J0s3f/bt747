@@ -21,7 +21,7 @@ package gps;
 
 import bt747.sys.Convert;
 
-/**Class to write a CompeGPS TRK file or WPT file.
+/**Class to write a PLT file (OZI).
  * @author Mario De Weerd
  */
 public class GPSCompoGPSTrkFile extends GPSFile {
@@ -56,18 +56,10 @@ public class GPSCompoGPSTrkFile extends GPSFile {
     // "P": device information, version, ...
     
 
-    private boolean m_isWayType;
-    
-    public GPSCompoGPSTrkFile() {
-        super();
-        C_NUMBER_OF_PASSES=2;
-    }
 
-    public void initialiseFile(final String basename, final String ext, final int Card, int oneFilePerDay) {
-        super.initialiseFile(basename, ext, Card, oneFilePerDay);
-        m_isWayType=false;
-    }
-     
+    
+
+    
     public void writeFileHeader(final String s) {
         super.writeFileHeader(s);
         writeTxt("G  WGS 84\r\n"  // WGS 84
@@ -102,21 +94,21 @@ public class GPSCompoGPSTrkFile extends GPSFile {
 //        -27.348610, 153.055867,0,-777,36169.6307194, 09-Jan-99, 3:08:14 
     
     
+    private static final String[] C_MONTHS = {
+            "JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"
+    };
+    
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
     private StringBuffer rec=new StringBuffer(1024);
-    private StringBuffer wrec=new StringBuffer(1024);
 
-    public void writeRecord(final GPSRecord s) {
+    public void writeRecord(GPSRecord s) {
         super.writeRecord(s);
         boolean prevField=false;
-        boolean trackpt;
-        boolean waypt;
-        trackpt=!m_isWayType&&m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
-        waypt=m_isWayType&&m_Filters[GPSFilter.C_WAYPT_IDX].doFilter(s);
+        //rec+=Convert.toString(m_recCount);
         
-        if(activeFields!=null && (trackpt || waypt) ) {
+        if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             rec.setLength(0);
             
             rec.append("T  A ");
@@ -168,32 +160,17 @@ public class GPSCompoGPSTrkFile extends GPSFile {
             } else {
                 rec.append("01-JAN-70 00:00:00 ");
             }
-
-            if(waypt) {
-                wrec.setLength(0);
-                wrec.append("W  ");
-                wrec.append("waypt-"+s.recCount); // name
-                wrec.append(rec.substring(2));
-            }
+      
             rec.append("s ");
             
             
 
             if(activeFields.height!=0) {
                 rec.append(Convert.toString(s.height,1));
-                if(waypt) {
-                    wrec.append(Convert.toString(s.height,1));
-                }
             } else {
-                rec.append("0.0");
-                if(waypt) {
-                    wrec.append("0.0");
-                }
+                rec.append("0.0 ");
             }
             rec.append(" 0.0 0.0 0.0 0 -1000.0 -1.0 ");
-//            if(waypt) {
-//                wrec.append("Description")
-//            }
             if(activeFields.nsat!=0) {
                 rec.append((s.nsat&0xFF00)>>8);  // in use
                 rec.append(" ");
@@ -203,29 +180,10 @@ public class GPSCompoGPSTrkFile extends GPSFile {
             rec.append("-1.0 -1.0");
 
             rec.append("\r\n");
-            if(!trackpt) {
-                rec.setLength(0);
-            }
-            if(waypt) {
-              rec.append(wrec);
-              rec.append("\r\n");
-            }
             writeTxt(rec.toString());
             rec.setLength(0);
         } // activeFields!=null
     }    
-
-    public boolean nextPass() {
-        super.nextPass();
-        if(!m_isWayType) {
-            m_prevdate=0;
-            m_isWayType=true;
-            m_ext=".WPT";
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 
 //    public void finaliseFile() {

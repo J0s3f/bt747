@@ -33,7 +33,7 @@ import gps.GPSFilterAdvanced;
 import gps.GPSstate;
 import gps.GpsEvent;
 
-import bt747.Txt;
+import bt747.Version;
 import bt747.ui.MessageBox;
 
 /** Main class (application entry)
@@ -54,72 +54,53 @@ public class BT747 extends MainWindow {
     /** The application's MenuBar */
     private static MenuBar     m_MenuBar;
     /** The content of the menu bar */
-    private static final String menu[][] = {
-            {   Txt.S_FILE,
-                Txt.S_EXIT_APPLICATION},  
-            {   Txt.S_SETTINGS,
-                 Txt.S_RESTART_CONNECTION,
-                 Txt.S_STOP_CONNECTION,
-                "-", 
-                MenuBar.UNCHECKED+Txt.S_GPX_UTC_OFFSET_0, 
-                MenuBar.UNCHECKED+Txt.S_GPX_TRKSEG_WHEN_SMALL, 
-                MenuBar.UNCHECKED+Txt.S_GPS_DECODE_ACTIVE, 
-                MenuBar.UNCHECKED+Txt.ADD_RECORD_NUMBER, 
-                "-", 
-                MenuBar.UNCHECKED+Txt.S_FOCUS_HIGHLIGHT, 
-                "-", 
-                MenuBar.UNCHECKED+Txt.S_DEBUG, 
-                MenuBar.UNCHECKED+Txt.S_STATS, 
-                MenuBar.UNCHECKED+"Holux 241" 
+    private final String menu[][] = {
+            {"File","Exit application"},
+            {"Settings","Restart connection","Stop connection",
+                "-",
+                MenuBar.UNCHECKED+"GPX UTC offset 0",
+                MenuBar.UNCHECKED+"GPX Trkseg when small",
+                MenuBar.UNCHECKED+"GPS Decode active",
+                "-",
+                MenuBar.UNCHECKED+"Focus Highlight",
+                "-",
+                MenuBar.UNCHECKED+"Debug",
+                MenuBar.UNCHECKED+"Stats"
             },
-            {   Txt.S_INFO,
-                Txt.S_ABOUT_BT747,
-                Txt.S_ABOUT_SUPERWABA,
-                Txt.S_INFO}    
+            {"Info","About BT747","About SuperWaba VM","Info"}
     };
     /** MenuBar item for File->Exit */
-    private static final int C_MENU_FILE_EXIT = 001;
+    private final static int C_MENU_FILE_EXIT = 001;
     /** MenuBar item for Settings->Restart connection */
-//    private static final int C_MENU_CONNECTION_SETTINGS = 101;
+//    private final static int C_MENU_CONNECTION_SETTINGS = 101;
 //    /** MenuBar item for Settings->Restart connection */
-    private static final int C_MENU_RESTART_CONNECTION = 101;
+    private final static int C_MENU_RESTART_CONNECTION = 101;
     /** MenuBar item for Settings->Stop connection */
-    private static final int C_MENU_STOP_CONNECTION = 102;
+    private final static int C_MENU_STOP_CONNECTION = 102;
     /** MenuBar item for Settings->GPX UTC 0 */
-    private static final int C_MENU_GPX_UTC0 = 104;
+    private final static int C_MENU_GPX_UTC0 = 104;
     /** MenuBar item for Settings->GPX Trk Sep when big only */
-    private static final int C_MENU_GPX_TRKSEG_BIGONLY = 105;
+    private final static int C_MENU_GPX_TRKSEG_BIGONLY = 105;
     /** MenuBar item for Settings->GPS Decode Active*/
-    private static final int C_MENU_GPS_DECODE_ACTIVE = 106;
-    /** MenuBar item for Settings->Record number in logs*/
-    private static final int C_MENU_RECORDNMBR_IN_LOGS = 107;
+    private final static int C_MENU_GPS_DECODE_ACTIVE = 106;
     /** MenuBar item for Settings->Debug */
-    private static final int C_MENU_FOCUS_HIGHLIGHT = 109;
+    private final static int C_MENU_FOCUS_HIGHLIGHT = 108;
     /** MenuBar item for Settings->Debug */
-    private static final int C_MENU_DEBUG_ACTIVE = 111;
+    private final static int C_MENU_DEBUG_ACTIVE = 110;
     /** MenuBar item for Settings->Conn. Stats */
-    private static final int C_MENU_STATS_ACTIVE = 112;
-    /** MenuBar item for Settings->Conn. Stats */
-    private static final int C_MENU_HOLUX_241 = 113;
+    private final static int C_MENU_STATS_ACTIVE = 111;
     /** MenuBar item for Info->About BT747 */
-    private static final int C_MENU_ABOUT = 201;
+    private final static int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
-    private static final int C_MENU_ABOUT_SW = 202;
+    private final static int C_MENU_ABOUT_SW = 202;
     /** MenuBar item for Info->Info */
-    private static final int C_MENU_INFO = 203;   
+    private final static int C_MENU_INFO = 203;   
     
     /** The tab panel */
     private static TabPanel    m_TabPanel;
     /** The captions for the tab panel */
     private final String c_tpCaptions[]= {
-            Txt.C_FMT,
-            Txt.C_CTRL,
-            Txt.C_LOG,
-            Txt.C_FILE,
-            Txt.C_FLTR,
-            Txt.C_EASY,
-            Txt.C_CON,
-            Txt.C_OTHR
+            "FMT","Ctrl","Log","File","Fltr","Easy","Con","Othr"
     };
     /** Tab Panel container - Logger control/configuration */
     private static GPSLogFormat  m_GPSLogCtrl;
@@ -162,10 +143,9 @@ public class BT747 extends MainWindow {
         }
         orgAutoOnOff=waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off causing BT trouble
 
-        Txt.init();
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
-        setTitle(Txt.S_TITLE); 
+        setTitle("BT747 - MTK Logger Control");
         Settings.setUIStyle(Settings.Flat);
         Settings.keyboardFocusTraversable = m_settings.isTraversableFocus();
         for (int i = 0; i < m_GPSFilter.length; i++) {
@@ -183,7 +163,7 @@ public class BT747 extends MainWindow {
 
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
         // Progress bar to show download progress (separate thread)
-        m_ProgressLabel=new Label(Txt.LB_DOWNLOAD); 
+        m_ProgressLabel=new Label("Download");
         m_ProgressBar=new ProgressBar();
         add(m_ProgressLabel,LEFT,BOTTOM);
         m_ProgressLabel.setRect(LEFT,BOTTOM,PREFERRED,PREFERRED);
@@ -203,7 +183,7 @@ public class BT747 extends MainWindow {
         m_TabPanel.setPanel(C_GPS_LOGGET_IDX,m_GPSLogGet = new GPSLogGet(m_GPSstate,m_ProgressBar,m_settings,m_GPSFilter,m_GPSFilterAdv));
         m_TabPanel.setPanel(C_GPS_FILECTRL_IDX,m_GPSLogFile = new GPSLogFile(m_settings));
         m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX,m_GPSFiltersTabPanel = new GPSFiltersTabPanel(m_settings, m_GPSFilter, m_GPSFilterAdv));
-        m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX,m_GPSLogEasy = new GPSLogEasy(m_GPSstate, m_settings));
+        m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX,m_GPSLogEasy = new GPSLogEasy(m_GPSstate));
         m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,m_GPSconctrl = new GPSconctrl(m_GPSstate,m_settings));
         //m_TabPanel.setPanel(C_GPS_FLASH_IDX,m_GPSFlash = new GPSFlashOption(m_GPSstate));
         m_TabPanel.setPanel(C_GPS_FLASH_IDX,new GPSOtherTabPanel(m_GPSstate, m_settings));
@@ -228,10 +208,8 @@ public class BT747 extends MainWindow {
 
         m_MenuBar.setChecked(C_MENU_GPS_DECODE_ACTIVE,m_settings.getGpsDecode());
         m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
-
-        m_MenuBar.setChecked(C_MENU_RECORDNMBR_IN_LOGS,m_settings.getRecordNbrInLogs());
-        m_MenuBar.setChecked(C_MENU_HOLUX_241,m_settings.getForceHolux241());
-
+        
+        
         addTimer(this, 55);
 
     }
@@ -249,10 +227,10 @@ public class BT747 extends MainWindow {
                 switch (m_MenuBar.getSelectedMenuItem()) {
                 case C_MENU_FILE_EXIT:
                     MessageBox mb;
-                    String []szExitButtonArray = {Txt.YES,Txt.NO};  
-                    mb = new MessageBox(
-                            Txt.TITLE_ATTENTION,
-                            Txt.CONFIRM_APP_EXIT, 
+                    String []szExitButtonArray = {"Yes","No"};
+                    mb = new MessageBox("Attention",
+                            "You are about to exit the application|" +
+                            "Confirm application exit?",
                             szExitButtonArray);				 					
                     mb.popupBlockingModal();										
                     if (mb.getPressedButtonIndex()==0){
@@ -278,9 +256,6 @@ public class BT747 extends MainWindow {
                 case C_MENU_STATS_ACTIVE:
                     m_GPSstate.setStats(m_MenuBar.isChecked(C_MENU_STATS_ACTIVE));
                     break;
-                case C_MENU_HOLUX_241:
-                    m_settings.setForceHolux241(m_MenuBar.isChecked(C_MENU_HOLUX_241));
-                    break;
                 case C_MENU_GPX_UTC0:
                     m_settings.setGpxUTC0(m_MenuBar.isChecked(C_MENU_GPX_UTC0));
                     break;
@@ -291,22 +266,48 @@ public class BT747 extends MainWindow {
                     m_settings.setGpsDecode(m_MenuBar.isChecked(C_MENU_GPS_DECODE_ACTIVE));
                     m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
                     break;
-                case C_MENU_RECORDNMBR_IN_LOGS:
-                    m_settings.setRecordNbrInLogs(m_MenuBar.isChecked(C_MENU_GPS_DECODE_ACTIVE));
-                    break;
                 case C_MENU_ABOUT:
-                    new MessageBox(Txt.ABOUT_TITLE,
-                            Txt.ABOUT_TXT
+                    new MessageBox("About BT747 V"+Version.VERSION_NUMBER,
+                            " Created with SuperWaba" +
+                            "|http://www.superwaba.org"+
+                            "|" +Version.BUILD_STR +
+                            "|Written by Mario De Weerd" +
+                            "|m.deweerd@ieee.org"+
+                            "|"+
+                            "|This application allows control of" +
+                            "|the BT747 device." +
+                            "|Full control using bluetooth is enabled" +
+                            "|by applying a hardware hack.  " +
+                            "|You can find information on the web."
                     ).popupModal();
                     break;              
                 case C_MENU_ABOUT_SW:
-                    new MessageBox(Txt.ABOUT_SUPERWABA_TITLE,
-                            Txt.ABOUT_SUPERWABA_TXT).popupModal(); 
+                    new MessageBox("About SuperWaba",
+                            "SuperWaba Virtual Machine "+ Settings.versionStr +
+                            "|Copyright (c)2000-2007" +
+                            "|Guilherme Campos Hazan" +
+                            "|www.superwaba.com|" +
+                            "|" +
+                            "SuperWaba is an enhanced version" +
+                            "|of the Waba Virtual Machine" +
+                            "|Copyright (c) 1998,1999 WabaSoft" +
+                    "|www.wabasoft.com").popupModal();
                     break;                  
                 case C_MENU_INFO:    					
                     new MessageBox(
-                            Txt.DISCLAIMER_TITLE,
-                            Txt.DISCLAIMER_TXT
+                            "Disclaimer",
+                            "Software is provided 'AS IS,' without" +
+                            "|a warranty of any kind. ALL EXPRESS" +
+                            "|OR IMPLIED REPRESENTATIONS AND " +
+                            "|WARRANTIES, INCLUDING ANY IMPLIED" +
+                            "|WARRANTY OF MERCHANTABILITY," +
+                            "|FITNESS FOR A PARTICULAR PURPOSE" +
+                            "|OR NON-INFRINGEMENT, ARE HEREBY" +
+                            "|EXCLUDED. THE ENTIRE RISK ARISING " +
+                            "|OUT OF USING THE SOFTWARE IS" +
+                            "|ASSUMED BY THE USER. See the" +
+                            "|GNU General Public License for more" +
+                            "|details."
                     ).popupModal();
                     break;              
                     

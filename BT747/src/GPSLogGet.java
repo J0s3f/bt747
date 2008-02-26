@@ -29,7 +29,6 @@ import waba.ui.ProgressBar;
 import waba.util.Date;
 
 import gps.BT747LogConvert;
-import gps.CSVLogConvert;
 import gps.GPSCSVFile;
 import gps.GPSCompoGPSTrkFile;
 import gps.GPSFile;
@@ -37,14 +36,11 @@ import gps.GPSFilter;
 import gps.GPSGPXFile;
 import gps.GPSGmapsHTMLEncodedFile;
 import gps.GPSKMLFile;
-import gps.GPSLogConvert;
 import gps.GPSNMEAFile;
 import gps.GPSPLTFile;
 import gps.GPSstate;
 import gps.GpsEvent;
-import gps.HoluxTrlLogConvert;
 
-import bt747.Txt;
 import bt747.sys.Convert;
 import bt747.ui.Button;
 import bt747.ui.Check;
@@ -79,7 +75,7 @@ public class GPSLogGet extends Container {
     Edit m_edTrkSep;
 
     ComboBox m_cbTimeOffsetHours;
-    private static final String[] offsetStr = {
+    private final static String[] offsetStr = {
             "-12", "-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1",
             "+0",
             "+1","+2","+3","+4","+5","+6","+7","+8","+9","+10","+11","+12",
@@ -87,7 +83,7 @@ public class GPSLogGet extends Container {
     };
     
     ComboBox m_cbColors;
-    private static final String[] colors = {
+    private final static String[] colors = {
             "FF0000",
             "0000FF",
             "800000",
@@ -100,13 +96,13 @@ public class GPSLogGet extends Container {
     Check m_chkIncremental;
 
     ComboBox m_chkOneFilePerDay;
-    private static final String[] fileStr = {
-            Txt.ONE_FILE,
-            Txt.ONE_FILE_DAY,
-            Txt.ONE_FILE_TRK
+    private final static String[] fileStr = {
+            "One file",
+            "One file/ day",
+            "One file/ trk"
     };
   
-    static final int JULIAN_DAY_1_1_1970=18264;   
+    final static int JULIAN_DAY_1_1_1970=18264;   
     ProgressBar m_pb;
     AppSettings m_appSettings;
     
@@ -141,26 +137,26 @@ public class GPSLogGet extends Container {
      */
     protected void onStart() {
         super.onStart();
-        add(m_chkLogOnOff = new Check(Txt.DEV_LOGONOFF), LEFT, TOP); //$NON-NLS-1$
-        add(m_chkIncremental = new Check(Txt.INCREMENTAL), RIGHT, SAME); //$NON-NLS-1$
+        add(m_chkLogOnOff = new Check("Device log on(/off)"), LEFT, TOP); //$NON-NLS-1$
+        add(m_chkIncremental = new Check("Incremental"), RIGHT, SAME); //$NON-NLS-1$
         m_chkIncremental.setChecked(true);
-        add(m_chkLogOverwriteStop = new Check(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
-        add(new Label(Txt.DATE_RANGE), LEFT, AFTER); //$NON-NLS-1$
+        add(m_chkLogOverwriteStop = new Check("Log overwrite(/stop) when full"), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label("Date range"), LEFT, AFTER); //$NON-NLS-1$
         add(m_btStartDate = new Button(m_StartDate.getDate()), AFTER, SAME); //$NON-NLS-1$
         //m_btStartDate.setMode(Edit.DATE);
         add(m_btEndDate = new Button(m_EndDate.getDate()), RIGHT, SAME); //$NON-NLS-1$
         //m_btEndDate.setMode(Edit.DATE);
-        add(m_btGetLog = new Button(Txt.GET_LOG), LEFT, AFTER+2); //$NON-NLS-1$
-        add(m_btCancelGetLog = new Button(Txt.CANCEL_GET), AFTER+5, SAME); //$NON-NLS-1$
+        add(m_btGetLog = new Button("Get Log"), LEFT, AFTER+2); //$NON-NLS-1$
+        add(m_btCancelGetLog = new Button("Cancel"), AFTER+5, SAME); //$NON-NLS-1$
 
         m_cbColors=new ComboBox(colors);
         add(m_cbColors,RIGHT, SAME);
-        add(new Label(Txt.NOFIX_COL), BEFORE, SAME);
+        add(new Label("No Fix Color"), BEFORE, SAME);
         
-        add(new Label(Txt.TRK_SEP), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label("Trk sep:"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edTrkSep = new Edit("00000"), AFTER, SAME); //$NON-NLS-1$
         m_edTrkSep.setValidChars(Edit.numbersSet);
-        add(new Label(Txt.MIN), AFTER, SAME); //$NON-NLS-1$
+        add(new Label("min"), AFTER, SAME); //$NON-NLS-1$
         m_edTrkSep.setText(Convert.toString(m_appSettings.getTrkSep()));
         m_edTrkSep.alignment=RIGHT;
 
@@ -173,24 +169,24 @@ public class GPSLogGet extends Container {
         m_cbTimeOffsetHours=new ComboBox(offsetStr);
         add(m_cbTimeOffsetHours,RIGHT, SAME);
         m_cbTimeOffsetHours.select(offsetIdx);
-        add(new Label(Txt.UTC), BEFORE, SAME);
+        add(new Label("UTC"), BEFORE, SAME);
         
 
 
         //add(new Label("End"),BEFORE,SAME);
         add(m_chkOneFilePerDay = new ComboBox(fileStr), LEFT, AFTER+2);
         m_chkOneFilePerDay.select(m_appSettings.getFileSeparationFreq());
-        add(m_chkNoGeoid = new Check(Txt.HGHT_GEOID_DIFF), AFTER+5, SAME); //$NON-NLS-1$
+        add(m_chkNoGeoid = new Check("hght - geiod diff"), AFTER+5, SAME); //$NON-NLS-1$
         m_chkNoGeoid.setChecked(m_appSettings.getNoGeoid());
 
-        add(m_btToCSV = new Button(Txt.TO_CSV), LEFT, AFTER + 5); //$NON-NLS-1$
-        add(m_btToGPX = new Button(Txt.TO_GPX), AFTER + 5 , SAME); //$NON-NLS-1$
-        add(m_btToKML = new Button(Txt.TO_KML), RIGHT, SAME); //$NON-NLS-1$
-        add(m_btToTRK = new Button(Txt.TO_TRK), BEFORE - 5, SAME); //$NON-NLS-1$
+        add(m_btToCSV = new Button("To CSV"), LEFT, AFTER + 5); //$NON-NLS-1$
+        add(m_btToGPX = new Button("To GPX"), AFTER + 5 , SAME); //$NON-NLS-1$
+        add(m_btToKML = new Button("To KML"), RIGHT, SAME); //$NON-NLS-1$
+        add(m_btToTRK = new Button("To TRK"), BEFORE - 5, SAME); //$NON-NLS-1$
 
-        add(m_btToPLT = new Button(Txt.TO_PLT), LEFT, AFTER + 2); //$NON-NLS-1$
-        add(m_btToGMAP = new Button(Txt.TO_GMAP), CENTER, SAME); //$NON-NLS-1$
-        add(m_btToNMEA = new Button(Txt.TO_NMEA), RIGHT, SAME); //$NON-NLS-1$
+        add(m_btToPLT = new Button("To PLT"), LEFT, AFTER + 2); //$NON-NLS-1$
+        add(m_btToGMAP = new Button("To GMAP"), CENTER, SAME); //$NON-NLS-1$
+        add(m_btToNMEA = new Button("To NMEA"), RIGHT, SAME); //$NON-NLS-1$
 
         add(m_UsedLabel=new Label(   ""),LEFT, AFTER+3);
         add(m_RecordsLabel=new Label(""),LEFT, AFTER+3);
@@ -210,10 +206,10 @@ public class GPSLogGet extends Container {
 //        m_chkLogOnOff.repaintNow();
         m_chkLogOverwriteStop.setChecked(m_GPSstate.logFullOverwrite);
 //        m_chkLogOverwriteStop.repaintNow();
-        m_UsedLabel.setText(   Txt.MEM_USED+Convert.toString(m_GPSstate.logMemUsed)
+        m_UsedLabel.setText(   "Mem Used   : "+Convert.toString(m_GPSstate.logMemUsed)
                 +"("+Convert.toString(m_GPSstate.logMemUsedPercent)+"%)");
 //        m_UsedLabel.repaintNow();
-        m_RecordsLabel.setText(Txt.NBR_RECORDS+Convert.toString(m_GPSstate.logNbrLogPts));
+        m_RecordsLabel.setText("Nbr records: "+Convert.toString(m_GPSstate.logNbrLogPts));
 //        m_RecordsLabel.repaintNow();
     }
     
@@ -289,16 +285,7 @@ public class GPSLogGet extends Container {
                     ||event.target==m_btToNMEA) {
                 String ext="";
                 GPSFile gpsFile=null;
-                //GPSLogConvert lc;
-                GPSLogConvert lc;
-                if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".trl")) {
-                    lc=new HoluxTrlLogConvert();
-                } else if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".csv")) {
-                    lc=new CSVLogConvert();
-                } else {
-                    lc=new BT747LogConvert();
-                    ((BT747LogConvert)lc).setHolux(m_appSettings.getForceHolux241());
-                }
+                BT747LogConvert lc=new BT747LogConvert();
                 GPSFilter[] usedFilters;
                 Button z_Button=((Button)event.target);
                 Color BackupBackColor=z_Button.getBackColor();
@@ -344,17 +331,14 @@ public class GPSLogGet extends Container {
                 }
                 if(event.target==m_btToGMAP) {
                     gpsFile=new GPSGmapsHTMLEncodedFile();
-                    ((GPSGmapsHTMLEncodedFile)gpsFile).setGoogleKeyCode(
-                            m_appSettings.getGoogleMapKey());
                     ext=".html";
                 }
 
-
-                gpsFile.setRecordNbrInLogs(m_appSettings.getRecordNbrInLogs());
+                    
                 gpsFile.setBadTrackColor(m_appSettings.getColorInvalidTrack());
                 for (int i = 0; i < usedFilters.length; i++) {
-                    usedFilters[i].setStartDate(dateToUTCepoch1970(m_StartDate));
-                    usedFilters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
+                    m_Filters[i].setStartDate(dateToUTCepoch1970(m_StartDate));
+                    m_Filters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
                 }
                 gpsFile.setFilters(usedFilters);
                 gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard(),

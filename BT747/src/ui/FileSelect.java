@@ -96,7 +96,7 @@ public class FileSelect extends Window {
     }
     
     private void buildWindow() {
-        Rect r;
+        Rect r=new Rect();
         //r.set(getParentWindow().getClientRect());
         //setRect(r.modifiedBy(2, 2, -4, -4)); // same gap in all corners
         filePopList(root,relPath);

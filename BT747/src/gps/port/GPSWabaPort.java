@@ -20,7 +20,7 @@
 package gps.port;
 
 import waba.io.DataStream;
-import bt747.io.File;
+import waba.io.File;
 import waba.ui.MessageBox;
 
 /** Implements the serial port for the standard Waba SerialPort

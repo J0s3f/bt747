@@ -19,13 +19,11 @@
 //********************************************************************  
 package gps;
 
-import gps.convert.Conv;
-
-import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
-import bt747.sys.Vm;
 import bt747.ui.MessageBox;
+
+import gps.convert.Conv;
 
 /** This class is used to convert the binary log to a new format.
  * Basically this class interprets the log and creates a {@link GPSRecord}.
@@ -34,7 +32,7 @@ import bt747.ui.MessageBox;
  * 
  * @author Mario De Weerd
  */
-public final class BT747LogConvert implements GPSLogConvert {
+public final class BT747LogConvert {
     private int minRecordSize;
     private int maxRecordSize;
     private int logFormat;
@@ -65,11 +63,9 @@ public final class BT747LogConvert implements GPSLogConvert {
         if(!passToFindFieldsActivatedInLog) {
             gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
         }
-        if((logFormat&0x80000000L)!=0) {
-            holux=true;
-        }
         minRecordSize=BT747_dev.logRecordMinSize(logFormat, holux);
         maxRecordSize=BT747_dev.logRecordMaxSize(logFormat, holux);
+        //holux=(logFormat&0x80000000)!=0;
         do {
             if ((bits&1)!=0) {
                 switch (index) {
@@ -116,6 +112,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         int satcnt;
         int satidx;
         int idx;
+        holux=false;
         
         recCount=0;
         logFormat=0;
@@ -159,22 +156,12 @@ public final class BT747LogConvert implements GPSLogConvert {
                     // Read header (20 bytes is enough)
                     readResult=m_File.readBytes(bytes, 0, 20);
                     if(readResult!=20) {
-                        (new MessageBox(
-                                Txt.ERROR,
-                                Txt.PROBLEM_READING+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
+                        (new MessageBox("Error","Problem reading|"+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
                     }
                     newLogFormat=   (0xFF&bytes[2])<<0
                     |(0xFF&bytes[3])<<8
                     |(0xFF&bytes[4])<<16
                     |(0xFF&bytes[5])<<24;
-                    if(newLogFormat==0xFFFFFFFF) {
-                        // TODO: Treat error
-                        if(logFormat==0) {
-                            newLogFormat=0x8000001D; // Supposing holux M-241
-                        } else {
-                            newLogFormat=logFormat;
-                        }
-                    }
                     if(newLogFormat!=logFormat) {
                         updateLogFormat(gpsFile, newLogFormat);
                     }
@@ -187,9 +174,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                  */
                 readResult=m_File.readBytes(bytes, 0, sizeToRead);
                 if(readResult!=sizeToRead) {
-                    (new MessageBox(
-                            Txt.ERROR,
-                            Txt.PROBLEM_READING+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
+                    (new MessageBox("Error","Problem reading|"+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
                 }
                 nextAddrToRead+=sizeToRead;
             }
@@ -374,20 +359,9 @@ public final class BT747LogConvert implements GPSLogConvert {
                                 foundRecord=true;
 
 
-                                int rcrIdx;
-                                if(!holux) {
-                                    rcrIdx=offsetInBuffer-2-
-                                            ((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?
-                                                                   BT747_dev.logFmtByteSizes[BT747_dev.FMT_DISTANCE_IDX]:0)+ 
-                                            (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?BT747_dev.logFmtByteSizes[BT747_dev.FMT_MILISECOND_IDX]:0)+ 
-                                            (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?BT747_dev.logFmtByteSizes[BT747_dev.FMT_RCR_IDX]:0));
-                                } else {
-                                    rcrIdx=offsetInBuffer-1-
-                                    ((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?
-                                                           BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_DISTANCE_IDX]:0)+ 
-                                    (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_MILISECOND_IDX]:0)+ 
-                                    (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_RCR_IDX]:0));
-                               }
+                                int rcrIdx=offsetInBuffer-2-((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?8:0)+ 
+                                        (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?2:0)+ 
+                                        (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?2:0));
                                 recCount++;
                                 //System.out.println(recCount);
                                 foundAnyRecord=true;
@@ -396,7 +370,6 @@ public final class BT747LogConvert implements GPSLogConvert {
                                  * Get all the information in the record.
                                  */
                                 gpsRec.recCount=recCount;
-                                boolean valid =true;
                                 if(!passToFindFieldsActivatedInLog) {
                                     // Only interpret fiels if not looking for logFormat changes only
                                     if((logFormat&(1<<BT747_dev.FMT_UTC_IDX))!=0) {
@@ -406,9 +379,6 @@ public final class BT747LogConvert implements GPSLogConvert {
                                             |(0xFF&bytes[recIdx++])<<16
                                             |(0xFF&bytes[recIdx++])<<24
                                             ;
-                                        if(gpsRec.utc==0xFFFFFFFF) {
-                                            valid=false;
-                                        }
                                         gpsRec.utc+=timeOffsetSeconds;
                                     } else {
                                         gpsRec.utc= 1000;  // Value after earliest date
@@ -443,10 +413,6 @@ public final class BT747LogConvert implements GPSLogConvert {
                                                 ;
                                             gpsRec.latitude=Convert.toFloatBitwise(latitude);
                                         }
-                                        if(gpsRec.latitude>90.00
-                                           ||gpsRec.latitude<-90.00) {
-                                            valid=false;
-                                        }
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_LONGITUDE_IDX))!=0) {
                                         if(!holux) {
@@ -470,10 +436,6 @@ public final class BT747LogConvert implements GPSLogConvert {
                                                 ;
                                             gpsRec.longitude=Convert.toFloatBitwise(longitude);//*1.0;
                                         }
-                                        if(gpsRec.longitude>180.00
-                                                ||gpsRec.latitude<-180.00) {
-                                                 valid=false;
-                                             }
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_HEIGHT_IDX))!=0) { 
                                         if(!holux) {
@@ -496,19 +458,18 @@ public final class BT747LogConvert implements GPSLogConvert {
                                         if(noGeoid
                                                 &&((logFormat&(1<<BT747_dev.FMT_LATITUDE_IDX))!=0)
                                                 &&((logFormat&(1<<BT747_dev.FMT_LONGITUDE_IDX))!=0)
-                                                &&valid
                                                 ) {
                                             gpsRec.height-=Conv.wgs84_separation(gpsRec.latitude, gpsRec.longitude);
                                         }
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_SPEED_IDX))!=0) {
-                                            int speed=
-                                                (0xFF&bytes[recIdx++])<<0
-                                                |(0xFF&bytes[recIdx++])<<8
-                                                |(0xFF&bytes[recIdx++])<<16
-                                                |(0xFF&bytes[recIdx++])<<24
-                                                ;
-                                            gpsRec.speed=Convert.toFloatBitwise(speed);
+                                        int speed=
+                                            (0xFF&bytes[recIdx++])<<0
+                                            |(0xFF&bytes[recIdx++])<<8
+                                            |(0xFF&bytes[recIdx++])<<16
+                                            |(0xFF&bytes[recIdx++])<<24
+                                            ;
+                                        gpsRec.speed=Convert.toFloatBitwise(speed);
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_HEADING_IDX))!=0) { 
                                         int heading=
@@ -606,7 +567,6 @@ public final class BT747LogConvert implements GPSLogConvert {
                                         }
                                         satidx++;
                                     }
-                                    //Vm.debug("Offset1:"+recIdx+" "+rcrIdx);
                                     recIdx=rcrIdx;  // Sat information limit is rcrIdx
                                     if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
                                         gpsRec.rcr=
@@ -615,7 +575,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                                             ;
                                     } else
                                     {
-                                        gpsRec.rcr=0x0001;  // For filter
+                                        gpsRec.rcr=0xFFFF;  // For filter
                                     }
                                     if((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0) { 
                                         gpsRec.milisecond=
@@ -638,10 +598,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                                             ;
                                         gpsRec.distance=Convert.longBitsToDouble(distance);
                                     }
-                                    //Vm.debug("Offset:"+recIdx+" "+offsetInBuffer);
-                                    if(valid) {
-                                        gpsFile.writeRecord(gpsRec);
-                                    }
+                                    gpsFile.writeRecord(gpsRec);
                                 }
                                }
                                 /* End handling record */
@@ -685,9 +642,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
-                (new MessageBox(
-                        Txt.ERROR,
-                        Txt.COULD_NOT_OPEN+fileName+"|"+m_File.lastError)).popupBlockingModal();                                   
+                (new MessageBox("Error","Could not open|"+fileName+"|"+m_File.lastError)).popupBlockingModal();                                   
                 m_File=null;
             } else {
                 passToFindFieldsActivatedInLog=gpsFile.needPassToFindFieldsActivatedInLog();
@@ -701,11 +656,6 @@ public final class BT747LogConvert implements GPSLogConvert {
                     parseFile(gpsFile);
                 } while (gpsFile.nextPass());
                 gpsFile.finaliseFile();
-                if(gpsFile.getFilesCreated()==0) {
-                    (new MessageBox(
-                            Txt.WARNING,
-                            Txt.NO_FILES_WERE_CREATED)).popupBlockingModal();                                   
-                }
             }
             
             if(m_File!=null) {
@@ -782,10 +732,5 @@ public final class BT747LogConvert implements GPSLogConvert {
         return gpsRec;
     }
     
-    /**
-     * @param holux The holux to set.
-     */
-    public void setHolux(boolean holux) {
-        this.holux = holux;
-    }
+    
 }

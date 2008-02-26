@@ -40,7 +40,7 @@ public class GPSFilePort extends GPSPort {
 
     private String portPrefix="";
     private boolean hasPortNbr=true;
-    public static final String os_name=java.lang.System.getProperty("os.name");  
+    public static String os_name=java.lang.System.getProperty("os.name");  
     /**
      * 
      */
@@ -61,7 +61,7 @@ public class GPSFilePort extends GPSPort {
 //        if(m_debugFile.exists()) {
 //            m_debugFile.delete();
 //        }
-        m_debugFile=new bt747.io.File(C_DEBUG_FILE,bt747.io.File.CREATE);
+        m_debugFile=new waba.io.File(C_DEBUG_FILE,waba.io.File.CREATE);
     }
 
     /** Indicates if the device is connected or not.

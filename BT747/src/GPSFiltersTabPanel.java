@@ -28,8 +28,6 @@ import gps.GPSFilter;
 import gps.GPSFilterAdvanced;
 import gps.GpsEvent;
 
-import bt747.Txt;
-
 /**
  * @author Mario De Weerd
 
@@ -46,8 +44,7 @@ public class GPSFiltersTabPanel extends Container {
     private GPSFilterAdvanced[] m_logFiltersAdv;
     
     private final String c_tpCaptions[]= {
-            Txt.STANDARD,
-            Txt.ADVANCED
+            "Standard","Advanced"
     };
     
     public GPSFiltersTabPanel(AppSettings settings,GPSFilter[] logFilters,GPSFilterAdvanced[] logFiltersAdv) {

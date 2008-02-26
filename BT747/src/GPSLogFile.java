@@ -19,7 +19,10 @@
 //********************************************************************
 import ui.FileSelect;
 
+import bt747.io.File;
+import bt747.sys.Convert;
 import waba.sys.Settings;
+import bt747.ui.Button;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -27,11 +30,6 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 import waba.util.Vector;
-
-import bt747.Txt;
-import bt747.io.File;
-import bt747.sys.Convert;
-import bt747.ui.Button;
 
 /** The purpose of this container is to configure file settings
  * 
@@ -65,33 +63,33 @@ public class GPSLogFile extends Container {
         int idx;
         
         // OUTPUT DIRECTORY AND "+" button
-        add(tmp=new Label(Txt.OUTPUT_DIR), LEFT, AFTER); //$NON-NLS-1$
+        add(tmp=new Label("Output dir:"), LEFT, AFTER); //$NON-NLS-1$
         add(m_btSelectBaseDirName=new Button("+"), RIGHT, SAME);
         m_edBaseDirName = new Edit("");
         add(m_edBaseDirName); //$NON-NLS-1$
         m_edBaseDirName.setRect(AFTER, SAME,FILL-m_btSelectBaseDirName.getSize().width(),PREFERRED,tmp);
         
         // RAW DATA FILE
-        add(tmp=new Label(Txt.LOGFILE), LEFT, AFTER); //$NON-NLS-1$
+        add(tmp=new Label("LogFile:"), LEFT, AFTER); //$NON-NLS-1$
         add(m_btSelectLogFileName=new Button("+"), RIGHT, SAME);
         m_edLogFileName = new Edit("");
         add(m_edLogFileName);
         m_edLogFileName.setRect(AFTER, SAME,FILL-m_btSelectLogFileName.getSize().width(),PREFERRED,tmp);
         
-        add(new Label(Txt.REPORT), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label("Report :"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edReportBaseName = new Edit(""), AFTER, SAME); //$NON-NLS-1$
 
-        add(new Label(Txt.CHUNK), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label("Chunk :"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edChunkSize = new Edit(""), AFTER, SAME); //$NON-NLS-1$
         m_edChunkSize.setValidChars(Edit.numbersSet);
-        add(new Label(Txt.CHUNK_AHEAD), LEFT, AFTER);
+        add(new Label("Chunk ahead request:"), LEFT, AFTER);
         add(m_cblogReqAhead=new ComboBox(C_LOG_REQ_AHEAD),AFTER,SAME);
         idx=m_settings.getLogRequestAhead();
         if(idx>m_cblogReqAhead.size()-1) {
             idx=m_cblogReqAhead.size()-1;
         }
         m_cblogReqAhead.select(idx);
-        add(new Label(Txt.READ_TIMEOUT), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label("Read timeout (ms) :"), LEFT, AFTER); //$NON-NLS-1$
         add(m_edTimeout = new Edit(""), AFTER, SAME); //$NON-NLS-1$
         m_edTimeout.setValidChars(Edit.numbersSet);
 
@@ -110,15 +108,15 @@ public class GPSLogFile extends Container {
             if(Card==-1) {
                 idx=v.size()-1;
             }
-            add(new Label(Txt.CARD_VOL), LEFT, AFTER); //$NON-NLS-1$
+            add(new Label("Card/Volume:"), LEFT, AFTER); //$NON-NLS-1$
             add( m_cbVolumes= new ComboBox((String[])v.toObjectArray()), AFTER,SAME);
             m_cbVolumes.select(idx);
         }
         
 
-        m_btChangeSettings=new Button(Txt.APPLY_SET);
+        m_btChangeSettings=new Button("Apply&Set the above values");
         add(m_btChangeSettings,CENTER,AFTER+5);
-        m_btDefaultSettings=new Button(Txt.DEFAULT_SET);
+        m_btDefaultSettings=new Button("Default settings");
         add(m_btDefaultSettings,CENTER,AFTER+5);
 
         updateValues();

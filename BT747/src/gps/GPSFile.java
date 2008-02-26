@@ -19,7 +19,6 @@
 //********************************************************************       
 package gps;
 
-import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Time;
@@ -36,6 +35,8 @@ import bt747.util.Date;
  */
 public abstract class GPSFile {
     protected GPSFilter[] m_Filters = null;
+
+    protected int m_recCount;
 
     protected boolean m_oneFilePerDay;
 
@@ -55,7 +56,7 @@ public abstract class GPSFile {
 
     protected int C_NUMBER_OF_PASSES = 1;
 
-    private File m_File = null;
+    protected File m_File = null;
 
     protected Time t = new Time(); // Time from log, already transformed
 
@@ -63,25 +64,17 @@ public abstract class GPSFile {
     protected int m_prevtime = 0;
     protected boolean m_sepTrack=false;
     protected int m_TrackSepTime=60*60; // Time needed between points to separate segments.
-    protected int filesCreated=0;
     
     protected boolean m_oneFilePerTrack=false;
     protected boolean m_multipleFiles=false;
     
-    protected boolean recordNbrInLogs=false;
-    
     protected String badTrackColor="FF0000";
     protected String goodTrackColor="0000FF";
-    
-    protected static final String[] C_MONTHS = {
-            "JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"
-    };
-    
-
 
     public void initialiseFile(final String basename, final String ext,
             final int Card, int fileSeparationFreq) {
         m_FirstRecord = true;
+        m_recCount = 0;
         m_nbrOfPassesToGo = C_NUMBER_OF_PASSES - 1;
         m_ext = ext;
         m_basename = basename;
@@ -136,10 +129,12 @@ public abstract class GPSFile {
         return result;
     }
 
-    public void writeRecord(final GPSRecord s) {
+    public void writeRecord(GPSRecord s) {
         String extraExt; // Extra extension for log file
         boolean newDate = false;
         int dateref = 0;
+
+        m_recCount++;
 
         if (activeFields.utc != 0) {
             setUTCTime(t, s.utc); // Initialisation needed later too!
@@ -221,9 +216,7 @@ public abstract class GPSFile {
             finaliseFile();
         } else {
             // More passes to go.
-            if(isOpen()) {
-                closeFile();
-            }
+            closeFile();
         }
         return false;
     };
@@ -248,12 +241,11 @@ public abstract class GPSFile {
         m_File = new File(fileName, createNewFile ? File.CREATE
                 : File.READ_WRITE, m_card);
         if (!m_File.isOpen()) {
-            bt747.sys.Vm.debug(Txt.COULD_NOT_OPEN + fileName+"|"+m_File.lastError);
-            (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName+"|"+m_File.lastError))
+            waba.sys.Vm.debug("Could not open " + fileName+"|"+m_File.lastError);
+            (new MessageBox("Error", "Could not open|" + fileName+"|"+m_File.lastError))
                         .popupModal();
             m_File = null;
         } else {
-            filesCreated+=1;
             if (createNewFile) {
                 // New file
                 writeFileHeader("GPS" + extra_ext); // First time this file is
@@ -273,15 +265,11 @@ public abstract class GPSFile {
             m_File.close();
         } catch (Exception e) {
             // TODO: handle exception
-            Vm.debug(Txt.CLOSE_FAILED);
+            Vm.debug("Closing failed (closeFile) - probably a bug.");
         }
     }
-    
-    protected boolean isOpen() {
-        return m_File!=null;
-    }
 
-    private static final int DAYS_BETWEEN_1970_1983 = 4748;
+    private final static int DAYS_BETWEEN_1970_1983 = 4748;
 
     public static final void setUTCTime(Time t, final int utc_int) {
         //long utc=utc_int&0xFFFFFFFFL;
@@ -342,7 +330,7 @@ public abstract class GPSFile {
             if (m_File != null) {
                 m_File.writeBytes(s.getBytes(), 0, s.length());
             } else {
-                Vm.debug(Txt.WRITING_CLOSED);
+                Vm.debug("Writing to closed file");
             }
         } catch (Exception e) {
 
@@ -376,23 +364,5 @@ public abstract class GPSFile {
      */
     public void setGoodTrackColor(String goodTrackColor) {
         this.goodTrackColor = goodTrackColor;
-    }
-    /**
-     * @return Returns the filesCreated.
-     */
-    public int getFilesCreated() {
-        return filesCreated;
-    }
-    /**
-     * @return Returns the recordNbrInLogs.
-     */
-    public boolean isRecordNbrInLogs() {
-        return recordNbrInLogs;
-    }
-    /**
-     * @param recordNbrInLogs The recordNbrInLogs to set.
-     */
-    public void setRecordNbrInLogs(boolean recordNbrInLogs) {
-        this.recordNbrInLogs = recordNbrInLogs;
     }
 }

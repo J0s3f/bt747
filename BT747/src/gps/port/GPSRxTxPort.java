@@ -19,6 +19,8 @@
 //********************************************************************  
 package gps.port;
 
+import waba.sys.Vm;
+
 import bt747.sys.Convert;
 
 import gnu.io.CommPort;
@@ -40,7 +42,7 @@ public class GPSRxTxPort extends GPSPort {
     private OutputStream ds;
     private String portPrefix="";
     private boolean hasPortNbr=true;
-    public static final String os_name=java.lang.System.getProperty("os.name");
+    public static String os_name=java.lang.System.getProperty("os.name");
     
     /**
      * 
