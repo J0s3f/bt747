@@ -366,16 +366,18 @@ public class Txt_es {
     public static final String METERS_ABBR = "m";
 
     public static final String WARNING =
-        "Warning";
+        "Alerta";
     public static final String NO_FILES_WERE_CREATED =
-        "No output files were created!" +
+        "No se crearon archivos de salida!" +
         "||" +
-        "This usually means that either:" +
-        "|- The filter did not select any points" +
-        "|- The log does not contain any data" +
+        "Esto puede significar que:" +
+        "|- El filtro no seleccionó ningún punto" +
+        "|- El log no contiene datos" +
         "|" +
-        "|Try selecting all points." +
-        "|If that does not work," +
-        "| it may be a bug.";
+        "|Prueba seleccionando todos los puntos." +
+        "|Si no funciona," +
+        "|puede ser un error del programa.";
+    
     public static final String ADD_RECORD_NUMBER =
-        "Record nbr info in logs";}
+        "Info núm en el log";
+    }
