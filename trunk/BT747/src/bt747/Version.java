@@ -29,10 +29,10 @@ package bt747;
 public final class Version {
 
    /** Build number (timestamp with format yyyyMMddHHmmssSSS). */
-   public static final long BUILD = 20080226190405886L; //automatically set during Ant compilation!
-   public static final String BUILD_STR = "20080226190405886"; //automatically set during Ant compilation!
+   public static final long BUILD = 20080229005907794L; //automatically set during Ant compilation!
+   public static final String BUILD_STR = "20080229005907794"; //automatically set during Ant compilation!
    /** Release date of this version (date format dd.MM.yyyy). */
-   public static final String DATE = "26.02.2008"; //automatically set during Ant compilation!
+   public static final String DATE = "29.02.2008"; //automatically set during Ant compilation!
    /**
     * Version number of format x.y.z, with
     * <ul>
@@ -41,7 +41,7 @@ public final class Version {
     * <li>z = bug fix version
     * </ul>
     */
-   public static final String VERSION_NUMBER = "1.41";
+   public static final String VERSION_NUMBER = "1.42";
    /** Minimum Java JRE version required. */
    public static final String NUMBER_JAVAMIN = "1.4";
    /** Title of this project. */

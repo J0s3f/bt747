@@ -127,7 +127,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
                 } else {
                     rec.append(Convert.toString(-s.latitude,8)+(char)0xBA+"S");
                 }
-            } else if(activeFileFields.latitude!=0) {
+            } else {
                 rec.append("0°N");
             }
 
@@ -138,7 +138,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
                 } else {
                     rec.append(Convert.toString(-s.longitude,8)+(char)0xBA+"W");
                 }
-            } else if(activeFileFields.longitude!=0) {
+            } else {
                 rec.append("0°E");
             }
             rec.append(" ");

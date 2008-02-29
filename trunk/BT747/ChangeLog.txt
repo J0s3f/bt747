@@ -1,3 +1,9 @@
+Version 1.42
+* Improvements to binary log format interpretation, especially for Holux M-241 format.
+  Has an impact on other log interpretations too (the implemented error recovery mechanism
+  was hiding some bugs in the 'iBlue 747 like format interpretations).
+
+
 Version 1.41
 * Some changes in device recognition (given new device info with BT-Q1000).
 * Possibility to add record number in logs (gpx, kml).
