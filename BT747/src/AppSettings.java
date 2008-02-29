@@ -940,6 +940,7 @@ public class AppSettings implements gps.settings {
     public String getGoogleMapKey() {
         String path="";
         String gkey="";
+        int idx;
         boolean notok=true;
         int i=3;
         while (notok && i >=0) {
@@ -957,7 +958,10 @@ public class AppSettings implements gps.settings {
                 path=getReportFileBasePath();
                 break;
             }
-            path= path.substring(0, path.lastIndexOf('/'));
+            idx=path.lastIndexOf('/');
+            if(idx!=-1) {
+                path= path.substring(0, path.lastIndexOf('/'));
+            }
             
             File gmap=new File(path+"/"+C_GMAP_KEY_FILENAME,File.READ_ONLY);
             
