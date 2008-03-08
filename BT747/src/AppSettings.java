@@ -17,7 +17,6 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import waba.io.DataStream;
 import waba.io.File;
 import bt747.sys.Convert;
 import waba.sys.Settings;
@@ -29,7 +28,7 @@ import gps.convert.Conv;
  * @author Herbert Geus (initial code for saving settings on WindowsCE)
   */
 public class AppSettings implements gps.settings {
-    private static final String CONFIG_FILE_NAME =
+    static private final String CONFIG_FILE_NAME =
         //#if RXTX java.lang.System.getProperty("bt747_settings",
 
         (waba.sys.Settings.platform.startsWith("Win32")
@@ -40,109 +39,105 @@ public class AppSettings implements gps.settings {
          //#if RXTX )
          ; 
 
-    private static final int C_PORTNBR_IDX=0;
-    private static final int C_PORTNBR_SIZE=8;
-    private static final int C_BAUDRATE_IDX=C_PORTNBR_IDX+C_PORTNBR_SIZE;
-    private static final int C_BAUDRATE_SIZE=8;
-    private static final int C_VERSION_IDX=C_BAUDRATE_IDX+C_BAUDRATE_SIZE;
-    private static final int C_VERSION_SIZE=8;
-    private static final int C_BASEDIRPATH_IDX=C_VERSION_IDX+C_VERSION_SIZE;
-    private static final int C_BASEDIRPATH_SIZE=256;
-    private static final int C_REPORTFILEBASE_IDX=C_BASEDIRPATH_IDX+C_BASEDIRPATH_SIZE;
-    private static final int C_REPORTFILEBASE_SIZE=40;
-    private static final int C_LOGFILE_IDX=C_REPORTFILEBASE_IDX+C_REPORTFILEBASE_SIZE;
-    private static final int C_LOGFILE_SIZE=40;
-    private static final int C_OPENSTARTUP_IDX=C_LOGFILE_IDX+C_LOGFILE_SIZE;
-    private static final int C_OPENSTARTUP_SIZE=40;
-    private static final int C_CHUNKSIZE_IDX=C_OPENSTARTUP_IDX+C_OPENSTARTUP_SIZE;
-    private static final int C_CHUNKSIZE_SIZE=8;
-    private static final int C_DOWNLOADTIMEOUT_IDX=C_CHUNKSIZE_IDX+C_CHUNKSIZE_SIZE;
-    private static final int C_DOWNLOADTIMEOUT_SIZE=8;
-    private static final int C_CARD_IDX=C_DOWNLOADTIMEOUT_IDX+C_DOWNLOADTIMEOUT_SIZE;
-    private static final int C_CARD_SIZE=4;
-    private static final int C_TIMEOFFSETHOURS_IDX=C_CARD_IDX+C_CARD_SIZE;
-    private static final int C_TIMEOFFSETHOURS_SIZE=4;
-    private static final int C_WAYPT_RCR_IDX=C_TIMEOFFSETHOURS_IDX+C_TIMEOFFSETHOURS_SIZE;
-    private static final int C_WAYPT_RCR_SIZE=4;
-    private static final int C_WAYPT_VALID_IDX=C_WAYPT_RCR_IDX+C_WAYPT_RCR_SIZE;
-    private static final int C_WAYPT_VALID_SIZE=4;
-    private static final int C_TRKPT_RCR_IDX=C_WAYPT_VALID_IDX+C_WAYPT_VALID_SIZE;
-    private static final int C_TRKPT_RCR_SIZE=4;
-    private static final int C_TRKPT_VALID_IDX=C_TRKPT_RCR_IDX+C_TRKPT_RCR_SIZE;
-    private static final int C_TRKPT_VALID_SIZE=4;
-    private static final int C_ONEFILEPERDAY_IDX=C_TRKPT_VALID_IDX+C_TRKPT_VALID_SIZE;
-    private static final int C_ONEFILEPERDAY_SIZE=1;
-    private static final int C_NOGEOID_IDX=C_ONEFILEPERDAY_IDX+C_ONEFILEPERDAY_SIZE;
-    private static final int C_NOGEOID_SIZE=4;
-    private static final int C_LOGAHEAD_IDX=C_NOGEOID_IDX+C_NOGEOID_SIZE;
-    private static final int C_LOGAHEAD_SIZE=1;
-    private static final int C_NMEASET_IDX=C_LOGAHEAD_IDX+C_LOGAHEAD_SIZE;
-    private static final int C_NMEASET_SIZE=8;
-    private static final int C_GPXUTC0_IDX=C_NMEASET_IDX+C_NMEASET_SIZE;
-    private static final int C_GPXUTC0_SIZE=1;
-    private static final int C_TRKSEP_IDX=C_GPXUTC0_IDX+C_GPXUTC0_SIZE;
-    private static final int C_TRKSEP_SIZE=4;
-    private static final int C_ADVFILTACTIVE_IDX=C_TRKSEP_IDX+C_TRKSEP_SIZE;
-    private static final int C_ADVFILTACTIVE_SIZE=1;
-    private static final int C_minDist_IDX=C_ADVFILTACTIVE_IDX+C_ADVFILTACTIVE_SIZE;
-    private static final int C_minDist_SIZE=8;
-    private static final int C_maxDist_IDX=C_minDist_IDX+C_minDist_SIZE;
-    private static final int C_maxDist_SIZE=8;
-    private static final int C_minSpeed_IDX=C_maxDist_IDX+C_maxDist_SIZE;
-    private static final int C_minSpeed_SIZE=8;
-    private static final int C_maxSpeed_IDX=C_minSpeed_IDX+C_minSpeed_SIZE;
-    private static final int C_maxSpeed_SIZE=8;
-    private static final int C_maxHDOP_IDX=C_maxSpeed_IDX+C_maxSpeed_SIZE;
-    private static final int C_maxHDOP_SIZE=8;
-    private static final int C_maxPDOP_IDX=C_maxHDOP_IDX+C_maxHDOP_SIZE;
-    private static final int C_maxPDOP_SIZE=8;
-    private static final int C_maxVDOP_IDX=C_maxPDOP_IDX+C_maxPDOP_SIZE;
-    private static final int C_maxVDOP_SIZE=8;
-    private static final int C_minRecCount_IDX=C_maxVDOP_IDX+C_maxVDOP_SIZE;
-    private static final int C_minRecCount_SIZE=8;
-    private static final int C_maxRecCount_IDX=C_minRecCount_IDX+C_minRecCount_SIZE;
-    private static final int C_maxRecCount_SIZE=8;
-    private static final int C_minNSAT_IDX=C_maxRecCount_IDX+C_maxRecCount_SIZE;
-    private static final int C_minNSAT_SIZE=4;
-    private static final int C_GPXTRKSEGBIG_IDX=C_minNSAT_IDX+C_minNSAT_SIZE;
-    private static final int C_GPXTRKSEGBIG_SIZE=1;
-    private static final int C_DECODEGPS_IDX=C_GPXTRKSEGBIG_IDX+C_GPXTRKSEGBIG_SIZE;
-    private static final int C_DECODEGPS_SIZE=4;
-    private static final int C_COLOR_INVALIDTRACK_IDX=C_DECODEGPS_IDX+C_DECODEGPS_SIZE;
-    private static final int C_COLOR_INVALIDTRACK_SIZE=8;
-    private static final int C_ISTRAVERSABLE_IDX=C_COLOR_INVALIDTRACK_IDX+C_COLOR_INVALIDTRACK_SIZE;
-    private static final int C_ISTRAVERSABLE_SIZE=4;
-    private static final int C_SETTING1_TIME_IDX=C_ISTRAVERSABLE_IDX+C_ISTRAVERSABLE_SIZE;
-    private static final int C_SETTING1_TIME_SIZE=8;
-    private static final int C_SETTING1_SPEED_IDX=C_SETTING1_TIME_IDX+C_SETTING1_TIME_SIZE;
-    private static final int C_SETTING1_SPEED_SIZE=8;
-    private static final int C_SETTING1_DIST_IDX=C_SETTING1_SPEED_IDX+C_SETTING1_SPEED_SIZE;
-    private static final int C_SETTING1_DIST_SIZE=8;
-    private static final int C_SETTING1_FIX_IDX=C_SETTING1_DIST_IDX+C_SETTING1_DIST_SIZE;
-    private static final int C_SETTING1_FIX_SIZE=8;
-    private static final int C_SETTING1_NMEA_IDX=C_SETTING1_FIX_IDX+C_SETTING1_FIX_SIZE;
-    private static final int C_SETTING1_NMEA_SIZE=20;
-    private static final int C_SETTING1_DGPS_IDX=C_SETTING1_NMEA_IDX+C_SETTING1_NMEA_SIZE;
-    private static final int C_SETTING1_DGPS_SIZE=8;
-    private static final int C_SETTING1_TEST_IDX=C_SETTING1_DGPS_IDX+C_SETTING1_DGPS_SIZE;
-    private static final int C_SETTING1_TEST_SIZE=2;
-    private static final int C_SETTING1_LOG_OVR_IDX=C_SETTING1_TEST_IDX+C_SETTING1_TEST_SIZE;
-    private static final int C_SETTING1_LOG_OVR_SIZE=1;
-    private static final int C_SETTING1_LOG_FORMAT_IDX=C_SETTING1_LOG_OVR_IDX+C_SETTING1_LOG_OVR_SIZE;
-    private static final int C_SETTING1_LOG_FORMAT_SIZE=8;
-    private static final int C_SETTING1_SBAS_IDX=C_SETTING1_LOG_FORMAT_IDX+C_SETTING1_LOG_FORMAT_SIZE;
-    private static final int C_SETTING1_SBAS_SIZE=1;
-    private static final int C_RECORDNBR_IN_LOGS_IDX=C_SETTING1_SBAS_IDX+C_SETTING1_SBAS_SIZE;
-    private static final int C_RECORDNBR_IN_LOGS_SIZE=4;
-    private static final int C_HOLUX241_IDX=C_RECORDNBR_IN_LOGS_IDX+C_RECORDNBR_IN_LOGS_SIZE;
-    private static final int C_HOLUX241_SIZE=1;
-    private static final int C_NEXT_IDX=C_HOLUX241_IDX+C_HOLUX241_SIZE;
+    private final static int C_PORTNBR_IDX=0;
+    private final static int C_PORTNBR_SIZE=8;
+    private final static int C_BAUDRATE_IDX=C_PORTNBR_IDX+C_PORTNBR_SIZE;
+    private final static int C_BAUDRATE_SIZE=8;
+    private final static int C_VERSION_IDX=C_BAUDRATE_IDX+C_BAUDRATE_SIZE;
+    private final static int C_VERSION_SIZE=8;
+    private final static int C_BASEDIRPATH_IDX=C_VERSION_IDX+C_VERSION_SIZE;
+    private final static int C_BASEDIRPATH_SIZE=256;
+    private final static int C_REPORTFILEBASE_IDX=C_BASEDIRPATH_IDX+C_BASEDIRPATH_SIZE;
+    private final static int C_REPORTFILEBASE_SIZE=40;
+    private final static int C_LOGFILE_IDX=C_REPORTFILEBASE_IDX+C_REPORTFILEBASE_SIZE;
+    private final static int C_LOGFILE_SIZE=40;
+    private final static int C_OPENSTARTUP_IDX=C_LOGFILE_IDX+C_LOGFILE_SIZE;
+    private final static int C_OPENSTARTUP_SIZE=40;
+    private final static int C_CHUNKSIZE_IDX=C_OPENSTARTUP_IDX+C_OPENSTARTUP_SIZE;
+    private final static int C_CHUNKSIZE_SIZE=8;
+    private final static int C_DOWNLOADTIMEOUT_IDX=C_CHUNKSIZE_IDX+C_CHUNKSIZE_SIZE;
+    private final static int C_DOWNLOADTIMEOUT_SIZE=8;
+    private final static int C_CARD_IDX=C_DOWNLOADTIMEOUT_IDX+C_DOWNLOADTIMEOUT_SIZE;
+    private final static int C_CARD_SIZE=4;
+    private final static int C_TIMEOFFSETHOURS_IDX=C_CARD_IDX+C_CARD_SIZE;
+    private final static int C_TIMEOFFSETHOURS_SIZE=4;
+    private final static int C_WAYPT_RCR_IDX=C_TIMEOFFSETHOURS_IDX+C_TIMEOFFSETHOURS_SIZE;
+    private final static int C_WAYPT_RCR_SIZE=4;
+    private final static int C_WAYPT_VALID_IDX=C_WAYPT_RCR_IDX+C_WAYPT_RCR_SIZE;
+    private final static int C_WAYPT_VALID_SIZE=4;
+    private final static int C_TRKPT_RCR_IDX=C_WAYPT_VALID_IDX+C_WAYPT_VALID_SIZE;
+    private final static int C_TRKPT_RCR_SIZE=4;
+    private final static int C_TRKPT_VALID_IDX=C_TRKPT_RCR_IDX+C_TRKPT_RCR_SIZE;
+    private final static int C_TRKPT_VALID_SIZE=4;
+    private final static int C_ONEFILEPERDAY_IDX=C_TRKPT_VALID_IDX+C_TRKPT_VALID_SIZE;
+    private final static int C_ONEFILEPERDAY_SIZE=1;
+    private final static int C_NOGEOID_IDX=C_ONEFILEPERDAY_IDX+C_ONEFILEPERDAY_SIZE;
+    private final static int C_NOGEOID_SIZE=4;
+    private final static int C_LOGAHEAD_IDX=C_NOGEOID_IDX+C_NOGEOID_SIZE;
+    private final static int C_LOGAHEAD_SIZE=1;
+    private final static int C_NMEASET_IDX=C_LOGAHEAD_IDX+C_LOGAHEAD_SIZE;
+    private final static int C_NMEASET_SIZE=8;
+    private final static int C_GPXUTC0_IDX=C_NMEASET_IDX+C_NMEASET_SIZE;
+    private final static int C_GPXUTC0_SIZE=1;
+    private final static int C_TRKSEP_IDX=C_GPXUTC0_IDX+C_GPXUTC0_SIZE;
+    private final static int C_TRKSEP_SIZE=4;
+    private final static int C_ADVFILTACTIVE_IDX=C_TRKSEP_IDX+C_TRKSEP_SIZE;
+    private final static int C_ADVFILTACTIVE_SIZE=1;
+    private final static int C_minDist_IDX=C_ADVFILTACTIVE_IDX+C_ADVFILTACTIVE_SIZE;
+    private final static int C_minDist_SIZE=8;
+    private final static int C_maxDist_IDX=C_minDist_IDX+C_minDist_SIZE;
+    private final static int C_maxDist_SIZE=8;
+    private final static int C_minSpeed_IDX=C_maxDist_IDX+C_maxDist_SIZE;
+    private final static int C_minSpeed_SIZE=8;
+    private final static int C_maxSpeed_IDX=C_minSpeed_IDX+C_minSpeed_SIZE;
+    private final static int C_maxSpeed_SIZE=8;
+    private final static int C_maxHDOP_IDX=C_maxSpeed_IDX+C_maxSpeed_SIZE;
+    private final static int C_maxHDOP_SIZE=8;
+    private final static int C_maxPDOP_IDX=C_maxHDOP_IDX+C_maxHDOP_SIZE;
+    private final static int C_maxPDOP_SIZE=8;
+    private final static int C_maxVDOP_IDX=C_maxPDOP_IDX+C_maxPDOP_SIZE;
+    private final static int C_maxVDOP_SIZE=8;
+    private final static int C_minRecCount_IDX=C_maxVDOP_IDX+C_maxVDOP_SIZE;
+    private final static int C_minRecCount_SIZE=8;
+    private final static int C_maxRecCount_IDX=C_minRecCount_IDX+C_minRecCount_SIZE;
+    private final static int C_maxRecCount_SIZE=8;
+    private final static int C_minNSAT_IDX=C_maxRecCount_IDX+C_maxRecCount_SIZE;
+    private final static int C_minNSAT_SIZE=4;
+    private final static int C_GPXTRKSEGBIG_IDX=C_minNSAT_IDX+C_minNSAT_SIZE;
+    private final static int C_GPXTRKSEGBIG_SIZE=1;
+    private final static int C_DECODEGPS_IDX=C_GPXTRKSEGBIG_IDX+C_GPXTRKSEGBIG_SIZE;
+    private final static int C_DECODEGPS_SIZE=4;
+    private final static int C_COLOR_INVALIDTRACK_IDX=C_DECODEGPS_IDX+C_DECODEGPS_SIZE;
+    private final static int C_COLOR_INVALIDTRACK_SIZE=8;
+    private final static int C_ISTRAVERSABLE_IDX=C_COLOR_INVALIDTRACK_IDX+C_COLOR_INVALIDTRACK_SIZE;
+    private final static int C_ISTRAVERSABLE_SIZE=4;
+    private final static int C_SETTING1_TIME_IDX=C_ISTRAVERSABLE_IDX+C_ISTRAVERSABLE_SIZE;
+    private final static int C_SETTING1_TIME_SIZE=8;
+    private final static int C_SETTING1_SPEED_IDX=C_SETTING1_TIME_IDX+C_SETTING1_TIME_SIZE;
+    private final static int C_SETTING1_SPEED_SIZE=8;
+    private final static int C_SETTING1_DIST_IDX=C_SETTING1_SPEED_IDX+C_SETTING1_SPEED_SIZE;
+    private final static int C_SETTING1_DIST_SIZE=8;
+    private final static int C_SETTING1_FIX_IDX=C_SETTING1_DIST_IDX+C_SETTING1_DIST_SIZE;
+    private final static int C_SETTING1_FIX_SIZE=8;
+    private final static int C_SETTING1_NMEA_IDX=C_SETTING1_FIX_IDX+C_SETTING1_FIX_SIZE;
+    private final static int C_SETTING1_NMEA_SIZE=20;
+    private final static int C_SETTING1_DGPS_IDX=C_SETTING1_NMEA_IDX+C_SETTING1_NMEA_SIZE;
+    private final static int C_SETTING1_DGPS_SIZE=8;
+    private final static int C_SETTING1_TEST_IDX=C_SETTING1_DGPS_IDX+C_SETTING1_DGPS_SIZE;
+    private final static int C_SETTING1_TEST_SIZE=2;
+    private final static int C_SETTING1_LOG_OVR_IDX=C_SETTING1_TEST_IDX+C_SETTING1_TEST_SIZE;
+    private final static int C_SETTING1_LOG_OVR_SIZE=1;
+    private final static int C_SETTING1_LOG_FORMAT_IDX=C_SETTING1_LOG_OVR_IDX+C_SETTING1_LOG_OVR_SIZE;
+    private final static int C_SETTING1_LOG_FORMAT_SIZE=8;
+    private final static int C_SETTING1_SBAS_IDX=C_SETTING1_LOG_FORMAT_IDX+C_SETTING1_LOG_FORMAT_SIZE;
+    private final static int C_SETTING1_SBAS_SIZE=1;
+    private final static int C_NEXT_IDX=C_SETTING1_SBAS_IDX+C_SETTING1_SBAS_SIZE;
     // Next lines just to add new items faster using replace functions
-    private static final int C_NEXT_SIZE=4;
-    private static final int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
+    private final static int C_NEXT_SIZE=4;
+    private final static int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
 
-    private static final int C_DEFAULT_DEVICE_TIMEOUT=3500; // ms
-    private static final int C_DEFAULT_LOG_REQUEST_AHEAD=3;
+    private final static int C_DEFAULT_DEVICE_TIMEOUT=3500; // ms
+    private final static int C_DEFAULT_LOG_REQUEST_AHEAD=3;
 
     private String baseDirPath;
     private String logFile;
@@ -284,14 +279,8 @@ public class AppSettings implements gps.settings {
         case 12:
             setTraversableFocus(Settings.onDevice&&(!waba.sys.Settings.platform.startsWith("Palm")));
             /* fall through */
-        case 13:
-            setRecordNbrInLogs(false);
-            /* fall through */
-        case 14:
-            setForceHolux241(false);
-            /* fall through */
         }
-        setStringOpt("0.15",C_VERSION_IDX, C_VERSION_SIZE);
+        setStringOpt("0.13",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
@@ -912,79 +901,4 @@ public class AppSettings implements gps.settings {
         setStringOpt(value,C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
     }
 
-    public boolean getRecordNbrInLogs() {
-        return getBooleanOpt(C_RECORDNBR_IN_LOGS_IDX, C_RECORDNBR_IN_LOGS_SIZE);
-    }
-    public void setRecordNbrInLogs(final boolean value) {
-        setBooleanOpt(value, C_RECORDNBR_IN_LOGS_IDX, C_RECORDNBR_IN_LOGS_SIZE);
-    }
-
-    public boolean getForceHolux241() {
-        return getBooleanOpt(C_HOLUX241_IDX, C_HOLUX241_SIZE);
-    }
-    public void setForceHolux241(final boolean value) {
-        setBooleanOpt(value, C_HOLUX241_IDX, C_HOLUX241_SIZE);
-    }
-
-    
-    public boolean isStoredSetting1() {
-        return getNMEASetting1().length()>15;
-    }
-    
-    /** Look for the google map site key in a file called "gmapkey.txt"
-     * Will look in the output dir first, then in the source dir, then
-     * in the settings dir.
-     * @return
-     */
-    public static final String C_GMAP_KEY_FILENAME="gmapkey.txt";
-    public String getGoogleMapKey() {
-        String path="";
-        String gkey="";
-        int idx;
-        boolean notok=true;
-        int i=3;
-        while (notok && i >=0) {
-            switch (i--) {
-            case 0:
-                path= CONFIG_FILE_NAME;
-                break;
-            case 1:
-                path=getBaseDirPath()+"/";
-                break;
-            case 2:
-                path=getLogFilePath();
-                break;
-            case 3:
-                path=getReportFileBasePath();
-                break;
-            }
-            idx=path.lastIndexOf('/');
-            if(idx!=-1) {
-                path= path.substring(0, path.lastIndexOf('/'));
-            }
-            
-            File gmap=new File(path+"/"+C_GMAP_KEY_FILENAME,File.READ_ONLY);
-            
-            if(gmap.isOpen()) {
-                byte[] b= new byte[100];
-                int len;
-                len=gmap.readBytes(b, 0, 99);
-                gmap.close();
-                if(len!=0) {
-                    gkey=new String(b,0,len);
-                    int min;
-                    min=gkey.indexOf(10);
-                    if(min!=0) {
-                        gkey=gkey.substring(0, min);
-                    };
-                    min=gkey.indexOf(13);
-                    if(min!=0) {
-                        gkey=gkey.substring(0, min);
-                    };
-                    notok=false;
-                }
-            }
-        }
-        return gkey;
-    }
 }

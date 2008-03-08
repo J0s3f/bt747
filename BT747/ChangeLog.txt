@@ -1,32 +1,5 @@
-Version 1.43
-* Some changes in startup order to see effect on WM5.0 device.
-
-Version 1.42
-* Improvements to binary log format interpretation, especially for Holux M-241 format.
-  Has an impact on other log interpretations too (the implemented error recovery mechanism
-  was hiding some bugs in the 'iBlue 747 like format interpretations).
-
-
-Version 1.41
-* Some changes in device recognition (given new device info with BT-Q1000).
-* Possibility to add record number in logs (gpx, kml).
-* A warning message is provided when no records were selected.
-* Date filter was not taken into account for advanced filter - solved.
-* CSV files can be read now.
-* Added option to force 'Holux 241' format and improved interpretation of Holux M241 format.
-
-Version 1.40
-* Deactivating device logging automatically during download.
-  The original setting is restored after download.
-  Some users reported a positive effect of disabling logging during download.
-* Changed GMAP format to be able to activate/de-activate parts of the track.
-* Possibility to set key for Google Map file through 'gmapkey.txt' file.
-
 Version 1.39
 * Settings of device can now be saved and restored (after battery removal for example)
-* German translation
-* French translation
-* Chinese translation (automatic -> beta)
 
 Version 1.38
 * Spanish translation!

@@ -63,12 +63,12 @@ public class GPSconctrl extends Container {
     ComboBox m_cbPorts;
 
     ComboBox m_cbBaud;
-    private static final String[] BaudRates = {
+    private final static String[] BaudRates = {
             "115200", "38400"
     };
   
 
-    private static final int C_MAX_PORTNBR = 32;
+    private final static int C_MAX_PORTNBR = 32;
     private AppSettings m_Settings;
 
     public GPSconctrl(GPSstate p_GPSstate, AppSettings settings) {
@@ -186,14 +186,11 @@ public class GPSconctrl extends Container {
     
     private void updateGPSData(final GPSRecord gps) {
 
-        lbLat.setText(Txt.LAT+Convert.toString(gps.latitude,5)
-                +Txt.HGHT_SEP+Convert.toString(gps.height,3)
-                +Txt.METERS_ABBR);
+        lbLat.setText(Txt.LAT+Convert.toString(gps.latitude,5)+Txt.HGHT_SEP+Convert.toString(gps.height,3));
         lbLon.setText(Txt.LON+Convert.toString(gps.longitude,5)+
                 TimeStr);
-        lbGeoid.setText(Txt.GEOID+Convert.toString(gps.geoid,3)+Txt.METERS_ABBR+Txt.CALC+
-                Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)
-                +Txt.METERS_ABBR+")");
+        lbGeoid.setText(Txt.GEOID+Convert.toString(gps.geoid,3)+Txt.CALC+
+                Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)+")");
 
         //lbLat.repaintNow();
         //lbLon.repaintNow();

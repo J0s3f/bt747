@@ -115,18 +115,16 @@ public class GPSCSVFile extends GPSFile {
         return m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
     }
     
-
-//    private GPSRecord prevRecord=null;
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public void writeRecord(GPSRecord s) {
         super.writeRecord(s);
         boolean prevField=false;
         
         if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             rec.setLength(0);
-            rec.append(Convert.toString(s.recCount));
+            rec.append(Convert.toString(m_recCount));
             if(activeFileFields.rcr!=0) {
                 rec.append(fieldSep);
             }
@@ -327,26 +325,6 @@ public class GPSCSVFile extends GPSFile {
                     }
                 }
             }
-//            if(activeFields.utc!=0 && 
-//                activeFields.longitude!=0 && activeFields.latitude!=0) {
-//                
-//                // Next lines calculate speed, distance (trial)
-//                if(prevRecord!=null && prevRecord.utc>1000) {
-//                    double distance;
-//                    distance=Conv.earth_distance(s.latitude,s.longitude,prevRecord.latitude,prevRecord.longitude);
-//                    double speed;
-//                    speed=s.utc-prevRecord.utc+(s.milisecond-prevRecord.milisecond)*0.001; // Currently time
-//                    if(speed>0.1) {
-//                        // Not 0 and some difference
-//                        speed=3.6*distance/speed;
-//                    } else {
-//                        speed=0.000;
-//                    }
-//                    rec.append(","+Convert.toString(speed,3)+","+distance);
-//                }
-//                prevRecord=new GPSRecord(s);
-//            }
-            
             rec.append(fieldSep);
                 
             rec.append("\r\n");

@@ -59,6 +59,7 @@ public class GPSGPXFile extends GPSFile {
 //                closeFile();
 //            }
             m_nbrOfPassesToGo--;
+            m_recCount=0;
             m_prevdate=0;
             m_isWayType=false;
             m_currentFilter=GPSFilter.C_TRKPT_IDX;
@@ -126,7 +127,7 @@ public class GPSGPXFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    private static final char []zeros = "0000000".toCharArray();
+    final private static char []zeros = "0000000".toCharArray();
     public void writeRecord(GPSRecord s) {
         super.writeRecord(s);
 
@@ -231,13 +232,13 @@ public class GPSGPXFile extends GPSFile {
                 }
                 if(m_newTrack) {
                     StringBuffer tx=new StringBuffer();
-                    String tmp=Convert.toString(s.recCount);
+                    String tmp=Convert.toString(m_recCount);
                     int nZeros=5-tmp.length();
                     if(nZeros<0) {
                         nZeros=0;
                     }
                     tx.append(zeros,0,nZeros);
-                    m_TrackName="#"+tx.toString()+Convert.toString(s.recCount)+"#";
+                    m_TrackName="#"+tx.toString()+Convert.toString(m_recCount)+"#";
                 }
                 if((activeFields.utc!=0)) {
                     rec.append(timeStr);
@@ -245,7 +246,7 @@ public class GPSGPXFile extends GPSFile {
                         m_TrackName+=" "+timeStr;
                     }
                 } else {
-                    rec.append(Convert.toString(s.recCount));
+                    rec.append(Convert.toString(m_recCount));
                 }
                 rec.append("</name>\r\n");
                 
@@ -360,9 +361,6 @@ public class GPSGPXFile extends GPSFile {
                 // No comments, so commented out.
                 rec.append("<cmt>");
                 rec.append("<![CDATA[");
-                if(recordNbrInLogs) {
-                    rec.append("#"+s.recCount+",");
-                }
                 rec.append(fixStr+","+rcrStr+","+hdopStr+","+nsatStr);
                 //                    //              <pdop> xsd:decimal </pdop> [0..1] ?
                 rec.append("]]>");
@@ -385,7 +383,7 @@ public class GPSGPXFile extends GPSFile {
      * @see gps.GPSFile#FinaliseFile()
      */
     public void finaliseFile() {
-        if(this.isOpen()) {
+        if(m_File!=null) {
             String footer;
             writeDataFooter();
             footer= "</gpx>";
