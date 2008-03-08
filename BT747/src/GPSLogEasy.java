@@ -24,9 +24,12 @@ import waba.ui.Event;
 import waba.ui.Label;
 import waba.ui.MessageBox;
 
+import javax.swing.border.TitledBorder;
+
 import gps.BT747_dev;
 import gps.GPSstate;
 import gps.GpsEvent;
+import gps.settings;
 
 import bt747.Txt;
 import bt747.ui.Button;
@@ -65,8 +68,9 @@ public class GPSLogEasy extends Container {
           add(m_btSet5Hz = new Button(Txt.BT_5HZ_FIX), LEFT, AFTER+3); //$NON-NLS-1$
           add(m_btSet2Hz = new Button(Txt.BT_2HZ_FIX), RIGHT, SAME); //$NON-NLS-1$
           add(m_btStore = new Button(Txt.STORE_SETTINGS), LEFT, AFTER+3); //$NON-NLS-1$
-          add(m_btRestore = new Button(Txt.RESTORE_SETTINGS), RIGHT, SAME); //$NON-NLS-1$
+//          m_btStore.setEnabled(false);
           enableStore();
+          add(m_btRestore = new Button(Txt.RESTORE_SETTINGS), RIGHT, SAME); //$NON-NLS-1$
           add(m_btHotStart = new Button(Txt.BT_HOT), LEFT, AFTER+10); //$NON-NLS-1$
           add(m_btWarmStart = new Button(Txt.BT_WARM), CENTER, SAME); //$NON-NLS-1$
           add(m_btColdStart = new Button(Txt.BT_COLD), RIGHT, SAME); //$NON-NLS-1$
@@ -205,7 +209,6 @@ public class GPSLogEasy extends Container {
                   GPSstate.C_OK_DIST       |
                   GPSstate.C_OK_FORMAT)
           );
-          m_btRestore.setEnabled(m_settings.isStoredSetting1());
       }
       
       public void onEvent(Event event) {

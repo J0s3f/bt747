@@ -8,46 +8,44 @@ import bt747.sys.Settings;
  ** Class to provide language specific strings.
  */
 public class Txt_en {
-    public static void init() {
-    }
     
     // BT747 class
-    public static final String S_FILE = "File";
-    public static final String S_EXIT_APPLICATION = "Exit application";
+    public final static String S_FILE = "File";
+    public final static String S_EXIT_APPLICATION = "Exit application";
     
-    public static final String S_SETTINGS = "Settings";
-    public static final String S_RESTART_CONNECTION = "Restart connection";
-    public static final String S_STOP_CONNECTION = "Stop connection";
-    public static final String S_GPX_UTC_OFFSET_0= "GPX UTC offset 0";
-    public static final String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg when small";
-    public static final String S_GPS_DECODE_ACTIVE= "GPS Decode active";
-    public static final String S_FOCUS_HIGHLIGHT= "Focus Highlight";
-    public static final String S_DEBUG= "Debug";
-    public static final String S_STATS= "Stats";
-    public static final String S_INFO= "Info";
-    public static final String S_ABOUT_BT747= "About BT747";
-    public static final String S_ABOUT_SUPERWABA= "About SuperWaba VM";
+    public final static String S_SETTINGS = "Settings";
+    public final static String S_RESTART_CONNECTION = "Restart connection";
+    public final static String S_STOP_CONNECTION = "Stop connection";
+    public final static String S_GPX_UTC_OFFSET_0= "GPX UTC offset 0";
+    public final static String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg when small";
+    public final static String S_GPS_DECODE_ACTIVE= "GPS Decode active";
+    public final static String S_FOCUS_HIGHLIGHT= "Focus Highlight";
+    public final static String S_DEBUG= "Debug";
+    public final static String S_STATS= "Stats";
+    public final static String S_INFO= "Info";
+    public final static String S_ABOUT_BT747= "About BT747";
+    public final static String S_ABOUT_SUPERWABA= "About SuperWaba VM";
     
-    public static final String S_TITLE= "BT747 - MTK Logger Control";
+    public final static String S_TITLE= "BT747 - MTK Logger Control";
 
     
-    public static final String LB_DOWNLOAD= "Download";
+    public final static String LB_DOWNLOAD= "Download";
     
-    public static final String TITLE_ATTENTION = "Attention";
-    public static final String CONFIRM_APP_EXIT = "You are about to exit the application|" + 
+    public final static String TITLE_ATTENTION = "Attention";
+    public final static String CONFIRM_APP_EXIT = "You are about to exit the application|" + 
                                                   "Confirm application exit?";
     
-    public static final String YES=
+    public final static String YES=
         "Yes";
-    public static final String NO=
+    public final static String NO=
         "No";
-    public static final String CANCEL=
+    public final static String CANCEL=
         "Cancel";
 
 
-    public static final String ABOUT_TITLE=
+    public final static String ABOUT_TITLE=
         "About BT747 V"+Version.VERSION_NUMBER;
-    public static final String ABOUT_TXT=
+    public final static String ABOUT_TXT=
         "Created with SuperWaba" + 
         "|http://www.superwaba.org"+ 
         "|" +Version.BUILD_STR + 
@@ -61,9 +59,9 @@ public class Txt_en {
         "|You can find information on the web."; 
 
     
-    public static final String ABOUT_SUPERWABA_TITLE=
+    public final static String ABOUT_SUPERWABA_TITLE=
         "About SuperWaba";
-    public static final String ABOUT_SUPERWABA_TXT=
+    public final static String ABOUT_SUPERWABA_TXT=
         "SuperWaba Virtual Machine "+ Settings.versionStr + 
         "|Copyright (c)2000-2007" + 
         "|Guilherme Campos Hazan" + 
@@ -74,9 +72,9 @@ public class Txt_en {
         "|Copyright (c) 1998,1999 WabaSoft" + 
         "|www.wabasoft.com";
     
-    public static final String DISCLAIMER_TITLE=
+    public final static String DISCLAIMER_TITLE=
         "Disclaimer";
-    public static final String DISCLAIMER_TXT=
+    public final static String DISCLAIMER_TXT=
         "Software is provided 'AS IS,' without" + 
         "|a warranty of any kind. ALL EXPRESS" + 
         "|OR IMPLIED REPRESENTATIONS AND " + 
@@ -91,36 +89,34 @@ public class Txt_en {
         "|details." ;
 
     // TAB identification
-    public static final String C_FMT  = "FMT";
-    public static final String C_CTRL = "Ctrl";
-    public static final String C_LOG  = "Log";
-    public static final String C_FILE = "File";
-    public static final String C_FLTR = "Fltr";
-    public static final String C_EASY = "Easy";
-    public static final String C_CON  = "Con";
-    public static final String C_OTHR = "Othr";
+    public final static String C_FMT  = "FMT";
+    public final static String C_CTRL = "Ctrl";
+    public final static String C_LOG  = "Log";
+    public final static String C_FILE = "File";
+    public final static String C_FLTR = "Fltr";
+    public final static String C_EASY = "Easy";
+    public final static String C_CON  = "Con";
+    public final static String C_OTHR = "Othr";
 
     // Conctrl strings
-    public static final String BT_BLUETOOTH = "BLUETOOTH";
-    public static final String BT_CONNECT_PRT = "Connect Port Nbr";
-    public static final String BT_CLOSE_PRT = "Close port";
-    public static final String BT_REOPEN_PRT  = "(Re)open port";
-    public static final String MAIN = "Main:";
-    public static final String FIRMWARE = "Firmware:";
-    public static final String MODEL = "Model:";
-    public static final String FLASHINFO = "FlashInfo:";
-    public static final String TIME_SEP = "  - Time:";
-    public static final String LAT = "Lat:";
-    public static final String LON = "Lon:";
-    public static final String GEOID = "Geoid:";
-    public static final String CALC = "(calc:";
-    public static final String HGHT_SEP = " - Hght:";
-    public static final String METERS_ABBR = "m";
-
+    public final static String BT_BLUETOOTH = "BLUETOOTH";
+    public final static String BT_CONNECT_PRT = "Connect Port Nbr";
+    public final static String BT_CLOSE_PRT = "Close port";
+    public final static String BT_REOPEN_PRT  = "(Re)open port";
+    public final static String MAIN = "Main:";
+    public final static String FIRMWARE = "Firmware:";
+    public final static String MODEL = "Model:";
+    public final static String FLASHINFO = "FlashInfo:";
+    public final static String TIME_SEP = "  - Time:";
+    public final static String LAT = "Lat:";
+    public final static String LON = "Lon:";
+    public final static String GEOID = "Geoid:";
+    public final static String CALC = "(calc:";
+    public final static String HGHT_SEP = " - Hght:";
     
     // Filters tab panel
-    public static final String STANDARD = "Standard";
-    public static final String ADVANCED = "Advanced";
+    public final static String STANDARD = "Standard";
+    public final static String ADVANCED = "Advanced";
 
     
     // BT747_dev class
@@ -277,7 +273,7 @@ public class Txt_en {
     public static final String TO_TRK = "To TRK";
     public static final String TO_PLT = "To PLT";
     public static final String TO_GMAP= "To GMAP";
-    public static final String TO_NMEA= "To NMEA";
+    public static final String TO_NMEA= "To NMEÄ";
     public static final String MEM_USED = "Mem Used   : ";
     public static final String NBR_RECORDS = "Nbr records: ";
     
@@ -360,20 +356,7 @@ public class Txt_en {
         "Store settings";
     public static final String RESTORE_SETTINGS =
         "Restore settings";
-    public static final String WARNING =
-        "Warning";
-    public static final String NO_FILES_WERE_CREATED =
-        "No output files were created!" +
-        "||" +
-        "This usually means that either:" +
-        "|- The filter did not select any points" +
-        "|- The log does not contain any data" +
-        "|" +
-        "|Try selecting all points." +
-        "|If that does not work," +
-        "| it may be a bug.";
-    public static final String ADD_RECORD_NUMBER =
-        "Record nbr info in logs";
+    
 }
 
 

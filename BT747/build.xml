@@ -27,16 +27,11 @@
         <pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
     </path>
     
-
     <!-- Warp/Exegen classpath -->
     <path id="utils">
         <pathelement location="${superwaba_root}/lib/SuperWabaTools.jar"/>
         <pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
     </path>
-	
-	<!-- Set some properties according to availability of files -->
-	<available file="package.bat" property="do.package" value="true"/>
-	<available file="upload.bat"  property="do.upload"  value="true"/>
     
     <!-- Clean directories and files -->
     <target name="clean">
@@ -81,19 +76,15 @@
         </echo>
     </target>
     
-	<!-- Set the default language -->
-	<target name="setlang" unless="lang">
-		<property name="lang" value="en"/>
-	</target>
-	
-	<!-- Update the language in some files -->
-	<target name="updatelang" depends="setlang">
+	<target name="updatelang" if="lang">
         <replaceregexp file="src/bt747/Txt.java" encoding="${encoding}" match="extends Txt_.." replace="extends Txt_${lang}"/>
         <replaceregexp file="package.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}'/>	
-        <replaceregexp file="upload.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}'/>	
 	</target>
-	
-    <target name="updatedate" depends="initdate,updatelang" description="increase build number and set release date">
+	<target name="defaultlang" unless="lang.set">
+        <replaceregexp file="src/bt747/Txt.java" encoding="${encoding}" match="extends Txt_.." replace="extends Txt_en"/>
+        <replaceregexp file="package.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=en'/>	
+	</target>
+    <target name="updatedate" depends="initdate,defaultlang,updatelang" description="increase build number and set release date">
         <!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
         <replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;"/>
         <replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match='BUILD_STR = \"[0-9]+\";' replace='BUILD_STR = "${TIMESTAMP}";'/>
@@ -102,12 +93,8 @@
         <replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}'/>	
     </target>
 	
-	<target name="package" if="do.package">
-		<exec executable="package.bat" failifexecutionfails="false"/>
-	</target>
-	
-	<target name="upload-jnlp" if="do.upload">
-		<exec executable="upload.bat" failifexecutionfails="false"/>
+	<target name="package">
+		<exec command="package.bat" failifexecutionfails="false"/>
 	</target>
 	
 	<target name="all-es">
@@ -119,19 +106,6 @@
 	<target name="all-de">
 		<antcall target="all">
 			<param name="lang" value="de"/>
-		</antcall>
-		<antcall target="package"/>
-	</target>
-	<target name="all-fr">
-		<antcall target="all">
-			<param name="lang" value="fr"/>
-		</antcall>
-		<antcall target="package"/>
-		<!-- ss -->
-	</target>
-	<target name="all-zh">
-		<antcall target="all">
-			<param name="lang" value="zh"/>
 		</antcall>
 		<antcall target="package"/>
 	</target>
@@ -400,9 +374,8 @@
         <java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
             <arg value="/INST"/>
             <!-- <arg value="/SIS"/> -->
-        	<!-- <arg value="/SH"/> -->
-        	<arg value="/V"/>  <arg value="${build_version}"/>
-        	<arg value="/c"/>  <arg value="BT74"/>
+            <arg value="/c"/>
+            <arg value="BT74"/>
             <arg value="${ant.project.name}"/>
             <arg value=""/>
             <arg value="${ant.project.name}"/>

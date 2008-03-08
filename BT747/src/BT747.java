@@ -54,7 +54,7 @@ public class BT747 extends MainWindow {
     /** The application's MenuBar */
     private static MenuBar     m_MenuBar;
     /** The content of the menu bar */
-    private static final String menu[][] = {
+    private final String menu[][] = {
             {   Txt.S_FILE,
                 Txt.S_EXIT_APPLICATION},  
             {   Txt.S_SETTINGS,
@@ -64,13 +64,11 @@ public class BT747 extends MainWindow {
                 MenuBar.UNCHECKED+Txt.S_GPX_UTC_OFFSET_0, 
                 MenuBar.UNCHECKED+Txt.S_GPX_TRKSEG_WHEN_SMALL, 
                 MenuBar.UNCHECKED+Txt.S_GPS_DECODE_ACTIVE, 
-                MenuBar.UNCHECKED+Txt.ADD_RECORD_NUMBER, 
                 "-", 
                 MenuBar.UNCHECKED+Txt.S_FOCUS_HIGHLIGHT, 
                 "-", 
                 MenuBar.UNCHECKED+Txt.S_DEBUG, 
-                MenuBar.UNCHECKED+Txt.S_STATS, 
-                MenuBar.UNCHECKED+"Holux 241" 
+                MenuBar.UNCHECKED+Txt.S_STATS 
             },
             {   Txt.S_INFO,
                 Txt.S_ABOUT_BT747,
@@ -78,35 +76,31 @@ public class BT747 extends MainWindow {
                 Txt.S_INFO}    
     };
     /** MenuBar item for File->Exit */
-    private static final int C_MENU_FILE_EXIT = 001;
+    private final static int C_MENU_FILE_EXIT = 001;
     /** MenuBar item for Settings->Restart connection */
-//    private static final int C_MENU_CONNECTION_SETTINGS = 101;
+//    private final static int C_MENU_CONNECTION_SETTINGS = 101;
 //    /** MenuBar item for Settings->Restart connection */
-    private static final int C_MENU_RESTART_CONNECTION = 101;
+    private final static int C_MENU_RESTART_CONNECTION = 101;
     /** MenuBar item for Settings->Stop connection */
-    private static final int C_MENU_STOP_CONNECTION = 102;
+    private final static int C_MENU_STOP_CONNECTION = 102;
     /** MenuBar item for Settings->GPX UTC 0 */
-    private static final int C_MENU_GPX_UTC0 = 104;
+    private final static int C_MENU_GPX_UTC0 = 104;
     /** MenuBar item for Settings->GPX Trk Sep when big only */
-    private static final int C_MENU_GPX_TRKSEG_BIGONLY = 105;
+    private final static int C_MENU_GPX_TRKSEG_BIGONLY = 105;
     /** MenuBar item for Settings->GPS Decode Active*/
-    private static final int C_MENU_GPS_DECODE_ACTIVE = 106;
-    /** MenuBar item for Settings->Record number in logs*/
-    private static final int C_MENU_RECORDNMBR_IN_LOGS = 107;
+    private final static int C_MENU_GPS_DECODE_ACTIVE = 106;
     /** MenuBar item for Settings->Debug */
-    private static final int C_MENU_FOCUS_HIGHLIGHT = 109;
+    private final static int C_MENU_FOCUS_HIGHLIGHT = 108;
     /** MenuBar item for Settings->Debug */
-    private static final int C_MENU_DEBUG_ACTIVE = 111;
+    private final static int C_MENU_DEBUG_ACTIVE = 110;
     /** MenuBar item for Settings->Conn. Stats */
-    private static final int C_MENU_STATS_ACTIVE = 112;
-    /** MenuBar item for Settings->Conn. Stats */
-    private static final int C_MENU_HOLUX_241 = 113;
+    private final static int C_MENU_STATS_ACTIVE = 111;
     /** MenuBar item for Info->About BT747 */
-    private static final int C_MENU_ABOUT = 201;
+    private final static int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
-    private static final int C_MENU_ABOUT_SW = 202;
+    private final static int C_MENU_ABOUT_SW = 202;
     /** MenuBar item for Info->Info */
-    private static final int C_MENU_INFO = 203;   
+    private final static int C_MENU_INFO = 203;   
     
     /** The tab panel */
     private static TabPanel    m_TabPanel;
@@ -162,7 +156,6 @@ public class BT747 extends MainWindow {
         }
         orgAutoOnOff=waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off causing BT trouble
 
-        Txt.init();
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle(Txt.S_TITLE); 
@@ -180,21 +173,7 @@ public class BT747 extends MainWindow {
         m_GPSstate=new GPSstate(m_settings);
         m_GPSstate.setEventPosterObject(new bt747.generic.EventPosterObject(this));
         setMenuBar(m_MenuBar=new MenuBar(menu));
-        // Next line is for modeling a device for debug.
-        // Doing this on the windows platform
-        //       if (Settings.platform.equals("Java")) m_model= new BT747model();       
-        //          sp.writeBytes(buf,0,1);
-        m_MenuBar.setChecked(C_MENU_GPX_UTC0,m_settings.getGpxUTC0());
 
-        m_MenuBar.setChecked(C_MENU_GPX_TRKSEG_BIGONLY,m_settings.getGpxTrkSegWhenBig());
-
-        m_MenuBar.setChecked(C_MENU_GPS_DECODE_ACTIVE,m_settings.getGpsDecode());
-        m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
-
-        m_MenuBar.setChecked(C_MENU_RECORDNMBR_IN_LOGS,m_settings.getRecordNbrInLogs());
-        m_MenuBar.setChecked(C_MENU_HOLUX_241,m_settings.getForceHolux241());
-
-        
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
         // Progress bar to show download progress (separate thread)
         m_ProgressLabel=new Label(Txt.LB_DOWNLOAD); 
@@ -211,9 +190,6 @@ public class BT747 extends MainWindow {
                 getClientRect().width-m_ProgressLabel.getRect().width-2,
                 PREFERRED);
         m_ProgressBar.setVisible(false);
-        m_GPSstate.setProgressBar(m_ProgressBar);
-        
-
         
         m_TabPanel.setPanel(C_LOG_CTRL_IDX,m_GPSLogCtrl = new GPSLogFormat(m_GPSstate));
         m_TabPanel.setPanel(C_GPS_LOGINFO_IDX,m_GPSLogInfo = new GPSLogReason(m_GPSstate));
@@ -233,7 +209,19 @@ public class BT747 extends MainWindow {
         //				10,//getClientRect().width-m_ProgressLabel.getRect().width,
         //				10+0*PREFERRED);
         m_TabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
+        m_GPSstate.setProgressBar(m_ProgressBar);
+        
+        // Next line is for modeling a device for debug.
+        // Doing this on the windows platform
+        //		 if (Settings.platform.equals("Java")) m_model= new BT747model();		
+        //			sp.writeBytes(buf,0,1);
+        m_MenuBar.setChecked(C_MENU_GPX_UTC0,m_settings.getGpxUTC0());
 
+        m_MenuBar.setChecked(C_MENU_GPX_TRKSEG_BIGONLY,m_settings.getGpxTrkSegWhenBig());
+
+        m_MenuBar.setChecked(C_MENU_GPS_DECODE_ACTIVE,m_settings.getGpsDecode());
+        m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
+        
         addTimer(this, 55);
 
     }
@@ -280,9 +268,6 @@ public class BT747 extends MainWindow {
                 case C_MENU_STATS_ACTIVE:
                     m_GPSstate.setStats(m_MenuBar.isChecked(C_MENU_STATS_ACTIVE));
                     break;
-                case C_MENU_HOLUX_241:
-                    m_settings.setForceHolux241(m_MenuBar.isChecked(C_MENU_HOLUX_241));
-                    break;
                 case C_MENU_GPX_UTC0:
                     m_settings.setGpxUTC0(m_MenuBar.isChecked(C_MENU_GPX_UTC0));
                     break;
@@ -292,9 +277,6 @@ public class BT747 extends MainWindow {
                 case C_MENU_GPS_DECODE_ACTIVE:
                     m_settings.setGpsDecode(m_MenuBar.isChecked(C_MENU_GPS_DECODE_ACTIVE));
                     m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
-                    break;
-                case C_MENU_RECORDNMBR_IN_LOGS:
-                    m_settings.setRecordNbrInLogs(m_MenuBar.isChecked(C_MENU_GPS_DECODE_ACTIVE));
                     break;
                 case C_MENU_ABOUT:
                     new MessageBox(Txt.ABOUT_TITLE,
