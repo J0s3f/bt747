@@ -180,7 +180,21 @@ public class BT747 extends MainWindow {
         m_GPSstate=new GPSstate(m_settings);
         m_GPSstate.setEventPosterObject(new bt747.generic.EventPosterObject(this));
         setMenuBar(m_MenuBar=new MenuBar(menu));
+        // Next line is for modeling a device for debug.
+        // Doing this on the windows platform
+        //       if (Settings.platform.equals("Java")) m_model= new BT747model();       
+        //          sp.writeBytes(buf,0,1);
+        m_MenuBar.setChecked(C_MENU_GPX_UTC0,m_settings.getGpxUTC0());
 
+        m_MenuBar.setChecked(C_MENU_GPX_TRKSEG_BIGONLY,m_settings.getGpxTrkSegWhenBig());
+
+        m_MenuBar.setChecked(C_MENU_GPS_DECODE_ACTIVE,m_settings.getGpsDecode());
+        m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
+
+        m_MenuBar.setChecked(C_MENU_RECORDNMBR_IN_LOGS,m_settings.getRecordNbrInLogs());
+        m_MenuBar.setChecked(C_MENU_HOLUX_241,m_settings.getForceHolux241());
+
+        
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
         // Progress bar to show download progress (separate thread)
         m_ProgressLabel=new Label(Txt.LB_DOWNLOAD); 
@@ -197,6 +211,9 @@ public class BT747 extends MainWindow {
                 getClientRect().width-m_ProgressLabel.getRect().width-2,
                 PREFERRED);
         m_ProgressBar.setVisible(false);
+        m_GPSstate.setProgressBar(m_ProgressBar);
+        
+
         
         m_TabPanel.setPanel(C_LOG_CTRL_IDX,m_GPSLogCtrl = new GPSLogFormat(m_GPSstate));
         m_TabPanel.setPanel(C_GPS_LOGINFO_IDX,m_GPSLogInfo = new GPSLogReason(m_GPSstate));
@@ -216,21 +233,6 @@ public class BT747 extends MainWindow {
         //				10,//getClientRect().width-m_ProgressLabel.getRect().width,
         //				10+0*PREFERRED);
         m_TabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
-        m_GPSstate.setProgressBar(m_ProgressBar);
-        
-        // Next line is for modeling a device for debug.
-        // Doing this on the windows platform
-        //		 if (Settings.platform.equals("Java")) m_model= new BT747model();		
-        //			sp.writeBytes(buf,0,1);
-        m_MenuBar.setChecked(C_MENU_GPX_UTC0,m_settings.getGpxUTC0());
-
-        m_MenuBar.setChecked(C_MENU_GPX_TRKSEG_BIGONLY,m_settings.getGpxTrkSegWhenBig());
-
-        m_MenuBar.setChecked(C_MENU_GPS_DECODE_ACTIVE,m_settings.getGpsDecode());
-        m_GPSstate.setGpsDecode(m_settings.getGpsDecode());
-
-        m_MenuBar.setChecked(C_MENU_RECORDNMBR_IN_LOGS,m_settings.getRecordNbrInLogs());
-        m_MenuBar.setChecked(C_MENU_HOLUX_241,m_settings.getForceHolux241());
 
         addTimer(this, 55);
 

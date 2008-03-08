@@ -1,3 +1,6 @@
+Version 1.43
+* Some changes in startup order to see effect on WM5.0 device.
+
 Version 1.42
 * Improvements to binary log format interpretation, especially for Holux M-241 format.
   Has an impact on other log interpretations too (the implemented error recovery mechanism
