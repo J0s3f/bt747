@@ -48,7 +48,7 @@ public class GPSLogFilter extends Container {
     private String[] C_PB_TYPE_NAMES=new String[2];
 
 
-    private static final int C_VALID_COUNT=9;
+    private final static int C_VALID_COUNT=9;
     private Check [] chkValid =new Check[C_VALID_COUNT];
     private PushButtonGroup pbPtType;
     

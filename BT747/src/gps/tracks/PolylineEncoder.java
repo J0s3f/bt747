@@ -95,9 +95,9 @@ public class PolylineEncoder {
 				maxDist = 0;
 
 				for (i = current[0] + 1; i < current[1]; i++) {
-					temp = this.distance((Trackpoint)track.getTrackpoints().elementAt(i), (Trackpoint)track
-							.getTrackpoints().elementAt(current[0]), (Trackpoint)track
-							.getTrackpoints().elementAt(current[1]));
+					temp = this.distance((Trackpoint)track.getTrackpoints().items[i], (Trackpoint)track
+							.getTrackpoints().items[current[0]], (Trackpoint)track
+							.getTrackpoints().items[current[1]]);
 					if (temp > maxDist) {
 						maxDist = temp;
 						maxLoc = i;
@@ -375,18 +375,18 @@ public class PolylineEncoder {
 			}
 		}
 
-		Hashtable lbounds = new Hashtable(0);
-		lbounds.put("maxlat", Convert.toString(maxlat));
-		lbounds.put("minlat", Convert.toString(minlat));
-		lbounds.put("maxlon", Convert.toString(maxlon));
-		lbounds.put("minlon", Convert.toString(minlon));
+		Hashtable bounds = new Hashtable(0);
+		bounds.put("maxlat", Convert.toString(maxlat));
+		bounds.put("minlat", Convert.toString(minlat));
+		bounds.put("maxlon", Convert.toString(maxlon));
+		bounds.put("minlon", Convert.toString(minlon));
 
-		this.setBounds(lbounds);
+		this.setBounds(bounds);
 		return encodedPoints.toString();
 	}
 
-	private void setBounds(Hashtable pbounds) {
-		this.bounds = pbounds;
+	private void setBounds(Hashtable bounds) {
+		this.bounds = bounds;
 	}
 
 	public Hashtable createEncodings(Track track, int level, int step) {
