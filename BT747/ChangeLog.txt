@@ -1,3 +1,7 @@
+Version 1.46
+* End of block handling improved - especially usefull for Holux M241 devices with
+  satellite logging active.
+
 Version 1.45
 * Distance can now be expressed in decimeters.
 * Problem mainly appearing on WM devices should be solved now.

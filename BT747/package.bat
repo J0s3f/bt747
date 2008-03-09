@@ -1,5 +1,5 @@
 SETLOCAL
-SET DT=1.39r7
+SET DT=1.46
 SET APP_LANG=en
 del BT747*_%LANG%_*.zip
 dos2unix *.sh

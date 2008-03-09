@@ -48,6 +48,8 @@ public final class BT747LogConvert implements GPSLogConvert {
     private int satRecSize;
     private boolean holux=false;
     
+    private int badrecord_count=0;
+    
     private final void updateLogFormat(final GPSFile gpsFile,final int newLogFormat) {
         int bits=newLogFormat;
         int index = 0;
@@ -121,6 +123,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         recCount=0;
         logFormat=0;
         nextAddrToRead=0;
+        badrecord_count=0;
         fileSize=m_File.getSize();
         while(nextAddrToRead<fileSize) {
             int okInBuffer=-1; // Last ending position in buffer
@@ -284,6 +287,7 @@ public final class BT747LogConvert implements GPSLogConvert {
 //                    foundRecord=false;
                     
 //                    while(lookForRecord&&(sizeToRead>offsetInBuffer+minRecordSize+(holux?1:2))) {
+                    if((sizeToRead>offsetInBuffer+minRecordSize+(holux?1:2))) {
                         // As long as record may fit in data still to read.
                         int indexInBuffer=offsetInBuffer;
                         int checkSum=0;
@@ -300,8 +304,8 @@ public final class BT747LogConvert implements GPSLogConvert {
                             satCntIdx=offsetInBuffer+satIdxOffset;
                             satcnt=(0xFF&bytes[satCntIdx+2])<<0
                             |(0xFF&bytes[satCntIdx+3])<<8;
-                            if(satcnt>32) {
-                                // TODO: handle error
+                            if( (satcnt>32)||(satcnt<0)) {
+                                // TODO: handle error  [can happen if end of block or end of file]
                                 satcnt=32;
                             }
                             if(satcnt!=0) {
@@ -324,12 +328,13 @@ public final class BT747LogConvert implements GPSLogConvert {
                          * Skip until potential length found.
                          */
                         //do {
-                            if(
-                                    (!holux &&((bytes[indexInBuffer]=='*')
+                            if(   (allFF!=0xFF)
+                                  &&((!holux &&((bytes[indexInBuffer]=='*')
                                     &&((checkSum&0xFF)==(0xFF&bytes[indexInBuffer+1])))
                                     )
                                     ||(holux && ((checkSum&0xFF)==(0xFF&bytes[indexInBuffer])))
-                                    ) {
+                                    )
+                                ) {
                                 if (!holux) {
                                     indexInBuffer+=2; // Point just past end ('*' and checksum).
                                 } else {
@@ -360,7 +365,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                                 recCount++;
                                 //System.out.println(recCount);
                                 foundAnyRecord=true;
-                               if(allFF!=0xFF) {
+
                                 /******************************************
                                  * Get all the information in the record.
                                  */
@@ -618,19 +623,27 @@ public final class BT747LogConvert implements GPSLogConvert {
                                     //Vm.debug("Offset:"+recIdx+" "+offsetInBuffer);
                                     if(valid) {
                                         gpsFile.writeRecord(gpsRec);
+                                    } else {
+                                        badrecord_count++;
                                     }
                                 }
-                               }
+                               
                                 /* End handling record */
                                 break;
 //                            } else {
 //                                allFF&=bytes[indexInBuffer];
 //                                checkSum^=0xFF&bytes[indexInBuffer++];
+                            } else {
+                                // Problem in checksum, data format, ... .
+                                if(allFF!=0xFF) {
+                                    badrecord_count++;
+                                }
                             }
 //                        } while(!foundRecord&&(indexInBuffer<maxRecordSize+offsetInBuffer+(holux?1:2))&&(indexInBuffer<sizeToRead-2));
                         lookForRecord=foundRecord;
-//                    }
+                    }  // End if (or while previously) for possible good record.
 //                } while(foundRecord);
+                  
                 if(!foundAnyRecord) {
                     if(sizeToRead>offsetInBuffer+maxRecordSize+(holux?1:2)) {
                         // Did not find any record - expected at least one.
