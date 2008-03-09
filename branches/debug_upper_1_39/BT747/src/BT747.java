@@ -238,7 +238,6 @@ public class BT747 extends MainWindow {
       //         if (Settings.platform.equals("Java")) m_model= new BT747model();       
       //            sp.writeBytes(buf,0,1);
 
-      myAddTimer();
   }
   
   private final void myAddTimer() {
