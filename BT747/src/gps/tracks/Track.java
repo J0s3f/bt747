@@ -25,11 +25,11 @@ public class Track {
     }
 
     public void addTrackpoint(Trackpoint trkpt) {
-        this.trackpoints.addElement(trkpt);
+        this.trackpoints.add(trkpt);
     }
     
     public Trackpoint get(int i) {
-        return (Trackpoint) this.trackpoints.elementAt(i);
+        return (Trackpoint) this.trackpoints.items[i];
     }
     
     public int size() {

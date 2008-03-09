@@ -102,15 +102,20 @@ public class GPSCompoGPSTrkFile extends GPSFile {
 //        -27.348610, 153.055867,0,-777,36169.6307194, 09-Jan-99, 3:08:14 
     
     
+    private static final String[] C_MONTHS = {
+            "JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"
+    };
+    
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
     private StringBuffer rec=new StringBuffer(1024);
     private StringBuffer wrec=new StringBuffer(1024);
 
-    public void writeRecord(final GPSRecord s) {
+    public void writeRecord(GPSRecord s) {
         super.writeRecord(s);
         boolean prevField=false;
+        //rec+=Convert.toString(m_recCount);
         boolean trackpt;
         boolean waypt;
         trackpt=!m_isWayType&&m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
@@ -127,7 +132,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
                 } else {
                     rec.append(Convert.toString(-s.latitude,8)+(char)0xBA+"S");
                 }
-            } else {
+            } else if(activeFileFields.latitude!=0) {
                 rec.append("0°N");
             }
 
@@ -138,7 +143,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
                 } else {
                     rec.append(Convert.toString(-s.longitude,8)+(char)0xBA+"W");
                 }
-            } else {
+            } else if(activeFileFields.longitude!=0) {
                 rec.append("0°E");
             }
             rec.append(" ");
@@ -172,7 +177,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
             if(waypt) {
                 wrec.setLength(0);
                 wrec.append("W  ");
-                wrec.append("waypt-"+s.recCount); // name
+                wrec.append("waypt-"+m_recCount); // name
                 wrec.append(rec.substring(2));
             }
             rec.append("s ");
@@ -218,6 +223,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
     public boolean nextPass() {
         super.nextPass();
         if(!m_isWayType) {
+            m_recCount=0;
             m_prevdate=0;
             m_isWayType=true;
             m_ext=".WPT";

@@ -130,8 +130,6 @@ public class GPSstate implements Thread {
     private String mainVersion = "";
 
     private String model = "";
-    
-    private String device = "";
 
     private String firmwareVersion = "";
 
@@ -164,7 +162,6 @@ public class GPSstate implements Thread {
 
     public void setDebug(boolean dbg) {
         GPS_DEBUG = dbg;
-        m_GPSrxtx.setDebug(dbg);
     }
 
     public void setStats(boolean stats) {
@@ -202,9 +199,6 @@ public class GPSstate implements Thread {
 
     }
 
-    /**
-     * @return The usefull bytes int the log.
-     */
     public final int logMemUsefullSize() {
         return (int) ((logMemSize >> 16) * (0x10000 - 0x200)); //16Mb
     }
@@ -493,9 +487,9 @@ public class GPSstate implements Thread {
         if (sentCmds.getCount() > C_MAX_SENT_COMMANDS) {
             sentCmds.del(0);
         }
-//        if (GPS_DEBUG) {
-//            Vm.debug(p_Cmd);
-//        }
+        if (GPS_DEBUG) {
+            Vm.debug(p_Cmd);
+        }
     }
 
     private void checkSendCmdFromQueue() {
@@ -652,7 +646,6 @@ public class GPSstate implements Thread {
         //getDGPSMode();
         //getDatumMode();
         //getFixInterval();
-        requestHoluxName(); // Mainly here to identify Holux device
     }
 
     public void getLogOnOffStatus() {
@@ -1059,12 +1052,6 @@ public class GPSstate implements Thread {
             case BT747_dev.PMTK_DT_RELEASE: // CMD 705
                 firmwareVersion = p_nmea[1];
                 model = p_nmea[2];
-                if(p_nmea.length>=4) {
-                    device=p_nmea[3];
-                    firmwareVersion += " ("+device+")";
-                } else {
-                    device="";
-                }
                 PostStatusUpdateEvent();
                 break;
 
@@ -1072,7 +1059,6 @@ public class GPSstate implements Thread {
                 break;
             } // End switch
         } else if (p_nmea[0].equals("HOLUX001")) {
-            holux=true;
             z_Result = -1; // Suppose cmd not treated
             if (GPS_DEBUG) {
                 String s;
@@ -1122,10 +1108,11 @@ public class GPSstate implements Thread {
             mdStr = "iBlue 737/Qstarz 810";
             break;
         case 0x0002:
-            mdStr = "Qstarz 815/iBlue 747";
+            mdStr = "Qstarz 815";
             break;
         case 0x0005:
-            mdStr = "Holux M-241/QT-1000P";
+            mdStr = "Holux M-241";
+            holux=true;
             break;
         case 0x001B:
             mdStr = "iBlue 747";
@@ -1138,24 +1125,18 @@ public class GPSstate implements Thread {
             break;
         case 0x1388:
             mdStr = "757/ZI v1";
-//            logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
+            logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
             break;
         case 0x5202:
             mdStr = "757/ZI v2";
-//            logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
+            logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
             break;
         case 0x8300:
             mdStr = "Qstarz BT-1200";
-//            logMemSize = 32 * 1024 * 1024 / 8; //32Mb -> 4MB
+            logMemSize = 32 * 1024 * 1024 / 8; //32Mb -> 4MB
             break;
         default:
             mdStr = Txt.UNKNOWN;
-        }
-        // Recognition based on 'device'
-        if (device.length()==0) {
-            //Do nothing
-        } else if(device.equals("QST1000P")) {
-            mdStr = "Qstarz BT-1000P";
         }
         return mdStr;
     }
@@ -1321,10 +1302,10 @@ public class GPSstate implements Thread {
      * Start of block position to verify if log in device corresponds to log in
      * file.
      */
-    private static final int C_BLOCKVERIF_START = 0x200;
+    private final static int C_BLOCKVERIF_START = 0x200;
 
     /** Size of block to validate that log in device is log in file. */
-    private static final int C_BLOCKVERIF_SIZE = 0x200;
+    private final static int C_BLOCKVERIF_SIZE = 0x200;
 
     private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
 
@@ -1354,7 +1335,6 @@ public class GPSstate implements Thread {
         }
     }
 
-    
     private void endGetLog() {
         m_logState = C_LOG_NOLOGGING;
         closeLog();
@@ -1364,7 +1344,6 @@ public class GPSstate implements Thread {
         }
         if(loggingIsActiveBeforeDownload) {
             startLog();
-            getLogOnOffStatus();
         }
     }
 
@@ -1382,11 +1361,9 @@ public class GPSstate implements Thread {
             final int p_Step, final String p_FileName, final int Card,
             final boolean incremental, // True if incremental read
             final ProgressBar pb) {
-        if(m_logState==C_LOG_NOLOGGING) {
-            // Disable device logging while downloading
+        if(logStatus==C_LOG_NOLOGGING) {
             loggingIsActiveBeforeDownload = loggingIsActive;
             stopLog();
-            getLogOnOffStatus();
         }
 
         m_StartAddr = p_StartAddr;
@@ -1535,7 +1512,7 @@ public class GPSstate implements Thread {
         }
     }
 
-    // Called regularly
+    // Called regurarly
     private void getNextLogPart() {
         if (m_logState != C_LOG_NOLOGGING) {
             int z_Step;
@@ -1715,17 +1692,6 @@ public class GPSstate implements Thread {
             }
         } // Switch m_logState
     }
-    
-    
-    
-    /**
-     * <code>dataOK</code> indicates if all volatile data from the device
-     * has been fetched.  This is usefull to know if the settings can be
-     * backed up.
-     */
-    private int dataOK = 0;
-
-    // The next lines indicate bit fields of <code>dataOK</code>
     public static final int C_OK_FIX        = 0x0001;
     public static final int C_OK_DGPS       = 0x0002;
     public static final int C_OK_SBAS       = 0x0004;
@@ -1736,7 +1702,11 @@ public class GPSstate implements Thread {
     public static final int C_OK_SPEED      = 0x0080;
     public static final int C_OK_DIST       = 0x0100;
     public static final int C_OK_FORMAT     = 0x0200;
+    
+    
 
+    private int dataOK = 0;
+    
     public boolean isDataOK(final int mask) {
         return ( (dataOK & mask)== mask );
     }
@@ -1864,16 +1834,9 @@ public class GPSstate implements Thread {
             }
         }
         return 0; // Done.
+
     }
 
-    
-    /********************************************************************
-     * Getters and Setters
-     * 
-     */
-    
-    
-    
     /**
      * @return Returns the gpsDecode.
      */
@@ -1883,8 +1846,7 @@ public class GPSstate implements Thread {
 
     /**
      * @param gpsDecode
-     *            Activate gps decoding if true, do not decode if false.
-     * This may improve performance.
+     *            The gpsDecode to set.
      */
     public void setGpsDecode(final boolean gpsDecode) {
         this.gpsDecode = gpsDecode;
@@ -1906,12 +1868,24 @@ public class GPSstate implements Thread {
     }
 
     /**
+     * @param flashDesc
+     *            The flashDesc to set.
+     */
+    public void setFlashDesc(String flashDesc) {
+        FlashDesc = flashDesc;
+    }
+    /**
      * @return Returns the mtkLogVersion.
      */
     public String getMtkLogVersion() {
         return MtkLogVersion;
     }
-
+    /**
+     * @param mtkLogVersion The mtkLogVersion to set.
+     */
+    public void setMtkLogVersion(String mtkLogVersion) {
+        MtkLogVersion = mtkLogVersion;
+    }
     /**
      * @return Returns the holux.
      */
@@ -1919,7 +1893,7 @@ public class GPSstate implements Thread {
         return holux;
     }
     /**
-     * @param holux Indicates if this device needs special holux decoding.
+     * @param holux The holux to set.
      */
     public void setHolux(boolean holux) {
         this.holux = holux;
