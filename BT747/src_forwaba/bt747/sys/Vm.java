@@ -12,12 +12,12 @@ package bt747.sys;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-final public class Vm {
-    final static public int getTimeStamp() {
+public final class Vm {
+    public static final int getTimeStamp() {
         return waba.sys.Vm.getTimeStamp();
     }
     
-    final static public void debug(final String s) {
+    public static final void debug(final String s) {
         waba.sys.Vm.debug(s);
     }
 
