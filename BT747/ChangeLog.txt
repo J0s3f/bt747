@@ -1,3 +1,7 @@
+Version 1.45
+* Distance can now be expressed in decimeters.
+* Problem mainly appearing on WM devices should be solved now.
+
 Version 1.44
 * Added japanese beta
 * Reverted a change from 1.39 to 1.40 that potentially harmed PocketPC users (removed static

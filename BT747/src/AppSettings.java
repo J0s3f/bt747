@@ -290,8 +290,14 @@ public class AppSettings implements gps.settings {
         case 14:
             setForceHolux241(false);
             /* fall through */
+        case 15:
+            /* Value interpretation changed */
+            setDistConditionSetting1(getDistConditionSetting1()*10);
+            /* fall through */
+
+            /* Must be last line in case (not 'default') */ 
+            setStringOpt("0.16",C_VERSION_IDX, C_VERSION_SIZE);
         }
-        setStringOpt("0.15",C_VERSION_IDX, C_VERSION_SIZE);
         getSettings();
     }
     
