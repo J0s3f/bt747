@@ -30,13 +30,13 @@ package gps;
  */
 public class GPSFilter {
     private int startDate=0; // Seconds since 1/1/1970
-    // TODO: could fix potential problem with negative values for date.
+    // TODO: could fix problem with negative values for date.
     private int endDate=0x7FFFFFFF; // Seconds since 1/1/1970
     private int validMask=0xFFFFFFFE; // Valid mask
     private int rcrMask=0xFFFFFFFF;
     
-    public static final int C_TRKPT_IDX=0;
-    public static final int C_WAYPT_IDX=1;
+    public final static int C_TRKPT_IDX=0;
+    public final static int C_WAYPT_IDX=1;
 
     public int getEndDate() {
         return endDate;
@@ -63,10 +63,10 @@ public class GPSFilter {
         this.validMask = validMask;
     }
     
-    public boolean doFilter(final GPSRecord r) {
+    public boolean doFilter(GPSRecord r) {
         // Filter the record information
         boolean z_Result;
-        z_Result=((r.utc < 1001)||((r.utc>=startDate) && (r.utc<=endDate)))
+        z_Result=(r.utc>=startDate) && (r.utc<=endDate)
                 &&((r.valid&validMask)!=0)
                 &&((r.rcr&rcrMask)!=0);
         

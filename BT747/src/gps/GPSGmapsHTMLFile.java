@@ -57,6 +57,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
 //                closeFile();
 //            }
             m_nbrOfPassesToGo--;
+            m_recCount=0;
             m_prevdate=0;
             m_isWayType=false;
             m_currentFilter=GPSFilter.C_TRKPT_IDX;
@@ -168,7 +169,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public void writeRecord(GPSRecord s) {
         super.writeRecord(s);
 
         if(activeFields!=null) {
@@ -432,7 +433,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
      * @see gps.GPSFile#FinaliseFile()
      */
     public void finaliseFile() {
-        if(this.isOpen()) {
+        if(m_File!=null) {
             String footer;
             writeDataFooter();
             footer= "map.setCenter(new GLatLng(" +

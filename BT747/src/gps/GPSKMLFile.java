@@ -64,6 +64,7 @@ public class GPSKMLFile extends GPSFile {
 //              closeFile();  // Close every time - if single file, it gets reopened.
 //          }
           m_nbrOfPassesToGo--;
+          m_recCount=0;
           m_prevdate=0;
 //          if(!m_multipleFiles) {
 //            writeDataFooter();
@@ -349,7 +350,7 @@ public class GPSKMLFile extends GPSFile {
   /* (non-Javadoc)
    * @see gps.GPSFile#WriteRecord()
    */
-  public void writeRecord(final GPSRecord s) {
+  public void writeRecord(GPSRecord s) {
       super.writeRecord(s);
 
       if(activeFields!=null) {
@@ -369,7 +370,7 @@ public class GPSKMLFile extends GPSFile {
                             );
                     } else {
                         rec.append("IDX: ");
-                        rec.append(Convert.toString(s.recCount));
+                        rec.append(Convert.toString(m_recCount));
                     }
                     rec.append("</name>\r\n");
                     
@@ -435,11 +436,6 @@ public class GPSKMLFile extends GPSFile {
                     
                     rec.append("<description>");
                     rec.append("<![CDATA[");
-                    if(recordNbrInLogs) {
-                        rec.append("IDX: ");
-                        rec.append(Convert.toString(s.recCount));
-                        rec.append("<br/>");
-                    }
                     if(activeFields.utc!=0) {
                         rec.append("DATE: ");
                         rec.append(Convert.toString(t.getYear())+"-"
@@ -564,8 +560,7 @@ public class GPSKMLFile extends GPSFile {
                     }
                     if(activeFields.distance!=0) {
                         rec.append("<br />DISTANCE: ");
-                        rec.append(Convert.toString(s.distance,2));
-                        rec.append(" m");
+                        rec.append(Convert.toString(s.distance,2)); 
                     }
                     
                     rec.append("]]>");
@@ -615,7 +610,7 @@ public class GPSKMLFile extends GPSFile {
    * @see gps.GPSFile#FinaliseFile()
    */
   public void finaliseFile() {
-      if(this.isOpen()) {
+      if(m_File!=null) {
           String footer;
           writeDataFooter();            
           footer=

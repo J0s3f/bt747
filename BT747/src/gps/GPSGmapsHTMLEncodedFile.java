@@ -19,14 +19,14 @@
 //********************************************************************  
 package gps;
 
+import bt747.sys.Convert;
+import bt747.util.Hashtable;
+
 import gps.tracks.PolylineEncoder;
 import gps.tracks.Track;
 import gps.tracks.Trackpoint;
 
-import bt747.sys.Convert;
-import bt747.util.Hashtable;
-
-/**Class to write a Google Maps HTML file.
+/**Class to write a GPX file.
  * @author Mario De Weerd
  */
 public class GPSGmapsHTMLEncodedFile extends GPSFile {
@@ -37,10 +37,6 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     private int m_currentFilter;
     
     Track track;
-    
-    private int m_TrackIndex=0;  // Index for tracks
-
-    private String m_TrackOnclickFuncCalls=""; // Javascript function calls if click.
     
     /**
      * 
@@ -70,6 +66,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                closeFile();
 //            }
             m_nbrOfPassesToGo--;
+            m_recCount=0;
             m_prevdate=0;
             m_isWayType=false;
             m_currentFilter=GPSFilter.C_TRKPT_IDX;
@@ -81,32 +78,18 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             return false;
         }
     }
-    
-    private String googleKeyCode="";  // Google key code for web
-    private String keyCode() {
-        if(googleKeyCode.length()!=0) {
-            return ";key="+googleKeyCode;
-        }
-        return ""; // default
-    }
-
 
     protected void writeFileHeader(final String Name) {
-        StringBuffer l_header=new StringBuffer(1700);
-        l_header.setLength(0);
-        l_header.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n" + 
+        String header;
+        header ="<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n" + 
                 "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\r\n" + 
                 "<head>\r\n" + 
-                "<title>");
-        l_header.append(Name);
-        
-        l_header.append("</title>\r\n" + 
+                "<title>"+Name+
+                "</title>\r\n" + 
                 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n" + 
-                "<meta name=\"description\" content=\"Tracks - Generated with BT747 http://sf.net/projects/bt747 - powered by Google Maps\" />\r\n" + 
+                "<meta name=\"description\" content=\"test - powered by Google Maps\" />\r\n" + 
                 "\r\n" + 
-                "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp");
-        l_header.append(keyCode());
-        l_header.append("\" type=\"text/javascript\">\r\n" + 
+                "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp\" type=\"text/javascript\">\r\n" + 
                 "</script>\r\n" + 
                 "<style type=\"text/css\">\r\n" + 
                 "             v\\:* {\r\n" + 
@@ -127,9 +110,8 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 "</style>\r\n" + 
                 "</head>\r\n" + 
                 "\r\n" + 
-                "<body onload=\"setFooter()\" onresize=\"setFooter()\" onunload=\"GUnload()\">\r\n" + 
+                "<body>\r\n" + 
                 "<div id=\"map\"> </div>\r\n" + 
-                "<div id=\"footer\">\r\n" + 
                 "\r\n" + 
                 "<script type=\"text/javascript\">\r\n" + 
                 "//<![CDATA[ \r\n" +             // check for compatibility 
@@ -142,52 +124,8 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 "\r\n" + 
                 "  function showMarkerInfo(i) {\r\n" + 
                 "     markers[i].openInfoWindowHtml(infoHtmls[i]);\r\n" + 
-                "  }\r\n" +                 // create the map
-                // Code from http://www.pompage.net/pompe/pieds/
-                "function getWindowHeight() {\r\n" + 
-                "    var windowHeight=0;\r\n" + 
-                "    if (typeof(window.innerHeight)==\'number\') {\r\n" + 
-                "        windowHeight=window.innerHeight;\r\n" + 
-                "    }\r\n" + 
-                "    else {\r\n" + 
-                "     if (document.documentElement&&\r\n" + 
-                "       document.documentElement.clientHeight) {\r\n" + 
-                "         windowHeight = document.documentElement.clientHeight;\r\n" + 
-                "    }\r\n" + 
-                "    else {\r\n" + 
-                "     if (document.body&&document.body.clientHeight) {\r\n" + 
-                "         windowHeight=document.body.clientHeight;\r\n" + 
-                "      }\r\n" + 
-                "     }\r\n" + 
-                "    }\r\n" + 
-                "    return windowHeight;\r\n" + 
-                "}" +
-                "function setFooter() {\r\n" + 
-                "    if (document.getElementById) {\r\n" + 
-                "        var windowHeight=getWindowHeight();\r\n" + 
-                "        var footerElement=document.getElementById(\'footer\');\r\n" + 
-                "        var footerHeight=footerElement.offsetHeight;\r\n" + 
-                "        if (windowHeight-footerHeight>400) {\r\n" + 
-                "            document.getElementById(\'map\').style.height=\r\n" + 
-                "            (windowHeight-footerHeight)+\'px\';\r\n" + 
-                "        }\r\n" + 
-                "        else {\r\n" + 
-                "            document.getElementById(\'map\').style.height=400;\r\n" + 
-//                "            footerElement.style.position=\'static\';\r\n" + 
-                "        }\r\n" +  // else
-                "       }\r\n" + 
-                "}\r\n" + // Function 
-                "    function trackClick(trk,val) {\r\n" + 
-                "      if (val == 1) {\r\n" + 
-                "        map.addOverlay(trk);\r\n" + 
-                "      } else {\r\n" + 
-                "        map.removeOverlay(trk);\r\n" + 
-                "      } }\r\n" + 
-                "    var clickStr; clickStr=\"\";" +
-                "    function clickString() {\r\n" +
-                "    document.write(clickStr);" +
-                "    }\r\n"+
-
+                "  }\r\n" +                 // create the map 
+                "\r\n" +
                 
 //                "var blueIcon = new GIcon(G_DEFAULT_ICON);" +
 //                "blueIcon.image = \"http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png\";" +
@@ -208,10 +146,10 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                "     } else {\r\n" + 
 //                "       window.addEventListener(\"resize\", function() {this.map.onResize()} , false);\r\n" + 
 //                "     }\r\n" +                // add a polyline overlay 
-                "");
+                "";
                 //"points.push(new GPoint(3.11492833333333,45.75697))";
         //map.addOverlay(new GPolyline(points,"#960000",2,.75));
-        writeTxt(l_header.toString());
+        writeTxt(header);
     }
     
     private double minlat;
@@ -245,16 +183,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         
         if(tmp.length()>=2) {
             rec.setLength(0);
-            
-            // Track assignment
-            m_TrackOnclickFuncCalls+="trackClick(track"+m_TrackIndex+",this.checked);";
-            rec.append("var track");
-            rec.append(m_TrackIndex);
-            
-            rec.append(";\r\nmap.addOverlay(");
-            rec.append("track");
-            rec.append(m_TrackIndex);
-            rec.append("=new GPolyline.fromEncoded({\r\n" + 
+            rec.append("map.addOverlay(new GPolyline.fromEncoded({\r\n" + 
                     "  color: \"#");
             rec.append(hexColor);
             rec.append("\",\r\n" + 
@@ -277,7 +206,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         }
 
         //System.out.println(rec.toString());
-        m_TrackIndex++;
+
         track=new Track();
     }
     
@@ -302,49 +231,17 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             }
             track=new Track();
         } else {
-            endTrack(goodTrackColor);
-            splitOrEndTrack();
-        }
-    }
-    
-    private void splitOrEndTrack() {
-        StringBuffer lrec=new StringBuffer();
-        if(!m_isWayType && (m_TrackOnclickFuncCalls.length()!=0)) {
-            lrec.setLength(0);
-            lrec.append(
-                    "clickStr+= \""+m_TrackDescription +
-                    "<input type=\\\"checkbox\\\"" +
-                    "           onClick=\\\"" + m_TrackOnclickFuncCalls + "\\\" checked/>\";\r\n");
-            writeTxt(lrec.toString());
-            m_TrackOnclickFuncCalls="";
-            m_TrackDescription="";
+            endTrack("0000FF");
         }
     }
 
     private int m_PreviousTime = 0;
-    private String m_TrackDescription="";
-    
-    private String getTimeStr(final GPSRecord s) {
-        if(activeFields.utc!=0) {
-            return 
-            (   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+"-"
-            +C_MONTHS[t.getMonth()-1]+"-"
-            +((t.getYear()%100)<10?"0":"")+Convert.toString(t.getYear()%100)
-            +" "
-            +(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
-            +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute()) //+":"
-            //+(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
-            ;
-        } else {
-            return "";
-        }
-    }
-    
-    
+
+       
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public void writeRecord(GPSRecord s) {
         super.writeRecord(s);
 
         if(activeFields!=null) {
@@ -380,13 +277,9 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         if(s.utc-m_PreviousTime<m_TrackSepTime) {
                             track.addTrackpoint(new Trackpoint(s.latitude,s.longitude));
                             endTrack(badTrackColor);
-                        } else {
-                            // points quite separated - No line, but separate track
-                            splitOrEndTrack();
                         }
                     }
                     track=new Track();
-                    m_TrackDescription=getTimeStr(s);
                 }
                 
                 if((activeFields.utc!=0)) {
@@ -629,11 +522,10 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
      * @see gps.GPSFile#FinaliseFile()
      */
     public void finaliseFile() {
-        if(this.isOpen()) {
+        if(m_File!=null) {
             String footer;
             writeDataFooter();
-            footer=  "clickString();\r\n" +
-                    "map.setCenter(new GLatLng(" +
+            footer= "map.setCenter(new GLatLng(" +
                     Convert.toString((maxlat+minlat)/2) +
                     "," +
                     Convert.toString((maxlon+minlon)/2) +
@@ -650,7 +542,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     "   }\r\n" + 
                     "//]]>\r\n" + 
                     "</script>\r\n" + 
-                    " </div>\r\n" + 
+                    "\r\n" + 
                     "</body>\r\n" + 
                     "</html>";
             writeTxt(footer);
@@ -659,16 +551,4 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         
     }
     
-    /**
-     * @return Returns the googleKeyCode.
-     */
-    public String getGoogleKeyCode() {
-        return googleKeyCode;
-    }
-    /**
-     * @param googleKeyCode The googleKeyCode to set.
-     */
-    public void setGoogleKeyCode(String googleKeyCode) {
-        this.googleKeyCode = googleKeyCode;
-    }
 }
