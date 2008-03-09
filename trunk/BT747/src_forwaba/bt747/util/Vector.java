@@ -14,32 +14,7 @@ package bt747.util;
  */
 public class Vector extends waba.util.Vector {
 
-    /**
-     * 
-     */
-    public Vector() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-    /**
-     * @param size
-     */
-    public Vector(int size) {
-        super(size);
-        // TODO Auto-generated constructor stub
-    }
-
-//    /**
-//     * @param startingWith
-//     */
-//    public Vector(Object[] startingWith) {
-//        super(startingWith);
-//        // TODO Auto-generated constructor stub
-//    }
-
     public final void addElement(Object obj) {
-        // TODO Auto-generated method stub
         super.add(obj);
     }
     
