@@ -13,7 +13,30 @@ package bt747.util;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class Vector extends waba.util.Vector {
+    /**
+     * 
+     */
+    public Vector() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
+    /**
+     * @param size
+     */
+    public Vector(int size) {
+        super(size);
+        // TODO Auto-generated constructor stub
+    }
+
+    /**
+     * @param startingWith
+     */
+    public Vector(Object[] startingWith) {
+        super(startingWith);
+        // TODO Auto-generated constructor stub
+    }
+    
     public final void addElement(Object obj) {
         super.add(obj);
     }
@@ -21,8 +44,4 @@ public class Vector extends waba.util.Vector {
     public final Object elementAt(int i) {
         return items[i];
     }
-    
-    
-    
-
 }
