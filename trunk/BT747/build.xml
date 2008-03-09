@@ -135,7 +135,14 @@
 		</antcall>
 		<antcall target="package"/>
 	</target>
-    
+	
+	<target name="all-jp">
+		<antcall target="all">
+			<param name="lang" value="jp"/>
+		</antcall>
+		<antcall target="package"/>
+	</target>    
+	
     <!-- Compile -->
     <target name="build" depends="clean, updatedate">
         

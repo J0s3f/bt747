@@ -1,3 +1,8 @@
+Version 1.44
+* Added japanese beta
+* Reverted a change from 1.39 to 1.40 that potentially harmed PocketPC users (removed static
+  on menu string list).
+
 Version 1.43
 * Some changes in startup order to see effect on WM5.0 device.
 

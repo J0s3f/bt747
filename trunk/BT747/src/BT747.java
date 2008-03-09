@@ -54,7 +54,7 @@ public class BT747 extends MainWindow {
     /** The application's MenuBar */
     private static MenuBar     m_MenuBar;
     /** The content of the menu bar */
-    private static final String menu[][] = {
+    private final String menu[][] = {
             {   Txt.S_FILE,
                 Txt.S_EXIT_APPLICATION},  
             {   Txt.S_SETTINGS,
