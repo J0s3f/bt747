@@ -606,7 +606,7 @@ public class GPSstate implements Thread {
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_SET_STR + ","
                 + BT747_dev.PMTK_LOG_DISTANCE_INTERVAL_STR + ","
-                + Convert.toString(z_value * 10));
+                + Convert.toString(z_value));
     }
 
     public void setLogSpeedInterval(final int value) {
@@ -1800,7 +1800,7 @@ public class GPSstate implements Thread {
                         PostStatusUpdateEvent();
                         break;
                     case BT747_dev.PMTK_LOG_DISTANCE_INTERVAL: //4;
-                        logDistanceInterval = Convert.toInt(nmea[3]) / 10;
+                        logDistanceInterval = Convert.toInt(nmea[3]);
                     dataOK|=C_OK_DIST;
                         PostStatusUpdateEvent();
                         break;

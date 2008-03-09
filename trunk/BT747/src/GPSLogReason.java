@@ -109,7 +109,7 @@ public class GPSLogReason extends Container {
         m_chkDistanceOnOff.setChecked(m_GPSstate.logDistanceInterval!=0);
         m_edDistance.setEnabled(m_GPSstate.logDistanceInterval!=0);
         if(m_GPSstate.logDistanceInterval!=0) {
-            m_edDistance.setText(Convert.toString(m_GPSstate.logDistanceInterval));
+            m_edDistance.setText(Convert.toString((float)m_GPSstate.logDistanceInterval/10,1));
         }
         m_chkFixOnOff.setChecked(m_GPSstate.logFix!=0);
         m_edFix.setEnabled(m_GPSstate.logFix!=0);
@@ -150,7 +150,7 @@ public class GPSLogReason extends Container {
             m_GPSstate.setLogSpeedInterval(0);
         }
         if(m_chkDistanceOnOff.getChecked()) {
-            m_GPSstate.setLogDistanceInterval(Convert.toInt(m_edDistance.getText()));
+            m_GPSstate.setLogDistanceInterval((int)(10*Convert.toFloat(m_edDistance.getText())));
         } else {
             m_GPSstate.setLogDistanceInterval(0);
         }
