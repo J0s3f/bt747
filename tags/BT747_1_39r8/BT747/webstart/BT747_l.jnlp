@@ -1,0 +1,58 @@
+<jnlp href="BT747_l.jnlp" 
+      codebase="file:///mdeweerd/workspace/BT747/webstart">
+  <information>
+    <title>BT747</title>
+    <vendor>Mario De Weerd (GNU GPL license)</vendor>
+    <description>Control and log management application for MTK based devices</description>
+    <icon href="http://sflogo.sourceforge.net/sflogo.php?group_id=196368&amp;type=4" width="125" height="37" />
+   <icon kind="splash" href="http://sflogo.sourceforge.net/sflogo.php?group_id=196368&amp;type=4" width="125" height="37" />
+   <offline-allowed/>
+   <shortcut online="false">
+     <desktop />
+     <menu submenu="iBlue 747 / BT-Q1000"/>
+   </shortcut>
+  </information>
+  
+  <security>
+    <all-permissions />
+  </security>
+  
+  <resources>
+    <j2se version="1.4+"/>
+   <icon kind=splash" href="http://sflogo.sourceforge.net/sflogo.php?group_id=196368&amp;type=4" />
+    <jar href="Waba_only.jar" />
+    <jar href="BT747_rxtx.jar" />
+    <jar href="RXTXcomm.jar" />
+  </resources>
+  <resources os="Mac OS X" >
+    <nativelib href="RXTX_macosx.jar" download="eager"/>
+  </resources>
+  <resources os="Windows">
+    <nativelib href="RXTX_win.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="i686">
+    <nativelib href="RXTX_linux_x86.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="i386">
+    <nativelib href="RXTX_linux_x86.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="x86">
+    <nativelib href="RXTX_linux_x86.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="ia64">
+    <nativelib href="RXTX_linux_ia64.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="x64">
+    <nativelib href="RXTX_linux_x64.jar" download="eager"/>
+  </resources>
+
+ 
+  <applet-desc name=BT747 main-class="waba.applet.Applet" width="320" height="320">
+<param name="appClass" value="BT747"/>
+<param name="bpp" value="8"/>
+<param name="scale" value="1"/>
+   
+</applet-desc>
+
+</jnlp>
+
