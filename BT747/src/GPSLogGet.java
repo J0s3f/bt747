@@ -29,7 +29,6 @@ import waba.ui.ProgressBar;
 import waba.util.Date;
 
 import gps.BT747LogConvert;
-import gps.CSVLogConvert;
 import gps.GPSCSVFile;
 import gps.GPSCompoGPSTrkFile;
 import gps.GPSFile;
@@ -79,7 +78,7 @@ public class GPSLogGet extends Container {
     Edit m_edTrkSep;
 
     ComboBox m_cbTimeOffsetHours;
-    private static final String[] offsetStr = {
+    private final static String[] offsetStr = {
             "-12", "-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1",
             "+0",
             "+1","+2","+3","+4","+5","+6","+7","+8","+9","+10","+11","+12",
@@ -87,7 +86,7 @@ public class GPSLogGet extends Container {
     };
     
     ComboBox m_cbColors;
-    private static final String[] colors = {
+    private final static String[] colors = {
             "FF0000",
             "0000FF",
             "800000",
@@ -100,13 +99,13 @@ public class GPSLogGet extends Container {
     Check m_chkIncremental;
 
     ComboBox m_chkOneFilePerDay;
-    private static final String[] fileStr = {
+    private final static String[] fileStr = {
             Txt.ONE_FILE,
             Txt.ONE_FILE_DAY,
             Txt.ONE_FILE_TRK
     };
   
-    static final int JULIAN_DAY_1_1_1970=18264;   
+    final static int JULIAN_DAY_1_1_1970=18264;   
     ProgressBar m_pb;
     AppSettings m_appSettings;
     
@@ -293,11 +292,8 @@ public class GPSLogGet extends Container {
                 GPSLogConvert lc;
                 if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".trl")) {
                     lc=new HoluxTrlLogConvert();
-                } else if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".csv")) {
-                    lc=new CSVLogConvert();
                 } else {
                     lc=new BT747LogConvert();
-                    ((BT747LogConvert)lc).setHolux(m_appSettings.getForceHolux241());
                 }
                 GPSFilter[] usedFilters;
                 Button z_Button=((Button)event.target);
@@ -344,17 +340,14 @@ public class GPSLogGet extends Container {
                 }
                 if(event.target==m_btToGMAP) {
                     gpsFile=new GPSGmapsHTMLEncodedFile();
-                    ((GPSGmapsHTMLEncodedFile)gpsFile).setGoogleKeyCode(
-                            m_appSettings.getGoogleMapKey());
                     ext=".html";
                 }
 
-
-                gpsFile.setRecordNbrInLogs(m_appSettings.getRecordNbrInLogs());
+                    
                 gpsFile.setBadTrackColor(m_appSettings.getColorInvalidTrack());
                 for (int i = 0; i < usedFilters.length; i++) {
-                    usedFilters[i].setStartDate(dateToUTCepoch1970(m_StartDate));
-                    usedFilters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
+                    m_Filters[i].setStartDate(dateToUTCepoch1970(m_StartDate));
+                    m_Filters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
                 }
                 gpsFile.setFilters(usedFilters);
                 gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard(),

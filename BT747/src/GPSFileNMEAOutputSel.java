@@ -34,7 +34,7 @@ public class GPSFileNMEAOutputSel extends Container {
     private Check [] chkNMEAItems =new Check[BT747_dev.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
     
-    private static final int C_NMEAactiveFilters=0x0002003A;
+    private final int C_NMEAactiveFilters=0x0002003A;
     
     private AppSettings m_settings;
     /**
