@@ -1,3 +1,6 @@
+Version 1.47
+* Date/time indicated on gmaps page was incorrect in "most" cases.  Solved.
+
 Version 1.46
 * End of block handling improved - especially usefull for Holux M241 devices with
   satellite logging active.
