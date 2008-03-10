@@ -59,6 +59,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         m_isWayType=true;
         
         track=new Track();
+        m_TrackDescription="";
     }
     
     
@@ -69,6 +70,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //            if(m_multipleFiles) {
 //                closeFile();
 //            }
+            m_TrackDescription="";
             m_nbrOfPassesToGo--;
             m_prevdate=0;
             m_isWayType=false;
@@ -311,6 +313,8 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         StringBuffer lrec=new StringBuffer();
         if(!m_isWayType && (m_TrackOnclickFuncCalls.length()!=0)) {
             lrec.setLength(0);
+            //Vm.debug("Do:"+m_TrackDescription);
+
             lrec.append(
                     "clickStr+= \""+m_TrackDescription +
                     "<input type=\\\"checkbox\\\"" +
@@ -386,7 +390,11 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         }
                     }
                     track=new Track();
-                    m_TrackDescription=getTimeStr(s);
+                    //Vm.debug("Pos:"+getTimeStr(s));
+                    if(m_TrackDescription.length()==0) {
+                        m_TrackDescription=getTimeStr(s);
+                        //Vm.debug(m_TrackDescription);
+                    }
                 }
                 
                 if((activeFields.utc!=0)) {
