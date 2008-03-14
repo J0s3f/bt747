@@ -11,6 +11,8 @@
 	<property file="default.properties" />
 
 	<property name="dist" value="dist"/>
+	
+	<property name="application" value="BT747"/>
 
 	<exec outputproperty="build.current.revision" executable="svnversion">
 	         <arg line="-n -c" />
@@ -572,4 +574,95 @@
 			<arg value="/?"/>
 		</java>
 	</target>
+
+	
+	<!-- Stuff to build war target - under development -->
+	<property name="keytool.alias"  value="alogin"/>
+	<property name="keytool.passwd" value="secret"/>
+	<property name="keytool.keystore" value="cfg/jws/myKeystore"/>
+		
+	<target name="pack" depends="pack.init,jws.pack" >
+		<delete file="build/wars/${application}.war"/>
+		<war destfile="build/wars/${application}.war"
+		     webxml="${dist}/src/WEB-INF/web.xml"
+		     basedir="${dist}/src" >
+			<lib dir="lib">
+			  <include name="ext/jnlp-servlet.jar"/>
+				<!--
+			  <include name="ext/xalan.jar"/>
+			  -->
+			</lib>
+		</war>
+	</target>
+ 
+	<target name="pack.init">
+		<mkdir dir="build/wars"/>
+		<mkdir dir="build/sign"/>
+		<mkdir dir="${dist}/src/app"/>
+		<mkdir dir="${dist}/src/WEB-INF"/>
+	</target>
+ 
+	<target name="jws.web-inf">
+		<copy todir="${dist}/src/WEB-INF" overwrite="yes">
+			<fileset dir="cfg/war" includes="**/*.xml"/>
+			<filterchain> <expandproperties/> </filterchain>
+		</copy>
+		<fixcrlf srcdir="${dist}/src/WEB-INF" includes="**/*.xml" eol="lf" eof="remove" />
+	</target>
+ 
+	<target name="jws.jnlp-init">
+		<copy tofile="${dist}/src/app/${application}.jnlp" overwrite="yes">
+			<fileset dir="cfg/jws" includes="jnlp.head"/>
+			<filterchain> <expandproperties/> </filterchain>
+		</copy>
+	</target>
+ 
+	<target name="jws.jnlp-end">
+		<copy todir="${dist}/src/app" overwrite="yes">
+			<fileset dir="cfg/jws" includes="jnlp.footer"/>
+			<filterchain> <expandproperties/> </filterchain>
+		</copy>
+		<concat destfile="${dist}/src/app/${application}.jnlp" append="true" >
+			<filelist dir="${dist}/src/app" files="jnlp.footer"/>
+		</concat>
+		<delete file="${dist}/src/app/jnlp.footer"/>
+	</target>
+ 
+	<target name="jws.pack.lib">
+		<copy todir="build/sign" file="${lib.dir}/${lib.name}" overwrite="yes" />
+		<signjar jar="build/sign/${lib.name}" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}"/>
+		<copy todir="${dist}/src/app">
+			<fileset dir="build/sign" includes="${lib.name}"/>
+			<mapper type="glob" from="*.jar" to="*__V${lib.version}.jar"/>
+			<filterchain> <expandproperties/> </filterchain>
+		</copy>
+		<copy file="cfg/jws/jnlp.lib" todir="${dist}/src/app" >
+			<filterset>
+				<filter token="jarfile" value="${lib.name}"/>
+				<filter token="version" value="${lib.version}"/>
+			</filterset>
+		</copy>
+		<concat destfile="${dist}/src/app/${application}.jnlp" append="true">
+			<filelist dir="${dist}/src/app" files="jnlp.lib"/>
+		</concat>
+		<delete file="${dist}/src/app/jnlp.lib"/>
+	</target>
+ 
+	<target name="jws.pack" depends="jws.web-inf,jws.jnlp-init">
+		<antcall target="jws.pack.lib">
+			<param name="lib.name" value="BT747_rxtx.jar"/>
+			<param name="lib.dir"  value="dist"/>
+			<param name="lib.version" value="${build_version}"/>
+		</antcall>
+		<!--
+		<antcall target="jws.pack.lib">
+			<param name="lib.name" value="component2.jar"/>
+			<param name="lib.dir"  value="libs"/>
+			<param name="lib.version" value="4.3"/>
+		</antcall>
+		-->
+		<antcall target="jws.jnlp-end"/>
+	</target>
+
 </project>
+
