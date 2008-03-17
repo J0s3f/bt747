@@ -189,7 +189,7 @@ In that case you should (can) change run_rxtx.sh:
 
 RXTXPATH=/usr/lib
 RXTXLIBPATH=/usr/lib
-CLASSPATH=/usr/share/java/RXTXcomm.jar:webstart/Waba_only.jar:dist/BT747_rxtx.jar:.:$CLASSPATH
+CLASSPATH=/usr/share/java/RXTXcomm.jar:lib/Waba_only.jar:dist/BT747_rxtx.jar:.:$CLASSPATH
 
 ============= Debian over bluetooth ============
 I struggled a while with gnu.io.NoSuchPortException when opening the port, but finally got it to run. 
@@ -206,7 +206,7 @@ MYROOTPATH=.
 SERPORT=/dev/rfcomm0 
  
 RXTXLIBPATH=${MYROOTPATH}/rxtx-2.1-7-bins-r2/Linux/i686-unknown-linux-gnu 
-export CLASSPATH=webstart/Waba_only.jar:dist/BT747_rxtx.jar:rxtx-2.1-7-bins-r2/RXTXcomm.jar 
+export CLASSPATH=lib/Waba_only.jar:dist/BT747_rxtx.jar:rxtx-2.1-7-bins-r2/RXTXcomm.jar 
  
 java -Dgnu.io.rxtx.SerialPorts=${SERPORT} -Dbt747_port=${SERPORT} -Djava.library.path=${RXTXLIBPATH} waba.applet.Applet /w 320 /h 320 /scale 1 /bpp 8 BT747 
 ----------------------- 
