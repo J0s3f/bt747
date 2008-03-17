@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry path="src" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+	<classpathentry path="superwaba.ide.container.SuperWabaContainer/" kind="con"/>
+	<classpathentry path="src_forwaba" kind="src"/>
+	<classpathentry path="lib/comm.jar" kind="lib"/>
+	<classpathentry path="lib/RXTX_linux_x86.jar" kind="lib"/>
+	<classpathentry path="lib/RXTXcomm.jar" kind="lib"/>
+	<classpathentry path="lib/win32comm.jar" kind="lib"/>
+	<classpathentry path="bin" kind="output"/>
+</classpath>

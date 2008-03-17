@@ -1,0 +1,3 @@
+  <resources>
+    <jar href="${lib.dir}/${lib.name}" version=${lib.version}/>
+  </resources>  

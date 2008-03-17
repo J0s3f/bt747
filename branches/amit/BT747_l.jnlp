@@ -1,0 +1,57 @@
+<jnlp href="BT747.jnlp" codebase="$$codebase">
+  <!-- Must replace $$codebase with correct path in above line: file:///path/to/thisdir
+       and rename this file to BT747.jnlp -->
+  <information>
+    <title>BT747</title>
+    <vendor>Mario De Weerd (GNU GPL license)</vendor>
+    <description>Control and log management application for MTK based devices</description>
+
+   <offline-allowed/>
+   <shortcut online="false">
+     <desktop />
+     <menu submenu="MTK Datalogger Control"/>
+   </shortcut>
+  </information>
+  
+  <security>
+    <all-permissions />
+  </security>
+  
+  <resources>
+    <j2se version="1.4+"/>
+    <jar href="lib/Waba_only.jar" />
+    <jar href="dist/BT747_rxtx.jar" />
+    <jar href="lib/RXTXcomm.jar" />
+  </resources>
+  <resources os="Mac OS X" >
+    <nativelib href="lib/RXTX_macosx.jar" download="eager"/>
+  </resources>
+  <resources os="Windows">
+    <nativelib href="lib/RXTX_win.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="i686">
+    <nativelib href="lib/RXTX_linux_x86.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="i386">
+    <nativelib href="lib/RXTX_linux_x86.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="x86">
+    <nativelib href="lib/RXTX_linux_x86.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="ia64">
+    <nativelib href="lib/RXTX_linux_ia64.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="x64">
+    <nativelib href="lib/RXTX_linux_x64.jar" download="eager"/>
+  </resources>
+
+ 
+  <applet-desc name=BT747 main-class="waba.applet.Applet" width="320" height="320">
+<param name="appClass" value="BT747"/>
+<param name="bpp" value="8"/>
+<param name="scale" value="1"/>
+   
+</applet-desc>
+
+</jnlp>
+
