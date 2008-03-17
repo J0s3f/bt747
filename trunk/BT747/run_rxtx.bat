@@ -2,12 +2,12 @@
 setlocal
 
 REM Next line adds Java 1.4 installation path
-REM set JAVA_HOME=c:\j2sdk1.4.2_14
+
 set MYROOTPATH=%CD%
-set RXTXPATH=%MYROOTPATH%\rxtx-2.1-7-bins-r2
+set RXTXPATH=%MYROOTPATH%\lib\rxtx-2.1-7-bins-r2
 set MYSYSTEMRXTXBINS=%RXTXPATH%\Windows\i368-mingw32
 set PATH=%MYSYSTEMRXTXBINS%;%CD%;%JAVA_HOME%\bin;%PATH%
-set CLASSPATH=%RXTXPATH%\RXTXcomm.jar;webstart\waba_only.jar;dist\BT747_rxtx.jar;%CLASSPATH%
+set CLASSPATH=%RXTXPATH%\RXTXcomm.jar;lib\waba_only.jar;dist\BT747_rxtx.jar;%CLASSPATH%
 
 REM java -Dbt747_prefix="COM" -Dbt747_settings="bt747settings.pdb" waba.applet.Applet BT747
 

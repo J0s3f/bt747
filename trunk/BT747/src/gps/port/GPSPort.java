@@ -34,7 +34,7 @@ public abstract class GPSPort {
     protected int spPortNbr;
     protected int spSpeed=115200;  // Does not really matter on most platforms
     
-    public static final boolean GPS_FILE_LOG = true;//false;  // When true log communication to file for debug
+    protected static final boolean GPS_FILE_LOG = false;  // When true log communication to file for debug
 
     protected File m_debugFile=null;
     protected static final String C_DEBUG_FILE="/Palm/gpsRAW.txt";
@@ -115,4 +115,38 @@ public abstract class GPSPort {
     public final boolean debugActive() {
         return GPS_FILE_LOG&&(m_debugFile!=null);
     }
+    
+    public final void startDebug() {
+        if(GPS_FILE_LOG&&(m_debugFile==null)) {
+            try {
+                new File(C_DEBUG_FILE).delete();
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            try {
+                // Having some trouble on Palm - doing it like this.
+                new File(C_DEBUG_FILE,File.CREATE).close();
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            try {
+                m_debugFile=new File(C_DEBUG_FILE,File.READ_WRITE);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+        }
+    }
+
+    public final void endDebug() {
+        if(m_debugFile!=null) {
+            try {
+                m_debugFile.close();
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            m_debugFile=null;
+        }
+    }
+
+
 }
