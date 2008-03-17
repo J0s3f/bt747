@@ -7,13 +7,13 @@ if [ -e /usr/share/java/RXTXcomm.jar ] ; then
 else
  # You may need to change the next line to an absolute path.
  MYROOTPATH=.
- RXTXPATH=${MYROOTPATH}/rxtx-2.1-7-bins-r2
- RXTXLIBPATH=${MYROOTPATH}/rxtx-2.1-7-bins-r2/Linux/i686-unknown-linux-gnu
+ RXTXPATH=${MYROOTPATH}/lib/rxtx-2.1-7-bins-r2
+ RXTXLIBPATH=${RXTXPATH}/Linux/i686-unknown-linux-gnu
  RXTXJAR=${RXTXPATH}/RXTXcomm.jar
 fi
 
 export CLASSPATH
-CLASSPATH=${RXTXJAR}:webstart/Waba_only.jar:dist/BT747_rxtx.jar:.:$CLASSPATH
+CLASSPATH=${RXTXJAR}:lib/Waba_only.jar:dist/BT747_rxtx.jar:.:$CLASSPATH
 
 # Change the port prefix by adding the following option to the java invocation:
 #     (the example is for ports like /dev/ttyUSB0)
