@@ -43,12 +43,12 @@
 	<!-- Application classpath -->
 	<path id="classpath">
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
-		<pathelement location="win32comm.jar"/>
+		<pathelement location="lib/win32comm.jar"/>
 	</path>
 
 	<path id="rxtxclasspath">
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
-		<pathelement location="webstart/RXTXcomm.jar"/>
+		<pathelement location="lib/RXTXcomm.jar"/>
 	</path>
 
 	<path id="symbianclasspath">
@@ -72,9 +72,9 @@
 	<!-- Clean directories and files -->
 	<target name="clean">
 
-		<delete dir="build"/>
-		<delete dir="rxtxbuild"/>
-		<delete dir="filebuild"/>
+		<delete dir="${build.dir}"/>
+		<delete dir="${rxtxbuild.dir}"/>
+		<delete dir="${filebuild.dir}"/>
 		<delete dir="${dist}"/>
 
 	</target>
@@ -82,8 +82,8 @@
 	<target name="run_rxtx" depends="rxtxjar">
 		<java classname="waba.applet.Applet" fork="true">
 			<classpath>
-				<pathelement path="webstart/waba_only.jar"/>
-				<pathelement path="rxtx-2.1-7-bins-r2/RXTXcomm.jar"/>
+				<pathelement path="lib/Waba_only.jar"/>
+				<pathelement path="lib/rxtx-2.1-7-bins-r2/RXTXcomm.jar"/>
 				<pathelement path="${dist}/BT747_rxtx.jar"/>
 			</classpath>
 			<arg line="/w 320 /h 320 /scale 1 /bpp 8 BT747"/>
@@ -193,21 +193,21 @@
 	<!-- Compile -->
 	<target name="build" depends="clean, updatedate">
 
-		<mkdir dir="build"/>
+		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${dist}"/>
 
-		<javac srcdir="src_forwaba" destdir="build" target="1.1" optimize="true" source="1.2">
+		<javac srcdir="src_forwaba" destdir="${build.dir}" target="1.1" optimize="true" source="1.2">
 			<include name="**/*.java"/>
 			<classpath refid="classpath"/>
 		</javac>
-		<javac srcdir="src" destdir="build" target="1.1" source="1.2" optimize="true">
+		<javac srcdir="src" destdir="${build.dir}" target="1.1" source="1.2" optimize="true">
 			<include name="**/*.java"/>
 			<exclude name="gps/model/*"/>
 			<exclude name="gps/port/GPSRxTxPort.java"/>
 			<exclude name="gps/port/GPSWabaSocketPort.java*"/>
 			<classpath refid="classpath"/>
 		</javac>
-		<copy todir="build">
+		<copy todir="${build.dir}">
 			<fileset dir="src">
 				<exclude name="**/*.java"/>
 			</fileset>
@@ -217,11 +217,11 @@
 
 	<target name="rxtxbuild" depends="clean, updatedate">
 
-		<mkdir dir="rxtxbuild"/>
-		<delete dir="rxtxsrc"/>
-		<mkdir dir="rxtxsrc"/>
+		<mkdir dir="${rxtxbuild.dir}"/>
+		<delete dir="${rxtxsrc.dir}"/>
+		<mkdir dir="${rxtxsrc.dir}"/>
 
-		<copy todir="rxtxsrc">
+		<copy todir="${rxtxsrc.dir}">
 			<fileset dir="src">
 				<include name="**/*.java"/>
 			</fileset>
@@ -229,16 +229,16 @@
 				<include name="**/*.java"/>
 			</fileset>
 		</copy>
-		<replace file="rxtxsrc/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort" />
-		<replace file="rxtxsrc/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
+		<replace file="${rxtxsrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort" />
+		<replace file="${rxtxsrc.dir}/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
 
-		<javac srcdir="rxtxsrc" destdir="rxtxbuild" target="1.1" source="1.2" optimize="true" classpathref="rxtxclasspath">
+		<javac srcdir="${rxtxsrc.dir}" destdir="${rxtxbuild.dir}" target="1.1" source="1.2" optimize="true" classpathref="rxtxclasspath">
 			<include name="**/*.java"/>
 			<exclude name="gps/port/GPSWabaPort.java*"/>
 			<exclude name="gps/port/GPSWabaSocketPort.java*"/>
 			<exclude name="gps/model/*"/>
 		</javac>
-		<copy todir="rxtxbuild">
+		<copy todir="${rxtxbuild.dir}">
 			<fileset dir="src">
 				<exclude name="**/*.java"/>
 			</fileset>
@@ -248,11 +248,11 @@
 
 	<target name="symbianbuild" depends="clean, updatedate">
 
-		<mkdir dir="symbianbuild"/>
-		<delete dir="symbiansrc"/>
-		<mkdir dir="symbiansrc"/>
+		<mkdir dir="${symbianbuild.dir}"/>
+		<delete dir="${symbiansrc.dir}"/>
+		<mkdir dir="${symbiansrc.dir}"/>
 
-		<copy todir="symbiansrc">
+		<copy todir="${symbiansrc.dir}">
 			<fileset dir="src">
 				<include name="**/*.java"/>
 				<exclude name="gps/port/GPSWabaPort.java"/>
@@ -263,13 +263,13 @@
 				<include name="**/*.java"/>
 			</fileset>
 		</copy>
-		<replace file="symbiansrc/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSWabaSocketPort" />
+		<replace file="${symbiansrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSWabaSocketPort" />
 
-		<javac srcdir="symbiansrc" destdir="symbianbuild" target="1.1" optimize="true" classpathref="symbianclasspath">
+		<javac srcdir="${symbiansrc.dir}" destdir="${symbianbuild.dir}" target="1.1" optimize="true" classpathref="symbianclasspath">
 			<include name="**/*.java"/>
 			<exclude name="gps/model/*"/>
 		</javac>
-		<copy todir="symbianbuild">
+		<copy todir="${symbianbuild.dir}">
 			<fileset dir="src">
 				<exclude name="**/*.java"/>
 			</fileset>
@@ -280,11 +280,11 @@
 
 	<target name="filebuild" depends="clean, updatedate">
 
-		<mkdir dir="filebuild"/>
-		<delete dir="filesrc"/>
-		<mkdir dir="filesrc"/>
+		<mkdir dir="${filebuild.dir}"/>
+		<delete dir="${filesrc.dir}"/>
+		<mkdir dir="${filesrc.dir}"/>
 
-		<copy todir="filesrc">
+		<copy todir="${filesrc.dir}">
 			<fileset dir="src">
 				<include name="**/*.java"/>
 			</fileset>
@@ -292,16 +292,16 @@
 				<include name="**/*.java"/>
 			</fileset>
 		</copy>
-		<replace file="filesrc/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSFilePort" />
-		<replace file="filesrc/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
+		<replace file="${filesrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSFilePort" />
+		<replace file="${filesrc.dir}/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
 
-		<javac srcdir="filesrc" destdir="filebuild" target="1.1" optimize="true" classpathref="classpath">
+		<javac srcdir="${filesrc.dir}" destdir="${filebuild.dir}" target="1.1" optimize="true" classpathref="classpath">
 			<include name="**/*.java"/>
 			<exclude name="gps/port/GPSWabaPort.java*"/>
 			<exclude name="gps/port/GPSRxTxPort.java*"/>
 			<exclude name="gps/model/*"/>
 		</javac>
-		<copy todir="filebuild">
+		<copy todir="${filebuild.dir}">
 			<fileset dir="src">
 				<exclude name="**/*.java"/>
 			</fileset>
@@ -310,59 +310,75 @@
 	</target>
 
 	<!-- Package classes -->
+	<target name="sign" if="keytool.sign">
+		<!-- Sign only if keytool.sign is true, this indicates parameters are set -->
+		<signjar jar="${jar.tosign}"
+			alias="${keytool.alias}"
+			storepass="${keytool.passwd}"
+			keystore="${keytool.keystore}"
+		/>
+	</target>
+
 	<target name="jar" depends="build">
 
-		<jar jarfile="build/${ant.project.name}.jar" compress="true">
-			<fileset dir="build" includes="**/*.class"/>
+		<jar jarfile="${build.dir}/${ant.project.name}.jar" compress="true">
+			<fileset dir="${build.dir}" includes="**/*.class"/>
 		</jar>
-
 	</target>
 
 	<target name="rxtxjar" depends="rxtxbuild">
-
-		<jar jarfile="rxtxbuild/${ant.project.name}_rxtx.jar" compress="true">
-			<fileset dir="rxtxbuild" includes="**/*.class"/>
+		<jar jarfile="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" compress="true">
+			<fileset dir="${rxtxbuild.dir}" includes="**/*.class"/>
 		</jar>
+		<antcall target="sign">
+			<param name="jar.tosign" value="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar"/>
+		</antcall>
 		<copy todir="${dist}">
-			<fileset dir="rxtxbuild">
+			<fileset dir="${rxtxbuild.dir}">
 				<include name="**/*.jar"/>
 			</fileset>
 		</copy>
-
-
+		<antcall target="sign">
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_rxtx.jar"/>
+		</antcall>
 	</target>
 
 
 	<target name="symbianjar" depends="symbianbuild">
 
-		<jar jarfile="symbianbuild/${ant.project.name}_symbian.jar" compress="true">
-			<fileset dir="symbianbuild" includes="**/*.class"/>
+		<jar jarfile="${symbianbuild.dir}/${ant.project.name}_symbian.jar" compress="true">
+			<fileset dir="${symbianbuild.dir}" includes="**/*.class"/>
 		</jar>
 		<copy todir="${dist}">
-			<fileset dir="symbianbuild">
+			<fileset dir="${symbianbuild.dir}">
 				<include name="**/*.jar"/>
 			</fileset>
 		</copy>
-
-
+		<antcall target="sign">
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_symbian.jar"/>
+		</antcall>
 	</target>
 
 	<target name="filejar" depends="filebuild">
 
-		<jar jarfile="filebuild/${ant.project.name}_file.jar" compress="true">
-			<fileset dir="filebuild" includes="**/*.class"/>
+		<jar jarfile="${filebuild.dir}/${ant.project.name}_file.jar" compress="true">
+			<fileset dir="${filebuild.dir}" includes="**/*.class"/>
 		</jar>
 		<copy todir="${dist}">
-			<fileset dir="filebuild">
+			<fileset dir="${filebuild.dir}">
 				<include name="**/*.jar"/>
 			</fileset>
 		</copy>
+		<antcall target="sign">
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_file.jar"/>
+		</antcall>
+
 	</target>
 
 	<taskdef name="proguard" classpath="${proguardLib}" 
       classname="proguard.ant.ProGuardTask"/>
 	<target name="proguard" depends="jar">
-		<move file="${buildDir}/${ant.project.name}.jar" tofile="${buildDir}/${ant.project.name}_unopt.jar"/>
+		<move file="${build.dir}/${ant.project.name}.jar" tofile="${build.dir}/${ant.project.name}_unopt.jar"/>
 		<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="true" 
 	    allowaccessmodification="true"
 	    printusage="false"
@@ -370,20 +386,20 @@
 			<keep name="${mainClass}" />
 			<libraryjar file="${java.home}/lib/rt.jar" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
-			<injar path="${buildDir}/${ant.project.name}_unopt.jar" />
-			<outjar path="${buildDir}/${ant.project.name}.jar" />
+			<injar path="${build.dir}/${ant.project.name}_unopt.jar" />
+			<outjar path="${build.dir}/${ant.project.name}.jar" />
 		</proguard>
 	</target>
 
 	<target name="proguardxx" depends="jar">
-		<move file="${buildDir}/${ant.project.name}.jar" tofile="${buildDir}/${ant.project.name}_unopt.jar"/>
+		<move file="${build.dir}/${ant.project.name}.jar" tofile="${build.dir}/${ant.project.name}_unopt.jar"/>
 
 		<java classname="proguard.ProGuard" fork="yes">
 			<classpath>
 				<pathelement path="${proguardLib}"/>
 			</classpath>
-			<arg line="-injars ${buildDir}/${ant.project.name}_unopt.jar"/>
-			<arg line="-outjars ${buildDir}/${ant.project.name}.jar"/>
+			<arg line="-injars ${build.dir}/${ant.project.name}_unopt.jar"/>
+			<arg line="-outjars ${build.dir}/${ant.project.name}.jar"/>
 			<arg line="-libraryjars ${java.home}/lib/rt.jar${path.separator}${superwaba_root}/lib/SuperWaba.jar"/>
 			<arg line="-keep public class ${mainClass}"/>
 			<arg line="-allowaccessmodification"/>
@@ -399,7 +415,7 @@
 	<!-- Execute WARP -->
 	<target name="warp" depends="proguard">
 
-		<java dir="build" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
+		<java dir="${build.dir}" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
 			<arg value="c"/>
 			<arg value="/c"/>
 			<arg value="BT74"/>
@@ -412,7 +428,7 @@
 	<!-- Execute WARP -->
 	<target name="symbianwarp" depends="symbianjar">
 
-		<java dir="symbianbuild" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
+		<java dir="${symbianbuild.dir}" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
 			<arg value="c"/>
 			<arg value="/x"/>
 			<arg value="GPSFilePort"/>
@@ -429,7 +445,7 @@
 	<target name="prepare-exegen">
 
 		<mkdir dir="icons"/>
-		<copy todir="build">
+		<copy todir="${build.dir}">
 			<fileset dir="icons">
 				<include name="*.bmp"/>
 			</fileset>
@@ -440,7 +456,7 @@
 	<target name="symbianprepare-exegen">
 
 		<mkdir dir="icons"/>
-		<copy todir="symbianbuild">
+		<copy todir="${symbianbuild.dir}">
 			<fileset dir="icons">
 				<include name="*.bmp"/>
 			</fileset>
@@ -451,7 +467,7 @@
 	<!-- Execute EXEGEN -->
 	<target name="exegen" depends="warp, prepare-exegen">
 
-		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
+		<java dir="${build.dir}" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/INST"/>
 			<!-- <arg value="/SIS"/> -->
 			<!-- <arg value="/SH"/> -->
@@ -469,7 +485,7 @@
 	<!-- Execute EXEGEN -->
 	<target name="symbianexegen" depends="symbianwarp, symbianprepare-exegen">
 
-		<java dir="symbianbuild" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
+		<java dir="${symbianbuild.dir}" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<!-- <arg value="/INST"/> -->
 			<arg value="/SIS"/>
 			<arg value="/c"/>
@@ -485,7 +501,7 @@
 	<!-- Execute EXEGEN with WinCE EXE -->
 	<target name="exegen-exe" depends="warp, prepare-exegen">
 
-		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
+		<java dir="${build.dir}" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/c"/>
 			<arg value="BT74"/>
 			<arg value="/e"/>
@@ -499,7 +515,7 @@
 	<!-- Execute EXEGEN with WinCE CAB -->
 	<target name="exegen-cab" depends="warp, prepare-exegen">
 
-		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
+		<java dir="${build.dir}" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/c"/>
 			<arg value="BT74"/>
 			<arg value="/z"/>
@@ -513,15 +529,15 @@
 	<!-- Execute WARP and populate distribution directory -->
 	<target name="all-warp" depends="warp">
 
-		<move file="build/${ant.project.name}.pdb" todir="${dist}"/>
+		<move file="${build.dir}/${ant.project.name}.pdb" todir="${dist}"/>
 
 	</target>
 
 	<!-- Execute EXEGEN and populate distribution directory -->
 	<target name="all-exegen" depends="exegen, all-warp">
 
-		<move todir="${dist}" file="build/${ant.project.name}.prc"/>
-		<move todir="${dist}" file="build/install.exe"/>
+		<move todir="${dist}" file="${build.dir}/${ant.project.name}.prc"/>
+		<move todir="${dist}" file="${build.dir}/install.exe"/>
 
 	</target>
 
@@ -530,7 +546,7 @@
 
 		<move todir="${dist}">
 
-			<fileset dir="build">
+			<fileset dir="${build.dir}">
 				<include name="${ant.project.name}.prc"/>
 				<include name="**/*.exe"/>
 				<include name="*.exe"/>
@@ -545,7 +561,7 @@
 
 		<move todir="${dist}">
 
-			<fileset dir="build">
+			<fileset dir="${build.dir}">
 				<include name="${ant.project.name}.prc"/>
 				<include name="*.CAB"/>
 				<include name="*.ini"/>
@@ -562,7 +578,7 @@
 
 		<move todir="${dist}">
 
-			<fileset dir="build">
+			<fileset dir="${build.dir}">
 				<include name="${ant.project.name}.prc"/>
 				<include name="**/*.exe"/>
 				<include name="*.CAB"/>
@@ -571,21 +587,23 @@
 				<include name="*.exe"/>
 				<include name="${ant.project.name}.jar"/>
 			</fileset>
-
 		</move>
+		<antcall target="sign">
+			<param name="jar.tosign" value="${dist}/${ant.project.name}.jar"/>
+		</antcall>
 
 	</target>
 
 	<target name="all" depends="all-exegen-types"/>
 
 	<target name="warp-help">
-		<java dir="build" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
+		<java dir="${build.dir}" classname="superwaba.tools.Warp" fork="true" classpathref="utils">
 			<arg value="/?"/>
 		</java>
 	</target>
 
 	<target name="exegen-help">
-		<java dir="build" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
+		<java dir="${build.dir}" classname="superwaba.tools.Exegen" fork="true" classpathref="utils">
 			<arg value="/?"/>
 		</java>
 	</target>
@@ -597,13 +615,13 @@
 	<property name="keytool.keystore" value="cfg/jws/myKeystore"/>
 		
 	<target name="pack.test">
-		<war destfile="dist/BT747.war" webxml="src/metadata/BT747.xml">
+		<war destfile="${dist}/${ant.project.name}.war" webxml="src/metadata/BT747.xml">
 		  <fileset dir="${dist}/" includes="BT747*rxtx*jar"/>
 		  <lib dir="ext">
 		    <exclude name="jdbc1.jar"/>
 		  </lib>
 			<!--
-		  <classes dir="build/main"/>
+		  <classes dir="${build.dir}/main"/>
 		  <zipfileset dir="src/graphics/images/gifs"
 		              prefix="images"/>
 		              -->
@@ -611,8 +629,8 @@
 
 	</target>
 	<target name="pack" depends="pack.init,jws.pack" >
-		<delete file="build/wars/${application}.war"/>
-		<war destfile="build/wars/${application}.war"
+		<delete file="${build.dir}/wars/${application}.war"/>
+		<war destfile="${build.dir}/wars/${application}.war"
 		     webxml="${dist}/src/WEB-INF/web.xml"
 		     basedir="${dist}/src" >
 			<lib dir="lib">
@@ -625,8 +643,8 @@
 	</target>
  
 	<target name="pack.init">
-		<mkdir dir="build/wars"/>
-		<mkdir dir="build/sign"/>
+		<mkdir dir="${build.dir}/wars"/>
+		<mkdir dir="${build.dir}/sign"/>
 		<mkdir dir="${dist}/src/app"/>
 		<mkdir dir="${dist}/src/WEB-INF"/>
 	</target>
@@ -658,10 +676,10 @@
 	</target>
  
 	<target name="jws.pack.lib">
-		<copy todir="build/sign" file="${lib.dir}/${lib.name}" overwrite="yes" />
-		<signjar jar="build/sign/${lib.name}" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}"/>
+		<copy todir="${build.dir}/sign" file="${lib.dir}/${lib.name}" overwrite="yes" />
+		<signjar jar="${build.dir}/sign/${lib.name}" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}"/>
 		<copy todir="${dist}/src/app">
-			<fileset dir="build/sign" includes="${lib.name}"/>
+			<fileset dir="${build.dir}/sign" includes="${lib.name}"/>
 			<mapper type="glob" from="*.jar" to="*__V${lib.version}.jar"/>
 			<filterchain> <expandproperties/> </filterchain>
 		</copy>
@@ -703,17 +721,17 @@
 		>
 	<!--	depends="dist" -->
 	     
-		<mkdir dir="${distribution.dir}/configuration"/>
+		<mkdir dir="${dist}/configuration"/>
 			
         <!-- build the web archive -->
-        <copy todir="${distribution.dir}/configuration">  
+        <copy todir="${dist}/configuration">  
             <fileset dir="." includes="${lib.dir}/**"/>
          	<fileset dir="." includes="${3rdparty.dir}/**"/>
         	<fileset dir="." includes="${bin.dir}/*.bat"/>
         	<fileset dir="." includes="${bin.dir}/*.sh"/>
         </copy>
 		
-		<zip zipfile="${distribution.dir}/standalone.zip" basedir="${distribution.dir}/configuration"/>
+		<zip zipfile="${dist}/standalone.zip" basedir="${dist}/configuration"/>
     </target>
         	
     <!-- ======================================= -->
@@ -724,21 +742,22 @@
 		>
 <!--		depends="dist,sign.jars" -->
 	     
-		<mkdir dir="${distribution.dir}"/>
+		<mkdir dir="${dist}"/>
 			
         <!-- build the web archive -->
-        <war destfile="${distribution.dir}/cc-configuration.war" webxml="${web.dir}/web.xml">
+        <war destfile="${dist}/${ant.project.name}.war"
+        	webxml="cfg/war/web.xml">
 		  
           <fileset dir="." includes="${lib.dir}/**"/>
-       	  <fileset dir="." includes="${3rdparty.dir}/**"/>
-		  <fileset dir="${bin.dir}" includes="*.jnlp"/>
-          <fileset dir="${web.dir}">
+		  <fileset dir="." includes="BT747.jnlp"/>
+          <!--
+          	<fileset dir="${web.dir}">
         	<include name="lib/**"/>
-          	<include name="3rdparty/**"/>
-          	<include name="index.html"/>
-          </fileset>
+			<include name="index.html"/>
+	        </fileset>
+           -->
           
-		  <lib file="${3rdparty.dir}/jnlp-servlet.jar"/>
+		  <lib file="${lib.dir}/jnlp-servlet.jar"/>
 		</war>
 
     </target>
@@ -751,20 +770,20 @@
 >
 		<!--		depends="dist,sign.jars" -->
 
-		<mkdir dir="${distribution.dir}/configuration"/>
+		<mkdir dir="${dist}/configuration"/>
 			
         <!-- build the web archive -->
-        <copy todir="${distribution.dir}/configuration">
+        <copy todir="${dist}/configuration">
 		  
           <fileset dir="." includes="${lib.dir}/**"/>
-       	  <fileset dir="." includes="${3rdparty.dir}/**"/>
+       	  <!-- <fileset dir="." includes="${3rdparty.dir}/**"/> -->
 
         </copy>
 
-		<copy file="${bin.dir}/static_cruisecontrol-gui.jnlp"
-		      toFile="${distribution.dir}/configuration/cruisecontrol-gui.jnlp"/>
+		<copy file="${ant.project.name}.jnlp"
+		      toFile="${dist}/configuration/{ant.project.name}.jnlp"/>
 		
-		<zip zipfile="${distribution.dir}/configuration.zip" basedir="${distribution.dir}/configuration"/>
+		<zip zipfile="${dist}/configuration.zip" basedir="${dist}/configuration"/>
     </target>
 	
     <!-- ======================================== -->
@@ -789,31 +808,31 @@
 		<!-- depends="init"-->
     
     	<!-- clean out directory -->
-    	<delete dir="${distribution.dir}/webclient_cd"/>
-    	<mkdir dir="${distribution.dir}/webclient_cd"/>
+    	<delete dir="${dist}/webclient_cd"/>
+    	<mkdir dir="${dist}/webclient_cd"/>
     	
     	<!-- get the install instructions -->
-        <copy todir="${distribution.dir}/webclient_cd">          
+        <copy todir="${dist}/webclient_cd">          
           <fileset dir="${client.dir}/docs/install">
             <include name="**"/>
           </fileset>
           
           <!-- copy the database installation file -->
-          <fileset dir="${distribution.dir}" includes="systemx-client-db.zip"/>
+          <!-- <fileset dir="${dist}" includes="systemx-client-db.zip"/> -->
         </copy>
     	
     	<!-- copy the required elements over -->
-        <copy todir="${distribution.dir}/webclient_cd/client">
+        <copy todir="${dist}/webclient_cd/client">
         	<fileset dir="${client.dir}/bin/${environment}"/>
         	
         	<fileset dir="${client.dir}/installs"/>
         </copy>
         
         <!-- redo the flow of the html for cd install -->
-        <delete file="${distribution.dir}/webclient_cd/index.html"/>
-        <delete file="${distribution.dir}/webclient_cd/oneTimeSetup.html"/>
-        <move file="${distribution.dir}/webclient_cd/oneTimeSetup_cd.html" 
-              tofile="${distribution.dir}/webclient_cd/index.html"/>
+        <delete file="${dist}/webclient_cd/index.html"/>
+        <delete file="${dist}/webclient_cd/oneTimeSetup.html"/>
+        <move file="${dist}/webclient_cd/oneTimeSetup_cd.html" 
+              tofile="${dist}/webclient_cd/index.html"/>
         
    </target>
 

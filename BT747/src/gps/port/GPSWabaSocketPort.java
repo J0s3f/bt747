@@ -59,20 +59,6 @@ public class GPSWabaSocketPort extends GPSPort {
    public int openPort() {
        int result=-1;
        closePort();
-       if(GPS_FILE_LOG&&(m_debugFile==null)) {
-           try {
-               new File(C_DEBUG_FILE).delete();
-           } catch (Exception e) {
-               // TODO: handle exception
-           }
-           try {
-               // Having some trouble on Palm - doing it like this.
-               new File(C_DEBUG_FILE,File.CREATE).close();
-           } catch (Exception e) {
-               // TODO: handle exception
-           }
-           m_debugFile=new File(C_DEBUG_FILE,File.READ_WRITE);
-       }
 
        try {
            sp=new waba.io.Socket(MacAddr,1);

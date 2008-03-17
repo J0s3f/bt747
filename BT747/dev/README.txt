@@ -20,3 +20,18 @@ debugn.bat
 
 gcj_comp.bat
   Script trying to compile the application using gcj
+  
+compile_with_swt.sh
+compile_swt.sh
+  Scripts 'trying' to compile with the swing awt to build a native
+  executeable.
+  
+prof.bat
+  Script to profile the application.
+  
+run.bat
+  Script to run the application with debug.
+  
+build_small.xml
+  Reference file extracted from SuperwabaSDK - intention to use this to make
+  the standard build file more generic.

@@ -26,6 +26,7 @@ import java.io.*;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import bt747.io.File;
 import bt747.sys.Convert;
 
 /** This class implements the serial port by accessing the file as 
@@ -58,10 +59,6 @@ public class GPSFilePort extends GPSPort {
             hasPortNbr=false;
         }
         portPrefix=java.lang.System.getProperty("bt747_prefix",portPrefix);
-//        if(m_debugFile.exists()) {
-//            m_debugFile.delete();
-//        }
-        m_debugFile=new bt747.io.File(C_DEBUG_FILE,bt747.io.File.CREATE);
     }
 
     /** Indicates if the device is connected or not.
