@@ -399,6 +399,9 @@ public class Txt_fr {
         "|il y a peut-être un bug";
     public static final String ADD_RECORD_NUMBER =
         "Record nbr info in logs";    
+
+    public static final String S_DEBUG_CONN= "Debug conn.";
+
 }
 
 

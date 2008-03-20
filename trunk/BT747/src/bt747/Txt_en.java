@@ -23,6 +23,7 @@ public class Txt_en {
     public static final String S_GPS_DECODE_ACTIVE= "GPS Decode active";
     public static final String S_FOCUS_HIGHLIGHT= "Focus Highlight";
     public static final String S_DEBUG= "Debug";
+    public static final String S_DEBUG_CONN= "Debug conn.";
     public static final String S_STATS= "Stats";
     public static final String S_INFO= "Info";
     public static final String S_ABOUT_BT747= "About BT747";

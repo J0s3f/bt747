@@ -230,11 +230,11 @@ public class GPSconctrl extends Container {
             }
             break;
         case GpsEvent.GPGGA:
-            GpsEvent eb=(GpsEvent) event;
+            //GpsEvent eb=(GpsEvent) event;
             updateGPSData(m_GPSstate.getGpsRecord());
             break;
         case GpsEvent.GPRMC:
-            GpsEvent ec=(GpsEvent) event;
+            //GpsEvent ec=(GpsEvent) event;
             updateRMCData(m_GPSstate.getGpsRecord());
         break;
         }

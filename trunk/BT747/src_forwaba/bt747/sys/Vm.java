@@ -13,6 +13,8 @@ package bt747.sys;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public final class Vm {
+    public static final String ERASE_DEBUG = waba.sys.Vm.ERASE_DEBUG;
+    
     public static final int getTimeStamp() {
         return waba.sys.Vm.getTimeStamp();
     }

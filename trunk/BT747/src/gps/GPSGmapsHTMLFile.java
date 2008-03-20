@@ -158,7 +158,6 @@ public class GPSGmapsHTMLFile extends GPSFile {
     }
     
     protected void writeDataFooter() {
-        String header;
         if(m_isWayType) {
         } else {
             writeTxt("map.addOverlay(new GPolyline(points,\"#0000FF\",2,.75));\r\n");
@@ -186,13 +185,6 @@ public class GPSGmapsHTMLFile extends GPSFile {
             } else {
                 // This log item is to be transcribed in the output file.
                 
-                String timeStr="";  // String that will represent time
-                String fixStr="";   // String that will represent fix type
-                String rcrlStr="";   // String that will represent log reason
-                String hdopStr="";  // String that will represent HDOP
-                String nsatStr="";  // String that will represent number of sats
-                
-
                 //StringBuffer rec=new StringBuffer(1024);
                 rec.setLength(0);
                 m_newTrack=false;

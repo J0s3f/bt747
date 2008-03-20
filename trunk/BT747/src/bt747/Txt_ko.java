@@ -383,6 +383,9 @@ public class Txt_ko {
         "| it may be a bug.";
     public static final String ADD_RECORD_NUMBER =
         "Record nbr info in logs";    
+
+    public static final String S_DEBUG_CONN= "Debug conn.";
+
 }
 
 

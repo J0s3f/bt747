@@ -34,10 +34,10 @@ public abstract class GPSPort {
     protected int spPortNbr;
     protected int spSpeed=115200;  // Does not really matter on most platforms
     
-    protected static final boolean GPS_FILE_LOG = false;  // When true log communication to file for debug
+    protected static final boolean GPS_FILE_LOG = true;  // When true log communication to file for debug
 
     protected File m_debugFile=null;
-    protected static final String C_DEBUG_FILE="/Palm/gpsRAW.txt";
+    protected static String debugFileName="/Palm/gpsRAW.txt";
     
     // Hooked reference to java os string h ere to avoid creating extra classes and
     // exceptions in compilation flow.
@@ -119,18 +119,18 @@ public abstract class GPSPort {
     public final void startDebug() {
         if(GPS_FILE_LOG&&(m_debugFile==null)) {
             try {
-                new File(C_DEBUG_FILE).delete();
+                new File(debugFileName).delete();
             } catch (Exception e) {
                 // TODO: handle exception
             }
             try {
                 // Having some trouble on Palm - doing it like this.
-                new File(C_DEBUG_FILE,File.CREATE).close();
+                new File(debugFileName,File.CREATE).close();
             } catch (Exception e) {
                 // TODO: handle exception
             }
             try {
-                m_debugFile=new File(C_DEBUG_FILE,File.READ_WRITE);
+                m_debugFile=new File(debugFileName,File.READ_WRITE);
             } catch (Exception e) {
                 // TODO: handle exception
             }
@@ -149,4 +149,16 @@ public abstract class GPSPort {
     }
 
 
+    /**
+     * @return Returns the debugFileName.
+     */
+    public static String getDebugFileName() {
+        return debugFileName;
+    }
+    /**
+     * @param debugFileName The debugFileName to set.
+     */
+    public static void setDebugFileName(final String debugFileName) {
+        GPSPort.debugFileName = debugFileName;
+    }
 }

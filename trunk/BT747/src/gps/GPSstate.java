@@ -35,7 +35,7 @@ import bt747.ui.MessageBox;
 import bt747.util.Vector;
 
 /*
- * Created on 12 mai 2007
+ * Created on 12 may 2007
  */
 
 /**
@@ -162,9 +162,12 @@ public class GPSstate implements Thread {
         m_settings = s;
     }
 
-    public void setDebug(boolean dbg) {
+    public void setDebug(final boolean dbg) {
         GPS_DEBUG = dbg;
-        m_GPSrxtx.setDebug(dbg);
+    }
+
+    public void setDebugConn(final boolean dbg) {
+        m_GPSrxtx.setDebugConn(dbg,m_settings.getBaseDirPath());
     }
 
     public void setStats(boolean stats) {
@@ -1618,8 +1621,7 @@ public class GPSstate implements Thread {
                         //                        Vm.debug("Writing("+Convert.toString(p_StartAddr)+"):
                         // "+Convert.toString(j)+" "+Convert.toString(l));
 
-                        int q;
-                        if ((q = m_logFile.writeBytes(m_Data, j, l)) != l) {
+                        if ((m_logFile.writeBytes(m_Data, j, l)) != l) {
                             //                            Vm.debug("Problem during anaLog:
                             // "+Convert.toString(m_logFile.lastError));
                             cancelGetLog();

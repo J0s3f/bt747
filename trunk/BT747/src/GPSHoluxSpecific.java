@@ -64,8 +64,6 @@ public class GPSHoluxSpecific extends Container {
      * @see waba.ui.Container#onStart()
      */
     protected void onStart() {
-        int bit=1;
-        
         lbHoluxName= new Label(Txt.HOLUX_NAME);
         add(lbHoluxName,LEFT,TOP);
         add(edHoluxName= new Edit(""),AFTER,SAME);

@@ -373,4 +373,7 @@ public class Txt_de {
         "| ist es möglicherweise ein Fehler/Bug.";
     public static final String ADD_RECORD_NUMBER =
         "Rekord-Nummer im Log";
+    
+    public static final String S_DEBUG_CONN= "Debug conn.";
+    
 }

@@ -34,8 +34,7 @@ import bt747.ui.MessageBox;
  * @author Mario De Weerd
  */
 public final class HoluxTrlLogConvert implements GPSLogConvert {
-    private int minRecordSize;
-    private int maxRecordSize;
+    private int recordSize;
     private int logFormat;
     private File m_File=null;
     private long timeOffsetSeconds=0;
@@ -63,16 +62,13 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
             gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
         }
 
-        minRecordSize=15;
-        maxRecordSize=minRecordSize;
+        recordSize=15;
         
         recCount=0;
         logFormat=0;
         nextAddrToRead=0;
         fileSize=m_File.getSize();
-        while(nextAddrToRead+minRecordSize+1<fileSize) {
-            int okInBuffer=-1; // Last ending position in buffer
-            
+        while(nextAddrToRead+recordSize+1<fileSize) {
             sizeToRead=C_BUF_SIZE;
             if((sizeToRead+nextAddrToRead)>fileSize) {
                 sizeToRead=fileSize-nextAddrToRead;
@@ -80,7 +76,6 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
             
             /* Read the bytes from the file */
             int readResult;
-            boolean continueInBuffer=true;
             int offsetInBuffer=0;
             
             m_File.setPos(nextAddrToRead);
@@ -100,12 +95,12 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
              * Interpret the data read in the Buffer as long as the records are complete
              */
             // A block of bytes has been read, read the records
-            while(sizeToRead>offsetInBuffer+minRecordSize) {
+            while(sizeToRead>offsetInBuffer+recordSize) {
                 // As long as record may fit in data still to read.
                 int indexInBuffer=offsetInBuffer;
                 int checkSum=0;
                 
-                while((indexInBuffer<minRecordSize+offsetInBuffer)&&(indexInBuffer<sizeToRead-1)) {
+                while((indexInBuffer<recordSize+offsetInBuffer)&&(indexInBuffer<sizeToRead-1)) {
                     checkSum^=bytes[indexInBuffer++];
                 }
                 

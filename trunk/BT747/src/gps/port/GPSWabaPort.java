@@ -20,7 +20,6 @@
 package gps.port;
 
 import waba.io.DataStream;
-import bt747.io.File;
 import waba.ui.MessageBox;
 
 /** Implements the serial port for the standard Waba SerialPort
@@ -113,12 +112,14 @@ public class GPSWabaPort extends GPSPort {
        int l=b.length;
        sp.writeBytes(b,0,l);
        if(GPS_FILE_LOG&&(m_debugFile!=null)) {
+           m_debugFile.writeBytes("W:".getBytes(),0,2);
            m_debugFile.writeBytes(b,0,l);
        }
    }
    
    public int readCheck() {
        if(sp!=null) {
+           //return 0x800;
            return sp.readCheck();
        } else {
            return -1;

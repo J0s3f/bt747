@@ -110,7 +110,6 @@ public class GPSCompoGPSTrkFile extends GPSFile {
 
     public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
-        boolean prevField=false;
         boolean trackpt;
         boolean waypt;
         trackpt=!m_isWayType&&m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);

@@ -67,5 +67,6 @@ public interface settings {
      */
     public int getLogRequestAhead();
 
+    public String getBaseDirPath();
 
 }
