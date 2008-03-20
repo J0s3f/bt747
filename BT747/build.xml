@@ -200,7 +200,8 @@
 			<include name="**/*.java"/>
 			<classpath refid="classpath"/>
 		</javac>
-		<javac srcdir="src" destdir="${build.dir}" target="1.1" source="1.2" optimize="true">
+		<javac srcdir="src" destdir="${build.dir}" target="1.1" source="1.2" optimize="true"
+			deprecation="false">
 			<include name="**/*.java"/>
 			<exclude name="gps/model/*"/>
 			<exclude name="gps/port/GPSRxTxPort.java"/>
@@ -375,14 +376,26 @@
 
 	</target>
 
-	<taskdef name="proguard" classpath="${proguardLib}" 
-      classname="proguard.ant.ProGuardTask"/>
-	<target name="proguard" depends="jar">
+	<target name="proguard_task" depends="jar" unless="use.proguard_java">
+		<taskdef name="proguard" classpath="${proguardLib}" 
+	      classname="proguard.ant.ProGuardTask"
+		/>
 		<move file="${build.dir}/${ant.project.name}.jar" tofile="${build.dir}/${ant.project.name}_unopt.jar"/>
-		<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="true" 
-	    allowaccessmodification="true"
-	    printusage="false"
-	    overloadaggressively="true" verbose="true" ignorewarnings="true">
+		<proguard
+			shrink="true"
+			defaultpackage=""
+			optimize="true"
+			obfuscate="true" 
+		    allowaccessmodification="true"
+			flattenpackagehierarchy=""
+			repackageclasses=""
+		    printusage="false"
+		    overloadaggressively="true"
+			verbose="true"
+			ignorewarnings="true"
+			optimizationpasses="4"
+			>
+			
 			<keep name="${mainClass}" />
 			<libraryjar file="${java.home}/lib/rt.jar" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
@@ -391,13 +404,13 @@
 		</proguard>
 	</target>
 
-	<target name="proguardxx" depends="jar">
-		<move file="${build.dir}/${ant.project.name}.jar" tofile="${build.dir}/${ant.project.name}_unopt.jar"/>
-
-		<java classname="proguard.ProGuard" fork="yes">
-			<classpath>
-				<pathelement path="${proguardLib}"/>
-			</classpath>
+	<target name="proguard_java" depends="jar" if="use.proguard_java">
+		<move file="${build.dir}/${ant.project.name}.jar"
+			tofile="${build.dir}/${ant.project.name}_unopt.jar"/>
+		<echo message="${proguardLib}"/>
+		<java classname="proguard.ProGuard"
+			fork="yes"
+			classpath="${proguardLib}">
 			<arg line="-injars ${build.dir}/${ant.project.name}_unopt.jar"/>
 			<arg line="-outjars ${build.dir}/${ant.project.name}.jar"/>
 			<arg line="-libraryjars ${java.home}/lib/rt.jar${path.separator}${superwaba_root}/lib/SuperWaba.jar"/>
@@ -410,6 +423,9 @@
 			-->
 		</java>
 
+	</target>
+	
+	<target name="proguard" depends="proguard_task,proguard_java">
 	</target>
 
 	<!-- Execute WARP -->

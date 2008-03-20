@@ -27,7 +27,6 @@ import gps.convert.Conv;
 import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
-import bt747.sys.Time;
 import bt747.sys.Vm;
 import bt747.ui.MessageBox;
 
@@ -39,18 +38,12 @@ import bt747.ui.MessageBox;
  * @author Mario De Weerd
  */
 public final class CSVLogConvert implements GPSLogConvert {
-    private int minRecordSize;
-    private int maxRecordSize;
     private int logFormat;
     private File m_File=null;
     private long timeOffsetSeconds=0;
     protected boolean passToFindFieldsActivatedInLog= false;
     protected int activeFileFields=0;
     private boolean noGeoid=false; // If true,remove geoid difference from height
-    
-    private int satIdxOffset;
-    private int satRecSize;
-    private boolean holux=false;
     
     private static final int FMT_NS = -6;
     private static final int FMT_EW = -5;
@@ -59,22 +52,17 @@ public final class CSVLogConvert implements GPSLogConvert {
     private static final int FMT_TIME = -2;
     private static final int FMT_NO_FIELD = -1;
     
-    private static final int DAYS_BETWEEN_1970_1983 = 4748;
+    //private static final int DAYS_BETWEEN_1970_1983 = 4748;
     private static final int DAYS_Julian_1970 = (new Date(1,1,1970)).getJulianDay();
     
     public final void parseFile(final GPSFile gpsFile) {
         GPSRecord gpsRec=new GPSRecord();
-        GPSRecord activeFields=new GPSRecord();
         final int C_BUF_SIZE=0x800;
         byte[] bytes=new byte[C_BUF_SIZE];
         int sizeToRead;
         int nextAddrToRead;
         int recCount;
         int fileSize;
-        int satCntIdx;
-        int satcnt;
-        int satidx;
-        int idx;
         
         boolean firstline=true;
         
@@ -88,8 +76,6 @@ public final class CSVLogConvert implements GPSLogConvert {
         
         
         while(nextAddrToRead<fileSize) {
-            int okInBuffer=-1; // Last ending position in buffer
-            
             /********************************************************************
              * Read data from the data file into the local buffer.
              */
@@ -103,7 +89,6 @@ public final class CSVLogConvert implements GPSLogConvert {
             int readResult;
             boolean continueInBuffer=true;
             int offsetInBuffer=0;
-            int newLogFormat;
             
             m_File.setPos(nextAddrToRead);
             
@@ -128,7 +113,6 @@ public final class CSVLogConvert implements GPSLogConvert {
              */
             // A block of bytes has been read, read the records
             do {
-                boolean valid = false;
                 int eol_pos;
                 // Find end of line
                 for(eol_pos=offsetInBuffer;

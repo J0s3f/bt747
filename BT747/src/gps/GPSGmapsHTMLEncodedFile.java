@@ -222,7 +222,6 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     private double maxlon;
     
     protected void writeDataHeader() {
-        String header;
         if(m_isWayType) {
         } else {
             m_newTrack=true;
@@ -284,7 +283,6 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     }
     
     protected void writeDataFooter() {
-        String header;
         if(m_isWayType) {
             if(track.size()!=0) {
                 rec.setLength(0);
@@ -369,13 +367,6 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             } else {
                 // This log item is to be transcribed in the output file.
                 
-                String timeStr="";  // String that will represent time
-                String fixStr="";   // String that will represent fix type
-                String rcrlStr="";   // String that will represent log reason
-                String hdopStr="";  // String that will represent HDOP
-                String nsatStr="";  // String that will represent number of sats
-                
-
                 //StringBuffer rec=new StringBuffer(1024);
                 rec.setLength(0);
                 if(m_newTrack) {

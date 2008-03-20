@@ -122,7 +122,6 @@ public class GPSCSVFile extends GPSFile {
      */
     public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
-        boolean prevField=false;
         
         if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             rec.setLength(0);

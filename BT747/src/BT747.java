@@ -69,6 +69,7 @@ public class BT747 extends MainWindow {
                 MenuBar.UNCHECKED+Txt.S_FOCUS_HIGHLIGHT, 
                 "-", 
                 MenuBar.UNCHECKED+Txt.S_DEBUG, 
+                MenuBar.UNCHECKED+Txt.S_DEBUG_CONN, 
                 MenuBar.UNCHECKED+Txt.S_STATS, 
                 MenuBar.UNCHECKED+"Holux 241" 
             },
@@ -97,10 +98,11 @@ public class BT747 extends MainWindow {
     private static final int C_MENU_FOCUS_HIGHLIGHT = 109;
     /** MenuBar item for Settings->Debug */
     private static final int C_MENU_DEBUG_ACTIVE = 111;
+    private static final int C_MENU_DEBUG_CONN = 112;
     /** MenuBar item for Settings->Conn. Stats */
-    private static final int C_MENU_STATS_ACTIVE = 112;
+    private static final int C_MENU_STATS_ACTIVE = 113;
     /** MenuBar item for Settings->Conn. Stats */
-    private static final int C_MENU_HOLUX_241 = 113;
+    private static final int C_MENU_HOLUX_241 = 114;
     /** MenuBar item for Info->About BT747 */
     private static final int C_MENU_ABOUT = 201;
     /** MenuBar item for Info->About Superwaba */
@@ -158,7 +160,7 @@ public class BT747 extends MainWindow {
      */
     public BT747() {
         if(Settings.onDevice) {
-            waba.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
+            bt747.sys.Vm.debug(bt747.sys.Vm.ERASE_DEBUG);
         }
         orgAutoOnOff=waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off causing BT trouble
 
@@ -167,7 +169,6 @@ public class BT747 extends MainWindow {
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle(Txt.S_TITLE); 
         Settings.setUIStyle(Settings.Flat);
-        Settings.keyboardFocusTraversable = m_settings.isTraversableFocus();
         for (int i = 0; i < m_GPSFilter.length; i++) {
             m_GPSFilter[i]=new GPSFilter();
             m_GPSFilterAdv[i]=new GPSFilterAdvanced();
@@ -234,6 +235,8 @@ public class BT747 extends MainWindow {
         //				10+0*PREFERRED);
         m_TabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
 
+        Settings.keyboardFocusTraversable = m_settings.isTraversableFocus();
+
         addTimer(this, 55);
 
     }
@@ -249,6 +252,8 @@ public class BT747 extends MainWindow {
         case ControlEvent.WINDOW_CLOSED:
             if (event.target==menubar) {
                 switch (m_MenuBar.getSelectedMenuItem()) {
+                case -1:
+                    break; // No item selected
                 case C_MENU_FILE_EXIT:
                     MessageBox mb;
                     String []szExitButtonArray = {Txt.YES,Txt.NO};  
@@ -276,6 +281,9 @@ public class BT747 extends MainWindow {
                     break;
                 case C_MENU_DEBUG_ACTIVE:
                     m_GPSstate.setDebug(m_MenuBar.isChecked(C_MENU_DEBUG_ACTIVE));
+                    break;
+                case C_MENU_DEBUG_CONN:
+                    m_GPSstate.setDebugConn(m_MenuBar.isChecked(C_MENU_DEBUG_CONN));
                     break;
                 case C_MENU_STATS_ACTIVE:
                     m_GPSstate.setStats(m_MenuBar.isChecked(C_MENU_STATS_ACTIVE));

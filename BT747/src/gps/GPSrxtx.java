@@ -41,12 +41,14 @@ public class GPSrxtx {
     
     private boolean ignoreNMEA=false;
     
+    private boolean stableStrategy=false;  // Some improvement on PDA when true.
+    private int prevReadCheck=0;
+    
     
     /** Class constructor.
      */
     public  GPSrxtx() {
         gpsPort=new GPSWabaPort(); // TODO: select according to OS (done during compile currently).
-//        gpsPort=new gps.port.GPSFilePort(); // TODO: select according to OS (done during compile currently).
         setDefaults();
     }
     
@@ -126,7 +128,7 @@ public class GPSrxtx {
     private static final int C_FIELD_STATE = 2;
     private static final int C_STAR_STATE  = 3;
     private static final int C_CHECKSUM_CHAR1_STATE = 4;
-    private static final int C_CHECKSUM_CHAR2_STATE = 5;
+    //private static final int C_CHECKSUM_CHAR2_STATE = 5;
     private static final int C_EOL_STATE = 6;
     private static final int C_ERROR_STATE = 7;
     private static final int C_FOUND_STATE = 8;
@@ -153,7 +155,6 @@ public class GPSrxtx {
     static final int ERR_TOO_LONG= 3;
     
     private Vector vCmd = new Vector();
-    private static final String[] Empty_vCmd = {};
     private static final char[] EOL_BYTES = {'\015','\012'};
     
     StringBuffer rec= new StringBuffer(256);
@@ -167,7 +168,6 @@ public class GPSrxtx {
             // Calculate checksum
             int z_Index= p_Packet.length();
             byte z_Checksum= 0;
-            int z_Result=0;
             while(--z_Index>=0) {
                 z_Checksum^=(byte)p_Packet.charAt(z_Index);
             }
@@ -179,7 +179,7 @@ public class GPSrxtx {
             rec.append('*');
             rec.append(Convert.unsigned2hex(z_Checksum,2));
             if(GPS_DEBUG) {
-                waba.sys.Vm.debug(">"+rec.toString());
+                bt747.sys.Vm.debug(">"+rec.toString());
             }
             rec.append(EOL_BYTES);
             gpsPort.write(rec.toString());
@@ -196,7 +196,7 @@ public class GPSrxtx {
 
         if(gpsPort.debugActive()) {
             // Test to avoid unnecessary lost time
-            gpsPort.writeDebug("\r\n:"+Convert.toString(Vm.getTimeStamp())+":");
+            gpsPort.writeDebug("\r\nR:"+Convert.toString(bt747.sys.Vm.getTimeStamp())+":");
         }
 
         if(current_state==C_FOUND_STATE) {
@@ -210,7 +210,7 @@ public class GPSrxtx {
                 char c;
                 c= (char)read_buf[read_buf_p++];  // Next character from buffer
                 // if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
-                //       waba.sys.Vm.debug(Convert.toString(c));
+                //       bt747.sys.Vm.debug(Convert.toString(c));
                 // }
                 switch (current_state) {
                 case C_EOL_STATE:
@@ -218,7 +218,7 @@ public class GPSrxtx {
                     //						StringBuffer sb = new StringBuffer(cmd_buf_p);
                     //						sb.setLength(0);
                     //						sb.append(cmd_buf,0,cmd_buf_p);
-                    //						if(GPS_DEBUG) {waba.sys.Vm.debug(sb.toString()+"\n");}; 
+                    //						if(GPS_DEBUG) {bt747.sys.Vm.debug(sb.toString()+"\n");}; 
                     if ( ( (c==10) || (c==13))) {
                         current_state = C_FOUND_STATE;
                         continueReading = false;
@@ -257,7 +257,7 @@ public class GPSrxtx {
                         current_state = C_STAR_STATE;
                         vCmd.add(new String(cmd_buf,0,cmd_buf_p));
                         //                        if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
-                        //                            waba.sys.Vm.debug(((String[])vCmd.toObjectArray())[vCmd.getCount()-1]);
+                        //                            bt747.sys.Vm.debug(((String[])vCmd.toObjectArray())[vCmd.getCount()-1]);
                         //                        }
                     } else if ( c == ',') {
                         checksum^= c;
@@ -344,14 +344,29 @@ public class GPSrxtx {
                         readAgain=false;
                         try {
                             int max= gpsPort.readCheck();
-                            if(max>C_BUF_SIZE) {
-                                max=C_BUF_SIZE;
+                            if(!stableStrategy 
+                                    ||(prevReadCheck==max)
+                                    ||(max>C_BUF_SIZE)) {
+
+                                gpsPort.writeDebug("\r\nC1:"+max+":");
+                                if((max>C_BUF_SIZE)) {
+                                    prevReadCheck=max-C_BUF_SIZE;
+                                    max=C_BUF_SIZE;
+                                } else {
+                                    prevReadCheck=0;
+                                }
+
+                                gpsPort.writeDebug("\r\nC2:"+max+":");
+                                if(max>0) {
+                                    bytesRead= gpsPort.readBytes(read_buf,0,max);
+                                    // String sb=new String(read_buf,0,bytesRead);
+                                    // System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
+                                }
+                                gpsPort.writeDebug("\r\nC3:"+bytesRead+":");
+                            } else {
+                                prevReadCheck=max;
                             }
-                            if(max>0) {
-                                bytesRead= gpsPort.readBytes(read_buf,0,max);
-                                // String sb=new String(read_buf,0,bytesRead);
-                                // System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
-                            }
+                            //if(prevReadCheck!=0) {System.out.println("prev:"+prevReadCheck+":");}
                         }
                         catch (Exception e) {
                             // new MessageBox("Waiting","Exception").popupBlockingModal();
@@ -371,34 +386,34 @@ public class GPSrxtx {
             }
         }		
         if (myError==C_ERROR_STATE) {
-//            waba.sys.Vm.debug("Error on reception");
+//            bt747.sys.Vm.debug("Error on reception");
 //
 //            if(GPS_DEBUG&&(vCmd.getCount()!=0)) {
 //                String s;
 //                s="-";
-//                waba.sys.Vm.debug(s);
+//                bt747.sys.Vm.debug(s);
 //                for (int i = 0; i < vCmd.getCount(); i++) {
-//                    waba.sys.Vm.debug(((String[])vCmd.toObjectArray())[i]);
+//                    bt747.sys.Vm.debug(((String[])vCmd.toObjectArray())[i]);
 //                };
-//                //waba.sys.Vm.debug(s);
+//                //bt747.sys.Vm.debug(s);
 //            }        
             vCmd.removeAllElements();
         }
         //        if((vCmd.getCount()!=0)&&(Settings.platform.equals("Java"))) {
         //            String s=new String();
         //            s="<";
-        //            waba.sys.Vm.debug("<");
+        //            bt747.sys.Vm.debug("<");
         //            for (int i = 0; i < vCmd.getCount(); i++) {
         //                s+=((String[])vCmd.toObjectArray())[i];
         //            };
-        //            waba.sys.Vm.debug(s);
+        //            bt747.sys.Vm.debug(s);
         //        }        
         if(current_state==C_FOUND_STATE) {
 //            if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
 ////                return (String[])vCmd.toObjectArray();                
 ////            }
 //                for (int i = 0; i < vCmd.getCount(); i++) {
-//                    waba.sys.Vm.debug("Rec:"+Convert.toString( ((String[])vCmd.toObjectArray())[i].length()));
+//                    bt747.sys.Vm.debug("Rec:"+Convert.toString( ((String[])vCmd.toObjectArray())[i].length()));
 //                };
 //            }
 
@@ -426,5 +441,14 @@ public class GPSrxtx {
      */
     public void setDebug(final boolean gps_debug) {
         GPS_DEBUG = gps_debug;
+    }
+    
+    public void setDebugConn(final boolean gps_debug,final String s) {
+        gpsPort.setDebugFileName(s+"/gpsRawDebug.txt");
+        if(gps_debug) {
+            gpsPort.startDebug();
+        } else {
+            gpsPort.endDebug();
+        }
     }
 }

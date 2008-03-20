@@ -193,7 +193,6 @@ public class GPSLogFilterAdv extends Container {
 
     public void getSettings() {
         for (int i = 0; i < m_gpsFilters.length; i++) {
-            GPSFilterAdvanced filter = m_gpsFilters[i];
             m_minRecCount.setText(Convert.toString(m_settings.getFilterMinRecCount()));
             m_maxRecCount.setText(Convert.toString(m_settings.getFilterMaxRecCount()));
             m_minSpeed.setText(Convert.toString(m_settings.getFilterMinSpeed(),2));

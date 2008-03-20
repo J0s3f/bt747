@@ -57,10 +57,8 @@ public class GPSNMEAFile extends GPSFile {
      */
     public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
-        boolean prevField=false;
         String timeStr="";
         if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
-            int z_Checksum;
             
             if((activeFields.utc!=0)) {
                 timeStr=(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())

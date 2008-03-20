@@ -395,4 +395,7 @@ public class Txt_es {
     
     public static final String ADD_RECORD_NUMBER =
         "Info núm en el log";
-    }
+
+    public static final String S_DEBUG_CONN= "Debug conn.";
+
+}

@@ -387,6 +387,9 @@ public class Txt_jp {
         "| it may be a bug.";
     public static final String ADD_RECORD_NUMBER =
         "Record nbr info in logs";
+    
+    public static final String S_DEBUG_CONN= "Debug conn.";
+
 }
 //public static final String S_FILE = "????";
 //public static final String S_EXIT_APPLICATION = "??";

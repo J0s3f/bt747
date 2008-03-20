@@ -88,8 +88,6 @@ public class GPSPLTFile extends GPSFile {
      */
     public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
-        boolean prevField=false;
-        //rec+=Convert.toString(m_recCount);
         
         if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             String rec="";

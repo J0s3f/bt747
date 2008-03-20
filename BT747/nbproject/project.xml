@@ -31,6 +31,12 @@
                     <location>src_forwaba</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
+                <source-folder>
+                    <label>src_forJ2ME</label>
+                    <type>java</type>
+                    <location>src_forJ2ME</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
             </folders>
             <ide-actions>
                 <action name="build">
@@ -66,6 +72,10 @@
                         <label>src_forwaba</label>
                         <location>src_forwaba</location>
                     </source-folder>
+                    <source-folder style="packages">
+                        <label>src_forJ2ME</label>
+                        <location>src_forJ2ME</location>
+                    </source-folder>
                     <source-file>
                         <location>build.xml</location>
                     </source-file>
@@ -91,7 +101,8 @@
             <compilation-unit>
                 <package-root>src</package-root>
                 <package-root>src_forwaba</package-root>
-                <classpath mode="compile">${superwaba_root}/lib/SuperWaba.jar;win32comm.jar;webstart/RXTXcomm.jar</classpath>
+                <package-root>src_forJ2ME</package-root>
+                <classpath mode="compile">lib/Waba_only.jar;lib/win32comm.jar;lib/RXTXcomm.jar</classpath>
                 <built-to>build</built-to>
                 <source-level>1.3</source-level>
             </compilation-unit>
