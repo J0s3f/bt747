@@ -116,11 +116,13 @@ public class LogPacket {
 			this.vdop = parser.getVDOP();
 		}
 		
-		assert(lf.hasNSat() == lf.hasSID());
 		if (lf.hasNSat()) {
 			this.nSatInUse = parser.getNSatInUse();
 			this.nSatInView = parser.getNSatInView();
-			
+		}
+		
+		if (lf.hasSID()) {
+			assert(lf.hasNSat() == lf.hasSID()); // if this is not the case, it gets more complicated to determine the size of sats[] . . . 
 			this.sats = new SatelliteData[this.nSatInUse];
 			for (int i=0; i<this.nSatInUse; i++) {
 				// . . . assuming lf.hasSID() . . . 
@@ -178,8 +180,10 @@ public class LogPacket {
 		if (this.pdop != null) sb.append(String.format(", PDOP=%d", this.pdop));
 		if (this.hdop != null) sb.append(String.format(", HDOP=%d", this.hdop));
 		if (this.vdop != null) sb.append(String.format(", VDOP=%d", this.vdop));
+		if (this.nSatInUse != null) sb.append(String.format(", #Siu=%d", this.nSatInUse));
+		if (this.nSatInView != null) sb.append(String.format(", #Siv=%d", this.nSatInView));
 		if ((this.sats != null) && (this.sats.length > 0)) {
-			sb.append(String.format(", %d/%d[", this.nSatInUse, this.nSatInView));
+			sb.append(", [");
 			for (SatelliteData sat : this.sats) {
 				sb.append(String.format("(id=%d, used=%b, n=%d", sat.id, sat.isInUse, sat.nbrSats));
 				if (sat.elevation != null) sb.append(String.format(", elev=%d", sat.elevation));
