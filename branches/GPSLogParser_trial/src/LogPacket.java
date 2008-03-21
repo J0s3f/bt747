@@ -178,7 +178,7 @@ public class LogPacket {
 		if (this.pdop != null) sb.append(String.format(", PDOP=%d", this.pdop));
 		if (this.hdop != null) sb.append(String.format(", HDOP=%d", this.hdop));
 		if (this.vdop != null) sb.append(String.format(", VDOP=%d", this.vdop));
-		if (this.sats.length > 0) {
+		if ((this.sats != null) && (this.sats.length > 0)) {
 			sb.append(String.format(", %d/%d[", this.nSatInUse, this.nSatInView));
 			for (SatelliteData sat : this.sats) {
 				sb.append(String.format("(id=%d, used=%b, n=%d", sat.id, sat.isInUse, sat.nbrSats));
