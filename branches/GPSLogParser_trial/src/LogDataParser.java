@@ -133,12 +133,12 @@ public class LogDataParser {
 	public int getVDOPSize() { return 2; }
 	
 	public Byte getNSatInUse() throws IOException {
-		return new Byte(this.dis.readByte());
+		return Byte.valueOf(this.dis.readByte());
 	}
 	public int getNSatInUseSize() { return 1; }
 	
 	public Byte getNSatInView() throws IOException {
-		return new Byte(this.dis.readByte());
+		return Byte.valueOf(this.dis.readByte());
 	}
 	public int getNSatInViewSize() { return 1; }
 	

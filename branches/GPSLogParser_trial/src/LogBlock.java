@@ -31,7 +31,7 @@ import java.util.Iterator;
  * @author Thomas Mohme
  */
 public class LogBlock {
-	public static int LOG_BLOCK_SIZE = 0x10000;
+	public static final int LOG_BLOCK_SIZE = 0x10000;
 	
 	private LogBlockHeader hdr;
 	private LogBlockChunk chunk;

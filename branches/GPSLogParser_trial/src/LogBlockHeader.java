@@ -25,7 +25,8 @@ import java.io.IOException;
  * @author Thomas Mohme
  */
 public class LogBlockHeader {
-	public static int LOG_BLOCK_HEADER_SIZE = 20	// header_info 
+	public final static int LOG_BLOCK_HEADER_SIZE
+	                                        = 20	// header_info 
 											+ 32    // sector_status
 											+ 454	// 0xFF
 											+ 6;    // 0x2AFFBBBBBBBB
