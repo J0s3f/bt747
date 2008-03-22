@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -34,6 +35,7 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.ui.MessageBox;
 
 /** Main class (application entry)
@@ -334,27 +336,27 @@ public class BT747 extends MainWindow {
                 c.postEvent(new Event(ControlEvent.PRESSED,c,0));                
             }
             break;
-        case GpsEvent.DATA_UPDATE:
+        default:
             if(event.target==null) {
-                Control c;
-                c=m_TabPanel.getChildren()[0];
-                c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
-                event.consumed=true;
+                if(event.type==GpsEvent.DATA_UPDATE) {
+                    Control c;
+                    c=m_TabPanel.getChildren()[0];
+                    c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
+                    event.consumed=true;
+                } else if (
+                        (event.type==GpsEvent.GPRMC)
+                      ||(event.type==GpsEvent.GPGGA)) {
+
+                    Control c;
+                    c=m_TabPanel.getChildren()[0];
+                    event.target=c;
+                    c.postEvent(event);
+                    event.consumed=true;
+                } else if ((event.type==GpsEvent.CONNECTED) ) {
+                    m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
+                    event.consumed=true;
+                }
             }
-            break;
-        case GpsEvent.GPRMC:
-        case GpsEvent.GPGGA:
-            if(event.target==null) {
-                Control c;
-                c=m_TabPanel.getChildren()[0];
-                event.target=c;
-                c.postEvent(event);
-                event.consumed=true;
-            }
-            break;
-        case GpsEvent.CONNECTED:
-            m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
-            event.consumed=true;
         }
     }
     

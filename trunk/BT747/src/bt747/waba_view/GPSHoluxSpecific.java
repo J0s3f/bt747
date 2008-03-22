@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -28,19 +29,12 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
-
-/*
- * Created on 3 sept. 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+import bt747.model.AppSettings;
 
 /**
  * @author Mario De Weerd
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * Implements Holux Specific operations
  */
 public class GPSHoluxSpecific extends Container {
   
@@ -92,10 +86,12 @@ public class GPSHoluxSpecific extends Container {
                 doSet();
             }
             break;
-        case GpsEvent.DATA_UPDATE:
-            if(event.target==this) {
-                updateData();
-                event.consumed=true;
+        default:
+            if(event.type==GpsEvent.DATA_UPDATE) {
+                if(event.target==this) {
+                    updateData();
+                    event.consumed=true;
+                }
             }
         }
     }

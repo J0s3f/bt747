@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -28,6 +29,7 @@ import gps.GPSFilterAdvanced;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.sys.Convert;
 import bt747.ui.Button;
 /**
@@ -239,10 +241,12 @@ public class GPSLogFilterAdv extends Container {
             event.consumed=false;
         }
         break;
-        case GpsEvent.DATA_UPDATE:
-            if(event.target==this) {
-                updateButtons();
-                event.consumed=true;
+        default:
+            if(event.type==GpsEvent.DATA_UPDATE) {
+                if(event.target==this) {
+                    updateButtons();
+                    event.consumed=true;
+                }
             }
         }
     }

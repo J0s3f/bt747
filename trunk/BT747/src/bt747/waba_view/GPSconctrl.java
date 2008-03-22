@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -32,6 +33,7 @@ import gps.convert.Conv;
 
 import bt747.Txt;
 import bt747.Version;
+import bt747.model.AppSettings;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 import bt747.ui.Button;
@@ -223,20 +225,17 @@ public class GPSconctrl extends Container {
                 m_GPSstate.GPS_restart();
             }
             break;
-        case GpsEvent.DATA_UPDATE:
-            if(event.target==this) {
-                updateButtons();
-                event.consumed=true;
+        default:
+            if(event.type==GpsEvent.DATA_UPDATE) {
+                if(event.target==this) {
+                    updateButtons();
+                    event.consumed=true;
+                }
+            } else if (event.type==GpsEvent.GPGGA) {
+                updateGPSData(m_GPSstate.getGpsRecord());
+            } else if (event.type==GpsEvent.GPRMC) {
+                updateRMCData(m_GPSstate.getGpsRecord());
             }
-            break;
-        case GpsEvent.GPGGA:
-            //GpsEvent eb=(GpsEvent) event;
-            updateGPSData(m_GPSstate.getGpsRecord());
-            break;
-        case GpsEvent.GPRMC:
-            //GpsEvent ec=(GpsEvent) event;
-            updateRMCData(m_GPSstate.getGpsRecord());
-        break;
         }
         
     }
