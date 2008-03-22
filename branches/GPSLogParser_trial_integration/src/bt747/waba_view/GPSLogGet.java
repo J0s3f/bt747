@@ -308,7 +308,7 @@ public class GPSLogGet extends Container {
 //                        if(Class.forName("gps.parser.NewLogConvert")!=null) {
 //                            lc=(GPSLogConvert)new gps.parser.NewLogConvert();
 //                        } else {
-                            lc=new BT747LogConvert();
+                            lc=new gps.parser.NewLogConvert();
 //                        }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -317,8 +317,9 @@ public class GPSLogGet extends Container {
                 } else if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".csv")) {
                     lc=new CSVLogConvert();
                 } else {
-                    lc=new BT747LogConvert();
-                    ((BT747LogConvert)lc).setHolux(m_appSettings.getForceHolux241());
+//                    lc=new BT747LogConvert();
+                    lc=new gps.parser.NewLogConvert();  // For integration testing.
+                    ((gps.parser.NewLogConvert)lc).setHolux(m_appSettings.getForceHolux241());
                 }
                 GPSFilter[] usedFilters;
                 Button z_Button=((Button)event.target);
