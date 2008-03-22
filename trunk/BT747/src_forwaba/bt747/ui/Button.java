@@ -21,7 +21,6 @@ public class Button extends waba.ui.Button {
      */
     public Button(String text) {
         super(text);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -29,7 +28,6 @@ public class Button extends waba.ui.Button {
      */
     public Button(Image img) {
         super(img);
-        // TODO Auto-generated constructor stub
     }
     public void repaint()
     {

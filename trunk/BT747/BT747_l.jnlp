@@ -1,6 +1,8 @@
+<?xml version="1.0"?>
+<!-- Must replace $$codebase with correct path in line below: file:///path/to/thisdir
+     and rename this file to BT747.jnlp -->
 <jnlp href="BT747.jnlp" codebase="$$codebase">
-  <!-- Must replace $$codebase with correct path in above line: file:///path/to/thisdir
-       and rename this file to BT747.jnlp -->
+
   <information>
     <title>BT747</title>
     <vendor>Mario De Weerd (GNU GPL license)</vendor>

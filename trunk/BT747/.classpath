@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src_forwaba"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="src_forwaba"/>
 	<classpathentry kind="lib" path="lib/comm.jar"/>
 	<classpathentry kind="lib" path="lib/RXTX_linux_x86.jar"/>
 	<classpathentry kind="lib" path="lib/RXTXcomm.jar"/>

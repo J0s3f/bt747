@@ -7,12 +7,14 @@
 ROOT_DIR=`dirname $0`
 if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
 
-#Change to appropriate directory (suppose that we are already in it (or that ROOT_DIR is ok) -> commented)
+#Change to appropriate directory (suppose that we are already in it 
+# (or that ROOT_DIR is ok) -> commented)
 #cd /Applications/gps ; ROOT_DIR=$PWD*
 
 RXTX_PATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
+RXTX_BIN_PATH=${RXTX_BIN_PATH}/Mac_OS_X
 
-CLASSPATH=${RXTX_PATH}:${ROOT_DIR}/lib/Waba_only.jar:${ROOT_DIR}/dist/BT747_rxtx.jar:.:$CLASSPATH
+CLASSPATH=${RXTX_PATH}:${RXTX_BIN_PATH}:${ROOT_DIR}/lib/Waba_only.jar:${ROOT_DIR}/dist/BT747_rxtx.jar:.:$CLASSPATH
 export CLASSPATH
 # More advanced way of looking for ports
 POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/cu.SLAB_USBtoUART"
@@ -35,5 +37,5 @@ which javaw 2>1 >/dev/null && JAVA=javaw
 
 # you may want to force the path to the settings file in the next call:
 # -Dbt747_settings="${USER}/bt747_settings.pdb"
-$JAVA -Djava.library.path=${ROOT_DIR}/rxtx/ $PORT_OPTION waba.applet.Applet /w 400 /h 400 /scale 1 /bpp 8 BT747
+$JAVA -Djava.library.path=${RXTX_BIN_PATH} $PORT_OPTION waba.applet.Applet /w 400 /h 400 /scale 1 /bpp 8 BT747
 
