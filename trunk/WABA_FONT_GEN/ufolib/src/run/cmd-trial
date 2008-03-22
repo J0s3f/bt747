@@ -1,0 +1,12 @@
+help
+list_converters
+open_font_file 
+open_font_file x.bdf 
+use_font_as_profile
+help
+calculate_uff_range
+set_uff_family FUGGER
+set_uff_size 16
+set_uff_shape n
+save_uff_file
+exit
