@@ -29,21 +29,23 @@ import waba.ui.Label;
 import waba.ui.ProgressBar;
 import waba.util.Date;
 
-import gps.BT747LogConvert;
-import gps.CSVLogConvert;
-import gps.GPSCSVFile;
-import gps.GPSCompoGPSTrkFile;
-import gps.GPSFile;
-import gps.GPSFilter;
-import gps.GPSGPXFile;
-import gps.GPSGmapsHTMLEncodedFile;
-import gps.GPSKMLFile;
-import gps.GPSLogConvert;
-import gps.GPSNMEAFile;
-import gps.GPSPLTFile;
+import com.sun.jndi.url.corbaname.corbanameURLContextFactory;
+
 import gps.GPSstate;
 import gps.GpsEvent;
-import gps.HoluxTrlLogConvert;
+import gps.log.BT747LogConvert;
+import gps.log.CSVLogConvert;
+import gps.log.GPSCSVFile;
+import gps.log.GPSCompoGPSTrkFile;
+import gps.log.GPSFile;
+import gps.log.GPSFilter;
+import gps.log.GPSGPXFile;
+import gps.log.GPSGmapsHTMLEncodedFile;
+import gps.log.GPSKMLFile;
+import gps.log.GPSLogConvert;
+import gps.log.GPSNMEAFile;
+import gps.log.GPSPLTFile;
+import gps.log.HoluxTrlLogConvert;
 
 import bt747.Txt;
 import bt747.model.AppSettings;
@@ -81,6 +83,7 @@ public class GPSLogGet extends Container {
     Edit m_edTrkSep;
 
     ComboBox m_cbTimeOffsetHours;
+    
     private static final String[] offsetStr = {
             "-12", "-11","-10","-9","-8","-7","-6","-5","-4","-3","-2","-1",
             "+0",
@@ -293,10 +296,24 @@ public class GPSLogGet extends Container {
                 GPSFile gpsFile=null;
                 //GPSLogConvert lc;
                 GPSLogConvert lc;
+                
+                
                 if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".trl")) {
                     lc=new HoluxTrlLogConvert();
                 } else if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".new")) {
-                    lc=new gps.parser.NewLogConvert();
+                    // If the new parser is included then we try to use it
+                    try {
+                        //Class c = Class.forName("gps.parser.NewLogConvert");
+                        //lc=(GPSLogConvert)(c.getConstructor().newInstance());
+//                        if(Class.forName("gps.parser.NewLogConvert")!=null) {
+//                            lc=(GPSLogConvert)new gps.parser.NewLogConvert();
+//                        } else {
+                            lc=new BT747LogConvert();
+//                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        lc=new BT747LogConvert();
+                    }
                 } else if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".csv")) {
                     lc=new CSVLogConvert();
                 } else {

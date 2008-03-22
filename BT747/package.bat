@@ -22,7 +22,7 @@ SET FILES=%FILES% run_ex.bat run_rxtx.bat run_rxtx.sh
 SET FILES=%FILES% bt747_macosX.command BT747_l.jnlp BT747_lwin.jnlp
 SET FILES=%FILES% lib/Waba_only.jar lib/win32comm.jar lib/win32/javax.comm.properties lib/win32com.dll  lib/comm.jar lib/RXTXcomm.jar
 SET RXTXFILES=%FILES% lib/rxtx-2.1-7-bins-r2
-SET EXCLUDEFILES=nbproject/private/\*
+SET EXCLUDEFILES=nbproject/private/\* src/gps/parser/\*
 
 del %PACK_DIR%\BT747_%DT%_%APP_LANG%_*.zip
 mkdir %PACK_DIR%

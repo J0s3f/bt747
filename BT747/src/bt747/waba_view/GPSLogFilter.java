@@ -25,7 +25,7 @@ import waba.ui.Event;
 import waba.ui.PushButtonGroup;
 
 import gps.BT747_dev;
-import gps.GPSFilter;
+import gps.log.GPSFilter;
 
 import bt747.Txt;
 import bt747.model.AppSettings;
