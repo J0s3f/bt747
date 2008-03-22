@@ -105,7 +105,7 @@ public class Txt_de {
     public static final String BT_BLUETOOTH = "Bluetooth";
     public static final String BT_CONNECT_PRT = "Port verbinden";
     public static final String BT_CLOSE_PRT = "Port schließen";
-    public static final String BT_REOPEN_PRT  = "Port öffnen";
+    public static final String BT_REOPEN_PRT  = "Port neu öffnen";
     public static final String MAIN = "Main: ";  //TODO: translate to german
     public static final String FIRMWARE = "Firmware: "; 
     public static final String MODEL = "Model: ";
