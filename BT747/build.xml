@@ -61,6 +61,8 @@
 		<pathelement location="${superwaba_root}/lib/SuperWabaTools.jar"/>
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
 	</path>
+	
+	<property name="swcollections.jar" value="${lib.dir}/collections-superwaba.jar"/>
 
 	<!-- Set some properties according to availability of files -->
 	<!-- Currently set in local.properties so that only the release
@@ -79,12 +81,12 @@
 
 	</target>
 
-	<target name="run_rxtx" depends="rxtxjar">
+	<target name="run_rxtx" depends="proguard.rxtx">
 		<java classname="waba.applet.Applet" fork="true">
 			<classpath>
 				<pathelement path="lib/Waba_only.jar"/>
 				<pathelement path="lib/rxtx-2.1-7-bins-r2/RXTXcomm.jar"/>
-				<pathelement path="${dist}/BT747_rxtx.jar"/>
+				<pathelement path="${rxtxbuild.dir}/BT747_rxtx.jar"/>
 			</classpath>
 			<arg line="/w 320 /h 320 /scale 1 /bpp 8 BT747"/>
 		</java>
@@ -196,12 +198,19 @@
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${dist}"/>
 
-		<javac srcdir="src_forwaba" destdir="${build.dir}" target="1.1" optimize="true" source="1.2">
+		<javac srcdir="src_forwaba" destdir="${build.dir}"
+			target="1.1"
+			optimize="true"
+			source="1.3">
 			<include name="**/*.java"/>
 			<classpath refid="classpath"/>
 		</javac>
-		<javac srcdir="src" destdir="${build.dir}" target="1.1" source="1.2" optimize="true"
+		<javac srcdir="src" destdir="${build.dir}"
+			target="1.1"
+			source="1.3"
+			optimize="true"
 			deprecation="false">
+			<exclude name="gps/parser/**"/>
 			<include name="**/*.java"/>
 			<exclude name="gps/model/*"/>
 			<exclude name="gps/port/GPSRxTxPort.java"/>
@@ -215,6 +224,9 @@
 		</copy>
 
 	</target>
+
+	<property name="java.src.version" value="1.3"/>
+	<property name="java.target.version" value="1.1"/>
 
 	<target name="rxtxbuild" depends="clean, updatedate">
 
@@ -232,8 +244,12 @@
 		</copy>
 		<replace file="${rxtxsrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort" />
 		<replace file="${rxtxsrc.dir}/bt747/model/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
-
-		<javac srcdir="${rxtxsrc.dir}" destdir="${rxtxbuild.dir}" target="1.1" source="1.2" optimize="true" classpathref="rxtxclasspath">
+<!--
+			source="${java.src.version}"
+			target="${java.target.version}"
+-->
+		<javac srcdir="${rxtxsrc.dir}" destdir="${rxtxbuild.dir}"
+			optimize="true" classpathref="rxtxclasspath">
 			<include name="**/*.java"/>
 			<exclude name="gps/port/GPSWabaPort.java*"/>
 			<exclude name="gps/port/GPSWabaSocketPort.java*"/>
@@ -296,7 +312,10 @@
 		<replace file="${filesrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSFilePort" />
 		<replace file="${filesrc.dir}/bt747/model/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
 
-		<javac srcdir="${filesrc.dir}" destdir="${filebuild.dir}" target="1.1" optimize="true" classpathref="classpath">
+		<javac srcdir="${filesrc.dir}" destdir="${filebuild.dir}"
+			source="1.3"
+			target="1.1"
+			optimize="true" classpathref="classpath">
 			<include name="**/*.java"/>
 			<exclude name="gps/port/GPSWabaPort.java*"/>
 			<exclude name="gps/port/GPSRxTxPort.java*"/>
@@ -321,7 +340,6 @@
 	</target>
 
 	<target name="jar" depends="build">
-
 		<jar jarfile="${build.dir}/${ant.project.name}.jar" compress="true">
 			<fileset dir="${build.dir}" includes="**/*.class"/>
 		</jar>
@@ -331,17 +349,6 @@
 		<jar jarfile="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" compress="true">
 			<fileset dir="${rxtxbuild.dir}" includes="**/*.class"/>
 		</jar>
-		<antcall target="sign">
-			<param name="jar.tosign" value="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar"/>
-		</antcall>
-		<copy todir="${dist}">
-			<fileset dir="${rxtxbuild.dir}">
-				<include name="**/*.jar"/>
-			</fileset>
-		</copy>
-		<antcall target="sign">
-			<param name="jar.tosign" value="${dist}/${ant.project.name}_rxtx.jar"/>
-		</antcall>
 	</target>
 
 
@@ -400,8 +407,61 @@
 			<libraryjar file="${java.home}/lib/rt.jar" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${build.dir}/${ant.project.name}_unopt.jar" />
+			<injar path="${swcollections.jar}" jarfilter="!META*"/>
 			<outjar path="${build.dir}/${ant.project.name}.jar" />
 		</proguard>
+	</target>
+
+	<target name="proguard_task.rxtx" depends="rxtxjar" unless="use.proguard_java">
+		<taskdef name="proguard" classpath="${proguardLib}" 
+	      classname="proguard.ant.ProGuardTask"
+		/>
+		<move file="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar"
+			tofile="${rxtxbuild.dir}/${ant.project.name}_rxtx_unopt.jar"/>
+		<proguard
+			shrink="true"
+			defaultpackage=""
+			optimize="false"
+			obfuscate="false" 
+		    allowaccessmodification="no"
+			flattenpackagehierarchy=""
+			repackageclasses="false"
+		    printusage="false"
+		    overloadaggressively="false"
+			verbose="true"
+			ignorewarnings="true"
+			optimizationpasses="4"
+			>
+			
+			<keep name="${mainClass}" />
+			<libraryjar file="${java.home}/lib/rt.jar" />
+			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+			<injar path="${rxtxbuild.dir}/${ant.project.name}_rxtx_unopt.jar" />
+			<injar path="${swcollections.jar}" filter="!META-INF/MANIFEST.MF"/>
+			<outjar path="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" />
+		</proguard>
+		<delete file="${rxtxbuild.dir}/${ant.project.name}_rxtx_unopt.jar"></delete>
+	</target>
+
+	<target name="proguard_java.rxtx" depends="rxtxjar" if="use.proguard_java">
+		<move file="${build.dir}/${ant.project.name}_rxtx.jar"
+			tofile="${build.dir}/${ant.project.name}_rxtx_unopt.jar"/>
+		<echo message="${proguardLib}"/>
+		<java classname="proguard.ProGuard"
+			fork="yes"
+			classpath="${proguardLib}">
+			<arg line="-injars ${build.dir}/${ant.project.name}_rxtx_unopt.jar${path.separator}${swcollections.jar}(!META-INF/MANIFEST)"/>
+			<arg line="-outjars ${build.dir}/${ant.project.name}_rxtx.jar"/>
+			<arg line="-libraryjars ${java.home}/lib/rt.jar${path.separator}${superwaba_root}/lib/SuperWaba.jar"/>
+			<arg line="-keep public class ${mainClass}"/>
+			<arg line="-allowaccessmodification"/>
+			<arg line="-overloadaggressively"/>
+			<!--
+			<arg line="-repackageclasses"/>
+			<arg line="-optimizationpasses 3"/>
+			-->
+		</java>
+
 	</target>
 
 	<target name="proguard_java" depends="jar" if="use.proguard_java">
@@ -426,6 +486,9 @@
 	</target>
 	
 	<target name="proguard" depends="proguard_task,proguard_java">
+	</target>
+
+	<target name="proguard.rxtx" depends="proguard_task.rxtx,proguard_java.rxtx">
 	</target>
 
 	<!-- Execute WARP -->
@@ -590,7 +653,7 @@
 	</target>
 
 	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
-	<target name="all-exegen-types" depends="exegen, exegen-exe, exegen-cab, rxtxjar, all-warp">
+	<target name="all-exegen-types" depends="exegen, exegen-exe, exegen-cab, proguard.rxtx, all-warp">
 
 		<move todir="${dist}">
 
@@ -606,6 +669,18 @@
 		</move>
 		<antcall target="sign">
 			<param name="jar.tosign" value="${dist}/${ant.project.name}.jar"/>
+		</antcall>
+
+		<antcall target="sign">
+			<param name="jar.tosign" value="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar"/>
+		</antcall>
+		<copy todir="${dist}">
+			<fileset dir="${rxtxbuild.dir}">
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
+		<antcall target="sign">
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_rxtx.jar"/>
 		</antcall>
 
 	</target>

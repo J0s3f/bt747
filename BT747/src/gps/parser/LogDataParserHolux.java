@@ -1,3 +1,4 @@
+package gps.parser;
 /*
 	(c)2008 Thomas Mohme
 	tmohme at sourceforge.net

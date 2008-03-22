@@ -295,6 +295,8 @@ public class GPSLogGet extends Container {
                 GPSLogConvert lc;
                 if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".trl")) {
                     lc=new HoluxTrlLogConvert();
+                } else if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".new")) {
+                    lc=new gps.parser.NewLogConvert();
                 } else if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".csv")) {
                     lc=new CSVLogConvert();
                 } else {

@@ -1,4 +1,3 @@
-package bt747;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -17,33 +16,54 @@ package bt747;
 //***  This is a proprietary development environment based in      ***
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
-//********************************************************************                              
+//********************************************************************  
+package gps.parser;
 
-/** This class has a partial automatic update in the build script.
- * and is used to reference the version.
+import gps.GPSFile;
+import gps.GPSLogConvert;
+import gps.GPSRecord;
+
+/** This class is used to convert the binary log to a new format.
+ * Basically this class interprets the log and creates a {@link GPSRecord}.
+ * The {@link GPSRecord} is then sent to the {@link GPSFile} class object to write it
+ * to the output.
  * 
- * @link Original code found on 
- *      http://forum.java.sun.com/thread.jspa?forumID=31&threadID=583820
  * @author Mario De Weerd
  */
-public final class Version {
+public final class NewLogConvert implements GPSLogConvert {
+    protected boolean passToFindFieldsActivatedInLog= false;
+    protected int activeFileFields=0;
+    String [] argv=new String[1];
+    
+    /**
+     * @return
+     * @param gpsFile - object doing actual write to files
+     * 
+     */
+    public final void parseFile(final GPSFile gpsFile) {
 
-   /** Build number (timestamp with format yyyyMMddHHmmssSSS). */
-   public static final long BUILD = 20080322115835262L; //automatically set during Ant compilation!
-   public static final String BUILD_STR = "20080312203651642xBT747.303M"; //automatically set during Ant compilation!
-   /** Release date of this version (date format dd.MM.yyyy). */
-   public static final String DATE = "22.03.2008"; //automatically set during Ant compilation!
-   /**
-    * Version number of format x.y.z, with
-    * <ul>
-    * <li>x = major version
-    * <li>y = minor version
-    * <li>z = bug fix version
-    * </ul>
-    */
-   public static final String VERSION_NUMBER = "1.47beta";
-   /** Minimum Java JRE version required. */
-   public static final String NUMBER_JAVAMIN = "1.4";
-   /** Title of this project. */
-   public static final String TITLE = "BT747";
-}//Version
+    }
+    
+    public final void setTimeOffset(final long offset) {
+    }
+    
+    public final void setNoGeoid(final boolean b) {
+    }
+    
+    public final void toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
+        argv[0]=fileName;
+        try {
+            LogFile.main(argv);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+    
+    /**
+     * @param holux The holux to set.
+     */
+    public void setHolux(boolean holux) {
+    }
+    
+
+    }
