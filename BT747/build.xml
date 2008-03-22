@@ -231,7 +231,7 @@
 			</fileset>
 		</copy>
 		<replace file="${rxtxsrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort" />
-		<replace file="${rxtxsrc.dir}/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
+		<replace file="${rxtxsrc.dir}/bt747/model/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
 
 		<javac srcdir="${rxtxsrc.dir}" destdir="${rxtxbuild.dir}" target="1.1" source="1.2" optimize="true" classpathref="rxtxclasspath">
 			<include name="**/*.java"/>
@@ -294,7 +294,7 @@
 			</fileset>
 		</copy>
 		<replace file="${filesrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSFilePort" />
-		<replace file="${filesrc.dir}/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
+		<replace file="${filesrc.dir}/bt747/model/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
 
 		<javac srcdir="${filesrc.dir}" destdir="${filebuild.dir}" target="1.1" optimize="true" classpathref="classpath">
 			<include name="**/*.java"/>
