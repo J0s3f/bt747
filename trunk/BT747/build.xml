@@ -82,7 +82,7 @@
 	</target>
 
 	<target name="run_rxtx" depends="proguard.rxtx">
-		<java classname="waba.applet.Applet" fork="true">
+		<java classname="waba.applet.Applet" fork="true" spawn="true">
 			<classpath>
 				<pathelement path="lib/Waba_only.jar"/>
 				<pathelement path="lib/rxtx-2.1-7-bins-r2/RXTXcomm.jar"/>
@@ -198,27 +198,23 @@
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${dist}"/>
 
-		<javac srcdir="src_forwaba" destdir="${build.dir}"
-			target="1.1"
-			optimize="true"
-			source="1.3">
-			<include name="**/*.java"/>
-			<classpath refid="classpath"/>
-		</javac>
-		<javac srcdir="src" destdir="${build.dir}"
+		<javac srcdir="." destdir="${build.dir}"
 			target="1.1"
 			source="1.3"
 			optimize="true"
-			deprecation="false">
-			<exclude name="gps/parser/**"/>
-			<include name="**/*.java"/>
-			<exclude name="gps/model/*"/>
-			<exclude name="gps/port/GPSRxTxPort.java"/>
-			<exclude name="gps/port/GPSWabaSocketPort.java*"/>
+			deprecation="true"
+			>
+				<include name="src_forwaba/**/*.java"/>
+				<include name="${src.dir}/**/*.java"/>
+				<exclude name="${src.dir}/gps/model/*"/>
+				<exclude name="${src.dir}/gps/port/GPSRxTxPort.java"/>
+				<exclude name="${src.dir}/gps/port/GPSWabaSocketPort.java"/>
+			    <exclude name="${src.dir}/gps/parser/**"/>
 			<classpath refid="classpath"/>
 		</javac>
+		<delete dir="${build.dir}/gps/parser"></delete>
 		<copy todir="${build.dir}">
-			<fileset dir="src">
+			<fileset dir="${src.dir}">
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
@@ -254,6 +250,7 @@
 			<exclude name="gps/port/GPSWabaPort.java*"/>
 			<exclude name="gps/port/GPSWabaSocketPort.java*"/>
 			<exclude name="gps/model/*"/>
+			<exclude name="gps/parser/*" unless="${use.newparser}"/>
 		</javac>
 		<copy todir="${rxtxbuild.dir}">
 			<fileset dir="src">
@@ -285,6 +282,7 @@
 		<javac srcdir="${symbiansrc.dir}" destdir="${symbianbuild.dir}" target="1.1" optimize="true" classpathref="symbianclasspath">
 			<include name="**/*.java"/>
 			<exclude name="gps/model/*"/>
+			<exclude name="gps/parser/*" unless="${use.newparser}"/>
 		</javac>
 		<copy todir="${symbianbuild.dir}">
 			<fileset dir="src">
@@ -320,6 +318,7 @@
 			<exclude name="gps/port/GPSWabaPort.java*"/>
 			<exclude name="gps/port/GPSRxTxPort.java*"/>
 			<exclude name="gps/model/*"/>
+			<exclude name="gps/parser/*" unless="${use.newparser}"/>
 		</javac>
 		<copy todir="${filebuild.dir}">
 			<fileset dir="src">
@@ -349,6 +348,16 @@
 		<jar jarfile="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" compress="true">
 			<fileset dir="${rxtxbuild.dir}" includes="**/*.class"/>
 		</jar>
+		<!--
+		<retroweaver
+			inputjar="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar"
+			outputjar="${rxtxbuild.dir}/${ant.project.name}_rxtx_retro.jar"
+			target="1.2"
+			>
+		</retroweaver>
+		<move file="${rxtxbuild.dir}/${ant.project.name}_rxtx_retro.jar"
+			tofile="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar"/>
+		-->
 	</target>
 
 
@@ -404,10 +413,11 @@
 			>
 			
 			<keep name="${mainClass}" />
+
 			<libraryjar file="${java.home}/lib/rt.jar" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${build.dir}/${ant.project.name}_unopt.jar" />
-			<injar path="${swcollections.jar}" jarfilter="!META*"/>
+			<injar path="${swcollections.jar}" jarfilter="!META-INF/MANIFEST.MF"/>
 			<outjar path="${build.dir}/${ant.project.name}.jar" />
 		</proguard>
 	</target>
@@ -434,6 +444,7 @@
 			>
 			
 			<keep name="${mainClass}" />
+			<keep name="gps.parser.*" />
 			<libraryjar file="${java.home}/lib/rt.jar" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}_rxtx_unopt.jar" />
@@ -454,6 +465,7 @@
 			<arg line="-outjars ${build.dir}/${ant.project.name}_rxtx.jar"/>
 			<arg line="-libraryjars ${java.home}/lib/rt.jar${path.separator}${superwaba_root}/lib/SuperWaba.jar"/>
 			<arg line="-keep public class ${mainClass}"/>
+			<arg line="-keep gps.parser.*" />
 			<arg line="-allowaccessmodification"/>
 			<arg line="-overloadaggressively"/>
 			<!--
@@ -926,6 +938,13 @@
               tofile="${dist}/webclient_cd/index.html"/>
         
    </target>
+
+	<taskdef name="retroweaver" classname="net.sourceforge.retroweaver.ant.RetroWeaverTask">
+	  <classpath>
+	    <fileset dir="${retroweaver.home}/lib" includes="**/*"/>
+	    <pathelement location="${retroweaver.home}/release/retroweaver-all-2.0.5.jar"/>
+	  </classpath>
+	</taskdef>
 
 	
 </project>

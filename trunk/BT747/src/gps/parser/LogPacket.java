@@ -199,4 +199,30 @@ public class LogPacket {
 		if (this.distance != null) sb.append(String.format(", distance=%f", this.distance));
 		return sb.toString();
 	}
+	
+	
+	public int recFormat() {
+	    return
+	    ((this.utc!=null)?(1<<0):0)|
+	    ((this.fix!=null)?(1<<1):0)|
+	    ((this.latitude!=null)?(1<<2):0)|
+	    ((this.longitude!=null)?(1<<3):0)|
+	    ((this.height!=null)?(1<<4):0)|
+	    ((this.speed!=null)?(1<<5):0)|
+	    ((this.heading!=null)?(1<<6):0)|
+	    ((this.dsta!=null)?(1<<7):0)|
+	    ((this.dage!=null)?(1<<8):0)|
+	    ((this.pdop!=null)?(1<<9):0)|
+	    ((this.hdop!=null)?(1<<10):0)|
+	    ((this.vdop!=null)?(1<<11):0)|
+	    ((this.nSatInUse!=null)?(1<<12):0)|
+//	    ((this.elevation!=null)?(1<<14):0)|
+//	    ((this.azimuth!=null)?(1<<15):0)|
+//	    ((this.snr!=null)?(1<<16):0)|
+	    ((this.recordingMethod!=null)?(1<<17):0)|
+	    ((this.milliseconds!=null)?(1<<18):0)|
+	    ((this.distance!=null)?(1<<19):0);
+	    
+	    //public boolean isLowPrecision() { return ((this.format&(1<<31)) != 0); } 
+	}
 } // end of class LogPacket

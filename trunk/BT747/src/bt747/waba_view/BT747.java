@@ -29,10 +29,10 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
-import gps.GPSFilter;
-import gps.GPSFilterAdvanced;
 import gps.GPSstate;
 import gps.GpsEvent;
+import gps.log.GPSFilter;
+import gps.log.GPSFilterAdvanced;
 
 import bt747.Txt;
 import bt747.model.AppSettings;

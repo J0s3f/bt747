@@ -22,6 +22,7 @@ package gps;
 import waba.ui.ProgressBar;
 
 import gps.convert.Conv;
+import gps.log.GPSRecord;
 
 import bt747.Txt;
 import bt747.generic.EventPosterObject;

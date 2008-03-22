@@ -25,11 +25,11 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
 
-import gps.GPSFile;
-import gps.GPSRecord;
 import gps.GPSstate;
 import gps.GpsEvent;
 import gps.convert.Conv;
+import gps.log.GPSFile;
+import gps.log.GPSRecord;
 
 import bt747.Txt;
 import bt747.Version;
