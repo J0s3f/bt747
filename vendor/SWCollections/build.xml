@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<project name="SWCollections" default="all" basedir=".">
+	<!-- Main dirs -->
+    <property name="srcDir" value="src"/>
+    <property name="buildDir" value="build"/>
+    <property name="libDir" value="lib"/>
+    <property name="distDir" value="dist"/>
+	
+	<!-- Library files/dirs in lib dir -->
+    <property name="swLib" value="${libDir}/superwaba/SuperWaba.jar"/>
+    <property name="swtLib" value="${libDir}/superwaba/SuperWabaTools.jar"/>
+	
+    <!-- Allow any user specific values to override the defaults -->
+    <property file="${user.home}/build.properties"/>
+  
+    <!-- Allow user defaults for this project -->
+    <property file="build.properties"/>
+	
+	<target name="all" depends="jar, library" description="Compiles the library in jar and pdb format."/>
+	
+	<target name="jar" depends="classes" description="Packs the classes into a jar file.">
+        <jar destfile="${buildDir}/collections-superwaba.jar">
+		    <fileset dir="${buildDir}">
+		        <include name="**/*.class" />
+		    </fileset>
+        </jar>
+		<copy file="${buildDir}/collections-superwaba.jar" todir="${distDir}"/>
+	</target>
+
+	<target name="classes" depends="init" description="Compile the sources into .class files.">
+        <javac srcdir="${srcDir}" destdir="${buildDir}" source="1.1" target="1.1" fork="true" >
+            <classpath>
+                <pathelement path="${swLib}"/>
+            </classpath>
+          <include name="**/*.java" />
+        </javac>
+    </target>
+	
+    <target name="init" depends="clean" description="Sets up the needed directories.">
+         <mkdir dir="${buildDir}"/>
+         <mkdir dir="${distDir}"/>
+    </target>
+
+    <target name="clean" description="Wipes out old builds.">
+        <delete dir="${buildDir}"/>
+        <delete dir="${distDir}"/>
+	</target>
+
+    <target name="library" depends="jar" description="Packs the library in SuperWaba format.">
+        <java classname="superwaba.tools.Warp" fork="yes" dir="${buildDir}">
+           <classpath>
+               <pathelement path="${swtLib}"/>
+           </classpath>
+           <arg value="c"/>
+           <arg line="/c moio"/>
+           <arg value="/lg"/>
+           <arg value="collections-superwaba"/>
+           <arg value="collections-superwaba.jar"/>
+        </java>
+		<move file="${buildDir}/collections-superwaba.pdb" todir="${distDir}"/>
+    </target>
+</project>
