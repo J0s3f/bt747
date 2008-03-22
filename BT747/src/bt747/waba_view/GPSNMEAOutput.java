@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -121,12 +122,13 @@ public class GPSNMEAOutput extends Container {
             }
         
         break;
-        case GpsEvent.DATA_UPDATE:
-            if(event.target==this) {
-                
-//                updateLogFormat(m_GPSstate.logFormat);
-                updatePeriods();
-                event.consumed=true;
+        default:
+            if(event.type==GpsEvent.DATA_UPDATE) {
+                if(event.target==this) {
+//                  updateLogFormat(m_GPSstate.logFormat);
+                    updatePeriods();
+                    event.consumed=true;
+                }
             }
         }
     }

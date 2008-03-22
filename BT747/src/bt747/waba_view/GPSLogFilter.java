@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -27,6 +28,7 @@ import gps.BT747_dev;
 import gps.GPSFilter;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.ui.Check;
 
 /** The purpose of this container is to set the log filter settings.

@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -29,6 +30,7 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.ui.Button;
 
 /** Implement some buttons to easily do more complex operations
@@ -253,14 +255,14 @@ public class GPSLogEasy extends Container {
                   event.consumed=false;
               }
               break;
-          case GpsEvent.DATA_UPDATE:
-              if(event.target==this) {
-                  enableStore();
+          default:
+              if(event.type==GpsEvent.DATA_UPDATE) {
+                  if(event.target==this) {
+                      enableStore();
+                  }
+                  //                  updateLogFormat(m_GPSstate.logFormat);
+                  event.consumed=true;
               }
-                  
-              //                  updateLogFormat(m_GPSstate.logFormat);
-              event.consumed=true;
-              break;
       }
   }
 }

@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -30,6 +31,7 @@ import waba.util.Vector;
 
 import bt747.Txt;
 import bt747.io.File;
+import bt747.model.AppSettings;
 import bt747.sys.Convert;
 import bt747.ui.Button;
 
@@ -41,7 +43,7 @@ public class GPSLogFile extends Container {
     
     AppSettings m_settings;
     
-    GPSLogFile(AppSettings settings) {
+    public GPSLogFile(AppSettings settings) {
         m_settings=settings;
     }
     

@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -45,6 +46,7 @@ import gps.GpsEvent;
 import gps.HoluxTrlLogConvert;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.sys.Convert;
 import bt747.ui.Button;
 import bt747.ui.Check;
@@ -376,12 +378,6 @@ public class GPSLogGet extends Container {
             }
             break;
 
-        case GpsEvent.DATA_UPDATE:
-            if(event.target==this) {
-                updateButtons();
-                event.consumed=true;
-            }
-            break;
         case ControlEvent.WINDOW_CLOSED:
             if (event.target == cal)
             {
@@ -399,6 +395,13 @@ public class GPSLogGet extends Container {
             collected. Calendar objects waste memory and it is always a
             good idea to save memory when possible*/
             break;
+        default:
+            if(event.type==GpsEvent.DATA_UPDATE) {
+                if(event.target==this) {
+                    updateButtons();
+                    event.consumed=true;
+                }
+            }
         }
     }
 }

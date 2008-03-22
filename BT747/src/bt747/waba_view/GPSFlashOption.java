@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -149,18 +150,20 @@ public class GPSFlashOption extends Container {
         switch (event.type) {
         case ControlEvent.PRESSED:
             event.consumed=true;
-        if(event.target==m_btSet) {
-            setSettings();
-        } else if (event.target == this) {
-            m_GPSstate.getFlashUserOption();
-        } else {
-            event.consumed=false;
-        }
-        break;
-        case GpsEvent.DATA_UPDATE:
-            if(event.target==this) {
-                updateButtons();
-                event.consumed=true;
+            if(event.target==m_btSet) {
+                setSettings();
+            } else if (event.target == this) {
+                m_GPSstate.getFlashUserOption();
+            } else {
+                event.consumed=false;
+            }
+            break;
+        default:
+            if(event.type==GpsEvent.DATA_UPDATE) {
+                if(event.target==this) {
+                    updateButtons();
+                    event.consumed=true;
+                }
             }
         }
     }

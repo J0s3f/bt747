@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -17,6 +18,7 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import bt747.model.AppSettings;
 import bt747.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;

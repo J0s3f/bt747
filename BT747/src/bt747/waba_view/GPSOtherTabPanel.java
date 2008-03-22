@@ -1,3 +1,4 @@
+package bt747.waba_view;
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -29,6 +30,7 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 
 /*
  * Created on 3 sept. 2007
@@ -90,14 +92,15 @@ public class GPSOtherTabPanel extends Container {
                 c.postEvent(new Event(ControlEvent.PRESSED,c,0));                
             }
             break;
-        case GpsEvent.DATA_UPDATE:
-            if(event.target==this) {
-                Control c;
-                c=m_TabPanel.getChildren()[0];
-                c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
-                event.consumed=true;
+        default:
+            if(event.type==GpsEvent.DATA_UPDATE) {
+                if(event.target==this) {
+                    Control c;
+                    c=m_TabPanel.getChildren()[0];
+                    c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
+                    event.consumed=true;
+                }
             }
-            break;
         }
     }
 }
