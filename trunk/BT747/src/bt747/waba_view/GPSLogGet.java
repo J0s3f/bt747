@@ -29,8 +29,6 @@ import waba.ui.Label;
 import waba.ui.ProgressBar;
 import waba.util.Date;
 
-import com.sun.jndi.url.corbaname.corbanameURLContextFactory;
-
 import gps.GPSstate;
 import gps.GpsEvent;
 import gps.log.BT747LogConvert;
@@ -48,8 +46,11 @@ import gps.log.GPSPLTFile;
 import gps.log.HoluxTrlLogConvert;
 
 import bt747.Txt;
-import bt747.model.AppSettings;
+import bt747.control.Controller;
+import bt747.model.Model;
+import bt747.model.ModelEvent;
 import bt747.sys.Convert;
+import bt747.sys.Vm;
 import bt747.ui.Button;
 import bt747.ui.Check;
 
@@ -63,11 +64,8 @@ public class GPSLogGet extends Container {
     Check m_chkLogOverwriteStop;
 
     Button m_btStartDate;
-    Date m_StartDate=new Date(1,1,1983);
 
     Button m_btEndDate;
-    Date m_EndDate=new Date();
-
     Button m_btGetLog;
     Check m_chkNoGeoid;
     Button m_btCancelGetLog;
@@ -111,31 +109,25 @@ public class GPSLogGet extends Container {
             Txt.ONE_FILE_TRK
     };
   
-    static final int JULIAN_DAY_1_1_1970=18264;   
     ProgressBar m_pb;
-    AppSettings m_appSettings;
     
+    Model m;
+    Controller c;
+
+    private Color BackupBackColor;
+
     private Label       m_UsedLabel;
     private Label       m_RecordsLabel;
 
-    GPSFilter[] m_Filters;
-    GPSFilter[] m_FiltersAdv;
-
-    public int dateToUTCepoch1970(final Date d) {
-        return (d.getJulianDay()-JULIAN_DAY_1_1_1970)*24*60*60;
-    }
-    
     public GPSLogGet(
             GPSstate state,
             ProgressBar pb,
-            AppSettings s,
-            GPSFilter[] filters,
-            GPSFilter[] filtersAdv ) {
+            Model m,
+            Controller c) {
         m_GPSstate = state;
         m_pb= pb;
-        m_appSettings= s;
-        m_Filters=filters;
-        m_FiltersAdv=filtersAdv;
+        this.m= m;
+        this.c= c;
     } 
     
 
@@ -151,9 +143,9 @@ public class GPSLogGet extends Container {
         m_chkIncremental.setChecked(true);
         add(m_chkLogOverwriteStop = new Check(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
         add(new Label(Txt.DATE_RANGE), LEFT, AFTER); //$NON-NLS-1$
-        add(m_btStartDate = new Button(m_StartDate.getDate()), AFTER, SAME); //$NON-NLS-1$
+        add(m_btStartDate = new Button(m.getStartDate().getDate()), AFTER, SAME); //$NON-NLS-1$
         //m_btStartDate.setMode(Edit.DATE);
-        add(m_btEndDate = new Button(m_EndDate.getDate()), RIGHT, SAME); //$NON-NLS-1$
+        add(m_btEndDate = new Button(m.getEndDate().getDate()), RIGHT, SAME); //$NON-NLS-1$
         //m_btEndDate.setMode(Edit.DATE);
         add(m_btGetLog = new Button(Txt.GET_LOG), LEFT, AFTER+2); //$NON-NLS-1$
         add(m_btCancelGetLog = new Button(Txt.CANCEL_GET), AFTER+5, SAME); //$NON-NLS-1$
@@ -166,13 +158,13 @@ public class GPSLogGet extends Container {
         add(m_edTrkSep = new Edit("00000"), AFTER, SAME); //$NON-NLS-1$
         m_edTrkSep.setValidChars(Edit.numbersSet);
         add(new Label(Txt.MIN), AFTER, SAME); //$NON-NLS-1$
-        m_edTrkSep.setText(Convert.toString(m_appSettings.getTrkSep()));
+        m_edTrkSep.setText(Convert.toString(m.getTrkSep()));
         m_edTrkSep.alignment=RIGHT;
 
         
-        int offsetIdx=m_appSettings.getTimeOffsetHours()+12;
+        int offsetIdx=m.getTimeOffsetHours()+12;
         if(offsetIdx>26) {
-            m_appSettings.setTimeOffsetHours(0);
+            m.setTimeOffsetHours(0);
             offsetIdx=12;
         }
         m_cbTimeOffsetHours=new ComboBox(offsetStr);
@@ -184,9 +176,9 @@ public class GPSLogGet extends Container {
 
         //add(new Label("End"),BEFORE,SAME);
         add(m_chkOneFilePerDay = new ComboBox(fileStr), LEFT, AFTER+2);
-        m_chkOneFilePerDay.select(m_appSettings.getFileSeparationFreq());
+        m_chkOneFilePerDay.select(m.getFileSeparationFreq());
         add(m_chkNoGeoid = new Check(Txt.HGHT_GEOID_DIFF), AFTER+5, SAME); //$NON-NLS-1$
-        m_chkNoGeoid.setChecked(m_appSettings.getNoGeoid());
+        m_chkNoGeoid.setChecked(m.getNoGeoid());
 
         add(m_btToCSV = new Button(Txt.TO_CSV), LEFT, AFTER + 5); //$NON-NLS-1$
         add(m_btToGPX = new Button(Txt.TO_GPX), AFTER + 5 , SAME); //$NON-NLS-1$
@@ -196,11 +188,13 @@ public class GPSLogGet extends Container {
         add(m_btToPLT = new Button(Txt.TO_PLT), LEFT, AFTER + 2); //$NON-NLS-1$
         add(m_btToGMAP = new Button(Txt.TO_GMAP), CENTER, SAME); //$NON-NLS-1$
         add(m_btToNMEA = new Button(Txt.TO_NMEA), RIGHT, SAME); //$NON-NLS-1$
+        
+        BackupBackColor=m_btToCSV.getBackColor();
 
         add(m_UsedLabel=new Label(   ""),LEFT, AFTER+3);
         add(m_RecordsLabel=new Label(""),LEFT, AFTER+3);
         
-        String s=m_appSettings.getColorInvalidTrack();
+        String s=m.getColorInvalidTrack();
         m_cbColors.select(0);
         for (int i = 0; i < m_cbColors.size()-1; i++) {
             if(s.equals((String)m_cbColors.getItemAt(i))) {
@@ -232,19 +226,19 @@ public class GPSLogGet extends Container {
      *      configureable.
      */
     public void onEvent(Event event) {
+        //Vm.debug("Event:"+event.type+" "+event.consumed);
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
             event.consumed=true;
             if (event.target == m_btGetLog) {
-                int logRequestSize=m_appSettings.getChunkSize(); // Short by default
+                int logRequestSize=m.getChunkSize(); // Short by default
                 m_GPSstate.getLogInit(0,            /* StartPosition */
                         m_GPSstate.logMemUsed-1,    /* EndPosition */
                         logRequestSize,             /* Size per request */
-                        m_appSettings.getLogFilePath(), /* Log file name */
-                        m_appSettings.getCard(),    /* Card for file operations */
-                        m_chkIncremental.getChecked(), /* Incremental download */
-                        m_pb                        /* ProgressBar */
+                        m.getLogFilePath(), /* Log file name */
+                        m.getCard(),    /* Card for file operations */
+                        m_chkIncremental.getChecked() /* Incremental download */
                         ); //$NON-NLS-1$
                 m_btGetLog.press(false);
             } else if (event.target == m_btCancelGetLog) {
@@ -257,22 +251,22 @@ public class GPSLogGet extends Container {
                 }
                 m_GPSstate.getLogOnOffStatus();
             } else if (event.target == m_cbColors) {
-                m_appSettings.setColorInvalidTrack((String)m_cbColors.getSelectedItem());
+                m.setColorInvalidTrack((String)m_cbColors.getSelectedItem());
             } else if (event.target == m_cbTimeOffsetHours) {
                 // Work around superwaba bug
                 String tmp=(String)m_cbTimeOffsetHours.getSelectedItem();
                 if(tmp.charAt(0)=='+') {
-                    m_appSettings.setTimeOffsetHours(Convert.toInt((String)tmp.substring(1)));
+                    m.setTimeOffsetHours(Convert.toInt((String)tmp.substring(1)));
                 } else {
-                    m_appSettings.setTimeOffsetHours(Convert.toInt(tmp));
+                    m.setTimeOffsetHours(Convert.toInt(tmp));
                 }
             } else if (event.target == m_chkLogOverwriteStop) {
                     m_GPSstate.setLogOverwrite(m_chkLogOverwriteStop.getChecked());
                 m_GPSstate.getLogOverwrite();
             } else if (event.target == m_chkOneFilePerDay) {
-                m_appSettings.setOneFilePerDay(m_chkOneFilePerDay.getSelectedIndex());
+                m.setOneFilePerDay(m_chkOneFilePerDay.getSelectedIndex());
             } else if (event.target == m_chkNoGeoid) {
-                m_appSettings.setNoGeoid(m_chkNoGeoid.getChecked());
+                m.setNoGeoid(m_chkNoGeoid.getChecked());
             } else if (event.target == m_btEndDate) {
                 if (cal == null) {
                     cal = new Calendar();
@@ -292,98 +286,29 @@ public class GPSLogGet extends Container {
                     ||event.target==m_btToTRK
                     ||event.target==m_btToGMAP
                     ||event.target==m_btToNMEA) {
-                String ext="";
-                GPSFile gpsFile=null;
-                //GPSLogConvert lc;
-                GPSLogConvert lc;
-                
-                
-                if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".trl")) {
-                    lc=new HoluxTrlLogConvert();
-                } else if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".new")) {
-                    // If the new parser is included then we try to use it
-                    try {
-                        //Class c = Class.forName("gps.parser.NewLogConvert");
-                        //lc=(GPSLogConvert)(c.getConstructor().newInstance());
-//                        if(Class.forName("gps.parser.NewLogConvert")!=null) {
-//                            lc=(GPSLogConvert)new gps.parser.NewLogConvert();
-//                        } else {
-                            lc=new BT747LogConvert();
-//                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        lc=new BT747LogConvert();
-                    }
-                } else if(m_appSettings.getLogFilePath().toLowerCase().endsWith(".csv")) {
-                    lc=new CSVLogConvert();
-                } else {
-                    lc=new BT747LogConvert();
-                    ((BT747LogConvert)lc).setHolux(m_appSettings.getForceHolux241());
-                }
-                GPSFilter[] usedFilters;
-                Button z_Button=((Button)event.target);
-                Color BackupBackColor=z_Button.getBackColor();
-                z_Button.setBackColor(Color.GREEN);
-                z_Button.repaintNow();
-                if(m_appSettings.getAdvFilterActive()) {
-                    usedFilters=m_FiltersAdv;
-                } else {
-                    usedFilters=m_Filters;
-                }
-                lc.setTimeOffset(m_appSettings.getTimeOffsetHours()*3600);
-                lc.setNoGeoid(m_appSettings.getNoGeoid());
-
+                int logType=Model.C_NO_LOG;
                 if(event.target==m_btToCSV) {
-                    gpsFile=new GPSCSVFile();
-                    ext=".csv";
-                }
+                    logType=Model.C_CSV_LOG;
+                } else
                 if(event.target==m_btToTRK) {
-                    gpsFile=new GPSCompoGPSTrkFile();
-                    ext=".TRK";
-                }
+                    logType=Model.C_TRK_LOG;
+                } else
                 if(event.target==m_btToKML) {
-                    gpsFile=new GPSKMLFile();
-                    ext=".kml";
-                }
+                    logType=Model.C_KML_LOG;
+                } else
                 if(event.target==m_btToPLT) {
-                    gpsFile=new GPSPLTFile();
-                    ext=".plt";
-                }
+                    logType=Model.C_PLT_LOG;
+                } else
                 if(event.target==m_btToGPX) {
-                    gpsFile=new GPSGPXFile();
-                    ext=".gpx";
-                    // Force offset to 0 if selected in menu.
-                    if(m_appSettings.getGpxUTC0()) {
-                        lc.setTimeOffset(0);
-                    }
-                    ((GPSGPXFile)gpsFile).setTrkSegSplitOnlyWhenSmall(m_appSettings.getGpxTrkSegWhenBig());
-                }
+                    logType=Model.C_GPX_LOG;
+                } else
                 if(event.target==m_btToNMEA) {
-                    gpsFile=new GPSNMEAFile();
-                    ((GPSNMEAFile)gpsFile).setNMEAoutput(m_appSettings.getNMEAset());
-                    ext=".nmea";
-                }
+                    logType=Model.C_NMEA_LOG;
+                } else
                 if(event.target==m_btToGMAP) {
-                    gpsFile=new GPSGmapsHTMLEncodedFile();
-                    ((GPSGmapsHTMLEncodedFile)gpsFile).setGoogleKeyCode(
-                            m_appSettings.getGoogleMapKey());
-                    ext=".html";
+                    logType=Model.C_GMAP_LOG;
                 }
-
-
-                gpsFile.setRecordNbrInLogs(m_appSettings.getRecordNbrInLogs());
-                gpsFile.setBadTrackColor(m_appSettings.getColorInvalidTrack());
-                for (int i = 0; i < usedFilters.length; i++) {
-                    usedFilters[i].setStartDate(dateToUTCepoch1970(m_StartDate));
-                    usedFilters[i].setEndDate(dateToUTCepoch1970(m_EndDate)+(24*60*60-1));
-                }
-                gpsFile.setFilters(usedFilters);
-                gpsFile.initialiseFile(m_appSettings.getReportFileBasePath(), ext, m_appSettings.getCard(),
-                        m_appSettings.getFileSeparationFreq());
-                gpsFile.setTrackSepTime(m_appSettings.getTrkSep()*60);
-                lc.toGPSFile(m_appSettings.getLogFilePath(),gpsFile,m_appSettings.getCard());
-                z_Button.setBackColor(BackupBackColor);
-                z_Button.repaintNow();
+                c.writeLog(logType);
             } else if (event.target == this) {
                 m_GPSstate.getLogCtrlInfo();
             } else {
@@ -392,8 +317,8 @@ public class GPSLogGet extends Container {
             break;
         case ControlEvent.FOCUS_OUT:
             if (event.target == m_edTrkSep) {
-                m_appSettings.setTrkSep(Convert.toInt(m_edTrkSep.getText()));
-                m_edTrkSep.setText(Convert.toString(m_appSettings.getTrkSep()));
+                m.setTrkSep(Convert.toInt(m_edTrkSep.getText()));
+                m_edTrkSep.setText(Convert.toString(m.getTrkSep()));
             }
             break;
 
@@ -404,8 +329,8 @@ public class GPSLogGet extends Container {
                 if(d!=null) {
                     calBt.setText(d.toString());
                     // Can't change the value of the date, changing all
-                    m_StartDate=new Date(m_btStartDate.getText());
-                    m_EndDate=new Date(m_btEndDate.getText());
+                    m.setStartDate(new Date(m_btStartDate.getText()));
+                    m.setEndDate(new Date(m_btEndDate.getText()));
                 }
             }
             /*cal = null;
@@ -419,6 +344,39 @@ public class GPSLogGet extends Container {
                 if(event.target==this) {
                     updateButtons();
                     event.consumed=true;
+                }
+            } else if (event.type==ModelEvent.CONVERSION_STATE_CHANGE) {
+                Button b = null;
+                switch (m.getLastConversionOngoing()) {
+                case Model.C_CSV_LOG:
+                    b=m_btToCSV;
+                    break;
+                case Model.C_TRK_LOG:
+                    b=m_btToTRK;
+                    break;
+                case Model.C_KML_LOG:
+                    b=m_btToKML;
+                    break;
+                case Model.C_PLT_LOG:
+                    b=m_btToPLT;
+                    break;
+                case Model.C_GPX_LOG:
+                    b=m_btToGPX;
+                    break;
+                case Model.C_NMEA_LOG:
+                    b=m_btToNMEA;
+                    break;
+                case Model.C_GMAP_LOG:
+                    b=m_btToGMAP;
+                    break;
+                }
+                if(b!=null) {
+                    if(m.isConversionOngoing()) {
+                        b.setBackColor(Color.GREEN);
+                    } else {
+                        b.setBackColor(BackupBackColor);
+                    }
+                    b.repaintNow();
                 }
             }
         }

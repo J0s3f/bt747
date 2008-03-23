@@ -30,7 +30,7 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.AppSettings;
+import bt747.model.Model;
 import bt747.ui.Button;
 
 /** Implement some buttons to easily do more complex operations
@@ -56,9 +56,9 @@ public class GPSLogEasy extends Container {
       
       private Label lbLogUserTxt;
       
-      private AppSettings m_settings;
+      private Model m_settings;
       
-      public GPSLogEasy(GPSstate state, AppSettings settings) {
+      public GPSLogEasy(GPSstate state, Model settings) {
           m_GPSstate= state;
           m_settings = settings;
       }

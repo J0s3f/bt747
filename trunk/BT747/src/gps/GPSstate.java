@@ -19,8 +19,6 @@
 //********************************************************************                              
 package gps;
 
-import waba.ui.ProgressBar;
-
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 
@@ -52,8 +50,6 @@ public class GPSstate implements Thread {
     private boolean GPS_DEBUG = false; //(!Settings.onDevice);
 
     private GPSrxtx m_GPSrxtx = new GPSrxtx();
-
-    ProgressBar m_ProgressBar = null;
 
     private boolean m_getFullLog = true; // If true, get the entire log (based
                                          // on block head)
@@ -177,16 +173,6 @@ public class GPSstate implements Thread {
 
     public void setEventPosterObject(EventPosterObject s) {
         m_EventPosterObject = s;
-    }
-
-    /**
-     * Provide the progress bar to use (download progress)
-     * 
-     * @param pb
-     *            ProgressBar
-     */
-    public void setProgressBar(ProgressBar pb) {
-        m_ProgressBar = pb;
     }
 
     /**
@@ -1363,10 +1349,8 @@ public class GPSstate implements Thread {
     private void endGetLog() {
         m_logState = C_LOG_NOLOGGING;
         closeLog();
-        if (m_ProgressBar != null) {
-            m_ProgressBar.setVisible(false);
-            //m_ProgressBar.getParentWindow().repaintNow();
-        }
+        
+        m_settings.setDownloadOnGoing(false);
         if(loggingIsActiveBeforeDownload) {
             startLog();
             getLogOnOffStatus();
@@ -1385,8 +1369,8 @@ public class GPSstate implements Thread {
      */
     public void getLogInit(final int p_StartAddr, final int p_EndAddr,
             final int p_Step, final String p_FileName, final int Card,
-            final boolean incremental, // True if incremental read
-            final ProgressBar pb) {
+            final boolean incremental // True if incremental read
+        ) {
         if(m_logState==C_LOG_NOLOGGING) {
             // Disable device logging while downloading
             loggingIsActiveBeforeDownload = loggingIsActive;
@@ -1399,18 +1383,16 @@ public class GPSstate implements Thread {
         m_NextReqAddr = m_StartAddr;
         m_NextReadAddr = m_StartAddr;
         m_Step = p_Step;
-        m_ProgressBar = pb;
-        if (pb != null) {
-            pb.min = m_StartAddr;
-            pb.max = m_EndAddr;
-            pb.setValue(m_NextReadAddr, "", " b");
-            pb.setVisible(true);
-        }
         if (m_Step > 0x800) {
             m_logRequestAhead = 0;
         } else {
             m_logRequestAhead = m_settings.getLogRequestAhead();
         }
+        
+        m_settings.setStartAddr(m_StartAddr);
+        m_settings.setEndAddr(m_EndAddr);
+        m_settings.setNextReadAddr(m_NextReadAddr);
+        m_settings.setDownloadOnGoing(true);
 
         if (incremental) {
             reOpenLogRead(p_FileName, Card);
@@ -1433,7 +1415,7 @@ public class GPSstate implements Thread {
                         if (continueLoop) {
                             // This block is fully filled
                             blockHeadPos += 0x10000;
-                            m_ProgressBar.setValue(blockHeadPos);
+                            m_settings.setNextReadAddr(blockHeadPos);
                             continueLoop = (blockHeadPos <= (m_logFile
                                     .getSize() & 0xFFFF0000));
                         }
@@ -1463,7 +1445,7 @@ public class GPSstate implements Thread {
                                                               // than 0xFF
                                                               // found.
                                 if (continueLoop) {
-                                    m_ProgressBar.setValue(m_NextReadAddr);
+                                    m_settings.setNextReadAddr(m_NextReadAddr);
                                     m_NextReadAddr += 0x200;
                                 }
                             }
@@ -1632,10 +1614,8 @@ public class GPSstate implements Thread {
                         j += l;
                     }
                     m_NextReadAddr += dataLength;
-                    if (m_ProgressBar != null) {
-                        m_ProgressBar.setValue(m_NextReadAddr);
+                    m_settings.setNextReadAddr(m_NextReadAddr);
                         //m_ProgressBar.repaintNow();
-                    }
                     if (m_getFullLog
                             && (((p_StartAddr - 1 + dataLength) & 0xFFFF0000) >= p_StartAddr)) {
                         // Block boundery (0xX0000) is inside data.
@@ -1653,10 +1633,7 @@ public class GPSstate implements Thread {
                             }
                             if (minEndAddr > m_EndAddr) {
                                 m_EndAddr = minEndAddr;
-                                if (m_ProgressBar != null) {
-                                    m_ProgressBar.max = m_EndAddr;
-                                    //m_ProgressBar.repaintNow();
-                                }
+                                m_settings.setEndAddr(m_EndAddr);
                             }
                         }
                     }

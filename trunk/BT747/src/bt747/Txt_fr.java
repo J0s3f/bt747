@@ -401,6 +401,7 @@ public class Txt_fr {
         "Record nbr info in logs";    
 
     public static final String S_DEBUG_CONN= "Debug conn.";
+    public static final String S_IMPERIAL= "Unités anglaises";
 
 }
 

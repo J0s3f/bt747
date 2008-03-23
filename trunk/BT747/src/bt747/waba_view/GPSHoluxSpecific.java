@@ -29,7 +29,7 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.AppSettings;
+import bt747.model.Model;
 
 /**
  * @author Mario De Weerd
@@ -38,7 +38,7 @@ import bt747.model.AppSettings;
  */
 public class GPSHoluxSpecific extends Container {
   
-    private AppSettings m_settings;
+    private Model m_settings;
     private GPSstate m_gpsState;
     
     private Label lbHoluxName;
@@ -48,7 +48,7 @@ public class GPSHoluxSpecific extends Container {
     /**
      * 
      */
-    public GPSHoluxSpecific(final AppSettings settings, final GPSstate gpsState) {
+    public GPSHoluxSpecific(final Model settings, final GPSstate gpsState) {
         m_settings=settings;
         m_gpsState=gpsState;
     }

@@ -30,7 +30,7 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.AppSettings;
+import bt747.model.Model;
 
 /*
  * Created on 3 sept. 2007
@@ -51,7 +51,7 @@ public class GPSOtherTabPanel extends Container {
     private GPSFileNMEAOutputSel m_GPSNMEAFile;
     private GPSHoluxSpecific m_GPSHolux;
     private GPSstate m_GPSstate;
-    private AppSettings m_settings;
+    private Model m_settings;
     
     private final String c_tpCaptions[]= {
             Txt.TAB_FLSH,
@@ -64,7 +64,7 @@ public class GPSOtherTabPanel extends Container {
      * @param settings TODO
      * 
      */
-    public GPSOtherTabPanel(final GPSstate state, AppSettings settings) {
+    public GPSOtherTabPanel(final GPSstate state, Model settings) {
         m_GPSstate=state;
         m_settings=settings;
     }

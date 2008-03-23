@@ -18,7 +18,7 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import bt747.model.AppSettings;
+import bt747.model.Model;
 import bt747.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -38,11 +38,11 @@ public class GPSFileNMEAOutputSel extends Container {
     
     private static final int C_NMEAactiveFilters=0x0002003A;
     
-    private AppSettings m_settings;
+    private Model m_settings;
     /**
      * 
      */
-    public GPSFileNMEAOutputSel(final AppSettings settings) {
+    public GPSFileNMEAOutputSel(final Model settings) {
         m_settings=settings;
     }
 

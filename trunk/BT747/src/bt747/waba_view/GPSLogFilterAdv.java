@@ -29,7 +29,7 @@ import gps.GpsEvent;
 import gps.log.GPSFilterAdvanced;
 
 import bt747.Txt;
-import bt747.model.AppSettings;
+import bt747.model.Model;
 import bt747.sys.Convert;
 import bt747.ui.Button;
 /**
@@ -60,11 +60,11 @@ public class GPSLogFilterAdv extends Container {
             Txt.INACTIVE
             };
     
-    private AppSettings m_settings;
+    private Model m;
     
-    public GPSLogFilterAdv(AppSettings settings, GPSFilterAdvanced[] filters) {;
-        m_gpsFilters=filters;
-        m_settings=settings;
+    public GPSLogFilterAdv(Model settings) {;
+        m=settings;
+        m_gpsFilters=m.getLogFiltersAdv();
     }
     
     protected void onStart() {
@@ -125,7 +125,7 @@ public class GPSLogFilterAdv extends Container {
                     )
                     , RIGHT, SAME);
 
-        pbPtType.setSelected(m_settings.getAdvFilterActive()?0:1);
+        pbPtType.setSelected(m.getAdvFilterActive()?0:1);
 
         getSettings();
     }
@@ -162,49 +162,49 @@ public class GPSLogFilterAdv extends Container {
     private void setFilters() {
         for (int i = 0; i < m_gpsFilters.length; i++) {
             GPSFilterAdvanced filter = m_gpsFilters[i];
-            filter.setMinRecCount(m_settings.getFilterMinRecCount());
-            filter.setMaxRecCount(m_settings.getFilterMaxRecCount());
-            filter.setMinSpeed(m_settings.getFilterMinSpeed());
-            filter.setMaxSpeed(m_settings.getFilterMaxSpeed());
-            filter.setMinDist(m_settings.getFilterMinDist());
-            filter.setMaxDist(m_settings.getFilterMaxDist());
-            filter.setMaxPDOP((int)(m_settings.getFilterMaxPDOP()*100));
-            filter.setMaxHDOP((int)(m_settings.getFilterMaxHDOP()*100));
-            filter.setMaxVDOP((int)(m_settings.getFilterMaxVDOP()*100));
-            filter.setMinNSAT(m_settings.getFilterMinNSAT());
+            filter.setMinRecCount(m.getFilterMinRecCount());
+            filter.setMaxRecCount(m.getFilterMaxRecCount());
+            filter.setMinSpeed(m.getFilterMinSpeed());
+            filter.setMaxSpeed(m.getFilterMaxSpeed());
+            filter.setMinDist(m.getFilterMinDist());
+            filter.setMaxDist(m.getFilterMaxDist());
+            filter.setMaxPDOP((int)(m.getFilterMaxPDOP()*100));
+            filter.setMaxHDOP((int)(m.getFilterMaxHDOP()*100));
+            filter.setMaxVDOP((int)(m.getFilterMaxVDOP()*100));
+            filter.setMinNSAT(m.getFilterMinNSAT());
         }
     }
 
     
     public void setSettings() {
 
-        m_settings.setFilterMinRecCount(Convert.toInt(m_minRecCount.getText()));
-        m_settings.setFilterMaxRecCount(Convert.toInt(m_maxRecCount.getText()));
-        m_settings.setFilterMinSpeed(Convert.toFloat(m_minSpeed.getText()));
-        m_settings.setFilterMaxSpeed(Convert.toFloat(m_maxSpeed.getText()));
-        m_settings.setFilterMinDist(Convert.toFloat(m_minDist.getText()));
-        m_settings.setFilterMaxDist(Convert.toFloat(m_maxDist.getText()));
-        m_settings.setFilterMaxPDOP((Convert.toFloat(m_maxPDOP.getText())));
-        m_settings.setFilterMaxHDOP((Convert.toFloat(m_maxHDOP.getText())));
-        m_settings.setFilterMaxVDOP((Convert.toFloat(m_maxVDOP.getText())));
-        m_settings.setFilterMinNSAT(Convert.toInt(m_minNSAT.getText()));
+        m.setFilterMinRecCount(Convert.toInt(m_minRecCount.getText()));
+        m.setFilterMaxRecCount(Convert.toInt(m_maxRecCount.getText()));
+        m.setFilterMinSpeed(Convert.toFloat(m_minSpeed.getText()));
+        m.setFilterMaxSpeed(Convert.toFloat(m_maxSpeed.getText()));
+        m.setFilterMinDist(Convert.toFloat(m_minDist.getText()));
+        m.setFilterMaxDist(Convert.toFloat(m_maxDist.getText()));
+        m.setFilterMaxPDOP((Convert.toFloat(m_maxPDOP.getText())));
+        m.setFilterMaxHDOP((Convert.toFloat(m_maxHDOP.getText())));
+        m.setFilterMaxVDOP((Convert.toFloat(m_maxVDOP.getText())));
+        m.setFilterMinNSAT(Convert.toInt(m_minNSAT.getText()));
 
-        m_settings.saveSettings();
+        m.saveSettings();
         setFilters();
     }
 
     public void getSettings() {
         for (int i = 0; i < m_gpsFilters.length; i++) {
-            m_minRecCount.setText(Convert.toString(m_settings.getFilterMinRecCount()));
-            m_maxRecCount.setText(Convert.toString(m_settings.getFilterMaxRecCount()));
-            m_minSpeed.setText(Convert.toString(m_settings.getFilterMinSpeed(),2));
-            m_maxSpeed.setText(Convert.toString(m_settings.getFilterMaxSpeed(),2));
-            m_minDist.setText(Convert.toString(m_settings.getFilterMinDist(),2));
-            m_maxDist.setText(Convert.toString(m_settings.getFilterMaxDist(),2));
-            m_maxPDOP.setText(Convert.toString(m_settings.getFilterMaxPDOP(),2));
-            m_maxHDOP.setText(Convert.toString(m_settings.getFilterMaxHDOP(),2));
-            m_maxVDOP.setText(Convert.toString(m_settings.getFilterMaxVDOP(),2));
-            m_minNSAT.setText(Convert.toString(m_settings.getFilterMinNSAT()));
+            m_minRecCount.setText(Convert.toString(m.getFilterMinRecCount()));
+            m_maxRecCount.setText(Convert.toString(m.getFilterMaxRecCount()));
+            m_minSpeed.setText(Convert.toString(m.getFilterMinSpeed(),2));
+            m_maxSpeed.setText(Convert.toString(m.getFilterMaxSpeed(),2));
+            m_minDist.setText(Convert.toString(m.getFilterMinDist(),2));
+            m_maxDist.setText(Convert.toString(m.getFilterMaxDist(),2));
+            m_maxPDOP.setText(Convert.toString(m.getFilterMaxPDOP(),2));
+            m_maxHDOP.setText(Convert.toString(m.getFilterMaxHDOP(),2));
+            m_maxVDOP.setText(Convert.toString(m.getFilterMaxVDOP(),2));
+            m_minNSAT.setText(Convert.toString(m.getFilterMinNSAT()));
         }
         setFilters();
     }
@@ -233,7 +233,7 @@ public class GPSLogFilterAdv extends Container {
         } else if(event.target==m_btClear) {
              clearSettings();
         } else if (event.target==pbPtType) {
-            m_settings.setAdvFilterActive(pbPtType.getSelected()==0);
+            m.setAdvFilterActive(pbPtType.getSelected()==0);
 
         } else if (event.target == this) {
             //m_GPSstate.getFlashUserOption();

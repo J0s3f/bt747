@@ -1,0 +1,211 @@
+package bt747.model;
+
+import waba.ui.Control;
+import waba.util.Date;
+
+import gps.GpsEvent;
+import gps.log.GPSFilter;
+import gps.log.GPSFilterAdvanced;
+import moio.util.HashSet;
+import moio.util.Iterator;
+
+import bt747.ui.Event;
+
+public class Model extends AppSettings implements gps.settings{
+
+    
+    /*
+     * Log conversion related information
+     */
+
+    public static final int C_NO_LOG = 0;
+    public static final int C_CSV_LOG = 1;
+    public static final int C_GMAP_LOG = 2;
+    public static final int C_GPX_LOG = 3;
+    public static final int C_KML_LOG = 4;
+    public static final int C_NMEA_LOG = 5;
+    public static final int C_PLT_LOG = 6;
+    public static final int C_TRK_LOG = 7;
+
+    private Date startDate = new Date(1, 1, 1983);
+    private Date endDate = new Date();
+    
+    private int lastConversionOngoing= C_NO_LOG;
+    private boolean conversionOngoing= false;
+    
+    private static final int C_NBR_FILTERS=2;
+    private GPSFilter[] logFilters=new GPSFilter[C_NBR_FILTERS];
+    private GPSFilterAdvanced[] logFiltersAdv=new GPSFilterAdvanced[C_NBR_FILTERS];
+    
+    public Model() {
+        for (int i = 0; i < logFilters.length; i++) {
+            logFilters[i]=new GPSFilter();
+            logFiltersAdv[i]=new GPSFilterAdvanced();
+        }
+    }
+    /**
+     * @return the lastConversionOngoing
+     */
+    public final int getLastConversionOngoing() {
+        return lastConversionOngoing;
+    }
+    /**
+     * @param lastConversionOngoing the lastConversionOngoing to set
+     */
+    public final void setLastConversionOngoing(int lastConversionOngoing) {
+        this.lastConversionOngoing = lastConversionOngoing;
+    }
+    /**
+     * @return the conversionOngoing
+     */
+    public final boolean isConversionOngoing() {
+        return conversionOngoing;
+    }
+    
+    /**
+     * @return the logFilters
+     */
+    public final GPSFilter[] getLogFilters() {
+        return logFilters;
+    }
+    /**
+     * @param logFilters the logFilters to set
+     */
+    public final void setLogFilters(GPSFilter[] logFilters) {
+        this.logFilters = logFilters;
+    }
+    
+    /**
+     * @return the logFiltersAdv
+     */
+    public final GPSFilterAdvanced[] getLogFiltersAdv() {
+        return logFiltersAdv;
+    }
+    /**
+     * @param logFiltersAdv the logFiltersAdv to set
+     */
+    public final void setLogFiltersAdv(GPSFilterAdvanced[] logFiltersAdv) {
+        this.logFiltersAdv = logFiltersAdv;
+    }
+    /**
+     * @return the startDate
+     */
+    public final Date getStartDate() {
+        return startDate;
+    }
+    /**
+     * @param startDate the startDate to set
+     */
+    public final void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+    /**
+     * @return the endDate
+     */
+    public final Date getEndDate() {
+        return endDate;
+    }
+    /**
+     * @param endDate the endDate to set
+     */
+    public final void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+    
+    public final void logConversionStarted(int type) {
+        this.lastConversionOngoing= type;
+        this.conversionOngoing= true;
+        postEvent(ModelEvent.CONVERSION_STATE_CHANGE);
+    }
+
+    public final void logConversionEnded(int type) {
+        this.conversionOngoing= false;
+        postEvent(ModelEvent.CONVERSION_STATE_CHANGE);
+    }
+    
+    
+    
+    /*
+     * Log download related information
+     */
+    int startAddr;
+    int endAddr;
+    boolean downloadOnGoing=false;
+    int nextReadAddr;
+
+    /**
+     * @return the startAddr
+     */
+    public final int getStartAddr() {
+        return startAddr;
+    }
+    /**
+     * @param startAddr the startAddr to set
+     */
+    public final void setStartAddr(int startAddr) {
+        this.startAddr = startAddr;
+    }
+    /**
+     * @return the endAddr
+     */
+    public final int getEndAddr() {
+        return endAddr;
+    }
+    /**
+     * @param endAddr the endAddr to set
+     */
+    public final void setEndAddr(int endAddr) {
+        this.endAddr = endAddr;
+    }
+    /**
+     * @return the downloadOnGoing
+     */
+    public final boolean isDownloadOnGoing() {
+        return downloadOnGoing;
+    }
+    /**
+     * @param downloadOnGoing the downloadOnGoing to set
+     */
+    public void setDownloadOnGoing(boolean downloadOnGoing) {
+        this.downloadOnGoing = downloadOnGoing;
+        postEvent(ModelEvent.DOWNLOAD_PROGRESS_UPDATE);
+
+    }
+    /**
+     * @return the nextReadAddr
+     */
+    public final int getNextReadAddr() {
+        return nextReadAddr;
+    }
+    /**
+     * @param nextReadAddr the nextReadAddr to set
+     */
+    public void setNextReadAddr(int nextReadAddr) {
+        this.nextReadAddr = nextReadAddr;
+        if(this.downloadOnGoing) {
+            postEvent(ModelEvent.DOWNLOAD_PROGRESS_UPDATE);
+        }
+    }
+
+
+    /*
+     * Event posting
+     */
+
+    
+    private HashSet listeners = new HashSet();
+
+    /**add a listener to event thrown by this class*/
+    public void addListener(ModelListener l){        
+        listeners.add(l);
+    }
+
+    private void postEvent(final int type) {
+        Iterator it = listeners.iterator();
+        while (it.hasNext()) {
+            ModelListener l=(ModelListener)it.next();
+            Event e=new Event(type, l, 0);
+            l.newEvent(e);
+        }
+    }
+}
