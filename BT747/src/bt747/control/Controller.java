@@ -1,7 +1,5 @@
 package bt747.control;
 
-import waba.fx.Color;
-
 import gps.convert.Conv;
 import gps.log.BT747LogConvert;
 import gps.log.CSVLogConvert;
@@ -16,11 +14,8 @@ import gps.log.GPSLogConvert;
 import gps.log.GPSNMEAFile;
 import gps.log.GPSPLTFile;
 import gps.log.HoluxTrlLogConvert;
-import bt747.model.ModelEvent.*;
 
 import bt747.model.Model;
-import bt747.model.ModelEvent;
-import bt747.ui.Button;
 
 /**
  * @author Mario De Weerd
@@ -124,6 +119,7 @@ public class Controller {
         }
 
 
+        gpsFile.setImperial(m.getImperial());
         gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
         gpsFile.setBadTrackColor(m.getColorInvalidTrack());
         for (int i = 0; i < usedFilters.length; i++) {
