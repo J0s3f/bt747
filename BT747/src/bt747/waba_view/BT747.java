@@ -48,8 +48,8 @@ public class BT747 extends MainWindow implements ModelListener {
     /*
      * Using Model, Controller, View.
      */
-    Model m = new Model();
-    Controller c= new Controller(m);
+    protected Model m = new Model();
+    protected Controller c= new Controller(m);
     
     /** The 'GPS state'.  Used to get current GPS information and get access
      * to it.
