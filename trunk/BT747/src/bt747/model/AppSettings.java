@@ -32,7 +32,7 @@ public class AppSettings {
     private static final String CONFIG_FILE_NAME =
         //#if RXTX java.lang.System.getProperty("bt747_settings",
 
-        (waba.sys.Settings.platform.startsWith("Win32")
+        (bt747.sys.Settings.platform.startsWith("Win32")
          //#if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")  
          ) ?
             "SettingsBT747.pdb" : 

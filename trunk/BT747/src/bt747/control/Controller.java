@@ -43,8 +43,6 @@ public class Controller {
         GPSFile gpsFile=null;
         GPSLogConvert lc;
 
-        m.logConversionStarted(log_type);
-        
         /*
          * Check the input file
          */
@@ -118,19 +116,24 @@ public class Controller {
             break;
         }
 
-
-        gpsFile.setImperial(m.getImperial());
-        gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
-        gpsFile.setBadTrackColor(m.getColorInvalidTrack());
-        for (int i = 0; i < usedFilters.length; i++) {
-            usedFilters[i].setStartDate(Conv.dateToUTCepoch1970(m.getStartDate()));
-            usedFilters[i].setEndDate(Conv.dateToUTCepoch1970(m.getEndDate())+(24*60*60-1));
+        if(gpsFile!=null) {
+            m.logConversionStarted(log_type);
+            
+            gpsFile.setImperial(m.getImperial());
+            gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
+            gpsFile.setBadTrackColor(m.getColorInvalidTrack());
+            for (int i = 0; i < usedFilters.length; i++) {
+                usedFilters[i].setStartDate(Conv.dateToUTCepoch1970(m.getStartDate()));
+                usedFilters[i].setEndDate(Conv.dateToUTCepoch1970(m.getEndDate())+(24*60*60-1));
+            }
+            gpsFile.setFilters(usedFilters);
+            gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
+                    m.getFileSeparationFreq());
+            gpsFile.setTrackSepTime(m.getTrkSep()*60);
+            lc.toGPSFile(m.getLogFilePath(),gpsFile,m.getCard());
+        } else {
+            // TODO report error
         }
-        gpsFile.setFilters(usedFilters);
-        gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
-                m.getFileSeparationFreq());
-        gpsFile.setTrackSepTime(m.getTrkSep()*60);
-        lc.toGPSFile(m.getLogFilePath(),gpsFile,m.getCard());
         m.logConversionEnded(log_type);
     }
 

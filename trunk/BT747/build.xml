@@ -451,6 +451,7 @@
 			verbose="true"
 			ignorewarnings="true"
 			optimizationpasses="4"
+		    printmapping="${buildDir}/${ant.project.name}.mapping"
 			>
 			
 			<keep name="${mainClass}" />
@@ -482,6 +483,7 @@
 			verbose="true"
 			ignorewarnings="true"
 			optimizationpasses="4"
+		    printmapping="${buildDir}/${ant.project.name}_rxtx.mapping"
 			>
 			
 			<keep name="${mainClass}" />

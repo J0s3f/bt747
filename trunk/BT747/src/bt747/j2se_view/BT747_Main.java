@@ -23,8 +23,6 @@ public class BT747_Main extends javax.swing.JFrame
     /** Creates new form BT747_Main */
     public BT747_Main() {
         initComponents();
-        //m=new Model();
-        //c=new Controller(m);
     }
     
     public BT747_Main(Model m, Controller c) {
@@ -64,67 +62,118 @@ public class BT747_Main extends javax.swing.JFrame
         DownloadProgressBar = new javax.swing.JProgressBar();
         DownloadProgressLabel = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        LogOperationsPanel = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        ConvertButton = new javax.swing.JButton();
+        FormatSelectionBox = new javax.swing.JComboBox();
+        TargetFormatLabel = new javax.swing.JLabel();
+        DeviceSettingsPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
-        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        FileMenu = new javax.swing.JMenu();
+        SettingsMenu = new javax.swing.JMenu();
+        InfoMenu = new javax.swing.JMenu();
+        AboutBT747 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
         DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
-        DownloadProgressBar.setToolTipText("Download progress");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        DownloadProgressBar.setToolTipText(bundle.getString("BT747_Main.DownloadProgressBar.toolTipText")); // NOI18N
         DownloadProgressBar.setFocusable(false);
 
-        DownloadProgressLabel.setText("Progress");
+        DownloadProgressLabel.setText(bundle.getString("BT747_Main.DownloadProgressLabel.text")); // NOI18N
 
-        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        ConvertButton.setText(bundle.getString("BT747_Main.ConvertButton.text")); // NOI18N
+        ConvertButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ConvertButtonMouseReleased(evt);
+            }
+        });
+
+        FormatSelectionBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML", "OziExplorer (.PLT)", "NMEA", "Google Map (.html)" }));
+        FormatSelectionBox.setToolTipText(bundle.getString("BT747_Main.FormatSelectionBox.toolTipText")); // NOI18N
+        FormatSelectionBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                FormatSelectionBoxItemStateChanged(evt);
+            }
+        });
+        FormatSelectionBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FormatSelectionBoxActionPerformed(evt);
+            }
+        });
+
+        TargetFormatLabel.setText(bundle.getString("BT747_Main.TargetFormatLabel.text")); // NOI18N
+
+        org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(ConvertButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(TargetFormatLabel)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(FormatSelectionBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(FormatSelectionBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(TargetFormatLabel)
+                    .add(ConvertButton))
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+
+        org.jdesktop.layout.GroupLayout LogOperationsPanelLayout = new org.jdesktop.layout.GroupLayout(LogOperationsPanel);
+        LogOperationsPanel.setLayout(LogOperationsPanelLayout);
+        LogOperationsPanelLayout.setHorizontalGroup(
+            LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(LogOperationsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(53, Short.MAX_VALUE))
+        );
+        LogOperationsPanelLayout.setVerticalGroup(
+            LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, LogOperationsPanelLayout.createSequentialGroup()
+                .addContainerGap(127, Short.MAX_VALUE)
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab(bundle.getString("BT747_Main.LogOperationsPanel.TabConstraints.tabTitle"), LogOperationsPanel); // NOI18N
+
+        org.jdesktop.layout.GroupLayout DeviceSettingsPanelLayout = new org.jdesktop.layout.GroupLayout(DeviceSettingsPanel);
+        DeviceSettingsPanel.setLayout(DeviceSettingsPanelLayout);
+        DeviceSettingsPanelLayout.setHorizontalGroup(
+            DeviceSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(0, 375, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        DeviceSettingsPanelLayout.setVerticalGroup(
+            DeviceSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(0, 205, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Log Download & Convert", jPanel1);
+        jTabbedPane1.addTab(bundle.getString("BT747_Main.DeviceSettingsPanel.TabConstraints.tabTitle"), DeviceSettingsPanel); // NOI18N
 
-        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 375, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 205, Short.MAX_VALUE)
-        );
+        FileMenu.setText(bundle.getString("BT747_Main.FileMenu.text")); // NOI18N
+        jMenuBar1.add(FileMenu);
 
-        jTabbedPane1.addTab("Device settings", jPanel2);
+        SettingsMenu.setText(bundle.getString("BT747_Main.SettingsMenu.text")); // NOI18N
+        jMenuBar1.add(SettingsMenu);
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        InfoMenu.setText(bundle.getString("BT747_Main.InfoMenu.text")); // NOI18N
 
-        jMenu2.setText("Edit");
+        AboutBT747.setText(bundle.getString("BT747_Main.AboutBT747.text")); // NOI18N
+        InfoMenu.add(AboutBT747);
 
-        jCheckBoxMenuItem1.setSelected(true);
-        jCheckBoxMenuItem1.setText("CheckBox");
-        jMenu2.add(jCheckBoxMenuItem1);
-
-        jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("Info");
-
-        jMenuItem1.setText("About BT747");
-        jMenu3.add(jMenuItem1);
-
-        jMenuBar1.add(jMenu3);
+        jMenuBar1.add(InfoMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -139,7 +188,7 @@ public class BT747_Main extends javax.swing.JFrame
                     .add(layout.createSequentialGroup()
                         .add(DownloadProgressLabel)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)))
+                        .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -159,29 +208,75 @@ public class BT747_Main extends javax.swing.JFrame
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private int selectedFormat=Model.C_NO_LOG;
+    
+    private void FormatSelectionBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FormatSelectionBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_FormatSelectionBoxActionPerformed
+
+    private void ConvertButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ConvertButtonMouseReleased
+        c.writeLog(selectedFormat);
+}//GEN-LAST:event_ConvertButtonMouseReleased
+    
+    private final void setSelectedFormat(final String selected) {
+        if(selected.startsWith("CSV")) {
+            selectedFormat=Model.C_CSV_LOG;
+        } else if(selected.startsWith("Google Map")) {
+            selectedFormat=Model.C_GMAP_LOG;
+        } else if(selected.startsWith("GPX")) {
+            selectedFormat=Model.C_GPX_LOG;
+        } else if(selected.startsWith("KML")) {
+            selectedFormat=Model.C_KML_LOG;
+        } else if(selected.startsWith("NMEA")) {
+            selectedFormat=Model.C_NMEA_LOG;
+        } else if(selected.startsWith("Ozi")) {
+            selectedFormat=Model.C_PLT_LOG;
+        } else if(selected.startsWith("Compe")) {
+            selectedFormat=Model.C_TRK_LOG;
+        } else {
+            selectedFormat=Model.C_NO_LOG;
+        }
+    }
+
+    private void FormatSelectionBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_FormatSelectionBoxItemStateChanged
+        // TODO add your handling code here:
+        switch (evt.getStateChange() ) {
+            case java.awt.event.ItemEvent.SELECTED:
+                setSelectedFormat(evt.getItem().toString());
+                break;
+            case java.awt.event.ItemEvent.DESELECTED:
+                break;
+        }
+    }//GEN-LAST:event_FormatSelectionBoxItemStateChanged
     
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+            Model m=new Model();
+            Controller c=new Controller(m);
             public void run() {
-                new BT747_Main().setVisible(true);
+                new BT747_Main(m,c).setVisible(true);
             }
         });
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem AboutBT747;
+    private javax.swing.JButton ConvertButton;
+    private javax.swing.JPanel DeviceSettingsPanel;
     private javax.swing.JProgressBar DownloadProgressBar;
     private javax.swing.JLabel DownloadProgressLabel;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu FileMenu;
+    private javax.swing.JComboBox FormatSelectionBox;
+    private javax.swing.JMenu InfoMenu;
+    private javax.swing.JPanel LogOperationsPanel;
+    private javax.swing.JMenu SettingsMenu;
+    private javax.swing.JLabel TargetFormatLabel;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
     
