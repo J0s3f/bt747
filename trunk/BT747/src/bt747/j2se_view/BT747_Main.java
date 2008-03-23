@@ -35,19 +35,21 @@ public class BT747_Main extends javax.swing.JFrame
     public void newEvent(bt747.ui.Event e) {
         onEvent(e);
     }
-    
+
+    private void progressBarUpdate() {
+        DownloadProgressBar.setMinimum(m.getStartAddr());
+        DownloadProgressBar.setMaximum(m.getEndAddr());
+        DownloadProgressBar.setValue(m.getNextReadAddr());
+        DownloadProgressBar.setVisible(m.isDownloadOnGoing());
+        DownloadProgressLabel.setVisible(m.isDownloadOnGoing());
+        //this.invalidate();
+        //this.paintAll(this.getGraphics());
+    }
     public void onEvent(bt747.ui.Event e) {
         if(e.type==ModelEvent.DOWNLOAD_PROGRESS_UPDATE) {
-            DownloadProgressBar.setMinimum(m.getStartAddr());
-            DownloadProgressBar.setMaximum(m.getEndAddr());
-            DownloadProgressBar.setValue(m.getNextReadAddr());
-            DownloadProgressBar.setVisible(m.isDownloadOnGoing());
-            DownloadProgressLabel.setVisible(m.isDownloadOnGoing());
-            //this.invalidate();
-            //this.paintAll(this.getGraphics());
+            progressBarUpdate();
         }
-
-    }
+}
     
     
     
@@ -78,13 +80,11 @@ public class BT747_Main extends javax.swing.JFrame
 
         DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
         DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
-        DownloadProgressBar.setToolTipText(bundle.getString("BT747_Main.DownloadProgressBar.toolTipText")); // NOI18N
         DownloadProgressBar.setFocusable(false);
 
-        DownloadProgressLabel.setText(bundle.getString("BT747_Main.DownloadProgressLabel.text")); // NOI18N
+        DownloadProgressLabel.setText("Download progress");
 
-        ConvertButton.setText(bundle.getString("BT747_Main.ConvertButton.text")); // NOI18N
+        ConvertButton.setText("Convert");
         ConvertButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 ConvertButtonMouseReleased(evt);
@@ -92,7 +92,6 @@ public class BT747_Main extends javax.swing.JFrame
         });
 
         FormatSelectionBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML", "OziExplorer (.PLT)", "NMEA", "Google Map (.html)" }));
-        FormatSelectionBox.setToolTipText(bundle.getString("BT747_Main.FormatSelectionBox.toolTipText")); // NOI18N
         FormatSelectionBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 FormatSelectionBoxItemStateChanged(evt);
@@ -104,7 +103,7 @@ public class BT747_Main extends javax.swing.JFrame
             }
         });
 
-        TargetFormatLabel.setText(bundle.getString("BT747_Main.TargetFormatLabel.text")); // NOI18N
+        TargetFormatLabel.setText("Target Format");
 
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -147,7 +146,7 @@ public class BT747_Main extends javax.swing.JFrame
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(bundle.getString("BT747_Main.LogOperationsPanel.TabConstraints.tabTitle"), LogOperationsPanel); // NOI18N
+        jTabbedPane1.addTab("Log operations", LogOperationsPanel);
 
         org.jdesktop.layout.GroupLayout DeviceSettingsPanelLayout = new org.jdesktop.layout.GroupLayout(DeviceSettingsPanel);
         DeviceSettingsPanel.setLayout(DeviceSettingsPanelLayout);
@@ -160,17 +159,17 @@ public class BT747_Main extends javax.swing.JFrame
             .add(0, 205, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab(bundle.getString("BT747_Main.DeviceSettingsPanel.TabConstraints.tabTitle"), DeviceSettingsPanel); // NOI18N
+        jTabbedPane1.addTab("Device settings", DeviceSettingsPanel);
 
-        FileMenu.setText(bundle.getString("BT747_Main.FileMenu.text")); // NOI18N
+        FileMenu.setText("File");
         jMenuBar1.add(FileMenu);
 
-        SettingsMenu.setText(bundle.getString("BT747_Main.SettingsMenu.text")); // NOI18N
+        SettingsMenu.setText("Settings");
         jMenuBar1.add(SettingsMenu);
 
-        InfoMenu.setText(bundle.getString("BT747_Main.InfoMenu.text")); // NOI18N
+        InfoMenu.setText("Info");
 
-        AboutBT747.setText(bundle.getString("BT747_Main.AboutBT747.text")); // NOI18N
+        AboutBT747.setText(null);
         InfoMenu.add(AboutBT747);
 
         jMenuBar1.add(InfoMenu);
@@ -204,6 +203,7 @@ public class BT747_Main extends javax.swing.JFrame
         );
 
         DownloadProgressBar.getAccessibleContext().setAccessibleName("DownloadProgessBar");
+        progressBarUpdate();
         jTabbedPane1.getAccessibleContext().setAccessibleName("Log download & Convert");
 
         pack();

@@ -19,10 +19,11 @@ package bt747.model;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.io.File;
-import bt747.sys.Convert;
-import waba.sys.Settings;
 
 import gps.convert.Conv;
+
+import bt747.sys.Convert;
+import bt747.sys.Settings;
 
 /**
  * @author Mario De Weerd
@@ -160,26 +161,26 @@ public class AppSettings {
     }
     
     private boolean isWin32LikeDevice() {
-        return waba.sys.Settings.platform.startsWith("WindowsCE")
-        || waba.sys.Settings.platform.startsWith("PocketPC")
-        ||(waba.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice)
+        return bt747.sys.Settings.platform.startsWith("WindowsCE")
+        || bt747.sys.Settings.platform.startsWith("PocketPC")
+        ||(bt747.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice)
         ;
     }
     
     public void init() {
         String mVersion;
         int VersionX100=0;
-        if(Settings.appSettings==null||Settings.appSettings.length()<100
+        if(Settings.getAppSettings()==null||Settings.getAppSettings().length()<100
             //#if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
           ) {
-            Settings.appSettings=new String(new byte[2048]);
+            Settings.setAppSettings(new String(new byte[2048]));
             if ( isWin32LikeDevice()
                     //#if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")  
                     //#if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
                     ) {
                 int readLength = 0;
                 
-                //waba.sys.Vm.debug("on Device "+waba.sys.Settings.platform);
+                //waba.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
                 //waba.sys.Vm.debug("loading config file "+CONFIG_FILE_NAME);
                 File m_prefFile = new File("");
                 try {
@@ -193,7 +194,7 @@ public class AppSettings {
                     byte[] appSettingsArray = new byte[2048];
                     
                     m_prefFile.readBytes(appSettingsArray, 0, readLength);
-                    Settings.appSettings = new String(appSettingsArray);
+                    Settings.setAppSettings(new String(appSettingsArray));
                 }
                 try {
                     m_prefFile.close();
@@ -220,7 +221,7 @@ public class AppSettings {
             setPortnbr(0);
             setBaudRate(115200);
             setCard(-1);
-            if (waba.sys.Settings.platform.startsWith("Palm")) {
+            if (bt747.sys.Settings.platform.startsWith("Palm")) {
                 setBaseDirPath("/Palm");
             } else if ( isWin32LikeDevice() ) {
                 File f=bt747.io.File.getCardVolume();
@@ -236,7 +237,7 @@ public class AppSettings {
             setLogFile("BT747log.bin");
             setReportFileBase("GPSDATA");
             setStartupOpenPort(false);
-            setChunkSize(waba.sys.Settings.onDevice?220:0x10000);
+            setChunkSize(bt747.sys.Settings.onDevice?220:0x10000);
             setDownloadTimeOut( C_DEFAULT_DEVICE_TIMEOUT );
             /* fall through */
         case 1: 
@@ -284,7 +285,7 @@ public class AppSettings {
             setColorInvalidTrack("FF0000");
             /* fall through */
         case 12:
-            setTraversableFocus(Settings.onDevice&&(!waba.sys.Settings.platform.startsWith("Palm")));
+            setTraversableFocus(Settings.onDevice&&(!bt747.sys.Settings.platform.startsWith("Palm")));
             /* fall through */
         case 13:
             setRecordNbrInLogs(false);
@@ -322,7 +323,7 @@ public class AppSettings {
                 //#if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")  
                 //#if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
                 ) {
-//            waba.sys.Vm.debug("on Device "+waba.sys.Settings.platform);
+//            waba.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
 //            waba.sys.Vm.debug("saving config file "+CONFIG_FILE_NAME);
             File m_prefFile=new File("");
             try {
@@ -346,7 +347,7 @@ public class AppSettings {
                 m_prefFile=new File(CONFIG_FILE_NAME,File.CREATE);
                 m_prefFile.close();
                 m_prefFile=new File(CONFIG_FILE_NAME,File.READ_WRITE);
-                m_prefFile.writeBytes(Settings.appSettings.getBytes(), 0, Settings.appSettings.length());
+                m_prefFile.writeBytes(Settings.getAppSettings().getBytes(), 0, Settings.getAppSettings().length());
                 m_prefFile.close();
             } catch (Exception e) {
 //                Vm.debug("Exception new log create");
@@ -364,10 +365,10 @@ public class AppSettings {
     }
 
     private final void setOpt(final String src, final int idx, final int size) {
-        Settings.appSettings=
-            Settings.appSettings.substring(0,idx)
+        Settings.setAppSettings(
+            Settings.getAppSettings().substring(0,idx)
         +src.substring(0, (src.length()<(size))?src.length():size)
-        +Settings.appSettings.substring((src.length()<(size-1))?idx+src.length():idx+size)
+        +Settings.getAppSettings().substring((src.length()<(size-1))?idx+src.length():idx+size))
         ;
     }
 
@@ -396,24 +397,24 @@ public class AppSettings {
     }
 
     private final void setStringOpt(final String src, final int idx, final int size) {
-        Settings.appSettings=
-            Settings.appSettings.substring(0,idx)
+        Settings.setAppSettings(Settings.getAppSettings().substring(0,idx)
         +src.substring(0, (src.length()<size)?src.length():size)
         +(src.length()<size?"\0":"")
         +((src.length()<(size-1))?new String(new byte[size-src.length()-1]):"")
-        +((Settings.appSettings.length()>idx+size)?
-                Settings.appSettings.substring(idx+size,Settings.appSettings.length())
+        +((Settings.getAppSettings().length()>idx+size)?
+                Settings.getAppSettings().substring(idx+size,Settings.getAppSettings().length())
                 :"")
+                )
         ;
     }
 
     private final String getStringOpt(final int idx, final int size) {
         String s;
         int i;
-        if(idx+size>Settings.appSettings.length()) {
+        if(idx+size>Settings.getAppSettings().length()) {
             return "";
         } else {
-            s=Settings.appSettings.substring(idx,idx+size);
+            s=Settings.getAppSettings().substring(idx,idx+size);
             if((i=s.indexOf("\0"))!=-1) {
                 return s.substring(0, i);
             } else {
