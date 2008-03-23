@@ -28,7 +28,7 @@ import gps.convert.Conv;
  * @author Mario De Weerd
  * @author Herbert Geus (initial code for saving settings on WindowsCE)
   */
-public class AppSettings implements gps.settings {
+public class AppSettings {
     private static final String CONFIG_FILE_NAME =
         //#if RXTX java.lang.System.getProperty("bt747_settings",
 
@@ -136,7 +136,9 @@ public class AppSettings implements gps.settings {
     private static final int C_RECORDNBR_IN_LOGS_SIZE=4;
     private static final int C_HOLUX241_IDX=C_RECORDNBR_IN_LOGS_IDX+C_RECORDNBR_IN_LOGS_SIZE;
     private static final int C_HOLUX241_SIZE=1;
-    private static final int C_NEXT_IDX=C_HOLUX241_IDX+C_HOLUX241_SIZE;
+    private static final int C_IMPERIAL_IDX=C_HOLUX241_IDX+C_HOLUX241_SIZE;
+    private static final int C_IMPERIAL_SIZE=1;
+    private static final int C_NEXT_IDX=C_IMPERIAL_IDX+C_IMPERIAL_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE=4;
     private static final int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -294,9 +296,12 @@ public class AppSettings implements gps.settings {
             /* Value interpretation changed */
             setDistConditionSetting1(getDistConditionSetting1()*10);
             /* fall through */
+        case 16:
+            setImperial(false);
+            /* fall through */
 
             /* Must be last line in case (not 'default') */ 
-            setStringOpt("0.16",C_VERSION_IDX, C_VERSION_SIZE);
+            setStringOpt("0.17",C_VERSION_IDX, C_VERSION_SIZE);
         }
         getSettings();
     }
@@ -930,6 +935,13 @@ public class AppSettings implements gps.settings {
     }
     public void setForceHolux241(final boolean value) {
         setBooleanOpt(value, C_HOLUX241_IDX, C_HOLUX241_SIZE);
+    }
+
+    public boolean getImperial() {
+        return getBooleanOpt(C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
+    }
+    public void setImperial(final boolean value) {
+        setBooleanOpt(value, C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
     }
 
     

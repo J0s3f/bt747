@@ -30,7 +30,8 @@ import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 
 import bt747.Txt;
-import bt747.model.AppSettings;
+import bt747.control.Controller;
+import bt747.model.Model;
 
 /**
  * @author Mario De Weerd
@@ -43,19 +44,16 @@ public class GPSFiltersTabPanel extends Container {
     private GPSLogFilterAdv  m_GPSLogFilterAdv;
     private GPSNMEAOutput m_GPSNMEAOutput;
     private GPSFileNMEAOutputSel m_GPSNMEAFile;
-    private AppSettings m_settings;
-    private GPSFilter[] m_logFilters;
-    private GPSFilterAdvanced[] m_logFiltersAdv;
+    private Model m;
     
     private final String c_tpCaptions[]= {
             Txt.STANDARD,
             Txt.ADVANCED
     };
     
-    public GPSFiltersTabPanel(AppSettings settings,GPSFilter[] logFilters,GPSFilterAdvanced[] logFiltersAdv) {
-        m_settings=settings;
-        m_logFilters=logFilters;
-        m_logFiltersAdv=logFiltersAdv;
+    public GPSFiltersTabPanel(Model settings,
+            Controller c) {
+        m=settings;
     }
     
     /**
@@ -65,9 +63,9 @@ public class GPSFiltersTabPanel extends Container {
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
         m_TabPanel.setBorderStyle(Window.NO_BORDER);
         m_TabPanel.setRect(getClientRect().modifiedBy(0,0,0,0));
-        m_TabPanel.setPanel(0,m_GPSLogFilter = new GPSLogFilter(m_settings,m_logFilters,m_logFiltersAdv));
-        m_TabPanel.setPanel(1,m_GPSLogFilterAdv = new GPSLogFilterAdv(m_settings, m_logFiltersAdv));
-//        m_TabPanel.setPanel(2,m_GPSNMEAFile = new GPSFileNMEAOutputSel(m_settings));
+        m_TabPanel.setPanel(0,m_GPSLogFilter = new GPSLogFilter(m));
+        m_TabPanel.setPanel(1,m_GPSLogFilterAdv = new GPSLogFilterAdv(m));
+//        m_TabPanel.setPanel(2,m_GPSNMEAFile = new GPSFileNMEAOutputSel(m));
     }
     public void onEvent(Event event) {
         //

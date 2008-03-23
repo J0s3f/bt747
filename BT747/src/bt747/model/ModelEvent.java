@@ -17,7 +17,7 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************       
-package gps;
+package bt747.model;
 
 import bt747.ui.Event;
 
@@ -25,13 +25,11 @@ import bt747.ui.Event;
  * 
  * @author Mario De Weerd
  */
-public class GpsEvent extends Event {
-    public static final int DATA_UPDATE = bt747.ui.Event.getNextAvailableEventId();
-    public static final int CONNECTED   = getNextAvailableEventId();
-    public static final int GPRMC       = getNextAvailableEventId();
-    public static final int GPGGA       = getNextAvailableEventId();
+public class ModelEvent extends Event {
+    public static final int CONVERSION_STATE_CHANGE = getNextAvailableEventId();
+    public static final int DOWNLOAD_PROGRESS_UPDATE = getNextAvailableEventId();
     
-    public GpsEvent(int type, Object target, int timeStamp)
+    public ModelEvent(int type, Object target, int timeStamp)
     {
         super(type,target,timeStamp);
     }

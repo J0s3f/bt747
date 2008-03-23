@@ -31,7 +31,7 @@ import waba.util.Vector;
 
 import bt747.Txt;
 import bt747.io.File;
-import bt747.model.AppSettings;
+import bt747.model.Model;
 import bt747.sys.Convert;
 import bt747.ui.Button;
 
@@ -41,9 +41,9 @@ import bt747.ui.Button;
  */
 public class GPSLogFile extends Container {
     
-    AppSettings m_settings;
+    Model m_settings;
     
-    public GPSLogFile(AppSettings settings) {
+    public GPSLogFile(Model settings) {
         m_settings=settings;
     }
     

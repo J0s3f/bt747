@@ -33,7 +33,7 @@ import gps.log.GPSRecord;
 
 import bt747.Txt;
 import bt747.Version;
-import bt747.model.AppSettings;
+import bt747.model.Model;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 import bt747.ui.Button;
@@ -71,9 +71,9 @@ public class GPSconctrl extends Container {
   
 
     private static final int C_MAX_PORTNBR = 32;
-    private AppSettings m_Settings;
+    private Model m_Settings;
 
-    public GPSconctrl(GPSstate p_GPSstate, AppSettings settings) {
+    public GPSconctrl(GPSstate p_GPSstate, Model settings) {
         m_GPSstate = p_GPSstate;
         m_Settings = settings;
     }

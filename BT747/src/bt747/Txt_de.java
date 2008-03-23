@@ -375,5 +375,6 @@ public class Txt_de {
         "Rekord-Nummer im Log";
     
     public static final String S_DEBUG_CONN= "Debug conn.";
-    
+    public static final String S_IMPERIAL= "Imperial Units";
+
 }

@@ -39,20 +39,24 @@
 
 	<property name="full.build.version" value="${build.current.version}.${build.current.revision}" />
 
+	<property name="swcollections.jar" value="${lib.dir}/collections-superwaba.jar"/>
 	
 	<!-- Application classpath -->
 	<path id="classpath">
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
+		<pathelement location="${swcollections.jar}"/>
 		<pathelement location="lib/win32comm.jar"/>
 	</path>
 
 	<path id="rxtxclasspath">
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
+		<pathelement location="${swcollections.jar}"/>
 		<pathelement location="lib/RXTXcomm.jar"/>
 	</path>
 
 	<path id="symbianclasspath">
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
+		<pathelement location="${swcollections.jar}"/>
 	</path>
 
 
@@ -62,7 +66,6 @@
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar"/>
 	</path>
 	
-	<property name="swcollections.jar" value="${lib.dir}/collections-superwaba.jar"/>
 
 	<!-- Set some properties according to availability of files -->
 	<!-- Currently set in local.properties so that only the release

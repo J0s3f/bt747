@@ -28,22 +28,17 @@ import gps.BT747_dev;
 import gps.log.GPSFilter;
 
 import bt747.Txt;
-import bt747.model.AppSettings;
+import bt747.model.Model;
 import bt747.ui.Check;
 
 /** The purpose of this container is to set the log filter settings.
  */
 public class GPSLogFilter extends Container {
-    private GPSFilter[] m_logFilters;
-    private GPSFilter[] m_logFiltersAdv;
     private int currentLogFilter=0;
-    private AppSettings m_settings;
+    private Model m;
 
-    public GPSLogFilter(AppSettings settings, final GPSFilter[] logFilters,
-            final GPSFilter[] logFiltersAdv) {
-        m_logFilters = logFilters;
-        m_logFiltersAdv = logFiltersAdv;
-        m_settings=settings;
+    public GPSLogFilter(Model settings) {
+        m=settings;
     }
 
     private String[] strValid= Txt.STR_VALID;
@@ -55,15 +50,15 @@ public class GPSLogFilter extends Container {
     private PushButtonGroup pbPtType;
     
     private void getSettings(GPSFilter[] logFilters) {
-        logFilters[GPSFilter.C_TRKPT_IDX].setRcrMask(m_settings.getTrkPtRCR());
-        logFilters[GPSFilter.C_TRKPT_IDX].setValidMask(m_settings.getTrkPtValid());
-        logFilters[GPSFilter.C_WAYPT_IDX].setRcrMask(m_settings.getWayPtRCR());
-        logFilters[GPSFilter.C_WAYPT_IDX].setValidMask(m_settings.getWayPtValid());
+        logFilters[GPSFilter.C_TRKPT_IDX].setRcrMask(m.getTrkPtRCR());
+        logFilters[GPSFilter.C_TRKPT_IDX].setValidMask(m.getTrkPtValid());
+        logFilters[GPSFilter.C_WAYPT_IDX].setRcrMask(m.getWayPtRCR());
+        logFilters[GPSFilter.C_WAYPT_IDX].setValidMask(m.getWayPtValid());
     };
     
     private void getSettings() {
-        getSettings(m_logFilters);
-        getSettings(m_logFiltersAdv);
+        getSettings(m.getLogFilters());
+        getSettings(m.getLogFiltersAdv());
     }
 
     public void onStart() {
@@ -177,8 +172,8 @@ public class GPSLogFilter extends Container {
     }
     
     private void updateFromFilter() {
-        setValid(m_logFilters[currentLogFilter].getValidMask());
-        setRCR(m_logFilters[currentLogFilter].getRcrMask());
+        setValid(m.getLogFilters()[currentLogFilter].getValidMask());
+        setRCR(m.getLogFilters()[currentLogFilter].getRcrMask());
     }
 
     
@@ -205,13 +200,13 @@ public class GPSLogFilter extends Container {
                     }
                 }
                 if(z_updated) {
-                    m_logFilters[currentLogFilter].setValidMask(getValid());
+                    m.getLogFilters()[currentLogFilter].setValidMask(getValid());
                     switch (currentLogFilter) {
                     case GPSFilter.C_TRKPT_IDX:
-                        m_settings.setTrkPtValid(getValid());
+                        m.setTrkPtValid(getValid());
                         break;
                     case GPSFilter.C_WAYPT_IDX:
-                        m_settings.setWayPtValid(getValid());
+                        m.setWayPtValid(getValid());
                         break;
                     }
                 }
@@ -222,13 +217,13 @@ public class GPSLogFilter extends Container {
                     }
                 }
                 if(z_updated) {
-                    m_logFilters[currentLogFilter].setRcrMask(getRCR());
+                    (m.getLogFilters())[currentLogFilter].setRcrMask(getRCR());
                     switch (currentLogFilter) {
                     case GPSFilter.C_TRKPT_IDX:
-                        m_settings.setTrkPtRCR(getRCR());
+                        m.setTrkPtRCR(getRCR());
                         break;
                     case GPSFilter.C_WAYPT_IDX:
-                        m_settings.setWayPtRCR(getRCR());
+                        m.setWayPtRCR(getRCR());
                         break;
                     }
                 }

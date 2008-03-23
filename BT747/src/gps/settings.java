@@ -69,4 +69,26 @@ public interface settings {
 
     public String getBaseDirPath();
 
+    
+
+    
+    /**
+     * @param startAddr the startAddr to set
+     */
+    public void setStartAddr(int startAddr);
+    /**
+     * @param endAddr the endAddr to set
+     */
+    public void setEndAddr(int endAddr) ;
+
+    /**
+     * @param downloadOnGoing the downloadOnGoing to set
+     */
+    public void setDownloadOnGoing(boolean downloadOnGoing);
+
+    /**
+     * @param nextReadAddr the nextReadAddr to set
+     */
+    public void setNextReadAddr(int nextReadAddr);
+    
 }

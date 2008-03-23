@@ -26,6 +26,7 @@ public class Txt_en {
     public static final String S_DEBUG_CONN= "Debug conn.";
     public static final String S_STATS= "Stats";
     public static final String S_INFO= "Info";
+    public static final String S_IMPERIAL= "Imperial Units";
     public static final String S_ABOUT_BT747= "About BT747";
     public static final String S_ABOUT_SUPERWABA= "About SuperWaba VM";
     
