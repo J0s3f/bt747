@@ -53,7 +53,7 @@
                     <target>all</target>
                 </action>
                 <action name="run">
-                    <target>run</target>
+                    <target>run_rxtx_both</target>
                 </action>
             </ide-actions>
             <export>
@@ -86,16 +86,20 @@
                     <ide-action name="clean"/>
                     <ide-action name="run"/>
                     <action>
-                        <label>RXTX Build</label>
+                        <label>Build Waba (RXTX)</label>
                         <target>rxtxbuild</target>
                     </action>
                     <action>
-                        <label>RXTX Run</label>
+                        <label>Run Waba (RXTX)</label>
                         <target>run_rxtx</target>
                     </action>
                     <action>
                         <label>Run Waba and J2SE (RXTX)</label>
                         <target>run_rxtx_both</target>
+                    </action>
+                    <action>
+                        <label>Run J2SE (RXTX)</label>
+                        <target>run_rxtx_j2se</target>
                     </action>
                 </context-menu>
             </view>

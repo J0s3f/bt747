@@ -308,6 +308,7 @@ public class BT747 extends MainWindow implements ModelListener {
                     break;
                 case C_MENU_IMPERIAL:
                     c.setImperial(m_MenuBar.isChecked(C_MENU_IMPERIAL));
+                    break;
                 case C_MENU_GPX_UTC0:
                     m.setGpxUTC0(m_MenuBar.isChecked(C_MENU_GPX_UTC0));
                     break;
