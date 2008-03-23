@@ -93,6 +93,10 @@
                         <label>RXTX Run</label>
                         <target>run_rxtx</target>
                     </action>
+                    <action>
+                        <label>Run Waba and J2SE (RXTX)</label>
+                        <target>run_rxtx_both</target>
+                    </action>
                 </context-menu>
             </view>
             <subprojects/>
