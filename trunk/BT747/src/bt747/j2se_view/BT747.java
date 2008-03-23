@@ -1,4 +1,5 @@
-package bt747;
+package bt747.j2se_view;
+
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -12,38 +13,30 @@ package bt747;
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
-//***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-
-/** This class has a partial automatic update in the build script.
- * and is used to reference the version.
+/**
+ * Main class (application entry) An empty wrapper to maintain compatibility
+ * after moving classes into specific package.
  * 
- * @link Original code found on 
- *      http://forum.java.sun.com/thread.jspa?forumID=31&threadID=583820
  * @author Mario De Weerd
  */
-public final class Version {
+public class BT747 extends bt747.waba_view.BT747 {
+    
+    BT747_Main j2se_view;
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                j2se_view= new BT747_Main(m,c);
+                j2se_view.setVisible(true);
+            }
+        });
+    }
 
-   /** Build number (timestamp with format yyyyMMddHHmmssSSS). */
-   public static final long BUILD = 20080323112149660L; //automatically set during Ant compilation!
-   public static final String BUILD_STR = "20080312203651642xBT747.303M"; //automatically set during Ant compilation!
-   /** Release date of this version (date format dd.MM.yyyy). */
-   public static final String DATE = "23.03.2008"; //automatically set during Ant compilation!
-   /**
-    * Version number of format x.y.z, with
-    * <ul>
-    * <li>x = major version
-    * <li>y = minor version
-    * <li>z = bug fix version
-    * </ul>
-    */
-   public static final String VERSION_NUMBER = "1.47beta2";
-   /** Minimum Java JRE version required. */
-   public static final String NUMBER_JAVAMIN = "1.4";
-   /** Title of this project. */
-   public static final String TITLE = "BT747";
-}//Version
+}

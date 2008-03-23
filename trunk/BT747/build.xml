@@ -209,6 +209,7 @@
 			>
 				<include name="src_forwaba/**/*.java"/>
 				<include name="${src.dir}/**/*.java"/>
+				<exclude name="${src.dir}/bt747/j2se_view/*"/>
 				<exclude name="${src.dir}/gps/model/*"/>
 				<exclude name="${src.dir}/gps/port/GPSRxTxPort.java"/>
 				<exclude name="${src.dir}/gps/port/GPSWabaSocketPort.java"/>
@@ -236,6 +237,7 @@
 		<copy todir="${rxtxsrc.dir}">
 			<fileset dir="src">
 				<include name="**/*.java"/>
+				<exclude name="bt747/j2se_view/*"/>
 			</fileset>
 			<fileset dir="src_forwaba">
 				<include name="**/*.java"/>
@@ -272,6 +274,7 @@
 		<copy todir="${symbiansrc.dir}">
 			<fileset dir="src">
 				<include name="**/*.java"/>
+				<exclude name="bt747/j2se_view/*"/>
 				<exclude name="gps/port/GPSWabaPort.java"/>
 				<exclude name="gps/port/GPSFilePort.java"/>
 				<exclude name="gps/port/GPSRxTxPort.java"/>
@@ -305,6 +308,7 @@
 		<copy todir="${filesrc.dir}">
 			<fileset dir="src">
 				<include name="**/*.java"/>
+				<exclude name="bt747/j2se_view/*"/>
 			</fileset>
 			<fileset dir="src_forwaba">
 				<include name="**/*.java"/>
