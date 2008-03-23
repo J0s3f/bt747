@@ -76,6 +76,10 @@ public final class CSVLogConvert implements GPSLogConvert {
         fileSize=m_File.getSize();
         
         
+        final int FMT_HEIGHT_FT_IDX=BT747_dev.FMT_HEIGHT_IDX+100;
+        final int FMT_SPEED_MPH_IDX=BT747_dev.FMT_SPEED_IDX+100;
+        final int FMT_DISTANCE_FT_IDX=BT747_dev.FMT_DISTANCE_IDX+100;
+        
         while(nextAddrToRead<fileSize) {
             /********************************************************************
              * Read data from the data file into the local buffer.
@@ -177,9 +181,15 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     activeFileFields|=(1<<BT747_dev.FMT_LONGITUDE_IDX);
                                 } else if(string.equals("E/W")) {
                                     records[i]=FMT_EW;
+                                } else if(string.startsWith("HEIGHT(ft)")) {
+                                    records[i]=FMT_HEIGHT_FT_IDX;
+                                    activeFileFields|=(1<<BT747_dev.FMT_HEIGHT_IDX);
                                 } else if(string.startsWith("HEIGHT")) {
                                     records[i]=BT747_dev.FMT_HEIGHT_IDX;
                                     activeFileFields|=(1<<BT747_dev.FMT_HEIGHT_IDX);
+                                } else if(string.startsWith("SPEED(mph)")) {
+                                    records[i]=FMT_SPEED_MPH_IDX;
+                                    activeFileFields|=(1<<BT747_dev.FMT_SPEED_IDX);
                                 } else if(string.startsWith("SPEED")) {
                                     records[i]=BT747_dev.FMT_SPEED_IDX;
                                     activeFileFields|=(1<<BT747_dev.FMT_SPEED_IDX);
@@ -204,6 +214,9 @@ public final class CSVLogConvert implements GPSLogConvert {
                                 } else if(string.equals("NSAT (USED/VIEW)")) {
                                     records[i]=BT747_dev.FMT_NSAT_IDX;
                                     activeFileFields|=(1<<BT747_dev.FMT_NSAT_IDX);
+                                } else if(string.startsWith("DISTANCE(ft)")) {
+                                    records[i]=FMT_DISTANCE_FT_IDX;
+                                    activeFileFields|=(1<<BT747_dev.FMT_DISTANCE_IDX);
                                 } else if(string.startsWith("DISTANCE")) {
                                     records[i]=BT747_dev.FMT_DISTANCE_IDX;
                                     activeFileFields|=(1<<BT747_dev.FMT_DISTANCE_IDX);
@@ -338,11 +351,20 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         gpsRec.height=Convert.toFloat(field.replaceFirst(" .*",""));
                                     curLogFormat|=(1<<BT747_dev.FMT_HEIGHT_IDX);
                                     break;
+                                    case FMT_HEIGHT_FT_IDX:
+                                        gpsRec.height=Convert.toFloat(field.replaceFirst(" .*",""))/3.28083989501312F;
+                                    curLogFormat|=(1<<BT747_dev.FMT_HEIGHT_IDX);
+                                    break;
                                     
                                     case BT747_dev.FMT_SPEED_IDX:
                                         gpsRec.speed=Convert.toFloat(field.replaceFirst(" .*",""));
                                     curLogFormat|=(1<<BT747_dev.FMT_SPEED_IDX);
                                     break;
+                                    case FMT_SPEED_MPH_IDX:
+                                        gpsRec.speed=Convert.toFloat(field.replaceFirst(" .*",""))/0.621371192237334F;
+                                        curLogFormat|=(1<<BT747_dev.FMT_SPEED_IDX);
+                                        break;
+
                                     //                      gpsRec.speed=Convert.toFloatBitwise(speed);
                                     case BT747_dev.FMT_HEADING_IDX:
                                         gpsRec.heading=Convert.toFloat(field);
@@ -456,6 +478,10 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         gpsRec.distance=Convert.toDouble(field.replaceAll(" ","").replaceAll("m",""));
                                     curLogFormat|=(1<<BT747_dev.FMT_DISTANCE_IDX);
                                     break;
+                                    case FMT_DISTANCE_FT_IDX:
+                                        gpsRec.distance=Convert.toDouble(field.replaceAll(" ",""))/3.28083989501312;
+                                        curLogFormat|=(1<<BT747_dev.FMT_DISTANCE_IDX);
+                                        break;
                                     case BT747_dev.FMT_HOLUX_LOW_PRECISION_IDX:
                                         break;
                                     default:

@@ -534,11 +534,20 @@ public class GPSKMLFile extends GPSFile {
                     }
                     if(activeFields.height!=0) {
                         rec.append("<br />HEIGHT: ");
-                        rec.append(Convert.toString(s.height,3)+" m");
+                        if(!imperial) {
+                            rec.append(Convert.toString(s.height,3)+" m");
+                        } else {
+                            /// speed/distance/altitude in imperial units (mph/miles/feet?). 
+                            rec.append(Convert.toString(s.height*3.28083989501312,3)+" feet");
+                        }
                     }
                     if(activeFields.speed!=0) {
                         rec.append("<br />SPEED: ");
-                        rec.append(Convert.toString(s.speed,3)+" km/h");
+                        if(!imperial) {
+                            rec.append(Convert.toString(s.speed,3)+" km/h");
+                        } else {
+                            rec.append(Convert.toString(s.speed*0.621371192237334,3)+" mph");
+                        }
                     }
                     if(activeFields.heading!=0) {
                         rec.append("<br />HEADING: ");
@@ -566,8 +575,13 @@ public class GPSKMLFile extends GPSFile {
                     }
                     if(activeFields.distance!=0) {
                         rec.append("<br />DISTANCE: ");
-                        rec.append(Convert.toString(s.distance,2));
-                        rec.append(" m");
+                        if(!imperial) {
+                            rec.append(Convert.toString(s.distance,2));
+                            rec.append(" m");
+                        } else {
+                            rec.append(Convert.toString(s.distance*3.2808398950131234,2));
+                            rec.append(" feet");
+                        }
                     }
                     
                     rec.append("]]>");

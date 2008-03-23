@@ -75,6 +75,8 @@ public abstract class GPSFile {
     protected String badTrackColor="FF0000";
     protected String goodTrackColor="0000FF";
     
+    protected boolean imperial=false; // If true, use English units
+    
     protected static final String[] C_MONTHS = {
             "JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"
     };
@@ -121,6 +123,10 @@ public abstract class GPSFile {
     public void setFilters(final GPSFilter[] filters) {
         m_Filters = filters;
     };
+    
+    public void setImperial(final boolean imperial) {
+        this.imperial = imperial;
+    }
 
     /**
      * Returns true when the record is used by the format. Checks all the
