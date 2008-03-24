@@ -501,6 +501,11 @@ public class BT747_Main extends javax.swing.JFrame
             }
         });
     }
+    
+//    public static void main(String args) {
+//        main((String[])null);
+//    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AboutBT747;
     private javax.swing.JButton ConvertButton;
