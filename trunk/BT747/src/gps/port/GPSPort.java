@@ -58,6 +58,7 @@ public abstract class GPSPort {
      */
     public void setPort(int port) {
         spPortNbr= port;
+        freeTextPort="";
     }
     
     public int openPort() {
@@ -65,8 +66,22 @@ public abstract class GPSPort {
     }
     public void closePort() { }
     
-    public void setBlueTooth() {}
-    public void setUSB() {}
+    public void setBlueTooth() {
+        freeTextPort="";
+    }
+    public void setUSB() {
+        freeTextPort="";
+    }
+    
+    protected String freeTextPort="";
+    public void setFreeTextPort(String s) {
+        freeTextPort=s;
+    }
+
+    public String getFreeTextPort() {
+        return freeTextPort;
+    }
+    
     
     public final void setSpeed(int speed) {
         spSpeed= speed;

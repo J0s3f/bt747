@@ -112,6 +112,15 @@ public class GPSrxtx {
         return gpsPort.openPort();
     }
     
+    public int setFreeTextPortAndOpen(String s) {
+        gpsPort.setFreeTextPort(s);
+        return gpsPort.openPort();
+    }
+    
+    public String getFreeTextPort() {
+        return gpsPort.getFreeTextPort();
+    }
+    
     public int getPort() {
         return gpsPort.getPort();
     }

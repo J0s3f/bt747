@@ -18,6 +18,7 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import bt747.control.Controller;
 import waba.io.SerialPort;
 import waba.ui.ComboBox;
 import waba.ui.Container;
@@ -25,7 +26,6 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
 
-import gps.GPSstate;
 import gps.GpsEvent;
 import gps.convert.Conv;
 import gps.log.GPSFile;
@@ -51,7 +51,7 @@ public class GPSconctrl extends Container {
 //    private Button btnUSB;
     private Button btnConnectPort;
 
-    private GPSstate m_GPSstate;
+    private Controller c;
 
     private Label lbLat;  // GPS information
     private Label lbLon; // GPS information
@@ -71,11 +71,11 @@ public class GPSconctrl extends Container {
   
 
     private static final int C_MAX_PORTNBR = 32;
-    private Model m_Settings;
+    private Model m;
 
-    public GPSconctrl(GPSstate p_GPSstate, Model settings) {
-        m_GPSstate = p_GPSstate;
-        m_Settings = settings;
+    public GPSconctrl(Controller c, Model m) {
+        this.c = c;
+        this.m = m;
     }
 
     public void onStart() {
@@ -93,9 +93,9 @@ public class GPSconctrl extends Container {
         }
         m_cbPorts=new ComboBox(portNbrs);
         
-        int portNbr=m_Settings.getPortnbr();
+        int portNbr=m.getPortnbr();
 
-        String baudRate=Convert.toString(m_Settings.getBaudRate());
+        String baudRate=Convert.toString(m.getBaudRate());
         m_cbBaud=new ComboBox(BaudRates);
 
         
@@ -107,7 +107,7 @@ public class GPSconctrl extends Container {
         add(btnConnectPort,LEFT,AFTER+2);
         add(m_cbPorts,AFTER+3, SAME);
         add(btnStopGps, RIGHT, SAME);
-        if(m_Settings.getPortnbr()<C_MAX_PORTNBR) {
+        if(m.getPortnbr()<C_MAX_PORTNBR) {
             m_cbPorts.select(portNbr);
         }
         //repaintNow();
@@ -120,7 +120,7 @@ public class GPSconctrl extends Container {
         }
         // Set a default setting
         if(!baudRate.equals((String)m_cbBaud.getSelectedItem())) {
-            m_Settings.setBaudRate(Convert.toInt(baudRate));
+            m.setBaudRate(Convert.toInt(baudRate));
         }        
         add(lbLat=new Label(""), LEFT, AFTER+2); //$NON-NLS-1$)
         add(lbLon=new Label(""), LEFT, AFTER); //$NON-NLS-1$)
@@ -138,7 +138,7 @@ public class GPSconctrl extends Container {
     private void GPS_setChannel(int channel) {
         switch (channel) {
         case SerialPort.BLUETOOTH:
-            m_GPSstate.setBluetooth();
+            c.setBluetooth();
             btnBluetooth.press(true);
             break;
 //        case SerialPort.USB:
@@ -146,20 +146,20 @@ public class GPSconctrl extends Container {
 //            btnUSB.press(true);
 //            break;
         default:
-            m_GPSstate.setPort(channel);
+            c.setPort(channel);
             break;
         }
     }
     
     private void updateButtons() {
-        lbVersion.setText("V"+Version.VERSION_NUMBER+"("+Version.DATE+")   "+m_GPSstate.getMtkLogVersion());
-        lbFirmwareMainVersion.setText(((m_GPSstate.getMainVersion().length()!=0)?Txt.MAIN:"")+m_GPSstate.getMainVersion());
-        lbFirmwareName.setText(((m_GPSstate.getFirmwareVersion().length()!=0)?Txt.FIRMWARE:"")+m_GPSstate.getFirmwareVersion());
-        lbModel.setText(((m_GPSstate.getModel().length()!=0)?Txt.MODEL:"")+m_GPSstate.getModel());
-        lbFlashInfo.setText(((m_GPSstate.getFlashManuProdID()!=0)
+        lbVersion.setText("V"+Version.VERSION_NUMBER+"("+Version.DATE+")   "+m.getMtkLogVersion());
+        lbFirmwareMainVersion.setText(((m.getMainVersion().length()!=0)?Txt.MAIN:"")+m.getMainVersion());
+        lbFirmwareName.setText(((m.getFirmwareVersion().length()!=0)?Txt.FIRMWARE:"")+m.getFirmwareVersion());
+        lbModel.setText(((m.getModel().length()!=0)?Txt.MODEL:"")+m.getModel());
+        lbFlashInfo.setText(((m.getFlashManuProdID()!=0)
                 ?
-                        Txt.FLASHINFO+Convert.unsigned2hex(m_GPSstate.getFlashManuProdID(),8)
-                        +" "+m_GPSstate.getFlashDesc()
+                        Txt.FLASHINFO+Convert.unsigned2hex(m.getFlashManuProdID(),8)
+                        +" "+m.getFlashDesc()
                         :""
                             ));
         //lbFirmwareMainVersion.repaintNow();
@@ -208,21 +208,21 @@ public class GPSconctrl extends Container {
             if (event.target == btnBluetooth) {
                 GPS_setChannel(SerialPort.BLUETOOTH);
             } else if (event.target == btnConnectPort) {
-                m_GPSstate.setSpeed(Convert.toInt((String)m_cbBaud.getSelectedItem()));
+                c.setSpeed(Convert.toInt((String)m_cbBaud.getSelectedItem()));
                 GPS_setChannel(Convert.toInt(((String)m_cbPorts.getSelectedItem())));
 //            } else if (event.target == btnUSB) {
 //                GPS_setChannel(SerialPort.USB);
             } else if (event.target == m_cbBaud) {
-               //m_Settings.setBaudRate(Convert.toInt((String)m_cbBaud.getSelectedItem()));
+               //m.setBaudRate(Convert.toInt((String)m_cbBaud.getSelectedItem()));
             } else if (event.target == m_cbPorts) {
                 
             } else if (event.target==this) {
-                m_GPSstate.getDeviceInfo();
+                c.reqDeviceInfo();
                 event.consumed=true;
             } else if (event.target == btnStopGps) {
-                m_GPSstate.GPS_close();
+                c.GPS_close();
             } else if (event.target == btnRestartGps) {
-                m_GPSstate.GPS_restart();
+                c.GPS_restart();
             }
             break;
         default:
@@ -232,9 +232,9 @@ public class GPSconctrl extends Container {
                     event.consumed=true;
                 }
             } else if (event.type==GpsEvent.GPGGA) {
-                updateGPSData(m_GPSstate.getGpsRecord());
+                updateGPSData(m.getGpsRecord());
             } else if (event.type==GpsEvent.GPRMC) {
-                updateRMCData(m_GPSstate.getGpsRecord());
+                updateRMCData(m.getGpsRecord());
             }
         }
         

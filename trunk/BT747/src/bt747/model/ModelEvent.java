@@ -31,6 +31,7 @@ public class ModelEvent extends Event {
     public static final int WORKDIRPATH_UPDATE = getNextAvailableEventId();
     public static final int OUTPUTFILEPATH_UPDATE = getNextAvailableEventId();
     public static final int LOGFILEPATH_UPDATE = getNextAvailableEventId();
+    public static final int INCREMENTAL_CHANGE = getNextAvailableEventId();
     
     public ModelEvent(int type, Object target, int timeStamp)
     {

@@ -37,7 +37,6 @@ public class Controller {
         m.setImperial(on);
     }
 
-    
     public final void setBaseDirPath(String s) {
         m.setBaseDirPath(s);
     }
@@ -149,4 +148,105 @@ public class Controller {
         m.logConversionEnded(log_type);
     }
 
+
+    public final void setIncremental(boolean b) {
+        m.setIncremental(b);
+    }
+
+    /**
+     * Log download cancel
+     */
+    public final void cancelGetLog() {
+        m.gpsModel().cancelGetLog();
+    }
+  
+    public final void startDownload() {
+        m.gpsModel().getLogInit(0, /* StartPosition */
+                m.gpsModel().logMemUsed - 1, /* EndPosition */
+                m.getChunkSize(), /* Size per request */
+                m.getLogFilePath(), /* Log file name */
+                m.getCard(), /* Card for file operations */
+                m.isIncremental() /* Incremental download */);
+
+    }
+    
+    /***
+     * Device state
+     * **********************************************/
+    
+    public final void startLog() {
+        m.gpsModel().startLog();
+        m.gpsModel().reqLogOnOffStatus();
+    }
+    public final void stopLog() {
+        m.gpsModel().stopLog();
+        m.gpsModel().reqLogOnOffStatus();
+    };
+    
+    public final void setLogOverwrite(boolean b) {
+        m.gpsModel().setLogOverwrite(b);
+        m.gpsModel().reqLogOverwrite();
+    };
+
+    public final void reqLogStatus() {
+        m.gpsModel().reqLogStatus();
+    }
+    
+    public final void reqLogMemUsed() {
+        m.gpsModel().reqLogMemUsed();
+    }
+    
+    public final void reqLogMemPoints() {
+        m.gpsModel().reqLogMemPoints();
+    }
+    
+    public final void reqLogOverwrite() {
+        m.gpsModel().reqLogOverwrite();
+    }
+    
+
+    public final void reqDeviceInfo() {
+        m.gpsModel().reqDeviceInfo();
+    }
+
+
+    /**
+     * Device connection
+     */
+    public final void setBluetooth() {
+        m.gpsModel().GPS_close();
+        m.gpsModel().setBluetooth();
+    }
+
+    public final void setUsb() {
+        m.gpsModel().GPS_close();
+        m.gpsModel().setUsb();
+    }
+
+    public final void setPort(final int port) {
+        m.gpsModel().GPS_close();
+        m.gpsModel().setPort(port);
+    }
+
+    public final void setFreeTextPort(final String s) {
+        m.gpsModel().GPS_close();
+        m.gpsModel().setFreeTextPort(s);
+    }
+    
+    public final String getFreeTextPort() {
+        return m.gpsModel().getFreeTextPort();
+    }
+
+
+    public final void setSpeed(final int speed) {
+        m.gpsModel().setSpeed(speed);
+    }
+
+    public final void GPS_close() {
+        m.gpsModel().GPS_close();
+    }
+
+    public final void GPS_restart() {
+        m.gpsModel().GPS_restart();
+    }
 }

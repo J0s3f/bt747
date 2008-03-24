@@ -143,7 +143,9 @@ public class AppSettings {
     private static final int C_HOLUX241_SIZE=1;
     private static final int C_IMPERIAL_IDX=C_HOLUX241_IDX+C_HOLUX241_SIZE;
     private static final int C_IMPERIAL_SIZE=1;
-    private static final int C_NEXT_IDX=C_IMPERIAL_IDX+C_IMPERIAL_SIZE;
+    private static final int C_FREETEXT_PORT_IDX=C_IMPERIAL_IDX+C_IMPERIAL_SIZE;
+    private static final int C_FREETEXT_PORT_SIZE=4;
+    private static final int C_NEXT_IDX=C_FREETEXT_PORT_IDX+C_FREETEXT_PORT_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE=4;
     private static final int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -222,7 +224,7 @@ public class AppSettings {
     private void updateSettings(final int versionX100) {
         switch(versionX100) {
         case 0:
-            setPortnbr(0);
+            setPortnbr(-1);
             setBaudRate(115200);
             setCard(-1);
             if (bt747.sys.Settings.platform.startsWith("Palm")) {
@@ -303,9 +305,12 @@ public class AppSettings {
         case 16:
             setImperial(false);
             /* fall through */
-
+        case 17:
+            setFreeTextPort("");
+            /* fall through */
+            
             /* Must be last line in case (not 'default') */ 
-            setStringOpt(0,"0.17",C_VERSION_IDX, C_VERSION_SIZE);
+            setStringOpt(0,"0.18",C_VERSION_IDX, C_VERSION_SIZE);
         }
         getSettings();
     }
@@ -436,7 +441,7 @@ public class AppSettings {
 	 * @return Returns the portnbr.
 	 */
 	public int getPortnbr() {
-		return getIntOpt(C_PORTNBR_IDX, C_PORTNBR_SIZE);
+            return getIntOpt(C_PORTNBR_IDX, C_PORTNBR_SIZE);
 	}
 	/**
 	 * @param portnbr The portnbr to set.
@@ -444,7 +449,16 @@ public class AppSettings {
 	public void setPortnbr(int portnbr) {
 	    setIntOpt(0,portnbr,C_PORTNBR_IDX,C_PORTNBR_SIZE);
 	}
-    /**
+        
+        public String getFreeTextPort() {
+            return getStringOpt(C_FREETEXT_PORT_IDX, C_FREETEXT_PORT_SIZE);
+        }
+
+        public void setFreeTextPort(final String s) {
+            setStringOpt(0,s,C_FREETEXT_PORT_IDX, C_FREETEXT_PORT_SIZE);
+        }
+
+        /**
      * @return The default baud rate
      */
 	public int getBaudRate() {

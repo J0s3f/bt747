@@ -189,7 +189,7 @@ public class GPSLogEasy extends Container {
           m_GPSstate.getSBASEnabled();
           m_GPSstate.getSBASTestEnabled();
           m_GPSstate.getDGPSMode();
-          m_GPSstate.getLogOverwrite();
+          m_GPSstate.reqLogOverwrite();
           m_GPSstate.getNMEAPeriods();
       }
       

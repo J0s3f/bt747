@@ -256,13 +256,22 @@ public class GPSstate implements Thread {
      * @param port
      *            Port number to open
      */
-    public void setPort(int port) {
+    public final void setPort(final int port) {
         m_GPSrxtx.setPortAndOpen(port);
         GPS_postConnect();
     }
 
-    public void setSpeed(int speed) {
+    public final void setSpeed(final int speed) {
         m_GPSrxtx.setSpeed(speed);
+    }
+
+    public final void setFreeTextPort(final String s) {
+        m_GPSrxtx.setFreeTextPortAndOpen(s);
+        GPS_postConnect();
+    }
+    
+    public final String getFreeTextPort() {
+        return m_GPSrxtx.getFreeTextPort();
     }
 
     /**
@@ -335,7 +344,7 @@ public class GPSstate implements Thread {
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_FULL_COLD_START_STR);
     }
 
-    public void getDeviceInfo() {
+    public void reqDeviceInfo() {
         sendNMEA("PMTK" + BT747_dev.PMTK_Q_VERSION_STR);
         sendNMEA("PMTK" + BT747_dev.PMTK_Q_RELEASE_STR);
         readFlashManuID(); // Should be last
@@ -521,19 +530,20 @@ public class GPSstate implements Thread {
                 + BT747_dev.PMTK_LOG_QUERY_STR + ","
                 + BT747_dev.PMTK_LOG_LOG_STATUS_STR);
     }
-    public void getLogCtrlInfo() {
-        // Request log status from device
-        sendNMEA("PMTK182,2,12");
-        getLogStatus();
-        // Request mem size from device
+    
+    public final void reqLogMemUsed() {
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_QUERY_STR + ","
                 + BT747_dev.PMTK_LOG_MEM_USED_STR);
-        // Request number of log points
+    }
+    
+    public final void reqLogMemPoints() {
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_QUERY_STR + ","
                 + BT747_dev.PMTK_LOG_NBR_LOG_PTS_STR);
-        getLogOverwrite();
+    }
+    public final void reqLogStatus() {
+        sendNMEA("PMTK182,2,12");
     }
 
     public void getLogReasonStatus() {
@@ -645,8 +655,17 @@ public class GPSstate implements Thread {
         requestHoluxName(); // Mainly here to identify Holux device
     }
 
-    public void getLogOnOffStatus() {
+    public void reqLogOnOffStatus() {
         getLogCtrlInfo();
+    }
+    
+    private final void getLogCtrlInfo() {
+        reqLogStatus();
+        // Request mem size from device
+        reqLogMemUsed();
+        // Request number of log points
+        reqLogMemPoints();
+        reqLogOverwrite();
     }
 
     /** Activate the logging by the device */
@@ -676,7 +695,7 @@ public class GPSstate implements Thread {
                 + BT747_dev.PMTK_LOG_REC_METHOD_STR + "," + (set ? "1" : "2"));
     }
 
-    public void getLogOverwrite() {
+    public void reqLogOverwrite() {
         // Request log format from device
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_QUERY_STR + ","
@@ -1353,7 +1372,7 @@ public class GPSstate implements Thread {
         m_settings.setDownloadOnGoing(false);
         if(loggingIsActiveBeforeDownload) {
             startLog();
-            getLogOnOffStatus();
+            reqLogOnOffStatus();
         }
     }
 
@@ -1375,7 +1394,7 @@ public class GPSstate implements Thread {
             // Disable device logging while downloading
             loggingIsActiveBeforeDownload = loggingIsActive;
             stopLog();
-            getLogOnOffStatus();
+            reqLogOnOffStatus();
         }
 
         m_StartAddr = p_StartAddr;

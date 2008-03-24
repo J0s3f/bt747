@@ -28,6 +28,7 @@ import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -54,6 +55,8 @@ public class GPSRxTxPort extends GPSPort {
         } else if(os_name.startsWith("Linux")) {
             portPrefix="/dev/ttyUSB";
         } else if(os_name.startsWith("Mac")) {
+            setUSB();
+            setBlueTooth();
             //portPrefix="/dev/tty.iBt-GPS-SPPslave-";
             portPrefix="/dev/cu.SLAB_USBtoUART";
             hasPortNbr=false;
@@ -91,8 +94,12 @@ public class GPSRxTxPort extends GPSPort {
    public int openPort() {
        int result=-1;
        String portStr;
-       portStr=java.lang.System.getProperty("bt747_port",
+       if(freeTextPort.length()==0) {
+           portStr=java.lang.System.getProperty("bt747_port",
                portPrefix+(hasPortNbr?Convert.toString(spPortNbr):""));
+       } else {
+           portStr=freeTextPort;
+       }
        
        closePort();
        
@@ -139,7 +146,22 @@ public class GPSRxTxPort extends GPSPort {
     *
     */
    public void setBlueTooth() {
+       super.setBlueTooth();
        spPortNbr= 0;
+       boolean portFound=false;
+       if(os_name.toLowerCase().startsWith("mac")) {
+           for(int i=0;!portFound&&(i<3);i++) {
+               freeTextPort="/dev/tty.HOLUX_M-241-SSPSlave-"+i;
+               portFound=(new File(freeTextPort)).exists();
+           }
+           for(int i=0;!portFound&&(i<3);i++) {
+               freeTextPort="/dev/tty.iBt-GPS-SPPslave-"+i;
+               portFound=(new File(freeTextPort)).exists();
+           }
+        }
+       if(!portFound) {
+           freeTextPort="";
+       }
    }
    
    /** Set an USB connection
@@ -147,8 +169,31 @@ public class GPSRxTxPort extends GPSPort {
     *
     */
    public void setUSB() {
-       spPortNbr= 0;
+       super.setUSB();
+       boolean portFound=false;
+       if(!portFound){
+            freeTextPort="/dev/cu.SLAB_USBtoUART";
+            portFound=(new File(freeTextPort)).exists();
+       }
+       if(!portFound && os_name.toLowerCase().startsWith("lin")){
+           for(int i=0;!portFound&&(i<6);i++) {
+               freeTextPort="/dev/ttyUSB"+i;
+               portFound=(new File(freeTextPort)).canRead();
+           }
+       }
+       if(!portFound) {
+           freeTextPort="";
+       }
    }
+
+    public void setFreeTextPort(String s) {
+        super.setFreeTextPort(s);
+    }
+
+    public String getFreeTextPort() {
+        return freeTextPort;
+    }
+            
    
    /** getter to retrieve the last error report by the serial port driver.
     * 
