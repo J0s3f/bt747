@@ -29,8 +29,8 @@ package bt747;
 public final class Version {
 
    /** Build number (timestamp with format yyyyMMddHHmmssSSS). */
-   public static final long BUILD = 20080324125505629L; //automatically set during Ant compilation!
-   public static final String BUILD_STR = "BT747.354M.20080324125505629"; //automatically set during Ant compilation!
+   public static final long BUILD = 20080324232006426L; //automatically set during Ant compilation!
+   public static final String BUILD_STR = ".356M.20080324232006426"; //automatically set during Ant compilation!
    /** Release date of this version (date format dd.MM.yyyy). */
    public static final String DATE = "24.03.2008"; //automatically set during Ant compilation!
    /**

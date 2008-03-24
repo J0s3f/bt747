@@ -8,6 +8,8 @@ import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 
 import bt747.ui.Event;
+import gps.GPSstate;
+import gps.log.GPSRecord;
 
 public class Model extends AppSettings implements gps.settings{
 
@@ -34,12 +36,21 @@ public class Model extends AppSettings implements gps.settings{
     private static final int C_NBR_FILTERS=2;
     private GPSFilter[] logFilters=new GPSFilter[C_NBR_FILTERS];
     private GPSFilterAdvanced[] logFiltersAdv=new GPSFilterAdvanced[C_NBR_FILTERS];
+
+    private GPSstate gpsModel;
+    
+    private boolean incremental=true; // Incremental download - default
     
     public Model() {
         for (int i = 0; i < logFilters.length; i++) {
             logFilters[i]=new GPSFilter();
             logFiltersAdv[i]=new GPSFilterAdvanced();
         }
+        gpsModel=new GPSstate(this);
+    }
+    
+    public final GPSstate gpsModel()  {
+        return this.gpsModel;
     }
     /**
      * @return the lastConversionOngoing
@@ -164,7 +175,7 @@ public class Model extends AppSettings implements gps.settings{
     /**
      * @param downloadOnGoing the downloadOnGoing to set
      */
-    public void setDownloadOnGoing(boolean downloadOnGoing) {
+    public final void setDownloadOnGoing(boolean downloadOnGoing) {
         this.downloadOnGoing = downloadOnGoing;
         postEvent(ModelEvent.DOWNLOAD_PROGRESS_UPDATE);
 
@@ -178,10 +189,69 @@ public class Model extends AppSettings implements gps.settings{
     /**
      * @param nextReadAddr the nextReadAddr to set
      */
-    public void setNextReadAddr(int nextReadAddr) {
+    public final void setNextReadAddr(int nextReadAddr) {
         this.nextReadAddr = nextReadAddr;
         if(this.downloadOnGoing) {
             postEvent(ModelEvent.DOWNLOAD_PROGRESS_UPDATE);
         }
     }
+
+    public final boolean isIncremental() {
+        return incremental;
+    }
+
+    public final void setIncremental(boolean incremental) {
+        this.incremental = incremental;
+        postEvent(ModelEvent.INCREMENTAL_CHANGE);
+    }
+    
+    
+    public final boolean loggingIsActive() {
+        return gpsModel.loggingIsActive;
+    }
+
+    public final boolean logFullOverwrite() {
+        return gpsModel.logFullOverwrite;
+    }
+
+    public final int logMemUsed() {
+        return gpsModel.logMemUsed;
+    }
+
+    public final int logMemUsedPercent() {
+        return gpsModel.logMemUsedPercent;
+    }
+
+     public final int logNbrLogPts() {
+        return gpsModel.logNbrLogPts;
+    }
+     
+     
+     public final String getMtkLogVersion() {
+        return gpsModel.getMtkLogVersion();
+     }
+     
+     public final String getMainVersion() {
+        return gpsModel.getMainVersion();
+     }
+
+     public final String getFirmwareVersion() {
+        return gpsModel.getFirmwareVersion();
+     }
+     
+     public final String getModel() {
+        return gpsModel.getModel();
+     }
+     
+     public final int getFlashManuProdID() {
+        return gpsModel.getFlashManuProdID();
+     }
+     
+     public final String getFlashDesc() {
+        return gpsModel.getFlashDesc();
+     }
+     
+     public final GPSRecord getGpsRecord() {
+         return gpsModel.getGpsRecord();
+     }
 }

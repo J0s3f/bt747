@@ -54,7 +54,7 @@ public class BT747 extends MainWindow implements ModelListener {
     /** The 'GPS state'.  Used to get current GPS information and get access
      * to it.
      */
-    private static GPSstate    m_GPSstate;
+    private GPSstate    m_GPSstate;
     /** The label next to the progressbar.  Hidden when not in use. */
     private static Label       m_ProgressLabel;
     /** The progress bar itself.  Hidden when not in use. */
@@ -183,7 +183,7 @@ public class BT747 extends MainWindow implements ModelListener {
     public void onStart() {
         super.onStart();
         
-        m_GPSstate=new GPSstate(m);
+        m_GPSstate=m.gpsModel();
         m_GPSstate.setEventPosterObject(new bt747.generic.EventPosterObject(this));
         setMenuBar(m_MenuBar=new MenuBar(menu));
         // Next line is for modeling a device for debug.
@@ -217,14 +217,14 @@ public class BT747 extends MainWindow implements ModelListener {
         pb.setRect(RIGHT,BOTTOM,//BOTTOM,RIGHT,
                 getClientRect().width-m_ProgressLabel.getRect().width-2,
                 PREFERRED);
-        pb.setVisible(false);
+        updateProgressBar();
 
         numPanels=0;
         m_TabPanel.setPanel(C_LOG_CTRL_IDX,m_GPSLogCtrl = new GPSLogFormat(m_GPSstate));
         numPanels++;
         m_TabPanel.setPanel(C_GPS_LOGINFO_IDX,m_GPSLogInfo = new GPSLogReason(m_GPSstate));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_LOGGET_IDX,m_GPSLogGet = new GPSLogGet(m_GPSstate,pb,m,c));
+        m_TabPanel.setPanel(C_GPS_LOGGET_IDX,m_GPSLogGet = new GPSLogGet(m_GPSstate,m,c));
         numPanels++;
         m_TabPanel.setPanel(C_GPS_FILECTRL_IDX,m_GPSLogFile = new GPSLogFile(m));
         numPanels++;
@@ -232,7 +232,7 @@ public class BT747 extends MainWindow implements ModelListener {
         numPanels++;
         m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX,m_GPSLogEasy = new GPSLogEasy(m_GPSstate, m));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,m_GPSconctrl = new GPSconctrl(m_GPSstate,m));
+        m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,m_GPSconctrl = new GPSconctrl(c,m));
         numPanels++;
         //m_TabPanel.setPanel(C_GPS_FLASH_IDX,m_GPSFlash = new GPSFlashOption(m_GPSstate));
         //C_NUM_PANELS++;
@@ -375,13 +375,7 @@ public class BT747 extends MainWindow implements ModelListener {
             }
             if(event.target==this) {
                 if(event.type==ModelEvent.DOWNLOAD_PROGRESS_UPDATE) {
-                    if (pb != null) {
-                        pb.min = m.getStartAddr();
-                        pb.max = m.getEndAddr();
-                        pb.setValue(m.getNextReadAddr(), "", " b");
-                        pb.setVisible(m.isDownloadOnGoing());
-                        m_ProgressLabel.setVisible(m.isDownloadOnGoing());
-                    }
+                    updateProgressBar();
                     event.consumed=true;
                 } else {
                     for (int i = 0; i<numPanels; i++) {
@@ -392,6 +386,16 @@ public class BT747 extends MainWindow implements ModelListener {
         }
     }
     
+    private void updateProgressBar() {
+        if (pb != null) {
+            pb.min = m.getStartAddr();
+            pb.max = m.getEndAddr();
+            pb.setValue(m.getNextReadAddr(), "", " b");
+            pb.setVisible(m.isDownloadOnGoing());
+            m_ProgressLabel.setVisible(m.isDownloadOnGoing());
+        }
+    }
+    
     public void newEvent(bt747.ui.Event e) {
         postEvent(e);
         
@@ -399,7 +403,7 @@ public class BT747 extends MainWindow implements ModelListener {
     
     
     public void onExit() {
-        m.saveSettings();
         waba.sys.Vm.setDeviceAutoOff(orgAutoOnOff); // Avoid auto-off causing BT trouble
+        m.saveSettings();
     }
 }

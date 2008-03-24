@@ -8,6 +8,7 @@ package bt747.j2se_view;
 import bt747.control.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.sys.Convert;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
@@ -44,6 +45,7 @@ public class BT747_Main extends javax.swing.JFrame
         getWorkDirPath();
         getRawLogFilePath();
         getOutputFilePath();
+        getIncremental();
     }
 
     public void onEvent(bt747.ui.Event e) {
@@ -55,6 +57,8 @@ public class BT747_Main extends javax.swing.JFrame
             getOutputFilePath();
         } else if (e.type == ModelEvent.WORKDIRPATH_UPDATE) {
             getWorkDirPath();
+        } else if (e.type == ModelEvent.INCREMENTAL_CHANGE) {
+            getIncremental();
         }
     }
 
@@ -69,21 +73,25 @@ public class BT747_Main extends javax.swing.JFrame
         WorkingDirectoryChooser = new javax.swing.JFileChooser();
         RawLogFileChooser = new javax.swing.JFileChooser();
         OutputFileChooser = new javax.swing.JFileChooser();
-        DownloadProgressBar = new javax.swing.JProgressBar();
-        DownloadProgressLabel = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         LogOperationsPanel = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        ConvertButton = new javax.swing.JButton();
-        FormatSelectionBox = new javax.swing.JComboBox();
-        TargetFormatLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        WorkDirectory = new javax.swing.JTextField();
-        RawLogFilePath = new javax.swing.JTextField();
-        OutputFileBaseName = new javax.swing.JTextField();
+        tfWorkDirectory = new javax.swing.JTextField();
+        tfRawLogFilePath = new javax.swing.JTextField();
+        tfOutputFileBaseName = new javax.swing.JTextField();
         btWorkingDirectory = new javax.swing.JButton();
         btRawLogFile = new javax.swing.JButton();
         btOutputFile = new javax.swing.JButton();
+        btConvert = new javax.swing.JButton();
+        cbFormat = new javax.swing.JComboBox();
+        jPanel2 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        cbIncremental = new javax.swing.JCheckBox();
+        DownloadProgressLabel = new javax.swing.JLabel();
+        DownloadProgressBar = new javax.swing.JProgressBar();
+        jPanel3 = new javax.swing.JPanel();
+        btConnect = new javax.swing.JButton();
+        cbPortName = new javax.swing.JComboBox();
         DeviceSettingsPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
@@ -98,79 +106,21 @@ public class BT747_Main extends javax.swing.JFrame
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("BT747 Application");
 
-        DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
-        DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
-        DownloadProgressBar.setFocusable(false);
-
-        DownloadProgressLabel.setText("Download progress");
-
-        ConvertButton.setText("Convert");
-        ConvertButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                ConvertButtonMouseReleased(evt);
-            }
-        });
-        ConvertButton.addActionListener(new java.awt.event.ActionListener() {
+        tfWorkDirectory.setText("jTextField1");
+        tfWorkDirectory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ConvertButtonActionPerformed(evt);
+                tfWorkDirectoryActionPerformed(evt);
             }
         });
-
-        FormatSelectionBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML", "OziExplorer (.PLT)", "NMEA", "Google Map (.html)" }));
-        FormatSelectionBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                FormatSelectionBoxItemStateChanged(evt);
-            }
-        });
-        FormatSelectionBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FormatSelectionBoxActionPerformed(evt);
-            }
-        });
-
-        TargetFormatLabel.setText("Target Format");
-
-        org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
-                .add(ConvertButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(TargetFormatLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(FormatSelectionBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(FormatSelectionBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(TargetFormatLabel)
-                    .add(ConvertButton))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        setSelectedFormat(FormatSelectionBox.getSelectedItem().toString());
-
-        WorkDirectory.setText("jTextField1");
-        WorkDirectory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                WorkDirectoryActionPerformed(evt);
-            }
-        });
-        WorkDirectory.addFocusListener(new java.awt.event.FocusAdapter() {
+        tfWorkDirectory.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                WorkDirectoryFocusLost(evt);
+                tfWorkDirectoryFocusLost(evt);
             }
         });
 
-        RawLogFilePath.setText("jTextField2");
+        tfRawLogFilePath.setText("jTextField2");
 
-        OutputFileBaseName.setText("jTextField3");
+        tfOutputFileBaseName.setText("jTextField3");
 
         btWorkingDirectory.setText("Working Directory :");
         btWorkingDirectory.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -197,6 +147,30 @@ public class BT747_Main extends javax.swing.JFrame
             }
         });
 
+        btConvert.setText("Convert To");
+        btConvert.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                btConvertMouseReleased(evt);
+            }
+        });
+        btConvert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btConvertActionPerformed(evt);
+            }
+        });
+
+        cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML", "OziExplorer (.PLT)", "NMEA", "Google Map (.html)" }));
+        cbFormat.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbFormatItemStateChanged(evt);
+            }
+        });
+        cbFormat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbFormatActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -208,51 +182,151 @@ public class BT747_Main extends javax.swing.JFrame
                     .add(btWorkingDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(OutputFileBaseName, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
-                    .add(RawLogFilePath, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
-                    .add(WorkDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)))
+                    .add(tfRawLogFilePath, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
+                    .add(tfWorkDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(tfOutputFileBaseName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 150, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btConvert)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(WorkDirectory, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(tfWorkDirectory, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(btWorkingDirectory))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(RawLogFilePath, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(tfRawLogFilePath, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(btRawLogFile))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(OutputFileBaseName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(btOutputFile))
+                    .add(btOutputFile)
+                    .add(tfOutputFileBaseName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(btConvert)
+                    .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        WorkDirectory.setText(m.getBaseDirPath());
+        tfWorkDirectory.setText(m.getBaseDirPath());
+        setSelectedFormat(cbFormat.getSelectedItem().toString());
+
+        jButton1.setText("Download Log");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        cbIncremental.setText("Incremental Download");
+        cbIncremental.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbIncrementalActionPerformed(evt);
+            }
+        });
+
+        DownloadProgressLabel.setText("Download progress");
+
+        DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
+        DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
+        DownloadProgressBar.setFocusable(false);
+
+        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(jButton1)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 33, Short.MAX_VALUE)
+                        .add(cbIncremental))
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(DownloadProgressLabel)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jButton1)
+                    .add(cbIncremental))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 39, Short.MAX_VALUE)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(DownloadProgressLabel))
+                .addContainerGap())
+        );
+
+        DownloadProgressBar.getAccessibleContext().setAccessibleName("DownloadProgessBar");
+        progressBarUpdate();
+
+        btConnect.setText("Connect");
+        btConnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btConnectActionPerformed(evt);
+            }
+        });
+
+        cbPortName.setEditable(true);
+        cbPortName.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "USB (for Linux, Mac)", "BLUETOOTH (for Mac)", "COM1:", "COM2:", "COM3:", "COM4:", "COM5:", "COM6:", "COM7:", "COM8:", "COM9:", "COM10:", "COM11:", "COM12:", "COM13:", "COM14:", "COM15:", "COM16:" }));
+        cbPortName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbPortNameActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(btConnect)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbPortName, 0, 152, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(btConnect)
+                    .add(cbPortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(66, Short.MAX_VALUE))
+        );
 
         org.jdesktop.layout.GroupLayout LogOperationsPanelLayout = new org.jdesktop.layout.GroupLayout(LogOperationsPanel);
         LogOperationsPanel.setLayout(LogOperationsPanelLayout);
         LogOperationsPanelLayout.setHorizontalGroup(
             LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(LogOperationsPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .add(LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(LogOperationsPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(LogOperationsPanelLayout.createSequentialGroup()
-                        .add(19, 19, 19)
-                        .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(jPanel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         LogOperationsPanelLayout.setVerticalGroup(
             LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, LogOperationsPanelLayout.createSequentialGroup()
+            .add(LogOperationsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 35, Short.MAX_VALUE)
-                .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -262,11 +336,11 @@ public class BT747_Main extends javax.swing.JFrame
         DeviceSettingsPanel.setLayout(DeviceSettingsPanelLayout);
         DeviceSettingsPanelLayout.setHorizontalGroup(
             DeviceSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 475, Short.MAX_VALUE)
+            .add(0, 560, Short.MAX_VALUE)
         );
         DeviceSettingsPanelLayout.setVerticalGroup(
             DeviceSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 205, Short.MAX_VALUE)
+            .add(0, 231, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Device settings", DeviceSettingsPanel);
@@ -290,43 +364,32 @@ public class BT747_Main extends javax.swing.JFrame
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
-                    .add(layout.createSequentialGroup()
-                        .add(DownloadProgressLabel)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)))
+                .add(jTabbedPane1)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(DownloadProgressLabel))
+                .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        DownloadProgressBar.getAccessibleContext().setAccessibleName("DownloadProgessBar");
-        progressBarUpdate();
         jTabbedPane1.getAccessibleContext().setAccessibleName("Log download & Convert");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private int selectedFormat = Model.C_NO_LOG;
 
-    private void FormatSelectionBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FormatSelectionBoxActionPerformed
+    private void cbFormatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFormatActionPerformed
     // TODO add your handling code here:
-    }//GEN-LAST:event_FormatSelectionBoxActionPerformed
+}//GEN-LAST:event_cbFormatActionPerformed
 
-    private void ConvertButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ConvertButtonMouseReleased
+    private void btConvertMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btConvertMouseReleased
 
-}//GEN-LAST:event_ConvertButtonMouseReleased
+}//GEN-LAST:event_btConvertMouseReleased
 
     private final void setSelectedFormat(final String selected) {
         if (selected.startsWith("CSV")) {
@@ -348,7 +411,7 @@ public class BT747_Main extends javax.swing.JFrame
         }
     }
 
-    private void FormatSelectionBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_FormatSelectionBoxItemStateChanged
+    private void cbFormatItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbFormatItemStateChanged
         // TODO add your handling code here:
         switch (evt.getStateChange()) {
             case java.awt.event.ItemEvent.SELECTED:
@@ -357,7 +420,7 @@ public class BT747_Main extends javax.swing.JFrame
             case java.awt.event.ItemEvent.DESELECTED:
                 break;
         }
-    }//GEN-LAST:event_FormatSelectionBoxItemStateChanged
+}//GEN-LAST:event_cbFormatItemStateChanged
 
     private void progressBarUpdate() {
         DownloadProgressBar.setMinimum(m.getStartAddr());
@@ -369,13 +432,13 @@ public class BT747_Main extends javax.swing.JFrame
     //this.paintAll(this.getGraphics());
     }
 
-    private void WorkDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WorkDirectoryActionPerformed
+    private void tfWorkDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfWorkDirectoryActionPerformed
     // TODO add your handling code here:
-}//GEN-LAST:event_WorkDirectoryActionPerformed
+}//GEN-LAST:event_tfWorkDirectoryActionPerformed
 
-    private void WorkDirectoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_WorkDirectoryFocusLost
-        c.setBaseDirPath(WorkDirectory.getText());
-    }//GEN-LAST:event_WorkDirectoryFocusLost
+    private void tfWorkDirectoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfWorkDirectoryFocusLost
+        c.setBaseDirPath(tfWorkDirectory.getText());
+}//GEN-LAST:event_tfWorkDirectoryFocusLost
 
     private void btWorkingDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btWorkingDirectoryActionPerformed
     // TODO add your handling code here:
@@ -404,9 +467,9 @@ public class BT747_Main extends javax.swing.JFrame
         }
 }//GEN-LAST:event_btOutputFileActionPerformed
 
-    private void ConvertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConvertButtonActionPerformed
+    private void btConvertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConvertActionPerformed
         c.writeLog(selectedFormat);
-    }//GEN-LAST:event_ConvertButtonActionPerformed
+}//GEN-LAST:event_btConvertActionPerformed
 
     private void getOutputFilePath() {
         File curDir;
@@ -414,7 +477,7 @@ public class BT747_Main extends javax.swing.JFrame
 //        if (curDir.exists()) {
         OutputFileChooser.setCurrentDirectory(curDir);
 //        }
-        OutputFileBaseName.setText(m.getReportFileBase());
+        tfOutputFileBaseName.setText(m.getReportFileBase());
     }
 
     private void getRawLogFilePath() {
@@ -423,7 +486,7 @@ public class BT747_Main extends javax.swing.JFrame
 //        if (curDir.exists()) {
         RawLogFileChooser.setCurrentDirectory(curDir);
 //        }
-        RawLogFilePath.setText(m.getLogFile());
+        tfRawLogFilePath.setText(m.getLogFile());
     }
 
     private void getWorkDirPath() {
@@ -432,7 +495,11 @@ public class BT747_Main extends javax.swing.JFrame
         if (curDir.exists()) {
             WorkingDirectoryChooser.setCurrentDirectory(curDir);
         }
-        WorkDirectory.setText(curDir.getPath());
+        tfWorkDirectory.setText(curDir.getPath());
+    }
+    
+    private void getIncremental() {
+        cbIncremental.setSelected(m.isIncremental());
     }
 
     private void btWorkingDirectoryActionPerformed1(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btWorkingDirectoryActionPerformed1
@@ -441,6 +508,58 @@ public class BT747_Main extends javax.swing.JFrame
             c.setBaseDirPath(WorkingDirectoryChooser.getSelectedFile().getAbsolutePath());
         }
 }//GEN-LAST:event_btWorkingDirectoryActionPerformed1
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        c.startDownload();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cbIncrementalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbIncrementalActionPerformed
+        c.setIncremental(cbIncremental.isSelected());
+}//GEN-LAST:event_cbIncrementalActionPerformed
+
+    private void btConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConnectActionPerformed
+        openPort(cbPortName.getSelectedItem().toString());
+}//GEN-LAST:event_btConnectActionPerformed
+
+    private void openPort(String s) {
+        boolean foundPort=false;
+        int port=0;
+        port=Convert.toInt(s);
+        if(Convert.toString(port).equals(s)) {
+            foundPort=true;
+        }
+        if(!foundPort
+                && s.toUpperCase().startsWith("COM")) {
+            if(s.length()==5&&s.charAt(4)==':') {
+                port=Convert.toInt(s.substring(3,4));
+            } else if(s.length()==6&&s.charAt(5)==':') {
+                port=Convert.toInt(s.substring(3,5));
+            } else {
+                port=Convert.toInt(s.substring(3));
+            }
+            if(s.toUpperCase().equals("COM"+port)
+                    ||s.toUpperCase().equals("COM"+port+":")) {
+            } {
+                foundPort=true;
+            }
+        }
+        if(foundPort) {
+            c.setPort(port);
+        } else {
+            if (s.toUpperCase().equals("BLUETOOTH")) {
+                c.setBluetooth();
+            } else if (s.toUpperCase().startsWith("USB")) {
+                c.setUsb();
+            } else {
+                c.setFreeTextPort(s);
+            }
+        }
+    }
+    
+
+    private void cbPortNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPortNameActionPerformed
+        //selectPort(jComboBox1.getSelectedItem().toString());
+}//GEN-LAST:event_cbPortNameActionPerformed
     /*
      * Find the appropriate look and feel for the system
      * *********************************************************************/
@@ -508,28 +627,32 @@ public class BT747_Main extends javax.swing.JFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AboutBT747;
-    private javax.swing.JButton ConvertButton;
     private javax.swing.JPanel DeviceSettingsPanel;
     private javax.swing.JProgressBar DownloadProgressBar;
     private javax.swing.JLabel DownloadProgressLabel;
     private javax.swing.JMenu FileMenu;
-    private javax.swing.JComboBox FormatSelectionBox;
     private javax.swing.JMenu InfoMenu;
     private javax.swing.JPanel LogOperationsPanel;
-    private javax.swing.JTextField OutputFileBaseName;
     private javax.swing.JFileChooser OutputFileChooser;
     private javax.swing.JFileChooser RawLogFileChooser;
-    private javax.swing.JTextField RawLogFilePath;
     private javax.swing.JMenu SettingsMenu;
-    private javax.swing.JLabel TargetFormatLabel;
-    private javax.swing.JTextField WorkDirectory;
     private javax.swing.JFileChooser WorkingDirectoryChooser;
+    private javax.swing.JButton btConnect;
+    private javax.swing.JButton btConvert;
     private javax.swing.JButton btOutputFile;
     private javax.swing.JButton btRawLogFile;
     private javax.swing.JButton btWorkingDirectory;
+    private javax.swing.JComboBox cbFormat;
+    private javax.swing.JCheckBox cbIncremental;
+    private javax.swing.JComboBox cbPortName;
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField tfOutputFileBaseName;
+    private javax.swing.JTextField tfRawLogFilePath;
+    private javax.swing.JTextField tfWorkDirectory;
     // End of variables declaration//GEN-END:variables
 }

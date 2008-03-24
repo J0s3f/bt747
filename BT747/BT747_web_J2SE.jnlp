@@ -15,9 +15,9 @@
 
   <!-- main resources -->  
   <resources>
-    <j2se version="1.5+"/>
+    <j2se version="1.5"/>
+    <jar href="waba_forj2se.jar" download=eager/>
     <jar href="Waba_only.jar" />
-    <jar href="waba_forj2se.jar" />
     <jar href="RXTXcomm.jar" />
     <jar href="swing-layout-1.0.3.jar" />
     <jar href="collections-superwaba.jar" download="lazy" />
