@@ -99,15 +99,16 @@
 	</target>
 
 	<target name="run_rxtx_both">
-		<!--
 		<antcall target="proguard.rxtx">
-			<param name="build.j2se" value="true"/>
+			<param name="build.j2se" value="_j2se"/>
 		</antcall>
-		-->
+		
 
+        <!--
 		<antcall target="rxtxjar">
-			<param name="build.j2se" value="true" />
+			<param name="build.j2se" value="_j2se" />
 		</antcall>
+        -->
 
 
 		<!-- <java classname="waba.applet.Applet" fork="true" spawn="true">
@@ -118,22 +119,44 @@
 				<pathelement path="lib/rxtx-2.1-7-bins-r2/RXTXcomm.jar" />
 				<pathelement path="lib/swing-layout-1.0.3.jar" />
 				<pathelement path="${swcollections.jar}" />
-				<pathelement path="${rxtxbuild.dir}/BT747_rxtx.jar" />
+				<pathelement path="${rxtxbuild.dir}/BT747_rxtx_j2se.jar" />
 			</classpath>
 			<arg line="/w 320 /h 320 /x 500 /scale 1 /bpp 8 bt747.j2se_view.BT747" />
 		</java>
 	</target>
 
-	<target name="run_rxtx_j2se">
-		<!--
+	
+	<target name="build.j2se">
 		<antcall target="proguard.rxtx">
-			<param name="build.j2se" value="true"/>
+			<param name="build.j2se" value="_j2se" />
 		</antcall>
+        <!--
 		-->
 
 		<antcall target="rxtxjar">
-			<param name="build.j2se" value="true" />
+			<param name="build.j2se" value="_j2se" />
 		</antcall>
+        <!--
+		-->
+		
+		<copy file="${rxtxbuild.dir}/${ant.project.name}_rxtx_j2se.jar" tofile="${dist}/${ant.project.name}_rxtx_j2se.jar"/>
+		<antcall target="sign">
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_rxtx_j2se.jar" />
+		</antcall>
+
+	</target>
+		
+
+	<target name="run_rxtx_j2se">
+		<antcall target="proguard.rxtx">
+			<param name="build.j2se" value="_j2se"/>
+		</antcall>
+
+        <!--
+		<antcall target="rxtxjar">
+			<param name="build.j2se" value="_j2se" />
+		</antcall>
+        -->
 
 
 		<!-- <java classname="waba.applet.Applet" fork="true" spawn="true">
@@ -145,7 +168,7 @@
 				<pathelement path="lib/swing-layout-1.0.3.jar" />
 				<pathelement path="lib/waba_forj2se.jar" />
 				<pathelement path="${swcollections.jar}" />
-				<pathelement path="${rxtxbuild.dir}/BT747_rxtx.jar" />
+				<pathelement path="${rxtxbuild.dir}/BT747_rxtx_j2se.jar" />
 			</classpath>
 			<!-- <arg line="/w 320 /h 320 /x 500 /scale 1 /bpp 8 " /> -->
 		</java>
@@ -284,8 +307,11 @@
 				<include name="**/*.java" />
 			</fileset>
 			<fileset dir="src_forwaba">
-				<include name="**/*.java" />
+				<include name="**/*.java" unless="build.j2se" />
 			</fileset>
+            <fileset dir="src_forj2se">
+                <include name="**/*.java" if="build.j2se" />
+            </fileset>
 		</copy>
 		<delete>
 			<fileset dir="${rxtxsrc.dir}">
@@ -411,7 +437,7 @@
 	</target>
 
 	<target name="rxtxjar" depends="rxtxbuild">
-		<jar jarfile="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" compress="true">
+		<jar jarfile="${rxtxbuild.dir}/${ant.project.name}_rxtx${build.j2se}.jar" compress="true">
 			<fileset dir="${rxtxbuild.dir}" includes="**/*.class" />
 		</jar>
 		<!--
@@ -475,32 +501,36 @@
 
 	<target name="proguard_task.rxtx" depends="rxtxjar" unless="use.proguard_java">
 		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
-		<move file="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" tofile="${rxtxbuild.dir}/${ant.project.name}_rxtx_unopt.jar" />
+		<move file="${rxtxbuild.dir}/${ant.project.name}_rxtx${build.j2se}.jar" tofile="${rxtxbuild.dir}/${ant.project.name}_rxtx${build.j2se}_unopt.jar" />
 		<proguard shrink="true" defaultpackage="" optimize="false" obfuscate="false" allowaccessmodification="no" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true" optimizationpasses="4" printmapping="${buildDir}/${ant.project.name}_rxtx.mapping">
-
 			<keep name="${mainClass}" />
 			<keep name="gps.parser.*" />
 			<keep name="bt747.j2se_view.BT747" />
 			<libraryjar file="${java.home}/lib/rt.jar" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
-			<injar path="${rxtxbuild.dir}/${ant.project.name}_rxtx_unopt.jar" />
+			<injar path="${rxtxbuild.dir}/${ant.project.name}_rxtx${build.j2se}_unopt.jar" />
 			<injar path="${swcollections.jar}" filter="!META-INF/MANIFEST.MF" />
-			<outjar path="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" />
+			<outjar path="${rxtxbuild.dir}/${ant.project.name}_rxtx${build.j2se}.jar" />
+			-keepclasseswithmembers public class * {
+			    public static void main(java.lang.String[]); }
+
 		</proguard>
-		<delete file="${rxtxbuild.dir}/${ant.project.name}_rxtx_unopt.jar">
+		<delete file="${rxtxbuild.dir}/${ant.project.name}_rxtx${build.j2se}_unopt.jar">
 		</delete>
 	</target>
 
 	<target name="proguard_java.rxtx" depends="rxtxjar" if="use.proguard_java">
-		<move file="${build.dir}/${ant.project.name}_rxtx.jar" tofile="${build.dir}/${ant.project.name}_rxtx_unopt.jar" />
+		<move file="${build.dir}/${ant.project.name}_rxtx${build.j2se}.jar" tofile="${build.dir}/${ant.project.name}_rxtx${build.j2se}_unopt.jar" />
 		<echo message="${proguardLib}" />
 		<java classname="proguard.ProGuard" fork="yes" classpath="${proguardLib}">
-			<arg line="-injars ${build.dir}/${ant.project.name}_rxtx_unopt.jar${path.separator}${swcollections.jar}(!META-INF/MANIFEST)" />
-			<arg line="-outjars ${build.dir}/${ant.project.name}_rxtx.jar" />
+			<arg line="-injars ${build.dir}/${ant.project.name}_rxtx${build.j2se}_unopt.jar${path.separator}${swcollections.jar}(!META-INF/MANIFEST)" />
+			<arg line="-outjars ${build.dir}/${ant.project.name}_rxtx${build.j2se}.jar" />
 			<arg line="-libraryjars ${java.home}/lib/rt.jar${path.separator}${superwaba_root}/lib/SuperWaba.jar" />
 			<arg line="-keep public class ${mainClass}" />
 			<arg line="-keep gps.parser.*" />
 			<arg line="-keep bt747.j2se_view.BT747" />
+			<arg line="-keepclasseswithmembers public class * {  public static void main(java.lang.String[]); }" />
+
 			<arg line="-allowaccessmodification" />
 			<arg line="-overloadaggressively" />
 			<!--
