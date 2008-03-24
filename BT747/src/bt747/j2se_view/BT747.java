@@ -33,6 +33,7 @@ public class BT747 extends bt747.waba_view.BT747 {
         super.onStart();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                BT747_Main.myLookAndFeel();
                 j2se_view= new BT747_Main(m,c);
                 j2se_view.setVisible(true);
             }

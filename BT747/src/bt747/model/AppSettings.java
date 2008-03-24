@@ -18,12 +18,16 @@ package bt747.model;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import waba.io.File;
+import bt747.io.File;
 
 import gps.convert.Conv;
 
 import bt747.sys.Convert;
 import bt747.sys.Settings;
+import bt747.ui.Event;
+
+import moio.util.HashSet;
+import moio.util.Iterator;
 
 /**
  * @author Mario De Weerd
@@ -224,11 +228,10 @@ public class AppSettings {
             if (bt747.sys.Settings.platform.startsWith("Palm")) {
                 setBaseDirPath("/Palm");
             } else if ( isWin32LikeDevice() ) {
-                File f=bt747.io.File.getCardVolume();
-                if(f==null) {
+                if(File.getCardVolume()==null) {
                     setBaseDirPath("/EnterYourDir");
                 } else {
-                    setBaseDirPath(f.getPath());
+                    setBaseDirPath(File.getCardVolume().getPath());
                 }
             } else {
                 setBaseDirPath("/BT747");
@@ -302,7 +305,7 @@ public class AppSettings {
             /* fall through */
 
             /* Must be last line in case (not 'default') */ 
-            setStringOpt("0.17",C_VERSION_IDX, C_VERSION_SIZE);
+            setStringOpt(0,"0.17",C_VERSION_IDX, C_VERSION_SIZE);
         }
         getSettings();
     }
@@ -364,39 +367,42 @@ public class AppSettings {
         logFile=getStringOpt(C_LOGFILE_IDX, C_LOGFILE_SIZE);
     }
 
-    private final void setOpt(final String src, final int idx, final int size) {
+    private final void setOpt(final int event_type, final String src, final int idx, final int size) {
         Settings.setAppSettings(
             Settings.getAppSettings().substring(0,idx)
         +src.substring(0, (src.length()<(size))?src.length():size)
         +Settings.getAppSettings().substring((src.length()<(size-1))?idx+src.length():idx+size))
         ;
+        if(event_type!=0) {
+            postEvent(event_type);
+        }
     }
 
-    private final void setIntOpt(final int src, final int idx, final int size) {
-        setOpt(Convert.unsigned2hex(src,size),idx,size);
+    private final void setIntOpt(final int event_type,final int src, final int idx, final int size) {
+        setOpt(event_type,Convert.unsigned2hex(src,size),idx,size);
     }
 
     private final int getIntOpt(final int idx, final int size) {
         return Conv.hex2Int(getStringOpt(idx,size));
     }
 
-    private final void setBooleanOpt(final boolean value, final int idx, final int size) {
-        setStringOpt((value?"1":"0"),idx, size);
+    private final void setBooleanOpt(final int event_type,final boolean value, final int idx, final int size) {
+        setStringOpt(event_type,(value?"1":"0"),idx, size);
     }
 
     private final boolean getBooleanOpt(final int idx, final int size) {
         return getIntOpt(idx, size)==1;
     }
 
-    private final void setFloatOpt(final float src, final int idx, final int size) {
-        setOpt(Convert.unsigned2hex(Convert.toIntBitwise(src),size),idx,size);
+    private final void setFloatOpt(final int event_type,final float src, final int idx, final int size) {
+        setOpt(event_type,Convert.unsigned2hex(Convert.toIntBitwise(src),size),idx,size);
     }
 
     private final float getFloatOpt(final int idx, final int size) {
         return Convert.toFloatBitwise(Conv.hex2Int(getStringOpt(idx,size)));
     }
 
-    private final void setStringOpt(final String src, final int idx, final int size) {
+    private final void setStringOpt(final int event_type,final String src, final int idx, final int size) {
         Settings.setAppSettings(Settings.getAppSettings().substring(0,idx)
         +src.substring(0, (src.length()<size)?src.length():size)
         +(src.length()<size?"\0":"")
@@ -406,6 +412,9 @@ public class AppSettings {
                 :"")
                 )
         ;
+        if(event_type!=0) {
+            postEvent(event_type);
+        }
     }
 
     private final String getStringOpt(final int idx, final int size) {
@@ -433,7 +442,7 @@ public class AppSettings {
 	 * @param portnbr The portnbr to set.
 	 */
 	public void setPortnbr(int portnbr) {
-	    setIntOpt(portnbr,C_PORTNBR_IDX,C_PORTNBR_SIZE);
+	    setIntOpt(0,portnbr,C_PORTNBR_IDX,C_PORTNBR_SIZE);
 	}
     /**
      * @return The default baud rate
@@ -445,7 +454,7 @@ public class AppSettings {
 	 * @param Baud The Baud rate to set as a default.
 	 */
 	public void setBaudRate(int Baud) {
-        setIntOpt(Baud,C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
+        setIntOpt(0,Baud,C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
 	}
 
     /**
@@ -463,7 +472,7 @@ public class AppSettings {
      * @param ChunkSize The ChunkSize  to set as a default.
      */
     public void setChunkSize(int ChunkSize) {
-        setIntOpt(ChunkSize,C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE);
+        setIntOpt(0,ChunkSize,C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE);
     }
 
     /**
@@ -480,7 +489,7 @@ public class AppSettings {
     * @param DownloadTimeOut The DownloadTimeOut  to set as a default.
     */
    public void setDownloadTimeOut(int DownloadTimeOut) {
-       setIntOpt(DownloadTimeOut,C_DOWNLOADTIMEOUT_IDX, C_DOWNLOADTIMEOUT_SIZE);
+       setIntOpt(0,DownloadTimeOut,C_DOWNLOADTIMEOUT_IDX, C_DOWNLOADTIMEOUT_SIZE);
    }
 
    /**
@@ -497,7 +506,7 @@ public class AppSettings {
     * @param Card The Card  to set as a default.
     */
    public void setCard(int Card) {
-       setIntOpt(Card,C_CARD_IDX, C_CARD_SIZE);
+       setIntOpt(0,Card,C_CARD_IDX, C_CARD_SIZE);
    }
    
    /**
@@ -514,7 +523,7 @@ public class AppSettings {
     * @param timeOffsetHours The TIMEOFFSETHOURS  to set as a default.
     */
    public void setTimeOffsetHours(int timeOffsetHours) {
-       setIntOpt(timeOffsetHours,C_TIMEOFFSETHOURS_IDX, C_TIMEOFFSETHOURS_SIZE);
+       setIntOpt(0,timeOffsetHours,C_TIMEOFFSETHOURS_IDX, C_TIMEOFFSETHOURS_SIZE);
    }
    
 	public boolean getStartupOpenPort() {
@@ -524,7 +533,7 @@ public class AppSettings {
 	 * @param value The default value for opening the port.
 	 */
 	public void setStartupOpenPort(boolean value) {
-        setBooleanOpt(value,C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
+        setBooleanOpt(0,value,C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
 	}
 	
     /** The location of the logFile
@@ -534,7 +543,7 @@ public class AppSettings {
      * @return Returns the logFile full path.
      */
     public String getLogFilePath() {
-        return baseDirPath+"/"+logFile;
+        return baseDirPath+File.separatorChar+logFile;
     }
 
     public String getLogFile() {
@@ -546,24 +555,29 @@ public class AppSettings {
      */
     public void setLogFile(String logFile) {
         this.logFile = logFile;
-        setStringOpt(this.logFile, C_LOGFILE_IDX, C_LOGFILE_SIZE);
+        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE,
+                this.logFile, C_LOGFILE_IDX, C_LOGFILE_SIZE);
     }
     
     public String getBaseDirPath() {
         return baseDirPath;
     }
     
+
     public void setBaseDirPath(String baseDirPath) {
         this.baseDirPath = baseDirPath;
-        setStringOpt(this.baseDirPath, C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE);
+        setStringOpt(ModelEvent.WORKDIRPATH_UPDATE,
+                this.baseDirPath, C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE);
     }
     
     public String getReportFileBase() {
         return reportFileBase;
     }
+
     public void setReportFileBase(String reportFileBase) {
         this.reportFileBase = reportFileBase;
-        setStringOpt(this.reportFileBase, C_REPORTFILEBASE_IDX, C_REPORTFILEBASE_SIZE);
+        setStringOpt(ModelEvent.OUTPUTFILEPATH_UPDATE,
+                this.reportFileBase, C_REPORTFILEBASE_IDX, C_REPORTFILEBASE_SIZE);
     }
 
     public String getReportFileBasePath() {
@@ -577,7 +591,7 @@ public class AppSettings {
      * @param value The default value for opening the port.
      */
     public void setWayPtRCR(int value) {
-        setIntOpt(value,C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
+        setIntOpt(0,value,C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
     }
     
     public int getWayPtValid() {
@@ -587,7 +601,7 @@ public class AppSettings {
      * @param value The default value for opening the port.
      */
     public void setWayPtValid(int value) {
-        setIntOpt(value,C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
+        setIntOpt(0,value,C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
     }
 
     public int getTrkPtRCR() {
@@ -598,7 +612,7 @@ public class AppSettings {
      * @param value The default value for opening the port.
      */
     public void setTrkPtRCR(int value) {
-        setIntOpt(value,C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
+        setIntOpt(0,value,C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
     }
     
     public int getTrkPtValid() {
@@ -608,7 +622,7 @@ public class AppSettings {
      * @param value The default value for opening the port.
      */
     public void setTrkPtValid(final int value) {
-        setIntOpt(value,C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
+        setIntOpt(0,value,C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
     }
     
     public int getFileSeparationFreq() {
@@ -618,7 +632,7 @@ public class AppSettings {
      * @param value The default value for opening the port.
      */
     public void setOneFilePerDay(final int value) {
-        setIntOpt(value,C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
+        setIntOpt(0,value,C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
     }
     
     public boolean getNoGeoid() {
@@ -628,7 +642,7 @@ public class AppSettings {
      * @param value The default value for opening the port.
      */
     public void setNoGeoid(final boolean value) {
-        setBooleanOpt(value,C_NOGEOID_IDX, C_NOGEOID_SIZE);
+        setBooleanOpt(0,value,C_NOGEOID_IDX, C_NOGEOID_SIZE);
     }
 
     public boolean getAdvFilterActive() {
@@ -638,7 +652,7 @@ public class AppSettings {
      * @param value The default value for opening the port.
      */
     public void setAdvFilterActive(final boolean value) {
-        setBooleanOpt(value,C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
+        setBooleanOpt(0,value,C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
     }
 
     public int getLogRequestAhead() {
@@ -648,7 +662,7 @@ public class AppSettings {
      * @param value The default value for opening the port.
      */
     public void setLogRequestAhead(int value) {
-        setIntOpt(value,C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
+        setIntOpt(0,value,C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
     }
 
     public int getNMEAset() {
@@ -656,7 +670,7 @@ public class AppSettings {
     }
 
     public void setNMEAset(final int value) {
-        setIntOpt(value,C_NMEASET_IDX, C_NMEASET_SIZE);
+        setIntOpt(0,value,C_NMEASET_IDX, C_NMEASET_SIZE);
     }
 
 
@@ -665,21 +679,21 @@ public class AppSettings {
     }
 
     public void setGpxUTC0(final boolean value) {
-        setBooleanOpt(value,C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
+        setBooleanOpt(0,value,C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
     }
     public boolean getGpsDecode() {
         return getBooleanOpt(C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
     }
 
     public void setGpsDecode(final boolean value) {
-        setBooleanOpt(value,C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
+        setBooleanOpt(0,value,C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
     }
     public boolean getGpxTrkSegWhenBig() {
         return getBooleanOpt(C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
     }
 
     public void setGpxTrkSegWhenBig(final boolean value) {
-        setBooleanOpt(value,C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
+        setBooleanOpt(0,value,C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
     }
 
     public int getTrkSep() {
@@ -687,7 +701,7 @@ public class AppSettings {
     }
 
     public void setTrkSep(final int value) {
-        setIntOpt(value,C_TRKSEP_IDX, C_TRKSEP_SIZE);
+        setIntOpt(0,value,C_TRKSEP_IDX, C_TRKSEP_SIZE);
     }
 
     /**
@@ -700,7 +714,7 @@ public class AppSettings {
      * @param maxDist The maxDist to setFilter.
      */
     public void setFilterMaxDist(float maxDist) {
-        setFloatOpt(maxDist,C_maxDist_IDX, C_maxDist_SIZE);
+        setFloatOpt(0,maxDist,C_maxDist_IDX, C_maxDist_SIZE);
     }
     /**
      * @return Returns the maxHDOP.
@@ -713,7 +727,7 @@ public class AppSettings {
      * @param maxHDOP The maxHDOP to setFilter.
      */
     public void setFilterMaxHDOP(float maxHDOP) {
-        setFloatOpt(maxHDOP,C_maxHDOP_IDX, C_maxHDOP_SIZE);
+        setFloatOpt(0,maxHDOP,C_maxHDOP_IDX, C_maxHDOP_SIZE);
     }
     /**
      * @return Returns the maxPDOP.
@@ -725,7 +739,7 @@ public class AppSettings {
      * @param maxPDOP The maxPDOP to setFilter.
      */
     public void setFilterMaxPDOP(float maxPDOP) {
-        setFloatOpt(maxPDOP,C_maxPDOP_IDX, C_maxPDOP_SIZE);
+        setFloatOpt(0,maxPDOP,C_maxPDOP_IDX, C_maxPDOP_SIZE);
     }
     /**
      * @return Returns the maxRecCnt.
@@ -737,7 +751,7 @@ public class AppSettings {
      * @param maxRecCnt The maxRecCnt to setFilter.
      */
     public void setFilterMaxRecCount(int maxRecCnt) {
-        setIntOpt(maxRecCnt,C_maxRecCount_IDX, C_maxRecCount_SIZE);
+        setIntOpt(0,maxRecCnt,C_maxRecCount_IDX, C_maxRecCount_SIZE);
     }
     /**
      * @return Returns the maxSpeed.
@@ -749,7 +763,7 @@ public class AppSettings {
      * @param maxSpeed The maxSpeed to setFilter.
      */
     public void setFilterMaxSpeed(float maxSpeed) {
-        setFloatOpt(maxSpeed,C_maxSpeed_IDX, C_maxSpeed_SIZE);
+        setFloatOpt(0,maxSpeed,C_maxSpeed_IDX, C_maxSpeed_SIZE);
     }
     /**
      * @return Returns the maxVDOP.
@@ -761,7 +775,7 @@ public class AppSettings {
      * @param maxVDOP The maxVDOP to setFilter.
      */
     public void setFilterMaxVDOP(float maxVDOP) {
-        setFloatOpt(maxVDOP,C_maxVDOP_IDX, C_maxVDOP_SIZE);
+        setFloatOpt(0,maxVDOP,C_maxVDOP_IDX, C_maxVDOP_SIZE);
     }
     /**
      * @return Returns the minDist.
@@ -773,7 +787,7 @@ public class AppSettings {
      * @param minDist The minDist to setFilter.
      */
     public void setFilterMinDist(float minDist) {
-        setFloatOpt(minDist,C_minDist_IDX, C_minDist_SIZE);
+        setFloatOpt(0,minDist,C_minDist_IDX, C_minDist_SIZE);
     }
     /**
      * @return Returns the minNSAT.
@@ -785,7 +799,7 @@ public class AppSettings {
      * @param minNSAT The minNSAT to setFilter.
      */
     public void setFilterMinNSAT(int minNSAT) {
-        setIntOpt(minNSAT,C_minNSAT_IDX, C_minNSAT_SIZE);
+        setIntOpt(0,minNSAT,C_minNSAT_IDX, C_minNSAT_SIZE);
     }
     /**
      * @return Returns the minRecCnt.
@@ -797,7 +811,7 @@ public class AppSettings {
      * @param minRecCnt The minRecCnt to setFilter.
      */
     public void setFilterMinRecCount(int minRecCnt) {
-        setIntOpt(minRecCnt,C_minRecCount_IDX, C_minRecCount_SIZE);
+        setIntOpt(0,minRecCnt,C_minRecCount_IDX, C_minRecCount_SIZE);
     }
     /**
      * @return Returns the minSpeed.
@@ -809,7 +823,7 @@ public class AppSettings {
      * @param minSpeed The minSpeed to setFilter.
      */
     public void setFilterMinSpeed(final float minSpeed) {
-        setFloatOpt(minSpeed,C_minSpeed_IDX, C_minSpeed_SIZE);
+        setFloatOpt(0,minSpeed,C_minSpeed_IDX, C_minSpeed_SIZE);
     }
 
     public String getColorInvalidTrack() {
@@ -817,7 +831,7 @@ public class AppSettings {
     }
     
     public void setColorInvalidTrack(final String colorInvalidTrack) {
-        setStringOpt(colorInvalidTrack, C_COLOR_INVALIDTRACK_IDX, C_COLOR_INVALIDTRACK_SIZE);
+        setStringOpt(0,colorInvalidTrack, C_COLOR_INVALIDTRACK_IDX, C_COLOR_INVALIDTRACK_SIZE);
     }
 
     
@@ -844,7 +858,7 @@ public class AppSettings {
      * @param traversableFocus The traversableFocus to set.
      */
     public void setTraversableFocus(boolean traversableFocus) {
-        setBooleanOpt(traversableFocus, C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE);
+        setBooleanOpt(0,traversableFocus, C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE);
     }
     
     //  - Log conditions;
@@ -858,7 +872,7 @@ public class AppSettings {
 
     
     public void setTimeConditionSetting1(final int value) {
-        setIntOpt(value, C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE);
+        setIntOpt(0,value, C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE);
     }
     
     public int getTimeConditionSetting1() {
@@ -866,38 +880,38 @@ public class AppSettings {
     }
     
     public void setSpeedConditionSetting1(final int value) {
-        setIntOpt(value, C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
+        setIntOpt(0,value, C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
     }
     
     public int getSpeedConditionSetting1() {
         return getIntOpt(C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
     }
     public void setDistConditionSetting1(final int value) {
-        setIntOpt(value, C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
+        setIntOpt(0,value, C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
     }
     public int getDistConditionSetting1() {
         return getIntOpt(C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
     }
     public void setFixSetting1(final int value) {
-        setIntOpt(value, C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
+        setIntOpt(0,value, C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
     }
     public int getFixSetting1() {
         return getIntOpt(C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
     }
     public void setLogFormatConditionSetting1(final int value) {
-        setIntOpt(value, C_SETTING1_LOG_FORMAT_IDX, C_SETTING1_LOG_FORMAT_SIZE);
+        setIntOpt(0,value, C_SETTING1_LOG_FORMAT_IDX, C_SETTING1_LOG_FORMAT_SIZE);
     }
     public int getLogFormatSetting1() {
         return getIntOpt(C_SETTING1_LOG_FORMAT_IDX, C_SETTING1_LOG_FORMAT_SIZE);
     }
     public void setSBASSetting1(final boolean value) {
-        setBooleanOpt(value, C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
+        setBooleanOpt(0,value, C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
     }
     public boolean getSBASSetting1() {
         return getBooleanOpt(C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
     }
     public void setDGPSSetting1(final int value) {
-        setIntOpt(value, C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
+        setIntOpt(0,value, C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
     }
     public int getDPGSSetting1() {
         return getIntOpt(C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
@@ -907,42 +921,42 @@ public class AppSettings {
         return getBooleanOpt(C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
     }
     public void setTestSBASSetting1(final boolean value) {
-        setBooleanOpt(value, C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
+        setBooleanOpt(0,value, C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
     }
 
     public boolean getLogOverwriteSetting1() {
         return getBooleanOpt(C_SETTING1_LOG_OVR_IDX, C_SETTING1_LOG_OVR_SIZE);
     }
     public void setLogOverwriteSetting1(final boolean value) {
-        setBooleanOpt(value, C_SETTING1_LOG_OVR_IDX, C_SETTING1_LOG_OVR_SIZE);
+        setBooleanOpt(0,value, C_SETTING1_LOG_OVR_IDX, C_SETTING1_LOG_OVR_SIZE);
     }
     
     public String getNMEASetting1() {
         return getStringOpt(C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
     }
     public void setNMEASetting1(final String value) {
-        setStringOpt(value,C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
+        setStringOpt(0,value,C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
     }
 
     public boolean getRecordNbrInLogs() {
         return getBooleanOpt(C_RECORDNBR_IN_LOGS_IDX, C_RECORDNBR_IN_LOGS_SIZE);
     }
     public void setRecordNbrInLogs(final boolean value) {
-        setBooleanOpt(value, C_RECORDNBR_IN_LOGS_IDX, C_RECORDNBR_IN_LOGS_SIZE);
+        setBooleanOpt(0,value, C_RECORDNBR_IN_LOGS_IDX, C_RECORDNBR_IN_LOGS_SIZE);
     }
 
     public boolean getForceHolux241() {
         return getBooleanOpt(C_HOLUX241_IDX, C_HOLUX241_SIZE);
     }
     public void setForceHolux241(final boolean value) {
-        setBooleanOpt(value, C_HOLUX241_IDX, C_HOLUX241_SIZE);
+        setBooleanOpt(0,value, C_HOLUX241_IDX, C_HOLUX241_SIZE);
     }
 
     public boolean getImperial() {
         return getBooleanOpt(C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
     }
     public void setImperial(final boolean value) {
-        setBooleanOpt(value, C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
+        setBooleanOpt(0,value, C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
     }
 
     
@@ -1005,5 +1019,25 @@ public class AppSettings {
             }
         }
         return gkey;
+    }
+    /*
+     * Event posting
+     */
+
+    
+    private HashSet listeners = new HashSet();
+
+    /**add a listener to event thrown by this class*/
+    public void addListener(ModelListener l){        
+        listeners.add(l);
+    }
+
+    protected void postEvent(final int type) {
+        Iterator it = listeners.iterator();
+        while (it.hasNext()) {
+            ModelListener l=(ModelListener)it.next();
+            Event e=new Event(type, l, 0);
+            l.newEvent(e);
+        }
     }
 }

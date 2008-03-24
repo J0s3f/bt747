@@ -36,8 +36,20 @@ public class Controller {
     public final void setImperial(boolean on) {
         m.setImperial(on);
     }
+
     
+    public final void setBaseDirPath(String s) {
+        m.setBaseDirPath(s);
+    }
     
+    public final void setLogFilePath(String s) {
+        m.setLogFile(s);
+    }
+
+    public final void setOutputFileBasePath(String s) {
+        m.setReportFileBase(s);
+    }
+
     public final void writeLog(final int log_type) {
         String ext="";
         GPSFile gpsFile=null;
