@@ -32,6 +32,7 @@ import waba.util.Vector;
 import bt747.Txt;
 import bt747.io.File;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
 import bt747.sys.Convert;
 import bt747.ui.Button;
 
@@ -170,6 +171,13 @@ public class GPSLogFile extends Container {
                 m_edLogFileName.setText(fs.getRelPath());
             } else if (event.target==m_btDefaultSettings) {
                 m_settings.defaultSettings();
+                updateValues();
+            }
+        break;
+        default:
+            if (event.type==ModelEvent.LOGFILEPATH_UPDATE
+                ||event.type==ModelEvent.OUTPUTFILEPATH_UPDATE
+                ||event.type==ModelEvent.WORKDIRPATH_UPDATE) {
                 updateValues();
             }
         break;

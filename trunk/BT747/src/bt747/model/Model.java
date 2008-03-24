@@ -6,8 +6,6 @@ import waba.util.Date;
 import gps.GpsEvent;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
-import moio.util.HashSet;
-import moio.util.Iterator;
 
 import bt747.ui.Event;
 
@@ -184,28 +182,6 @@ public class Model extends AppSettings implements gps.settings{
         this.nextReadAddr = nextReadAddr;
         if(this.downloadOnGoing) {
             postEvent(ModelEvent.DOWNLOAD_PROGRESS_UPDATE);
-        }
-    }
-
-
-    /*
-     * Event posting
-     */
-
-    
-    private HashSet listeners = new HashSet();
-
-    /**add a listener to event thrown by this class*/
-    public void addListener(ModelListener l){        
-        listeners.add(l);
-    }
-
-    private void postEvent(final int type) {
-        Iterator it = listeners.iterator();
-        while (it.hasNext()) {
-            ModelListener l=(ModelListener)it.next();
-            Event e=new Event(type, l, 0);
-            l.newEvent(e);
         }
     }
 }

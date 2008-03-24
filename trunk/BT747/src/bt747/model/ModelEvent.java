@@ -28,6 +28,9 @@ import bt747.ui.Event;
 public class ModelEvent extends Event {
     public static final int CONVERSION_STATE_CHANGE = getNextAvailableEventId();
     public static final int DOWNLOAD_PROGRESS_UPDATE = getNextAvailableEventId();
+    public static final int WORKDIRPATH_UPDATE = getNextAvailableEventId();
+    public static final int OUTPUTFILEPATH_UPDATE = getNextAvailableEventId();
+    public static final int LOGFILEPATH_UPDATE = getNextAvailableEventId();
     
     public ModelEvent(int type, Object target, int timeStamp)
     {

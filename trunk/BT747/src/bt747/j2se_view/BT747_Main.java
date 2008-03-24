@@ -3,32 +3,35 @@
  *
  * Created on 23 mars 2008, 10:37
  */
-
 package bt747.j2se_view;
 
 import bt747.control.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.UIManager;
 
 /**
  *
  * @author  Mario De Weerd
  */
-public class BT747_Main extends javax.swing.JFrame 
-    implements bt747.model.ModelListener{
-    
+public class BT747_Main extends javax.swing.JFrame
+        implements bt747.model.ModelListener {
+
     Model m;
     Controller c;
-    
+
     /** Creates new form BT747_Main */
     public BT747_Main() {
         initComponents();
     }
-    
+
     public BT747_Main(Model m, Controller c) {
-        this.m= m;
-        this.c= c;
+        this.m = m;
+        this.c = c;
         initComponents();
+        initAppData();
         m.addListener(this);
     }
 
@@ -36,23 +39,25 @@ public class BT747_Main extends javax.swing.JFrame
         onEvent(e);
     }
 
-    private void progressBarUpdate() {
-        DownloadProgressBar.setMinimum(m.getStartAddr());
-        DownloadProgressBar.setMaximum(m.getEndAddr());
-        DownloadProgressBar.setValue(m.getNextReadAddr());
-        DownloadProgressBar.setVisible(m.isDownloadOnGoing());
-        DownloadProgressLabel.setVisible(m.isDownloadOnGoing());
-        //this.invalidate();
-        //this.paintAll(this.getGraphics());
+    private void initAppData() {
+        progressBarUpdate();
+        getWorkDirPath();
+        getRawLogFilePath();
+        getOutputFilePath();
     }
+
     public void onEvent(bt747.ui.Event e) {
-        if(e.type==ModelEvent.DOWNLOAD_PROGRESS_UPDATE) {
+        if (e.type == ModelEvent.DOWNLOAD_PROGRESS_UPDATE) {
             progressBarUpdate();
+        } else if (e.type == ModelEvent.LOGFILEPATH_UPDATE) {
+            getRawLogFilePath();
+        } else if (e.type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+            getOutputFilePath();
+        } else if (e.type == ModelEvent.WORKDIRPATH_UPDATE) {
+            getWorkDirPath();
         }
-}
-    
-    
-    
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -61,6 +66,9 @@ public class BT747_Main extends javax.swing.JFrame
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        WorkingDirectoryChooser = new javax.swing.JFileChooser();
+        RawLogFileChooser = new javax.swing.JFileChooser();
+        OutputFileChooser = new javax.swing.JFileChooser();
         DownloadProgressBar = new javax.swing.JProgressBar();
         DownloadProgressLabel = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -69,6 +77,13 @@ public class BT747_Main extends javax.swing.JFrame
         ConvertButton = new javax.swing.JButton();
         FormatSelectionBox = new javax.swing.JComboBox();
         TargetFormatLabel = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        WorkDirectory = new javax.swing.JTextField();
+        RawLogFilePath = new javax.swing.JTextField();
+        OutputFileBaseName = new javax.swing.JTextField();
+        btWorkingDirectory = new javax.swing.JButton();
+        btRawLogFile = new javax.swing.JButton();
+        btOutputFile = new javax.swing.JButton();
         DeviceSettingsPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
@@ -76,7 +91,12 @@ public class BT747_Main extends javax.swing.JFrame
         InfoMenu = new javax.swing.JMenu();
         AboutBT747 = new javax.swing.JMenuItem();
 
+        WorkingDirectoryChooser.setDialogTitle("Choose Working Directory");
+        WorkingDirectoryChooser.setDialogType(javax.swing.JFileChooser.CUSTOM_DIALOG);
+        WorkingDirectoryChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("BT747 Application");
 
         DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
         DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
@@ -88,6 +108,11 @@ public class BT747_Main extends javax.swing.JFrame
         ConvertButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 ConvertButtonMouseReleased(evt);
+            }
+        });
+        ConvertButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ConvertButtonActionPerformed(evt);
             }
         });
 
@@ -110,7 +135,7 @@ public class BT747_Main extends javax.swing.JFrame
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(24, Short.MAX_VALUE)
                 .add(ConvertButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(TargetFormatLabel)
@@ -126,22 +151,107 @@ public class BT747_Main extends javax.swing.JFrame
                     .add(FormatSelectionBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(TargetFormatLabel)
                     .add(ConvertButton))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        setSelectedFormat(FormatSelectionBox.getSelectedItem().toString());
+
+        WorkDirectory.setText("jTextField1");
+        WorkDirectory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                WorkDirectoryActionPerformed(evt);
+            }
+        });
+        WorkDirectory.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                WorkDirectoryFocusLost(evt);
+            }
+        });
+
+        RawLogFilePath.setText("jTextField2");
+
+        OutputFileBaseName.setText("jTextField3");
+
+        btWorkingDirectory.setText("Working Directory :");
+        btWorkingDirectory.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btWorkingDirectory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btWorkingDirectoryActionPerformed(evt);
+                btWorkingDirectoryActionPerformed1(evt);
+            }
+        });
+
+        btRawLogFile.setText("Raw Log File :");
+        btRawLogFile.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btRawLogFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRawLogFileActionPerformed(evt);
+            }
+        });
+
+        btOutputFile.setText("Output File :");
+        btOutputFile.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btOutputFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btOutputFileActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                    .add(btOutputFile, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(btRawLogFile, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(btWorkingDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(OutputFileBaseName, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                    .add(RawLogFilePath, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                    .add(WorkDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(WorkDirectory, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(btWorkingDirectory))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(RawLogFilePath, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(btRawLogFile))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(OutputFileBaseName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(btOutputFile))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        WorkDirectory.setText(m.getBaseDirPath());
 
         org.jdesktop.layout.GroupLayout LogOperationsPanelLayout = new org.jdesktop.layout.GroupLayout(LogOperationsPanel);
         LogOperationsPanel.setLayout(LogOperationsPanelLayout);
         LogOperationsPanelLayout.setHorizontalGroup(
             LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(LogOperationsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .add(LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(LogOperationsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(LogOperationsPanelLayout.createSequentialGroup()
+                        .add(19, 19, 19)
+                        .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         LogOperationsPanelLayout.setVerticalGroup(
             LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, LogOperationsPanelLayout.createSequentialGroup()
-                .addContainerGap(127, Short.MAX_VALUE)
+                .addContainerGap()
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 35, Short.MAX_VALUE)
                 .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -152,7 +262,7 @@ public class BT747_Main extends javax.swing.JFrame
         DeviceSettingsPanel.setLayout(DeviceSettingsPanelLayout);
         DeviceSettingsPanelLayout.setHorizontalGroup(
             DeviceSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 375, Short.MAX_VALUE)
+            .add(0, 475, Short.MAX_VALUE)
         );
         DeviceSettingsPanelLayout.setVerticalGroup(
             DeviceSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -183,11 +293,11 @@ public class BT747_Main extends javax.swing.JFrame
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
                     .add(layout.createSequentialGroup()
                         .add(DownloadProgressLabel)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)))
+                        .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -208,40 +318,39 @@ public class BT747_Main extends javax.swing.JFrame
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private int selectedFormat = Model.C_NO_LOG;
 
-    private int selectedFormat=Model.C_NO_LOG;
-    
     private void FormatSelectionBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FormatSelectionBoxActionPerformed
-        // TODO add your handling code here:
+    // TODO add your handling code here:
     }//GEN-LAST:event_FormatSelectionBoxActionPerformed
 
     private void ConvertButtonMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ConvertButtonMouseReleased
-        c.writeLog(selectedFormat);
+
 }//GEN-LAST:event_ConvertButtonMouseReleased
-    
+
     private final void setSelectedFormat(final String selected) {
-        if(selected.startsWith("CSV")) {
-            selectedFormat=Model.C_CSV_LOG;
-        } else if(selected.startsWith("Google Map")) {
-            selectedFormat=Model.C_GMAP_LOG;
-        } else if(selected.startsWith("GPX")) {
-            selectedFormat=Model.C_GPX_LOG;
-        } else if(selected.startsWith("KML")) {
-            selectedFormat=Model.C_KML_LOG;
-        } else if(selected.startsWith("NMEA")) {
-            selectedFormat=Model.C_NMEA_LOG;
-        } else if(selected.startsWith("Ozi")) {
-            selectedFormat=Model.C_PLT_LOG;
-        } else if(selected.startsWith("Compe")) {
-            selectedFormat=Model.C_TRK_LOG;
+        if (selected.startsWith("CSV")) {
+            selectedFormat = Model.C_CSV_LOG;
+        } else if (selected.startsWith("Google Map")) {
+            selectedFormat = Model.C_GMAP_LOG;
+        } else if (selected.startsWith("GPX")) {
+            selectedFormat = Model.C_GPX_LOG;
+        } else if (selected.startsWith("KML")) {
+            selectedFormat = Model.C_KML_LOG;
+        } else if (selected.startsWith("NMEA")) {
+            selectedFormat = Model.C_NMEA_LOG;
+        } else if (selected.startsWith("Ozi")) {
+            selectedFormat = Model.C_PLT_LOG;
+        } else if (selected.startsWith("Compe")) {
+            selectedFormat = Model.C_TRK_LOG;
         } else {
-            selectedFormat=Model.C_NO_LOG;
+            selectedFormat = Model.C_NO_LOG;
         }
     }
 
     private void FormatSelectionBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_FormatSelectionBoxItemStateChanged
         // TODO add your handling code here:
-        switch (evt.getStateChange() ) {
+        switch (evt.getStateChange()) {
             case java.awt.event.ItemEvent.SELECTED:
                 setSelectedFormat(evt.getItem().toString());
                 break;
@@ -249,20 +358,149 @@ public class BT747_Main extends javax.swing.JFrame
                 break;
         }
     }//GEN-LAST:event_FormatSelectionBoxItemStateChanged
-    
+
+    private void progressBarUpdate() {
+        DownloadProgressBar.setMinimum(m.getStartAddr());
+        DownloadProgressBar.setMaximum(m.getEndAddr());
+        DownloadProgressBar.setValue(m.getNextReadAddr());
+        DownloadProgressBar.setVisible(m.isDownloadOnGoing());
+        DownloadProgressLabel.setVisible(m.isDownloadOnGoing());
+    //this.invalidate();
+    //this.paintAll(this.getGraphics());
+    }
+
+    private void WorkDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WorkDirectoryActionPerformed
+    // TODO add your handling code here:
+}//GEN-LAST:event_WorkDirectoryActionPerformed
+
+    private void WorkDirectoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_WorkDirectoryFocusLost
+        c.setBaseDirPath(WorkDirectory.getText());
+    }//GEN-LAST:event_WorkDirectoryFocusLost
+
+    private void btWorkingDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btWorkingDirectoryActionPerformed
+    // TODO add your handling code here:
+}//GEN-LAST:event_btWorkingDirectoryActionPerformed
+
+    private void btRawLogFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRawLogFileActionPerformed
+        getRawLogFilePath();
+        if (RawLogFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            c.setLogFilePath(
+                    bt747.util.FileUtil.getRelativePath(
+                    m.getBaseDirPath(),
+                    RawLogFileChooser.getSelectedFile().getAbsolutePath(),
+                    File.separatorChar));
+        }
+
+}//GEN-LAST:event_btRawLogFileActionPerformed
+
+    private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOutputFileActionPerformed
+        getOutputFilePath();
+        if (OutputFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            c.setOutputFileBasePath(
+                    bt747.util.FileUtil.getRelativePath(
+                    m.getBaseDirPath(),
+                    OutputFileChooser.getSelectedFile().getAbsolutePath(),
+                    File.separatorChar));
+        }
+}//GEN-LAST:event_btOutputFileActionPerformed
+
+    private void ConvertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConvertButtonActionPerformed
+        c.writeLog(selectedFormat);
+    }//GEN-LAST:event_ConvertButtonActionPerformed
+
+    private void getOutputFilePath() {
+        File curDir;
+        curDir = new File(m.getReportFileBasePath());
+//        if (curDir.exists()) {
+        OutputFileChooser.setCurrentDirectory(curDir);
+//        }
+        OutputFileBaseName.setText(m.getReportFileBase());
+    }
+
+    private void getRawLogFilePath() {
+        File curDir;
+        curDir = new File(m.getLogFilePath());
+//        if (curDir.exists()) {
+        RawLogFileChooser.setCurrentDirectory(curDir);
+//        }
+        RawLogFilePath.setText(m.getLogFile());
+    }
+
+    private void getWorkDirPath() {
+        File curDir;
+        curDir = new File(m.getBaseDirPath());
+        if (curDir.exists()) {
+            WorkingDirectoryChooser.setCurrentDirectory(curDir);
+        }
+        WorkDirectory.setText(curDir.getPath());
+    }
+
+    private void btWorkingDirectoryActionPerformed1(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btWorkingDirectoryActionPerformed1
+        getWorkDirPath();
+        if (WorkingDirectoryChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            c.setBaseDirPath(WorkingDirectoryChooser.getSelectedFile().getAbsolutePath());
+        }
+}//GEN-LAST:event_btWorkingDirectoryActionPerformed1
+    /*
+     * Find the appropriate look and feel for the system
+     * *********************************************************************/
+    private static final String[] lookAndFeels = {
+        "com.sun.java.swing.plaf.windows.WindowsLookAndFeel",
+        "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel",
+        "com.sun.java.swing.plaf.gtk.GTKLookAndFeel",
+        "com.sun.java.swing.plaf.motif.MotifLookAndFeel",
+        "javax.swing.plaf.metal.MetalLookAndFeel",
+        "javax.swing.plaf.mac.MacLookAndFeel"
+    };
+    /* Index for Mac look and feel */
+    private static final int C_MAC_LOOKANDFEEL_IDX = lookAndFeels.length - 1;
+
+    /**
+     * Try setting a look and feel for the system - catch the Exception
+     * when not found.
+     * @return true if successfull
+     */
+    private final static boolean tryLookAndFeel(String s) {
+        try {
+            UIManager.setLookAndFeel(s);
+            return true;
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    /**
+     * Set a good look and feel for the system.
+     */
+    public static void myLookAndFeel() {
+        boolean lookAndFeelIsSet = false;
+        if (java.lang.System.getProperty("os.name").toLowerCase().startsWith("mac")) {
+            lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[C_MAC_LOOKANDFEEL_IDX]);
+        }
+        for (int i = 0; !lookAndFeelIsSet && (i < lookAndFeels.length); i++) {
+            lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[i]);
+        }
+        if (!lookAndFeelIsSet) {
+            tryLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        myLookAndFeel();
         java.awt.EventQueue.invokeLater(new Runnable() {
-            Model m=new Model();
-            Controller c=new Controller(m);
+
+            Model m = new Model();
+            Controller c = new Controller(m);
+
             public void run() {
-                new BT747_Main(m,c).setVisible(true);
+                BT747_Main app = new BT747_Main(m, c);
+                app.setVisible(true);
             }
         });
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AboutBT747;
     private javax.swing.JButton ConvertButton;
@@ -273,11 +511,20 @@ public class BT747_Main extends javax.swing.JFrame
     private javax.swing.JComboBox FormatSelectionBox;
     private javax.swing.JMenu InfoMenu;
     private javax.swing.JPanel LogOperationsPanel;
+    private javax.swing.JTextField OutputFileBaseName;
+    private javax.swing.JFileChooser OutputFileChooser;
+    private javax.swing.JFileChooser RawLogFileChooser;
+    private javax.swing.JTextField RawLogFilePath;
     private javax.swing.JMenu SettingsMenu;
     private javax.swing.JLabel TargetFormatLabel;
+    private javax.swing.JTextField WorkDirectory;
+    private javax.swing.JFileChooser WorkingDirectoryChooser;
+    private javax.swing.JButton btOutputFile;
+    private javax.swing.JButton btRawLogFile;
+    private javax.swing.JButton btWorkingDirectory;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
-    
 }
