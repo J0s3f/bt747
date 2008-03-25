@@ -23,8 +23,7 @@ import bt747.sys.Settings;
 import bt747.sys.Vm;
 import bt747.util.Vector;
 
-import gps.port.GPSPort;
-import gps.port.GPSWabaPort;
+import gps.port.*;
 
 /** This class implements the low level driver of the GPS device.
  * It extracs NMEA strings.
@@ -48,7 +47,8 @@ public class GPSrxtx {
     /** Class constructor.
      */
     public  GPSrxtx() {
-        gpsPort=new GPSWabaPort(); // TODO: select according to OS (done during compile currently).
+        //gpsPort=new GPSWabaPort(); // TODO: select according to OS (done during compile currently).
+        gpsPort=new GPSRxTxPort(); // TODO: select according to OS (done during compile currently).
         setDefaults();
     }
     
