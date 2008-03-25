@@ -1,0 +1,23 @@
+#!/bin/bash
+for d  in src src_forwaba  ; do
+echo Changing in $d
+
+find $d -name '*.java' -exec \
+perl -i -p -e 's/final static/static final/g' {} \;
+
+find $d -name '*.java' -exec \
+perl -i -p -e 's/static private/private static/g' {} \;
+
+find $d -name '*.java' -exec \
+perl -i -p -e 's/final private/private final/g' {} \;
+
+find $d -name '*.java' -exec \
+perl -i -p -e 's/final public/public final/g' {} \;
+
+find $d -name '*.java' -exec \
+perl -i -p -e 's/static public/public static/g' {} \;
+
+find $d -name '*.bak' -exec rm {} \;
+echo Diffing $d
+diff 1.40/$d $d
+done

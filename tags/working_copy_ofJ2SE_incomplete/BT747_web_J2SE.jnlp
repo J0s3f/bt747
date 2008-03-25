@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<jnlp href="BT747_J2SE.jnlp" 
+	codebase="http://bt747.sourceforge.net/">
+  <information>
+    <title>BT747</title>
+    <vendor>Mario De Weerd (GNU GPL license)</vendor>
+    <icon kind="splash" href="http://sflogo.sourceforge.net/sflogo.php?group_id=196368&amp;type=4" width="125" height="37" />    
+    <offline-allowed />
+
+  </information>
+  
+  <security>
+    <all-permissions />
+  </security>
+
+  <!-- main resources -->  
+  <resources>
+    <j2se version="1.5"/>
+    <jar href="waba_forj2se.jar" download=eager/>
+    <jar href="Waba_only.jar" />
+    <jar href="RXTXcomm.jar" />
+    <jar href="swing-layout-1.0.3.jar" />
+    <jar href="collections-superwaba.jar" download="lazy" />
+  </resources>
+
+  <!-- language specific resources -->  
+  <!-- Got locale from http://www.greendesktiny.com/support/knowledgebase_detail.php?knowledge_ref=EUH-483&cat=1 --> 
+  
+  <!--
+  <resources locale="de_DE, de, de_AT, de_BE, de_CH, de_LU">
+    <jar href="BT747_rxtx__Lde.jar" />
+  </resources>  
+  <resources locale="es, es_AR, es_BO, es_CL, es_CO, es_CR, es_DO, es_EC, es_ES, es_GT, es_HN, es_MX, es_NI, es_PA, es_PE, es_PR, es_PY, es_SV, es_US, es_UY, es_VE">
+    <jar href="BT747_rxtx__Les.jar" />
+  </resources>  
+  <resources locale="fr_BE, fr_CA, fr_CH, fr_FR, fr_LU, fr">
+    <jar href="BT747_rxtx__Lfr.jar" />
+  </resources>  
+  -->
+
+  
+  <!-- Trial of chinese version
+  <resources locale="zh, zh_HK, zh_TW, zh_CN, zh_SG">
+    <jar href="BT747_rxtx__Lzh.jar" />
+    <jar href="WabaChi.jar" />
+  </resources>   -->
+
+  <!-- default language specific resources -->  
+  <resources>
+    <jar href="BT747_rxtx_j2se.jar" download="lazy"/>
+  </resources>
+  
+  <!-- os specific resources -->
+  
+  <resources os="Mac OS X" >
+    <nativelib href="RXTX_macosx.jar" download="eager"/>
+  </resources>
+  <resources os="Windows">
+    <nativelib href="RXTX_win.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="i686">
+    <nativelib href="RXTX_linux_x86.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="i386">
+    <nativelib href="RXTX_linux_x86.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="x86">
+    <nativelib href="RXTX_linux_x86.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="ia64">
+    <nativelib href="RXTX_linux_ia64.jar" download="eager"/>
+  </resources>
+  <resources os="Linux" arch="x64">
+    <nativelib href="RXTX_linux_x64.jar" download="eager"/>
+  </resources>
+
+ 
+  <applet-desc name=BT747 main-class="waba.applet.Applet" width="320" height="320">
+<param name="appClass" value="bt747.j2se_view.BT747"/>
+<param name="bpp" value="8"/>
+<param name="scale" value="1"/>
+   
+</applet-desc>
+
+</jnlp>
