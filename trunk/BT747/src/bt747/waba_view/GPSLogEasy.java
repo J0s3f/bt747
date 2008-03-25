@@ -18,6 +18,7 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************  
+import waba.ui.Button;
 import waba.ui.Container;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
@@ -31,7 +32,6 @@ import gps.GpsEvent;
 
 import bt747.Txt;
 import bt747.model.Model;
-import bt747.ui.Button;
 
 /** Implement some buttons to easily do more complex operations
  * or to do some things not done in other tabs.

@@ -191,16 +191,16 @@ public class AppSettings {
                 File m_prefFile = new File("");
                 try {
                     m_prefFile = new File(CONFIG_FILE_NAME,File.READ_ONLY);
+                    readLength = m_prefFile.getSize();
+                    if (readLength >= 100)
+                    {
+                        byte[] appSettingsArray = new byte[2048];
+                        
+                        m_prefFile.readBytes(appSettingsArray, 0, readLength);
+                        Settings.setAppSettings(new String(appSettingsArray));
+                    }
                 } catch (Exception e) {
                     //            Vm.debug("Exception new log create");
-                }
-                readLength = m_prefFile.getSize();
-                if (readLength >= 100)
-                {
-                    byte[] appSettingsArray = new byte[2048];
-                    
-                    m_prefFile.readBytes(appSettingsArray, 0, readLength);
-                    Settings.setAppSettings(new String(appSettingsArray));
                 }
                 try {
                     m_prefFile.close();
@@ -1009,27 +1009,30 @@ public class AppSettings {
             if(idx!=-1) {
                 path= path.substring(0, path.lastIndexOf('/'));
             }
-            
-            File gmap=new File(path+"/"+C_GMAP_KEY_FILENAME,File.READ_ONLY);
-            
-            if(gmap.isOpen()) {
-                byte[] b= new byte[100];
-                int len;
-                len=gmap.readBytes(b, 0, 99);
-                gmap.close();
-                if(len!=0) {
-                    gkey=new String(b,0,len);
-                    int min;
-                    min=gkey.indexOf(10);
-                    if(min!=0) {
-                        gkey=gkey.substring(0, min);
-                    };
-                    min=gkey.indexOf(13);
-                    if(min!=0) {
-                        gkey=gkey.substring(0, min);
-                    };
-                    notok=false;
+            try {
+                File gmap=new File(path+"/"+C_GMAP_KEY_FILENAME,File.READ_ONLY);
+
+                if(gmap.isOpen()) {
+                    byte[] b= new byte[100];
+                    int len;
+                    len=gmap.readBytes(b, 0, 99);
+                    gmap.close();
+                    if(len!=0) {
+                        gkey=new String(b,0,len);
+                        int min;
+                        min=gkey.indexOf(10);
+                        if(min!=0) {
+                            gkey=gkey.substring(0, min);
+                        };
+                        min=gkey.indexOf(13);
+                        if(min!=0) {
+                            gkey=gkey.substring(0, min);
+                        };
+                        notok=false;
+                    }
                 }
+            } catch (Exception e) {
+                // TODO: handle exception
             }
         }
         return gkey;

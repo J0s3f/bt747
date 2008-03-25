@@ -21,9 +21,9 @@ package bt747.waba_view;
 import ui.FileSelect;
 
 import waba.sys.Settings;
+import waba.ui.Button;
 import waba.ui.ComboBox;
 import waba.ui.Container;
-import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Edit;
 import waba.ui.Event;
@@ -35,7 +35,6 @@ import bt747.io.File;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
-import bt747.ui.Button;
 
 /** The purpose of this container is to configure file settings
  * 

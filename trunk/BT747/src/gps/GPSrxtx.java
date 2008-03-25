@@ -18,9 +18,7 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 package gps;
-import bt747.sys.Convert;
-import bt747.sys.Settings;
-import bt747.sys.Vm;
+import bt747.sys.*;
 import bt747.util.Vector;
 
 import gps.port.*;
@@ -47,8 +45,11 @@ public class GPSrxtx {
     /** Class constructor.
      */
     public  GPSrxtx() {
-        //gpsPort=new GPSWabaPort(); // TODO: select according to OS (done during compile currently).
-        gpsPort=new GPSRxTxPort(); // TODO: select according to OS (done during compile currently).
+        if(Settings.hasWaba) {
+            gpsPort=new GPSWabaPort(); // TODO: select according to OS (done during compile currently).
+        } else {
+            //gpsPort=new GPSRxTxPort(); // TODO: select according to OS (done during compile currently).
+        }
         setDefaults();
     }
     
@@ -233,7 +234,7 @@ public class GPSrxtx {
                         continueReading = false;
                         if(ignoreNMEA) {
                             // Skip NMEA strings if requested.
-                           continueReading=((String)vCmd.items[0]).startsWith("GP");
+                           continueReading=((String)vCmd.elementAt(0)).startsWith("GP");
                         }
                     } else {
                         current_state = C_ERROR_STATE;											        

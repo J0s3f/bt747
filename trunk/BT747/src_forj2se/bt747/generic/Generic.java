@@ -32,7 +32,7 @@ public final class Generic {
         t.started();
         mt.jvThread=new java.lang.Thread(mt);
         if(mt != null) {
-            System.out.println("new Thread() succeed");
+            //System.out.println("new Thread() succeed");
           } else {
              System.out.println("new Thread() failed"); 
           } 
@@ -46,8 +46,8 @@ public final class Generic {
         while (it.hasNext()) {
             MyThread tt=(MyThread)it.next();
             if( tt.btThread.equals(t)) {
-                tt.jvThread.stop();
-                t.stopped();
+                //tt.jvThread.stop();
+                tt.btThread=null;  // When this is null, the thread stops.
                 h.remove(tt);
             }
         }

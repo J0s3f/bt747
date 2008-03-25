@@ -12,8 +12,22 @@ package bt747.util;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Vector extends waba.util.Vector {
-    public final Object elementAt(int i) {
-        return items[i];
+public class Vector extends java.util.Stack<Object> {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public int getCount() {
+        return this.elementCount;
+    }
+    
+    public void del(Object o) {
+        remove(o);
+    }
+    
+    public Object[] toObjectArray() {
+        return toArray();
     }
 }

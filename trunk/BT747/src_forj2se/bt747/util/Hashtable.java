@@ -12,8 +12,9 @@ package bt747.util;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Hashtable extends waba.util.Hashtable {
+public class Hashtable extends java.util.Hashtable<String, Object> {
 
+    static final long serialVersionUID=1L;
     /**
      * @param initialCapacity
      */
@@ -34,9 +35,11 @@ public class Hashtable extends waba.util.Hashtable {
     /**
      * @param res
      */
-    public Hashtable(String res) {
-        super(res);
-        // TODO Auto-generated constructor stub
-    }
+//    public Hashtable(String res) {
+//        //res is a string of "key1=value1,key2=value2" etc.
+//        waba.util.Hashtable
+//        super(res);
+//        // TODO Auto-generated constructor stub
+//    }
 
 }

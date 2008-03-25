@@ -6,6 +6,8 @@
  */
 package bt747.sys;
 
+import java.util.Date;
+
 
 /**
  * @author Mario De Weerd
@@ -13,57 +15,32 @@ package bt747.sys;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class Time {
-    private waba.sys.Time m_Time;
-    public Time()
-    {
-       m_Time=new waba.sys.Time();
-    }
+public final class Time extends java.util.Date {
 
-    public Time(long t) {
-        m_Time=new waba.sys.Time(t);
-    }
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4377529854748199705L;
     
-    public int getYear() {
-        return m_Time.year;
-    }
-    public void setYear(int year) {
-        m_Time.year=year;
-    }
-    public int getMonth() {
-        return m_Time.month;
-    }
-    public void setMonth(int month) {
-        m_Time.month=month;
-    }
-    public int getDay() {
-        return m_Time.day;
-    }
-    public void setDay(int day) {
-        m_Time.day=day;
-    }
     public int getHour() {
-        return m_Time.hour;
+        return getHours();
     }
-    public void setHour(int hour) {
-        m_Time.hour=hour;
+    public void setHour(int hours) {
+        setHours(hours);
     }
     public int getMinute() {
-        return m_Time.minute;
+        return getMinutes();
     }
-    public void setMinute(int minute) {
-        m_Time.minute=minute;
+    public void setMinute(int hours) {
+        setMinutes(hours);
     }
     public int getSecond() {
-        return m_Time.second;
+        return getSeconds();
     }
-    public void setSecond(int second) {
-        m_Time.second=second;
+    public void setSecond(int hours) {
+        setSeconds(hours);
     }
-    public int getMillis() {
-        return m_Time.millis;
-    }
-    public void setMillis(int millis) {
-        m_Time.millis=millis;
+    public void setDay(int date) {
+        setDate(date);
     }
 }

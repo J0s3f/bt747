@@ -161,13 +161,16 @@ public class Controller {
     }
   
     public final void startDownload() {
+        try {
         m.gpsModel().getLogInit(0, /* StartPosition */
                 m.gpsModel().logMemUsed - 1, /* EndPosition */
                 m.getChunkSize(), /* Size per request */
                 m.getLogFilePath(), /* Log file name */
                 m.getCard(), /* Card for file operations */
                 m.isIncremental() /* Incremental download */);
-
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
     
     /***

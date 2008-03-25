@@ -18,13 +18,14 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import bt747.model.Model;
-import bt747.ui.Check;
+import waba.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 
 import gps.BT747_dev;
+
+import bt747.model.Model;
 
 /**
  * @author Mario De Weerd

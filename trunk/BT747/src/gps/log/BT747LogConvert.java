@@ -128,7 +128,12 @@ public final class BT747LogConvert implements GPSLogConvert {
         logFormat=0;
         nextAddrToRead=0;
         badrecord_count=0;
-        fileSize=m_File.getSize();
+        try {
+            fileSize=m_File.getSize();
+        } catch (Exception e) {
+            // TODO: handle exception
+            fileSize=0;
+        }
         while(nextAddrToRead<fileSize) {
             int okInBuffer=-1; // Last ending position in buffer
             
@@ -156,7 +161,11 @@ public final class BT747LogConvert implements GPSLogConvert {
             int offsetInBuffer=0;
             int newLogFormat;
             
-            m_File.setPos(nextAddrToRead);
+            try {
+                m_File.setPos(nextAddrToRead);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
             
             if((nextAddrToRead&0xFFFF)==0) {
                 /******************************
@@ -164,8 +173,13 @@ public final class BT747LogConvert implements GPSLogConvert {
                  * Only 20 bytes are read - just enough to get the log format.  
                  */
                 if(sizeToRead>=20) {
+                    readResult=0;
                     // Read header (20 bytes is enough)
-                    readResult=m_File.readBytes(bytes, 0, 20);
+                    try {
+                        readResult=m_File.readBytes(bytes, 0, 20);
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
                     if(readResult!=20) {
                         (new MessageBox(
                                 Txt.ERROR,
@@ -193,7 +207,12 @@ public final class BT747LogConvert implements GPSLogConvert {
                 /*******************************
                  * Not reading header - reading data.
                  */
-                readResult=m_File.readBytes(bytes, 0, sizeToRead);
+                try {
+                    readResult=m_File.readBytes(bytes, 0, sizeToRead);
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    readResult=0;
+                }
                 if(readResult!=sizeToRead) {
                     (new MessageBox(
                             Txt.ERROR,
@@ -361,7 +380,11 @@ public final class BT747LogConvert implements GPSLogConvert {
     
     public final void toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
         if(File.isAvailable()) {
-            m_File=new File(fileName,File.READ_ONLY, Card);
+            try {
+                m_File=new File(fileName,File.READ_ONLY, Card);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
             if(!m_File.isOpen()) {
                 (new MessageBox(
                         Txt.ERROR,
@@ -387,7 +410,11 @@ public final class BT747LogConvert implements GPSLogConvert {
             }
             
             if(m_File!=null) {
-                m_File.close();
+                try {
+                    m_File.close();
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
             }
         }
     }

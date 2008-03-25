@@ -49,15 +49,16 @@ public class BT747_Main extends javax.swing.JFrame
     }
 
     public void onEvent(bt747.ui.Event e) {
-        if (e.type == ModelEvent.DOWNLOAD_PROGRESS_UPDATE) {
+        int type = e.getType();
+        if (type == ModelEvent.DOWNLOAD_PROGRESS_UPDATE) {
             progressBarUpdate();
-        } else if (e.type == ModelEvent.LOGFILEPATH_UPDATE) {
+        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
             getRawLogFilePath();
-        } else if (e.type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
             getOutputFilePath();
-        } else if (e.type == ModelEvent.WORKDIRPATH_UPDATE) {
+        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
             getWorkDirPath();
-        } else if (e.type == ModelEvent.INCREMENTAL_CHANGE) {
+        } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
             getIncremental();
         }
     }
@@ -524,10 +525,15 @@ public class BT747_Main extends javax.swing.JFrame
     private void openPort(String s) {
         boolean foundPort=false;
         int port=0;
-        port=Convert.toInt(s);
-        if(Convert.toString(port).equals(s)) {
-            foundPort=true;
+        try {
+            port=Convert.toInt(s);
+            if(Convert.toString(port).equals(s)) {
+                foundPort=true;
+            }
+        } catch (Exception e) {
+            // Ignore exception
         }
+        try {
         if(!foundPort
                 && s.toUpperCase().startsWith("COM")) {
             if(s.length()==5&&s.charAt(4)==':') {
@@ -542,6 +548,9 @@ public class BT747_Main extends javax.swing.JFrame
             } {
                 foundPort=true;
             }
+        }
+        } catch (Exception e) {
+            // Ignore exception
         }
         if(foundPort) {
             c.setPort(port);

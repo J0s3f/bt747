@@ -19,6 +19,7 @@ package bt747.waba_view;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 
+import waba.ui.Button;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -30,7 +31,6 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.ui.Button;
 
 /**
  * @author Mario De Weerd

@@ -19,14 +19,15 @@ package bt747.waba_view;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.fx.Color;
+import waba.ui.Button;
 import waba.ui.Calendar;
+import waba.ui.Check;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
-import waba.util.Date;
 
 import gps.GPSstate;
 import gps.GpsEvent;
@@ -36,8 +37,7 @@ import bt747.control.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
-import bt747.ui.Button;
-import bt747.ui.Check;
+import bt747.util.Date;
 
 /**
  * @author Mario De Weerd
@@ -109,9 +109,9 @@ public class GPSLogGet extends Container {
         m_chkIncremental.setChecked(m.isIncremental());
         add(m_chkLogOverwriteStop = new Check(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
         add(new Label(Txt.DATE_RANGE), LEFT, AFTER); //$NON-NLS-1$
-        add(m_btStartDate = new Button(m.getStartDate().getDate()), AFTER, SAME); //$NON-NLS-1$
+        add(m_btStartDate = new Button(m.getStartDate().getDateString()), AFTER, SAME); //$NON-NLS-1$
         //m_btStartDate.setMode(Edit.DATE);
-        add(m_btEndDate = new Button(m.getEndDate().getDate()), RIGHT, SAME); //$NON-NLS-1$
+        add(m_btEndDate = new Button(m.getEndDate().getDateString()), RIGHT, SAME); //$NON-NLS-1$
         //m_btEndDate.setMode(Edit.DATE);
         add(m_btGetLog = new Button(Txt.GET_LOG), LEFT, AFTER + 2); //$NON-NLS-1$
         add(m_btCancelGetLog = new Button(Txt.CANCEL_GET), AFTER + 5, SAME); //$NON-NLS-1$
@@ -278,7 +278,7 @@ public class GPSLogGet extends Container {
 
             case ControlEvent.WINDOW_CLOSED:
                 if (event.target == cal) {
-                    Date d = cal.getSelectedDate();
+                    Date d = new Date(cal.getSelectedDate());
                     if (d != null) {
                         calBt.setText(d.toString());
                         // Can't change the value of the date, changing all

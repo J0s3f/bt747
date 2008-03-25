@@ -18,6 +18,8 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.ui.Button;
+import waba.ui.Check;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -29,8 +31,6 @@ import gps.GpsEvent;
 
 import bt747.Txt;
 import bt747.sys.Convert;
-import bt747.ui.Button;
-import bt747.ui.Check;
 /**
  * @author Mario De Weerd
  */
