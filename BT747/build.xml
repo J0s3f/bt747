@@ -421,6 +421,9 @@
 		<jar jarfile="${lib.dir}/waba_forj2se.jar" compress="true">
 			<fileset dir="${build.dir}/forj2se" includes="**/*.class" />
 		</jar>
+        <antcall target="sign">
+            <param name="jar.tosign" value="${lib.dir}/waba_forj2se.jar" />
+        </antcall>
 
 	</target>
 

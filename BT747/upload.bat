@@ -29,6 +29,9 @@ goto end:
 ssh shell.sourceforge.net chmod 755 bt747/htdocs/swing-layout-1.0.3.jar
 scp lib/swing-layout-1.0.3.jar shell.sourceforge.net:bt747/htdocs/swing-layout-1.0.3.jar
 ssh shell.sourceforge.net chmod 755 bt747/htdocs/swing-layout-1.0.3.jar
+goto end:
+
+:forj2se
 
 ssh shell.sourceforge.net chmod 755 bt747/htdocs/waba_forj2se.jar
 scp lib/waba_forj2se.jar shell.sourceforge.net:bt747/htdocs/waba_forj2se.jar
