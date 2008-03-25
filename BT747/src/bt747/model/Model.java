@@ -1,15 +1,11 @@
 package bt747.model;
 
-import waba.ui.Control;
-import waba.util.Date;
-
-import gps.GpsEvent;
+import gps.GPSstate;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
-
-import bt747.ui.Event;
-import gps.GPSstate;
 import gps.log.GPSRecord;
+
+import bt747.util.Date;
 
 public class Model extends AppSettings implements gps.settings{
 

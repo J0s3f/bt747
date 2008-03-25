@@ -6,6 +6,8 @@
  */
 package bt747.ui;
 
+import javax.swing.JFrame;
+
 
 
 /**
@@ -14,15 +16,19 @@ package bt747.ui;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class MessageBox extends waba.ui.MessageBox {
+public final class MessageBox extends javax.swing.JDialog {
 
     /**
      * @param title
      * @param msg
      */
     public MessageBox(String title, String msg) {
-        super(title, msg);
+        super(new JFrame(),"title");
         // TODO Auto-generated constructor stub
+    }
+    
+    public int popupBlockingModal() {
+        return 0;
     }
 
     /**
@@ -31,7 +37,8 @@ public final class MessageBox extends waba.ui.MessageBox {
      * @param buttonCaptions
      */
     public MessageBox(String title, String text, String[] buttonCaptions) {
-        super(title, text, buttonCaptions);
+        super(new JFrame(),"title");
+//        super(title, text, buttonCaptions);
         // TODO Auto-generated constructor stub
     }
 
@@ -44,11 +51,16 @@ public final class MessageBox extends waba.ui.MessageBox {
      */
     public MessageBox(String title, String text, String[] buttonCaptions,
             int gap, int insideGap) {
-        super(title, text, buttonCaptions, gap, insideGap);
+        //super(title, text, buttonCaptions, gap, insideGap);
+        this(title, "");
         // TODO Auto-generated constructor stub
     }
 
     private boolean popped=false;
+    
+    public void popupModal() {
+        // TODO Auto-generated method stub
+    }
     
     
     /**
@@ -57,23 +69,9 @@ public final class MessageBox extends waba.ui.MessageBox {
     public boolean isPopped() {
         return popped;
     }
-    /* (non-Javadoc)
-     * @see waba.ui.Window#onPopup()
-     */
-    protected void onPopup() {
+    
+    private void getPressedButtonIndex() {
         // TODO Auto-generated method stub
-        super.onPopup();
-        popped=true;
-//        ((btMainAppInterf)MainWindow.getMainWindow()).IncrementPopups();
-    }
-    /* (non-Javadoc)
-     * @see waba.ui.Window#onUnpop()
-     */
-    protected void onUnpop() {
-        // TODO Auto-generated method stub
-        super.onUnpop();
-        
-//        ((btMainAppInterf)MainWindow.getMainWindow()).DecrementPopups();
-        popped=false;
+
     }
 }

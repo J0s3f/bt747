@@ -29,7 +29,7 @@ import gps.GpsEvent;
 
 import bt747.Txt;
 import bt747.sys.Convert;
-import bt747.ui.Button;
+import waba.ui.Button;
 import bt747.ui.MessageBox;
 /**
  * @author Mario De Weerd

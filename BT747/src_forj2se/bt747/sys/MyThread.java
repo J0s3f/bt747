@@ -9,7 +9,7 @@ public class MyThread implements java.lang.Runnable {
         btThread=t;
     }
     public final void run() {
-        System.out.println("new Thread().run() succeed");
+        //System.out.println("new Thread().run() succeed");
         while(btThread!=null)
         {
             btThread.run();

@@ -18,6 +18,7 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
+import waba.ui.Check;
 import waba.ui.Container;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
@@ -29,7 +30,6 @@ import gps.log.GPSFilter;
 
 import bt747.Txt;
 import bt747.model.Model;
-import bt747.ui.Check;
 
 /** The purpose of this container is to set the log filter settings.
  */

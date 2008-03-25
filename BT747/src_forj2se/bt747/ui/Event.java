@@ -6,35 +6,53 @@
  */
 package bt747.ui;
 
+
 /**
  * @author Mario De Weerd
  *
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Event extends waba.ui.Event {
+public class Event extends java.awt.Event {
 
     /**
      * 
      */
-    public Event() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+    private static final long serialVersionUID = 1L;
 
+//    /**
+//     * 
+//     */
+//    public Event() {
+//        super();
+//        // TODO Auto-generated constructor stub
+//    }
+//
+    public Event() {
+        super(null,0,null);
+    }
+    
+    public Event(Event e) {
+        super(e.target, e.id, e.arg);
+    }
     /**
      * @param type
      * @param target
      * @param timeStamp
      */
     public Event(int type, Object target, int timeStamp) {
-        super(type, target, timeStamp);
+        super(target, type, null);
         // TODO Auto-generated constructor stub
     }
     
+    static private int next_id=10000;
     public final static int getNextAvailableEventId()
     {
-       return waba.ui.Event.getNextAvailableEventId();
+       return next_id++;
+    }
+    
+    public final int getType() {
+        return this.id;
     }
 
 

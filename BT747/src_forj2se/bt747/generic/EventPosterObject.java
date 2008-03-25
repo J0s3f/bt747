@@ -6,8 +6,6 @@
  */
 package bt747.generic;
 
-import waba.ui.Control;
-
 import bt747.ui.Event;
 
 /**
@@ -18,15 +16,16 @@ import bt747.ui.Event;
  */
 public class EventPosterObject {
 
-    Control m_Control;
+    java.awt.Component m_Control;
     /**
      * 
      */
-    public EventPosterObject(Control s) {
+    public EventPosterObject(java.awt.Component s) {
         m_Control=s;
     }
     
     public void postEvent(Event e) {
+        //m_Control.
         m_Control.postEvent(e);
     }
 

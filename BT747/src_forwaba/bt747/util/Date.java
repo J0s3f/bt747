@@ -66,5 +66,18 @@ public class Date extends waba.util.Date {
         super(t);
         // TODO Auto-generated constructor stub
     }
+    
+    public String getDateString() {
+        return getDate();
+    }
 
+    public Date (waba.util.Date d) {
+        super(d.getDay(),d.getMonth(),d.getYear());
+    }
+    
+    private final static int JULIAN_DAY_1_1_1970=18264;   
+
+    public final int dateToUTCepoch1970() {
+        return (getJulianDay()-JULIAN_DAY_1_1_1970)*24*60*60;
+    }
 }

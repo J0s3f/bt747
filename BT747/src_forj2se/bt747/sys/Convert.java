@@ -15,48 +15,49 @@ package bt747.sys;
 public final class Convert {
     public static String toString(boolean p)
     {
-       return waba.sys.Convert.toString(p);
+       return String.valueOf(p);
     }
 
     public static String toString(int p)
     {
-       return waba.sys.Convert.toString(p);
+       return String.valueOf(p);
     }
 
     public static String toString(float p)
     {
-       return waba.sys.Convert.toString(p);
+       return Float.toString(p);
     }
     public static String toString(double p)
     {
-       return waba.sys.Convert.toString(p);
+       return Double.toString(p);
     }
     
     public static String toString(double p, int i)
     {
-       return waba.sys.Convert.toString(p,i);
+       return Double.toString(p); // TODO: implement digits after .
     }
     public static String unsigned2hex(int p, int i)
     {
-       return waba.sys.Convert.unsigned2hex(p,i);
+        String s=Integer.toHexString(p);
+       return "00000000".substring(8-s.length()).concat(s);
     }
     public static int toInt(String s) {
-        return waba.sys.Convert.toInt(s);
+        return Integer.valueOf(s).intValue();
     }
     public static float toFloat(String s) {
-        return waba.sys.Convert.toFloat(s);
+        return Float.parseFloat(s);
     }
     public static double toDouble(String s) {
-        return waba.sys.Convert.toDouble(s);
+        return Double.parseDouble(s);
     }
     public static double longBitsToDouble(long l) {
-        return waba.sys.Convert.longBitsToDouble(l);
+        return Double.longBitsToDouble(l);
     }
 
     public static float toFloatBitwise(int l) {
-        return waba.sys.Convert.toFloatBitwise(l);
+        return Float.intBitsToFloat(l);
     }
     public static int toIntBitwise(float f) {
-        return waba.sys.Convert.toIntBitwise(f);
+        return Float.floatToIntBits(f);
     }
 }

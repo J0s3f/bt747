@@ -37,5 +37,7 @@ public class Event extends waba.ui.Event {
        return waba.ui.Event.getNextAvailableEventId();
     }
 
-
+    public final int getType() {
+        return this.type;
+    }
 }

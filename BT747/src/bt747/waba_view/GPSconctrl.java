@@ -18,8 +18,8 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import bt747.control.Controller;
 import waba.io.SerialPort;
+import waba.ui.Button;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -33,10 +33,10 @@ import gps.log.GPSRecord;
 
 import bt747.Txt;
 import bt747.Version;
+import bt747.control.Controller;
 import bt747.model.Model;
 import bt747.sys.Convert;
 import bt747.sys.Time;
-import bt747.ui.Button;
 
 /**
  * @author Mario De Weerd

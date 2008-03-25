@@ -338,9 +338,8 @@ public final class Conv {
         return r;
     }
 
-    private final static int JULIAN_DAY_1_1_1970=18264;   
-
-    public final static int dateToUTCepoch1970(final Date d) {
-        return (d.getJulianDay()-JULIAN_DAY_1_1_1970)*24*60*60;
+    public final static int dateToUTCepoch1970(final bt747.util.Date d) {
+        return d.dateToUTCepoch1970();
     }
+
 }
