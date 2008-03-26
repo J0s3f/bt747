@@ -86,6 +86,6 @@ public class LogFormat {
 	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		return String.format("0x%08x", this.format);
+		return "0x"+Integer.toHexString(this.format);
 	}
 } // end of class LogFormat

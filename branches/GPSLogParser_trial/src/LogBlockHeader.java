@@ -67,11 +67,22 @@ public class LogBlockHeader {
 		StringBuilder sb = new StringBuilder(100);
 		sb.append(this.getClass().getName());
 		if (this.count != null) {
-			sb.append(String.format(": %6d", this.count));
+			sb.append(": ");
+			sb.append(this.count);
 		} else {
-			sb.append(String.format(":Unknown number of"));
+			sb.append(":Unknown number of");
 		}
-		sb.append(String.format(" records in format "+this.format+" ("+this.fix+"), p="+(this.period/10.0)+"s, d="+(this.distance/10.0)+"m, s="+(this.speed/10.0)+"km/h"));
+		sb.append(" records in format ");
+		sb.append(this.format);
+		sb.append(" (");
+		sb.append(this.fix);
+		sb.append("), p=");
+		sb.append(this.period/10.0);
+		sb.append("s, d=");
+		sb.append(this.distance/10.0);
+		sb.append("m, s=");
+		sb.append(this.speed/10.0);
+		sb.append("km/h");
 		
 		return sb.toString();
 	}

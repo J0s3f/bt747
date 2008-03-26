@@ -18,6 +18,7 @@
 
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -167,35 +168,99 @@ public class LogPacket {
 	@SuppressWarnings("nls")
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(200);
-		if (this.utc != null) sb.append(String.format("%tF %tT (%d)", this.utc, this.utc, this.utc.getTime()));
-		if (this.fix != null) sb.append(String.format(", fix=%02x", this.fix));
-		if (this.latitude != null) sb.append(String.format(", lat=%f", this.latitude));
-		if (this.longitude != null) sb.append(String.format(", long=%f", this.longitude));
-		if (this.height != null) sb.append(String.format(", height=%f", this.height));
-		if (this.speed != null) sb.append(String.format(", speed=%f", this.speed));
-		if (this.heading != null) sb.append(String.format(", heading=%f", this.heading));
-		if (this.dsta != null) sb.append(String.format(", DSta=%d", this.dsta));
-		if (this.dage != null) sb.append(String.format(", DAge=%d", this.dage));
-		if (this.pdop != null) sb.append(String.format(", PDOP=%d", this.pdop));
-		if (this.hdop != null) sb.append(String.format(", HDOP=%d", this.hdop));
-		if (this.vdop != null) sb.append(String.format(", VDOP=%d", this.vdop));
-		if (this.nSatInUse != null) sb.append(String.format(", #Siu=%d", this.nSatInUse));
-		if (this.nSatInView != null) sb.append(String.format(", #Siv=%d", this.nSatInView));
+		StringBuffer sb = new StringBuffer(200);
+		// We're going without the more elegant String.format to enable the use of retroweaver . . .
+		// For the same reason we use StringBuffer instead of StringBuilder
+		if (this.utc != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			sb.append(sdf.format(this.utc));
+			}
+		if (this.fix != null) {
+			sb.append(", fix=0x");
+			sb.append(Integer.toHexString(this.fix.intValue()));
+		}
+		if (this.latitude != null) {
+			sb.append(", lat=");
+			sb.append(this.latitude.toString());
+		}
+		if (this.longitude != null){
+			sb.append(", long=");
+			sb.append(this.longitude.toString());
+		}
+		if (this.height != null) {
+			sb.append(", height=");
+			sb.append(this.height.toString());
+		}
+		if (this.speed != null) {
+			sb.append(", speed=");
+			sb.append(this.speed.toString());
+		}
+		if (this.heading != null) {
+			sb.append(", heading=");
+			sb.append(this.heading.toString());
+		}
+		if (this.dsta != null) {
+			sb.append(", DSta=");
+			sb.append(this.dsta.toString());
+		}
+		if (this.dage != null) {
+			sb.append(", DAge=");
+			sb.append(this.dage.toString());
+		}
+		if (this.pdop != null) {
+			sb.append(", PDOP=");
+			sb.append(this.pdop.toString());
+		}
+		if (this.hdop != null) {
+			sb.append(", HDOP=");
+			sb.append(this.hdop.toString());
+		}
+		if (this.vdop != null) {
+			sb.append(", VDOP=");
+			sb.append(this.vdop.toString());
+		}
+		if (this.nSatInUse != null) {
+			sb.append(", #Siu=");
+			sb.append(this.nSatInUse.toString());
+		}
+		if (this.nSatInView != null) {
+			sb.append(", #Siv=");
+			sb.append(this.nSatInView.toString());
+		}
 		if ((this.sats != null) && (this.sats.length > 0)) {
 			sb.append(", [");
 			for (SatelliteData sat : this.sats) {
-				sb.append(String.format("(id=%d, used=%b, n=%d", sat.id, sat.isInUse, sat.nbrSats));
-				if (sat.elevation != null) sb.append(String.format(", elev=%d", sat.elevation));
-				if (sat.azimuth != null) sb.append(String.format(", azimv=%d", sat.azimuth));
-				if (sat.SNR != null) sb.append(String.format(", SNR=%d", sat.SNR));
+				sb.append("(id="); sb.append(sat.id);
+				sb.append(", used="); sb.append(sat.isInUse);
+				sb.append(", n="); sb.append(sat.nbrSats);
+				if (sat.elevation != null) {
+					sb.append(", elev=");
+					sb.append(sat.elevation);
+				}
+				if (sat.azimuth != null) {
+					sb.append(", azim=");
+					sb.append(sat.azimuth);
+				}
+				if (sat.SNR != null) {
+					sb.append(", SNR=");
+					sb.append(sat.SNR);
+				}
 				sb.append(')');
 			}
 			sb.append(']');
 		}
-		if (this.recordingMethod != null) sb.append(String.format(", RCR=%d", this.recordingMethod));
-		if (this.milliseconds != null) sb.append(String.format(", ms=%d", this.milliseconds));
-		if (this.distance != null) sb.append(String.format(", distance=%f", this.distance));
+		if (this.recordingMethod != null) {
+			sb.append(", RCR=%d");
+			sb.append(this.recordingMethod);
+		}
+		if (this.milliseconds != null) {
+			sb.append(", ms=");
+			sb.append(this.milliseconds);
+		}
+		if (this.distance != null) {
+			sb.append(", distance=");
+			sb.append(this.distance);
+		}
 		return sb.toString();
 	}
 } // end of class LogPacket

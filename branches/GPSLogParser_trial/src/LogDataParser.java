@@ -47,11 +47,20 @@ public class LogDataParser {
 		this.dis = aDIS;
 	}
 	
+	/**
+	 * This method is for debugging only!
+	 * <br>
+	 * The next "l" bytes of the stream (given on instantiation) are written to System.out.
+	 * For performance this is really nasty . . .
+	 * @param l
+	 */
 	public void peek(int l) {
 		try {
 			dis.mark(l);
 			for (int i = 0; i < l; i++) {
-				System.out.printf("%02x ", dis.readByte()); //$NON-NLS-1$
+				byte b = dis.readByte();
+				String s = (b<16)?"0"+Integer.toHexString(b):Integer.toHexString(b);
+				System.out.print(s+" "); //$NON-NLS-1$
 			}
 			System.out.println();
 			dis.reset();

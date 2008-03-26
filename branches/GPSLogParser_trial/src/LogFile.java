@@ -166,9 +166,10 @@ public class LogFile implements Iterable<LogPacket> {
 	public static void main(String[] argv) throws FileNotFoundException  {
 		LogFile lf = new LogFile(argv[0], new LogDataParserHolux());
 		
-		int i=0;
+		int i=1;
 		for (LogPacket packet : lf) {
-			System.out.printf("%4d: %s\n", ++i, packet);
+			System.out.println(""+i+": "+packet);
+			i++;
 		}
 			
 	} // void main(String[])
