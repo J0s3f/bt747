@@ -1,4 +1,4 @@
-package ui;
+package bt747.waba_view.ui;
 import waba.fx.Rect;
 import waba.io.File;
 import waba.ui.ControlEvent;

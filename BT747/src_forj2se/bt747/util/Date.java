@@ -6,9 +6,10 @@
  */
 package bt747.util;
 
-import java.util.Formatter;
+import java.text.DateFormat;
+import java.util.Locale;
 
-import com.sun.org.apache.bcel.internal.generic.FMUL;
+import bt747.sys.Settings;
 
 /**
  * @author Mario De Weerd
@@ -58,9 +59,28 @@ public class Date extends java.util.Date {
      * @param strDate
      * @param dateFormat
      */
-//    public Date(String strDate, byte dateFormat) {
-//        super(strDate, dateFormat);
-//    }
+    public Date(String strDate, byte dateFormat) {
+        super();
+        DateFormat df;
+        switch (dateFormat) {
+
+        case Settings.DATE_YMD:
+            df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
+            break;
+        case Settings.DATE_DMY:
+        default:
+            df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE);
+            break;
+        }
+        try {
+        java.util.Date d=df.parse(strDate);
+        super.setDate(d.getDate());
+        super.setMonth(d.getMonth());
+        super.setYear(d.getYear());
+        } catch (Exception e){
+            // TODO: handle exception
+        }
+    }
 
     /**
      * @param t
@@ -92,6 +112,12 @@ public class Date extends java.util.Date {
        return "";
 
    }
+   
+//   private static final int DAYS_Julian_1970 = (new Date(1,1,1970)).getJulianDay();
+   public final int getJulianDay() {
+       return dateToUTCepoch1970();
+   }
+
    
    
 

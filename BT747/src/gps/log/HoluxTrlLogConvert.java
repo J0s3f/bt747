@@ -51,6 +51,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
     
     
     public final void parseFile(final GPSFile gpsFile) {
+        try {
         GPSRecord gpsRec=new GPSRecord();
         final int C_BUF_SIZE=0x800;
         byte[] bytes=new byte[C_BUF_SIZE];
@@ -161,6 +162,9 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
             } /* ContinueInBuffer*/
             nextAddrToRead-=(sizeToRead-offsetInBuffer);
         } /* nextAddrToRead<fileSize */
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public final void setTimeOffset(long offset) {
@@ -173,6 +177,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
     
     
     public final void toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
+        try {
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
@@ -195,6 +200,9 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
             if(m_File!=null) {
                 m_File.close();
             }
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     

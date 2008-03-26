@@ -19,8 +19,8 @@
 //********************************************************************  
 package gps.log;
 
-import waba.sys.Settings;
-import waba.util.Date;
+import bt747.sys.Settings;
+import bt747.util.Date;
 
 import gps.BT747_dev;
 import gps.convert.Conv;
@@ -68,6 +68,7 @@ public final class CSVLogConvert implements GPSLogConvert {
         boolean firstline=true;
         
         int[] records=new int[30];
+        try {
         records[0]=FMT_NO_FIELD; // Indicates that there are no records
         
         recCount=0;
@@ -516,6 +517,9 @@ public final class CSVLogConvert implements GPSLogConvert {
             } while(continueInBuffer);
             nextAddrToRead-=(sizeToRead-offsetInBuffer);
         } /* nextAddrToRead<fileSize */
+        } catch ( Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public final void setTimeOffset(long offset) {
@@ -528,6 +532,7 @@ public final class CSVLogConvert implements GPSLogConvert {
     
     
     public final void toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
+        try {
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
@@ -552,6 +557,9 @@ public final class CSVLogConvert implements GPSLogConvert {
             if(m_File!=null) {
                 m_File.close();
             }
+        } } catch (Exception e) {
+            e.printStackTrace();
+            // TODO: handle exception
         }
     }
     

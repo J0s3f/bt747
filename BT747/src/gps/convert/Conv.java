@@ -19,7 +19,6 @@
 //********************************************************************                              
 package gps.convert;
 
-import waba.util.Date;
 
 /**
  * Implement some conversion functions

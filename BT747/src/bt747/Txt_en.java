@@ -8,8 +8,8 @@ import bt747.sys.Settings;
  ** Class to provide language specific strings.
  */
 public class Txt_en {
-    public static void init() {
-    }
+    public static final String fontFile=null;
+    public static final String encoding=null;
     
     // BT747 class
     public static final String S_FILE = "File";

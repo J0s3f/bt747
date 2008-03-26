@@ -1,8 +1,5 @@
 package bt747;
 
-import waba.fx.Font;
-import waba.ui.MainWindow;
-
 import bt747.sys.Settings;
 
 /**
@@ -11,14 +8,8 @@ import bt747.sys.Settings;
  ** Class to provide language specific strings.
  */
 public class Txt_ko {
-    
-    /**
-     * 
-     */
-    public static void init() {
-        MainWindow.defaultFont = new Font("UFFKor", Font.PLAIN, 12);
-        waba.sys.Convert.setDefaultConverter("UTF8");
-    }
+    public static final String fontFile="UFFKor";
+    public static final String encoding="UTF8";
     
     // BT747 class
     public static final String S_FILE = "File";

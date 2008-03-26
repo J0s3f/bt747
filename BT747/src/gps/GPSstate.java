@@ -1628,11 +1628,17 @@ public class GPSstate implements Thread {
                         //                        Vm.debug("Writing("+Convert.toString(p_StartAddr)+"):
                         // "+Convert.toString(j)+" "+Convert.toString(l));
 
-                        if ((m_logFile.writeBytes(m_Data, j, l)) != l) {
-                            //                            Vm.debug("Problem during anaLog:
-                            // "+Convert.toString(m_logFile.lastError));
+                        try {
+                            if ((m_logFile.writeBytes(m_Data, j, l)) != l) {
+                                //                            Vm.debug("Problem during anaLog:
+                                // "+Convert.toString(m_logFile.lastError));
+                                cancelGetLog();
+                                //                            Vm.debug(Convert.toString(q));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            
                             cancelGetLog();
-                            //                            Vm.debug(Convert.toString(q));
                         }
                         j += l;
                     }
@@ -1676,10 +1682,15 @@ public class GPSstate implements Thread {
                     && (dataLength == C_BLOCKVERIF_SIZE)) {
                 // The block we got should be the block to check
                 byte[] m_localdata = new byte[dataLength];
-                int result;
+                int result=0;
                 boolean success = false;
-                m_logFile.setPos(p_StartAddr);
-                result = m_logFile.readBytes(m_localdata, 0, dataLength);
+                try {
+                    m_logFile.setPos(p_StartAddr);
+                    result = m_logFile.readBytes(m_localdata, 0, dataLength);
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    e.printStackTrace();
+                }
                 if (result == dataLength) {
                     success = true;
                     for (int i = dataLength - 1; i >= 0; i--) {
@@ -1696,7 +1707,11 @@ public class GPSstate implements Thread {
                     // Downloaded data seems to correspond - start incremental
                     // download
                     reOpenLogWrite(fileName, m_logFileCard);
-                    m_logFile.setPos(m_NextReadAddr);
+                    try {
+                        m_logFile.setPos(m_NextReadAddr);
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
                     m_logState = C_LOG_ACTIVE;
                 } else {
                     // Log is not the same - delete the log and reopen.

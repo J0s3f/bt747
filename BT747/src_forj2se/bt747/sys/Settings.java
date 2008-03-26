@@ -17,6 +17,8 @@ public final class Settings {
     public static final String platform = java.lang.System.getProperty("os.name");
     public static final String versionStr = java.lang.System.getProperty("os.version");
     public static final boolean onDevice = false;
+    public static final byte DATE_YMD=1;
+    public static final byte DATE_DMY=2;
 
     private static String appSettings=""; // TODO: Implement other solution
     /**

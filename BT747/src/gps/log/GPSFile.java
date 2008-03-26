@@ -63,25 +63,23 @@ public abstract class GPSFile {
 
     protected int m_prevdate = 0;
     protected int m_prevtime = 0;
-    protected boolean m_sepTrack=false;
-    protected int m_TrackSepTime=60*60; // Time needed between points to separate segments.
-    protected int filesCreated=0;
-    
-    protected boolean m_oneFilePerTrack=false;
-    protected boolean m_multipleFiles=false;
-    
-    protected boolean recordNbrInLogs=false;
-    
-    protected String badTrackColor="FF0000";
-    protected String goodTrackColor="0000FF";
-    
-    protected boolean imperial=false; // If true, use English units
-    
-    protected static final String[] C_MONTHS = {
-            "JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"
-    };
-    
+    protected boolean m_sepTrack = false;
+    protected int m_TrackSepTime = 60 * 60; // Time needed between points to
+                                            // separate segments.
+    protected int filesCreated = 0;
 
+    protected boolean m_oneFilePerTrack = false;
+    protected boolean m_multipleFiles = false;
+
+    protected boolean recordNbrInLogs = false;
+
+    protected String badTrackColor = "FF0000";
+    protected String goodTrackColor = "0000FF";
+
+    protected boolean imperial = false; // If true, use English units
+
+    protected static final String[] C_MONTHS = { "JAN", "FEB", "MAR", "APR",
+            "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
     public void initialiseFile(final String basename, final String ext,
             final int Card, int fileSeparationFreq) {
@@ -90,28 +88,28 @@ public abstract class GPSFile {
         m_ext = ext;
         m_basename = basename;
         m_card = Card;
-        m_oneFilePerDay= false;
-        m_oneFilePerTrack=false;
-        switch(fileSeparationFreq) {
+        m_oneFilePerDay = false;
+        m_oneFilePerTrack = false;
+        switch (fileSeparationFreq) {
         case 1:
-            m_oneFilePerDay= true;
-            m_multipleFiles=true;
+            m_oneFilePerDay = true;
+            m_multipleFiles = true;
             break;
         case 2:
-            m_oneFilePerTrack=true;
-            m_multipleFiles=true;
+            m_oneFilePerTrack = true;
+            m_multipleFiles = true;
             break;
         }
     };
-    
+
     public void setOneFilePerTrack(final boolean oneFilePerTrack) {
-        m_oneFilePerTrack=oneFilePerTrack;
+        m_oneFilePerTrack = oneFilePerTrack;
     }
 
     public void setTrackSepTime(final int time) {
-        m_TrackSepTime=time;
+        m_TrackSepTime = time;
     }
-    
+
     public void setActiveFileFields(final GPSRecord full) {
         activeFileFields = full;
     }
@@ -119,11 +117,11 @@ public abstract class GPSFile {
     public void writeLogFmtHeader(final GPSRecord f) {
         activeFields = new GPSRecord(f);
     };
-    
+
     public void setFilters(final GPSFilter[] filters) {
         m_Filters = filters;
     };
-    
+
     public void setImperial(final boolean imperial) {
         this.imperial = imperial;
     }
@@ -131,7 +129,7 @@ public abstract class GPSFile {
     /**
      * Returns true when the record is used by the format. Checks all the
      * filters by default.
-     *  
+     * 
      */
     protected boolean recordIsNeeded(GPSRecord s) {
         boolean result = false;
@@ -151,23 +149,21 @@ public abstract class GPSFile {
 
         if (activeFields.utc != 0) {
             setUTCTime(t, s.utc); // Initialisation needed later too!
-            if (m_oneFilePerDay||m_oneFilePerTrack) {
-                dateref = (t.getYear() << 14) + (t.getMonth() << 7) + t.getDay(); // year *
-                                                                   // 16384 +
-                                                                   // month *
-                                                                   // 128 + day
+            if (m_oneFilePerDay || m_oneFilePerTrack) {
+                dateref = (t.getYear() << 14) + (t.getMonth() << 7)
+                        + t.getDay(); // year *
+                // 16384 +
+                // month *
+                // 128 + day
                 newDate = (dateref > m_prevdate);
             }
 
         }
 
-        if ( ( (((m_oneFilePerDay && newDate) && activeFields.utc != 0) || m_FirstRecord)
-                ||
-                (m_oneFilePerTrack && activeFields.utc != 0 
-                        && (s.utc>m_prevtime+m_TrackSepTime))
-             )
-             && recordIsNeeded(s)
-           ) {
+        if (((((m_oneFilePerDay && newDate) && activeFields.utc != 0) || m_FirstRecord) || (m_oneFilePerTrack
+                && activeFields.utc != 0 && (s.utc > m_prevtime
+                + m_TrackSepTime)))
+                && recordIsNeeded(s)) {
             boolean createOK = true;
             m_prevdate = dateref;
 
@@ -176,13 +172,13 @@ public abstract class GPSFile {
                     extraExt = "-" + Convert.toString(t.getYear())
                             + (t.getMonth() < 10 ? "0" : "")
                             + Convert.toString(t.getMonth())
-                            + (t.getDay() < 10 ? "0" : "") + Convert.toString(t.getDay());
-                    if(m_oneFilePerTrack) {
-                        extraExt+= "_"
-                            + (t.getHour() < 10 ? "0" : "")
-                            + Convert.toString(t.getHour())
-                            + (t.getMinute() < 10 ? "0" : "")
-                            + Convert.toString(t.getMinute());
+                            + (t.getDay() < 10 ? "0" : "")
+                            + Convert.toString(t.getDay());
+                    if (m_oneFilePerTrack) {
+                        extraExt += "_" + (t.getHour() < 10 ? "0" : "")
+                                + Convert.toString(t.getHour())
+                                + (t.getMinute() < 10 ? "0" : "")
+                                + Convert.toString(t.getMinute());
                     }
                 } else {
                     extraExt = "";
@@ -194,10 +190,10 @@ public abstract class GPSFile {
             if (!m_FirstRecord && (extraExt.length() != 0)) {
                 // newDate -> close previous file
                 if (m_nbrOfPassesToGo == 0) {
-//                    Vm.debug("Finalize:"+m_File.getPath());
+                    // Vm.debug("Finalize:"+m_File.getPath());
                     finaliseFile();
                 } else {
-//                    Vm.debug("Close"+m_File.getPath());
+                    // Vm.debug("Close"+m_File.getPath());
                     closeFile();
                 }
             } else {
@@ -208,7 +204,7 @@ public abstract class GPSFile {
                 createFile(extraExt);
             }
         }
-        
+
         if (activeFields.utc != 0 && recordIsNeeded(s)) {
             m_prevtime = s.utc;
         }
@@ -216,20 +212,24 @@ public abstract class GPSFile {
 
     public void finaliseFile() {
         if (m_File != null) {
-            m_File.close();
+            try {
+                m_File.close();
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
             m_File = null;
         }
     }
 
     public boolean nextPass() {
         m_prevdate = 0;
-        m_FirstRecord=true;
-        if(m_nbrOfPassesToGo==0) {
+        m_FirstRecord = true;
+        if (m_nbrOfPassesToGo == 0) {
             // Last Pass done
             finaliseFile();
         } else {
             // More passes to go.
-            if(isOpen()) {
+            if (isOpen()) {
                 closeFile();
             }
         }
@@ -249,29 +249,39 @@ public abstract class GPSFile {
         String fileName = m_basename + extra_ext + m_ext;
         boolean createNewFile = C_NUMBER_OF_PASSES - 1 == m_nbrOfPassesToGo;
 
-        m_File = new File(fileName, File.DONT_OPEN, m_card);
-        if (createNewFile && m_File.exists()) {
-            m_File.delete();
+        try {
+            m_File = new File(fileName, File.DONT_OPEN, m_card);
+            if (createNewFile && m_File.exists()) {
+                m_File.delete();
+            }
+            m_File = new File(fileName, createNewFile ? File.CREATE
+                    : File.READ_WRITE, m_card);
+        } catch (Exception e) {
+            // TODO: handle exception
         }
-        m_File = new File(fileName, createNewFile ? File.CREATE
-                : File.READ_WRITE, m_card);
-        if (!m_File.isOpen()) {
-            bt747.sys.Vm.debug(Txt.COULD_NOT_OPEN + fileName+"|"+m_File.lastError);
-            (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName+"|"+m_File.lastError))
-                        .popupModal();
+        if (m_File != null && !m_File.isOpen()) {
+            bt747.sys.Vm.debug(Txt.COULD_NOT_OPEN + fileName + "|"
+                    + m_File.lastError);
+            (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName + "|"
+                    + m_File.lastError)).popupModal();
             m_File = null;
         } else {
-            filesCreated+=1;
-            if (createNewFile) {
-                // New file
-                writeFileHeader("GPS" + extra_ext); // First time this file is
-                                                    // opened.
-            } else {
-                // Append to existing file
-                m_File.setPos(m_File.getSize());
+            filesCreated += 1;
+            try {
+                if (createNewFile) {
+                    // New file
+                    writeFileHeader("GPS" + extra_ext); // First time this file
+                                                        // is
+                    // opened.
+                } else {
+                    // Append to existing file
+                    m_File.setPos(m_File.getSize());
+                }
+                writeLogFmtHeader(activeFields);
+                writeDataHeader();
+            } catch (Exception e) {
+                // TODO: handle exception
             }
-            writeLogFmtHeader(activeFields);
-            writeDataHeader();
         }
     }
 
@@ -284,17 +294,17 @@ public abstract class GPSFile {
             Vm.debug(Txt.CLOSE_FAILED);
         }
     }
-    
+
     protected boolean isOpen() {
-        return m_File!=null;
+        return m_File != null;
     }
 
     private static final int DAYS_BETWEEN_1970_1983 = 4748;
 
     public static final void setUTCTime(Time t, final int utc_int) {
-        //long utc=utc_int&0xFFFFFFFFL;
+        // long utc=utc_int&0xFFFFFFFFL;
         int utc = utc_int;
-        //Time t=new Time();
+        // Time t=new Time();
         t.setSecond((int) utc % 60);
         utc /= 60;
         t.setMinute((int) utc % 60);
@@ -302,46 +312,47 @@ public abstract class GPSFile {
         t.setHour((int) utc % 24);
         utc /= 24;
         // Now days since 1/1/1970
-        Date d = new Date(1, 1, 1983); //Minimum = 1983
+        Date d = new Date(1, 1, 1983); // Minimum = 1983
         d.advance(((int) utc) - DAYS_BETWEEN_1970_1983);
         t.setYear(d.getYear());
         t.setMonth(d.getMonth());
         t.setDay(d.getDay());
     }
-    
-    StringBuffer rcrStr=new StringBuffer(16);
+
+    StringBuffer rcrStr = new StringBuffer(16);
+
     protected final String getRCRstr(final GPSRecord s) {
         rcrStr.setLength(0);
-        if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
+        if ((s.rcr & BT747_dev.RCR_TIME_MASK) != 0) {
             rcrStr.append("T");
         }
-        if((s.rcr&BT747_dev.RCR_SPEED_MASK)!=0) {
+        if ((s.rcr & BT747_dev.RCR_SPEED_MASK) != 0) {
             rcrStr.append("S");
         }
-        if((s.rcr&BT747_dev.RCR_DISTANCE_MASK)!=0) {
+        if ((s.rcr & BT747_dev.RCR_DISTANCE_MASK) != 0) {
             rcrStr.append("D");
         }
-        if((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
+        if ((s.rcr & BT747_dev.RCR_BUTTON_MASK) != 0) {
             rcrStr.append("B");
         }
-        
+
         // Still 16-4 = 12 possibilities.
         // Taking numbers from 1 to 9
         // Then letters X, Y and Z
-        char c='1';
+        char c = '1';
         int i;
-        for ( i= 0x10; c <= '9' ; i<<=1, c++) {
-            if((s.rcr&i) !=0) {
+        for (i = 0x10; c <= '9'; i <<= 1, c++) {
+            if ((s.rcr & i) != 0) {
                 rcrStr.append(c);
             }
         }
-        c='X';
-        for (; i < 0x10000 ; i<<=1, c++) {
-            if((s.rcr&i) !=0) {
+        c = 'X';
+        for (; i < 0x10000; i <<= 1, c++) {
+            if ((s.rcr & i) != 0) {
                 rcrStr.append(c);
             }
         }
-        
+
         return rcrStr.toString();
     }
 
@@ -367,38 +378,47 @@ public abstract class GPSFile {
     public String getBadTrackColor() {
         return badTrackColor;
     }
+
     /**
-     * @param badTrackColor The badTrackColor to set.
+     * @param badTrackColor
+     *            The badTrackColor to set.
      */
     public void setBadTrackColor(String badTrackColor) {
         this.badTrackColor = badTrackColor;
     }
+
     /**
      * @return Returns the goodTrackColor.
      */
     public String getGoodTrackColor() {
         return goodTrackColor;
     }
+
     /**
-     * @param goodTrackColor The goodTrackColor to set.
+     * @param goodTrackColor
+     *            The goodTrackColor to set.
      */
     public void setGoodTrackColor(String goodTrackColor) {
         this.goodTrackColor = goodTrackColor;
     }
+
     /**
      * @return Returns the filesCreated.
      */
     public int getFilesCreated() {
         return filesCreated;
     }
+
     /**
      * @return Returns the recordNbrInLogs.
      */
     public boolean isRecordNbrInLogs() {
         return recordNbrInLogs;
     }
+
     /**
-     * @param recordNbrInLogs The recordNbrInLogs to set.
+     * @param recordNbrInLogs
+     *            The recordNbrInLogs to set.
      */
     public void setRecordNbrInLogs(boolean recordNbrInLogs) {
         this.recordNbrInLogs = recordNbrInLogs;

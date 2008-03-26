@@ -1,8 +1,5 @@
 package bt747;
 
-import waba.fx.Font;
-import waba.ui.MainWindow;
-
 import bt747.sys.Settings;
 
 /**
@@ -11,15 +8,8 @@ import bt747.sys.Settings;
  ** Class to provide language specific strings.
  */
 public class Txt_jp {
-    
-    /**
-     * 
-     */
-    public static void init() {
-        MainWindow.defaultFont = new Font("UFFJap", Font.PLAIN, 12);
-        MainWindow.getMainWindow().setTitleFont(MainWindow.defaultFont);
-        waba.sys.Convert.setDefaultConverter("UTF8");
-    }
+    public static String fontFile="UFFJap";
+    public static String encoding="UTF8";
     
     // BT747 class
     // It is possible to write the language tokens directly and then convert

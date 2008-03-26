@@ -18,6 +18,7 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.fx.Font;
 import waba.sys.Settings;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
@@ -171,7 +172,17 @@ public class BT747 extends MainWindow implements ModelListener {
         }
         orgAutoOnOff=waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off causing BT trouble
 
-        Txt.init();
+        /**
+         * 
+         */
+        if(Txt.fontFile!=null) {
+            MainWindow.defaultFont = new Font(Txt.fontFile, Font.PLAIN, 12);
+            MainWindow.getMainWindow().setTitleFont(MainWindow.defaultFont);
+        }
+        if(Txt.encoding!=null) {
+            waba.sys.Convert.setDefaultConverter(Txt.encoding);
+        }
+
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle(Txt.S_TITLE); 
