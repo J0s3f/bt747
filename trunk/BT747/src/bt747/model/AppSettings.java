@@ -162,8 +162,8 @@ public class AppSettings {
     
     public AppSettings() {
         init();
-        //waba.sys.Vm.debug(CONFIG_FILE_NAME);
-        //#if RXTX waba.sys.Vm.debug(java.lang.System.getProperty("bt747_settings"));
+        //bt747.sys.Vm.debug(CONFIG_FILE_NAME);
+        //#if RXTX bt747.sys.Vm.debug(java.lang.System.getProperty("bt747_settings"));
     }
     
     private boolean isWin32LikeDevice() {
@@ -186,8 +186,8 @@ public class AppSettings {
                     ) {
                 int readLength = 0;
                 
-                //waba.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
-                //waba.sys.Vm.debug("loading config file "+CONFIG_FILE_NAME);
+                //bt747.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
+                //bt747.sys.Vm.debug("loading config file "+CONFIG_FILE_NAME);
                 File m_prefFile = new File("");
                 try {
                     m_prefFile = new File(CONFIG_FILE_NAME,File.READ_ONLY);
@@ -331,8 +331,8 @@ public class AppSettings {
                 //#if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")  
                 //#if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
                 ) {
-//            waba.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
-//            waba.sys.Vm.debug("saving config file "+CONFIG_FILE_NAME);
+//            bt747.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
+//            bt747.sys.Vm.debug("saving config file "+CONFIG_FILE_NAME);
             File m_prefFile=new File("");
             try {
                 File m_Dir=new File(CONFIG_FILE_NAME.substring(0, CONFIG_FILE_NAME.lastIndexOf('/')),
@@ -360,7 +360,7 @@ public class AppSettings {
             } catch (Exception e) {
 //                Vm.debug("Exception new log create");
             }
-//            waba.sys.Vm.debug("saved config file length "+Settings.appSettings.length());
+//            bt747.sys.Vm.debug("saved config file length "+Settings.appSettings.length());
         }
     }
 

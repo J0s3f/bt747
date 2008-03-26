@@ -20,7 +20,7 @@
 
 package gps.port;
 
-import waba.io.DataStream;
+//import bt747.io.DataStream;
 import bt747.io.File;
 
 /** abstract class defining interface for serial port implementation.
@@ -29,7 +29,7 @@ import bt747.io.File;
  * @author Mario De Weerd
  */
 public abstract class GPSPort {
-    protected DataStream ds=null;
+    //protected DataStream ds=null;
 
     protected int spPortNbr;
     protected int spSpeed=115200;  // Does not really matter on most platforms

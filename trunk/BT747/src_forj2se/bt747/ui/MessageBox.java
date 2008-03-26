@@ -70,8 +70,12 @@ public final class MessageBox extends javax.swing.JDialog {
         return popped;
     }
     
-    private void getPressedButtonIndex() {
+    public void unpop() {
+        
+    }
+    
+    public int getPressedButtonIndex() {
         // TODO Auto-generated method stub
-
+        return 0;
     }
 }

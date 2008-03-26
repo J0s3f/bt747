@@ -48,7 +48,7 @@ public class GPSrxtx {
         if(Settings.hasWaba) {
             gpsPort=new GPSWabaPort(); // TODO: select according to OS (done during compile currently).
         } else {
-            //gpsPort=new GPSRxTxPort(); // TODO: select according to OS (done during compile currently).
+            gpsPort=new GPSRxTxPort(); // TODO: select according to OS (done during compile currently).
         }
         setDefaults();
     }

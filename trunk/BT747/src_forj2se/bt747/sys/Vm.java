@@ -24,7 +24,7 @@ public final class Vm {
     }
     
     public static final void debug(final String s) {
-        waba.sys.Vm.debug(s);
+        System.out.println(s);
     }
 
 }

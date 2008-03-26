@@ -18,7 +18,6 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
-import ui.FileSelect;
 
 import waba.sys.Settings;
 import waba.ui.Button;
@@ -35,6 +34,7 @@ import bt747.io.File;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
+import bt747.waba_view.ui.FileSelect;
 
 /** The purpose of this container is to configure file settings
  * 

@@ -19,6 +19,9 @@ public final class Settings {
     public static final String platform = waba.sys.Settings.platform;
     public static final String versionStr = waba.sys.Settings.versionStr;
     public static final boolean onDevice = waba.sys.Settings.onDevice;
+    public static final byte DATE_YMD=waba.sys.Settings.DATE_YMD;
+    public static final byte DATE_DMY=waba.sys.Settings.DATE_DMY;
+
     /**
      * @return the appSettings
      */
