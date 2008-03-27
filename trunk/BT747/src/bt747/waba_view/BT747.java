@@ -30,6 +30,7 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
+import gps.GPSListener;
 import gps.GPSstate;
 import gps.GpsEvent;
 
@@ -44,7 +45,7 @@ import bt747.ui.MessageBox;
  * 
  * @author Mario De Weerd
  */
-public class BT747 extends MainWindow implements ModelListener {
+public class BT747 extends MainWindow implements ModelListener,GPSListener {
     
     /*
      * Using Model, Controller, View.
@@ -195,7 +196,6 @@ public class BT747 extends MainWindow implements ModelListener {
         super.onStart();
         
         m_GPSstate=m.gpsModel();
-        m_GPSstate.setEventPosterObject(new bt747.generic.EventPosterObject(this));
         setMenuBar(m_MenuBar=new MenuBar(menu));
         // Next line is for modeling a device for debug.
         // Doing this on the windows platform
@@ -262,6 +262,7 @@ public class BT747 extends MainWindow implements ModelListener {
         Settings.keyboardFocusTraversable = m.isTraversableFocus();
 
         m.addListener((ModelListener)this);
+        m_GPSstate.addListener(this);
         addTimer(this, 55);
 
     }
@@ -348,8 +349,6 @@ public class BT747 extends MainWindow implements ModelListener {
                             Txt.DISCLAIMER_TXT
                     ).popupModal();
                     break;              
-                    
-                    
                 default: break;
                 
                 }
@@ -364,26 +363,6 @@ public class BT747 extends MainWindow implements ModelListener {
             }
             break;
         default:
-            if(event.target==null) {
-                if(event.type==GpsEvent.DATA_UPDATE) {
-                    Control c;
-                    c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
-                    c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
-                    event.consumed=true;
-                } else if (
-                        (event.type==GpsEvent.GPRMC)
-                      ||(event.type==GpsEvent.GPGGA)) {
-
-                    Control c;
-                    c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
-                    event.target=c;
-                    c.postEvent(event);
-                    event.consumed=true;
-                } else if ((event.type==GpsEvent.CONNECTED) ) {
-                    m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
-                    event.consumed=true;
-                }
-            }
             if(event.target==this) {
                 if(event.type==ModelEvent.DOWNLOAD_PROGRESS_UPDATE) {
                     updateProgressBar();
@@ -407,9 +386,26 @@ public class BT747 extends MainWindow implements ModelListener {
         }
     }
     
-    public void newEvent(bt747.ui.Event e) {
-        postEvent(e);
-        
+    public final void newEvent(bt747.ui.Event event) {
+        this.postEvent(event);
+    }
+    
+    public void gpsEvent(GpsEvent event) {
+            if(event.getType()==GpsEvent.DATA_UPDATE) {
+                Control c;
+                c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
+                c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
+            } else if (
+                    (event.getType()==GpsEvent.GPRMC)
+                  ||(event.getType()==GpsEvent.GPGGA)) {
+
+                Control c;
+                c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
+                event.target=c;
+                c.postEvent(event);
+            } else if ((event.getType()==GpsEvent.CONNECTED) ) {
+                m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
+            }
     }
     
     

@@ -7,6 +7,7 @@
 package bt747.util;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import bt747.sys.Settings;
@@ -65,11 +66,11 @@ public class Date extends java.util.Date {
         switch (dateFormat) {
 
         case Settings.DATE_YMD:
-            df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
+            df = new SimpleDateFormat("yyyy/dd/mm");
             break;
         case Settings.DATE_DMY:
         default:
-            df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE);
+            df = new SimpleDateFormat("mm/dd/yyyy");
             break;
         }
         try {
@@ -79,9 +80,10 @@ public class Date extends java.util.Date {
         super.setYear(d.getYear());
         } catch (Exception e){
             // TODO: handle exception
+            e.printStackTrace();
         }
     }
-
+    
     /**
      * @param t
      */
@@ -107,9 +109,9 @@ public class Date extends java.util.Date {
         return (int)(getTime()/1000L);
     }
 
-   private String getDateString() {
-    // TODO Auto-generated method stub
-       return "";
+   public String getDateString() {
+    // TODO Check this method
+       return new SimpleDateFormat("mm/dd/yyyy").format(this);
 
    }
    

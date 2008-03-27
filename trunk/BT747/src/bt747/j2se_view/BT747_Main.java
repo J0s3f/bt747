@@ -9,6 +9,8 @@ import bt747.control.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
+import bt747.ui.Event;
+
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
@@ -20,6 +22,10 @@ import javax.swing.UIManager;
 public class BT747_Main extends javax.swing.JFrame
         implements bt747.model.ModelListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     Model m;
     Controller c;
 
@@ -63,6 +69,10 @@ public class BT747_Main extends javax.swing.JFrame
         }
     }
 
+    public void gpsEvent(Event e) {
+        // TODO Auto-generated method stub
+        
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -664,4 +674,6 @@ public class BT747_Main extends javax.swing.JFrame
     private javax.swing.JTextField tfRawLogFilePath;
     private javax.swing.JTextField tfWorkDirectory;
     // End of variables declaration//GEN-END:variables
+
+
 }

@@ -19,11 +19,12 @@
 //********************************************************************                              
 package gps;
 
+import moio.util.HashSet;
+import moio.util.Iterator;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import bt747.Txt;
-import bt747.generic.EventPosterObject;
 import bt747.generic.Generic;
 import bt747.io.File;
 import bt747.sys.Convert;
@@ -97,8 +98,6 @@ public class GPSstate implements Thread {
 
     public int dgps_mode = 0;
 
-    EventPosterObject m_EventPosterObject = null;
-
     private settings m_settings;
 
     // Flash user option values
@@ -171,9 +170,6 @@ public class GPSstate implements Thread {
         GPS_STATS = stats;
     }
 
-    public void setEventPosterObject(EventPosterObject s) {
-        m_EventPosterObject = s;
-    }
 
     /**
      * Some initialisation
@@ -421,29 +417,6 @@ public class GPSstate implements Thread {
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_QUERY_STR + ","
                 + BT747_dev.PMTK_LOG_VERSION);
-    }
-
-    private void PostStatusUpdateEvent() {
-        if (m_EventPosterObject != null) {
-            m_EventPosterObject.postEvent(new Event(GpsEvent.DATA_UPDATE, null,
-                    0));
-        }
-    }
-
-    private void PostGpsEvent(final int type) {
-        if (m_EventPosterObject != null) {
-            m_EventPosterObject.postEvent(new GpsEvent(type,null,0));
-        }
-    }
-
-    public final GPSRecord getGpsRecord() {
-        return gps;
-    }
-
-    private void PostStatusEvent(final int event) {
-        if (m_EventPosterObject != null) {
-            m_EventPosterObject.postEvent(new Event(event, null, 0));
-        }
     }
 
     static final int C_SEND_BUF_SIZE = 5;
@@ -896,14 +869,15 @@ public class GPSstate implements Thread {
         return z_Result;
     }
 
-    GPSRecord gps = new GPSRecord();
+    
+    GPSRecord gps= new GPSRecord();
 
     final void analyzeGPRMC(final String[] p_nmea) {
         if (p_nmea.length >= 11) {
             gps.utc = Convert.toInt(p_nmea[1].substring(0, 2)) * 3600
             + Convert.toInt(p_nmea[1].substring(2, 4)) * 60
             + Convert.toInt(p_nmea[1].substring(4, 6));
-            PostGpsEvent(GpsEvent.GPRMC);
+            PostGpsEvent(GpsEvent.GPRMC,gps);
         }
     }
 
@@ -911,6 +885,7 @@ public class GPSstate implements Thread {
         // Partial decode to compare height with calculated geoid.
         if (p_nmea.length >= 15) {
             try {
+                //GPSRecord gps = new GPSRecord();
                 gps.latitude = (Convert.toDouble(p_nmea[2].substring(0, 2)) + Convert
                         .toDouble(p_nmea[2].substring(2)) / 60)
                         * (p_nmea[3].equals("N") ? 1 : -1);
@@ -926,7 +901,7 @@ public class GPSstate implements Thread {
                 //                        + " geoid calc:"+Convert.toString(geoid)
                 //                        );
                 //            }
-                PostGpsEvent(GpsEvent.GPGGA);
+                PostGpsEvent(GpsEvent.GPRMC,gps);
             } catch (Exception e) {
                 // TODO: handle exception
             }
@@ -1949,4 +1924,39 @@ public class GPSstate implements Thread {
     public String getHoluxName() {
         return holuxName;
     }
+
+
+    private void PostStatusUpdateEvent() {
+        postEvent(new GpsEvent(GpsEvent.DATA_UPDATE));
+    }
+
+    private void PostGpsEvent(final int type, Object o) {
+        postEvent(new GpsEvent(type,o));
+   }
+
+    
+    public final GPSRecord getGpsRecord() {
+        return gps;
+    }
+
+    private void PostStatusEvent(final int event) {
+        postEvent(new GpsEvent(event));
+    }
+
+
+    private HashSet listeners = new HashSet();
+
+    /**add a listener to event thrown by this class*/
+    public void addListener(GPSListener l){        
+        listeners.add(l);
+    }
+
+    protected void postEvent(GpsEvent e) {
+        Iterator it = listeners.iterator();
+        while (it.hasNext()) {
+            GPSListener l=(GPSListener)it.next();
+            l.gpsEvent(e);
+        }
+    }
+
 }

@@ -32,6 +32,12 @@ public class Event extends waba.ui.Event {
         // TODO Auto-generated constructor stub
     }
     
+    public Event(Object target, int type, Object arg) {
+        super(type,target,0);
+        this.arg=arg;
+        
+    }
+    
     public final static int getNextAvailableEventId()
     {
        return waba.ui.Event.getNextAvailableEventId();
@@ -40,4 +46,15 @@ public class Event extends waba.ui.Event {
     public final int getType() {
         return this.type;
     }
+
+    Object arg=null;
+
+    public final Object getArg() {
+        return this.arg;
+    }
+    
+    public final void setArg(Object arg) {
+        this.arg=arg;
+    }
+
 }
