@@ -247,7 +247,4 @@ public class Model extends AppSettings implements gps.settings{
         return gpsModel.getFlashDesc();
      }
      
-     public final GPSRecord getGpsRecord() {
-         return gpsModel.getGpsRecord();
-     }
 }

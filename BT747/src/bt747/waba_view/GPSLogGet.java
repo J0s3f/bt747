@@ -278,7 +278,7 @@ public class GPSLogGet extends Container {
 
             case ControlEvent.WINDOW_CLOSED:
                 if (event.target == cal) {
-                    Date d = new Date(cal.getSelectedDate());
+                    waba.util.Date d= cal.getSelectedDate();
                     if (d != null) {
                         calBt.setText(d.toString());
                         // Can't change the value of the date, changing all

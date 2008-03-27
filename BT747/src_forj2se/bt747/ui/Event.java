@@ -44,6 +44,12 @@ public class Event extends java.awt.Event {
         super(target, type, null);
         // TODO Auto-generated constructor stub
     }
+
+    public Event(Object target, int type, Object arg) {
+        super(target, type, arg);
+        // TODO Auto-generated constructor stub
+    }
+
     
     static private int next_id=10000;
     public final static int getNextAvailableEventId()
@@ -53,6 +59,14 @@ public class Event extends java.awt.Event {
     
     public final int getType() {
         return this.id;
+    }
+    
+    public final Object getArg() {
+        return this.arg;
+    }
+    
+    public final void setArg(Object arg) {
+        this.arg=arg;
     }
 
 
