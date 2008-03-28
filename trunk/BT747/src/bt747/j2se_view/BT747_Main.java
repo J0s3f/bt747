@@ -5,13 +5,18 @@
  */
 package bt747.j2se_view;
 
+import bt747.Txt;
 import bt747.control.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
-import bt747.ui.Event;
 
+import gps.GPSListener;
+import gps.GpsEvent;
+import gps.convert.Conv;
+import gps.log.GPSRecord;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 
@@ -20,7 +25,7 @@ import javax.swing.UIManager;
  * @author  Mario De Weerd
  */
 public class BT747_Main extends javax.swing.JFrame
-        implements bt747.model.ModelListener {
+        implements bt747.model.ModelListener,GPSListener {
 
     /**
      * 
@@ -52,6 +57,11 @@ public class BT747_Main extends javax.swing.JFrame
         getRawLogFilePath();
         getOutputFilePath();
         getIncremental();
+        
+        //TODO: Deactivate debug by default
+        c.setDebug(true);
+        c.setDebugConn(true);
+
     }
 
     public void onEvent(bt747.ui.Event e) {
@@ -69,8 +79,37 @@ public class BT747_Main extends javax.swing.JFrame
         }
     }
 
-    public void gpsEvent(Event e) {
+    
+    private void updateRMCData(final GPSRecord gps) {
+        if (gps.utc > 0) {
+            //Da
+            String TimeStr = new SimpleDateFormat().format(new java.util.Date(gps.utc));
+            lbTime.setText(TimeStr);
+        }
+        updateGPSData(gps);
+    }
+    
+    private void updateGPSData(final GPSRecord gps) {
+
+        lbLatitude.setText(Convert.toString(gps.height,3)
+                +Txt.METERS_ABBR);
+        lbLongitude.setText(Convert.toString(gps.longitude,5));
+        lbGeoid.setText(Convert.toString(gps.geoid,3)+Txt.METERS_ABBR+Txt.CALC+
+                Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)
+                +Txt.METERS_ABBR+")");
+
+    }
+
+    public void gpsEvent(GpsEvent e) {
         // TODO Auto-generated method stub
+        int type = e.getType();
+        if (type == GpsEvent.GPRMC) {
+            updateRMCData((GPSRecord)e.getArg());
+        } else if (type == GpsEvent.DATA_UPDATE) {
+        } else if (type == GpsEvent.GPGGA) {
+            updateGPSData((GPSRecord)e.getArg());
+        } else if (type == GpsEvent.CONNECTED) {
+        }
         
     }
     /** This method is called from within the constructor to
@@ -104,6 +143,15 @@ public class BT747_Main extends javax.swing.JFrame
         btConnect = new javax.swing.JButton();
         cbPortName = new javax.swing.JComboBox();
         DeviceSettingsPanel = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        lbLatitude = new javax.swing.JLabel();
+        lbLongitude = new javax.swing.JLabel();
+        lbTime = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        lbGeoid = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
         SettingsMenu = new javax.swing.JMenu();
@@ -356,6 +404,73 @@ public class BT747_Main extends javax.swing.JFrame
 
         jTabbedPane1.addTab("Device settings", DeviceSettingsPanel);
 
+        jLabel1.setText("Latitude :");
+
+        jLabel2.setText("Longitude :");
+
+        jLabel3.setText("GPS Time :");
+
+        lbLatitude.setText("jLabel4");
+
+        lbLongitude.setText("jLabel4");
+
+        lbTime.setText("jLabel5");
+
+        jLabel4.setText("Geoid :");
+
+        lbGeoid.setText("jLabel5");
+
+        org.jdesktop.layout.GroupLayout jPanel4Layout = new org.jdesktop.layout.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel1)
+                            .add(jLabel2))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(lbLatitude)
+                            .add(lbLongitude)))
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabel3)
+                            .add(jLabel4))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(lbGeoid)
+                            .add(lbTime))))
+                .addContainerGap(455, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel1)
+                    .add(lbLatitude))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel2)
+                    .add(lbLongitude))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel4Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(jLabel3)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel4))
+                    .add(jPanel4Layout.createSequentialGroup()
+                        .add(lbTime)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lbGeoid)))
+                .addContainerGap(146, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("GPS Decode", jPanel4);
+
         FileMenu.setText("File");
         jMenuBar1.add(FileMenu);
 
@@ -377,7 +492,7 @@ public class BT747_Main extends javax.swing.JFrame
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jTabbedPane1)
+                .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -665,11 +780,20 @@ public class BT747_Main extends javax.swing.JFrame
     private javax.swing.JCheckBox cbIncremental;
     private javax.swing.JComboBox cbPortName;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lbGeoid;
+    private javax.swing.JLabel lbLatitude;
+    private javax.swing.JLabel lbLongitude;
+    private javax.swing.JLabel lbTime;
     private javax.swing.JTextField tfOutputFileBaseName;
     private javax.swing.JTextField tfRawLogFilePath;
     private javax.swing.JTextField tfWorkDirectory;

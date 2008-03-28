@@ -19,7 +19,6 @@
 //********************************************************************  
 package gps.port;
 
-import waba.io.DataStream;
 import waba.ui.MessageBox;
 
 /** Implements the serial port for the standard Waba SerialPort

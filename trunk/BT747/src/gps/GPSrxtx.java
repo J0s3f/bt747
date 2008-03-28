@@ -30,7 +30,7 @@ import gps.port.*;
  * @author Mario De Weerd
  */
 public class GPSrxtx {
-    private boolean GPS_DEBUG = false; //!Settings.onDevice;
+    private boolean GPS_DEBUG = !Settings.hasWaba||false; //!Settings.onDevice;
     
     private GPSPort gpsPort;
     
@@ -46,10 +46,16 @@ public class GPSrxtx {
      */
     public  GPSrxtx() {
         if(Settings.hasWaba) {
-            gpsPort=new GPSWabaPort(); // TODO: select according to OS (done during compile currently).
+            gpsPort=new GPSWabaPort();
         } else {
-           // gpsPort=new GPSRxTxPort(); // TODO: select according to OS (done during compile currently).
-            gpsPort=new GPSWabaPort(); // TODO: select according to OS (done during compile currently).
+            try {
+                // gpsPort=new GPSRxTxPort();
+            gpsPort = (GPSPort)
+            Class.forName("gps.port.GPSRxTxPort").newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+                gpsPort=new GPSWabaPort();
+            }
         }
         setDefaults();
     }
@@ -100,6 +106,7 @@ public class GPSrxtx {
     }
 
     public final void openPort() {
+        closePort();
         gpsPort.openPort();
     }
 
@@ -428,7 +435,7 @@ public class GPSrxtx {
 //                };
 //            }
 
-            return (String[])vCmd.toObjectArray();
+                return vCmd.toStringArray();
         } else {
             return null;
         }

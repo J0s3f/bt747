@@ -29,7 +29,7 @@ public final class File {
 
     RandomAccessFile raf=null;
     
-    public final static int DONT_OPEN = 1;
+    public final static int DONT_OPEN = 0;
     public final static int READ_ONLY = 1;
     public final static int CREATE = 2;
     public final static int WRITE_ONLY = 3;

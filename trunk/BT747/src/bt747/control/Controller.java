@@ -252,4 +252,15 @@ public class Controller {
     public final void GPS_restart() {
         m.gpsModel().GPS_restart();
     }
+    
+    
+    public final void setDebug(boolean b) {
+        m.gpsModel().setDebug(b);
+    }
+    
+    public final void setDebugConn(boolean b) {
+        m.gpsModel().setDebugConn(b);
+    }
+
+
 }

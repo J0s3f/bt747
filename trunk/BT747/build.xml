@@ -449,6 +449,9 @@
 			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
 
 		</jar>
+        <mkdir dir="${dist}" />
+		<move file="${j2sebuild.dir}/${ant.project.name}_rxtx_j2seonly.jar" 
+		todir="${dist}" />
 	</target>
 
 
