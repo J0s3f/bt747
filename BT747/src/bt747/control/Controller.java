@@ -229,11 +229,17 @@ public class Controller {
     public final void setPort(final int port) {
         m.gpsModel().GPS_close();
         m.gpsModel().setPort(port);
+        // TODO: review save settings | saving port currently for debug
+        m.setPortnbr(port);
+        m.saveSettings();
     }
 
     public final void setFreeTextPort(final String s) {
         m.gpsModel().GPS_close();
         m.gpsModel().setFreeTextPort(s);
+        // TODO: review save settings | saving port currently for debug
+        m.setFreeTextPort(s);
+        m.saveSettings();
     }
     
     public final String getFreeTextPort() {

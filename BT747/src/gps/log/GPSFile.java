@@ -148,7 +148,7 @@ public abstract class GPSFile {
         int dateref = 0;
 
         if (activeFields.utc != 0) {
-            setUTCTime(t, s.utc); // Initialisation needed later too!
+            t.setUTCTime(s.utc); // Initialisation needed later too!
             if (m_oneFilePerDay || m_oneFilePerTrack) {
                 dateref = (t.getYear() << 14) + (t.getMonth() << 7)
                         + t.getDay(); // year *
@@ -297,26 +297,6 @@ public abstract class GPSFile {
 
     protected boolean isOpen() {
         return m_File != null;
-    }
-
-    private static final int DAYS_BETWEEN_1970_1983 = 4748;
-
-    public static final void setUTCTime(Time t, final int utc_int) {
-        // long utc=utc_int&0xFFFFFFFFL;
-        int utc = utc_int;
-        // Time t=new Time();
-        t.setSecond((int) utc % 60);
-        utc /= 60;
-        t.setMinute((int) utc % 60);
-        utc /= 60;
-        t.setHour((int) utc % 24);
-        utc /= 24;
-        // Now days since 1/1/1970
-        Date d = new Date(1, 1, 1983); // Minimum = 1983
-        d.advance(((int) utc) - DAYS_BETWEEN_1970_1983);
-        t.setYear(d.getYear());
-        t.setMonth(d.getMonth());
-        t.setDay(d.getDay());
     }
 
     StringBuffer rcrStr = new StringBuffer(16);

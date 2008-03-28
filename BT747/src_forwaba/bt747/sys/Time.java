@@ -6,6 +6,9 @@
  */
 package bt747.sys;
 
+import bt747.sys.Time;
+import bt747.util.Date;
+
 
 /**
  * @author Mario De Weerd
@@ -65,5 +68,25 @@ public final class Time {
     }
     public void setMillis(int millis) {
         m_Time.millis=millis;
+    }
+    
+    private static final int DAYS_BETWEEN_1970_1983 = 4748;
+
+    public static final void setUTCTime(final int utc_int) {
+        // long utc=utc_int&0xFFFFFFFFL;
+        int utc = utc_int;
+        // Time t=new Time();
+        setSecond((int) utc % 60);
+        utc /= 60;
+        setMinute((int) utc % 60);
+        utc /= 60;
+        setHour((int) utc % 24);
+        utc /= 24;
+        // Now days since 1/1/1970
+        Date d = new Date(1, 1, 1983); // Minimum = 1983
+        d.advance(((int) utc) - DAYS_BETWEEN_1970_1983);
+        setYear(d.getYear());
+        setMonth(d.getMonth());
+        setDay(d.getDay());
     }
 }

@@ -57,13 +57,14 @@ public class BT747_Main extends javax.swing.JFrame
         getRawLogFilePath();
         getOutputFilePath();
         getIncremental();
+        getDefaultPort();
         
         //TODO: Deactivate debug by default
         c.setDebug(true);
         c.setDebugConn(true);
 
     }
-
+    
     public void onEvent(bt747.ui.Event e) {
         int type = e.getType();
         if (type == ModelEvent.DOWNLOAD_PROGRESS_UPDATE) {
@@ -689,7 +690,18 @@ public class BT747_Main extends javax.swing.JFrame
             }
         }
     }
-    
+
+    private void getDefaultPort() {
+        if(m.getFreeTextPort().length()!=0) {
+            cbPortName.setSelectedItem(m.getFreeTextPort());
+        } else if(m.getPortnbr()>=0) {
+            cbPortName.setSelectedItem("COM"+m.getPortnbr()+":");//getSelectedItem().toString();
+        } else {
+            // Do nothing
+        }
+    }
+
+
 
     private void cbPortNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPortNameActionPerformed
         //selectPort(jComboBox1.getSelectedItem().toString());
