@@ -12,11 +12,14 @@ public class MyThread implements java.lang.Runnable {
         //System.out.println("new Thread().run() succeed");
         while(btThread!=null)
         {
-            btThread.run();
             try {
+                btThread.run();
                 jvThread.sleep(2);
-            } catch(InterruptedException e){}
+            } catch(InterruptedException e){
+                e.printStackTrace();
+            }
         }
+        Vm.debug("Thread ended");
     }
     
 }

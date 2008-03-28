@@ -43,4 +43,16 @@ public final class Time extends java.util.Date {
     public void setDay(int date) {
         setDate(date);
     }
+   
+    public int getYear() {
+        return super.getYear()+1900;
+    }
+
+    public void setYear(int year) {
+        super.setYear(year-1900);
+    }
+
+    public  final void setUTCTime(final int utc_int) {
+        setTime(utc_int*1000L);
+    }
 }

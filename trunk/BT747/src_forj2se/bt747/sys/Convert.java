@@ -39,7 +39,7 @@ public final class Convert {
     public static String unsigned2hex(int p, int i)
     {
         String s=Integer.toHexString(p);
-       return "00000000".substring(8-s.length()).concat(s);
+       return "00000000".substring(s.length()).concat(s);
     }
     public static int toInt(String s) {
         return Integer.valueOf(s).intValue();
