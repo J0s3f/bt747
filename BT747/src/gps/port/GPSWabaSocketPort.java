@@ -48,7 +48,7 @@ public class GPSWabaSocketPort extends GPSPort {
    public void closePort() {
        if (sp!= null && sp.isOpen()) {
            portIsOK= false;
-           ds.close();
+           sp.close();
        } 
    }
    
@@ -69,17 +69,14 @@ public class GPSWabaSocketPort extends GPSPort {
                sp.setReadTimeout(20);//small to read data in chunks and have good resp.
                //               sp.setReadTimeout(50);//small to read data in chunks and have good resp.
                //sp.setFlowControl(true);
-               ds=new DataStream(sp);
            } else {
                sp=null;
-               ds=null;
            }
        }
        catch (Exception e) {
            new MessageBox("waba.io.Socket open","Unexpected exception catched").popupBlockingModal();
            ;//if(GPS_DEBUG) {waba.sys.Vm.debug("Exception when opening port\n");}; 
            sp=null;
-           ds=null;
        }
        return result;
    }    
@@ -115,7 +112,11 @@ public class GPSWabaSocketPort extends GPSPort {
        int l=b.length;
        sp.writeBytes(b,0,l);
        if(GPS_FILE_LOG&&(m_debugFile!=null)) {
-           m_debugFile.writeBytes(b,0,l);
+           try {
+               m_debugFile.writeBytes(b,0,l);
+           } catch (Exception e) {
+            // TODO: handle exception
+        }
        }
    }
    

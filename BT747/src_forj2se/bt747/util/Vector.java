@@ -30,4 +30,17 @@ public class Vector extends java.util.Stack<Object> {
     public Object[] toObjectArray() {
         return toArray();
     }
+
+    public String[]   toStringArray() {
+        String[] s= new String[elementCount];
+        for (int i = 0; i < s.length; i++) {
+            s[i]=(String)elementData[i];
+            System.out.println(s[i]);
+        }
+        
+        return s;
+    }
+    
+    
+
 }

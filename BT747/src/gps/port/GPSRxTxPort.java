@@ -80,7 +80,9 @@ public class GPSRxTxPort extends GPSPort {
        if (sp!= null) {
            //ds.close();
          try {
-               ds.close();
+               sp.close();
+               ds=null;
+               sp=null;
            } catch (Exception e) {
                e.printStackTrace();
            }
