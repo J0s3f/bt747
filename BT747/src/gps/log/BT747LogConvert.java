@@ -115,7 +115,7 @@ public final class BT747LogConvert implements GPSLogConvert {
      */
     public final void parseFile(final GPSFile gpsFile) {
         GPSRecord gpsRec=new GPSRecord();
-        final int C_BUF_SIZE=0x800;
+        final int C_BUF_SIZE=0x10000;
         byte[] bytes=new byte[C_BUF_SIZE];
         int sizeToRead;
         int nextAddrToRead;

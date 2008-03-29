@@ -45,7 +45,7 @@ public class GPSrxtx {
     private boolean ignoreNMEA = false;
 
     private boolean stableStrategy = false; // Some improvement on PDA when
-                                            // true.
+    // true.
     private int prevReadCheck = 0;
 
     /**
@@ -237,10 +237,11 @@ public class GPSrxtx {
                 // Still bytes in read buffer to interpret
                 char c;
                 c = (char) read_buf[read_buf_p++]; // Next character from
-                                                    // buffer
-                // if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P')
+                // buffer
+                // if((vCmd.getCount()!=0)&&((String[])vCmd.toStringArray())[0].charAt(0)=='P')
                 // {
                 // bt747.sys.Vm.debug(Convert.toString(c));
+                //System.err.print("["+c+"]");
                 // }
                 switch (current_state) {
                 case C_EOL_STATE:
@@ -252,6 +253,8 @@ public class GPSrxtx {
                     if (((c == 10) || (c == 13))) {
                         current_state = C_FOUND_STATE;
                         continueReading = false;
+                        //System.err.println("[NEW]");
+
                         if (ignoreNMEA) {
                             // Skip NMEA strings if requested.
                             continueReading = ((String) vCmd.elementAt(0))
@@ -263,6 +266,8 @@ public class GPSrxtx {
                     break;
 
                 case C_FOUND_STATE:
+                    current_state = C_START_STATE;
+                    /* Fall through */
                 case C_INITIAL_STATE:
                 case C_START_STATE:
                     vCmd.removeAllElements();
@@ -375,7 +380,7 @@ public class GPSrxtx {
                             if (!stableStrategy || (prevReadCheck == max)
                                     || (max > C_BUF_SIZE)) {
 
-                                gpsPort.writeDebug("\r\nC1:" + max + ":");
+                                //gpsPort.writeDebug("\r\nC1:" + max + ":");
                                 if ((max > C_BUF_SIZE)) {
                                     prevReadCheck = max - C_BUF_SIZE;
                                     max = C_BUF_SIZE;
@@ -383,15 +388,19 @@ public class GPSrxtx {
                                     prevReadCheck = 0;
                                 }
 
-                                gpsPort.writeDebug("\r\nC2:" + max + ":");
+                                //gpsPort.writeDebug("\r\nC2:" + max + ":");
                                 if (max > 0) {
                                     bytesRead = gpsPort.readBytes(read_buf, 0,
                                             max);
-                                    // String sb=new
-                                    // String(read_buf,0,bytesRead);
-                                    // System.out.println("RCVD:"+Convert.toString(bytesRead)+":"+sb+":");
+//                                    if (bytesRead != 0) {
+//                                        String sb = new String(read_buf, 0,
+//                                                bytesRead);
+//                                        System.out.println("RCVD:"
+//                                                + Convert.toString(bytesRead)
+//                                                + ":" + sb + ":");
+//                                    }
                                 }
-                                gpsPort.writeDebug("\r\nC3:" + bytesRead + ":");
+                                //gpsPort.writeDebug("\r\nC3:" + bytesRead + ":");
                             } else {
                                 prevReadCheck = max;
                             }
@@ -449,7 +458,6 @@ public class GPSrxtx {
             // ((String[])vCmd.toObjectArray())[i].length()));
             // };
             // }
-
             return vCmd.toStringArray();
         } else {
             return null;

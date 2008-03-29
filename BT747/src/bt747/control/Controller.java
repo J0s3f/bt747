@@ -1,5 +1,7 @@
 package bt747.control;
 
+import bt747.sys.Settings;
+
 import gps.GPSListener;
 import gps.convert.Conv;
 import gps.log.BT747LogConvert;
@@ -17,6 +19,7 @@ import gps.log.GPSPLTFile;
 import gps.log.HoluxTrlLogConvert;
 
 import bt747.model.Model;
+import bt747.sys.Convert;
 
 /**
  * @author Mario De Weerd
@@ -49,6 +52,22 @@ public class Controller {
     public final void setOutputFileBasePath(String s) {
         m.setReportFileBase(s);
     }
+    
+    public final void setChunkSize(int i) {
+        m.setChunkSize(i);
+    }
+    
+    public final void setDownloadTimeOut(int i) {
+        m.setDownloadTimeOut(i);
+    }
+    
+    public final void setCard(int i) {
+        m.setCard(i);
+    }
+    
+    public final void setLogRequestAhead(int i) {
+        m.setLogRequestAhead(i);
+    }
 
     public final void writeLog(final int log_type) {
         String ext="";
@@ -77,8 +96,16 @@ public class Controller {
         } else if(m.getLogFilePath().toLowerCase().endsWith(".csv")) {
             lc=new CSVLogConvert();
         } else {
-            lc=new BT747LogConvert();
-            ((BT747LogConvert)lc).setHolux(m.getForceHolux241());
+            switch(m.getBinDecoder()) {
+            case DECODER_THOMAS:
+                lc=new gps.parser.NewLogConvert();
+                break;
+            default:
+            case DECODER_ORG:
+                lc=new BT747LogConvert();
+                ((BT747LogConvert)lc).setHolux(m.getForceHolux241());
+                break;
+            }
         }
         GPSFilter[] usedFilters;
         if(m.getAdvFilterActive()) {
@@ -220,16 +247,19 @@ public class Controller {
     public final void setBluetooth() {
         m.gpsModel().GPS_close();
         m.gpsModel().setBluetooth();
+        m.setFreeTextPort("");
     }
 
     public final void setUsb() {
         m.gpsModel().GPS_close();
         m.gpsModel().setUsb();
+        m.setFreeTextPort("");
     }
 
     public final void setPort(final int port) {
         m.gpsModel().GPS_close();
         m.gpsModel().setPort(port);
+        m.setFreeTextPort("");
         // TODO: review save settings | saving port currently for debug
         m.setPortnbr(port);
         m.saveSettings();
@@ -272,6 +302,18 @@ public class Controller {
     
     public void addGPSListener(GPSListener l) {
         m.gpsModel().addListener(l);
+    }
+
+
+    public static final int DECODER_ORG = 1;
+    public static final int DECODER_THOMAS = 2;
+    
+    public void setBinDecoder(int decoder_idx) {
+        m.setBinDecoder(decoder_idx);
+    }
+
+    public void saveSettings() {
+        m.saveSettings(); // Explicitally save settings
     }
 
 

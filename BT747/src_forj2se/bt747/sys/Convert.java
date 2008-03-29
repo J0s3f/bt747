@@ -6,6 +6,8 @@
  */
 package bt747.sys;
 
+import com.sun.corba.se.spi.extension.ZeroPortPolicy;
+
 /**
  * @author Mario De Weerd
  *
@@ -36,10 +38,18 @@ public class Convert {
     {
        return Double.toString(p); // TODO: implement digits after .
     }
+    
+    private final static String zerostring="0000000000000000";
     public static String unsigned2hex(int p, int i)
     {
-        String s=Integer.toHexString(p);
-       return "00000000".substring(s.length()).concat(s);
+        String s=Integer.toHexString(p).toUpperCase();
+        if(s.length()==i) {
+            return s;
+        } else if(s.length()<i) {
+            return zerostring.substring(zerostring.length()-i+s.length()).concat(s);
+        } else {
+            return s.substring(s.length()-i);
+        } 
     }
     public static int toInt(String s) {
         return Integer.valueOf(s).intValue();

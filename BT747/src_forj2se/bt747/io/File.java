@@ -125,7 +125,7 @@ public class File {
         }
         return false;
     }
-    
+
     public int lastError = 0;
 
     public boolean isOpen() {
@@ -145,7 +145,7 @@ public class File {
         return raf.read(b, off, len);
     }
 
-    public static File getCardVolume() {
+    public static String getCardVolumePath() {
         return null;
     }
 
@@ -175,5 +175,4 @@ public class File {
     // super(path, mode, slot);
     // // TODO Auto-generated constructor stub
     // }
-
 }

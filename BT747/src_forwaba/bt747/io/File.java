@@ -41,4 +41,12 @@ public class File extends waba.io.File {
         // TODO Auto-generated constructor stub
     }
     
+    public static String getCardVolumePath() {
+        if(getCardVolume()!=null) {
+            return getCardVolume().getPath();
+        } else {
+            return null;
+        }
+    }
+    
 }

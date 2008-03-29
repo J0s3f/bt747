@@ -17,7 +17,7 @@ public class Vector extends waba.util.Vector {
         return items[i];
     }
     
-    public final String[] toStringArray() {
+    public String[] toStringArray() {
         return (String[]) toObjectArray();
     }
     

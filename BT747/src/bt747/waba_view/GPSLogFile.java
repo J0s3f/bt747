@@ -30,6 +30,7 @@ import waba.ui.Label;
 import waba.util.Vector;
 
 import bt747.Txt;
+import bt747.control.Controller;
 import bt747.io.File;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -43,8 +44,10 @@ import bt747.waba_view.ui.FileSelect;
 public class GPSLogFile extends Container {
     
     Model m;
+    Controller c;
     
-    public GPSLogFile(Model settings) {
+    public GPSLogFile(Controller c, Model settings) {
+        this.c=c;
         m=settings;
     }
     
@@ -143,13 +146,13 @@ public class GPSLogFile extends Container {
 //                m_settings.setBaseDirPath(m_edBaseDirName.getText());
 //                m_settings.setLogFile(m_edLogFileName.getText());
 //                m_settings.setReportFileBase(m_edReportBaseName.getText());
-                m.setChunkSize(Convert.toInt(m_edChunkSize.getText()));
-                m.setDownloadTimeOut(Convert.toInt(m_edTimeout.getText()));
+                c.setChunkSize(Convert.toInt(m_edChunkSize.getText()));
+                c.setDownloadTimeOut(Convert.toInt(m_edTimeout.getText()));
                 if(Settings.platform.startsWith("Palm")) {
-                    m.setCard(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
+                    c.setCard(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
                 }
-                m.setLogRequestAhead(Convert.toInt((String)m_cblogReqAhead.getSelectedItem()));
-                m.saveSettings(); // Explicitally save settings
+                c.setLogRequestAhead(Convert.toInt((String)m_cblogReqAhead.getSelectedItem()));
+                c.saveSettings(); // Explicitally save settings
             } else if (event.target==m_btSelectBaseDirName) {
                 FileSelect fs=new FileSelect();
                 fs.setDirOnly(true);

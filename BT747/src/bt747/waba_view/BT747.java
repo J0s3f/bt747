@@ -237,7 +237,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         numPanels++;
         m_TabPanel.setPanel(C_GPS_LOGGET_IDX,m_GPSLogGet = new GPSLogGet(m_GPSstate,m,c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_FILECTRL_IDX,m_GPSLogFile = new GPSLogFile(m));
+        m_TabPanel.setPanel(C_GPS_FILECTRL_IDX,m_GPSLogFile = new GPSLogFile(c,m));
         numPanels++;
         m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX,m_GPSFiltersTabPanel = new GPSFiltersTabPanel(m,c));
         numPanels++;
