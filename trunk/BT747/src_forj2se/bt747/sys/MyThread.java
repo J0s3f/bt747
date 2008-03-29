@@ -4,11 +4,13 @@ public class MyThread implements java.lang.Runnable {
 
     public java.lang.Thread jvThread;
     public bt747.sys.Thread btThread=null;
+    public boolean running=false;
     
     public MyThread(bt747.sys.Thread t) {
         btThread=t;
     }
     public final void run() {
+        running=true;
         //System.out.println("new Thread().run() succeed");
         while(btThread!=null)
         {
@@ -19,7 +21,8 @@ public class MyThread implements java.lang.Runnable {
                 e.printStackTrace();
             }
         }
-        Vm.debug("Thread ended");
+        running=false;
+        //Vm.debug("Thread ended");
     }
     
 }

@@ -231,8 +231,6 @@ public class GPSconctrl extends Container {
                     event.consumed=true;
                 }
             } else if (event.type==GpsEvent.GPGGA) {
-                GpsEvent en = new GpsEvent(4);
-                event = en;
                 updateGPSData((GPSRecord)(((GpsEvent) event).getArg()));
             } else if (event.type==GpsEvent.GPRMC) {
                 updateRMCData((GPSRecord)(((GpsEvent) event).getArg()));

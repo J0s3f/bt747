@@ -38,7 +38,8 @@ public class AppSettings {
     private static final String CONFIG_FILE_NAME =
         //#if RXTX java.lang.System.getProperty("bt747_settings",
 
-        (bt747.sys.Settings.platform.startsWith("Win32")
+        (bt747.sys.Settings.platform.startsWith("Win32")||bt747.sys.Settings.platform.startsWith("Windows")
+                ||bt747.sys.Settings.platform.startsWith("Mac")
          //#if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")  
          ) ?
             "SettingsBT747.pdb" : 
@@ -145,7 +146,7 @@ public class AppSettings {
     private static final int C_IMPERIAL_IDX=C_HOLUX241_IDX+C_HOLUX241_SIZE;
     private static final int C_IMPERIAL_SIZE=1;
     private static final int C_FREETEXT_PORT_IDX=C_IMPERIAL_IDX+C_IMPERIAL_SIZE;
-    private static final int C_FREETEXT_PORT_SIZE=4;
+    private static final int C_FREETEXT_PORT_SIZE=50;
     private static final int C_NEXT_IDX=C_FREETEXT_PORT_IDX+C_FREETEXT_PORT_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE=4;
@@ -171,6 +172,7 @@ public class AppSettings {
         return bt747.sys.Settings.platform.startsWith("WindowsCE")
         || bt747.sys.Settings.platform.startsWith("PocketPC")
         ||(bt747.sys.Settings.platform.startsWith("Win32")&&Settings.onDevice)
+        ||!Settings.isWaba()
         ;
     }
     
@@ -306,12 +308,12 @@ public class AppSettings {
         case 16:
             setImperial(false);
             /* fall through */
-        case 17:
+        case 18:
             setFreeTextPort("");
             /* fall through */
             
             /* Must be last line in case (not 'default') */ 
-            setStringOpt(0,"0.18",C_VERSION_IDX, C_VERSION_SIZE);
+            setStringOpt(0,"0.19",C_VERSION_IDX, C_VERSION_SIZE);
         }
         getSettings();
     }
@@ -343,6 +345,7 @@ public class AppSettings {
                 }
             } catch (Exception e) {
 //                Vm.debug("Exception new log delete");
+                //e.printStackTrace();
             }
             try {
                 m_prefFile=new File(CONFIG_FILE_NAME,File.DONT_OPEN);
@@ -360,6 +363,7 @@ public class AppSettings {
                 m_prefFile.close();
             } catch (Exception e) {
 //                Vm.debug("Exception new log create");
+                e.printStackTrace();
             }
 //            bt747.sys.Vm.debug("saved config file length "+Settings.appSettings.length());
         }

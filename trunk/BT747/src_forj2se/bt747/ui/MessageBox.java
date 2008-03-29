@@ -16,7 +16,7 @@ import javax.swing.JFrame;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class MessageBox extends javax.swing.JDialog {
+public class MessageBox extends javax.swing.JDialog {
 
     /**
      * @param title

@@ -15,7 +15,7 @@ import bt747.sys.Thread;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class Generic {
+public class Generic {
 
     public static void addThread(Thread t, final boolean b) {
         MainWindow.getMainWindow().addThread(t, b);

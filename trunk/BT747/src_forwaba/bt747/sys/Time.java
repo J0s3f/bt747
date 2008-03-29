@@ -16,7 +16,7 @@ import bt747.util.Date;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class Time {
+public class Time {
     private waba.sys.Time m_Time;
     public Time()
     {

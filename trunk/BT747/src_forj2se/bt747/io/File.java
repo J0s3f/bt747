@@ -16,7 +16,7 @@ import java.io.RandomAccessFile;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public final class File {
+public class File {
 
     // public static final char separatorChar='/';
     // /**
@@ -52,6 +52,12 @@ public final class File {
             break;
         case CREATE:
             modeStr = "rw";
+            try {
+                java.io.File tmp = new java.io.File(path);
+                tmp.createNewFile();
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
             break;
         case READ_WRITE:
             modeStr = "rw";
