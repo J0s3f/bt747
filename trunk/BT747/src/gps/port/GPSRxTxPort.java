@@ -19,8 +19,6 @@
 //********************************************************************  
 package gps.port;
 
-import bt747.sys.Convert;
-
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
@@ -30,7 +28,10 @@ import gnu.io.UnsupportedCommOperationException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+
+import bt747.sys.Convert;
 
 /** This class implements the serial port for rxtx (on Linux)
  * @author Mario De Weerd
@@ -39,6 +40,7 @@ public class GPSRxTxPort extends GPSPort {
     private SerialPort sp=null;
 
     private OutputStream ds;
+    private InputStream in;
     private String portPrefix="";
     private boolean hasPortNbr=true;
     public static final String os_name=java.lang.System.getProperty("os.name");
@@ -120,11 +122,13 @@ public class GPSRxTxPort extends GPSPort {
                    SerialPort serialPort = (SerialPort)commPort;
                    sp = serialPort;
                    serialPort.setSerialPortParams(getSpeed(), 8, 1, 0);
+                   in = sp.getInputStream();
                    ds = sp.getOutputStream();
                    result=0;
                } else
                {
                    sp=null;
+                   in=null;
                    ds=null;
                    System.out.println("Error: Only serial ports are handled by this example.");
                }
@@ -226,7 +230,9 @@ public class GPSRxTxPort extends GPSPort {
    public int readCheck() {
        if(sp!=null) {
            try {
-               return sp.getInputStream().available();//getInputStream().available();
+               //System.err.println("Available: "+in.available());
+               //return 100;
+               return in.available();//getInputStream().available();
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -238,7 +244,7 @@ public class GPSRxTxPort extends GPSPort {
    
    public int readBytes(byte[]b,int start, int max) {
        try {
-           return sp.getInputStream().read(b, start, max);
+           return in.read(b, start, max);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

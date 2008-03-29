@@ -120,12 +120,12 @@ public class Model extends AppSettings implements gps.settings{
     public final void logConversionStarted(int type) {
         this.lastConversionOngoing= type;
         this.conversionOngoing= true;
-        postEvent(ModelEvent.CONVERSION_STATE_CHANGE);
+        postEvent(ModelEvent.CONVERSION_STATE_CHANGE,(Boolean)true);
     }
 
     public final void logConversionEnded(int type) {
         this.conversionOngoing= false;
-        postEvent(ModelEvent.CONVERSION_STATE_CHANGE);
+        postEvent(ModelEvent.CONVERSION_STATE_CHANGE,(Boolean)false);
     }
     
     

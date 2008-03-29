@@ -27,12 +27,11 @@ public class Vector extends java.util.Stack<Object> {
         remove(o);
     }
     
-    public boolean del(int i) {
+    public void del(int i) {
         try {
             remove(i);
-            return true;
         } catch (Exception e) {
-            return false;
+            //return false;
         }
             
     }

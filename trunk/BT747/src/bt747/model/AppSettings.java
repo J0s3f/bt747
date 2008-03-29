@@ -147,7 +147,9 @@ public class AppSettings {
     private static final int C_IMPERIAL_SIZE=1;
     private static final int C_FREETEXT_PORT_IDX=C_IMPERIAL_IDX+C_IMPERIAL_SIZE;
     private static final int C_FREETEXT_PORT_SIZE=50;
-    private static final int C_NEXT_IDX=C_FREETEXT_PORT_IDX+C_FREETEXT_PORT_SIZE;
+    private static final int C_BIN_DECODER_IDX=C_FREETEXT_PORT_IDX+C_FREETEXT_PORT_SIZE;
+    private static final int C_BIN_DECODER_SIZE=4;
+    private static final int C_NEXT_IDX=C_BIN_DECODER_IDX+C_BIN_DECODER_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE=4;
     private static final int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -233,10 +235,10 @@ public class AppSettings {
             if (bt747.sys.Settings.platform.startsWith("Palm")) {
                 setBaseDirPath("/Palm");
             } else if ( isWin32LikeDevice() ) {
-                if(File.getCardVolume()==null) {
+                if(bt747.io.File.getCardVolumePath()==null) {
                     setBaseDirPath("/EnterYourDir");
                 } else {
-                    setBaseDirPath(File.getCardVolume().getPath());
+                    setBaseDirPath(File.getCardVolumePath());
                 }
             } else {
                 setBaseDirPath("/BT747");
@@ -977,11 +979,17 @@ public class AppSettings {
     public void setImperial(final boolean value) {
         setBooleanOpt(0,value, C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
     }
-
-    
     public boolean isStoredSetting1() {
         return getNMEASetting1().length()>15;
     }
+    
+    public void setBinDecoder(final int value) {
+        setIntOpt(0,value, C_BIN_DECODER_IDX, C_BIN_DECODER_SIZE);
+    }
+    public int getBinDecoder() {
+        return getIntOpt(C_BIN_DECODER_IDX, C_BIN_DECODER_SIZE);
+    }
+
     
     /** Look for the google map site key in a file called "gmapkey.txt"
      * Will look in the output dir first, then in the source dir, then
@@ -1054,12 +1062,22 @@ public class AppSettings {
         listeners.add(l);
     }
 
+    protected void postEvent(final int type, Object o) {
+        Iterator it = listeners.iterator();
+        while (it.hasNext()) {
+            ModelListener l=(ModelListener)it.next();
+            Event e=new Event(l, type, o);
+            l.newEvent(e);
+        }
+    }
+
     protected void postEvent(final int type) {
         Iterator it = listeners.iterator();
         while (it.hasNext()) {
             ModelListener l=(ModelListener)it.next();
-            Event e=new Event(type, l, 0);
+            Event e=new Event(l, type, null);
             l.newEvent(e);
         }
     }
+    
 }

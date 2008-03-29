@@ -916,7 +916,10 @@ public class GPSstate implements Thread {
         z_Result = 0;
         //if(GPS_DEBUG&&!p_nmea[0].startsWith("G")) {
         // waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]);}
-        if (gpsDecode && (m_logState == C_LOG_NOLOGGING) // Not during log
+        if (p_nmea.length==0) {
+            // Shoudl not happen, problem in program
+            Vm.debug("Problem - report NMEA is 0 length");
+        } else if (gpsDecode && (m_logState == C_LOG_NOLOGGING ) // Not during log
                 // download for
                 // performance.
                 && p_nmea[0].startsWith("G")) {
