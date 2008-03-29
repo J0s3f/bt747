@@ -19,7 +19,6 @@
 //********************************************************************       
 package gps;
 
-import bt747.ui.Event;
 
 /** Defines some events for the gps package
  * 

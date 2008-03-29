@@ -28,7 +28,6 @@ import waba.ui.Label;
 
 import gps.GpsEvent;
 import gps.convert.Conv;
-import gps.log.GPSFile;
 import gps.log.GPSRecord;
 
 import bt747.Txt;
@@ -172,7 +171,7 @@ public class GPSconctrl extends Container {
     private void updateRMCData(final GPSRecord gps) {
         if(gps.utc>0) {
             Time t = new Time();
-            GPSFile.setUTCTime(t, gps.utc);
+            t.setUTCTime(gps.utc);
             TimeStr=Txt.TIME_SEP+
             //Convert.toString(
 //                    t.getYear())+"/"
@@ -232,6 +231,8 @@ public class GPSconctrl extends Container {
                     event.consumed=true;
                 }
             } else if (event.type==GpsEvent.GPGGA) {
+                GpsEvent en = new GpsEvent(4);
+                event = en;
                 updateGPSData((GPSRecord)(((GpsEvent) event).getArg()));
             } else if (event.type==GpsEvent.GPRMC) {
                 updateRMCData((GPSRecord)(((GpsEvent) event).getArg()));

@@ -5,20 +5,25 @@
  */
 package bt747.j2se_view;
 
+import gps.GPSListener;
+import gps.GpsEvent;
+import gps.convert.Conv;
+import gps.log.GPSRecord;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.swing.JFileChooser;
+import javax.swing.UIManager;
+
 import bt747.Txt;
 import bt747.control.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
-
-import gps.GPSListener;
-import gps.GpsEvent;
-import gps.convert.Conv;
-import gps.log.GPSRecord;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import javax.swing.JFileChooser;
-import javax.swing.UIManager;
+import bt747.sys.Time;
 
 /**
  *
@@ -45,6 +50,7 @@ public class BT747_Main extends javax.swing.JFrame
         initComponents();
         initAppData();
         m.addListener(this);
+        c.addGPSListener(this);
     }
 
     public void newEvent(bt747.ui.Event e) {
@@ -84,7 +90,27 @@ public class BT747_Main extends javax.swing.JFrame
     private void updateRMCData(final GPSRecord gps) {
         if (gps.utc > 0) {
             //Da
-            String TimeStr = new SimpleDateFormat().format(new java.util.Date(gps.utc));
+//            long utc=gps.utc*1000L;
+//            utc=System.currentTimeMillis();
+//            Date t=new java.util.Date(utc);
+//            String TimeStr = new SimpleDateFormat().format(t);
+            String TimeStr;
+            //Date t=new Date(System.currentTimeMillis());
+//            java.util.Date x=new Date(gps.utc*1000L);
+//            x.setYear(2000);
+//            TimeStr=x.toString();
+//            x.setTime(gps.utc*1000L);
+//            System.out.println(TimeStr);
+            bt747.sys.Time t = new bt747.sys.Time();
+            t.setUTCTime(gps.utc);
+            TimeStr=
+//            Convert.toString(t.getYear())+"/"
+//            +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
+//            +(   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+" " +
+             (  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
+            +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())+":"
+            +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
+            ;
             lbTime.setText(TimeStr);
         }
         updateGPSData(gps);
@@ -92,8 +118,8 @@ public class BT747_Main extends javax.swing.JFrame
     
     private void updateGPSData(final GPSRecord gps) {
 
-        lbLatitude.setText(Convert.toString(gps.height,3)
-                +Txt.METERS_ABBR);
+        lbLatitude.setText(Convert.toString(gps.latitude,5));
+        //lbHeight.setText(Convert.toString(gps.height,3)+Txt.METERS_ABBR);
         lbLongitude.setText(Convert.toString(gps.longitude,5));
         lbGeoid.setText(Convert.toString(gps.geoid,3)+Txt.METERS_ABBR+Txt.CALC+
                 Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)

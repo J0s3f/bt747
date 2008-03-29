@@ -6,8 +6,6 @@
  */
 package bt747.sys;
 
-import gps.port.GPSPort;
-
 /**
  * @author Mario De Weerd
  *
@@ -15,7 +13,7 @@ import gps.port.GPSPort;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public final class Settings {
-    public static final boolean hasWaba= true;
+    public static boolean hasWaba= true;
     public static final String platform = waba.sys.Settings.platform;
     public static final String versionStr = waba.sys.Settings.versionStr;
     public static final boolean onDevice = waba.sys.Settings.onDevice;
@@ -35,4 +33,7 @@ public final class Settings {
         waba.sys.Settings.appSettings= appSettings;
     }
     
+    public static boolean isWaba() {
+        return hasWaba;
+    }
 }

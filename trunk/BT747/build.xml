@@ -196,7 +196,7 @@
 	</target>
 
 
-	<target name="run_rxtx_j2se" depends="build_forj2se">
+	<target name="run_rxtx_j2se" depends="build.lib.forj2se">
 		<antcall target="proguard.rxtx">
 			<param name="build.j2se" value="_j2se" />
 		</antcall>
@@ -524,7 +524,7 @@
 
 
 	<!-- Target for pur j2se environment - builds library. -->
-	<target name="build_forj2se">
+	<target name="build.lib.forj2se">
 		<delete dir="${build.dir}/forj2se" />
 		<mkdir dir="${build.dir}/forj2se" />
 		<javac srcdir="." destdir="${build.dir}/forj2se" target="1.5" source="1.5" optimize="true">
@@ -540,6 +540,24 @@
 		</antcall>
 
 	</target>
+
+	
+	   <target name="build.lib.forwaba">
+	        <delete dir="${build.dir}/forwaba" />
+	        <mkdir dir="${build.dir}/forwaba" />
+	        <javac srcdir="." destdir="${build.dir}/forwaba" target="1.5" source="1.5" optimize="true">
+	            <include name="src_forwaba/**/*.java" />
+	            <classpath refid="classpath" />
+	            <!-- included for now -->
+	        </javac>
+	        <jar jarfile="${lib.dir}/waba_forwaba.jar" compress="true">
+	            <fileset dir="${build.dir}/forwaba" includes="**/*.class" />
+	        </jar>
+	        <antcall target="sign">
+	            <param name="jar.tosign" value="${lib.dir}/waba_forwaba.jar" />
+	        </antcall>
+
+	    </target>
 
 	<!-- Package classes -->
 	<target name="sign" if="keytool.sign">

@@ -13,7 +13,7 @@ package bt747.sys;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public final class Settings {
-    public static final boolean hasWaba= false;
+    public static boolean hasWaba= false;
     public static final String platform = java.lang.System.getProperty("os.name");
     public static final String versionStr = java.lang.System.getProperty("os.version");
     public static final boolean onDevice = false;
@@ -32,5 +32,9 @@ public final class Settings {
      */
     public static final void setAppSettings(String appSettings) {
         Settings.appSettings= appSettings;
+    }
+    
+    public static boolean isWaba() {
+        return hasWaba;
     }
 }
