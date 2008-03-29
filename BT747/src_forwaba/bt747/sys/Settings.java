@@ -12,7 +12,7 @@ package bt747.sys;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class Settings {
+public class Settings {
     public static boolean hasWaba= true;
     public static final String platform = waba.sys.Settings.platform;
     public static final String versionStr = waba.sys.Settings.versionStr;

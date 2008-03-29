@@ -11,9 +11,6 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
@@ -23,7 +20,6 @@ import bt747.control.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
-import bt747.sys.Time;
 
 /**
  *

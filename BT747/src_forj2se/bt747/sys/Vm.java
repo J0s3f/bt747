@@ -13,17 +13,20 @@ package bt747.sys;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class Vm {
+public class Vm {
     public static final String ERASE_DEBUG = "Erase Debug";
+    private static final long appStartTime=System.currentTimeMillis(); 
     
     public static final int getTimeStamp() {
+        // Returns the time in ms since the program started.
         //TODO: Find function
-        return 1;
+        return (int)(System.currentTimeMillis()-appStartTime);
         //return waba.sys.Vm.getTimeStamp();
         //Date.
     }
     
     public static final void debug(final String s) {
+        System.out.print(getTimeStamp()+" - ");
         System.out.println(s);
     }
 

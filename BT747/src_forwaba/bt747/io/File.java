@@ -12,7 +12,7 @@ package bt747.io;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class File extends waba.io.File {
+public class File extends waba.io.File {
     public static final char separatorChar='/';
     /**
      * @param path

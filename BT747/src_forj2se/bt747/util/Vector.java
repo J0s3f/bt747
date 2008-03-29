@@ -22,11 +22,20 @@ public class Vector extends java.util.Stack<Object> {
     public int getCount() {
         return this.elementCount;
     }
-    
+
     public void del(Object o) {
         remove(o);
     }
     
+    public boolean del(int i) {
+        try {
+            remove(i);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+            
+    }
     public Object[] toObjectArray() {
         return toArray();
     }
@@ -35,7 +44,7 @@ public class Vector extends java.util.Stack<Object> {
         String[] s= new String[elementCount];
         for (int i = 0; i < s.length; i++) {
             s[i]=(String)elementData[i];
-            System.out.println(s[i]);
+            //System.out.println(s[i]);
         }
         
         return s;

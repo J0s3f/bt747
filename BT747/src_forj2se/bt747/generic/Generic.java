@@ -18,7 +18,7 @@ import bt747.sys.Thread;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public final class Generic {
+public class Generic {
 
     static HashSet h = new HashSet();
     static HashSet oos = new HashSet();
@@ -29,6 +29,9 @@ public final class Generic {
 
     public static void addThread(Thread t, final boolean b) {
         // MainWindow.getMainWindow().addThread(t, b);
+        if (!oos.contains(t)) {
+            removeIfStoppedThread(t);
+        }
         if (!oos.contains(t)) {
             System.out.println("Adding " + t);
             MyThread mt = new MyThread(t);
@@ -56,6 +59,24 @@ public final class Generic {
                 // tt.jvThread.stop();
                 tt.btThread = null; // When this is null, the thread stops.
                 h.remove(tt);
+                oos.remove(t);
+            }
+        }
+
+    }
+
+    public static void removeIfStoppedThread(Thread t) {
+        // MainWindow.getMainWindow().removeThread(t);
+        Iterator it = h.iterator();
+        while (it.hasNext()) {
+            MyThread tt = (MyThread) it.next();
+            if (tt.btThread.equals(t)) {
+                // tt.jvThread.stop();
+                if(tt.running) {
+                    // When this is null, the thread stops.)
+                    h.remove(tt);
+                    oos.remove(t);
+                }
             }
         }
 

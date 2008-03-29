@@ -14,7 +14,7 @@ import java.io.Reader;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class FileJ2SE extends java.io.File {
+public class FileJ2SE extends java.io.File {
     private String path;
     /**
      * @param path

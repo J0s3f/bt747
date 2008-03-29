@@ -15,7 +15,7 @@ import java.util.Date;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class Time extends java.util.Date {
+public class Time extends java.util.Date {
 
     /**
      * 
