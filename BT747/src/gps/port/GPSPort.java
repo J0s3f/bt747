@@ -140,7 +140,8 @@ public abstract class GPSPort {
             }
             try {
                 // Having some trouble on Palm - doing it like this.
-                new File(debugFileName,File.CREATE).close();
+                File tmp=new File(debugFileName,File.CREATE);
+                tmp.close();
             } catch (Exception e) {
                 // TODO: handle exception
             }

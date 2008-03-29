@@ -442,7 +442,7 @@ public class GPSstate implements Thread {
             doSendNMEA(p_Cmd);
         } else if (cmdsWaiting < C_MAX_TOSEND_COMMANDS) {
             // Ok to buffer more cmds
-            toSendCmds.add(p_Cmd);
+            toSendCmds.addElement(p_Cmd);
         }
     }
 
@@ -453,7 +453,7 @@ public class GPSstate implements Thread {
     private void doSendNMEA(final String p_Cmd) {
         resetLogTimeOut();
         if (p_Cmd.startsWith("PMTK")) {
-            sentCmds.add(p_Cmd);
+            sentCmds.addElement(p_Cmd);
         }
         m_GPSrxtx.sendPacket(p_Cmd);
         nextCmdSendTime = Vm.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;

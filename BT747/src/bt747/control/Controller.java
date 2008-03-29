@@ -1,5 +1,6 @@
 package bt747.control;
 
+import gps.GPSListener;
 import gps.convert.Conv;
 import gps.log.BT747LogConvert;
 import gps.log.CSVLogConvert;
@@ -266,6 +267,11 @@ public class Controller {
     
     public final void setDebugConn(boolean b) {
         m.gpsModel().setDebugConn(b);
+    }
+
+    
+    public void addGPSListener(GPSListener l) {
+        m.gpsModel().addListener(l);
     }
 
 

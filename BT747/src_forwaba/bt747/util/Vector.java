@@ -20,4 +20,9 @@ public class Vector extends waba.util.Vector {
     public final String[] toStringArray() {
         return (String[]) toObjectArray();
     }
+    
+    public final void addElement(Object obj) {
+        // TODO Auto-generated method stub
+        super.add(obj);
+    } 
 }

@@ -18,10 +18,12 @@
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 package gps;
-import bt747.sys.*;
-import bt747.util.Vector;
-
 import gps.port.*;
+
+import bt747.sys.Convert;
+import bt747.sys.Settings;
+import bt747.sys.Vm;
+import bt747.util.Vector;
 
 /** This class implements the low level driver of the GPS device.
  * It extracs NMEA strings.
@@ -31,6 +33,7 @@ import gps.port.*;
  */
 public class GPSrxtx {
     private boolean GPS_DEBUG = !Settings.hasWaba||false; //!Settings.onDevice;
+    private boolean hasWaba=Settings.isWaba();
     
     private GPSPort gpsPort;
     
@@ -45,7 +48,7 @@ public class GPSrxtx {
     /** Class constructor.
      */
     public  GPSrxtx() {
-        if(Settings.hasWaba) {
+        if(hasWaba) {
             gpsPort=new GPSWabaPort();
         } else {
             try {
@@ -273,13 +276,13 @@ public class GPSrxtx {
                         current_state = C_EOL_STATE;
                     } else if ( c == '*') {
                         current_state = C_STAR_STATE;
-                        vCmd.add(new String(cmd_buf,0,cmd_buf_p));
+                        vCmd.addElement(new String(cmd_buf,0,cmd_buf_p));
                         //                        if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P') {
                         //                            bt747.sys.Vm.debug(((String[])vCmd.toObjectArray())[vCmd.getCount()-1]);
                         //                        }
                     } else if ( c == ',') {
                         checksum^= c;
-                        vCmd.add(new String(cmd_buf,0,cmd_buf_p));
+                        vCmd.addElement(new String(cmd_buf,0,cmd_buf_p));
                         cmd_buf_p= 0;
                     } else {
                         cmd_buf[cmd_buf_p++]= c;

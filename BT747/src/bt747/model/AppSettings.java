@@ -20,6 +20,7 @@ package bt747.model;
 //********************************************************************                              
 import bt747.io.File;
 
+import gps.GPSListener;
 import gps.convert.Conv;
 
 import bt747.sys.Convert;

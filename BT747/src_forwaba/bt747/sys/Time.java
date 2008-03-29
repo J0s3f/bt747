@@ -72,7 +72,7 @@ public final class Time {
     
     private static final int DAYS_BETWEEN_1970_1983 = 4748;
 
-    public static final void setUTCTime(final int utc_int) {
+    public final void setUTCTime(final int utc_int) {
         // long utc=utc_int&0xFFFFFFFFL;
         int utc = utc_int;
         // Time t=new Time();
