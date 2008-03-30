@@ -21,7 +21,6 @@ package bt747.waba_view;
 import waba.fx.Color;
 import waba.ui.Button;
 import waba.ui.Calendar;
-import waba.ui.Check;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -44,12 +43,12 @@ import bt747.util.Date;
  */
 public class GPSLogGet extends Container {
 
-    Check m_chkLogOnOff;
-    Check m_chkLogOverwriteStop;
+    MyCheck m_chkLogOnOff;
+    MyCheck m_chkLogOverwriteStop;
     Button m_btStartDate;
     Button m_btEndDate;
     Button m_btGetLog;
-    Check m_chkNoGeoid;
+    MyCheck m_chkNoGeoid;
     Button m_btCancelGetLog;
     Button m_btToCSV;
     Button m_btToKML;
@@ -75,7 +74,7 @@ public class GPSLogGet extends Container {
         "00FF00",
         "008000"
     };
-    Check m_chkIncremental;
+    MyCheck m_chkIncremental;
     ComboBox m_chkOneFilePerDay;
     private static final String[] fileStr = {
         Txt.ONE_FILE,
@@ -104,10 +103,10 @@ public class GPSLogGet extends Container {
      */
     protected void onStart() {
         super.onStart();
-        add(m_chkLogOnOff = new Check(Txt.DEV_LOGONOFF), LEFT, TOP); //$NON-NLS-1$
-        add(m_chkIncremental = new Check(Txt.INCREMENTAL), RIGHT, SAME); //$NON-NLS-1$
+        add(m_chkLogOnOff = new MyCheck(Txt.DEV_LOGONOFF), LEFT, TOP); //$NON-NLS-1$
+        add(m_chkIncremental = new MyCheck(Txt.INCREMENTAL), RIGHT, SAME); //$NON-NLS-1$
         m_chkIncremental.setChecked(m.isIncremental());
-        add(m_chkLogOverwriteStop = new Check(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
+        add(m_chkLogOverwriteStop = new MyCheck(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
         add(new Label(Txt.DATE_RANGE), LEFT, AFTER); //$NON-NLS-1$
         add(m_btStartDate = new Button(m.getStartDate().getDateString()), AFTER, SAME); //$NON-NLS-1$
         //m_btStartDate.setMode(Edit.DATE);
@@ -140,7 +139,7 @@ public class GPSLogGet extends Container {
         //add(new Label("End"),BEFORE,SAME);
         add(m_chkOneFilePerDay = new ComboBox(fileStr), LEFT, AFTER + 2);
         m_chkOneFilePerDay.select(m.getFileSeparationFreq());
-        add(m_chkNoGeoid = new Check(Txt.HGHT_GEOID_DIFF), AFTER + 5, SAME); //$NON-NLS-1$
+        add(m_chkNoGeoid = new MyCheck(Txt.HGHT_GEOID_DIFF), AFTER + 5, SAME); //$NON-NLS-1$
         m_chkNoGeoid.setChecked(m.getNoGeoid());
 
         add(m_btToCSV = new Button(Txt.TO_CSV), LEFT, AFTER + 5); //$NON-NLS-1$

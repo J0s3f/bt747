@@ -20,7 +20,6 @@ package bt747.waba_view;
 //********************************************************************                              
 import waba.sys.Settings;
 import waba.ui.Button;
-import waba.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -42,7 +41,7 @@ public class GPSLogFormat extends Container {
     /** The object that is used to communicate with the GPS device. */
     private GPSstate m_GPSstate;
     /** The tickboxes for the format items */
-    private Check [] chkLogFmtItems =new Check[C_LOG_FMT_COUNT];
+    private MyCheck [] chkLogFmtItems =new MyCheck[C_LOG_FMT_COUNT];
     /** The button that requests to change the log format of the device */
     private Button m_btChangeFormatErase;
     private Button m_btChangeFormat;
@@ -65,7 +64,15 @@ public class GPSLogFormat extends Container {
     public void onStart () {
         // Add all tick buttons.
         for (int i=0;i<C_LOG_FMT_COUNT;i++) {
-            chkLogFmtItems[i]= new Check(BT747_dev.logFmtItems[i]);
+            chkLogFmtItems[i]= new MyCheck(BT747_dev.logFmtItems[i]);
+//            int extra_offset=chkLogFmtItems[i].fm.height-chkLogFmtItems[i].getPreferredHeight();
+//            add(chkLogFmtItems[i]);
+//            int x=((i==0)?LEFT:((i==((C_LOG_FMT_COUNT/2)))? getClientRect().width/2:SAME));
+//            if(((i==0) ||i==((C_LOG_FMT_COUNT/2)))) {
+//                chkLogFmtItems[i].setRect(x, TOP, PREFERRED+extra_offset-1, chkLogFmtItems[i].fm.height-1);
+//            } else {
+//                chkLogFmtItems[i].setRect(x, AFTER-1, PREFERRED+extra_offset-1, chkLogFmtItems[i].fm.height-1);
+//            }
             add( chkLogFmtItems[i],
                     ((i==0)?LEFT:((i==((C_LOG_FMT_COUNT/2)))? getClientRect().width/2:SAME)),
                     ((i==0) ||i==((C_LOG_FMT_COUNT/2)))? TOP:AFTER-1

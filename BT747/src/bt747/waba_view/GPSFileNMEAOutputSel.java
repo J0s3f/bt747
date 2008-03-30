@@ -18,7 +18,6 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import waba.ui.Check;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -34,7 +33,7 @@ import bt747.model.Model;
  */
 public class GPSFileNMEAOutputSel extends Container {
     /** The object that is used to communicate with the GPS device. */
-    private Check [] chkNMEAItems =new Check[BT747_dev.C_NMEA_SEN_COUNT];
+    private MyCheck [] chkNMEAItems =new MyCheck[BT747_dev.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
     
     private static final int C_NMEAactiveFilters=0x0002003A;
@@ -54,7 +53,7 @@ public class GPSFileNMEAOutputSel extends Container {
     protected void onStart() {
         int bit=1;
         for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
-            chkNMEAItems[i]= new Check(BT747_dev.NMEA_strings[i]);
+            chkNMEAItems[i]= new MyCheck(BT747_dev.NMEA_strings[i]);
             add( chkNMEAItems[i]);
             chkNMEAItems[i].setRect(((i<((BT747_dev.C_NMEA_SEN_COUNT/2)+1))?LEFT:(getClientRect().width/2)),
                     ((i==0) ||i==((BT747_dev.C_NMEA_SEN_COUNT/2)+1))? TOP:AFTER-1, PREFERRED, PREFERRED-1);

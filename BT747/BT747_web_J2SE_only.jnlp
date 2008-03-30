@@ -17,12 +17,17 @@
   <!-- main resources -->  
   <resources>
     <j2se version="1.5"/>
+    <!--
     <jar href="waba_forj2se.jar" download=eager main="false" />
     <jar href="BT747_rxtx_j2se.jar" download="eager" main="true" />
-    <jar href="Waba_only.jar" />
+     -->
+    <jar href="BT747_j2se.jar" main="true" />
     <jar href="RXTXcomm.jar" />
     <jar href="swing-layout-1.0.3.jar" />
+    <!--
     <jar href="collections-superwaba.jar" download="lazy" />
+    -->
+    <jar href="Waba_only.jar" />
   </resources>
 
   <!-- language specific resources -->  
@@ -82,7 +87,7 @@
   </resources>
 
  
-  
+
   <application-desc main-class="bt747.j2se_view.BT747_Main">
   </application-desc>
 

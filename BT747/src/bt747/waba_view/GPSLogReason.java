@@ -19,7 +19,6 @@ package bt747.waba_view;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.ui.Button;
-import waba.ui.Check;
 import waba.ui.ComboBox;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
@@ -38,10 +37,10 @@ public class GPSLogReason extends Container {
     private static final boolean ENABLE_PWR_SAVE_CONTROL=false;
     private GPSstate m_GPSstate;
     
-    private Check m_chkTimeOnOff;
-    private Check m_chkDistanceOnOff;
-    private Check m_chkSpeedOnOff;
-    private Check m_chkFixOnOff;
+    private MyCheck m_chkTimeOnOff;
+    private MyCheck m_chkDistanceOnOff;
+    private MyCheck m_chkSpeedOnOff;
+    private MyCheck m_chkFixOnOff;
     private Edit m_edTime;
     private Edit m_edDistance;
     private Edit m_edSpeed;
@@ -49,9 +48,9 @@ public class GPSLogReason extends Container {
     
     private Button m_btSet;
     
-    private Check m_chkPowerSaveOnOff;
-    private Check m_chkSBASOnOff;
-    private Check m_chkSBASTestOnOff;
+    private MyCheck m_chkPowerSaveOnOff;
+    private MyCheck m_chkSBASOnOff;
+    private MyCheck m_chkSBASTestOnOff;
     private static final String[] strDGPSMode= {Txt.NO_DGPS, Txt.RTCM,Txt.WAAS};
     private ComboBox m_cbDGPSMode;
     private static final String[] strDatumMode= {"WGS84", "TOKYO-M","TOKYO-A"};
@@ -65,28 +64,28 @@ public class GPSLogReason extends Container {
     
     protected void onStart() {
         super.onStart();
-        add(m_chkTimeOnOff      = new Check(Txt.RCR_TIME), LEFT, TOP); //$NON-NLS-1$
+        add(m_chkTimeOnOff      = new MyCheck(Txt.RCR_TIME), LEFT, TOP); //$NON-NLS-1$
         add(m_edTime = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(m_chkSpeedOnOff     = new Check(Txt.RCR_SPD), LEFT, AFTER); //$NON-NLS-1$
+        add(m_chkSpeedOnOff     = new MyCheck(Txt.RCR_SPD), LEFT, AFTER); //$NON-NLS-1$
         add(m_edSpeed = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(m_chkDistanceOnOff  = new Check(Txt.RCR_DIST), LEFT, AFTER); //$NON-NLS-1$
+        add(m_chkDistanceOnOff  = new MyCheck(Txt.RCR_DIST), LEFT, AFTER); //$NON-NLS-1$
         add(m_edDistance = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(m_chkFixOnOff = new Check(Txt.FIX_PER), LEFT,AFTER); //$NON-NLS-1$
+        add(m_chkFixOnOff = new MyCheck(Txt.FIX_PER), LEFT,AFTER); //$NON-NLS-1$
         add(m_edFix = new Edit(), AFTER, SAME); //$NON-NLS-1$
         m_edSpeed.setValidChars(Edit.numbersSet);
         m_edDistance.setValidChars(Edit.numbersSet);
         m_edTime.setValidChars(Edit.numbersSet+".");
-        add(m_chkSBASOnOff = new Check("SBAS"), LEFT, AFTER+3); //$NON-NLS-1$
+        add(m_chkSBASOnOff = new MyCheck("SBAS"), LEFT, AFTER+3); //$NON-NLS-1$
         m_cbDGPSMode=new ComboBox();
         m_cbDGPSMode.add(strDGPSMode);
         add(m_cbDGPSMode, AFTER, SAME);
-        add(m_chkSBASTestOnOff = new Check(Txt.INCL_TST_SBAS), RIGHT, SAME); //$NON-NLS-1$
+        add(m_chkSBASTestOnOff = new MyCheck(Txt.INCL_TST_SBAS), RIGHT, SAME); //$NON-NLS-1$
         m_cbDatumMode=new ComboBox();
         m_cbDatumMode.setEnabled(false);
         m_cbDatumMode.add(strDatumMode);
         add(m_cbDatumMode, LEFT, AFTER+3);
         if(ENABLE_PWR_SAVE_CONTROL) {
-            add(m_chkPowerSaveOnOff = new Check(Txt.PWR_SAVE_INTRNL), LEFT, AFTER+3); //$NON-NLS-1$
+            add(m_chkPowerSaveOnOff = new MyCheck(Txt.PWR_SAVE_INTRNL), LEFT, AFTER+3); //$NON-NLS-1$
         }
         
         
