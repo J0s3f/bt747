@@ -57,9 +57,9 @@ ssh shell.sourceforge.net chmod 755 bt747/htdocs/BT747_J2SE_only.jnlp
 goto end:
 
 :j2se
-ssh shell.sourceforge.net chmod 755 bt747/htdocs/BT747_rxtx_j2se.jar
-scp dist/BT747_rxtx_j2se.jar shell.sourceforge.net:bt747/htdocs/BT747_rxtx_j2se.jar
-ssh shell.sourceforge.net chmod 755 bt747/htdocs/BT747_rxtx_j2se.jar
+ssh shell.sourceforge.net chmod 755 bt747/htdocs/BT747_j2se.jar
+scp dist/BT747_j2se.jar shell.sourceforge.net:bt747/htdocs/BT747_j2se.jar
+ssh shell.sourceforge.net chmod 755 bt747/htdocs/BT747_j2se.jar
 
 goto end:
 
