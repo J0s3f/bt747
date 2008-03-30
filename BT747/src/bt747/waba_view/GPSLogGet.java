@@ -297,7 +297,8 @@ public class GPSLogGet extends Container {
                     updateButtons();
                 } else if (event.type == ModelEvent.INCREMENTAL_CHANGE) {
                     m_chkIncremental.setChecked(m.isIncremental());
-                } else if (event.type == ModelEvent.CONVERSION_STATE_CHANGE) {
+                } else if (event.type == ModelEvent.CONVERSION_ENDED
+                        || event.type == ModelEvent.CONVERSION_STARTED) {
                     Button b = null;
                     switch (m.getLastConversionOngoing()) {
                         case Model.C_CSV_LOG:

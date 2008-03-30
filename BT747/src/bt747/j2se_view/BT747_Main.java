@@ -92,15 +92,12 @@ public class BT747_Main extends javax.swing.JFrame
             getWorkDirPath();
         } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
             getIncremental();
-        } else if (type == ModelEvent.CONVERSION_STATE_CHANGE) {
-            if((Boolean)e.getArg()) {
-                conversionStartTime=System.currentTimeMillis();
-            } else {
-                lbConversionTime.setText("Time to convert: "
-                        +((int)(System.currentTimeMillis()-conversionStartTime))+" ms");
-                lbConversionTime.setVisible(true);
-            }
-                
+        } else if (type == ModelEvent.CONVERSION_STARTED) {
+            conversionStartTime=System.currentTimeMillis();
+        } else if (type == ModelEvent.CONVERSION_ENDED) {
+            lbConversionTime.setText("Time to convert: "
+                    +((int)(System.currentTimeMillis()-conversionStartTime))+" ms");
+            lbConversionTime.setVisible(true);
         }
     }
 

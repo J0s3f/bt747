@@ -17,6 +17,8 @@ import gps.log.GPSLogConvert;
 import gps.log.GPSNMEAFile;
 import gps.log.GPSPLTFile;
 import gps.log.HoluxTrlLogConvert;
+import gps.port.GPSPort;
+import gps.port.GPSWabaPort;
 
 import bt747.model.Model;
 import bt747.sys.Convert;
@@ -98,7 +100,14 @@ public class Controller {
         } else {
             switch(m.getBinDecoder()) {
             case DECODER_THOMAS:
-                lc=new gps.parser.NewLogConvert();
+                try {
+                    // TODO: Reference directly once integrated for PDA too.
+                    lc = (GPSLogConvert) Class.forName("gps.parser.NewLogConvert")
+                            .newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    lc=new BT747LogConvert();
+                }
                 break;
             default:
             case DECODER_ORG:
