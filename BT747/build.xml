@@ -18,9 +18,16 @@
 	<property name="keytool.passwd" value="secret" />
 	<property name="keytool.keystore" value="cfg/jws/myKeystore" />
 
-
-
 	<property name="swcollections.jar" value="${lib.dir}/collections-superwaba.jar" />
+
+	<property name="lang" value="en" />
+	<property name="waba.jar" value="${lib.dir}/Waba_only.jar" />
+	<property name="rxtxcomm.jar" value="${lib.dir}/rxtx-2.1-7-bins-r2/RXTXcomm.jar" />
+	<property name="swinglayout.jar" value="${lib.dir}/swing-layout-1.0.3.jar" />
+	<property name="waba_forj2se.jar" value="${lib.dir}/waba_forj2se.jar" />
+	<property name="waba_forwaba.jar" value="${lib.dir}/waba_forwaba.jar" />
+
+	<property name="j2se.main" value="bt747.j2se_view.BT747_Main" />
 
 	<!-- Application classpath -->
 	<path id="classpath">
@@ -30,16 +37,19 @@
 	</path>
 
 	<path id="rxtxclasspath">
+		<pathelement location="${waba_forwaba.jar}" />
+		<pathelement location="${waba.jar}" />
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar" />
 		<pathelement location="${swcollections.jar}" />
-		<pathelement location="lib/swing-layout-1.0.3.jar" />
-		<pathelement location="lib/RXTXcomm.jar" />
+		<pathelement location="${swinglayout.jar}" />
+		<pathelement location="${rxtxcomm.jar}" />
 	</path>
 
 	<path id="j2seclasspath">
+		<pathelement location="${waba_forj2se.jar}" />
 		<pathelement location="${swcollections.jar}" />
-		<pathelement location="lib/swing-layout-1.0.3.jar" />
-		<pathelement location="lib/RXTXcomm.jar" />
+		<pathelement location="${swinglayout.jar}" />
+		<pathelement location="${rxtxcomm.jar}" />
 	</path>
 
 	<path id="symbianclasspath">
@@ -61,23 +71,7 @@
 	<available file="package.bat" property="do.package" value="true"/>
 	<available file="upload.bat"  property="do.upload"  value="true"/>
 	  -->
-
-	<property name="waba.jar" value="${lib.dir}/Waba_only.jar" />
-	<property name="rxtxcomm.jar" value="${lib.dir}/rxtx-2.1-7-bins-r2/RXTXcomm.jar" />
-	<property name="swinglayout.jar" value="${lib.dir}/swing-layout-1.0.3.jar" />
-	<property name="waba_forj2se.jar" value="${lib.dir}/waba_forj2se.jar" />
-
-
-	<target name="updatedate" depends="initdate,updatelang" description="increase build number and set release date">
-		<!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
-		<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;" />
-		<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match='BUILD_STR = \".*\";' replace='BUILD_STR = "${full.build.version}.${TIMESTAMP}";' />
-		<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";' />
-		<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";' />
-		<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}' />
-	</target>
-
-
+	<!-- Set the default language -->
 	<!-- ======================================== -->
 	<!-- all - currently build english target     -->
 	<!--       without uploading the package      -->
@@ -159,19 +153,138 @@
 	<!-- 3. Build the jar                         -->
 	<!-- 4. To distribution and sign              -->
 
+	<property name="j2sesrc.dir" value="${build.dir}/j2se_src" />
+	<property name="j2sebuild.dir" value="${build.dir}/j2se" />
 
-	<macrodef name="macro.run.j2sewaba">
-		<attribute name="main-class" />
-		<attribute name="args" />
-		<attribute name="wabajar" default="${waba.jar}" />
+	<target name="j2sebuild" depends="clean, updatedate">
+		<mkdir dir="${j2sebuild.dir}" />
+		<delete dir="${j2sesrc.dir}" />
+		<mkdir dir="${j2sesrc.dir}" />
+
+		<copy todir="${j2sesrc.dir}">
+			<fileset dir="src">
+				<include name="**/*.java" />
+				<exclude name="**/waba_view/**" />
+				<exclude name="**/j2se_view/BT747.java" />
+				<exclude name="BT747.java" />
+			</fileset>
+			<fileset dir="src_forj2se">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+
+
+		<replace file="${j2sesrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort" />
+		<replace file="${j2sesrc.dir}/bt747/model/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
+		<!--
+                    source="${java.src.version}"
+                    target="${java.target.version}"
+        -->
+		<javac srcdir="${j2sesrc.dir}" destdir="${j2sebuild.dir}" optimize="true" classpathref="j2seclasspath">
+			<include name="**/*.java" />
+			<exclude name="gps/port/GPSWabaPort.java*" />
+			<exclude name="gps/port/GPSWabaSocketPort.java*" />
+			<exclude name="gps/model/*" />
+			<exclude name="gps/parser/*" unless="use.newparser" />
+		</javac>
+		<copy todir="${j2sebuild.dir}">
+			<fileset dir="src">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+
+	</target>
+
+
+	<target name="j2sejar" depends="j2sebuild">
+		<buildnumber file="build.num" />
+		<delete file="MANIFEST.MF" />
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Main-Class" value="${j2se.main}" />
+			<attribute name="Implementation-Version" value="${full.build.version}" />
+			<attribute name="Class-Path" value="RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/collections-superwaba.jar ../${swinglayout.jar}" />
+		</manifest>
+		<!-- It might be possible to read the version in the application:
+             TheMainClass.class.getPackage().getImplementationVersion() ); -->
+
+		<jar manifest="MANIFEST.MF" jarfile="${j2sebuild.dir}/${ant.project.name}_waba_j2seonly.jar" compress="true">
+			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
+
+		</jar>
+		<mkdir dir="${dist}" />
+		<move file="${j2sebuild.dir}/${ant.project.name}_waba_j2seonly.jar" todir="${dist}" />
+	</target>
+
+
+	<macrodef name="build.rxtx">
+		<attribute name="suffix" default="_waba_j2se" />
+		<attribute name="build.j2se" default="" />
 		<sequential>
-
-			<property name="j2se.suffix" value="_rxtx_j2se" />
-
+			<property name="j2se.suffix" value="@{suffix}" />
 			<antcall target="proguard.rxtx">
-				<param name="build.j2se" value="yes" />
+				<param name="build.j2se" value="@{build.j2se}" />
 				<param name="name.suffix" value="${j2se.suffix}" />
 			</antcall>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="dist.rxtx">
+		<attribute name="suffix" default="_waba_j2se" />
+		<attribute name="build.j2se" default="" />
+		<sequential>
+			<build.rxtx suffix="@{suffix}" build.j2se="@{build.j2se}" />
+			<copy file="${rxtxbuild.dir}/${ant.project.name}@{suffix}.jar" tofile="${dist}/${ant.project.name}@{suffix}.jar" />
+			<antcall target="sign">
+				<param name="jar.tosign" value="${dist}/${ant.project.name}@{suffix}.jar" />
+			</antcall>
+		</sequential>
+	</macrodef>
+
+
+	<target name="dist.j2se" depends="build.lib.forj2se">
+		<!-- First build normal target -->
+		<property name="tmp_suffix" value="_j2se_tmp" />
+		<property name="j2se_suffix" value="_j2se" />
+		<build.rxtx suffix="_j2se_tmp" build.j2se="yes" />
+
+		<!-- Then, optimize to build a single jar -->
+		<!--
+            -overloadaggressively
+            -repackageclasses ''
+            -allowaccessmodification
+        -->
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
+		<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="false" allowaccessmodification="yes" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true" optimizationpasses="4">
+			<libraryjar file="${java.home}/lib/rt.jar" />
+			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+			<injar path="${rxtxbuild.dir}/${ant.project.name}${tmp_suffix}.jar" />
+			<outjar path="${dist}/${ant.project.name}${j2se_suffix}.jar" />
+                -optimizationpasses 4
+                -injar ${waba_forj2se.jar}(!META-INF/**)
+                -injar ${swcollections.jar}(!META-INF/**)
+                -printmapping ${ant.project.name}${j2se_suffix}.map
+                -keep public class BT747
+                -keep public class bt747.j2se_view.BT747
+                -keep public class * implements GPSLogConvert
+                -keep public class * extends MainWindow
+                -keep public class * extends GPSPort
+                -keepclasseswithmembers public class * {
+                     public static void main(java.lang.String[]); }
+       </proguard>
+		<antcall target="sign">
+			<param name="jar.tosign" value="${dist}/${ant.project.name}${j2se_suffix}.jar" />
+		</antcall>
+	</target>
+
+	<macrodef name="macro.run.rxtx">
+		<attribute name="main-class" />
+		<attribute name="main-class-args" />
+		<attribute name="wabajar" default="${waba.jar}" />
+		<attribute name="suffix" default="_waba_j2se" />
+		<sequential>
+			<property name="j2se.suffix" value="@{suffix}" />
+			<build.rxtx suffix="@suffix" build.j2se="@{suffix}" />
 
 			<!--
 	        <antcall target="rxtxjar">
@@ -189,65 +302,57 @@
 					<pathelement path="${swinglayout.jar}" />
 					<pathelement path="${swcollections.jar}" />
 					<pathelement path="${rxtxbuild.dir}/${ant.project.name}${j2se.suffix}.jar" />
+					<pathelement path="${waba_forwaba.jar}" />
 				</classpath>
-				<arg line="@{args}" />
+				<arg line="@{main-class-args}" />
 			</java>
 		</sequential>
 	</macrodef>
 
 	<target name="run.j2sewaba">
-		<macro.run.j2sewaba main-class="waba.applet.Applet" args="/w 320 /h 320 /x 500 /scale 1 /bpp 8 bt747.j2se_view.BT747" />
+		<macro.run.rxtx main-class="waba.applet.Applet" main-class-args="/w 320 /h 320 /x 500 /scale 1 /bpp 8 bt747.j2se_view.BT747" />
 	</target>
 
 	<target name="run.j2se" depends="build.lib.forj2se">
-		<macro.run.j2sewaba main-class="bt747.j2se_view.BT747_Main"
-			args=""
-			wabajar="${waba_forj2se.jar}"
-		/>
+		<macro.run.rxtx main-class="${j2se.main}" main-class-args="" wabajar="${waba_forj2se.jar}" />
 	</target>
 
 	<target name="run.rxtx">
-		<macro.run.j2sewaba main-class="waba.applet.Applet" args="/w 320 /h 320 /scale 1 /bpp 8 BT747" 
-		   />
+		<macro.run.rxtx main-class="waba.applet.Applet" main-class-args="/w 320 /h 320 /scale 1 /bpp 8 BT747" />
 	</target>
-	
+
 	<!-- see http://ant.apache.org/manual/CoreTasks/conditions.html for conditions -->
 	<target name="proguard.rxtx" depends="proguard_task.rxtx,proguard_java.rxtx">
 	</target>
 
-	<macrodef name="getsuffix">
-		<sequential>
-			<condition property="suffix" value="_rxtx">
-				<or>
-					<not>
-						<isset property="name.suffix" />
-					</not>
-					<equals arg1="${name.suffix}" arg2="" />
-				</or>
-			</condition>
-			<condition property="suffix" value="${name.suffix}">
-				<not>
-					<isset property="suffix" />
-				</not>
-			</condition>
-		</sequential>
-	</macrodef>
+
 
 	<target name="proguard_task.rxtx" depends="rxtxjar" unless="use.proguard_java">
 		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
 		<getsuffix />
 		<move file="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" tofile="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar" />
-		<proguard shrink="true" defaultpackage="" optimize="false" obfuscate="false" allowaccessmodification="no" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true" optimizationpasses="4" printmapping="${buildDir}/${ant.project.name}_rxtx.mapping">
+		<proguard shrink="true" defaultpackage="" optimize="false" obfuscate="false" allowaccessmodification="no" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
+			<!--
 			<keep name="${mainClass}" />
 			<keep name="gps.parser.*" />
 			<keep name="bt747.j2se_view.BT747" />
 			<keep name="gps.port.GPSRxTxPort" />
 			<keep name="gps.parser.NewLogConvert" />
+			-->
+			<keep name="bt747.j2se_view.BT747" />
 			<libraryjar file="${java.home}/lib/rt.jar" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+			<libraryjar file="${waba_forwaba.jar}" />
+			<libraryjar file="${swcollections.jar}" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar" />
-			<injar path="${swcollections.jar}" filter="!META-INF/MANIFEST.MF" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
+                -keep public class * implements GPSLogConvert
+                -keep public class * extends MainWindow
+                -keep public class * extends GPSPort
+                -keep public class BT747
+		        -keep public class bt747.j2se_view.BT747
+                -keepclasseswithmembers public class * {
+                    public static void main(java.lang.String[]); }
 	            -keepclasseswithmembers public class * {
 	                public static void main(java.lang.String[]); }
 
@@ -291,106 +396,12 @@
         </antcall>
         -->
 
-		<copy file="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" tofile="${dist}/${ant.project.name}_rxtx_j2se.jar" />
+		<copy file="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" tofile="${dist}/${ant.project.name}_waba_j2se.jar" />
 		<antcall target="sign">
-			<param name="jar.tosign" value="${dist}/${ant.project.name}_rxtx_j2se.jar" />
+			<param name="jar.tosign" value="${dist}/${ant.project.name}_waba_j2se.jar" />
 		</antcall>
 
 	</target>
-
-
-
-	<target name="run_rxtx" depends="proguard.rxtx">
-		<java classname="waba.applet.Applet" fork="true" spawn="false">
-			<classpath>
-				<pathelement path="${waba.jar}" />
-				<pathelement path="${rxtxcomm.jar}" />
-				<pathelement path="${rxtxbuild.dir}/BT747_rxtx.jar" />
-			</classpath>
-			<arg line="/w 320 /h 320 /scale 1 /bpp 8 BT747" />
-		</java>
-	</target>
-
-
-	<target name="build.j2seonly" depends="j2sejar">
-		<!--
-	        <antcall target="proguard.rxtx">
-	            <param name="build.j2se" value="_j2se" />
-	        </antcall>
-	        -->
-		<!--
-
-		<copy file="${j2sebuild.dir}/${ant.project.name}_rxtx_j2seonly.jar" tofile="${dist}/${ant.project.name}_rxtx_j2seonly.jar" />
-            -->
-		<antcall target="sign">
-			<param name="jar.tosign" value="${dist}/${ant.project.name}_rxtx_j2seonly.jar" />
-		</antcall>
-
-	</target>
-
-
-	<target name="run_j2seonly" depends="build.j2seonly">
-		<!--
-		<antcall target="proguard.rxtx">
-			<param name="build.j2se" value="_j2se" />
-		</antcall>
-
-	        <antcall target="rxtxjar">
-	            <param name="build.j2se" value="_j2se" />
-	        </antcall>
-	        -->
-
-
-		<!-- <java classname="waba.applet.Applet" fork="true" spawn="true">
-	        -->
-		<java classname="bt747.j2se_view.BT747_Main" fork="true" spawn="false">
-			<classpath>
-				<pathelement path="${dist}/BT747_rxtx_j2seonly.jar" />
-				<pathelement path="${rxtxcomm.jar}" />
-				<pathelement path="${swinglayout.jar}" />
-				<pathelement path="${swcollections.jar}" />
-			</classpath>
-			<!-- <arg line="/w 320 /h 320 /x 500 /scale 1 /bpp 8 " /> -->
-		</java>
-	</target>
-
-
-	<target name="run_rxtx_j2se" depends="build.lib.forj2se">
-		<antcall target="proguard.rxtx">
-			<param name="build.j2se" value="_j2se" />
-		</antcall>
-
-		<!--
-		<antcall target="rxtxjar">
-			<param name="build.j2se" value="_j2se" />
-		</antcall>
-        -->
-
-
-		<!-- <java classname="waba.applet.Applet" fork="true" spawn="true">
-		-->
-		<java classname="bt747.j2se_view.BT747_Main" fork="true" spawn="false">
-			<classpath>
-				<pathelement path="${waba.jar}" />
-				<pathelement path="${rxtxcomm.jar}" />
-				<pathelement path="${swinglayout.jar}" />
-				<pathelement path="${waba_forj2se.jar}" />
-				<pathelement path="${swcollections.jar}" />
-				<pathelement path="${rxtxbuild.dir}/BT747_rxtx_j2se.jar" />
-			</classpath>
-			<!-- <arg line="/w 320 /h 320 /x 500 /scale 1 /bpp 8 " /> -->
-		</java>
-	</target>
-
-
-
-	<!-- Set the default language -->
-	<target name="setlang" unless="lang">
-		<property name="lang" value="en" />
-	</target>
-
-
-
 
 	<!-- Compile -->
 	<target name="build" depends="clean, updatedate">
@@ -422,7 +433,7 @@
 	<property name="java.src.version" value="1.3" />
 	<property name="java.target.version" value="1.1" />
 
-	<target name="rxtxbuild" depends="clean, updatedate">
+	<target name="rxtxbuild" depends="clean, updatedate,build.lib.forwaba">
 		<getsuffix />
 		<mkdir dir="${rxtxbuild.dir}" />
 		<delete dir="${rxtxsrc.dir}" />
@@ -432,9 +443,10 @@
 			<fileset dir="src">
 				<include name="**/*.java" />
 			</fileset>
+			<!--
 			<fileset dir="src_forwaba">
 				<include name="**/*.java" />
-			</fileset>
+			</fileset> -->
 		</copy>
 		<delete>
 			<fileset dir="${rxtxsrc.dir}">
@@ -462,74 +474,6 @@
 			</fileset>
 		</copy>
 	</target>
-
-	<property name="j2sesrc.dir" value="${build.dir}/j2se_src" />
-	<property name="j2sebuild.dir" value="${build.dir}/j2se" />
-
-	<target name="j2sebuild" depends="clean, updatedate">
-		<mkdir dir="${j2sebuild.dir}" />
-		<delete dir="${j2sesrc.dir}" />
-		<mkdir dir="${j2sesrc.dir}" />
-
-		<copy todir="${j2sesrc.dir}">
-			<fileset dir="src">
-				<include name="**/*.java" />
-				<exclude name="**/waba_view/**" />
-				<exclude name="**/j2se_view/BT747.java" />
-				<exclude name="BT747.java" />
-			</fileset>
-			<fileset dir="src_forj2se">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-
-
-		<replace file="${j2sesrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort" />
-		<replace file="${j2sesrc.dir}/bt747/model/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
-		<!--
-		            source="${java.src.version}"
-		            target="${java.target.version}"
-		-->
-		<javac srcdir="${j2sesrc.dir}" destdir="${j2sebuild.dir}" optimize="true" classpathref="j2seclasspath">
-			<include name="**/*.java" />
-			<exclude name="gps/port/GPSWabaPort.java*" />
-			<exclude name="gps/port/GPSWabaSocketPort.java*" />
-			<exclude name="gps/model/*" />
-			<exclude name="gps/parser/*" unless="use.newparser" />
-		</javac>
-		<copy todir="${j2sebuild.dir}">
-			<fileset dir="src">
-				<exclude name="**/*.java" />
-			</fileset>
-		</copy>
-
-	</target>
-
-
-	<target name="j2sejar" depends="j2sebuild">
-		<delete file="MANIFEST.MF" />
-		<manifest file="MANIFEST.MF">
-			<attribute name="Built-By" value="${user.name}" />
-			<attribute name="Main-Class" value="bt747.j2se_view.BT747_Main" />
-			<attribute name="Implementation-Version" value="${full.build.version}" />
-			<attribute name="Class-Path" value="RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/collections-superwaba.jar ../${swinglayout.jar}" />
-		</manifest>
-
-		<!-- It might be possible to read the version in the application:
-    	     TheMainClass.class.getPackage().getImplementationVersion() ); -->
-		<buildnumber file="build.num" />
-		<tstamp>
-			<format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
-		</tstamp>
-
-		<jar manifest="MANIFEST.MF" jarfile="${j2sebuild.dir}/${ant.project.name}_rxtx_j2seonly.jar" compress="true">
-			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
-
-		</jar>
-		<mkdir dir="${dist}" />
-		<move file="${j2sebuild.dir}/${ant.project.name}_rxtx_j2seonly.jar" todir="${dist}" />
-	</target>
-
 
 	<target name="symbianbuild" depends="clean, updatedate">
 
@@ -608,11 +552,11 @@
 			<classpath refid="classpath" />
 			<!-- included for now -->
 		</javac>
-		<jar jarfile="${lib.dir}/waba_forj2se.jar" compress="true">
+		<jar jarfile="${waba_forj2se.jar}" compress="true">
 			<fileset dir="${build.dir}/forj2se" includes="**/*.class" />
 		</jar>
 		<antcall target="sign">
-			<param name="jar.tosign" value="${lib.dir}/waba_forj2se.jar" />
+			<param name="jar.tosign" value="${waba_forj2se.jar}" />
 		</antcall>
 
 	</target>
@@ -626,11 +570,11 @@
 			<classpath refid="classpath" />
 			<!-- included for now -->
 		</javac>
-		<jar jarfile="${lib.dir}/waba_forwaba.jar" compress="true">
+		<jar jarfile="${waba_forwaba.jar}" compress="true">
 			<fileset dir="${build.dir}/forwaba" includes="**/*.class" />
 		</jar>
 		<antcall target="sign">
-			<param name="jar.tosign" value="${lib.dir}/waba_forwaba.jar" />
+			<param name="jar.tosign" value="${waba_forwaba.jar}" />
 		</antcall>
 
 	</target>
@@ -643,9 +587,21 @@
 		</jar>
 	</target>
 
+	<property name="current.main.class" value="${j2se.main}" />
 	<target name="rxtxjar" depends="rxtxbuild">
 		<getsuffix />
-		<jar jarfile="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" compress="true">
+		<buildnumber file="build.num" />
+		<delete file="MANIFEST.MF" />
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Main-Class" value="${current.main.class}" />
+			<attribute name="Implementation-Version" value="${full.build.version}" />
+			<attribute name="Class-Path" value="RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/collections-superwaba.jar ../${swinglayout.jar}" />
+		</manifest>
+		<!-- It might be possible to read the version in the application:
+             TheMainClass.class.getPackage().getImplementationVersion() ); -->
+
+		<jar manifest="MANIFEST.MF" jarfile="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" compress="true">
 			<fileset dir="${rxtxbuild.dir}" includes="**/*.class" />
 		</jar>
 		<!--
@@ -1164,7 +1120,7 @@
 
 
 	<!-- Update the language in some files -->
-	<target name="updatelang" depends="setlang">
+	<target name="updatelang">
 		<replaceregexp file="src/bt747/Txt.java" encoding="${encoding}" match="extends Txt_.." replace="extends Txt_${lang}" />
 		<replaceregexp file="package.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}' />
 		<replaceregexp file="upload.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}' />
@@ -1204,6 +1160,19 @@
 	</exec>
 	<property name="full.build.version" value="${build.current.version}.${build.current.revision}" />
 
+
+	<!-- Update version information in the Version.java file -->
+	<target name="updatedate" depends="initdate,updatelang" description="increase build number and set release date">
+		<!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
+		<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="BUILD = [0-9]+L;" replace="BUILD = ${TIMESTAMP}L;" />
+		<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match='BUILD_STR = \".*\";' replace='BUILD_STR = "${full.build.version}.${TIMESTAMP}";' />
+		<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";' />
+		<replaceregexp file="src/bt747/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";' />
+		<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}' />
+	</target>
+
+
+
 	<target name="initdate">
 		<tstamp>
 			<format property="DATE" pattern="yyyyMMdd" />
@@ -1225,7 +1194,29 @@
 	        </echo>
 	</target>
 
+	<!-- ======================================== -->
+	<!-- getsuffix - set the suffix for files, ... -->
+	<!-- ======================================== -->
 
+	<property name="default.suffix" value="_rxtx" />
+
+	<macrodef name="getsuffix">
+		<sequential>
+			<condition property="suffix" value="${default.suffix}">
+				<or>
+					<not>
+						<isset property="name.suffix" />
+					</not>
+					<equals arg1="${name.suffix}" arg2="" />
+				</or>
+			</condition>
+			<condition property="suffix" value="${name.suffix}">
+				<not>
+					<isset property="suffix" />
+				</not>
+			</condition>
+		</sequential>
+	</macrodef>
 	<!-- ======================================== -->
 	<!-- retroweaver - to use retroweaver         -->
 	<!-- ======================================== -->
@@ -1247,6 +1238,7 @@
 		<!-- Sign only if keytool.sign is true, this indicates parameters are set -->
 		<signjar jar="${jar.tosign}" alias="${keytool.alias}" storepass="${keytool.passwd}" keystore="${keytool.keystore}" />
 	</target>
+
 
 
 </project>

@@ -49,6 +49,7 @@ public class Vector extends java.util.Stack<Object> {
         return s;
     }
     
-    
-
+    public final void mypush(Object item) {
+        super.push(item);
+    }
 }

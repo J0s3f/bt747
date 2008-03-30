@@ -26,5 +26,7 @@ public class Vector extends waba.util.Vector {
         super.add(obj);
     } 
     
-    
+    public final void mypush(Object item) {
+        super.push(item);
+    }
 }

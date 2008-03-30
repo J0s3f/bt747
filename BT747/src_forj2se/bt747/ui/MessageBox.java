@@ -67,7 +67,7 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
         yesButton = new JButton((buttonCaptions.length>=1)?buttonCaptions[0]:"Yes");
         yesButton.addActionListener(this);
         myPanel.add(yesButton);        
-        noButton = new JButton((buttonCaptions.length>=2)?buttonCaptions[0]:"Yes");
+        noButton = new JButton((buttonCaptions.length>=2)?buttonCaptions[1]:"No");
         noButton.addActionListener(this);
         myPanel.add(noButton);        
         pack();
@@ -86,10 +86,10 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
         myPanel = new JPanel();
         getContentPane().add(myPanel);
         myPanel.add(new JLabel(msg));
-        yesButton = new JButton("Yes");
+        yesButton = new JButton((buttonCaptions.length>=1)?buttonCaptions[0]:"Yes");
         yesButton.addActionListener(this);
         myPanel.add(yesButton);        
-        noButton = new JButton("No");
+        noButton = new JButton((buttonCaptions.length>=2)?buttonCaptions[1]:"No");
         noButton.addActionListener(this);
         myPanel.add(noButton);        
         pack();

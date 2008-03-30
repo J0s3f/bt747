@@ -88,7 +88,7 @@ public class PolylineEncoder {
 
 		if (track.getTrackpoints().size() > 2) {
 			int[] stackVal = new int[] { 0, (track.getTrackpoints().size() - 1) };
-			stack.push(stackVal);
+			stack.mypush(stackVal);
 
 			while (stack.size() > 0) {
 				current = (int[])stack.pop();
@@ -109,9 +109,9 @@ public class PolylineEncoder {
 				if (maxDist > this.verySmall) {
 					dists[maxLoc] = maxDist;
 					int[] stackValCurMax = { current[0], maxLoc };
-					stack.push(stackValCurMax);
+					stack.mypush(stackValCurMax);
 					int[] stackValMaxCur = { maxLoc, current[1] };
-					stack.push(stackValMaxCur);
+					stack.mypush(stackValMaxCur);
 				}
 			}
 		}
