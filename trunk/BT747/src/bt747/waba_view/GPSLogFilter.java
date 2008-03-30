@@ -18,7 +18,6 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
-import waba.ui.Check;
 import waba.ui.Container;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
@@ -46,7 +45,7 @@ public class GPSLogFilter extends Container {
 
 
     private static final int C_VALID_COUNT=9;
-    private Check [] chkValid =new Check[C_VALID_COUNT];
+    private MyCheck [] chkValid =new MyCheck[C_VALID_COUNT];
     private PushButtonGroup pbPtType;
     
     private void getSettings(GPSFilter[] logFilters) {
@@ -76,7 +75,7 @@ public class GPSLogFilter extends Container {
 
         // Add all tick buttons.
         for (int i = 0; i < C_VALID_COUNT; i++) {
-            chkValid[i] = new Check(strValid[i]);
+            chkValid[i] = new MyCheck(strValid[i]);
             add(chkValid[i],
                 ((i==0) ? LEFT :((i == ((C_VALID_COUNT / 2))) ? getClientRect().width/2:SAME)),
                 ((i==0) || (i == ((C_VALID_COUNT / 2)))) ? AFTER+2:AFTER-1,
@@ -90,7 +89,7 @@ public class GPSLogFilter extends Container {
         Control rel=null;
         final int RCR_COL=4;
         for (int i=0; i<BT747_dev.C_RCR_COUNT; i++) {
-            chkRCR[i]= new Check(BT747_dev.C_STR_RCR[i]);
+            chkRCR[i]= new MyCheck(BT747_dev.C_STR_RCR[i]);
             //add( chkRCR[i], LEFT, AFTER);
             if(i == 0) {
                 x=LEFT;
@@ -140,7 +139,7 @@ public class GPSLogFilter extends Container {
         }
     }
 
-    private Check [] chkRCR =new Check[BT747_dev.C_RCR_COUNT];
+    private MyCheck [] chkRCR =new MyCheck[BT747_dev.C_RCR_COUNT];
 
     /** Get the format set by the user in the user interface. */
     private int getRCR() {
