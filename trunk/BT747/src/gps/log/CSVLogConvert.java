@@ -19,17 +19,17 @@
 //********************************************************************  
 package gps.log;
 
-import bt747.sys.Settings;
-import bt747.util.Date;
-
 import gps.BT747_dev;
 import gps.convert.Conv;
 
 import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
-import bt747.sys.Vm;
+import bt747.sys.Settings;
 import bt747.ui.MessageBox;
+import bt747.util.Date;
+
+import moio.util.StringTokenizer;
 
 /** This class is used to convert the binary log to a new format.
  * Basically this class interprets the log and creates a {@link GPSRecord}.
@@ -66,8 +66,8 @@ public final class CSVLogConvert implements GPSLogConvert {
         int fileSize;
         
         boolean firstline=true;
-        
-        int[] records=new int[30];
+        final int C_MAX_RECORDS=30;
+        int[] records=new int[C_MAX_RECORDS];
         try {
         records[0]=FMT_NO_FIELD; // Indicates that there are no records
         
@@ -140,9 +140,8 @@ public final class CSVLogConvert implements GPSLogConvert {
                     for (int i = offsetInBuffer; i < eol_pos; i++) {
                         s.append((char)bytes[i]);
                     }
-                    Buffer=s.toString();
                     
-                    String []Fields = Buffer.split(",");
+                    StringTokenizer Fields = new StringTokenizer(s.toString(),",");
                     offsetInBuffer=eol_pos;
                     for(;
                     offsetInBuffer<sizeToRead
@@ -150,13 +149,13 @@ public final class CSVLogConvert implements GPSLogConvert {
                             || bytes[offsetInBuffer]==0x0D);
                     offsetInBuffer++
                     );
-                    if(Buffer.length()!=0) {
+                    if(s.length()!=0) {
                         if(firstline) {
                             // Get header
                             firstline=false;
                             activeFileFields=0;
-                            for (int i = 0; i < Fields.length; i++) {
-                                String string = Fields[i];
+                            for (int i=0; Fields.hasMoreTokens()&&(i<C_MAX_RECORDS); i++) {
+                                String string = Fields.nextToken();
                                 if(string.equals("INDEX")) {
                                     records[i]=FMT_REC_NBR;
                                     
@@ -256,8 +255,10 @@ public final class CSVLogConvert implements GPSLogConvert {
                             gpsRec=new GPSRecord();  // Value after earliest date
                             gpsRec.recCount=++recCount;
                             
-                            while(records[field_nbr]!=FMT_NO_FIELD) {
-                                String field=Fields[field_nbr];
+                            while(Fields.hasMoreElements()
+                                    &&field_nbr<C_MAX_RECORDS
+                                    &&records[field_nbr]!=FMT_NO_FIELD) {
+                                String field=Fields.nextToken();
                                 if(field.length()!=0) {
                                     switch(records[field_nbr]) {
                                     case FMT_NS:
@@ -277,7 +278,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         }
                                         break;
                                     case FMT_REC_NBR:
-                                        gpsRec.recCount=Convert.toInt(Fields[field_nbr]);
+                                        gpsRec.recCount=Convert.toInt(field);
                                         recCount=gpsRec.recCount;
                                         break;
                                     case FMT_DATE:
@@ -290,7 +291,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             format=Settings.DATE_DMY;
                                         }
                                         
-                                        long date=(new Date(Fields[field_nbr],format)).getJulianDay()
+                                        long date=(new Date(field,format)).getJulianDay()
                                         -DAYS_Julian_1970;
                                         gpsRec.utc+=date*(24*3600);
                                     }
@@ -306,11 +307,11 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             gpsRec.milisecond=Convert.toInt(field.substring(dotidx+1));
                                             field=field.substring(0,dotidx);
                                         }
-                                        String[] tfields=field.split(":");
-                                        if(tfields.length==3) {
-                                            gpsRec.utc+=Convert.toInt(tfields[0])*3600L
-                                            +Convert.toInt(tfields[1])*60L
-                                            +Convert.toInt(tfields[2]);
+                                        StringTokenizer tfields=new StringTokenizer(field,":");
+                                        if(tfields.countTokens()==3) {
+                                            gpsRec.utc+=Convert.toInt(tfields.nextToken())*3600L
+                                            +Convert.toInt(tfields.nextToken())*60L
+                                            +Convert.toInt(tfields.nextToken());
                                         }
                                         gpsRec.utc+=timeOffsetSeconds;
                                     }
@@ -349,20 +350,32 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     curLogFormat|=(1<<BT747_dev.FMT_LONGITUDE_IDX);
                                     break;
                                     case BT747_dev.FMT_HEIGHT_IDX:
-                                        gpsRec.height=Convert.toFloat(field.replaceFirst(" .*",""));
+                                    {
+                                        StringTokenizer n=new StringTokenizer(field.trim()," ");
+                                        gpsRec.height=Convert.toFloat(n.nextToken());
+                                    }
                                     curLogFormat|=(1<<BT747_dev.FMT_HEIGHT_IDX);
                                     break;
                                     case FMT_HEIGHT_FT_IDX:
-                                        gpsRec.height=Convert.toFloat(field.replaceFirst(" .*",""))/3.28083989501312F;
+                                    {
+                                        StringTokenizer n=new StringTokenizer(field.trim()," ");
+                                        gpsRec.height=Convert.toFloat(n.nextToken())/3.28083989501312F;
+                                    }
                                     curLogFormat|=(1<<BT747_dev.FMT_HEIGHT_IDX);
                                     break;
                                     
                                     case BT747_dev.FMT_SPEED_IDX:
-                                        gpsRec.speed=Convert.toFloat(field.replaceFirst(" .*",""));
+                                    {
+                                        StringTokenizer n=new StringTokenizer(field.trim()," ");
+                                        gpsRec.speed=Convert.toFloat(n.nextToken());
+                                    }
                                     curLogFormat|=(1<<BT747_dev.FMT_SPEED_IDX);
                                     break;
                                     case FMT_SPEED_MPH_IDX:
-                                        gpsRec.speed=Convert.toFloat(field.replaceFirst(" .*",""))/0.621371192237334F;
+                                    {
+                                        StringTokenizer n=new StringTokenizer(field.trim()," ");
+                                        gpsRec.speed=Convert.toFloat(n.nextToken())/0.621371192237334F;
+                                    }
                                         curLogFormat|=(1<<BT747_dev.FMT_SPEED_IDX);
                                         break;
 
@@ -393,11 +406,11 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     break;
                                     case BT747_dev.FMT_NSAT_IDX:
                                     {
-                                        String[] nfields;
-                                        nfields=field.split("[()]");
-                                        if(nfields.length>=2) {
-                                            gpsRec.nsat=Convert.toInt(nfields[0])*256
-                                            +Convert.toInt(nfields[1]);
+                                        StringTokenizer nfields=
+                                            new StringTokenizer(field,"()");
+                                        if(nfields.countTokens()>=2) {
+                                            gpsRec.nsat=Convert.toInt(nfields.nextToken())*256
+                                            +Convert.toInt(nfields.nextToken());
                                             curLogFormat|=(1<<BT747_dev.FMT_NSAT_IDX);
                                         }
                                     }
@@ -407,31 +420,41 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         break;
                                     case BT747_dev.FMT_SID_IDX:
                                     {
-                                        String []SatFields = field.split(";");
-                                        gpsRec.sid=new int[SatFields.length];
-                                        gpsRec.sidinuse=new boolean[SatFields.length];
-                                        gpsRec.ele=new int[SatFields.length];
-                                        gpsRec.azi=new int[SatFields.length];
-                                        gpsRec.snr=new int[SatFields.length];
-                                        for (int i = 0; i < SatFields.length; i++) {
-                                            if(SatFields[i].length()!=0) {
-                                                gpsRec.sidinuse[i]=(SatFields[i].charAt(0)=='#');
-                                                String []sinfos=SatFields[i].substring(gpsRec.sidinuse[i]?1:0).split("-");
+                                        StringTokenizer SatFields = new StringTokenizer(field,";");
+                                        int cnt=SatFields.countTokens();
+                                        gpsRec.sid=new int[cnt];
+                                        gpsRec.sidinuse=new boolean[cnt];
+                                        gpsRec.ele=new int[cnt];
+                                        gpsRec.azi=new int[cnt];
+                                        gpsRec.snr=new int[cnt];
+                                        for (int i = 0; i < cnt; i++) {
+                                            String satf=SatFields.nextToken();
+                                            if(satf.length()!=0) {
+                                                gpsRec.sidinuse[i]=(satf.charAt(0)=='#');
+                                                StringTokenizer sinfos=
+                                                    new StringTokenizer(satf.substring(gpsRec.sidinuse[i]?1:0),"-");
                                                 //Vm.debug(sinfos[0]);
-                                                int j=0;
-                                                gpsRec.sid[i]=Convert.toInt(sinfos[j++]);
-                                                curLogFormat|=(1<<BT747_dev.FMT_SID_IDX);
-                                                if ((activeFileFields&BT747_dev.FMT_ELEVATION_IDX)!=0) {
+                                                if(sinfos.hasMoreElements()) {
+                                                    gpsRec.sid[i]=Convert.toInt(sinfos.nextToken());
+                                                    curLogFormat|=(1<<BT747_dev.FMT_SID_IDX);
+                                                }
+                                                if (((activeFileFields&BT747_dev.FMT_ELEVATION_IDX)!=0)
+                                                        && sinfos.hasMoreElements()
+                                                        ) {
                                                     curLogFormat|=(1<<BT747_dev.FMT_ELEVATION_IDX);
-                                                    gpsRec.ele[i]=Convert.toInt(sinfos[j++]);
+                                                    gpsRec.ele[i]=Convert.toInt(sinfos.nextToken());
                                                 }
-                                                if ((activeFileFields&BT747_dev.FMT_AZIMUTH_IDX)!=0) {
+                                                if (((activeFileFields&BT747_dev.FMT_AZIMUTH_IDX)!=0)
+                                                    && sinfos.hasMoreElements()
+                                                    ) {
                                                     curLogFormat|=(1<<BT747_dev.FMT_AZIMUTH_IDX);
-                                                    gpsRec.azi[i]=Convert.toInt(sinfos[j++]);
+                                                    gpsRec.azi[i]=Convert.toInt(sinfos.nextToken());
                                                 }
-                                                if ((activeFileFields&BT747_dev.FMT_SNR_IDX)!=0) {
+                                                if (((activeFileFields&BT747_dev.FMT_SNR_IDX)!=0) 
+                                                    && sinfos.hasMoreElements()
+                                                    ) {
                                                     curLogFormat|=(1<<BT747_dev.FMT_SNR_IDX);
-                                                    gpsRec.snr[i]=Convert.toInt(sinfos[j++]);
+                                                    gpsRec.snr[i]=Convert.toInt(sinfos.nextToken());
                                                 }
                                             }  // length
                                         } // for 
@@ -476,11 +499,17 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         //                        gpsRec.milisecond=
                                         break;
                                     case BT747_dev.FMT_DISTANCE_IDX:
-                                        gpsRec.distance=Convert.toDouble(field.replaceAll(" ","").replaceAll("m",""));
+                                    {
+                                        StringTokenizer n=new StringTokenizer(field.trim()," ");
+                                        gpsRec.distance=Convert.toDouble(n.nextToken());
+                                    }
                                     curLogFormat|=(1<<BT747_dev.FMT_DISTANCE_IDX);
                                     break;
                                     case FMT_DISTANCE_FT_IDX:
-                                        gpsRec.distance=Convert.toDouble(field.replaceAll(" ",""))/3.28083989501312;
+                                    {
+                                        StringTokenizer n=new StringTokenizer(field.trim()," ");
+                                        gpsRec.distance=Convert.toDouble(n.nextToken())/3.28083989501312;
+                                    }
                                         curLogFormat|=(1<<BT747_dev.FMT_DISTANCE_IDX);
                                         break;
                                     case BT747_dev.FMT_HOLUX_LOW_PRECISION_IDX:
