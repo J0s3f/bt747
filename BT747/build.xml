@@ -113,32 +113,32 @@
 	<!-- ======================================== -->
 	<target name="all.lang" depends="all.lang.en, all.lang.de, all.lang.es, all.lang.fr, all.lang.zh, all.lang.jp" />
 	<target name="all.lang.en">
-		<antcall target="all-package">
-			<param name="lang" value="es" />
+		<antcall target="all.package">
+			<param name="lang" value="en" />
 		</antcall>
 	</target>
 	<target name="all.lang.es">
-		<antcall target="all-package">
+		<antcall target="all.package">
 			<param name="lang" value="es" />
 		</antcall>
 	</target>
 	<target name="all.lang.de">
-		<antcall target="all">
+		<antcall target="all.package">
 			<param name="lang" value="de" />
 		</antcall>
 	</target>
 	<target name="all.lang.fr">
-		<antcall target="all">
+		<antcall target="all.package">
 			<param name="lang" value="fr" />
 		</antcall>
 	</target>
 	<target name="all.lang.zh">
-		<antcall target="all">
+		<antcall target="all.package">
 			<param name="lang" value="zh" />
 		</antcall>
 	</target>
 	<target name="all.lang.jp">
-		<antcall target="all">
+		<antcall target="all.package">
 			<param name="lang" value="jp" />
 		</antcall>
 	</target>
@@ -263,7 +263,7 @@
                 -optimizationpasses 4
                 -injar ${waba_forj2se.jar}(!META-INF/**)
                 -injar ${swcollections.jar}(!META-INF/**)
-                -printmapping ${ant.project.name}${j2se_suffix}.map
+                -printmapping ${dist}/${ant.project.name}${j2se_suffix}.map
                 -keep public class BT747
                 -keep public class bt747.j2se_view.BT747
                 -keep public class * implements GPSLogConvert
@@ -651,7 +651,7 @@
 	<target name="proguard_task" depends="jar" unless="use.proguard_java">
 		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
 		<move file="${build.dir}/${ant.project.name}.jar" tofile="${build.dir}/${ant.project.name}_unopt.jar" />
-		<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="true" allowaccessmodification="true" flattenpackagehierarchy="" repackageclasses="" printusage="false" overloadaggressively="true" verbose="true" ignorewarnings="true" optimizationpasses="4" printmapping="${buildDir}/${ant.project.name}.mapping">
+		<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="true" allowaccessmodification="true" flattenpackagehierarchy="" repackageclasses="" printusage="false" overloadaggressively="true" verbose="true" ignorewarnings="true" optimizationpasses="4" printmapping="${dist}/${ant.project.name}.mapping">
 
 			<keep name="${mainClass}" />
 

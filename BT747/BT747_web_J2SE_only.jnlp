@@ -19,15 +19,15 @@
     <j2se version="1.5"/>
     <!--
     <jar href="waba_forj2se.jar" download=eager main="false" />
-    <jar href="BT747_rxtx_j2se.jar" download="eager" main="true" />
+    XTar href="BT747_rxtx_j2se.jar" download="eager" main="true" />
      -->
     <jar href="BT747_j2se.jar" main="true" />
     <jar href="RXTXcomm.jar" />
     <jar href="swing-layout-1.0.3.jar" />
     <!--
     <jar href="collections-superwaba.jar" download="lazy" />
-    -->
     <jar href="Waba_only.jar" />
+    -->
   </resources>
 
   <!-- language specific resources -->  
@@ -50,9 +50,11 @@
 
   <!-- default language specific resources 
        should reorganise this for final -->  
+  <!--
   <resources>
     <jar href="BT747_rxtx_j2se.jar" download="lazy" main="true" />
   </resources>
+  -->
   
   <!-- Trial of chinese version
   <resources locale="zh, zh_HK, zh_TW, zh_CN, zh_SG">

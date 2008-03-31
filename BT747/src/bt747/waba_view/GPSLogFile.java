@@ -143,9 +143,9 @@ public class GPSLogFile extends Container {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target==m_btChangeSettings) {
-//                m_settings.setBaseDirPath(m_edBaseDirName.getText());
-//                m_settings.setLogFile(m_edLogFileName.getText());
-//                m_settings.setReportFileBase(m_edReportBaseName.getText());
+                m.setBaseDirPath(m_edBaseDirName.getText());
+                m.setLogFile(m_edLogFileName.getText());
+                m.setReportFileBase(m_edReportBaseName.getText());
                 c.setChunkSize(Convert.toInt(m_edChunkSize.getText()));
                 c.setDownloadTimeOut(Convert.toInt(m_edTimeout.getText()));
                 if(Settings.platform.startsWith("Palm")) {
