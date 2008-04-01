@@ -206,9 +206,9 @@
 	                -printmapping ${dist}/${ant.project.name}@{suffix}.map
 	                -keep public class BT747
 	                -keep public class bt747.j2se_view.BT747
-	                -keep public class * implements GPSLogConvert
-	                -keep public class * extends MainWindow
-	                -keep public class * extends GPSPort
+	                -keep public class * implements gps.log.GPSLogConvert
+	                -keep public class * extends waba.ui.MainWindow
+	                -keep public class * extends gps.port.GPSPort
 	                -keepclasseswithmembers public class * {
 	                     public static void main(java.lang.String[]); }
 	       </proguard>
@@ -251,10 +251,10 @@
                 -printmapping ${dist}/${ant.project.name}${j2se_suffix}.map
                 -keep public class BT747
                 -keep public class bt747.j2se_view.BT747
-                -keep public class * implements GPSLogConvert
-                -keep public class * extends MainWindow
-                -keep public class * extends GPSPort
-                -keepclasseswithmembers public class * {
+    		    -keep public class * implements gps.log.GPSLogConvert
+                -keep public class * extends waba.ui.MainWindow
+                -keep public class * extends gps.port.GPSPort
+    			-keepclasseswithmembers public class * {
                      public static void main(java.lang.String[]); }
        </proguard>
 		<antcall target="sign">
@@ -330,10 +330,10 @@
 			<libraryjar file="${swcollections.jar}" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
-                -keep public class * implements GPSLogConvert
-                -keep public class * extends MainWindow
-                -keep public class * extends GPSPort
-                -keep public class BT747
+                -keep public class * implements gps.log.GPSLogConvert
+                -keep public class * extends waba.ui.MainWindow
+                -keep public class * extends gps.port.GPSPort
+    			-keep public class BT747
 		        -keep public class bt747.j2se_view.BT747
                 -keepclasseswithmembers public class * {
                     public static void main(java.lang.String[]); }
