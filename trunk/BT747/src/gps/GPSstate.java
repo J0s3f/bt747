@@ -456,6 +456,9 @@ public class GPSstate implements Thread {
             sentCmds.addElement(p_Cmd);
         }
         m_GPSrxtx.sendPacket(p_Cmd);
+        if(GPS_DEBUG) {
+            Vm.debug(">"+p_Cmd);
+        }
         nextCmdSendTime = Vm.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
         if (sentCmds.getCount() > C_MAX_SENT_COMMANDS) {
             sentCmds.del(0);
