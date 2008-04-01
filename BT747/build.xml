@@ -1173,7 +1173,7 @@
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match='BUILD_STR = \".*\";' replace='BUILD_STR = "${full.build.version}.${TIMESTAMP}";' />
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";' />
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";' />
-			<copy file="dev/package.bat" dest="package.bat" />
+			<copy file="dev/package.bat" tofile="package.bat" />
 			<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}' />
 
 			<replace dir="@{dest.dir}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort">
