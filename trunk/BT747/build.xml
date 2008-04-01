@@ -76,7 +76,7 @@
 	<!-- all - currently build english target     -->
 	<!--       without uploading the package      -->
 	<!-- ======================================== -->
-	<target name="all" depends="all-exegen-types" />
+	<target name="all" depends="clean,all-exegen-types" />
 
 	<target name="all.package" depends="all,package" />
 
@@ -170,18 +170,65 @@
 		</sequential>
 	</macrodef>
 
-	<macrodef name="dist.rxtx">
-		<attribute name="suffix" default="_waba_j2se" />
+	<macrodef name="dist-jar">
+		<attribute name="suffix" default="_rxtx" />
 		<attribute name="build.j2se" default="" />
+		<attribute name="extralib" default="${waba_forwaba.jar}" />
 		<sequential>
-			<build.rxtx suffix="@{suffix}" build.j2se="@{build.j2se}" />
-			<copy file="${rxtxbuild.dir}/${ant.project.name}@{suffix}.jar" tofile="${dist}/${ant.project.name}@{suffix}.jar" />
+			<property name="tmp_suffix" value="@{suffix}_tmp" />
+
+			<build.rxtx suffix="${tmp_suffix}" build.j2se="@{build.j2se}" />
+
+			<!-- Then, optimize to build a single jar -->
+			<!--
+	            -overloadaggressively
+	            -repackageclasses ''
+	            -allowaccessmodification
+	        -->
+			<condition property="extralib_opt" value="-injar @{extralib}(!META-INF/**)">
+				<not>
+					<equals arg1="" arg2="@{extralib}" />
+				</not>
+			</condition>
+			<condition property="extralib_opt" value="">
+				<not>
+					<isset property="extralib_opt" />
+				</not>
+			</condition>
+
+			<echo message="EXTRALIB: ${extralib_opt}" />
+			<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
+			<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="false" allowaccessmodification="yes" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true" optimizationpasses="4">
+				<libraryjar file="${java.home}/lib/rt.jar" />
+				<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+				<injar path="${rxtxbuild.dir}/${ant.project.name}${tmp_suffix}.jar" />
+				<outjar path="${dist}/${ant.project.name}@{suffix}.jar" />
+	                -optimizationpasses 4
+			        ${extralib_opt}
+	                -injar ${swcollections.jar}(!META-INF/**)
+	                -printmapping ${dist}/${ant.project.name}@{suffix}.map
+	                -keep public class BT747
+	                -keep public class bt747.j2se_view.BT747
+	                -keep public class * implements GPSLogConvert
+	                -keep public class * extends MainWindow
+	                -keep public class * extends GPSPort
+	                -keepclasseswithmembers public class * {
+	                     public static void main(java.lang.String[]); }
+	       </proguard>
 			<antcall target="sign">
 				<param name="jar.tosign" value="${dist}/${ant.project.name}@{suffix}.jar" />
 			</antcall>
 		</sequential>
 	</macrodef>
 
+
+	<target name="dist.waba" depends="build.lib.forwaba">
+		<dist-jar suffix="_rxtx" extralib="${waba_forwaba.jar}" build.j2se="false" />
+	</target>
+
+	<target name="dist.rxtx" depends="build.lib.forwaba">
+		<dist-jar suffix="_rxtx" extralib="${waba_forwaba.jar}" build.j2se="false" />
+	</target>
 
 	<target name="dist.j2se" depends="build.lib.forj2se">
 		<!-- First build normal target -->
@@ -344,6 +391,8 @@
 
 	</target>
 
+	<property name="java.src.version" value="1.3" />
+	<property name="java.target.version" value="1.1" />
 
 	<!-- Filesets for normal build -->
 	<fileset dir="src_forwaba" id="waba_lib">
@@ -360,28 +409,21 @@
 	</fileset>
 
 	<!-- Compile -->
-	<target name="build" depends="clean">
+	<target name="build">
 
-		<mkdir dir="${build.dir}" />
+		<delete dir="{build.dir}/waba" />
+		<mkdir dir="${build.dir}/waba" />
+
 		<mkdir dir="${dist}" />
-		<copy_src srcid="waba_only_sources" libid="waba_lib" dest.dir="${build.dir}/waba" />
+		<copy_src srcid="waba_only_sources" libid="waba_lib" dest.dir="${build.dir}/waba/src" />
 
-		<javac srcdir="${build.dir}/waba" destdir="${build.dir}" target="1.1" source="1.3" optimize="true" deprecation="true">
+		<delete dir="${build.dir}/waba/gps/parser">
+		</delete>
+		<javac srcdir="${build.dir}/waba/src" destdir="${build.dir}/waba" target="1.1" source="1.3" optimize="true" deprecation="true">
 			<include name="**/*.java" />
 			<classpath refid="classpath" />
 		</javac>
-		<delete dir="${build.dir}/gps/parser">
-		</delete>
-		<copy todir="${build.dir}">
-			<fileset dir="${build.dir}/waba">
-				<exclude name="**/*.java" />
-			</fileset>
-		</copy>
-
 	</target>
-
-	<property name="java.src.version" value="1.3" />
-	<property name="java.target.version" value="1.1" />
 
 
 	<!-- filesets for rxtxbuild -->
@@ -392,7 +434,7 @@
 	</fileset>
 
 	<!-- rxtxbuild -->
-	<target name="rxtxbuild" depends="clean, build.lib.forwaba">
+	<target name="rxtxbuild" depends="build.lib.forwaba">
 		<getsuffix />
 		<mkdir dir="${rxtxbuild.dir}" />
 		<delete dir="${rxtxsrc.dir}" />
@@ -419,7 +461,7 @@
 		</copy>
 	</target>
 
-	<target name="symbianbuild" depends="clean, updatedate">
+	<target name="symbianbuild" depends="updatedate">
 
 		<mkdir dir="${symbianbuild.dir}" />
 		<delete dir="${symbiansrc.dir}" />
@@ -453,7 +495,7 @@
 	</target>
 
 
-	<target name="filebuild" depends="clean, updatedate">
+	<target name="filebuild" depends="updatedate">
 
 		<mkdir dir="${filebuild.dir}" />
 		<delete dir="${filesrc.dir}" />
@@ -488,7 +530,12 @@
 
 
 	<!-- Target for pur j2se environment - builds library. -->
-	<target name="build.lib.forj2se">
+	<uptodate property="waba_forj2se.uptodate">
+		<srcfiles dir="src_forj2se" includes="*" />
+		<mapper type="merge" to="${waba_forj2se.jar}" />
+	</uptodate>
+
+	<target name="build.lib.forj2se" unless="waba_forj2se.uptodate">
 		<delete dir="${build.dir}/forj2se" />
 		<mkdir dir="${build.dir}/forj2se" />
 		<javac srcdir="." destdir="${build.dir}/forj2se" target="1.5" source="1.5" optimize="true">
@@ -505,11 +552,16 @@
 
 	</target>
 
+	<uptodate property="waba_forwaba.uptodate">
+		<srcfiles dir="src_forwaba" includes="*" />
+		<mapper type="merge" to="${waba_forwaba.jar}" />
+	</uptodate>
 
-	<target name="build.lib.forwaba">
+
+	<target name="build.lib.forwaba" unless="waba_forwaba.uptodate">
 		<delete dir="${build.dir}/forwaba" />
 		<mkdir dir="${build.dir}/forwaba" />
-		<javac srcdir="." destdir="${build.dir}/forwaba" target="1.5" source="1.5" optimize="true">
+		<javac srcdir="." destdir="${build.dir}/forwaba" target="1.2" source="1.4" optimize="true">
 			<include name="src_forwaba/**/*.java" />
 			<classpath refid="classpath" />
 			<!-- included for now -->
@@ -520,14 +572,13 @@
 		<antcall target="sign">
 			<param name="jar.tosign" value="${waba_forwaba.jar}" />
 		</antcall>
-
 	</target>
 
 	<!-- Package classes -->
 
 	<target name="jar" depends="build">
 		<jar jarfile="${build.dir}/${ant.project.name}.jar" compress="true">
-			<fileset dir="${build.dir}" includes="**/*.class" />
+			<fileset dir="${build.dir}/waba" includes="**/*.class" />
 		</jar>
 	</target>
 
@@ -799,36 +850,27 @@
 
 	</target>
 
+	<target name="dist.pda" depends="exegen, exegen-exe, exegen-cab, all-warp">
+        <move todir="${dist}">
+
+            <fileset dir="${build.dir}">
+                <include name="${ant.project.name}.prc" />
+                <include name="**/*.exe" />
+                <include name="*.CAB" />
+                <include name="*.ini" />
+                <include name="*.bat" />
+                <include name="*.exe" />
+                <include name="${ant.project.name}.jar" />
+            </fileset>
+        </move>
+        <antcall target="sign">
+            <param name="jar.tosign" value="${dist}/${ant.project.name}.jar" />
+        </antcall>
+
+	</target>
+
 	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
-	<target name="all-exegen-types" depends="exegen, exegen-exe, exegen-cab, proguard.rxtx, all-warp">
-
-		<move todir="${dist}">
-
-			<fileset dir="${build.dir}">
-				<include name="${ant.project.name}.prc" />
-				<include name="**/*.exe" />
-				<include name="*.CAB" />
-				<include name="*.ini" />
-				<include name="*.bat" />
-				<include name="*.exe" />
-				<include name="${ant.project.name}.jar" />
-			</fileset>
-		</move>
-		<antcall target="sign">
-			<param name="jar.tosign" value="${dist}/${ant.project.name}.jar" />
-		</antcall>
-
-		<antcall target="sign">
-			<param name="jar.tosign" value="${rxtxbuild.dir}/${ant.project.name}_rxtx.jar" />
-		</antcall>
-		<copy todir="${dist}">
-			<fileset dir="${rxtxbuild.dir}">
-				<include name="**/*.jar" />
-			</fileset>
-		</copy>
-		<antcall target="sign">
-			<param name="jar.tosign" value="${dist}/${ant.project.name}_rxtx.jar" />
-		</antcall>
+	<target name="all-exegen-types" depends="dist.pda,dist.rxtx">
 
 	</target>
 
@@ -1135,8 +1177,6 @@
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";' />
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";' />
 			<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}' />
-
-			<echo>@{rxtx} ${rxtxfilter}</echo>
 
 			<replace dir="@{dest.dir}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort">
 				<include name="${rxtxfilter}gps/GPSrxtx.java" />

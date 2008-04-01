@@ -81,20 +81,6 @@ public class Controller {
          */
         if(m.getLogFilePath().toLowerCase().endsWith(".trl")) {
             lc=new HoluxTrlLogConvert();
-//        } else if(m.getLogFilePath().toLowerCase().endsWith(".new")) {
-//            // If the new parser is included then we try to use it
-//            try {
-//                //Class c = Class.forName("gps.parser.NewLogConvert");
-//                //lc=(GPSLogConvert)(c.getConstructor().newInstance());
-////                if(Class.forName("gps.parser.NewLogConvert")!=null) {
-////                    lc=(GPSLogConvert)new gps.parser.NewLogConvert();
-////                } else {
-//                    lc=new BT747LogConvert();
-////                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                lc=new BT747LogConvert();
-//            }
         } else if(m.getLogFilePath().toLowerCase().endsWith(".csv")) {
             lc=new CSVLogConvert();
         } else {

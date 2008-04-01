@@ -58,13 +58,13 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
      */
     private GPSstate    m_GPSstate;
     /** The label next to the progressbar.  Hidden when not in use. */
-    private static Label       m_ProgressLabel;
+    private Label       m_ProgressLabel;
     /** The progress bar itself.  Hidden when not in use. */
-    private static ProgressBar pb;
+    private ProgressBar pb;
     
     //private BT747model m_model;
     /** The application's MenuBar */
-    private static MenuBar     m_MenuBar;
+    private MenuBar     m_MenuBar;
     /** The content of the menu bar */
     private final String menu[][] = {
             {   Txt.S_FILE,
@@ -126,7 +126,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     private static final int C_MENU_INFO = 203;   
     
     /** The tab panel */
-    private static TabPanel    m_TabPanel;
+    private TabPanel m_TabPanel;
     /** The captions for the tab panel */
     private final String c_tpCaptions[]= {
             Txt.C_FMT,
@@ -139,26 +139,26 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
             Txt.C_OTHR
     };
     /** Tab Panel container - Logger control/configuration */
-    private static GPSLogFormat  m_GPSLogCtrl;
+    private GPSLogFormat  m_GPSLogCtrl;
     private static final int C_LOG_CTRL_IDX= 0;
      
     /** Tab Panel container - Log information */
-    private static GPSLogReason  m_GPSLogInfo;
+    private GPSLogReason  m_GPSLogInfo;
     private static final int C_GPS_LOGINFO_IDX= 1;    
     /** Tab Panel container - Log retrieval */
-    private static GPSLogGet   m_GPSLogGet;
+    private GPSLogGet   m_GPSLogGet;
     private static final int C_GPS_LOGGET_IDX= 2;
     /** Tab Panel container - Log file settings (name,...) */
-    private static GPSLogFile  m_GPSLogFile;
+    private GPSLogFile  m_GPSLogFile;
     private static final int C_GPS_FILECTRL_IDX= 3;
     /** Tab Panel container - Log filter settings (other than date)*/
-    private static GPSFiltersTabPanel m_GPSFiltersTabPanel;
+    private GPSFiltersTabPanel m_GPSFiltersTabPanel;
     private static final int C_GPS_FILTERCTRL_IDX= 4;
     /** Tab Panel container - Connection control/configuration */
-    private static GPSLogEasy  m_GPSLogEasy;
+    private GPSLogEasy  m_GPSLogEasy;
     private static final int C_GPS_EASYCTRL_IDX= 5;
     /** Tab Panel container - Connection control/configuration */
-    private static GPSconctrl  m_GPSconctrl;
+    private GPSconctrl  m_GPSconctrl;
     private static final int C_GPS_CONCTRL_IDX= 6;
     /** Tab Panel container - Other settings */
     private static final int C_GPS_FLASH_IDX= 7;

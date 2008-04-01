@@ -39,7 +39,6 @@ public class GPSFilePort extends GPSPort {
     private RandomAccessFile portfile = null;
     private InputStream spIn = null;
     private OutputStream spOut = null;
-    private InputStreamReader br = null;
 
     private String portPrefix = "";
     private boolean hasPortNbr = true;

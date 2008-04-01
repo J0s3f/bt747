@@ -43,12 +43,12 @@ import bt747.waba_view.ui.FileSelect;
  */
 public class GPSLogFile extends Container {
     
-    Model m;
-    Controller c;
+    private Model m;
+    private Controller c;
     
-    public GPSLogFile(Controller c, Model settings) {
+    public GPSLogFile(Controller c, Model m) {
         this.c=c;
-        m=settings;
+        this.m=m;
     }
     
     Edit m_edBaseDirName;
@@ -60,9 +60,9 @@ public class GPSLogFile extends Container {
     Edit m_edTimeout;
     ComboBox m_cbVolumes;
     ComboBox m_cblogReqAhead;
+    
     private static final String []C_LOG_REQ_AHEAD= {"0","1","2","3","4","5"};
     
-
     private Button m_btChangeSettings;
     private Button m_btDefaultSettings;
     
@@ -101,6 +101,8 @@ public class GPSLogFile extends Container {
         add(m_edTimeout = new Edit(""), AFTER, SAME); //$NON-NLS-1$
         m_edTimeout.setValidChars(Edit.numbersSet);
 
+        // The view does a little bit of control
+        // - left it here because it is platform dependent.
         if(Settings.platform.startsWith("Palm")) {
             Vector v = new Vector(50);
             int Card=m.getCard();
@@ -143,9 +145,9 @@ public class GPSLogFile extends Container {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target==m_btChangeSettings) {
-                m.setBaseDirPath(m_edBaseDirName.getText());
-                m.setLogFile(m_edLogFileName.getText());
-                m.setReportFileBase(m_edReportBaseName.getText());
+                c.setBaseDirPath(m_edBaseDirName.getText());
+                c.setLogFilePath(m_edLogFileName.getText());
+                c.setOutputFileBasePath(m_edReportBaseName.getText());
                 c.setChunkSize(Convert.toInt(m_edChunkSize.getText()));
                 c.setDownloadTimeOut(Convert.toInt(m_edTimeout.getText()));
                 if(Settings.platform.startsWith("Palm")) {
@@ -162,7 +164,7 @@ public class GPSLogFile extends Container {
                 }
                 fs.popupBlockingModal();
                 //m_edBaseDirName.setText(fs.getPath());
-                m.setBaseDirPath(fs.getPath());
+                c.setBaseDirPath(fs.getPath());
             } else if (event.target==m_btSelectLogFileName) {
                 FileSelect fs=new FileSelect();
                 fs.setRoot(m_edBaseDirName.getText());
@@ -173,7 +175,7 @@ public class GPSLogFile extends Container {
                 }
                 fs.popupBlockingModal();
                 //m_edLogFileName.setText(fs.getRelPath());
-                m.setLogFile(fs.getRelPath());
+                c.setLogFilePath(fs.getRelPath());
             } else if (event.target==m_btDefaultSettings) {
                 m.defaultSettings();
                 updateValues();
@@ -181,11 +183,11 @@ public class GPSLogFile extends Container {
         break;
         case ControlEvent.FOCUS_OUT:
             if(event.target==m_edLogFileName) {
-                m.setLogFile(m_edLogFileName.getText());
+                c.setLogFilePath(m_edLogFileName.getText());
             } else if (event.target==m_edBaseDirName) {
-                m.setBaseDirPath(m_edBaseDirName.getText());
+                c.setBaseDirPath(m_edBaseDirName.getText());
             } else if (event.target==m_edReportBaseName) {
-                m.setReportFileBase(m_edReportBaseName.getText());
+                c.setOutputFileBasePath(m_edReportBaseName.getText());
             }
             break;
         default:
