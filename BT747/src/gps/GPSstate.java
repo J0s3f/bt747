@@ -143,7 +143,7 @@ public class GPSstate implements Thread {
 
     private boolean GPS_STATS = false; //(!Settings.onDevice);
 
-    private final int C_LOGERASE_TIMEOUT = 2000; // Timeout between log status requests for erase.
+    private final static int C_LOGERASE_TIMEOUT = 2000; // Timeout between log status requests for erase.
 
     private boolean holux=false; // True if Holux M-241 device detected
 

@@ -92,7 +92,7 @@ public class Date extends java.util.Date {
 //    }
     
     public void advance(int s) {
-        setTime(getTime()+s*1000);
+        setTime(getTime()+s*1000L);
     }
     
     public Date (java.util.Date d) {
