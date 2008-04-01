@@ -162,10 +162,9 @@
 		<attribute name="suffix" default="_waba_j2se" />
 		<attribute name="build.j2se" default="" />
 		<sequential>
-			<property name="j2se.suffix" value="@{suffix}" />
 			<antcall target="proguard.rxtx">
 				<param name="build.j2se" value="@{build.j2se}" />
-				<param name="name.suffix" value="${j2se.suffix}" />
+				<param name="name.suffix" value="@{suffix}" />
 			</antcall>
 		</sequential>
 	</macrodef>
@@ -175,9 +174,7 @@
 		<attribute name="build.j2se" default="" />
 		<attribute name="extralib" default="${waba_forwaba.jar}" />
 		<sequential>
-			<property name="tmp_suffix" value="@{suffix}_tmp" />
-
-			<build.rxtx suffix="${tmp_suffix}" build.j2se="@{build.j2se}" />
+			<build.rxtx suffix="@{suffix}_tmp" build.j2se="@{build.j2se}" />
 
 			<!-- Then, optimize to build a single jar -->
 			<!--
@@ -185,26 +182,26 @@
 	            -repackageclasses ''
 	            -allowaccessmodification
 	        -->
-			<condition property="extralib_opt" value="-injar @{extralib}(!META-INF/**)">
+			<condition property="@{suffix}extralib_opt" value="-injar @{extralib}(!META-INF/**)">
 				<not>
 					<equals arg1="" arg2="@{extralib}" />
 				</not>
 			</condition>
-			<condition property="extralib_opt" value="">
+			<condition property="@{suffix}extralib_opt" value="">
 				<not>
-					<isset property="extralib_opt" />
+					<isset property="@{suffix}extralib_opt" />
 				</not>
 			</condition>
 
-			<echo message="EXTRALIB: ${extralib_opt}" />
+			<echo message="EXTRALIB: ${@{suffix}extralib_opt}" />
 			<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
 			<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="false" allowaccessmodification="yes" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true" optimizationpasses="4">
 				<libraryjar file="${java.home}/lib/rt.jar" />
 				<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
-				<injar path="${rxtxbuild.dir}/${ant.project.name}${tmp_suffix}.jar" />
+				<injar path="${rxtxbuild.dir}/${ant.project.name}@{suffix}_tmp.jar" />
 				<outjar path="${dist}/${ant.project.name}@{suffix}.jar" />
 	                -optimizationpasses 4
-			        ${extralib_opt}
+			        ${@{suffix}extralib_opt}
 	                -injar ${swcollections.jar}(!META-INF/**)
 	                -printmapping ${dist}/${ant.project.name}@{suffix}.map
 	                -keep public class BT747
@@ -271,7 +268,6 @@
 		<attribute name="wabajar" default="${waba.jar}" />
 		<attribute name="suffix" default="_waba_j2se" />
 		<sequential>
-			<property name="j2se.suffix" value="@{suffix}" />
 			<build.rxtx suffix="@suffix" build.j2se="@{suffix}" />
 
 			<!--
@@ -289,7 +285,7 @@
 					<pathelement path="${rxtxcomm.jar}" />
 					<pathelement path="${swinglayout.jar}" />
 					<pathelement path="${swcollections.jar}" />
-					<pathelement path="${rxtxbuild.dir}/${ant.project.name}${j2se.suffix}.jar" />
+					<pathelement path="${rxtxbuild.dir}/${ant.project.name}@{suffix}.jar" />
 					<pathelement path="${waba_forwaba.jar}" />
 				</classpath>
 				<arg line="@{main-class-args}" />
@@ -653,8 +649,8 @@
 			<libraryjar file="${java.home}/lib/rt.jar" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${build.dir}/${ant.project.name}_unopt.jar" />
-			<injar path="${swcollections.jar}" jarfilter="!META-INF/MANIFEST.MF" />
 			<outjar path="${build.dir}/${ant.project.name}.jar" />
+            -injar ${swcollections.jar}(!META-INF/**)
 		</proguard>
 	</target>
 
@@ -1159,12 +1155,13 @@
 		<attribute name="libid" />
 		<sequential>
 			<setupdates />
-			<condition property="rxtxfilter" value="">
+			<condition property="@{dest.dir}rxtxfilter" value="">
 				<istrue value="@{rxtx}" />
 			</condition>
-			<condition property="rxtxfilter" value="DOES_NOT_EXIST">
+			<condition property="@{dest.dir}rxtxfilter" value="DOES_NOT_EXIST">
 				<isfalse value="@{rxtx}" />
 			</condition>
+			<delete dir="@{dest.dir}" />
 			<copy todir="@{dest.dir}">
 				<fileset refid="@{srcid}" />
 			</copy>
@@ -1176,13 +1173,15 @@
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match='BUILD_STR = \".*\";' replace='BUILD_STR = "${full.build.version}.${TIMESTAMP}";' />
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";' />
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";' />
+			<copy file="dev/package.bat" dest="package.bat" />
 			<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}' />
 
 			<replace dir="@{dest.dir}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort">
-				<include name="${rxtxfilter}gps/GPSrxtx.java" />
+				<include name="${@{dest.dir}rxtxfilter}gps/GPSrxtx.java" />
 			</replace>
+			<echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" />
 			<replace dir="@{dest.dir}" token="//#if RXTX" summary="yes" value="">
-				<include name="${rxtxfilter}bt747/model/AppSettings.java" />
+				<include name="${@{dest.dir}rxtxfilter}bt747/model/AppSettings.java" />
 			</replace>
 		</sequential>
 	</macrodef>

@@ -1,5 +1,5 @@
 SETLOCAL
-SET DT=1.47b6
+SET DT=1.47b7
 SET APP_LANG=en
 SET PACK_DIR=pack
 dos2unix *.sh

@@ -35,3 +35,6 @@ run.bat
 build_small.xml
   Reference file extracted from SuperwabaSDK - intention to use this to make
   the standard build file more generic.
+  
+package.bat
+  File used to build actual packaging script in root directory.
