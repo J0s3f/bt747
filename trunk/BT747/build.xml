@@ -76,7 +76,7 @@
 	<!-- all - currently build english target     -->
 	<!--       without uploading the package      -->
 	<!-- ======================================== -->
-	<target name="all" depends="clean,all-exegen-types" />
+	<target name="all" depends="clean,dist" />
 
 	<target name="all.package" depends="all,package" />
 
@@ -847,26 +847,26 @@
 	</target>
 
 	<target name="dist.pda" depends="exegen, exegen-exe, exegen-cab, all-warp">
-        <move todir="${dist}">
+		<move todir="${dist}">
 
-            <fileset dir="${build.dir}">
-                <include name="${ant.project.name}.prc" />
-                <include name="**/*.exe" />
-                <include name="*.CAB" />
-                <include name="*.ini" />
-                <include name="*.bat" />
-                <include name="*.exe" />
-                <include name="${ant.project.name}.jar" />
-            </fileset>
-        </move>
-        <antcall target="sign">
-            <param name="jar.tosign" value="${dist}/${ant.project.name}.jar" />
-        </antcall>
+			<fileset dir="${build.dir}">
+				<include name="${ant.project.name}.prc" />
+				<include name="**/*.exe" />
+				<include name="*.CAB" />
+				<include name="*.ini" />
+				<include name="*.bat" />
+				<include name="*.exe" />
+				<include name="${ant.project.name}.jar" />
+			</fileset>
+		</move>
+		<antcall target="sign">
+			<param name="jar.tosign" value="${dist}/${ant.project.name}.jar" />
+		</antcall>
 
 	</target>
 
 	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
-	<target name="all-exegen-types" depends="dist.pda,dist.rxtx">
+	<target name="dist" depends="dist.pda,dist.rxtx">
 
 	</target>
 
@@ -1103,12 +1103,6 @@
 
 	<!-- Update the language in some files -->
 	<target name="updatelang">
-		<condition property="lang" value="${default.lang}">
-			<not><isset property="lang"/></not>
-		</condition>
-		<replaceregexp file="src/bt747/Txt.java" encoding="${encoding}" match="extends Txt_.." replace="extends Txt_${lang}" />
-		<replaceregexp file="package.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}' />
-		<replaceregexp file="upload.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}' />
 	</target>
 
 	<!-- Date information -->
@@ -1176,16 +1170,29 @@
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match='BUILD_STR = \".*\";' replace='BUILD_STR = "${full.build.version}.${TIMESTAMP}";' />
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match="DATE = [^\s]*;" replace='DATE = "${DATE_DE}";' />
 			<replaceregexp file="@{dest.dir}/bt747/Version.java" encoding="${encoding}" match="VERSION_NUMBER = [^\s]*;" replace='VERSION_NUMBER = "${build_version}";' />
-			<copy file="dev/package.bat" tofile="package.bat" />
-			<replaceregexp file="package.bat" encoding="${encoding}" match="SET DT=[^\s]*" replace='SET DT=${build_version}' />
+
 
 			<replace dir="@{dest.dir}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort">
 				<include name="${@{dest.dir}rxtxfilter}gps/GPSrxtx.java" />
 			</replace>
-			<echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" />
+			<!-- <echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" /> -->
 			<replace dir="@{dest.dir}" token="//#if RXTX" summary="yes" value="">
 				<include name="${@{dest.dir}rxtxfilter}bt747/model/AppSettings.java" />
 			</replace>
+
+			<condition property="lang" value="${default.lang}">
+				<not>
+					<isset property="lang" />
+				</not>
+			</condition>
+			<echo message="Preparing for language ${lang}" />
+			<replaceregexp file="@{dest.dir}/bt747/Txt.java" match="extends Txt_.." replace="extends Txt_${lang}" />
+
+			<copy file="dev/package.bat" tofile="package.bat" />
+            <copy file="dev/upload.bat" tofile="upload.bat" />
+			<replaceregexp file="package.bat" match="SET DT=[^\s]*" replace='SET DT=${build_version}' />
+			<replaceregexp file="package.bat" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}' />
+			<replaceregexp file="upload.bat" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}' />
 		</sequential>
 	</macrodef>
 
