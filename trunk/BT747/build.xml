@@ -10,6 +10,7 @@
 	<!-- Default properties (in version control) -->
 	<property file="default.properties" />
 
+	<property name="default.lang" value="en" />
 	<property name="dist" value="dist" />
 
 	<property name="application" value="BT747" />
@@ -20,7 +21,6 @@
 
 	<property name="swcollections.jar" value="${lib.dir}/collections-superwaba.jar" />
 
-	<property name="lang" value="en" />
 	<property name="waba.jar" value="${lib.dir}/Waba_only.jar" />
 	<property name="rxtxcomm.jar" value="${lib.dir}/rxtx-2.1-7-bins-r2/RXTXcomm.jar" />
 	<property name="swinglayout.jar" value="${lib.dir}/swing-layout-1.0.3.jar" />
@@ -1103,6 +1103,9 @@
 
 	<!-- Update the language in some files -->
 	<target name="updatelang">
+		<condition property="lang" value="${default.lang}">
+			<not><isset property="lang"/></not>
+		</condition>
 		<replaceregexp file="src/bt747/Txt.java" encoding="${encoding}" match="extends Txt_.." replace="extends Txt_${lang}" />
 		<replaceregexp file="package.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}' />
 		<replaceregexp file="upload.bat" encoding="${encoding}" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}' />
