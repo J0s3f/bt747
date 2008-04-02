@@ -36,16 +36,36 @@ import moio.util.Iterator;
   */
 public class AppSettings {
     private static final String CONFIG_FILE_NAME =
-        //#if RXTX java.lang.System.getProperty("bt747_settings",
+  //#if RXTX java.lang.System.getProperty("bt747_settings",  // bt747_settings or default value
+  //#if RXTX ((java.lang.System.getProperty("user.home").length()!=0) ?  
+  //#if RXTX java.lang.System.getProperty("user.home")+java.lang.System.getProperty("file.separator")+"SettingsBT747.pdb":(  
 
         (bt747.sys.Settings.platform.startsWith("Win32")||bt747.sys.Settings.platform.startsWith("Windows")
                 ||bt747.sys.Settings.platform.startsWith("Mac")
          //#if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")  
          ) ?
-            "SettingsBT747.pdb" : 
+            "SettingsBT747.pdb"
+                 : 
             "/My Documents/BT747/SettingsBT747.pdb"
          //#if RXTX )
+  //#if RXTX ))  
          ; 
+//    private static final String CONFIG_FILE_NAME =
+//        java.lang.System.getProperty("bt747_settings",
+//        ((java.lang.System.getProperty("user.home").length()!=0) ?  
+//                java.lang.System.getProperty("user.home")+java.lang.System.getProperty("file.separator")+"SettingsBT747.pdb":(  
+//
+//       (bt747.sys.Settings.platform.startsWith("Win32")||bt747.sys.Settings.platform.startsWith("Windows")
+//               ||bt747.sys.Settings.platform.startsWith("Mac")
+//         || java.lang.System.getProperty("os.name").startsWith("Mac")  
+//        ) ?
+//           "SettingsBT747.pdb"
+//                : 
+//           "/My Documents/BT747/SettingsBT747.pdb"
+//         )
+//                )  )
+//        ; 
+
 
     private static final int C_PORTNBR_IDX=0;
     private static final int C_PORTNBR_SIZE=8;
@@ -188,11 +208,12 @@ public class AppSettings {
             if ( isWin32LikeDevice()
                     //#if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")  
                     //#if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
+                    //#if RXTX ||java.lang.System.getProperty("user.home").length()!=0
                     ) {
                 int readLength = 0;
                 
-                //bt747.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
-                //bt747.sys.Vm.debug("loading config file "+CONFIG_FILE_NAME);
+//                bt747.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
+//                bt747.sys.Vm.debug("loading config file "+CONFIG_FILE_NAME);
                 File m_prefFile = new File("");
                 try {
                     m_prefFile = new File(CONFIG_FILE_NAME,File.READ_ONLY);
