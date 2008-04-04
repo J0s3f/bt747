@@ -526,9 +526,8 @@
 
 
 	<!-- Target for pur j2se environment - builds library. -->
-	<uptodate property="waba_forj2se.uptodate">
-		<srcfiles dir="src_forj2se" includes="*" />
-		<mapper type="merge" to="${waba_forj2se.jar}" />
+	<uptodate property="waba_forj2se.uptodate" targetfile="${waba_forj2se.jar}">
+		<srcfiles dir="src_forj2se" includes="**" />
 	</uptodate>
 
 	<target name="build.lib.forj2se" unless="waba_forj2se.uptodate">
@@ -548,18 +547,19 @@
 
 	</target>
 
-	<uptodate property="waba_forwaba.uptodate">
-		<srcfiles dir="src_forwaba" includes="*" />
-		<mapper type="merge" to="${waba_forwaba.jar}" />
-	</uptodate>
 
-
+    <uptodate property="waba_forwaba.uptodate" targetfile="${waba_forwaba.jar}" >
+        <srcfiles dir="src_forwaba" includes="**" />
+    </uptodate>
+	
 	<target name="build.lib.forwaba" unless="waba_forwaba.uptodate">
 		<delete dir="${build.dir}/forwaba" />
 		<mkdir dir="${build.dir}/forwaba" />
-		<javac srcdir="." destdir="${build.dir}/forwaba" target="1.2" source="1.4" optimize="true">
+		<javac srcdir="." destdir="${build.dir}/forwaba" target="1.1" source="1.3" optimize="true"
+			deprecation="true">
 			<include name="src_forwaba/**/*.java" />
 			<classpath refid="classpath" />
+			
 			<!-- included for now -->
 		</javac>
 		<jar jarfile="${waba_forwaba.jar}" compress="true">

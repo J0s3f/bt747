@@ -15,6 +15,9 @@ package bt747.sys;
 public class Settings {
     public static boolean hasWaba= true;
     public static final String platform = waba.sys.Settings.platform;
+    public static final int requiredVersion = 583;
+    public static final String requiredVersionStr = "5.83";
+    public static final int version = waba.sys.Settings.version;
     public static final String versionStr = waba.sys.Settings.versionStr;
     public static final boolean onDevice = waba.sys.Settings.onDevice;
     public static final byte DATE_YMD=waba.sys.Settings.DATE_YMD;

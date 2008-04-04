@@ -15,6 +15,9 @@ package bt747.sys;
 public class Settings {
     public static boolean hasWaba= false;
     public static final String platform = java.lang.System.getProperty("os.name");
+    public static final int requiredVersion = 585;
+    public static final String requiredVersionStr = "5.85";
+    public static final int version = 585;
     public static final String versionStr = java.lang.System.getProperty("os.version");
     public static final boolean onDevice = false;
     public static final byte DATE_YMD=1;
