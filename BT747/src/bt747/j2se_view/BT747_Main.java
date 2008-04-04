@@ -20,7 +20,6 @@ import bt747.control.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
-import bt747.ui.MessageBox;
 
 /**
  *

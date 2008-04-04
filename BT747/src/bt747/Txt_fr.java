@@ -402,6 +402,11 @@ public class Txt_fr {
 
     public static final String S_DEBUG_CONN= "Debug conn.";
     public static final String S_IMPERIAL= "Unités anglaises";
+    public static final String BAD_SUPERWABAVERSION =
+        "This application was built for|SuperWaba V" +
+        Settings.requiredVersionStr + "."
+        +"|This version is V"+Settings.versionStr+"."
+        +"|Exiting application";
 
 }
 

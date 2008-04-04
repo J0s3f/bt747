@@ -30,7 +30,6 @@ import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Thread;
 import bt747.sys.Vm;
-import bt747.ui.Event;
 import bt747.ui.MessageBox;
 import bt747.util.Vector;
 
@@ -435,7 +434,7 @@ public class GPSstate implements Thread {
 
     public void sendNMEA(final String p_Cmd) {
         int cmdsWaiting;
-        cmdsWaiting = sentCmds.getCount();
+        cmdsWaiting = sentCmds.size();
         if ((logStatus!=C_LOG_ERASE_STATE)
                 &&(cmdsWaiting == 0) && (Vm.getTimeStamp() > nextCmdSendTime)) {
             //  All sent commands were acknowledged, send cmd immediately
@@ -460,8 +459,8 @@ public class GPSstate implements Thread {
             Vm.debug(">"+p_Cmd);
         }
         nextCmdSendTime = Vm.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
-        if (sentCmds.getCount() > C_MAX_SENT_COMMANDS) {
-            sentCmds.del(0);
+        if (sentCmds.size() > C_MAX_SENT_COMMANDS) {
+            sentCmds.removeElementAt(0);
         }
 //      if (GPS_DEBUG) {
 //      Vm.debug(p_Cmd);
@@ -471,18 +470,18 @@ public class GPSstate implements Thread {
     private void checkSendCmdFromQueue() {
         int cTime = Vm.getTimeStamp();
         if(logStatus!=C_LOG_ERASE_STATE) {
-            if ((sentCmds.getCount() != 0)
+            if ((sentCmds.size() != 0)
                     && (cTime - logTimer) >= m_settings.getDownloadTimeOut()) {
                 // TimeOut!!
-                sentCmds.del(0);
+                sentCmds.removeElementAt(0);
                 logTimer = cTime;
             }
-            if ((toSendCmds.getCount() != 0)
-                    && (sentCmds.getCount() < C_MAX_CMDS_SENT)
+            if ((toSendCmds.size() != 0)
+                    && (sentCmds.size() < C_MAX_CMDS_SENT)
                     && (Vm.getTimeStamp() > nextCmdSendTime)) {
                 // No more commands waiting for acknowledge
                 doSendNMEA((String) toSendCmds.elementAt(0));
-                toSendCmds.del(0);
+                toSendCmds.removeElementAt(0);
             }
         }
     }
@@ -801,7 +800,7 @@ public class GPSstate implements Thread {
 
     final boolean removeFromSentCmds(final String match) {
         int z_CmdIdx = -1;
-        for (int i = 0; i < sentCmds.getCount(); i++) {
+        for (int i = 0; i < sentCmds.size(); i++) {
             if (((String) sentCmds.elementAt(i)).startsWith(match)) {
                 z_CmdIdx = i;
                 break;
@@ -813,7 +812,7 @@ public class GPSstate implements Thread {
             //          if(GPS_DEBUG) {
             //            Vm.debug("Remove:"+(String)sentCmds.items[0]);
             //          }
-            sentCmds.del(0);
+            sentCmds.removeElementAt(0);
         }
         return z_CmdIdx != -1;
     }
@@ -835,12 +834,12 @@ public class GPSstate implements Thread {
                 z_MatchString += "," + p_nmea[i];
             }
             //            if(GPS_DEBUG) {
-            //                Vm.debug("Before:"+sentCmds.getCount()+" "+z_MatchString);
+            //                Vm.debug("Before:"+sentCmds.size()+" "+z_MatchString);
             //            }
 
             removeFromSentCmds(z_MatchString);
             //            if(GPS_DEBUG) {
-            //                Vm.debug("After:"+sentCmds.getCount());
+            //                Vm.debug("After:"+sentCmds.size());
             //            }
             //sentCmds.find(z_MatchString);
             //if(GPS_DEBUG) {
@@ -1214,8 +1213,8 @@ public class GPSstate implements Thread {
                 //Vm.debug(Convert.toString(m_logState));
                 if (((m_logState != C_LOG_NOLOGGING)
                         &&(m_logState!= C_LOG_ERASE_STATE))
-                        && (sentCmds.getCount() == 0)
-                        && (toSendCmds.getCount() == 0)) {
+                        && (sentCmds.size() == 0)
+                        && (toSendCmds.size() == 0)) {
                     // Sending command on next timer adds some delay after
                     // the end of the previous command (reception)
                     getLogPartNoOutstandingRequests();

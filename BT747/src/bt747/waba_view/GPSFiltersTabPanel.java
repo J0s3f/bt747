@@ -26,8 +26,6 @@ import waba.ui.TabPanel;
 import waba.ui.Window;
 
 import gps.GpsEvent;
-import gps.log.GPSFilter;
-import gps.log.GPSFilterAdvanced;
 
 import bt747.Txt;
 import bt747.control.Controller;
@@ -40,10 +38,6 @@ import bt747.model.Model;
 public class GPSFiltersTabPanel extends Container {
 
     private TabPanel m_TabPanel;
-    private GPSLogFilter  m_GPSLogFilter;
-    private GPSLogFilterAdv  m_GPSLogFilterAdv;
-    private GPSNMEAOutput m_GPSNMEAOutput;
-    private GPSFileNMEAOutputSel m_GPSNMEAFile;
     private Model m;
     
     private final String c_tpCaptions[]= {
@@ -63,8 +57,8 @@ public class GPSFiltersTabPanel extends Container {
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
         m_TabPanel.setBorderStyle(Window.NO_BORDER);
         m_TabPanel.setRect(getClientRect().modifiedBy(0,0,0,0));
-        m_TabPanel.setPanel(0,m_GPSLogFilter = new GPSLogFilter(m));
-        m_TabPanel.setPanel(1,m_GPSLogFilterAdv = new GPSLogFilterAdv(m));
+        m_TabPanel.setPanel(0,new GPSLogFilter(m));
+        m_TabPanel.setPanel(1,new GPSLogFilterAdv(m));
 //        m_TabPanel.setPanel(2,m_GPSNMEAFile = new GPSFileNMEAOutputSel(m));
     }
     public void onEvent(Event event) {

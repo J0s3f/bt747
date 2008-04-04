@@ -381,6 +381,11 @@ public class Txt_zh {
 
     public static final String S_DEBUG_CONN= "Debug conn.";
     public static final String S_IMPERIAL= "Imperial Units";
+    public static final String BAD_SUPERWABAVERSION =
+        "This application was built for|SuperWaba V" +
+        Settings.requiredVersionStr + "."
+        +"|This version is V"+Settings.versionStr+"."
+        +"|Exiting application";
 
 }
 

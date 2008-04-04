@@ -38,7 +38,7 @@ import bt747.model.Model;
  */
 public class GPSHoluxSpecific extends Container {
   
-    private Model m_settings;
+    private Model m;
     private GPSstate m_gpsState;
     
     private Label lbHoluxName;
@@ -48,8 +48,8 @@ public class GPSHoluxSpecific extends Container {
     /**
      * 
      */
-    public GPSHoluxSpecific(final Model settings, final GPSstate gpsState) {
-        m_settings=settings;
+    public GPSHoluxSpecific(final Model m, final GPSstate gpsState) {
+        this.m=m;
         m_gpsState=gpsState;
     }
 
