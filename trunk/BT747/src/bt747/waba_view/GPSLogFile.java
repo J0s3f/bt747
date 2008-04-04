@@ -133,18 +133,22 @@ public class GPSLogFile extends Container {
 
     }
     
+    private boolean setting=false;
     private void updateValues() {
+        if(!setting) {
         m_edBaseDirName.setText(m.getBaseDirPath());
         m_edReportBaseName.setText(m.getReportFileBase());
         m_edLogFileName.setText(m.getLogFile());
         m_edChunkSize.setText(Convert.toString(m.getChunkSize()));
         m_edTimeout.setText(Convert.toString(m.getDownloadTimeOut()));
+        }
     }
 
     public void onEvent( Event event ) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target==m_btChangeSettings) {
+                setting=true;
                 c.setBaseDirPath(m_edBaseDirName.getText());
                 c.setLogFilePath(m_edLogFileName.getText());
                 c.setOutputFileBasePath(m_edReportBaseName.getText());
@@ -154,6 +158,8 @@ public class GPSLogFile extends Container {
                     c.setCard(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
                 }
                 c.setLogRequestAhead(Convert.toInt((String)m_cblogReqAhead.getSelectedItem()));
+                setting=false;
+                updateValues();
                 c.saveSettings(); // Explicitally save settings
             } else if (event.target==m_btSelectBaseDirName) {
                 FileSelect fs=new FileSelect();
