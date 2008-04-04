@@ -195,6 +195,13 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     public void onStart() {
         super.onStart();
         
+        if(Settings.version<585) {
+            new MessageBox(
+                    Txt.TITLE_ATTENTION,
+                    Txt.BAD_SUPERWABAVERSION).popupBlockingModal();
+            MainWindow.getMainWindow().exit(0);
+        }
+        
         m_GPSstate=m.gpsModel();
         setMenuBar(m_MenuBar=new MenuBar(menu));
         // Next line is for modeling a device for debug.

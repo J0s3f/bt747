@@ -376,6 +376,12 @@ public class Txt_en {
         "| it may be a bug.";
     public static final String ADD_RECORD_NUMBER =
         "Record nbr info in logs";
+    
+    public static final String BAD_SUPERWABAVERSION =
+        "This application was built for|SuperWaba V" +
+        Settings.requiredVersionStr + "."
+        +"|This version is V"+Settings.versionStr+"."
+        +"|Exiting application";
 }
 
 
