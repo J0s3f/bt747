@@ -132,9 +132,6 @@ public final class CSVLogConvert implements GPSLogConvert {
                 
                 
                 if(continueInBuffer) {
-                    String Buffer;
-                    //Buffer=new String(bytes,0,offsetInBuffer,eol_pos-offsetInBuffer);
-                    
                     StringBuffer s=new StringBuffer(eol_pos-offsetInBuffer+1);
                     
                     for (int i = offsetInBuffer; i < eol_pos; i++) {

@@ -367,6 +367,11 @@ public class Txt_ko {
 
     public static final String S_DEBUG_CONN= "\uB514\uBC84\uADF8 \uCF5C\uC194.";
     public static final String S_IMPERIAL= "Imperial Units";
+    public static final String BAD_SUPERWABAVERSION =
+        "This application was built for|SuperWaba V" +
+        Settings.requiredVersionStr + "."
+        +"|This version is V"+Settings.versionStr+"."
+        +"|Exiting application";
 
 }
 

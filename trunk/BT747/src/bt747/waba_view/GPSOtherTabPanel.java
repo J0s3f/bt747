@@ -46,10 +46,6 @@ import bt747.model.Model;
 public class GPSOtherTabPanel extends Container {
 
     private TabPanel m_TabPanel;
-    private GPSFlashOption  m_GPSFlash;
-    private GPSNMEAOutput m_GPSNMEAOutput;
-    private GPSFileNMEAOutputSel m_GPSNMEAFile;
-    private GPSHoluxSpecific m_GPSHolux;
     private GPSstate m_GPSstate;
     private Model m_settings;
     
@@ -77,10 +73,10 @@ public class GPSOtherTabPanel extends Container {
         m_TabPanel.setBorderStyle(Window.NO_BORDER);
         m_TabPanel.setRect(getClientRect().modifiedBy(0,0,0,0));
         // TODO Auto-generated method stub
-        m_TabPanel.setPanel(0,m_GPSFlash = new GPSFlashOption(m_GPSstate));
-        m_TabPanel.setPanel(1,m_GPSNMEAOutput = new GPSNMEAOutput(m_GPSstate));
-        m_TabPanel.setPanel(2,m_GPSNMEAFile = new GPSFileNMEAOutputSel(m_settings));
-        m_TabPanel.setPanel(3,m_GPSHolux = new GPSHoluxSpecific(m_settings,m_GPSstate));
+        m_TabPanel.setPanel(0,new GPSFlashOption(m_GPSstate));
+        m_TabPanel.setPanel(1,new GPSNMEAOutput(m_GPSstate));
+        m_TabPanel.setPanel(2,new GPSFileNMEAOutputSel(m_settings));
+        m_TabPanel.setPanel(3,new GPSHoluxSpecific(m_settings,m_GPSstate));
     }
     public void onEvent(Event event) {
         //

@@ -108,13 +108,13 @@ public class GPSLogFile extends Container {
             int Card=m.getCard();
             for (int i = 0; i < 255; i++) {
                 if (File.isCardInserted(i)) {
-                    v.add(""+i);
+                    v.addElement(""+i);
                     if(Card==i) {
                         idx=v.size()-1;
                     }
                 }
             }
-            v.add("-1");
+            v.addElement("-1");
             if(Card==-1) {
                 idx=v.size()-1;
             }

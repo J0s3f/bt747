@@ -19,116 +19,122 @@
 //********************************************************************  
 package gps.port;
 
-import waba.io.DataStream;
-import bt747.io.File;
 import bt747.ui.MessageBox;
 
-/** Implements the serial port for the standard Waba SerialPort
+/**
+ * Implements the serial port for the standard Waba SerialPort
  * 
  * @author Mario De Weerd
  */
 public class GPSWabaSocketPort extends GPSPort {
-    private waba.io.Socket sp=null;
+    private waba.io.Socket sp = null;
     private String MacAddr = "00:0B:0D:87:E7:CA";
 
-    private boolean portIsOK=false;  
+    private boolean portIsOK = false;
 
-    /** Indicates if the device is connected or not.
+    /**
+     * Indicates if the device is connected or not.
      * 
      * @return <code>true</code> if the device is connected.
      */
     public boolean isConnected() {
-        return (sp!=null && sp.isOpen());
+        return (sp != null && sp.isOpen());
     }
-    
-    /** Close the connection.
-    *
-    *
-    */
-   public void closePort() {
-       if (sp!= null && sp.isOpen()) {
-           portIsOK= false;
-           sp.close();
-       } 
-   }
-   
-   /** Open a connection
-    * 
-    * @return status result of the opening of the serial port.
-    */
-   public int openPort() {
-       int result=-1;
-       closePort();
 
-       try {
-           sp=new waba.io.Socket(MacAddr,1);
-           result=sp.lastError;
-           portIsOK= sp.isOpen();
-           if(portIsOK) {
-               // Read time out gives problems on windows: data is skipped!!!O
-               sp.setReadTimeout(20);//small to read data in chunks and have good resp.
-               //               sp.setReadTimeout(50);//small to read data in chunks and have good resp.
-               //sp.setFlowControl(true);
-           } else {
-               sp=null;
-           }
-       }
-       catch (Exception e) {
-           new MessageBox("waba.io.Socket open","Unexpected exception catched").popupBlockingModal();
-           ;//if(GPS_DEBUG) {waba.sys.Vm.debug("Exception when opening port\n");}; 
-           sp=null;
-       }
-       return result;
-   }    
-
-   
-   /** Set a bluetooth connection
-    * 
-    *
-    */
-   public void setBlueTooth() {
-       spPortNbr= waba.io.SerialPort.BLUETOOTH;
-   }
-   
-   /** Set an USB connection
-    * 
-    *
-    */
-   public void setUSB() {
-       spPortNbr= waba.io.SerialPort.USB;
-   }
-   
-   /** getter to retrieve the last error report by the serial port driver.
-    * 
-    * @return last error from the waba.io.SerialPort driver
-    */
-   public int error() {
-       return sp.lastError;
-   }
-
-   
-   public void write(final String s) {
-       byte[] b=s.getBytes();
-       int l=b.length;
-       sp.writeBytes(b,0,l);
-       if(GPS_FILE_LOG&&(m_debugFile!=null)) {
-           try {
-               m_debugFile.writeBytes(b,0,l);
-           } catch (Exception e) {
-            // TODO: handle exception
+    /**
+     * Close the connection.
+     * 
+     * 
+     */
+    public void closePort() {
+        if (sp != null && sp.isOpen()) {
+            portIsOK = false;
+            sp.close();
         }
-       }
-   }
-   
-   public int readCheck() {
-       if(sp!=null) {
-           return 255; // return sp.readCheck();
-       } else {
-           return -1;
-       }
-   }
-   
-   public int readBytes(byte[]b,int start, int max) {
-       return sp.readBytes(b, start, max);
-   }
+    }
+
+    /**
+     * Open a connection
+     * 
+     * @return status result of the opening of the serial port.
+     */
+    public int openPort() {
+        int result = -1;
+        closePort();
+
+        try {
+            sp = new waba.io.Socket(MacAddr, 1);
+            result = sp.lastError;
+            portIsOK = sp.isOpen();
+            if (portIsOK) {
+                // Read time out gives problems on windows: data is skipped!!!O
+                sp.setReadTimeout(20);// small to read data in chunks and have
+                                        // good resp.
+                // sp.setReadTimeout(50);//small to read data in chunks and have
+                // good resp.
+                // sp.setFlowControl(true);
+            } else {
+                sp = null;
+            }
+        } catch (Exception e) {
+            new MessageBox("waba.io.Socket open",
+                    "Unexpected exception catched").popupBlockingModal();
+            ;// if(GPS_DEBUG) {waba.sys.Vm.debug("Exception when opening
+                // port\n");};
+            sp = null;
+        }
+        return result;
+    }
+
+    /**
+     * Set a bluetooth connection
+     * 
+     * 
+     */
+    public void setBlueTooth() {
+        spPortNbr = waba.io.SerialPort.BLUETOOTH;
+    }
+
+    /**
+     * Set an USB connection
+     * 
+     * 
+     */
+    public void setUSB() {
+        spPortNbr = waba.io.SerialPort.USB;
+    }
+
+    /**
+     * getter to retrieve the last error report by the serial port driver.
+     * 
+     * @return last error from the waba.io.SerialPort driver
+     */
+    public int error() {
+        return sp.lastError;
+    }
+
+    public void write(final String s) {
+        byte[] b = s.getBytes();
+        int l = b.length;
+        sp.writeBytes(b, 0, l);
+        if (GPS_FILE_LOG && (m_debugFile != null)) {
+            try {
+                m_debugFile.writeBytes(b, 0, l);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+        }
+    }
+
+    public int readCheck() {
+        if (sp != null) {
+            return 255; // return sp.readCheck();
+        } else {
+            return -1;
+        }
+    }
+
+    public int readBytes(byte[] b, int start, int max) {
+        return sp.readBytes(b, start, max);
+    }
 }

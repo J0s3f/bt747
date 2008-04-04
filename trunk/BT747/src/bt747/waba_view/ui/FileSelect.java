@@ -150,21 +150,21 @@ public class FileSelect extends Window {
         String basePath="";
         int firstFoundIndex=1;
         if(!dirOnly) {
-            v.add("../");
+            v.addElement("../");
         }
         if(path.length()>0) {
             int offset;
             offset=path.lastIndexOf('/',path.length()-2);
             if(offset>=0) {
-                v.add(basePath=path.substring(0, offset+1));
+                v.addElement(basePath=path.substring(0, offset+1));
                 firstFoundIndex++;
             } else {
                 if (!dirOnly) {
-                    v.add("./");
+                    v.addElement("./");
                 }
             }
         }
-        v.add(path);
+        v.addElement(path);
         File file = new File(root+path,File.DONT_OPEN,cardSlot);
         if((!dirOnly)&&file.isDir()) {
             basePath=path+"/";

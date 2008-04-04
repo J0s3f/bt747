@@ -140,7 +140,7 @@ public class GPSLogFormat extends Container {
         m_mb=new MessageBox(Txt.TITLE_ATTENTION,
                 waba.sys.Convert.insertLineBreak(Settings.screenWidth-6,
                         '|',
-                        getFontMetrics(getFont()),
+                        getFont().fm,
                         Txt.C_msgWarningFormatIncompatibilityRisk),C_YesrCancel);
         m_mb.popupBlockingModal();
         if(m_mb.getPressedButtonIndex()==0) {

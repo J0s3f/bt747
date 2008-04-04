@@ -354,7 +354,7 @@ public class Txt_en {
         "ABORT by clicking abort!!";
     public static final String PERIOD_ABBREV = "Per";
     
-    // Forgotton in Advanced track filter
+    // Forgotten in Advanced track filter
     public static final String IGNORE_0VALUES
         = "Values of 0 are ignored";
     
