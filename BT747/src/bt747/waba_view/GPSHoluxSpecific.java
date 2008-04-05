@@ -80,7 +80,7 @@ public class GPSHoluxSpecific extends Container {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target==this) {
-                m_gpsState.requestHoluxName();
+                m_gpsState.reqHoluxName();
                 event.consumed=true;
             } else if(event.target==btSet) {
                 doSet();

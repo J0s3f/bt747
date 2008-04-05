@@ -6,7 +6,6 @@
  */
 package bt747.ui;
 
-import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -67,9 +66,11 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
         yesButton = new JButton((buttonCaptions.length>=1)?buttonCaptions[0]:"Yes");
         yesButton.addActionListener(this);
         myPanel.add(yesButton);        
-        noButton = new JButton((buttonCaptions.length>=2)?buttonCaptions[1]:"No");
-        noButton.addActionListener(this);
-        myPanel.add(noButton);        
+        if(buttonCaptions.length==0||buttonCaptions.length>=2) {
+           noButton = new JButton((buttonCaptions.length>=2)?buttonCaptions[1]:"No");
+           noButton.addActionListener(this);
+           myPanel.add(noButton);        
+        }
         pack();
     }
 
@@ -88,19 +89,25 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
         myPanel.add(new JLabel(msg));
         yesButton = new JButton((buttonCaptions.length>=1)?buttonCaptions[0]:"Yes");
         yesButton.addActionListener(this);
-        myPanel.add(yesButton);        
-        noButton = new JButton((buttonCaptions.length>=2)?buttonCaptions[1]:"No");
-        noButton.addActionListener(this);
-        myPanel.add(noButton);        
+        myPanel.add(yesButton);
+        if(buttonCaptions.length==0||buttonCaptions.length>=2) {
+            noButton = new JButton((buttonCaptions.length>=2)?buttonCaptions[1]:"No");
+            noButton.addActionListener(this);
+            myPanel.add(noButton);        
+        }
         pack();
         
     }
+    
+    public MessageBox(boolean n,String title,String Text,String[] Buttons) {
+        this(title,Text,Buttons);
+    }
 
     
-    private boolean popped=false;
-    
     public void popupModal() {
-        // TODO Auto-generated method stub
+        setModal(false);
+        setVisible(true);
+        toFront();
     }
     
     
@@ -108,11 +115,11 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
      * @return Returns the popped.
      */
     public boolean isPopped() {
-        return popped;
+        return isVisible();
     }
     
     public void unpop() {
-        
+        setVisible(false);
     }
     
     public int getPressedButtonIndex() {

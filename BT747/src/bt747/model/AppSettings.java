@@ -35,7 +35,7 @@ import moio.util.Iterator;
  * @author Herbert Geus (initial code for saving settings on WindowsCE)
   */
 public class AppSettings {
-    private static final String CONFIG_FILE_NAME =
+    private static String CONFIG_FILE_NAME =
   //#if RXTX java.lang.System.getProperty("bt747_settings",  // bt747_settings or default value
   //#if RXTX ((java.lang.System.getProperty("user.home").length()!=0) ?  
   //#if RXTX java.lang.System.getProperty("user.home")+java.lang.System.getProperty("file.separator")+"SettingsBT747.pdb":(  

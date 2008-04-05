@@ -253,7 +253,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         updateProgressBar();
 
         numPanels=0;
-        m_TabPanel.setPanel(C_LOG_CTRL_IDX,new GPSLogFormat(m_GPSstate));
+        m_TabPanel.setPanel(C_LOG_CTRL_IDX,new GPSLogFormat(m,c));
         numPanels++;
         m_TabPanel.setPanel(C_GPS_LOGINFO_IDX,new GPSLogReason(m_GPSstate));
         numPanels++;
@@ -263,7 +263,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         numPanels++;
         m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX,new GPSFiltersTabPanel(m,c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX,new GPSLogEasy(m_GPSstate, m));
+        m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX,new GPSLogEasy(m_GPSstate,m,c));
         numPanels++;
         m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,new GPSconctrl(c,m));
         numPanels++;

@@ -156,9 +156,9 @@ public class GPSLogReason extends Container {
         }
         if(m_chkFixOnOff.getChecked()) {
             m_GPSstate.setFixInterval(Convert.toInt(m_edFix.getText()));
-            m_GPSstate.getFixInterval();
+            m_GPSstate.reqFixInterval();
         }
-        m_GPSstate.getLogReasonStatus();
+        m_GPSstate.reqLogReasonStatus();
     }
     
     
@@ -182,23 +182,23 @@ public class GPSLogReason extends Container {
         } else if(event.target==m_btSet) {
             setSettings();
         } else if (event.target == this) {
-            m_GPSstate.getLogReasonStatus();
-            m_GPSstate.getFixInterval();
-            m_GPSstate.getSBASEnabled();
-            m_GPSstate.getSBASTestEnabled();
-            m_GPSstate.getDGPSMode();
+            m_GPSstate.reqLogReasonStatus();
+            m_GPSstate.reqFixInterval();
+            m_GPSstate.reqSBASEnabled();
+            m_GPSstate.reqSBASTestEnabled();
+            m_GPSstate.reqDGPSMode();
         } else if (event.target==m_chkSBASOnOff) {
             m_GPSstate.setSBASEnabled(m_chkSBASOnOff.getChecked());
-            m_GPSstate.getSBASEnabled();
+            m_GPSstate.reqSBASEnabled();
         } else if (event.target==m_chkSBASTestOnOff) {
             m_GPSstate.setSBASTestEnabled(m_chkSBASTestOnOff.getChecked());
-            m_GPSstate.getSBASTestEnabled();
+            m_GPSstate.reqSBASTestEnabled();
         } else if (ENABLE_PWR_SAVE_CONTROL && (event.target==m_chkPowerSaveOnOff)) {
             m_GPSstate.setPowerSaveEnabled(m_chkPowerSaveOnOff.getChecked());
-            m_GPSstate.getPowerSaveEnabled();
+            m_GPSstate.reqPowerSaveEnabled();
         } else if (event.target==m_cbDGPSMode) {
             m_GPSstate.setDGPSMode(m_cbDGPSMode.getSelectedIndex());
-            m_GPSstate.getDGPSMode();
+            m_GPSstate.reqDGPSMode();
         } else {
             event.consumed=false;
         }

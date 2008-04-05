@@ -6,6 +6,8 @@
  */
 package bt747.ui;
 
+import bt747.sys.Settings;
+
 /**
  * @author Mario De Weerd
  *
@@ -44,6 +46,14 @@ public class MessageBox extends waba.ui.MessageBox {
             int gap, int insideGap) {
         super(title, text, buttonCaptions, gap, insideGap);
         // TODO Auto-generated constructor stub
+    }
+    
+    public MessageBox(boolean n,String title,String Text,String[] Buttons) {
+        this(title,
+                waba.sys.Convert.insertLineBreak(waba.sys.Settings.screenWidth-6,
+                        '|',
+                        waba.ui.MainWindow.defaultFont.fm,
+                        Text),Buttons);
     }
 
     private boolean popped=false;

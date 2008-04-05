@@ -92,7 +92,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                     satRecSize+=byteSizes[index];
                 break;
                 case BT747_dev.FMT_RCR_IDX:
-                case BT747_dev.FMT_MILISECOND_IDX:
+                case BT747_dev.FMT_MILLISECOND_IDX:
                 case BT747_dev.FMT_DISTANCE_IDX:
                     
                     // These fields do not contribute to the sat offset
@@ -307,13 +307,13 @@ public final class BT747LogConvert implements GPSLogConvert {
                             rcrIdx=offsetInBuffer-2-
                             ((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?
                                     BT747_dev.logFmtByteSizes[BT747_dev.FMT_DISTANCE_IDX]:0)+ 
-                                    (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?BT747_dev.logFmtByteSizes[BT747_dev.FMT_MILISECOND_IDX]:0)+ 
+                                    (((logFormat&(1<<BT747_dev.FMT_MILLISECOND_IDX))!=0)?BT747_dev.logFmtByteSizes[BT747_dev.FMT_MILLISECOND_IDX]:0)+ 
                                     (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?BT747_dev.logFmtByteSizes[BT747_dev.FMT_RCR_IDX]:0));
                         } else {
                             rcrIdx=offsetInBuffer-1-
                             ((((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0)?
                                     BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_DISTANCE_IDX]:0)+ 
-                                    (((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0)?BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_MILISECOND_IDX]:0)+ 
+                                    (((logFormat&(1<<BT747_dev.FMT_MILLISECOND_IDX))!=0)?BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_MILLISECOND_IDX]:0)+ 
                                     (((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0)?BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_RCR_IDX]:0));
                         }
                         
@@ -476,7 +476,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
             gpsRec.rcr=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0) { 
+        if((logFormat&(1<<BT747_dev.FMT_MILLISECOND_IDX))!=0) { 
             gpsRec.milisecond=-1;
         }
         if((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0) { 
@@ -811,7 +811,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         {
             gpsRec.rcr=0x0001;  // For filter
         }
-        if((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0) { 
+        if((logFormat&(1<<BT747_dev.FMT_MILLISECOND_IDX))!=0) { 
             gpsRec.milisecond=
                 (0xFF&bytes[recIdx++])<<0
                 |(0xFF&bytes[recIdx++])<<8

@@ -1,5 +1,8 @@
 package bt747.control;
 
+import bt747.ui.MessageBox;
+
+import bt747.Txt;
 import bt747.sys.Settings;
 
 import gps.GPSListener;
@@ -214,8 +217,8 @@ public class Controller {
         m.gpsModel().reqLogOverwrite();
     };
 
-    public final void reqLogStatus() {
-        m.gpsModel().reqLogStatus();
+    public final void reqLogVersion() {
+        m.gpsModel().reqLoggerVersion();
     }
     
     public final void reqLogMemUsed() {
@@ -235,6 +238,116 @@ public class Controller {
         m.gpsModel().reqDeviceInfo();
     }
 
+
+    public void reqLogFormat() {
+        m.gpsModel().reqLogFormat();
+    }
+    
+    public void setLogFormat(int i) {
+        m.gpsModel().setLogFormat(i);
+    }
+    
+    private void eraseLog() {
+        // TODO: Handle erase popup.
+        m.gpsModel().eraseLog();
+    }
+
+    /** Options for the first warning message */
+    private static final String[] C_EraseOrCancel = {
+        Txt.ERASE, Txt.CANCEL
+    };
+    /** Options for the first warning message */
+    private static final String[] C_YesrCancel = {
+        Txt.YES, Txt.CANCEL
+    };
+    /** Options for the second warning message - reverse order on purpose */
+    private static final String[] C_CancelConfirmErase = {
+        Txt.CANCEL, Txt.CONFIRM_ERASE
+    };
+
+    /** (User) request to change the log format.
+     * Warns about requirement to erase the log too.
+     */
+    public void changeLogFormatAndErase(int logFormat) {
+        /** Object to open multiple message boxes */
+        MessageBox m_mb; 
+        m_mb=new MessageBox(
+                Txt.TITLE_ATTENTION,
+                Txt.C_msgWarningFormatAndErase,
+                C_EraseOrCancel);
+        m_mb.popupBlockingModal();
+        if(m_mb.getPressedButtonIndex()==0) {
+            m_mb=new MessageBox(
+                    Txt.TITLE_ATTENTION,
+                    Txt.C_msgWarningFormatAndErase2,
+                    C_CancelConfirmErase);
+            m_mb.popupBlockingModal();
+            if(m_mb.getPressedButtonIndex()==1) {
+                // Set format and reset log
+                setLogFormat(logFormat);
+                eraseLog();
+            }
+        }
+    }
+
+    /** (User) request to change the log format.
+     * The log is not erased and may be incompatible with other applications
+     */
+    public void changeLogFormat(int logFormat) {
+        /** Object to open multiple message boxes */
+        MessageBox m_mb; 
+        m_mb=new MessageBox(true,Txt.TITLE_ATTENTION,
+                        Txt.C_msgWarningFormatIncompatibilityRisk,C_YesrCancel);
+        m_mb.popupBlockingModal();
+        if(m_mb.getPressedButtonIndex()==0) {
+            setLogFormat(logFormat);
+        }
+    }
+
+    /** (User) request to change the log format.
+     * Warns about requirement to erase the log too.
+     */
+    public void eraseLogFormat() {
+        /** Object to open multiple message boxes */
+        MessageBox m_mb; 
+        m_mb=new MessageBox(
+                Txt.TITLE_ATTENTION,
+                Txt.C_msgEraseWarning,
+                C_EraseOrCancel);
+        m_mb.popupBlockingModal();
+        if(m_mb.getPressedButtonIndex()==0) {
+            m_mb=new MessageBox(
+                    Txt.TITLE_ATTENTION,
+                    Txt.C_msgEraseWarning2,
+                    C_CancelConfirmErase);
+            m_mb.popupBlockingModal();
+            if(m_mb.getPressedButtonIndex()==1) {
+                // Erase log
+                eraseLog();
+            }
+        }
+    }
+
+    public void forceErase() {
+        /** Object to open multiple message boxes */
+        MessageBox m_mb; 
+        m_mb=new MessageBox(
+                Txt.TITLE_ATTENTION,
+                Txt.C_msgEraseWarning,
+                C_EraseOrCancel);
+        m_mb.popupBlockingModal();
+        if(m_mb.getPressedButtonIndex()==0) {
+            m_mb=new MessageBox(
+                    Txt.TITLE_ATTENTION,
+                    Txt.C_msgEraseWarning2,
+                    C_CancelConfirmErase);
+            m_mb.popupBlockingModal();
+            if(m_mb.getPressedButtonIndex()==1) {
+                // Erase log
+                m.gpsModel().recoveryEraseLog();
+            }
+        }
+    }
 
     /**
      * Device connection

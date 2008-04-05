@@ -246,5 +246,17 @@ public class Model extends AppSettings implements gps.settings{
      public final String getFlashDesc() {
         return gpsModel.getFlashDesc();
      }
+
+     public final int getLogFormat() {
+         return gpsModel.getLogFormat();
+      }
+     
+     public final boolean isHolux() {
+         return gpsModel.isHolux();
+     }
+     
+     public final int logMemUsefullSize() {
+         return gpsModel.logMemUsefullSize();
+     }
      
 }
