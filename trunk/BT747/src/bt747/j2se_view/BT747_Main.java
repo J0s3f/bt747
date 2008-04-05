@@ -69,20 +69,17 @@ public class BT747_Main extends javax.swing.JFrame implements
         updateGuiLogFilterSettings();
         
         
-//        m_minRecCount.setText(Convert.toString(m.getFilterMinRecCount()));
-//        m_maxRecCount.setText(Convert.toString(m.getFilterMaxRecCount()));
-//        m_minSpeed.setText(Convert.toString(m.getFilterMinSpeed(),2));
-//        m_maxSpeed.setText(Convert.toString(m.getFilterMaxSpeed(),2));
-//        m_minDist.setText(Convert.toString(m.getFilterMinDist(),2));
-//        m_maxDist.setText(Convert.toString(m.getFilterMaxDist(),2));
-//        m_maxPDOP.setText(Convert.toString(m.getFilterMaxPDOP(),2));
-//        m_maxHDOP.setText(Convert.toString(m.getFilterMaxHDOP(),2));
-//        m_maxVDOP.setText(Convert.toString(m.getFilterMaxVDOP(),2));
-//        m_minNSAT.setText(Convert.toString(m.getFilterMinNSAT()));
-
         txtPDOPMax.setText(String.format("%.2f",m.getFilterMaxPDOP()));
         txtHDOPMax.setText(String.format("%.2f",m.getFilterMaxHDOP()));
         txtVDOPMax.setText(String.format("%.2f",m.getFilterMaxVDOP()));
+        txtNSATMin.setText(Integer.toString(m.getFilterMinNSAT()));
+        txtRecCntMin.setText(Integer.toString(m.getFilterMinRecCount()));
+        txtRecCntMax.setText(Integer.toString(m.getFilterMaxRecCount()));
+        txtDistanceMin.setText(String.format("%.2f",m.getFilterMinDist()));
+        txtDistanceMax.setText(String.format("%.2f",m.getFilterMaxDist()));
+        txtSpeedMin.setText(String.format("%.2f",m.getFilterMinSpeed()));
+        txtSpeedMax.setText(String.format("%.2f",m.getFilterMaxSpeed()));
+
 
         // TODO: Deactivate debug by default
         c.setDebug(true);
@@ -467,16 +464,17 @@ public class BT747_Main extends javax.swing.JFrame implements
         cbTrkUser12 = new javax.swing.JCheckBox();
         jPanel16 = new javax.swing.JPanel();
         jPanel14 = new javax.swing.JPanel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
+        txtRecCntMin = new javax.swing.JTextField();
+        txtDistanceMin = new javax.swing.JTextField();
+        txtSpeedMin = new javax.swing.JTextField();
+        lbDistanceFltr = new javax.swing.JLabel();
+        lbSpeedFltr = new javax.swing.JLabel();
+        txtRecCntMax = new javax.swing.JTextField();
+        txtDistanceMax = new javax.swing.JTextField();
+        txtSpeedMax = new javax.swing.JTextField();
+        lbNSATFltr = new javax.swing.JLabel();
+        txtNSATMin = new javax.swing.JTextField();
+        lbRecNbrFltr = new javax.swing.JLabel();
         jPanel13 = new javax.swing.JPanel();
         txtPDOPMax = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
@@ -991,7 +989,7 @@ public class BT747_Main extends javax.swing.JFrame implements
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnTrackpointLayout.createSequentialGroup()
                 .add(pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel12, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1000,32 +998,69 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         jPanel14.setBorder(javax.swing.BorderFactory.createTitledBorder("Other"));
 
-        jTextField2.setText("jTextField2");
-        jTextField2.setInputVerifier(IntVerifier);
+        txtRecCntMin.setText("jTextField2");
+        txtRecCntMin.setInputVerifier(IntVerifier);
+        txtRecCntMin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRecCntMinActionPerformed(evt);
+            }
+        });
 
-        jTextField3.setText("jTextField3");
-        jTextField3.setInputVerifier(FloatVerifier);
+        txtDistanceMin.setText("jTextField3");
+        txtDistanceMin.setInputVerifier(FloatVerifier);
+        txtDistanceMin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDistanceMinActionPerformed(evt);
+            }
+        });
 
-        jTextField4.setText("jTextField4");
-        jTextField4.setInputVerifier(FloatVerifier);
+        txtSpeedMin.setText("jTextField4");
+        txtSpeedMin.setInputVerifier(FloatVerifier);
+        txtSpeedMin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSpeedMinActionPerformed(evt);
+            }
+        });
 
-        jLabel10.setText("<= distance <=");
+        lbDistanceFltr.setText("<= distance <=");
 
-        jLabel11.setText("<= speed <=");
+        lbSpeedFltr.setText("<= speed <=");
 
-        jTextField5.setText("jTextField2");
-        jTextField5.setInputVerifier(IntVerifier);
+        txtRecCntMax.setText("jTextField2");
+        txtRecCntMax.setInputVerifier(IntVerifier);
+        txtRecCntMax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRecCntMaxActionPerformed(evt);
+            }
+        });
 
-        jTextField6.setText("jTextField3");
-        jTextField6.setInputVerifier(FloatVerifier);
+        txtDistanceMax.setText("jTextField3");
+        txtDistanceMax.setInputVerifier(FloatVerifier);
+        txtDistanceMax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDistanceMaxActionPerformed(evt);
+            }
+        });
 
-        jTextField7.setText("jTextField4");
-        jTextField7.setInputVerifier(FloatVerifier);
+        txtSpeedMax.setText("jTextField4");
+        txtSpeedMax.setInputVerifier(FloatVerifier);
+        txtSpeedMax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSpeedMaxActionPerformed(evt);
+            }
+        });
 
-        jLabel6.setText("<= NSAT    ");
+        lbNSATFltr.setText("<= NSAT    ");
 
-        jTextField10.setText("jTextField4");
-        jTextField10.setInputVerifier(IntVerifier);
+        txtNSATMin.setText("jTextField4");
+        txtNSATMin.setInputVerifier(IntVerifier);
+        txtNSATMin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNSATMinActionPerformed(evt);
+            }
+        });
+
+        lbRecNbrFltr.setText("<= rec nbr <=");
 
         org.jdesktop.layout.GroupLayout jPanel14Layout = new org.jdesktop.layout.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
@@ -1036,22 +1071,23 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .add(jPanel14Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel14Layout.createSequentialGroup()
                         .add(jPanel14Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jTextField2)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jTextField3)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jTextField4))
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, txtRecCntMin)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, txtDistanceMin)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, txtSpeedMin))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jPanel14Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
-                            .add(jLabel10)
-                            .add(jLabel11)
-                            .add(jLabel6))
+                            .add(lbDistanceFltr)
+                            .add(lbSpeedFltr)
+                            .add(lbNSATFltr)
+                            .add(lbRecNbrFltr))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jPanel14Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jTextField5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jTextField6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jTextField7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, txtRecCntMax, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, txtDistanceMax, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, txtSpeedMax, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .add(jPanel14Layout.createSequentialGroup()
-                        .add(jTextField10)
+                        .add(txtNSATMin)
                         .add(155, 155, 155))))
         );
         jPanel14Layout.setVerticalGroup(
@@ -1059,41 +1095,58 @@ public class BT747_Main extends javax.swing.JFrame implements
             .add(jPanel14Layout.createSequentialGroup()
                 .add(jPanel14Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel14Layout.createSequentialGroup()
-                        .add(jTextField2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(txtRecCntMin, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jPanel14Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jTextField3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel10))
+                            .add(txtDistanceMin, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(lbDistanceFltr))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jPanel14Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jTextField4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel11)))
+                            .add(txtSpeedMin, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(lbSpeedFltr)))
                     .add(jPanel14Layout.createSequentialGroup()
-                        .add(jTextField5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(jPanel14Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(txtRecCntMax, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(lbRecNbrFltr))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jTextField6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(txtDistanceMax, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jTextField7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .add(txtSpeedMax, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel14Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jTextField10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(txtNSATMin, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbNSATFltr, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
         jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder("Precision"));
 
         txtPDOPMax.setText("jTextField1");
         txtPDOPMax.setInputVerifier(FloatVerifier);
+        txtPDOPMax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPDOPMaxActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("PDOP <=");
 
         txtHDOPMax.setText("jTextField1");
         txtHDOPMax.setInputVerifier(FloatVerifier);
+        txtHDOPMax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHDOPMaxActionPerformed(evt);
+            }
+        });
 
         jLabel12.setText("HDOP <=");
 
         txtVDOPMax.setText("jTextField1");
         txtVDOPMax.setInputVerifier(FloatVerifier);
+        txtVDOPMax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtVDOPMaxActionPerformed(evt);
+            }
+        });
 
         jLabel13.setText("VDOP <=");
 
@@ -1348,7 +1401,7 @@ public class BT747_Main extends javax.swing.JFrame implements
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWaypointLayout.createSequentialGroup()
                 .add(pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointFix, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointFix, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1805,6 +1858,46 @@ public class BT747_Main extends javax.swing.JFrame implements
     private void WayRCRAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WayRCRAction
         setWayRCRFilterSettings();
     }//GEN-LAST:event_WayRCRAction
+
+    private void txtRecCntMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRecCntMinActionPerformed
+        m.setFilterMinRecCount(Integer.parseInt(txtRecCntMin.getText()));
+    }//GEN-LAST:event_txtRecCntMinActionPerformed
+
+    private void txtDistanceMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDistanceMinActionPerformed
+        m.setFilterMinDist(Float.parseFloat(txtDistanceMin.getText()));
+    }//GEN-LAST:event_txtDistanceMinActionPerformed
+
+    private void txtSpeedMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSpeedMinActionPerformed
+        m.setFilterMinSpeed(Float.parseFloat(txtSpeedMin.getText()));
+    }//GEN-LAST:event_txtSpeedMinActionPerformed
+
+    private void txtNSATMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNSATMinActionPerformed
+        m.setFilterMinNSAT(Integer.parseInt(txtNSATMin.getText()));
+    }//GEN-LAST:event_txtNSATMinActionPerformed
+
+    private void txtRecCntMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRecCntMaxActionPerformed
+        m.setFilterMaxRecCount(Integer.parseInt(txtRecCntMax.getText()));
+    }//GEN-LAST:event_txtRecCntMaxActionPerformed
+
+    private void txtDistanceMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDistanceMaxActionPerformed
+        m.setFilterMaxDist(Float.parseFloat(txtDistanceMax.getText()));
+    }//GEN-LAST:event_txtDistanceMaxActionPerformed
+
+    private void txtSpeedMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSpeedMaxActionPerformed
+        m.setFilterMaxSpeed(Float.parseFloat(txtSpeedMax.getText()));
+    }//GEN-LAST:event_txtSpeedMaxActionPerformed
+
+    private void txtVDOPMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVDOPMaxActionPerformed
+        m.setFilterMaxVDOP(Float.parseFloat(txtVDOPMax.getText()));
+    }//GEN-LAST:event_txtVDOPMaxActionPerformed
+
+    private void txtHDOPMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHDOPMaxActionPerformed
+        m.setFilterMaxHDOP(Float.parseFloat(txtHDOPMax.getText()));
+    }//GEN-LAST:event_txtHDOPMaxActionPerformed
+
+    private void txtPDOPMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPDOPMaxActionPerformed
+        m.setFilterMaxPDOP(Float.parseFloat(txtPDOPMax.getText()));
+    }//GEN-LAST:event_txtPDOPMaxActionPerformed
 
     private void btFormatAndEraseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btFormatAndEraseActionPerformed
         c.changeLogFormatAndErase(getUserLogFormat());
@@ -2277,15 +2370,12 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JCheckBox cbWayUser9;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar;
@@ -2306,17 +2396,14 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JLabel lbConversionTime;
+    private javax.swing.JLabel lbDistanceFltr;
     private javax.swing.JLabel lbGeoid;
     private javax.swing.JLabel lbLatitude;
     private javax.swing.JLabel lbLongitude;
+    private javax.swing.JLabel lbNSATFltr;
+    private javax.swing.JLabel lbRecNbrFltr;
+    private javax.swing.JLabel lbSpeedFltr;
     private javax.swing.JLabel lbTime;
     private javax.swing.JPanel pnTrackpoint;
     private javax.swing.JPanel pnWayPointFix;
@@ -2325,8 +2412,15 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JTextField tfOutputFileBaseName;
     private javax.swing.JTextField tfRawLogFilePath;
     private javax.swing.JTextField tfWorkDirectory;
+    private javax.swing.JTextField txtDistanceMax;
+    private javax.swing.JTextField txtDistanceMin;
     private javax.swing.JTextField txtHDOPMax;
+    private javax.swing.JTextField txtNSATMin;
     private javax.swing.JTextField txtPDOPMax;
+    private javax.swing.JTextField txtRecCntMax;
+    private javax.swing.JTextField txtRecCntMin;
+    private javax.swing.JTextField txtSpeedMax;
+    private javax.swing.JTextField txtSpeedMin;
     private javax.swing.JTextField txtVDOPMax;
     // End of variables declaration//GEN-END:variables
 
