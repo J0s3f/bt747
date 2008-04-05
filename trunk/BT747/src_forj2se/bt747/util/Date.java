@@ -63,15 +63,10 @@ public class Date extends java.util.Date {
     public Date(String strDate, byte dateFormat) {
         super();
         DateFormat df;
-        switch (dateFormat) {
-
-        case Settings.DATE_YMD:
+        if(dateFormat==Settings.DATE_YMD) {
             df = new SimpleDateFormat("yyyy/dd/mm");
-            break;
-        case Settings.DATE_DMY:
-        default:
+        } else { //if {dateFormat==Settings.DATE_DMY) {
             df = new SimpleDateFormat("mm/dd/yyyy");
-            break;
         }
         try {
         java.util.Date d=df.parse(strDate);

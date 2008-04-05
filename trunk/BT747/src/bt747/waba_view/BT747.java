@@ -19,7 +19,6 @@ package bt747.waba_view;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.fx.Font;
-import waba.sys.Settings;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -41,6 +40,7 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.ui.MessageBox;
+import bt747.sys.Settings;
 
 /**
  * Main class (application entry)
@@ -202,7 +202,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle(Txt.S_TITLE); 
-        Settings.setUIStyle(Settings.Flat);
+        waba.sys.Settings.setUIStyle(waba.sys.Settings.Flat);
     }
 
     private int numPanels;
@@ -210,7 +210,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     public void onStart() {
         super.onStart();
 
-        if(Settings.version<585) {
+        if(Settings.version<Settings.requiredVersion) {
             new MessageBox(
                     Txt.TITLE_ATTENTION,
                     Txt.BAD_SUPERWABAVERSION).popupBlockingModal();
@@ -282,7 +282,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         // 10+0*PREFERRED);
         m_TabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
 
-        Settings.keyboardFocusTraversable = m.isTraversableFocus();
+        waba.sys.Settings.keyboardFocusTraversable = m.isTraversableFocus();
         miTraversableFocus.isChecked=m.isTraversableFocus();
 
         m.addListener((ModelListener)this);
@@ -329,7 +329,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
                     break;
                 case C_MENU_FOCUS_HIGHLIGHT:
                     m.setTraversableFocus(miTraversableFocus.isChecked);
-                    Settings.keyboardFocusTraversable = m.isTraversableFocus();
+                    waba.sys.Settings.keyboardFocusTraversable = m.isTraversableFocus();
                     break;
                 case C_MENU_DEBUG_ACTIVE:
                     m_GPSstate.setDebug(miDebug.isChecked);
