@@ -19,13 +19,13 @@
     <j2se version="1.5"/>
     <!--
     <jar href="waba_forj2se.jar" download=eager main="false" />
-    XTar href="BT747_rxtx_j2se.jar" download="eager" main="true" />
+    <jar href="BT747_rxtx_j2se.jar" download="eager" main="true" />
      -->
-    <jar href="BT747_j2se.jar" main="true" />
-    <jar href="RXTXcomm.jar" />
-    <jar href="swing-layout-1.0.3.jar" />
+    <jar href="BT747_j2se.jar" main="true" download="eager" />
+    <jar href="RXTXcomm.jar" download="eager" />
+    <jar href="swing-layout-1.0.3.jar" download="eager "/>
     <!--
-    <jar href="collections-superwaba.jar" download="lazy" />
+    <jar href="collections-superwaba.jar" download="e" />
     <jar href="Waba_only.jar" />
     -->
   </resources>

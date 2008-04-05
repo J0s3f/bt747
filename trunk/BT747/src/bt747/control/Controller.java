@@ -36,6 +36,7 @@ public class Controller {
     
     public Controller(Model m) {
         this.m = m;
+        getLogFilterSettings();
     }
     
     
@@ -106,6 +107,7 @@ public class Controller {
             }
         }
         GPSFilter[] usedFilters;
+        getLogFilterSettings(); // TODO : Do this another way (in the model for example)
         if(m.getAdvFilterActive()) {
             usedFilters=m.getLogFiltersAdv();
         } else {
@@ -424,5 +426,38 @@ public class Controller {
         m.saveSettings(); // Explicitally save settings
     }
 
+    public void setTrkPtRCR(int i) {
+        m.setTrkPtRCR(i);
+        getLogFilterSettings();
+    }
 
+    public void setWayPtRCR(int i) {
+        m.setWayPtRCR(i);
+        getLogFilterSettings();
+    }
+    
+    public void setTrkPtValid(int i) {
+        m.setTrkPtValid(i);
+        getLogFilterSettings();
+    }
+
+    public void setWayPtValid(int i) {
+        m.setWayPtValid(i);
+        getLogFilterSettings();
+    }
+
+    
+    // The way logfilter are handle should be reviewed.
+    private void getSettings(GPSFilter[] logFilters) {
+        logFilters[GPSFilter.C_TRKPT_IDX].setRcrMask(m.getTrkPtRCR());
+        logFilters[GPSFilter.C_TRKPT_IDX].setValidMask(m.getTrkPtValid());
+        logFilters[GPSFilter.C_WAYPT_IDX].setRcrMask(m.getWayPtRCR());
+        logFilters[GPSFilter.C_WAYPT_IDX].setValidMask(m.getWayPtValid());
+    };
+    
+    private void getLogFilterSettings() {
+        getSettings(m.getLogFilters());
+        getSettings(m.getLogFiltersAdv());
+    }
+    
 }

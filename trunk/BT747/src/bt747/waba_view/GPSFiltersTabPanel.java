@@ -37,17 +37,20 @@ import bt747.model.Model;
  */
 public class GPSFiltersTabPanel extends Container {
 
-    private TabPanel m_TabPanel;
     private Model m;
+    private Controller c;
+
+    private TabPanel m_TabPanel;
     
     private final String c_tpCaptions[]= {
             Txt.STANDARD,
             Txt.ADVANCED
     };
     
-    public GPSFiltersTabPanel(Model settings,
+    public GPSFiltersTabPanel(Model m,
             Controller c) {
-        m=settings;
+        this.m=m;
+        this.c=c;
     }
     
     /**
@@ -57,7 +60,7 @@ public class GPSFiltersTabPanel extends Container {
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
         m_TabPanel.setBorderStyle(Window.NO_BORDER);
         m_TabPanel.setRect(getClientRect().modifiedBy(0,0,0,0));
-        m_TabPanel.setPanel(0,new GPSLogFilter(m));
+        m_TabPanel.setPanel(0,new GPSLogFilter(m,c));
         m_TabPanel.setPanel(1,new GPSLogFilterAdv(m));
 //        m_TabPanel.setPanel(2,m_GPSNMEAFile = new GPSFileNMEAOutputSel(m));
     }

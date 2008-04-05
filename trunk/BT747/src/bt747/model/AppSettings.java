@@ -634,6 +634,7 @@ public class AppSettings {
      */
     public void setWayPtRCR(int value) {
         setIntOpt(0,value,C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
+        postEvent(ModelEvent.WAY_RCR_CHANGE);
     }
     
     public int getWayPtValid() {
@@ -644,10 +645,11 @@ public class AppSettings {
      */
     public void setWayPtValid(int value) {
         setIntOpt(0,value,C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
+        postEvent(ModelEvent.WAY_VALID_CHANGE);
     }
 
     public int getTrkPtRCR() {
-        return getIntOpt(C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
+        return getIntOpt(C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);      
     }
 
     /**
@@ -655,6 +657,7 @@ public class AppSettings {
      */
     public void setTrkPtRCR(int value) {
         setIntOpt(0,value,C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
+        postEvent(ModelEvent.TRK_RCR_CHANGE);
     }
     
     public int getTrkPtValid() {
@@ -665,6 +668,7 @@ public class AppSettings {
      */
     public void setTrkPtValid(final int value) {
         setIntOpt(0,value,C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
+        postEvent(ModelEvent.TRK_VALID_CHANGE);
     }
     
     public int getFileSeparationFreq() {

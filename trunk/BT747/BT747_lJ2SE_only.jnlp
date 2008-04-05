@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- Must replace $$codebase with correct path in line below: file:///path/to/thisdir
-     and rename this file to BT747.jnlp -->
+     and rename this file to BT747.jnlp (and change href) -->
 <jnlp href="BT747_lJ2SE_only.jnlp"
 	codebase="$$codebase">
 

@@ -28,6 +28,7 @@ import gps.BT747_dev;
 import gps.log.GPSFilter;
 
 import bt747.Txt;
+import bt747.control.Controller;
 import bt747.model.Model;
 
 /** The purpose of this container is to set the log filter settings.
@@ -35,9 +36,11 @@ import bt747.model.Model;
 public class GPSLogFilter extends Container {
     private int currentLogFilter=0;
     private Model m;
+    private Controller c;
 
-    public GPSLogFilter(Model settings) {
-        m=settings;
+    public GPSLogFilter(Model m,Controller c) {
+        this.m=m;
+        this.c=c;
     }
 
     private String[] strValid= Txt.STR_VALID;
@@ -47,21 +50,8 @@ public class GPSLogFilter extends Container {
     private static final int C_VALID_COUNT=9;
     private MyCheck [] chkValid =new MyCheck[C_VALID_COUNT];
     private PushButtonGroup pbPtType;
-    
-    private void getSettings(GPSFilter[] logFilters) {
-        logFilters[GPSFilter.C_TRKPT_IDX].setRcrMask(m.getTrkPtRCR());
-        logFilters[GPSFilter.C_TRKPT_IDX].setValidMask(m.getTrkPtValid());
-        logFilters[GPSFilter.C_WAYPT_IDX].setRcrMask(m.getWayPtRCR());
-        logFilters[GPSFilter.C_WAYPT_IDX].setValidMask(m.getWayPtValid());
-    };
-    
-    private void getSettings() {
-        getSettings(m.getLogFilters());
-        getSettings(m.getLogFiltersAdv());
-    }
-
+   
     public void onStart() {
-        getSettings();
         C_PB_TYPE_NAMES[GPSFilter.C_TRKPT_IDX]=Txt.TRKPT;
         C_PB_TYPE_NAMES[GPSFilter.C_WAYPT_IDX]=Txt.WAYPT;
         add(pbPtType=
@@ -134,7 +124,6 @@ public class GPSLogFilter extends Container {
         
         for (int i=0; i<C_VALID_COUNT; i++) {
             chkValid[i].setChecked((valid & bitMask)!=0);
-//            chkValid[i].repaintNow();
             bitMask<<=1;
         }
     }
@@ -202,10 +191,10 @@ public class GPSLogFilter extends Container {
                     m.getLogFilters()[currentLogFilter].setValidMask(getValid());
                     switch (currentLogFilter) {
                     case GPSFilter.C_TRKPT_IDX:
-                        m.setTrkPtValid(getValid());
+                        c.setTrkPtValid(getValid());
                         break;
                     case GPSFilter.C_WAYPT_IDX:
-                        m.setWayPtValid(getValid());
+                        c.setWayPtValid(getValid());
                         break;
                     }
                 }
@@ -219,14 +208,13 @@ public class GPSLogFilter extends Container {
                     (m.getLogFilters())[currentLogFilter].setRcrMask(getRCR());
                     switch (currentLogFilter) {
                     case GPSFilter.C_TRKPT_IDX:
-                        m.setTrkPtRCR(getRCR());
+                        c.setTrkPtRCR(getRCR());
                         break;
                     case GPSFilter.C_WAYPT_IDX:
-                        m.setWayPtRCR(getRCR());
+                        c.setWayPtRCR(getRCR());
                         break;
                     }
                 }
-                getSettings();
             }
         break;
         }
