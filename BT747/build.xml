@@ -587,7 +587,7 @@
 			<attribute name="Built-By" value="${user.name}" />
 			<attribute name="Main-Class" value="${current.main.class}" />
 			<attribute name="Implementation-Version" value="${full.build.version}" />
-			<attribute name="Class-Path" value="RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/collections-superwaba.jar ../${swinglayout.jar}" />
+			<attribute name="Class-Path" value="RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../lib/collections-superwaba.jar ../${swinglayout.jar} lib/RXTXcomm.jar lib/collections-superwaba.jar lib/swing-layout-1.0.3.jar" />
 		</manifest>
 		<!-- It might be possible to read the version in the application:
              TheMainClass.class.getPackage().getImplementationVersion() ); -->

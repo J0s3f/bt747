@@ -540,4 +540,15 @@ public final class BT747_dev {  // dev as in device
 //    +#define MX_25L1635D            0x2415
 //    +#define MX_25L3235D            0x2416
 
+
+    public static final int VALID_NO_FIX_MASK = 0x0001;
+    public static final int VALID_SPS_MASK    = 0x0002;
+    public static final int VALID_DGPS_MASK   = 0x0004;
+    public static final int VALID_PPS_MASK    = 0x0008;
+    public static final int VALID_RTK_MASK    = 0x0010;
+    public static final int VALID_FRTK_MASK   = 0x0020;
+    public static final int VALID_ESTIMATED_MASK = 0x0040;
+    public static final int VALID_MANUAL_MASK = 0x0080;
+    public static final int VALID_SIMULATOR_MASK = 0x0100;
+
 }
