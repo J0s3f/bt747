@@ -222,7 +222,7 @@ public final class NewLogConvert implements GPSLogConvert {
        if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
            gpsRec.rcr=-1;
        }
-       if((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0) { 
+       if((logFormat&(1<<BT747_dev.FMT_MILLISECOND_IDX))!=0) { 
            gpsRec.milisecond=-1;
        }
        if((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0) { 

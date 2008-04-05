@@ -24,13 +24,13 @@ import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
-import waba.ui.MessageBox;
 
 import gps.BT747_dev;
-import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.control.Controller;
+import bt747.model.Model;
 
 
 /**
@@ -39,25 +39,27 @@ import bt747.Txt;
 public class GPSLogFormat extends Container {
     private static final int C_LOG_FMT_COUNT = 21;
     /** The object that is used to communicate with the GPS device. */
-    private GPSstate m_GPSstate;
+    private Model m;
+    private Controller c;
     /** The tickboxes for the format items */
     private MyCheck [] chkLogFmtItems =new MyCheck[C_LOG_FMT_COUNT];
     /** The button that requests to change the log format of the device */
     private Button m_btChangeFormatErase;
     private Button m_btChangeFormat;
     private Button m_btErase;
-    
+
     private Label m_lbEstNbrRecords;
-    
+
     /** Initialiser of this Container.<br>
      * Requires Object to communicate with GPS device.
      * @param p_GPSstate Object to communicate with GPS device.
      */
-    public GPSLogFormat(GPSstate p_GPSstate) {
+    public GPSLogFormat(Model m, Controller c) {
         //super("Log ON/OFF", Container.);
-        m_GPSstate = p_GPSstate;
+        this.m = m;
+        this.c = c;
     };
-    
+
     /** Initiliaser once all objects received initial setup
      * 
      */
@@ -65,14 +67,14 @@ public class GPSLogFormat extends Container {
         // Add all tick buttons.
         for (int i=0;i<C_LOG_FMT_COUNT;i++) {
             chkLogFmtItems[i]= new MyCheck(BT747_dev.logFmtItems[i]);
-//            int extra_offset=chkLogFmtItems[i].fm.height-chkLogFmtItems[i].getPreferredHeight();
-//            add(chkLogFmtItems[i]);
-//            int x=((i==0)?LEFT:((i==((C_LOG_FMT_COUNT/2)))? getClientRect().width/2:SAME));
-//            if(((i==0) ||i==((C_LOG_FMT_COUNT/2)))) {
-//                chkLogFmtItems[i].setRect(x, TOP, PREFERRED+extra_offset-1, chkLogFmtItems[i].fm.height-1);
-//            } else {
-//                chkLogFmtItems[i].setRect(x, AFTER-1, PREFERRED+extra_offset-1, chkLogFmtItems[i].fm.height-1);
-//            }
+//          int extra_offset=chkLogFmtItems[i].fm.height-chkLogFmtItems[i].getPreferredHeight();
+//          add(chkLogFmtItems[i]);
+//          int x=((i==0)?LEFT:((i==((C_LOG_FMT_COUNT/2)))? getClientRect().width/2:SAME));
+//          if(((i==0) ||i==((C_LOG_FMT_COUNT/2)))) {
+//          chkLogFmtItems[i].setRect(x, TOP, PREFERRED+extra_offset-1, chkLogFmtItems[i].fm.height-1);
+//          } else {
+//          chkLogFmtItems[i].setRect(x, AFTER-1, PREFERRED+extra_offset-1, chkLogFmtItems[i].fm.height-1);
+//          }
             add( chkLogFmtItems[i],
                     ((i==0)?LEFT:((i==((C_LOG_FMT_COUNT/2)))? getClientRect().width/2:SAME)),
                     ((i==0) ||i==((C_LOG_FMT_COUNT/2)))? TOP:AFTER-1
@@ -82,7 +84,7 @@ public class GPSLogFormat extends Container {
         m_lbEstNbrRecords=new Label("0000000"+Txt.REC_ESTIMATED);
         add(m_lbEstNbrRecords,LEFT,AFTER);
         m_lbEstNbrRecords.setText("");
-        
+
         // Add button confirming change of log format.
         m_btChangeFormatErase=new Button(Txt.SET_ERASE);
         add(m_btChangeFormatErase,LEFT,AFTER+5);
@@ -90,89 +92,7 @@ public class GPSLogFormat extends Container {
         add(m_btErase=new Button(Txt.ERASE),RIGHT,SAME);
         setLogFormatControls();
     }
-    
-    /** Options for the first warning message */
-    private static final String[] C_EraseOrCancel = {
-            Txt.ERASE, Txt.CANCEL
-    };
-    /** Options for the first warning message */
-    private static final String[] C_YesrCancel = {
-            Txt.YES, Txt.CANCEL
-    };
-    /** Options for the second warning message - reverse order on purpose */
-    private static final String[] C_CancelConfirmErase = {
-            Txt.CANCEL, Txt.CONFIRM_ERASE
-    };
 
-    
-    /** (User) request to change the log format.
-     * Warns about requirement to erase the log too.
-     * TODO: Wait until erase is finished
-     */
-    private void changeLogFormatAndErase() {
-        /** Object to open multiple message boxes */
-        MessageBox m_mb; 
-        m_mb=new MessageBox(
-                Txt.TITLE_ATTENTION,
-                Txt.C_msgWarningFormatAndErase,
-                C_EraseOrCancel);
-        m_mb.popupBlockingModal();
-        if(m_mb.getPressedButtonIndex()==0) {
-            m_mb=new MessageBox(
-                    Txt.TITLE_ATTENTION,
-                    Txt.C_msgWarningFormatAndErase2,
-                    C_CancelConfirmErase);
-            m_mb.popupBlockingModal();
-            if(m_mb.getPressedButtonIndex()==1) {
-                // Set format and reset log
-                m_GPSstate.setLogFormat(getSelectedLogFormat());
-                m_GPSstate.eraseLog();
-            }
-        }
-    }
-
-    /** (User) request to change the log format.
-     * The log is not erased and may be incompatible with other applications
-     */
-    private void changeLogFormat() {
-        /** Object to open multiple message boxes */
-        MessageBox m_mb; 
-        m_mb=new MessageBox(Txt.TITLE_ATTENTION,
-                waba.sys.Convert.insertLineBreak(Settings.screenWidth-6,
-                        '|',
-                        getFont().fm,
-                        Txt.C_msgWarningFormatIncompatibilityRisk),C_YesrCancel);
-        m_mb.popupBlockingModal();
-        if(m_mb.getPressedButtonIndex()==0) {
-            m_GPSstate.setLogFormat(getSelectedLogFormat());
-        }
-    }
-
-    /** (User) request to change the log format.
-     * Warns about requirement to erase the log too.
-     * TODO: Wait until erase is finished
-     */
-    private void eraseLogFormat() {
-        /** Object to open multiple message boxes */
-        MessageBox m_mb; 
-        m_mb=new MessageBox(
-                Txt.TITLE_ATTENTION,
-                Txt.C_msgEraseWarning,
-                C_EraseOrCancel);
-        m_mb.popupBlockingModal();
-        if(m_mb.getPressedButtonIndex()==0) {
-            m_mb=new MessageBox(
-                    Txt.TITLE_ATTENTION,
-                    Txt.C_msgEraseWarning2,
-                    C_CancelConfirmErase);
-            m_mb.popupBlockingModal();
-            if(m_mb.getPressedButtonIndex()==1) {
-                // Erase log
-                m_GPSstate.eraseLog();
-            }
-        }
-    }
-    
     /** Get the format set by the user in the user interface. */
     private int getSelectedLogFormat() {
         int bitMask=1;
@@ -189,7 +109,7 @@ public class GPSLogFormat extends Container {
         }
         return logFormat;
     }
-    
+
     /** Updates the format options shown the the user.<br>
      * This is typically done when the device responded with the current settings.
      * @param p_logFormat LogFormat to set
@@ -197,55 +117,56 @@ public class GPSLogFormat extends Container {
     private void updateLogFormat(final int p_logFormat) {
         int bitMask=1;
         //if(GPS_DEBUG) {	waba.sys.Vm.debug("UPD:"+Convert.unsigned2hex(p_logFormat,2)+"\n");}
-        
-        
+
+
         for (int i=0;i<C_LOG_FMT_COUNT-1;i++) {
             chkLogFmtItems[i].setChecked((p_logFormat & bitMask)!=0);
-//            chkLogFmtItems[i].repaintNow();
+//          chkLogFmtItems[i].repaintNow();
             bitMask<<=1;
         }
         chkLogFmtItems[C_LOG_FMT_COUNT-1]
                        .setChecked((p_logFormat&(1<<BT747_dev.FMT_HOLUX_LOW_PRECISION_IDX))!=0);
         setLogFormatControls();
     }
-    
+
     private void setLogFormatControls() {
         boolean sidSet;
         sidSet=chkLogFmtItems[BT747_dev.FMT_SID_IDX].getChecked();
         chkLogFmtItems[BT747_dev.FMT_ELEVATION_IDX].setEnabled(sidSet);
         chkLogFmtItems[BT747_dev.FMT_AZIMUTH_IDX].setEnabled(sidSet);
         chkLogFmtItems[BT747_dev.FMT_SNR_IDX].setEnabled(sidSet);
-        
+
         int count;
         m_lbEstNbrRecords.setText("");
         try {
-            int size=BT747_dev.logRecordSize(getSelectedLogFormat(), m_GPSstate.isHolux(),12);
-            if(m_GPSstate.isHolux()) {
+            int size=BT747_dev.logRecordSize(getSelectedLogFormat(), m.isHolux(),12);
+            if(m.isHolux()) {
                 size+=1;
             } else {
                 size+=2;
             }
-            count= m_GPSstate.logMemUsefullSize()/size;
+            count= m.logMemUsefullSize()/size;
             m_lbEstNbrRecords.setText(count+Txt.REC_ESTIMATED);
         } catch (Exception e) {
+            e.printStackTrace();
             // TODO: handle exception
         }
     }
-    
+
     /** Handle events for this object.
      * @param event The event to be interpreted.
      */
-     public void onEvent( Event event ) {
+    public void onEvent( Event event ) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target==m_btChangeFormatErase) {
-                changeLogFormatAndErase();
+                c.changeLogFormatAndErase(getSelectedLogFormat());
             } else if (event.target==m_btChangeFormat) {
-                changeLogFormat();
+                c.changeLogFormat(getSelectedLogFormat());
             } else if (event.target==m_btErase) {
-                eraseLogFormat();
+                c.eraseLogFormat();
             } else if (event.target==this) {
-                m_GPSstate.getLogFormat();
+                c.reqLogFormat();
                 event.consumed=true;
             } else {
                 boolean z_updated=false;
@@ -258,14 +179,11 @@ public class GPSLogFormat extends Container {
                     setLogFormatControls();
                 }
             }
-        
-        break;
+
+            break;
         default:
-            if(event.type==GpsEvent.DATA_UPDATE) {
-                if(event.target==this) {
-                    updateLogFormat(m_GPSstate.logFormat);
-                    event.consumed=true;
-                }
+            if(event.type==GpsEvent.LOG_FORMAT_UPDATE) {
+                updateLogFormat(m.getLogFormat());
             }
         }
     }

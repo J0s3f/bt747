@@ -91,7 +91,7 @@ public class GPSNMEAOutput extends Container {
             Periods[i]=chkNMEAItems[i].getSelectedIndex();
         }
         m_GPSstate.setNMEAPeriods(Periods);
-        m_GPSstate.getNMEAPeriods();
+        m_GPSstate.reqNMEAPeriods();
     }
 
     /** Handle events for this object.
@@ -101,7 +101,7 @@ public class GPSNMEAOutput extends Container {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target==this) {
-                m_GPSstate.getNMEAPeriods();
+                m_GPSstate.reqNMEAPeriods();
                 event.consumed=true;
             } else if (event.target==btSet) {
                 setPeriods();

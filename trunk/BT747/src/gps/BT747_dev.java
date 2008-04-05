@@ -72,7 +72,7 @@ public final class BT747_dev {  // dev as in device
     /** Index of bit for log format setting */
     public static final int FMT_RCR_IDX =        17;
     /** Index of bit for log format setting */
-    public static final int FMT_MILISECOND_IDX = 18;
+    public static final int FMT_MILLISECOND_IDX = 18;
     /** Index of bit for log format setting */
     public static final int FMT_DISTANCE_IDX =   19;
     /** Index of bit for log format setting */

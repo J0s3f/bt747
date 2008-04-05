@@ -299,7 +299,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         int dotidx;
                                         curLogFormat|=(1<<BT747_dev.FMT_UTC_IDX);
                                         if((dotidx=field.indexOf('.'))!=-1) {
-                                            curLogFormat|=(1<<BT747_dev.FMT_MILISECOND_IDX);
+                                            curLogFormat|=(1<<BT747_dev.FMT_MILLISECOND_IDX);
                                             // TODO: check if idx out of range.
                                             gpsRec.milisecond=Convert.toInt(field.substring(dotidx+1));
                                             field=field.substring(0,dotidx);
@@ -492,7 +492,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         }
                                     }
                                     break;
-                                    case BT747_dev.FMT_MILISECOND_IDX:
+                                    case BT747_dev.FMT_MILLISECOND_IDX:
                                         //                        gpsRec.milisecond=
                                         break;
                                     case BT747_dev.FMT_DISTANCE_IDX:
@@ -655,7 +655,7 @@ public final class CSVLogConvert implements GPSLogConvert {
         if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
             gpsRec.rcr=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_MILISECOND_IDX))!=0) { 
+        if((logFormat&(1<<BT747_dev.FMT_MILLISECOND_IDX))!=0) { 
             gpsRec.milisecond=-1;
         }
         if((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0) { 

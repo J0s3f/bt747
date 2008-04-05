@@ -31,6 +31,7 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.control.Controller;
 import bt747.model.Model;
 
 /** Implement some buttons to easily do more complex operations
@@ -56,11 +57,13 @@ public class GPSLogEasy extends Container {
       
       private Label lbLogUserTxt;
       
-      private Model m_settings;
+      private Model m;
+      private Controller c;
       
-      public GPSLogEasy(GPSstate state, Model settings) {
+      public GPSLogEasy(GPSstate state, Model m, Controller c) {
           m_GPSstate= state;
-          m_settings = settings;
+          this.m = m;
+          this.c = c;
       }
       
       protected void onStart() {
@@ -104,37 +107,6 @@ public class GPSLogEasy extends Container {
           }
       }
       
-      /** Options for the first warning message */
-      private static final String[] C_EraseOrCancel = {
-              Txt.ERASE, Txt.CANCEL
-      };
-      /** Options for the second warning message - reverse order on purpose */
-      private static final String[] C_CancelConfirmErase = {
-              Txt.CANCEL, Txt.CONFIRM_ERASE
-      };
-
-      
-      private void forceErase() {
-          /** Object to open multiple message boxes */
-          MessageBox m_mb; 
-          m_mb=new MessageBox(
-                  Txt.TITLE_ATTENTION,
-                  Txt.C_msgEraseWarning,
-                  C_EraseOrCancel);
-          m_mb.popupBlockingModal();
-          if(m_mb.getPressedButtonIndex()==0) {
-              m_mb=new MessageBox(
-                      Txt.TITLE_ATTENTION,
-                      Txt.C_msgEraseWarning2,
-                      C_CancelConfirmErase);
-              m_mb.popupBlockingModal();
-              if(m_mb.getPressedButtonIndex()==1) {
-                  // Erase log
-                  m_GPSstate.recoveryEraseLog();
-              }
-          }
-      }
-      
       
       // "Volatile" settings of the MTK loggers:
       //  - Log conditions;
@@ -145,52 +117,52 @@ public class GPSLogEasy extends Container {
       //  - Log overwrite/STOP       [byte, byte]
       //  - NMEA output              [18 byte]
       private void StoreSetting1() {
-          m_settings.setTimeConditionSetting1(m_GPSstate.logTimeInterval);
-          m_settings.setDistConditionSetting1(m_GPSstate.logDistanceInterval);
-          m_settings.setSpeedConditionSetting1(m_GPSstate.logSpeedInterval);
-          m_settings.setLogFormatConditionSetting1(m_GPSstate.logFormat);
-          m_settings.setFixSetting1(m_GPSstate.logFix);
-          m_settings.setSBASSetting1(m_GPSstate.SBASEnabled);
-          m_settings.setDGPSSetting1(m_GPSstate.dgps_mode);
-          m_settings.setTestSBASSetting1(m_GPSstate.SBASTestEnabled);
-          m_settings.setLogOverwriteSetting1(m_GPSstate.logFullOverwrite);
+          m.setTimeConditionSetting1(m_GPSstate.logTimeInterval);
+          m.setDistConditionSetting1(m_GPSstate.logDistanceInterval);
+          m.setSpeedConditionSetting1(m_GPSstate.logSpeedInterval);
+          m.setLogFormatConditionSetting1(m.getLogFormat());
+          m.setFixSetting1(m_GPSstate.logFix);
+          m.setSBASSetting1(m_GPSstate.SBASEnabled);
+          m.setDGPSSetting1(m_GPSstate.dgps_mode);
+          m.setTestSBASSetting1(m_GPSstate.SBASTestEnabled);
+          m.setLogOverwriteSetting1(m_GPSstate.logFullOverwrite);
           String NMEA="";
           for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
               NMEA+=(m_GPSstate.NMEA_periods[i]);
           }
-          m_settings.setNMEASetting1(NMEA);
+          m.setNMEASetting1(NMEA);
       }
       
       private void RestoreSetting1() {
-          m_GPSstate.setLogTimeInterval(m_settings.getTimeConditionSetting1());
-          m_GPSstate.setLogDistanceInterval(m_settings.getDistConditionSetting1());
-          m_GPSstate.setLogSpeedInterval(m_settings.getSpeedConditionSetting1());
-          m_GPSstate.setLogFormat(m_settings.getLogFormatSetting1());
-          m_GPSstate.setFixInterval(m_settings.getFixSetting1());
-          m_GPSstate.setSBASEnabled(m_settings.getSBASSetting1());
-          m_GPSstate.setSBASTestEnabled(m_settings.getTestSBASSetting1());
-          m_GPSstate.setDGPSMode(m_settings.getDPGSSetting1());
-          m_GPSstate.setLogOverwrite(m_settings.getLogOverwriteSetting1());
+          m_GPSstate.setLogTimeInterval(m.getTimeConditionSetting1());
+          m_GPSstate.setLogDistanceInterval(m.getDistConditionSetting1());
+          m_GPSstate.setLogSpeedInterval(m.getSpeedConditionSetting1());
+          m_GPSstate.setLogFormat(m.getLogFormatSetting1());
+          m_GPSstate.setFixInterval(m.getFixSetting1());
+          m_GPSstate.setSBASEnabled(m.getSBASSetting1());
+          m_GPSstate.setSBASTestEnabled(m.getTestSBASSetting1());
+          m_GPSstate.setDGPSMode(m.getDPGSSetting1());
+          m_GPSstate.setLogOverwrite(m.getLogOverwriteSetting1());
         
-          String NMEA=m_settings.getNMEASetting1();
+          String NMEA=m.getNMEASetting1();
           int[] Periods = new int[BT747_dev.C_NMEA_SEN_COUNT];
           
           for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
               Periods[i]=(int)(NMEA.charAt(i)-'0');
           }
           m_GPSstate.setNMEAPeriods(Periods);
-          m_GPSstate.getNMEAPeriods();
+          m_GPSstate.reqNMEAPeriods();
       }
 
       private void getSettings() {
-          m_GPSstate.getLogReasonStatus();
-          m_GPSstate.getLogFormat();
-          m_GPSstate.getFixInterval();
-          m_GPSstate.getSBASEnabled();
-          m_GPSstate.getSBASTestEnabled();
-          m_GPSstate.getDGPSMode();
+          m_GPSstate.reqLogReasonStatus();
+          m_GPSstate.reqLogFormat();
+          m_GPSstate.reqFixInterval();
+          m_GPSstate.reqSBASEnabled();
+          m_GPSstate.reqSBASTestEnabled();
+          m_GPSstate.reqDGPSMode();
           m_GPSstate.reqLogOverwrite();
-          m_GPSstate.getNMEAPeriods();
+          m_GPSstate.reqNMEAPeriods();
       }
       
 
@@ -207,7 +179,7 @@ public class GPSLogEasy extends Container {
                   GPSstate.C_OK_DIST       |
                   GPSstate.C_OK_FORMAT)
           );
-          m_btRestore.setEnabled(m_settings.isStoredSetting1());
+          m_btRestore.setEnabled(m.isStoredSetting1());
       }
       
       public void onEvent(Event event) {
@@ -244,7 +216,7 @@ public class GPSLogEasy extends Container {
                       m_GPSstate.doFullColdStart();
                   }
               } else if (event.target==m_btForceErase) {
-                  forceErase();
+                  c.forceErase();
               } else {
                   for (int i=0;i<BT747_dev.C_RCR_COUNT;i++) {
                       if (event.target==chkRCR[i]) {
