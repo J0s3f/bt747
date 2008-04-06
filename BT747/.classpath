@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/waba_forwaba.jar" sourcepath="src_forwaba"/>
 	<classpathentry kind="lib" path="lib/waba_forj2se.jar" sourcepath="src_forj2se"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SuperwabaSDK"/>
 	<classpathentry kind="lib" path="lib/collections-superwaba.jar" sourcepath="/SWCollections/src"/>
 	<classpathentry kind="lib" path="lib/swing-layout-1.0.3.jar"/>
@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/RXTXcomm.jar" sourcepath="C:/mdeweerd/workspace/rxtx-2.1-7r2/"/>
 	<classpathentry kind="lib" path="lib/win32comm.jar"/>
 	<classpathentry kind="lib" path="lib/comm.jar"/>
+	<classpathentry kind="lib" path="lib/wabalang.jar" sourcepath="C:/SuperWabaSDK/src/java/waba/lang/StringBuffer.java"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
