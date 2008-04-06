@@ -25,10 +25,10 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 
-import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.control.Controller;
 import bt747.model.Model;
 
 /**
@@ -39,7 +39,7 @@ import bt747.model.Model;
 public class GPSHoluxSpecific extends Container {
   
     private Model m;
-    private GPSstate m_gpsState;
+    private Controller c;
     
     private Label lbHoluxName;
     private Edit  edHoluxName;
@@ -48,9 +48,9 @@ public class GPSHoluxSpecific extends Container {
     /**
      * 
      */
-    public GPSHoluxSpecific(final Model m, final GPSstate gpsState) {
+    public GPSHoluxSpecific(final Model m, final Controller c) {
         this.m=m;
-        m_gpsState=gpsState;
+        this.c=c;
     }
 
     
@@ -65,11 +65,11 @@ public class GPSHoluxSpecific extends Container {
     }
     
     private void doSet() {
-        m_gpsState.setHoluxName(edHoluxName.getText().replace(',',';'));
+        c.setHoluxName(edHoluxName.getText().replace(',',';'));
     }
     
     private void updateData() {
-        edHoluxName.setText(m_gpsState.getHoluxName());
+        edHoluxName.setText(m.getHoluxName());
     }
     
 
@@ -80,7 +80,7 @@ public class GPSHoluxSpecific extends Container {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target==this) {
-                m_gpsState.reqHoluxName();
+                c.reqHoluxName();
                 event.consumed=true;
             } else if(event.target==btSet) {
                 doSet();

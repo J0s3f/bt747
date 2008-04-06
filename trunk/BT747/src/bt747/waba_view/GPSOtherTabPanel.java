@@ -30,6 +30,7 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.control.Controller;
 import bt747.model.Model;
 
 /*
@@ -46,8 +47,8 @@ import bt747.model.Model;
 public class GPSOtherTabPanel extends Container {
 
     private TabPanel m_TabPanel;
-    private GPSstate m_GPSstate;
-    private Model m_settings;
+    private Controller c;
+    private Model m;
     
     private final String c_tpCaptions[]= {
             Txt.TAB_FLSH,
@@ -60,9 +61,9 @@ public class GPSOtherTabPanel extends Container {
      * @param settings TODO
      * 
      */
-    public GPSOtherTabPanel(final GPSstate state, Model settings) {
-        m_GPSstate=state;
-        m_settings=settings;
+    public GPSOtherTabPanel(final Controller c, Model m) {
+        this.c=c;
+        this.m=m;
     }
     
     /**
@@ -73,10 +74,10 @@ public class GPSOtherTabPanel extends Container {
         m_TabPanel.setBorderStyle(Window.NO_BORDER);
         m_TabPanel.setRect(getClientRect().modifiedBy(0,0,0,0));
         // TODO Auto-generated method stub
-        m_TabPanel.setPanel(0,new GPSFlashOption(m_GPSstate));
-        m_TabPanel.setPanel(1,new GPSNMEAOutput(m_GPSstate));
-        m_TabPanel.setPanel(2,new GPSFileNMEAOutputSel(m_settings));
-        m_TabPanel.setPanel(3,new GPSHoluxSpecific(m_settings,m_GPSstate));
+        m_TabPanel.setPanel(0,new GPSFlashOption(m,c));
+        m_TabPanel.setPanel(1,new GPSNMEAOutput(m,c));
+        m_TabPanel.setPanel(2,new GPSFileNMEAOutputSel(m));
+        m_TabPanel.setPanel(3,new GPSHoluxSpecific(m,c));
     }
     public void onEvent(Event event) {
         //

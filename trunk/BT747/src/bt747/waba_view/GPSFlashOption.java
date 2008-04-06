@@ -18,24 +18,26 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import waba.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 
-import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.control.Controller;
+import bt747.model.Model;
 import bt747.sys.Convert;
-import waba.ui.Button;
 import bt747.ui.MessageBox;
 /**
  * @author Mario De Weerd
  */
 public class GPSFlashOption extends Container {
-    private GPSstate m_GPSstate;
+    private Controller c;
+    private Model m;
     
     private Edit m_userOptionTimesLeft;
     private Edit m_edUpdateRate;
@@ -52,8 +54,9 @@ public class GPSFlashOption extends Container {
     
     private Button m_btSet;
     
-    public GPSFlashOption(GPSstate state) {
-        m_GPSstate= state;
+    public GPSFlashOption(Model m, Controller c) {
+        this.m=m;
+        this.c=c;
     }
     
     protected void onStart() {
@@ -92,17 +95,17 @@ public class GPSFlashOption extends Container {
     
     
     public void updateButtons() {
-        m_userOptionTimesLeft.setText(Convert.toString(m_GPSstate.userOptionTimesLeft));
-        m_edUpdateRate.setText(Convert.toString(m_GPSstate.dtUpdateRate));
-        m_edBaudRate.setText(Convert.toString(m_GPSstate.dtBaudRate));
-        m_edGLL_Period.setText(Convert.toString(m_GPSstate.dtGLL_Period));
-        m_edRMC_Period.setText(Convert.toString(m_GPSstate.dtRMC_Period));
-        m_edVTG_Period.setText(Convert.toString(m_GPSstate.dtVTG_Period));
-        m_edGSA_Period.setText(Convert.toString(m_GPSstate.dtGSA_Period));
-        m_edGSV_Period.setText(Convert.toString(m_GPSstate.dtGSV_Period));
-        m_edGGA_Period.setText(Convert.toString(m_GPSstate.dtGGA_Period));
-        m_edZDA_Period.setText(Convert.toString(m_GPSstate.dtZDA_Period));
-        m_edMCHN_Period.setText(Convert.toString(m_GPSstate.dtMCHN_Period));
+        m_userOptionTimesLeft.setText(Convert.toString(m.getDtUserOptionTimesLeft()));
+        m_edUpdateRate.setText(Convert.toString(m.getDtUpdateRate()));
+        m_edBaudRate.setText(Convert.toString(m.getDtBaudRate()));
+        m_edGLL_Period.setText(Convert.toString(m.getDtGLL_Period()));
+        m_edRMC_Period.setText(Convert.toString(m.getDtRMC_Period()));
+        m_edVTG_Period.setText(Convert.toString(m.getDtVTG_Period()));
+        m_edGSA_Period.setText(Convert.toString(m.getDtGSA_Period()));
+        m_edGSV_Period.setText(Convert.toString(m.getDtGSV_Period()));
+        m_edGGA_Period.setText(Convert.toString(m.getDtGGA_Period()));
+        m_edZDA_Period.setText(Convert.toString(m.getDtZDA_Period()));
+        m_edMCHN_Period.setText(Convert.toString(m.getDtMCHN_Period()));
         
         
 //        m_userOptionTimesLeft.repaintNow();
@@ -127,7 +130,7 @@ public class GPSFlashOption extends Container {
                 mbStr);                                 
         mb.popupBlockingModal();      
         if (mb.getPressedButtonIndex()==0){
-            m_GPSstate.setFlashUserOption(
+            c.setFlashUserOption(
                     false, // lock
                     Convert.toInt(m_edUpdateRate.getText()),
                     Convert.toInt(m_edBaudRate.getText()),
@@ -153,7 +156,7 @@ public class GPSFlashOption extends Container {
             if(event.target==m_btSet) {
                 setSettings();
             } else if (event.target == this) {
-                m_GPSstate.getFlashUserOption();
+                c.reqFlashUserOption();
             } else {
                 event.consumed=false;
             }

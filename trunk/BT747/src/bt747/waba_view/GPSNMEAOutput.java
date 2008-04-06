@@ -27,10 +27,11 @@ import waba.ui.Event;
 import waba.ui.Label;
 
 import gps.BT747_dev;
-import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.control.Controller;
+import bt747.model.Model;
 
 /**
  * @author Mario De Weerd
@@ -47,14 +48,16 @@ public class GPSNMEAOutput extends Container {
     
     private Button btSet;
     private Button btSetDefaults;
+
+    private Model m;
+    private Controller c;
     
-    private GPSstate m_GPSstate;
     /**
      * 
      */
-    public GPSNMEAOutput(final GPSstate state) {
-        m_GPSstate=state;
-        // TODO Auto-generated constructor stub
+    public GPSNMEAOutput(final Model m, Controller c) {
+        this.m=m;
+        this.c=c;
     }
 
     
@@ -79,7 +82,7 @@ public class GPSNMEAOutput extends Container {
     
     private void updatePeriods() {
         for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
-            chkNMEAItems[i].select(m_GPSstate.NMEA_periods[i]);
+            chkNMEAItems[i].select(m.getNMEAPeriod(i));
 //            chkNMEAItems[i].repaintNow();
         }
     }
@@ -90,8 +93,7 @@ public class GPSNMEAOutput extends Container {
         for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
             Periods[i]=chkNMEAItems[i].getSelectedIndex();
         }
-        m_GPSstate.setNMEAPeriods(Periods);
-        m_GPSstate.reqNMEAPeriods();
+        c.setNMEAPeriods(Periods);
     }
 
     /** Handle events for this object.
@@ -101,13 +103,13 @@ public class GPSNMEAOutput extends Container {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target==this) {
-                m_GPSstate.reqNMEAPeriods();
+                c.reqNMEAPeriods();
                 event.consumed=true;
             } else if (event.target==btSet) {
                 setPeriods();
                 event.consumed=true;
             } else if (event.target==btSetDefaults) {
-                m_GPSstate.setNMEADefaultPeriods();
+                c.setNMEADefaultPeriods();
                 event.consumed=true;
             } else {
 //                boolean z_updated=false;

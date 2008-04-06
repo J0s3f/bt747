@@ -29,13 +29,16 @@ import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
+import bt747.control.Controller;
+import bt747.model.Model;
 import bt747.sys.Convert;
 /**
  * @author Mario De Weerd
  */
 public class GPSLogReason extends Container {
     private static final boolean ENABLE_PWR_SAVE_CONTROL=false;
-    private GPSstate m_GPSstate;
+    private Controller c;
+    private Model m;
     
     private MyCheck m_chkTimeOnOff;
     private MyCheck m_chkDistanceOnOff;
@@ -57,8 +60,9 @@ public class GPSLogReason extends Container {
     private ComboBox m_cbDatumMode;
     
     
-    public GPSLogReason(GPSstate state) {
-        m_GPSstate= state;
+    public GPSLogReason(Controller c, Model m) {
+        this.c=c;
+        this.m=m;
         
     }
     
@@ -90,75 +94,60 @@ public class GPSLogReason extends Container {
         
         
         add(m_btSet = new Button(Txt.SET), CENTER, AFTER+3); //$NON-NLS-1$
-        
-        
     }
     
     
     public void updateButtons() {
-        m_chkTimeOnOff.setChecked(m_GPSstate.logTimeInterval!=0);
-        m_edTime.setEnabled(m_GPSstate.logTimeInterval!=0);
-        if(m_GPSstate.logTimeInterval!=0) {
-            m_edTime.setText(Convert.toString(((float)m_GPSstate.logTimeInterval)/10,1));
+        m_chkTimeOnOff.setChecked(m.getLogTimeInterval()!=0);
+        m_edTime.setEnabled(m.getLogTimeInterval()!=0);
+        if(m.getLogTimeInterval()!=0) {
+            m_edTime.setText(Convert.toString(((float)m.getLogTimeInterval())/10,1));
         }
-        m_chkSpeedOnOff.setChecked(m_GPSstate.logSpeedInterval!=0);
-        m_edSpeed.setEnabled(m_GPSstate.logSpeedInterval!=0);
-        if(m_GPSstate.logSpeedInterval!=0) {
-            m_edSpeed.setText(Convert.toString(m_GPSstate.logSpeedInterval));
+        m_chkSpeedOnOff.setChecked(m.getLogSpeedInterval()!=0);
+        m_edSpeed.setEnabled(m.getLogSpeedInterval()!=0);
+        if(m.getLogSpeedInterval()!=0) {
+            m_edSpeed.setText(Convert.toString(m.getLogSpeedInterval()));
         }
-        m_chkDistanceOnOff.setChecked(m_GPSstate.logDistanceInterval!=0);
-        m_edDistance.setEnabled(m_GPSstate.logDistanceInterval!=0);
-        if(m_GPSstate.logDistanceInterval!=0) {
-            m_edDistance.setText(Convert.toString((float)m_GPSstate.logDistanceInterval/10,1));
+        m_chkDistanceOnOff.setChecked(m.getLogDistanceInterval()!=0);
+        m_edDistance.setEnabled(m.getLogDistanceInterval()!=0);
+        if(m.getLogDistanceInterval()!=0) {
+            m_edDistance.setText(Convert.toString((float)m.getLogDistanceInterval()/10,1));
         }
-        m_chkFixOnOff.setChecked(m_GPSstate.logFix!=0);
-        m_edFix.setEnabled(m_GPSstate.logFix!=0);
-        if(m_GPSstate.logFix!=0) {
-            m_edFix.setText(Convert.toString(m_GPSstate.logFix));
+        m_chkFixOnOff.setChecked(m.getLogFixPeriod()!=0);
+        m_edFix.setEnabled(m.getLogFixPeriod()!=0);
+        if(m.getLogFixPeriod()!=0) {
+            m_edFix.setText(Convert.toString(m.getLogFixPeriod()));
         }
-        m_chkSBASOnOff.setChecked(m_GPSstate.SBASEnabled);
-        m_chkSBASTestOnOff.setChecked(m_GPSstate.SBASTestEnabled);
-        m_cbDGPSMode.select(m_GPSstate.dgps_mode);
+        m_chkSBASOnOff.setChecked(m.isSBASEnabled());
+        m_chkSBASTestOnOff.setChecked(m.isSBASTestEnabled());
+        m_cbDGPSMode.select(m.getDgpsMode());
         if(ENABLE_PWR_SAVE_CONTROL) {
-            m_chkPowerSaveOnOff.setChecked(m_GPSstate.powerSaveEnabled);
-//            m_chkPowerSaveOnOff.repaintNow();
+            m_chkPowerSaveOnOff.setChecked(m.isPowerSaveEnabled());
         }
-        m_cbDatumMode.select(m_GPSstate.datum);
-//        m_chkTimeOnOff.repaintNow();
-//        m_edTime.repaintNow();
-//        m_chkSpeedOnOff.repaintNow();
-//        m_edSpeed.repaintNow();
-//        m_chkDistanceOnOff.repaintNow();
-//        m_edDistance.repaintNow();
-//        m_chkFixOnOff.repaintNow();
-//        m_edFix.repaintNow();
-//        m_chkSBASOnOff.repaintNow();
-//        m_chkSBASTestOnOff.repaintNow();
-//        m_cbDGPSMode.repaintNow();
-//        m_cbDatumMode.repaintNow();
+        m_cbDatumMode.select(m.getDatum());
+
     }
     
     public void setSettings() {
         if(m_chkTimeOnOff.getChecked()) {
-            m_GPSstate.setLogTimeInterval((int)(10*Convert.toFloat(m_edTime.getText())));
+            c.setLogTimeInterval((int)(10*Convert.toFloat(m_edTime.getText())));
         } else {
-            m_GPSstate.setLogTimeInterval(0);
+            c.setLogTimeInterval(0);
         }
         if(m_chkSpeedOnOff.getChecked()) {
-            m_GPSstate.setLogSpeedInterval(Convert.toInt(m_edSpeed.getText()));
+            c.setLogSpeedInterval(Convert.toInt(m_edSpeed.getText()));
         } else {
-            m_GPSstate.setLogSpeedInterval(0);
+            c.setLogSpeedInterval(0);
         }
         if(m_chkDistanceOnOff.getChecked()) {
-            m_GPSstate.setLogDistanceInterval((int)(10*Convert.toFloat(m_edDistance.getText())));
+            c.setLogDistanceInterval((int)(10*Convert.toFloat(m_edDistance.getText())));
         } else {
-            m_GPSstate.setLogDistanceInterval(0);
+            c.setLogDistanceInterval(0);
         }
         if(m_chkFixOnOff.getChecked()) {
-            m_GPSstate.setFixInterval(Convert.toInt(m_edFix.getText()));
-            m_GPSstate.reqFixInterval();
+            c.setFixInterval(Convert.toInt(m_edFix.getText()));
         }
-        m_GPSstate.reqLogReasonStatus();
+        c.reqLogReasonStatus();
     }
     
     
@@ -169,36 +158,28 @@ public class GPSLogReason extends Container {
             event.consumed=true;
         if(event.target==m_chkTimeOnOff) {
             m_edTime.setEnabled(m_chkTimeOnOff.getChecked());
-//            m_edTime.repaintNow();
         } else if(event.target==m_chkSpeedOnOff) {
             m_edSpeed.setEnabled(m_chkSpeedOnOff.getChecked());
-//            m_edSpeed.repaintNow();
         } else if(event.target==m_chkDistanceOnOff) {
             m_edDistance.setEnabled(m_chkDistanceOnOff.getChecked());
-//            m_edDistance.repaintNow();
         } else if(event.target==m_chkFixOnOff) {
             m_edFix.setEnabled(m_chkFixOnOff.getChecked());
-//            m_edFix.repaintNow();
         } else if(event.target==m_btSet) {
             setSettings();
         } else if (event.target == this) {
-            m_GPSstate.reqLogReasonStatus();
-            m_GPSstate.reqFixInterval();
-            m_GPSstate.reqSBASEnabled();
-            m_GPSstate.reqSBASTestEnabled();
-            m_GPSstate.reqDGPSMode();
+            c.reqLogReasonStatus();
+            c.reqFixInterval();
+            c.reqSBASEnabled();
+            c.reqSBASTestEnabled();
+            c.reqDGPSMode();
         } else if (event.target==m_chkSBASOnOff) {
-            m_GPSstate.setSBASEnabled(m_chkSBASOnOff.getChecked());
-            m_GPSstate.reqSBASEnabled();
+            c.setSBASEnabled(m_chkSBASOnOff.getChecked());
         } else if (event.target==m_chkSBASTestOnOff) {
-            m_GPSstate.setSBASTestEnabled(m_chkSBASTestOnOff.getChecked());
-            m_GPSstate.reqSBASTestEnabled();
+            c.setSBASTestEnabled(m_chkSBASTestOnOff.getChecked());
         } else if (ENABLE_PWR_SAVE_CONTROL && (event.target==m_chkPowerSaveOnOff)) {
-            m_GPSstate.setPowerSaveEnabled(m_chkPowerSaveOnOff.getChecked());
-            m_GPSstate.reqPowerSaveEnabled();
+            c.setPowerSaveEnabled(m_chkPowerSaveOnOff.getChecked());
         } else if (event.target==m_cbDGPSMode) {
-            m_GPSstate.setDGPSMode(m_cbDGPSMode.getSelectedIndex());
-            m_GPSstate.reqDGPSMode();
+            c.setDGPSMode(m_cbDGPSMode.getSelectedIndex());
         } else {
             event.consumed=false;
         }

@@ -88,7 +88,6 @@ public class GPSLogGet extends Container {
     private Label m_RecordsLabel;
 
     public GPSLogGet(
-            GPSstate state,
             Model m,
             Controller c) {
         this.m = m;
