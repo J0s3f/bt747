@@ -28,7 +28,6 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 
-import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
