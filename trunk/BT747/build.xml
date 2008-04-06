@@ -29,6 +29,7 @@
 	<property name="waba_forwaba.jar" value="${lib.dir}/waba_forwaba.jar" />
 
 	<property name="j2se.main" value="bt747.j2se_view.BT747_Main" />
+    <property name="j2se.main2" value="bt747.j2se_view.BT747_Main2" />
 
 	<!-- Application classpath -->
 	<path id="classpath">
@@ -300,6 +301,10 @@
 
 	<target name="run.j2se" depends="build.lib.forj2se">
 		<macro.run.rxtx main-class="${j2se.main}" main-class-args="" wabajar="${waba_forj2se.jar}" />
+	</target>
+
+	<target name="run.j2se2" depends="build.lib.forj2se">
+		<macro.run.rxtx main-class="${j2se.main2}" main-class-args="" wabajar="${waba_forj2se.jar}" />
 	</target>
 
 	<target name="run.rxtx">
@@ -663,7 +668,7 @@
 
 			<keep name="${mainClass}" />
 
-            <!-- to check if methods are Waba compatible -->
+			<!-- to check if methods are Waba compatible -->
 			<libraryjar file="${wabalang.jar}" />
 
 			<!--
