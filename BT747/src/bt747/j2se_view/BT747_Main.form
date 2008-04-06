@@ -64,7 +64,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="846" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="847" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -73,7 +73,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="347" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -142,8 +142,8 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="tfRawLogFilePath" pref="684" max="32767" attributes="0"/>
-                              <Component id="tfWorkDirectory" alignment="0" pref="684" max="32767" attributes="0"/>
+                              <Component id="tfRawLogFilePath" pref="685" max="32767" attributes="0"/>
+                              <Component id="tfWorkDirectory" alignment="0" pref="685" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Group type="102" attributes="0">
@@ -189,7 +189,7 @@
                               <Component id="cbDecoderChoice" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="74" max="32767" attributes="0"/>
+                          <EmptySpace pref="117" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -391,7 +391,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btConnect" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="cbPortName" pref="433" max="32767" attributes="0"/>
+                          <Component id="cbPortName" pref="434" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -470,7 +470,7 @@
                       <Component id="jPanel16" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnWaypoint" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="19" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -479,11 +479,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="jPanel16" alignment="0" max="32767" attributes="1"/>
+                          <Component id="pnWaypoint" alignment="0" min="0" max="32767" attributes="1"/>
                           <Component id="pnTrackpoint" alignment="0" max="32767" attributes="1"/>
-                          <Component id="pnWaypoint" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="jPanel16" alignment="0" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="44" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -512,10 +512,10 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jPanel11" alignment="0" pref="263" max="32767" attributes="1"/>
+                              <Component id="jPanel11" alignment="0" max="32767" attributes="1"/>
                               <Component id="jPanel12" alignment="0" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="21" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -815,12 +815,13 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jPanel13" min="-2" max="-2" attributes="1"/>
                               <Component id="jPanel14" alignment="0" max="32767" attributes="1"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <Component id="jPanel13" alignment="0" min="-2" max="-2" attributes="1"/>
+                              <Component id="cbAdvancedActive" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -829,12 +830,14 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
+                          <Component id="cbAdvancedActive" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel13" min="-2" pref="98" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel14" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="14" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -931,6 +934,7 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtRecCntMinActionPerformed"/>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtRecCntMinFocusLost"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtDistanceMin">
@@ -942,6 +946,7 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtDistanceMinActionPerformed"/>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtDistanceMinFocusLost"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtSpeedMin">
@@ -953,6 +958,7 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtSpeedMinActionPerformed"/>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSpeedMinFocusLost"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="lbDistanceFltr">
@@ -974,6 +980,7 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtRecCntMaxActionPerformed"/>
+                        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtRecCntMaxInputMethodTextChanged"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtDistanceMax">
@@ -985,6 +992,7 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtDistanceMaxActionPerformed"/>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtDistanceMaxFocusLost"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtSpeedMax">
@@ -996,6 +1004,7 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtSpeedMaxActionPerformed"/>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSpeedMaxFocusLost"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="lbNSATFltr">
@@ -1012,6 +1021,7 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNSATMinActionPerformed"/>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtNSATMinFocusLost"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="lbRecNbrFltr">
@@ -1087,10 +1097,14 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPDOPMaxActionPerformed"/>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPDOPMaxFocusLost"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel9">
                       <Properties>
+                        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                          <ComponentRef name="txtPDOPMax"/>
+                        </Property>
                         <Property name="text" type="java.lang.String" value="PDOP &lt;="/>
                       </Properties>
                     </Component>
@@ -1103,10 +1117,14 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtHDOPMaxActionPerformed"/>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtHDOPMaxFocusLost"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel12">
                       <Properties>
+                        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                          <ComponentRef name="txtHDOPMax"/>
+                        </Property>
                         <Property name="text" type="java.lang.String" value="HDOP &lt;="/>
                       </Properties>
                     </Component>
@@ -1119,10 +1137,14 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtVDOPMaxActionPerformed"/>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtVDOPMaxFocusLost"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel13">
                       <Properties>
+                        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                          <ComponentRef name="txtVDOPMax"/>
+                        </Property>
                         <Property name="text" type="java.lang.String" value="VDOP &lt;="/>
                       </Properties>
                     </Component>
@@ -1132,6 +1154,14 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Values that are 0 are ignored for the filter"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="cbAdvancedActive">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Activate Common Filter"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbAdvancedActiveStateChanged"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -1151,6 +1181,7 @@
                           <Component id="pnWayPointFix" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnWayPointRCR" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1158,10 +1189,10 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="pnWayPointFix" alignment="0" pref="263" max="32767" attributes="1"/>
+                              <Component id="pnWayPointFix" alignment="0" max="32767" attributes="1"/>
                               <Component id="pnWayPointRCR" alignment="0" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace pref="28" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1216,7 +1247,7 @@
                               <Component id="cbWayManual" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="cbWaySimulate" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1354,7 +1385,6 @@
                                       <Component id="cbWayUser6" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1471,7 +1501,7 @@
                           <Component id="btErase" min="-2" max="-2" attributes="0"/>
                           <Component id="btRecoverMemory" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="331" max="32767" attributes="0"/>
+                      <EmptySpace pref="332" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1494,7 +1524,7 @@
                               <Component id="btRecoverMemory" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="36" max="32767" attributes="0"/>
+                      <EmptySpace pref="79" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1959,7 +1989,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="736" max="32767" attributes="0"/>
+                      <EmptySpace pref="737" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1989,7 +2019,7 @@
                               <Component id="lbGeoid" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="237" max="32767" attributes="0"/>
+                      <EmptySpace pref="280" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

@@ -207,7 +207,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
                 rec.setLength(0);
             }
             if(waypt) {
-              rec.append(wrec);
+              rec.append(wrec.toString());
               rec.append("\r\n");
             }
             writeTxt(rec.toString());

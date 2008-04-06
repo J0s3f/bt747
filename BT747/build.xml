@@ -22,6 +22,7 @@
 	<property name="swcollections.jar" value="${lib.dir}/collections-superwaba.jar" />
 
 	<property name="waba.jar" value="${lib.dir}/Waba_only.jar" />
+	<property name="wabalang.jar" value="${lib.dir}/wabalang.jar" />
 	<property name="rxtxcomm.jar" value="${lib.dir}/rxtx-2.1-7-bins-r2/RXTXcomm.jar" />
 	<property name="swinglayout.jar" value="${lib.dir}/swing-layout-1.0.3.jar" />
 	<property name="waba_forj2se.jar" value="${lib.dir}/waba_forj2se.jar" />
@@ -421,19 +422,22 @@
 		</javac>
 	</target>
 
+	<uptodate property="wabalang.uptodate" targetfile="${waba_forj2se.jar}">
+		<srcfiles dir="${superwaba_root}/src/java/waba/lang" includes="**" />
+	</uptodate>
 
-	<target name="waba.lang">
-        <mkdir dir="${build.dir}/wabalang" />
+	<target name="waba.lang" unless="wabalang.uptodate">
+		<mkdir dir="${build.dir}/wabalang" />
 		<javac srcdir="${superwaba_root}/src/java/waba/lang" destdir="${build.dir}/wabalang">
 			<include name="**/*.java" />
 			<classpath refid="classpath" />
 		</javac>
-        <jar jarfile="lib/wabalang.jar" compress="true">
-            <fileset dir="${build.dir}/wabalang" includes="**/*.class" />
-        </jar>
-        <antcall target="sign">
-            <param name="jar.tosign" value="lib/wabalang.jar" />
-        </antcall>
+		<jar jarfile="${wabalang.jar}" compress="true">
+			<fileset dir="${build.dir}/wabalang" includes="**/*.class" />
+		</jar>
+		<antcall target="sign">
+			<param name="jar.tosign" value="${wabalang.jar}" />
+		</antcall>
 	</target>
 
 	<!-- filesets for rxtxbuild -->
@@ -652,14 +656,19 @@
 
 	</target>
 
-	<target name="proguard_task" depends="jar" unless="use.proguard_java">
+	<target name="proguard_task" depends="waba.lang,jar" unless="use.proguard_java">
 		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
 		<move file="${build.dir}/${ant.project.name}.jar" tofile="${build.dir}/${ant.project.name}_unopt.jar" />
 		<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="true" allowaccessmodification="true" flattenpackagehierarchy="" repackageclasses="" printusage="false" overloadaggressively="true" verbose="true" ignorewarnings="true" optimizationpasses="4" printmapping="${dist}/${ant.project.name}.mapping">
 
 			<keep name="${mainClass}" />
 
+            <!-- to check if methods are Waba compatible -->
+			<libraryjar file="${wabalang.jar}" />
+
+			<!--
 			<libraryjar file="${java.home}/lib/rt.jar" />
+			-->
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${build.dir}/${ant.project.name}_unopt.jar" />
 			<outjar path="${build.dir}/${ant.project.name}.jar" />
