@@ -18,7 +18,6 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import waba.sys.Settings;
 import waba.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;

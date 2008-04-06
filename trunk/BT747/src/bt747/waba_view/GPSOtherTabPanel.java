@@ -26,7 +26,6 @@ import waba.ui.Event;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
-import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
