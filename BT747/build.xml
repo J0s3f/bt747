@@ -415,7 +415,7 @@
 
 		<delete dir="${build.dir}/waba/gps/parser">
 		</delete>
-		<javac srcdir="${build.dir}/waba/src" destdir="${build.dir}/waba" target="1.1" source="1.3" optimize="true" deprecation="true">
+		<javac srcdir="${build.dir}/waba/src" destdir="${build.dir}/waba" target="1.1" source="1.2" optimize="true" deprecation="true">
 			<include name="**/*.java" />
 			<classpath refid="classpath" />
 		</javac>
