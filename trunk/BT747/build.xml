@@ -422,6 +422,20 @@
 	</target>
 
 
+	<target name="waba.lang">
+        <mkdir dir="${build.dir}/wabalang" />
+		<javac srcdir="${superwaba_root}/src/java/waba/lang" destdir="${build.dir}/wabalang">
+			<include name="**/*.java" />
+			<classpath refid="classpath" />
+		</javac>
+        <jar jarfile="lib/wabalang.jar" compress="true">
+            <fileset dir="${build.dir}/wabalang" includes="**/*.class" />
+        </jar>
+        <antcall target="sign">
+            <param name="jar.tosign" value="lib/wabalang.jar" />
+        </antcall>
+	</target>
+
 	<!-- filesets for rxtxbuild -->
 	<fileset dir="src" id="rxtx_src">
 		<include name="**/*.java" />
@@ -548,18 +562,17 @@
 	</target>
 
 
-    <uptodate property="waba_forwaba.uptodate" targetfile="${waba_forwaba.jar}" >
-        <srcfiles dir="src_forwaba" includes="**" />
-    </uptodate>
-	
+	<uptodate property="waba_forwaba.uptodate" targetfile="${waba_forwaba.jar}">
+		<srcfiles dir="src_forwaba" includes="**" />
+	</uptodate>
+
 	<target name="build.lib.forwaba" unless="waba_forwaba.uptodate">
 		<delete dir="${build.dir}/forwaba" />
 		<mkdir dir="${build.dir}/forwaba" />
-		<javac srcdir="." destdir="${build.dir}/forwaba" target="1.1" source="1.3" optimize="true"
-			deprecation="true">
+		<javac srcdir="." destdir="${build.dir}/forwaba" target="1.1" source="1.3" optimize="true" deprecation="true">
 			<include name="src_forwaba/**/*.java" />
 			<classpath refid="classpath" />
-			
+
 			<!-- included for now -->
 		</javac>
 		<jar jarfile="${waba_forwaba.jar}" compress="true">
@@ -1189,7 +1202,7 @@
 			<replaceregexp file="@{dest.dir}/bt747/Txt.java" match="extends Txt_.." replace="extends Txt_${lang}" />
 
 			<copy file="dev/package.bat" tofile="package.bat" />
-            <copy file="dev/upload.bat" tofile="upload.bat" />
+			<copy file="dev/upload.bat" tofile="upload.bat" />
 			<replaceregexp file="package.bat" match="SET DT=[^\s]*" replace='SET DT=${build_version}' />
 			<replaceregexp file="package.bat" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}' />
 			<replaceregexp file="upload.bat" match="SET APP_LANG=[^\s]*" replace='SET APP_LANG=${lang}' />
