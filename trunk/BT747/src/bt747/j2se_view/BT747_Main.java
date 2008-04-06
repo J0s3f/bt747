@@ -466,7 +466,7 @@ public class BT747_Main extends javax.swing.JFrame implements
         cbTrkUser10 = new javax.swing.JCheckBox();
         cbTrkUser11 = new javax.swing.JCheckBox();
         cbTrkUser12 = new javax.swing.JCheckBox();
-        jPanel16 = new javax.swing.JPanel();
+        pnCommonFilter = new javax.swing.JPanel();
         jPanel14 = new javax.swing.JPanel();
         txtRecCntMin = new javax.swing.JTextField();
         txtDistanceMin = new javax.swing.JTextField();
@@ -999,17 +999,12 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
-        jPanel16.setBorder(javax.swing.BorderFactory.createTitledBorder("Common Filter"));
+        pnCommonFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Common Filter"));
 
         jPanel14.setBorder(javax.swing.BorderFactory.createTitledBorder("Other"));
 
         txtRecCntMin.setText("jTextField2");
         txtRecCntMin.setInputVerifier(IntVerifier);
-        txtRecCntMin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRecCntMinActionPerformed(evt);
-            }
-        });
         txtRecCntMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtRecCntMinFocusLost(evt);
@@ -1018,11 +1013,6 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         txtDistanceMin.setText("jTextField3");
         txtDistanceMin.setInputVerifier(FloatVerifier);
-        txtDistanceMin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDistanceMinActionPerformed(evt);
-            }
-        });
         txtDistanceMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtDistanceMinFocusLost(evt);
@@ -1031,11 +1021,6 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         txtSpeedMin.setText("jTextField4");
         txtSpeedMin.setInputVerifier(FloatVerifier);
-        txtSpeedMin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSpeedMinActionPerformed(evt);
-            }
-        });
         txtSpeedMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtSpeedMinFocusLost(evt);
@@ -1048,11 +1033,6 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         txtRecCntMax.setText("jTextField2");
         txtRecCntMax.setInputVerifier(IntVerifier);
-        txtRecCntMax.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRecCntMaxActionPerformed(evt);
-            }
-        });
         txtRecCntMax.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
@@ -1063,11 +1043,6 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         txtDistanceMax.setText("jTextField3");
         txtDistanceMax.setInputVerifier(FloatVerifier);
-        txtDistanceMax.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDistanceMaxActionPerformed(evt);
-            }
-        });
         txtDistanceMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtDistanceMaxFocusLost(evt);
@@ -1076,11 +1051,6 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         txtSpeedMax.setText("jTextField4");
         txtSpeedMax.setInputVerifier(FloatVerifier);
-        txtSpeedMax.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSpeedMaxActionPerformed(evt);
-            }
-        });
         txtSpeedMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtSpeedMaxFocusLost(evt);
@@ -1091,11 +1061,6 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         txtNSATMin.setText("jTextField4");
         txtNSATMin.setInputVerifier(IntVerifier);
-        txtNSATMin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNSATMinActionPerformed(evt);
-            }
-        });
         txtNSATMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtNSATMinFocusLost(evt);
@@ -1164,11 +1129,6 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         txtPDOPMax.setText("jTextField1");
         txtPDOPMax.setInputVerifier(FloatVerifier);
-        txtPDOPMax.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPDOPMaxActionPerformed(evt);
-            }
-        });
         txtPDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtPDOPMaxFocusLost(evt);
@@ -1180,11 +1140,6 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         txtHDOPMax.setText("jTextField1");
         txtHDOPMax.setInputVerifier(FloatVerifier);
-        txtHDOPMax.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtHDOPMaxActionPerformed(evt);
-            }
-        });
         txtHDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtHDOPMaxFocusLost(evt);
@@ -1196,11 +1151,6 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         txtVDOPMax.setText("jTextField1");
         txtVDOPMax.setInputVerifier(FloatVerifier);
-        txtVDOPMax.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtVDOPMaxActionPerformed(evt);
-            }
-        });
         txtVDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtVDOPMaxFocusLost(evt);
@@ -1256,23 +1206,23 @@ public class BT747_Main extends javax.swing.JFrame implements
             }
         });
 
-        org.jdesktop.layout.GroupLayout jPanel16Layout = new org.jdesktop.layout.GroupLayout(jPanel16);
-        jPanel16.setLayout(jPanel16Layout);
-        jPanel16Layout.setHorizontalGroup(
-            jPanel16Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel16Layout.createSequentialGroup()
-                .add(jPanel16Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        org.jdesktop.layout.GroupLayout pnCommonFilterLayout = new org.jdesktop.layout.GroupLayout(pnCommonFilter);
+        pnCommonFilter.setLayout(pnCommonFilterLayout);
+        pnCommonFilterLayout.setHorizontalGroup(
+            pnCommonFilterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnCommonFilterLayout.createSequentialGroup()
+                .add(pnCommonFilterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel14, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jPanel16Layout.createSequentialGroup()
+                    .add(pnCommonFilterLayout.createSequentialGroup()
                         .addContainerGap()
                         .add(jLabel7))
                     .add(jPanel13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(cbAdvancedActive))
                 .addContainerGap())
         );
-        jPanel16Layout.setVerticalGroup(
-            jPanel16Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel16Layout.createSequentialGroup()
+        pnCommonFilterLayout.setVerticalGroup(
+            pnCommonFilterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnCommonFilterLayout.createSequentialGroup()
                 .add(cbAdvancedActive)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel13, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 98, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1484,7 +1434,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .addContainerGap()
                 .add(pnTrackpoint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel16, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(pnCommonFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnWaypoint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1496,7 +1446,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .add(LogFiltersPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, pnWaypoint, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, pnTrackpoint, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel16, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnCommonFilter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
 
@@ -1928,46 +1878,6 @@ public class BT747_Main extends javax.swing.JFrame implements
     private void WayRCRAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WayRCRAction
         setWayRCRFilterSettings();
     }//GEN-LAST:event_WayRCRAction
-
-    private void txtRecCntMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRecCntMinActionPerformed
-        m.setFilterMinRecCount(Integer.parseInt(txtRecCntMin.getText()));
-    }//GEN-LAST:event_txtRecCntMinActionPerformed
-
-    private void txtDistanceMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDistanceMinActionPerformed
-        m.setFilterMinDist(Float.parseFloat(txtDistanceMin.getText()));
-    }//GEN-LAST:event_txtDistanceMinActionPerformed
-
-    private void txtSpeedMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSpeedMinActionPerformed
-        m.setFilterMinSpeed(Float.parseFloat(txtSpeedMin.getText()));
-    }//GEN-LAST:event_txtSpeedMinActionPerformed
-
-    private void txtNSATMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNSATMinActionPerformed
-        m.setFilterMinNSAT(Integer.parseInt(txtNSATMin.getText()));
-    }//GEN-LAST:event_txtNSATMinActionPerformed
-
-    private void txtRecCntMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRecCntMaxActionPerformed
-        m.setFilterMaxRecCount(Integer.parseInt(txtRecCntMax.getText()));
-    }//GEN-LAST:event_txtRecCntMaxActionPerformed
-
-    private void txtDistanceMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDistanceMaxActionPerformed
-        m.setFilterMaxDist(Float.parseFloat(txtDistanceMax.getText()));
-    }//GEN-LAST:event_txtDistanceMaxActionPerformed
-
-    private void txtSpeedMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSpeedMaxActionPerformed
-        m.setFilterMaxSpeed(Float.parseFloat(txtSpeedMax.getText()));
-    }//GEN-LAST:event_txtSpeedMaxActionPerformed
-
-    private void txtVDOPMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVDOPMaxActionPerformed
-        m.setFilterMaxVDOP(Float.parseFloat(txtVDOPMax.getText()));
-    }//GEN-LAST:event_txtVDOPMaxActionPerformed
-
-    private void txtHDOPMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHDOPMaxActionPerformed
-        m.setFilterMaxHDOP(Float.parseFloat(txtHDOPMax.getText()));
-    }//GEN-LAST:event_txtHDOPMaxActionPerformed
-
-    private void txtPDOPMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPDOPMaxActionPerformed
-        m.setFilterMaxPDOP(Float.parseFloat(txtPDOPMax.getText()));
-    }//GEN-LAST:event_txtPDOPMaxActionPerformed
 
     private void cbAdvancedActiveStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbAdvancedActiveStateChanged
         // TODO : Need to use control instead of model
@@ -2512,7 +2422,6 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -2531,6 +2440,7 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JLabel lbRecNbrFltr;
     private javax.swing.JLabel lbSpeedFltr;
     private javax.swing.JLabel lbTime;
+    private javax.swing.JPanel pnCommonFilter;
     private javax.swing.JPanel pnTrackpoint;
     private javax.swing.JPanel pnWayPointFix;
     private javax.swing.JPanel pnWayPointRCR;
