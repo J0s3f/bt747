@@ -58,11 +58,11 @@ public class GPSstate implements Thread {
 
     public int logRecordMaxSize = 0;
 
-    public int logTimeInterval = 0;
+    private int logTimeInterval = 0;
 
-    public int logSpeedInterval = 0;
+    private int logSpeedInterval = 0;
 
-    public int logDistanceInterval = 0;
+    private int logDistanceInterval = 0;
 
     public int logStatus = 0;
 
@@ -80,9 +80,9 @@ public class GPSstate implements Thread {
 
     public int logMemMax = 0;
 
-    public int logFix = 0; // Time between fixes
+    private int logFixPeriod = 0; // Time between fixes
 
-    public int datum = 0; // Datum WGS84, TOKYO-M, TOKYO-A
+    private int datum = 0; // Datum WGS84, TOKYO-M, TOKYO-A
 
     public boolean loggingIsActive = false;
     public boolean loggerIsFull = false;
@@ -92,35 +92,35 @@ public class GPSstate implements Thread {
 
     public boolean loggingIsActiveBeforeDownload = false;
 
-    public boolean logFullOverwrite = false; // When true, overwrite log when
+    private boolean logFullOverwrite = false; // When true, overwrite log when
     // device is full
 
-    public int dgps_mode = 0;
+    private int dgps_mode = 0;
 
     private settings m_settings;
 
     // Flash user option values
-    public int userOptionTimesLeft;
+    private int dtUserOptionTimesLeft;
 
-    public int dtUpdateRate;
+    private int dtUpdateRate;
 
-    public int dtBaudRate;
+    private int dtBaudRate;
 
-    public int dtGLL_Period;
+    private int dtGLL_Period;
 
-    public int dtRMC_Period;
+    private int dtRMC_Period;
 
-    public int dtVTG_Period;
+    private int dtVTG_Period;
 
-    public int dtGSA_Period;
+    private int dtGSA_Period;
 
-    public int dtGSV_Period;
+    private int dtGSV_Period;
 
-    public int dtGGA_Period;
+    private int dtGGA_Period;
 
-    public int dtZDA_Period;
+    private int dtZDA_Period;
 
-    public int dtMCHN_Period;
+    private int dtMCHN_Period;
 
     private String mainVersion = "";
 
@@ -589,7 +589,6 @@ public class GPSstate implements Thread {
                 + Convert.toString(z_value * 10));
     }
 
-
     public void setFixInterval(final int value) {
         int z_value = value;
         if (z_value > 30000) {
@@ -648,11 +647,11 @@ public class GPSstate implements Thread {
                 + BT747_dev.PMTK_LOG_OFF);
     }
 
-    public boolean SBASEnabled = false;
+    private boolean SBASEnabled = false;
 
-    public boolean SBASTestEnabled = false;
+    private boolean SBASTestEnabled = false;
 
-    public boolean powerSaveEnabled = false;
+    private boolean powerSaveEnabled = false;
 
     public void setLogOverwrite(final boolean set) {
         // Request log format from device
@@ -714,6 +713,7 @@ public class GPSstate implements Thread {
         sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_DGPS_MODE_STR);
     }
 
+
     public void setDatumMode(final int mode) {
         // Request log format from device
         if (mode >= 0 && mode <= 2) {
@@ -722,7 +722,7 @@ public class GPSstate implements Thread {
         }
     }
 
-    public void getDatumMode() {
+    public void reqDatumMode() {
         // Request log format from device
         sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_DATUM_STR);
     }
@@ -789,7 +789,7 @@ public class GPSstate implements Thread {
 
     }
 
-    public void getFlashUserOption() {
+    public void reqFlashUserOption() {
         // Request log format from device
         sendNMEA("PMTK" + BT747_dev.PMTK_API_GET_USER_OPTION_STR);
     }
@@ -965,13 +965,13 @@ public class GPSstate implements Thread {
                 break;
             case BT747_dev.PMTK_DT_FIX_CTL: // CMD 500
                 if (p_nmea.length >= 2) {
-                    logFix = Convert.toInt(p_nmea[1]);
+                    logFixPeriod = Convert.toInt(p_nmea[1]);
                 }
                 dataOK|=C_OK_FIX;
                 break;
             case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
                 if (p_nmea.length == 2) {
-                    dgps_mode = Convert.toInt(p_nmea[1]);
+                    dgps_mode=Convert.toInt(p_nmea[1]);
                 }
                 dataOK|=C_OK_DGPS;
                 PostStatusUpdateEvent();
@@ -1015,7 +1015,7 @@ public class GPSstate implements Thread {
                 break;
             case BT747_dev.PMTK_DT_FLASH_USER_OPTION: // CMD 590
 
-                userOptionTimesLeft = Convert.toInt(p_nmea[1]);
+                dtUserOptionTimesLeft = Convert.toInt(p_nmea[1]);
                 dtUpdateRate = Convert.toInt(p_nmea[2]);
                 dtBaudRate = Convert.toInt(p_nmea[3]);
                 dtGLL_Period = Convert.toInt(p_nmea[4]);
@@ -1962,6 +1962,94 @@ public class GPSstate implements Thread {
 
     public final int getLogFormat() {
         return logFormat;
+    }
+
+    public final int getDtUpdateRate() {
+        return dtUpdateRate;
+    }
+
+    public final int getDtGLL_Period() {
+        return dtGLL_Period;
+    }
+
+    public final int getDtRMC_Period() {
+        return dtRMC_Period;
+    }
+
+    public final int getDtVTG_Period() {
+        return dtVTG_Period;
+    }
+
+    public final int getDtGSA_Period() {
+        return dtGSA_Period;
+    }
+
+    public final int getDtGSV_Period() {
+        return dtGSV_Period;
+    }
+
+    public final int getDtGGA_Period() {
+        return dtGGA_Period;
+    }
+
+    public final int getDtZDA_Period() {
+        return dtZDA_Period;
+    }
+
+    public final int getDtMCHN_Period() {
+        return dtMCHN_Period;
+    }
+
+    public final int getDtBaudRate() {
+        return dtBaudRate;
+    }
+
+    public final int getDtUserOptionTimesLeft() {
+        return dtUserOptionTimesLeft;
+    }
+
+    public final int getLogTimeInterval() {
+        return logTimeInterval;
+    }
+
+    public final int getLogSpeedInterval() {
+        return logSpeedInterval;
+    }
+
+    public final int getLogDistanceInterval() {
+        return logDistanceInterval;
+    }
+
+    public final int getLogFixPeriod() {
+        return logFixPeriod;
+    }
+
+    public final boolean isSBASEnabled() {
+        return SBASEnabled;
+    }
+
+    public final boolean isSBASTestEnabled() {
+        return SBASTestEnabled;
+    }
+
+    public final boolean isPowerSaveEnabled() {
+        return powerSaveEnabled;
+    }
+
+    public int getDgpsMode() {
+        return dgps_mode;
+    }
+
+    public boolean isLogFullOverwrite() {
+        return logFullOverwrite;
+    }
+
+    public void setDatum(int datum) {
+        this.datum = datum;
+    }
+
+    public int getDatum() {
+        return datum;
     }
 
 }

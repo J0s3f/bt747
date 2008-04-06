@@ -207,7 +207,7 @@ public class Model extends AppSettings implements gps.settings{
     }
 
     public final boolean logFullOverwrite() {
-        return gpsModel.logFullOverwrite;
+        return gpsModel.isLogFullOverwrite();
     }
 
     public final int logMemUsed() {
@@ -259,4 +259,97 @@ public class Model extends AppSettings implements gps.settings{
          return gpsModel.logMemUsefullSize();
      }
      
+     
+     public final int getDtUpdateRate() {
+         return gpsModel.getDtUpdateRate();
+     }
+
+     public final int getDtGLL_Period() {
+         return gpsModel.getDtGLL_Period();
+     }
+
+     public final int getDtRMC_Period() {
+         return gpsModel.getDtRMC_Period();
+     }
+
+     public final int getDtVTG_Period() {
+         return gpsModel.getDtVTG_Period();
+     }
+
+     public final int getDtGSA_Period() {
+         return gpsModel.getDtGSA_Period();
+     }
+
+     public final int getDtGSV_Period() {
+         return gpsModel.getDtGSV_Period();
+     }
+
+     public final int getDtGGA_Period() {
+         return gpsModel.getDtGGA_Period();
+     }
+
+     public final int getDtZDA_Period() {
+         return gpsModel.getDtZDA_Period();
+     }
+
+     public final int getDtMCHN_Period() {
+         return gpsModel.getDtMCHN_Period();
+     }
+
+     public final int getDtBaudRate() {
+         return gpsModel.getDtBaudRate();
+     }
+
+     public final int getDtUserOptionTimesLeft() {
+         return gpsModel.getDtUserOptionTimesLeft();
+     }
+
+     public final String getHoluxName() {
+         return gpsModel.getHoluxName();
+     }
+     
+     public final int getNMEAPeriod(int i) {
+         return gpsModel.NMEA_periods[i];
+     }
+
+     public final int getLogTimeInterval() {
+         return gpsModel.getLogTimeInterval();
+     }
+
+     public final int getLogSpeedInterval() {
+         return gpsModel.getLogSpeedInterval();
+     }
+
+     public final int getLogDistanceInterval() {
+         return gpsModel.getLogDistanceInterval();
+     }
+
+     public final int getLogFixPeriod() {
+         return gpsModel.getLogFixPeriod();
+     }
+
+     public int getDgpsMode() {
+         return gpsModel.getDgpsMode();
+     }
+
+     public boolean isLogFullOverwrite() {
+         return gpsModel.isLogFullOverwrite();
+     }
+     
+     public boolean isSBASEnabled() {
+         return gpsModel.isSBASEnabled();
+     }
+     
+     public boolean isSBASTestEnabled() {
+         return gpsModel.isSBASTestEnabled();
+     }
+     
+     public boolean isPowerSaveEnabled() {
+         return gpsModel.isPowerSaveEnabled();
+     }
+     
+     public int getDatum() {
+         return gpsModel.getDatum();
+     }
+
 }

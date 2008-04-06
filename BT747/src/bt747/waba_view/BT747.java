@@ -255,22 +255,22 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         numPanels=0;
         m_TabPanel.setPanel(C_LOG_CTRL_IDX,new GPSLogFormat(m,c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_LOGINFO_IDX,new GPSLogReason(m_GPSstate));
+        m_TabPanel.setPanel(C_GPS_LOGINFO_IDX,new GPSLogReason(c,m));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_LOGGET_IDX,new GPSLogGet(m_GPSstate,m,c));
+        m_TabPanel.setPanel(C_GPS_LOGGET_IDX,new GPSLogGet(m,c));
         numPanels++;
         m_TabPanel.setPanel(C_GPS_FILECTRL_IDX,new GPSLogFile(c,m));
         numPanels++;
         m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX,new GPSFiltersTabPanel(m,c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX,new GPSLogEasy(m_GPSstate,m,c));
+        m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX,new GPSLogEasy(m,c));
         numPanels++;
         m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,new GPSconctrl(c,m));
         numPanels++;
         // m_TabPanel.setPanel(C_GPS_FLASH_IDX,m_GPSFlash = new
         // GPSFlashOption(m_GPSstate));
         // C_NUM_PANELS++;
-        m_TabPanel.setPanel(C_GPS_FLASH_IDX,new GPSOtherTabPanel(m_GPSstate, m));
+        m_TabPanel.setPanel(C_GPS_FLASH_IDX,new GPSOtherTabPanel(c,m));
         numPanels++;
         // m_TabPanel.setPanel(1,dataEdit = new dataEdit());
         // m_TabPanel.setPanel(2,grid = new Grid(gridCaptions,false));
