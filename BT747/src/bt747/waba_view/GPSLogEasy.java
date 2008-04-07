@@ -27,7 +27,6 @@ import waba.ui.Label;
 import waba.ui.MessageBox;
 
 import gps.BT747_dev;
-import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
@@ -164,18 +163,7 @@ public class GPSLogEasy extends Container {
 
       private void enableStore() {
           // TODO : should enable this from controller.
-          m_btStore.setEnabled(c.isDataOK(
-                  GPSstate.C_OK_FIX        |
-                  GPSstate.C_OK_DGPS       |
-                  GPSstate.C_OK_SBAS       |
-                  GPSstate.C_OK_NMEA       |
-                  GPSstate.C_OK_SBAS_TEST  |
-                  // GPSstate.C_OK_SBAS_DATUM |
-                  GPSstate.C_OK_TIME       |
-                  GPSstate.C_OK_SPEED      |
-                  GPSstate.C_OK_DIST       |
-                  GPSstate.C_OK_FORMAT)
-          );
+          m_btStore.setEnabled(c.isEnableStoreOK());
           m_btRestore.setEnabled(m.isStoredSetting1());
       }
       

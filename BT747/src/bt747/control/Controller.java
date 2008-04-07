@@ -7,6 +7,7 @@ import bt747.sys.Settings;
 
 import gps.BT747_dev;
 import gps.GPSListener;
+import gps.GPSstate;
 import gps.convert.Conv;
 import gps.log.BT747LogConvert;
 import gps.log.CSVLogConvert;
@@ -38,6 +39,7 @@ public class Controller {
     public Controller(Model m) {
         this.m = m;
         getLogFilterSettings();
+        m.setGpsDecode(m.getGpsDecode());
     }
 
     /**
@@ -574,9 +576,45 @@ public class Controller {
         m.gpsModel().doFullColdStart();
     }
     
-    public boolean isDataOK(int i) {
+    public boolean isEnableStoreOK() {
         // TODO: This function serves to enable 'save settings'.
         //        should do this through an event to the view.
-        return m.gpsModel().isDataOK(i);
+        return m.gpsModel().isDataOK((
+                GPSstate.C_OK_FIX        |
+                GPSstate.C_OK_DGPS       |
+                GPSstate.C_OK_SBAS       |
+                GPSstate.C_OK_NMEA       |
+                GPSstate.C_OK_SBAS_TEST  |
+                // GPSstate.C_OK_SBAS_DATUM |
+                GPSstate.C_OK_TIME       |
+                GPSstate.C_OK_SPEED      |
+                GPSstate.C_OK_DIST       |
+                GPSstate.C_OK_FORMAT));
+    }
+    
+    public void setStats(boolean b) {
+        m.gpsModel().setStats(b);
+    }
+    
+    public void setGpsDecode(boolean value) {
+        m.setGpsDecode(value);
+        m.gpsModel().setGpsDecode(value);
+    }
+    
+    public void setForceHolux241(boolean b) {
+        m.setForceHolux241(b);
+    }
+    
+    public void setGpxTrkSegWhenBig(boolean b) {
+        m.setGpxTrkSegWhenBig(b);
+    }
+    
+    public void setGpxUTC0(boolean b) {
+        m.setGpxUTC0(b);
+    }
+
+    // For PDA - move through the menus using the arrows.
+    public void setTraversableFocus(boolean b) {
+        m.setTraversableFocus(b);
     }
 }

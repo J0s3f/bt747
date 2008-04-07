@@ -31,7 +31,6 @@ import waba.ui.TabPanel;
 import waba.ui.Window;
 
 import gps.GPSListener;
-import gps.GPSstate;
 import gps.GpsEvent;
 
 import bt747.Txt;
@@ -39,8 +38,8 @@ import bt747.control.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.ui.MessageBox;
 import bt747.sys.Settings;
+import bt747.ui.MessageBox;
 
 /**
  * Main class (application entry)
@@ -59,7 +58,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
      * The 'GPS state'. Used to get current GPS information and get access to
      * it.
      */
-    private GPSstate    m_GPSstate;
+    //private GPSstate    m_GPSstate;
     /** The label next to the progressbar. Hidden when not in use. */
     private Label       m_ProgressLabel;
     /** The progress bar itself. Hidden when not in use. */
@@ -217,7 +216,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
             MainWindow.getMainWindow().exit(0);
         }
 
-        m_GPSstate=m.gpsModel();
+        //m_GPSstate=m.gpsModel();
         setMenuBar(m_MenuBar=new MenuBar(menu));
         // Next line is for modeling a device for debug.
         // Doing this on the windows platform
@@ -228,7 +227,6 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         miGpxTrkSegWhenBig.isChecked=m.getGpxTrkSegWhenBig();
 
         miGpsDecode.isChecked=m.getGpsDecode();
-        m_GPSstate.setGpsDecode(m.getGpsDecode());
 
         miRecordNumberInLogs.isChecked=m.getRecordNbrInLogs();
         miHolux.isChecked=m.getForceHolux241();
@@ -286,7 +284,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         miTraversableFocus.isChecked=m.isTraversableFocus();
 
         m.addListener((ModelListener)this);
-        m_GPSstate.addListener(this);
+        c.addGPSListener(this);
         addTimer(this, 55);
 
     }
@@ -322,39 +320,38 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
                     // Back to application
                     break;
                 case C_MENU_RESTART_CONNECTION:
-                    m_GPSstate.GPS_restart();
+                    c.GPS_restart();
                     break;
                 case C_MENU_STOP_CONNECTION:
-                    m_GPSstate.GPS_close();
+                    c.GPS_close();
                     break;
                 case C_MENU_FOCUS_HIGHLIGHT:
-                    m.setTraversableFocus(miTraversableFocus.isChecked);
+                    c.setTraversableFocus(miTraversableFocus.isChecked);
                     waba.sys.Settings.keyboardFocusTraversable = m.isTraversableFocus();
                     break;
                 case C_MENU_DEBUG_ACTIVE:
-                    m_GPSstate.setDebug(miDebug.isChecked);
+                    c.setDebug(miDebug.isChecked);
                     break;
                 case C_MENU_DEBUG_CONN:
-                    m_GPSstate.setDebugConn(miDebugConn.isChecked);
+                    c.setDebugConn(miDebugConn.isChecked);
                     break;
                 case C_MENU_STATS_ACTIVE:
-                    m_GPSstate.setStats(miStats.isChecked);
+                    c.setStats(miStats.isChecked);
                     break;
                 case C_MENU_HOLUX_241:
-                    m.setForceHolux241(miHolux.isChecked);
+                    c.setForceHolux241(miHolux.isChecked);
                     break;
                 case C_MENU_IMPERIAL:
                     c.setImperial(miImperial.isChecked);
                     break;
                 case C_MENU_GPX_UTC0:
-                    m.setGpxUTC0(miGpxUTC0.isChecked);
+                    c.setGpxUTC0(miGpxUTC0.isChecked);
                     break;
                 case C_MENU_GPX_TRKSEG_BIGONLY:
-                    m.setGpxTrkSegWhenBig(miGpxTrkSegWhenBig.isChecked);
+                    c.setGpxTrkSegWhenBig(miGpxTrkSegWhenBig.isChecked);
                     break;
                 case C_MENU_GPS_DECODE_ACTIVE:
-                    m.setGpsDecode(miGpsDecode.isChecked);
-                    m_GPSstate.setGpsDecode(m.getGpsDecode());
+                    c.setGpsDecode(miGpsDecode.isChecked);
                     break;
                 case C_MENU_RECORDNMBR_IN_LOGS:
                     m.setRecordNbrInLogs(miRecordNumberInLogs.isChecked);
