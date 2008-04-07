@@ -38,7 +38,7 @@ public class GPSLogFilter extends Container {
     private Model m;
     private Controller c;
 
-    public GPSLogFilter(Model m,Controller c) {
+    public GPSLogFilter(Controller c,Model m) {
         this.m=m;
         this.c=c;
     }
@@ -160,8 +160,8 @@ public class GPSLogFilter extends Container {
     }
     
     private void updateFromFilter() {
-        setValid(m.getLogFilters()[currentLogFilter].getValidMask());
-        setRCR(m.getLogFilters()[currentLogFilter].getRcrMask());
+        setValid(m.getValidMask(currentLogFilter));
+        setRCR(m.getRcrMask(currentLogFilter));
     }
 
     
@@ -188,7 +188,7 @@ public class GPSLogFilter extends Container {
                     }
                 }
                 if(z_updated) {
-                    m.getLogFilters()[currentLogFilter].setValidMask(getValid());
+                    c.setValidMask(currentLogFilter,getValid()); // TODO: may not be needed
                     switch (currentLogFilter) {
                     case GPSFilter.C_TRKPT_IDX:
                         c.setTrkPtValid(getValid());
@@ -205,7 +205,7 @@ public class GPSLogFilter extends Container {
                     }
                 }
                 if(z_updated) {
-                    (m.getLogFilters())[currentLogFilter].setRcrMask(getRCR());
+                    c.setRcrMask(currentLogFilter, getRCR());  // TODO: may not be needed
                     switch (currentLogFilter) {
                     case GPSFilter.C_TRKPT_IDX:
                         c.setTrkPtRCR(getRCR());

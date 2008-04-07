@@ -30,6 +30,7 @@ import gps.GpsEvent;
 import gps.log.GPSFilterAdvanced;
 
 import bt747.Txt;
+import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.sys.Convert;
 /**
@@ -48,8 +49,6 @@ public class GPSLogFilterAdv extends Container {
     private Edit m_maxVDOP;
     private Edit m_minNSAT;
     
-    private GPSFilterAdvanced[] m_gpsFilters;
-    
     
     private Button m_btSet;
     private Button m_btClear;
@@ -61,10 +60,11 @@ public class GPSLogFilterAdv extends Container {
             };
     
     private Model m;
+    private Controller c;
     
-    public GPSLogFilterAdv(Model settings) {;
-        m=settings;
-        m_gpsFilters=m.getLogFiltersAdv();
+    public GPSLogFilterAdv(Controller c, Model m) {;
+        this.m=m;
+        this.c=c;
     }
     
     protected void onStart() {
@@ -129,84 +129,36 @@ public class GPSLogFilterAdv extends Container {
 
         getSettings();
     }
-    
-    
-    public void updateButtons() {
-//        m_userOptionTimesLeft.setText(Convert.toString(m_GPSstate.userOptionTimesLeft));
-//        m_edUpdateRate.setText(Convert.toString(m_GPSstate.dtUpdateRate));
-//        m_edBaudRate.setText(Convert.toString(m_GPSstate.dtBaudRate));
-//        m_edGLL_Period.setText(Convert.toString(m_GPSstate.dtGLL_Period));
-//        m_edRMC_Period.setText(Convert.toString(m_GPSstate.dtRMC_Period));
-//        m_edVTG_Period.setText(Convert.toString(m_GPSstate.dtVTG_Period));
-//        m_edGSA_Period.setText(Convert.toString(m_GPSstate.dtGSA_Period));
-//        m_edGSV_Period.setText(Convert.toString(m_GPSstate.dtGSV_Period));
-//        m_edGGA_Period.setText(Convert.toString(m_GPSstate.dtGGA_Period));
-//        m_edZDA_Period.setText(Convert.toString(m_GPSstate.dtZDA_Period));
-//        m_edMCHN_Period.setText(Convert.toString(m_GPSstate.dtMCHN_Period));
-//        
-//        
-//        m_userOptionTimesLeft.repaintNow();
-//        m_edUpdateRate.repaintNow();
-//        m_edBaudRate.repaintNow();
-//        m_edGLL_Period.repaintNow();
-//        m_edRMC_Period.repaintNow();
-//        m_edVTG_Period.repaintNow();
-//        m_edGSA_Period.repaintNow();
-//        m_edGSV_Period.repaintNow();
-//        m_edGGA_Period.repaintNow();
-//        m_edZDA_Period.repaintNow();
-//        m_edMCHN_Period.repaintNow();
-
-    }
-    
-    private void setFilters() {
-        for (int i = 0; i < m_gpsFilters.length; i++) {
-            GPSFilterAdvanced filter = m_gpsFilters[i];
-            filter.setMinRecCount(m.getFilterMinRecCount());
-            filter.setMaxRecCount(m.getFilterMaxRecCount());
-            filter.setMinSpeed(m.getFilterMinSpeed());
-            filter.setMaxSpeed(m.getFilterMaxSpeed());
-            filter.setMinDist(m.getFilterMinDist());
-            filter.setMaxDist(m.getFilterMaxDist());
-            filter.setMaxPDOP((int)(m.getFilterMaxPDOP()*100));
-            filter.setMaxHDOP((int)(m.getFilterMaxHDOP()*100));
-            filter.setMaxVDOP((int)(m.getFilterMaxVDOP()*100));
-            filter.setMinNSAT(m.getFilterMinNSAT());
-        }
-    }
-
-    
+       
     public void setSettings() {
 
-        m.setFilterMinRecCount(Convert.toInt(m_minRecCount.getText()));
-        m.setFilterMaxRecCount(Convert.toInt(m_maxRecCount.getText()));
-        m.setFilterMinSpeed(Convert.toFloat(m_minSpeed.getText()));
-        m.setFilterMaxSpeed(Convert.toFloat(m_maxSpeed.getText()));
-        m.setFilterMinDist(Convert.toFloat(m_minDist.getText()));
-        m.setFilterMaxDist(Convert.toFloat(m_maxDist.getText()));
-        m.setFilterMaxPDOP((Convert.toFloat(m_maxPDOP.getText())));
-        m.setFilterMaxHDOP((Convert.toFloat(m_maxHDOP.getText())));
-        m.setFilterMaxVDOP((Convert.toFloat(m_maxVDOP.getText())));
-        m.setFilterMinNSAT(Convert.toInt(m_minNSAT.getText()));
+        c.setFilterMinRecCount(Convert.toInt(m_minRecCount.getText()));
+        c.setFilterMaxRecCount(Convert.toInt(m_maxRecCount.getText()));
+        c.setFilterMinSpeed(Convert.toFloat(m_minSpeed.getText()));
+        c.setFilterMaxSpeed(Convert.toFloat(m_maxSpeed.getText()));
+        c.setFilterMinDist(Convert.toFloat(m_minDist.getText()));
+        c.setFilterMaxDist(Convert.toFloat(m_maxDist.getText()));
+        c.setFilterMaxPDOP((Convert.toFloat(m_maxPDOP.getText())));
+        c.setFilterMaxHDOP((Convert.toFloat(m_maxHDOP.getText())));
+        c.setFilterMaxVDOP((Convert.toFloat(m_maxVDOP.getText())));
+        c.setFilterMinNSAT(Convert.toInt(m_minNSAT.getText()));
 
-        m.saveSettings();
-        setFilters();
+        c.saveSettings();
+        c.setFilters();
     }
 
     public void getSettings() {
-        for (int i = 0; i < m_gpsFilters.length; i++) {
-            m_minRecCount.setText(Convert.toString(m.getFilterMinRecCount()));
-            m_maxRecCount.setText(Convert.toString(m.getFilterMaxRecCount()));
-            m_minSpeed.setText(Convert.toString(m.getFilterMinSpeed(),2));
-            m_maxSpeed.setText(Convert.toString(m.getFilterMaxSpeed(),2));
-            m_minDist.setText(Convert.toString(m.getFilterMinDist(),2));
-            m_maxDist.setText(Convert.toString(m.getFilterMaxDist(),2));
-            m_maxPDOP.setText(Convert.toString(m.getFilterMaxPDOP(),2));
-            m_maxHDOP.setText(Convert.toString(m.getFilterMaxHDOP(),2));
-            m_maxVDOP.setText(Convert.toString(m.getFilterMaxVDOP(),2));
-            m_minNSAT.setText(Convert.toString(m.getFilterMinNSAT()));
-        }
-        setFilters();
+        m_minRecCount.setText(Convert.toString(m.getFilterMinRecCount()));
+        m_maxRecCount.setText(Convert.toString(m.getFilterMaxRecCount()));
+        m_minSpeed.setText(Convert.toString(m.getFilterMinSpeed(), 2));
+        m_maxSpeed.setText(Convert.toString(m.getFilterMaxSpeed(), 2));
+        m_minDist.setText(Convert.toString(m.getFilterMinDist(), 2));
+        m_maxDist.setText(Convert.toString(m.getFilterMaxDist(), 2));
+        m_maxPDOP.setText(Convert.toString(m.getFilterMaxPDOP(), 2));
+        m_maxHDOP.setText(Convert.toString(m.getFilterMaxHDOP(), 2));
+        m_maxVDOP.setText(Convert.toString(m.getFilterMaxVDOP(), 2));
+        m_minNSAT.setText(Convert.toString(m.getFilterMinNSAT()));
+        c.setFilters();
     }
     
     public void clearSettings() {
@@ -233,7 +185,7 @@ public class GPSLogFilterAdv extends Container {
         } else if(event.target==m_btClear) {
              clearSettings();
         } else if (event.target==pbPtType) {
-            m.setAdvFilterActive(pbPtType.getSelected()==0);
+            c.setAdvFilterActive(pbPtType.getSelected()==0);
 
         } else if (event.target == this) {
             //m_GPSstate.getFlashUserOption();
@@ -241,13 +193,6 @@ public class GPSLogFilterAdv extends Container {
             event.consumed=false;
         }
         break;
-        default:
-            if(event.type==GpsEvent.DATA_UPDATE) {
-                if(event.target==this) {
-                    updateButtons();
-                    event.consumed=true;
-                }
-            }
         }
     }
 }

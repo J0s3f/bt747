@@ -1,10 +1,5 @@
 package bt747.model;
 
-import bt747.ui.MessageBox;
-
-import bt747.Txt;
-import bt747.sys.Settings;
-
 import gps.BT747_dev;
 import gps.GPSListener;
 import gps.GPSstate;
@@ -15,6 +10,7 @@ import gps.log.GPSCSVFile;
 import gps.log.GPSCompoGPSTrkFile;
 import gps.log.GPSFile;
 import gps.log.GPSFilter;
+import gps.log.GPSFilterAdvanced;
 import gps.log.GPSGPXFile;
 import gps.log.GPSGmapsHTMLEncodedFile;
 import gps.log.GPSKMLFile;
@@ -22,10 +18,9 @@ import gps.log.GPSLogConvert;
 import gps.log.GPSNMEAFile;
 import gps.log.GPSPLTFile;
 import gps.log.HoluxTrlLogConvert;
-import gps.port.GPSPort;
-import gps.port.GPSWabaPort;
 
-import bt747.sys.Convert;
+import bt747.Txt;
+import bt747.ui.MessageBox;
 
 /**
  * @author Mario De Weerd
@@ -562,52 +557,48 @@ public class Controller {
     public void doHotStart() {
         m.gpsModel().doHotStart();
     }
-    
+
     public void doColdStart() {
         m.gpsModel().doColdStart();
     }
-    
+
     public void doWarmStart() {
         m.gpsModel().doWarmStart();
     }
-    
+
     public void doFullColdStart() {
         m.gpsModel().doFullColdStart();
     }
-    
+
     public boolean isEnableStoreOK() {
         // TODO: This function serves to enable 'save settings'.
-        //        should do this through an event to the view.
-        return m.gpsModel().isDataOK((
-                GPSstate.C_OK_FIX        |
-                GPSstate.C_OK_DGPS       |
-                GPSstate.C_OK_SBAS       |
-                GPSstate.C_OK_NMEA       |
-                GPSstate.C_OK_SBAS_TEST  |
-                // GPSstate.C_OK_SBAS_DATUM |
-                GPSstate.C_OK_TIME       |
-                GPSstate.C_OK_SPEED      |
-                GPSstate.C_OK_DIST       |
-                GPSstate.C_OK_FORMAT));
+        // should do this through an event to the view.
+        return m.gpsModel().isDataOK(
+                (GPSstate.C_OK_FIX | GPSstate.C_OK_DGPS | GPSstate.C_OK_SBAS
+                        | GPSstate.C_OK_NMEA | GPSstate.C_OK_SBAS_TEST
+                        |
+                        // GPSstate.C_OK_SBAS_DATUM |
+                        GPSstate.C_OK_TIME | GPSstate.C_OK_SPEED
+                        | GPSstate.C_OK_DIST | GPSstate.C_OK_FORMAT));
     }
-    
+
     public void setStats(boolean b) {
         m.gpsModel().setStats(b);
     }
-    
+
     public void setGpsDecode(boolean value) {
         m.setGpsDecode(value);
         m.gpsModel().setGpsDecode(value);
     }
-    
+
     public void setForceHolux241(boolean b) {
         m.setForceHolux241(b);
     }
-    
+
     public void setGpxTrkSegWhenBig(boolean b) {
         m.setGpxTrkSegWhenBig(b);
     }
-    
+
     public void setGpxUTC0(boolean b) {
         m.setGpxUTC0(b);
     }
@@ -616,4 +607,159 @@ public class Controller {
     public void setTraversableFocus(boolean b) {
         m.setTraversableFocus(b);
     }
+
+    public void setEndDate(bt747.util.Date d) {
+        m.setEndDate(d);
+    }
+
+    public void setStartDate(bt747.util.Date d) {
+        m.setStartDate(d);
+    }
+
+    public void setRecordNbrInLogs(boolean b) {
+        m.setRecordNbrInLogs(b);
+    }
+
+    public void setTrkSep(int value) {
+        m.setTrkSep(value);
+    }
+
+    public void setColorInvalidTrack(String s) {
+        m.setColorInvalidTrack(s);
+    }
+
+    // "Volatile" settings of the MTK loggers:
+    // - Log conditions;
+    // - Time, Speed, Distance[3x 4 byte]
+    // - Log format; [4 byte]
+    // - Fix period [4 byte]
+    // - SBAS /DGPS / TEST SBAS [byte, byte, byte]
+    // - Log overwrite/STOP [byte, byte]
+    // - NMEA output [18 byte]
+
+    public void StoreSetting1() {
+        m.setTimeConditionSetting1(m.getLogTimeInterval());
+        m.setDistConditionSetting1(m.getLogDistanceInterval());
+        m.setSpeedConditionSetting1(m.getLogSpeedInterval());
+        m.setLogFormatConditionSetting1(m.getLogFormat());
+        m.setFixSetting1(m.getLogFixPeriod());
+        m.setSBASSetting1(m.isSBASEnabled());
+        m.setDGPSSetting1(m.getDgpsMode());
+        m.setTestSBASSetting1(m.isSBASTestEnabled());
+        m.setLogOverwriteSetting1(m.isLogFullOverwrite());
+        String NMEA = "";
+        for (int i = 0; i < BT747_dev.C_NMEA_SEN_COUNT; i++) {
+            NMEA += (m.getNMEAPeriod(i));
+        }
+        m.setNMEASetting1(NMEA);
+    }
+
+    public void RestoreSetting1() {
+        setLogTimeInterval(m.getTimeConditionSetting1());
+        setLogDistanceInterval(m.getDistConditionSetting1());
+        setLogSpeedInterval(m.getSpeedConditionSetting1());
+        setLogFormat(m.getLogFormatSetting1());
+        setFixInterval(m.getFixSetting1());
+        setSBASEnabled(m.getSBASSetting1());
+        setSBASTestEnabled(m.getTestSBASSetting1());
+        setDGPSMode(m.getDPGSSetting1());
+        setLogOverwrite(m.getLogOverwriteSetting1());
+
+        String NMEA = m.getNMEASetting1();
+        int[] Periods = new int[BT747_dev.C_NMEA_SEN_COUNT];
+
+        for (int i = 0; i < BT747_dev.C_NMEA_SEN_COUNT; i++) {
+            Periods[i] = (int) (NMEA.charAt(i) - '0');
+        }
+        setNMEAPeriods(Periods);
+    }
+
+    public void reqSettingsForStorage() {
+        reqLogReasonStatus();
+        reqLogFormat();
+        reqFixInterval();
+        reqSBASEnabled();
+        reqSBASTestEnabled();
+        reqDGPSMode();
+        reqLogOverwrite();
+        reqNMEAPeriods();
+    }
+
+    public void setAdvFilterActive(boolean b) {
+        m.setAdvFilterActive(b);
+    };
+
+    public void setFilterMinRecCount(int i) {
+        m.setFilterMinRecCount(i);
+    }
+
+    public void setFilterMaxRecCount(int i) {
+        m.setFilterMaxRecCount(i);
+    }
+
+    public void setFilterMinSpeed(float i) {
+        m.setFilterMinSpeed(i);
+    }
+
+    public void setFilterMaxSpeed(float i) {
+        m.setFilterMaxSpeed(i);
+    }
+
+    public void setFilterMinDist(float i) {
+        m.setFilterMinDist(i);
+    }
+
+    public void setFilterMaxDist(float i) {
+        m.setFilterMaxDist(i);
+    }
+
+    public void setFilterMaxPDOP(float i) {
+        m.setFilterMaxPDOP(i);
+    }
+
+    public void setFilterMaxHDOP(float i) {
+        m.setFilterMaxHDOP(i);
+    }
+
+    public void setFilterMaxVDOP(float i) {
+        m.setFilterMaxVDOP(i);
+    }
+
+    public void setFilterMinNSAT(int i) {
+        m.setFilterMinNSAT(i);
+    }
+    
+    
+    public void setFilters() {
+        // TODO : Should schedule this after a while.
+        for (int i = m.getLogFiltersAdv().length-1; i >=0; i--) {
+            GPSFilterAdvanced filter = m.getLogFiltersAdv()[i];
+            filter.setMinRecCount(m.getFilterMinRecCount());
+            filter.setMaxRecCount(m.getFilterMaxRecCount());
+            filter.setMinSpeed(m.getFilterMinSpeed());
+            filter.setMaxSpeed(m.getFilterMaxSpeed());
+            filter.setMinDist(m.getFilterMinDist());
+            filter.setMaxDist(m.getFilterMaxDist());
+            filter.setMaxPDOP((int)(m.getFilterMaxPDOP()*100));
+            filter.setMaxHDOP((int)(m.getFilterMaxHDOP()*100));
+            filter.setMaxVDOP((int)(m.getFilterMaxVDOP()*100));
+            filter.setMinNSAT(m.getFilterMinNSAT());
+        }
+    }
+    
+    public void setNMEAset(int value) {
+        m.setNMEAset(value);
+    }
+
+    
+    public void setValidMask(int i, int mask) {
+        // TODO: not sure this is needed anymore
+        m.getLogFilters()[i].setValidMask(mask);
+    }
+
+    public void setRcrMask(int i, int rcrmask) {
+        // TODO: not sure this is needed anymore
+        m.getLogFilters()[i].setRcrMask(rcrmask);
+    }
+
 }
