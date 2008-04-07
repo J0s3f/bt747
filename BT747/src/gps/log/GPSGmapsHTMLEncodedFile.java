@@ -225,10 +225,10 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         if(m_isWayType) {
         } else {
             m_newTrack=true;
-            minlat=9999;
-            maxlat=-9999;
-            minlon=9999;
-            maxlon=-9999;
+            minlat=90;
+            maxlat=-90;
+            minlon=180;
+            maxlon=-180;
         }
     }
     
@@ -411,20 +411,21 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                    rec.append(',');
 //                    rec.append(Convert.toString(s.longitude,6));
 //                    rec.append("));");
+                    Trackpoint tp=new Trackpoint(s.latitude,s.longitude);
 //                    
-                    track.addTrackpoint(new Trackpoint(s.latitude,s.longitude));
+                    track.addTrackpoint(tp);
                     
-                    if(s.latitude<minlat) {
-                        minlat=s.latitude;
+                    if(tp.getLatDouble()<minlat) {
+                        minlat=tp.getLatDouble();
                     }
-                    if(s.latitude>maxlat) {
-                        maxlat=s.latitude;
+                    if(tp.getLatDouble()>maxlat) {
+                        maxlat=tp.getLatDouble();
                     }
-                    if(s.longitude<minlon) {
-                        minlon=s.longitude;
+                    if(tp.getLonDouble()<minlon) {
+                        minlon=tp.getLonDouble();
                     }
-                    if(s.longitude>maxlon) {
-                        maxlon=s.longitude;
+                    if(tp.getLonDouble()>maxlon) {
+                        maxlon=tp.getLonDouble();
                     }
                 }
 //                //

@@ -166,7 +166,9 @@ public class AppSettings {
     private static final int C_FREETEXT_PORT_SIZE=50;
     private static final int C_BIN_DECODER_IDX=C_FREETEXT_PORT_IDX+C_FREETEXT_PORT_SIZE;
     private static final int C_BIN_DECODER_SIZE=4;
-    private static final int C_NEXT_IDX=C_BIN_DECODER_IDX+C_BIN_DECODER_SIZE;
+    private static final int C_GPSType_IDX=C_BIN_DECODER_IDX+C_BIN_DECODER_SIZE;
+    private static final int C_GPSType_SIZE=1;
+    private static final int C_NEXT_IDX=C_GPSType_IDX+C_GPSType_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE=4;
     private static final int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
@@ -1010,6 +1012,13 @@ public class AppSettings {
     }
     public int getBinDecoder() {
         return getIntOpt(C_BIN_DECODER_IDX, C_BIN_DECODER_SIZE);
+    }
+
+    public int getGPSType() {
+        return getIntOpt(C_GPSType_IDX, C_GPSType_SIZE);
+    }
+    protected void setGPSType(final int value) {
+        setIntOpt(0,value, C_GPSType_IDX, C_GPSType_SIZE);
     }
 
     

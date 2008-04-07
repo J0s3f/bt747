@@ -1,0 +1,345 @@
+//********************************************************************
+//***                           BT 747                             ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
+//***  for more details.                                           ***
+//***  *********************************************************** ***
+//***  The application was written using the SuperWaba toolset.    ***
+//***  This is a proprietary development environment based in      ***
+//***  part on the Waba development environment developed by       ***                                   
+//***  WabaSoft, Inc.                                              ***
+//********************************************************************  
+package gps.log;
+
+import gps.BT747_dev;
+import gps.convert.Conv;
+
+import bt747.Txt;
+import bt747.io.File;
+import bt747.sys.Convert;
+import bt747.ui.MessageBox;
+
+/**
+ * This class is used to convert the binary log to a new format. Basically this
+ * class interprets the log and creates a {@link GPSRecord}. The
+ * {@link GPSRecord} is then sent to the {@link GPSFile} class object to write
+ * it to the output.
+ * 
+ * @author Mario De Weerd
+ */
+public final class DPL700LogConvert implements GPSLogConvert {
+    private int recordSize = 16;
+    private int logFormat;
+    private File m_File = null;
+    private long timeOffsetSeconds = 0;
+    protected boolean passToFindFieldsActivatedInLog = false;
+    protected int activeFileFields = (1 << BT747_dev.FMT_UTC_IDX)
+            | (1 << BT747_dev.FMT_LATITUDE_IDX)
+            | (1 << BT747_dev.FMT_LONGITUDE_IDX)
+            | (1 << BT747_dev.FMT_HEIGHT_IDX);
+
+    private boolean noGeoid = false; // If true,remove geoid difference from
+    // height
+
+    final int ITRACKU_NUMERIX = 0;
+    final int PHOTOTRACKR = 1;
+    final int ITRACKU_SIRFIII = 2;
+
+    private int logType = ITRACKU_NUMERIX;
+
+    public DPL700LogConvert() {
+        super();
+        setTimeOffset(ITRACKU_NUMERIX);
+    }
+
+    public final int getLogType() {
+        return logType;
+    }
+
+    public final void setLogType(int logType) {
+        this.logType = logType;
+        switch (this.logType) {
+        case PHOTOTRACKR:
+        case ITRACKU_SIRFIII:
+            activeFileFields = (1 << BT747_dev.FMT_UTC_IDX)
+                    | (1 << BT747_dev.FMT_LATITUDE_IDX)
+                    | (1 << BT747_dev.FMT_LONGITUDE_IDX)
+                    | (1 << BT747_dev.FMT_HEIGHT_IDX)
+                    | (1 << BT747_dev.FMT_SPEED_IDX);
+            recordSize = 16;
+            break;
+        case ITRACKU_NUMERIX:
+        default:
+            activeFileFields = (1 << BT747_dev.FMT_UTC_IDX)
+                    | (1 << BT747_dev.FMT_LATITUDE_IDX)
+                    | (1 << BT747_dev.FMT_LONGITUDE_IDX)
+                    | (1 << BT747_dev.FMT_HEIGHT_IDX);
+            recordSize = 16;
+            break;
+        }
+    }
+
+    public final void parseFile(final GPSFile gpsFile) {
+        try {
+            GPSRecord gpsRec = new GPSRecord();
+            final int C_BUF_SIZE = 0x800;
+            byte[] bytes = new byte[C_BUF_SIZE];
+            int sizeToRead;
+            int nextAddrToRead;
+            int recCount;
+            int fileSize;
+
+            if (!passToFindFieldsActivatedInLog) {
+                gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
+            }
+
+            // recordSize = 15;
+
+            recCount = 0;
+            logFormat = 0;
+            nextAddrToRead = 0;
+            fileSize = m_File.getSize();
+            while (nextAddrToRead + recordSize + 1 < fileSize) {
+                sizeToRead = C_BUF_SIZE;
+                if ((sizeToRead + nextAddrToRead) > fileSize) {
+                    sizeToRead = fileSize - nextAddrToRead;
+                }
+
+                /* Read the bytes from the file */
+                int readResult;
+                int offsetInBuffer = 0;
+
+                m_File.setPos(nextAddrToRead);
+
+                /***************************************************************
+                 * Not reading header - reading data.
+                 */
+                readResult = m_File.readBytes(bytes, 0, sizeToRead);
+                if (readResult != sizeToRead) {
+                    (new MessageBox(Txt.ERROR, Txt.PROBLEM_READING
+                            + m_File.getPath() + "|" + m_File.lastError))
+                            .popupBlockingModal();
+                }
+                nextAddrToRead += sizeToRead;
+
+                /***************************************************************
+                 * Interpret the data read in the Buffer as long as the records
+                 * are complete
+                 */
+                // A block of bytes has been read, read the records
+                while (sizeToRead > offsetInBuffer + recordSize) {
+                    // As long as record may fit in data still to read.
+                    int indexInBuffer = offsetInBuffer;
+                    // int checkSum = 0;
+                    //
+                    // while ((indexInBuffer < recordSize + offsetInBuffer)
+                    // && (indexInBuffer < sizeToRead - 1)) {
+                    // checkSum ^= bytes[indexInBuffer++];
+                    // }
+                    //
+                    // indexInBuffer += 1;
+
+                    indexInBuffer += 16;
+                    int recIdx = offsetInBuffer;
+                    offsetInBuffer = indexInBuffer;
+
+                    recCount++;
+
+                    if (true) { // (((checkSum & 0xFF) == (0xFF &
+                                // bytes[indexInBuffer - 1]))) {
+                        /*******************************************************
+                         * Get all the information in the record.
+                         */
+                        gpsRec.recCount = recCount;
+                        if (!passToFindFieldsActivatedInLog) {
+
+                            // if (( lc( $o{'i'} ) eq lc( 'iTrackU-Nemerix' ) )
+                            // or
+                            // # parse the record, this trick took me one whole
+                            // day...
+                            // ($lon, $lat, $year, $month, $day, $hour, $minute,
+                            // $second, $speed, $tag) =
+                            // unpack( " V V C C C C C C C C", $_ );
+                            // # _Longitude_ _Latitude__ YY MM DD HH MM SS
+                            // SpdTag
+                            // # ef f3 b7 00 d1 df 02 03 07 09 1d 06 01 2a 00 ff
+
+                            // elsif (( lc( $o{'i'} ) eq lc( 'PhotoTrackr' ) )
+                            // or
+                            // ( lc( $o{'i'} ) eq 'p' ) or
+                            // ( lc( $o{'i'} ) eq lc( 'iTrackU-SIRFIII' ) ) or
+                            // ( lc( $o{'i'} ) eq 's' ) ) {
+                            // ($lon, $lat, $date, $altitude, $speed, $tag) =
+                            // unpack( " V V V s C C", $_ );
+                            // # _Longitude_ _Latitude__ ___Date____ _Alt_
+                            // SpdTag
+                            // # bd 49 90 00 09 0c 1d 03 b4 eb a8 1e 3b 00 02 63
+
+                            int longitude;
+                            int latitude;
+                            int year;
+                            int month;
+                            int day;
+                            int hour;
+                            int minutes;
+                            int seconds;
+                            int speed;
+                            int tag;
+                            int altitude;
+
+                            switch (logType) {
+                            case PHOTOTRACKR:
+                            case ITRACKU_SIRFIII:
+                                // NEMERIX
+                                // Get information from log file
+                                longitude = (0xFF & bytes[recIdx++]) << 0
+                                        | (0xFF & bytes[recIdx++]) << 8
+                                        | (0xFF & bytes[recIdx++]) << 16
+                                        | (0xFF & bytes[recIdx++]) << 24;
+                                latitude = (0xFF & bytes[recIdx++]) << 0
+                                        | (0xFF & bytes[recIdx++]) << 8
+                                        | (0xFF & bytes[recIdx++]) << 16
+                                        | (0xFF & bytes[recIdx++]) << 24;
+                                gpsRec.utc = (0xFF & bytes[recIdx++]) << 0
+                                        | (0xFF & bytes[recIdx++]) << 8
+                                        | (0xFF & bytes[recIdx++]) << 16
+                                        | (0xFF & bytes[recIdx++]) << 24;
+                                altitude = (0xFF & bytes[recIdx++]) << 0
+                                        | (0xFF & bytes[recIdx++]) << 8;
+                                gpsRec.height = altitude;
+                                if (noGeoid) {
+                                    gpsRec.height -= Conv.wgs84_separation(
+                                            gpsRec.latitude, gpsRec.longitude);
+                                }
+                                speed = (0xFF & bytes[recIdx++]) << 0;
+                                tag = (0xFF & bytes[recIdx++]) << 0;
+                                break;
+                            default:
+                                // NEMERIX
+                                // Get information from log file
+                                longitude = (0xFF & bytes[recIdx++]) << 0
+                                | (0xFF & bytes[recIdx++]) << 8
+                                | (0xFF & bytes[recIdx++]) << 16
+                                | (0xFF & bytes[recIdx++]) << 24;
+                                latitude = (0xFF & bytes[recIdx++]) << 0
+                                        | (0xFF & bytes[recIdx++]) << 8
+                                        | (0xFF & bytes[recIdx++]) << 16
+                                        | (0xFF & bytes[recIdx++]) << 24;
+                                year = (0xFF & bytes[recIdx++]) << 0;
+                                month = (0xFF & bytes[recIdx++]) << 0;
+                                day = (0xFF & bytes[recIdx++]) << 0;
+                                hour = (0xFF & bytes[recIdx++]) << 0;
+                                minutes = (0xFF & bytes[recIdx++]) << 0;
+                                seconds = (0xFF & bytes[recIdx++]) << 0;
+                                speed = (0xFF & bytes[recIdx++]) << 0;
+                                tag = (0xFF & bytes[recIdx++]) << 0;
+                                gpsRec.utc = Conv
+                                        .dateToUTCepoch1970(new bt747.util.Date(
+                                                day, month, year + 2000));
+                                gpsRec.utc += 3600 * hour + 60 * minutes
+                                        + seconds;
+                                gpsRec.utc += timeOffsetSeconds;
+                                break;
+                            }
+
+                            if (latitude == 0xFFFFFFFF) {
+                                // TODO : cleaner exit
+                                return;
+                            }
+                            if ((longitude & 0x80000000) != 0) {
+                                longitude = -(longitude & 0x7FFFFFFF);
+                            }
+                            if ((latitude & 0x80000000) != 0) {
+                                latitude = -(latitude & 0x7FFFFFFF);
+                            }
+
+                            // Convert information to log record
+                            gpsRec.longitude = (longitude / 1000000)
+                                    + (longitude % 1000000) / 600000.0;
+                            gpsRec.latitude = (latitude / 1000000)
+                                    + (latitude % 1000000) / 600000.0;
+                            gpsRec.speed = speed * 1.852f;
+
+                            gpsRec.valid = 0xFFFF;
+                            gpsRec.rcr = 0x0001; // For filter
+                            gpsFile.writeRecord(gpsRec);
+                        }
+                    }
+                } /* ContinueInBuffer */
+                nextAddrToRead -= (sizeToRead - offsetInBuffer);
+            } /* nextAddrToRead<fileSize */
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public final void setTimeOffset(long offset) {
+        timeOffsetSeconds = offset;
+    }
+
+    public final void setNoGeoid(boolean b) {
+        noGeoid = b;
+    }
+
+    public final void toGPSFile(final String fileName, final GPSFile gpsFile,
+            final int Card) {
+        try {
+            if (File.isAvailable()) {
+                m_File = new File(fileName, File.READ_ONLY, Card);
+                if (!m_File.isOpen()) {
+                    (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName
+                            + "|" + m_File.lastError)).popupBlockingModal();
+                    m_File = null;
+                } else {
+                    passToFindFieldsActivatedInLog = gpsFile
+                            .needPassToFindFieldsActivatedInLog();
+                    if (passToFindFieldsActivatedInLog) {
+                        gpsFile
+                                .setActiveFileFields(getLogFormatRecord(activeFileFields));
+                    }
+                    passToFindFieldsActivatedInLog = false;
+                    do {
+                        parseFile(gpsFile);
+                    } while (gpsFile.nextPass());
+                    gpsFile.finaliseFile();
+                }
+
+                if (m_File != null) {
+                    m_File.close();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public final GPSRecord getLogFormatRecord(final int logFormat) {
+        GPSRecord gpsRec = new GPSRecord();
+        gpsRec.utc = -1;
+        gpsRec.latitude = -1;
+        gpsRec.longitude = -1;
+        gpsRec.speed = -1;
+
+        switch (logType) {
+        case PHOTOTRACKR:
+        case ITRACKU_SIRFIII:
+            gpsRec.height = -1;
+            break;
+        case ITRACKU_NUMERIX:
+        default:
+            break;
+        }
+
+        /* End handling record */
+        return gpsRec;
+    }
+
+}

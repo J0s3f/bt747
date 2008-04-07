@@ -6,7 +6,7 @@
  */
 package bt747.sys;
 
-import com.sun.corba.se.spi.extension.ZeroPortPolicy;
+import java.util.Locale;
 
 /**
  * @author Mario De Weerd
@@ -36,7 +36,7 @@ public class Convert {
     
     public static String toString(double p, int i)
     {
-       return Double.toString(p); // TODO: implement digits after .
+       return String.format((Locale)null,"%."+i+"f", p);
     }
     
     private final static String zerostring="0000000000000000";

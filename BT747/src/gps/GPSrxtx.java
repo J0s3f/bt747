@@ -159,6 +159,11 @@ public class GPSrxtx {
     private static final int C_EOL_STATE = 6;
     private static final int C_ERROR_STATE = 7;
     private static final int C_FOUND_STATE = 8;
+    private static final int C_DPL700_STATE = 9;
+    private static final int C_DPL700_W_STATE = 10;
+    private static final int C_DPL700_P_STATE = 11;
+    private static final int C_DPL700_TEXT_STATE = 12;
+    private static final int C_DPL700_END_STATE = 13;
 
     // The maximum length of each packet is restricted to 255 bytes (except for
     // logger)
@@ -214,6 +219,39 @@ public class GPSrxtx {
         }
     }
 
+    final static int NORMAL_MODE = 0;
+    final static int DPL700_MODE = 1;
+
+    private int rxtxMode = NORMAL_MODE;
+
+    byte[] DPL700_buffer;
+    int DPL700_buffer_idx;
+    byte[] DPL700_EndString = new byte[200];
+    int endStringIdx;
+
+    public void sendCmdAndGetDPL700Response(int cmd, int buffer_size) {
+        if (isConnected()) {
+            m_writeOngoing.down(); // Semaphore - reserve link
+            rxtxMode = DPL700_MODE;
+            endStringIdx = 0;
+            current_state = C_DPL700_STATE;
+            DPL700_buffer = new byte[buffer_size];
+            DPL700_buffer_idx = 0;
+            if (GPS_DEBUG) {
+                bt747.sys.Vm.debug(">0x" + Convert.unsigned2hex(cmd, 8)
+                        + "0000");
+            }
+            rec.setLength(0);
+            rec.append((char) (cmd >> 24) & 0xFF);
+            rec.append((char) (cmd >> 16) & 0xFF);
+            rec.append((char) (cmd >> 8) & 0xFF);
+            rec.append((char) (cmd >> 0) & 0xFF);
+            rec.append("\0\0");
+            gpsPort.write(rec.toString());
+            m_writeOngoing.up(); // Semaphore - release link
+        }
+    }
+
     public String[] getResponse() {
         boolean continueReading;
         boolean readAgain = true;
@@ -241,129 +279,196 @@ public class GPSrxtx {
                 // if((vCmd.getCount()!=0)&&((String[])vCmd.toStringArray())[0].charAt(0)=='P')
                 // {
                 // bt747.sys.Vm.debug(Convert.toString(c));
-                //System.err.print("["+c+"]");
+                // System.err.print("["+c+"]");
                 // }
-                switch (current_state) {
-                case C_EOL_STATE:
-                    // EOL found, record is ok.
-                    // StringBuffer sb = new StringBuffer(cmd_buf_p);
-                    // sb.setLength(0);
-                    // sb.append(cmd_buf,0,cmd_buf_p);
-                    // if(GPS_DEBUG) {bt747.sys.Vm.debug(sb.toString()+"\n");};
-                    if (((c == 10) || (c == 13))) {
-                        current_state = C_FOUND_STATE;
-                        continueReading = false;
-                        //System.err.println("[NEW]");
+                if (rxtxMode == NORMAL_MODE) {
+                    switch (current_state) {
+                    case C_EOL_STATE:
+                        // EOL found, record is ok.
+                        // StringBuffer sb = new StringBuffer(cmd_buf_p);
+                        // sb.setLength(0);
+                        // sb.append(cmd_buf,0,cmd_buf_p);
+                        // if(GPS_DEBUG)
+                        // {bt747.sys.Vm.debug(sb.toString()+"\n");};
+                        if (((c == 10) || (c == 13))) {
+                            current_state = C_FOUND_STATE;
+                            continueReading = false;
+                            // System.err.println("[NEW]");
 
-                        if (ignoreNMEA) {
-                            // Skip NMEA strings if requested.
-                            continueReading = ((String) vCmd.elementAt(0))
-                                    .startsWith("GP");
+                            if (ignoreNMEA) {
+                                // Skip NMEA strings if requested.
+                                continueReading = ((String) vCmd.elementAt(0))
+                                        .startsWith("GP");
+                            }
+                        } else {
+                            current_state = C_ERROR_STATE;
                         }
-                    } else {
-                        current_state = C_ERROR_STATE;
-                    }
-                    break;
+                        break;
 
-                case C_FOUND_STATE:
-                    current_state = C_START_STATE;
-                    /* Fall through */
-                case C_INITIAL_STATE:
-                case C_START_STATE:
-                    vCmd.removeAllElements();
-                    if (c == '$') {
-                        // First character of NMEA string found
-                        current_state = C_FIELD_STATE;
-                        cmd_buf_p = 0;
+                    case C_FOUND_STATE:
+                        current_state = C_START_STATE;
+                        /* Fall through */
+                    case C_INITIAL_STATE:
+                    case C_START_STATE:
+                        vCmd.removeAllElements();
+                        if (c == '$') {
+                            // First character of NMEA string found
+                            current_state = C_FIELD_STATE;
+                            cmd_buf_p = 0;
 
-                        // cmd_and_param=new String()[];
-                        // cmd_buf[cmd_buf_p++]= c;
-                        checksum = 0;
-                    } else if (!((c == 10) || (c == 13))) {
-                        if (current_state == C_START_STATE) {
+                            // cmd_and_param=new String()[];
+                            // cmd_buf[cmd_buf_p++]= c;
+                            checksum = 0;
+                        } else if (!((c == 10) || (c == 13))) {
+                            if (current_state == C_START_STATE) {
+                                myError = ERR_INCOMPLETE;
+                                current_state = C_ERROR_STATE;
+                            }
+                        }
+                        break;
+                    case C_FIELD_STATE:
+                        if ((c == 10) || (c == 13)) {
+                            current_state = C_EOL_STATE;
+                        } else if (c == '*') {
+                            current_state = C_STAR_STATE;
+                            vCmd.addElement(new String(cmd_buf, 0, cmd_buf_p));
+                            // if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P')
+                            // {
+                            // bt747.sys.Vm.debug(((String[])vCmd.toObjectArray())[vCmd.getCount()-1]);
+                            // }
+                        } else if (c == ',') {
+                            checksum ^= c;
+                            vCmd.addElement(new String(cmd_buf, 0, cmd_buf_p));
+                            cmd_buf_p = 0;
+                        } else {
+                            cmd_buf[cmd_buf_p++] = c;
+                            checksum ^= c;
+                        }
+                        break;
+                    case C_STAR_STATE:
+                        if ((c == 10) || (c == 13)) {
+                            current_state = C_ERROR_STATE;
+                        } else if (((c >= '0' && c <= '9')
+                                || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))) {
+                            // cmd_buf[cmd_buf_p++]= c;
+                            if (c >= '0' && c <= '9') {
+                                read_checksum = (c - '0') << 4;
+                            } else if (c >= 'A' && c <= 'F') {
+                                read_checksum = (c - 'A' + 10) << 4;
+                            } else {
+                                read_checksum = (c - 'a' + 10) << 4;
+                            }
+                            current_state = C_CHECKSUM_CHAR1_STATE;
+                        } else {
                             myError = ERR_INCOMPLETE;
                             current_state = C_ERROR_STATE;
                         }
-                    }
-                    break;
-                case C_FIELD_STATE:
-                    if ((c == 10) || (c == 13)) {
-                        current_state = C_EOL_STATE;
-                    } else if (c == '*') {
-                        current_state = C_STAR_STATE;
-                        vCmd.addElement(new String(cmd_buf, 0, cmd_buf_p));
-                        // if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P')
-                        // {
-                        // bt747.sys.Vm.debug(((String[])vCmd.toObjectArray())[vCmd.getCount()-1]);
-                        // }
-                    } else if (c == ',') {
-                        checksum ^= c;
-                        vCmd.addElement(new String(cmd_buf, 0, cmd_buf_p));
-                        cmd_buf_p = 0;
-                    } else {
-                        cmd_buf[cmd_buf_p++] = c;
-                        checksum ^= c;
-                    }
-                    break;
-                case C_STAR_STATE:
-                    if ((c == 10) || (c == 13)) {
-                        current_state = C_ERROR_STATE;
-                    } else if (((c >= '0' && c <= '9')
-                            || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))) {
-                        // cmd_buf[cmd_buf_p++]= c;
-                        if (c >= '0' && c <= '9') {
-                            read_checksum = (c - '0') << 4;
-                        } else if (c >= 'A' && c <= 'F') {
-                            read_checksum = (c - 'A' + 10) << 4;
-                        } else {
-                            read_checksum = (c - 'a' + 10) << 4;
-                        }
-                        current_state = C_CHECKSUM_CHAR1_STATE;
-                    } else {
-                        myError = ERR_INCOMPLETE;
-                        current_state = C_ERROR_STATE;
-                    }
-                    break;
-                case C_CHECKSUM_CHAR1_STATE:
-                    if ((c == 10) || (c == 13)) {
-                        myError = ERR_INCOMPLETE;
-                        current_state = C_ERROR_STATE;
-                    } else if (((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'))) {
-                        // cmd_buf[cmd_buf_p++]= c;
-                        if (c >= '0' && c <= '9') {
-                            read_checksum += c - '0';
-                        } else if (c >= 'A' && c <= 'F') {
-                            read_checksum += c - 'A' + 10;
-                        } else {
-                            read_checksum += c - 'a' + 10;
-                        }
+                        break;
+                    case C_CHECKSUM_CHAR1_STATE:
+                        if ((c == 10) || (c == 13)) {
+                            myError = ERR_INCOMPLETE;
+                            current_state = C_ERROR_STATE;
+                        } else if (((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'))) {
+                            // cmd_buf[cmd_buf_p++]= c;
+                            if (c >= '0' && c <= '9') {
+                                read_checksum += c - '0';
+                            } else if (c >= 'A' && c <= 'F') {
+                                read_checksum += c - 'A' + 10;
+                            } else {
+                                read_checksum += c - 'a' + 10;
+                            }
 
-                        if (read_checksum != checksum) {
-                            myError = ERR_CHECKSUM;
+                            if (read_checksum != checksum) {
+                                myError = ERR_CHECKSUM;
+                                current_state = C_ERROR_STATE;
+                            }
+                            current_state = C_EOL_STATE;
+                        } else {
+                            myError = ERR_INCOMPLETE;
                             current_state = C_ERROR_STATE;
                         }
-                        current_state = C_EOL_STATE;
-                    } else {
-                        myError = ERR_INCOMPLETE;
+                        break;
+                    case C_ERROR_STATE:
+                        if (((c == 10) || (c == 13))) {
+                            // EOL found, start is ok.
+                            current_state = C_START_STATE;
+                        }
+                    default:
+                        current_state = C_ERROR_STATE;
+                        break;
+                    }
+                    if (cmd_buf_p > (C_BUF_SIZE - 1)) {
+                        myError = ERR_TOO_LONG;
                         current_state = C_ERROR_STATE;
                     }
-                    break;
-                case C_ERROR_STATE:
-                    if (((c == 10) || (c == 13))) {
-                        // EOL found, start is ok.
-                        current_state = C_START_STATE;
+                    if (current_state == C_ERROR_STATE) {
+                        current_state = C_INITIAL_STATE;
+                        vCmd.removeAllElements();
+                        if (!skipError) {
+                            continueReading = false;
+                        }
                     }
-                }
-                if (cmd_buf_p > (C_BUF_SIZE - 1)) {
-                    myError = ERR_TOO_LONG;
-                    current_state = C_ERROR_STATE;
-                }
-                if (current_state == C_ERROR_STATE) {
-                    current_state = C_INITIAL_STATE;
-                    vCmd.removeAllElements();
-                    if (!skipError) {
-                        continueReading = false;
+                } else { // DPL700_MODE
+                    if (DPL700_buffer_idx < DPL700_buffer.length) {
+                        DPL700_buffer[DPL700_buffer_idx++] = (byte) c;
+                        switch (current_state) {
+                        case C_DPL700_STATE:
+                            if (c == 'W') {
+                                endStringIdx = 0;
+                                DPL700_EndString[endStringIdx++] = (byte) c;
+                                current_state = C_DPL700_W_STATE;
+                            } else {
+                                current_state = C_DPL700_STATE;
+                            }
+                            break;
+                        case C_DPL700_W_STATE:
+                            if (c == 'P') {
+                                DPL700_EndString[endStringIdx++] = (byte) c;
+                                current_state = C_DPL700_P_STATE;
+                                break;
+                            } else if (c == 'W') {
+                                endStringIdx = 0;
+                                DPL700_EndString[endStringIdx++] = (byte) c;
+                                current_state = C_DPL700_W_STATE;
+                            } else {
+                                current_state = C_DPL700_STATE;
+                            }
+                            break;
+                        case C_DPL700_P_STATE:
+                            if (c == ' ') {
+                                DPL700_EndString[endStringIdx++] = (byte) c;
+                                current_state = C_DPL700_TEXT_STATE;
+                                break;
+                            } else if (c == 'W') {
+                                current_state = C_DPL700_W_STATE;
+                            } else {
+                                current_state = C_DPL700_STATE;
+                            }
+                            break;
+                        case C_DPL700_TEXT_STATE:
+                            // Trying to read end string
+                            if (c == 0) {
+                                DPL700_EndString[endStringIdx++] = (byte) c;
+                                DPL700_buffer_idx -= endStringIdx;
+                                rxtxMode = NORMAL_MODE;
+                                current_state = C_DPL700_END_STATE;
+                                continueReading = false;
+                            } else if ((c >= 'A' && c <= 'Z')
+                                    || (c >= 'a' && c <= 'z') || c == ' '
+                                    || c == '\'') {
+                                DPL700_EndString[endStringIdx++] = (byte) c;
+                            } else {
+                                current_state = C_DPL700_STATE;
+                            }
+                            break;
+                        default:
+                            rxtxMode = NORMAL_MODE;
+                            current_state = C_ERROR_STATE;
+                        }
+                    } else {
+                        rxtxMode = NORMAL_MODE;
                     }
+
                 }
             }
 
@@ -372,7 +477,7 @@ public class GPSrxtx {
             if (continueReading) {
                 read_buf_p = 0;
                 bytesRead = 0;
-                if (isConnected()) {
+                if (isConnected()) { // && rxtxMode != DPL700_MODE) {
                     if (readAgain) {
                         readAgain = false;
                         try {
@@ -380,7 +485,7 @@ public class GPSrxtx {
                             if (!stableStrategy || (prevReadCheck == max)
                                     || (max > C_BUF_SIZE)) {
 
-                                //gpsPort.writeDebug("\r\nC1:" + max + ":");
+                                // gpsPort.writeDebug("\r\nC1:" + max + ":");
                                 if ((max > C_BUF_SIZE)) {
                                     prevReadCheck = max - C_BUF_SIZE;
                                     max = C_BUF_SIZE;
@@ -388,19 +493,20 @@ public class GPSrxtx {
                                     prevReadCheck = 0;
                                 }
 
-                                //gpsPort.writeDebug("\r\nC2:" + max + ":");
+                                // gpsPort.writeDebug("\r\nC2:" + max + ":");
                                 if (max > 0) {
                                     bytesRead = gpsPort.readBytes(read_buf, 0,
                                             max);
-//                                    if (bytesRead != 0) {
-//                                        String sb = new String(read_buf, 0,
-//                                                bytesRead);
-//                                        System.out.println("RCVD:"
-//                                                + Convert.toString(bytesRead)
-//                                                + ":" + sb + ":");
-//                                    }
+                                    // if (bytesRead != 0) {
+                                    // String sb = new String(read_buf, 0,
+                                    // bytesRead);
+                                    // System.out.println("RCVD:"
+                                    // + Convert.toString(bytesRead)
+                                    // + ":" + sb + ":");
+                                    // }
                                 }
-                                //gpsPort.writeDebug("\r\nC3:" + bytesRead + ":");
+                                // gpsPort.writeDebug("\r\nC3:" + bytesRead +
+                                // ":");
                             } else {
                                 prevReadCheck = max;
                             }
@@ -423,7 +529,13 @@ public class GPSrxtx {
                         }
                     }
                 }
-            }
+                // else if (rxtxMode == DPL700_MODE) {
+                // // Debug purposes
+                // String s = "aerkljdslkfqjsdfkl mqdfj WP Update Over\0";
+                // s.getBytes(1, s.length(), read_buf, 0);
+                // bytesRead = s.length();
+                // }
+            } // continueReading
         }
         if (myError == C_ERROR_STATE) {
             // bt747.sys.Vm.debug("Error on reception");
@@ -459,6 +571,11 @@ public class GPSrxtx {
             // };
             // }
             return vCmd.toStringArray();
+        } else if (current_state == C_DPL700_END_STATE) {
+            current_state = C_FOUND_STATE;
+            String[] resp = new String[1];
+            resp[0] = new String(DPL700_EndString, 0, endStringIdx - 1);
+            return resp;
         } else {
             return null;
         }
