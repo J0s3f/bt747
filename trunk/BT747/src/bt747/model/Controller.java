@@ -6,6 +6,7 @@ import gps.GPSstate;
 import gps.convert.Conv;
 import gps.log.BT747LogConvert;
 import gps.log.CSVLogConvert;
+import gps.log.DPL700LogConvert;
 import gps.log.GPSCSVFile;
 import gps.log.GPSCompoGPSTrkFile;
 import gps.log.GPSFile;
@@ -42,34 +43,42 @@ public class Controller {
      */
     public final void setImperial(boolean on) {
         m.setImperial(on);
+        m.saveSettings();
     }
 
     public final void setBaseDirPath(String s) {
         m.setBaseDirPath(s);
+        m.saveSettings();
     }
 
     public final void setLogFilePath(String s) {
         m.setLogFile(s);
+        m.saveSettings();
     }
 
     public final void setOutputFileBasePath(String s) {
         m.setReportFileBase(s);
+        m.saveSettings();
     }
 
     public final void setChunkSize(int i) {
         m.setChunkSize(i);
+        m.saveSettings();
     }
 
     public final void setDownloadTimeOut(int i) {
         m.setDownloadTimeOut(i);
+        m.saveSettings();
     }
 
     public final void setCard(int i) {
         m.setCard(i);
+        m.saveSettings();
     }
 
     public final void setLogRequestAhead(int i) {
         m.setLogRequestAhead(i);
+        m.saveSettings();
     }
 
     public final void writeLog(final int log_type) {
@@ -84,6 +93,10 @@ public class Controller {
             lc = new HoluxTrlLogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".csv")) {
             lc = new CSVLogConvert();
+        } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
+            lc = new DPL700LogConvert();
+            /// TODO: set SR Log type correctly.
+            ((DPL700LogConvert)lc).setLogType(m.getGPSType()==0?0:1);
         } else {
             switch (m.getBinDecoder()) {
             case DECODER_THOMAS:
@@ -200,6 +213,15 @@ public class Controller {
         } catch (Exception e) {
             // TODO: handle exception
         }
+    }
+    
+    
+    public final void startDPL700Download() {
+        m.gpsModel().getDPL700Log(m.getLogFilePath(), m.getCard());
+    }
+    
+    public final void setGPSType(int i) {
+        m.setGPSType(i);
     }
 
     /***************************************************************************

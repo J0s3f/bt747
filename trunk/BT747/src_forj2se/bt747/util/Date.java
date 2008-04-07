@@ -46,7 +46,7 @@ public class Date extends java.util.Date {
      * @param sentYear
      */
     public Date(int sentDay, int sentMonth, int sentYear) {
-        super(sentYear, sentMonth, sentDay);
+        super(sentYear-1900, sentMonth, sentDay);
     }
 
     /**
@@ -64,9 +64,9 @@ public class Date extends java.util.Date {
         super();
         DateFormat df;
         if(dateFormat==Settings.DATE_YMD) {
-            df = new SimpleDateFormat("yyyy/dd/mm");
+            df = new SimpleDateFormat("yyyy/dd/MM");
         } else { //if {dateFormat==Settings.DATE_DMY) {
-            df = new SimpleDateFormat("mm/dd/yyyy");
+            df = new SimpleDateFormat("MM/dd/yyyy");
         }
         try {
         java.util.Date d=df.parse(strDate);
@@ -106,7 +106,7 @@ public class Date extends java.util.Date {
 
    public String getDateString() {
     // TODO Check this method
-       return new SimpleDateFormat("mm/dd/yyyy").format(this);
+       return new SimpleDateFormat("dd/MM/yyyy").format(this);
 
    }
    
