@@ -354,7 +354,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
                     c.setGpsDecode(miGpsDecode.isChecked);
                     break;
                 case C_MENU_RECORDNMBR_IN_LOGS:
-                    m.setRecordNbrInLogs(miRecordNumberInLogs.isChecked);
+                    c.setRecordNbrInLogs(miRecordNumberInLogs.isChecked);
                     break;
                 case C_MENU_ABOUT:
                     new MessageBox(Txt.ABOUT_TITLE,
@@ -434,6 +434,6 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     public void onExit() {
         waba.sys.Vm.setDeviceAutoOff(orgAutoOnOff); // Avoid auto-off causing BT
         // trouble
-        m.saveSettings();
+        c.saveSettings();
     }
 }

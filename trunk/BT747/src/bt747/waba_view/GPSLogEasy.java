@@ -102,65 +102,7 @@ public class GPSLogEasy extends Container {
               chkRCR[i].setEnabled(true);
           }
       }
-      
-      
-      // "Volatile" settings of the MTK loggers:
-      //  - Log conditions;
-      //      - Time, Speed, Distance[3x 4 byte]
-      //  - Log format;              [4 byte]
-      //  - Fix period               [4 byte]
-      //  - SBAS /DGPS / TEST SBAS         [byte, byte, byte]
-      //  - Log overwrite/STOP       [byte, byte]
-      //  - NMEA output              [18 byte]
-      private void StoreSetting1() {
-          m.setTimeConditionSetting1(m.getLogTimeInterval());
-          m.setDistConditionSetting1(m.getLogDistanceInterval());
-          m.setSpeedConditionSetting1(m.getLogSpeedInterval());
-          m.setLogFormatConditionSetting1(m.getLogFormat());
-          m.setFixSetting1(m.getLogFixPeriod());
-          m.setSBASSetting1(m.isSBASEnabled());
-          m.setDGPSSetting1(m.getDgpsMode());
-          m.setTestSBASSetting1(m.isSBASTestEnabled());
-          m.setLogOverwriteSetting1(m.isLogFullOverwrite());
-          String NMEA="";
-          for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
-              NMEA+=(m.getNMEAPeriod(i));
-          }
-          m.setNMEASetting1(NMEA);
-      }
-      
-      private void RestoreSetting1() {
-          c.setLogTimeInterval(m.getTimeConditionSetting1());
-          c.setLogDistanceInterval(m.getDistConditionSetting1());
-          c.setLogSpeedInterval(m.getSpeedConditionSetting1());
-          c.setLogFormat(m.getLogFormatSetting1());
-          c.setFixInterval(m.getFixSetting1());
-          c.setSBASEnabled(m.getSBASSetting1());
-          c.setSBASTestEnabled(m.getTestSBASSetting1());
-          c.setDGPSMode(m.getDPGSSetting1());
-          c.setLogOverwrite(m.getLogOverwriteSetting1());
-        
-          String NMEA=m.getNMEASetting1();
-          int[] Periods = new int[BT747_dev.C_NMEA_SEN_COUNT];
-          
-          for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
-              Periods[i]=(int)(NMEA.charAt(i)-'0');
-          }
-          c.setNMEAPeriods(Periods);
-      }
-
-      private void getSettings() {
-          c.reqLogReasonStatus();
-          c.reqLogFormat();
-          c.reqFixInterval();
-          c.reqSBASEnabled();
-          c.reqSBASTestEnabled();
-          c.reqDGPSMode();
-          c.reqLogOverwrite();
-          c.reqNMEAPeriods();
-      }
-      
-
+           
       private void enableStore() {
           // TODO : should enable this from controller.
           m_btStore.setEnabled(c.isEnableStoreOK());
@@ -173,16 +115,16 @@ public class GPSLogEasy extends Container {
           case ControlEvent.PRESSED:
               event.consumed=true;
               if(event.target==this) {
-                  getSettings();
+                  c.reqSettingsForStorage();
               } else if(event.target==m_btSet2Hz) {
                   c.setFixInterval(500);
               } else if (event.target==m_btSet5Hz) {
                   c.setLogTimeInterval(2);
                   c.setFixInterval(200);
               } else if (event.target==m_btStore) {
-                  StoreSetting1();
+                  c.StoreSetting1();
               } else if (event.target==m_btRestore) {
-                  RestoreSetting1();
+                  c.RestoreSetting1();
               } else if (event.target==m_btHotStart) {
                   c.doHotStart();
               } else if (event.target==m_btColdStart) {
@@ -208,7 +150,6 @@ public class GPSLogEasy extends Container {
                           c.logImmediate(1<<i);
                       }
                   }
-                  
                   event.consumed=false;
               }
               break;

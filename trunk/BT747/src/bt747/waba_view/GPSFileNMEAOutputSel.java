@@ -24,6 +24,7 @@ import waba.ui.Event;
 
 import gps.BT747_dev;
 
+import bt747.model.Controller;
 import bt747.model.Model;
 
 /**
@@ -38,12 +39,14 @@ public class GPSFileNMEAOutputSel extends Container {
     
     private static final int C_NMEAactiveFilters=0x0002003A;
     
-    private Model m_settings;
+    private Model m;
+    private Controller c;
     /**
      * 
      */
-    public GPSFileNMEAOutputSel(final Model settings) {
-        m_settings=settings;
+    public GPSFileNMEAOutputSel(Controller c, Model m) {
+        this.m=m;
+        this.c=c;
     }
 
     
@@ -66,7 +69,7 @@ public class GPSFileNMEAOutputSel extends Container {
     private void updateNMEAset() {
         int NMEAset;
         int bit;
-        NMEAset=m_settings.getNMEAset();
+        NMEAset=m.getNMEAset();
         bit=1;
         for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
             chkNMEAItems[i].setChecked(
@@ -87,7 +90,7 @@ public class GPSFileNMEAOutputSel extends Container {
             NMEAset|=chkNMEAItems[i].getChecked()?bit:0;
             bit <<=1;
         }
-        m_settings.setNMEAset(NMEAset);
+        c.setNMEAset(NMEAset);
     }
 
     /** Handle events for this object.

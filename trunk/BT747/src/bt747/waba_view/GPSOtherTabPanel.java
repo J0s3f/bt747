@@ -75,7 +75,7 @@ public class GPSOtherTabPanel extends Container {
         // TODO Auto-generated method stub
         m_TabPanel.setPanel(0,new GPSFlashOption(m,c));
         m_TabPanel.setPanel(1,new GPSNMEAOutput(m,c));
-        m_TabPanel.setPanel(2,new GPSFileNMEAOutputSel(m));
+        m_TabPanel.setPanel(2,new GPSFileNMEAOutputSel(c,m));
         m_TabPanel.setPanel(3,new GPSHoluxSpecific(m,c));
     }
     public void onEvent(Event event) {

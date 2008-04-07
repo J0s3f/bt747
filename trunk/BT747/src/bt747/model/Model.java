@@ -3,7 +3,6 @@ package bt747.model;
 import gps.GPSstate;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
-import gps.log.GPSRecord;
 
 import bt747.util.Date;
 
@@ -57,7 +56,7 @@ public class Model extends AppSettings implements gps.settings{
     /**
      * @param lastConversionOngoing the lastConversionOngoing to set
      */
-    public final void setLastConversionOngoing(int lastConversionOngoing) {
+    protected final void setLastConversionOngoing(int lastConversionOngoing) {
         this.lastConversionOngoing = lastConversionOngoing;
     }
     /**
@@ -70,26 +69,35 @@ public class Model extends AppSettings implements gps.settings{
     /**
      * @return the logFilters
      */
-    public final GPSFilter[] getLogFilters() {
+    protected final GPSFilter[] getLogFilters() {
         return logFilters;
     }
+    
+    public int getValidMask(int i) {
+        return logFilters[i].getValidMask();
+    }
+
+    public int getRcrMask(int i) {
+        return logFilters[i].getRcrMask();
+    }
+
     /**
      * @param logFilters the logFilters to set
      */
-    public final void setLogFilters(GPSFilter[] logFilters) {
+    protected final void setLogFilters(GPSFilter[] logFilters) {
         this.logFilters = logFilters;
     }
     
     /**
      * @return the logFiltersAdv
      */
-    public final GPSFilterAdvanced[] getLogFiltersAdv() {
+    protected final GPSFilterAdvanced[] getLogFiltersAdv() {
         return logFiltersAdv;
     }
     /**
      * @param logFiltersAdv the logFiltersAdv to set
      */
-    public final void setLogFiltersAdv(GPSFilterAdvanced[] logFiltersAdv) {
+    protected final void setLogFiltersAdv(GPSFilterAdvanced[] logFiltersAdv) {
         this.logFiltersAdv = logFiltersAdv;
     }
     /**
@@ -101,7 +109,7 @@ public class Model extends AppSettings implements gps.settings{
     /**
      * @param startDate the startDate to set
      */
-    public final void setStartDate(Date startDate) {
+    protected final void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
     /**
@@ -113,7 +121,7 @@ public class Model extends AppSettings implements gps.settings{
     /**
      * @param endDate the endDate to set
      */
-    public final void setEndDate(Date endDate) {
+    protected final void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
     
@@ -196,7 +204,7 @@ public class Model extends AppSettings implements gps.settings{
         return incremental;
     }
 
-    public final void setIncremental(boolean incremental) {
+    protected final void setIncremental(boolean incremental) {
         this.incremental = incremental;
         postEvent(ModelEvent.INCREMENTAL_CHANGE);
     }
@@ -258,7 +266,6 @@ public class Model extends AppSettings implements gps.settings{
      public final int logMemUsefullSize() {
          return gpsModel.logMemUsefullSize();
      }
-     
      
      public final int getDtUpdateRate() {
          return gpsModel.getDtUpdateRate();

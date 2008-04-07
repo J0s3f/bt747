@@ -214,7 +214,7 @@ public class GPSLogGet extends Container {
                         c.stopLog();
                     }
                 } else if (event.target == m_cbColors) {
-                    m.setColorInvalidTrack((String) m_cbColors.getSelectedItem());
+                    c.setColorInvalidTrack((String) m_cbColors.getSelectedItem());
                 } else if (event.target == m_cbTimeOffsetHours) {
                     // Work around superwaba bug
                     String tmp = (String) m_cbTimeOffsetHours.getSelectedItem();
@@ -268,7 +268,7 @@ public class GPSLogGet extends Container {
                 break;
             case ControlEvent.FOCUS_OUT:
                 if (event.target == m_edTrkSep) {
-                    m.setTrkSep(Convert.toInt(m_edTrkSep.getText()));
+                    c.setTrkSep(Convert.toInt(m_edTrkSep.getText()));
                     m_edTrkSep.setText(Convert.toString(m.getTrkSep()));
                 }
                 break;
@@ -279,8 +279,8 @@ public class GPSLogGet extends Container {
                     if (d != null) {
                         calBt.setText(d.toString());
                         // Can't change the value of the date, changing all
-                        m.setStartDate(new Date(m_btStartDate.getText()));
-                        m.setEndDate(new Date(m_btEndDate.getText()));
+                        c.setStartDate(new Date(m_btStartDate.getText()));
+                        c.setEndDate(new Date(m_btEndDate.getText()));
                     }
                 }
                 /*cal = null;

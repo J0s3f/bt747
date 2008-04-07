@@ -12,7 +12,6 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import java.io.File;
-import java.text.Format;
 import java.util.Locale;
 
 import javax.swing.InputVerifier;
@@ -1881,57 +1880,57 @@ public class BT747_Main extends javax.swing.JFrame implements
 
     private void cbAdvancedActiveStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbAdvancedActiveStateChanged
         // TODO : Need to use control instead of model
-        m.setAdvFilterActive(cbAdvancedActive.isSelected());
+        c.setAdvFilterActive(cbAdvancedActive.isSelected());
     }//GEN-LAST:event_cbAdvancedActiveStateChanged
 
     private void txtPDOPMaxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPDOPMaxFocusLost
         // TODO : Need to use control instead of model
-        m.setFilterMaxPDOP(Float.parseFloat(txtPDOPMax.getText()));
+        c.setFilterMaxPDOP(Float.parseFloat(txtPDOPMax.getText()));
     }//GEN-LAST:event_txtPDOPMaxFocusLost
 
     private void txtHDOPMaxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtHDOPMaxFocusLost
         // TODO : Need to use control instead of model
-        m.setFilterMaxHDOP(Float.parseFloat(txtHDOPMax.getText()));
+        c.setFilterMaxHDOP(Float.parseFloat(txtHDOPMax.getText()));
     }//GEN-LAST:event_txtHDOPMaxFocusLost
 
     private void txtVDOPMaxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtVDOPMaxFocusLost
         // TODO : Need to use control instead of model
-        m.setFilterMaxVDOP(Float.parseFloat(txtVDOPMax.getText()));
+        c.setFilterMaxVDOP(Float.parseFloat(txtVDOPMax.getText()));
     }//GEN-LAST:event_txtVDOPMaxFocusLost
 
     private void txtRecCntMinFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRecCntMinFocusLost
         // TODO : Need to use control instead of model
-        m.setFilterMinRecCount(Integer.parseInt(txtRecCntMin.getText()));
+        c.setFilterMinRecCount(Integer.parseInt(txtRecCntMin.getText()));
     }//GEN-LAST:event_txtRecCntMinFocusLost
 
     private void txtRecCntMaxInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtRecCntMaxInputMethodTextChanged
         // TODO : Need to use control instead of model
-        m.setFilterMaxRecCount(Integer.parseInt(txtRecCntMax.getText()));
+        c.setFilterMaxRecCount(Integer.parseInt(txtRecCntMax.getText()));
     }//GEN-LAST:event_txtRecCntMaxInputMethodTextChanged
 
     private void txtDistanceMinFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDistanceMinFocusLost
         // TODO : Need to use control instead of model
-        m.setFilterMinDist(Float.parseFloat(txtDistanceMin.getText()));
+        c.setFilterMinDist(Float.parseFloat(txtDistanceMin.getText()));
     }//GEN-LAST:event_txtDistanceMinFocusLost
 
     private void txtDistanceMaxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDistanceMaxFocusLost
         // TODO : Need to use control instead of model
-        m.setFilterMaxDist(Float.parseFloat(txtDistanceMax.getText()));
+        c.setFilterMaxDist(Float.parseFloat(txtDistanceMax.getText()));
     }//GEN-LAST:event_txtDistanceMaxFocusLost
 
     private void txtSpeedMinFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSpeedMinFocusLost
         // TODO : Need to use control instead of model
-        m.setFilterMinSpeed(Float.parseFloat(txtSpeedMin.getText()));
+        c.setFilterMinSpeed(Float.parseFloat(txtSpeedMin.getText()));
     }//GEN-LAST:event_txtSpeedMinFocusLost
 
     private void txtSpeedMaxFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSpeedMaxFocusLost
         // TODO : Need to use control instead of model
-        m.setFilterMaxSpeed(Float.parseFloat(txtSpeedMax.getText()));
+        c.setFilterMaxSpeed(Float.parseFloat(txtSpeedMax.getText()));
     }//GEN-LAST:event_txtSpeedMaxFocusLost
 
     private void txtNSATMinFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNSATMinFocusLost
         // TODO : Need to use control instead of model
-        m.setFilterMinNSAT(Integer.parseInt(txtNSATMin.getText()));
+        c.setFilterMinNSAT(Integer.parseInt(txtNSATMin.getText()));
     }//GEN-LAST:event_txtNSATMinFocusLost
 
     private void btFormatAndEraseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btFormatAndEraseActionPerformed
