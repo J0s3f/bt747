@@ -28,7 +28,7 @@ import waba.ui.Label;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.control.Controller;
+import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.sys.Convert;
 import bt747.ui.MessageBox;

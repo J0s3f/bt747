@@ -30,7 +30,7 @@ import gps.BT747_dev;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.control.Controller;
+import bt747.model.Controller;
 import bt747.model.Model;
 
 /**

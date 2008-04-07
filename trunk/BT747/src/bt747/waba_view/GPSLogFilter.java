@@ -28,7 +28,7 @@ import gps.BT747_dev;
 import gps.log.GPSFilter;
 
 import bt747.Txt;
-import bt747.control.Controller;
+import bt747.model.Controller;
 import bt747.model.Model;
 
 /** The purpose of this container is to set the log filter settings.

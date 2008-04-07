@@ -1,4 +1,4 @@
-package bt747.control;
+package bt747.model;
 
 import bt747.ui.MessageBox;
 
@@ -25,7 +25,6 @@ import gps.log.HoluxTrlLogConvert;
 import gps.port.GPSPort;
 import gps.port.GPSWabaPort;
 
-import bt747.model.Model;
 import bt747.sys.Convert;
 
 /**
