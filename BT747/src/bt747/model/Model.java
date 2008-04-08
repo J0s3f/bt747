@@ -1,5 +1,6 @@
 package bt747.model;
 
+import gps.BT747_dev;
 import gps.GPSstate;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
@@ -358,5 +359,26 @@ public class Model extends AppSettings implements gps.settings{
      public int getDatum() {
          return gpsModel.getDatum();
      }
+
+     public int getEstimatedNbrRecords(int logFormat) {
+         int count=0;
+         try {
+             int size=BT747_dev.logRecordSize(logFormat, isHolux(),12);
+             if(isHolux()) {
+                 size+=1;
+             } else {
+                 size+=2;
+             }
+             if(size!=0) {
+                 count= logMemUsefullSize()/size;
+             }
+         } catch (Exception e) {
+             e.printStackTrace();
+             // TODO: handle exception
+         }
+         return count;
+     }
+     
+     
 
 }

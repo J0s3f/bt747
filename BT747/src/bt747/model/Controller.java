@@ -19,8 +19,11 @@ import gps.log.GPSLogConvert;
 import gps.log.GPSNMEAFile;
 import gps.log.GPSPLTFile;
 import gps.log.HoluxTrlLogConvert;
+import moio.util.HashSet;
+import moio.util.Iterator;
 
 import bt747.Txt;
+import bt747.ui.Event;
 import bt747.ui.MessageBox;
 
 /**
@@ -419,6 +422,10 @@ public class Controller {
         m.gpsModel().addListener(l);
     }
 
+    public void removeGPSListener(GPSListener l) {
+        m.gpsModel().removeListener(l);
+    }
+
     public static final int DECODER_ORG = 1;
     public static final int DECODER_THOMAS = 2;
 
@@ -783,5 +790,33 @@ public class Controller {
         // TODO: not sure this is needed anymore
         m.getLogFilters()[i].setRcrMask(rcrmask);
     }
+
+    
+    // View handling.
+    private HashSet views = new HashSet();
+
+    /**add a listener to event thrown by this class*/
+    public void addView(BT747View v){        
+        views.add(v);
+        v.setController(this);
+        v.setModel(this.m);
+    }
+
+    protected void MessageBoxModal() {
+        Iterator it = views.iterator();
+        while (it.hasNext()) {
+//            BT747View l=(BT747View)it.next();
+//            l.newEvent(e);
+        }
+    }
+
+//    protected void postEvent(final int type) {
+//        Iterator it = views.iterator();
+//        while (it.hasNext()) {
+//            BT747View l=(BT747View)it.next();
+//            Event e=new Event(l, type, null);
+//            l.newEvent(e);
+//        }
+//    }
 
 }

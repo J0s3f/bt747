@@ -224,7 +224,10 @@ public class GPSstate implements Thread {
      * Close the GPS connection
      */
     public void GPS_close() {
-        m_GPSrxtx.closePort();
+        if (m_GPSrxtx.isConnected()) {
+            m_GPSrxtx.closePort();
+            PostStatusEvent(GpsEvent.DISCONNECTED);
+        }
     }
 
     /**
@@ -1949,6 +1952,10 @@ public class GPSstate implements Thread {
         listeners.add(l);
     }
 
+    public void removeListener(GPSListener l) {
+        listeners.remove(l);
+    }
+    
     protected void postEvent(GpsEvent e) {
         Iterator it = listeners.iterator();
         while (it.hasNext()) {
