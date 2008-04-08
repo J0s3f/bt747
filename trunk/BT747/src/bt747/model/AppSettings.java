@@ -1093,6 +1093,10 @@ public class AppSettings {
         listeners.add(l);
     }
 
+    public void removeListener(ModelListener l){        
+        listeners.remove(l);
+    }
+    
     protected void postEvent(final int type, Object o) {
         Iterator it = listeners.iterator();
         while (it.hasNext()) {

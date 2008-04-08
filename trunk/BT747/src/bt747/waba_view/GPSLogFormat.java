@@ -24,6 +24,8 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
 
+import sun.security.action.GetLongAction;
+
 import gps.BT747_dev;
 import gps.GpsEvent;
 
@@ -135,21 +137,7 @@ public class GPSLogFormat extends Container {
         chkLogFmtItems[BT747_dev.FMT_AZIMUTH_IDX].setEnabled(sidSet);
         chkLogFmtItems[BT747_dev.FMT_SNR_IDX].setEnabled(sidSet);
 
-        int count;
-        m_lbEstNbrRecords.setText("");
-        try {
-            int size=BT747_dev.logRecordSize(getSelectedLogFormat(), m.isHolux(),12);
-            if(m.isHolux()) {
-                size+=1;
-            } else {
-                size+=2;
-            }
-            count= m.logMemUsefullSize()/size;
-            m_lbEstNbrRecords.setText(count+Txt.REC_ESTIMATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // TODO: handle exception
-        }
+        m_lbEstNbrRecords.setText(m.getEstimatedNbrRecords(getSelectedLogFormat())+Txt.REC_ESTIMATED);
     }
 
     /** Handle events for this object.
