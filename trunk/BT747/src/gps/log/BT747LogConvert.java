@@ -564,6 +564,21 @@ public final class BT747LogConvert implements GPSLogConvert {
                 updateLogFormat(gpsFile, logFormat);
             }
             nbrBytesDone+=16;
+            if(//   ((0xFF&bytes[offsetInBuffer+5])=='G')
+               // &&((0xFF&bytes[offsetInBuffer+6])=='R')
+               // &&((0xFF&bytes[offsetInBuffer+7])=='2')
+               // &&((0xFF&bytes[offsetInBuffer+8])=='4')
+               // &&((0xFF&bytes[offsetInBuffer+9])=='1')
+               // &&
+                  ((0xFF&bytes[offsetInBuffer+10])=='W')
+                &&((0xFF&bytes[offsetInBuffer+11])=='A')
+                &&((0xFF&bytes[offsetInBuffer+12])=='Y')
+                &&((0xFF&bytes[offsetInBuffer+13])=='P')
+                &&((0xFF&bytes[offsetInBuffer+14])=='N')
+                &&((0xFF&bytes[offsetInBuffer+15])=='T')
+                ) {
+//                Vm.debug("Holux Waypoint");
+                }
         }
         return nbrBytesDone;
     }
