@@ -333,9 +333,13 @@ public class AppSettings {
         case 18:
             setFreeTextPort("");
             /* fall through */
+        case 19:
+            setBinDecoder(0);
+            setGPSType(0);
+            /* fall through */
             
             /* Must be last line in case (not 'default') */ 
-            setStringOpt(0,"0.19",C_VERSION_IDX, C_VERSION_SIZE);
+            setStringOpt(0,"0.20",C_VERSION_IDX, C_VERSION_SIZE);
         }
         getSettings();
     }
