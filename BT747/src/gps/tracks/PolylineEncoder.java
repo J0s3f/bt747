@@ -1,5 +1,5 @@
 /**
- * Reimplementation of Mark McClures Javascript PolylineEncoder
+ * Reimplementation of Mark McClure's Javascript PolylineEncoder
  * All the mathematical logic is more or less copied by McClure
  *  
  * @author Mark Rambow
