@@ -2066,8 +2066,21 @@ public class GPSstate implements Thread {
         m_GPSrxtx.sendCmdAndGetDPL700Response(0x63B70000, 10 * 1024 * 1024);
     }
 
-    public void getDPL700LogSize() {
+    public void reqDPL700LogSize() {
         m_GPSrxtx.sendCmdAndGetDPL700Response(0x60B50000, 255);
+    }
+
+    public void reqDPL700Erase() {
+        m_GPSrxtx.sendCmdAndGetDPL700Response(0x60B50000, 255);
+    }
+
+    
+    public void reqDPL700DeviceInfo() {
+        m_GPSrxtx.sendCmdAndGetDPL700Response(0x5BB00000, 255);
+    }
+
+    public void getDPL700GetSettings() {
+        m_GPSrxtx.sendCmdAndGetDPL700Response(0x62B60000, 255);
     }
 
     private void AnalyseDPL700Data(String s) {
