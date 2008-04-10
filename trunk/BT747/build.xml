@@ -270,7 +270,7 @@
 		<attribute name="wabajar" default="${waba.jar}" />
 		<attribute name="suffix" default="_waba_j2se" />
 		<sequential>
-			<build.rxtx suffix="@suffix" build.j2se="@{suffix}" />
+			<build.rxtx suffix="@{suffix}" build.j2se="@{suffix}" />
 
 			<!--
 	        <antcall target="rxtxjar">
