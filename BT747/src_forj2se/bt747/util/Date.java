@@ -8,7 +8,7 @@ package bt747.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.GregorianCalendar;
 
 import bt747.sys.Settings;
 
@@ -18,15 +18,17 @@ import bt747.sys.Settings;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Date extends java.util.Date {
+public class Date extends java.util.GregorianCalendar {
 
-    java.util.Date d;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8694258139978808370L;
     /**
      * 
      */
     public Date() {
         super();
-        //d=new java.util.Date();
     }
 
     /**
@@ -46,14 +48,16 @@ public class Date extends java.util.Date {
      * @param sentYear
      */
     public Date(int sentDay, int sentMonth, int sentYear) {
-        super(sentYear-1900, sentMonth, sentDay);
+        super(sentYear,sentMonth,sentDay);
+        System.err.println(sentDay+"/"+sentMonth+"/"+sentYear);
+        System.err.println(getDateString());
     }
 
     /**
      * @param strDate
      */
     public Date(String strDate) {
-        super(strDate);
+        this(strDate,Settings.DATE_YMD);
     }
 
     /**
@@ -64,15 +68,13 @@ public class Date extends java.util.Date {
         super();
         DateFormat df;
         if(dateFormat==Settings.DATE_YMD) {
-            df = new SimpleDateFormat("yyyy/dd/MM");
+            df = new SimpleDateFormat("yyyy/MM/dd");
         } else { //if {dateFormat==Settings.DATE_DMY) {
-            df = new SimpleDateFormat("MM/dd/yyyy");
+            df = new SimpleDateFormat("dd/MM/yyyy");
         }
         try {
         java.util.Date d=df.parse(strDate);
-        super.setDate(d.getDate());
-        super.setMonth(d.getMonth());
-        super.setYear(d.getYear());
+        super.setTime(d);
         } catch (Exception e){
             // TODO: handle exception
             e.printStackTrace();
@@ -87,35 +89,43 @@ public class Date extends java.util.Date {
 //    }
     
     public void advance(int s) {
-        setTime(getTime()+s*1000L);
+        super.add(GregorianCalendar.SECOND, s);
+
     }
     
     public Date (java.util.Date d) {
         super();
-        this.setDate(d.getDate());
+        this.setTime(d);
     }
     
     public Date (Date d) {
         super();
-        this.setDate(d.getDate());
+        super.setTime(d.getTime());
     }
     
     public final int dateToUTCepoch1970() {
-        return (int)(getTime()/1000L);
+        return (int)(this.getTimeInMillis()/1000L);
     }
 
    public String getDateString() {
-    // TODO Check this method
-       return new SimpleDateFormat("dd/MM/yyyy").format(this);
+       return new SimpleDateFormat("dd/MM/yyyy").format(this.getTime());
 
    }
    
 //   private static final int DAYS_Julian_1970 = (new Date(1,1,1970)).getJulianDay();
    public final int getJulianDay() {
-       return dateToUTCepoch1970();
+       return this.dateToUTCepoch1970();
    }
 
-   
+   public final int getYear() {
+       return this.get(GregorianCalendar.YEAR);
+   }
+   public final int getMonth() {
+       return this.get(GregorianCalendar.MONTH);
+   }
+   public final int getDay() {
+       return this.get(GregorianCalendar.DAY_OF_MONTH);
+   }
    
 
 }

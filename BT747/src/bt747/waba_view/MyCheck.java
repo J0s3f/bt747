@@ -9,7 +9,7 @@ import waba.ui.Check;
  * @author Mario De Weerd
  *
  */
-public class MyCheck extends Check {
+public final class MyCheck extends Check {
 
     /**
      * @param text
@@ -19,12 +19,12 @@ public class MyCheck extends Check {
     }
     
     //@Override
-    public int getPreferredHeight() {
+    final public int getPreferredHeight() {
         return fm.height-4;
     }
     
     //@Override
-    public int getPreferredWidth() {
+    final public int getPreferredWidth() {
         return super.getPreferredWidth()+getPreferredHeight()-super.getPreferredHeight()-1;
     }
 
