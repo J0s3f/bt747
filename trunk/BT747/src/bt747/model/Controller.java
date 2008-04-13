@@ -429,7 +429,7 @@ public class Controller {
     public static final int DECODER_ORG = 1;
     public static final int DECODER_THOMAS = 2;
 
-    public void setBinDecoder(int decoder_idx) {
+    public final void setBinDecoder(final int decoder_idx) {
         m.setBinDecoder(decoder_idx);
     }
 

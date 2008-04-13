@@ -36,7 +36,7 @@ public class Convert {
     
     public static String toString(double p, int i)
     {
-       return String.format((Locale)null,"%."+i+"f", p);
+       return String.format((Locale)null,"%."+i+"f", new Double(p));
     }
     
     private final static String zerostring="0000000000000000";

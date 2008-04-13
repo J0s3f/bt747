@@ -454,17 +454,17 @@ public class AppSettings {
     }
 
     private final String getStringOpt(final int idx, final int size) {
-        String s;
-        int i;
-        if(idx+size>Settings.getAppSettings().length()) {
-            return "";
-        } else {
+        if(idx+size<=Settings.getAppSettings().length()) {
+            String s;
+            int i;
             s=Settings.getAppSettings().substring(idx,idx+size);
             if((i=s.indexOf("\0"))!=-1) {
                 return s.substring(0, i);
             } else {
                 return s;
             }
+        } else {
+            return "";
         }
     }
 
@@ -887,7 +887,7 @@ public class AppSettings {
     /**
      * @return Returns the solveMacLagProblem.
      */
-    public boolean isSolveMacLagProblem() {
+    public final boolean isSolveMacLagProblem() {
         return solveMacLagProblem;
     }
     /**

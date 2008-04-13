@@ -23,6 +23,7 @@ import gps.BT747_dev;
 
 import bt747.Txt;
 import bt747.io.File;
+import bt747.io.BufFile;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 import bt747.sys.Vm;
@@ -56,7 +57,7 @@ public abstract class GPSFile {
 
     protected int C_NUMBER_OF_PASSES = 1;
 
-    private File m_File = null;
+    private BufFile m_File = null;
 
     protected Time t = new Time(); // Time from log, already transformed
 
@@ -101,27 +102,27 @@ public abstract class GPSFile {
         }
     };
 
-    public void setOneFilePerTrack(final boolean oneFilePerTrack) {
+    public final void setOneFilePerTrack(final boolean oneFilePerTrack) {
         m_oneFilePerTrack = oneFilePerTrack;
     }
 
-    public void setTrackSepTime(final int time) {
+    public final void setTrackSepTime(final int time) {
         m_TrackSepTime = time;
     }
 
-    public void setActiveFileFields(final GPSRecord full) {
+    public final void setActiveFileFields(final GPSRecord full) {
         activeFileFields = full;
     }
 
-    public void writeLogFmtHeader(final GPSRecord f) {
+    public final void writeLogFmtHeader(final GPSRecord f) {
         activeFields = new GPSRecord(f);
     };
 
-    public void setFilters(final GPSFilter[] filters) {
+    public final void setFilters(final GPSFilter[] filters) {
         m_Filters = filters;
     };
 
-    public void setImperial(final boolean imperial) {
+    public final void setImperial(final boolean imperial) {
         this.imperial = imperial;
     }
 
@@ -249,11 +250,11 @@ public abstract class GPSFile {
         boolean createNewFile = C_NUMBER_OF_PASSES - 1 == m_nbrOfPassesToGo;
 
         try {
-            m_File = new File(fileName, File.DONT_OPEN, m_card);
+            m_File = new BufFile(fileName, File.DONT_OPEN, m_card);
             if (createNewFile && m_File.exists()) {
                 m_File.delete();
             }
-            m_File = new File(fileName, createNewFile ? File.CREATE
+            m_File = new BufFile(fileName, createNewFile ? File.CREATE
                     : File.READ_WRITE, m_card);
         } catch (Exception e) {
             // TODO: handle exception
@@ -294,7 +295,7 @@ public abstract class GPSFile {
         }
     }
 
-    protected boolean isOpen() {
+    protected final boolean isOpen() {
         return m_File != null;
     }
 
@@ -335,7 +336,7 @@ public abstract class GPSFile {
         return rcrStr.toString();
     }
 
-    protected void writeTxt(final String s) {
+    protected final void writeTxt(final String s) {
         try {
             if (m_File != null) {
                 m_File.writeBytes(s.getBytes(), 0, s.length());
@@ -369,7 +370,7 @@ public abstract class GPSFile {
     /**
      * @return Returns the goodTrackColor.
      */
-    public String getGoodTrackColor() {
+    public final String getGoodTrackColor() {
         return goodTrackColor;
     }
 
@@ -377,21 +378,21 @@ public abstract class GPSFile {
      * @param goodTrackColor
      *            The goodTrackColor to set.
      */
-    public void setGoodTrackColor(String goodTrackColor) {
+    public final void setGoodTrackColor(String goodTrackColor) {
         this.goodTrackColor = goodTrackColor;
     }
 
     /**
      * @return Returns the filesCreated.
      */
-    public int getFilesCreated() {
+    public final int getFilesCreated() {
         return filesCreated;
     }
 
     /**
      * @return Returns the recordNbrInLogs.
      */
-    public boolean isRecordNbrInLogs() {
+    public final boolean isRecordNbrInLogs() {
         return recordNbrInLogs;
     }
 
@@ -399,7 +400,7 @@ public abstract class GPSFile {
      * @param recordNbrInLogs
      *            The recordNbrInLogs to set.
      */
-    public void setRecordNbrInLogs(boolean recordNbrInLogs) {
+    public final void setRecordNbrInLogs(boolean recordNbrInLogs) {
         this.recordNbrInLogs = recordNbrInLogs;
     }
 }

@@ -27,6 +27,7 @@
 	<property name="swinglayout.jar" value="${lib.dir}/swing-layout-1.0.3.jar" />
 	<property name="waba_forj2se.jar" value="${lib.dir}/waba_forj2se.jar" />
 	<property name="waba_forwaba.jar" value="${lib.dir}/waba_forwaba.jar" />
+    <property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
 
 	<property name="j2se.main" value="bt747.j2se_view.BT747_Main" />
     <property name="j2se.main2" value="bt747.j2se_view.BT747_Main2" />
@@ -40,6 +41,7 @@
 
 	<path id="rxtxclasspath">
 		<pathelement location="${waba_forwaba.jar}" />
+		<pathelement location="${jcalendar.jar}" />
 		<pathelement location="${waba.jar}" />
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar" />
 		<pathelement location="${swcollections.jar}" />
@@ -49,6 +51,7 @@
 
 	<path id="j2seclasspath">
 		<pathelement location="${waba_forj2se.jar}" />
+        <pathelement location="${jcalendar.jar}" />
 		<pathelement location="${swcollections.jar}" />
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
@@ -250,6 +253,7 @@
                 -optimizationpasses 4
                 -injar ${waba_forj2se.jar}(!META-INF/**)
                 -injar ${swcollections.jar}(!META-INF/**)
+			    -injar ${jcalendar.jar}(!META-INF/**)
                 -printmapping ${dist}/${ant.project.name}${j2se_suffix}.map
                 -keep public class BT747
                 -keep public class bt747.j2se_view.BT747
@@ -286,6 +290,7 @@
 					<pathelement path="@{wabajar}" />
 					<pathelement path="${rxtxcomm.jar}" />
 					<pathelement path="${swinglayout.jar}" />
+                    <pathelement path="${jcalendar.jar}" />
 					<pathelement path="${swcollections.jar}" />
 					<pathelement path="${rxtxbuild.dir}/${ant.project.name}@{suffix}.jar" />
 					<pathelement path="${waba_forwaba.jar}" />
