@@ -19,10 +19,10 @@
 //********************************************************************                              
 package gps;
 
-import moio.util.HashSet;
-import moio.util.Iterator;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
+import moio.util.HashSet;
+import moio.util.Iterator;
 
 import bt747.Txt;
 import bt747.generic.Generic;
@@ -53,7 +53,7 @@ public class GPSstate implements Thread {
     private GPSrxtx m_GPSrxtx = new GPSrxtx();
 
     private boolean m_getFullLog = true; // If true, get the entire log
-                                            // (based
+    // (based
     // on block head)
 
     private int logFormat = 0;
@@ -145,8 +145,8 @@ public class GPSstate implements Thread {
     private boolean GPS_STATS = false; // (!Settings.onDevice);
 
     private final static int C_LOGERASE_TIMEOUT = 2000; // Timeout between log
-                                                        // status requests for
-                                                        // erase.
+    // status requests for
+    // erase.
 
     private boolean holux = false; // True if Holux M-241 device detected
 
@@ -423,7 +423,7 @@ public class GPSstate implements Thread {
     Vector toSendCmds = new Vector(); // List of sent commands
 
     static final int C_MAX_TOSEND_COMMANDS = 20; // Max commands to put in
-                                                    // list
+    // list
 
     static final int C_MAX_CMDS_SENT = 4;
 
@@ -824,7 +824,7 @@ public class GPSstate implements Thread {
         if (p_nmea.length >= 3) {
             String z_MatchString;
             z_Flag = Convert.toInt(p_nmea[p_nmea.length - 1]); // Last
-                                                                // parameter
+            // parameter
             z_MatchString = "PMTK" + p_nmea[1];
             for (int i = 2; i < p_nmea.length - 1; i++) {
                 // ACK is variable length, can have parameters of cmd.
@@ -920,7 +920,7 @@ public class GPSstate implements Thread {
         } else if (p_nmea.length == 1 && p_nmea[0].startsWith("WP")) {
             AnalyseDPL700Data(p_nmea[0]);
         } else if (gpsDecode && (m_logState == C_LOG_NOLOGGING) // Not during
-                                                                // log
+                // log
                 // download for
                 // performance.
                 && p_nmea[0].startsWith("G")) {
@@ -1434,7 +1434,7 @@ public class GPSstate implements Thread {
                                         continueLoop = ((m_Data[i] & 0xFF) == 0xFF);
                                     }
                                     continueLoop = !continueLoop; // Continue
-                                                                    // if
+                                    // if
                                     // something else
                                     // than 0xFF
                                     // found.
@@ -1955,7 +1955,7 @@ public class GPSstate implements Thread {
     public void removeListener(GPSListener l) {
         listeners.remove(l);
     }
-    
+
     protected void postEvent(GpsEvent e) {
         Iterator it = listeners.iterator();
         while (it.hasNext()) {
@@ -2059,11 +2059,31 @@ public class GPSstate implements Thread {
     // DPL700 Functionality
     private String DPL700LogFileName;
     private int DPL700Card;
+    private static final int C_DPL700_OFF = 0;
+    private static final int C_DPL700_NEEDGETLOG = 1;
+    private static final int C_DPL700_GETLOG = 2;
+    private int DPL700_State = C_DPL700_OFF;
 
     public void getDPL700Log(String p_FileName, int Card) {
-        DPL700LogFileName=p_FileName;
-        DPL700Card=Card;
+        DPL700LogFileName = p_FileName;
+        DPL700Card = Card;
+        enterDPL700Mode();
+        DPL700_State = C_DPL700_NEEDGETLOG;
+    }
+
+    public void reqDPL700Log() {
+        DPL700_State = C_DPL700_GETLOG;
         m_GPSrxtx.sendCmdAndGetDPL700Response(0x63B70000, 10 * 1024 * 1024);
+    }
+
+    public void enterDPL700Mode() {
+        exitDPL700Mode(); // Exit previous session if still open
+        m_GPSrxtx.sendCmdAndGetDPL700Response("W'P Camera Detect", 255);
+    }
+
+    public void exitDPL700Mode() {
+        m_GPSrxtx.sendDPL700Cmd("WP AP-Exit"); // No reply expected
+        DPL700_State = C_DPL700_OFF;
     }
 
     public void reqDPL700LogSize() {
@@ -2074,7 +2094,6 @@ public class GPSstate implements Thread {
         m_GPSrxtx.sendCmdAndGetDPL700Response(0x60B50000, 255);
     }
 
-    
     public void reqDPL700DeviceInfo() {
         m_GPSrxtx.sendCmdAndGetDPL700Response(0x5BB00000, 255);
     }
@@ -2087,20 +2106,30 @@ public class GPSstate implements Thread {
         if (GPS_DEBUG) {
             Vm.debug("<DPL700 " + s);
         }
-        if (s.startsWith("WP Update Over")) {
-            if (DPL700LogFileName != null) {
-                if(!DPL700LogFileName.endsWith(".sr")) {
-                    DPL700LogFileName+=".sr";
+        if (s.startsWith("WP GPS")) {
+            // WP GPS+BT
+            // Response to W'P detect
+            if (DPL700_State == C_DPL700_NEEDGETLOG) {
+                reqDPL700Log();
+            }
+        } else if (s.startsWith("WP Update Over")) {
+            if (DPL700_State == C_DPL700_GETLOG) {
+                if (DPL700LogFileName != null) {
+                    if (!DPL700LogFileName.endsWith(".sr")) {
+                        DPL700LogFileName += ".sr";
+                    }
+                    openNewLog(DPL700LogFileName, DPL700Card);
+                    try {
+                        m_logFile.writeBytes(m_GPSrxtx.DPL700_buffer, 0,
+                                m_GPSrxtx.DPL700_buffer_idx);
+                        m_logFile.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // TODO: handle exception
+                    }
+                    DPL700LogFileName = null;
+                    exitDPL700Mode();
                 }
-                openNewLog(DPL700LogFileName, DPL700Card);
-                try {
-                    m_logFile.writeBytes(m_GPSrxtx.DPL700_buffer,0,m_GPSrxtx.DPL700_buffer_idx);
-                    m_logFile.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    // TODO: handle exception
-                }
-                DPL700LogFileName=null;
             }
         }
     }

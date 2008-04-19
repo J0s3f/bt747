@@ -735,17 +735,17 @@ public class BT747_Main extends javax.swing.JFrame implements
         cbNMEAOutGRS = new javax.swing.JComboBox();
         jComboBox21 = new javax.swing.JComboBox();
         jLabel34 = new javax.swing.JLabel();
-        jPanel16 = new javax.swing.JPanel();
+        AdvancedfileSettingsPanel = new javax.swing.JPanel();
         pnNMEAOutput1 = new javax.swing.JPanel();
-        jComboBox34 = new javax.swing.JComboBox();
+        cbNMEAFileType10 = new javax.swing.JComboBox();
         jLabel45 = new javax.swing.JLabel();
-        jComboBox35 = new javax.swing.JComboBox();
-        jComboBox36 = new javax.swing.JComboBox();
-        jComboBox37 = new javax.swing.JComboBox();
-        jComboBox38 = new javax.swing.JComboBox();
-        jComboBox39 = new javax.swing.JComboBox();
-        jComboBox40 = new javax.swing.JComboBox();
-        jComboBox41 = new javax.swing.JComboBox();
+        cbNMEAFileType11 = new javax.swing.JComboBox();
+        cbNMEAFileType12 = new javax.swing.JComboBox();
+        cbNMEAFileMALM = new javax.swing.JComboBox();
+        cbNMEAFileMDGP = new javax.swing.JComboBox();
+        cbNMEAFileMEPH = new javax.swing.JComboBox();
+        cbNMEAFileMDBG = new javax.swing.JComboBox();
+        cbNMEAFileMZDA = new javax.swing.JComboBox();
         jLabel49 = new javax.swing.JLabel();
         jLabel50 = new javax.swing.JLabel();
         jLabel51 = new javax.swing.JLabel();
@@ -756,7 +756,7 @@ public class BT747_Main extends javax.swing.JFrame implements
         btSetNMEAOutput1 = new javax.swing.JButton();
         btSetNMEAOutputDefaults1 = new javax.swing.JButton();
         lbGLLOut2 = new javax.swing.JLabel();
-        jComboBox42 = new javax.swing.JComboBox();
+        cbNMEAFileGLL = new javax.swing.JComboBox();
         jComboBox43 = new javax.swing.JComboBox();
         lbRMCOut2 = new javax.swing.JLabel();
         cbVTGOut2 = new javax.swing.JLabel();
@@ -777,10 +777,10 @@ public class BT747_Main extends javax.swing.JFrame implements
         jComboBox51 = new javax.swing.JComboBox();
         jComboBox52 = new javax.swing.JComboBox();
         jLabel56 = new javax.swing.JLabel();
-        jPanel17 = new javax.swing.JPanel();
+        pnGPXFileSettings = new javax.swing.JPanel();
         cbUTCOffset0 = new javax.swing.JCheckBox();
         cbGPXTrkSegWhenSmall = new javax.swing.JCheckBox();
-        jPanel19 = new javax.swing.JPanel();
+        InfoPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         btConnect = new javax.swing.JButton();
@@ -866,8 +866,8 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(tfOutputFileBaseName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 150, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(tfWorkDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE)
-                    .add(tfRawLogFilePath, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE))
+                    .add(tfWorkDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
+                    .add(tfRawLogFilePath, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -886,7 +886,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                         .add(btRawLogFile)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(btOutputFile)))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         tfWorkDirectory.setText(m.getBaseDirPath());
@@ -1068,16 +1068,11 @@ public class BT747_Main extends javax.swing.JFrame implements
         LogOperationsPanelLayout.setHorizontalGroup(
             LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(LogOperationsPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .add(LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(LogOperationsPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .add(LogOperationsPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(pnDownload, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(LogOperationsPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(pnConvert, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(pnDownload, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnConvert, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         LogOperationsPanelLayout.setVerticalGroup(
@@ -1204,7 +1199,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .add(FileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(499, Short.MAX_VALUE))
+                .addContainerGap(485, Short.MAX_VALUE))
         );
         FileSettingsPanelLayout.setVerticalGroup(
             FileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1213,7 +1208,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Output Settings", FileSettingsPanel);
@@ -1406,7 +1401,7 @@ public class BT747_Main extends javax.swing.JFrame implements
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnTrackpointLayout.createSequentialGroup()
                 .add(pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel12, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
@@ -1833,7 +1828,7 @@ public class BT747_Main extends javax.swing.JFrame implements
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWaypointLayout.createSequentialGroup()
                 .add(pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointFix, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointFix, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
@@ -1849,7 +1844,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .add(pnCommonFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnWaypoint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         LogFiltersPanelLayout.setVerticalGroup(
             LogFiltersPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1859,7 +1854,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                     .add(org.jdesktop.layout.GroupLayout.LEADING, pnWaypoint, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, pnTrackpoint, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, pnCommonFilter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Filters", LogFiltersPanel);
@@ -2480,7 +2475,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                                 .add(pnLogBy, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                 .add(18, 18, 18)
                                 .add(pnSBAS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Device settings", DeviceSettingsPanel);
@@ -2548,7 +2543,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                     .add(lbTime)
                     .add(lbLongitude)
                     .add(lbLatitude))
-                .addContainerGap(700, Short.MAX_VALUE))
+                .addContainerGap(686, Short.MAX_VALUE))
         );
         GPSDecodePanelLayout.setVerticalGroup(
             GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2591,7 +2586,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel17)
                     .add(jLabel19))
-                .addContainerGap(167, Short.MAX_VALUE))
+                .addContainerGap(161, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("GPS Decode", GPSDecodePanel);
@@ -2973,7 +2968,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .add(pnFlashSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(415, Short.MAX_VALUE))
+                .addContainerGap(401, Short.MAX_VALUE))
         );
         AdvancedSettingsPanelLayout.setVerticalGroup(
             AdvancedSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2989,23 +2984,23 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         pnNMEAOutput1.setBorder(javax.swing.BorderFactory.createTitledBorder("NMEA File Settings"));
 
-        jComboBox34.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileType10.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
         jLabel45.setText("Type 10 (?)");
 
-        jComboBox35.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileType11.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox36.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileType12.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox37.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileMALM.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox38.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileMDGP.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox39.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileMEPH.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox40.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileMDBG.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox41.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileMZDA.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
         jLabel49.setText("Type 11 (?)");
 
@@ -3027,7 +3022,7 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         lbGLLOut2.setText("GLL Period");
 
-        jComboBox42.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileGLL.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
         jComboBox43.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
@@ -3079,7 +3074,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, pnNMEAOutput1Layout.createSequentialGroup()
                         .add(jLabel45)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jComboBox34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(cbNMEAFileType10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, pnNMEAOutput1Layout.createSequentialGroup()
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                             .add(lbGLLOut2)
@@ -3094,7 +3089,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                             .add(cbGSTOut1))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jComboBox42, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbNMEAFileGLL, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jComboBox43, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jComboBox44, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jComboBox45, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -3110,31 +3105,31 @@ public class BT747_Main extends javax.swing.JFrame implements
                             .add(pnNMEAOutput1Layout.createSequentialGroup()
                                 .add(jLabel49)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jComboBox35, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(cbNMEAFileType11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutput1Layout.createSequentialGroup()
                                 .add(jLabel50)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jComboBox36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(cbNMEAFileType12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutput1Layout.createSequentialGroup()
                                 .add(jLabel51)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jComboBox37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(cbNMEAFileMALM, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutput1Layout.createSequentialGroup()
                                 .add(jLabel52)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jComboBox39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(cbNMEAFileMEPH, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutput1Layout.createSequentialGroup()
                                 .add(jLabel53)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jComboBox38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(cbNMEAFileMDGP, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutput1Layout.createSequentialGroup()
                                 .add(jLabel54)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jComboBox40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(cbNMEAFileMDBG, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutput1Layout.createSequentialGroup()
                                 .add(jLabel55)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jComboBox41, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(cbNMEAFileMZDA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutput1Layout.createSequentialGroup()
                                 .add(jLabel56)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -3149,7 +3144,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnNMEAOutput1Layout.createSequentialGroup()
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jComboBox42, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbNMEAFileGLL, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(lbGLLOut2))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -3186,35 +3181,35 @@ public class BT747_Main extends javax.swing.JFrame implements
                             .add(jLabel56)))
                     .add(pnNMEAOutput1Layout.createSequentialGroup()
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jComboBox34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbNMEAFileType10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jLabel45))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jComboBox35, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbNMEAFileType11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jLabel49))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jComboBox36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbNMEAFileType12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jLabel50))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jComboBox37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbNMEAFileMALM, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jLabel51))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jComboBox39, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbNMEAFileMEPH, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jLabel52))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jComboBox38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbNMEAFileMDGP, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jLabel53))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jComboBox40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbNMEAFileMDBG, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jLabel54))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jComboBox41, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cbNMEAFileMZDA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jLabel55))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jComboBox52, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
@@ -3228,53 +3223,53 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .add(btSetNMEAOutputDefaults1))
         );
 
-        jPanel17.setBorder(javax.swing.BorderFactory.createTitledBorder("GPX File Settings"));
+        pnGPXFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("GPX File Settings"));
 
         cbUTCOffset0.setText("Do not apply UTC offset");
 
         cbGPXTrkSegWhenSmall.setText("Make a new track segment even if time split is small");
 
-        org.jdesktop.layout.GroupLayout jPanel17Layout = new org.jdesktop.layout.GroupLayout(jPanel17);
-        jPanel17.setLayout(jPanel17Layout);
-        jPanel17Layout.setHorizontalGroup(
-            jPanel17Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel17Layout.createSequentialGroup()
-                .add(jPanel17Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        org.jdesktop.layout.GroupLayout pnGPXFileSettingsLayout = new org.jdesktop.layout.GroupLayout(pnGPXFileSettings);
+        pnGPXFileSettings.setLayout(pnGPXFileSettingsLayout);
+        pnGPXFileSettingsLayout.setHorizontalGroup(
+            pnGPXFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnGPXFileSettingsLayout.createSequentialGroup()
+                .add(pnGPXFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(cbUTCOffset0)
                     .add(cbGPXTrkSegWhenSmall))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel17Layout.setVerticalGroup(
-            jPanel17Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel17Layout.createSequentialGroup()
+        pnGPXFileSettingsLayout.setVerticalGroup(
+            pnGPXFileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnGPXFileSettingsLayout.createSequentialGroup()
                 .add(cbUTCOffset0)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cbGPXTrkSegWhenSmall)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        org.jdesktop.layout.GroupLayout jPanel16Layout = new org.jdesktop.layout.GroupLayout(jPanel16);
-        jPanel16.setLayout(jPanel16Layout);
-        jPanel16Layout.setHorizontalGroup(
-            jPanel16Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel16Layout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout AdvancedfileSettingsPanelLayout = new org.jdesktop.layout.GroupLayout(AdvancedfileSettingsPanel);
+        AdvancedfileSettingsPanel.setLayout(AdvancedfileSettingsPanelLayout);
+        AdvancedfileSettingsPanelLayout.setHorizontalGroup(
+            AdvancedfileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(AdvancedfileSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(pnNMEAOutput1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel17, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(320, Short.MAX_VALUE))
+                .add(pnGPXFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(306, Short.MAX_VALUE))
         );
-        jPanel16Layout.setVerticalGroup(
-            jPanel16Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel16Layout.createSequentialGroup()
+        AdvancedfileSettingsPanelLayout.setVerticalGroup(
+            AdvancedfileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(AdvancedfileSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel16Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(AdvancedfileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnNMEAOutput1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jPanel17, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(pnGPXFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Advanced File Settings", jPanel16);
+        jTabbedPane1.addTab("Advanced File Settings", AdvancedfileSettingsPanel);
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setOpaque(false);
@@ -3288,23 +3283,23 @@ public class BT747_Main extends javax.swing.JFrame implements
         jTextArea1.setOpaque(false);
         jScrollPane1.setViewportView(jTextArea1);
 
-        org.jdesktop.layout.GroupLayout jPanel19Layout = new org.jdesktop.layout.GroupLayout(jPanel19);
-        jPanel19.setLayout(jPanel19Layout);
-        jPanel19Layout.setHorizontalGroup(
-            jPanel19Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel19Layout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(InfoPanel);
+        InfoPanel.setLayout(InfoPanelLayout);
+        InfoPanelLayout.setHorizontalGroup(
+            InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE))
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 826, Short.MAX_VALUE))
         );
-        jPanel19Layout.setVerticalGroup(
-            jPanel19Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel19Layout.createSequentialGroup()
+        InfoPanelLayout.setVerticalGroup(
+            InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 316, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("INFO", jPanel19);
+        jTabbedPane1.addTab("INFO", InfoPanel);
 
         btConnect.setText("Connect");
         btConnect.addActionListener(new java.awt.event.ActionListener() {
@@ -3857,6 +3852,7 @@ public class BT747_Main extends javax.swing.JFrame implements
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AboutBT747;
     private javax.swing.JPanel AdvancedSettingsPanel;
+    private javax.swing.JPanel AdvancedfileSettingsPanel;
     private javax.swing.JFrame ColorChooser;
     private javax.swing.JPanel DeviceSettingsPanel;
     private javax.swing.JProgressBar DownloadProgressBar;
@@ -3866,6 +3862,7 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JPanel GPSDecodePanel;
     private javax.swing.JMenuItem Info;
     private javax.swing.JMenu InfoMenu;
+    private javax.swing.JPanel InfoPanel;
     private javax.swing.JPanel LogFiltersPanel;
     private javax.swing.JPanel LogOperationsPanel;
     private javax.swing.JFileChooser OutputFileChooser;
@@ -3937,6 +3934,15 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JCheckBox cbLat;
     private javax.swing.JCheckBox cbLong;
     private javax.swing.JCheckBox cbMilliSeconds;
+    private javax.swing.JComboBox cbNMEAFileGLL;
+    private javax.swing.JComboBox cbNMEAFileMALM;
+    private javax.swing.JComboBox cbNMEAFileMDBG;
+    private javax.swing.JComboBox cbNMEAFileMDGP;
+    private javax.swing.JComboBox cbNMEAFileMEPH;
+    private javax.swing.JComboBox cbNMEAFileMZDA;
+    private javax.swing.JComboBox cbNMEAFileType10;
+    private javax.swing.JComboBox cbNMEAFileType11;
+    private javax.swing.JComboBox cbNMEAFileType12;
     private javax.swing.JComboBox cbNMEAOutGGA;
     private javax.swing.JComboBox cbNMEAOutGLL;
     private javax.swing.JComboBox cbNMEAOutGRS;
@@ -4037,15 +4043,6 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JComboBox jComboBox18;
     private javax.swing.JComboBox jComboBox21;
     private javax.swing.JComboBox jComboBox23;
-    private javax.swing.JComboBox jComboBox34;
-    private javax.swing.JComboBox jComboBox35;
-    private javax.swing.JComboBox jComboBox36;
-    private javax.swing.JComboBox jComboBox37;
-    private javax.swing.JComboBox jComboBox38;
-    private javax.swing.JComboBox jComboBox39;
-    private javax.swing.JComboBox jComboBox40;
-    private javax.swing.JComboBox jComboBox41;
-    private javax.swing.JComboBox jComboBox42;
     private javax.swing.JComboBox jComboBox43;
     private javax.swing.JComboBox jComboBox44;
     private javax.swing.JComboBox jComboBox45;
@@ -4120,10 +4117,7 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
-    private javax.swing.JPanel jPanel16;
-    private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel19;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea1;
@@ -4148,6 +4142,7 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JPanel pnConvert;
     private javax.swing.JPanel pnDownload;
     private javax.swing.JPanel pnFlashSettings;
+    private javax.swing.JPanel pnGPXFileSettings;
     private javax.swing.JPanel pnHoluxSettings;
     private javax.swing.JPanel pnLogBy;
     private javax.swing.JPanel pnLogFormat;

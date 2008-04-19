@@ -151,19 +151,11 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel1" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="pnDownload" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="pnConvert" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="pnDownload" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="pnConvert" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -204,8 +196,8 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="tfOutputFileBaseName" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
-                              <Component id="tfWorkDirectory" alignment="0" pref="675" max="32767" attributes="1"/>
-                              <Component id="tfRawLogFilePath" alignment="0" pref="675" max="32767" attributes="1"/>
+                              <Component id="tfWorkDirectory" alignment="0" pref="661" max="32767" attributes="1"/>
+                              <Component id="tfRawLogFilePath" alignment="0" pref="661" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -230,7 +222,7 @@
                                   <Component id="btOutputFile" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="22" max="32767" attributes="0"/>
+                          <EmptySpace pref="16" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -579,7 +571,7 @@
                           <Component id="pnVarious" min="-2" max="-2" attributes="1"/>
                           <Component id="pnSeparation" alignment="0" min="-2" max="-2" attributes="2"/>
                       </Group>
-                      <EmptySpace pref="499" max="32767" attributes="0"/>
+                      <EmptySpace pref="485" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -590,7 +582,7 @@
                       <Component id="pnVarious" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnSeparation" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="144" max="32767" attributes="0"/>
+                      <EmptySpace pref="138" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -838,7 +830,7 @@
                       <Component id="pnCommonFilter" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnWaypoint" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="18" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -851,7 +843,7 @@
                           <Component id="pnTrackpoint" alignment="0" max="32767" attributes="1"/>
                           <Component id="pnCommonFilter" alignment="0" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace pref="31" max="32767" attributes="0"/>
+                      <EmptySpace pref="25" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -880,7 +872,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jPanel11" alignment="0" pref="263" max="32767" attributes="1"/>
+                              <Component id="jPanel11" alignment="0" max="32767" attributes="1"/>
                               <Component id="jPanel12" alignment="0" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace pref="21" max="32767" attributes="0"/>
@@ -1547,7 +1539,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="pnWayPointFix" alignment="0" pref="256" max="32767" attributes="1"/>
+                              <Component id="pnWayPointFix" alignment="0" max="32767" attributes="1"/>
                               <Component id="pnWayPointRCR" alignment="0" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace pref="28" max="32767" attributes="0"/>
@@ -1929,7 +1921,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="50" max="32767" attributes="0"/>
+                      <EmptySpace pref="44" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -2799,7 +2791,7 @@
                           <Component id="lbLongitude" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lbLatitude" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="700" max="32767" attributes="0"/>
+                      <EmptySpace pref="686" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -2854,7 +2846,7 @@
                           <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="167" max="32767" attributes="0"/>
+                      <EmptySpace pref="161" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -2969,7 +2961,7 @@
                       <Component id="pnFlashSettings" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnNMEAOutput" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="415" max="32767" attributes="0"/>
+                      <EmptySpace pref="401" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -3853,7 +3845,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel16">
+        <Container class="javax.swing.JPanel" name="AdvancedfileSettingsPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Advanced File Settings">
@@ -3869,8 +3861,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnNMEAOutput1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="320" max="32767" attributes="0"/>
+                      <Component id="pnGPXFileSettings" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="306" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -3880,7 +3872,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="pnNMEAOutput1" alignment="0" min="-2" max="-2" attributes="1"/>
-                          <Component id="jPanel17" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="pnGPXFileSettings" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -3906,7 +3898,7 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="jLabel45" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jComboBox34" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbNMEAFileType10" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
@@ -3923,7 +3915,7 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jComboBox42" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileGLL" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jComboBox43" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jComboBox44" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jComboBox45" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -3941,37 +3933,37 @@
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel49" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox35" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileType11" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel50" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox36" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileType12" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel51" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox37" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileMALM" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel52" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox39" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileMEPH" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel53" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox38" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileMDGP" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel54" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox40" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileMDBG" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel55" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox41" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileMZDA" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel56" min="-2" max="-2" attributes="0"/>
@@ -3993,7 +3985,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox42" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileGLL" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="lbGLLOut2" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -4040,42 +4032,42 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox34" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileType10" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel45" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox35" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileType11" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel49" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox36" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileType12" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel50" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox37" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMALM" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel51" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox39" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMEPH" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel52" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox38" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMDGP" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel53" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox40" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMDBG" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel54" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox41" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMZDA" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel55" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -4097,7 +4089,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JComboBox" name="jComboBox34">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileType10">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4116,7 +4108,7 @@
                     <Property name="text" type="java.lang.String" value="Type 10 (?)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox35">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileType11">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4130,7 +4122,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox36">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileType12">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4144,7 +4136,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox37">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileMALM">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4158,7 +4150,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox38">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileMDGP">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4172,7 +4164,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox39">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileMEPH">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4186,7 +4178,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox40">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileMDBG">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4200,7 +4192,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox41">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileMZDA">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4264,7 +4256,7 @@
                     <Property name="text" type="java.lang.String" value="GLL Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox42">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileGLL">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4470,7 +4462,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel17">
+            <Container class="javax.swing.JPanel" name="pnGPXFileSettings">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -4517,7 +4509,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel19">
+        <Container class="javax.swing.JPanel" name="InfoPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="INFO">
@@ -4531,7 +4523,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="840" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="826" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4540,7 +4532,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="316" max="-2" attributes="0"/>
-                      <EmptySpace pref="25" max="32767" attributes="0"/>
+                      <EmptySpace pref="19" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
