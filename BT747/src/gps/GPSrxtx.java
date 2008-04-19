@@ -255,6 +255,41 @@ public class GPSrxtx {
         }
     }
 
+    
+    public void sendCmdAndGetDPL700Response(String cmd, int buffer_size) {
+        if (isConnected()) {
+            m_writeOngoing.down(); // Semaphore - reserve link
+            DPL700_buffer = new byte[buffer_size];
+            rxtxMode = DPL700_MODE;
+            endStringIdx = 0;
+            current_state = C_DPL700_STATE;
+            DPL700_buffer_idx = 0;
+            if (GPS_DEBUG) {
+                bt747.sys.Vm.debug(">" + cmd);
+            }
+            rec.setLength(0);
+            rec.append(cmd);
+            rec.append("\0");
+            gpsPort.write(rec.toString());
+            m_writeOngoing.up(); // Semaphore - release link
+        }
+    }
+
+    
+    public void sendDPL700Cmd(String cmd) {
+        if (isConnected()) {
+            m_writeOngoing.down(); // Semaphore - reserve link
+            if (GPS_DEBUG) {
+                bt747.sys.Vm.debug(">" + cmd);
+            }
+            rec.setLength(0);
+            rec.append(cmd);
+            rec.append("\0");
+            gpsPort.write(rec.toString());
+            m_writeOngoing.up(); // Semaphore - release link
+        }
+    }
+
     public String[] getResponse() {
         boolean continueReading;
         boolean readAgain = true;
