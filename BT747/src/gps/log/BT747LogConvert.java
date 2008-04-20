@@ -69,9 +69,9 @@ public final class BT747LogConvert implements GPSLogConvert {
         if(!passToFindFieldsActivatedInLog) {
             gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
         }
-        if((logFormat&0x80000000)!=0) {
-            holux=true;
-        }
+//        if((logFormat&0x80000000)!=0) {
+//            holux=true;
+//        }
         minRecordSize=BT747_dev.logRecordMinSize(logFormat, holux);
         maxRecordSize=BT747_dev.logRecordMaxSize(logFormat, holux);
         do {
@@ -277,7 +277,11 @@ public final class BT747LogConvert implements GPSLogConvert {
                     /*******************************************
                      * Skip minimum number of bytes in a record.
                      */
-                    while((indexInBuffer<minRecordSize+satRecords+offsetInBuffer)&&(indexInBuffer<sizeToRead-2)) {
+                    if((minRecordSize+satRecords+offsetInBuffer)<=(sizeToRead-2)) {
+                        // Record fits in buffer
+                        int cnt;
+                        cnt=minRecordSize+satRecords+offsetInBuffer-indexInBuffer;
+                    while(cnt-->0) {
                         allFF&=bytes[indexInBuffer];
                         checkSum^=bytes[indexInBuffer++];
                     }
@@ -350,10 +354,13 @@ public final class BT747LogConvert implements GPSLogConvert {
                             badrecord_count++;
                         }
                     }
+                    } else {
+                        continueInBuffer=false;
+                    }
                     lookForRecord=foundRecord;
                 }  // End if (or while previously) for possible good record.
                 
-                if(!foundAnyRecord) {
+                if(!foundAnyRecord&&continueInBuffer) {
                     if(sizeToRead>offsetInBuffer+maxRecordSize+(holux?1:2)) {  // TODO: recover when 16 bytes available too.
                         // Did not find any record - expected at least one.
                         // Try to recover.
