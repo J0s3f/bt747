@@ -413,21 +413,21 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     }
 
     public void gpsEvent(GpsEvent event) {
-        if(event.getType()==GpsEvent.DATA_UPDATE) {
-            Control c;
-            c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
-            c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
-        } else if (
-                (event.getType()==GpsEvent.GPRMC)
-                ||(event.getType()==GpsEvent.GPGGA)) {
-
+        int etype=event.getType();
+        if((event.getType()==GpsEvent.GPRMC)
+            ||(event.getType()==GpsEvent.GPGGA)) {
             Control c;
             c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
             event.target=c;
             c.postEvent(event);
         } else if ((event.getType()==GpsEvent.CONNECTED) ) {
             m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
+        } else {
+            Control c;
+            c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
+            c.postEvent(new Event(etype,c,0));
         }
+
     }
 
 
