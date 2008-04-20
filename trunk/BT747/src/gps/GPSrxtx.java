@@ -537,10 +537,16 @@ public class GPSrxtx {
                 bytesRead = 0;
                 if (isConnected()) { // && rxtxMode != DPL700_MODE) {
                     if(virtualInput!=null) {
-                        String s=virtualInput.toString();
-                        s.getBytes(0, s.length(), read_buf, 0);
-                        bytesRead = s.length();
-                        Vm.debug("Virtual:"+s);
+                        byte[] ns=virtualInput.toString().getBytes();
+                        int l=ns.length;
+                        if(l>read_buf.length) {
+                            l=read_buf.length;
+                        }
+                        bytesRead = l;
+                        while(--l>0) {
+                            read_buf[l]=ns[l];
+                        }
+                        Vm.debug("Virtual:"+virtualInput.toString());
                         virtualInput=null;
                     } else if (readAgain) {
                         readAgain = false;
