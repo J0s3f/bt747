@@ -2074,11 +2074,13 @@ public class GPSstate implements Thread {
     public void reqDPL700Log() {
         DPL700_State = C_DPL700_GETLOG;
         m_GPSrxtx.sendCmdAndGetDPL700Response(0x63B70000, 10 * 1024 * 1024);
+        //m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
     public void enterDPL700Mode() {
         exitDPL700Mode(); // Exit previous session if still open
         m_GPSrxtx.sendCmdAndGetDPL700Response("W'P Camera Detect", 255);
+        //m_GPSrxtx.virtualReceive("WP GPS+BT\0");
     }
 
     public void exitDPL700Mode() {
