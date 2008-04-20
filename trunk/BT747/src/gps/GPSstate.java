@@ -2073,7 +2073,7 @@ public class GPSstate implements Thread {
 
     public void reqDPL700Log() {
         DPL700_State = C_DPL700_GETLOG;
-        m_GPSrxtx.sendCmdAndGetDPL700Response(0x63B70000, 10 * 1024 * 1024);
+        m_GPSrxtx.sendCmdAndGetDPL700Response(0x60B50000, 10 * 1024 * 1024);
         //m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
