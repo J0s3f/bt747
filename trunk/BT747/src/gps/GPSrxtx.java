@@ -289,6 +289,16 @@ public class GPSrxtx {
             m_writeOngoing.up(); // Semaphore - release link
         }
     }
+    
+    // Implemention to allow 'virtual debug' of protocol
+    private StringBuffer virtualInput=null;
+    public void virtualReceive(String rvd) {
+        if(virtualInput==null) {
+            virtualInput=new StringBuffer(rvd);
+        } else {
+            virtualInput.append(rvd);
+        }
+    }
 
     public String[] getResponse() {
         boolean continueReading;
@@ -496,7 +506,7 @@ public class GPSrxtx {
                         current_state = C_DPL700_END_STATE;
                         continueReading = false;
                     } else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
-                            || c == ' ' || c == '\'') {
+                            || c == ' ' || c=='+' || c == '\'') {
                         DPL700_EndString[endStringIdx++] = (byte) c;
                     } else {
                         current_state = C_DPL700_STATE;
@@ -526,13 +536,13 @@ public class GPSrxtx {
                 read_buf_p = 0;
                 bytesRead = 0;
                 if (isConnected()) { // && rxtxMode != DPL700_MODE) {
-//                    if (rxtxMode == DPL700_MODE) {
-//                        // Debug purposes
-//                        String s = "aerkljdslkfqjsdfkl mqdfj W'P Update Over\0";
-//                        s.getBytes(1, s.length(), read_buf, 0);
-//                        bytesRead = s.length();
-//                    }
-                    if (readAgain) {
+                    if(virtualInput!=null) {
+                        String s=virtualInput.toString();
+                        s.getBytes(0, s.length(), read_buf, 0);
+                        bytesRead = s.length();
+                        Vm.debug("Virtual:"+s);
+                        virtualInput=null;
+                    } else if (readAgain) {
                         readAgain = false;
                         try {
                             int max = gpsPort.readCheck();
