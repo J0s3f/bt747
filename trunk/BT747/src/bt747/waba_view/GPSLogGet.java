@@ -166,6 +166,7 @@ public class GPSLogGet extends Container {
     
     private void reqLogInfo() {
         // Request device info for this control
+        c.reqLogStatus();
         // Request log version from device
         c.reqLogVersion();
         // Request mem size from device

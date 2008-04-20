@@ -266,6 +266,10 @@ public class Controller {
         m.gpsModel().reqDeviceInfo();
     }
 
+    public void reqLogStatus() {
+        m.gpsModel().reqLogStatus();
+    }
+    
     public void reqLogFormat() {
         m.gpsModel().reqLogFormat();
     }
