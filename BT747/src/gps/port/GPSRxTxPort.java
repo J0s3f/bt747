@@ -210,9 +210,7 @@ public class GPSRxTxPort extends GPSPort {
    }
 
    
-   public void write(final String s) {
-       byte[] b=s.getBytes();
-       int l=b.length;
+   public void write(final byte[] b) {
        try {
            ds.write(b);
        } catch (Exception e) {
@@ -220,11 +218,15 @@ public class GPSRxTxPort extends GPSPort {
        }
        if(GPS_FILE_LOG&&(m_debugFile!=null)) {
            try {
-               m_debugFile.writeBytes(b,0,l);
+               m_debugFile.writeBytes(b,0,b.length);
            } catch (Exception e) {
                e.printStackTrace();
            }
        }
+   }
+
+   public void write(final String s) {
+       write(s.getBytes());
    }
    
    public int readCheck() {

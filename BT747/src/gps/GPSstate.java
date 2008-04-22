@@ -1111,6 +1111,9 @@ public class GPSstate implements Thread {
         case 0x0005:
             mdStr = "Holux M-241/QT-1000P";
             break;
+        case 0x0007:
+            mdStr = "Just Mobile® Blucard";
+            break;
         case 0x0011: // Seen in FCC OUP940760101
         case 0x001B:
             mdStr = "iBlue 747";

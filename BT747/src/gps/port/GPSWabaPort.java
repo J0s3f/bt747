@@ -103,19 +103,22 @@ public class GPSWabaPort extends GPSPort {
    }
 
    
-   public void write(final String s) {
-       byte[] b=s.getBytes();
-       int l=b.length;
-       sp.writeBytes(b,0,l);
+   public void write(final byte[]b) {
+       sp.writeBytes(b,0,b.length);
        if(GPS_FILE_LOG&&(m_debugFile!=null)) {
            try {
                 m_debugFile.writeBytes("W:".getBytes(), 0, 2);
-                m_debugFile.writeBytes(b, 0, l);
+                m_debugFile.writeBytes(b, 0, b.length);
             } catch (Exception e) {
                 // TODO: handle exception
             }
        }
    }
+   
+   public void write(final String s) {
+       write(s.getBytes());
+   }
+
    
    public int readCheck() {
        if(sp!=null) {

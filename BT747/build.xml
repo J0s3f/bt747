@@ -495,6 +495,7 @@
 			<fileset dir="src">
 				<include name="**/*.java" />
 				<exclude name="bt747/j2se_view/*" unless="build.j2se" />
+                <exclude name="bt747/j2me_view/*" unless="build.j2me" />
 				<exclude name="gps/port/GPSWabaPort.java" />
 				<exclude name="gps/port/GPSFilePort.java" />
 				<exclude name="gps/port/GPSRxTxPort.java" />
@@ -529,6 +530,7 @@
 			<fileset dir="src">
 				<include name="**/*.java" />
 				<exclude name="bt747/j2se_view/*" unless="build.j2se" />
+                <exclude name="bt747/j2me_view/*" unless="build.j2me" />
 			</fileset>
 			<fileset dir="src_forwaba">
 				<include name="**/*.java" />
