@@ -160,9 +160,7 @@ public class GPSFilePort extends GPSPort {
         return 0;
     }
 
-    public void write(final String s) {
-        byte[] b = s.getBytes();
-        int l = b.length;
+    public void write(final byte[] b) {
         try {
             if (spOut != null) {
                 spOut.write(b);
@@ -172,11 +170,16 @@ public class GPSFilePort extends GPSPort {
         }
         try {
             if (GPS_FILE_LOG && (m_debugFile != null)) {
-                m_debugFile.writeBytes(b, 0, l);
+                m_debugFile.writeBytes(b, 0, b.length);
             }
         } catch (Exception e) {
             // TODO: handle exception
         }
+    }
+
+    public void write(final String s) {
+        byte[] b = s.getBytes();
+        write(b);
     }
 
     public int readCheck() {
@@ -201,4 +204,5 @@ public class GPSFilePort extends GPSPort {
             return 0;
         }
     }
+
 }

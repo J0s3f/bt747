@@ -171,7 +171,7 @@ public class GPSrxtx {
     private static final int C_BUF_SIZE = 0x1100;
     private static final int C_CMDBUF_SIZE = 0x1100;
 
-    private static int current_state = C_INITIAL_STATE;
+    private int current_state = C_INITIAL_STATE;
 
     private byte[] read_buf = new byte[C_BUF_SIZE];
     private char[] cmd_buf = new char[C_CMDBUF_SIZE];
@@ -234,6 +234,7 @@ public class GPSrxtx {
 
     public void sendCmdAndGetDPL700Response(int cmd, int buffer_size) {
         if (isConnected()) {
+            byte[] sendbuffer=new byte[7];
             m_writeOngoing.down(); // Semaphore - reserve link
             DPL700_buffer = new byte[buffer_size];
             rxtxMode = DPL700_MODE;
@@ -244,13 +245,14 @@ public class GPSrxtx {
                 bt747.sys.Vm.debug(">0x" + Convert.unsigned2hex(cmd, 8)
                         + "000000");
             }
-            rec.setLength(0);
-            rec.append((char) ((cmd >> 24) & 0xFF));
-            rec.append((char) ((cmd >> 16) & 0xFF));
-            rec.append((char) ((cmd >> 8) & 0xFF));
-            rec.append((char) ((cmd >> 0) & 0xFF));
-            rec.append("\0\0\0");
-            gpsPort.write(rec.toString());
+            sendbuffer[0]=(byte)((cmd >> 24) & 0xFF);
+            sendbuffer[1]=(byte)((cmd >> 16) & 0xFF);
+            sendbuffer[2]=(byte)((cmd >>  8) & 0xFF);
+            sendbuffer[3]=(byte)((cmd >>  0) & 0xFF);
+            sendbuffer[4]=0;
+            sendbuffer[5]=0;
+            sendbuffer[6]=0;
+            gpsPort.write(sendbuffer);
             m_writeOngoing.up(); // Semaphore - release link
         }
     }

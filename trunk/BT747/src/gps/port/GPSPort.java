@@ -99,7 +99,9 @@ public abstract class GPSPort {
         return spPortNbr;
     }
 
-    public void write(final String s) {}
+    public abstract void write(final String s);
+
+    public abstract void write(final byte[] b);
 
     public void writeDebug(final String s) {
         byte[] b;
