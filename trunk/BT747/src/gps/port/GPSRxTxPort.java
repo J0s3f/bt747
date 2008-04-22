@@ -218,6 +218,7 @@ public class GPSRxTxPort extends GPSPort {
        }
        if(GPS_FILE_LOG&&(m_debugFile!=null)) {
            try {
+               m_debugFile.writeBytes("\nWrite:".getBytes(), 0, 2);
                m_debugFile.writeBytes(b,0,b.length);
            } catch (Exception e) {
                e.printStackTrace();
