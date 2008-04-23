@@ -413,7 +413,7 @@ public class Txt_jp {
 
     public static final String S_DEVICE = "Device";
     public static final String S_DEFAULTDEVICE = "Default Device";
-    public static final String S_GISTEQTYPE1 = "Gisteq Type 1";
-    public static final String S_GISTEQTYPE2 = "Gisteq Type 2";
-
+    public static final String S_GISTEQTYPE1 = "iTrackU-Nemerix";
+    public static final String S_GISTEQTYPE2 = "iTrackU-PhotoTrackr";
+    public static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII";
 }

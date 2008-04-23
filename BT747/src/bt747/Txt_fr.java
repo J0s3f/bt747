@@ -410,9 +410,9 @@ public class Txt_fr {
 
     public static final String S_DEVICE = "Appareil";
     public static final String S_DEFAULTDEVICE = "Par defaut";
-    public static final String S_GISTEQTYPE1 = "Gisteq Type 1";
-    public static final String S_GISTEQTYPE2 = "Gisteq Type 2";
-
+    public static final String S_GISTEQTYPE1 = "iTrackU-Nemerix";
+    public static final String S_GISTEQTYPE2 = "iTrackU-PhotoTrackr";
+    public static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII";
 }
 
 
