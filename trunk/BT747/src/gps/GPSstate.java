@@ -161,12 +161,20 @@ public class GPSstate implements Thread {
         m_settings = s;
     }
 
-    public void setDebug(final boolean dbg) {
+    public final void setDebug(final boolean dbg) {
         GPS_DEBUG = dbg;
+    }
+    
+    public final boolean isDebug() {
+        return GPS_DEBUG;
     }
 
     public void setDebugConn(final boolean dbg) {
         m_GPSrxtx.setDebugConn(dbg, m_settings.getBaseDirPath());
+    }
+    
+    public boolean isDebugConn() {
+        return m_GPSrxtx.isDebugConn();
     }
 
     public void setStats(boolean stats) {
@@ -1112,7 +1120,7 @@ public class GPSstate implements Thread {
             mdStr = "Holux M-241/QT-1000P";
             break;
         case 0x0007:
-            mdStr = "Just Mobile® Blucard";
+            mdStr = "Just Mobileï¿½ Blucard";
             break;
         case 0x0011: // Seen in FCC OUP940760101
         case 0x001B:

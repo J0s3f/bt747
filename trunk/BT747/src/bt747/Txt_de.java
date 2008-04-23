@@ -382,4 +382,9 @@ public class Txt_de {
         +"|This version is V"+Settings.versionStr+"."
         +"|Exiting application";
 
+    public static final String S_DEVICE = "Device";
+    public static final String S_DEFAULTDEVICE = "Default Device";
+    public static final String S_GISTEQTYPE1 = "Gisteq Type 1";
+    public static final String S_GISTEQTYPE2 = "Gisteq Type 2";
+
 }

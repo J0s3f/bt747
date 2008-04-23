@@ -684,6 +684,10 @@ public class GPSrxtx {
         GPS_DEBUG = gps_debug;
     }
 
+    public final boolean isDebug() {
+        return GPS_DEBUG;
+    }
+
     public void setDebugConn(final boolean gps_debug, final String s) {
         gpsPort.setDebugFileName(s + "/gpsRawDebug.txt");
         if (gps_debug) {
@@ -692,4 +696,9 @@ public class GPSrxtx {
             gpsPort.endDebug();
         }
     }
+    
+    public final boolean isDebugConn() {
+        return gpsPort.debugActive();
+    }
+    
 }

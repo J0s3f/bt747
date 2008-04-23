@@ -85,6 +85,13 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     private MenuItem miStats = new MenuItem(Txt.S_STATS,false); 
     private MenuItem miHolux = new MenuItem("Holux M241",false);
     private MenuItem miImperial = new MenuItem(Txt.S_IMPERIAL,false);
+    
+    private MenuItem miDevice = new MenuItem(Txt.S_DEVICE);
+    private MenuItem miDefaultDevice = new MenuItem(Txt.S_DEFAULTDEVICE,true);
+    private MenuItem miGisteqType1 = new MenuItem(Txt.S_GISTEQTYPE1,false);
+    private MenuItem miGisteqType2 = new MenuItem(Txt.S_GISTEQTYPE2,false);
+    private MenuItem miGisteqType3 = new MenuItem(Txt.S_GISTEQTYPE3,false);
+    
     private MenuItem miInfo = new MenuItem(Txt.S_INFO);
     private MenuItem miAboutBT747 = new MenuItem(Txt.S_ABOUT_BT747);
     private MenuItem miAboutSuperWaba = new MenuItem(Txt.S_ABOUT_SUPERWABA);
@@ -111,6 +118,12 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
                 miStats, 
                 miHolux,
                 miImperial,
+            },
+            {   miDevice,
+                miDefaultDevice,
+                miGisteqType1,
+                miGisteqType2,
+                miGisteqType3,
             },
             {   miInfo,
                 miAboutBT747,
@@ -145,12 +158,18 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     private static final int C_MENU_HOLUX_241 = 114;
     /** MenuBar item for Settings->Imperial units */
     private static final int C_MENU_IMPERIAL = 115;
+    
+    private static final int C_MENU_DEFAULTDEVICE=201;
+    private static final int C_MENU_GISTEQ_TYPE1=202;
+    private static final int C_MENU_GISTEQ_TYPE2=203;
+    private static final int C_MENU_GISTEQ_TYPE3=204;
+    
     /** MenuBar item for Info->About BT747 */
-    private static final int C_MENU_ABOUT = 201;
+    private static final int C_MENU_ABOUT = 301;
     /** MenuBar item for Info->About Superwaba */
-    private static final int C_MENU_ABOUT_SW = 202;
+    private static final int C_MENU_ABOUT_SW = 302;
     /** MenuBar item for Info->Info */
-    private static final int C_MENU_INFO = 203;   
+    private static final int C_MENU_INFO = 303;   
 
     /** The tab panel */
     private TabPanel m_TabPanel;
@@ -287,6 +306,30 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         c.addGPSListener(this);
         addTimer(this, 55);
 
+        gpsType();
+    }
+    
+    private void gpsType() {
+        miDefaultDevice.isChecked=false;
+        miGisteqType1.isChecked=false;
+        miGisteqType2.isChecked=false;
+        miGisteqType3.isChecked=false;
+        switch (m.getGPSType()) {
+        case Controller.GPS_TYPE_DEFAULT:
+            miDefaultDevice.isChecked=true;
+            break;
+        case Controller.GPS_TYPE_GISTEQ1:
+            miGisteqType1.isChecked=true;
+            break;
+        case Controller.GPS_TYPE_GISTEQ2:
+            miGisteqType2.isChecked=true;
+            break;
+        case Controller.GPS_TYPE_GISTEQ3:
+            miGisteqType3.isChecked=true;
+            break;
+        default:
+            break;
+        }
     }
 
     public void onEvent(Event event) {
@@ -370,7 +413,23 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
                             Txt.DISCLAIMER_TITLE,
                             Txt.DISCLAIMER_TXT
                     ).popupModal();
-                    break;              
+                    break;
+                case C_MENU_DEFAULTDEVICE:
+                    c.setGPSType(Controller.GPS_TYPE_DEFAULT);
+                    gpsType();
+                    break;
+                case C_MENU_GISTEQ_TYPE1:
+                    c.setGPSType(Controller.GPS_TYPE_GISTEQ1);
+                    gpsType();
+                    break;
+                case C_MENU_GISTEQ_TYPE2:
+                    c.setGPSType(Controller.GPS_TYPE_GISTEQ2);
+                    gpsType();
+                    break;
+                case C_MENU_GISTEQ_TYPE3:
+                    c.setGPSType(Controller.GPS_TYPE_GISTEQ3);
+                    gpsType();
+                    break;
                 default: break;
 
                 }

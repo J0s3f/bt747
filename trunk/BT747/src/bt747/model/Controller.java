@@ -99,7 +99,7 @@ public class Controller {
         } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
             lc = new DPL700LogConvert();
             /// TODO: set SR Log type correctly.
-            ((DPL700LogConvert)lc).setLogType(m.getGPSType()==0?0:1);
+            ((DPL700LogConvert)lc).setLogType(m.getGPSType()==GPS_TYPE_GISTEQ2?0:1);
         } else {
             switch (m.getBinDecoder()) {
             case DECODER_THOMAS:
@@ -206,6 +206,18 @@ public class Controller {
     }
 
     public final void startDownload() {
+        switch(m.getGPSType()) {
+        case GPS_TYPE_DEFAULT:
+            startDefaultDownload();
+            break;
+        case GPS_TYPE_GISTEQ1:
+        case GPS_TYPE_GISTEQ2:
+        case GPS_TYPE_GISTEQ3:
+            startDPL700Download();
+            break;
+        }
+    }
+    public final void startDefaultDownload() {
         try {
             m.gpsModel().getLogInit(0, /* StartPosition */
             m.gpsModel().logMemUsed - 1, /* EndPosition */
@@ -218,7 +230,6 @@ public class Controller {
         }
     }
     
-    
     public final void startDPL700Download() {
         m.gpsModel().getDPL700Log(m.getLogFilePath(), m.getCard());
     }
@@ -226,6 +237,10 @@ public class Controller {
     public final void setGPSType(int i) {
         m.setGPSType(i);
     }
+    public final static int GPS_TYPE_DEFAULT = 0; 
+    public final static int GPS_TYPE_GISTEQ1 = 1; 
+    public final static int GPS_TYPE_GISTEQ2 = 2; 
+    public final static int GPS_TYPE_GISTEQ3 = 3; 
 
     /***************************************************************************
      * Device state
@@ -812,6 +827,18 @@ public class Controller {
 //            BT747View l=(BT747View)it.next();
 //            l.newEvent(e);
         }
+    }
+    
+    public void setTimeOffsetHours(int timeOffsetHours) {
+        m.setTimeOffsetHours(timeOffsetHours);
+    }
+    
+    public void setOneFilePerDay(int value) {
+        m.setOneFilePerDay(value);
+    }
+    
+    public void setNoGeoid(boolean value) {
+        m.setNoGeoid(value);
     }
 
 //    protected void postEvent(final int type) {

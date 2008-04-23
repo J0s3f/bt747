@@ -1,5 +1,7 @@
 package bt747;
 
+import waba.ui.MenuItem;
+
 import bt747.sys.Settings;
 
 /**
@@ -382,6 +384,12 @@ public class Txt_en {
         Settings.requiredVersionStr + "."
         +"|This version is V"+Settings.versionStr+"."
         +"|Exiting application";
+
+    public static final String S_DEVICE = "Device";
+    public static final String S_DEFAULTDEVICE = "Default Device";
+    public static final String S_GISTEQTYPE1 = "Gisteq Type 1";
+    public static final String S_GISTEQTYPE2 = "Gisteq Type 2";
+    public static final String S_GISTEQTYPE3 = "Gisteq Type 3";
 }
 
 
