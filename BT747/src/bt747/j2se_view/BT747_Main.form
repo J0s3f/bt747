@@ -50,6 +50,24 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Settings"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JRadioButtonMenuItem" name="btGPSDebug">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="GPS Debug"/>
+              </Properties>
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="btGPSDebugStateChanged"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JRadioButtonMenuItem" name="btGPSConnectDebug">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="GPS Connection Debug"/>
+              </Properties>
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="btGPSConnectDebugStateChanged"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="InfoMenu">
           <Properties>
@@ -533,10 +551,11 @@
                 <Component class="javax.swing.JComboBox" name="cbGPSType">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="3">
-                        <StringItem index="0" value="iTrackU-Nemerix"/>
-                        <StringItem index="1" value="PhotoTrackr"/>
-                        <StringItem index="2" value="iTrackU-SIRFIII"/>
+                      <StringArray count="4">
+                        <StringItem index="0" value="Default"/>
+                        <StringItem index="1" value="iTrackU-Nemerix"/>
+                        <StringItem index="2" value="PhotoTrackr"/>
+                        <StringItem index="3" value="iTrackU-SIRFIII"/>
                       </StringArray>
                     </Property>
                   </Properties>
@@ -546,7 +565,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel57">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Type of &apos;.sr&apos; file:"/>
+                    <Property name="text" type="java.lang.String" value="Device type"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -619,7 +638,7 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="cbHeightOverMeanSeaLevel" min="-2" max="-2" attributes="1"/>
-                                  <Component id="cbOneFilePerDay" max="32767" attributes="0"/>
+                                  <Component id="cbOneFilePerDay" pref="280" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="cbImperialUnits" min="-2" max="-2" attributes="0"/>
@@ -712,6 +731,9 @@
                       </StringArray>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbUTCOffsetFocusLost"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cbStandardOrDaylightSaving">
                   <Properties>
@@ -722,6 +744,9 @@
                       </StringArray>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbStandardOrDaylightSavingFocusLost"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel33">
                   <Properties>
@@ -729,14 +754,9 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cbHeightOverMeanSeaLevel">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="2">
-                        <StringItem index="0" value="write height over mean sea level"/>
-                        <StringItem index="1" value="write height over Geoid"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbHeightOverMeanSeaLevelFocusLost"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="cbRecordNumberInfoInLog">
                   <Properties>
@@ -872,7 +892,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jPanel11" alignment="0" max="32767" attributes="1"/>
+                              <Component id="jPanel11" alignment="0" pref="263" max="32767" attributes="1"/>
                               <Component id="jPanel12" alignment="0" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace pref="21" max="32767" attributes="0"/>
@@ -1539,7 +1559,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="pnWayPointFix" alignment="0" max="32767" attributes="1"/>
+                              <Component id="pnWayPointFix" alignment="0" pref="256" max="32767" attributes="1"/>
                               <Component id="pnWayPointRCR" alignment="0" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace pref="28" max="32767" attributes="0"/>

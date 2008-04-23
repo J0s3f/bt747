@@ -408,6 +408,11 @@ public class Txt_fr {
         +"|This version is V"+Settings.versionStr+"."
         +"|Exiting application";
 
+    public static final String S_DEVICE = "Appareil";
+    public static final String S_DEFAULTDEVICE = "Par defaut";
+    public static final String S_GISTEQTYPE1 = "Gisteq Type 1";
+    public static final String S_GISTEQTYPE2 = "Gisteq Type 2";
+
 }
 
 

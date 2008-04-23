@@ -37,6 +37,12 @@
                     <location>src_forJ2ME</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
+                <source-folder>
+                    <label>src_forj2se</label>
+                    <type>java</type>
+                    <location>src_forj2se</location>
+                    <encoding>UTF-8</encoding>
+                </source-folder>
             </folders>
             <ide-actions>
                 <action name="build">
@@ -76,6 +82,10 @@
                         <label>src_forJ2ME</label>
                         <location>src_forJ2ME</location>
                     </source-folder>
+                    <source-folder style="packages">
+                        <label>src_forj2se</label>
+                        <location>src_forj2se</location>
+                    </source-folder>
                     <source-file>
                         <location>build.xml</location>
                     </source-file>
@@ -110,6 +120,7 @@
                 <package-root>src</package-root>
                 <package-root>src_forwaba</package-root>
                 <package-root>src_forJ2ME</package-root>
+                <package-root>src_forj2se</package-root>
                 <classpath mode="compile">lib/Waba_only.jar;lib/win32comm.jar;lib/RXTXcomm.jar;lib/collections-superwaba.jar;lib/swing-layout-1.0.3.jar;lib/jcalendar-1.3.2.jar</classpath>
                 <built-to>build</built-to>
                 <source-level>1.5</source-level>

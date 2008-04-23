@@ -170,13 +170,13 @@ public abstract class GPSPort {
     /**
      * @return Returns the debugFileName.
      */
-    public static String getDebugFileName() {
+    public String getDebugFileName() {
         return debugFileName;
     }
     /**
      * @param debugFileName The debugFileName to set.
      */
-    public static void setDebugFileName(final String debugFileName) {
+    public void setDebugFileName(final String debugFileName) {
         GPSPort.debugFileName = debugFileName;
     }
 }

@@ -126,7 +126,7 @@ public class GPSLogGet extends Container {
 
         int offsetIdx = m.getTimeOffsetHours() + 12;
         if (offsetIdx > 26) {
-            m.setTimeOffsetHours(0);  // TODO: Change in call to control
+            c.setTimeOffsetHours(0);  // TODO: Change in call to control
             offsetIdx = 12;
         }
         m_cbTimeOffsetHours = new ComboBox(offsetStr);
@@ -220,16 +220,16 @@ public class GPSLogGet extends Container {
                     // Work around superwaba bug
                     String tmp = (String) m_cbTimeOffsetHours.getSelectedItem();
                     if (tmp.charAt(0) == '+') {
-                        m.setTimeOffsetHours(Convert.toInt((String) tmp.substring(1)));
+                        c.setTimeOffsetHours(Convert.toInt((String) tmp.substring(1)));
                     } else {
-                        m.setTimeOffsetHours(Convert.toInt(tmp));
+                        c.setTimeOffsetHours(Convert.toInt(tmp));
                     }
                 } else if (event.target == m_chkLogOverwriteStop) {
                     c.setLogOverwrite(m_chkLogOverwriteStop.getChecked());
                 } else if (event.target == m_chkOneFilePerDay) {
-                    m.setOneFilePerDay(m_chkOneFilePerDay.getSelectedIndex());
+                    c.setOneFilePerDay(m_chkOneFilePerDay.getSelectedIndex());
                 } else if (event.target == m_chkNoGeoid) {
-                    m.setNoGeoid(m_chkNoGeoid.getChecked());
+                    c.setNoGeoid(m_chkNoGeoid.getChecked());
                 } else if (event.target == m_btEndDate) {
                     if (cal == null) {
                         cal = new Calendar();

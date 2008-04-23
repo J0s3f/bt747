@@ -379,6 +379,11 @@ public class Model extends AppSettings implements gps.settings{
          return count;
      }
      
+     public final boolean isDebug() {
+         return gpsModel.isDebug();
+     }
      
-
+     public final boolean isDebugConn() {
+         return gpsModel.isDebugConn();
+     }
 }
