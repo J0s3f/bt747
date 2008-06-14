@@ -1,3 +1,10 @@
+Version 1.48
+* Resolved issue concerning log on/off indication
+* Resolved web launch issue
+* Resolved issue in GPSCompoGPSTrk format (waypoint)
+* Some extra recognition of models
+
+
 Version 1.47
 * Date/time indicated on gmaps page was incorrect in "most" cases.  Solved.
 * Directory structure changed.  build.xml improved.
