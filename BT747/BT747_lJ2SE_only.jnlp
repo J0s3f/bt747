@@ -21,7 +21,7 @@
   </security>
   
   <resources>
-    <j2se version="1.5"/>
+    <j2se version="1.5+"/>
      <jar href="dist/BT747_j2se.jar" main="true" />
      <jar href="lib/RXTXcomm.jar" />
      <jar href="lib/swing-layout-1.0.3.jar" />

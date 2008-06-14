@@ -628,7 +628,7 @@ public class GPSstate implements Thread {
     }
 
     public void reqLogOnOffStatus() {
-        getLogCtrlInfo();
+        reqLogStatus();
     }
 
     private final void getLogCtrlInfo() {
@@ -645,6 +645,8 @@ public class GPSstate implements Thread {
         // Request log format from device
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_ON);
+        loggingIsActive = true; // This should be the result of the action.
+                                // The device will eventually tell the new status
     }
 
     /** Stop the automatic logging of the device */
@@ -652,6 +654,8 @@ public class GPSstate implements Thread {
         // Request log format from device
         sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
                 + BT747_dev.PMTK_LOG_OFF);
+        loggingIsActive = false; // This should be the result of the action.
+                                 // The device will eventually tell the new status
     }
 
     private boolean SBASEnabled = false;
@@ -1129,6 +1133,9 @@ public class GPSstate implements Thread {
         case 0x001D:
             mdStr = "747/Q1000/BGL-32";
             break;
+        case 0x0023:
+            mdStr = "Holux M-241";
+            break;
         case 0x0131:
             mdStr = "EB-85A";
             break;
@@ -1150,6 +1157,10 @@ public class GPSstate implements Thread {
         // Recognition based on 'device'
         if (device.length() == 0) {
             // Do nothing
+        } else if (device.startsWith("TSI747")) {
+            mdStr = "iBlue 747";
+        } else if (device.startsWith("TSI757")) {
+            mdStr = "iBlue 757";
         } else if (device.equals("QST1000P")) {
             mdStr = "Qstarz BT-1000P";
         }
@@ -1825,7 +1836,8 @@ public class GPSstate implements Thread {
                         loggerIsFull = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
                         loggerIsDisabled = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
-
+               System.out.println("GPSstate.analyseLogNmea()");
+               System.out.println(loggingIsActive?"Active":"Inactive");
                         PostStatusUpdateEvent();
                         break;
                     case BT747_dev.PMTK_LOG_MEM_USED: // 8;

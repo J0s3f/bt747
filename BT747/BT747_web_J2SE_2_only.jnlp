@@ -16,7 +16,7 @@
 
   <!-- main resources -->  
   <resources>
-    <j2se version="1.5"/>
+    <j2se version="1.5+"/>
     <!--
     <jar href="waba_forj2se.jar" download=eager main="false" />
     <jar href="BT747_rxtx_j2se.jar" download="eager" main="true" />
@@ -35,15 +35,15 @@
   
   <!--
   <resources locale="de_DE, de, de_AT, de_BE, de_CH, de_LU">
-    <j2se version="1.5"/>
+    <j2se version="1.5+"/>
     <jar href="BT747_rxtx__Lde.jar" />
   </resources>  
   <resources locale="es, es_AR, es_BO, es_CL, es_CO, es_CR, es_DO, es_EC, es_ES, es_GT, es_HN, es_MX, es_NI, es_PA, es_PE, es_PR, es_PY, es_SV, es_US, es_UY, es_VE">
-    <j2se version="1.5"/>
+    <j2se version="1.5+"/>
     <jar href="BT747_rxtx__Les.jar" />
   </resources>  
   <resources locale="fr_BE, fr_CA, fr_CH, fr_FR, fr_LU, fr">
-    <j2se version="1.5"/>
+    <j2se version="1.5+"/>
     <jar href="BT747_rxtx__Lfr.jar" />
   </resources>  
   -->
@@ -58,7 +58,7 @@
   
   <!-- Trial of chinese version
   <resources locale="zh, zh_HK, zh_TW, zh_CN, zh_SG">
-    <j2se version="1.5"/>
+    <j2se version="1.5+"/>
     <jar href="BT747_rxtx__Lzh.jar" />
     <jar href="WabaChi.jar" />
   </resources>   -->
