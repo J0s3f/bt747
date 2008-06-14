@@ -1836,8 +1836,6 @@ public class GPSstate implements Thread {
                         loggerIsFull = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
                         loggerIsDisabled = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
-               System.out.println("GPSstate.analyseLogNmea()");
-               System.out.println(loggingIsActive?"Active":"Inactive");
                         PostStatusUpdateEvent();
                         break;
                     case BT747_dev.PMTK_LOG_MEM_USED: // 8;
