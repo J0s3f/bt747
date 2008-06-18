@@ -3,6 +3,7 @@ Version 1.48
 * Resolved web launch issue
 * Resolved issue in GPSCompoGPSTrk format (waypoint)
 * Some extra recognition of models
+* Fixed conversion when CSV input and no fix or rcr information is available.
 
 
 Version 1.47

@@ -251,6 +251,8 @@ public final class CSVLogConvert implements GPSLogConvert {
                             // Defaults
                             gpsRec=new GPSRecord();  // Value after earliest date
                             gpsRec.recCount=++recCount;
+                            gpsRec.valid=0xFFFF; // In case valid is not logged
+                            gpsRec.rcr=1; // In case RCR is not logged - default = time
                             
                             while(Fields.hasMoreElements()
                                     &&field_nbr<C_MAX_RECORDS
