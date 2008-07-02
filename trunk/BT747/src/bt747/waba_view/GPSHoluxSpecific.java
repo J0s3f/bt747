@@ -43,6 +43,8 @@ public class GPSHoluxSpecific extends Container {
     
     private Label lbHoluxName;
     private Edit  edHoluxName;
+    private Label lbBTMacAddr;
+    private Edit  edHoluxBT_MacAddr;
     
     private Button btSet;
     /**
@@ -62,6 +64,10 @@ public class GPSHoluxSpecific extends Container {
         add(lbHoluxName,LEFT,TOP);
         add(edHoluxName= new Edit(""),AFTER,SAME);
         add(btSet=new Button(Txt.SET),CENTER,AFTER+5);
+        lbBTMacAddr= new Label(Txt.BT_MAC_ADDR);
+        add(lbBTMacAddr,LEFT,AFTER+5);
+        add(edHoluxBT_MacAddr= new Edit(""),AFTER,SAME);
+        //add(btBTMacSet=new Button(Txt.SET),CENTER,AFTER+5);
     }
     
     private void doSet() {
@@ -70,6 +76,7 @@ public class GPSHoluxSpecific extends Container {
     
     private void updateData() {
         edHoluxName.setText(m.getHoluxName());
+        edHoluxBT_MacAddr.setText(m.getBTAddr());
     }
     
 
@@ -81,6 +88,7 @@ public class GPSHoluxSpecific extends Container {
         case ControlEvent.PRESSED:
             if (event.target==this) {
                 c.reqHoluxName();
+                c.reqBTAddr();
                 event.consumed=true;
             } else if(event.target==btSet) {
                 doSet();

@@ -316,6 +316,10 @@ public class Model extends AppSettings implements gps.settings{
          return gpsModel.getHoluxName();
      }
      
+     public final String getBTAddr() {
+         return gpsModel.getBT_MAC_ADDR();
+     }
+     
      public final int getNMEAPeriod(int i) {
          return gpsModel.NMEA_periods[i];
      }

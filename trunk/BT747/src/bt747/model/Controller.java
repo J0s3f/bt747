@@ -7,18 +7,18 @@ import gps.convert.Conv;
 import gps.log.BT747LogConvert;
 import gps.log.CSVLogConvert;
 import gps.log.DPL700LogConvert;
-import gps.log.GPSCSVFile;
-import gps.log.GPSCompoGPSTrkFile;
 import gps.log.GPSFile;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
-import gps.log.GPSGPXFile;
-import gps.log.GPSGmapsHTMLEncodedFile;
-import gps.log.GPSKMLFile;
 import gps.log.GPSLogConvert;
-import gps.log.GPSNMEAFile;
-import gps.log.GPSPLTFile;
 import gps.log.HoluxTrlLogConvert;
+import gps.log.out.GPSCSVFile;
+import gps.log.out.GPSCompoGPSTrkFile;
+import gps.log.out.GPSGPXFile;
+import gps.log.out.GPSGmapsHTMLEncodedFile;
+import gps.log.out.GPSKMLFile;
+import gps.log.out.GPSNMEAFile;
+import gps.log.out.GPSPLTFile;
 import moio.util.HashSet;
 import moio.util.Iterator;
 
@@ -229,7 +229,20 @@ public class Controller {
             // TODO: handle exception
         }
     }
-    
+
+    public final void startFullDownload() {
+        try {
+            m.gpsModel().getLogInit(0, /* StartPosition */
+            m.gpsModel().logMemSize - 1, /* EndPosition */
+            m.getChunkSize(), /* Size per request */
+            m.getLogFilePath(), /* Log file name */
+            m.getCard(), /* Card for file operations */
+            m.isIncremental() /* Incremental download */);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
     public final void startDPL700Download() {
         m.gpsModel().getDPL700Log(m.getLogFilePath(), m.getCard());
     }
@@ -505,6 +518,10 @@ public class Controller {
 
     public void reqHoluxName() {
         m.gpsModel().reqHoluxName();
+    }
+
+    public void reqBTAddr() {
+        m.gpsModel().reqBT_MAC_ADDR();
     }
 
     public void setHoluxName(String s) {

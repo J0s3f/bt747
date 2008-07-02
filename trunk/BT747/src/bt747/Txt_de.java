@@ -387,4 +387,6 @@ public class Txt_de {
     public static final String S_GISTEQTYPE1 = "Gisteq Type 1";
     public static final String S_GISTEQTYPE2 = "Gisteq Type 2";
 
+    public static final String BT_MAC_ADDR = "BT Mac Addr:";
+
 }

@@ -17,8 +17,11 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************  
-package gps.log;
+package gps.log.out;
 
+import gps.log.GPSFile;
+import gps.log.GPSFilter;
+import gps.log.GPSRecord;
 import gps.tracks.PolylineEncoder;
 import gps.tracks.Track;
 import gps.tracks.Trackpoint;

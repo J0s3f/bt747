@@ -379,6 +379,8 @@ public class Txt_ko {
     public static final String S_GISTEQTYPE2 = "iTrackU-PhotoTrackr";
     public static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII";
 
+    public static final String BT_MAC_ADDR = "BT Mac Addr:";
+
 }
 
 

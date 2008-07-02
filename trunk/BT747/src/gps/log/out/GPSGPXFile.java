@@ -20,7 +20,11 @@
 // Thanks to Marcus Schmidke for modifications to the output format
 // making it compatible with MapSource that requires specific field
 // ordering.
-package gps.log;
+package gps.log.out;
+
+import gps.log.GPSFile;
+import gps.log.GPSFilter;
+import gps.log.GPSRecord;
 
 import bt747.sys.Convert;
 
