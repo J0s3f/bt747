@@ -20,7 +20,6 @@
 package gps.log.out;
 
 import gps.BT747_dev;
-import gps.log.GPSFile;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 

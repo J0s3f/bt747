@@ -4,7 +4,9 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package gps.log;
+package gps.log.in;
+
+import gps.log.out.GPSFile;
 
 /**
  * @author Mario De Weerd

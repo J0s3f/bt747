@@ -20,9 +20,9 @@
 package gps.parser;
 
 import gps.BT747_dev;
-import gps.log.GPSFile;
-import gps.log.GPSLogConvert;
 import gps.log.GPSRecord;
+import gps.log.in.GPSLogConvert;
+import gps.log.out.GPSFile;
 
 import bt747.Txt;
 import bt747.sys.Vm;
