@@ -19,7 +19,6 @@
 //********************************************************************  
 package gps.log.out;
 
-import gps.log.GPSFile;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -176,7 +175,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
                 wrec.setLength(0);
                 wrec.append("W  ");
                 wrec.append("waypt-"+s.recCount); // name
-                rec.toString().substring(2);
+                wrec.append(rec.toString().substring(2));
             }
             rec.append("s ");
             

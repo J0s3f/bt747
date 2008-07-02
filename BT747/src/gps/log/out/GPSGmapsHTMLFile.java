@@ -19,7 +19,6 @@
 //********************************************************************  
 package gps.log.out;
 
-import gps.log.GPSFile;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
