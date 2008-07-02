@@ -23,6 +23,7 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 import moio.util.HashSet;
 import moio.util.Iterator;
+import moio.util.StringTokenizer;
 
 import bt747.Txt;
 import bt747.generic.Generic;
@@ -139,6 +140,8 @@ public class GPSstate implements Thread {
     private int FlashManuProdID = 0;
 
     private String FlashDesc = "";
+    
+    private String BT_MAC_ADDR_STR="";
 
     public int NMEA_periods[] = new int[BT747_dev.C_NMEA_SEN_COUNT];
 
@@ -752,10 +755,41 @@ public class GPSstate implements Thread {
     public void setHoluxName(String holuxName) {
         sendNMEA(BT747_dev.HOLUX_MAIN_CMD + BT747_dev.HOLUX_API_SET_NAME + ","
                 + holuxName);
-        sendNMEA(BT747_dev.HOLUX_MAIN_CMD + BT747_dev.HOLUX_API_CONFIRM_NAME);
-        sendNMEA(BT747_dev.HOLUX_MAIN_CMD + BT747_dev.HOLUX_API_CONFIRM_NAME);
         reqHoluxName();
     }
+
+    /** Returns the current mac address for bluetooth (Holux 241 devices)
+     * @return
+     */
+    public final void reqBT_MAC_ADDR() {
+        sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_BT_MAC_ADDR);
+    }
+
+    /** Returns the current mac address for bluetooth (Holux 241 devices)
+     * @return
+     */
+    public final String getBT_MAC_ADDR() {
+        return BT_MAC_ADDR_STR;
+    }
+
+    /** Sets the current mac address for bluetooth (Holux 241 devices)
+     * TODO
+     */
+    public final void setBT_MAC_ADDR(String bt_mac_addr) {
+        String MyMacAddr="";
+        StringTokenizer Fields = new StringTokenizer(bt_mac_addr,",");
+        while(Fields.hasMoreTokens()) {
+            MyMacAddr=Fields.nextToken()+MyMacAddr;
+        }
+
+        if(MyMacAddr.length()==12) {
+            sendNMEA("PMTK" + BT747_dev.PMTK_API_SET_BT_MAC_ADDR
+                    + "," + MyMacAddr.substring(0,6)
+                    + "," + MyMacAddr.substring(6,12) );
+            reqBT_MAC_ADDR();
+        }
+    }
+
 
     public void setNMEAPeriods(final int periods[]) {
         StringBuffer sb = new StringBuffer(255);
@@ -1042,6 +1076,18 @@ public class GPSstate implements Thread {
                 dtZDA_Period = Convert.toInt(p_nmea[10]);
                 dtMCHN_Period = Convert.toInt(p_nmea[11]);
 
+                PostStatusUpdateEvent();
+                break;
+            case BT747_dev.PMTK_DT_BT_MAC_ADDR: // CMD 592
+                if(p_nmea[1].length()==12) {
+                    BT_MAC_ADDR_STR=
+                            p_nmea[1].substring(10, 12) +
+                        ":"+p_nmea[1].substring( 8, 10) +
+                        ":"+p_nmea[1].substring( 6,  8) +
+                        ":"+p_nmea[1].substring( 4,  6) +
+                        ":"+p_nmea[1].substring( 2,  4) +
+                        ":"+p_nmea[1].substring( 0,  2);
+                }
                 PostStatusUpdateEvent();
                 break;
             case BT747_dev.PMTK_DT_DGPS_INFO: // CMD 702
@@ -2156,5 +2202,6 @@ public class GPSstate implements Thread {
             }
         }
     }
+
 
 }

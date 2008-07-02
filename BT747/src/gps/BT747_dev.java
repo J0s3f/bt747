@@ -234,6 +234,7 @@ public final class BT747_dev {  // dev as in device
     public static final int PMTK_API_SET_DATUM          = 330;
     public static final int PMTK_API_SET_DATUM_ADVANCE  = 331;
     public static final int PMTK_API_SET_USER_OPTION    = 390;
+    public static final int PMTK_API_SET_BT_MAC_ADDR    = 392;
     /* REPLIES: Q - Same as above, but 4XX in stead of 3XX */
     public static final int PMTK_API_Q_FIX_CTL          = 400;
     public static final int PMTK_API_Q_DGPS_MODE        = 401;
@@ -243,7 +244,8 @@ public final class BT747_dev {  // dev as in device
     public static final int PMTK_API_Q_PWR_SAV_MOD      = 420;
     public static final int PMTK_API_Q_DATUM            = 430;
     public static final int PMTK_API_Q_DATUM_ADVANCE    = 431;
-    public static final int PMTK_API_Q_GET_USER_OPTION    = 490;
+    public static final int PMTK_API_Q_GET_USER_OPTION  = 490;
+    public static final int PMTK_API_Q_BT_MAC_ADDR      = 492;
     /* REPLIES: DT - Same as above, but 5XX in stead of 4XX */
     public static final int PMTK_DT_FIX_CTL             = 500;
     public static final int PMTK_DT_DGPS_MODE           = 501;
@@ -253,6 +255,8 @@ public final class BT747_dev {  // dev as in device
     public static final int PMTK_DT_PWR_SAV_MODE        = 520;
     public static final int PMTK_DT_DATUM               = 530;
     public static final int PMTK_DT_FLASH_USER_OPTION   = 590;
+    public static final int PMTK_DT_BT_MAC_ADDR         = 592;
+    
     /* Special requests * SW ? */
     public static final int PMTK_Q_DGPS_INFO            = 602;
     public static final int PMTK_Q_VERSION              = 604;
@@ -384,13 +388,23 @@ public final class BT747_dev {  // dev as in device
      */
 
     public static final String HOLUX_MAIN_CMD = "HOLUX241,";
+    public static final int HOLUX_API_SET_CONN  = 1;
+    public static final int HOLUX_API_SET_DISCONN  = 2;
+    public static final int HOLUX_API_Q_FIRMWARE_VERSION = 3;
+    
     public static final int HOLUX_API_SET_NAME  = 4;
     public static final int HOLUX_API_Q_NAME  = 5;
-    public static final int HOLUX_API_CONFIRM_NAME  = 6; // Not sure what this is.
+    public static final int HOLUX_API_KEEP_ALIVE = 6;
+    public static final int HOLUX_API_Q_HW_VERSION = 7;
 
+    public static final int HOLUX_API_SET_TZ_OFFSET = 9;
+    public static final int HOLUX_API_Q_TZ_OFFSET = 10;
+
+
+    public static final int HOLUX_API_DT_FIRMWARE_VERSION  = 3;
     public static final int HOLUX_API_DT_NAME  = 5;
-    
-    
+    public static final int HOLUX_API_DT_HW_VERSION = 7;
+    public static final int HOLUX_API_DT_TZ_OFFSET  = 10;
     
     /** Get the size of the log header in the device.
      * @param p_logFormat The log format of the device

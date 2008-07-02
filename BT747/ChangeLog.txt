@@ -4,7 +4,8 @@ Version 1.48
 * Resolved issue in GPSCompoGPSTrk format (waypoint)
 * Some extra recognition of models
 * Fixed conversion when CSV input and no fix or rcr information is available.
-
+* Able to get bluetooth mac address (Holux M241)
+* Converting Holux M 241 waypoint information 
 
 Version 1.47
 * Date/time indicated on gmaps page was incorrect in "most" cases.  Solved.

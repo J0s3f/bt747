@@ -50,6 +50,8 @@ public final class BT747LogConvert implements GPSLogConvert {
     private int satIdxOffset;
     private int satRecSize;
     private boolean holux = false;
+    private boolean nextPointIsWayPt=false;
+
 
     private int badrecord_count = 0;
 
@@ -131,6 +133,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         recCount = 0;
         logFormat = 0;
         nextAddrToRead = 0;
+        nextPointIsWayPt=false;
         badrecord_count = 0;
         try {
             fileSize = m_File.getSize();
@@ -594,6 +597,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                     && ((0xFF & bytes[offsetInBuffer + 13]) == 'P')
                     && ((0xFF & bytes[offsetInBuffer + 14]) == 'N')
                     && ((0xFF & bytes[offsetInBuffer + 15]) == 'T')) {
+                nextPointIsWayPt=true;
                 // Vm.debug("Holux Waypoint");
             }
         }
@@ -794,7 +798,11 @@ public final class BT747LogConvert implements GPSLogConvert {
             gpsRec.rcr = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         } else {
-            gpsRec.rcr = 0x0001; // For filter
+            gpsRec.rcr = BT747_dev.RCR_TIME_MASK; // For filter
+        }
+        if(nextPointIsWayPt) {
+            gpsRec.rcr |= BT747_dev.RCR_BUTTON_MASK;
+            nextPointIsWayPt=false;
         }
         if ((logFormat & (1 << BT747_dev.FMT_MILLISECOND_IDX)) != 0) {
             gpsRec.milisecond = (0xFF & bytes[recIdx++]) << 0
