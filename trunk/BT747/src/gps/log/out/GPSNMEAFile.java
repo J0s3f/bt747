@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps.log.out;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -76,7 +76,7 @@ public class GPSNMEAFile extends GPSFile {
                 } 
             }
             
-            if((activeFields.utc!=0)&&((m_NMEAout&(1<<BT747_dev.NMEA_SEN_ZDA_IDX))!=0)) {
+            if((activeFields.utc!=0)&&((m_NMEAout&(1<<BT747Constants.NMEA_SEN_ZDA_IDX))!=0)) {
                 /* Write GPZDA sentence if time is available
                  */
                 rec.setLength(0);
@@ -99,7 +99,7 @@ public class GPSNMEAFile extends GPSFile {
             
             // FIX
             
-            if((m_NMEAout&(1<<BT747_dev.NMEA_SEN_GGA_IDX))!=0) { 
+            if((m_NMEAout&(1<<BT747Constants.NMEA_SEN_GGA_IDX))!=0) { 
                 rec.setLength(0);
                 rec.append("GPGGA,");
                 
@@ -255,7 +255,7 @@ public class GPSNMEAFile extends GPSFile {
             //$GPRMC,hhmmss.ss, A,llll.ll,  a,yyyyy.yy,  a,x.x,   x.x ,ddmmyy,x.x,a*hh
             //$GPRMC,190633.500,A,4800.0000,N,00200.0000,E,0.31,123.10,261007,,,A*68
             
-            if((m_NMEAout&(1<<BT747_dev.NMEA_SEN_RMC_IDX))!=0) { 
+            if((m_NMEAout&(1<<BT747Constants.NMEA_SEN_RMC_IDX))!=0) { 
                 
                 rec.setLength(0);
                 rec.append("GPRMC,");
@@ -387,7 +387,7 @@ public class GPSNMEAFile extends GPSFile {
 //            12-15= Information about third SV, same as field 4-7
 //            16-19= Information about fourth SV, same as field 4-7
 //
-            if((m_NMEAout&(1<<BT747_dev.NMEA_SEN_GSV_IDX))!=0) {
+            if((m_NMEAout&(1<<BT747Constants.NMEA_SEN_GSV_IDX))!=0) {
                 if(activeFields.sid!=null) {
                     int j;
                     int i;
@@ -462,7 +462,7 @@ public class GPSNMEAFile extends GPSFile {
 //                15   = Position Dilution of Precision (PDOP)
 //                16   = Horizontal Dilution of Precision (HDOP)
 //                17   = Vertical Dilution of Precision (VDOP)
-                if((s.sid!=null)&&(m_NMEAout&(1<<BT747_dev.NMEA_SEN_GSA_IDX))!=0) {
+                if((s.sid!=null)&&(m_NMEAout&(1<<BT747Constants.NMEA_SEN_GSA_IDX))!=0) {
                     rec.setLength(0);
                     rec.append("GPGSA,A,");
                     if((activeFields.valid!=0)) {

@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps.log.in;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
@@ -48,6 +48,9 @@ public final class CSVLogConvert implements GPSLogConvert {
     protected int activeFileFields=0;
     private boolean noGeoid=false; // If true,remove geoid difference from height
     
+    private static final int C_LOGTIME=-9;
+    private static final int C_LOGDIST=-8;
+    private static final int C_LOGSPD=-7;
     private static final int FMT_NS = -6;
     private static final int FMT_EW = -5;
     private static final int FMT_REC_NBR = -4;
@@ -79,10 +82,16 @@ public final class CSVLogConvert implements GPSLogConvert {
         fileSize=m_File.getSize();
         
         
-        final int FMT_HEIGHT_FT_IDX=BT747_dev.FMT_HEIGHT_IDX+100;
-        final int FMT_SPEED_MPH_IDX=BT747_dev.FMT_SPEED_IDX+100;
-        final int FMT_DISTANCE_FT_IDX=BT747_dev.FMT_DISTANCE_IDX+100;
+        final int FMT_HEIGHT_FT_IDX=BT747Constants.FMT_HEIGHT_IDX+100;
+        final int FMT_SPEED_MPH_IDX=BT747Constants.FMT_SPEED_IDX+100;
+        final int FMT_DISTANCE_FT_IDX=BT747Constants.FMT_DISTANCE_IDX+100;
         
+        
+
+        boolean logTimeActive=false;
+        boolean logDistActive=false;
+        boolean logSpdActive=false;
+
         while(nextAddrToRead<fileSize) {
             /********************************************************************
              * Read data from the data file into the local buffer.
@@ -159,78 +168,87 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     records[i]=FMT_REC_NBR;
                                     
                                 } else if(string.equals("RCR")) {
-                                    records[i]=BT747_dev.FMT_RCR_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_RCR_IDX);
+                                    records[i]=BT747Constants.FMT_RCR_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_RCR_IDX);
                                 } else if(string.equals("TIME")) {
                                     records[i]=FMT_TIME;
-                                    activeFileFields|=(1<<BT747_dev.FMT_UTC_IDX);
+                                    activeFileFields|=(1<<BT747Constants.FMT_UTC_IDX);
                                 } else if(string.equals("DATE")) {
                                     records[i]=FMT_DATE;
-                                    activeFileFields|=(1<<BT747_dev.FMT_UTC_IDX);
+                                    activeFileFields|=(1<<BT747Constants.FMT_UTC_IDX);
                                 } else if(string.equals("VALID")) {
-                                    records[i]=BT747_dev.FMT_VALID_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_VALID_IDX);
+                                    records[i]=BT747Constants.FMT_VALID_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_VALID_IDX);
                                 } else if(string.equals("LATITUDE")) {
-                                    records[i]=BT747_dev.FMT_LATITUDE_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_LATITUDE_IDX);
+                                    records[i]=BT747Constants.FMT_LATITUDE_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_LATITUDE_IDX);
                                 } else if(string.equals("N/S")) {
                                     records[i]=FMT_NS;
                                 } else if(string.equals("LONGITUDE")) {
-                                    records[i]=BT747_dev.FMT_LONGITUDE_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_LONGITUDE_IDX);
+                                    records[i]=BT747Constants.FMT_LONGITUDE_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_LONGITUDE_IDX);
                                 } else if(string.equals("E/W")) {
                                     records[i]=FMT_EW;
                                 } else if(string.startsWith("HEIGHT(ft)")) {
                                     records[i]=FMT_HEIGHT_FT_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_HEIGHT_IDX);
+                                    activeFileFields|=(1<<BT747Constants.FMT_HEIGHT_IDX);
                                 } else if(string.startsWith("HEIGHT")) {
-                                    records[i]=BT747_dev.FMT_HEIGHT_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_HEIGHT_IDX);
+                                    records[i]=BT747Constants.FMT_HEIGHT_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_HEIGHT_IDX);
                                 } else if(string.startsWith("SPEED(mph)")) {
                                     records[i]=FMT_SPEED_MPH_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_SPEED_IDX);
+                                    activeFileFields|=(1<<BT747Constants.FMT_SPEED_IDX);
                                 } else if(string.startsWith("SPEED")) {
-                                    records[i]=BT747_dev.FMT_SPEED_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_SPEED_IDX);
+                                    records[i]=BT747Constants.FMT_SPEED_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_SPEED_IDX);
                                 } else if(string.equals("HEADING")) {
-                                    records[i]=BT747_dev.FMT_HEADING_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_HEADING_IDX);
+                                    records[i]=BT747Constants.FMT_HEADING_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_HEADING_IDX);
                                 } else if(string.equals("DSTA")) {
-                                    records[i]=BT747_dev.FMT_DSTA_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_DSTA_IDX);
+                                    records[i]=BT747Constants.FMT_DSTA_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_DSTA_IDX);
                                 } else if(string.equals("DAGE")) {
-                                    records[i]=BT747_dev.FMT_DAGE_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_DAGE_IDX);
+                                    records[i]=BT747Constants.FMT_DAGE_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_DAGE_IDX);
                                 } else if(string.equals("PDOP")) {
-                                    records[i]=BT747_dev.FMT_PDOP_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_PDOP_IDX);
+                                    records[i]=BT747Constants.FMT_PDOP_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_PDOP_IDX);
                                 } else if(string.equals("HDOP")) {
-                                    records[i]=BT747_dev.FMT_HDOP_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_HDOP_IDX);
+                                    records[i]=BT747Constants.FMT_HDOP_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_HDOP_IDX);
                                 } else if(string.equals("VDOP")) {
-                                    records[i]=BT747_dev.FMT_VDOP_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_VDOP_IDX);
+                                    records[i]=BT747Constants.FMT_VDOP_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_VDOP_IDX);
                                 } else if(string.equals("NSAT (USED/VIEW)")) {
-                                    records[i]=BT747_dev.FMT_NSAT_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_NSAT_IDX);
+                                    records[i]=BT747Constants.FMT_NSAT_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_NSAT_IDX);
                                 } else if(string.startsWith("DISTANCE(ft)")) {
                                     records[i]=FMT_DISTANCE_FT_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_DISTANCE_IDX);
+                                    activeFileFields|=(1<<BT747Constants.FMT_DISTANCE_IDX);
                                 } else if(string.startsWith("DISTANCE")) {
-                                    records[i]=BT747_dev.FMT_DISTANCE_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_DISTANCE_IDX);
+                                    records[i]=BT747Constants.FMT_DISTANCE_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_DISTANCE_IDX);
                                 } else if(string.startsWith("SAT INFO (SID")) {
-                                    records[i]=BT747_dev.FMT_SID_IDX;
-                                    activeFileFields|=(1<<BT747_dev.FMT_SID_IDX);
+                                    records[i]=BT747Constants.FMT_SID_IDX;
+                                    activeFileFields|=(1<<BT747Constants.FMT_SID_IDX);
                                     if(string.indexOf("-ELE",12)!=-1) {
-                                        activeFileFields|=(1<<BT747_dev.FMT_ELEVATION_IDX);
+                                        activeFileFields|=(1<<BT747Constants.FMT_ELEVATION_IDX);
                                     }
                                     if(string.indexOf("-AZI",12)!=-1) {
-                                        activeFileFields|=(1<<BT747_dev.FMT_AZIMUTH_IDX);
+                                        activeFileFields|=(1<<BT747Constants.FMT_AZIMUTH_IDX);
                                     }
                                     if(string.indexOf("-SNR",12)!=-1) {
-                                        activeFileFields|=(1<<BT747_dev.FMT_SNR_IDX);
+                                        activeFileFields|=(1<<BT747Constants.FMT_SNR_IDX);
                                     }
+                                } else if(string.startsWith("LOGTIME")) {
+                                    records[i]=C_LOGTIME;
+                                    logTimeActive=true;
+                                } else if(string.startsWith("LOGDIST")) {
+                                    records[i]=C_LOGDIST;
+                                    logDistActive=true;
+                                } else if(string.startsWith("LOGSPD")) {
+                                    records[i]=C_LOGSPD;
+                                    logSpdActive=true;
                                 } else {
                                     records[i]=-100;//FMT_UNKNOWN_FIELD;
                                 }
@@ -262,6 +280,15 @@ public final class CSVLogConvert implements GPSLogConvert {
                                 String field=Fields.nextToken();
                                 if(field.length()!=0) {
                                     switch(records[field_nbr]) {
+                                    case C_LOGTIME:
+                                        gpsRec.logPeriod=(int)(Convert.toFloat(field)*10);
+                                        break;
+                                    case C_LOGDIST:
+                                        gpsRec.logDistance=(int)(Convert.toFloat(field)*10);
+                                        break;
+                                    case C_LOGSPD:
+                                        gpsRec.logSpeed=(int)(Convert.toFloat(field)*10);
+                                        break;
                                     case FMT_NS:
                                         // Supposes longitude preceded
                                         if(field.equals("N")) {
@@ -285,7 +312,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     case FMT_DATE:
                                     {
                                         byte format;
-                                        curLogFormat|=(1<<BT747_dev.FMT_UTC_IDX);
+                                        curLogFormat|=(1<<BT747Constants.FMT_UTC_IDX);
                                         if(field.indexOf('/')==4) {
                                             format=Settings.DATE_YMD;
                                         } else {
@@ -301,9 +328,9 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     {
                                         //gpsRec.utc=;
                                         int dotidx;
-                                        curLogFormat|=(1<<BT747_dev.FMT_UTC_IDX);
+                                        curLogFormat|=(1<<BT747Constants.FMT_UTC_IDX);
                                         if((dotidx=field.indexOf('.'))!=-1) {
-                                            curLogFormat|=(1<<BT747_dev.FMT_MILLISECOND_IDX);
+                                            curLogFormat|=(1<<BT747Constants.FMT_MILLISECOND_IDX);
                                             // TODO: check if idx out of range.
                                             gpsRec.milisecond=Convert.toInt(field.substring(dotidx+1));
                                             field=field.substring(0,dotidx);
@@ -317,8 +344,8 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         gpsRec.utc+=timeOffsetSeconds;
                                     }
                                     break;
-                                    case BT747_dev.FMT_VALID_IDX:
-                                        curLogFormat|=(1<<BT747_dev.FMT_VALID_IDX);
+                                    case BT747Constants.FMT_VALID_IDX:
+                                        curLogFormat|=(1<<BT747Constants.FMT_VALID_IDX);
                                     if (field.equals("No fix")) {
                                         gpsRec.valid= 0x0001; 
                                     } else if (field.equals( "SPS")) {
@@ -340,86 +367,86 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     } else {
                                         gpsRec.valid= 0x0000;
                                     }
-                                    curLogFormat|=(1<<BT747_dev.FMT_VALID_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_VALID_IDX);
                                     break;
-                                    case BT747_dev.FMT_LATITUDE_IDX:
+                                    case BT747Constants.FMT_LATITUDE_IDX:
                                         gpsRec.latitude=Convert.toDouble(field);
-                                    curLogFormat|=(1<<BT747_dev.FMT_LATITUDE_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_LATITUDE_IDX);
                                     break;
-                                    case BT747_dev.FMT_LONGITUDE_IDX:
+                                    case BT747Constants.FMT_LONGITUDE_IDX:
                                         gpsRec.longitude=Convert.toDouble(field);
-                                    curLogFormat|=(1<<BT747_dev.FMT_LONGITUDE_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_LONGITUDE_IDX);
                                     break;
-                                    case BT747_dev.FMT_HEIGHT_IDX:
+                                    case BT747Constants.FMT_HEIGHT_IDX:
                                     {
                                         StringTokenizer n=new StringTokenizer(field.trim()," ");
                                         gpsRec.height=Convert.toFloat(n.nextToken());
                                     }
-                                    curLogFormat|=(1<<BT747_dev.FMT_HEIGHT_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_HEIGHT_IDX);
                                     break;
                                     case FMT_HEIGHT_FT_IDX:
                                     {
                                         StringTokenizer n=new StringTokenizer(field.trim()," ");
                                         gpsRec.height=Convert.toFloat(n.nextToken())/3.28083989501312F;
                                     }
-                                    curLogFormat|=(1<<BT747_dev.FMT_HEIGHT_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_HEIGHT_IDX);
                                     break;
                                     
-                                    case BT747_dev.FMT_SPEED_IDX:
+                                    case BT747Constants.FMT_SPEED_IDX:
                                     {
                                         StringTokenizer n=new StringTokenizer(field.trim()," ");
                                         gpsRec.speed=Convert.toFloat(n.nextToken());
                                     }
-                                    curLogFormat|=(1<<BT747_dev.FMT_SPEED_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_SPEED_IDX);
                                     break;
                                     case FMT_SPEED_MPH_IDX:
                                     {
                                         StringTokenizer n=new StringTokenizer(field.trim()," ");
                                         gpsRec.speed=Convert.toFloat(n.nextToken())/0.621371192237334F;
                                     }
-                                        curLogFormat|=(1<<BT747_dev.FMT_SPEED_IDX);
+                                        curLogFormat|=(1<<BT747Constants.FMT_SPEED_IDX);
                                         break;
 
                                     //                      gpsRec.speed=Convert.toFloatBitwise(speed);
-                                    case BT747_dev.FMT_HEADING_IDX:
+                                    case BT747Constants.FMT_HEADING_IDX:
                                         gpsRec.heading=Convert.toFloat(field);
-                                    curLogFormat|=(1<<BT747_dev.FMT_HEADING_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_HEADING_IDX);
                                     break;
-                                    case BT747_dev.FMT_DSTA_IDX:
+                                    case BT747Constants.FMT_DSTA_IDX:
                                         gpsRec.dsta=Convert.toInt(field);
-                                    curLogFormat|=(1<<BT747_dev.FMT_DSTA_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_DSTA_IDX);
                                     break;
-                                    case BT747_dev.FMT_DAGE_IDX:
+                                    case BT747Constants.FMT_DAGE_IDX:
                                         gpsRec.dage=Convert.toInt(field);
-                                    curLogFormat|=(1<<BT747_dev.FMT_DAGE_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_DAGE_IDX);
                                     break;
-                                    case BT747_dev.FMT_PDOP_IDX:
+                                    case BT747Constants.FMT_PDOP_IDX:
                                         gpsRec.pdop=(int)(Convert.toFloat(field)*100);
-                                    curLogFormat|=(1<<BT747_dev.FMT_PDOP_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_PDOP_IDX);
                                     break;
-                                    case BT747_dev.FMT_HDOP_IDX:
+                                    case BT747Constants.FMT_HDOP_IDX:
                                         gpsRec.hdop=(int)(Convert.toFloat(field)*100);
-                                    curLogFormat|=(1<<BT747_dev.FMT_HDOP_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_HDOP_IDX);
                                     break;
-                                    case BT747_dev.FMT_VDOP_IDX:
+                                    case BT747Constants.FMT_VDOP_IDX:
                                         gpsRec.vdop=(int)(Convert.toFloat(field)*100);
-                                    curLogFormat|=(1<<BT747_dev.FMT_VDOP_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_VDOP_IDX);
                                     break;
-                                    case BT747_dev.FMT_NSAT_IDX:
+                                    case BT747Constants.FMT_NSAT_IDX:
                                     {
                                         StringTokenizer nfields=
                                             new StringTokenizer(field,"()");
                                         if(nfields.countTokens()>=2) {
                                             gpsRec.nsat=Convert.toInt(nfields.nextToken())*256
                                             +Convert.toInt(nfields.nextToken());
-                                            curLogFormat|=(1<<BT747_dev.FMT_NSAT_IDX);
+                                            curLogFormat|=(1<<BT747Constants.FMT_NSAT_IDX);
                                         }
                                     }
                                     // Need to handle ()
                                     break;
-                                    case BT747_dev.FMT_MAX_SATS:
+                                    case BT747Constants.FMT_MAX_SATS:
                                         break;
-                                    case BT747_dev.FMT_SID_IDX:
+                                    case BT747Constants.FMT_SID_IDX:
                                     {
                                         StringTokenizer SatFields = new StringTokenizer(field,";");
                                         int cnt=SatFields.countTokens();
@@ -437,24 +464,24 @@ public final class CSVLogConvert implements GPSLogConvert {
                                                 //Vm.debug(sinfos[0]);
                                                 if(sinfos.hasMoreElements()) {
                                                     gpsRec.sid[i]=Convert.toInt(sinfos.nextToken());
-                                                    curLogFormat|=(1<<BT747_dev.FMT_SID_IDX);
+                                                    curLogFormat|=(1<<BT747Constants.FMT_SID_IDX);
                                                 }
-                                                if (((activeFileFields&BT747_dev.FMT_ELEVATION_IDX)!=0)
+                                                if (((activeFileFields&BT747Constants.FMT_ELEVATION_IDX)!=0)
                                                         && sinfos.hasMoreElements()
                                                         ) {
-                                                    curLogFormat|=(1<<BT747_dev.FMT_ELEVATION_IDX);
+                                                    curLogFormat|=(1<<BT747Constants.FMT_ELEVATION_IDX);
                                                     gpsRec.ele[i]=Convert.toInt(sinfos.nextToken());
                                                 }
-                                                if (((activeFileFields&BT747_dev.FMT_AZIMUTH_IDX)!=0)
+                                                if (((activeFileFields&BT747Constants.FMT_AZIMUTH_IDX)!=0)
                                                     && sinfos.hasMoreElements()
                                                     ) {
-                                                    curLogFormat|=(1<<BT747_dev.FMT_AZIMUTH_IDX);
+                                                    curLogFormat|=(1<<BT747Constants.FMT_AZIMUTH_IDX);
                                                     gpsRec.azi[i]=Convert.toInt(sinfos.nextToken());
                                                 }
-                                                if (((activeFileFields&BT747_dev.FMT_SNR_IDX)!=0) 
+                                                if (((activeFileFields&BT747Constants.FMT_SNR_IDX)!=0) 
                                                     && sinfos.hasMoreElements()
                                                     ) {
-                                                    curLogFormat|=(1<<BT747_dev.FMT_SNR_IDX);
+                                                    curLogFormat|=(1<<BT747Constants.FMT_SNR_IDX);
                                                     gpsRec.snr[i]=Convert.toInt(sinfos.nextToken());
                                                 }
                                             }  // length
@@ -462,20 +489,20 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     }
                                     break;
                                     
-                                    case BT747_dev.FMT_RCR_IDX:
+                                    case BT747Constants.FMT_RCR_IDX:
                                     {
-                                        curLogFormat|=(1<<BT747_dev.FMT_RCR_IDX);
+                                        curLogFormat|=(1<<BT747Constants.FMT_RCR_IDX);
                                         if(field.indexOf('B',0)!=-1) {
-                                            gpsRec.rcr|=BT747_dev.RCR_BUTTON_MASK;
+                                            gpsRec.rcr|=BT747Constants.RCR_BUTTON_MASK;
                                         }
                                         if(field.indexOf('T',0)!=-1) {
-                                            gpsRec.rcr|=BT747_dev.RCR_TIME_MASK;
+                                            gpsRec.rcr|=BT747Constants.RCR_TIME_MASK;
                                         }
                                         if(field.indexOf('S',0)!=-1) {
-                                            gpsRec.rcr|=BT747_dev.RCR_SPEED_MASK;
+                                            gpsRec.rcr|=BT747Constants.RCR_SPEED_MASK;
                                         }
                                         if(field.indexOf('D',0)!=-1) {
-                                            gpsRec.rcr|=BT747_dev.RCR_DISTANCE_MASK;
+                                            gpsRec.rcr|=BT747Constants.RCR_DISTANCE_MASK;
                                         }
                                         
                                         // Still 16-4 = 12 possibilities.
@@ -496,24 +523,24 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         }
                                     }
                                     break;
-                                    case BT747_dev.FMT_MILLISECOND_IDX:
+                                    case BT747Constants.FMT_MILLISECOND_IDX:
                                         //                        gpsRec.milisecond=
                                         break;
-                                    case BT747_dev.FMT_DISTANCE_IDX:
+                                    case BT747Constants.FMT_DISTANCE_IDX:
                                     {
                                         StringTokenizer n=new StringTokenizer(field.trim()," ");
                                         gpsRec.distance=Convert.toDouble(n.nextToken());
                                     }
-                                    curLogFormat|=(1<<BT747_dev.FMT_DISTANCE_IDX);
+                                    curLogFormat|=(1<<BT747Constants.FMT_DISTANCE_IDX);
                                     break;
                                     case FMT_DISTANCE_FT_IDX:
                                     {
                                         StringTokenizer n=new StringTokenizer(field.trim()," ");
                                         gpsRec.distance=Convert.toDouble(n.nextToken())/3.28083989501312;
                                     }
-                                        curLogFormat|=(1<<BT747_dev.FMT_DISTANCE_IDX);
+                                        curLogFormat|=(1<<BT747Constants.FMT_DISTANCE_IDX);
                                         break;
-                                    case BT747_dev.FMT_HOLUX_LOW_PRECISION_IDX:
+                                    case BT747Constants.FMT_HOLUX_LOW_PRECISION_IDX:
                                         break;
                                     default:
                                         // Error message to show.
@@ -526,9 +553,9 @@ public final class CSVLogConvert implements GPSLogConvert {
                                 field_nbr++;
                             }
                             if(noGeoid
-                                    &&((curLogFormat&(1<<BT747_dev.FMT_HEIGHT_IDX))!=0)
-                                    &&((curLogFormat&(1<<BT747_dev.FMT_LATITUDE_IDX))!=0)
-                                    &&((curLogFormat&(1<<BT747_dev.FMT_LONGITUDE_IDX))!=0)
+                                    &&((curLogFormat&(1<<BT747Constants.FMT_HEIGHT_IDX))!=0)
+                                    &&((curLogFormat&(1<<BT747Constants.FMT_LATITUDE_IDX))!=0)
+                                    &&((curLogFormat&(1<<BT747Constants.FMT_LONGITUDE_IDX))!=0)
                             ) {
                                 gpsRec.height-=Conv.wgs84_separation(gpsRec.latitude, gpsRec.longitude);
                             }
@@ -604,65 +631,65 @@ public final class CSVLogConvert implements GPSLogConvert {
     
     public static final GPSRecord getLogFormatRecord(final int logFormat) {
         GPSRecord gpsRec=new GPSRecord();
-        if((logFormat&(1<<BT747_dev.FMT_UTC_IDX))!=0) {
+        if((logFormat&(1<<BT747Constants.FMT_UTC_IDX))!=0) {
             gpsRec.utc=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_VALID_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_VALID_IDX))!=0) { 
             gpsRec.valid=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_LATITUDE_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_LATITUDE_IDX))!=0) { 
             gpsRec.latitude=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_LONGITUDE_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_LONGITUDE_IDX))!=0) { 
             gpsRec.longitude=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_HEIGHT_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_HEIGHT_IDX))!=0) { 
             gpsRec.height=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_SPEED_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_SPEED_IDX))!=0) { 
             gpsRec.speed=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_HEADING_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_HEADING_IDX))!=0) { 
             gpsRec.heading=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_DSTA_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_DSTA_IDX))!=0) { 
             gpsRec.dsta=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_DAGE_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_DAGE_IDX))!=0) { 
             gpsRec.dage=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_PDOP_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_PDOP_IDX))!=0) { 
             gpsRec.pdop=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_HDOP_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_HDOP_IDX))!=0) { 
             gpsRec.hdop=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_VDOP_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_VDOP_IDX))!=0) { 
             gpsRec.vdop=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_NSAT_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_NSAT_IDX))!=0) { 
             gpsRec.nsat=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_SID_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_SID_IDX))!=0) { 
             gpsRec.sid=new int[0];
             gpsRec.sidinuse=new boolean[0];
         }
-        if((logFormat&(1<<BT747_dev.FMT_ELEVATION_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_ELEVATION_IDX))!=0) { 
             gpsRec.ele=new int[0];
         }
-        if((logFormat&(1<<BT747_dev.FMT_AZIMUTH_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_AZIMUTH_IDX))!=0) { 
             gpsRec.azi=new int[0];
         }
-        if((logFormat&(1<<BT747_dev.FMT_SNR_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_SNR_IDX))!=0) { 
             gpsRec.snr=new int[0];
         }
-        if((logFormat&(1<<BT747_dev.FMT_RCR_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_RCR_IDX))!=0) { 
             gpsRec.rcr=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_MILLISECOND_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_MILLISECOND_IDX))!=0) { 
             gpsRec.milisecond=-1;
         }
-        if((logFormat&(1<<BT747_dev.FMT_DISTANCE_IDX))!=0) { 
+        if((logFormat&(1<<BT747Constants.FMT_DISTANCE_IDX))!=0) { 
             gpsRec.distance=-1;
         }
         

@@ -26,7 +26,7 @@ import waba.ui.Label;
 
 import sun.security.action.GetLongAction;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.GpsEvent;
 
 import bt747.Txt;
@@ -67,7 +67,7 @@ public class GPSLogFormat extends Container {
     public void onStart () {
         // Add all tick buttons.
         for (int i=0;i<C_LOG_FMT_COUNT;i++) {
-            chkLogFmtItems[i]= new MyCheck(BT747_dev.logFmtItems[i]);
+            chkLogFmtItems[i]= new MyCheck(BT747Constants.logFmtItems[i]);
 //          int extra_offset=chkLogFmtItems[i].fm.height-chkLogFmtItems[i].getPreferredHeight();
 //          add(chkLogFmtItems[i]);
 //          int x=((i==0)?LEFT:((i==((C_LOG_FMT_COUNT/2)))? getClientRect().width/2:SAME));
@@ -106,7 +106,7 @@ public class GPSLogFormat extends Container {
         }
         // Special case : low precision
         if(chkLogFmtItems[C_LOG_FMT_COUNT-1].getChecked()) {
-            logFormat|=(1<<BT747_dev.FMT_HOLUX_LOW_PRECISION_IDX);
+            logFormat|=(1<<BT747Constants.FMT_HOLUX_LOW_PRECISION_IDX);
         }
         return logFormat;
     }
@@ -126,16 +126,16 @@ public class GPSLogFormat extends Container {
             bitMask<<=1;
         }
         chkLogFmtItems[C_LOG_FMT_COUNT-1]
-                       .setChecked((p_logFormat&(1<<BT747_dev.FMT_HOLUX_LOW_PRECISION_IDX))!=0);
+                       .setChecked((p_logFormat&(1<<BT747Constants.FMT_HOLUX_LOW_PRECISION_IDX))!=0);
         setLogFormatControls();
     }
 
     private void setLogFormatControls() {
         boolean sidSet;
-        sidSet=chkLogFmtItems[BT747_dev.FMT_SID_IDX].getChecked();
-        chkLogFmtItems[BT747_dev.FMT_ELEVATION_IDX].setEnabled(sidSet);
-        chkLogFmtItems[BT747_dev.FMT_AZIMUTH_IDX].setEnabled(sidSet);
-        chkLogFmtItems[BT747_dev.FMT_SNR_IDX].setEnabled(sidSet);
+        sidSet=chkLogFmtItems[BT747Constants.FMT_SID_IDX].getChecked();
+        chkLogFmtItems[BT747Constants.FMT_ELEVATION_IDX].setEnabled(sidSet);
+        chkLogFmtItems[BT747Constants.FMT_AZIMUTH_IDX].setEnabled(sidSet);
+        chkLogFmtItems[BT747Constants.FMT_SNR_IDX].setEnabled(sidSet);
 
         m_lbEstNbrRecords.setText(m.getEstimatedNbrRecords(getSelectedLogFormat())+Txt.REC_ESTIMATED);
     }

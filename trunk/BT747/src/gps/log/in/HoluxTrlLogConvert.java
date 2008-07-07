@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps.log.in;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
@@ -43,10 +43,10 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
     private long timeOffsetSeconds=0;
     protected boolean passToFindFieldsActivatedInLog= false;
     protected int activeFileFields=
-        (1<<BT747_dev.FMT_UTC_IDX)
-        |(1<<BT747_dev.FMT_LATITUDE_IDX)
-        |(1<<BT747_dev.FMT_LONGITUDE_IDX)
-        |(1<<BT747_dev.FMT_HEIGHT_IDX)
+        (1<<BT747Constants.FMT_UTC_IDX)
+        |(1<<BT747Constants.FMT_LATITUDE_IDX)
+        |(1<<BT747Constants.FMT_LONGITUDE_IDX)
+        |(1<<BT747Constants.FMT_HEIGHT_IDX)
         ;
     
     private boolean noGeoid=false; // If true,remove geoid difference from height

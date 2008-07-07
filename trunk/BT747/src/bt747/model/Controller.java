@@ -1,8 +1,10 @@
 package bt747.model;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GPSstate;
+import gps.GpsEvent;
+import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
@@ -36,8 +38,26 @@ public class Controller {
 
     public Controller(Model m) {
         this.m = m;
+        init();
+        
+    }
+   
+
+    private void init() {
         getLogFilterSettings();
         m.setGpsDecode(m.getGpsDecode());
+        m.gpsModel().setDownloadTimeOut(m.getDownloadTimeOut());
+        m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
+
+        
+        int port = m.getPortnbr();
+        if (port != 0x5555) {
+            // TODO: review this, especially with 'freetext port'
+            m.gpsRxTx().setDefaults(port, m.getBaudRate());
+        }
+        if (m.getStartupOpenPort()) {
+            connectGPS();
+        }
     }
 
     /**
@@ -46,6 +66,11 @@ public class Controller {
      */
     public final void setImperial(boolean on) {
         m.setImperial(on);
+        m.saveSettings();
+    }
+
+    public final void setOutputLogConditions(boolean on) {
+        m.setOutputLogConditions(on);
         m.saveSettings();
     }
 
@@ -71,6 +96,7 @@ public class Controller {
 
     public final void setDownloadTimeOut(int i) {
         m.setDownloadTimeOut(i);
+        m.gpsModel().setDownloadTimeOut(i);
         m.saveSettings();
     }
 
@@ -81,6 +107,7 @@ public class Controller {
 
     public final void setLogRequestAhead(int i) {
         m.setLogRequestAhead(i);
+        m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
         m.saveSettings();
     }
 
@@ -173,6 +200,7 @@ public class Controller {
         if (gpsFile != null) {
             m.logConversionStarted(log_type);
 
+            gpsFile.setAddLogConditionInfo(m.getOutputLogConditions());
             gpsFile.setImperial(m.getImperial());
             gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
             gpsFile.setBadTrackColor(m.getColorInvalidTrack());
@@ -394,60 +422,106 @@ public class Controller {
         }
     }
 
+    /* ***********************************************************
+     * SECTION FOR CONNECTION RELATED METHODS
+     * ***********************************************************/ 
+
+    public void connectGPS() {
+        closeGPS();
+        m.gpsRxTx().openPort();
+        if (m.gpsRxTx().isConnected()) {
+            performOperationsAfterGPSConnect();
+        }
+    }
+
+
     /**
-     * Device connection
+     * Close the GPS connection
      */
-    public final void setBluetooth() {
-        m.gpsModel().GPS_close();
-        m.gpsModel().setBluetooth();
-        m.setFreeTextPort("");
+    public void closeGPS() {
+        if (m.gpsRxTx().isConnected()) {
+            m.gpsRxTx().closePort();
+            // TODO Move event posting to appropriate place (in model)
+            m.postEvent(ModelEvent.DISCONNECTED);
+        }
     }
 
-    public final void setUsb() {
-        m.gpsModel().GPS_close();
-        m.gpsModel().setUsb();
-        m.setFreeTextPort("");
+    /**
+     * open a Bluetooth connection Calls getStatus to request initial parameters
+     * from the device. Set up the timer to regurarly poll the connection for
+     * data.
+     */
+    public void setBluetooth() {
+        closeGPS();
+        m.gpsRxTx().setBluetoothAndOpen();
+        performOperationsAfterGPSConnect();
     }
 
+    /**
+     * open a Usb connection Calls getStatus to request initial parameters from
+     * the device. Set up the timer to regurarly poll the connection for data.
+     */
+    public void setUsb() {
+        closeGPS();
+        m.gpsRxTx().setUSBAndOpen();
+        performOperationsAfterGPSConnect();
+    }
+
+    /**
+     * open a connection on the given port number. Calls getStatus to request
+     * initial parameters from the device. Set up the timer to regurarly poll
+     * the connection for data.
+     * 
+     * @param port
+     *            Port number to open
+     */
     public final void setPort(final int port) {
-        m.gpsModel().GPS_close();
-        m.gpsModel().setPort(port);
-        m.setFreeTextPort("");
-        // TODO: review save settings | saving port currently for debug
-        m.setPortnbr(port);
-        m.saveSettings();
+        closeGPS();
+        m.gpsRxTx().setPortAndOpen(port);
+        performOperationsAfterGPSConnect();
+    }
+    
+
+    public final void setSpeed(final int speed) {
+        m.gpsRxTx().setSpeed(speed);
     }
 
     public final void setFreeTextPort(final String s) {
-        m.gpsModel().GPS_close();
-        m.gpsModel().setFreeTextPort(s);
-        // TODO: review save settings | saving port currently for debug
-        m.setFreeTextPort(s);
-        m.saveSettings();
+        closeGPS();
+        m.gpsRxTx().setFreeTextPortAndOpen(s);
+        performOperationsAfterGPSConnect();
     }
 
     public final String getFreeTextPort() {
-        return m.gpsModel().getFreeTextPort();
+        return m.gpsRxTx().getFreeTextPort();
     }
 
-    public final void setSpeed(final int speed) {
-        m.gpsModel().setSpeed(speed);
+    private void performOperationsAfterGPSConnect() {
+        if (m.gpsRxTx().isConnected()) {
+            m.gpsModel().getStatus();
+            // TODO: Setup timer in gpsRxTx instead of in the gpsModel
+            m.gpsModel().setupTimer();
+            // Remember defaults
+            m.setPortnbr(m.gpsRxTx().getPort());
+            m.setBaudRate(m.gpsRxTx().getSpeed());
+            m.setFreeTextPort(m.gpsRxTx().getFreeTextPort());
+            m.saveSettings();
+            m.postEvent(ModelEvent.CONNECTED);
+        }
     }
 
-    public final void GPS_close() {
-        m.gpsModel().GPS_close();
-    }
 
-    public final void GPS_restart() {
-        m.gpsModel().GPS_restart();
+    public void setDebugConn(final boolean dbg) {
+        m.gpsRxTx().setDebugConn(dbg, m.getBaseDirPath());
     }
-
+    
+    /* ***********************************************************
+     * END OF SECTION FOR CONNECTION RELATED METHODS
+     * ***********************************************************/ 
+    
+    
     public final void setDebug(boolean b) {
         m.gpsModel().setDebug(b);
-    }
-
-    public final void setDebugConn(boolean b) {
-        m.gpsModel().setDebugConn(b);
     }
 
     public void addGPSListener(GPSListener l) {
@@ -713,7 +787,7 @@ public class Controller {
         m.setTestSBASSetting1(m.isSBASTestEnabled());
         m.setLogOverwriteSetting1(m.isLogFullOverwrite());
         String NMEA = "";
-        for (int i = 0; i < BT747_dev.C_NMEA_SEN_COUNT; i++) {
+        for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             NMEA += (m.getNMEAPeriod(i));
         }
         m.setNMEASetting1(NMEA);
@@ -731,9 +805,9 @@ public class Controller {
         setLogOverwrite(m.getLogOverwriteSetting1());
 
         String NMEA = m.getNMEASetting1();
-        int[] Periods = new int[BT747_dev.C_NMEA_SEN_COUNT];
+        int[] Periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
 
-        for (int i = 0; i < BT747_dev.C_NMEA_SEN_COUNT; i++) {
+        for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             Periods[i] = (int) (NMEA.charAt(i) - '0');
         }
         setNMEAPeriods(Periods);

@@ -19,7 +19,8 @@
 //********************************************************************  
 package gps.log.in;
 
-import gps.BT747_dev;
+import sun.util.logging.resources.logging_zh_TW;
+import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
@@ -65,9 +66,9 @@ public final class BT747LogConvert implements GPSLogConvert {
         int[] byteSizes;
 
         if (holux) {
-            byteSizes = BT747_dev.logFmtByteSizesHolux;
+            byteSizes = BT747Constants.logFmtByteSizesHolux;
         } else {
-            byteSizes = BT747_dev.logFmtByteSizes;
+            byteSizes = BT747Constants.logFmtByteSizes;
         }
         satRecSize = 0;
 
@@ -79,28 +80,28 @@ public final class BT747LogConvert implements GPSLogConvert {
         // if((logFormat&0x80000000)!=0) {
         // holux=true;
         // }
-        minRecordSize = BT747_dev.logRecordMinSize(logFormat, holux);
-        maxRecordSize = BT747_dev.logRecordMaxSize(logFormat, holux);
+        minRecordSize = BT747Constants.logRecordMinSize(logFormat, holux);
+        maxRecordSize = BT747Constants.logRecordMaxSize(logFormat, holux);
         do {
             if ((bits & 1) != 0) {
                 switch (index) {
-                case BT747_dev.FMT_LATITUDE_IDX:
-                case BT747_dev.FMT_LONGITUDE_IDX:
+                case BT747Constants.FMT_LATITUDE_IDX:
+                case BT747Constants.FMT_LONGITUDE_IDX:
                     total += byteSizes[index];
                     break;
-                case BT747_dev.FMT_HEIGHT_IDX:
+                case BT747Constants.FMT_HEIGHT_IDX:
                     total += byteSizes[index];
                     break;
 
-                case BT747_dev.FMT_SID_IDX:
-                case BT747_dev.FMT_ELEVATION_IDX:
-                case BT747_dev.FMT_AZIMUTH_IDX:
-                case BT747_dev.FMT_SNR_IDX:
+                case BT747Constants.FMT_SID_IDX:
+                case BT747Constants.FMT_ELEVATION_IDX:
+                case BT747Constants.FMT_AZIMUTH_IDX:
+                case BT747Constants.FMT_SNR_IDX:
                     satRecSize += byteSizes[index];
                     break;
-                case BT747_dev.FMT_RCR_IDX:
-                case BT747_dev.FMT_MILLISECOND_IDX:
-                case BT747_dev.FMT_DISTANCE_IDX:
+                case BT747Constants.FMT_RCR_IDX:
+                case BT747Constants.FMT_MILLISECOND_IDX:
+                case BT747Constants.FMT_DISTANCE_IDX:
 
                     // These fields do not contribute to the sat offset
                     break;
@@ -194,9 +195,49 @@ public final class BT747LogConvert implements GPSLogConvert {
                                 + m_File.getPath() + "|" + m_File.lastError))
                                 .popupBlockingModal();
                     }
-                    newLogFormat = (0xFF & bytes[2]) << 0
-                            | (0xFF & bytes[3]) << 8 | (0xFF & bytes[4]) << 16
+                    newLogFormat =
+                              (0xFF & bytes[2]) << 0
+                            | (0xFF & bytes[3]) << 8
+                            | (0xFF & bytes[4]) << 16
                             | (0xFF & bytes[5]) << 24;
+                    logMode =
+                          (0xFF & bytes[6]) << 0
+                        | (0xFF & bytes[7]) << 8;
+
+                    logPeriod =
+                        (0xFF & bytes[8]) << 0
+                      | (0xFF & bytes[9]) << 8
+                      | (0xFF & bytes[10]) << 16
+                      | (0xFF & bytes[11]) << 24;
+
+                    logDistance =
+                        (0xFF & bytes[12]) << 0
+                      | (0xFF & bytes[13]) << 8
+                      | (0xFF & bytes[14]) << 16
+                      | (0xFF & bytes[15]) << 24;
+
+                    logSpeed =
+                        (0xFF & bytes[16]) << 0
+                      | (0xFF & bytes[17]) << 8
+                      | (0xFF & bytes[18]) << 16
+                      | (0xFF & bytes[19]) << 24;
+                    if(logPeriod!=0) {
+                        rcr_mask |= BT747Constants.RCR_TIME_MASK;
+                    } else {
+                        rcr_mask &= ~BT747Constants.RCR_TIME_MASK;
+                    }
+                    if(logDistance!=0) {
+                        rcr_mask |= BT747Constants.RCR_DISTANCE_MASK;
+                    } else {
+                        rcr_mask &= ~BT747Constants.RCR_DISTANCE_MASK;
+                    }
+                    if(logSpeed!=0) {
+                        rcr_mask |= BT747Constants.RCR_SPEED_MASK;
+                    } else {
+                        rcr_mask &= ~BT747Constants.RCR_SPEED_MASK;
+                    }
+
+
                     if (newLogFormat == 0xFFFFFFFF) {
                         // TODO: Treat error
                         if (logFormat == 0) {
@@ -270,7 +311,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                     /***********************************************************
                      * Get some satellite record information.
                      */
-                    if ((logFormat & (1 << BT747_dev.FMT_SID_IDX)) != 0) {
+                    if ((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0) {
                         satCntIdx = offsetInBuffer + satIdxOffset;
                         satcnt = (0xFF & bytes[satCntIdx + 2]) << 0
                                 | (0xFF & bytes[satCntIdx + 3]) << 8;
@@ -316,18 +357,18 @@ public final class BT747LogConvert implements GPSLogConvert {
                             if (!holux) {
                                 rcrIdx = offsetInBuffer
                                         - 2
-                                        - ((((logFormat & (1 << BT747_dev.FMT_DISTANCE_IDX)) != 0) ? BT747_dev.logFmtByteSizes[BT747_dev.FMT_DISTANCE_IDX]
+                                        - ((((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) ? BT747Constants.logFmtByteSizes[BT747Constants.FMT_DISTANCE_IDX]
                                                 : 0)
-                                                + (((logFormat & (1 << BT747_dev.FMT_MILLISECOND_IDX)) != 0) ? BT747_dev.logFmtByteSizes[BT747_dev.FMT_MILLISECOND_IDX]
-                                                        : 0) + (((logFormat & (1 << BT747_dev.FMT_RCR_IDX)) != 0) ? BT747_dev.logFmtByteSizes[BT747_dev.FMT_RCR_IDX]
+                                                + (((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) ? BT747Constants.logFmtByteSizes[BT747Constants.FMT_MILLISECOND_IDX]
+                                                        : 0) + (((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) ? BT747Constants.logFmtByteSizes[BT747Constants.FMT_RCR_IDX]
                                                 : 0));
                             } else {
                                 rcrIdx = offsetInBuffer
                                         - 1
-                                        - ((((logFormat & (1 << BT747_dev.FMT_DISTANCE_IDX)) != 0) ? BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_DISTANCE_IDX]
+                                        - ((((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) ? BT747Constants.logFmtByteSizesHolux[BT747Constants.FMT_DISTANCE_IDX]
                                                 : 0)
-                                                + (((logFormat & (1 << BT747_dev.FMT_MILLISECOND_IDX)) != 0) ? BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_MILLISECOND_IDX]
-                                                        : 0) + (((logFormat & (1 << BT747_dev.FMT_RCR_IDX)) != 0) ? BT747_dev.logFmtByteSizesHolux[BT747_dev.FMT_RCR_IDX]
+                                                + (((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) ? BT747Constants.logFmtByteSizesHolux[BT747Constants.FMT_MILLISECOND_IDX]
+                                                        : 0) + (((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) ? BT747Constants.logFmtByteSizesHolux[BT747Constants.FMT_RCR_IDX]
                                                 : 0));
                             }
 
@@ -447,65 +488,65 @@ public final class BT747LogConvert implements GPSLogConvert {
 
     public static final GPSRecord getLogFormatRecord(final int logFormat) {
         GPSRecord gpsRec = new GPSRecord();
-        if ((logFormat & (1 << BT747_dev.FMT_UTC_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
             gpsRec.utc = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_VALID_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_VALID_IDX)) != 0) {
             gpsRec.valid = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_LATITUDE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0) {
             gpsRec.latitude = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_LONGITUDE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0) {
             gpsRec.longitude = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_HEIGHT_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0) {
             gpsRec.height = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_SPEED_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
             gpsRec.speed = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_HEADING_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) != 0) {
             gpsRec.heading = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_DSTA_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0) {
             gpsRec.dsta = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_DAGE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_DAGE_IDX)) != 0) {
             gpsRec.dage = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_PDOP_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_PDOP_IDX)) != 0) {
             gpsRec.pdop = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_HDOP_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_HDOP_IDX)) != 0) {
             gpsRec.hdop = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_VDOP_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) != 0) {
             gpsRec.vdop = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_NSAT_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) != 0) {
             gpsRec.nsat = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_SID_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0) {
             gpsRec.sid = new int[0];
             gpsRec.sidinuse = new boolean[0];
         }
-        if ((logFormat & (1 << BT747_dev.FMT_ELEVATION_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) != 0) {
             gpsRec.ele = new int[0];
         }
-        if ((logFormat & (1 << BT747_dev.FMT_AZIMUTH_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_AZIMUTH_IDX)) != 0) {
             gpsRec.azi = new int[0];
         }
-        if ((logFormat & (1 << BT747_dev.FMT_SNR_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_SNR_IDX)) != 0) {
             gpsRec.snr = new int[0];
         }
-        if ((logFormat & (1 << BT747_dev.FMT_RCR_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
             gpsRec.rcr = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_MILLISECOND_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) {
             gpsRec.milisecond = -1;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_DISTANCE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) {
             gpsRec.distance = -1;
         }
 
@@ -521,6 +562,11 @@ public final class BT747LogConvert implements GPSLogConvert {
         this.holux = holux;
     }
 
+    private int logMode=0;
+    private int rcr_mask=0; // Default RCR based on log settings
+    private int logSpeed=0;
+    private int logDistance=0;
+    private int logPeriod=0;
     /**
      * Tries to find a special record at the indicated offset.
      * 
@@ -552,22 +598,41 @@ public final class BT747LogConvert implements GPSLogConvert {
                 if (newLogFormat != logFormat) {
                     updateLogFormat(gpsFile, newLogFormat);
                 }
-                // bt747.sys.Vm.debug("Log format set to
-                // :"+Convert.unsigned2hex(value, 8));
+                //bt747.sys.Vm.debug("Log format set to :"+Convert.unsigned2hex(value, 8));
                 break;
             case 0x03: // log Period change
-                // bt747.sys.Vm.debug("Log period set to :"+value);
+                logPeriod= value;
+                if(value!=0) {
+                    rcr_mask |= BT747Constants.RCR_TIME_MASK;
+                } else {
+                    rcr_mask &= ~BT747Constants.RCR_TIME_MASK;
+                }
+                //bt747.sys.Vm.debug("Log period set to :"+value);
                 break;
             case 0x04: // log distance change
-                // bt747.sys.Vm.debug("Log distance set to :"+value);
+                logDistance=value;
+                if(value!=0) {
+                    rcr_mask |= BT747Constants.RCR_DISTANCE_MASK;
+                } else {
+                    rcr_mask &= ~BT747Constants.RCR_DISTANCE_MASK;
+                }
+                //bt747.sys.Vm.debug("Log distance set to :"+value);
                 break;
             case 0x05: // log speed change
-                // bt747.sys.Vm.debug("Log speed set to :"+value);
+                logSpeed=value;
+                if(value!=0) {
+                    rcr_mask |= BT747Constants.RCR_SPEED_MASK;
+                } else {
+                    rcr_mask &= ~BT747Constants.RCR_SPEED_MASK;
+                }
+                //bt747.sys.Vm.debug("Log speed set to :"+value);
                 break;
             case 0x06: // value: 0x0106= logger on 0x0107= logger off 0x104=??
-                // bt747.sys.Vm.debug("Logger off :"+value);
+                logMode=value;
+                //bt747.sys.Vm.debug("Logger off :"+value);
             case 0x07: // value: 0x0106= logger on 0x0107= logger off 0x104=??
-                // bt747.sys.Vm.debug("Logger off :"+value);
+                logMode=value;
+                //bt747.sys.Vm.debug("Logger off :"+value);
                 break;
             default:
                 break; // Added to set SW breakpoint to discover other records.
@@ -622,7 +687,10 @@ public final class BT747LogConvert implements GPSLogConvert {
         recIdx = startIdx;
         valid = true;
 
-        if ((logFormat & (1 << BT747_dev.FMT_UTC_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
+            gpsRec.logPeriod=  logPeriod;
+            gpsRec.logDistance=logDistance;
+            gpsRec.logSpeed=   logSpeed;
             gpsRec.utc = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
@@ -634,13 +702,13 @@ public final class BT747LogConvert implements GPSLogConvert {
         } else {
             gpsRec.utc = 1000; // Value after earliest date
         }
-        if ((logFormat & (1 << BT747_dev.FMT_VALID_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_VALID_IDX)) != 0) {
             gpsRec.valid = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         } else {
             gpsRec.valid = 0xFFFF;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_LATITUDE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0) {
             if (!holux) {
                 long latitude = (0xFFL & bytes[recIdx++]) << 0
                         | (0xFFL & bytes[recIdx++]) << 8
@@ -662,7 +730,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                 valid = false;
             }
         }
-        if ((logFormat & (1 << BT747_dev.FMT_LONGITUDE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0) {
             if (!holux) {
                 long longitude = (0xFFL & bytes[recIdx++]) << 0
                         | (0xFFL & bytes[recIdx++]) << 8
@@ -684,7 +752,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                 valid = false;
             }
         }
-        if ((logFormat & (1 << BT747_dev.FMT_HEIGHT_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0) {
             if (!holux) {
                 int height = (0xFF & bytes[recIdx++]) << 0
                         | (0xFF & bytes[recIdx++]) << 8
@@ -699,50 +767,50 @@ public final class BT747LogConvert implements GPSLogConvert {
                 gpsRec.height = Convert.toFloatBitwise(height);
             }
             if (noGeoid
-                    && ((logFormat & (1 << BT747_dev.FMT_LATITUDE_IDX)) != 0)
-                    && ((logFormat & (1 << BT747_dev.FMT_LONGITUDE_IDX)) != 0)
+                    && ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
+                    && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)
                     && valid) {
                 gpsRec.height -= Conv.wgs84_separation(gpsRec.latitude,
                         gpsRec.longitude);
             }
         }
-        if ((logFormat & (1 << BT747_dev.FMT_SPEED_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
             int speed = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
             gpsRec.speed = Convert.toFloatBitwise(speed);
         }
-        if ((logFormat & (1 << BT747_dev.FMT_HEADING_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) != 0) {
             int heading = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
             gpsRec.heading = Convert.toFloatBitwise(heading);
         }
-        if ((logFormat & (1 << BT747_dev.FMT_DSTA_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0) {
             gpsRec.dsta = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_DAGE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_DAGE_IDX)) != 0) {
             gpsRec.dage = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_PDOP_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_PDOP_IDX)) != 0) {
             gpsRec.pdop = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_HDOP_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_HDOP_IDX)) != 0) {
             gpsRec.hdop = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_VDOP_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) != 0) {
             gpsRec.vdop = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_NSAT_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) != 0) {
             gpsRec.nsat = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         }
@@ -762,7 +830,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         }
         if (satcnt == idx) {
             while (idx-- > 0) {
-                if ((logFormat & (1 << BT747_dev.FMT_SID_IDX)) != 0) {
+                if ((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0) {
                     gpsRec.sid[satidx] = (0xFF & bytes[recIdx++]) << 0;
                     gpsRec.sidinuse[satidx] = ((0xFF & bytes[recIdx++]) << 0) != 0;
                     // if(false) {
@@ -774,15 +842,15 @@ public final class BT747LogConvert implements GPSLogConvert {
                     recIdx += 2;
                     // }
                 }
-                if ((logFormat & (1 << BT747_dev.FMT_ELEVATION_IDX)) != 0) {
+                if ((logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) != 0) {
                     gpsRec.ele[satidx] = (0xFF & bytes[recIdx++]) << 0
                             | (0xFF & bytes[recIdx++]) << 8;
                 }
-                if ((logFormat & (1 << BT747_dev.FMT_AZIMUTH_IDX)) != 0) {
+                if ((logFormat & (1 << BT747Constants.FMT_AZIMUTH_IDX)) != 0) {
                     gpsRec.azi[satidx] = (0xFF & bytes[recIdx++]) << 0
                             | (0xFF & bytes[recIdx++]) << 8;
                 }
-                if ((logFormat & (1 << BT747_dev.FMT_SNR_IDX)) != 0) {
+                if ((logFormat & (1 << BT747Constants.FMT_SNR_IDX)) != 0) {
                     gpsRec.snr[satidx] = (0xFF & bytes[recIdx++]) << 0
                             | (0xFF & bytes[recIdx++]) << 8;
                 }
@@ -796,23 +864,23 @@ public final class BT747LogConvert implements GPSLogConvert {
             Vm.debug("Problem in sat decode (end idx)");
         }
         recIdx = rcrIdx; // Sat information limit is rcrIdx
-        if ((logFormat & (1 << BT747_dev.FMT_RCR_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
             gpsRec.rcr = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         } else {
-            gpsRec.rcr = BT747_dev.RCR_TIME_MASK; // For filter
+            gpsRec.rcr = rcr_mask; // For filter
         }
         if(nextPointIsWayPt) {
-            gpsRec.rcr |= BT747_dev.RCR_BUTTON_MASK;
+            gpsRec.rcr |= BT747Constants.RCR_BUTTON_MASK;
             nextPointIsWayPt=false;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_MILLISECOND_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) {
             gpsRec.milisecond = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         } else {
             gpsRec.milisecond = 0;
         }
-        if ((logFormat & (1 << BT747_dev.FMT_DISTANCE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) {
             long distance = (0xFFL & bytes[recIdx++]) << 0
                     | (0xFFL & bytes[recIdx++]) << 8
                     | (0xFFL & bytes[recIdx++]) << 16

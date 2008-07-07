@@ -19,7 +19,7 @@
 //********************************************************************       
 package gps.log.out;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -305,16 +305,16 @@ public abstract class GPSFile {
 
     protected final String getRCRstr(final GPSRecord s) {
         rcrStr.setLength(0);
-        if ((s.rcr & BT747_dev.RCR_TIME_MASK) != 0) {
+        if ((s.rcr & BT747Constants.RCR_TIME_MASK) != 0) {
             rcrStr.append("T");
         }
-        if ((s.rcr & BT747_dev.RCR_SPEED_MASK) != 0) {
+        if ((s.rcr & BT747Constants.RCR_SPEED_MASK) != 0) {
             rcrStr.append("S");
         }
-        if ((s.rcr & BT747_dev.RCR_DISTANCE_MASK) != 0) {
+        if ((s.rcr & BT747Constants.RCR_DISTANCE_MASK) != 0) {
             rcrStr.append("D");
         }
-        if ((s.rcr & BT747_dev.RCR_BUTTON_MASK) != 0) {
+        if ((s.rcr & BT747Constants.RCR_BUTTON_MASK) != 0) {
             rcrStr.append("B");
         }
 
@@ -404,5 +404,16 @@ public abstract class GPSFile {
      */
     public final void setRecordNbrInLogs(boolean recordNbrInLogs) {
         this.recordNbrInLogs = recordNbrInLogs;
+    }
+
+    protected boolean addLogConditionInfo = false;
+    
+    public final boolean isAddLogConditionInfo() {
+        return addLogConditionInfo;
+    }
+
+
+    public final void setAddLogConditionInfo(boolean addLogConditionInfo) {
+        this.addLogConditionInfo = addLogConditionInfo;
     }
 }

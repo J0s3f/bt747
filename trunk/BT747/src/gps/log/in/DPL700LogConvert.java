@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps.log.in;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
@@ -43,10 +43,10 @@ public final class DPL700LogConvert implements GPSLogConvert {
     private File m_File = null;
     private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
-    protected int activeFileFields = (1 << BT747_dev.FMT_UTC_IDX)
-            | (1 << BT747_dev.FMT_LATITUDE_IDX)
-            | (1 << BT747_dev.FMT_LONGITUDE_IDX)
-            | (1 << BT747_dev.FMT_HEIGHT_IDX);
+    protected int activeFileFields = (1 << BT747Constants.FMT_UTC_IDX)
+            | (1 << BT747Constants.FMT_LATITUDE_IDX)
+            | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+            | (1 << BT747Constants.FMT_HEIGHT_IDX);
 
     private boolean noGeoid = false; // If true,remove geoid difference from
     // height
@@ -71,19 +71,19 @@ public final class DPL700LogConvert implements GPSLogConvert {
         switch (this.logType) {
         case PHOTOTRACKR:
         case ITRACKU_SIRFIII:
-            activeFileFields = (1 << BT747_dev.FMT_UTC_IDX)
-                    | (1 << BT747_dev.FMT_LATITUDE_IDX)
-                    | (1 << BT747_dev.FMT_LONGITUDE_IDX)
-                    | (1 << BT747_dev.FMT_HEIGHT_IDX)
-                    | (1 << BT747_dev.FMT_SPEED_IDX);
+            activeFileFields = (1 << BT747Constants.FMT_UTC_IDX)
+                    | (1 << BT747Constants.FMT_LATITUDE_IDX)
+                    | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+                    | (1 << BT747Constants.FMT_HEIGHT_IDX)
+                    | (1 << BT747Constants.FMT_SPEED_IDX);
             recordSize = 16;
             break;
         case ITRACKU_NUMERIX:
         default:
-            activeFileFields = (1 << BT747_dev.FMT_UTC_IDX)
-                    | (1 << BT747_dev.FMT_LATITUDE_IDX)
-                    | (1 << BT747_dev.FMT_LONGITUDE_IDX)
-                    | (1 << BT747_dev.FMT_HEIGHT_IDX);
+            activeFileFields = (1 << BT747Constants.FMT_UTC_IDX)
+                    | (1 << BT747Constants.FMT_LATITUDE_IDX)
+                    | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+                    | (1 << BT747Constants.FMT_HEIGHT_IDX);
             recordSize = 16;
             break;
         }

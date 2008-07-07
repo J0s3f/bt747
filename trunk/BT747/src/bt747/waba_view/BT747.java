@@ -83,14 +83,15 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     private MenuItem miDebug = new MenuItem(Txt.S_DEBUG,false);
     private MenuItem miDebugConn = new MenuItem(Txt.S_DEBUG_CONN,false); 
     private MenuItem miStats = new MenuItem(Txt.S_STATS,false); 
-    private MenuItem miHolux = new MenuItem("Holux M241",false);
     private MenuItem miImperial = new MenuItem(Txt.S_IMPERIAL,false);
+    private MenuItem miOutputLogConditions = new MenuItem(Txt.S_OUTPUT_LOGCONDITIONS,false);
     
     private MenuItem miDevice = new MenuItem(Txt.S_DEVICE);
     private MenuItem miDefaultDevice = new MenuItem(Txt.S_DEFAULTDEVICE,true);
     private MenuItem miGisteqType1 = new MenuItem(Txt.S_GISTEQTYPE1,false);
     private MenuItem miGisteqType2 = new MenuItem(Txt.S_GISTEQTYPE2,false);
     private MenuItem miGisteqType3 = new MenuItem(Txt.S_GISTEQTYPE3,false);
+    private MenuItem miHolux = new MenuItem("Holux M241",false);
     
     private MenuItem miInfo = new MenuItem(Txt.S_INFO);
     private MenuItem miAboutBT747 = new MenuItem(Txt.S_ABOUT_BT747);
@@ -116,14 +117,15 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
                 miDebug, 
                 miDebugConn, 
                 miStats, 
-                miHolux,
                 miImperial,
+                miOutputLogConditions,
             },
             {   miDevice,
                 miDefaultDevice,
                 miGisteqType1,
                 miGisteqType2,
                 miGisteqType3,
+                miHolux,
             },
             {   miInfo,
                 miAboutBT747,
@@ -154,15 +156,17 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     private static final int C_MENU_DEBUG_CONN = 112;
     /** MenuBar item for Settings->Conn. Stats */
     private static final int C_MENU_STATS_ACTIVE = 113;
-    /** MenuBar item for Settings->Holux M-241 */
-    private static final int C_MENU_HOLUX_241 = 114;
     /** MenuBar item for Settings->Imperial units */
-    private static final int C_MENU_IMPERIAL = 115;
+    private static final int C_MENU_IMPERIAL = 114;
+    /** MenuBar item for Settings->OutputLogConditions */
+    private static final int C_MENU_OUTPUT_LOGCONDITIONS = 115;
     
     private static final int C_MENU_DEFAULTDEVICE=201;
     private static final int C_MENU_GISTEQ_TYPE1=202;
     private static final int C_MENU_GISTEQ_TYPE2=203;
     private static final int C_MENU_GISTEQ_TYPE3=204;
+    /** MenuBar item for Settings->Holux M-241 */
+    private static final int C_MENU_HOLUX_241 = 205;
     
     /** MenuBar item for Info->About BT747 */
     private static final int C_MENU_ABOUT = 301;
@@ -250,6 +254,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         miRecordNumberInLogs.isChecked=m.getRecordNbrInLogs();
         miHolux.isChecked=m.getForceHolux241();
         miImperial.isChecked=m.getImperial();
+        miOutputLogConditions.isChecked=m.getOutputLogConditions();
 
 
         add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
@@ -363,10 +368,10 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
                     // Back to application
                     break;
                 case C_MENU_RESTART_CONNECTION:
-                    c.GPS_restart();
+                    c.connectGPS();
                     break;
                 case C_MENU_STOP_CONNECTION:
-                    c.GPS_close();
+                    c.closeGPS();
                     break;
                 case C_MENU_FOCUS_HIGHLIGHT:
                     c.setTraversableFocus(miTraversableFocus.isChecked);
@@ -383,6 +388,9 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
                     break;
                 case C_MENU_HOLUX_241:
                     c.setForceHolux241(miHolux.isChecked);
+                    break;
+                case C_MENU_OUTPUT_LOGCONDITIONS:
+                    c.setOutputLogConditions(miOutputLogConditions.isChecked);
                     break;
                 case C_MENU_IMPERIAL:
                     c.setImperial(miImperial.isChecked);
@@ -445,29 +453,29 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
             break;
         default:
             if(event.target==this) {
-                if(event.type==ModelEvent.DOWNLOAD_PROGRESS_UPDATE) {
-                    updateProgressBar();
-                    event.consumed=true;
-                } else {
                     for (int i = 0; i<numPanels; i++) {
                         m_TabPanel.getPanel(i).onEvent(event);    
                     }
-                }
             }
         }
     }
 
     private void updateProgressBar() {
         if (pb != null) {
-            pb.min = m.getStartAddr();
-            pb.max = m.getEndAddr();
-            pb.setValue(m.getNextReadAddr(), "", " b");
+            if(m.isDownloadOnGoing()) {
+                pb.min = m.getStartAddr();
+                pb.max = m.getEndAddr();
+                pb.setValue(m.getNextReadAddr(), "", " b");
+            }
             pb.setVisible(m.isDownloadOnGoing());
             m_ProgressLabel.setVisible(m.isDownloadOnGoing());
         }
     }
 
     public final void newEvent(bt747.ui.Event event) {
+        if ((event.getType()==ModelEvent.CONNECTED) ) {
+            m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
+        }
         this.postEvent(event);
     }
 
@@ -479,8 +487,8 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
             c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
             event.target=c;
             c.postEvent(event);
-        } else if ((event.getType()==GpsEvent.CONNECTED) ) {
-            m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
+        } else if ((event.getType()==GpsEvent.DOWNLOAD_STATE_CHANGE) ) {
+            updateProgressBar();
         } else {
             Control c;
             c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());

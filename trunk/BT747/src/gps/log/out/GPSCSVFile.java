@@ -116,6 +116,11 @@ public class GPSCSVFile extends GPSFile {
             }
             rec.append(")");
         }
+        if(addLogConditionInfo) {
+            rec.append(fieldSep+"LOGTIME(s)");
+            rec.append(fieldSep+"LOGDIST(m)");
+            rec.append(fieldSep+"LOGSPD(km/h)");
+        }
         rec.append(fieldSep+"\r\n");
         writeTxt(rec.toString());
         //"NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
@@ -373,7 +378,28 @@ public class GPSCSVFile extends GPSFile {
 //                }
 //                prevRecord=new GPSRecord(s);
 //            }
-            
+
+            if(addLogConditionInfo) {
+                rec.append(fieldSep);
+                if(s.logPeriod%10==0) {
+                    rec.append(Convert.toString(s.logPeriod/10));
+                } else {
+                    rec.append(Convert.toString(s.logPeriod/10.0,1));
+                }
+                rec.append(fieldSep);
+                if(s.logDistance%10==0) {
+                    rec.append(Convert.toString(s.logDistance/10));
+                } else {
+                    rec.append(Convert.toString(s.logDistance/10.0,1));
+                }
+                rec.append(fieldSep);
+                if(s.logSpeed%10==0) {
+                    rec.append(Convert.toString(s.logSpeed/10));
+                } else {
+                    rec.append(Convert.toString(s.logSpeed/10.0,1));
+                }
+            }
+
             rec.append(fieldSep);
                 
             rec.append("\r\n");

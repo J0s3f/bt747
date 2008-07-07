@@ -1,13 +1,14 @@
 package bt747.model;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.GPSstate;
+import gps.connection.GPSrxtx;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 
 import bt747.util.Date;
 
-public class Model extends AppSettings implements gps.settings{
+public class Model extends AppSettings {
 
     
     /*
@@ -34,7 +35,8 @@ public class Model extends AppSettings implements gps.settings{
     private GPSFilterAdvanced[] logFiltersAdv=new GPSFilterAdvanced[C_NBR_FILTERS];
 
     private GPSstate gpsModel;
-    
+    private GPSrxtx gpsRxTx;
+
     private boolean incremental=true; // Incremental download - default
     
     public Model() {
@@ -42,12 +44,19 @@ public class Model extends AppSettings implements gps.settings{
             logFilters[i]=new GPSFilter();
             logFiltersAdv[i]=new GPSFilterAdvanced();
         }
-        gpsModel=new GPSstate(this);
+        gpsRxTx= new GPSrxtx();
+        gpsModel=new GPSstate(gpsRxTx);
+        //gpsModel.setGPSRxtx(gpsRxTx);
     }
     
     public final GPSstate gpsModel()  {
         return this.gpsModel;
     }
+    
+    public final GPSrxtx gpsRxTx() {
+        return this.gpsRxTx;
+    }
+
     /**
      * @return the lastConversionOngoing
      */
@@ -151,54 +160,35 @@ public class Model extends AppSettings implements gps.settings{
      * @return the startAddr
      */
     public final int getStartAddr() {
-        return startAddr;
+        return gpsModel.getStartAddr();
     }
-    /**
-     * @param startAddr the startAddr to set
-     */
-    public final void setStartAddr(int startAddr) {
-        this.startAddr = startAddr;
-    }
+
     /**
      * @return the endAddr
      */
     public final int getEndAddr() {
-        return endAddr;
+        return gpsModel.getEndAddr();
     }
-    /**
-     * @param endAddr the endAddr to set
-     */
-    public final void setEndAddr(int endAddr) {
-        this.endAddr = endAddr;
-    }
+
     /**
      * @return the downloadOnGoing
      */
     public final boolean isDownloadOnGoing() {
-        return downloadOnGoing;
+        return gpsModel.isDownloadOnGoing();
     }
+    
     /**
      * @param downloadOnGoing the downloadOnGoing to set
      */
     public final void setDownloadOnGoing(boolean downloadOnGoing) {
         this.downloadOnGoing = downloadOnGoing;
-        postEvent(ModelEvent.DOWNLOAD_PROGRESS_UPDATE);
 
     }
     /**
      * @return the nextReadAddr
      */
     public final int getNextReadAddr() {
-        return nextReadAddr;
-    }
-    /**
-     * @param nextReadAddr the nextReadAddr to set
-     */
-    public final void setNextReadAddr(int nextReadAddr) {
-        this.nextReadAddr = nextReadAddr;
-        if(this.downloadOnGoing) {
-            postEvent(ModelEvent.DOWNLOAD_PROGRESS_UPDATE);
-        }
+        return gpsModel.getNextReadAddr();
     }
 
     public final boolean isIncremental() {
@@ -367,7 +357,7 @@ public class Model extends AppSettings implements gps.settings{
      public int getEstimatedNbrRecords(int logFormat) {
          int count=0;
          try {
-             int size=BT747_dev.logRecordSize(logFormat, isHolux(),12);
+             int size=BT747Constants.logRecordSize(logFormat, isHolux(),12);
              if(isHolux()) {
                  size+=1;
              } else {
@@ -388,6 +378,6 @@ public class Model extends AppSettings implements gps.settings{
      }
      
      public final boolean isDebugConn() {
-         return gpsModel.isDebugConn();
+         return gpsRxTx.isDebugConn();
      }
 }

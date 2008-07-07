@@ -219,9 +219,9 @@ public class GPSconctrl extends Container {
                 c.reqDeviceInfo();
                 event.consumed=true;
             } else if (event.target == btnStopGps) {
-                c.GPS_close();
+                c.closeGPS();
             } else if (event.target == btnRestartGps) {
-                c.GPS_restart();
+                c.connectGPS();
             }
             break;
         default:

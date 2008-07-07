@@ -5,7 +5,7 @@
  */
 package bt747.j2se_view;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GpsEvent;
 import gps.convert.Conv;
@@ -74,9 +74,7 @@ public class BT747_Main2 extends javax.swing.JFrame implements
 
     public void onEvent(bt747.ui.Event e) {
         int type = e.getType();
-        if (type == ModelEvent.DOWNLOAD_PROGRESS_UPDATE) {
-            progressBarUpdate();
-        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+        if (type == ModelEvent.LOGFILEPATH_UPDATE) {
             getRawLogFilePath();
         } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
             getOutputFilePath();
@@ -84,6 +82,8 @@ public class BT747_Main2 extends javax.swing.JFrame implements
             getWorkDirPath();
         } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
             getIncremental();
+        } else if (type == ModelEvent.CONNECTED) {
+
         }
     }
 
@@ -138,9 +138,9 @@ public class BT747_Main2 extends javax.swing.JFrame implements
         } else if (type == GpsEvent.DATA_UPDATE) {
         } else if (type == GpsEvent.GPGGA) {
             updateGPSData((GPSRecord) e.getArg());
-        } else if (type == GpsEvent.CONNECTED) {
+        } else if (type == GpsEvent.DOWNLOAD_STATE_CHANGE) {
+            progressBarUpdate();
         }
-
     }
 
     InputVerifier IntVerifier = new InputVerifier() {
@@ -177,180 +177,180 @@ public class BT747_Main2 extends javax.swing.JFrame implements
         int wayRCR = m.getWayPtRCR();
         int wayValid = m.getWayPtValid();
 
-        cbTrkNoFix.setSelected((trkValid & BT747_dev.VALID_NO_FIX_MASK) != 0);
-        cbTrkPPS.setSelected((trkValid & BT747_dev.VALID_PPS_MASK) != 0);
+        cbTrkNoFix.setSelected((trkValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
+        cbTrkPPS.setSelected((trkValid & BT747Constants.VALID_PPS_MASK) != 0);
         cbTrkEstimate
-                .setSelected((trkValid & BT747_dev.VALID_ESTIMATED_MASK) != 0);
-        cbTrkManual.setSelected((trkValid & BT747_dev.VALID_MANUAL_MASK) != 0);
-        cbTrkSPS.setSelected((trkValid & BT747_dev.VALID_SPS_MASK) != 0);
-        cbTrkFRTK.setSelected((trkValid & BT747_dev.VALID_FRTK_MASK) != 0);
-        cbTrkDGPS.setSelected((trkValid & BT747_dev.VALID_DGPS_MASK) != 0);
+                .setSelected((trkValid & BT747Constants.VALID_ESTIMATED_MASK) != 0);
+        cbTrkManual.setSelected((trkValid & BT747Constants.VALID_MANUAL_MASK) != 0);
+        cbTrkSPS.setSelected((trkValid & BT747Constants.VALID_SPS_MASK) != 0);
+        cbTrkFRTK.setSelected((trkValid & BT747Constants.VALID_FRTK_MASK) != 0);
+        cbTrkDGPS.setSelected((trkValid & BT747Constants.VALID_DGPS_MASK) != 0);
         cbTrkSimulate
-                .setSelected((trkValid & BT747_dev.VALID_SIMULATOR_MASK) != 0);
-        cbTrkRTK.setSelected((trkValid & BT747_dev.VALID_RTK_MASK) != 0);
+                .setSelected((trkValid & BT747Constants.VALID_SIMULATOR_MASK) != 0);
+        cbTrkRTK.setSelected((trkValid & BT747Constants.VALID_RTK_MASK) != 0);
 
-        cbTrkTime.setSelected((BT747_dev.RCR_TIME_MASK & trkRCR) != 0);
-        cbTrkSpeed.setSelected((BT747_dev.RCR_SPEED_MASK & trkRCR) != 0);
-        cbTrkDistance.setSelected((BT747_dev.RCR_DISTANCE_MASK & trkRCR) != 0);
-        cbTrkButton.setSelected((BT747_dev.RCR_BUTTON_MASK & trkRCR) != 0);
-        cbTrkUser1.setSelected((BT747_dev.RCR_APP1_MASK & trkRCR) != 0);
-        cbTrkUser2.setSelected((BT747_dev.RCR_APP2_MASK & trkRCR) != 0);
-        cbTrkUser3.setSelected((BT747_dev.RCR_APP3_MASK & trkRCR) != 0);
-        cbTrkUser4.setSelected((BT747_dev.RCR_APP4_MASK & trkRCR) != 0);
-        cbTrkUser5.setSelected((BT747_dev.RCR_APP5_MASK & trkRCR) != 0);
-        cbTrkUser6.setSelected((BT747_dev.RCR_APP6_MASK & trkRCR) != 0);
-        cbTrkUser7.setSelected((BT747_dev.RCR_APP7_MASK & trkRCR) != 0);
-        cbTrkUser8.setSelected((BT747_dev.RCR_APP8_MASK & trkRCR) != 0);
-        cbTrkUser9.setSelected((BT747_dev.RCR_APP9_MASK & trkRCR) != 0);
-        cbTrkUser10.setSelected((BT747_dev.RCR_APPX_MASK & trkRCR) != 0);
-        cbTrkUser11.setSelected((BT747_dev.RCR_APPY_MASK & trkRCR) != 0);
-        cbTrkUser12.setSelected((BT747_dev.RCR_APPZ_MASK & trkRCR) != 0);
+        cbTrkTime.setSelected((BT747Constants.RCR_TIME_MASK & trkRCR) != 0);
+        cbTrkSpeed.setSelected((BT747Constants.RCR_SPEED_MASK & trkRCR) != 0);
+        cbTrkDistance.setSelected((BT747Constants.RCR_DISTANCE_MASK & trkRCR) != 0);
+        cbTrkButton.setSelected((BT747Constants.RCR_BUTTON_MASK & trkRCR) != 0);
+        cbTrkUser1.setSelected((BT747Constants.RCR_APP1_MASK & trkRCR) != 0);
+        cbTrkUser2.setSelected((BT747Constants.RCR_APP2_MASK & trkRCR) != 0);
+        cbTrkUser3.setSelected((BT747Constants.RCR_APP3_MASK & trkRCR) != 0);
+        cbTrkUser4.setSelected((BT747Constants.RCR_APP4_MASK & trkRCR) != 0);
+        cbTrkUser5.setSelected((BT747Constants.RCR_APP5_MASK & trkRCR) != 0);
+        cbTrkUser6.setSelected((BT747Constants.RCR_APP6_MASK & trkRCR) != 0);
+        cbTrkUser7.setSelected((BT747Constants.RCR_APP7_MASK & trkRCR) != 0);
+        cbTrkUser8.setSelected((BT747Constants.RCR_APP8_MASK & trkRCR) != 0);
+        cbTrkUser9.setSelected((BT747Constants.RCR_APP9_MASK & trkRCR) != 0);
+        cbTrkUser10.setSelected((BT747Constants.RCR_APPX_MASK & trkRCR) != 0);
+        cbTrkUser11.setSelected((BT747Constants.RCR_APPY_MASK & trkRCR) != 0);
+        cbTrkUser12.setSelected((BT747Constants.RCR_APPZ_MASK & trkRCR) != 0);
 
-        cbWayNoFix.setSelected((wayValid & BT747_dev.VALID_NO_FIX_MASK) != 0);
-        cbWayPPS.setSelected((wayValid & BT747_dev.VALID_PPS_MASK) != 0);
+        cbWayNoFix.setSelected((wayValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
+        cbWayPPS.setSelected((wayValid & BT747Constants.VALID_PPS_MASK) != 0);
         cbWayEstimate
-                .setSelected((wayValid & BT747_dev.VALID_ESTIMATED_MASK) != 0);
-        cbWayManual.setSelected((wayValid & BT747_dev.VALID_MANUAL_MASK) != 0);
-        cbWaySPS.setSelected((wayValid & BT747_dev.VALID_SPS_MASK) != 0);
-        cbWayFRTK.setSelected((wayValid & BT747_dev.VALID_FRTK_MASK) != 0);
-        cbWayDGPS.setSelected((wayValid & BT747_dev.VALID_DGPS_MASK) != 0);
+                .setSelected((wayValid & BT747Constants.VALID_ESTIMATED_MASK) != 0);
+        cbWayManual.setSelected((wayValid & BT747Constants.VALID_MANUAL_MASK) != 0);
+        cbWaySPS.setSelected((wayValid & BT747Constants.VALID_SPS_MASK) != 0);
+        cbWayFRTK.setSelected((wayValid & BT747Constants.VALID_FRTK_MASK) != 0);
+        cbWayDGPS.setSelected((wayValid & BT747Constants.VALID_DGPS_MASK) != 0);
         cbWaySimulate
-                .setSelected((wayValid & BT747_dev.VALID_SIMULATOR_MASK) != 0);
-        cbWayRTK.setSelected((wayValid & BT747_dev.VALID_RTK_MASK) != 0);
+                .setSelected((wayValid & BT747Constants.VALID_SIMULATOR_MASK) != 0);
+        cbWayRTK.setSelected((wayValid & BT747Constants.VALID_RTK_MASK) != 0);
 
-        cbWayTime.setSelected((BT747_dev.RCR_TIME_MASK & wayRCR) != 0);
-        cbWaySpeed.setSelected((BT747_dev.RCR_SPEED_MASK & wayRCR) != 0);
-        cbWayDistance.setSelected((BT747_dev.RCR_DISTANCE_MASK & wayRCR) != 0);
-        cbWayButton.setSelected((BT747_dev.RCR_BUTTON_MASK & wayRCR) != 0);
-        cbWayUser1.setSelected((BT747_dev.RCR_APP1_MASK & wayRCR) != 0);
-        cbWayUser2.setSelected((BT747_dev.RCR_APP2_MASK & wayRCR) != 0);
-        cbWayUser3.setSelected((BT747_dev.RCR_APP3_MASK & wayRCR) != 0);
-        cbWayUser4.setSelected((BT747_dev.RCR_APP4_MASK & wayRCR) != 0);
-        cbWayUser5.setSelected((BT747_dev.RCR_APP5_MASK & wayRCR) != 0);
-        cbWayUser6.setSelected((BT747_dev.RCR_APP6_MASK & wayRCR) != 0);
-        cbWayUser7.setSelected((BT747_dev.RCR_APP7_MASK & wayRCR) != 0);
-        cbWayUser8.setSelected((BT747_dev.RCR_APP8_MASK & wayRCR) != 0);
-        cbWayUser9.setSelected((BT747_dev.RCR_APP9_MASK & wayRCR) != 0);
-        cbWayUser10.setSelected((BT747_dev.RCR_APPX_MASK & wayRCR) != 0);
-        cbWayUser11.setSelected((BT747_dev.RCR_APPY_MASK & wayRCR) != 0);
-        cbWayUser12.setSelected((BT747_dev.RCR_APPZ_MASK & wayRCR) != 0);
+        cbWayTime.setSelected((BT747Constants.RCR_TIME_MASK & wayRCR) != 0);
+        cbWaySpeed.setSelected((BT747Constants.RCR_SPEED_MASK & wayRCR) != 0);
+        cbWayDistance.setSelected((BT747Constants.RCR_DISTANCE_MASK & wayRCR) != 0);
+        cbWayButton.setSelected((BT747Constants.RCR_BUTTON_MASK & wayRCR) != 0);
+        cbWayUser1.setSelected((BT747Constants.RCR_APP1_MASK & wayRCR) != 0);
+        cbWayUser2.setSelected((BT747Constants.RCR_APP2_MASK & wayRCR) != 0);
+        cbWayUser3.setSelected((BT747Constants.RCR_APP3_MASK & wayRCR) != 0);
+        cbWayUser4.setSelected((BT747Constants.RCR_APP4_MASK & wayRCR) != 0);
+        cbWayUser5.setSelected((BT747Constants.RCR_APP5_MASK & wayRCR) != 0);
+        cbWayUser6.setSelected((BT747Constants.RCR_APP6_MASK & wayRCR) != 0);
+        cbWayUser7.setSelected((BT747Constants.RCR_APP7_MASK & wayRCR) != 0);
+        cbWayUser8.setSelected((BT747Constants.RCR_APP8_MASK & wayRCR) != 0);
+        cbWayUser9.setSelected((BT747Constants.RCR_APP9_MASK & wayRCR) != 0);
+        cbWayUser10.setSelected((BT747Constants.RCR_APPX_MASK & wayRCR) != 0);
+        cbWayUser11.setSelected((BT747Constants.RCR_APPY_MASK & wayRCR) != 0);
+        cbWayUser12.setSelected((BT747Constants.RCR_APPZ_MASK & wayRCR) != 0);
     }
 
     void setTrkValidFilterSettings() {
         int trkValid = 0;
         if (cbTrkNoFix.isSelected())
-            trkValid |= BT747_dev.VALID_NO_FIX_MASK;
+            trkValid |= BT747Constants.VALID_NO_FIX_MASK;
         if (cbTrkPPS.isSelected())
-            trkValid |= BT747_dev.VALID_PPS_MASK;
+            trkValid |= BT747Constants.VALID_PPS_MASK;
         if (cbTrkEstimate.isSelected())
-            trkValid |= BT747_dev.VALID_ESTIMATED_MASK;
+            trkValid |= BT747Constants.VALID_ESTIMATED_MASK;
         if (cbTrkManual.isSelected())
-            trkValid |= BT747_dev.VALID_MANUAL_MASK;
+            trkValid |= BT747Constants.VALID_MANUAL_MASK;
         if (cbTrkSPS.isSelected())
-            trkValid |= BT747_dev.VALID_SPS_MASK;
+            trkValid |= BT747Constants.VALID_SPS_MASK;
         if (cbTrkFRTK.isSelected())
-            trkValid |= BT747_dev.VALID_FRTK_MASK;
+            trkValid |= BT747Constants.VALID_FRTK_MASK;
         if (cbTrkDGPS.isSelected())
-            trkValid |= BT747_dev.VALID_DGPS_MASK;
+            trkValid |= BT747Constants.VALID_DGPS_MASK;
         if (cbTrkSimulate.isSelected())
-            trkValid |= BT747_dev.VALID_SIMULATOR_MASK;
+            trkValid |= BT747Constants.VALID_SIMULATOR_MASK;
         if (cbTrkRTK.isSelected())
-            trkValid |= BT747_dev.VALID_RTK_MASK;
+            trkValid |= BT747Constants.VALID_RTK_MASK;
     }
 
     void setWayValidFilterSettings() {
 
         int wayValid = 0;
         if (cbWayNoFix.isSelected())
-            wayValid |= BT747_dev.VALID_NO_FIX_MASK;
+            wayValid |= BT747Constants.VALID_NO_FIX_MASK;
         if (cbWayPPS.isSelected())
-            wayValid |= BT747_dev.VALID_PPS_MASK;
+            wayValid |= BT747Constants.VALID_PPS_MASK;
         if (cbWayEstimate.isSelected())
-            wayValid |= BT747_dev.VALID_ESTIMATED_MASK;
+            wayValid |= BT747Constants.VALID_ESTIMATED_MASK;
         if (cbWayManual.isSelected())
-            wayValid |= BT747_dev.VALID_MANUAL_MASK;
+            wayValid |= BT747Constants.VALID_MANUAL_MASK;
         if (cbWaySPS.isSelected())
-            wayValid |= BT747_dev.VALID_SPS_MASK;
+            wayValid |= BT747Constants.VALID_SPS_MASK;
         if (cbWayFRTK.isSelected())
-            wayValid |= BT747_dev.VALID_FRTK_MASK;
+            wayValid |= BT747Constants.VALID_FRTK_MASK;
         if (cbWayDGPS.isSelected())
-            wayValid |= BT747_dev.VALID_DGPS_MASK;
+            wayValid |= BT747Constants.VALID_DGPS_MASK;
         if (cbWaySimulate.isSelected())
-            wayValid |= BT747_dev.VALID_SIMULATOR_MASK;
+            wayValid |= BT747Constants.VALID_SIMULATOR_MASK;
         if (cbWayRTK.isSelected())
-            wayValid |= BT747_dev.VALID_RTK_MASK;
+            wayValid |= BT747Constants.VALID_RTK_MASK;
     }
 
     void setTrkRCRFilterSettings() {
         int trkRCR = 0;
         if (cbTrkTime.isSelected())
-            trkRCR |= BT747_dev.RCR_TIME_MASK;
+            trkRCR |= BT747Constants.RCR_TIME_MASK;
         if (cbTrkSpeed.isSelected())
-            trkRCR |= BT747_dev.RCR_SPEED_MASK;
+            trkRCR |= BT747Constants.RCR_SPEED_MASK;
         if (cbTrkDistance.isSelected())
-            trkRCR |= BT747_dev.RCR_DISTANCE_MASK;
+            trkRCR |= BT747Constants.RCR_DISTANCE_MASK;
         if (cbTrkButton.isSelected())
-            trkRCR |= BT747_dev.RCR_BUTTON_MASK;
+            trkRCR |= BT747Constants.RCR_BUTTON_MASK;
         if (cbTrkUser1.isSelected())
-            trkRCR |= BT747_dev.RCR_APP1_MASK;
+            trkRCR |= BT747Constants.RCR_APP1_MASK;
         if (cbTrkUser2.isSelected())
-            trkRCR |= BT747_dev.RCR_APP2_MASK;
+            trkRCR |= BT747Constants.RCR_APP2_MASK;
         if (cbTrkUser3.isSelected())
-            trkRCR |= BT747_dev.RCR_APP3_MASK;
+            trkRCR |= BT747Constants.RCR_APP3_MASK;
         if (cbTrkUser4.isSelected())
-            trkRCR |= BT747_dev.RCR_APP4_MASK;
+            trkRCR |= BT747Constants.RCR_APP4_MASK;
         if (cbTrkUser5.isSelected())
-            trkRCR |= BT747_dev.RCR_APP5_MASK;
+            trkRCR |= BT747Constants.RCR_APP5_MASK;
         if (cbTrkUser6.isSelected())
-            trkRCR |= BT747_dev.RCR_APP6_MASK;
+            trkRCR |= BT747Constants.RCR_APP6_MASK;
         if (cbTrkUser7.isSelected())
-            trkRCR |= BT747_dev.RCR_APP7_MASK;
+            trkRCR |= BT747Constants.RCR_APP7_MASK;
         if (cbTrkUser8.isSelected())
-            trkRCR |= BT747_dev.RCR_APP8_MASK;
+            trkRCR |= BT747Constants.RCR_APP8_MASK;
         if (cbTrkUser9.isSelected())
-            trkRCR |= BT747_dev.RCR_APP9_MASK;
+            trkRCR |= BT747Constants.RCR_APP9_MASK;
         if (cbTrkUser10.isSelected())
-            trkRCR |= BT747_dev.RCR_APPX_MASK;
+            trkRCR |= BT747Constants.RCR_APPX_MASK;
         if (cbTrkUser11.isSelected())
-            trkRCR |= BT747_dev.RCR_APPY_MASK;
+            trkRCR |= BT747Constants.RCR_APPY_MASK;
         if (cbTrkUser12.isSelected())
-            trkRCR |= BT747_dev.RCR_APPZ_MASK;
+            trkRCR |= BT747Constants.RCR_APPZ_MASK;
     }
 
     void setWayRCRFilterSettings() {
         int wayRCR = 0;
         if (cbWayTime.isSelected())
-            wayRCR |= BT747_dev.RCR_TIME_MASK;
+            wayRCR |= BT747Constants.RCR_TIME_MASK;
         if (cbWaySpeed.isSelected())
-            wayRCR |= BT747_dev.RCR_SPEED_MASK;
+            wayRCR |= BT747Constants.RCR_SPEED_MASK;
         if (cbWayDistance.isSelected())
-            wayRCR |= BT747_dev.RCR_DISTANCE_MASK;
+            wayRCR |= BT747Constants.RCR_DISTANCE_MASK;
         if (cbWayButton.isSelected())
-            wayRCR |= BT747_dev.RCR_BUTTON_MASK;
+            wayRCR |= BT747Constants.RCR_BUTTON_MASK;
         if (cbWayUser1.isSelected())
-            wayRCR |= BT747_dev.RCR_APP1_MASK;
+            wayRCR |= BT747Constants.RCR_APP1_MASK;
         if (cbWayUser2.isSelected())
-            wayRCR |= BT747_dev.RCR_APP2_MASK;
+            wayRCR |= BT747Constants.RCR_APP2_MASK;
         if (cbWayUser3.isSelected())
-            wayRCR |= BT747_dev.RCR_APP3_MASK;
+            wayRCR |= BT747Constants.RCR_APP3_MASK;
         if (cbWayUser4.isSelected())
-            wayRCR |= BT747_dev.RCR_APP4_MASK;
+            wayRCR |= BT747Constants.RCR_APP4_MASK;
         if (cbWayUser5.isSelected())
-            wayRCR |= BT747_dev.RCR_APP5_MASK;
+            wayRCR |= BT747Constants.RCR_APP5_MASK;
         if (cbWayUser6.isSelected())
-            wayRCR |= BT747_dev.RCR_APP6_MASK;
+            wayRCR |= BT747Constants.RCR_APP6_MASK;
         if (cbWayUser7.isSelected())
-            wayRCR |= BT747_dev.RCR_APP7_MASK;
+            wayRCR |= BT747Constants.RCR_APP7_MASK;
         if (cbWayUser8.isSelected())
-            wayRCR |= BT747_dev.RCR_APP8_MASK;
+            wayRCR |= BT747Constants.RCR_APP8_MASK;
         if (cbWayUser9.isSelected())
-            wayRCR |= BT747_dev.RCR_APP9_MASK;
+            wayRCR |= BT747Constants.RCR_APP9_MASK;
         if (cbWayUser10.isSelected())
-            wayRCR |= BT747_dev.RCR_APPX_MASK;
+            wayRCR |= BT747Constants.RCR_APPX_MASK;
         if (cbWayUser11.isSelected())
-            wayRCR |= BT747_dev.RCR_APPY_MASK;
+            wayRCR |= BT747Constants.RCR_APPY_MASK;
         if (cbWayUser12.isSelected())
-            wayRCR |= BT747_dev.RCR_APPZ_MASK;
+            wayRCR |= BT747Constants.RCR_APPZ_MASK;
     }
 
     /**

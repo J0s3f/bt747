@@ -49,6 +49,10 @@ public class GPSRecord {
     
     public float geoid; // Value returned by GPS.
     public int recCount;
+    
+    public int logPeriod; // Programmed period between logged points
+    public int logSpeed;  // Programmed minimum speed
+    public int logDistance;  // Programmed distance between logged points
 
     public GPSRecord() {} {
     }
