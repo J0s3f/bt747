@@ -3,16 +3,16 @@ package bt747.model;
 import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GPSstate;
-import gps.GpsEvent;
-import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
+import gps.log.GPSRecord;
 import gps.log.in.BT747LogConvert;
 import gps.log.in.CSVLogConvert;
 import gps.log.in.DPL700LogConvert;
 import gps.log.in.GPSLogConvert;
 import gps.log.in.HoluxTrlLogConvert;
+import gps.log.out.GPSArray;
 import gps.log.out.GPSCSVFile;
 import gps.log.out.GPSCompoGPSTrkFile;
 import gps.log.out.GPSFile;
@@ -25,7 +25,6 @@ import moio.util.HashSet;
 import moio.util.Iterator;
 
 import bt747.Txt;
-import bt747.ui.Event;
 import bt747.ui.MessageBox;
 
 /**
@@ -222,6 +221,79 @@ public class Controller {
         m.logConversionEnded(log_type);
     }
 
+    public final GPSRecord[] getTrackPoints() {
+        String ext = "";
+        GPSArray gpsFile = null;
+        GPSLogConvert lc;
+
+        /*
+         * Check the input file
+         */
+        if (m.getLogFilePath().toLowerCase().endsWith(".trl")) {
+            lc = new HoluxTrlLogConvert();
+        } else if (m.getLogFilePath().toLowerCase().endsWith(".csv")) {
+            lc = new CSVLogConvert();
+        } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
+            lc = new DPL700LogConvert();
+            /// TODO: set SR Log type correctly.
+            ((DPL700LogConvert)lc).setLogType(m.getGPSType()==GPS_TYPE_GISTEQ2?0:1);
+        } else {
+            switch (m.getBinDecoder()) {
+            case DECODER_THOMAS:
+                try {
+                    // TODO: Reference directly once integrated for PDA too.
+                    lc = (GPSLogConvert) Class.forName(
+                            "gps.parser.NewLogConvert").newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    lc = new BT747LogConvert();
+                }
+                break;
+            default:
+            case DECODER_ORG:
+                lc = new BT747LogConvert();
+                ((BT747LogConvert) lc).setHolux(m.getForceHolux241());
+                break;
+            }
+        }
+        GPSFilter[] usedFilters;
+        getLogFilterSettings(); // TODO : Do this another way (in the model for
+        // example)
+        if (m.getAdvFilterActive()) {
+            usedFilters = m.getLogFiltersAdv();
+        } else {
+            usedFilters = m.getLogFilters();
+        }
+        lc.setTimeOffset(m.getTimeOffsetHours() * 3600);
+        lc.setNoGeoid(m.getNoGeoid());
+
+        
+        gpsFile = new GPSArray();
+
+        //m.logConversionStarted(log_type);
+
+//        gpsFile.setAddLogConditionInfo(m.getOutputLogConditions());
+//        gpsFile.setImperial(m.getImperial());
+//        gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
+//        gpsFile.setBadTrackColor(m.getColorInvalidTrack());
+
+        for (int i = 0; i < usedFilters.length; i++) {
+            usedFilters[i].setStartDate(Conv.dateToUTCepoch1970(m
+                    .getStartDate()));
+            usedFilters[i].setEndDate(Conv.dateToUTCepoch1970(m
+                    .getEndDate())
+                    + (24 * 60 * 60 - 1));
+        }
+        gpsFile.setFilters(usedFilters);
+//        gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
+//                    m.getFileSeparationFreq());
+//            gpsFile.setTrackSepTime(m.getTrkSep() * 60);
+        lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+//        m.logConversionEnded(log_type);
+        return gpsFile.getGpsTrackPoints();
+    }
+
+    
     public final void setIncremental(boolean b) {
         m.setIncremental(b);
     }
