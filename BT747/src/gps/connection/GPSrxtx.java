@@ -17,10 +17,9 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-package gps;
+package gps.connection;
 
-import gps.port.GPSPort;
-import gps.port.GPSWabaPort;
+import gps.Semaphore;
 
 import bt747.sys.Convert;
 import bt747.sys.Settings;
@@ -227,8 +226,8 @@ public class GPSrxtx {
 
     private int rxtxMode = NORMAL_MODE;
 
-    byte[] DPL700_buffer;
-    int DPL700_buffer_idx;
+    public byte[] DPL700_buffer;
+    public int DPL700_buffer_idx;
     byte[] DPL700_EndString = new byte[200];
     int endStringIdx;
 

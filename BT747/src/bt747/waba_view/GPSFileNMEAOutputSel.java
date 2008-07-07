@@ -22,7 +22,7 @@ import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 
 import bt747.model.Controller;
 import bt747.model.Model;
@@ -34,7 +34,7 @@ import bt747.model.Model;
  */
 public class GPSFileNMEAOutputSel extends Container {
     /** The object that is used to communicate with the GPS device. */
-    private MyCheck [] chkNMEAItems =new MyCheck[BT747_dev.C_NMEA_SEN_COUNT];
+    private MyCheck [] chkNMEAItems =new MyCheck[BT747Constants.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
     
     private static final int C_NMEAactiveFilters=0x0002003A;
@@ -55,11 +55,11 @@ public class GPSFileNMEAOutputSel extends Container {
      */
     protected void onStart() {
         int bit=1;
-        for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
-            chkNMEAItems[i]= new MyCheck(BT747_dev.NMEA_strings[i]);
+        for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
+            chkNMEAItems[i]= new MyCheck(BT747Constants.NMEA_strings[i]);
             add( chkNMEAItems[i]);
-            chkNMEAItems[i].setRect(((i<((BT747_dev.C_NMEA_SEN_COUNT/2)+1))?LEFT:(getClientRect().width/2)),
-                    ((i==0) ||i==((BT747_dev.C_NMEA_SEN_COUNT/2)+1))? TOP:AFTER-1, PREFERRED, PREFERRED-1);
+            chkNMEAItems[i].setRect(((i<((BT747Constants.C_NMEA_SEN_COUNT/2)+1))?LEFT:(getClientRect().width/2)),
+                    ((i==0) ||i==((BT747Constants.C_NMEA_SEN_COUNT/2)+1))? TOP:AFTER-1, PREFERRED, PREFERRED-1);
             chkNMEAItems[i].setEnabled((C_NMEAactiveFilters&bit)!=0);
             bit <<=1;
         }
@@ -71,7 +71,7 @@ public class GPSFileNMEAOutputSel extends Container {
         int bit;
         NMEAset=m.getNMEAset();
         bit=1;
-        for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
+        for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
             chkNMEAItems[i].setChecked(
                     (NMEAset&bit)!=0
                     );
@@ -86,7 +86,7 @@ public class GPSFileNMEAOutputSel extends Container {
         NMEAset=0;
         
         bit=1;
-        for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
+        for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
             NMEAset|=chkNMEAItems[i].getChecked()?bit:0;
             bit <<=1;
         }
@@ -99,7 +99,7 @@ public class GPSFileNMEAOutputSel extends Container {
      public void onEvent( Event event ) {
         switch (event.type) {
         case ControlEvent.PRESSED:
-            for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
+            for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
                 if(event.target==chkNMEAItems[i]) {
                     setNMEAset();
                     break;

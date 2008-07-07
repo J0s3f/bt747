@@ -26,7 +26,7 @@ import bt747.sys.Vm;
 /** Constants for the iBlue 747 (BT747) device
  * @author Mario De Weerd
  */
-public final class BT747_dev {  // dev as in device
+public final class BT747Constants {  // dev as in device
     
     /** String description of the log format items of the iBlue 747
      * device.<br>

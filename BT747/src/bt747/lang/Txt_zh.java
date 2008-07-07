@@ -1,5 +1,6 @@
-package bt747;
+package bt747.lang;
 
+import bt747.Version;
 import bt747.sys.Settings;
 
 /**
@@ -394,7 +395,7 @@ public class Txt_zh {
     public static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII";
 
     public static final String BT_MAC_ADDR = "BT Mac Addr:";
-
+    public static final String S_OUTPUT_LOGCONDITIONS = "Output log conditions";
 }
 
 

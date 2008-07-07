@@ -19,7 +19,7 @@
 //********************************************************************  
 package gps.log.out;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -402,19 +402,19 @@ public class GPSKMLFile extends GPSFile {
                     if(activeFields.rcr!=0) {
                         String style=getRCRstr(s);
                         
-                        if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
+                        if((s.rcr&BT747Constants.RCR_TIME_MASK)!=0) {
                             style+="T";
                         }
-                        if((s.rcr&BT747_dev.RCR_SPEED_MASK)!=0) {
+                        if((s.rcr&BT747Constants.RCR_SPEED_MASK)!=0) {
                             style+="S";
                         }
-                        if((s.rcr&BT747_dev.RCR_DISTANCE_MASK)!=0) {
+                        if((s.rcr&BT747Constants.RCR_DISTANCE_MASK)!=0) {
                             style+="D";
                         }
-                        if((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
+                        if((s.rcr&BT747Constants.RCR_BUTTON_MASK)!=0) {
                             style+="B";
                         }
-                        if(style.length()>1 || ((s.rcr&BT747_dev.RCR_ALL_APP_MASK)!=0)) {
+                        if(style.length()>1 || ((s.rcr&BT747Constants.RCR_ALL_APP_MASK)!=0)) {
                             style="M";
                         }
                         rec.append("#Style");
@@ -453,16 +453,16 @@ public class GPSKMLFile extends GPSFile {
                     }
                     if(activeFields.rcr!=0) {
                         rec.append("<br />RCR: ");
-                        if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
+                        if((s.rcr&BT747Constants.RCR_TIME_MASK)!=0) {
                             rec.append("T");
                         }
-                        if((s.rcr&BT747_dev.RCR_SPEED_MASK)!=0) {
+                        if((s.rcr&BT747Constants.RCR_SPEED_MASK)!=0) {
                             rec.append("S");
                         }
-                        if((s.rcr&BT747_dev.RCR_DISTANCE_MASK)!=0) {
+                        if((s.rcr&BT747Constants.RCR_DISTANCE_MASK)!=0) {
                             rec.append("D");
                         }
-                        if((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
+                        if((s.rcr&BT747Constants.RCR_BUTTON_MASK)!=0) {
                             rec.append("B");
                         }
                     }

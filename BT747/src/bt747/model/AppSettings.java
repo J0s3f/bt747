@@ -168,11 +168,12 @@ public class AppSettings {
     private static final int C_BIN_DECODER_SIZE=4;
     private static final int C_GPSType_IDX=C_BIN_DECODER_IDX+C_BIN_DECODER_SIZE;
     private static final int C_GPSType_SIZE=1;
-    private static final int C_NEXT_IDX=C_GPSType_IDX+C_GPSType_SIZE;
+    private static final int C_OUTPUTLOGCONDITIONS_IDX=C_GPSType_IDX+C_GPSType_SIZE;
+    private static final int C_OUTPUTLOGCONDITIONS_SIZE=1;
+    private static final int C_NEXT_IDX=C_OUTPUTLOGCONDITIONS_IDX+C_OUTPUTLOGCONDITIONS_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE=4;
     private static final int C_NEW_NEXT_IDX=C_NEXT_IDX+C_NEXT_SIZE;
-
     private static final int C_DEFAULT_DEVICE_TIMEOUT=3500; // ms
     private static final int C_DEFAULT_LOG_REQUEST_AHEAD=3;
 
@@ -336,10 +337,12 @@ public class AppSettings {
         case 19:
             setBinDecoder(0);
             setGPSType(0);
+        case 20:
+            setOutputLogConditions(false);
             /* fall through */
             
             /* Must be last line in case (not 'default') */ 
-            setStringOpt(0,"0.20",C_VERSION_IDX, C_VERSION_SIZE);
+            setStringOpt(0,"0.21",C_VERSION_IDX, C_VERSION_SIZE);
         }
         getSettings();
     }
@@ -1023,6 +1026,12 @@ public class AppSettings {
     }
     protected void setGPSType(final int value) {
         setIntOpt(0,value, C_GPSType_IDX, C_GPSType_SIZE);
+    }
+    public boolean getOutputLogConditions() {
+        return getBooleanOpt(C_OUTPUTLOGCONDITIONS_IDX, C_OUTPUTLOGCONDITIONS_SIZE);
+    }
+    protected void setOutputLogConditions(final boolean value) {
+        setBooleanOpt(0,value, C_OUTPUTLOGCONDITIONS_IDX, C_OUTPUTLOGCONDITIONS_SIZE);
     }
 
     

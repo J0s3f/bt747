@@ -26,7 +26,7 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.GpsEvent;
 
 import bt747.Txt;
@@ -41,7 +41,7 @@ import bt747.model.Model;
  */
 public class GPSNMEAOutput extends Container {
     /** The object that is used to communicate with the GPS device. */
-    private ComboBox [] chkNMEAItems =new ComboBox[BT747_dev.C_NMEA_SEN_COUNT];
+    private ComboBox [] chkNMEAItems =new ComboBox[BT747Constants.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
     
     private static final String C_NMEA_PERIODS[]= {"0","1","2","3","4","5"};
@@ -65,12 +65,12 @@ public class GPSNMEAOutput extends Container {
      * @see waba.ui.Container#onStart()
      */
     protected void onStart() {
-        for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
+        for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
             chkNMEAItems[i]= new ComboBox(C_NMEA_PERIODS);
             add( chkNMEAItems[i]);
-            chkNMEAItems[i].setRect(((i<((BT747_dev.C_NMEA_SEN_COUNT/2)+1))?LEFT:(getClientRect().width/2)),
-                    ((i==0) ||i==((BT747_dev.C_NMEA_SEN_COUNT/2)+1))? TOP:AFTER-1, PREFERRED, PREFERRED-1);
-            add( new Label(BT747_dev.NMEA_strings[i]),AFTER,SAME);
+            chkNMEAItems[i].setRect(((i<((BT747Constants.C_NMEA_SEN_COUNT/2)+1))?LEFT:(getClientRect().width/2)),
+                    ((i==0) ||i==((BT747Constants.C_NMEA_SEN_COUNT/2)+1))? TOP:AFTER-1, PREFERRED, PREFERRED-1);
+            add( new Label(BT747Constants.NMEA_strings[i]),AFTER,SAME);
 //            chkNMEAItems[i].setEnabled(true);
         }
         btSet=new Button(Txt.SET);
@@ -81,16 +81,16 @@ public class GPSNMEAOutput extends Container {
     }
     
     private void updatePeriods() {
-        for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
+        for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
             chkNMEAItems[i].select(m.getNMEAPeriod(i));
 //            chkNMEAItems[i].repaintNow();
         }
     }
 
     private void setPeriods() {
-        int[] Periods = new int[BT747_dev.C_NMEA_SEN_COUNT];
+        int[] Periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
         
-        for (int i=0;i<BT747_dev.C_NMEA_SEN_COUNT;i++) {
+        for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
             Periods[i]=chkNMEAItems[i].getSelectedIndex();
         }
         c.setNMEAPeriods(Periods);

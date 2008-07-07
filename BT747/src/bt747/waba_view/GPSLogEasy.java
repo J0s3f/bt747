@@ -26,7 +26,7 @@ import waba.ui.Event;
 import waba.ui.Label;
 import waba.ui.MessageBox;
 
-import gps.BT747_dev;
+import gps.BT747Constants;
 import gps.GpsEvent;
 
 import bt747.Txt;
@@ -48,7 +48,7 @@ public class GPSLogEasy extends Container {
       private Button m_btColdStart;
       private Button m_btFullColdStart;
 
-      private Button [] chkRCR =new Button[BT747_dev.C_RCR_COUNT];
+      private Button [] chkRCR =new Button[BT747Constants.C_RCR_COUNT];
 
       private Button m_btForceErase;
       
@@ -81,16 +81,16 @@ public class GPSLogEasy extends Container {
           int y=SAME;
           Control rel=null;
           final int RCR_COL=4;
-          for (int i=0; i<BT747_dev.C_RCR_COUNT; i++) {
-              chkRCR[i]= new Button(BT747_dev.C_STR_RCR[i]);
+          for (int i=0; i<BT747Constants.C_RCR_COUNT; i++) {
+              chkRCR[i]= new Button(BT747Constants.C_STR_RCR[i]);
               //add( chkRCR[i], LEFT, AFTER);
               if(i == 0) {
                   x=LEFT;
-              } else if((i%(BT747_dev.C_RCR_COUNT / RCR_COL)) ==0) {
-                  x=getClientRect().width*(i/(BT747_dev.C_RCR_COUNT / RCR_COL))/RCR_COL+8;
+              } else if((i%(BT747Constants.C_RCR_COUNT / RCR_COL)) ==0) {
+                  x=getClientRect().width*(i/(BT747Constants.C_RCR_COUNT / RCR_COL))/RCR_COL+8;
               }
 
-              if((i%(BT747_dev.C_RCR_COUNT / RCR_COL)) ==0) {
+              if((i%(BT747Constants.C_RCR_COUNT / RCR_COL)) ==0) {
                   rel=lbLogUserTxt;
                   y=AFTER+6;
               } else {
@@ -145,7 +145,7 @@ public class GPSLogEasy extends Container {
               } else if (event.target==m_btForceErase) {
                   c.forceErase();
               } else {
-                  for (int i=0;i<BT747_dev.C_RCR_COUNT;i++) {
+                  for (int i=0;i<BT747Constants.C_RCR_COUNT;i++) {
                       if (event.target==chkRCR[i]) {
                           c.logImmediate(1<<i);
                       }

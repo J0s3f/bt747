@@ -1,5 +1,7 @@
 package bt747;
 
+import bt747.lang.*;
+
 /**
  * @author Mario De Weerd
  *

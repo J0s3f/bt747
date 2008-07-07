@@ -19,6 +19,7 @@
 //********************************************************************                              
 package gps;
 
+import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import moio.util.HashSet;
@@ -51,7 +52,7 @@ import bt747.util.Vector;
 public class GPSstate implements Thread {
     private boolean GPS_DEBUG = false; // (!Settings.onDevice);
 
-    private GPSrxtx m_GPSrxtx = new GPSrxtx();
+    private GPSrxtx gpsRxTx = null;
 
     private boolean m_getFullLog = true; // If true, get the entire log
     // (based
@@ -100,8 +101,6 @@ public class GPSstate implements Thread {
 
     private int dgps_mode = 0;
 
-    private settings m_settings;
-
     // Flash user option values
     private int dtUserOptionTimesLeft;
 
@@ -143,7 +142,7 @@ public class GPSstate implements Thread {
     
     private String BT_MAC_ADDR_STR="";
 
-    public int NMEA_periods[] = new int[BT747_dev.C_NMEA_SEN_COUNT];
+    public int NMEA_periods[] = new int[BT747Constants.C_NMEA_SEN_COUNT];
 
     private boolean GPS_STATS = false; // (!Settings.onDevice);
 
@@ -160,8 +159,16 @@ public class GPSstate implements Thread {
      * 
      * 
      */
-    public GPSstate(settings s) {
-        m_settings = s;
+    public GPSstate(GPSrxtx gpsRxTx) {
+        this.setGPSRxtx(gpsRxTx);
+    }
+    
+    public final void setGPSRxtx(GPSrxtx gpsRxTx) {
+        if(this.gpsRxTx!=null) {
+            // TODO  Remove myself as listener
+        }
+        this.gpsRxTx= gpsRxTx;
+        // TODO: Add myself as listener
     }
 
     public final void setDebug(final boolean dbg) {
@@ -172,33 +179,8 @@ public class GPSstate implements Thread {
         return GPS_DEBUG;
     }
 
-    public void setDebugConn(final boolean dbg) {
-        m_GPSrxtx.setDebugConn(dbg, m_settings.getBaseDirPath());
-    }
-    
-    public boolean isDebugConn() {
-        return m_GPSrxtx.isDebugConn();
-    }
-
     public void setStats(boolean stats) {
         GPS_STATS = stats;
-    }
-
-    /**
-     * Some initialisation
-     * 
-     * 
-     */
-    public void onStart() {
-        int port = m_settings.getPortnbr();
-        if (port != 0x5555) {
-            m_GPSrxtx.setDefaults(port, m_settings.getBaudRate());
-        }
-
-        if (m_settings.getStartupOpenPort()) {
-            GPS_connect();
-        }
-
     }
 
     /**
@@ -209,95 +191,14 @@ public class GPSstate implements Thread {
     }
 
     /**
-     * Restart the GPS connection Will close the current connection (if still
-     * open) and open it again (use the same parameters)
-     */
-    public void GPS_restart() {
-        m_GPSrxtx.closePort();
-        GPS_connect();
-    }
-
-    private void GPS_connect() {
-        m_GPSrxtx.openPort();
-        GPS_postConnect();
-    }
-
-    private void GPS_postConnect() {
-        if (m_GPSrxtx.isConnected()) {
-            PostStatusEvent(GpsEvent.CONNECTED);
-            dataOK = 0;
-            getStatus();
-            setupTimer();
-        }
-    }
-
-    /**
-     * Close the GPS connection
-     */
-    public void GPS_close() {
-        if (m_GPSrxtx.isConnected()) {
-            m_GPSrxtx.closePort();
-            PostStatusEvent(GpsEvent.DISCONNECTED);
-        }
-    }
-
-    /**
-     * open a Bluetooth connection Calls getStatus to request initial parameters
-     * from the device. Set up the timer to regurarly poll the connection for
-     * data.
-     */
-    public void setBluetooth() {
-        m_GPSrxtx.setBluetoothAndOpen();
-        GPS_postConnect();
-    }
-
-    /**
-     * open a Usb connection Calls getStatus to request initial parameters from
-     * the device. Set up the timer to regurarly poll the connection for data.
-     */
-    public void setUsb() {
-        m_GPSrxtx.setUSBAndOpen();
-        GPS_postConnect();
-    }
-
-    /**
-     * open a connection on the given port number. Calls getStatus to request
-     * initial parameters from the device. Set up the timer to regurarly poll
-     * the connection for data.
-     * 
-     * @param port
-     *            Port number to open
-     */
-    public final void setPort(final int port) {
-        m_GPSrxtx.setPortAndOpen(port);
-        GPS_postConnect();
-    }
-
-    public final void setSpeed(final int speed) {
-        m_GPSrxtx.setSpeed(speed);
-    }
-
-    public final void setFreeTextPort(final String s) {
-        m_GPSrxtx.setFreeTextPortAndOpen(s);
-        GPS_postConnect();
-    }
-
-    public final String getFreeTextPort() {
-        return m_GPSrxtx.getFreeTextPort();
-    }
-
-    /**
      * Start the timer To be called once the port is opened. The timer is used
      * to launch functions that will check if there is information on the serial
      * connection or to send to the GPS device.
      */
-    private void setupTimer() {
-        if (m_GPSrxtx.isConnected()) {
+    public void setupTimer() {
+        // TODO: set up thread in gpsRxTx directly (through controller)
+        if (gpsRxTx.isConnected()) {
             Generic.addThread(this, false);
-
-            // Remember defaults
-            m_settings.setPortnbr(m_GPSrxtx.getPort());
-            m_settings.setBaudRate(m_GPSrxtx.getSpeed());
         }
     }
 
@@ -312,16 +213,16 @@ public class GPSstate implements Thread {
         // Ensure option consistency.
         int logFmt;
         logFmt = p_logFormat;
-        if ((logFmt & (1 << BT747_dev.FMT_SID_IDX)) == 0) {
+        if ((logFmt & (1 << BT747Constants.FMT_SID_IDX)) == 0) {
             // If SID is not set, some other settings can not be
             // set either. Be sure they are disabled in that
             // case.
-            logFmt &= ~((1 << BT747_dev.FMT_ELEVATION_IDX)
-                    | (1 << BT747_dev.FMT_AZIMUTH_IDX) | (1 << BT747_dev.FMT_SNR_IDX));
+            logFmt &= ~((1 << BT747Constants.FMT_ELEVATION_IDX)
+                    | (1 << BT747Constants.FMT_AZIMUTH_IDX) | (1 << BT747Constants.FMT_SNR_IDX));
         }
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_SET_STR + ","
-                + BT747_dev.PMTK_LOG_FORMAT_STR + ","
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_SET_STR + ","
+                + BT747Constants.PMTK_LOG_FORMAT_STR + ","
                 + Convert.unsigned2hex(logFmt, 8));
     }
 
@@ -338,24 +239,24 @@ public class GPSstate implements Thread {
     }
 
     public void doHotStart() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_HOT_START_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_HOT_START_STR);
     }
 
     public void doWarmStart() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_WARM_START_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_WARM_START_STR);
     }
 
     public void doColdStart() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_COLD_START_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_COLD_START_STR);
     }
 
     public void doFullColdStart() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_FULL_COLD_START_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_FULL_COLD_START_STR);
     }
 
     public void reqDeviceInfo() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_Q_VERSION_STR);
-        sendNMEA("PMTK" + BT747_dev.PMTK_Q_RELEASE_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_Q_VERSION_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_Q_RELEASE_STR);
         readFlashManuID(); // Should be last
         reqLoggerVersion();
     }
@@ -366,10 +267,10 @@ public class GPSstate implements Thread {
      */
 
     public void eraseLog() {
-        if (m_GPSrxtx.isConnected()) {
-            sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                    + BT747_dev.PMTK_LOG_ERASE + ","
-                    + BT747_dev.PMTK_LOG_ERASE_YES_STR);
+        if (gpsRxTx.isConnected()) {
+            sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                    + BT747Constants.PMTK_LOG_ERASE + ","
+                    + BT747Constants.PMTK_LOG_ERASE_YES_STR);
             waitEraseDone();
         }
     }
@@ -380,8 +281,8 @@ public class GPSstate implements Thread {
         reqLogStatus(); // Check status
         reqLogFlashSectorStatus(); // Get flash sector information from device
         // TODO:
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_ENABLE);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_ENABLE);
 
         reqLogStatus(); // Check status
 
@@ -394,8 +295,8 @@ public class GPSstate implements Thread {
         reqLogStatus();
         reqLogFlashSectorStatus(); // Get flash sector information from device
 
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_INIT);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_INIT);
 
         reqLogFlashSectorStatus(); // Get flash sector information from device
         reqLogStatus();
@@ -413,16 +314,16 @@ public class GPSstate implements Thread {
      *            size of the data range requested
      */
     public void readLog(final int startAddr, final int size) {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_REQ_DATA_STR + ","
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_REQ_DATA_STR + ","
                 + Convert.unsigned2hex(startAddr, 8) + ","
                 + Convert.unsigned2hex(size, 8));
     }
 
     public void readFlashManuID() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_FLASH_STR + "," + "9F");
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_FLASH_STR + "," + "9F");
     }
 
     static final int C_SEND_BUF_SIZE = 5;
@@ -460,7 +361,7 @@ public class GPSstate implements Thread {
         if (p_Cmd.startsWith("PMTK")) {
             sentCmds.addElement(p_Cmd);
         }
-        m_GPSrxtx.sendPacket(p_Cmd);
+        gpsRxTx.sendPacket(p_Cmd);
         if (GPS_DEBUG) {
             Vm.debug(">" + p_Cmd);
         }
@@ -473,11 +374,17 @@ public class GPSstate implements Thread {
         // }
     }
 
+    private int downloadTimeOut=3500;
+    
+    public final void setDownloadTimeOut(int downloadTimeOut) {
+        this.downloadTimeOut = downloadTimeOut;
+    }
+
     private void checkSendCmdFromQueue() {
         int cTime = Vm.getTimeStamp();
         if (logStatus != C_LOG_ERASE_STATE) {
             if ((sentCmds.size() != 0)
-                    && (cTime - logTimer) >= m_settings.getDownloadTimeOut()) {
+                    && (cTime - logTimer) >= downloadTimeOut) {
                 // TimeOut!!
                 sentCmds.removeElementAt(0);
                 logTimer = cTime;
@@ -494,68 +401,68 @@ public class GPSstate implements Thread {
     /** Request the current log format from the device */
     public void reqLogFormat() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_FORMAT_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_FORMAT_STR);
     }
 
     public void reqLogStatus() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_LOG_STATUS_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_LOG_STATUS_STR);
     }
 
     public final void reqLogMemUsed() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_MEM_USED_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_MEM_USED_STR);
     }
 
     public final void reqLogMemPoints() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_NBR_LOG_PTS_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_NBR_LOG_PTS_STR);
     }
 
     public final void reqLoggerVersion() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_VERSION_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_VERSION_STR);
     }
 
     public void reqLogReasonStatus() {
         /* Get log distance interval */
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_DISTANCE_INTERVAL_STR);
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_SPEED_INTERVAL_STR);
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_TIME_INTERVAL_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_SPEED_INTERVAL_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR);
 
     }
 
     public void reqLogFlashStatus() {
         /* Get flash status - immediate (not in output buffer) */
         /* Needed for erase */
-        doSendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_FLASH_STAT_STR);
+        doSendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_FLASH_STAT_STR);
     }
 
     public void reqLogFlashSectorStatus() {
         /* Get flash status - immediate (not in output buffer) */
         /* Needed for erase */
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_FLASH_SECTORS_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_FLASH_SECTORS_STR);
     }
 
     public void logImmediate(final int value) {
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_SET_STR + "," + BT747_dev.PMTK_LOG_USER
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_SET_STR + "," + BT747Constants.PMTK_LOG_USER
                 + "," + Convert.toString(value));
     }
 
@@ -564,9 +471,9 @@ public class GPSstate implements Thread {
         if (z_value != 0 && z_value > 999) {
             z_value = 999;
         }
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_SET_STR + ","
-                + BT747_dev.PMTK_LOG_TIME_INTERVAL_STR + ","
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_SET_STR + ","
+                + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR + ","
                 + Convert.toString(z_value));
     }
 
@@ -579,9 +486,9 @@ public class GPSstate implements Thread {
         }
 
         /* Get log distance interval */
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_SET_STR + ","
-                + BT747_dev.PMTK_LOG_DISTANCE_INTERVAL_STR + ","
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_SET_STR + ","
+                + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL_STR + ","
                 + Convert.toString(z_value));
     }
 
@@ -593,9 +500,9 @@ public class GPSstate implements Thread {
             z_value = 1;
         }
         /* Get log distance interval */
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_SET_STR + ","
-                + BT747_dev.PMTK_LOG_SPEED_INTERVAL_STR + ","
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_SET_STR + ","
+                + BT747Constants.PMTK_LOG_SPEED_INTERVAL_STR + ","
                 + Convert.toString(z_value * 10));
     }
 
@@ -608,13 +515,13 @@ public class GPSstate implements Thread {
         }
 
         /* Set log distance interval */
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_SET_FIX_CTL + ","
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_FIX_CTL + ","
                 + Convert.toString(z_value) + ",0,0,0.0,0.0");
     }
 
     public void reqFixInterval() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_FIX_CTL);
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_FIX_CTL);
     }
 
     /** Get the current status of the device */
@@ -646,8 +553,8 @@ public class GPSstate implements Thread {
     /** Activate the logging by the device */
     public void startLog() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_ON);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_ON);
         loggingIsActive = true; // This should be the result of the action.
                                 // The device will eventually tell the new status
     }
@@ -655,8 +562,8 @@ public class GPSstate implements Thread {
     /** Stop the automatic logging of the device */
     public void stopLog() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_OFF);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_OFF);
         loggingIsActive = false; // This should be the result of the action.
                                  // The device will eventually tell the new status
     }
@@ -669,83 +576,83 @@ public class GPSstate implements Thread {
 
     public void setLogOverwrite(final boolean set) {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_SET_STR + ","
-                + BT747_dev.PMTK_LOG_REC_METHOD_STR + "," + (set ? "1" : "2"));
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_SET_STR + ","
+                + BT747Constants.PMTK_LOG_REC_METHOD_STR + "," + (set ? "1" : "2"));
     }
 
     public void reqLogOverwrite() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_CMD_LOG_STR + ","
-                + BT747_dev.PMTK_LOG_QUERY_STR + ","
-                + BT747_dev.PMTK_LOG_REC_METHOD_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+                + BT747Constants.PMTK_LOG_QUERY_STR + ","
+                + BT747Constants.PMTK_LOG_REC_METHOD_STR);
     }
 
     public void setSBASTestEnabled(final boolean set) {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_SET_SBAS_TEST_STR + ","
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_SBAS_TEST_STR + ","
                 + (set ? "0" : "1"));
     }
 
     public void reqSBASTestEnabled() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_SBAS_TEST_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_SBAS_TEST_STR);
     }
 
     public void setSBASEnabled(final boolean set) {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_SET_SBAS_STR + ","
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_SBAS_STR + ","
                 + (set ? "1" : "0"));
     }
 
     public void reqSBASEnabled() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_SBAS_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_SBAS_STR);
     }
 
     public void setPowerSaveEnabled(final boolean set) {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_SET_PWR_SAV_MODE_STR + ","
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_PWR_SAV_MODE_STR + ","
                 + (set ? "1" : "0"));
     }
 
     public void reqPowerSaveEnabled() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_PWR_SAV_MOD_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_PWR_SAV_MOD_STR);
     }
 
     public void setDGPSMode(final int mode) {
         // Request log format from device
         if (mode >= 0 && mode <= 2) {
-            sendNMEA("PMTK" + BT747_dev.PMTK_API_SET_DGPS_MODE_STR + ","
+            sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_DGPS_MODE_STR + ","
                     + Convert.toString(mode));
         }
     }
 
     public void reqDGPSMode() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_DGPS_MODE_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_DGPS_MODE_STR);
     }
 
     public void setDatumMode(final int mode) {
         // Request log format from device
         if (mode >= 0 && mode <= 2) {
-            sendNMEA("PMTK" + BT747_dev.PMTK_API_SET_DATUM_STR + ","
+            sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_DATUM_STR + ","
                     + Convert.toString(mode));
         }
     }
 
     public void reqDatumMode() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_DATUM_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_DATUM_STR);
     }
 
     public void reqNMEAPeriods() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_NMEA_OUTPUT);
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_NMEA_OUTPUT);
     }
 
     public void reqHoluxName() {
-        sendNMEA(BT747_dev.HOLUX_MAIN_CMD + BT747_dev.HOLUX_API_Q_NAME);
+        sendNMEA(BT747Constants.HOLUX_MAIN_CMD + BT747Constants.HOLUX_API_Q_NAME);
     }
 
     /**
@@ -753,7 +660,7 @@ public class GPSstate implements Thread {
      *            The holuxName to set.
      */
     public void setHoluxName(String holuxName) {
-        sendNMEA(BT747_dev.HOLUX_MAIN_CMD + BT747_dev.HOLUX_API_SET_NAME + ","
+        sendNMEA(BT747Constants.HOLUX_MAIN_CMD + BT747Constants.HOLUX_API_SET_NAME + ","
                 + holuxName);
         reqHoluxName();
     }
@@ -762,7 +669,7 @@ public class GPSstate implements Thread {
      * @return
      */
     public final void reqBT_MAC_ADDR() {
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_Q_BT_MAC_ADDR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_Q_BT_MAC_ADDR);
     }
 
     /** Returns the current mac address for bluetooth (Holux 241 devices)
@@ -783,7 +690,7 @@ public class GPSstate implements Thread {
         }
 
         if(MyMacAddr.length()==12) {
-            sendNMEA("PMTK" + BT747_dev.PMTK_API_SET_BT_MAC_ADDR
+            sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_BT_MAC_ADDR
                     + "," + MyMacAddr.substring(0,6)
                     + "," + MyMacAddr.substring(6,12) );
             reqBT_MAC_ADDR();
@@ -794,7 +701,7 @@ public class GPSstate implements Thread {
     public void setNMEAPeriods(final int periods[]) {
         StringBuffer sb = new StringBuffer(255);
         sb.setLength(0);
-        sb.append("PMTK" + BT747_dev.PMTK_API_SET_NMEA_OUTPUT);
+        sb.append("PMTK" + BT747Constants.PMTK_API_SET_NMEA_OUTPUT);
         for (int i = 0; i < periods.length; i++) {
             sb.append(',');
             sb.append(periods[i]);
@@ -803,16 +710,16 @@ public class GPSstate implements Thread {
     }
 
     public void setNMEADefaultPeriods() {
-        int[] Periods = new int[BT747_dev.C_NMEA_SEN_COUNT];
+        int[] Periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
 
-        for (int i = 0; i < BT747_dev.C_NMEA_SEN_COUNT; i++) {
+        for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             Periods[i] = 0;
         }
-        Periods[BT747_dev.NMEA_SEN_RMC_IDX] = 1;
-        Periods[BT747_dev.NMEA_SEN_GGA_IDX] = 1;
-        Periods[BT747_dev.NMEA_SEN_GSA_IDX] = 1;
-        Periods[BT747_dev.NMEA_SEN_GSV_IDX] = 1;
-        Periods[BT747_dev.NMEA_SEN_MDBG_IDX] = 1;
+        Periods[BT747Constants.NMEA_SEN_RMC_IDX] = 1;
+        Periods[BT747Constants.NMEA_SEN_GGA_IDX] = 1;
+        Periods[BT747Constants.NMEA_SEN_GSA_IDX] = 1;
+        Periods[BT747Constants.NMEA_SEN_GSV_IDX] = 1;
+        Periods[BT747Constants.NMEA_SEN_MDBG_IDX] = 1;
         setNMEAPeriods(Periods);
         reqNMEAPeriods();
     }
@@ -823,7 +730,7 @@ public class GPSstate implements Thread {
             final int GGA_Period, final int ZDA_Period, final int MCHN_Period) {
         // Request log format from device
         sendNMEA("PMTK"
-                + BT747_dev.PMTK_API_SET_USER_OPTION
+                + BT747Constants.PMTK_API_SET_USER_OPTION
                 + ","
                 + "0" // Lock:
                 // currently
@@ -837,7 +744,7 @@ public class GPSstate implements Thread {
 
     public void reqFlashUserOption() {
         // Request log format from device
-        sendNMEA("PMTK" + BT747_dev.PMTK_API_GET_USER_OPTION_STR);
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_GET_USER_OPTION_STR);
     }
 
     final boolean removeFromSentCmds(final String match) {
@@ -890,19 +797,19 @@ public class GPSstate implements Thread {
             // if(GPS_DEBUG) {
             // waba.sys.Vm.debug("FLAG:"+Convert.toString(z_Flag)+"\n");}
             switch (z_Flag) {
-            case BT747_dev.PMTK_ACK_INVALID:
+            case BT747Constants.PMTK_ACK_INVALID:
                 // 0: Invalid cmd or packet
                 z_Result = 0;
                 break;
-            case BT747_dev.PMTK_ACK_UNSUPPORTED:
+            case BT747Constants.PMTK_ACK_UNSUPPORTED:
                 // 1: Unsupported cmd or packet
                 z_Result = 0;
                 break;
-            case BT747_dev.PMTK_ACK_FAILED:
+            case BT747Constants.PMTK_ACK_FAILED:
                 // 2: Valid cmd or packet but action failed
                 z_Result = 0;
                 break;
-            case BT747_dev.PMTK_ACK_SUCCEEDED:
+            case BT747Constants.PMTK_ACK_SUCCEEDED:
                 // 3: Valid cmd or packat but action succeeded
                 z_Result = 0;
                 break;
@@ -1002,67 +909,67 @@ public class GPSstate implements Thread {
 
             z_Result = -1; // Suppose cmd not treated
             switch (z_Cmd) {
-            case BT747_dev.PMTK_CMD_LOG: // CMD 182;
+            case BT747Constants.PMTK_CMD_LOG: // CMD 182;
                 z_Result = analyseLogNmea(p_nmea);
                 break;
-            case BT747_dev.PMTK_TEST: // CMD 000
+            case BT747Constants.PMTK_TEST: // CMD 000
                 break;
-            case BT747_dev.PMTK_ACK: // CMD 001
+            case BT747Constants.PMTK_ACK: // CMD 001
                 z_Result = analyseMTK_Ack(p_nmea);
                 break;
-            case BT747_dev.PMTK_SYS_MSG: // CMD 010
+            case BT747Constants.PMTK_SYS_MSG: // CMD 010
                 break;
-            case BT747_dev.PMTK_DT_FIX_CTL: // CMD 500
+            case BT747Constants.PMTK_DT_FIX_CTL: // CMD 500
                 if (p_nmea.length >= 2) {
                     logFixPeriod = Convert.toInt(p_nmea[1]);
                 }
                 dataOK |= C_OK_FIX;
                 break;
-            case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
+            case BT747Constants.PMTK_DT_DGPS_MODE: // CMD 501
                 if (p_nmea.length == 2) {
                     dgps_mode = Convert.toInt(p_nmea[1]);
                 }
                 dataOK |= C_OK_DGPS;
                 PostStatusUpdateEvent();
                 break;
-            case BT747_dev.PMTK_DT_SBAS: // CMD 513
+            case BT747Constants.PMTK_DT_SBAS: // CMD 513
                 if (p_nmea.length == 2) {
                     SBASEnabled = (p_nmea[1].equals("1"));
                 }
                 dataOK |= C_OK_SBAS;
                 PostStatusUpdateEvent();
                 break;
-            case BT747_dev.PMTK_DT_NMEA_OUTPUT: // CMD 514
-                if (p_nmea.length - 1 == BT747_dev.C_NMEA_SEN_COUNT) {
-                    for (int i = 0; i < BT747_dev.C_NMEA_SEN_COUNT; i++) {
+            case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
+                if (p_nmea.length - 1 == BT747Constants.C_NMEA_SEN_COUNT) {
+                    for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
                         NMEA_periods[i] = Convert.toInt(p_nmea[i + 1]);
                     }
                 }
                 dataOK |= C_OK_NMEA;
                 PostStatusUpdateEvent();
                 break;
-            case BT747_dev.PMTK_DT_SBAS_TEST: // CMD 513
+            case BT747Constants.PMTK_DT_SBAS_TEST: // CMD 513
                 if (p_nmea.length == 2) {
                     SBASTestEnabled = (p_nmea[1].equals("0"));
                 }
                 dataOK |= C_OK_SBAS_TEST;
                 PostStatusUpdateEvent();
                 break;
-            case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
+            case BT747Constants.PMTK_DT_PWR_SAV_MODE: // CMD 520
                 if (p_nmea.length == 2) {
                     powerSaveEnabled = (p_nmea[1].equals("1"));
                 }
                 ;
                 PostStatusUpdateEvent();
                 break;
-            case BT747_dev.PMTK_DT_DATUM: // CMD 530
+            case BT747Constants.PMTK_DT_DATUM: // CMD 530
                 if (p_nmea.length == 2) {
                     datum = Convert.toInt(p_nmea[1]);
                 }
                 dataOK |= C_OK_DATUM;
                 PostStatusUpdateEvent();
                 break;
-            case BT747_dev.PMTK_DT_FLASH_USER_OPTION: // CMD 590
+            case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
 
                 dtUserOptionTimesLeft = Convert.toInt(p_nmea[1]);
                 dtUpdateRate = Convert.toInt(p_nmea[2]);
@@ -1078,7 +985,7 @@ public class GPSstate implements Thread {
 
                 PostStatusUpdateEvent();
                 break;
-            case BT747_dev.PMTK_DT_BT_MAC_ADDR: // CMD 592
+            case BT747Constants.PMTK_DT_BT_MAC_ADDR: // CMD 592
                 if(p_nmea[1].length()==12) {
                     BT_MAC_ADDR_STR=
                             p_nmea[1].substring(10, 12) +
@@ -1090,14 +997,14 @@ public class GPSstate implements Thread {
                 }
                 PostStatusUpdateEvent();
                 break;
-            case BT747_dev.PMTK_DT_DGPS_INFO: // CMD 702
+            case BT747Constants.PMTK_DT_DGPS_INFO: // CMD 702
                 /* Not handled */
                 break;
-            case BT747_dev.PMTK_DT_VERSION: // CMD 704
+            case BT747Constants.PMTK_DT_VERSION: // CMD 704
                 mainVersion = p_nmea[1] + "." + p_nmea[2] + "." + p_nmea[3];
                 PostStatusUpdateEvent();
                 break;
-            case BT747_dev.PMTK_DT_RELEASE: // CMD 705
+            case BT747Constants.PMTK_DT_RELEASE: // CMD 705
                 firmwareVersion = p_nmea[1];
                 model = p_nmea[2];
                 if (p_nmea.length >= 4) {
@@ -1130,7 +1037,7 @@ public class GPSstate implements Thread {
 
             z_Result = -1; // Suppose cmd not treated
             switch (z_Cmd) {
-            case BT747_dev.HOLUX_API_DT_NAME:
+            case BT747Constants.HOLUX_API_DT_NAME:
                 if (p_nmea.length == 3) {
                     this.holuxName = p_nmea[2];
                     PostStatusUpdateEvent();
@@ -1225,7 +1132,7 @@ public class GPSstate implements Thread {
         DevType = (FlashManuProdID >> 16) & 0xFF;
 
         switch (Manufacturer) {
-        case BT747_dev.SPI_MAN_ID_MACRONIX:
+        case BT747Constants.SPI_MAN_ID_MACRONIX:
             if ((DevType == 0x20) || (DevType == 0x24)) {
                 // +/* MX25L chips are SPI, first byte of device id is memory
                 // type,
@@ -1245,7 +1152,7 @@ public class GPSstate implements Thread {
 
             }
             break;
-        case BT747_dev.SPI_MAN_ID_EON:
+        case BT747Constants.SPI_MAN_ID_EON:
             if ((DevType == 0x20)) { // || (DevType == 0x24)) {
                 // Supposing the same rule as macronix.
                 // Example device: EN25P16
@@ -1277,7 +1184,7 @@ public class GPSstate implements Thread {
         if (Vm.getTimeStamp() >= nextRun) {
             nextRun = Vm.getTimeStamp() + 10;
             int loops_to_go = 0; // Setting to 0 for more responsiveness
-            if (m_GPSrxtx.isConnected()) {
+            if (gpsRxTx.isConnected()) {
                 // Vm.debug(Convert.toString(m_logState));
                 if (((m_logState != C_LOG_NOLOGGING) && (m_logState != C_LOG_ERASE_STATE))
                         && (sentCmds.size() == 0) && (toSendCmds.size() == 0)) {
@@ -1291,7 +1198,7 @@ public class GPSstate implements Thread {
                         if (!mbErase.isPopped()) {
                             mbErase = null;
                             m_logState = C_LOG_NOLOGGING;
-                            m_GPSrxtx.setIgnoreNMEA(!gpsDecode);
+                            gpsRxTx.setIgnoreNMEA(!gpsDecode);
                         } else if ((Vm.getTimeStamp() - logTimer) > C_LOGERASE_TIMEOUT) {
                             reqLogFlashStatus();
                         }
@@ -1299,7 +1206,7 @@ public class GPSstate implements Thread {
                     }
                 }
                 do {
-                    lastResponse = m_GPSrxtx.getResponse();
+                    lastResponse = gpsRxTx.getResponse();
                     if (lastResponse != null)
                         analyseNMEA(lastResponse);
                     checkSendCmdFromQueue();
@@ -1366,7 +1273,7 @@ public class GPSstate implements Thread {
 
     private int m_logState = C_LOG_NOLOGGING;
 
-    private int m_logRequestAhead = 0;
+    private int usedLogRequestAhead = 0;
 
     /**
      * Start of block position to verify if log in device corresponds to log in
@@ -1409,16 +1316,38 @@ public class GPSstate implements Thread {
         m_logState = C_LOG_NOLOGGING;
         closeLog();
 
-        m_settings.setDownloadOnGoing(false);
         if (loggingIsActiveBeforeDownload) {
             startLog();
             reqLogOnOffStatus();
         }
+        postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
+    }
+    
+    public final boolean isDownloadOnGoing() {
+        return m_logState!=C_LOG_NOLOGGING;
+    }
+    
+    public final int getStartAddr() {
+        return m_StartAddr;
+    }
+
+    /**
+     * @return the endAddr
+     */
+    public final int getEndAddr() {
+        return m_EndAddr;
+    }
+    
+    public final int getNextReadAddr() {
+        return m_NextReadAddr;
     }
 
     public void cancelGetLog() {
         endGetLog();
     }
+    
+    private int logRequestAhead=0;
+    
 
     /**
      * @param p_StartAddr
@@ -1444,15 +1373,10 @@ public class GPSstate implements Thread {
             m_NextReadAddr = m_StartAddr;
             m_Step = p_Step;
             if (m_Step > 0x800) {
-                m_logRequestAhead = 0;
+                usedLogRequestAhead = 0;
             } else {
-                m_logRequestAhead = m_settings.getLogRequestAhead();
+                usedLogRequestAhead = logRequestAhead;
             }
-
-            m_settings.setStartAddr(m_StartAddr);
-            m_settings.setEndAddr(m_EndAddr);
-            m_settings.setNextReadAddr(m_NextReadAddr);
-            m_settings.setDownloadOnGoing(true);
 
             if (incremental) {
                 reOpenLogRead(p_FileName, Card);
@@ -1475,7 +1399,6 @@ public class GPSstate implements Thread {
                             if (continueLoop) {
                                 // This block is fully filled
                                 blockHeadPos += 0x10000;
-                                m_settings.setNextReadAddr(blockHeadPos);
                                 continueLoop = (blockHeadPos <= (m_logFile
                                         .getSize() & 0xFFFF0000));
                             }
@@ -1507,8 +1430,6 @@ public class GPSstate implements Thread {
                                     // than 0xFF
                                     // found.
                                     if (continueLoop) {
-                                        m_settings
-                                                .setNextReadAddr(m_NextReadAddr);
                                         m_NextReadAddr += 0x200;
                                     }
                                 }
@@ -1530,13 +1451,16 @@ public class GPSstate implements Thread {
                         m_logState = C_LOG_CHECK;
                     }
                 }
-                m_GPSrxtx.setIgnoreNMEA((!gpsDecode)
+                gpsRxTx.setIgnoreNMEA((!gpsDecode)
                         || (m_logState != C_LOG_NOLOGGING));
             }
             if (!(m_logState == C_LOG_CHECK)) {
                 // File could not be opened or is not incremental.
                 openNewLog(p_FileName, Card);
                 m_logState = C_LOG_ACTIVE;
+            }
+            if(m_logState!=C_LOG_NOLOGGING) {
+                postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -1600,7 +1524,7 @@ public class GPSstate implements Thread {
 
             switch (m_logState) {
             case C_LOG_ACTIVE:
-                if (m_NextReqAddr > m_NextReadAddr + m_Step * m_logRequestAhead) {
+                if (m_NextReqAddr > m_NextReadAddr + m_Step * usedLogRequestAhead) {
                     z_Step = 0;
                 }
                 break;
@@ -1690,7 +1614,6 @@ public class GPSstate implements Thread {
                         j += l;
                     }
                     m_NextReadAddr += dataLength;
-                    m_settings.setNextReadAddr(m_NextReadAddr);
                     // m_ProgressBar.repaintNow();
                     if (m_getFullLog
                             && (((p_StartAddr - 1 + dataLength) & 0xFFFF0000) >= p_StartAddr)) {
@@ -1709,7 +1632,6 @@ public class GPSstate implements Thread {
                             }
                             if (minEndAddr > m_EndAddr) {
                                 m_EndAddr = minEndAddr;
-                                m_settings.setEndAddr(m_EndAddr);
                             }
                         }
                     }
@@ -1778,6 +1700,7 @@ public class GPSstate implements Thread {
                 }
             }
         } // Switch m_logState
+        postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
     }
 
     /**
@@ -1821,7 +1744,7 @@ public class GPSstate implements Thread {
         resetLogTimeOut(); // Reset timeout
         if (nmea.length > 2) {
             switch (Convert.toInt(nmea[1])) {
-            case BT747_dev.PMTK_LOG_DT:
+            case BT747Constants.PMTK_LOG_DT:
                 // Parameter information
                 // TYPE = Parameter type
                 // DATA = Parameter data
@@ -1829,7 +1752,7 @@ public class GPSstate implements Thread {
                 int z_type = Convert.toInt(nmea[2]);
                 if (nmea.length == 4) {
                     switch (z_type) {
-                    case BT747_dev.PMTK_LOG_FLASH_STAT:
+                    case BT747Constants.PMTK_LOG_FLASH_STAT:
                         if (m_logState == C_LOG_ERASE_STATE) {
                             switch (Convert.toInt(nmea[3])) {
                             case 1:
@@ -1847,60 +1770,60 @@ public class GPSstate implements Thread {
                         }
                         break;
 
-                    case BT747_dev.PMTK_LOG_FORMAT: // 2;
+                    case BT747Constants.PMTK_LOG_FORMAT: // 2;
                         // if(GPS_DEBUG) {
                         // waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
                         logFormat = Conv.hex2Int(nmea[3]);
-                        logRecordMaxSize = BT747_dev.logRecordMinSize(
+                        logRecordMaxSize = BT747Constants.logRecordMinSize(
                                 logFormat, false);
                         dataOK |= C_OK_FORMAT;
-                        PostStatusEvent(GpsEvent.LOG_FORMAT_UPDATE);
+                        postEvent(GpsEvent.LOG_FORMAT_UPDATE);
                         break;
-                    case BT747_dev.PMTK_LOG_TIME_INTERVAL: // 3;
+                    case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
                         logTimeInterval = Convert.toInt(nmea[3]);
                         dataOK |= C_OK_TIME;
                         PostStatusUpdateEvent();
                         break;
-                    case BT747_dev.PMTK_LOG_DISTANCE_INTERVAL: // 4;
+                    case BT747Constants.PMTK_LOG_DISTANCE_INTERVAL: // 4;
                         logDistanceInterval = Convert.toInt(nmea[3]);
                         dataOK |= C_OK_DIST;
                         PostStatusUpdateEvent();
                         break;
-                    case BT747_dev.PMTK_LOG_SPEED_INTERVAL: // 5;
+                    case BT747Constants.PMTK_LOG_SPEED_INTERVAL: // 5;
                         logSpeedInterval = Convert.toInt(nmea[3]) / 10;
                         dataOK |= C_OK_SPEED;
                         PostStatusUpdateEvent();
                         break;
-                    case BT747_dev.PMTK_LOG_REC_METHOD: // 6;
+                    case BT747Constants.PMTK_LOG_REC_METHOD: // 6;
                         logFullOverwrite = (Convert.toInt(nmea[3]) == 1);
                         PostStatusUpdateEvent();
                         break;
-                    case BT747_dev.PMTK_LOG_LOG_STATUS: // 7; // bit 2 = logging
+                    case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2 = logging
                         // on/off
                         logStatus = Convert.toInt(nmea[3]);
-                        loggingIsActive = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
-                        loggerIsFull = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
-                        loggerNeedsInit = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
-                        loggerIsDisabled = (((logStatus & BT747_dev.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
+                        loggingIsActive = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
+                        loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
+                        loggerNeedsInit = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
+                        loggerIsDisabled = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
                         PostStatusUpdateEvent();
                         break;
-                    case BT747_dev.PMTK_LOG_MEM_USED: // 8;
+                    case BT747Constants.PMTK_LOG_MEM_USED: // 8;
                         logMemUsed = Conv.hex2Int(nmea[3]);
                         logMemUsedPercent = (100 * (logMemUsed - (0x200 * ((logMemUsed + 0xFFFF) / 0x10000))))
                                 / logMemUsefullSize();
                         PostStatusUpdateEvent();
                         break;
-                    case BT747_dev.PMTK_LOG_FLASH: // 9;
+                    case BT747Constants.PMTK_LOG_FLASH: // 9;
                         FlashManuProdID = Conv.hex2Int(nmea[3]);
                         analyseFlashManuProdID();
                         break;
-                    case BT747_dev.PMTK_LOG_NBR_LOG_PTS: // 10;
+                    case BT747Constants.PMTK_LOG_NBR_LOG_PTS: // 10;
                         logNbrLogPts = Conv.hex2Int(nmea[3]);
                         PostStatusUpdateEvent();
                         break;
-                    case BT747_dev.PMTK_LOG_FLASH_SECTORS: // 11;
+                    case BT747Constants.PMTK_LOG_FLASH_SECTORS: // 11;
                         break;
-                    case BT747_dev.PMTK_LOG_VERSION: // 12:
+                    case BT747Constants.PMTK_LOG_VERSION: // 12:
                         MtkLogVersion = Txt.LOGGER
                                 + "V"
                                 + Convert.toString(
@@ -1910,7 +1833,7 @@ public class GPSstate implements Thread {
                     }
                 }
                 break;
-            case BT747_dev.PMTK_LOG_DT_LOG:
+            case BT747Constants.PMTK_LOG_DT_LOG:
                 // Data from the log
                 // $PMTK182,8,START_ADDRESS,DATA
 
@@ -1949,7 +1872,7 @@ public class GPSstate implements Thread {
      */
     public void setGpsDecode(final boolean gpsDecode) {
         this.gpsDecode = gpsDecode;
-        m_GPSrxtx.setIgnoreNMEA((!this.gpsDecode)
+        gpsRxTx.setIgnoreNMEA((!this.gpsDecode)
                 || (m_logState != C_LOG_NOLOGGING));
     }
 
@@ -2008,10 +1931,6 @@ public class GPSstate implements Thread {
         return gps;
     }
 
-    private void PostStatusEvent(final int event) {
-        postEvent(new GpsEvent(event));
-    }
-
     private HashSet listeners = new HashSet();
 
     /** add a listener to event thrown by this class */
@@ -2021,6 +1940,10 @@ public class GPSstate implements Thread {
 
     public void removeListener(GPSListener l) {
         listeners.remove(l);
+    }
+
+    private void postEvent(final int event) {
+        postEvent(new GpsEvent(event));
     }
 
     protected void postEvent(GpsEvent e) {
@@ -2140,35 +2063,35 @@ public class GPSstate implements Thread {
 
     public void reqDPL700Log() {
         DPL700_State = C_DPL700_GETLOG;
-        m_GPSrxtx.sendCmdAndGetDPL700Response(0x60B50000, 10 * 1024 * 1024);
+        gpsRxTx.sendCmdAndGetDPL700Response(0x60B50000, 10 * 1024 * 1024);
         //m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
     public void enterDPL700Mode() {
         exitDPL700Mode(); // Exit previous session if still open
-        m_GPSrxtx.sendCmdAndGetDPL700Response("W'P Camera Detect", 255);
+        gpsRxTx.sendCmdAndGetDPL700Response("W'P Camera Detect", 255);
         //m_GPSrxtx.virtualReceive("WP GPS+BT\0");
     }
 
     public void exitDPL700Mode() {
-        m_GPSrxtx.sendDPL700Cmd("WP AP-Exit"); // No reply expected
+        gpsRxTx.sendDPL700Cmd("WP AP-Exit"); // No reply expected
         DPL700_State = C_DPL700_OFF;
     }
 
     public void reqDPL700LogSize() {
-        m_GPSrxtx.sendCmdAndGetDPL700Response(0x60B50000, 255);
+        gpsRxTx.sendCmdAndGetDPL700Response(0x60B50000, 255);
     }
 
     public void reqDPL700Erase() {
-        m_GPSrxtx.sendCmdAndGetDPL700Response(0x60B50000, 255);
+        gpsRxTx.sendCmdAndGetDPL700Response(0x60B50000, 255);
     }
 
     public void reqDPL700DeviceInfo() {
-        m_GPSrxtx.sendCmdAndGetDPL700Response(0x5BB00000, 255);
+        gpsRxTx.sendCmdAndGetDPL700Response(0x5BB00000, 255);
     }
 
     public void getDPL700GetSettings() {
-        m_GPSrxtx.sendCmdAndGetDPL700Response(0x62B60000, 255);
+        gpsRxTx.sendCmdAndGetDPL700Response(0x62B60000, 255);
     }
 
     private void AnalyseDPL700Data(String s) {
@@ -2189,8 +2112,8 @@ public class GPSstate implements Thread {
                     }
                     openNewLog(DPL700LogFileName, DPL700Card);
                     try {
-                        m_logFile.writeBytes(m_GPSrxtx.DPL700_buffer, 0,
-                                m_GPSrxtx.DPL700_buffer_idx);
+                        m_logFile.writeBytes(gpsRxTx.DPL700_buffer, 0,
+                                gpsRxTx.DPL700_buffer_idx);
                         m_logFile.close();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -2201,6 +2124,10 @@ public class GPSstate implements Thread {
                 }
             }
         }
+    }
+
+    public final void setLogRequestAhead(int logRequestAhead) {
+        this.logRequestAhead = logRequestAhead;
     }
 
 
