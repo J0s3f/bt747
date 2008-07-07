@@ -222,7 +222,6 @@ public class Controller {
     }
 
     public final GPSRecord[] getTrackPoints() {
-        String ext = "";
         GPSArray gpsFile = null;
         GPSLogConvert lc;
 
