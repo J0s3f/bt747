@@ -27,10 +27,10 @@
 	<property name="swinglayout.jar" value="${lib.dir}/swing-layout-1.0.3.jar" />
 	<property name="waba_forj2se.jar" value="${lib.dir}/waba_forj2se.jar" />
 	<property name="waba_forwaba.jar" value="${lib.dir}/waba_forwaba.jar" />
-    <property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
+	<property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
 
 	<property name="j2se.main" value="bt747.j2se_view.BT747_Main" />
-    <property name="j2se.main2" value="bt747.j2se_view.BT747_Main2" />
+	<property name="j2se.main2" value="bt747.j2se_view.BT747_Main2" />
 
 	<!-- Application classpath -->
 	<path id="classpath">
@@ -51,7 +51,7 @@
 
 	<path id="j2seclasspath">
 		<pathelement location="${waba_forj2se.jar}" />
-        <pathelement location="${jcalendar.jar}" />
+		<pathelement location="${jcalendar.jar}" />
 		<pathelement location="${swcollections.jar}" />
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
@@ -267,66 +267,61 @@
 		<antcall target="sign">
 			<param name="jar.tosign" value="${dist}/${ant.project.name}${j2se_suffix}.jar" />
 		</antcall>
+
+		<antcall target="dist.libj2se"/>
+
 	</target>
 
-	   <target name="dist.libj2se" > <!-- depends="build.lib.forj2se"> -->
-	        <!-- First build normal target -->
-	        <property name="tmp_suffix" value="_j2se_tmp" />
-	        <property name="j2se_suffix" value="_j2se" />
-	   	<!--
+	<target name="dist.libj2se">
+		<!-- depends="build.lib.forj2se"> -->
+		<!-- First build normal target -->
+		<property name="tmp_suffix" value="_j2se_tmp" />
+		<property name="j2se_suffix" value="_j2se" />
+		<!--
 	        <build.rxtx suffix="_j2se_tmp" build.j2se="yes" />
 
 	         Then, optimize to build a single jar -->
-	        <!--
+		<!--
 	            -overloadaggressively
 	            -repackageclasses ''
 	            -allowaccessmodification
                 <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
                     -injar ${waba_forj2se.jar}(!META-INF/**)
 	        -->
-	   	<delete file="${dist}/lib${ant.project.name}.jar" />
-	        <taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
-	        <proguard forceprocessing="true" shrink="true" defaultpackage="" optimize="true" obfuscate="false" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
-	            <libraryjar file="${java.home}/lib/rt.jar" />
-	            <outjar path="${dist}/lib${ant.project.name}.jar" />
+		<delete file="${dist}/lib${ant.project.name}.jar" />
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
+		<proguard forceprocessing="true" shrink="true" defaultpackage="" optimize="true" obfuscate="false" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
+			<libraryjar file="${java.home}/lib/rt.jar" />
+			<outjar path="${dist}/lib${ant.project.name}.jar" />
 	                -injar ${rxtxbuild.dir}/lib${ant.project.name}${tmp_suffix}.jar(!BT747.class,!bt747/*_view/**)
+		            -injar ${waba_forj2se.jar}(!META-INF/**)
 	                -optimizationpasses 1
-                    -keep public class gps.* { *; }
+                    -keep public class gps.BT747Constants { *; }
+		            -keep public class gps.GpsEvent { *; }
+			        -keep public class gps.GPSListener { *; }
+                    -keep public class gps.log.GPSRecord { *; }
+                    -keep public class gps.log.GPSFilter { *; }
+                    -keep public class gps.log.GPSAdvancedFilter { *; }
 	        	    -keep public class gps.model.* { *; }
+                    -keep public class gps.log.in.GPSLogConvert { *; }
 	                -keep public class * implements gps.log.in.GPSLogConvert { *; }
-	                -keep public class * extends gps.connection.GPSPort  { *; }
+	                -keep public class * extends gps.connection.GPSPort { *; }
+                    -keep public class gps.connection.GPSPort  { *; }
 	       </proguard>
 
-	        
-	        <antcall target="sign">
-	            <param name="jar.tosign" value="${dist}/${ant.project.name}${j2se_suffix}.jar" />
-	        </antcall>
-	    </target>
 
-   <target name="dist.lib" depends="build.lib.forj2se">
-        <!-- First build normal target -->
-        <property name="tmp_suffix" value="_j2se_tmp" />
-        <property name="j2se_suffix" value="_j2se" />
-        <build.rxtx suffix="_j2se_tmp" build.j2se="yes" />
+		<antcall target="sign">
+			<param name="jar.tosign" value="${dist}/lib${ant.project.name}.jar" />
+		</antcall>
+	</target>
 
-        <!-- Then, optimize to build a single jar -->
-        <!--
-            -overloadaggressively
-            -repackageclasses ''
-            -allowaccessmodification
-        -->
-        <antcall target="sign">
-            <param name="jar.tosign" value="${dist}/${ant.project.name}${j2se_suffix}.jar" />
-        </antcall>
-    </target>
-	
-	
-    <target name="libtask.rxtx" depends="rxtxjar" unless="use.proguard_java">
-          <taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
-          <getsuffix />
-          <move file="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar" tofile="${rxtxbuild.dir}/lib${ant.project.name}${suffix}_unopt.jar" />
-          <proguard shrink="true" defaultpackage="" optimize="false" obfuscate="false" allowaccessmodification="no" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
-              <!--
+
+	<target name="libtask.rxtx" depends="rxtxjar" unless="use.proguard_java">
+		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
+		<getsuffix />
+		<move file="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar" tofile="${rxtxbuild.dir}/lib${ant.project.name}${suffix}_unopt.jar" />
+		<proguard shrink="true" defaultpackage="" optimize="false" obfuscate="false" allowaccessmodification="no" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
+			<!--
               <keep name="${mainClass}" />
               <keep name="gps.parser.*" />
               <keep name="bt747.j2se_view.BT747" />
@@ -336,9 +331,9 @@
               <libraryjar file="${waba_forwaba.jar}" />
               <libraryjar file="${swcollections.jar}" />
               -->
-              <libraryjar file="${java.home}/lib/rt.jar" />
-              <injar path="" filter="" />
-              <outjar path="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar" />
+			<libraryjar file="${java.home}/lib/rt.jar" />
+			<injar path="" filter="" />
+			<outjar path="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar" />
                   -optimizationpasses 2
           	      -injar ${rxtxbuild.dir}/lib${ant.project.name}${suffix}_unopt.jar(!bt747/waba_view/**,!BT747.class) 
                   -injar ${waba_forj2se.jar}(!META-INF/**)
@@ -349,11 +344,11 @@
                   -keep public class bt747.model.Model*  { *; }
                   -keep public class bt747.model.Controller  { *; }
               </proguard>
-          <delete file="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar">
-          </delete>
-      </target>
+		<delete file="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar">
+		</delete>
+	</target>
 
-  
+
 
 
 	<macrodef name="macro.run.rxtx">
@@ -378,7 +373,7 @@
 					<pathelement path="@{wabajar}" />
 					<pathelement path="${rxtxcomm.jar}" />
 					<pathelement path="${swinglayout.jar}" />
-                    <pathelement path="${jcalendar.jar}" />
+					<pathelement path="${jcalendar.jar}" />
 					<pathelement path="${swcollections.jar}" />
 					<pathelement path="${rxtxbuild.dir}/${ant.project.name}@{suffix}.jar" />
 					<pathelement path="${waba_forwaba.jar}" />
@@ -583,7 +578,7 @@
 			<fileset dir="src">
 				<include name="**/*.java" />
 				<exclude name="bt747/j2se_view/*" unless="build.j2se" />
-                <exclude name="bt747/j2me_view/*" unless="build.j2me" />
+				<exclude name="bt747/j2me_view/*" unless="build.j2me" />
 				<exclude name="gps/connection/GPSWabaPort.java" />
 				<exclude name="gps/connection/GPSFilePort.java" />
 				<exclude name="gps/connection/GPSRxTxPort.java" />
@@ -618,7 +613,7 @@
 			<fileset dir="src">
 				<include name="**/*.java" />
 				<exclude name="bt747/j2se_view/*" unless="build.j2se" />
-                <exclude name="bt747/j2me_view/*" unless="build.j2me" />
+				<exclude name="bt747/j2me_view/*" unless="build.j2me" />
 			</fileset>
 			<fileset dir="src_forwaba">
 				<include name="**/*.java" />
