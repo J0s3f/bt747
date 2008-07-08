@@ -301,10 +301,12 @@
 			        -keep public class gps.GPSListener { *; }
                     -keep public class gps.log.GPSRecord { *; }
                     -keep public class gps.log.GPSFilter { *; }
-                    -keep public class gps.log.GPSAdvancedFilter { *; }
-	        	    -keep public class gps.model.* { *; }
+                    -keep public class gps.log.GPSFilterAdvanced { *; }
+	        	    -keep public class bt747.model.* { *; }
                     -keep public class gps.log.in.GPSLogConvert { *; }
 	                -keep public class * implements gps.log.in.GPSLogConvert { *; }
+                    -keep public class * implements gps.log.out.GPSFile { *; }
+                    -keep public class gps.log.out.GPSFile { *; }
 	                -keep public class * extends gps.connection.GPSPort { *; }
                     -keep public class gps.connection.GPSPort  { *; }
 	       </proguard>
