@@ -24,11 +24,9 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
 
-import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Settings;
-import bt747.ui.MessageBox;
 import bt747.util.Date;
 
 import moio.util.StringTokenizer;
@@ -60,8 +58,13 @@ public final class CSVLogConvert implements GPSLogConvert {
     
     //private static final int DAYS_BETWEEN_1970_1983 = 4748;
     private static final int DAYS_Julian_1970 = (new Date(1,1,1970)).getJulianDay();
+
+    private String errorInfo;
+    public final String getErrorInfo() {
+        return errorInfo;
+    }
     
-    public final void parseFile(final GPSFile gpsFile) {
+    public final int parseFile(final GPSFile gpsFile) {
         GPSRecord gpsRec=new GPSRecord();
         final int C_BUF_SIZE=0x800;
         byte[] bytes=new byte[C_BUF_SIZE];
@@ -86,12 +89,6 @@ public final class CSVLogConvert implements GPSLogConvert {
         final int FMT_SPEED_MPH_IDX=BT747Constants.FMT_SPEED_IDX+100;
         final int FMT_DISTANCE_FT_IDX=BT747Constants.FMT_DISTANCE_IDX+100;
         
-        
-
-        boolean logTimeActive=false;
-        boolean logDistActive=false;
-        boolean logSpdActive=false;
-
         while(nextAddrToRead<fileSize) {
             /********************************************************************
              * Read data from the data file into the local buffer.
@@ -114,9 +111,8 @@ public final class CSVLogConvert implements GPSLogConvert {
              */
             readResult=m_File.readBytes(bytes, 0, sizeToRead);
             if(readResult!=sizeToRead) {
-                (new MessageBox(
-                        Txt.ERROR,
-                        Txt.PROBLEM_READING+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
+                errorInfo=m_File.getPath()+"|"+m_File.lastError;
+                return BT747Constants.ERROR_READING_FILE;
             }
             nextAddrToRead+=sizeToRead;
             
@@ -242,13 +238,10 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     }
                                 } else if(string.startsWith("LOGTIME")) {
                                     records[i]=C_LOGTIME;
-                                    logTimeActive=true;
                                 } else if(string.startsWith("LOGDIST")) {
                                     records[i]=C_LOGDIST;
-                                    logDistActive=true;
                                 } else if(string.startsWith("LOGSPD")) {
                                     records[i]=C_LOGSPD;
-                                    logSpdActive=true;
                                 } else {
                                     records[i]=-100;//FMT_UNKNOWN_FIELD;
                                 }
@@ -257,7 +250,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                             }
                             if(passToFindFieldsActivatedInLog) {
                                 // Some brute force return
-                                return;
+                                return BT747Constants.NO_ERROR;
                             }
                         } else {
                             
@@ -577,6 +570,7 @@ public final class CSVLogConvert implements GPSLogConvert {
         } catch ( Exception e) {
             e.printStackTrace();
         }
+        return BT747Constants.NO_ERROR;
     }
     
     public final void setTimeOffset(long offset) {
@@ -588,26 +582,28 @@ public final class CSVLogConvert implements GPSLogConvert {
     }
     
     
-    public final void toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
+    public final int toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
+        int error=BT747Constants.NO_ERROR;
         try {
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
-                (new MessageBox(
-                        Txt.ERROR,
-                        Txt.COULD_NOT_OPEN+fileName+"|"+m_File.lastError)).popupBlockingModal();                                   
-                m_File=null;
+                errorInfo=fileName + "|" + m_File.lastError;
+                error=BT747Constants.ERROR_COULD_NOT_OPEN;
+                m_File = null;
             } else {
                 passToFindFieldsActivatedInLog=gpsFile.needPassToFindFieldsActivatedInLog();
                 if(passToFindFieldsActivatedInLog) {
                     activeFileFields=0;
-                    parseFile(gpsFile);
+                    error=parseFile(gpsFile);
                     gpsFile.setActiveFileFields(getLogFormatRecord(activeFileFields));
                 }
                 passToFindFieldsActivatedInLog=false;
-                do {
-                    parseFile(gpsFile);
-                } while (gpsFile.nextPass());
+                if(error==BT747Constants.NO_ERROR) {
+                    do {
+                        error=parseFile(gpsFile);
+                    } while (gpsFile.nextPass());
+                }
                 gpsFile.finaliseFile();
             }
             
@@ -618,6 +614,7 @@ public final class CSVLogConvert implements GPSLogConvert {
             e.printStackTrace();
             // TODO: handle exception
         }
+        return error;
     }
     
     private final void updateLogFormat(final GPSFile gpsFile,final int newLogFormat) {

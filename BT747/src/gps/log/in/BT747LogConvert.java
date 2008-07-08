@@ -19,17 +19,14 @@
 //********************************************************************  
 package gps.log.in;
 
-import sun.util.logging.resources.logging_zh_TW;
 import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
 
-import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Vm;
-import bt747.ui.MessageBox;
 
 /**
  * This class is used to convert the binary log to a new format. Basically this
@@ -122,7 +119,7 @@ public final class BT747LogConvert implements GPSLogConvert {
      *            object doing actual write to files
      * 
      */
-    public final void parseFile(final GPSFile gpsFile) {
+    public final int parseFile(final GPSFile gpsFile) {
         GPSRecord gpsRec = new GPSRecord();
         final int C_BUF_SIZE = 0x2000;
         byte[] bytes = new byte[C_BUF_SIZE];
@@ -191,9 +188,8 @@ public final class BT747LogConvert implements GPSLogConvert {
                         // TODO: handle exception
                     }
                     if (readResult != 20) {
-                        (new MessageBox(Txt.ERROR, Txt.PROBLEM_READING
-                                + m_File.getPath() + "|" + m_File.lastError))
-                                .popupBlockingModal();
+                        errorInfo=m_File.getPath() + "|" + m_File.lastError;
+                        return BT747Constants.ERROR_READING_FILE;
                     }
                     newLogFormat =
                               (0xFF & bytes[2]) << 0
@@ -263,9 +259,8 @@ public final class BT747LogConvert implements GPSLogConvert {
                     readResult = 0;
                 }
                 if (readResult != sizeToRead) {
-                    (new MessageBox(Txt.ERROR, Txt.PROBLEM_READING
-                            + m_File.getPath() + "|" + m_File.lastError))
-                            .popupBlockingModal();
+                    errorInfo=m_File.getPath() + "|" + m_File.lastError;
+                    return BT747Constants.ERROR_READING_FILE;
                 }
                 nextAddrToRead += sizeToRead;
             }
@@ -434,6 +429,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                 nextAddrToRead -= (sizeToRead - okInBuffer);
             }
         } /* nextAddrToRead<fileSize */
+        return BT747Constants.NO_ERROR;
     }
 
     public final void setTimeOffset(final long offset) {
@@ -444,8 +440,15 @@ public final class BT747LogConvert implements GPSLogConvert {
         noGeoid = b;
     }
 
-    public final void toGPSFile(final String fileName, final GPSFile gpsFile,
+
+    private String errorInfo;
+    public final String getErrorInfo() {
+        return errorInfo;
+    }
+
+    public final int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int Card) {
+        int error=BT747Constants.NO_ERROR;
         if (File.isAvailable()) {
             try {
                 m_File = new File(fileName, File.READ_ONLY, Card);
@@ -453,26 +456,27 @@ public final class BT747LogConvert implements GPSLogConvert {
                 // TODO: handle exception
             }
             if (!m_File.isOpen()) {
-                (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName + "|"
-                        + m_File.lastError)).popupBlockingModal();
+                errorInfo=fileName + "|" + m_File.lastError;
+                error=BT747Constants.ERROR_COULD_NOT_OPEN;
                 m_File = null;
             } else {
                 passToFindFieldsActivatedInLog = gpsFile
                         .needPassToFindFieldsActivatedInLog();
                 if (passToFindFieldsActivatedInLog) {
                     activeFileFields = 0;
-                    parseFile(gpsFile);
+                    error=parseFile(gpsFile);
                     gpsFile
                             .setActiveFileFields(getLogFormatRecord(activeFileFields));
                 }
                 passToFindFieldsActivatedInLog = false;
-                do {
-                    parseFile(gpsFile);
-                } while (gpsFile.nextPass());
+                if(error==BT747Constants.NO_ERROR) {
+                    do {
+                        error=parseFile(gpsFile);
+                    } while (error==BT747Constants.NO_ERROR && gpsFile.nextPass());
+                }
                 gpsFile.finaliseFile();
                 if (gpsFile.getFilesCreated() == 0) {
-                    (new MessageBox(Txt.WARNING, Txt.NO_FILES_WERE_CREATED))
-                            .popupBlockingModal();
+                    error=BT747Constants.ERROR_NO_FILES_WERE_CREATED;
                 }
             }
 
@@ -484,6 +488,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                 }
             }
         }
+        return error;
     }
 
     public static final GPSRecord getLogFormatRecord(final int logFormat) {

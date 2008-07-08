@@ -11,7 +11,7 @@
 	<classpathentry kind="lib" path="lib/RXTXcomm.jar" sourcepath="C:/mdeweerd/workspace/rxtx-2.1-7r2/"/>
 	<classpathentry kind="lib" path="lib/win32comm.jar"/>
 	<classpathentry kind="lib" path="lib/comm.jar"/>
-	<classpathentry kind="lib" path="lib/wabalang.jar" sourcepath="C:/SuperWabaSDK/src/java/waba/lang/StringBuffer.java"/>
+	<classpathentry kind="lib" path="lib/wabalang.jar" sourcepath="C:/SuperWabaSDK/src/java/waba/lang"/>
 	<classpathentry kind="lib" path="lib/jcalendar-1.3.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

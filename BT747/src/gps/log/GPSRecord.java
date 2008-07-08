@@ -111,7 +111,7 @@ public class GPSRecord {
         this.recCount=r.recCount;
     }
     
-    public final GPSRecord clone() {
+    public final GPSRecord cloneRecord() {
         return new GPSRecord(this);
     }
 }

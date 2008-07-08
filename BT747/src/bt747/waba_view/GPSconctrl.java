@@ -151,10 +151,13 @@ public class GPSconctrl extends Container {
     }
     
     private void updateButtons() {
-        lbVersion.setText("V"+Version.VERSION_NUMBER+"("+Version.DATE+")   "+m.getMtkLogVersion());
+        lbVersion.setText("V"+Version.VERSION_NUMBER+"("+Version.DATE+")   "
+                + Txt.LOGGER +m.getMtkLogVersion());
         lbFirmwareMainVersion.setText(((m.getMainVersion().length()!=0)?Txt.MAIN:"")+m.getMainVersion());
         lbFirmwareName.setText(((m.getFirmwareVersion().length()!=0)?Txt.FIRMWARE:"")+m.getFirmwareVersion());
-        lbModel.setText(((m.getModel().length()!=0)?Txt.MODEL:"")+m.getModel());
+        String model=m.getModel();
+        //model.replaceFirst("\?",Txt.UNKNOWN);
+        lbModel.setText(((model.length()!=0)?Txt.MODEL:"")+model);
         lbFlashInfo.setText(((m.getFlashManuProdID()!=0)
                 ?
                         Txt.FLASHINFO+Convert.unsigned2hex(m.getFlashManuProdID(),8)

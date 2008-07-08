@@ -247,9 +247,10 @@ public abstract class GPSFile {
     protected void writeDataFooter() {
     };
 
-    protected void createFile(final String extra_ext) {
+    protected int createFile(final String extra_ext) {
         String fileName = m_basename + extra_ext + m_ext;
         boolean createNewFile = C_NUMBER_OF_PASSES - 1 == m_nbrOfPassesToGo;
+        int error=BT747Constants.NO_ERROR;
 
         try {
             m_File = new BufFile(fileName, File.DONT_OPEN, m_card);
@@ -262,10 +263,8 @@ public abstract class GPSFile {
             // TODO: handle exception
         }
         if (m_File != null && !m_File.isOpen()) {
-            bt747.sys.Vm.debug(Txt.COULD_NOT_OPEN + fileName + "|"
-                    + m_File.lastError);
-            (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName + "|"
-                    + m_File.lastError)).popupModal();
+            errorInfo=fileName + "|" + m_File.lastError;
+            error=BT747Constants.ERROR_COULD_NOT_OPEN;
             m_File = null;
         } else {
             filesCreated += 1;
@@ -285,6 +284,7 @@ public abstract class GPSFile {
                 // TODO: handle exception
             }
         }
+        return error;
     }
 
     protected void closeFile() {
@@ -416,4 +416,10 @@ public abstract class GPSFile {
     public final void setAddLogConditionInfo(boolean addLogConditionInfo) {
         this.addLogConditionInfo = addLogConditionInfo;
     }
+
+    protected String errorInfo;
+    public final String getErrorInfo() {
+        return errorInfo;
+    }
+
 }
