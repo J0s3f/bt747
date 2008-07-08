@@ -24,10 +24,8 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
 
-import bt747.Txt;
 import bt747.io.File;
 import bt747.sys.Convert;
-import bt747.ui.MessageBox;
 
 /** This class is used to convert the binary log to a new format.
  * Basically this class interprets the log and creates a {@link GPSRecord}.
@@ -51,8 +49,12 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
     
     private boolean noGeoid=false; // If true,remove geoid difference from height
     
-    
-    public final void parseFile(final GPSFile gpsFile) {
+    private String errorInfo;
+    public final String getErrorInfo() {
+        return errorInfo;
+    }
+
+    public final int parseFile(final GPSFile gpsFile) {
         try {
         GPSRecord gpsRec=new GPSRecord();
         final int C_BUF_SIZE=0x800;
@@ -89,9 +91,8 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
              */
             readResult=m_File.readBytes(bytes, 0, sizeToRead);
             if(readResult!=sizeToRead) {
-                (new MessageBox(
-                        Txt.ERROR,
-                        Txt.PROBLEM_READING+m_File.getPath()+"|"+m_File.lastError)).popupBlockingModal();                                   
+                errorInfo=m_File.getPath()+"|"+m_File.lastError;
+                return BT747Constants.ERROR_READING_FILE;
             }
             nextAddrToRead+=sizeToRead;
             
@@ -167,6 +168,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return BT747Constants.NO_ERROR;
     }
     
     public final void setTimeOffset(long offset) {
@@ -178,24 +180,26 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
     }
     
     
-    public final void toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
+    public final int toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
+        int error=BT747Constants.NO_ERROR;
         try {
         if(File.isAvailable()) {
             m_File=new File(fileName,File.READ_ONLY, Card);
             if(!m_File.isOpen()) {
-                (new MessageBox(
-                        Txt.ERROR,
-                        Txt.COULD_NOT_OPEN+fileName+"|"+m_File.lastError)).popupBlockingModal();                                   
-                m_File=null;
+                errorInfo=fileName + "|" + m_File.lastError;
+                error=BT747Constants.ERROR_COULD_NOT_OPEN;
+                m_File = null;
             } else {
                 passToFindFieldsActivatedInLog=gpsFile.needPassToFindFieldsActivatedInLog();
                 if(passToFindFieldsActivatedInLog) {
                     gpsFile.setActiveFileFields(getLogFormatRecord(activeFileFields));
                 }
                 passToFindFieldsActivatedInLog=false;
-                do {
-                    parseFile(gpsFile);
-                } while (gpsFile.nextPass());
+                if(error==BT747Constants.NO_ERROR) {
+                    do {
+                        error=parseFile(gpsFile);
+                    } while (gpsFile.nextPass());
+                }
                 gpsFile.finaliseFile();
             }
             
@@ -206,6 +210,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return error;
     }
     
     public static final GPSRecord getLogFormatRecord(final int logFormat) {

@@ -214,7 +214,9 @@ public class Controller {
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
                     m.getFileSeparationFreq());
             gpsFile.setTrackSepTime(m.getTrkSep() * 60);
-            lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+            int error;
+            error=lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+            reportError(error,lc.getErrorInfo());
         } else {
             // TODO report error
         }
@@ -287,9 +289,33 @@ public class Controller {
 //        gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
 //                    m.getFileSeparationFreq());
 //            gpsFile.setTrackSepTime(m.getTrkSep() * 60);
-        lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+        int error;
+        error=lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+        reportError(error,lc.getErrorInfo());
 //        m.logConversionEnded(log_type);
         return gpsFile.getGpsTrackPoints();
+    }
+    
+    private void reportError(int error, String errorInfo) {
+        String errorMsg;
+        switch (error) {
+        case BT747Constants.ERROR_COULD_NOT_OPEN:
+            errorMsg=Txt.COULD_NOT_OPEN + errorInfo;
+            bt747.sys.Vm.debug(errorMsg);
+            new MessageBox(Txt.ERROR, errorMsg).popupBlockingModal();
+            break;
+        case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
+            (new MessageBox(Txt.WARNING, Txt.NO_FILES_WERE_CREATED))
+            .popupBlockingModal();
+            break;
+        case BT747Constants.ERROR_READING_FILE:
+            new MessageBox(Txt.ERROR, Txt.PROBLEM_READING
+                    + errorInfo)
+                    .popupBlockingModal();
+            break;
+        default:
+            break;
+        }
     }
 
     
@@ -341,6 +367,26 @@ public class Controller {
             // TODO: handle exception
         }
     }
+
+    /** The GpsModel is waiting for a reply to the question if the currently
+     * existing log with different data can be overwritten.
+     * This method must be called to replay to this question which is in principle
+     * the result of a user reply to a message box.
+     * @param isOkToOverwrite  If true, the existing log can be overwritten
+     */
+    public final void replyToOkToOverwrite(boolean isOkToOverwrite) {
+        m.gpsModel().replyToOkToOverwrite(isOkToOverwrite);
+    }
+    
+    
+    /**
+     * The log is being erased - the user request to abandon waiting for the
+     * end of this operation.
+     */
+    public final void stopErase() {
+        m.gpsModel().stopErase();
+    }
+
 
     public final void startDPL700Download() {
         m.gpsModel().getDPL700Log(m.getLogFilePath(), m.getCard());

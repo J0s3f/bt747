@@ -33,7 +33,7 @@ import gps.convert.Conv;
  * 
  * @author Mario De Weerd
  */
-public class BT747model extends Control {
+public class IBlue747Model extends Control {
 
     public int logFormat = 0x3E;
 
@@ -42,7 +42,7 @@ public class BT747model extends Control {
     /**
      *  
      */
-    public BT747model() {
+    public IBlue747Model() {
     }
 
     public void onStart() {

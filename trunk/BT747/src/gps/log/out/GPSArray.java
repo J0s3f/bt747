@@ -19,6 +19,7 @@
 //********************************************************************  
 package gps.log.out;
 
+import gps.BT747Constants;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
@@ -80,21 +81,22 @@ public class GPSArray extends GPSFile {
         // NO CALL TO super.writeRecord(s); TO INHIBIT FILE CREATION
         if(m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             if(m_nbrOfPassesToGo==0) {
-                gpsTrackPoints[trackPointCount]=s.clone();
+                gpsTrackPoints[trackPointCount]=s.cloneRecord();
             }
             trackPointCount++;
         }
 
         if(m_Filters[GPSFilter.C_WAYPT_IDX].doFilter(s)) {
             if(m_nbrOfPassesToGo==0) {
-                gpsWayPoints[wayPointCount]=s.clone();
+                gpsWayPoints[wayPointCount]=s.cloneRecord();
             }
             wayPointCount++;
         }
     }
     
-    protected void createFile(final String extra_ext) {
+    protected int createFile(final String extra_ext) {
         // Override to avoid file creation.
+        return BT747Constants.NO_ERROR;
     }
 
     protected void closeFile() {

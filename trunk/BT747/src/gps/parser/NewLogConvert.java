@@ -40,12 +40,19 @@ public final class NewLogConvert implements GPSLogConvert {
     protected int activeFileFields=0;
     String [] argv=new String[1];
     
-    /**
+
+    private String errorInfo;
+    public final String getErrorInfo() {
+        return errorInfo;
+    }
+
+/**
      * @return
      * @param gpsFile - object doing actual write to files
      * 
      */
-    public final void parseFile(final GPSFile gpsFile) {
+    public final int parseFile(final GPSFile gpsFile) {
+        int error=BT747Constants.NO_ERROR;
         int format=0;
         try {
             LogFile lf = new LogFile(argv[0], new LogDataParserHolux());
@@ -67,8 +74,11 @@ public final class NewLogConvert implements GPSLogConvert {
         } catch (Exception e) {
             e.printStackTrace();
             Vm.debug("? Problem reading file "+argv[0]);
+            errorInfo=argv[0];
+            error=BT747Constants.ERROR_READING_FILE;
         }
         activeFileFields=format;
+        return error;
     }
     
     public final void setTimeOffset(final long offset) {
@@ -77,7 +87,8 @@ public final class NewLogConvert implements GPSLogConvert {
     public final void setNoGeoid(final boolean b) {
     }
     
-    public final void toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
+    public final int toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
+        int error=BT747Constants.NO_ERROR;
         Vm.debug("Using new parser");
         argv[0]=fileName;
         passToFindFieldsActivatedInLog=gpsFile.needPassToFindFieldsActivatedInLog();
@@ -93,11 +104,9 @@ public final class NewLogConvert implements GPSLogConvert {
         } while (gpsFile.nextPass());
         gpsFile.finaliseFile();
         if(gpsFile.getFilesCreated()==0) {
-            (new MessageBox(
-                    Txt.WARNING,
-                    Txt.NO_FILES_WERE_CREATED)).popupBlockingModal();                                   
+            error=BT747Constants.ERROR_NO_FILES_WERE_CREATED;
         }
-
+        return error;
     }
     
     /**

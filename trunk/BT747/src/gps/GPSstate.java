@@ -26,13 +26,11 @@ import moio.util.HashSet;
 import moio.util.Iterator;
 import moio.util.StringTokenizer;
 
-import bt747.Txt;
 import bt747.generic.Generic;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Thread;
 import bt747.sys.Vm;
-import bt747.ui.MessageBox;
 import bt747.util.Vector;
 
 /*
@@ -226,16 +224,25 @@ public class GPSstate implements Thread {
                 + Convert.unsigned2hex(logFmt, 8));
     }
 
-    MessageBox mbErase = null;
-    private final String[] eraseWait = { Txt.CANCEL_WAITING };
 
+    private boolean isEraseOngoing=false;
     private void waitEraseDone() {
-        mbErase = new MessageBox(Txt.TITLE_WAITING_ERASE,
-                Txt.TXT_WAITING_ERASE, eraseWait);
-        mbErase.popupModal();
+        isEraseOngoing=true;
+        postEvent(GpsEvent.ERASE_ONGOING_NEED_POPUP);
         m_logState = C_LOG_ERASE_STATE;
         resetLogTimeOut();
         // readLogFlashStatus(); - Will be done after timeout
+    }
+    private void signalEraseDone() {
+        postEvent(GpsEvent.ERASE_DONE_REMOVE_POPUP);
+    }
+    
+    public void stopErase() {
+        if (isEraseOngoing && (m_logState == C_LOG_ERASE_STATE) ) {
+            m_logState = C_LOG_NOLOGGING;
+            gpsRxTx.setIgnoreNMEA(!gpsDecode);
+            postEvent(GpsEvent.ERASE_DONE_REMOVE_POPUP);
+        }
     }
 
     public void doHotStart() {
@@ -363,14 +370,14 @@ public class GPSstate implements Thread {
         }
         gpsRxTx.sendPacket(p_Cmd);
         if (GPS_DEBUG) {
-            Vm.debug(">" + p_Cmd);
+            debugMsg(">" + p_Cmd);
         }
         nextCmdSendTime = Vm.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
         if (sentCmds.size() > C_MAX_SENT_COMMANDS) {
             sentCmds.removeElementAt(0);
         }
         // if (GPS_DEBUG) {
-        // Vm.debug(p_Cmd);
+        // debugMsg(p_Cmd);
         // }
     }
 
@@ -759,7 +766,7 @@ public class GPSstate implements Thread {
         // Remove all cmds up to
         for (int i = z_CmdIdx; i >= 0; i--) {
             // if(GPS_DEBUG) {
-            // Vm.debug("Remove:"+(String)sentCmds.items[0]);
+            // debugMsg("Remove:"+(String)sentCmds.items[0]);
             // }
             sentCmds.removeElementAt(0);
         }
@@ -772,7 +779,7 @@ public class GPSstate implements Thread {
         // PMTK001,Cmd,Flag
         int z_Flag;
         int z_Result = -1;
-        // if(GPS_DEBUG) { waba.sys.Vm.debug(p_nmea[0]+","+p_nmea[1]+"\n");}
+        // if(GPS_DEBUG) { waba.sys.debugMsg(p_nmea[0]+","+p_nmea[1]+"\n");}
 
         if (p_nmea.length >= 3) {
             String z_MatchString;
@@ -784,18 +791,18 @@ public class GPSstate implements Thread {
                 z_MatchString += "," + p_nmea[i];
             }
             // if(GPS_DEBUG) {
-            // Vm.debug("Before:"+sentCmds.size()+" "+z_MatchString);
+            // debugMsg("Before:"+sentCmds.size()+" "+z_MatchString);
             // }
 
             removeFromSentCmds(z_MatchString);
             // if(GPS_DEBUG) {
-            // Vm.debug("After:"+sentCmds.size());
+            // debugMsg("After:"+sentCmds.size());
             // }
             // sentCmds.find(z_MatchString);
             // if(GPS_DEBUG) {
-            // waba.sys.Vm.debug("IDX:"+Convert.toString(z_CmdIdx)+"\n");}
+            // waba.sys.debugMsg("IDX:"+Convert.toString(z_CmdIdx)+"\n");}
             // if(GPS_DEBUG) {
-            // waba.sys.Vm.debug("FLAG:"+Convert.toString(z_Flag)+"\n");}
+            // waba.sys.debugMsg("FLAG:"+Convert.toString(z_Flag)+"\n");}
             switch (z_Flag) {
             case BT747Constants.PMTK_ACK_INVALID:
                 // 0: Invalid cmd or packet
@@ -828,7 +835,7 @@ public class GPSstate implements Thread {
             gps.utc = Convert.toInt(p_nmea[1].substring(0, 2)) * 3600
                     + Convert.toInt(p_nmea[1].substring(2, 4)) * 60
                     + Convert.toInt(p_nmea[1].substring(4, 6));
-            PostGpsEvent(GpsEvent.GPRMC, gps);
+            postGpsEvent(GpsEvent.GPRMC, gps);
         }
     }
 
@@ -848,11 +855,11 @@ public class GPSstate implements Thread {
                 // if(GPS_DEBUG) {
                 // double geoid=Conv.wgs84_separation(gps.latitude,
                 // gps.longitude);
-                // Vm.debug("geoid GPS: "+Convert.toString(gps.geoid,3)
+                // debugMsg("geoid GPS: "+Convert.toString(gps.geoid,3)
                 // + " geoid calc:"+Convert.toString(geoid)
                 // );
                 // }
-                PostGpsEvent(GpsEvent.GPRMC, gps);
+                postGpsEvent(GpsEvent.GPRMC, gps);
             } catch (Exception e) {
                 // TODO: handle exception
             }
@@ -866,10 +873,10 @@ public class GPSstate implements Thread {
         int z_Result;
         z_Result = 0;
         // if(GPS_DEBUG&&!p_nmea[0].startsWith("G")) {
-        // waba.sys.Vm.debug("ANA:"+p_nmea[0]+","+p_nmea[1]);}
+        // waba.sys.debugMsg("ANA:"+p_nmea[0]+","+p_nmea[1]);}
         if (p_nmea.length == 0) {
             // Shoudl not happen, problem in program
-            Vm.debug("Problem - report NMEA is 0 length");
+            debugMsg("Problem - report NMEA is 0 length");
         } else if (p_nmea.length == 1 && p_nmea[0].startsWith("WP")) {
             AnalyseDPL700Data(p_nmea[0]);
         } else if (gpsDecode && (m_logState == C_LOG_NOLOGGING) // Not during
@@ -903,7 +910,7 @@ public class GPSstate implements Thread {
                     s += p_nmea[i];
                     s += ",";
                 }
-                Vm.debug(s);
+                debugMsg(s);
             }
             z_Cmd = Convert.toInt(p_nmea[0].substring(4));
 
@@ -1031,7 +1038,7 @@ public class GPSstate implements Thread {
                     s += p_nmea[i];
                     s += ",";
                 }
-                Vm.debug(s);
+                debugMsg(s);
             }
             z_Cmd = Convert.toInt(p_nmea[1]);
 
@@ -1105,7 +1112,7 @@ public class GPSstate implements Thread {
             // logMemSize = 32 * 1024 * 1024 / 8; //32Mb -> 4MB
             break;
         default:
-            mdStr = Txt.UNKNOWN;
+            mdStr = "?"; // Unknown model
         }
         // Recognition based on 'device'
         if (device.length() == 0) {
@@ -1185,7 +1192,7 @@ public class GPSstate implements Thread {
             nextRun = Vm.getTimeStamp() + 10;
             int loops_to_go = 0; // Setting to 0 for more responsiveness
             if (gpsRxTx.isConnected()) {
-                // Vm.debug(Convert.toString(m_logState));
+                // debugMsg(Convert.toString(m_logState));
                 if (((m_logState != C_LOG_NOLOGGING) && (m_logState != C_LOG_ERASE_STATE))
                         && (sentCmds.size() == 0) && (toSendCmds.size() == 0)) {
                     // Sending command on next timer adds some delay after
@@ -1194,15 +1201,8 @@ public class GPSstate implements Thread {
                 } else if (m_logState == C_LOG_ACTIVE) {
                     getNextLogPart();
                 } else if (m_logState == C_LOG_ERASE_STATE) {
-                    if (mbErase != null) {
-                        if (!mbErase.isPopped()) {
-                            mbErase = null;
-                            m_logState = C_LOG_NOLOGGING;
-                            gpsRxTx.setIgnoreNMEA(!gpsDecode);
-                        } else if ((Vm.getTimeStamp() - logTimer) > C_LOGERASE_TIMEOUT) {
-                            reqLogFlashStatus();
-                        }
-
+                    if ((Vm.getTimeStamp() - logTimer) > C_LOGERASE_TIMEOUT) {
+                        reqLogFlashStatus();
                     }
                 }
                 do {
@@ -1271,6 +1271,12 @@ public class GPSstate implements Thread {
 
     private static final int C_LOG_ERASE_STATE = 4;
 
+    /**
+     * Waiting for a reply from the application concerning the
+     * authorisation to overwrite data that is not the same.
+     */
+    private static final int C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY = 5;
+    
     private int m_logState = C_LOG_NOLOGGING;
 
     private int usedLogRequestAhead = 0;
@@ -1487,13 +1493,16 @@ public class GPSstate implements Thread {
             m_logFileCard = Card;
 
             if ((m_logFile == null) || !(m_logFile.isOpen())) {
-                (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName + " ("
-                        + Card + ")" + Txt.CHK_PATH)).popupBlockingModal();
+                postGpsEvent(GpsEvent.COULD_NOT_OPEN_FILE, fileName);
             }
         } catch (Exception e) {
             e.printStackTrace();
             // TODO: handle exception
         }
+    }
+    
+    private final void debugMsg(String dbgStr) {
+        postGpsEvent(GpsEvent.DEBUG_MSG, dbgStr);
     }
 
     private void reOpenLogRead(final String fileName, final int Card) {
@@ -1502,7 +1511,7 @@ public class GPSstate implements Thread {
             m_logFile = new File(fileName, File.READ_ONLY, Card);
             m_logFileCard = Card;
         } catch (Exception e) {
-            // Vm.debug("Exception reopen log read");
+            // debugMsg("Exception reopen log read");
         }
     }
 
@@ -1512,7 +1521,7 @@ public class GPSstate implements Thread {
             m_logFile = new File(fileName, File.READ_WRITE, Card);
             m_logFileCard = Card;
         } catch (Exception e) {
-            // Vm.debug("Exception reopen log write");
+            // debugMsg("Exception reopen log write");
         }
     }
 
@@ -1573,7 +1582,7 @@ public class GPSstate implements Thread {
     private void analyzeLogPart(final int p_StartAddr, final String p_Data) {
         int dataLength;
         dataLength = Conv.hexStringToBytes(p_Data, m_Data) / 2; // Fills m_data
-        // Vm.debug("Got "+p_StartAddr+" "+Convert.toString(p_Data.length())+"):
+        // debugMsg("Got "+p_StartAddr+" "+Convert.toString(p_Data.length())+"):
         // "+Convert.toString(dataLength));
         switch (m_logState) {
         case C_LOG_ACTIVE:
@@ -1596,15 +1605,15 @@ public class GPSstate implements Thread {
                         if (l > C_MAX_FILEBLOCK_WRITE) {
                             l = C_MAX_FILEBLOCK_WRITE;
                         }
-                        // Vm.debug("Writing("+Convert.toString(p_StartAddr)+"):
+                        // debugMsg("Writing("+Convert.toString(p_StartAddr)+"):
                         // "+Convert.toString(j)+" "+Convert.toString(l));
 
                         try {
                             if ((m_logFile.writeBytes(m_Data, j, l)) != l) {
-                                // Vm.debug("Problem during anaLog:
+                                // debugMsg("Problem during anaLog:
                                 // "+Convert.toString(m_logFile.lastError));
                                 cancelGetLog();
-                                // Vm.debug(Convert.toString(q));
+                                // debugMsg(Convert.toString(q));
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1683,24 +1692,26 @@ public class GPSstate implements Thread {
                     }
                     m_logState = C_LOG_ACTIVE;
                 } else {
-                    // Log is not the same - delete the log and reopen.
-                    MessageBox mb;
-                    String[] mbStr = { Txt.OVERWRITE, Txt.ABORT_DOWNLOAD };
-                    mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.DATA_NOT_SAME,
-                            mbStr);
-                    mb.popupBlockingModal();
-                    if (mb.getPressedButtonIndex() == 0) {
-                        openNewLog(fileName, m_logFileCard);
-                        m_NextReadAddr = 0;
-                        m_NextReadAddr = 0;
-                        m_logState = C_LOG_ACTIVE;
-                    } else {
-                        endGetLog();
-                    }
+                    postEvent(GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY);
                 }
             }
+            break;
         } // Switch m_logState
         postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
+    }
+    
+    public void replyToOkToOverwrite(boolean overwrite) {
+        if(m_logState==C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
+            if(overwrite) {
+                String fileName = m_logFile.getPath();
+                openNewLog(fileName, m_logFileCard);
+                m_NextReadAddr = 0;
+                m_NextReadAddr = 0;
+                m_logState = C_LOG_ACTIVE;
+            } else {
+                endGetLog();
+            }
+        }
     }
 
     /**
@@ -1736,7 +1747,7 @@ public class GPSstate implements Thread {
      */
     private int analyseLogNmea(final String[] nmea) {
         // if(GPS_DEBUG) {
-        // waba.sys.Vm.debug("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
+        // waba.sys.debugMsg("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
         // Suppose that the command is ok (PMTK182)
 
         // Currently taking care of replies from the device only.
@@ -1757,9 +1768,8 @@ public class GPSstate implements Thread {
                             switch (Convert.toInt(nmea[3])) {
                             case 1:
                                 m_logState = C_LOG_NOLOGGING;
-                                if (mbErase != null) {
-                                    mbErase.unpop();
-                                    mbErase = null;
+                                if(isEraseOngoing) {
+                                    signalEraseDone();
                                 }
                                 if (forcedErase) {
                                     forcedErase = false;
@@ -1772,7 +1782,7 @@ public class GPSstate implements Thread {
 
                     case BT747Constants.PMTK_LOG_FORMAT: // 2;
                         // if(GPS_DEBUG) {
-                        // waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
+                        // waba.sys.debugMsg("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
                         logFormat = Conv.hex2Int(nmea[3]);
                         logRecordMaxSize = BT747Constants.logRecordMinSize(
                                 logFormat, false);
@@ -1824,8 +1834,7 @@ public class GPSstate implements Thread {
                     case BT747Constants.PMTK_LOG_FLASH_SECTORS: // 11;
                         break;
                     case BT747Constants.PMTK_LOG_VERSION: // 12:
-                        MtkLogVersion = Txt.LOGGER
-                                + "V"
+                        MtkLogVersion = "V"
                                 + Convert.toString(
                                         Convert.toInt(nmea[3]) / 100f, 2);
                         break;
@@ -1838,7 +1847,7 @@ public class GPSstate implements Thread {
                 // $PMTK182,8,START_ADDRESS,DATA
 
                 try {
-                    // waba.sys.Vm.debug("Before
+                    // waba.sys.debugMsg("Before
                     // AnalyzeLog:"+p_nmea[3].length());
                     analyzeLogPart(Conv.hex2Int(nmea[2]), nmea[3]);
                 } catch (Exception e) {
@@ -1923,7 +1932,7 @@ public class GPSstate implements Thread {
         postEvent(new GpsEvent(GpsEvent.DATA_UPDATE));
     }
 
-    private void PostGpsEvent(final int type, Object o) {
+    private void postGpsEvent(final int type, Object o) {
         postEvent(new GpsEvent(type, o));
     }
 
@@ -2096,7 +2105,7 @@ public class GPSstate implements Thread {
 
     private void AnalyseDPL700Data(String s) {
         if (GPS_DEBUG) {
-            Vm.debug("<DPL700 " + s);
+            debugMsg("<DPL700 " + s);
         }
         if (s.startsWith("WP GPS")) {
             // WP GPS+BT

@@ -39,6 +39,7 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Settings;
+import bt747.sys.Vm;
 import bt747.ui.MessageBox;
 
 /**
@@ -348,7 +349,11 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
             }
             break;
         case ControlEvent.WINDOW_CLOSED:
-            if (event.target==menubar) {
+            if (event.target==mbErase) {
+                if(!mbErase.isPopped()) {
+                    stopErase();
+                }
+            } else if (event.target==menubar) {
                 switch (m_MenuBar.getSelectedMenuItem()) {
                 case -1:
                     break; // No item selected
@@ -489,6 +494,14 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
             c.postEvent(event);
         } else if ((event.getType()==GpsEvent.DOWNLOAD_STATE_CHANGE) ) {
             updateProgressBar();
+        } else if ((event.getType()==GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY) ) {
+            requestLogOverwriteConfirmation();
+        } else if ((event.getType()==GpsEvent.ERASE_ONGOING_NEED_POPUP) ) {
+            createErasePopup();
+        } else if ((event.getType()==GpsEvent.COULD_NOT_OPEN_FILE) ) {
+            couldNotOpenFileMessage((String) event.getArg());
+        } else if ((event.getType()==GpsEvent.DEBUG_MSG) ) {
+            Vm.debug((String) event.getArg());
         } else {
             Control c;
             c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
@@ -497,10 +510,36 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
 
     }
 
-
     public void onExit() {
         waba.sys.Vm.setDeviceAutoOff(orgAutoOnOff); // Avoid auto-off causing BT
         // trouble
         c.saveSettings();
     }
+
+    public void requestLogOverwriteConfirmation() {
+        // TODO: Make this non blocking (with multiple interfaces open)
+        // Log is not the same - delete the log and reopen.
+        MessageBox mb;
+        String[] mbStr = { Txt.OVERWRITE, Txt.ABORT_DOWNLOAD };
+        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.DATA_NOT_SAME,
+                mbStr);
+        mb.popupBlockingModal();
+        c.replyToOkToOverwrite(mb.getPressedButtonIndex() == 0);
+    }
+    
+    private final String[] eraseWait = { Txt.CANCEL_WAITING };
+    MessageBox mbErase = new MessageBox(Txt.TITLE_WAITING_ERASE,
+            Txt.TXT_WAITING_ERASE, eraseWait);;
+    private void createErasePopup() {
+        mbErase.popupModal();
+    }
+    private void stopErase() {
+        c.stopErase();
+    }
+    
+    private void couldNotOpenFileMessage(String fileName) {
+        (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName + Txt.CHK_PATH)).popupBlockingModal();
+    }
+
+
 }

@@ -565,4 +565,9 @@ public final class BT747Constants {  // dev as in device
     public static final int VALID_MANUAL_MASK = 0x0080;
     public static final int VALID_SIMULATOR_MASK = 0x0100;
 
+    
+    public final static int NO_ERROR            = 0;
+    public final static int ERROR_COULD_NOT_OPEN = -1;
+    public final static int ERROR_NO_FILES_WERE_CREATED = -2;
+    public final static int ERROR_READING_FILE = -3;    
 }
