@@ -668,7 +668,7 @@ public class BT747_Main extends javax.swing.JFrame implements
         pnReason = new javax.swing.JPanel();
         cbRCR = new javax.swing.JCheckBox();
         cbOtherFormat = new javax.swing.JPanel();
-        cbHoluxM241 = new javax.swing.JCheckBox();
+        cbValidFixOnly = new javax.swing.JCheckBox();
         txtEstimatedRecords = new javax.swing.JLabel();
         btFormatAndErase = new javax.swing.JButton();
         btFormat = new javax.swing.JButton();
@@ -3062,10 +3062,10 @@ public class BT747_Main extends javax.swing.JFrame implements
         cbOtherFormat.setBorder(javax.swing.BorderFactory
                 .createTitledBorder("Other"));
 
-        cbHoluxM241.setText("Holux M-241");
-        cbHoluxM241
+        cbValidFixOnly.setText("Holux M-241");
+        cbValidFixOnly
                 .setToolTipText("Usually indicates that this is a Holux M241 device using a 'different format'.\n\nKeep the original device setting.");
-        cbHoluxM241.addItemListener(new java.awt.event.ItemListener() {
+        cbValidFixOnly.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
@@ -3082,7 +3082,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                                 cbOtherFormatLayout
                                         .createSequentialGroup()
                                         .addContainerGap()
-                                        .add(cbHoluxM241)
+                                        .add(cbValidFixOnly)
                                         .addContainerGap(
                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                 Short.MAX_VALUE)));
@@ -3094,7 +3094,7 @@ public class BT747_Main extends javax.swing.JFrame implements
                                 cbOtherFormatLayout
                                         .createSequentialGroup()
                                         .add(
-                                                cbHoluxM241,
+                                                cbValidFixOnly,
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                 23,
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -6049,8 +6049,8 @@ public class BT747_Main extends javax.swing.JFrame implements
                 .setSelected((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0);
         cbDistance
                 .setSelected((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0);
-        cbHoluxM241
-                .setSelected((logFormat & (1 << BT747Constants.FMT_HOLUX_LOW_PRECISION_IDX)) != 0);
+        cbValidFixOnly
+                .setSelected((logFormat & (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX)) != 0);
 
     }
 
@@ -6123,8 +6123,8 @@ public class BT747_Main extends javax.swing.JFrame implements
         if (cbDistance.isSelected()) {
             logFormat |= (1 << BT747Constants.FMT_DISTANCE_IDX);
         }
-        if (cbHoluxM241.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_HOLUX_LOW_PRECISION_IDX);
+        if (cbValidFixOnly.isSelected()) {
+            logFormat |= (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX);
         }
         return logFormat;
     }
@@ -6372,7 +6372,7 @@ public class BT747_Main extends javax.swing.JFrame implements
     private javax.swing.JCheckBox cbHeading;
     private javax.swing.JCheckBox cbHeight;
     private javax.swing.JComboBox cbHeightOverMeanSeaLevel;
-    private javax.swing.JCheckBox cbHoluxM241;
+    private javax.swing.JCheckBox cbValidFixOnly;
     private javax.swing.JCheckBox cbImperialUnits;
     private javax.swing.JCheckBox cbIncremental;
     private javax.swing.JCheckBox cbLat;

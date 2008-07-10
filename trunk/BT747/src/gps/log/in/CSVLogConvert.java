@@ -533,7 +533,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     }
                                         curLogFormat|=(1<<BT747Constants.FMT_DISTANCE_IDX);
                                         break;
-                                    case BT747Constants.FMT_HOLUX_LOW_PRECISION_IDX:
+                                    case BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX:
                                         break;
                                     default:
                                         // Error message to show.

@@ -76,7 +76,7 @@ public final class BT747Constants {  // dev as in device
     /** Index of bit for log format setting */
     public static final int FMT_DISTANCE_IDX =   19;
     /** Index of bit for log format setting */
-    public static final int FMT_HOLUX_LOW_PRECISION_IDX =   31;
+    public static final int FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX =   31;
     
     /** Size for each item of the log format of the iBlue 747.<br>
      * <b>The log record length is variable is satelite information
@@ -118,7 +118,7 @@ public final class BT747Constants {  // dev as in device
             0, // 1C
             0, // 1D
             0, // 1E
-            0, // 1F  // Holux Low precision
+            0, // 1F  // Log points with valid fix only
     };  
 
     public static final int logFmtByteSizesHolux[] = {
@@ -153,7 +153,7 @@ public final class BT747Constants {  // dev as in device
             0, // 1C
             0, // 1D
             0, // 1E
-            0, // 1F  // Holux Low precision
+            0, // 1F  // Log points with valid fix only
     };  
 
     public static final int RCR_TIME_MASK=       0x01;

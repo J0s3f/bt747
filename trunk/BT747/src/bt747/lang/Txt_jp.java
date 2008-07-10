@@ -158,7 +158,7 @@ public class Txt_jp {
         "\u8A18\u9332\u6761\u4EF6",      // = 0x20000    // 11
         "\u30DF\u30EA\u79D2", // = 0x40000   // 12
         "\u8DDD\u96E2",  // = 0x80000    // 13
-        "HOLUX M-241" // =0x80000000
+        "VALID POINTS ONLY" // =0x80000000
     };
     public static final String C_BAD_LOG_FORMAT = "\u30ED\u30B0\u30D5\u30A9\u30FC\u30DE\u30C3\u30C8\u304C\u6B63\u3057\u304F\u3042\u308A\u307E\u305B\u3093"; 
     

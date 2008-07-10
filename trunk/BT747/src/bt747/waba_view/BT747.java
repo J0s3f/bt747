@@ -226,6 +226,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle(Txt.S_TITLE); 
         waba.sys.Settings.setUIStyle(waba.sys.Settings.Flat);
+        c.setBinDecoder(0);  // Using the original decoder only in this interface
     }
 
     private int numPanels;

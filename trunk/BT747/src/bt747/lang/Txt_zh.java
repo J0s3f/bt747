@@ -157,7 +157,7 @@ public class Txt_zh {
     "RCR", // = 0x20000 // 11
     "MILISECOND",//= 0x40000 // 12
     "\u8DDD\u79BB", // = 0x80000 // 13
-    "HOLUX M-241" // =0x80000000
+    "VALID PTS ONLY" // =0x80000000
     };
     public static final String C_BAD_LOG_FORMAT = "\u574F\u65E5\u5FD7\u683C\u5F0F";
 

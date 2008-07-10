@@ -104,9 +104,9 @@ public class GPSLogFormat extends Container {
             }
             bitMask<<=1;
         }
-        // Special case : low precision
+        // Special case : valid fix only
         if(chkLogFmtItems[C_LOG_FMT_COUNT-1].getChecked()) {
-            logFormat|=(1<<BT747Constants.FMT_HOLUX_LOW_PRECISION_IDX);
+            logFormat|=(1<<BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX);
         }
         return logFormat;
     }
@@ -126,7 +126,7 @@ public class GPSLogFormat extends Container {
             bitMask<<=1;
         }
         chkLogFmtItems[C_LOG_FMT_COUNT-1]
-                       .setChecked((p_logFormat&(1<<BT747Constants.FMT_HOLUX_LOW_PRECISION_IDX))!=0);
+                       .setChecked((p_logFormat&(1<<BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX))!=0);
         setLogFormatControls();
     }
 
