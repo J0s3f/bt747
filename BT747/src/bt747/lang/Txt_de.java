@@ -151,7 +151,7 @@ public class Txt_de {
         "RCR",      // = 0x20000    // 11
         "MILISEK.",// = 0x40000   // 12
         "ENTFERNUNG",  // = 0x80000    // 13
-        "VALID PTS ONLY" // =0x80000000
+        "NÜR GLTGE DATEI" // =0x80000000
     };
     public static final String C_BAD_LOG_FORMAT = "Falsches Log-Format";
 
@@ -375,22 +375,22 @@ public class Txt_de {
     public static final String ADD_RECORD_NUMBER =
         "Rekord-Nummer im Log";
     
-    public static final String S_DEBUG_CONN= "Debug conn.";
-    public static final String S_IMPERIAL= "Imperial Units";
+    public static final String S_DEBUG_CONN= "Debug Verbindung";
+    public static final String S_IMPERIAL= "Britische Einheiten";
     public static final String BAD_SUPERWABAVERSION =
-        "This application was built for|SuperWaba V" +
+        "Diese Anwendung wurde erstellt|für SuperWaba V" +
         Settings.requiredVersionStr + "."
-        +"|This version is V"+Settings.versionStr+"."
-        +"|Exiting application";
+        +"|Diese Version ist V"+Settings.versionStr+"."
+        +"|bt747 beenden";
 
-    public static final String S_DEVICE = "Device";
-    public static final String S_DEFAULTDEVICE = "Default Device";
-    public static final String S_GISTEQTYPE1 = "Gisteq Type 1";
-    public static final String S_GISTEQTYPE2 = "Gisteq Type 2";
+    public static final String S_DEVICE = "Gerät";
+    public static final String S_DEFAULTDEVICE = "Vorgegeb. Gerät";
+    public static final String S_GISTEQTYPE1 = "Gisteq Typ 1";
+    public static final String S_GISTEQTYPE2 = "Gisteq Typ 2";
     public static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII";
     
 
     public static final String BT_MAC_ADDR = "BT Mac Addr:";
 
-    public static final String S_OUTPUT_LOGCONDITIONS = "Output log conditions";
+    public static final String S_OUTPUT_LOGCONDITIONS = "Bed. für Log-Ausgabe";
 }
