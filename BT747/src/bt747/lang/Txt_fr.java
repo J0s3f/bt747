@@ -173,7 +173,7 @@ public class Txt_fr {
         "RAISON",      // = 0x20000    // 11
         "MILLISECONDE",// = 0x40000   // 12
         "DISTANCE",  // = 0x80000    // 13
-        "HOLUX M-241" // =0x80000000
+        "POINT VALIDES" // =0x80000000
     };
     public static final String C_BAD_LOG_FORMAT = "Mauvais format log";
     

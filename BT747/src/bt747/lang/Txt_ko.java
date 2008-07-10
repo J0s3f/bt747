@@ -148,7 +148,7 @@ public class Txt_ko {
         "RCR",      // = 0x20000    // 11
         "MILISECOND",// = 0x40000   // 12
         "DISTANCE",  // = 0x80000    // 13
-        "HOLUX M-241" // =0x80000000
+        "VALID PTS ONLY" // =0x80000000
     };
     public static final String C_BAD_LOG_FORMAT = "\uBE44\uC815\uC0C1\uC801\uC778 \uB85C\uADF8";
     

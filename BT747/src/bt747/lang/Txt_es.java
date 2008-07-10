@@ -167,7 +167,7 @@ public class Txt_es {
         "RCR",      // = 0x20000    // 11
         "MILISEGUNDOS",// = 0x40000   // 12
         "DISTANCIA",  // = 0x80000    // 13
-        "HOLUX M-241" // =0x80000000
+        "VALID PTS ONLY" // =0x80000000
     };
     public static final String C_BAD_LOG_FORMAT = "Formato log incorrecto";
     

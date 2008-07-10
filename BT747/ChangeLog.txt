@@ -1,3 +1,11 @@
+Version 1.50
+* A user was using the 'new', buggy parser by unfortunate coincidence.
+  Now forcing the 'standard' parser on SuperWaba interface regardless of previous
+  setting that could have been changed in the J2SE interface.
+* The format bit that said 'Holux M-241' is actually indicating that only valid log points
+  should be logged - changed the description.
+* RXTX binaries went missing from the delivery (since >1.43?) - fixed.
+
 Version 1.49
 * Fix of the 'bt747_maxosX.command' script
 * Log conditions written to CSV output format (when requested in menu)
