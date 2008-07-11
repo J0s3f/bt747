@@ -28,7 +28,7 @@ import bt747.ui.MessageBox;
  */
 public class GPSWabaSocketPort extends GPSPort {
     private waba.io.Socket sp = null;
-    private String MacAddr = "00:0B:0D:87:E7:CA"; //  "btssp://000B0D87E7CA";
+    private String MacAddr = "btspp://000B0D87E7CA"; //"00:0B:0D:87:E7:CA"; //  "btspp://000B0D87E7CA";
 
     private boolean portIsOK = false;
 
