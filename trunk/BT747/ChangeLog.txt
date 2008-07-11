@@ -1,7 +1,10 @@
+Version 1.52
+* Corrected another problem regarding connection.
+* Work on symbian target
+
 Version 1.51
 * Build was not correct for making the connection (result of refactoring).
   Corrected the build script.
-
 
 Version 1.50
 * A user was using the 'new', buggy parser by unfortunate coincidence.

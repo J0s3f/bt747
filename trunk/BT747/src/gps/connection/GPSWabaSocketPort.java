@@ -28,7 +28,7 @@ import bt747.ui.MessageBox;
  */
 public class GPSWabaSocketPort extends GPSPort {
     private waba.io.Socket sp = null;
-    private String MacAddr = "00:0B:0D:87:E7:CA";
+    private String MacAddr = "btssp://000B0D87E7CA";
 
     private boolean portIsOK = false;
 
@@ -65,6 +65,8 @@ public class GPSWabaSocketPort extends GPSPort {
         try {
             sp = new waba.io.Socket(MacAddr, 1);
             result = sp.lastError;
+            new MessageBox("waba.io.Socket open",
+            "Result:"+result).popupBlockingModal();
             portIsOK = sp.isOpen();
             if (portIsOK) {
                 // Read time out gives problems on windows: data is skipped!!!O
