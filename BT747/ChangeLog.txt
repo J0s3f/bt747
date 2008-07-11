@@ -1,5 +1,6 @@
 Version 1.51
-* Build was not correct for making the connection after the refactoring.
+* Build was not correct for making the connection (result of refactoring).
+  Corrected the build script.
 
 
 Version 1.50
