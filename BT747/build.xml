@@ -570,32 +570,27 @@
 		</copy>
 	</target>
 
-	<target name="symbianbuild" depends="updatedate">
+	<target name="symbianbuild" depends="build.lib.forwaba">
 
 		<mkdir dir="${symbianbuild.dir}" />
 		<delete dir="${symbiansrc.dir}" />
 		<mkdir dir="${symbiansrc.dir}" />
 
+        <copy_src srcid="waba_only_sources" libid="waba_lib" dest.dir="${symbiansrc.dir}" />
+
 		<copy todir="${symbiansrc.dir}">
 			<fileset dir="src">
-				<include name="**/*.java" />
-				<exclude name="bt747/j2se_view/*" unless="build.j2se" />
-				<exclude name="bt747/j2me_view/*" unless="build.j2me" />
-				<exclude name="gps/connection/GPSWabaPort.java" />
-				<exclude name="gps/connection/GPSFilePort.java" />
-				<exclude name="gps/connection/GPSRxTxPort.java" />
-			</fileset>
-			<fileset dir="src_forwaba">
-				<include name="**/*.java" />
+				<include name="gps/connection/GPSWabaSocketPort.java" />
 			</fileset>
 		</copy>
 		<replace file="${symbiansrc.dir}/gps/connection/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSWabaSocketPort" />
 
-		<javac srcdir="${symbiansrc.dir}" destdir="${symbianbuild.dir}" target="1.1" optimize="true" classpathref="symbianclasspath">
-			<include name="**/*.java" />
-			<exclude name="gps/model/*" />
-			<exclude name="gps/parser/*" unless="use.newparser" />
-		</javac>
+        <delete dir="${symbiansrc.dir}/gps/parser">
+        </delete>
+        <javac srcdir="${symbiansrc.dir}" destdir="${symbianbuild.dir}" target="1.1" source="1.2" optimize="true" deprecation="true">
+            <include name="**/*.java" />
+            <classpath refid="classpath" />
+        </javac>
 		<copy todir="${symbianbuild.dir}">
 			<fileset dir="src">
 				<exclude name="**/*.java" />
@@ -728,11 +723,29 @@
 		<jar jarfile="${symbianbuild.dir}/${ant.project.name}_symbian.jar" compress="true">
 			<fileset dir="${symbianbuild.dir}" includes="**/*.class" />
 		</jar>
-		<copy todir="${dist}">
-			<fileset dir="${symbianbuild.dir}">
-				<include name="**/*.jar" />
-			</fileset>
-		</copy>
+        <taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
+        <move file="${symbianbuild.dir}/${ant.project.name}_symbian.jar" tofile="${symbianbuild.dir}/${ant.project.name}_symbian_unopt.jar" />
+        <proguard shrink="true" defaultpackage="" optimize="true" obfuscate="true" allowaccessmodification="true" flattenpackagehierarchy="" repackageclasses="" printusage="false" overloadaggressively="true" verbose="true" ignorewarnings="true"  printmapping="${dist}/${ant.project.name}_symbian.mapping">
+            <keep name="${mainClass}" />
+
+            <!-- to check if methods are Waba compatible -->
+            <libraryjar file="${wabalang.jar}" />
+
+            <!--
+            <libraryjar file="${java.home}/lib/rt.jar" />
+            -->
+            <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+            <injar path="${symbianbuild.dir}/${ant.project.name}_symbian_unopt.jar" />
+            <injar path="${swcollections.jar}" />
+            <outjar path="${symbianbuild.dir}/${ant.project.name}_symbian.jar" />
+            <keep name="gps.parser.*" />
+            <keep name="gps.connection.*" />
+        </proguard>
+        <copy todir="${dist}">
+            <fileset dir="${symbianbuild.dir}">
+                <include name="**/*.jar" />
+            </fileset>
+        </copy>
 		<antcall target="sign">
 			<param name="jar.tosign" value="${dist}/${ant.project.name}_symbian.jar" />
 		</antcall>
@@ -793,6 +806,7 @@
 
 	</target>
 
+
 	<target name="proguard" depends="proguard_task,proguard_java">
 	</target>
 
@@ -827,6 +841,10 @@
 			<arg value="GPSFilePort" />
 			<arg value="/c" />
 			<arg value="BT74" />
+			<!--
+            <arg value="/v" />
+            <arg value="${build_version}" />
+            -->
 			<arg value="${ant.project.name}" />
 			<arg value="${ant.project.name}_symbian.jar" />
 		</java>

@@ -56,7 +56,7 @@ public class GPSrxtx {
         } else {
             try {
                 // gpsPort=new GPSRxTxPort();
-                gpsPort = (GPSPort) Class.forName("gps.port.GPSRxTxPort")
+                gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
                         .newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
