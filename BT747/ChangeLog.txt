@@ -1,3 +1,7 @@
+Version 1.51
+* Build was not correct for making the connection after the refactoring.
+
+
 Version 1.50
 * A user was using the 'new', buggy parser by unfortunate coincidence.
   Now forcing the 'standard' parser on SuperWaba interface regardless of previous

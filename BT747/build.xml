@@ -589,7 +589,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-		<replace file="${symbiansrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSWabaSocketPort" />
+		<replace file="${symbiansrc.dir}/gps/connection/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSWabaSocketPort" />
 
 		<javac srcdir="${symbiansrc.dir}" destdir="${symbianbuild.dir}" target="1.1" optimize="true" classpathref="symbianclasspath">
 			<include name="**/*.java" />
@@ -621,7 +621,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-		<replace file="${filesrc.dir}/gps/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSFilePort" />
+		<replace file="${filesrc.dir}/gps/connection/GPSrxtx.java" encoding="${encoding}" token="GPSWabaPort" summary="yes" value="GPSFilePort" />
 		<replace file="${filesrc.dir}/bt747/model/AppSettings.java" encoding="${encoding}" token="//#if RXTX" summary="yes" value="" />
 
 		<javac srcdir="${filesrc.dir}" destdir="${filebuild.dir}" source="1.3" target="1.1" optimize="true" classpathref="classpath">
@@ -1293,7 +1293,7 @@
 
 
 			<replace dir="@{dest.dir}" token="GPSWabaPort" summary="yes" value="GPSRxTxPort">
-				<include name="${@{dest.dir}rxtxfilter}gps/GPSrxtx.java" />
+				<include name="${@{dest.dir}rxtxfilter}gps/connection/GPSrxtx.java" />
 			</replace>
 			<!-- <echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" /> -->
 			<replace dir="@{dest.dir}" token="//#if RXTX" summary="yes" value="">
