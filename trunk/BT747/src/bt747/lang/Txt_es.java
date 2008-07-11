@@ -167,7 +167,7 @@ public class Txt_es {
         "RCR",      // = 0x20000    // 11
         "MILISEGUNDOS",// = 0x40000   // 12
         "DISTANCIA",  // = 0x80000    // 13
-        "VALID PTS ONLY" // =0x80000000
+        "SOLO LOG FIJADOS" // =0x80000000
     };
     public static final String C_BAD_LOG_FORMAT = "Formato log incorrecto";
     
@@ -397,20 +397,18 @@ public class Txt_es {
     public static final String ADD_RECORD_NUMBER =
         "Info núm en el log";
 
-    public static final String S_DEBUG_CONN= "Debug conn.";
-    public static final String S_IMPERIAL= "Imperial Units";
-    public static final String BAD_SUPERWABAVERSION =
-        "This application was built for|SuperWaba V" +
-        Settings.requiredVersionStr + "."
-        +"|This version is V"+Settings.versionStr+"."
-        +"|Exiting application";
-
-    public static final String S_DEVICE = "Device";
-    public static final String S_DEFAULTDEVICE = "Default Device";
-    public static final String S_GISTEQTYPE1 = "iTrackU-Nemerix";
-    public static final String S_GISTEQTYPE2 = "iTrackU-PhotoTrackr";
-    public static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII";
-    
-    public static final String BT_MAC_ADDR = "BT Mac Addr:";
-    public static final String S_OUTPUT_LOGCONDITIONS = "Output log conditions";
+    public static final String S_DEBUG_CONN= "Depurar conn.";
+    public static final String S_IMPERIAL= "Unid Imperiales"; 
+    public static final String BAD_SUPERWABAVERSION = 
+    "Esta aplicación se creó para|SuperWaba V" + 
+    Settings.requiredVersionStr + "." 
+    +    "|Esta es la versión V"+Settings.versionStr+"." 
+    +    "|Cerrando aplicación"; 
+    public static final String S_DEVICE = "Dispositivo"; 
+    public static final String S_DEFAULTDEVICE = "Disp. por defecto"; //"Dispositivo por defecto";                        (you can also use "") 
+    public static final String S_GISTEQTYPE1 = "iTrackU-Nemerix"; 
+    public static final String S_GISTEQTYPE2 = "iTrackU-PhotoTrackr"; 
+    public static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII"; 
+    public static final String BT_MAC_ADDR = "Dirección Mac BT:"; //     (you can also use "Direc. Mac BT") 
+    public static final String S_OUTPUT_LOGCONDITIONS = "Cond. del log de salida"; // //"Condiciones del log de salida";                         (you can also use ) 
 }

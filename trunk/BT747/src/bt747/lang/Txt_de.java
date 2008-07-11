@@ -151,7 +151,7 @@ public class Txt_de {
         "RCR",      // = 0x20000    // 11
         "MILISEK.",// = 0x40000   // 12
         "ENTFERNUNG",  // = 0x80000    // 13
-        "NÜR GLTGE DATEI" // =0x80000000
+        "NÜR GLTG DATEI" // =0x80000000
     };
     public static final String C_BAD_LOG_FORMAT = "Falsches Log-Format";
 

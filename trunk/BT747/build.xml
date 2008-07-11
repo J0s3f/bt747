@@ -200,12 +200,12 @@
 
 			<echo message="EXTRALIB: ${@{suffix}extralib_opt}" />
 			<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
-			<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="false" allowaccessmodification="yes" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true" optimizationpasses="4">
+			<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="false" allowaccessmodification="yes" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
 				<libraryjar file="${java.home}/lib/rt.jar" />
 				<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 				<injar path="${rxtxbuild.dir}/${ant.project.name}@{suffix}_tmp.jar" />
 				<outjar path="${dist}/${ant.project.name}@{suffix}.jar" />
-	                -optimizationpasses 4
+	                -optimizationpasses 1
 			        ${@{suffix}extralib_opt}
 	                -injar ${swcollections.jar}(!META-INF/**)
 	                -printmapping ${dist}/${ant.project.name}@{suffix}.map
@@ -245,12 +245,12 @@
             -allowaccessmodification
         -->
 		<taskdef name="proguard" classpath="${proguardLib}" classname="proguard.ant.ProGuardTask" />
-		<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="false" allowaccessmodification="yes" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true" optimizationpasses="4">
+		<proguard shrink="true" defaultpackage="" optimize="true" obfuscate="false" allowaccessmodification="yes" flattenpackagehierarchy="" repackageclasses="false" printusage="false" overloadaggressively="false" verbose="true" ignorewarnings="true">
 			<libraryjar file="${java.home}/lib/rt.jar" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${tmp_suffix}.jar" />
 			<outjar path="${dist}/${ant.project.name}${j2se_suffix}.jar" />
-                -optimizationpasses 4
+                -optimizationpasses 1
                 -injar ${waba_forj2se.jar}(!META-INF/**)
                 -injar ${swcollections.jar}(!META-INF/**)
 			    -injar ${jcalendar.jar}(!META-INF/**)
@@ -336,7 +336,7 @@
 			<libraryjar file="${java.home}/lib/rt.jar" />
 			<injar path="" filter="" />
 			<outjar path="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar" />
-                  -optimizationpasses 2
+                  -optimizationpasses 1
           	      -injar ${rxtxbuild.dir}/lib${ant.project.name}${suffix}_unopt.jar(!bt747/waba_view/**,!BT747.class) 
                   -injar ${waba_forj2se.jar}(!META-INF/**)
                   -keep public class * implements gps.log.in.GPSLogConvert  { *; }
