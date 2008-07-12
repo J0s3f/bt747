@@ -22,14 +22,13 @@ package bt747.model;
 import bt747.ui.Event;
 
 /**
- * Defines some events for the gps package
+ * Defines some events for the gps package.
  * 
  * @author Mario De Weerd
  */
 public class ModelEvent extends Event {
     public static final int CONVERSION_STARTED = getNextAvailableEventId();
     public static final int CONVERSION_ENDED = getNextAvailableEventId();
-    //public static final int DOWNLOAD_PROGRESS_UPDATE = getNextAvailableEventId();
     public static final int WORKDIRPATH_UPDATE = getNextAvailableEventId();
     public static final int OUTPUTFILEPATH_UPDATE = getNextAvailableEventId();
     public static final int LOGFILEPATH_UPDATE = getNextAvailableEventId();
@@ -41,7 +40,7 @@ public class ModelEvent extends Event {
     public static final int CONNECTED   = getNextAvailableEventId();
     public static final int DISCONNECTED   = getNextAvailableEventId();
 
-    public ModelEvent(int type, Object target, int timeStamp) {
+    public ModelEvent(final int type, final Object target, final int timeStamp) {
         super(type, target, timeStamp);
     }
 

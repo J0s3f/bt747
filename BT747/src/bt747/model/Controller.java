@@ -33,14 +33,12 @@ import bt747.ui.MessageBox;
  */
 public class Controller {
 
-    Model m;
+    private Model m;
 
-    public Controller(Model m) {
+    public Controller(final Model m) {
         this.m = m;
         init();
-        
     }
-   
 
     private void init() {
         getLogFilterSettings();
@@ -48,7 +46,6 @@ public class Controller {
         m.gpsModel().setDownloadTimeOut(m.getDownloadTimeOut());
         m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
 
-        
         int port = m.getPortnbr();
         if (port != 0x5555) {
             // TODO: review this, especially with 'freetext port'
@@ -63,48 +60,48 @@ public class Controller {
      * @param on
      *            True when Imperial units are to be used where possible
      */
-    public final void setImperial(boolean on) {
+    public final void setImperial(final boolean on) {
         m.setImperial(on);
         m.saveSettings();
     }
 
-    public final void setOutputLogConditions(boolean on) {
+    public final void setOutputLogConditions(final boolean on) {
         m.setOutputLogConditions(on);
         m.saveSettings();
     }
 
-    public final void setBaseDirPath(String s) {
+    public final void setBaseDirPath(final String s) {
         m.setBaseDirPath(s);
         m.saveSettings();
     }
 
-    public final void setLogFilePath(String s) {
+    public final void setLogFilePath(final String s) {
         m.setLogFile(s);
         m.saveSettings();
     }
 
-    public final void setOutputFileBasePath(String s) {
+    public final void setOutputFileBasePath(final String s) {
         m.setReportFileBase(s);
         m.saveSettings();
     }
 
-    public final void setChunkSize(int i) {
+    public final void setChunkSize(final int i) {
         m.setChunkSize(i);
         m.saveSettings();
     }
 
-    public final void setDownloadTimeOut(int i) {
+    public final void setDownloadTimeOut(final int i) {
         m.setDownloadTimeOut(i);
         m.gpsModel().setDownloadTimeOut(i);
         m.saveSettings();
     }
 
-    public final void setCard(int i) {
+    public final void setCard(final int i) {
         m.setCard(i);
         m.saveSettings();
     }
 
-    public final void setLogRequestAhead(int i) {
+    public final void setLogRequestAhead(final int i) {
         m.setLogRequestAhead(i);
         m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
         m.saveSettings();
@@ -125,7 +122,10 @@ public class Controller {
         } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
             lc = new DPL700LogConvert();
             /// TODO: set SR Log type correctly.
-            ((DPL700LogConvert)lc).setLogType(m.getGPSType()==GPS_TYPE_GISTEQ2?0:1);
+            ((DPL700LogConvert)lc).setLogType(
+                    m.getGPSType() == GPS_TYPE_GISTEQ2
+                    ? 0 : 1
+                            );
         } else {
             switch (m.getBinDecoder()) {
             case DECODER_THOMAS:
@@ -157,6 +157,7 @@ public class Controller {
         lc.setNoGeoid(m.getNoGeoid());
 
         switch (log_type) {
+        default:
         case Model.C_CSV_LOG:
             gpsFile = new GPSCSVFile();
             ext = ".csv";
@@ -215,8 +216,8 @@ public class Controller {
                     m.getFileSeparationFreq());
             gpsFile.setTrackSepTime(m.getTrkSep() * 60);
             int error;
-            error=lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
-            reportError(error,lc.getErrorInfo());
+            error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+            reportError(error, lc.getErrorInfo());
         } else {
             // TODO report error
         }
@@ -237,7 +238,9 @@ public class Controller {
         } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
             lc = new DPL700LogConvert();
             /// TODO: set SR Log type correctly.
-            ((DPL700LogConvert)lc).setLogType(m.getGPSType()==GPS_TYPE_GISTEQ2?0:1);
+            ((DPL700LogConvert)lc).setLogType(
+                    m.getGPSType() == GPS_TYPE_GISTEQ2
+                    ? 0 : 1);
         } else {
             switch (m.getBinDecoder()) {
             case DECODER_THOMAS:
@@ -290,17 +293,17 @@ public class Controller {
 //                    m.getFileSeparationFreq());
 //            gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         int error;
-        error=lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
-        reportError(error,lc.getErrorInfo());
+        error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+        reportError(error, lc.getErrorInfo());
 //        m.logConversionEnded(log_type);
         return gpsFile.getGpsTrackPoints();
     }
     
-    private void reportError(int error, String errorInfo) {
+    private void reportError(final int error, final String errorInfo) {
         String errorMsg;
         switch (error) {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
-            errorMsg=Txt.COULD_NOT_OPEN + errorInfo;
+            errorMsg = Txt.COULD_NOT_OPEN + errorInfo;
             bt747.sys.Vm.debug(errorMsg);
             new MessageBox(Txt.ERROR, errorMsg).popupBlockingModal();
             break;
@@ -319,19 +322,21 @@ public class Controller {
     }
 
     
-    public final void setIncremental(boolean b) {
+    public final void setIncremental(final boolean b) {
         m.setIncremental(b);
     }
 
-    /**
-     * Log download cancel
+    /** Cancel the log download process.
      */
     public final void cancelGetLog() {
         m.gpsModel().cancelGetLog();
     }
 
+    /** Start the log download process.
+     */
     public final void startDownload() {
         switch(m.getGPSType()) {
+        default:
         case GPS_TYPE_DEFAULT:
             startDefaultDownload();
             break;
@@ -342,6 +347,9 @@ public class Controller {
             break;
         }
     }
+    /** Start the default log download process without taking into
+     * account the device type. 
+     */
     public final void startDefaultDownload() {
         try {
             m.gpsModel().getLogInit(0, /* StartPosition */
@@ -355,26 +363,13 @@ public class Controller {
         }
     }
 
-    public final void startFullDownload() {
-        try {
-            m.gpsModel().getLogInit(0, /* StartPosition */
-            m.gpsModel().logMemSize - 1, /* EndPosition */
-            m.getChunkSize(), /* Size per request */
-            m.getLogFilePath(), /* Log file name */
-            m.getCard(), /* Card for file operations */
-            m.isIncremental() /* Incremental download */);
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-    }
-
     /** The GpsModel is waiting for a reply to the question if the currently
      * existing log with different data can be overwritten.
-     * This method must be called to replay to this question which is in principle
-     * the result of a user reply to a message box.
+     * This method must be called to replay to this question which is in
+     * principle the result of a user reply to a message box.
      * @param isOkToOverwrite  If true, the existing log can be overwritten
      */
-    public final void replyToOkToOverwrite(boolean isOkToOverwrite) {
+    public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
         m.gpsModel().replyToOkToOverwrite(isOkToOverwrite);
     }
     
@@ -392,29 +387,38 @@ public class Controller {
         m.gpsModel().getDPL700Log(m.getLogFilePath(), m.getCard());
     }
     
-    public final void setGPSType(int i) {
+    public final void setGPSType(final int i) {
         m.setGPSType(i);
     }
-    public final static int GPS_TYPE_DEFAULT = 0; 
-    public final static int GPS_TYPE_GISTEQ1 = 1; 
-    public final static int GPS_TYPE_GISTEQ2 = 2; 
-    public final static int GPS_TYPE_GISTEQ3 = 3; 
+    public static final int GPS_TYPE_DEFAULT = 0; 
+    public static final int GPS_TYPE_GISTEQ1 = 1; 
+    public static final int GPS_TYPE_GISTEQ2 = 2; 
+    public static final int GPS_TYPE_GISTEQ3 = 3; 
 
     /***************************************************************************
      * Device state
      **************************************************************************/
 
+    /** Activate logging on the device.
+     */
     public final void startLog() {
         m.gpsModel().startLog();
         m.gpsModel().reqLogOnOffStatus();
     }
 
+    /** Stop logging on the device.
+     */
     public final void stopLog() {
         m.gpsModel().stopLog();
         m.gpsModel().reqLogOnOffStatus();
     };
 
-    public final void setLogOverwrite(boolean b) {
+    /** Set log overwrite mode on the device
+     * @param b
+     *     true - overwrite data in device when full
+     *     false - stop logging when device is full
+     */
+    public final void setLogOverwrite(final boolean b) {
         m.gpsModel().setLogOverwrite(b);
         m.gpsModel().reqLogOverwrite();
     };
@@ -457,28 +461,28 @@ public class Controller {
     }
 
     /** Options for the first warning message */
-    private static final String[] C_EraseOrCancel = { Txt.ERASE, Txt.CANCEL };
+    private static final String[] C_ERASE_OR_CANCEL = { Txt.ERASE, Txt.CANCEL };
     /** Options for the first warning message */
-    private static final String[] C_YesrCancel = { Txt.YES, Txt.CANCEL };
+    private static final String[] C_YES_OR_CANCEL = { Txt.YES, Txt.CANCEL };
     /** Options for the second warning message - reverse order on purpose */
-    private static final String[] C_CancelConfirmErase = { Txt.CANCEL,
+    private static final String[] C_CANCEL_OR_CONFIRM_ERASE = { Txt.CANCEL,
             Txt.CONFIRM_ERASE };
 
     /**
      * (User) request to change the log format. Warns about requirement to erase
      * the log too.
      */
-    public void changeLogFormatAndErase(int logFormat) {
+    public void changeLogFormatAndErase(final int logFormat) {
         /** Object to open multiple message boxes */
-        MessageBox m_mb;
-        m_mb = new MessageBox(Txt.TITLE_ATTENTION,
-                Txt.C_msgWarningFormatAndErase, C_EraseOrCancel);
-        m_mb.popupBlockingModal();
-        if (m_mb.getPressedButtonIndex() == 0) {
-            m_mb = new MessageBox(Txt.TITLE_ATTENTION,
-                    Txt.C_msgWarningFormatAndErase2, C_CancelConfirmErase);
-            m_mb.popupBlockingModal();
-            if (m_mb.getPressedButtonIndex() == 1) {
+        MessageBox mb;
+        mb = new MessageBox(Txt.TITLE_ATTENTION,
+                Txt.C_msgWarningFormatAndErase, C_ERASE_OR_CANCEL);
+        mb.popupBlockingModal();
+        if (mb.getPressedButtonIndex() == 0) {
+            mb = new MessageBox(Txt.TITLE_ATTENTION,
+                    Txt.C_msgWarningFormatAndErase2, C_CANCEL_OR_CONFIRM_ERASE);
+            mb.popupBlockingModal();
+            if (mb.getPressedButtonIndex() == 1) {
                 // Set format and reset log
                 setLogFormat(logFormat);
                 eraseLog();
@@ -490,13 +494,13 @@ public class Controller {
      * (User) request to change the log format. The log is not erased and may be
      * incompatible with other applications
      */
-    public void changeLogFormat(int logFormat) {
+    public final void changeLogFormat(final int logFormat) {
         /** Object to open multiple message boxes */
-        MessageBox m_mb;
-        m_mb = new MessageBox(true, Txt.TITLE_ATTENTION,
-                Txt.C_msgWarningFormatIncompatibilityRisk, C_YesrCancel);
-        m_mb.popupBlockingModal();
-        if (m_mb.getPressedButtonIndex() == 0) {
+        MessageBox mb;
+        mb = new MessageBox(true, Txt.TITLE_ATTENTION,
+                Txt.C_msgWarningFormatIncompatibilityRisk, C_YES_OR_CANCEL);
+        mb.popupBlockingModal();
+        if (mb.getPressedButtonIndex() == 0) {
             setLogFormat(logFormat);
         }
     }
@@ -505,34 +509,34 @@ public class Controller {
      * (User) request to change the log format. Warns about requirement to erase
      * the log too.
      */
-    public void eraseLogFormat() {
+    public final void eraseLogFormat() {
         /** Object to open multiple message boxes */
-        MessageBox m_mb;
-        m_mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
-                C_EraseOrCancel);
-        m_mb.popupBlockingModal();
-        if (m_mb.getPressedButtonIndex() == 0) {
-            m_mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
-                    C_CancelConfirmErase);
-            m_mb.popupBlockingModal();
-            if (m_mb.getPressedButtonIndex() == 1) {
+        MessageBox mb;
+        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
+                C_ERASE_OR_CANCEL);
+        mb.popupBlockingModal();
+        if (mb.getPressedButtonIndex() == 0) {
+            mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
+                    C_CANCEL_OR_CONFIRM_ERASE);
+            mb.popupBlockingModal();
+            if (mb.getPressedButtonIndex() == 1) {
                 // Erase log
                 eraseLog();
             }
         }
     }
 
-    public void forceErase() {
+    public final void forceErase() {
         /** Object to open multiple message boxes */
-        MessageBox m_mb;
-        m_mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
-                C_EraseOrCancel);
-        m_mb.popupBlockingModal();
-        if (m_mb.getPressedButtonIndex() == 0) {
-            m_mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
-                    C_CancelConfirmErase);
-            m_mb.popupBlockingModal();
-            if (m_mb.getPressedButtonIndex() == 1) {
+        MessageBox mb;
+        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
+                C_ERASE_OR_CANCEL);
+        mb.popupBlockingModal();
+        if (mb.getPressedButtonIndex() == 0) {
+            mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
+                    C_CANCEL_OR_CONFIRM_ERASE);
+            mb.popupBlockingModal();
+            if (mb.getPressedButtonIndex() == 1) {
                 // Erase log
                 m.gpsModel().recoveryEraseLog();
             }
@@ -543,7 +547,7 @@ public class Controller {
      * SECTION FOR CONNECTION RELATED METHODS
      * ***********************************************************/ 
 
-    public void connectGPS() {
+    public final void connectGPS() {
         closeGPS();
         m.gpsRxTx().openPort();
         if (m.gpsRxTx().isConnected()) {
@@ -552,10 +556,9 @@ public class Controller {
     }
 
 
-    /**
-     * Close the GPS connection
+    /** Close the GPS connection.
      */
-    public void closeGPS() {
+    public final void closeGPS() {
         if (m.gpsRxTx().isConnected()) {
             m.gpsRxTx().closePort();
             // TODO Move event posting to appropriate place (in model)
@@ -568,7 +571,7 @@ public class Controller {
      * from the device. Set up the timer to regurarly poll the connection for
      * data.
      */
-    public void setBluetooth() {
+    public final void setBluetooth() {
         closeGPS();
         m.gpsRxTx().setBluetoothAndOpen();
         performOperationsAfterGPSConnect();
@@ -578,7 +581,7 @@ public class Controller {
      * open a Usb connection Calls getStatus to request initial parameters from
      * the device. Set up the timer to regurarly poll the connection for data.
      */
-    public void setUsb() {
+    public final void setUsb() {
         closeGPS();
         m.gpsRxTx().setUSBAndOpen();
         performOperationsAfterGPSConnect();
@@ -628,7 +631,7 @@ public class Controller {
     }
 
 
-    public void setDebugConn(final boolean dbg) {
+    public final void setDebugConn(final boolean dbg) {
         m.gpsRxTx().setDebugConn(dbg, m.getBaseDirPath());
     }
     
@@ -637,15 +640,15 @@ public class Controller {
      * ***********************************************************/ 
     
     
-    public final void setDebug(boolean b) {
+    public final void setDebug(final boolean b) {
         m.gpsModel().setDebug(b);
     }
 
-    public void addGPSListener(GPSListener l) {
+    public final void addGPSListener(GPSListener l) {
         m.gpsModel().addListener(l);
     }
 
-    public void removeGPSListener(GPSListener l) {
+    public final void removeGPSListener(GPSListener l) {
         m.gpsModel().removeListener(l);
     }
 
@@ -656,177 +659,185 @@ public class Controller {
         m.setBinDecoder(decoder_idx);
     }
 
-    public void saveSettings() {
-        m.saveSettings(); // Explicitally save settings
+    public final void saveSettings() {
+        m.saveSettings(); // Explicitly save settings
     }
 
-    public void setTrkPtRCR(int i) {
+    public final void setTrkPtRCR(final int i) {
         m.setTrkPtRCR(i);
         getLogFilterSettings();
     }
 
-    public void setWayPtRCR(int i) {
+    public final void setWayPtRCR(final int i) {
         m.setWayPtRCR(i);
         getLogFilterSettings();
     }
 
-    public void setTrkPtValid(int i) {
+    public final void setTrkPtValid(final int i) {
         m.setTrkPtValid(i);
         getLogFilterSettings();
     }
 
-    public void setWayPtValid(int i) {
+    public final void setWayPtValid(final int i) {
         m.setWayPtValid(i);
         getLogFilterSettings();
     }
 
     // The way logfilter are handle should be reviewed.
-    private void getSettings(GPSFilter[] logFilters) {
+    private final void getSettings(GPSFilter[] logFilters) {
         logFilters[GPSFilter.C_TRKPT_IDX].setRcrMask(m.getTrkPtRCR());
         logFilters[GPSFilter.C_TRKPT_IDX].setValidMask(m.getTrkPtValid());
         logFilters[GPSFilter.C_WAYPT_IDX].setRcrMask(m.getWayPtRCR());
         logFilters[GPSFilter.C_WAYPT_IDX].setValidMask(m.getWayPtValid());
     };
 
-    private void getLogFilterSettings() {
+    private final void getLogFilterSettings() {
         getSettings(m.getLogFilters());
         getSettings(m.getLogFiltersAdv());
     }
 
-    public void setFlashUserOption(final boolean lock, final int updateRate,
-            final int baudRate, final int GLL_Period, final int RMC_Period,
-            final int VTG_Period, final int GSA_Period, final int GSV_Period,
-            final int GGA_Period, final int ZDA_Period, final int MCHN_Period) {
-        m.gpsModel().setFlashUserOption(lock, updateRate, baudRate, GLL_Period,
-                RMC_Period, VTG_Period, GSA_Period, GSV_Period, GGA_Period,
-                ZDA_Period, MCHN_Period);
+    public final void setFlashUserOption(
+            final boolean lock,
+            final int updateRate,
+            final int baudRate,
+            final int periodGLL,
+            final int periodRMC,
+            final int periodVTG,
+            final int periodGSA,
+            final int periodGSV,
+            final int periodGGA,
+            final int periodZDA,
+            final int periodMCHN) {
+        m.gpsModel().setFlashUserOption(lock, updateRate, baudRate, periodGLL,
+                periodRMC, periodVTG, periodGSA, periodGSV, periodGGA,
+                periodZDA, periodMCHN);
         reqFlashUserOption();
     }
 
-    public void reqFlashUserOption() {
+    public final void reqFlashUserOption() {
         m.gpsModel().reqFlashUserOption();
     }
 
-    public void reqHoluxName() {
+    public final void reqHoluxName() {
         m.gpsModel().reqHoluxName();
     }
 
-    public void reqBTAddr() {
+    public final void reqBTAddr() {
         m.gpsModel().reqBT_MAC_ADDR();
     }
 
-    public void setHoluxName(String s) {
+    public final void setHoluxName(final String s) {
         m.gpsModel().setHoluxName(s);
         reqHoluxName();
     }
 
-    public void reqNMEAPeriods() {
+    public final void reqNMEAPeriods() {
         m.gpsModel().reqNMEAPeriods();
     }
 
-    public void setNMEAPeriods(final int periods[]) {
+    public final void setNMEAPeriods(final int periods[]) {
         m.gpsModel().setNMEAPeriods(periods);
         reqNMEAPeriods();
     }
 
-    public void setNMEADefaultPeriods() {
+    public final void setNMEADefaultPeriods() {
         m.gpsModel().setNMEADefaultPeriods();
     }
 
-    public void setSBASTestEnabled(final boolean set) {
+    public final void setSBASTestEnabled(final boolean set) {
         m.gpsModel().setSBASEnabled(set);
         reqSBASTestEnabled();
     }
 
-    public void reqSBASTestEnabled() {
+    public final void reqSBASTestEnabled() {
         m.gpsModel().reqSBASTestEnabled();
     }
 
-    public void setSBASEnabled(final boolean set) {
+    public final void setSBASEnabled(final boolean set) {
         m.gpsModel().setSBASEnabled(set);
         reqSBASEnabled();
     }
 
-    public void reqSBASEnabled() {
+    public final void reqSBASEnabled() {
         m.gpsModel().reqSBASEnabled();
     }
 
-    public void reqDatumMode() {
+    public final void reqDatumMode() {
         m.gpsModel().reqDatumMode();
     }
 
-    public void setDatumMode(final int mode) {
+    public final void setDatumMode(final int mode) {
         m.gpsModel().setDatumMode(mode);
         reqDatumMode();
     }
 
-    public void setDGPSMode(final int mode) {
+    public final void setDGPSMode(final int mode) {
         m.gpsModel().setDGPSMode(mode);
         reqDGPSMode();
     }
 
-    public void reqDGPSMode() {
+    public final void reqDGPSMode() {
         m.gpsModel().reqDGPSMode();
     }
 
-    public void setPowerSaveEnabled(final boolean set) {
+    public final void setPowerSaveEnabled(final boolean set) {
         m.gpsModel().setPowerSaveEnabled(set);
         reqPowerSaveEnabled();
     }
 
-    public void reqPowerSaveEnabled() {
+    public final void reqPowerSaveEnabled() {
         m.gpsModel().reqPowerSaveEnabled();
     }
 
-    public void reqLogReasonStatus() {
+    public final void reqLogReasonStatus() {
         m.gpsModel().reqLogReasonStatus();
     }
 
-    public void reqFixInterval() {
+    public final void reqFixInterval() {
         m.gpsModel().reqFixInterval();
     }
 
-    public void logImmediate(final int value) {
+    public final void logImmediate(final int value) {
         m.gpsModel().logImmediate(value);
     }
 
-    public void setFixInterval(final int value) {
+    public final void setFixInterval(final int value) {
         m.gpsModel().setFixInterval(value);
         reqFixInterval();
     }
 
-    public void setLogTimeInterval(final int value) {
+    public final void setLogTimeInterval(final int value) {
         m.gpsModel().setLogTimeInterval(value);
         // TODO : request time interval
     }
 
-    public void setLogDistanceInterval(final int value) {
+    public final void setLogDistanceInterval(final int value) {
         m.gpsModel().setLogDistanceInterval(value);
         // TODO : request distance interval
     }
 
-    public void setLogSpeedInterval(final int value) {
+    public final void setLogSpeedInterval(final int value) {
         m.gpsModel().setLogSpeedInterval(value);
         // TODO : request speed interval
     }
 
-    public void doHotStart() {
+    public final void doHotStart() {
         m.gpsModel().doHotStart();
     }
 
-    public void doColdStart() {
+    public final void doColdStart() {
         m.gpsModel().doColdStart();
     }
 
-    public void doWarmStart() {
+    public final void doWarmStart() {
         m.gpsModel().doWarmStart();
     }
 
-    public void doFullColdStart() {
+    public final void doFullColdStart() {
         m.gpsModel().doFullColdStart();
     }
 
-    public boolean isEnableStoreOK() {
+    public final boolean isEnableStoreOK() {
         // TODO: This function serves to enable 'save settings'.
         // should do this through an event to the view.
         return m.gpsModel().isDataOK(
@@ -838,49 +849,49 @@ public class Controller {
                         | GPSstate.C_OK_DIST | GPSstate.C_OK_FORMAT));
     }
 
-    public void setStats(boolean b) {
+    public final void setStats(final boolean b) {
         m.gpsModel().setStats(b);
     }
 
-    public void setGpsDecode(boolean value) {
+    public final void setGpsDecode(final boolean value) {
         m.setGpsDecode(value);
         m.gpsModel().setGpsDecode(value);
     }
 
-    public void setForceHolux241(boolean b) {
+    public final void setForceHolux241(final boolean b) {
         m.setForceHolux241(b);
     }
 
-    public void setGpxTrkSegWhenBig(boolean b) {
+    public final void setGpxTrkSegWhenBig(final boolean b) {
         m.setGpxTrkSegWhenBig(b);
     }
 
-    public void setGpxUTC0(boolean b) {
+    public final void setGpxUTC0(final boolean b) {
         m.setGpxUTC0(b);
     }
 
     // For PDA - move through the menus using the arrows.
-    public void setTraversableFocus(boolean b) {
+    public final void setTraversableFocus(final boolean b) {
         m.setTraversableFocus(b);
     }
 
-    public void setEndDate(bt747.util.Date d) {
+    public final void setEndDate(final bt747.util.Date d) {
         m.setEndDate(d);
     }
 
-    public void setStartDate(bt747.util.Date d) {
+    public final void setStartDate(final bt747.util.Date d) {
         m.setStartDate(d);
     }
 
-    public void setRecordNbrInLogs(boolean b) {
+    public final void setRecordNbrInLogs(final boolean b) {
         m.setRecordNbrInLogs(b);
     }
 
-    public void setTrkSep(int value) {
+    public final void setTrkSep(final int value) {
         m.setTrkSep(value);
     }
 
-    public void setColorInvalidTrack(String s) {
+    public final void setColorInvalidTrack(final String s) {
         m.setColorInvalidTrack(s);
     }
 
@@ -893,7 +904,7 @@ public class Controller {
     // - Log overwrite/STOP [byte, byte]
     // - NMEA output [18 byte]
 
-    public void storeSetting1() {
+    public final void storeSetting1() {
         m.setTimeConditionSetting1(m.getLogTimeInterval());
         m.setDistConditionSetting1(m.getLogDistanceInterval());
         m.setSpeedConditionSetting1(m.getLogSpeedInterval());
@@ -903,14 +914,14 @@ public class Controller {
         m.setDGPSSetting1(m.getDgpsMode());
         m.setTestSBASSetting1(m.isSBASTestEnabled());
         m.setLogOverwriteSetting1(m.isLogFullOverwrite());
-        String NMEA = "";
+        String sNMEA = "";
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
-            NMEA += (m.getNMEAPeriod(i));
+            sNMEA += (m.getNMEAPeriod(i));
         }
-        m.setNMEASetting1(NMEA);
+        m.setNMEASetting1(sNMEA);
     }
 
-    public void restoreSetting1() {
+    public final void restoreSetting1() {
         setLogTimeInterval(m.getTimeConditionSetting1());
         setLogDistanceInterval(m.getDistConditionSetting1());
         setLogSpeedInterval(m.getSpeedConditionSetting1());
@@ -921,16 +932,16 @@ public class Controller {
         setDGPSMode(m.getDPGSSetting1());
         setLogOverwrite(m.getLogOverwriteSetting1());
 
-        String NMEA = m.getNMEASetting1();
-        int[] Periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
+        String sNMEA = m.getNMEASetting1();
+        int[] periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
 
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
-            Periods[i] = (int) (NMEA.charAt(i) - '0');
+            periods[i] = (int) (sNMEA.charAt(i) - '0');
         }
-        setNMEAPeriods(Periods);
+        setNMEAPeriods(periods);
     }
 
-    public void reqSettingsForStorage() {
+    public final void reqSettingsForStorage() {
         reqLogReasonStatus();
         reqLogFormat();
         reqFixInterval();
@@ -941,54 +952,54 @@ public class Controller {
         reqNMEAPeriods();
     }
 
-    public void setAdvFilterActive(boolean b) {
+    public final void setAdvFilterActive(final boolean b) {
         m.setAdvFilterActive(b);
     };
 
-    public void setFilterMinRecCount(int i) {
+    public final void setFilterMinRecCount(final int i) {
         m.setFilterMinRecCount(i);
     }
 
-    public void setFilterMaxRecCount(int i) {
+    public final void setFilterMaxRecCount(final int i) {
         m.setFilterMaxRecCount(i);
     }
 
-    public void setFilterMinSpeed(float i) {
+    public final void setFilterMinSpeed(final float i) {
         m.setFilterMinSpeed(i);
     }
 
-    public void setFilterMaxSpeed(float i) {
+    public final void setFilterMaxSpeed(final float i) {
         m.setFilterMaxSpeed(i);
     }
 
-    public void setFilterMinDist(float i) {
+    public final void setFilterMinDist(final float i) {
         m.setFilterMinDist(i);
     }
 
-    public void setFilterMaxDist(float i) {
+    public final void setFilterMaxDist(final float i) {
         m.setFilterMaxDist(i);
     }
 
-    public void setFilterMaxPDOP(float i) {
+    public final void setFilterMaxPDOP(final float i) {
         m.setFilterMaxPDOP(i);
     }
 
-    public void setFilterMaxHDOP(float i) {
+    public final void setFilterMaxHDOP(final float i) {
         m.setFilterMaxHDOP(i);
     }
 
-    public void setFilterMaxVDOP(float i) {
+    public final void setFilterMaxVDOP(final float i) {
         m.setFilterMaxVDOP(i);
     }
 
-    public void setFilterMinNSAT(int i) {
+    public final void setFilterMinNSAT(final int i) {
         m.setFilterMinNSAT(i);
     }
     
     
-    public void setFilters() {
+    public final void setFilters() {
         // TODO : Should schedule this after a while.
-        for (int i = m.getLogFiltersAdv().length-1; i >=0; i--) {
+        for (int i = m.getLogFiltersAdv().length - 1; i >= 0; i--) {
             GPSFilterAdvanced filter = m.getLogFiltersAdv()[i];
             filter.setMinRecCount(m.getFilterMinRecCount());
             filter.setMaxRecCount(m.getFilterMaxRecCount());
@@ -1003,17 +1014,17 @@ public class Controller {
         }
     }
     
-    public void setNMEAset(int value) {
+    public final void setNMEAset(final int value) {
         m.setNMEAset(value);
     }
 
     
-    public void setValidMask(int i, int mask) {
+    public final void setValidMask(final int i, final int mask) {
         // TODO: not sure this is needed anymore
         m.getLogFilters()[i].setValidMask(mask);
     }
 
-    public void setRcrMask(int i, int rcrmask) {
+    public final void setRcrMask(final int i, final int rcrmask) {
         // TODO: not sure this is needed anymore
         m.getLogFilters()[i].setRcrMask(rcrmask);
     }
@@ -1022,8 +1033,8 @@ public class Controller {
     // View handling.
     private HashSet views = new HashSet();
 
-    /**add a listener to event thrown by this class*/
-    public void addView(BT747View v){        
+    /**add a listener to event thrown by this class.*/
+    public final void addView(final BT747View v) {        
         views.add(v);
         v.setController(this);
         v.setModel(this.m);
@@ -1039,15 +1050,15 @@ public class Controller {
 //}
 
 
-    public void setTimeOffsetHours(int timeOffsetHours) {
+    public final void setTimeOffsetHours(final int timeOffsetHours) {
         m.setTimeOffsetHours(timeOffsetHours);
     }
     
-    public void setOneFilePerDay(int value) {
+    public final void setOneFilePerDay(final int value) {
         m.setOneFilePerDay(value);
     }
     
-    public void setNoGeoid(boolean value) {
+    public final void setNoGeoid(final boolean value) {
         m.setNoGeoid(value);
     }
 

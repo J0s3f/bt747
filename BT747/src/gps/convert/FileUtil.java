@@ -1,33 +1,34 @@
 package gps.convert;
 
-public class FileUtil 
-{
-    
+public final class FileUtil {
     /**
      * Returns a relative path for the targetFile relative to the base
      * directory.
      *
-     * @param canonicalBase
+     * @param base
      *            base directory as returned by File.getCanonicalPath()
-     * @param targetFile
+     * @param target
      *            target file
+     * @param separator
+     *            path separator on the system
      * @return relative path of target file. Returns targetFile if there were
      *         no commonalities between the base and the target
      *
      * @author Curt Arnold
      */
-    public static String getRelativePath(String base, String target,char separator) 
-    {
-        try 
-        {
+    public static String getRelativePath(
+            final String base,
+            final String target,
+            final char separator
+            ) {
+        try {
             //
             //   remove trailing file separator
             //
             String canonicalBase = base;
-            
+
             if (base.charAt(base.length() - 1) == '/'
-                ||base.charAt(base.length() - 1) == '\\') 
-            {
+                || base.charAt(base.length() - 1) == '\\') {
                 canonicalBase = base.substring(0, base.length() - 1);
             }
             
@@ -128,45 +129,33 @@ public class FileUtil
             //   walk from the first difference to the end of the base
             //      adding "../" for each separator encountered
             //
-            if (canonicalBase.length() > firstDifference) 
-            {
+            if (canonicalBase.length() > firstDifference) {
                 relativePath.append("..");
-                for (int i = firstDifference; i < canonicalBase.length(); i++) 
-                {
+                for (int i = firstDifference; i < canonicalBase.length(); i++) {
                     if (canonicalBase.charAt(i) == '/'
-                        ||canonicalBase.charAt(i) == '\\') 
-                    {
+                        ||canonicalBase.charAt(i) == '\\') {
                         relativePath.append(separator);
                         relativePath.append("..");
                     }
                 }
             }
-            
-            if (canonicalTarget.length() > firstDifference) 
-            {
+
+            if (canonicalTarget.length() > firstDifference) {
                 //
                 //    append the rest of the target
                 //
 
-                if (relativePath.length() > 0) 
-                {
+                if (relativePath.length() > 0) {
                     relativePath.append(separator);
                 }
-                
                 relativePath.append(canonicalTarget.substring(firstDifference));
             }
-            
+
             return relativePath.toString();
-            
         } 
-        catch (Exception ex) 
-        {
+        catch (Exception ex) {
             //TODO more handling
         }
-        
         return target;
-        
     }
-    
- 
 }

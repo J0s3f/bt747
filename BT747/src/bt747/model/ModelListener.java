@@ -3,5 +3,5 @@ import bt747.ui.Event;
 
 
 public interface ModelListener  {
-    public void newEvent(Event e);
+    void newEvent(Event e);
 }

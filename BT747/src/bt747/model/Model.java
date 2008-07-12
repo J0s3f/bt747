@@ -27,25 +27,26 @@ public class Model extends AppSettings {
     private Date startDate = new Date(1, 1, 1983);
     private Date endDate = new Date();
     
-    private int lastConversionOngoing= C_NO_LOG;
-    private boolean conversionOngoing= false;
+    private int lastConversionOngoing = C_NO_LOG;
+    private boolean conversionOngoing = false;
     
-    private static final int C_NBR_FILTERS=2;
-    private GPSFilter[] logFilters=new GPSFilter[C_NBR_FILTERS];
-    private GPSFilterAdvanced[] logFiltersAdv=new GPSFilterAdvanced[C_NBR_FILTERS];
+    private static final int C_NBR_FILTERS = 2;
+    private GPSFilter[] logFilters = new GPSFilter[C_NBR_FILTERS];
+    private GPSFilterAdvanced[] logFiltersAdv =
+        new GPSFilterAdvanced[C_NBR_FILTERS];
 
     private GPSstate gpsModel;
     private GPSrxtx gpsRxTx;
 
-    private boolean incremental=true; // Incremental download - default
+    private boolean incremental = true; // Incremental download - default
     
     public Model() {
         for (int i = 0; i < logFilters.length; i++) {
-            logFilters[i]=new GPSFilter();
-            logFiltersAdv[i]=new GPSFilterAdvanced();
+            logFilters[i] = new GPSFilter();
+            logFiltersAdv[i] = new GPSFilterAdvanced();
         }
-        gpsRxTx= new GPSrxtx();
-        gpsModel=new GPSstate(gpsRxTx);
+        gpsRxTx = new GPSrxtx();
+        gpsModel = new GPSstate(gpsRxTx);
         //gpsModel.setGPSRxtx(gpsRxTx);
     }
     
@@ -66,7 +67,9 @@ public class Model extends AppSettings {
     /**
      * @param lastConversionOngoing the lastConversionOngoing to set
      */
-    protected final void setLastConversionOngoing(int lastConversionOngoing) {
+    protected final void setLastConversionOngoing(
+            final int lastConversionOngoing
+            ) {
         this.lastConversionOngoing = lastConversionOngoing;
     }
     /**
@@ -83,18 +86,18 @@ public class Model extends AppSettings {
         return logFilters;
     }
     
-    public int getValidMask(int i) {
+    public int getValidMask(final int i) {
         return logFilters[i].getValidMask();
     }
 
-    public int getRcrMask(int i) {
+    public int getRcrMask(final int i) {
         return logFilters[i].getRcrMask();
     }
 
     /**
      * @param logFilters the logFilters to set
      */
-    protected final void setLogFilters(GPSFilter[] logFilters) {
+    protected final void setLogFilters(final GPSFilter[] logFilters) {
         this.logFilters = logFilters;
     }
     
@@ -107,7 +110,9 @@ public class Model extends AppSettings {
     /**
      * @param logFiltersAdv the logFiltersAdv to set
      */
-    protected final void setLogFiltersAdv(GPSFilterAdvanced[] logFiltersAdv) {
+    protected final void setLogFiltersAdv(
+            final GPSFilterAdvanced[] logFiltersAdv
+            ) {
         this.logFiltersAdv = logFiltersAdv;
     }
     /**
@@ -119,7 +124,7 @@ public class Model extends AppSettings {
     /**
      * @param startDate the startDate to set
      */
-    protected final void setStartDate(Date startDate) {
+    protected final void setStartDate(final Date startDate) {
         this.startDate = startDate;
     }
     /**
@@ -131,18 +136,18 @@ public class Model extends AppSettings {
     /**
      * @param endDate the endDate to set
      */
-    protected final void setEndDate(Date endDate) {
+    protected final void setEndDate(final Date endDate) {
         this.endDate = endDate;
     }
     
-    public final void logConversionStarted(int type) {
-        this.lastConversionOngoing= type;
-        this.conversionOngoing= true;
+    public final void logConversionStarted(final int type) {
+        this.lastConversionOngoing = type;
+        this.conversionOngoing = true;
         postEvent(ModelEvent.CONVERSION_STARTED);
     }
 
-    public final void logConversionEnded(int type) {
-        this.conversionOngoing= false;
+    public final void logConversionEnded(final int type) {
+        this.conversionOngoing = false;
         postEvent(ModelEvent.CONVERSION_ENDED);
     }
 
@@ -178,7 +183,7 @@ public class Model extends AppSettings {
         return incremental;
     }
 
-    protected final void setIncremental(boolean incremental) {
+    protected final void setIncremental(final boolean incremental) {
         this.incremental = incremental;
         postEvent(ModelEvent.INCREMENTAL_CHANGE);
     }
@@ -337,17 +342,17 @@ public class Model extends AppSettings {
          return gpsModel.getDatum();
      }
 
-     public int getEstimatedNbrRecords(int logFormat) {
-         int count=0;
+     public int getEstimatedNbrRecords(final int logFormat) {
+         int count = 0;
          try {
-             int size=BT747Constants.logRecordSize(logFormat, isHolux(),12);
-             if(isHolux()) {
-                 size+=1;
+             int size = BT747Constants.logRecordSize(logFormat, isHolux(), 12);
+             if (isHolux()) {
+                 size += 1;
              } else {
-                 size+=2;
+                 size += 2;
              }
-             if(size!=0) {
-                 count= logMemUsefullSize()/size;
+             if (size != 0) {
+                 count = logMemUsefullSize() / size;
              }
          } catch (Exception e) {
              e.printStackTrace();
