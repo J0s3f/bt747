@@ -33,6 +33,7 @@ import bt747.ui.MessageBox;
  */
 public class Controller {
 
+    private static final int SECONDS_PER_DAY = 24 * 60 * 60;
     private static final int SECONDS_PER_HOUR = 3600;
     /**
      * Reference to the model
@@ -156,7 +157,9 @@ public class Controller {
         m.saveSettings();
     }
 
-    /** Convert the log given the provided parameters using other methods.
+    /**
+     * Convert the log given the provided parameters using other methods.
+     * 
      * @param logType
      *            Indicates the type of log that should be written. For example
      *            Model.CSV_LOGTYPE .
@@ -268,7 +271,7 @@ public class Controller {
                         .getStartDate()));
                 usedFilters[i].setEndDate(Conv.dateToUTCepoch1970(m
                         .getEndDate())
-                        + (24 * 60 * 60 - 1));
+                        + (SECONDS_PER_DAY - 1));
             }
             gpsFile.setFilters(usedFilters);
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
@@ -283,7 +286,12 @@ public class Controller {
         m.logConversionEnded(logType);
     }
 
-    public final GPSRecord[] getTrackPoints() {
+    /**
+     * Convert the log into an array of trackpoints.
+     * 
+     * @return Array of selected trackpoints.
+     */
+    public final GPSRecord[] convertLogToTrackPoints() {
         GPSArray gpsFile = null;
         GPSLogConvert lc;
 
@@ -326,7 +334,7 @@ public class Controller {
         } else {
             usedFilters = m.getLogFilters();
         }
-        lc.setTimeOffset(m.getTimeOffsetHours() * 3600);
+        lc.setTimeOffset(m.getTimeOffsetHours() * SECONDS_PER_HOUR);
         lc.setNoGeoid(m.getNoGeoid());
 
         gpsFile = new GPSArray();
@@ -342,7 +350,7 @@ public class Controller {
             usedFilters[i].setStartDate(Conv.dateToUTCepoch1970(m
                     .getStartDate()));
             usedFilters[i].setEndDate(Conv.dateToUTCepoch1970(m.getEndDate())
-                    + (24 * 60 * 60 - 1));
+                    + (SECONDS_PER_DAY - 1));
         }
         gpsFile.setFilters(usedFilters);
         // gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
@@ -376,8 +384,14 @@ public class Controller {
         }
     }
 
-    public final void setIncremental(final boolean b) {
-        m.setIncremental(b);
+    /**
+     * Set the 'incremental download' configuration.
+     * 
+     * @param incrementalDownload
+     *            true if the log download should be incremental.
+     */
+    public final void setIncremental(final boolean incrementalDownload) {
+        m.setIncremental(incrementalDownload);
     }
 
     /**
