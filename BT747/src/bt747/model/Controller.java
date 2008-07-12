@@ -156,8 +156,10 @@ public class Controller {
         m.saveSettings();
     }
 
-    /**
+    /** Convert the log given the provided parameters using other methods.
      * @param logType
+     *            Indicates the type of log that should be written. For example
+     *            Model.CSV_LOGTYPE .
      * @see Model#CSV_LOGTYPE
      * @see Model#TRK_LOGTYPE
      * @see Model#KML_LOGTYPE
@@ -166,7 +168,7 @@ public class Controller {
      * @see Model#NMEA_LOGTYPE
      * @see Model#GMAP_LOGTYPE
      */
-    public final void writeLog(final int logType) {
+    public final void convertLog(final int logType) {
         String ext = "";
         GPSFile gpsFile = null;
         GPSLogConvert lc;

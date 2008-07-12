@@ -3544,7 +3544,7 @@ public class BT747_Main2 extends javax.swing.JFrame implements
     }// GEN-LAST:event_btConvertMouseReleased
 
     private void btConvertActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btConvertActionPerformed
-        c.writeLog(selectedFormat);
+        c.convertLog(selectedFormat);
     }// GEN-LAST:event_btConvertActionPerformed
 
     private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btOutputFileActionPerformed
