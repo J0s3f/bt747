@@ -161,9 +161,9 @@ public class BT747 extends MainWindow implements ModelListener, GPSListener {
     /** The captions for the tab panel */
     private final String[] c_tpCaptions = { Txt.C_FMT, Txt.C_CTRL, Txt.C_LOG,
             Txt.C_FILE, Txt.C_FLTR, Txt.C_EASY, Txt.C_CON, Txt.C_OTHR };
-    private static final int C_LOG_CTRL_IDX = 0;
-    private static final int C_GPS_LOGINFO_IDX = 1;
-    private static final int C_GPS_LOGGET_IDX = 2;
+    private static final int TAB_LOG_CTRL_IDX = 0;
+    private static final int TAB_LOGINFO_IDX = 1;
+    private static final int TAB_LOG_GET_IDX = 2;
     private static final int C_GPS_FILECTRL_IDX = 3;
     private static final int C_GPS_FILTERCTRL_IDX = 4;
     private static final int C_GPS_EASYCTRL_IDX = 5;
@@ -171,6 +171,9 @@ public class BT747 extends MainWindow implements ModelListener, GPSListener {
     /** Tab Panel container - Other settings */
     private static final int C_GPS_FLASH_IDX = 7;
 
+    /**
+     * The auto on/off value at startup so that it can be restored at shutdown.
+     */
     private int orgAutoOnOff;
 
     /**
@@ -252,11 +255,11 @@ public class BT747 extends MainWindow implements ModelListener, GPSListener {
         updateProgressBar();
 
         numPanels = 0;
-        m_TabPanel.setPanel(C_LOG_CTRL_IDX, new GPSLogFormat(m, c));
+        m_TabPanel.setPanel(TAB_LOG_CTRL_IDX, new GPSLogFormat(m, c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_LOGINFO_IDX, new GPSLogReason(c, m));
+        m_TabPanel.setPanel(TAB_LOGINFO_IDX, new GPSLogReason(c, m));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_LOGGET_IDX, new GPSLogGet(m, c));
+        m_TabPanel.setPanel(TAB_LOG_GET_IDX, new GPSLogGet(m, c));
         numPanels++;
         m_TabPanel.setPanel(C_GPS_FILECTRL_IDX, new GPSLogFile(c, m));
         numPanels++;
@@ -452,7 +455,7 @@ public class BT747 extends MainWindow implements ModelListener, GPSListener {
 
     public final void newEvent(final bt747.ui.Event event) {
         if ((event.getType() == ModelEvent.CONNECTED)) {
-            m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
+            m_TabPanel.setActiveTab(TAB_LOG_GET_IDX);
         }
         this.postEvent(event);
     }
