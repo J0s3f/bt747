@@ -196,7 +196,7 @@ public class GPSconctrl extends Container {
         lbLon.setText(Txt.LON+Convert.toString(gps.longitude,5)+
                 TimeStr);
         lbGeoid.setText(Txt.GEOID+Convert.toString(gps.geoid,3)+Txt.METERS_ABBR+Txt.CALC+
-                Convert.toString(Conv.wgs84_separation(gps.latitude, gps.longitude),3)
+                Convert.toString(Conv.wgs84Separation(gps.latitude, gps.longitude),3)
                 +Txt.METERS_ABBR+")");
 
         //lbLat.repaintNow();

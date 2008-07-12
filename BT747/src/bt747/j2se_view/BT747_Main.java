@@ -219,7 +219,7 @@ public class BT747_Main extends javax.swing.JFrame implements
         lbGeoid.setText(Convert.toString(gps.geoid, 3)
                 + Txt.METERS_ABBR
                 + Txt.CALC
-                + Convert.toString(Conv.wgs84_separation(gps.latitude,
+                + Convert.toString(Conv.wgs84Separation(gps.latitude,
                         gps.longitude), 3) + Txt.METERS_ABBR + ")");
 
     }

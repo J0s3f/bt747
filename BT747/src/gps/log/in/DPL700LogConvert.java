@@ -219,7 +219,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
                                         | (0xFF & bytes[recIdx++]) << 8;
                                 gpsRec.height = altitude;
                                 if (noGeoid) {
-                                    gpsRec.height -= Conv.wgs84_separation(
+                                    gpsRec.height -= Conv.wgs84Separation(
                                             gpsRec.latitude, gpsRec.longitude);
                                 }
                                 speed = (0xFF & bytes[recIdx++]) << 0;
