@@ -561,7 +561,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                        ) != 0)
                             ) {
                                 gpsRec.height -=
-                                    Conv.wgs84_separation(
+                                    Conv.wgs84Separation(
                                             gpsRec.latitude, gpsRec.longitude);
                             }
                             if (curLogFormat != logFormat) {

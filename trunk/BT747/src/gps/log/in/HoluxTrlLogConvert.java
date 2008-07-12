@@ -157,7 +157,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
                             ;
                         gpsRec.height=Convert.toFloatBitwise(height);
                         if(noGeoid) {
-                            gpsRec.height-=Conv.wgs84_separation(gpsRec.latitude, gpsRec.longitude);
+                            gpsRec.height-=Conv.wgs84Separation(gpsRec.latitude, gpsRec.longitude);
                         }
                         gpsFile.writeRecord(gpsRec);
                     }
