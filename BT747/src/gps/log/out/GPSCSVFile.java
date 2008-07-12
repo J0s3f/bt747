@@ -33,12 +33,12 @@ public class GPSCSVFile extends GPSFile {
     private static final char fieldSep=',';  // For future parameterisation
     private static final char satSeperator=';';   // For future parameterisation
     
-    public boolean needPassToFindFieldsActivatedInLog() {
+    public final boolean needPassToFindFieldsActivatedInLog() {
         return true;
     }
     
 
-    protected void writeFileHeader(String Name) {
+    protected final void writeFileHeader(final String Name) {
         rec.setLength(0);
         //INDEX,RCR,DATE,TIME,VALID,LATITUDE,N/S,LONGITUDE,E/W,HEIGHT,SPEED,
         rec.append("INDEX");
@@ -131,8 +131,8 @@ public class GPSCSVFile extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected boolean recordIsNeeded(GPSRecord s) {
-        return m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+    protected final boolean recordIsNeeded(final GPSRecord s) {
+        return ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
     }
     
 
@@ -140,10 +140,10 @@ public class GPSCSVFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         
-        if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
+        if(activeFields!=null && ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             rec.setLength(0);
             rec.append(Convert.toString(s.recCount));
             if(activeFileFields.rcr!=0) {

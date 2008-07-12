@@ -28,18 +28,18 @@ import gps.log.GPSRecord;
  * @author Mario De Weerd
  */
 public class GPSArray extends GPSFile {
-    GPSRecord[] gpsTrackPoints;
-    GPSRecord[] gpsWayPoints;
+    private GPSRecord[] gpsTrackPoints;
+    private GPSRecord[] gpsWayPoints;
     
     public GPSArray() {
         super();
         C_NUMBER_OF_PASSES = 2;
-        trackPointCount=0;
-        wayPointCount=0;
+        trackPointCount = 0;
+        wayPointCount = 0;
     }
 
     
-    public boolean needPassToFindFieldsActivatedInLog() {
+    public final boolean needPassToFindFieldsActivatedInLog() {
         return false;
     }
 
@@ -48,20 +48,20 @@ public class GPSArray extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected boolean recordIsNeeded(GPSRecord s) {
-        return m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+    protected final boolean recordIsNeeded(final GPSRecord s) {
+        return ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
     }
     
-    public boolean nextPass() {
+    public final boolean nextPass() {
         super.nextPass();
-        if (m_nbrOfPassesToGo > 0) {
-            m_nbrOfPassesToGo--;
-            m_prevdate = 0;
-            if(m_nbrOfPassesToGo==0) {
-                gpsTrackPoints= new GPSRecord[trackPointCount];
-                gpsWayPoints= new GPSRecord[wayPointCount];
-                trackPointCount=0;
-                wayPointCount=0;
+        if (nbrOfPassesToGo > 0) {
+            nbrOfPassesToGo--;
+            previousDate = 0;
+            if (nbrOfPassesToGo == 0) {
+                gpsTrackPoints = new GPSRecord[trackPointCount];
+                gpsWayPoints = new GPSRecord[wayPointCount];
+                trackPointCount = 0;
+                wayPointCount = 0;
             }
             return true;
         } else {
@@ -70,31 +70,31 @@ public class GPSArray extends GPSFile {
 
     }
     
-    int trackPointCount;
-    int wayPointCount;
+    private int trackPointCount;
+    private int wayPointCount;
     
 //    private GPSRecord prevRecord=null;
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public final void writeRecord(final GPSRecord s) {
         // NO CALL TO super.writeRecord(s); TO INHIBIT FILE CREATION
-        if(m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
-            if(m_nbrOfPassesToGo==0) {
-                gpsTrackPoints[trackPointCount]=s.cloneRecord();
+        if (ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
+            if (nbrOfPassesToGo == 0) {
+                gpsTrackPoints[trackPointCount] = s.cloneRecord();
             }
             trackPointCount++;
         }
 
-        if(m_Filters[GPSFilter.C_WAYPT_IDX].doFilter(s)) {
-            if(m_nbrOfPassesToGo==0) {
-                gpsWayPoints[wayPointCount]=s.cloneRecord();
+        if (ptFilters[GPSFilter.C_WAYPT_IDX].doFilter(s)) {
+            if (nbrOfPassesToGo == 0) {
+                gpsWayPoints[wayPointCount] = s.cloneRecord();
             }
             wayPointCount++;
         }
     }
     
-    protected int createFile(final String extra_ext) {
+    protected final int createFile(final String extra_ext) {
         // Override to avoid file creation.
         return BT747Constants.NO_ERROR;
     }

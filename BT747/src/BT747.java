@@ -13,9 +13,9 @@
 //***  for more details.                                           ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
+//***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
-//********************************************************************                              
+//********************************************************************
 /**
  * Main class (application entry) An empty wrapper to maintain compatibility
  * after moving classes into specific package.

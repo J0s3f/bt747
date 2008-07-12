@@ -68,7 +68,7 @@ public class GPSPLTFile extends GPSFile {
      * Override parent class because only the trackpoint filter is used.
      */
     protected boolean recordIsNeeded(GPSRecord s) {
-        return m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+        return ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
     }
     
     
@@ -92,7 +92,7 @@ public class GPSPLTFile extends GPSFile {
     public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         
-        if(activeFields!=null && m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
+        if(activeFields!=null && ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
             String rec="";
 
 //          Field 1 : Latitude - decimal degrees.

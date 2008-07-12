@@ -55,12 +55,12 @@ public class GPSGmapsHTMLFile extends GPSFile {
     
     public boolean nextPass() {
         super.nextPass();
-        if(m_nbrOfPassesToGo>0) {
+        if(nbrOfPassesToGo>0) {
 //            if(m_multipleFiles) {
 //                closeFile();
 //            }
-            m_nbrOfPassesToGo--;
-            m_prevdate=0;
+            nbrOfPassesToGo--;
+            previousDate=0;
             m_isWayType=false;
             m_currentFilter=GPSFilter.C_TRKPT_IDX;
 //            if(!m_multipleFiles) {
@@ -175,10 +175,10 @@ public class GPSGmapsHTMLFile extends GPSFile {
 
         if(activeFields!=null) {
 
-            if(!m_Filters[m_currentFilter].doFilter(s)) {
+            if(!ptFilters[m_currentFilter].doFilter(s)) {
                 // The track is interrupted by a removed log item.
                 // Break the track in the output file
-                if(!m_isWayType&&!m_newTrack&&!m_FirstRecord) {
+                if(!m_isWayType&&!m_newTrack&&!firstRecord) {
                     m_newTrack=true;
                     writeTxt("map.addOverlay(new GPolyline(points,\"#0000FF\",2,.75));\r\n");
                     writeTxt("points=[];");              

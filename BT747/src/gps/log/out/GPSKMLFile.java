@@ -63,12 +63,12 @@ public class GPSKMLFile extends GPSFile {
   
   public boolean nextPass() {
       super.nextPass();
-      if(m_nbrOfPassesToGo>0) {
+      if(nbrOfPassesToGo>0) {
 //          if(m_multipleFiles) {
 //              closeFile();  // Close every time - if single file, it gets reopened.
 //          }
-          m_nbrOfPassesToGo--;
-          m_prevdate=0;
+          nbrOfPassesToGo--;
+          previousDate=0;
 //          if(!m_multipleFiles) {
 //            writeDataFooter();
 //          }
@@ -358,7 +358,7 @@ public class GPSKMLFile extends GPSFile {
 
       if(activeFields!=null) {
           rec.setLength(0);
-          if(m_Filters[m_currentFilter].doFilter(s)) {
+          if(ptFilters[m_currentFilter].doFilter(s)) {
             if (m_isWayType || m_isTrackType) {
                     rec.append("<Placemark>\r\n");
                     if (m_isTrackType) {
