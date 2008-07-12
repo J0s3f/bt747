@@ -195,6 +195,9 @@ public class GPSLogGet extends Container {
      * @see waba.ui.Control#onEvent(waba.ui.Event)
      *      configureable.
      */
+    /* (non-Javadoc)
+     * @see waba.ui.Control#onEvent(waba.ui.Event)
+     */
     public void onEvent(Event event) {
         //Vm.debug("Event:"+event.type+" "+event.consumed);
         super.onEvent(event);

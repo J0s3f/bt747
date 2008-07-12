@@ -86,7 +86,7 @@ public final class BT747Constants {  // dev as in device
      * Entries are in order.  The entry position corresponds to the
      * bit position in the log format 'byte'.
      */
-    public static final int logFmtByteSizes[] = {
+    public static final int[] logFmtByteSizes = {
             4, //"UTC",     // = 0x00001    // 0
             2, //"VALID",   // = 0x00002    // 1
             8, //"LATITUDE",    // = 0x00004    // 2
@@ -121,7 +121,7 @@ public final class BT747Constants {  // dev as in device
             0, // 1F  // Log points with valid fix only
     };  
 
-    public static final int logFmtByteSizesHolux[] = {
+    public static final int[] logFmtByteSizesHolux = {
             4, //"UTC",     // = 0x00001    // 0
             2, //"VALID",   // = 0x00002    // 1
             4, //"LATITUDE",    // = 0x00004    // 2
@@ -412,7 +412,7 @@ public final class BT747Constants {  // dev as in device
      * 
      * @return Size of the header
      */
-    public static final int logRecordMinSize(final int p_logFormat, final boolean holux) {
+    public static int logRecordMinSize(final int p_logFormat, final boolean holux) {
         int bits=p_logFormat;
         int index = 0;
         int total = 0;
@@ -451,7 +451,7 @@ public final class BT747Constants {  // dev as in device
      * @param p_Holux TODO
      * @return
      */
-    public static final int logRecordSize(final int p_logFormat, final boolean holux, final int sats) {
+    public static int logRecordSize(final int p_logFormat, final boolean holux, final int sats) {
         int cnt=0;
         int[] byteSizes;
         if(holux) {
@@ -469,7 +469,7 @@ public final class BT747Constants {  // dev as in device
         return cnt+logRecordMinSize(p_logFormat, false);
     }
     
-    public static final int logRecordMaxSize(final int p_logFormat, final boolean holux) {
+    public static int logRecordMaxSize(final int p_logFormat, final boolean holux) {
         return logRecordSize(p_logFormat, holux, FMT_MAX_SATS);
     }
 
@@ -482,7 +482,7 @@ public final class BT747Constants {  // dev as in device
      * Number of NMEA sentence types
      */
     public static final int C_NMEA_SEN_COUNT = 19;
-    public static final String NMEA_strings [] = {
+    public static final String[] NMEA_strings = {
             "GLL", //             0 // GPGLL interval - Geographic Position - Latitude longitude 
             "RMC", //             1 // GPRMC interval - Recommended Min. specic GNSS sentence 
             "VTG", //             2 / / GPVTG interval - Course Over Ground and Ground Speed 
@@ -566,8 +566,8 @@ public final class BT747Constants {  // dev as in device
     public static final int VALID_SIMULATOR_MASK = 0x0100;
 
     
-    public final static int NO_ERROR            = 0;
-    public final static int ERROR_COULD_NOT_OPEN = -1;
-    public final static int ERROR_NO_FILES_WERE_CREATED = -2;
-    public final static int ERROR_READING_FILE = -3;    
+    public static final int NO_ERROR            = 0;
+    public static final int ERROR_COULD_NOT_OPEN = -1;
+    public static final int ERROR_NO_FILES_WERE_CREATED = -2;
+    public static final int ERROR_READING_FILE = -3;    
 }

@@ -55,7 +55,7 @@ public final class BT747LogConvert implements GPSLogConvert {
 
     private int badrecord_count = 0;
 
-    private final void updateLogFormat(final GPSFile gpsFile,
+    private void updateLogFormat(final GPSFile gpsFile,
             final int newLogFormat) {
         int bits = newLogFormat;
         int index = 0;
@@ -119,7 +119,7 @@ public final class BT747LogConvert implements GPSLogConvert {
      *            object doing actual write to files
      * 
      */
-    public final int parseFile(final GPSFile gpsFile) {
+    public int parseFile(final GPSFile gpsFile) {
         GPSRecord gpsRec = new GPSRecord();
         final int C_BUF_SIZE = 0x2000;
         byte[] bytes = new byte[C_BUF_SIZE];
@@ -432,21 +432,21 @@ public final class BT747LogConvert implements GPSLogConvert {
         return BT747Constants.NO_ERROR;
     }
 
-    public final void setTimeOffset(final long offset) {
+    public void setTimeOffset(final long offset) {
         timeOffsetSeconds = offset;
     }
 
-    public final void setNoGeoid(final boolean b) {
+    public void setNoGeoid(final boolean b) {
         noGeoid = b;
     }
 
 
     private String errorInfo;
-    public final String getErrorInfo() {
+    public String getErrorInfo() {
         return errorInfo;
     }
 
-    public final int toGPSFile(final String fileName, final GPSFile gpsFile,
+    public int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int Card) {
         int error=BT747Constants.NO_ERROR;
         if (File.isAvailable()) {
@@ -491,7 +491,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         return error;
     }
 
-    public static final GPSRecord getLogFormatRecord(final int logFormat) {
+    public static GPSRecord getLogFormatRecord(final int logFormat) {
         GPSRecord gpsRec = new GPSRecord();
         if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
             gpsRec.utc = -1;
@@ -563,7 +563,7 @@ public final class BT747LogConvert implements GPSLogConvert {
      * @param holux
      *            The holux to set.
      */
-    public void setHolux(boolean holux) {
+    public void setHolux(final boolean holux) {
         this.holux = holux;
     }
 
@@ -577,8 +577,8 @@ public final class BT747LogConvert implements GPSLogConvert {
      * 
      * @return int / number of bytes found
      */
-    private final int getSpecialRecord(final byte[] bytes,
-            final int offsetInBuffer, GPSFile gpsFile) {
+    private int getSpecialRecord(final byte[] bytes,
+            final int offsetInBuffer, final GPSFile gpsFile) {
         int newLogFormat;
         int nbrBytesDone = 0;
         if (((0xFF & bytes[offsetInBuffer + 0]) == 0xAA)
@@ -682,9 +682,9 @@ public final class BT747LogConvert implements GPSLogConvert {
      * 
      * @return true if success
      */
-    private final boolean getRecord(
+    private boolean getRecord(
             final byte[] bytes, // The data string
-            GPSRecord gpsRec, final int startIdx, final int rcrIdx,
+            final GPSRecord gpsRec, final int startIdx, final int rcrIdx,
             final int satcnt) {
         int recIdx;
         boolean valid;

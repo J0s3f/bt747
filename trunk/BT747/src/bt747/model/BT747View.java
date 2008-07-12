@@ -2,10 +2,13 @@ package bt747.model;
 
 public interface BT747View {
 
-    public void createMessageBoxModal(String title, String msg, String[] buttonCaptions);
+    void createMessageBoxModal(
+            final String title,
+            final String msg,
+            final String[] buttonCaptions);
     
-    public void setController(Controller c);
+    void setController(Controller c);
     
-    public void setModel(Model m);
+    void setModel(Model m);
     
 }

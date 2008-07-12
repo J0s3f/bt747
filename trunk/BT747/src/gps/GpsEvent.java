@@ -20,7 +20,7 @@
 package gps;
 
 
-/** Defines some events for the gps package
+/** Defines some events for the gps package.
  * 
  * @author Mario De Weerd
  */
@@ -36,12 +36,12 @@ public class GpsEvent extends bt747.ui.Event {
     public static final int COULD_NOT_OPEN_FILE = getNextAvailableEventId();
     public static final int DEBUG_MSG = getNextAvailableEventId();
     
-    public GpsEvent(int type) {
-        super(null,type,null);
+    public GpsEvent(final int type) {
+        super(null, type, null);
     }
 
-    public GpsEvent(int type,Object arg) {
-        super(null,type,arg);
+    public GpsEvent(final int type, final Object arg) {
+        super(null, type, arg);
     }
 
 }
