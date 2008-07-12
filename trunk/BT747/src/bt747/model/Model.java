@@ -546,7 +546,8 @@ public class Model extends AppSettings {
         boolean forHolux;
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
-        forHolux = isHolux() || gpsModel.isHolux();
+        forHolux = (isHolux() && gpsRxTx.isConnected())
+                   || getForceHolux241();
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {
