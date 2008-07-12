@@ -158,7 +158,13 @@ public class Controller {
 
     /**
      * @param logType
-     * @see Model.CSV_LOGTYPE
+     * @see Model#CSV_LOGTYPE
+     * @see Model#TRK_LOGTYPE
+     * @see Model#KML_LOGTYPE
+     * @see Model#PLT_LOGTYPE
+     * @see Model#GPX_LOGTYPE
+     * @see Model#NMEA_LOGTYPE
+     * @see Model#GMAP_LOGTYPE
      */
     public final void writeLog(final int logType) {
         String ext = "";
