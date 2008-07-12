@@ -122,9 +122,9 @@ public class GPSLogEasy extends Container {
                   c.setLogTimeInterval(2);
                   c.setFixInterval(200);
               } else if (event.target==m_btStore) {
-                  c.StoreSetting1();
+                  c.storeSetting1();
               } else if (event.target==m_btRestore) {
-                  c.RestoreSetting1();
+                  c.restoreSetting1();
               } else if (event.target==m_btHotStart) {
                   c.doHotStart();
               } else if (event.target==m_btColdStart) {

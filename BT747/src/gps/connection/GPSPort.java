@@ -37,7 +37,7 @@ public abstract class GPSPort {
     protected static final boolean GPS_FILE_LOG = true;  // When true log communication to file for debug
 
     protected File m_debugFile=null;
-    protected static String debugFileName="/Palm/gpsRAW.txt";
+    protected String debugFileName="/Palm/gpsRAW.txt";
     
     // Hooked reference to java os string h ere to avoid creating extra classes and
     // exceptions in compilation flow.
@@ -176,7 +176,7 @@ public abstract class GPSPort {
     /**
      * @param debugFileName The debugFileName to set.
      */
-    public void setDebugFileName(final String debugFileName) {
-        GPSPort.debugFileName = debugFileName;
+    public final void setDebugFileName(final String debugFileName) {
+        this.debugFileName = debugFileName;
     }
 }

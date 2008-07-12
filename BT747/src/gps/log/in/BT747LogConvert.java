@@ -635,6 +635,7 @@ public final class BT747LogConvert implements GPSLogConvert {
             case 0x06: // value: 0x0106= logger on 0x0107= logger off 0x104=??
                 logMode=value;
                 //bt747.sys.Vm.debug("Logger off :"+value);
+                break;
             case 0x07: // value: 0x0106= logger on 0x0107= logger off 0x104=??
                 logMode=value;
                 //bt747.sys.Vm.debug("Logger off :"+value);

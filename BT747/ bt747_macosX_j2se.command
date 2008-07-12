@@ -13,7 +13,7 @@ if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
 #cd /Applications/gps ; ROOT_DIR=$PWD*
 
 RXTX_PATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
-RXTX_BIN_PATH=${RXTX_BIN_PATH}/Mac_OS_X
+RXTX_BIN_PATH=${RXTX_PATH}/Mac_OS_X
 
 CLASSPATH=${RXTX_PATH}:${RXTX_BIN_PATH}:${ROOT_DIR}/dist/BT747_j2se.jar:${ROOT_DIR}/lib/swing-layout-1.0.3.jar:.:$CLASSPATH
 export CLASSPATH

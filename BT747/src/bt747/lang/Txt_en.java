@@ -1,7 +1,5 @@
 package bt747.lang;
 
-import waba.ui.MenuItem;
-
 import bt747.Version;
 import bt747.sys.Settings;
 
