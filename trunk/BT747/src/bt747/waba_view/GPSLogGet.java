@@ -263,7 +263,7 @@ public class GPSLogGet extends Container {
                     } else if (event.target == m_btToGMAP) {
                         logType = Model.GMAP_LOGTYPE;
                     }
-                    c.writeLog(logType);
+                    c.convertLog(logType);
                 } else if (event.target == this) {
                     // Enters focus
                     reqLogInfo();

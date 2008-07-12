@@ -5953,7 +5953,7 @@ public class BT747_Main extends javax.swing.JFrame implements
 
     private void btConvertActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btConvertActionPerformed
 
-        c.writeLog(selectedFormat);
+        c.convertLog(selectedFormat);
     }// GEN-LAST:event_btConvertActionPerformed
 
     private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btOutputFileActionPerformed
