@@ -3683,25 +3683,25 @@ public class BT747_Main2 extends javax.swing.JFrame implements
         setWayRCRFilterSettings();
     }// GEN-LAST:event_cbWayTimeWayRCRAction
 
-    private int selectedFormat = Model.C_NO_LOG;
+    private int selectedFormat = Model.NO_LOG_LOGTYPE;
 
     private final void setSelectedFormat(final String selected) {
         if (selected.startsWith("CSV")) {
-            selectedFormat = Model.C_CSV_LOG;
+            selectedFormat = Model.CSV_LOGTYPE;
         } else if (selected.startsWith("Google Map")) {
-            selectedFormat = Model.C_GMAP_LOG;
+            selectedFormat = Model.GMAP_LOGTYPE;
         } else if (selected.startsWith("GPX")) {
-            selectedFormat = Model.C_GPX_LOG;
+            selectedFormat = Model.GPX_LOGTYPE;
         } else if (selected.startsWith("KML")) {
-            selectedFormat = Model.C_KML_LOG;
+            selectedFormat = Model.KML_LOGTYPE;
         } else if (selected.startsWith("NMEA")) {
-            selectedFormat = Model.C_NMEA_LOG;
+            selectedFormat = Model.NMEA_LOGTYPE;
         } else if (selected.startsWith("Ozi")) {
-            selectedFormat = Model.C_PLT_LOG;
+            selectedFormat = Model.PLT_LOGTYPE;
         } else if (selected.startsWith("Compe")) {
-            selectedFormat = Model.C_TRK_LOG;
+            selectedFormat = Model.TRK_LOGTYPE;
         } else {
-            selectedFormat = Model.C_NO_LOG;
+            selectedFormat = Model.NO_LOG_LOGTYPE;
         }
     }
 
