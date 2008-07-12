@@ -145,16 +145,6 @@ public class Model extends AppSettings {
         this.conversionOngoing= false;
         postEvent(ModelEvent.CONVERSION_ENDED);
     }
-    
-    
-    
-    /*
-     * Log download related information
-     */
-    int startAddr;
-    int endAddr;
-    boolean downloadOnGoing=false;
-    int nextReadAddr;
 
     /**
      * @return the startAddr
@@ -177,13 +167,6 @@ public class Model extends AppSettings {
         return gpsModel.isDownloadOnGoing();
     }
     
-    /**
-     * @param downloadOnGoing the downloadOnGoing to set
-     */
-    public final void setDownloadOnGoing(boolean downloadOnGoing) {
-        this.downloadOnGoing = downloadOnGoing;
-
-    }
     /**
      * @return the nextReadAddr
      */

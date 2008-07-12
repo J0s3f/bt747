@@ -24,8 +24,6 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
 
-import sun.security.action.GetLongAction;
-
 import gps.BT747Constants;
 import gps.GpsEvent;
 

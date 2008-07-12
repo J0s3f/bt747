@@ -265,10 +265,13 @@ public final class DPL700LogConvert implements GPSLogConvert {
                             }
 
                             // Convert information to log record
-                            gpsRec.longitude = (longitude / 1000000)
-                                    + (longitude % 1000000) / 600000.0;
-                            gpsRec.latitude = (latitude / 1000000)
-                                    + (latitude % 1000000) / 600000.0;
+                            // The next lines explicitly use an integer division on longitude
+                            // to get an integer result!  The objective is to get the first digits
+                            // of the number.
+                            gpsRec.longitude = ((double)((int)(longitude / 1000000)))
+                                    + ((longitude % 1000000) / 600000.0);
+                            gpsRec.latitude = ((double)((int)(latitude / 1000000)))
+                                    + ((latitude % 1000000) / 600000.0);
                             gpsRec.speed = speed * 1.852f;
 
                             gpsRec.valid = 0xFFFF;

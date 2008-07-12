@@ -893,7 +893,7 @@ public class Controller {
     // - Log overwrite/STOP [byte, byte]
     // - NMEA output [18 byte]
 
-    public void StoreSetting1() {
+    public void storeSetting1() {
         m.setTimeConditionSetting1(m.getLogTimeInterval());
         m.setDistConditionSetting1(m.getLogDistanceInterval());
         m.setSpeedConditionSetting1(m.getLogSpeedInterval());
@@ -910,7 +910,7 @@ public class Controller {
         m.setNMEASetting1(NMEA);
     }
 
-    public void RestoreSetting1() {
+    public void restoreSetting1() {
         setLogTimeInterval(m.getTimeConditionSetting1());
         setLogDistanceInterval(m.getDistConditionSetting1());
         setLogSpeedInterval(m.getSpeedConditionSetting1());
@@ -1029,14 +1029,16 @@ public class Controller {
         v.setModel(this.m);
     }
 
-    protected void MessageBoxModal() {
-        Iterator it = views.iterator();
-        while (it.hasNext()) {
-//            BT747View l=(BT747View)it.next();
-//            l.newEvent(e);
-        }
-    }
-    
+//  protected void postEvent(final int type) {
+//  Iterator it = views.iterator();
+//  while (it.hasNext()) {
+//      BT747View l=(BT747View)it.next();
+//      Event e=new Event(l, type, null);
+//      l.newEvent(e);
+//  }
+//}
+
+
     public void setTimeOffsetHours(int timeOffsetHours) {
         m.setTimeOffsetHours(timeOffsetHours);
     }
@@ -1048,14 +1050,5 @@ public class Controller {
     public void setNoGeoid(boolean value) {
         m.setNoGeoid(value);
     }
-
-//    protected void postEvent(final int type) {
-//        Iterator it = views.iterator();
-//        while (it.hasNext()) {
-//            BT747View l=(BT747View)it.next();
-//            Event e=new Event(l, type, null);
-//            l.newEvent(e);
-//        }
-//    }
 
 }

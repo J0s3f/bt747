@@ -29,7 +29,6 @@ import bt747.io.BufFile;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 import bt747.sys.Vm;
-import bt747.ui.MessageBox;
 
 /**
  * @author Mario De Weerd

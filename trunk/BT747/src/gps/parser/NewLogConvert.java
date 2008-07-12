@@ -24,9 +24,7 @@ import gps.log.GPSRecord;
 import gps.log.in.GPSLogConvert;
 import gps.log.out.GPSFile;
 
-import bt747.Txt;
 import bt747.sys.Vm;
-import bt747.ui.MessageBox;
 
 /** This class is used to convert the binary log to a new format.
  * Basically this class interprets the log and creates a {@link GPSRecord}.
