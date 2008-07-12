@@ -86,7 +86,7 @@ public class GPSstate implements Thread {
 
     private int datum = 0; // Datum WGS84, TOKYO-M, TOKYO-A
 
-    public boolean loggingIsActive = false;
+    public boolean isLoggingActive = false;
     public boolean loggerIsFull = false;
     public boolean loggerNeedsInit = false;
     public boolean loggerIsDisabled = false;
@@ -562,7 +562,7 @@ public class GPSstate implements Thread {
         // Request log format from device
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_ON);
-        loggingIsActive = true; // This should be the result of the action.
+        isLoggingActive = true; // This should be the result of the action.
                                 // The device will eventually tell the new status
     }
 
@@ -571,7 +571,7 @@ public class GPSstate implements Thread {
         // Request log format from device
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_OFF);
-        loggingIsActive = false; // This should be the result of the action.
+        isLoggingActive = false; // This should be the result of the action.
                                  // The device will eventually tell the new status
     }
 
@@ -1369,7 +1369,7 @@ public class GPSstate implements Thread {
         try {
             if (m_logState == C_LOG_NOLOGGING) {
                 // Disable device logging while downloading
-                loggingIsActiveBeforeDownload = loggingIsActive;
+                loggingIsActiveBeforeDownload = isLoggingActive;
                 stopLog();
                 reqLogOnOffStatus();
             }
@@ -1818,7 +1818,7 @@ public class GPSstate implements Thread {
                     case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2 = logging
                         // on/off
                         logStatus = Convert.toInt(nmea[3]);
-                        loggingIsActive = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
+                        isLoggingActive = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
                         loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
                         loggerIsDisabled = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));

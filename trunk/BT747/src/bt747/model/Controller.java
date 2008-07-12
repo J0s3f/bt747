@@ -33,13 +33,24 @@ import bt747.ui.MessageBox;
  */
 public class Controller {
 
+    private static final int SECONDS_PER_HOUR = 3600;
+    /**
+     * Reference to the model
+     */
     private Model m;
 
-    public Controller(final Model m) {
-        this.m = m;
+    /**
+     * @param model
+     *            The model to associate with this controller.
+     */
+    public Controller(final Model model) {
+        this.m = model;
         init();
     }
 
+    /**
+     * Called when the Controller starts. Used for initialization.
+     */
     private void init() {
         getLogFilterSettings();
         m.setGpsDecode(m.getGpsDecode());
@@ -65,11 +76,22 @@ public class Controller {
         m.saveSettings();
     }
 
+    /**
+     * @param on
+     *            When true, writes the log conditions to certain output
+     *            formats. A log condition is for example: log a point every
+     *            second.
+     * 
+     */
     public final void setOutputLogConditions(final boolean on) {
         m.setOutputLogConditions(on);
         m.saveSettings();
     }
 
+    /**
+     * @param s
+     *            The base path for the files referenced.
+     */
     public final void setBaseDirPath(final String s) {
         m.setBaseDirPath(s);
         m.saveSettings();
@@ -85,29 +107,60 @@ public class Controller {
         m.saveSettings();
     }
 
-    public final void setChunkSize(final int i) {
-        m.setChunkSize(i);
+    /**
+     * @param chunkSize
+     *            The amount of data that is requested from the device in a
+     *            single command when downloading the data.
+     */
+
+    public final void setChunkSize(final int chunkSize) {
+        m.setChunkSize(chunkSize);
         m.saveSettings();
     }
 
-    public final void setDownloadTimeOut(final int i) {
-        m.setDownloadTimeOut(i);
-        m.gpsModel().setDownloadTimeOut(i);
+    /**
+     * @param timeout
+     *            The timeout in ms after which the lack of reply from the
+     *            device will be considered as a communication failure.
+     *            Depending on the operation, a recovery will be attempted.
+     */
+    public final void setDownloadTimeOut(final int timeout) {
+        m.setDownloadTimeOut(timeout);
+        m.gpsModel().setDownloadTimeOut(timeout);
         m.saveSettings();
     }
 
-    public final void setCard(final int i) {
-        m.setCard(i);
+    /**
+     * @param card
+     *            The card number that the filepaths refer to. This is usefull
+     *            on PDA's only and probably only on a Palm. This is used by the
+     *            'SuperWaba' environment if used. '-1' refers to the 'last card
+     *            in the system' which is normally the card that can be inserted
+     *            by the PDA user.
+     */
+    public final void setCard(final int card) {
+        m.setCard(card);
         m.saveSettings();
     }
 
-    public final void setLogRequestAhead(final int i) {
-        m.setLogRequestAhead(i);
+    /**
+     * @param numberOfRequestsAhead
+     *            Especially when downloading using Bluetooth, downloading is
+     *            slow when no request pipeline is implemented. This number
+     *            defines how many 'chunk download' request will be sent to
+     *            device while the first reply is still pending.
+     */
+    public final void setLogRequestAhead(final int numberOfRequestsAhead) {
+        m.setLogRequestAhead(numberOfRequestsAhead);
         m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
         m.saveSettings();
     }
 
-    public final void writeLog(final int log_type) {
+    /**
+     * @param logType
+     * @see Model.CSV_LOGTYPE
+     */
+    public final void writeLog(final int logType) {
         String ext = "";
         GPSFile gpsFile = null;
         GPSLogConvert lc;
@@ -121,11 +174,9 @@ public class Controller {
             lc = new CSVLogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
             lc = new DPL700LogConvert();
-            /// TODO: set SR Log type correctly.
-            ((DPL700LogConvert)lc).setLogType(
-                    m.getGPSType() == GPS_TYPE_GISTEQ2
-                    ? 0 : 1
-                            );
+            // / TODO: set SR Log type correctly.
+            ((DPL700LogConvert) lc)
+                    .setLogType(m.getGPSType() == GPS_TYPE_GISTEQ2 ? 0 : 1);
         } else {
             switch (m.getBinDecoder()) {
             case DECODER_THOMAS:
@@ -153,28 +204,28 @@ public class Controller {
         } else {
             usedFilters = m.getLogFilters();
         }
-        lc.setTimeOffset(m.getTimeOffsetHours() * 3600);
+        lc.setTimeOffset(m.getTimeOffsetHours() * SECONDS_PER_HOUR);
         lc.setNoGeoid(m.getNoGeoid());
 
-        switch (log_type) {
+        switch (logType) {
         default:
-        case Model.C_CSV_LOG:
+        case Model.CSV_LOGTYPE:
             gpsFile = new GPSCSVFile();
             ext = ".csv";
             break;
-        case Model.C_TRK_LOG:
+        case Model.TRK_LOGTYPE:
             gpsFile = new GPSCompoGPSTrkFile();
             ext = ".TRK";
             break;
-        case Model.C_KML_LOG:
+        case Model.KML_LOGTYPE:
             gpsFile = new GPSKMLFile();
             ext = ".kml";
             break;
-        case Model.C_PLT_LOG:
+        case Model.PLT_LOGTYPE:
             gpsFile = new GPSPLTFile();
             ext = ".plt";
             break;
-        case Model.C_GPX_LOG:
+        case Model.GPX_LOGTYPE:
             gpsFile = new GPSGPXFile();
             ext = ".gpx";
             // Force offset to 0 if selected in menu.
@@ -184,12 +235,12 @@ public class Controller {
             ((GPSGPXFile) gpsFile).setTrkSegSplitOnlyWhenSmall(m
                     .getGpxTrkSegWhenBig());
             break;
-        case Model.C_NMEA_LOG:
+        case Model.NMEA_LOGTYPE:
             gpsFile = new GPSNMEAFile();
             ((GPSNMEAFile) gpsFile).setNMEAoutput(m.getNMEAset());
             ext = ".nmea";
             break;
-        case Model.C_GMAP_LOG:
+        case Model.GMAP_LOGTYPE:
             gpsFile = new GPSGmapsHTMLEncodedFile();
             ((GPSGmapsHTMLEncodedFile) gpsFile).setGoogleKeyCode(m
                     .getGoogleMapKey());
@@ -198,7 +249,7 @@ public class Controller {
         }
 
         if (gpsFile != null) {
-            m.logConversionStarted(log_type);
+            m.logConversionStarted(logType);
 
             gpsFile.setAddLogConditionInfo(m.getOutputLogConditions());
             gpsFile.setImperial(m.getImperial());
@@ -221,7 +272,7 @@ public class Controller {
         } else {
             // TODO report error
         }
-        m.logConversionEnded(log_type);
+        m.logConversionEnded(logType);
     }
 
     public final GPSRecord[] getTrackPoints() {
@@ -237,10 +288,9 @@ public class Controller {
             lc = new CSVLogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
             lc = new DPL700LogConvert();
-            /// TODO: set SR Log type correctly.
-            ((DPL700LogConvert)lc).setLogType(
-                    m.getGPSType() == GPS_TYPE_GISTEQ2
-                    ? 0 : 1);
+            // / TODO: set SR Log type correctly.
+            ((DPL700LogConvert) lc)
+                    .setLogType(m.getGPSType() == GPS_TYPE_GISTEQ2 ? 0 : 1);
         } else {
             switch (m.getBinDecoder()) {
             case DECODER_THOMAS:
@@ -271,34 +321,32 @@ public class Controller {
         lc.setTimeOffset(m.getTimeOffsetHours() * 3600);
         lc.setNoGeoid(m.getNoGeoid());
 
-        
         gpsFile = new GPSArray();
 
-        //m.logConversionStarted(log_type);
+        // m.logConversionStarted(log_type);
 
-//        gpsFile.setAddLogConditionInfo(m.getOutputLogConditions());
-//        gpsFile.setImperial(m.getImperial());
-//        gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
-//        gpsFile.setBadTrackColor(m.getColorInvalidTrack());
+        // gpsFile.setAddLogConditionInfo(m.getOutputLogConditions());
+        // gpsFile.setImperial(m.getImperial());
+        // gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
+        // gpsFile.setBadTrackColor(m.getColorInvalidTrack());
 
         for (int i = 0; i < usedFilters.length; i++) {
             usedFilters[i].setStartDate(Conv.dateToUTCepoch1970(m
                     .getStartDate()));
-            usedFilters[i].setEndDate(Conv.dateToUTCepoch1970(m
-                    .getEndDate())
+            usedFilters[i].setEndDate(Conv.dateToUTCepoch1970(m.getEndDate())
                     + (24 * 60 * 60 - 1));
         }
         gpsFile.setFilters(usedFilters);
-//        gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
-//                    m.getFileSeparationFreq());
-//            gpsFile.setTrackSepTime(m.getTrkSep() * 60);
+        // gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
+        // m.getFileSeparationFreq());
+        // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         int error;
         error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
         reportError(error, lc.getErrorInfo());
-//        m.logConversionEnded(log_type);
+        // m.logConversionEnded(log_type);
         return gpsFile.getGpsTrackPoints();
     }
-    
+
     private void reportError(final int error, final String errorInfo) {
         String errorMsg;
         switch (error) {
@@ -309,11 +357,10 @@ public class Controller {
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
             (new MessageBox(Txt.WARNING, Txt.NO_FILES_WERE_CREATED))
-            .popupBlockingModal();
+                    .popupBlockingModal();
             break;
         case BT747Constants.ERROR_READING_FILE:
-            new MessageBox(Txt.ERROR, Txt.PROBLEM_READING
-                    + errorInfo)
+            new MessageBox(Txt.ERROR, Txt.PROBLEM_READING + errorInfo)
                     .popupBlockingModal();
             break;
         default:
@@ -321,21 +368,22 @@ public class Controller {
         }
     }
 
-    
     public final void setIncremental(final boolean b) {
         m.setIncremental(b);
     }
 
-    /** Cancel the log download process.
+    /**
+     * Cancel the log download process.
      */
     public final void cancelGetLog() {
         m.gpsModel().cancelGetLog();
     }
 
-    /** Start the log download process.
+    /**
+     * Start the log download process.
      */
     public final void startDownload() {
-        switch(m.getGPSType()) {
+        switch (m.getGPSType()) {
         default:
         case GPS_TYPE_DEFAULT:
             startDefaultDownload();
@@ -347,8 +395,10 @@ public class Controller {
             break;
         }
     }
-    /** Start the default log download process without taking into
-     * account the device type. 
+
+    /**
+     * Start the default log download process without taking into account the
+     * device type.
      */
     public final void startDefaultDownload() {
         try {
@@ -363,60 +413,66 @@ public class Controller {
         }
     }
 
-    /** The GpsModel is waiting for a reply to the question if the currently
-     * existing log with different data can be overwritten.
-     * This method must be called to replay to this question which is in
-     * principle the result of a user reply to a message box.
-     * @param isOkToOverwrite  If true, the existing log can be overwritten
+    /**
+     * The GpsModel is waiting for a reply to the question if the currently
+     * existing log with different data can be overwritten. This method must be
+     * called to replay to this question which is in principle the result of a
+     * user reply to a message box.
+     * 
+     * @param isOkToOverwrite
+     *            If true, the existing log can be overwritten
      */
     public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
         m.gpsModel().replyToOkToOverwrite(isOkToOverwrite);
     }
-    
-    
+
     /**
-     * The log is being erased - the user request to abandon waiting for the
-     * end of this operation.
+     * The log is being erased - the user request to abandon waiting for the end
+     * of this operation.
      */
     public final void stopErase() {
         m.gpsModel().stopErase();
     }
 
-
     public final void startDPL700Download() {
         m.gpsModel().getDPL700Log(m.getLogFilePath(), m.getCard());
     }
-    
+
     public final void setGPSType(final int i) {
         m.setGPSType(i);
     }
-    public static final int GPS_TYPE_DEFAULT = 0; 
-    public static final int GPS_TYPE_GISTEQ1 = 1; 
-    public static final int GPS_TYPE_GISTEQ2 = 2; 
-    public static final int GPS_TYPE_GISTEQ3 = 3; 
+
+    public static final int GPS_TYPE_DEFAULT = 0;
+    public static final int GPS_TYPE_GISTEQ1 = 1;
+    public static final int GPS_TYPE_GISTEQ2 = 2;
+    public static final int GPS_TYPE_GISTEQ3 = 3;
 
     /***************************************************************************
      * Device state
      **************************************************************************/
 
-    /** Activate logging on the device.
+    /**
+     * Activate logging on the device.
      */
     public final void startLog() {
         m.gpsModel().startLog();
         m.gpsModel().reqLogOnOffStatus();
     }
 
-    /** Stop logging on the device.
+    /**
+     * Stop logging on the device.
      */
     public final void stopLog() {
         m.gpsModel().stopLog();
         m.gpsModel().reqLogOnOffStatus();
     };
 
-    /** Set log overwrite mode on the device
+    /**
+     * Set log overwrite mode on the device
+     * 
      * @param b
-     *     true - overwrite data in device when full
-     *     false - stop logging when device is full
+     *            true - overwrite data in device when full false - stop logging
+     *            when device is full
      */
     public final void setLogOverwrite(final boolean b) {
         m.gpsModel().setLogOverwrite(b);
@@ -446,7 +502,7 @@ public class Controller {
     public void reqLogStatus() {
         m.gpsModel().reqLogStatus();
     }
-    
+
     public void reqLogFormat() {
         m.gpsModel().reqLogFormat();
     }
@@ -543,9 +599,9 @@ public class Controller {
         }
     }
 
-    /* ***********************************************************
+    /***************************************************************************
      * SECTION FOR CONNECTION RELATED METHODS
-     * ***********************************************************/ 
+     **************************************************************************/
 
     public final void connectGPS() {
         closeGPS();
@@ -555,8 +611,8 @@ public class Controller {
         }
     }
 
-
-    /** Close the GPS connection.
+    /**
+     * Close the GPS connection.
      */
     public final void closeGPS() {
         if (m.gpsRxTx().isConnected()) {
@@ -600,7 +656,6 @@ public class Controller {
         m.gpsRxTx().setPortAndOpen(port);
         performOperationsAfterGPSConnect();
     }
-    
 
     public final void setSpeed(final int speed) {
         m.gpsRxTx().setSpeed(speed);
@@ -630,16 +685,14 @@ public class Controller {
         }
     }
 
-
     public final void setDebugConn(final boolean dbg) {
         m.gpsRxTx().setDebugConn(dbg, m.getBaseDirPath());
     }
-    
-    /* ***********************************************************
+
+    /***************************************************************************
      * END OF SECTION FOR CONNECTION RELATED METHODS
-     * ***********************************************************/ 
-    
-    
+     **************************************************************************/
+
     public final void setDebug(final boolean b) {
         m.gpsModel().setDebug(b);
     }
@@ -696,17 +749,10 @@ public class Controller {
         getSettings(m.getLogFiltersAdv());
     }
 
-    public final void setFlashUserOption(
-            final boolean lock,
-            final int updateRate,
-            final int baudRate,
-            final int periodGLL,
-            final int periodRMC,
-            final int periodVTG,
-            final int periodGSA,
-            final int periodGSV,
-            final int periodGGA,
-            final int periodZDA,
+    public final void setFlashUserOption(final boolean lock,
+            final int updateRate, final int baudRate, final int periodGLL,
+            final int periodRMC, final int periodVTG, final int periodGSA,
+            final int periodGSV, final int periodGGA, final int periodZDA,
             final int periodMCHN) {
         m.gpsModel().setFlashUserOption(lock, updateRate, baudRate, periodGLL,
                 periodRMC, periodVTG, periodGSA, periodGSV, periodGGA,
@@ -995,8 +1041,7 @@ public class Controller {
     public final void setFilterMinNSAT(final int i) {
         m.setFilterMinNSAT(i);
     }
-    
-    
+
     public final void setFilters() {
         // TODO : Should schedule this after a while.
         for (int i = m.getLogFiltersAdv().length - 1; i >= 0; i--) {
@@ -1007,18 +1052,17 @@ public class Controller {
             filter.setMaxSpeed(m.getFilterMaxSpeed());
             filter.setMinDist(m.getFilterMinDist());
             filter.setMaxDist(m.getFilterMaxDist());
-            filter.setMaxPDOP((int)(m.getFilterMaxPDOP()*100));
-            filter.setMaxHDOP((int)(m.getFilterMaxHDOP()*100));
-            filter.setMaxVDOP((int)(m.getFilterMaxVDOP()*100));
+            filter.setMaxPDOP((int) (m.getFilterMaxPDOP() * 100));
+            filter.setMaxHDOP((int) (m.getFilterMaxHDOP() * 100));
+            filter.setMaxVDOP((int) (m.getFilterMaxVDOP() * 100));
             filter.setMinNSAT(m.getFilterMinNSAT());
         }
     }
-    
+
     public final void setNMEAset(final int value) {
         m.setNMEAset(value);
     }
 
-    
     public final void setValidMask(final int i, final int mask) {
         // TODO: not sure this is needed anymore
         m.getLogFilters()[i].setValidMask(mask);
@@ -1029,35 +1073,33 @@ public class Controller {
         m.getLogFilters()[i].setRcrMask(rcrmask);
     }
 
-    
     // View handling.
     private HashSet views = new HashSet();
 
-    /**add a listener to event thrown by this class.*/
-    public final void addView(final BT747View v) {        
+    /** add a listener to event thrown by this class. */
+    public final void addView(final BT747View v) {
         views.add(v);
         v.setController(this);
         v.setModel(this.m);
     }
 
-//  protected void postEvent(final int type) {
-//  Iterator it = views.iterator();
-//  while (it.hasNext()) {
-//      BT747View l=(BT747View)it.next();
-//      Event e=new Event(l, type, null);
-//      l.newEvent(e);
-//  }
-//}
-
+    // protected void postEvent(final int type) {
+    // Iterator it = views.iterator();
+    // while (it.hasNext()) {
+    // BT747View l=(BT747View)it.next();
+    // Event e=new Event(l, type, null);
+    // l.newEvent(e);
+    // }
+    // }
 
     public final void setTimeOffsetHours(final int timeOffsetHours) {
         m.setTimeOffsetHours(timeOffsetHours);
     }
-    
+
     public final void setOneFilePerDay(final int value) {
         m.setOneFilePerDay(value);
     }
-    
+
     public final void setNoGeoid(final boolean value) {
         m.setNoGeoid(value);
     }

@@ -178,9 +178,9 @@ public class GPSLogGet extends Container {
     }
 
     public final void updateButtons() {
-        chkLogOnOff.setChecked(m.loggingIsActive());
+        chkLogOnOff.setChecked(m.isLoggingActive());
 //        m_chkLogOnOff.repaintNow();
-        chkLogOverwriteStop.setChecked(m.logFullOverwrite());
+        chkLogOverwriteStop.setChecked(m.isLogFullOverwrite());
 //        m_chkLogOverwriteStop.repaintNow();
         m_UsedLabel.setText(Txt.MEM_USED + Convert.toString(m.logMemUsed()) + "(" + Convert.toString(m.logMemUsedPercent()) + "%)");
 //        m_UsedLabel.repaintNow();
@@ -247,21 +247,21 @@ public class GPSLogGet extends Container {
                     calBt = btStartDate;
                     cal.popupModal();
                 } else if (event.target == m_btToCSV || event.target == m_btToKML || event.target == m_btToPLT || event.target == m_btToGPX || event.target == m_btToTRK || event.target == m_btToGMAP || event.target == m_btToNMEA) {
-                    int logType = Model.C_NO_LOG;
+                    int logType = Model.NO_LOG_LOGTYPE;
                     if (event.target == m_btToCSV) {
-                        logType = Model.C_CSV_LOG;
+                        logType = Model.CSV_LOGTYPE;
                     } else if (event.target == m_btToTRK) {
-                        logType = Model.C_TRK_LOG;
+                        logType = Model.TRK_LOGTYPE;
                     } else if (event.target == m_btToKML) {
-                        logType = Model.C_KML_LOG;
+                        logType = Model.KML_LOGTYPE;
                     } else if (event.target == m_btToPLT) {
-                        logType = Model.C_PLT_LOG;
+                        logType = Model.PLT_LOGTYPE;
                     } else if (event.target == m_btToGPX) {
-                        logType = Model.C_GPX_LOG;
+                        logType = Model.GPX_LOGTYPE;
                     } else if (event.target == m_btToNMEA) {
-                        logType = Model.C_NMEA_LOG;
+                        logType = Model.NMEA_LOGTYPE;
                     } else if (event.target == m_btToGMAP) {
-                        logType = Model.C_GMAP_LOG;
+                        logType = Model.GMAP_LOGTYPE;
                     }
                     c.writeLog(logType);
                 } else if (event.target == this) {
@@ -303,25 +303,25 @@ public class GPSLogGet extends Container {
                         || event.type == ModelEvent.CONVERSION_STARTED) {
                     Button b = null;
                     switch (m.getLastConversionOngoing()) {
-                        case Model.C_CSV_LOG:
+                        case Model.CSV_LOGTYPE:
                             b = m_btToCSV;
                             break;
-                        case Model.C_TRK_LOG:
+                        case Model.TRK_LOGTYPE:
                             b = m_btToTRK;
                             break;
-                        case Model.C_KML_LOG:
+                        case Model.KML_LOGTYPE:
                             b = m_btToKML;
                             break;
-                        case Model.C_PLT_LOG:
+                        case Model.PLT_LOGTYPE:
                             b = m_btToPLT;
                             break;
-                        case Model.C_GPX_LOG:
+                        case Model.GPX_LOGTYPE:
                             b = m_btToGPX;
                             break;
-                        case Model.C_NMEA_LOG:
+                        case Model.NMEA_LOGTYPE:
                             b = m_btToNMEA;
                             break;
-                        case Model.C_GMAP_LOG:
+                        case Model.GMAP_LOGTYPE:
                             b = m_btToGMAP;
                             break;
                         default:
