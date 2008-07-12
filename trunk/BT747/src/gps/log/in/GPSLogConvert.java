@@ -10,9 +10,9 @@ import gps.log.out.GPSFile;
 
 /**
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 public interface GPSLogConvert {
     int parseFile(final GPSFile gpsFile);
@@ -21,10 +21,7 @@ public interface GPSLogConvert {
 
     void setNoGeoid(final boolean b);
 
-    int toGPSFile(
-            final String fileName,
-            final GPSFile gpsFile,
-            final int card);
-    
+    int toGPSFile(final String fileName, final GPSFile gpsFile, final int card);
+
     String getErrorInfo();
 }

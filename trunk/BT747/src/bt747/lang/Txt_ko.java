@@ -36,8 +36,8 @@ public class Txt_ko {
     public static final String LB_DOWNLOAD= "\uB2E4\uC6B4\uB85C\uB4DC";
     
     public static final String TITLE_ATTENTION = "\uC8FC\uC758";
-    public static final String CONFIRM_APP_EXIT = "\uD504\uB85C\uADF8\uB7A8\uC744 \uB05D\uB0B4\uB824\uACE0 \uD569\uB2C8\uB2E4.|" + 
-                                                  "\uC815\uB9D0 \uD504\uB85C\uADF8\uB7A8\uC744 \uB05D\uB0C5\uB2C8\uAE4C?";
+    public static final String CONFIRM_APP_EXIT = "\uD504\uB85C\uADF8\uB7A8\uC744 \uB05D\uB0B4\uB824\uACE0 \uD569\uB2C8\uB2E4.|"
+                                                  + "\uC815\uB9D0 \uD504\uB85C\uADF8\uB7A8\uC744 \uB05D\uB0C5\uB2C8\uAE4C?";
     
     public static final String YES=
         "\uB124";
@@ -50,44 +50,44 @@ public class Txt_ko {
     public static final String ABOUT_TITLE=
         "BT747 V"+Version.VERSION_NUMBER+"\uC5D0 \uAD00\uD558\uC5EC";
     public static final String ABOUT_TXT=
-        "SuperWaba\uB97C \uC774\uC6A9\uD558\uC5EC " + 
-        "|http://www.superwaba.org"+ 
-        "|" +Version.BUILD_STR + 
-        "|Mario De Weerd\uAC00 \uC791\uC131\uD588\uC2B5\uB2C8\uB2E4." + 
-        "|m.deweerd@ieee.org"+ 
-        "|"+ 
-        "|\uC774 \uD504\uB85C\uADF8\uB7A8\uC740 BT747 \uAE30\uAE30\uB97C \uC870\uC808\uD569\uB2C8\uB2E4." + 
-        "|\uD558\uB4DC\uC6E8\uC5B4\uB97C \uD574\uD0B9\uD558\uC5EC \uBE14\uB8E8\uD22C\uC2A4\uB97C \uD1B5\uD55C" + 
-        "|\uAE30\uAE30\uC758 \uC870\uC808\uC774 \uAC00\uB2A5\uD569\uB2C8\uB2E4." + 
-        "|\uC790\uC138\uD55C \uC815\uBCF4\uB294 \uC6F9\uC744 \uCC38\uACE0\uD558\uC138\uC694."; 
+        "SuperWaba\uB97C \uC774\uC6A9\uD558\uC5EC "
+        + "|http://www.superwaba.org"
+        + "|" +Version.BUILD_STR
+        + "|Mario De Weerd\uAC00 \uC791\uC131\uD588\uC2B5\uB2C8\uB2E4."
+        + "|m.deweerd@ieee.org"
+        + "|"
+        + "|\uC774 \uD504\uB85C\uADF8\uB7A8\uC740 BT747 \uAE30\uAE30\uB97C \uC870\uC808\uD569\uB2C8\uB2E4."
+        + "|\uD558\uB4DC\uC6E8\uC5B4\uB97C \uD574\uD0B9\uD558\uC5EC \uBE14\uB8E8\uD22C\uC2A4\uB97C \uD1B5\uD55C"
+        + "|\uAE30\uAE30\uC758 \uC870\uC808\uC774 \uAC00\uB2A5\uD569\uB2C8\uB2E4."
+        + "|\uC790\uC138\uD55C \uC815\uBCF4\uB294 \uC6F9\uC744 \uCC38\uACE0\uD558\uC138\uC694."; 
 
     
     public static final String ABOUT_SUPERWABA_TITLE=
         "SuperWaba\uC5D0 \uAD00\uD558\uC5EC";
     public static final String ABOUT_SUPERWABA_TXT=
-        "SuperWaba Virtual Machine "+ Settings.versionStr + 
-        "|Copyright (c)2000-2007" + 
-        "|Guilherme Campos Hazan" + 
-        "|www.superwaba.com|" + 
-        "|" + 
-        "SuperWaba\uB294 Waba Virtual Machine\uC758 " + 
-        "|\uAC1C\uB7C9 \uBC84\uC804\uC785\uB2C8\uB2E4." + 
-        "|Copyright (c) 1998,1999 WabaSoft" + 
-        "|www.wabasoft.com";
+        "SuperWaba Virtual Machine "+ Settings.versionStr
+        + "|Copyright (c)2000-2007"
+        + "|Guilherme Campos Hazan"
+        + "|www.superwaba.com|"
+        + "|"
+        + "SuperWaba\uB294 Waba Virtual Machine\uC758 "
+        + "|\uAC1C\uB7C9 \uBC84\uC804\uC785\uB2C8\uB2E4."
+        + "|Copyright (c) 1998,1999 WabaSoft"
+        + "|www.wabasoft.com";
     
     public static final String DISCLAIMER_TITLE=
         "\uCC45\uC784\uC758 \uD55C\uACC4";
     public static final String DISCLAIMER_TXT=
-        "\uC774 \uC18C\uD504\uD2B8\uC6E8\uC5B4\uB294 \uC5B4\uB5A4 \uC885\uB958\uC758 \uBCF4\uC99D\uC5C6\uC774 " +
-        "|'\uC788\uB294 \uADF8\uB300\uB85C' \uC81C\uACF5\uB429\uB2C8\uB2E4. " + 
-        "|\uBB35\uC2DC\uC801\uC778 \uC5B4\uB5A4 \uC885\uB958\uC758 \uC0C1\uC5C5\uC131, " +
-        "|\uD2B9\uC815 \uC6A9\uB3C4\uC5D0\uC758 \uC801\uD569\uC131\uC774\uB098 \uBB34\uD574\uD568\uC744 " +
-        "|\uD3EC\uD568\uD558\uC5EC \uC5B4\uB5A4 \uC885\uB958\uC758 \uD45C\uD604, \uAC00\uC815\uC774\uB098 \uBCF4\uC99D\uB3C4 " + 
-        "|\uAC00\uC9C0\uACE0 \uC788\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." + 
-        "|\uC18C\uD504\uD2B8\uC6E8\uC5B4\uB97C \uC0AC\uC6A9\uD558\uBA74\uC11C " +
-        "|\uBC1C\uC0DD\uD560 \uC218 \uC788\uB294 \uBAA8\uB4E0 \uC704\uD5D8\uC740 \uC0AC\uC6A9\uC790\uAC00 " +
-        "|\uAC10\uC218\uD569\uB2C8\uB2E4. \uC880 \uB354 \uC790\uC138\uD55C \uAC83\uC740 " +
-        "|GNU \uC77C\uBC18 \uACF5\uACF5 \uB77C\uC774\uC13C\uC2A4\uB97C \uCC38\uACE0\uD558\uC138\uC694.";
+        "\uC774 \uC18C\uD504\uD2B8\uC6E8\uC5B4\uB294 \uC5B4\uB5A4 \uC885\uB958\uC758 \uBCF4\uC99D\uC5C6\uC774 "
+        + "|'\uC788\uB294 \uADF8\uB300\uB85C' \uC81C\uACF5\uB429\uB2C8\uB2E4. "
+        + "|\uBB35\uC2DC\uC801\uC778 \uC5B4\uB5A4 \uC885\uB958\uC758 \uC0C1\uC5C5\uC131, "
+        + "|\uD2B9\uC815 \uC6A9\uB3C4\uC5D0\uC758 \uC801\uD569\uC131\uC774\uB098 \uBB34\uD574\uD568\uC744 "
+        + "|\uD3EC\uD568\uD558\uC5EC \uC5B4\uB5A4 \uC885\uB958\uC758 \uD45C\uD604, \uAC00\uC815\uC774\uB098 \uBCF4\uC99D\uB3C4 "
+        + "|\uAC00\uC9C0\uACE0 \uC788\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
+        + "|\uC18C\uD504\uD2B8\uC6E8\uC5B4\uB97C \uC0AC\uC6A9\uD558\uBA74\uC11C "
+        + "|\uBC1C\uC0DD\uD560 \uC218 \uC788\uB294 \uBAA8\uB4E0 \uC704\uD5D8\uC740 \uC0AC\uC6A9\uC790\uAC00 "
+        + "|\uAC10\uC218\uD569\uB2C8\uB2E4. \uC880 \uB354 \uC790\uC138\uD55C \uAC83\uC740 "
+        + "|GNU \uC77C\uBC18 \uACF5\uACF5 \uB77C\uC774\uC13C\uC2A4\uB97C \uCC38\uACE0\uD558\uC138\uC694.";
 
     // TAB identification
     public static final String C_FMT  = "\uD3EC\uB9F7";
@@ -169,9 +169,9 @@ public class Txt_ko {
     public static final String BT_PT_WITH_REASON = "\uB85C\uADF8\uB97C \uC800\uC7A5\uD560 \uBC29\uC2DD\uC744 \uC120\uD0DD\uD558\uC138\uC694 :";
 
     public static final String CONFIRM_FACT_RESET =
-            "GPS \uB85C\uAC70 \uAE30\uAE30\uC758 \uC0C1\uD0DC\uB97C \uACF5\uC7A5 \uCD08\uAE30\uAC12\uC73C\uB85C |" +
-            "\uBC14\uAFB8\uB824\uACE0 \uD569\uB2C8\uB2E4.|"+
-            "||\uC704\uD5D8\uC744 \uAC10\uC218\uD558\uACE0 \uC2E4\uD589\uD558\uACA0\uC2B5\uB2C8\uAE4C???";    
+            "GPS \uB85C\uAC70 \uAE30\uAE30\uC758 \uC0C1\uD0DC\uB97C \uACF5\uC7A5 \uCD08\uAE30\uAC12\uC73C\uB85C |"
+            + "\uBC14\uAFB8\uB824\uACE0 \uD569\uB2C8\uB2E4.|"
+            + "||\uC704\uD5D8\uC744 \uAC10\uC218\uD558\uACE0 \uC2E4\uD589\uD558\uACA0\uC2B5\uB2C8\uAE4C???";    
     
     // File tab
     public static final String OUTPUT_DIR = "\uC800\uC7A5 \uB514\uB809\uD1A0\uB9AC :";
@@ -220,32 +220,32 @@ public class Txt_ko {
     public static final String CONFIRM_ERASE = "\uC0AD\uC81C \uD655\uC778";
     
     public static final String C_msgWarningFormatIncompatibilityRisk =
-        "\uB85C\uADF8\uB97C \uC0AD\uC81C\uD558\uC9C0 \uC54A\uACE0 \uB85C\uADF8 \uD3EC\uB9F7\uC744 \uBCC0\uACBD\uD569\uB2C8\uB2E4.|" +
-        "\uB2E4\uB978 \uC18C\uD504\uD2B8\uC6E8\uC5B4\uC5D0\uC11C \uAE30\uAE30\uC758 \uC790\uB8CC\uB97C \uC778\uC2DD\uD558\uC9C0 " +
-        "\uBABB\uD560\uC218\uB3C4 \uC788\uC2B5\uB2C8\uB2E4!||" +
-        "\uC774\uB7F0 \uBE44\uD638\uD658\uC131\uC5D0 \uB3D9\uC758\uD569\uB2C8\uAE4C?";
+        "\uB85C\uADF8\uB97C \uC0AD\uC81C\uD558\uC9C0 \uC54A\uACE0 \uB85C\uADF8 \uD3EC\uB9F7\uC744 \uBCC0\uACBD\uD569\uB2C8\uB2E4.|"
+        + "\uB2E4\uB978 \uC18C\uD504\uD2B8\uC6E8\uC5B4\uC5D0\uC11C \uAE30\uAE30\uC758 \uC790\uB8CC\uB97C \uC778\uC2DD\uD558\uC9C0 "
+        + "\uBABB\uD560\uC218\uB3C4 \uC788\uC2B5\uB2C8\uB2E4!||"
+        + "\uC774\uB7F0 \uBE44\uD638\uD658\uC131\uC5D0 \uB3D9\uC758\uD569\uB2C8\uAE4C?";
     
     /** Message warning user about impact of changing log format */
     public static final String C_msgWarningFormatAndErase = 
-        "\uB85C\uADF8\uB97C \uC0AD\uC81C\uD558\uACE0 \uB85C\uADF8 \uD3EC\uB9F7\uC744 \uBCC0\uACBD\uD569\uB2C8\uB2E4." +
-        "|" +
-        "|\uB85C\uADF8 \uC0AD\uC81C\uC640 \uD3EC\uB9F7 \uBCC0\uACBD?";
+        "\uB85C\uADF8\uB97C \uC0AD\uC81C\uD558\uACE0 \uB85C\uADF8 \uD3EC\uB9F7\uC744 \uBCC0\uACBD\uD569\uB2C8\uB2E4."
+        + "|"
+        + "|\uB85C\uADF8 \uC0AD\uC81C\uC640 \uD3EC\uB9F7 \uBCC0\uACBD?";
     /** Message warning the user again about the impact of a log format change */           
     public static final String C_msgWarningFormatAndErase2 =
-        "\uAE30\uAE30\uC758 \uC790\uB8CC\uB97C \uC0AD\uC81C\uD558\uC9C0 \uC54A\uC744 \uC218 \uC788\uB294 " +
-        "|\uB9C8\uC9C0\uB9C9 \uAE30\uD68C\uC785\uB2C8\uB2E4." +
-        "|" +
-        "|\uB85C\uADF8 \uC0AD\uC81C\uC640 \uD3EC\uB9F7 \uBCC0\uACBD?";
+        "\uAE30\uAE30\uC758 \uC790\uB8CC\uB97C \uC0AD\uC81C\uD558\uC9C0 \uC54A\uC744 \uC218 \uC788\uB294 "
+        + "|\uB9C8\uC9C0\uB9C9 \uAE30\uD68C\uC785\uB2C8\uB2E4."
+        + "|"
+        + "|\uB85C\uADF8 \uC0AD\uC81C\uC640 \uD3EC\uB9F7 \uBCC0\uACBD?";
     /** Message warning user about impact of changing log format */
     public static final String C_msgEraseWarning = 
-        "\uAE30\uAE30\uC758 \uB85C\uADF8\uB97C \uC0AD\uC81C\uD569\uB2C8\uB2E4." +
-        "|" +
-        "|\uB85C\uADF8 \uC0AD\uC81C?";
+        "\uAE30\uAE30\uC758 \uB85C\uADF8\uB97C \uC0AD\uC81C\uD569\uB2C8\uB2E4."
+        + "|"
+        + "|\uB85C\uADF8 \uC0AD\uC81C?";
     public static final String C_msgEraseWarning2 =
-        "\uAE30\uAE30\uC758 \uC790\uB8CC\uB97C \uC0AD\uC81C\uD558\uC9C0 \uC54A\uC744 \uC218 \uC788\uB294 " +
-        "|\uB9C8\uC9C0\uB9C9 \uAE30\uD68C\uC785\uB2C8\uB2E4." +
-        "|" +
-        "|\uB85C\uADF8 \uC0AD\uC81C?";
+        "\uAE30\uAE30\uC758 \uC790\uB8CC\uB97C \uC0AD\uC81C\uD558\uC9C0 \uC54A\uC744 \uC218 \uC788\uB294 "
+        + "|\uB9C8\uC9C0\uB9C9 \uAE30\uD68C\uC785\uB2C8\uB2E4."
+        + "|"
+        + "|\uB85C\uADF8 \uC0AD\uC81C?";
 
     public static final String ONE_FILE = "\uD558\uB098\uC758 \uD30C\uC77C";
     public static final String ONE_FILE_DAY = "\uB0A0\uC790\uBCC4 \uD30C\uC77C";
@@ -306,8 +306,8 @@ public class Txt_ko {
     public static final String TITLE_WAITING_ERASE =
         "\uC0AD\uC81C\uC911";
     public static final String TXT_WAITING_ERASE =
-        "\uC0AD\uC81C\uAC00 \uB05D\uB0A0\uB54C\uAE4C\uC9C0 \uAE30\uB2E4\uB824 \uC8FC\uC138\uC694.|" +
-        "\uC704\uD5D8\uC744 \uAC10\uC218\uD558\uACE0 \uCDE8\uC18C\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.";
+        "\uC0AD\uC81C\uAC00 \uB05D\uB0A0\uB54C\uAE4C\uC9C0 \uAE30\uB2E4\uB824 \uC8FC\uC138\uC694.|"
+        + "\uC704\uD5D8\uC744 \uAC10\uC218\uD558\uACE0 \uCDE8\uC18C\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.";
     
     public static final String UNKNOWN = "\uBBF8\uD655\uC778";
     public static final String CHK_PATH =
@@ -335,11 +335,11 @@ public class Txt_ko {
     public static final String WRITEFLASH = "\uD50C\uB798\uC26C\uC5D0 \uC4F0\uAE30";
     public static final String ABORT = "\uC911\uB2E8";
     public static final String TXT_FLASH_LIMITED_WRITES=
-        "\uD50C\uB798\uC26C \uBA54\uBAA8\uB9AC\uC5D0 \uC4F8 \uC218 \uC788\uB294 \uD69F\uC218\uB294 |" +
-        "\uC81C\uD55C\uB418\uC5B4 \uC788\uC73C\uBA70 \uC124\uC815\uC744 \uBCC0\uACBD\uD55C \uB2E4\uC74C |" +
-        "\uAE30\uAE30\uB97C \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC744 \uC218\uB3C4 \uC788\uC2B5\uB2C8\uB2E4 |" +
-        "(\uC608. \uBCC0\uC870\uC18D\uB3C4 \uBCC0\uACBD)|" +
-        "\uC911\uB2E8\uD558\uB824\uBA74 \uCDE8\uC18C\uB97C \uB204\uB974\uC138\uC694!!";
+        "\uD50C\uB798\uC26C \uBA54\uBAA8\uB9AC\uC5D0 \uC4F8 \uC218 \uC788\uB294 \uD69F\uC218\uB294 |"
+        + "\uC81C\uD55C\uB418\uC5B4 \uC788\uC73C\uBA70 \uC124\uC815\uC744 \uBCC0\uACBD\uD55C \uB2E4\uC74C |"
+        + "\uAE30\uAE30\uB97C \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC744 \uC218\uB3C4 \uC788\uC2B5\uB2C8\uB2E4 |"
+        + "(\uC608. \uBCC0\uC870\uC18D\uB3C4 \uBCC0\uACBD)|"
+        + "\uC911\uB2E8\uD558\uB824\uBA74 \uCDE8\uC18C\uB97C \uB204\uB974\uC138\uC694!!";
     public static final String PERIOD_ABBREV = "Per";
     
     // Forgotten in Advanced track filter
@@ -355,22 +355,22 @@ public class Txt_ko {
     public static final String WARNING =
         "\uACBD\uACE0";
     public static final String NO_FILES_WERE_CREATED =
-        "\uC800\uC7A5\uD560 \uD30C\uC77C\uC774 \uB9CC\uB4E4\uC5B4\uC9C0\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4!" +
-        "||" +
-        "|- \uD544\uD130\uAC00 \uC544\uBB34\uB7F0 \uD3EC\uC778\uD2B8\uB97C \uC120\uD0DD\uD558\uC9C0 \uC54A\uC558\uAC70\uB098 " +
-        "|- \uB85C\uADF8\uAC00 \uC544\uBB34\uB7F0 \uC790\uB8CC\uB97C \uD3EC\uD568\uD558\uC9C0 \uC54A\uC744\uC218 \uC788\uC2B5\uB2C8\uB2E4." +
-        "|" +
-        "|\uBAA8\uB4E0 \uD3EC\uC778\uD2B8\uB97C \uC120\uD0DD\uD558\uC138\uC694." +
-        "|\uADF8\uB798\uB3C4 \uC5D0\uB7EC\uAC00 \uBC1C\uC0DD\uD55C\uB2E4\uBA74," +
-        "| \uBC84\uADF8\uC758 \uAC00\uB2A5\uC131\uC774 \uC788\uC2B5\uB2C8\uB2E4.";
+        "\uC800\uC7A5\uD560 \uD30C\uC77C\uC774 \uB9CC\uB4E4\uC5B4\uC9C0\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4!"
+        + "||"
+        + "|- \uD544\uD130\uAC00 \uC544\uBB34\uB7F0 \uD3EC\uC778\uD2B8\uB97C \uC120\uD0DD\uD558\uC9C0 \uC54A\uC558\uAC70\uB098 "
+        + "|- \uB85C\uADF8\uAC00 \uC544\uBB34\uB7F0 \uC790\uB8CC\uB97C \uD3EC\uD568\uD558\uC9C0 \uC54A\uC744\uC218 \uC788\uC2B5\uB2C8\uB2E4."
+        + "|"
+        + "|\uBAA8\uB4E0 \uD3EC\uC778\uD2B8\uB97C \uC120\uD0DD\uD558\uC138\uC694."
+        + "|\uADF8\uB798\uB3C4 \uC5D0\uB7EC\uAC00 \uBC1C\uC0DD\uD55C\uB2E4\uBA74,"
+        + "| \uBC84\uADF8\uC758 \uAC00\uB2A5\uC131\uC774 \uC788\uC2B5\uB2C8\uB2E4.";
     public static final String ADD_RECORD_NUMBER =
         "\uB85C\uADF8\uC5D0 \uB808\uCF54\uB4DC \uAC1C\uC218\uB97C \uAE30\uB85D";    
 
     public static final String S_DEBUG_CONN= "\uB514\uBC84\uADF8 \uCF5C\uC194.";
     public static final String S_IMPERIAL= "Imperial Units";
     public static final String BAD_SUPERWABAVERSION =
-        "This application was built for|SuperWaba V" +
-        Settings.requiredVersionStr + "."
+        "This application was built for|SuperWaba V"
+        + Settings.requiredVersionStr + "."
         +"|This version is V"+Settings.versionStr+"."
         +"|Exiting application";
 

@@ -1,4 +1,5 @@
 package bt747.waba_view;
+
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -37,172 +38,181 @@ import bt747.model.ModelEvent;
 import bt747.sys.Convert;
 import bt747.waba_view.ui.FileSelect;
 
-/** The purpose of this container is to configure file settings
+/**
+ * The purpose of this container is to configure file settings
  * 
  * @author Mario De Weerd
  */
 public class GPSLogFile extends Container {
-    
+
     private Model m;
     private Controller c;
-    
-    public GPSLogFile(Controller c, Model m) {
-        this.c=c;
-        this.m=m;
+
+    public GPSLogFile(final Controller c, final Model m) {
+        this.c = c;
+        this.m = m;
     }
-    
-    Edit m_edBaseDirName;
-    Button m_btSelectBaseDirName;
-    Edit m_edLogFileName;
-    Button m_btSelectLogFileName;
-    Edit m_edReportBaseName;
-    Edit m_edChunkSize;
-    Edit m_edTimeout;
-    ComboBox m_cbVolumes;
-    ComboBox m_cblogReqAhead;
-    
-    private static final String []C_LOG_REQ_AHEAD= {"0","1","2","3","4","5"};
-    
-    private Button m_btChangeSettings;
-    private Button m_btDefaultSettings;
-    
-    protected void onStart() {
+
+    private Edit edBaseDirName;
+    private Button btSelectBaseDirName;
+    private Edit edLogFileName;
+    private Button btSelectLogFileName;
+    private Edit edReportBaseName;
+    private Edit edChunkSize;
+    private Edit edTimeout;
+    private ComboBox cbVolumes;
+    private ComboBox cblogReqAhead;
+
+    private static final String[] C_LOG_REQ_AHEAD = { "0", "1", "2", "3", "4",
+            "5" };
+
+    private Button btChangeSettings;
+    private Button btDefaultSettings;
+
+    protected final void onStart() {
         Label tmp;
         int idx;
-        
+
         // OUTPUT DIRECTORY AND "+" button
-        add(tmp=new Label(Txt.OUTPUT_DIR), LEFT, AFTER); //$NON-NLS-1$
-        add(m_btSelectBaseDirName=new Button("+"), RIGHT, SAME);
-        m_edBaseDirName = new Edit("");
-        add(m_edBaseDirName); //$NON-NLS-1$
-        m_edBaseDirName.setRect(AFTER, SAME,FILL-m_btSelectBaseDirName.getSize().width(),PREFERRED,tmp);
-        
+        add(tmp = new Label(Txt.OUTPUT_DIR), LEFT, AFTER); //$NON-NLS-1$
+        add(btSelectBaseDirName = new Button("+"), RIGHT, SAME);
+        edBaseDirName = new Edit("");
+        add(edBaseDirName); //$NON-NLS-1$
+        edBaseDirName.setRect(AFTER, SAME, FILL
+                - btSelectBaseDirName.getSize().width(), PREFERRED, tmp);
+
         // RAW DATA FILE
-        add(tmp=new Label(Txt.LOGFILE), LEFT, AFTER); //$NON-NLS-1$
-        add(m_btSelectLogFileName=new Button("+"), RIGHT, SAME);
-        m_edLogFileName = new Edit("");
-        add(m_edLogFileName);
-        m_edLogFileName.setRect(AFTER, SAME,FILL-m_btSelectLogFileName.getSize().width(),PREFERRED,tmp);
-        
+        add(tmp = new Label(Txt.LOGFILE), LEFT, AFTER); //$NON-NLS-1$
+        add(btSelectLogFileName = new Button("+"), RIGHT, SAME);
+        edLogFileName = new Edit("");
+        add(edLogFileName);
+        edLogFileName.setRect(AFTER, SAME, FILL
+                - btSelectLogFileName.getSize().width(), PREFERRED, tmp);
+
         add(new Label(Txt.REPORT), LEFT, AFTER); //$NON-NLS-1$
-        add(m_edReportBaseName = new Edit(""), AFTER, SAME); //$NON-NLS-1$
+        add(edReportBaseName = new Edit(""), AFTER, SAME); //$NON-NLS-1$
 
         add(new Label(Txt.CHUNK), LEFT, AFTER); //$NON-NLS-1$
-        add(m_edChunkSize = new Edit(""), AFTER, SAME); //$NON-NLS-1$
-        m_edChunkSize.setValidChars(Edit.numbersSet);
+        add(edChunkSize = new Edit(""), AFTER, SAME); //$NON-NLS-1$
+        edChunkSize.setValidChars(Edit.numbersSet);
         add(new Label(Txt.CHUNK_AHEAD), LEFT, AFTER);
-        add(m_cblogReqAhead=new ComboBox(C_LOG_REQ_AHEAD),AFTER,SAME);
-        idx=m.getLogRequestAhead();
-        if(idx>m_cblogReqAhead.size()-1) {
-            idx=m_cblogReqAhead.size()-1;
+        add(cblogReqAhead = new ComboBox(C_LOG_REQ_AHEAD), AFTER, SAME);
+        idx = m.getLogRequestAhead();
+        if (idx > cblogReqAhead.size() - 1) {
+            idx = cblogReqAhead.size() - 1;
         }
-        m_cblogReqAhead.select(idx);
+        cblogReqAhead.select(idx);
         add(new Label(Txt.READ_TIMEOUT), LEFT, AFTER); //$NON-NLS-1$
-        add(m_edTimeout = new Edit(""), AFTER, SAME); //$NON-NLS-1$
-        m_edTimeout.setValidChars(Edit.numbersSet);
+        add(edTimeout = new Edit(""), AFTER, SAME); //$NON-NLS-1$
+        edTimeout.setValidChars(Edit.numbersSet);
 
         // The view does a little bit of control
         // - left it here because it is platform dependent.
-        if(Settings.platform.startsWith("Palm")) {
+        if (Settings.platform.startsWith("Palm")) {
             Vector v = new Vector(50);
-            int Card=m.getCard();
+            int Card = m.getCard();
             for (int i = 0; i < 255; i++) {
                 if (File.isCardInserted(i)) {
-                    v.addElement(""+i);
-                    if(Card==i) {
-                        idx=v.size()-1;
+                    v.addElement("" + i);
+                    if (Card == i) {
+                        idx = v.size() - 1;
                     }
                 }
             }
             v.addElement("-1");
-            if(Card==-1) {
-                idx=v.size()-1;
+            if (Card == -1) {
+                idx = v.size() - 1;
             }
             add(new Label(Txt.CARD_VOL), LEFT, AFTER); //$NON-NLS-1$
-            add( m_cbVolumes= new ComboBox((String[])v.toObjectArray()), AFTER,SAME);
-            m_cbVolumes.select(idx);
+            add(cbVolumes = new ComboBox((String[]) v.toObjectArray()), AFTER,
+                    SAME);
+            cbVolumes.select(idx);
         }
-        
 
-        m_btChangeSettings=new Button(Txt.APPLY_SET);
-        add(m_btChangeSettings,CENTER,AFTER+5);
-        m_btDefaultSettings=new Button(Txt.DEFAULT_SET);
-        add(m_btDefaultSettings,CENTER,AFTER+5);
+        btChangeSettings = new Button(Txt.APPLY_SET);
+        add(btChangeSettings, CENTER, AFTER + 5);
+        btDefaultSettings = new Button(Txt.DEFAULT_SET);
+        add(btDefaultSettings, CENTER, AFTER + 5);
 
         updateValues();
 
     }
-    
-    private boolean setting=false;
+
+    private boolean setting = false;
+
     private void updateValues() {
-        if(!setting) {
-        m_edBaseDirName.setText(m.getBaseDirPath());
-        m_edReportBaseName.setText(m.getReportFileBase());
-        m_edLogFileName.setText(m.getLogFile());
-        m_edChunkSize.setText(Convert.toString(m.getChunkSize()));
-        m_edTimeout.setText(Convert.toString(m.getDownloadTimeOut()));
+        if (!setting) {
+            edBaseDirName.setText(m.getBaseDirPath());
+            edReportBaseName.setText(m.getReportFileBase());
+            edLogFileName.setText(m.getLogFile());
+            edChunkSize.setText(Convert.toString(m.getChunkSize()));
+            edTimeout.setText(Convert.toString(m.getDownloadTimeOut()));
         }
     }
 
-    public void onEvent( Event event ) {
+    public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
-            if (event.target==m_btChangeSettings) {
-                setting=true;
-                c.setBaseDirPath(m_edBaseDirName.getText());
-                c.setLogFilePath(m_edLogFileName.getText());
-                c.setOutputFileBasePath(m_edReportBaseName.getText());
-                c.setChunkSize(Convert.toInt(m_edChunkSize.getText()));
-                c.setDownloadTimeOut(Convert.toInt(m_edTimeout.getText()));
-                if(Settings.platform.startsWith("Palm")) {
-                    c.setCard(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
+            if (event.target == btChangeSettings) {
+                setting = true;
+                c.setBaseDirPath(edBaseDirName.getText());
+                c.setLogFilePath(edLogFileName.getText());
+                c.setOutputFileBasePath(edReportBaseName.getText());
+                c.setChunkSize(Convert.toInt(edChunkSize.getText()));
+                c.setDownloadTimeOut(Convert.toInt(edTimeout.getText()));
+                if (Settings.platform.startsWith("Palm")) {
+                    c.setCard(Convert.toInt((String) cbVolumes
+                            .getSelectedItem()));
                 }
-                c.setLogRequestAhead(Convert.toInt((String)m_cblogReqAhead.getSelectedItem()));
-                setting=false;
+                c.setLogRequestAhead(Convert.toInt((String) cblogReqAhead
+                        .getSelectedItem()));
+                setting = false;
                 updateValues();
                 c.saveSettings(); // Explicitally save settings
-            } else if (event.target==m_btSelectBaseDirName) {
-                FileSelect fs=new FileSelect();
+            } else if (event.target == btSelectBaseDirName) {
+                FileSelect fs = new FileSelect();
                 fs.setDirOnly(true);
-                fs.setPath(m_edBaseDirName.getText());
-                if(Settings.platform.startsWith("Palm")) {
-                    fs.setCardSlot(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
+                fs.setPath(edBaseDirName.getText());
+                if (Settings.platform.startsWith("Palm")) {
+                    fs.setCardSlot(Convert.toInt((String) cbVolumes
+                            .getSelectedItem()));
                 }
                 fs.popupBlockingModal();
-                //m_edBaseDirName.setText(fs.getPath());
+                // m_edBaseDirName.setText(fs.getPath());
                 c.setBaseDirPath(fs.getPath());
-            } else if (event.target==m_btSelectLogFileName) {
-                FileSelect fs=new FileSelect();
-                fs.setRoot(m_edBaseDirName.getText());
-                fs.setPath(m_edLogFileName.getText());
-                //fs.setDirOnly(false);   //Default
-                if(Settings.platform.startsWith("Palm")) {
-                    fs.setCardSlot(Convert.toInt((String)m_cbVolumes.getSelectedItem()));
+            } else if (event.target == btSelectLogFileName) {
+                FileSelect fs = new FileSelect();
+                fs.setRoot(edBaseDirName.getText());
+                fs.setPath(edLogFileName.getText());
+                // fs.setDirOnly(false); //Default
+                if (Settings.platform.startsWith("Palm")) {
+                    fs.setCardSlot(Convert.toInt((String) cbVolumes
+                            .getSelectedItem()));
                 }
                 fs.popupBlockingModal();
-                //m_edLogFileName.setText(fs.getRelPath());
+                // m_edLogFileName.setText(fs.getRelPath());
                 c.setLogFilePath(fs.getRelPath());
-            } else if (event.target==m_btDefaultSettings) {
+            } else if (event.target == btDefaultSettings) {
                 m.defaultSettings();
                 updateValues();
             }
-        break;
+            break;
         case ControlEvent.FOCUS_OUT:
-            if(event.target==m_edLogFileName) {
-                c.setLogFilePath(m_edLogFileName.getText());
-            } else if (event.target==m_edBaseDirName) {
-                c.setBaseDirPath(m_edBaseDirName.getText());
-            } else if (event.target==m_edReportBaseName) {
-                c.setOutputFileBasePath(m_edReportBaseName.getText());
+            if (event.target == edLogFileName) {
+                c.setLogFilePath(edLogFileName.getText());
+            } else if (event.target == edBaseDirName) {
+                c.setBaseDirPath(edBaseDirName.getText());
+            } else if (event.target == edReportBaseName) {
+                c.setOutputFileBasePath(edReportBaseName.getText());
             }
             break;
         default:
-            if (event.type==ModelEvent.LOGFILEPATH_UPDATE
-                ||event.type==ModelEvent.OUTPUTFILEPATH_UPDATE
-                ||event.type==ModelEvent.WORKDIRPATH_UPDATE) {
+            if (event.type == ModelEvent.LOGFILEPATH_UPDATE
+                    || event.type == ModelEvent.OUTPUTFILEPATH_UPDATE
+                    || event.type == ModelEvent.WORKDIRPATH_UPDATE) {
                 updateValues();
             }
-        break;
+            break;
         }
     }
 

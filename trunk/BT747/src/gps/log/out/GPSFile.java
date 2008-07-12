@@ -66,7 +66,7 @@ public abstract class GPSFile {
     protected int previousTime = 0;
     protected boolean separateTrack = false;
     protected int trackSepTime = 60 * 60; // Time needed between points to
-                                            // separate segments.
+    // separate segments.
     protected int filesCreated = 0;
 
     protected boolean oneFilePerTrack = false;
@@ -79,14 +79,11 @@ public abstract class GPSFile {
 
     protected boolean imperial = false; // If true, use English units
 
-    protected static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR", "APR",
-            "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
+    protected static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
+            "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
-    public void initialiseFile(
-            final String baseName,
-            final String extension,
-            final int fileCard,
-            final int fileSeparationFreq) {
+    public void initialiseFile(final String baseName, final String extension,
+            final int fileCard, final int fileSeparationFreq) {
         firstRecord = true;
         nbrOfPassesToGo = C_NUMBER_OF_PASSES - 1;
         ext = extension;
@@ -103,8 +100,8 @@ public abstract class GPSFile {
             oneFilePerTrack = true;
             isMultipleFiles = true;
             break;
-            default:
-                break;
+        default:
+            break;
         }
     };
 
@@ -276,7 +273,7 @@ public abstract class GPSFile {
                 if (createNewFile) {
                     // New file
                     writeFileHeader("GPS" + extra_ext); // First time this file
-                                                        // is
+                    // is
                     // opened.
                 } else {
                     // Append to existing file
@@ -411,17 +408,17 @@ public abstract class GPSFile {
     }
 
     protected boolean addLogConditionInfo = false;
-    
+
     public final boolean isAddLogConditionInfo() {
         return addLogConditionInfo;
     }
-
 
     public final void setAddLogConditionInfo(final boolean addLogConditionInfo) {
         this.addLogConditionInfo = addLogConditionInfo;
     }
 
     protected String errorInfo;
+
     public final String getErrorInfo() {
         return errorInfo;
     }

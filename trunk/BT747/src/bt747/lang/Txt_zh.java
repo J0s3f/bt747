@@ -40,8 +40,8 @@ public class Txt_zh {
     public static final String LB_DOWNLOAD= "\u4E0B\u8F7D";
 
     public static final String TITLE_ATTENTION = "\u6CE8\u610F";
-    public static final String CONFIRM_APP_EXIT = "\u60A8\u5C06\u9000\u51FA\u5E94\u7528|" + 
-    "\u8BC1\u5B9E\u5E94\u7528\u51FA\u53E3\uFF1F";
+    public static final String CONFIRM_APP_EXIT = "\u60A8\u5C06\u9000\u51FA\u5E94\u7528|"
+    + "\u8BC1\u5B9E\u5E94\u7528\u51FA\u53E3\uFF1F";
 
     public static final String YES=
     "\u662F";
@@ -54,47 +54,47 @@ public class Txt_zh {
     public static final String ABOUT_TITLE=
     "\u5173\u4E8EBT747 v " +Version.VERSION_NUMBER;
     public static final String ABOUT_TXT=
-    "\u521B\u9020\u4E0ESuperWaba" + 
-    "|http://www.superwaba.org " + 
-    "|" +Version.BUILD_STR + 
-    "|\u5199\u7531Mario De Weerd" + 
-    "|m.deweerd@ieee.org " + 
-    "|" + 
-    "|\u8FD9\u79CD\u5E94\u7528\u5141\u8BB8\u63A7\u5236" + 
-    "|BT747\u8BBE\u5907\u3002" + 
-    "|\u5B8C\u5168\u63A7\u5236\u4F7F\u7528bluetooth\u4F7F\u80FD" + 
-    "|\u901A\u8FC7\u5E94\u7528\u786C\u4EF6\u6587\u4E10\u3002 " + 
-    "|\u60A8\u80FD\u627E\u5230\u4FE1\u606F\u5173\u4E8E\u7F51\u3002"; 
+    "\u521B\u9020\u4E0ESuperWaba"
+    + "|http://www.superwaba.org "
+    + "|" +Version.BUILD_STR
+    + "|\u5199\u7531Mario De Weerd"
+    + "|m.deweerd@ieee.org "
+    + "|"
+    + "|\u8FD9\u79CD\u5E94\u7528\u5141\u8BB8\u63A7\u5236"
+    + "|BT747\u8BBE\u5907\u3002"
+    + "|\u5B8C\u5168\u63A7\u5236\u4F7F\u7528bluetooth\u4F7F\u80FD"
+    + "|\u901A\u8FC7\u5E94\u7528\u786C\u4EF6\u6587\u4E10\u3002 "
+    + "|\u60A8\u80FD\u627E\u5230\u4FE1\u606F\u5173\u4E8E\u7F51\u3002"; 
 
 
     public static final String ABOUT_SUPERWABA_TITLE=
     "\u5173\u4E8ESuperWaba";
     public static final String ABOUT_SUPERWABA_TXT=
-    "SuperWaba\u865A\u62DF\u673A"+ Settings.versionStr + 
-    "|\u590D\u5236\u6743(c) 2000-2007" + 
-    "|Guilherme Campos\u72B9\u592A\u4EBA\u6559\u5802\u9886\u5531\u8005" + 
-    "|www.superwaba.com|" + 
-    "|" + 
-    "SuperWaba\u662F\u4E00\u4E2A\u6539\u8FDB\u7684\u7248\u672C" + 
-    "|Waba\u865A\u62DF\u673A" + 
-    "|\u7248\u6743(c) 1998,1999 WabaSoft" + 
-    "|www.wabasoft.com";
+    "SuperWaba\u865A\u62DF\u673A"+ Settings.versionStr
+    + "|\u590D\u5236\u6743(c) 2000-2007"
+    + "|Guilherme Campos\u72B9\u592A\u4EBA\u6559\u5802\u9886\u5531\u8005"
+    + "|www.superwaba.com|"
+    + "|"
+    + "SuperWaba\u662F\u4E00\u4E2A\u6539\u8FDB\u7684\u7248\u672C"
+    + "|Waba\u865A\u62DF\u673A"
+    + "|\u7248\u6743(c) 1998,1999 WabaSoft"
+    + "|www.wabasoft.com";
 
     public static final String DISCLAIMER_TITLE=
     "\u58F0\u660E";
     public static final String DISCLAIMER_TXT=
-        "Software is provided 'AS IS,' without" + 
-        "|a warranty of any kind. ALL EXPRESS" + 
-        "|OR IMPLIED REPRESENTATIONS AND " + 
-        "|WARRANTIES, INCLUDING ANY IMPLIED" + 
-        "|WARRANTY OF MERCHANTABILITY," + 
-        "|FITNESS FOR A PARTICULAR PURPOSE" + 
-        "|OR NON-INFRINGEMENT, ARE HEREBY" + 
-        "|EXCLUDED. THE ENTIRE RISK ARISING " + 
-        "|OUT OF USING THE SOFTWARE IS" + 
-        "|ASSUMED BY THE USER. See the" + 
-        "|GNU General Public License for more" + 
-        "|details." ;
+        "Software is provided 'AS IS,' without"
+        + "|a warranty of any kind. ALL EXPRESS"
+        + "|OR IMPLIED REPRESENTATIONS AND "
+        + "|WARRANTIES, INCLUDING ANY IMPLIED"
+        + "|WARRANTY OF MERCHANTABILITY,"
+        + "|FITNESS FOR A PARTICULAR PURPOSE"
+        + "|OR NON-INFRINGEMENT, ARE HEREBY"
+        + "|EXCLUDED. THE ENTIRE RISK ARISING "
+        + "|OUT OF USING THE SOFTWARE IS"
+        + "|ASSUMED BY THE USER. See the"
+        + "|GNU General Public License for more"
+        + "|details." ;
 
 //    \u5236\u8868\u7B26\u8BC1\u660E
     public static final String C_FMT = "\u683C\u5F0F";
@@ -178,10 +178,10 @@ public class Txt_zh {
     public static final String BT_PT_WITH_REASON = "\u91C7\u4F10\u70B9\u7684\u70B9\u51FB\u4EE5\u539F\u56E0\uFF1A";
 
     public static final String CONFIRM_FACT_RESET =
-    "\u60A8\u5C06\u6267\u884C\u5DE5\u5382|" +
-    "\u60A8\u7684GPS\u65E5\u5FD7\u8BB0\u5F55\u5668\u8BBE\u5907\u91CD\u65B0\u8BBE\u7F6E |" +
-    "||\u60A8\u8BC1\u5B9E\u8FD9\u91CD\u65B0\u8BBE\u7F6E\u5728|" +
-    "\u60A8\u81EA\u5DF1\u7684\u98CE\u9669\u6001\u5EA6\u6076\u52A3"; 
+    "\u60A8\u5C06\u6267\u884C\u5DE5\u5382|"
+    + "\u60A8\u7684GPS\u65E5\u5FD7\u8BB0\u5F55\u5668\u8BBE\u5907\u91CD\u65B0\u8BBE\u7F6E |"
+    + "||\u60A8\u8BC1\u5B9E\u8FD9\u91CD\u65B0\u8BBE\u7F6E\u5728|"
+    + "\u60A8\u81EA\u5DF1\u7684\u98CE\u9669\u6001\u5EA6\u6076\u52A3"; 
 
 //    \u6587\u4EF6\u5236\u8868\u7B26
     public static final String OUTPUT_DIR = "\u8F93\u51FA\u7684\u65B9\u5411\uFF1A";
@@ -230,35 +230,35 @@ public class Txt_zh {
     public static final String CONFIRM_ERASE = "\u8BC1\u5B9E\u5220\u6389";
 
     public static final String C_msgWarningFormatIncompatibilityRisk =
-    "\u60A8\u5C06\u6539\u53D8\u60A8\u7684\u8BBE\u5907\u5F62\u5F0F\uFF0C\u4E0D\u7528" +
-    "\u5220\u6389\u65E5\u5FD7|" +
-    "\u5176\u4ED6\u8F6F\u4EF6\u4E5F\u8BB8\u4E0D\u4E86\u89E3" +
-    "\u6570\u636E\u5728\u60A8\u7684\u8BBE\u5907! ||" +
-    "\u60A8\u662F\u5426\u8D5E\u6210\u8FD9\u4E0D\u534F\u8C03\u6027\uFF1F";
+    "\u60A8\u5C06\u6539\u53D8\u60A8\u7684\u8BBE\u5907\u5F62\u5F0F\uFF0C\u4E0D\u7528"
+    + "\u5220\u6389\u65E5\u5FD7|"
+    + "\u5176\u4ED6\u8F6F\u4EF6\u4E5F\u8BB8\u4E0D\u4E86\u89E3"
+    + "\u6570\u636E\u5728\u60A8\u7684\u8BBE\u5907! ||"
+    + "\u60A8\u662F\u5426\u8D5E\u6210\u8FD9\u4E0D\u534F\u8C03\u6027\uFF1F";
 
     public static final String C_msgWarningFormatAndErase = 
-    "\u60A8\u5C06\u6539\u53D8" +
-    "|\u60A8\u7684\u8BBE\u5907\u91C7\u4F10\u7684\u683C\u5F0F\u3002" +
-    "|\u5E76\u4E14" +
-    "|\u5220\u6389\u65E5\u5FD7" +
-    "|" +
-    "|\u91C7\u4F10\u683C\u5F0F\u53D8\u52A8\u5E76\u4E14\u5220\u6389\uFF1F";
+    "\u60A8\u5C06\u6539\u53D8"
+    + "|\u60A8\u7684\u8BBE\u5907\u91C7\u4F10\u7684\u683C\u5F0F\u3002"
+    + "|\u5E76\u4E14"
+    + "|\u5220\u6389\u65E5\u5FD7"
+    + "|"
+    + "|\u91C7\u4F10\u683C\u5F0F\u53D8\u52A8\u5E76\u4E14\u5220\u6389\uFF1F";
      
     public static final String C_msgWarningFormatAndErase2 =
-    "\u8FD9\u662F\u60A8\u7684\u6700\u540E\u673A\u4F1A\u907F\u514D" +
-    "|\u5220\u6389\u60A8\u7684\u8BBE\u5907\u3002" +
-    "|" +
-    "|\u91C7\u4F10\u683C\u5F0F\u53D8\u52A8\u5E76\u4E14\u5220\u6389\uFF1F";
+    "\u8FD9\u662F\u60A8\u7684\u6700\u540E\u673A\u4F1A\u907F\u514D"
+    + "|\u5220\u6389\u60A8\u7684\u8BBE\u5907\u3002"
+    + "|"
+    + "|\u91C7\u4F10\u683C\u5F0F\u53D8\u52A8\u5E76\u4E14\u5220\u6389\uFF1F";
     public static final String C_msgEraseWarning = 
-    "\u60A8\u662F" +
-    "|\u5220\u6389\u60A8\u7684\u8BBE\u5907\u3002" +
-    "|" +
-    "|\u65E5\u5FD7\u5220\u6389\uFF1F";
+    "\u60A8\u662F"
+    + "|\u5220\u6389\u60A8\u7684\u8BBE\u5907\u3002"
+    + "|"
+    + "|\u65E5\u5FD7\u5220\u6389\uFF1F";
     public static final String C_msgEraseWarning2 =
-    "\u8FD9\u662F\u60A8\u7684\u6700\u540E\u673A\u4F1A\u907F\u514D" +
-    "|\u5220\u6389\u60A8\u7684\u8BBE\u5907\u3002" +
-    "|" +
-    "|\u65E5\u5FD7\u5220\u6389\uFF1F";
+    "\u8FD9\u662F\u60A8\u7684\u6700\u540E\u673A\u4F1A\u907F\u514D"
+    + "|\u5220\u6389\u60A8\u7684\u8BBE\u5907\u3002"
+    + "|"
+    + "|\u65E5\u5FD7\u5220\u6389\uFF1F";
 
     public static final String ONE_FILE = "\u4E00\u4E2A\u6587\u4EF6";
     public static final String ONE_FILE_DAY = "\u4E00\u6587\u4EF6\u5929";
@@ -319,8 +319,8 @@ public class Txt_zh {
     public static final String TITLE_WAITING_ERASE =
     "\u7B49\u5F85\u76F4\u5230\u5220\u6389\u505A";
     public static final String TXT_WAITING_ERASE =
-    "\u7B49\u5F85\uFF0C\u76F4\u5230\u5220\u6389\u5B8C\u6210|" +
-    "\u60A8\u80FD\u53D6\u6D88\u7B49\u5F85(\u5728\u60A8\u7684\u98CE\u9669)";
+    "\u7B49\u5F85\uFF0C\u76F4\u5230\u5220\u6389\u5B8C\u6210|"
+    + "\u60A8\u80FD\u53D6\u6D88\u7B49\u5F85(\u5728\u60A8\u7684\u98CE\u9669)";
 
     public static final String UNKNOWN = "\u672A\u77E5\u6570";
     public static final String CHK_PATH =
@@ -349,11 +349,11 @@ public class Txt_zh {
     public static final String WRITEFLASH = "\u5199\u95EA\u5149";
     public static final String ABORT = "\u653E\u5F03";
     public static final String TXT_FLASH_LIMITED_WRITES=
-    "\u6570\u5B57\u7ED9\u95EA\u5149\u5199|" +
-    "\u662F\u6709\u9650\u548C\u5728\u8BBE\u7F6E\u4E0A\u7684\u4E00\u4E2A\u53D8\u5316|" +
-    "\u80FD\u56DE\u62A5\u60A8\u8BBE\u5907\u4E0D\u80FD\u52A8\u624B\u672F|" +
-    "(\u5373\uFF0C\u6CE2\u7279\u901F\u7387\u53D8\u52A8)|" +
-    "\u653E\u5F03\u901A\u8FC7\u70B9\u51FB\u653E\u5F03!! ";
+    "\u6570\u5B57\u7ED9\u95EA\u5149\u5199|"
+    + "\u662F\u6709\u9650\u548C\u5728\u8BBE\u7F6E\u4E0A\u7684\u4E00\u4E2A\u53D8\u5316|"
+    + "\u80FD\u56DE\u62A5\u60A8\u8BBE\u5907\u4E0D\u80FD\u52A8\u624B\u672F|"
+    + "(\u5373\uFF0C\u6CE2\u7279\u901F\u7387\u53D8\u52A8)|"
+    + "\u653E\u5F03\u901A\u8FC7\u70B9\u51FB\u653E\u5F03!! ";
     public static final String PERIOD_ABBREV = "\u6BCF";
 
 //     Forgotton\u5728\u5148\u8FDB\u7684\u8F68\u9053\u8FC7\u6EE4\u5668
@@ -368,23 +368,23 @@ public class Txt_zh {
     public static final String WARNING =
         "Warning";
     public static final String NO_FILES_WERE_CREATED =
-        "No output files were created!" +
-        "||" +
-        "This usually means that either:" +
-        "|- The filter did not select any points" +
-        "|- The log does not contain any data" +
-        "|" +
-        "|Try selecting all points." +
-        "|If that does not work," +
-        "| it may be a bug.";
+        "No output files were created!"
+        + "||"
+        + "This usually means that either:"
+        + "|- The filter did not select any points"
+        + "|- The log does not contain any data"
+        + "|"
+        + "|Try selecting all points."
+        + "|If that does not work,"
+        + "| it may be a bug.";
     public static final String ADD_RECORD_NUMBER =
         "Record nbr info in logs";    
 
     public static final String S_DEBUG_CONN= "Debug conn.";
     public static final String S_IMPERIAL= "Imperial Units";
     public static final String BAD_SUPERWABAVERSION =
-        "This application was built for|SuperWaba V" +
-        Settings.requiredVersionStr + "."
+        "This application was built for|SuperWaba V"
+        + Settings.requiredVersionStr + "."
         +"|This version is V"+Settings.versionStr+"."
         +"|Exiting application";
 

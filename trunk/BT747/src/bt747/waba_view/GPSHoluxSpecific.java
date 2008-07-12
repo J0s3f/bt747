@@ -1,4 +1,5 @@
 package bt747.waba_view;
+
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -33,72 +34,76 @@ import bt747.model.Model;
 
 /**
  * @author Mario De Weerd
- *
+ * 
  * Implements Holux Specific operations
  */
 public class GPSHoluxSpecific extends Container {
-  
+
     private Model m;
     private Controller c;
-    
+
     private Label lbHoluxName;
-    private Edit  edHoluxName;
+    private Edit edHoluxName;
     private Label lbBTMacAddr;
-    private Edit  edHoluxBT_MacAddr;
-    
+    private Edit edHoluxBT_MacAddr;
+
     private Button btSet;
+
     /**
      * 
      */
     public GPSHoluxSpecific(final Model m, final Controller c) {
-        this.m=m;
-        this.c=c;
+        this.m = m;
+        this.c = c;
     }
 
-    
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see waba.ui.Container#onStart()
      */
     protected void onStart() {
-        lbHoluxName= new Label(Txt.HOLUX_NAME);
-        add(lbHoluxName,LEFT,TOP);
-        add(edHoluxName= new Edit(""),AFTER,SAME);
-        add(btSet=new Button(Txt.SET),CENTER,AFTER+5);
-        lbBTMacAddr= new Label(Txt.BT_MAC_ADDR);
-        add(lbBTMacAddr,LEFT,AFTER+5);
-        add(edHoluxBT_MacAddr= new Edit(""),AFTER,SAME);
-        //add(btBTMacSet=new Button(Txt.SET),CENTER,AFTER+5);
+        lbHoluxName = new Label(Txt.HOLUX_NAME);
+        add(lbHoluxName, LEFT, TOP);
+        add(edHoluxName = new Edit(""), AFTER, SAME);
+        add(btSet = new Button(Txt.SET), CENTER, AFTER + 5);
+        lbBTMacAddr = new Label(Txt.BT_MAC_ADDR);
+        add(lbBTMacAddr, LEFT, AFTER + 5);
+        add(edHoluxBT_MacAddr = new Edit(""), AFTER, SAME);
+        // add(btBTMacSet=new Button(Txt.SET),CENTER,AFTER+5);
     }
-    
+
     private void doSet() {
-        c.setHoluxName(edHoluxName.getText().replace(',',';'));
+        c.setHoluxName(edHoluxName.getText().replace(',', ';'));
     }
-    
+
     private void updateData() {
         edHoluxName.setText(m.getHoluxName());
         edHoluxBT_MacAddr.setText(m.getBTAddr());
     }
-    
 
-    /** Handle events for this object.
-     * @param event The event to be interpreted.
+    /**
+     * Handle events for this object.
+     * 
+     * @param event
+     *            The event to be interpreted.
      */
-     public void onEvent( Event event ) {
+    public void onEvent(Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
-            if (event.target==this) {
+            if (event.target == this) {
                 c.reqHoluxName();
                 c.reqBTAddr();
-                event.consumed=true;
-            } else if(event.target==btSet) {
+                event.consumed = true;
+            } else if (event.target == btSet) {
                 doSet();
             }
             break;
         default:
-            if(event.type==GpsEvent.DATA_UPDATE) {
-                if(event.target==this) {
+            if (event.type == GpsEvent.DATA_UPDATE) {
+                if (event.target == this) {
                     updateData();
-                    event.consumed=true;
+                    event.consumed = true;
                 }
             }
         }

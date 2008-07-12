@@ -1,4 +1,5 @@
 package bt747.waba_view;
+
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -29,83 +30,92 @@ import bt747.model.Model;
 
 /**
  * @author Mario De Weerd
- *
+ * 
  * User interface to select NMEA output strings
  */
 public class GPSFileNMEAOutputSel extends Container {
     /** The object that is used to communicate with the GPS device. */
-    private MyCheck [] chkNMEAItems =new MyCheck[BT747Constants.C_NMEA_SEN_COUNT];
+    private MyCheck[] chkNMEAItems = new MyCheck[BT747Constants.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
-    
-    private static final int C_NMEAactiveFilters=0x0002003A;
-    
+
+    private static final int C_NMEAactiveFilters = 0x0002003A;
+
     private Model m;
     private Controller c;
+
     /**
      * 
      */
-    public GPSFileNMEAOutputSel(Controller c, Model m) {
-        this.m=m;
-        this.c=c;
+    public GPSFileNMEAOutputSel(final Controller c, final Model m) {
+        this.m = m;
+        this.c = c;
     }
 
-    
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see waba.ui.Container#onStart()
      */
-    protected void onStart() {
-        int bit=1;
-        for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
-            chkNMEAItems[i]= new MyCheck(BT747Constants.NMEA_strings[i]);
-            add( chkNMEAItems[i]);
-            chkNMEAItems[i].setRect(((i<((BT747Constants.C_NMEA_SEN_COUNT/2)+1))?LEFT:(getClientRect().width/2)),
-                    ((i==0) ||i==((BT747Constants.C_NMEA_SEN_COUNT/2)+1))? TOP:AFTER-1, PREFERRED, PREFERRED-1);
-            chkNMEAItems[i].setEnabled((C_NMEAactiveFilters&bit)!=0);
-            bit <<=1;
+    protected final void onStart() {
+        int bit = 1;
+        for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
+            chkNMEAItems[i] = new MyCheck(BT747Constants.NMEA_strings[i]);
+            add(chkNMEAItems[i]);
+            chkNMEAItems[i]
+                    .setRect(
+                            ((i < ((BT747Constants.C_NMEA_SEN_COUNT / 2) + 1)) ? LEFT
+                                    : (getClientRect().width / 2)),
+                            ((i == 0) || i == ((BT747Constants.C_NMEA_SEN_COUNT / 2) + 1)) ? TOP
+                                    : AFTER - 1, PREFERRED, PREFERRED - 1);
+            chkNMEAItems[i].setEnabled((C_NMEAactiveFilters & bit) != 0);
+            bit <<= 1;
         }
         updateNMEAset();
     }
-    
+
     private void updateNMEAset() {
-        int NMEAset;
+        int maskNMEAset;
         int bit;
-        NMEAset=m.getNMEAset();
-        bit=1;
-        for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
-            chkNMEAItems[i].setChecked(
-                    (NMEAset&bit)!=0
-                    );
-            bit <<=1;
-            //chkNMEAItems[i].repaintNow();
+        maskNMEAset = m.getNMEAset();
+        bit = 1;
+        for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
+            chkNMEAItems[i].setChecked((maskNMEAset & bit) != 0);
+            bit <<= 1;
+            // chkNMEAItems[i].repaintNow();
         }
     }
 
     private void setNMEAset() {
-        int NMEAset;
+        int maskNMEAset;
         int bit;
-        NMEAset=0;
-        
-        bit=1;
-        for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
-            NMEAset|=chkNMEAItems[i].getChecked()?bit:0;
-            bit <<=1;
+        maskNMEAset = 0;
+
+        bit = 1;
+        for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
+            maskNMEAset |= chkNMEAItems[i].getChecked() ? bit : 0;
+            bit <<= 1;
         }
-        c.setNMEAset(NMEAset);
+        c.setNMEAset(maskNMEAset);
     }
 
-    /** Handle events for this object.
-     * @param event The event to be interpreted.
+    /**
+     * Handle events for this object.
+     * 
+     * @param event
+     *            The event to be interpreted.
      */
-     public void onEvent( Event event ) {
+    public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
-            for (int i=0;i<BT747Constants.C_NMEA_SEN_COUNT;i++) {
-                if(event.target==chkNMEAItems[i]) {
+            for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
+                if (event.target == chkNMEAItems[i]) {
                     setNMEAset();
                     break;
                 }
             }
-        break;
+            break;
+            default:
+                break;
         }
     }
 

@@ -7,7 +7,7 @@ import waba.ui.Check;
 
 /**
  * @author Mario De Weerd
- *
+ * 
  */
 public final class MyCheck extends Check {
 
@@ -17,15 +17,16 @@ public final class MyCheck extends Check {
     public MyCheck(String text) {
         super(text);
     }
-    
-    //@Override
+
+    // @Override
     final public int getPreferredHeight() {
-        return fm.height-4;
+        return fm.height - 4;
     }
-    
-    //@Override
+
+    // @Override
     final public int getPreferredWidth() {
-        return super.getPreferredWidth()+getPreferredHeight()-super.getPreferredHeight()-1;
+        return super.getPreferredWidth() + getPreferredHeight()
+                - super.getPreferredHeight() - 1;
     }
 
 }
