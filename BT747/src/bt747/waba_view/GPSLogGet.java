@@ -42,29 +42,30 @@ import bt747.util.Date;
  */
 public class GPSLogGet extends Container {
 
-    MyCheck m_chkLogOnOff;
-    MyCheck m_chkLogOverwriteStop;
-    Button m_btStartDate;
-    Button m_btEndDate;
-    Button m_btGetLog;
-    MyCheck m_chkNoGeoid;
-    Button m_btCancelGetLog;
-    Button m_btToCSV;
-    Button m_btToKML;
-    Button m_btToGPX;
-    Button m_btToTRK;
-    Button m_btToPLT;
-    Button m_btToNMEA;
-    Button m_btToGMAP;
-    Edit m_edTrkSep;
-    ComboBox m_cbTimeOffsetHours;
+    private MyCheck chkLogOnOff;
+    private MyCheck chkLogOverwriteStop;
+    private Button btStartDate;
+    private Button m_btEndDate;
+    private Button m_btGetLog;
+    private MyCheck m_chkNoGeoid;
+    private Button m_btCancelGetLog;
+    private Button m_btToCSV;
+    private Button m_btToKML;
+    private Button m_btToGPX;
+    private Button m_btToTRK;
+    private Button m_btToPLT;
+    private Button m_btToNMEA;
+    private Button m_btToGMAP;
+    private Edit m_edTrkSep;
+    private ComboBox m_cbTimeOffsetHours;
+    
     private static final String[] offsetStr = {
         "-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1",
         "+0",
         "+1", "+2", "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12",
         "+13", "+14"
     };
-    ComboBox m_cbColors;
+    private ComboBox m_cbColors;
     private static final String[] colors = {
         "FF0000",
         "0000FF",
@@ -73,22 +74,22 @@ public class GPSLogGet extends Container {
         "00FF00",
         "008000"
     };
-    MyCheck m_chkIncremental;
-    ComboBox m_chkOneFilePerDay;
+    private MyCheck m_chkIncremental;
+    private ComboBox m_chkOneFilePerDay;
     private static final String[] fileStr = {
         Txt.ONE_FILE,
         Txt.ONE_FILE_DAY,
         Txt.ONE_FILE_TRK
     };
-    Model m;
-    Controller c;
+    private Model m;
+    private Controller c;
     private Color BackupBackColor;
     private Label m_UsedLabel;
     private Label m_RecordsLabel;
 
     public GPSLogGet(
-            Model m,
-            Controller c) {
+            final Model m,
+            final Controller c) {
         this.m = m;
         this.c = c;
     }
@@ -99,14 +100,14 @@ public class GPSLogGet extends Container {
      * 
      * @see waba.ui.Container#onStart() 
      */
-    protected void onStart() {
+    protected final void onStart() {
         super.onStart();
-        add(m_chkLogOnOff = new MyCheck(Txt.DEV_LOGONOFF), LEFT, TOP); //$NON-NLS-1$
+        add(chkLogOnOff = new MyCheck(Txt.DEV_LOGONOFF), LEFT, TOP); //$NON-NLS-1$
         add(m_chkIncremental = new MyCheck(Txt.INCREMENTAL), RIGHT, SAME); //$NON-NLS-1$
         m_chkIncremental.setChecked(m.isIncremental());
-        add(m_chkLogOverwriteStop = new MyCheck(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
+        add(chkLogOverwriteStop = new MyCheck(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
         add(new Label(Txt.DATE_RANGE), LEFT, AFTER); //$NON-NLS-1$
-        add(m_btStartDate = new Button(m.getStartDate().getDateString()), AFTER, SAME); //$NON-NLS-1$
+        add(btStartDate = new Button(m.getStartDate().getDateString()), AFTER, SAME); //$NON-NLS-1$
         //m_btStartDate.setMode(Edit.DATE);
         add(m_btEndDate = new Button(m.getEndDate().getDateString()), RIGHT, SAME); //$NON-NLS-1$
         //m_btEndDate.setMode(Edit.DATE);
@@ -176,10 +177,10 @@ public class GPSLogGet extends Container {
         c.reqLogOverwrite();
     }
 
-    public void updateButtons() {
-        m_chkLogOnOff.setChecked(m.loggingIsActive());
+    public final void updateButtons() {
+        chkLogOnOff.setChecked(m.loggingIsActive());
 //        m_chkLogOnOff.repaintNow();
-        m_chkLogOverwriteStop.setChecked(m.logFullOverwrite());
+        chkLogOverwriteStop.setChecked(m.logFullOverwrite());
 //        m_chkLogOverwriteStop.repaintNow();
         m_UsedLabel.setText(Txt.MEM_USED + Convert.toString(m.logMemUsed()) + "(" + Convert.toString(m.logMemUsedPercent()) + "%)");
 //        m_UsedLabel.repaintNow();
@@ -198,7 +199,7 @@ public class GPSLogGet extends Container {
     /* (non-Javadoc)
      * @see waba.ui.Control#onEvent(waba.ui.Event)
      */
-    public void onEvent(Event event) {
+    public final void onEvent(final Event event) {
         //Vm.debug("Event:"+event.type+" "+event.consumed);
         super.onEvent(event);
         switch (event.type) {
@@ -211,8 +212,8 @@ public class GPSLogGet extends Container {
                     c.cancelGetLog();
                 } else if (event.target == m_chkIncremental) {
                     c.setIncremental(m_chkIncremental.getChecked());
-                } else if (event.target == m_chkLogOnOff) {
-                    if (m_chkLogOnOff.getChecked()) {
+                } else if (event.target == chkLogOnOff) {
+                    if (chkLogOnOff.getChecked()) {
                         c.startLog();
                     } else {
                         c.stopLog();
@@ -227,8 +228,8 @@ public class GPSLogGet extends Container {
                     } else {
                         c.setTimeOffsetHours(Convert.toInt(tmp));
                     }
-                } else if (event.target == m_chkLogOverwriteStop) {
-                    c.setLogOverwrite(m_chkLogOverwriteStop.getChecked());
+                } else if (event.target == chkLogOverwriteStop) {
+                    c.setLogOverwrite(chkLogOverwriteStop.getChecked());
                 } else if (event.target == m_chkOneFilePerDay) {
                     c.setOneFilePerDay(m_chkOneFilePerDay.getSelectedIndex());
                 } else if (event.target == m_chkNoGeoid) {
@@ -239,11 +240,11 @@ public class GPSLogGet extends Container {
                     }
                     calBt = m_btEndDate;
                     cal.popupModal();
-                } else if (event.target == m_btStartDate) {
+                } else if (event.target == btStartDate) {
                     if (cal == null) {
                         cal = new Calendar();
                     }
-                    calBt = m_btStartDate;
+                    calBt = btStartDate;
                     cal.popupModal();
                 } else if (event.target == m_btToCSV || event.target == m_btToKML || event.target == m_btToPLT || event.target == m_btToGPX || event.target == m_btToTRK || event.target == m_btToGMAP || event.target == m_btToNMEA) {
                     int logType = Model.C_NO_LOG;
@@ -283,7 +284,7 @@ public class GPSLogGet extends Container {
                     if (d != null) {
                         calBt.setText(d.toString());
                         // Can't change the value of the date, changing all
-                        c.setStartDate(new Date(m_btStartDate.getText()));
+                        c.setStartDate(new Date(btStartDate.getText()));
                         c.setEndDate(new Date(m_btEndDate.getText()));
                     }
                 }
@@ -322,6 +323,8 @@ public class GPSLogGet extends Container {
                             break;
                         case Model.C_GMAP_LOG:
                             b = m_btToGMAP;
+                            break;
+                        default:
                             break;
                     }
                     if (b != null) {

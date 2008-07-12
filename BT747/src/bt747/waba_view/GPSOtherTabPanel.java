@@ -1,4 +1,5 @@
 package bt747.waba_view;
+
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -39,62 +40,60 @@ import bt747.model.Model;
 
 /**
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 public class GPSOtherTabPanel extends Container {
 
     private TabPanel m_TabPanel;
     private Controller c;
     private Model m;
-    
-    private final String c_tpCaptions[]= {
-            Txt.TAB_FLSH,
-            Txt.TAB_NMEA_OUT,
-            Txt.TAB_NMEA_FILE,
-            Txt.TAB_HOLUX
-    };
-    
+
+    private final String c_tpCaptions[] = { Txt.TAB_FLSH, Txt.TAB_NMEA_OUT,
+            Txt.TAB_NMEA_FILE, Txt.TAB_HOLUX };
+
     /**
-     * @param settings TODO
+     * @param settings
+     *            TODO
      * 
      */
     public GPSOtherTabPanel(final Controller c, Model m) {
-        this.c=c;
-        this.m=m;
+        this.c = c;
+        this.m = m;
     }
-    
+
     /**
      * 
      */
     public void onStart() {
-        add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
+        add(m_TabPanel = new TabPanel(c_tpCaptions), CENTER, CENTER);
         m_TabPanel.setBorderStyle(Window.NO_BORDER);
-        m_TabPanel.setRect(getClientRect().modifiedBy(0,0,0,0));
+        m_TabPanel.setRect(getClientRect().modifiedBy(0, 0, 0, 0));
         // TODO Auto-generated method stub
-        m_TabPanel.setPanel(0,new GPSFlashOption(m,c));
-        m_TabPanel.setPanel(1,new GPSNMEAOutput(m,c));
-        m_TabPanel.setPanel(2,new GPSFileNMEAOutputSel(c,m));
-        m_TabPanel.setPanel(3,new GPSHoluxSpecific(m,c));
+        m_TabPanel.setPanel(0, new GPSFlashOption(m, c));
+        m_TabPanel.setPanel(1, new GPSNMEAOutput(m, c));
+        m_TabPanel.setPanel(2, new GPSFileNMEAOutputSel(c, m));
+        m_TabPanel.setPanel(3, new GPSHoluxSpecific(m, c));
     }
+
     public void onEvent(Event event) {
         //
         switch (event.type) {
         case ControlEvent.PRESSED:
-            if(event.target==m_TabPanel||event.target==this) {
+            if (event.target == m_TabPanel || event.target == this) {
                 Control c;
-                c=m_TabPanel.getChildren()[0];
-                c.postEvent(new Event(ControlEvent.PRESSED,c,0));                
+                c = m_TabPanel.getChildren()[0];
+                c.postEvent(new Event(ControlEvent.PRESSED, c, 0));
             }
             break;
         default:
-            if(event.type==GpsEvent.DATA_UPDATE) {
-                if(event.target==this) {
+            if (event.type == GpsEvent.DATA_UPDATE) {
+                if (event.target == this) {
                     Control c;
-                    c=m_TabPanel.getChildren()[0];
-                    c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
-                    event.consumed=true;
+                    c = m_TabPanel.getChildren()[0];
+                    c.postEvent(new Event(GpsEvent.DATA_UPDATE, c, 0));
+                    event.consumed = true;
                 }
             }
         }

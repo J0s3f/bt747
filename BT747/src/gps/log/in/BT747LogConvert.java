@@ -45,18 +45,16 @@ public final class BT747LogConvert implements GPSLogConvert {
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
     private boolean noGeoid = false; // If true,remove geoid difference from
-                                        // height
+    // height
 
     private int satIdxOffset;
     private int satRecSize;
     private boolean holux = false;
-    private boolean nextPointIsWayPt=false;
-
+    private boolean nextPointIsWayPt = false;
 
     private int badrecord_count = 0;
 
-    private void updateLogFormat(final GPSFile gpsFile,
-            final int newLogFormat) {
+    private void updateLogFormat(final GPSFile gpsFile, final int newLogFormat) {
         int bits = newLogFormat;
         int index = 0;
         int total = 0;
@@ -133,7 +131,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         recCount = 0;
         logFormat = 0;
         nextAddrToRead = 0;
-        nextPointIsWayPt=false;
+        nextPointIsWayPt = false;
         badrecord_count = 0;
         try {
             fileSize = m_File.getSize();
@@ -188,51 +186,42 @@ public final class BT747LogConvert implements GPSLogConvert {
                         // TODO: handle exception
                     }
                     if (readResult != 20) {
-                        errorInfo=m_File.getPath() + "|" + m_File.lastError;
+                        errorInfo = m_File.getPath() + "|" + m_File.lastError;
                         return BT747Constants.ERROR_READING_FILE;
                     }
-                    newLogFormat =
-                              (0xFF & bytes[2]) << 0
-                            | (0xFF & bytes[3]) << 8
-                            | (0xFF & bytes[4]) << 16
+                    newLogFormat = (0xFF & bytes[2]) << 0
+                            | (0xFF & bytes[3]) << 8 | (0xFF & bytes[4]) << 16
                             | (0xFF & bytes[5]) << 24;
-                    logMode =
-                          (0xFF & bytes[6]) << 0
-                        | (0xFF & bytes[7]) << 8;
+                    logMode = (0xFF & bytes[6]) << 0 | (0xFF & bytes[7]) << 8;
 
-                    logPeriod =
-                        (0xFF & bytes[8]) << 0
-                      | (0xFF & bytes[9]) << 8
-                      | (0xFF & bytes[10]) << 16
-                      | (0xFF & bytes[11]) << 24;
+                    logPeriod = (0xFF & bytes[8]) << 0 | (0xFF & bytes[9]) << 8
+                            | (0xFF & bytes[10]) << 16
+                            | (0xFF & bytes[11]) << 24;
 
-                    logDistance =
-                        (0xFF & bytes[12]) << 0
-                      | (0xFF & bytes[13]) << 8
-                      | (0xFF & bytes[14]) << 16
-                      | (0xFF & bytes[15]) << 24;
+                    logDistance = (0xFF & bytes[12]) << 0
+                            | (0xFF & bytes[13]) << 8
+                            | (0xFF & bytes[14]) << 16
+                            | (0xFF & bytes[15]) << 24;
 
-                    logSpeed =
-                        (0xFF & bytes[16]) << 0
-                      | (0xFF & bytes[17]) << 8
-                      | (0xFF & bytes[18]) << 16
-                      | (0xFF & bytes[19]) << 24;
-                    if(logPeriod!=0) {
+                    logSpeed = (0xFF & bytes[16]) << 0
+                            | (0xFF & bytes[17]) << 8
+                            | (0xFF & bytes[18]) << 16
+                            | (0xFF & bytes[19]) << 24;
+                    if (logPeriod != 0) {
                         rcr_mask |= BT747Constants.RCR_TIME_MASK;
                     } else {
                         rcr_mask &= ~BT747Constants.RCR_TIME_MASK;
                     }
-                    if(logDistance!=0) {
+                    if (logDistance != 0) {
                         rcr_mask |= BT747Constants.RCR_DISTANCE_MASK;
                     } else {
                         rcr_mask &= ~BT747Constants.RCR_DISTANCE_MASK;
                     }
-                    if(logSpeed!=0) {
+                    if (logSpeed != 0) {
                         rcr_mask |= BT747Constants.RCR_SPEED_MASK;
                     } else {
                         rcr_mask &= ~BT747Constants.RCR_SPEED_MASK;
                     }
-
 
                     if (newLogFormat == 0xFFFFFFFF) {
                         // TODO: Treat error
@@ -259,7 +248,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                     readResult = 0;
                 }
                 if (readResult != sizeToRead) {
-                    errorInfo=m_File.getPath() + "|" + m_File.lastError;
+                    errorInfo = m_File.getPath() + "|" + m_File.lastError;
                     return BT747Constants.ERROR_READING_FILE;
                 }
                 nextAddrToRead += sizeToRead;
@@ -275,9 +264,9 @@ public final class BT747LogConvert implements GPSLogConvert {
                 boolean lookForRecord = true;
 
                 while (lookForRecord && (sizeToRead - 16 > offsetInBuffer) // Enough
-                                                                            // bytes
-                                                                            // in
-                                                                            // buffer
+                // bytes
+                // in
+                // buffer
                 ) {
                     int nbrBytes;
                     nbrBytes = getSpecialRecord(bytes, offsetInBuffer, gpsFile);
@@ -337,7 +326,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                                 && ((!holux && ((bytes[indexInBuffer] == '*') && ((checkSum & 0xFF) == (0xFF & bytes[indexInBuffer + 1])))) || (holux && ((checkSum & 0xFF) == (0xFF & bytes[indexInBuffer]))))) {
                             if (!holux) {
                                 indexInBuffer += 2; // Point just past end ('*'
-                                                    // and checksum).
+                                // and checksum).
                             } else {
                                 indexInBuffer += 1;
                             }
@@ -414,7 +403,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                 if (!foundAnyRecord && continueInBuffer) {
                     if (sizeToRead > offsetInBuffer + maxRecordSize
                             + (holux ? 1 : 2)) { // TODO: recover when 16
-                                                    // bytes available too.
+                        // bytes available too.
                         // Did not find any record - expected at least one.
                         // Try to recover.
                         offsetInBuffer++;
@@ -440,15 +429,15 @@ public final class BT747LogConvert implements GPSLogConvert {
         noGeoid = b;
     }
 
-
     private String errorInfo;
+
     public String getErrorInfo() {
         return errorInfo;
     }
 
     public int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int Card) {
-        int error=BT747Constants.NO_ERROR;
+        int error = BT747Constants.NO_ERROR;
         if (File.isAvailable()) {
             try {
                 m_File = new File(fileName, File.READ_ONLY, Card);
@@ -456,27 +445,28 @@ public final class BT747LogConvert implements GPSLogConvert {
                 // TODO: handle exception
             }
             if (!m_File.isOpen()) {
-                errorInfo=fileName + "|" + m_File.lastError;
-                error=BT747Constants.ERROR_COULD_NOT_OPEN;
+                errorInfo = fileName + "|" + m_File.lastError;
+                error = BT747Constants.ERROR_COULD_NOT_OPEN;
                 m_File = null;
             } else {
                 passToFindFieldsActivatedInLog = gpsFile
                         .needPassToFindFieldsActivatedInLog();
                 if (passToFindFieldsActivatedInLog) {
                     activeFileFields = 0;
-                    error=parseFile(gpsFile);
+                    error = parseFile(gpsFile);
                     gpsFile
                             .setActiveFileFields(getLogFormatRecord(activeFileFields));
                 }
                 passToFindFieldsActivatedInLog = false;
-                if(error==BT747Constants.NO_ERROR) {
+                if (error == BT747Constants.NO_ERROR) {
                     do {
-                        error=parseFile(gpsFile);
-                    } while (error==BT747Constants.NO_ERROR && gpsFile.nextPass());
+                        error = parseFile(gpsFile);
+                    } while (error == BT747Constants.NO_ERROR
+                            && gpsFile.nextPass());
                 }
                 gpsFile.finaliseFile();
                 if (gpsFile.getFilesCreated() == 0) {
-                    error=BT747Constants.ERROR_NO_FILES_WERE_CREATED;
+                    error = BT747Constants.ERROR_NO_FILES_WERE_CREATED;
                 }
             }
 
@@ -567,18 +557,19 @@ public final class BT747LogConvert implements GPSLogConvert {
         this.holux = holux;
     }
 
-    private int logMode=0;
-    private int rcr_mask=0; // Default RCR based on log settings
-    private int logSpeed=0;
-    private int logDistance=0;
-    private int logPeriod=0;
+    private int logMode = 0;
+    private int rcr_mask = 0; // Default RCR based on log settings
+    private int logSpeed = 0;
+    private int logDistance = 0;
+    private int logPeriod = 0;
+
     /**
      * Tries to find a special record at the indicated offset.
      * 
      * @return int / number of bytes found
      */
-    private int getSpecialRecord(final byte[] bytes,
-            final int offsetInBuffer, final GPSFile gpsFile) {
+    private int getSpecialRecord(final byte[] bytes, final int offsetInBuffer,
+            final GPSFile gpsFile) {
         int newLogFormat;
         int nbrBytesDone = 0;
         if (((0xFF & bytes[offsetInBuffer + 0]) == 0xAA)
@@ -603,42 +594,43 @@ public final class BT747LogConvert implements GPSLogConvert {
                 if (newLogFormat != logFormat) {
                     updateLogFormat(gpsFile, newLogFormat);
                 }
-                //bt747.sys.Vm.debug("Log format set to :"+Convert.unsigned2hex(value, 8));
+                // bt747.sys.Vm.debug("Log format set to
+                // :"+Convert.unsigned2hex(value, 8));
                 break;
             case 0x03: // log Period change
-                logPeriod= value;
-                if(value!=0) {
+                logPeriod = value;
+                if (value != 0) {
                     rcr_mask |= BT747Constants.RCR_TIME_MASK;
                 } else {
                     rcr_mask &= ~BT747Constants.RCR_TIME_MASK;
                 }
-                //bt747.sys.Vm.debug("Log period set to :"+value);
+                // bt747.sys.Vm.debug("Log period set to :"+value);
                 break;
             case 0x04: // log distance change
-                logDistance=value;
-                if(value!=0) {
+                logDistance = value;
+                if (value != 0) {
                     rcr_mask |= BT747Constants.RCR_DISTANCE_MASK;
                 } else {
                     rcr_mask &= ~BT747Constants.RCR_DISTANCE_MASK;
                 }
-                //bt747.sys.Vm.debug("Log distance set to :"+value);
+                // bt747.sys.Vm.debug("Log distance set to :"+value);
                 break;
             case 0x05: // log speed change
-                logSpeed=value;
-                if(value!=0) {
+                logSpeed = value;
+                if (value != 0) {
                     rcr_mask |= BT747Constants.RCR_SPEED_MASK;
                 } else {
                     rcr_mask &= ~BT747Constants.RCR_SPEED_MASK;
                 }
-                //bt747.sys.Vm.debug("Log speed set to :"+value);
+                // bt747.sys.Vm.debug("Log speed set to :"+value);
                 break;
             case 0x06: // value: 0x0106= logger on 0x0107= logger off 0x104=??
-                logMode=value;
-                //bt747.sys.Vm.debug("Logger off :"+value);
+                logMode = value;
+                // bt747.sys.Vm.debug("Logger off :"+value);
                 break;
             case 0x07: // value: 0x0106= logger on 0x0107= logger off 0x104=??
-                logMode=value;
-                //bt747.sys.Vm.debug("Logger off :"+value);
+                logMode = value;
+                // bt747.sys.Vm.debug("Logger off :"+value);
                 break;
             default:
                 break; // Added to set SW breakpoint to discover other records.
@@ -670,7 +662,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                     && ((0xFF & bytes[offsetInBuffer + 13]) == 'P')
                     && ((0xFF & bytes[offsetInBuffer + 14]) == 'N')
                     && ((0xFF & bytes[offsetInBuffer + 15]) == 'T')) {
-                nextPointIsWayPt=true;
+                nextPointIsWayPt = true;
                 // Vm.debug("Holux Waypoint");
             }
         }
@@ -694,9 +686,9 @@ public final class BT747LogConvert implements GPSLogConvert {
         valid = true;
 
         if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
-            gpsRec.logPeriod=  logPeriod;
-            gpsRec.logDistance=logDistance;
-            gpsRec.logSpeed=   logSpeed;
+            gpsRec.logPeriod = logPeriod;
+            gpsRec.logDistance = logDistance;
+            gpsRec.logSpeed = logSpeed;
             gpsRec.utc = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
@@ -876,9 +868,9 @@ public final class BT747LogConvert implements GPSLogConvert {
         } else {
             gpsRec.rcr = rcr_mask; // For filter
         }
-        if(nextPointIsWayPt) {
+        if (nextPointIsWayPt) {
             gpsRec.rcr |= BT747Constants.RCR_BUTTON_MASK;
-            nextPointIsWayPt=false;
+            nextPointIsWayPt = false;
         }
         if ((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) {
             gpsRec.milisecond = (0xFF & bytes[recIdx++]) << 0

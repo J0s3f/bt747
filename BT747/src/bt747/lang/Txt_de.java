@@ -9,8 +9,8 @@ import bt747.sys.Settings;
  ** Class to provide language specific strings.
  */
 public class Txt_de {
-    public static String fontFile=null;
-    public static String encoding=null;
+    public static String fontFile = null;
+    public static String encoding = null;
 
     // BT747 class
     public static final String S_FILE = "Datei";
@@ -19,78 +19,78 @@ public class Txt_de {
     public static final String S_SETTINGS = "Einstellungen";
     public static final String S_RESTART_CONNECTION = "Verbindung neu starten";
     public static final String S_STOP_CONNECTION = "Verbindung unterbrechen";
-    public static final String S_GPX_UTC_OFFSET_0= "GPX UTC Offset 0";
+    public static final String S_GPX_UTC_OFFSET_0 = "GPX UTC Offset 0";
     public static final String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg wenn klein";
-    public static final String S_GPS_DECODE_ACTIVE= "GPS Dekodierung aktiv";
-    public static final String S_FOCUS_HIGHLIGHT= "Focus Highlight";
-    public static final String S_DEBUG= "Debug";
-    public static final String S_STATS= "Stats";
-    public static final String S_INFO= "Info";
-    public static final String S_ABOUT_BT747= "Über BT747";
-    public static final String S_ABOUT_SUPERWABA= "Über SuperWaba VM";
+    public static final String S_GPS_DECODE_ACTIVE = "GPS Dekodierung aktiv";
+    public static final String S_FOCUS_HIGHLIGHT = "Focus Highlight";
+    public static final String S_DEBUG = "Debug";
+    public static final String S_STATS = "Stats";
+    public static final String S_INFO = "Info";
+    public static final String S_ABOUT_BT747 = "Über BT747";
+    public static final String S_ABOUT_SUPERWABA = "Über SuperWaba VM";
 
-    public static final String S_TITLE= "BT747 - MTK Logger Control";
+    public static final String S_TITLE = "BT747 - MTK Logger Control";
 
 
-    public static final String LB_DOWNLOAD= "Download"; 
+    public static final String LB_DOWNLOAD = "Download"; 
 
     public static final String TITLE_ATTENTION = "Achtung";
-    public static final String CONFIRM_APP_EXIT = "Sie versuchen die Anwendung zu beenden|" +
-                                                  "Sind sie sicher?";
+    public static final String CONFIRM_APP_EXIT = "Sie versuchen die Anwendung zu beenden|"
+                                                  + "Sind sie sicher?";
 
-    public static final String YES=
+    public static final String YES =
         "Ja";
-    public static final String NO=
+    public static final String NO =
         "Nein";
-    public static final String CANCEL=
+    public static final String CANCEL =
         "Abbruch";
 
 
-    public static final String ABOUT_TITLE=
+    public static final String ABOUT_TITLE =
         "Über BT747 V"+Version.VERSION_NUMBER;
-    public static final String ABOUT_TXT=
-        "Erstellt mit SuperWaba" + 
-        "|http://www.superwaba.org"+
-        "|" +Version.BUILD_STR +
-        "|von Mario De Weerd" +
-        "|m.deweerd@ieee.org"+
-        "|Diese Anw. erlaubt die Kontrolle" +
-        "|über den iBlue 747 Empfänger." +
-        "|Volle Kontr. per Bluetooth kann per" +
-        "|Hardwaremod. erreicht werden. " +
-        "|Weitere Informationen im Internet." +
-        "|Übersetzung von Dirk Haase";
+    public static final String ABOUT_TXT =
+        "Erstellt mit SuperWaba"
+        + "|http://www.superwaba.org"
+        + "|" + Version.BUILD_STR
+        + "|von Mario De Weerd"
+        + "|m.deweerd@ieee.org"
+        + "|Diese Anw. erlaubt die Kontrolle"
+        + "|über den iBlue 747 Empfänger."
+        + "|Volle Kontr. per Bluetooth kann per"
+        + "|Hardwaremod. erreicht werden. "
+        + "|Weitere Informationen im Internet."
+        + "|Übersetzung von Dirk Haase";
 
 
-    public static final String ABOUT_SUPERWABA_TITLE=
+    public static final String ABOUT_SUPERWABA_TITLE =
         "Über SuperWaba";
-    public static final String ABOUT_SUPERWABA_TXT=
-        "SuperWaba Virtual Machine "+ Settings.versionStr +
-        "|Copyright (c)2000-2007" +
-        "|Guilherme Campos Hazan" +
-        "|www.superwaba.com|" +
-        "|" +
-        "SuperWaba is an enhanced version" +
-        "|of the Waba Virtual Machine" +
-        "|Copyright (c) 1998,1999 WabaSoft" +
-        "|www.wabasoft.com";
+    public static final String ABOUT_SUPERWABA_TXT =
+        "SuperWaba Virtual Machine "+ Settings.versionStr
+        + "|Copyright (c)2000-2007"
+        + "|Guilherme Campos Hazan"
+        + "|www.superwaba.com|"
+        + "|"
+        + "SuperWaba is an enhanced version"
+        + "|of the Waba Virtual Machine"
+        + "|Copyright (c) 1998,1999 WabaSoft"
+        + "|www.wabasoft.com";
 
-    public static final String DISCLAIMER_TITLE=
+    public static final String DISCLAIMER_TITLE =
         "Disclaimer";
-    public static final String DISCLAIMER_TXT=
-        "bt747 wird zur Verfügung gestellt," +
-        "|wie sie ist, ohne Garantie irgendw. Art." +
-        "|ALL EXPRESS" +
-        "|OR IMPLIED REPRESENTATIONS AND " +
-        "|WARRANTIES, INCLUDING ANY IMPLIED" +
-        "|WARRANTY OF MERCHANTABILITY," +
-        "|FITNESS FOR A PARTICULAR PURPOSE" +
-        "|OR NON-INFRINGEMENT, ARE HEREBY" +
-        "|EXCLUDED. THE ENTIRE RISK ARISING " +
-        "|OUT OF USING THE SOFTWARE IS" +
-        "|ASSUMED BY THE USER. See the" +
-        "|GNU General Public License for more" +
-        "|details." ;
+    public static final String DISCLAIMER_TXT =
+        "bt747 wird zur Verfügung gestellt,"
+        + "|wie sie ist, ohne Garantie irgendw. Art."
+        + "|ALL EXPRESS"
+        + "|OR IMPLIED REPRESENTATIONS AND "
+        + "|WARRANTIES, INCLUDING ANY IMPLIED"
+        + "|WARRANTY OF MERCHANTABILITY,"
+        + "|FITNESS FOR A PARTICULAR PURPOSE"
+        + "|OR NON-INFRINGEMENT, ARE HEREBY"
+        + "|EXCLUDED. THE ENTIRE RISK ARISING "
+        + "|OUT OF USING THE SOFTWARE IS"
+        + "|ASSUMED BY THE USER. See the"
+        + "|GNU General Public License for more"
+        + "|details." ;
 
     // TAB identification
     public static final String C_FMT  = "Fmt"; // "Format";
@@ -172,10 +172,10 @@ public class Txt_de {
     public static final String BT_PT_WITH_REASON = "Klicken für entspr. Log-Ereignis:";
 
     public static final String CONFIRM_FACT_RESET =
-            "Sie wollen einen Firmware-Reset ihres|" +
-            "GPS-Loggers durchführen.|"+
-            "||Durchführung erfolgt auf ihr|"+
-            "eigenes Risko ???";
+            "Sie wollen einen Firmware-Reset ihres|"
+            + "GPS-Loggers durchführen.|"
+            + "||Durchführung erfolgt auf ihr|"
+            + "eigenes Risko ???";
 
     // File tab
     public static final String OUTPUT_DIR = "Ausgabe-Verzeichnis:";
@@ -224,36 +224,36 @@ public class Txt_de {
     public static final String CONFIRM_ERASE = "Löschen bestätigen";
 
     public static final String C_msgWarningFormatIncompatibilityRisk =
-        "Ihre Wahl wird das Log-Format setzen ohne den " +
-        "Log-Speicher zu löschen.|" +
-        "Andere Software kann möglicherweise nicht mit " +
-        "Daten arbeiten!||" +
-        "Sind sie damit einverstanden?"; 
+        "Ihre Wahl wird das Log-Format setzen ohne den "
+        + "Log-Speicher zu löschen.|"
+        + "Andere Software kann möglicherweise nicht mit "
+        + "Daten arbeiten!||"
+        + "Sind sie damit einverstanden?"; 
 
     /** Message warning user about impact of changing log format */
     public static final String C_msgWarningFormatAndErase =
-        "Sie wollen das Log-Format ändern" +
-        "|und" +
-        "|den Log-Speicher LÖSCHEN" +
-        "|" +
-        "|LOG-FORMAT ÄNDERN UND LÖSCHEN?";
+        "Sie wollen das Log-Format ändern"
+        + "|und"
+        + "|den Log-Speicher LÖSCHEN"
+        + "|"
+        + "|LOG-FORMAT ÄNDERN UND LÖSCHEN?";
     /** Message warning the user again about the impact of a log format change */
     public static final String C_msgWarningFormatAndErase2 =
-        "Dies ist ihre letzte Chance" +
-        "|das Löschen abzubrechen." +
-        "|" +
-        "|LOG-FORMAT ÄNDERN UND LÖSCHEN?";
+        "Dies ist ihre letzte Chance"
+        + "|das Löschen abzubrechen."
+        + "|"
+        + "|LOG-FORMAT ÄNDERN UND LÖSCHEN?";
     /** Message warning user about impact of changing log format */
     public static final String C_msgEraseWarning =
-        "Sie wollen den" +
-        "|Log-Speicher löschen." +
-        "|" +
-        "|LOG LÖSCHEN?";
+        "Sie wollen den"
+        + "|Log-Speicher löschen."
+        + "|"
+        + "|LOG LÖSCHEN?";
     public static final String C_msgEraseWarning2 =
-        "Dies ist ihre letzte Chance" +
-        "|das Löschen abzubrechen." +
-        "|" +
-        "|LOG LÖSCHEN?";
+        "Dies ist ihre letzte Chance"
+        + "|das Löschen abzubrechen."
+        + "|"
+        + "|LOG LÖSCHEN?";
 
     public static final String ONE_FILE = "Eine Datei";
     public static final String ONE_FILE_DAY = "Eine Datei/Tag";
@@ -314,9 +314,9 @@ public class Txt_de {
     public static final String TITLE_WAITING_ERASE =
         "Warten bis Löschen beendet";
     public static final String TXT_WAITING_ERASE =
-        "Warten bis Löschen beendet.|" +
-        "Sie können das Warten auf eigenes|" +
-        "Risiko abbrechen";
+        "Warten bis Löschen beendet.|"
+        + "Sie können das Warten auf eigenes|"
+        + "Risiko abbrechen";
     public static final String UNKNOWN = "Unbekannt";
     public static final String CHK_PATH =
         "|Prüfen ob Pfad und Karte beschreibbar";
@@ -343,13 +343,13 @@ public class Txt_de {
     public static final String BAUDRATE = "Baudrate"; 
     public static final String WRITEFLASH = "Schreibe Flash"; 
     public static final String ABORT = "Über";  
-    public static final String TXT_FLASH_LIMITED_WRITES=
-        "Die Anzahl der Schreibvorgänge des|" +
-        "des Flash-Speichers ist begrenzt und|" +
-        "eine Änderung der Einstellungen kann|" +
-        "das Gerät unbrauchbar machen.|" +
-        "(z.B., eine Änderung der Baudrate)|" +
-        "ABBRECHEN durch klicken auf Abbrechen!!";
+    public static final String TXT_FLASH_LIMITED_WRITES =
+        "Die Anzahl der Schreibvorgänge des|"
+        + "des Flash-Speichers ist begrenzt und|"
+        + "eine Änderung der Einstellungen kann|"
+        + "das Gerät unbrauchbar machen.|"
+        + "(z.B., eine Änderung der Baudrate)|"
+        + "ABBRECHEN durch klicken auf Abbrechen!!";
     public static final String PERIOD_ABBREV = "Per";
 
     // Forgotten in Advanced track filter
@@ -363,25 +363,25 @@ public class Txt_de {
     public static final String WARNING =
         "Warnung";
     public static final String NO_FILES_WERE_CREATED =
-        "Es wurde keine Ausgabe-Datei erzeugt!" +
-        "||" +
-        "Dies kann folgende Ursachen haben:" +
-        "|- der Filter hat nicht alle Punkte gewählt" +
-        "|- das Log enthält keine Daten" +
-        "|" +
-        "|Versuchen Sie alle Punkte zu wählen." +
-        "|Wenn dies nicht funktioniert," +
-        "| ist es möglicherweise ein Fehler/Bug.";
+        "Es wurde keine Ausgabe-Datei erzeugt!"
+        + "||"
+        + "Dies kann folgende Ursachen haben:"
+        + "|- der Filter hat nicht alle Punkte gewählt"
+        + "|- das Log enthält keine Daten"
+        + "|"
+        + "|Versuchen Sie alle Punkte zu wählen."
+        + "|Wenn dies nicht funktioniert,"
+        + "| ist es möglicherweise ein Fehler/Bug.";
     public static final String ADD_RECORD_NUMBER =
         "Rekord-Nummer im Log";
     
     public static final String S_DEBUG_CONN= "Debug Verbindung";
     public static final String S_IMPERIAL= "Britische Einheiten";
     public static final String BAD_SUPERWABAVERSION =
-        "Diese Anwendung wurde erstellt|für SuperWaba V" +
-        Settings.requiredVersionStr + "."
-        +"|Diese Version ist V"+Settings.versionStr+"."
-        +"|bt747 beenden";
+        "Diese Anwendung wurde erstellt|für SuperWaba V"
+        + Settings.requiredVersionStr + "."
+        + "|Diese Version ist V" + Settings.versionStr + "."
+        + "|bt747 beenden";
 
     public static final String S_DEVICE = "Gerät";
     public static final String S_DEFAULTDEVICE = "Vorgegeb. Gerät";

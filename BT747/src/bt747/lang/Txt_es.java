@@ -36,8 +36,8 @@ public class Txt_es {
     public static final String LB_DOWNLOAD= "Descargar";
     
     public static final String TITLE_ATTENTION = "Atención";
-    public static final String CONFIRM_APP_EXIT = "Vas a cerrar la aplicación|" + 
-                                                  "¿Salir del programa?";
+    public static final String CONFIRM_APP_EXIT = "Vas a cerrar la aplicación|"
+                                                  + "¿Salir del programa?";
     
     public static final String YES=
         "Si";
@@ -50,61 +50,61 @@ public class Txt_es {
     public static final String ABOUT_TITLE=
         "Acerca de BT747 V"+Version.VERSION_NUMBER;
     public static final String ABOUT_TXT=
-        "Creado con SuperWaba" + 
-        "|http://www.superwaba.org"+ 
-        "|" +Version.BUILD_STR + 
-        "|creado por Mario De Weerd" + 
-        "|m.deweerd@ieee.org"+ 
-        "|Esta aplicación permite controlar" + 
-        "|dispositivos BT747." + 
-        "|Permite el control por bluetooth" + 
-        "|del GPS con un hardware hack.  " + 
-        "|Más información en la web." +
-        "|Traducido por Allsts" + 
-        "|allststr@terra.es"; 
+        "Creado con SuperWaba"
+        + "|http://www.superwaba.org"
+        + "|" +Version.BUILD_STR
+        + "|creado por Mario De Weerd"
+        + "|m.deweerd@ieee.org"
+        + "|Esta aplicación permite controlar"
+        + "|dispositivos BT747."
+        + "|Permite el control por bluetooth"
+        + "|del GPS con un hardware hack.  "
+        + "|Más información en la web."
+        + "|Traducido por Allsts"
+        + "|allststr@terra.es"; 
 
     
     public static final String ABOUT_SUPERWABA_TITLE=
         "Acerca de SuperWaba";
     public static final String ABOUT_SUPERWABA_TXT=
-        "SuperWaba Virtual Machine "+ Settings.versionStr + 
-        "|Copyright (c)2000-2007" + 
-        "|Guilherme Campos Hazan" + 
-        "|www.superwaba.com|" + 
-        "|" + 
-        "SuperWaba es una versión mejorada" + 
-        "|de la máquina virtual Waba" + 
-        "|Copyright (c) 1998,1999 WabaSoft" + 
-        "|www.wabasoft.com";
+        "SuperWaba Virtual Machine "+ Settings.versionStr
+        + "|Copyright (c)2000-2007"
+        + "|Guilherme Campos Hazan"
+        + "|www.superwaba.com|"
+        + "|"
+        + "SuperWaba es una versión mejorada"
+        + "|de la máquina virtual Waba"
+        + "|Copyright (c) 1998,1999 WabaSoft"
+        + "|www.wabasoft.com";
     
     public static final String DISCLAIMER_TITLE=
         "Renuncia";
     public static final String DISCLAIMER_TXT=
-        "El programa se proporciona 'COMO" + 
-        "|ESTA',sin garantía de ningún tipo." + 
-        "|Todas las representaciones expresas" + 
-        "|o implícitas y las garantías," + 
-        "|incluyendo cualquier garantía de" + 
-        "|comerciabilidad, adecuación para un" + 
-        "|uso particular o no-infringimiento" + 
-        "|están aquí excluidas. Los riesgros" + 
-        "|que surgan por emplear este" + 
-        "|programa serán asumidos por el" + 
-        "|usuario. Ver la licencia pública" + 
-        "|general (GNU) para más detalles." +
-        "|" +
-        "TODAS LAS REPRESENTACIONES EXPRESAS" +
-        "|OF IMPLÍCITAS Y LAS GARANTÍAS," +
-        "|INCLUYENDO CUALQUIER GARANTÍA" +
-        "|IMPLÍCITA DE COMERCIABILIDAD," +
-        "|ADECUACION (QUE SEA ADECUADO" +
-        "|O TENGA LAS CARACTERISTICAS" +
-        "|NECESARIAS) PARA UN USO PARTICULAR" +
-        "|O NO-INFRINGIMIENTO, ESTÁN AQUÍ" +
-        "|EXCLUIDAS.  LOS RIESGOS QUE SURJAN" +
-        "|POR UTILIZAR EL SOFTWARE SERAN" +
-        "|ASUMIDOS POR EL USUARIO.  VER LA" +
-        "|LICENCIA PUBLICA GENERAL GNU PARA MAS DETALLE" ;
+        "El programa se proporciona 'COMO"
+        + "|ESTA',sin garantía de ningún tipo."
+        + "|Todas las representaciones expresas"
+        + "|o implícitas y las garantías,"
+        + "|incluyendo cualquier garantía de"
+        + "|comerciabilidad, adecuación para un"
+        + "|uso particular o no-infringimiento"
+        + "|están aquí excluidas. Los riesgros"
+        + "|que surgan por emplear este"
+        + "|programa serán asumidos por el"
+        + "|usuario. Ver la licencia pública"
+        + "|general (GNU) para más detalles."
+        + "|"
+        + "TODAS LAS REPRESENTACIONES EXPRESAS"
+        + "|OF IMPLÍCITAS Y LAS GARANTÍAS,"
+        + "|INCLUYENDO CUALQUIER GARANTÍA"
+        + "|IMPLÍCITA DE COMERCIABILIDAD,"
+        + "|ADECUACION (QUE SEA ADECUADO"
+        + "|O TENGA LAS CARACTERISTICAS"
+        + "|NECESARIAS) PARA UN USO PARTICULAR"
+        + "|O NO-INFRINGIMIENTO, ESTÁN AQUÍ"
+        + "|EXCLUIDAS.  LOS RIESGOS QUE SURJAN"
+        + "|POR UTILIZAR EL SOFTWARE SERAN"
+        + "|ASUMIDOS POR EL USUARIO.  VER LA"
+        + "|LICENCIA PUBLICA GENERAL GNU PARA MAS DETALLE" ;
 
 
 
@@ -188,10 +188,10 @@ public class Txt_es {
     public static final String BT_PT_WITH_REASON = "Click para grabar un punto por...";
 
     public static final String CONFIRM_FACT_RESET =
-            "Vas a volver a los valores de|" +
-            "fábrica de tu GPS DataLogger.|"+
-            "|¿Confirmas este cambio bajo|"+
-            "tu responsabilidad ?";    
+            "Vas a volver a los valores de|"
+            + "fábrica de tu GPS DataLogger.|"
+            + "|¿Confirmas este cambio bajo|"
+            + "tu responsabilidad ?";    
     
     // File tab
     public static final String OUTPUT_DIR = "Guardar en:";
@@ -240,38 +240,38 @@ public class Txt_es {
     public static final String CONFIRM_ERASE = "Confirmar borrado";
     
     public static final String C_msgWarningFormatIncompatibilityRisk =
-        "Vas a cambiar el formato de tu dispositivo " +
-        "sin borrar el log.|" +
-        "Otros programas|" +
-        "pueden no entender|" +
-        "los datos de tu dispositivo!||" +
-        "¿Aceptas esta incompativilidad?";
+        "Vas a cambiar el formato de tu dispositivo "
+        + "sin borrar el log.|"
+        + "Otros programas|"
+        + "pueden no entender|"
+        + "los datos de tu dispositivo!||"
+        + "¿Aceptas esta incompativilidad?";
     
     /** Message warning user about impact of changing log format */
     public static final String C_msgWarningFormatAndErase = 
-        "Vas a cambiar el formato de" +
-        "|grabación de tu dispositivo." +
-        "|y" +
-        "|BORRAR el log" +
-        "|" +
-        "|¿CAMBIAR Y BORRAR EL LOG?";
+        "Vas a cambiar el formato de"
+        + "|grabación de tu dispositivo."
+        + "|y"
+        + "|BORRAR el log"
+        + "|"
+        + "|¿CAMBIAR Y BORRAR EL LOG?";
     /** Message warning the user again about the impact of a log format change */           
     public static final String C_msgWarningFormatAndErase2 =
-        "Esta es tu última oportunidad para" +
-        "|evitar borrar el log." +
-        "|" +
-        "|¿CAMBIAR Y BORRAR EL LOG?";
+        "Esta es tu última oportunidad para"
+        + "|evitar borrar el log."
+        + "|"
+        + "|¿CAMBIAR Y BORRAR EL LOG?";
     /** Message warning user about impact of changing log format */
     public static final String C_msgEraseWarning = 
-        "Vas a borrar el log" +
-        "|del dispositivo." +
-        "|" +
-        "|¿BORRAR el log?";
+        "Vas a borrar el log"
+        + "|del dispositivo."
+        + "|"
+        + "|¿BORRAR el log?";
     public static final String C_msgEraseWarning2 =
-        "Esta es tu última oportunidad para" +
-        "|evitar borrar el log." +
-        "|" +
-        "|¿BORRAR el Log?";
+        "Esta es tu última oportunidad para"
+        + "|evitar borrar el log."
+        + "|"
+        + "|¿BORRAR el Log?";
 
     public static final String ONE_FILE = "Un archivo";
     public static final String ONE_FILE_DAY = "Un archivo/ día";
@@ -332,13 +332,13 @@ public class Txt_es {
     public static final String TITLE_WAITING_ERASE =
         "Espere a que el borrado finalice";
     public static final String TXT_WAITING_ERASE =
-        "Espere a que el borrado finalice.|" +
-        "Cancelar (Bajo tu responsabilidad)";
+        "Espere a que el borrado finalice.|"
+        + "Cancelar (Bajo tu responsabilidad)";
     
     public static final String UNKNOWN = "Desconocido";
     public static final String CHK_PATH =
-        "|Revisa el destino y si la|" +
-	"tarjeta permite la escritura";
+        "|Revisa el destino y si la|"
+	+ "tarjeta permite la escritura";
     
     public static final String OVERWRITE = "Sobreescribir";
     public static final String ABORT_DOWNLOAD = "Abortar descarga";
@@ -364,11 +364,11 @@ public class Txt_es {
     public static final String WRITEFLASH = "Grabar Flash";
     public static final String ABORT = "Abortar";
     public static final String TXT_FLASH_LIMITED_WRITES=
-        "El número de cambios restantes es|" +
-        "limitada y cambiar la configuración|" +
-        "puede inutilizar el dispositivo|" +
-        "(p.e., un cambio de baud rate)|" +
-        "ABORTAR clicando abortar!!";
+        "El número de cambios restantes es|"
+        + "limitada y cambiar la configuración|"
+        + "puede inutilizar el dispositivo|"
+        + "(p.e., un cambio de baud rate)|"
+        + "ABORTAR clicando abortar!!";
     public static final String PERIOD_ABBREV = "Per";
 
     // Forgotton in Advanced track filter
@@ -384,15 +384,15 @@ public class Txt_es {
     public static final String WARNING =
         "Alerta";
     public static final String NO_FILES_WERE_CREATED =
-        "No se crearon archivos de salida!" +
-        "||" +
-        "Esto puede significar que:" +
-        "|- El filtro no seleccionó ningún punto" +
-        "|- El log no contiene datos" +
-        "|" +
-        "|Prueba seleccionando todos los puntos." +
-        "|Si no funciona," +
-        "|puede ser un error del programa.";
+        "No se crearon archivos de salida!"
+        + "||"
+        + "Esto puede significar que:"
+        + "|- El filtro no seleccionó ningún punto"
+        + "|- El log no contiene datos"
+        + "|"
+        + "|Prueba seleccionando todos los puntos."
+        + "|Si no funciona,"
+        + "|puede ser un error del programa.";
     
     public static final String ADD_RECORD_NUMBER =
         "Info núm en el log";
@@ -400,8 +400,8 @@ public class Txt_es {
     public static final String S_DEBUG_CONN= "Depurar conn.";
     public static final String S_IMPERIAL= "Unid Imperiales"; 
     public static final String BAD_SUPERWABAVERSION = 
-    "Esta aplicación se creó para|SuperWaba V" + 
-    Settings.requiredVersionStr + "." 
+    "Esta aplicación se creó para|SuperWaba V"
+    + Settings.requiredVersionStr + "." 
     +    "|Esta es la versión V"+Settings.versionStr+"." 
     +    "|Cerrando aplicación"; 
     public static final String S_DEVICE = "Dispositivo"; 

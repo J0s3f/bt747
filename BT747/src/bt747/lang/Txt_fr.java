@@ -36,9 +36,9 @@ public class Txt_fr {
     
     public static final String TITLE_ATTENTION = "Attention";
     public static final String CONFIRM_APP_EXIT =
-        "Vous êtes sur le point de quitter" +
-        "|l'application." + 
-        "|Vous confirmez?";
+        "Vous êtes sur le point de quitter"
+        + "|l'application."
+        + "|Vous confirmez?";
     
     public static final String YES=
         "Oui";
@@ -51,68 +51,68 @@ public class Txt_fr {
     public static final String ABOUT_TITLE=
         "A propos de BT747 V"+Version.VERSION_NUMBER;
     public static final String ABOUT_TXT=
-        "Crée avec SuperWaba" + 
-        "|http://www.superwaba.org"+ 
-        "|" +Version.BUILD_STR + 
-        "|Ecrit par Mario De Weerd" + 
-        "|m.deweerd@ieee.org"+ 
-        "|Cette application permets le contrôle" + 
-        "|de différents types de logger GPS à" + 
-        "|base de chipset MTK. La modification" + 
-        "|matériel peut être nécessaire" +
-        "|pour l'utiliser bluetooth." + 
-        "|Plus d'information sur le web."; 
+        "Crée avec SuperWaba"
+        + "|http://www.superwaba.org"
+        + "|" +Version.BUILD_STR
+        + "|Ecrit par Mario De Weerd"
+        + "|m.deweerd@ieee.org"
+        + "|Cette application permets le contrôle"
+        + "|de différents types de logger GPS à"
+        + "|base de chipset MTK. La modification"
+        + "|matériel peut être nécessaire"
+        + "|pour l'utiliser bluetooth."
+        + "|Plus d'information sur le web."; 
 
     
     public static final String ABOUT_SUPERWABA_TITLE=
         "A propos de SuperWaba";
     public static final String ABOUT_SUPERWABA_TXT=
-        "SuperWaba Virtual Machine "+ Settings.versionStr + 
-        "|Copyright (c)2000-2007" + 
-        "|Guilherme Campos Hazan" + 
-        "|www.superwaba.com|" + 
-        "|" + 
-        "SuperWaba is an enhanced version" + 
-        "|of the Waba Virtual Machine" + 
-        "|Copyright (c) 1998,1999 WabaSoft" + 
-        "|www.wabasoft.com";
+        "SuperWaba Virtual Machine "+ Settings.versionStr
+        + "|Copyright (c)2000-2007"
+        + "|Guilherme Campos Hazan"
+        + "|www.superwaba.com|"
+        + "|"
+        + "SuperWaba is an enhanced version"
+        + "|of the Waba Virtual Machine"
+        + "|Copyright (c) 1998,1999 WabaSoft"
+        + "|www.wabasoft.com";
     
     public static final String DISCLAIMER_TITLE=
         "Disclaimer";
     public static final String DISCLAIMER_TXT=
-        "Ce logiciel est fourni par les titu-" +
-        "|laires et les participants \"TEL QUEL\"" +
-        "|ET TOUTES LES GARANTIES EXPLICITES" +
-        "|OU IMPLICITES, Y COMPRIS, MAIS NON" +
-        "|LIMITÉES A CELLES-CI, LES GARANTIES" +
-        "|IMPLICITES DE COMMERCIALISATION" +
-        "|ET D\'ADÉQUATION À UN USAGE"+
-        "|PARTICULIER SONT DÉNIÉES. EN AUCUN" +
-        "|CAS LES TITULAIRES DU COPYRIGHT" +
-        "|OU LES PARTICIPANTS NE PEUVENT" +
-        "|ÊTRE TENUS POUR RESPONSABLE DES" +
-        "|DOMMAGES DIRECTS, INDIRECTS," +
-        "|FORTUITS, PARTICULIERS, EXEMPLAIRES" +
-        "|OU CONSÉCUTIFS À UNE ACTION (Y" +
-        "|COMPRIS, MAIS NON LIMITÉS À CEUX" +
-        "|-CI, L'ACQUISITION DE MARCHANDISES" +
-        "|OU DE SERVICES DE REMPLACEMENT; " +
-        "|LES PERTES D'UTILISATIONS, DE" +
-        "|DONNÉES OU FINANCIÈRES; OU L'" +
-        "|INTERRUPTION D'ACTIVITÉS) DE" +
-        "|QUELQUE MANIÈRE QUE CES DOMMAGES" +
-        "|SOIENT CAUSÉS ET CECI POUR" +
-        "|TOUTES LES THÉORIES DE" +
-        "|RESPONSABILITÉS, QUE CE SOIT" +
-        "|DANS UN CONTRAT, POUR DES" +
-        "|RESPONSABILITÉS STRICTES OU" +
-        "|DES PRÉJUDICES (Y COMPRIS DUS" +
-        "|À UNE NÉGLIGENCE OU AUTRE CHOSE)" +
-        "|SURVENANT DE QUELQUE" +
-        "|MANIÈRE QUE CE SOIT EN DEHORS DE" +
-        "|L'UTILISATION DE CE LOGICIEL, MÊME" +
-        "|EN CAS D\'AVERTISSEMENT DE LA" +
-        "|POSSIBILITÉ DE TELS DOMMAGES.";
+        "Ce logiciel est fourni par les titu-"
+        + "|laires et les participants \"TEL QUEL\""
+        + "|ET TOUTES LES GARANTIES EXPLICITES"
+        + "|OU IMPLICITES, Y COMPRIS, MAIS NON"
+        + "|LIMITÉES A CELLES-CI, LES GARANTIES"
+        + "|IMPLICITES DE COMMERCIALISATION"
+        + "|ET D\'ADÉQUATION À UN USAGE"
+        + "|PARTICULIER SONT DÉNIÉES. EN AUCUN"
+        + "|CAS LES TITULAIRES DU COPYRIGHT"
+        + "|OU LES PARTICIPANTS NE PEUVENT"
+        + "|ÊTRE TENUS POUR RESPONSABLE DES"
+        + "|DOMMAGES DIRECTS, INDIRECTS,"
+        + "|FORTUITS, PARTICULIERS, EXEMPLAIRES"
+        + "|OU CONSÉCUTIFS À UNE ACTION (Y"
+        + "|COMPRIS, MAIS NON LIMITÉS À CEUX"
+        + "|-CI, L'ACQUISITION DE MARCHANDISES"
+        + "|OU DE SERVICES DE REMPLACEMENT; "
+        + "|LES PERTES D'UTILISATIONS, DE"
+        + "|DONNÉES OU FINANCIÈRES; OU L'"
+        + "|INTERRUPTION D'ACTIVITÉS) DE"
+        + "|QUELQUE MANIÈRE QUE CES DOMMAGES"
+        + "|SOIENT CAUSÉS ET CECI POUR"
+        + "|TOUTES LES THÉORIES DE"
+        + "|RESPONSABILITÉS, QUE CE SOIT"
+        + "|DANS UN CONTRAT, POUR DES"
+        + "|RESPONSABILITÉS STRICTES OU"
+        + "|DES PRÉJUDICES (Y COMPRIS DUS"
+        + "|À UNE NÉGLIGENCE OU AUTRE CHOSE)"
+        + "|SURVENANT DE QUELQUE"
+        + "|MANIÈRE QUE CE SOIT EN DEHORS DE"
+        + "|L'UTILISATION DE CE LOGICIEL, MÊME"
+        + "|EN CAS D\'AVERTISSEMENT DE LA"
+        + "|POSSIBILITÉ DE TELS DOMMAGES.";
 
     // TAB identification
     public static final String C_FMT  = "Fmt";
@@ -194,11 +194,11 @@ public class Txt_fr {
     public static final String BT_PT_WITH_REASON = "Cliquez pour logger un point:";
 
     public static final String CONFIRM_FACT_RESET =
-            "Vous êtes sur le point de réaliser" +
-            "|une réinitialisation usine du" +
-            "|Chipset MTK." +
-            "||Confirmez-vous cette opération"+
-            "|à votre risque ???";    
+            "Vous êtes sur le point de réaliser"
+            + "|une réinitialisation usine du"
+            + "|Chipset MTK."
+            + "||Confirmez-vous cette opération"
+            + "|à votre risque ???";    
     
     // File tab
     public static final String OUTPUT_DIR = "Rép.sortie:";
@@ -247,36 +247,36 @@ public class Txt_fr {
     public static final String CONFIRM_ERASE = "Effacer";
     
     public static final String C_msgWarningFormatIncompatibilityRisk =
-        "Vous êtes sur le point de changer le format de" +
-        " votre appareil sans effacer la mémoire." +
-        " C'est incompatible avec d'autres logiciels" +
-        "||Vous êtes d'accord avec cette incompatibilité?";
+        "Vous êtes sur le point de changer le format de"
+        + " votre appareil sans effacer la mémoire."
+        + " C'est incompatible avec d'autres logiciels"
+        + "||Vous êtes d'accord avec cette incompatibilité?";
     
     /** Message warning user about impact of changing log format */
     public static final String C_msgWarningFormatAndErase = 
-        "Vous êtes sur le point de redéfinir le" +
-        "|format des points de votre appareil" +
-        "|et" +
-        "|d'effacer le contenu de la mémoire" +
-        "|" +
-        "|CHANGER LE FORMAT & EFFACER?";
+        "Vous êtes sur le point de redéfinir le"
+        + "|format des points de votre appareil"
+        + "|et"
+        + "|d'effacer le contenu de la mémoire"
+        + "|"
+        + "|CHANGER LE FORMAT & EFFACER?";
     /** Message warning the user again about the impact of a log format change */           
     public static final String C_msgWarningFormatAndErase2 =
-        "Ceci est votre dernière chance" +
-        "|d'annuler la remise à zéro" +
-        "|de la mémoire." +
-        "|" +
-        "|CHANGER LE FORMAT & EFFACER?";
+        "Ceci est votre dernière chance"
+        + "|d'annuler la remise à zéro"
+        + "|de la mémoire."
+        + "|"
+        + "|CHANGER LE FORMAT & EFFACER?";
     /** Message warning user about impact of changing log format */
     public static final String C_msgEraseWarning = 
-        "Vous aller effacer la mémoire" +
-        "|" +
-        "|EFFACER?";
+        "Vous aller effacer la mémoire"
+        + "|"
+        + "|EFFACER?";
     public static final String C_msgEraseWarning2 =
-        "Ceci est la dernière chance pour eviter" +
-        "|d'effacer la mémoire." +
-        "|" +
-        "|EFFACER?";
+        "Ceci est la dernière chance pour eviter"
+        + "|d'effacer la mémoire."
+        + "|"
+        + "|EFFACER?";
 
     public static final String ONE_FILE = "Un fichier";
     public static final String ONE_FILE_DAY = "Un fichier/ jr";
@@ -337,21 +337,21 @@ public class Txt_fr {
     public static final String TITLE_WAITING_ERASE =
         "Attente de la remise à zéro";
     public static final String TXT_WAITING_ERASE =
-        "Attente de la remise à zéro|" +
-        "Vous pouvez annuler à votre risque";
+        "Attente de la remise à zéro|"
+        + "Vous pouvez annuler à votre risque";
     
     public static final String UNKNOWN = "Inconnue";
     public static final String CHK_PATH =
-        "|Vérifiez le chemin et" +
-        "|si la carte peut être écrit";
+        "|Vérifiez le chemin et"
+        + "|si la carte peut être écrit";
     
     public static final String OVERWRITE = "Ecraser";
     public static final String ABORT_DOWNLOAD = "Annuler téléch.";
     public static final String DATA_NOT_SAME = 
-    "Les données dans la mémoire" +
-    "|ne correspondent au dernier" +
-    "|téléchargment" +
-    "|Souhaitez-vous écraser le fichier?";
+    "Les données dans la mémoire"
+    + "|ne correspondent au dernier"
+    + "|téléchargment"
+    + "|Souhaitez-vous écraser le fichier?";
     public static final String LOGGER = "Logger: ";  // For logger SW version
     
     
@@ -368,11 +368,11 @@ public class Txt_fr {
     public static final String WRITEFLASH = "Ecrire Flash";
     public static final String ABORT = "Annuler";
     public static final String TXT_FLASH_LIMITED_WRITES=
-        "Le nombre d'écritures dans la flash" +
-        "est limité et un changement de|" +
-        "ces options peut rendre l'appareil|" +
-        "inutilisable (changement du baud rate)." +
-        "ARRETEZ en selectionnant annulez!!";
+        "Le nombre d'écritures dans la flash"
+        + "est limité et un changement de|"
+        + "ces options peut rendre l'appareil|"
+        + "inutilisable (changement du baud rate)."
+        + "ARRETEZ en selectionnant annulez!!";
     public static final String PERIOD_ABBREV = "Pér";
     
     // Forgotton in Advanced track filter
@@ -389,23 +389,23 @@ public class Txt_fr {
     public static final String WARNING =
         "Alerte";
     public static final String NO_FILES_WERE_CREATED =
-        "Aucun fichier de sortie!" +
-        "||" +
-        "Habituellement les causes sont:" +
-        "|- Les filtres son trop strictes" +
-        "|- Il n'y a pas de données dans le log" +
-        "|" +
-        "|Essayez la selection de tous les points" +
-        "|Si cela ne donne pas de succès," +
-        "|il y a peut-être un bug";
+        "Aucun fichier de sortie!"
+        + "||"
+        + "Habituellement les causes sont:"
+        + "|- Les filtres son trop strictes"
+        + "|- Il n'y a pas de données dans le log"
+        + "|"
+        + "|Essayez la selection de tous les points"
+        + "|Si cela ne donne pas de succès,"
+        + "|il y a peut-être un bug";
     public static final String ADD_RECORD_NUMBER =
         "Record nbr info in logs";    
 
     public static final String S_DEBUG_CONN= "Debug conn.";
     public static final String S_IMPERIAL= "Unités anglaises";
     public static final String BAD_SUPERWABAVERSION =
-        "This application was built for|SuperWaba V" +
-        Settings.requiredVersionStr + "."
+        "This application was built for|SuperWaba V"
+        + Settings.requiredVersionStr + "."
         +"|This version is V"+Settings.versionStr+"."
         +"|Exiting application";
 

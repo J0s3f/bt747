@@ -23,14 +23,15 @@ import gps.BT747Constants;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
-/**Class to write a CSV file.
+/**
+ * Class to write a CSV file.
  * 
  * @author Mario De Weerd
  */
 public class GPSArray extends GPSFile {
     private GPSRecord[] gpsTrackPoints;
     private GPSRecord[] gpsWayPoints;
-    
+
     public GPSArray() {
         super();
         C_NUMBER_OF_PASSES = 2;
@@ -38,7 +39,6 @@ public class GPSArray extends GPSFile {
         wayPointCount = 0;
     }
 
-    
     public final boolean needPassToFindFieldsActivatedInLog() {
         return false;
     }
@@ -51,7 +51,7 @@ public class GPSArray extends GPSFile {
     protected final boolean recordIsNeeded(final GPSRecord s) {
         return ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
     }
-    
+
     public final boolean nextPass() {
         super.nextPass();
         if (nbrOfPassesToGo > 0) {
@@ -69,12 +69,14 @@ public class GPSArray extends GPSFile {
         }
 
     }
-    
+
     private int trackPointCount;
     private int wayPointCount;
-    
-//    private GPSRecord prevRecord=null;
-    /* (non-Javadoc)
+
+    // private GPSRecord prevRecord=null;
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.GPSFile#WriteRecord()
      */
     public final void writeRecord(final GPSRecord s) {
@@ -93,7 +95,7 @@ public class GPSArray extends GPSFile {
             wayPointCount++;
         }
     }
-    
+
     protected final int createFile(final String extra_ext) {
         // Override to avoid file creation.
         return BT747Constants.NO_ERROR;
@@ -106,7 +108,6 @@ public class GPSArray extends GPSFile {
     public final GPSRecord[] getGpsTrackPoints() {
         return gpsTrackPoints;
     }
-
 
     public final GPSRecord[] getGpsWayPoints() {
         return gpsWayPoints;

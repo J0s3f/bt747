@@ -1,4 +1,5 @@
 package bt747.waba_view;
+
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -33,7 +34,7 @@ import bt747.model.Model;
 
 /**
  * @author Mario De Weerd
-
+ * 
  */
 public class GPSFiltersTabPanel extends Container {
 
@@ -41,46 +42,43 @@ public class GPSFiltersTabPanel extends Container {
     private Controller c;
 
     private TabPanel m_TabPanel;
-    
-    private final String c_tpCaptions[]= {
-            Txt.STANDARD,
-            Txt.ADVANCED
-    };
-    
-    public GPSFiltersTabPanel(Model m,
-            Controller c) {
-        this.m=m;
-        this.c=c;
+
+    private final String[] c_tpCaptions = { Txt.STANDARD, Txt.ADVANCED };
+
+    public GPSFiltersTabPanel(final Model m, final Controller c) {
+        this.m = m;
+        this.c = c;
     }
-    
+
     /**
      * 
      */
-    public void onStart() {
-        add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
+    public final void onStart() {
+        add(m_TabPanel = new TabPanel(c_tpCaptions), CENTER, CENTER);
         m_TabPanel.setBorderStyle(Window.NO_BORDER);
-        m_TabPanel.setRect(getClientRect().modifiedBy(0,0,0,0));
-        m_TabPanel.setPanel(0,new GPSLogFilter(c,m));
-        m_TabPanel.setPanel(1,new GPSLogFilterAdv(c,m));
-//        m_TabPanel.setPanel(2,m_GPSNMEAFile = new GPSFileNMEAOutputSel(m));
+        m_TabPanel.setRect(getClientRect().modifiedBy(0, 0, 0, 0));
+        m_TabPanel.setPanel(0, new GPSLogFilter(c, m));
+        m_TabPanel.setPanel(1, new GPSLogFilterAdv(c, m));
+        // m_TabPanel.setPanel(2,m_GPSNMEAFile = new GPSFileNMEAOutputSel(m));
     }
-    public void onEvent(Event event) {
+
+    public final void onEvent(final Event event) {
         //
         switch (event.type) {
         case ControlEvent.PRESSED:
-            if(event.target==m_TabPanel||event.target==this) {
-                Control c;
-                c=m_TabPanel.getChildren()[0];
-                c.postEvent(new Event(ControlEvent.PRESSED,c,0));                
+            if (event.target == m_TabPanel || event.target == this) {
+                Control cntrl;
+                cntrl = m_TabPanel.getChildren()[0];
+                cntrl.postEvent(new Event(ControlEvent.PRESSED, cntrl, 0));
             }
             break;
         default:
-            if(event.type==GpsEvent.DATA_UPDATE) {
-                if(event.target==this) {
-                    Control c;
-                    c=m_TabPanel.getChildren()[0];
-                    c.postEvent(new Event(GpsEvent.DATA_UPDATE,c,0));
-                    event.consumed=true;
+            if (event.type == GpsEvent.DATA_UPDATE) {
+                if (event.target == this) {
+                    Control ctrnl;
+                    ctrnl = m_TabPanel.getChildren()[0];
+                    ctrnl.postEvent(new Event(GpsEvent.DATA_UPDATE, ctrnl, 0));
+                    event.consumed = true;
                 }
             }
         }

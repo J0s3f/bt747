@@ -69,8 +69,8 @@ public class GPSNMEAFile extends GPSFile {
                 +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())
                 +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond());
                 if(activeFields.milisecond!=0) {
-                    timeStr+="."+
-                    ((s.milisecond<100)?"0":"")
+                    timeStr+="."
+                    + ((s.milisecond<100)?"0":"")
                     +((s.milisecond<10)?"0":"")
                     +(Convert.toString(s.milisecond));
                 } 
