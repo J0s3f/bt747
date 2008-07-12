@@ -339,10 +339,10 @@ public final class Conv {
          */
         
         lat = p_lat * Math.PI / 180.0;
-        sc = Math.sin (lat);
+        sc = Math.sin(lat);
         x = a * (1.0 - e2);
         z = 1.0 - e2 * sc * sc;
-        y = Math.pow (z, 1.5);
+        y = Math.pow(z, 1.5);
         r = x / y;
         
         r = r * 1000.0;

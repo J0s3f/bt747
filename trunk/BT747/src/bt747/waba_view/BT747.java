@@ -61,14 +61,14 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
      */
     //private GPSstate    m_GPSstate;
     /** The label next to the progressbar. Hidden when not in use. */
-    private Label       m_ProgressLabel;
+    private Label       progressLabel;
     /** The progress bar itself. Hidden when not in use. */
     private ProgressBar pb;
 
     // private BT747model m_model;
-    /** The application's MenuBar */
-    private MenuBar     m_MenuBar;
-    /** The content of the menu bar */
+    /** The application's MenuBar. */
+    private MenuBar     menuBar;
+    /** The content of the menu bar. */
 
     private MenuItem miFile = new MenuItem(Txt.S_FILE);
     private MenuItem miExitApplication = new MenuItem(Txt.S_EXIT_APPLICATION);  
@@ -202,23 +202,23 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     private int orgAutoOnOff;
 
     /**
-     * Initialiser of the application
+     * Initialiser of the application.
      */
     public BT747() {
-        if(Settings.onDevice) {
+        if (Settings.onDevice) {
             bt747.sys.Vm.debug(bt747.sys.Vm.ERASE_DEBUG);
         }
-        orgAutoOnOff=waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off
+        orgAutoOnOff = waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off
         // causing BT trouble
 
         /**
          * 
          */
-        if(Txt.fontFile!=null) {
+        if (Txt.fontFile != null) {
             MainWindow.defaultFont = Font.getFont(Txt.fontFile, false, 12);
             MainWindow.getMainWindow().setTitleFont(MainWindow.defaultFont);
         }
-        if(Txt.encoding!=null) {
+        if (Txt.encoding != null) {
             waba.sys.Convert.setDefaultConverter(Txt.encoding);
         }
 
@@ -226,7 +226,8 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle(Txt.S_TITLE); 
         waba.sys.Settings.setUIStyle(waba.sys.Settings.Flat);
-        c.setBinDecoder(0);  // Using the original decoder only in this interface
+        // Using the original decoder only in this interface:
+        c.setBinDecoder(0);
     }
 
     private int numPanels;
@@ -234,7 +235,7 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     public void onStart() {
         super.onStart();
 
-        if(Settings.version<Settings.requiredVersion) {
+        if (Settings.version < Settings.requiredVersion) {
             new MessageBox(
                     Txt.TITLE_ATTENTION,
                     Txt.BAD_SUPERWABAVERSION).popupBlockingModal();
@@ -242,59 +243,64 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         }
 
         //m_GPSstate=m.gpsModel();
-        setMenuBar(m_MenuBar=new MenuBar(menu));
+        menuBar = new MenuBar(menu);
+        setMenuBar(menuBar);
         // Next line is for modeling a device for debug.
         // Doing this on the windows platform
         // if (Settings.platform.equals("Java")) m_model= new BT747model();
         // sp.writeBytes(buf,0,1);
-        miGpxUTC0.isChecked=m.getGpxUTC0();
+        miGpxUTC0.isChecked = m.getGpxUTC0();
 
-        miGpxTrkSegWhenBig.isChecked=m.getGpxTrkSegWhenBig();
+        miGpxTrkSegWhenBig.isChecked = m.getGpxTrkSegWhenBig();
 
-        miGpsDecode.isChecked=m.getGpsDecode();
+        miGpsDecode.isChecked = m.getGpsDecode();
 
-        miRecordNumberInLogs.isChecked=m.getRecordNbrInLogs();
-        miHolux.isChecked=m.getForceHolux241();
-        miImperial.isChecked=m.getImperial();
-        miOutputLogConditions.isChecked=m.getOutputLogConditions();
+        miRecordNumberInLogs.isChecked = m.getRecordNbrInLogs();
+        miHolux.isChecked = m.getForceHolux241();
+        miImperial.isChecked = m.getImperial();
+        miOutputLogConditions.isChecked = m.getOutputLogConditions();
 
-
-        add(m_TabPanel=new TabPanel(c_tpCaptions),CENTER,CENTER);
+        m_TabPanel = new TabPanel(c_tpCaptions);
+        add(m_TabPanel, CENTER, CENTER);
         // Progress bar to show download progress (separate thread)
-        m_ProgressLabel=new Label(Txt.LB_DOWNLOAD); 
-        pb=new ProgressBar();
-        add(m_ProgressLabel,LEFT,BOTTOM);
-        m_ProgressLabel.setRect(LEFT,BOTTOM,PREFERRED,PREFERRED);
-        m_ProgressLabel.setVisible(false);
+        progressLabel = new Label(Txt.LB_DOWNLOAD); 
+        pb = new ProgressBar();
+        add(progressLabel, LEFT, BOTTOM);
+        progressLabel.setRect(LEFT, BOTTOM, PREFERRED, PREFERRED);
+        progressLabel.setVisible(false);
         // m_ProgressLabel.setVisible(false);
         m_TabPanel.setBorderStyle(Window.NO_BORDER);
-        m_TabPanel.setRect(getClientRect().modifiedBy(0,0,0,-pb.getPreferredHeight()));
+        m_TabPanel.setRect(getClientRect().modifiedBy(
+                0,
+                0,
+                0,
+                -pb.getPreferredHeight()));
 
-        add(pb,RIGHT,SAME);  
-        pb.setRect(RIGHT,BOTTOM,// BOTTOM,RIGHT,
-                getClientRect().width-m_ProgressLabel.getRect().width-2,
+        add(pb, RIGHT, SAME);  
+        pb.setRect(RIGHT, BOTTOM, // BOTTOM,RIGHT,
+                getClientRect().width - progressLabel.getRect().width - 2,
                 PREFERRED);
         updateProgressBar();
 
-        numPanels=0;
-        m_TabPanel.setPanel(C_LOG_CTRL_IDX,new GPSLogFormat(m,c));
+        numPanels = 0;
+        m_TabPanel.setPanel(C_LOG_CTRL_IDX, new GPSLogFormat(m, c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_LOGINFO_IDX,new GPSLogReason(c,m));
+        m_TabPanel.setPanel(C_GPS_LOGINFO_IDX, new GPSLogReason(c, m));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_LOGGET_IDX,new GPSLogGet(m,c));
+        m_TabPanel.setPanel(C_GPS_LOGGET_IDX, new GPSLogGet(m, c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_FILECTRL_IDX,new GPSLogFile(c,m));
+        m_TabPanel.setPanel(C_GPS_FILECTRL_IDX, new GPSLogFile(c, m));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX,new GPSFiltersTabPanel(m,c));
+        m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX, new GPSFiltersTabPanel(m, c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX,new GPSLogEasy(m,c));
+        m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX, new GPSLogEasy(m, c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_CONCTRL_IDX,new GPSconctrl(c,m));
+        m_TabPanel.setPanel(C_GPS_CONCTRL_IDX, new GPSconctrl(c, m));
         numPanels++;
         // m_TabPanel.setPanel(C_GPS_FLASH_IDX,m_GPSFlash = new
         // GPSFlashOption(m_GPSstate));
         // C_NUM_PANELS++;
-        m_TabPanel.setPanel(C_GPS_FLASH_IDX,new GPSOtherTabPanel(c,m));
+        m_TabPanel.setPanel(C_GPS_FLASH_IDX, new GPSOtherTabPanel(c, m));
         numPanels++;
         // m_TabPanel.setPanel(1,dataEdit = new dataEdit());
         // m_TabPanel.setPanel(2,grid = new Grid(gridCaptions,false));
@@ -307,9 +313,9 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         m_TabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
 
         waba.sys.Settings.keyboardFocusTraversable = m.isTraversableFocus();
-        miTraversableFocus.isChecked=m.isTraversableFocus();
+        miTraversableFocus.isChecked = m.isTraversableFocus();
 
-        m.addListener((ModelListener)this);
+        m.addListener((ModelListener) this);
         c.addGPSListener(this);
         addTimer(this, 55);
 
@@ -317,22 +323,22 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     }
     
     private void gpsType() {
-        miDefaultDevice.isChecked=false;
-        miGisteqType1.isChecked=false;
-        miGisteqType2.isChecked=false;
-        miGisteqType3.isChecked=false;
+        miDefaultDevice.isChecked = false;
+        miGisteqType1.isChecked = false;
+        miGisteqType2.isChecked = false;
+        miGisteqType3.isChecked = false;
         switch (m.getGPSType()) {
         case Controller.GPS_TYPE_DEFAULT:
-            miDefaultDevice.isChecked=true;
+            miDefaultDevice.isChecked = true;
             break;
         case Controller.GPS_TYPE_GISTEQ1:
-            miGisteqType1.isChecked=true;
+            miGisteqType1.isChecked = true;
             break;
         case Controller.GPS_TYPE_GISTEQ2:
-            miGisteqType2.isChecked=true;
+            miGisteqType2.isChecked = true;
             break;
         case Controller.GPS_TYPE_GISTEQ3:
-            miGisteqType3.isChecked=true;
+            miGisteqType3.isChecked = true;
             break;
         default:
             break;
@@ -345,28 +351,30 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         // "+event.consumed); }
         switch (event.type) {
         case ControlEvent.TIMER:
-            if ((topMost==this)&&m.isSolveMacLagProblem() &&  event.target==this) {
+            if ((topMost == this)
+                    && m.isSolveMacLagProblem()
+                    && (event.target == this)) {
                 this._doPaint();
             }
             break;
         case ControlEvent.WINDOW_CLOSED:
-            if (event.target==mbErase) {
-                if(!mbErase.isPopped()) {
+            if (event.target == mbErase) {
+                if (!mbErase.isPopped()) {
                     stopErase();
                 }
-            } else if (event.target==menubar) {
-                switch (m_MenuBar.getSelectedMenuItem()) {
+            } else if (event.target == menubar) {
+                switch (menuBar.getSelectedMenuItem()) {
                 case -1:
                     break; // No item selected
                 case C_MENU_FILE_EXIT:
                     MessageBox mb;
-                    String []szExitButtonArray = {Txt.YES,Txt.NO};  
+                    String []szExitButtonArray = {Txt.YES, Txt.NO};  
                     mb = new MessageBox(
                             Txt.TITLE_ATTENTION,
                             Txt.CONFIRM_APP_EXIT, 
                             szExitButtonArray);				 					
-                    mb.popupBlockingModal();										
-                    if (mb.getPressedButtonIndex()==0){
+                    mb.popupBlockingModal();
+                    if (mb.getPressedButtonIndex() == 0) {
                         // Exit application
                         MainWindow.getMainWindow().exit(0);
                         break;
@@ -381,7 +389,8 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
                     break;
                 case C_MENU_FOCUS_HIGHLIGHT:
                     c.setTraversableFocus(miTraversableFocus.isChecked);
-                    waba.sys.Settings.keyboardFocusTraversable = m.isTraversableFocus();
+                    waba.sys.Settings.keyboardFocusTraversable =
+                        m.isTraversableFocus();
                     break;
                 case C_MENU_DEBUG_ACTIVE:
                     c.setDebug(miDebug.isChecked);
@@ -451,15 +460,15 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
             }
             break;
         case ControlEvent.PRESSED:
-            if(event.target==m_TabPanel) {
-                Control c;
-                c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
-                c.postEvent(new Event(ControlEvent.PRESSED,c,0));                
+            if (event.target == m_TabPanel) {
+                Control cntrl;
+                cntrl = m_TabPanel.getPanel(m_TabPanel.getActiveTab());
+                cntrl.postEvent(new Event(ControlEvent.PRESSED, cntrl, 0));
             }
             break;
         default:
-            if(event.target==this) {
-                    for (int i = 0; i<numPanels; i++) {
+            if (event.target == this) {
+                    for (int i = 0; i < numPanels; i++) {
                         m_TabPanel.getPanel(i).onEvent(event);    
                     }
             }
@@ -468,45 +477,45 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
 
     private void updateProgressBar() {
         if (pb != null) {
-            if(m.isDownloadOnGoing()) {
+            if (m.isDownloadOnGoing()) {
                 pb.min = m.getStartAddr();
                 pb.max = m.getEndAddr();
                 pb.setValue(m.getNextReadAddr(), "", " b");
             }
             pb.setVisible(m.isDownloadOnGoing());
-            m_ProgressLabel.setVisible(m.isDownloadOnGoing());
+            progressLabel.setVisible(m.isDownloadOnGoing());
         }
     }
 
     public final void newEvent(bt747.ui.Event event) {
-        if ((event.getType()==ModelEvent.CONNECTED) ) {
+        if ((event.getType() == ModelEvent.CONNECTED) ) {
             m_TabPanel.setActiveTab(C_GPS_LOGGET_IDX);
         }
         this.postEvent(event);
     }
 
     public void gpsEvent(GpsEvent event) {
-        int etype=event.getType();
-        if((event.getType()==GpsEvent.GPRMC)
-            ||(event.getType()==GpsEvent.GPGGA)) {
-            Control c;
-            c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
-            event.target=c;
-            c.postEvent(event);
-        } else if ((event.getType()==GpsEvent.DOWNLOAD_STATE_CHANGE) ) {
+        int eventType = event.getType();
+        if((event.getType() == GpsEvent.GPRMC)
+            ||(event.getType() == GpsEvent.GPGGA)) {
+            Control cntrl;
+            cntrl = m_TabPanel.getPanel(m_TabPanel.getActiveTab());
+            event.target = cntrl;
+            cntrl.postEvent(event);
+        } else if ((event.getType() == GpsEvent.DOWNLOAD_STATE_CHANGE) ) {
             updateProgressBar();
-        } else if ((event.getType()==GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY) ) {
+        } else if ((event.getType() == GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY) ) {
             requestLogOverwriteConfirmation();
-        } else if ((event.getType()==GpsEvent.ERASE_ONGOING_NEED_POPUP) ) {
+        } else if ((event.getType() == GpsEvent.ERASE_ONGOING_NEED_POPUP) ) {
             createErasePopup();
-        } else if ((event.getType()==GpsEvent.COULD_NOT_OPEN_FILE) ) {
+        } else if ((event.getType() == GpsEvent.COULD_NOT_OPEN_FILE) ) {
             couldNotOpenFileMessage((String) event.getArg());
-        } else if ((event.getType()==GpsEvent.DEBUG_MSG) ) {
+        } else if ((event.getType() == GpsEvent.DEBUG_MSG) ) {
             Vm.debug((String) event.getArg());
         } else {
-            Control c;
-            c=m_TabPanel.getPanel(m_TabPanel.getActiveTab());
-            c.postEvent(new Event(etype,c,0));
+            Control cntrl;
+            cntrl = m_TabPanel.getPanel(m_TabPanel.getActiveTab());
+            cntrl.postEvent(new Event(eventType, cntrl, 0));
         }
 
     }
@@ -529,8 +538,10 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
     }
     
     private final String[] eraseWait = { Txt.CANCEL_WAITING };
-    MessageBox mbErase = new MessageBox(Txt.TITLE_WAITING_ERASE,
-            Txt.TXT_WAITING_ERASE, eraseWait);;
+    private MessageBox mbErase =
+        new MessageBox(Txt.TITLE_WAITING_ERASE,
+            Txt.TXT_WAITING_ERASE, eraseWait);
+            
     private void createErasePopup() {
         mbErase.popupModal();
     }
@@ -538,8 +549,10 @@ public class BT747 extends MainWindow implements ModelListener,GPSListener {
         c.stopErase();
     }
     
-    private void couldNotOpenFileMessage(String fileName) {
-        (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName + Txt.CHK_PATH)).popupBlockingModal();
+    private void couldNotOpenFileMessage(final String fileName) {
+        (new MessageBox(Txt.ERROR,
+                Txt.COULD_NOT_OPEN + fileName + Txt.CHK_PATH)
+          ).popupBlockingModal();
     }
 
 

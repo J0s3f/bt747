@@ -34,50 +34,54 @@ import bt747.util.Hashtable;
 public class GPSGmapsHTMLEncodedFile extends GPSFile {
     private StringBuffer rec=new StringBuffer(1024);  // reused stringbuffer
 
-    private boolean m_isWayType;
-    private boolean m_newTrack=true;
-    private int m_currentFilter;
+    private boolean isWayType;
+    private boolean isNewTrack=true;
+    private int currentFilter;
     
     Track track;
     
-    private int m_TrackIndex=0;  // Index for tracks
+    private int trackIndex = 0;  // Index for tracks
 
-    private String m_TrackOnclickFuncCalls=""; // Javascript function calls if click.
+    private String trackOnclickFuncCalls=""; // Javascript function calls if click.
     
     /**
      * 
      */
     public GPSGmapsHTMLEncodedFile() {
         super();
-        C_NUMBER_OF_PASSES=2;
+        C_NUMBER_OF_PASSES = 2;
     }
 
     /* (non-Javadoc)
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(final String basename, final String ext, final int Card, int oneFilePerDay) {
-        super.initialiseFile(basename, ext, Card, oneFilePerDay);
-        m_currentFilter=GPSFilter.C_WAYPT_IDX;
-        m_isWayType=true;
+    public final void initialiseFile(
+            final String basename,
+            final String ext,
+            final int card,
+            final int oneFilePerDay) {
+        super.initialiseFile(basename, ext, card, oneFilePerDay);
+        currentFilter = GPSFilter.C_WAYPT_IDX;
+        isWayType = true;
         
-        track=new Track();
-        m_TrackDescription="";
+        track = new Track();
+        trackDescription = "";
     }
     
     
     
-    public boolean nextPass() {
+    public final boolean nextPass() {
         super.nextPass();
-        if(m_nbrOfPassesToGo>0) {
-//            if(m_multipleFiles) {
+        if (nbrOfPassesToGo > 0) {
+//            if (m_multipleFiles) {
 //                closeFile();
 //            }
-            m_TrackDescription="";
-            m_nbrOfPassesToGo--;
-            m_prevdate=0;
-            m_isWayType=false;
-            m_currentFilter=GPSFilter.C_TRKPT_IDX;
-//            if(!m_multipleFiles) {
+            trackDescription = "";
+            nbrOfPassesToGo--;
+            previousDate = 0;
+            isWayType = false;
+            currentFilter = GPSFilter.C_TRKPT_IDX;
+//            if (!m_multipleFiles) {
 //                writeDataHeader();
 //            }
             return true;
@@ -86,23 +90,23 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         }
     }
     
-    private String googleKeyCode="";  // Google key code for web
+    private String googleKeyCode = "";  // Google key code for web
     private String keyCode() {
-        if(googleKeyCode.length()!=0) {
-            return ";key="+googleKeyCode;
+        if (googleKeyCode.length() != 0) {
+            return ";key=" + googleKeyCode;
         }
         return ""; // default
     }
 
 
-    protected void writeFileHeader(final String Name) {
+    protected final void writeFileHeader(final String trackName) {
         StringBuffer l_header=new StringBuffer(1700);
         l_header.setLength(0);
         l_header.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n" + 
                 "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\r\n" + 
                 "<head>\r\n" + 
                 "<title>");
-        l_header.append(Name);
+        l_header.append(trackName);
         
         l_header.append("</title>\r\n" + 
                 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n" + 
@@ -223,10 +227,10 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     private double minlon;
     private double maxlon;
     
-    protected void writeDataHeader() {
-        if(m_isWayType) {
+    protected final void writeDataHeader() {
+        if (isWayType) {
         } else {
-            m_newTrack=true;
+            isNewTrack=true;
             minlat=90;
             maxlat=-90;
             minlon=180;
@@ -234,10 +238,10 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         }
     }
     
-    protected void endTrack(final String hexColor) {
+    protected final void endTrack(final String hexColor) {
         PolylineEncoder a= new PolylineEncoder();
         Hashtable res;
-        if(false) {
+        if (false) {
             res = a.createEncodings(track, 17, 4);
         } else {
             res = a.dpEncode(track);
@@ -246,17 +250,17 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         tmp=(String)res.get("encodedPoints");
         
         
-        if(tmp.length()>=2) {
+        if (tmp.length()>=2) {
             rec.setLength(0);
             
             // Track assignment
-            m_TrackOnclickFuncCalls+="trackClick(track"+m_TrackIndex+",this.checked);";
+            trackOnclickFuncCalls+="trackClick(track"+trackIndex+",this.checked);";
             rec.append("var track");
-            rec.append(m_TrackIndex);
+            rec.append(trackIndex);
             
             rec.append(";\r\nmap.addOverlay(");
             rec.append("track");
-            rec.append(m_TrackIndex);
+            rec.append(trackIndex);
             rec.append("=new GPolyline.fromEncoded({\r\n" + 
                     "  color: \"#");
             rec.append(hexColor);
@@ -280,29 +284,29 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         }
 
         //System.out.println(rec.toString());
-        m_TrackIndex++;
+        trackIndex++;
         track=new Track();
     }
     
-    protected void writeDataFooter() {
-        if(m_isWayType) {
-            if(track.size()!=0) {
+    protected final void writeDataFooter() {
+        if (isWayType) {
+            if (track.size() != 0) {
                 rec.setLength(0);
                 rec.append("mgr.addMarkers([");
-                for(int i=track.size()-1;i>=0;i--) {
+                for(int i = track.size() - 1; i >= 0; i--) {
                     rec.append("new GMarker(new GLatLng(");
                     rec.append(Convert.toString(track.get(i).getLatDouble(),5));
                     rec.append(',');
                     rec.append(Convert.toString(track.get(i).getLonDouble(),5));
                     rec.append("))");
-                    if(i!=0) {
+                    if (i != 0) {
                         rec.append(',');
                     }
                 }
                 rec.append("],0);mgr.refresh();\r\n");
                 writeTxt(rec.toString());
             }
-            track=new Track();
+            track = new Track();
         } else {
             endTrack(goodTrackColor);
             splitOrEndTrack();
@@ -311,28 +315,28 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     
     private void splitOrEndTrack() {
         StringBuffer lrec=new StringBuffer();
-        if(!m_isWayType && (m_TrackOnclickFuncCalls.length()!=0)) {
+        if (!isWayType && (trackOnclickFuncCalls.length()!=0)) {
             lrec.setLength(0);
             //Vm.debug("Do:"+m_TrackDescription);
 
             lrec.append(
-                    "clickStr+= \""+m_TrackDescription +
+                    "clickStr+= \""+trackDescription +
                     "<input type=\\\"checkbox\\\"" +
-                    "           onClick=\\\"" + m_TrackOnclickFuncCalls + "\\\" checked/>\";\r\n");
+                    "           onClick=\\\"" + trackOnclickFuncCalls + "\\\" checked/>\";\r\n");
             writeTxt(lrec.toString());
-            m_TrackOnclickFuncCalls="";
-            m_TrackDescription="";
+            trackOnclickFuncCalls="";
+            trackDescription="";
         }
     }
 
     private int m_PreviousTime = 0;
-    private String m_TrackDescription="";
+    private String trackDescription="";
     
     private String getTimeStr(final GPSRecord s) {
-        if(activeFields.utc!=0) {
+        if (activeFields.utc!=0) {
             return 
             (   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+"-"
-            +C_MONTHS[t.getMonth()-1]+"-"
+            +MONTHS_AS_TEXT[t.getMonth()-1]+"-"
             +((t.getYear()%100)<10?"0":"")+Convert.toString(t.getYear()%100)
             +" "
             +(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
@@ -348,17 +352,17 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
-        if(activeFields!=null) {
+        if (activeFields!=null) {
 
-            if(!m_Filters[m_currentFilter].doFilter(s)) {
+            if (!ptFilters[currentFilter].doFilter(s)) {
                 // The track is interrupted by a removed log item.
                 // Break the track in the output file
-                if(!m_isWayType&&!m_newTrack&&!m_FirstRecord) {
-                    m_newTrack=true;
-                    if(track.size()!=0) {
+                if (!isWayType&&!isNewTrack&&!firstRecord) {
+                    isNewTrack=true;
+                    if (track.size()!=0) {
                         Trackpoint tp=track.get(track.size()-1);
                         endTrack(goodTrackColor);
                         track.addTrackpoint(tp);
@@ -371,10 +375,10 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 
                 //StringBuffer rec=new StringBuffer(1024);
                 rec.setLength(0);
-                if(m_newTrack) {
-                    m_newTrack=false;
-                    if(activeFields.latitude!=0 && activeFields.longitude!=0) {
-                        if(s.utc-m_PreviousTime<m_TrackSepTime) {
+                if (isNewTrack) {
+                    isNewTrack=false;
+                    if (activeFields.latitude!=0 && activeFields.longitude!=0) {
+                        if (s.utc-m_PreviousTime<trackSepTime) {
                             track.addTrackpoint(new Trackpoint(s.latitude,s.longitude));
                             endTrack(badTrackColor);
                         } else {
@@ -384,13 +388,13 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     }
                     track=new Track();
                     //Vm.debug("Pos:"+getTimeStr(s));
-                    if(m_TrackDescription.length()==0) {
-                        m_TrackDescription=getTimeStr(s);
+                    if (trackDescription.length()==0) {
+                        trackDescription=getTimeStr(s);
                         //Vm.debug(m_TrackDescription);
                     }
                 }
                 
-                if((activeFields.utc!=0)) {
+                if ((activeFields.utc!=0)) {
                     m_PreviousTime=s.utc;
                 }
                 //                "  <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
@@ -402,12 +406,12 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 
                 // lat="latitudeType [1] ?"
                 // lon="longitudeType [1] ?">
-//                if(m_isWayType) {
+//                if (m_isWayType) {
 //                    rec.append("<wpt ");
 //                } else {
 //                    rec.append("<trkpt ");
 //                }
-                if(activeFields.latitude!=0 && activeFields.longitude!=0) {
+                if (activeFields.latitude!=0 && activeFields.longitude!=0) {
 //                    rec.append("points.push(new GLatLng(");
 //                    rec.append(Convert.toString(s.latitude,6));
 //                    rec.append(',');
@@ -417,28 +421,28 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                    
                     track.addTrackpoint(tp);
                     
-                    if(tp.getLatDouble()<minlat) {
+                    if (tp.getLatDouble()<minlat) {
                         minlat=tp.getLatDouble();
                     }
-                    if(tp.getLatDouble()>maxlat) {
+                    if (tp.getLatDouble()>maxlat) {
                         maxlat=tp.getLatDouble();
                     }
-                    if(tp.getLonDouble()<minlon) {
+                    if (tp.getLonDouble()<minlon) {
                         minlon=tp.getLonDouble();
                     }
-                    if(tp.getLonDouble()>maxlon) {
+                    if (tp.getLonDouble()>maxlon) {
                         maxlon=tp.getLonDouble();
                     }
                 }
 //                //
-//                //                if(m_isWayType) {
+//                //                if (m_isWayType) {
 //                //                    rec.append("<name>"+Convert.toString(m_recCount)+"</name>\r\n");
 //                //                }
 //                //                    <ele> xsd:decimal </ele> [0..1] ?  (elevation in meters)
 //                
 //                // <time> xsd:dateTime </time> [0..1] ? //2005-05-16T11:49:06Z
 //                    rec.append("<time>");
-//                    if(activeFields.utc!=0) {
+//                    if (activeFields.utc!=0) {
 //                        timeStr+=Convert.toString(t.year)+"-"
 //                        +( t.month<10?"0":"")+Convert.toString(t.month)+"-"
 //                        +(   t.day<10?"0":"")+Convert.toString(t.day)+"T"
@@ -446,7 +450,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                        +(t.minute<10?"0":"")+Convert.toString(t.minute)+":"
 //                        +(t.second<10?"0":"")+Convert.toString(t.second)
 //                        ;
-//                        if(activeFields.milisecond!=0) {
+//                        if (activeFields.milisecond!=0) {
 //                            timeStr+=".";
 //                            timeStr+=(s.milisecond<100)?"0":"";
 //                            timeStr+=(s.milisecond<10)?"0":"";
@@ -458,13 +462,13 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                    rec.append("</time>\r\n");
 //                }
 //                //                    <magvar> degreesType </magvar> [0..1] ?
-//                if((activeFields.heading!=0)) {
+//                if ((activeFields.heading!=0)) {
 //                    rec.append("<magvar>");
 //                    rec.append(Convert.toString(s.heading));
 //                    rec.append("</magvar>\r\n");
 //                }
 //                //                    <geoidheight> xsd:decimal </geoidheight> [0..1] ?
-//                if((activeFields.height!=0)) {
+//                if ((activeFields.height!=0)) {
 //                    rec.append("<ele>");
 //                    rec.append(Convert.toString(s.height,3));
 //                    rec.append("</ele>\r\n");
@@ -472,12 +476,12 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                
 //                //                    <name> xsd:string </name> [0..1] ?
 //                rec.append("<name>");
-//                if(m_isWayType) {
+//                if (m_isWayType) {
 //                    rec.append("wpt-");
 //                } else {
 //                    rec.append("trkpt-");
 //                }
-//                if((activeFields.utc!=0)) {
+//                if ((activeFields.utc!=0)) {
 //                    rec.append(timeStr);
 //                } else {
 //                    rec.append(Convert.toString(m_recCount));
@@ -491,20 +495,20 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                //                    <link> linkType </link> [0..*] ?
 //                //                    <sym> xsd:string </sym> [0..1] ?
 //                //                    <type> xsd:string </type> [0..1] ?
-//                if((activeFields.rcr!=0)) {
-//                    if((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
+//                if ((activeFields.rcr!=0)) {
+//                    if ((s.rcr&BT747_dev.RCR_TIME_MASK)!=0) {
 //                        rcrStr+="T";
 //                    }
-//                    if((s.rcr&BT747_dev.RCR_SPEED_MASK)!=0) {
+//                    if ((s.rcr&BT747_dev.RCR_SPEED_MASK)!=0) {
 //                        rcrStr+="S";
 //                    }
-//                    if((s.rcr&BT747_dev.RCR_DISTANCE_MASK)!=0) {
+//                    if ((s.rcr&BT747_dev.RCR_DISTANCE_MASK)!=0) {
 //                        rcrStr+="D";
 //                    }
-//                    if((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
+//                    if ((s.rcr&BT747_dev.RCR_BUTTON_MASK)!=0) {
 //                        rcrStr+="B";
 //                    }
-//                    //                    if(style.length()!=1) {
+//                    //                    if (style.length()!=1) {
 //                    //                        style="M";
 //                    //                    }
 //                    rec.append("<type>");
@@ -513,7 +517,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                }
 //                
 //                //                    <fix> fixType </fix> [0..1] ?
-//                if((activeFields.valid!=0)) {
+//                if ((activeFields.valid!=0)) {
 //                    switch(s.valid) {
 //                    case 0x0001: 
 //                        fixStr+="none"; //"No fix";
@@ -545,7 +549,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                    default:
 //                        //tmp+="Unknown mode";
 //                    }
-//                    if(fixStr.length()!=0) {
+//                    if (fixStr.length()!=0) {
 //                        rec.append("<fix>");
 //                        rec.append(fixStr);
 //                        rec.append("</fix>\r\n");
@@ -553,26 +557,26 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                }
 //                //                    <sat> xsd:nonNegativeInteger </sat> [0..1] ?
 //                //                    <hdop> xsd:decimal </hdop> [0..1] ?
-//                if((activeFields.hdop!=0)) {
+//                if ((activeFields.hdop!=0)) {
 //                    hdopStr=Convert.toString(s.hdop/100.0,2);
 //                    rec.append("<hdop>");
 //                    rec.append(hdopStr); 
 //                    rec.append("</hdop>\r\n");
 //                }
 //                //                    <vdop> xsd:decimal </vdop> [0..1] ?
-//                if((activeFields.vdop!=0)) {
+//                if ((activeFields.vdop!=0)) {
 //                    rec.append("<vdop>");
 //                    rec.append(Convert.toString(s.vdop/100.0,2)); 
 //                    rec.append("</vdop>\r\n");
 //                }
 //                //              <pdop> xsd:decimal </pdop> [0..1] ?
-//                if((activeFields.pdop!=0)) {
+//                if ((activeFields.pdop!=0)) {
 //                    rec.append("<pdop>");
 //                    rec.append(Convert.toString(s.pdop/100.0,2)); 
 //                    rec.append("</pdop>\r\n");
 //                }
 //                //                    <ageofdgpsdata> xsd:decimal </ageofdgpsdata> [0..1] ?
-//                if((activeFields.nsat!=0)) {
+//                if ((activeFields.nsat!=0)) {
 //                    nsatStr+=Convert.toString(s.nsat/256); 
 //                    nsatStr+="(";
 //                    nsatStr+=Convert.toString(s.nsat%256); 
@@ -581,27 +585,27 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                    rec.append(nsatStr);
 //                    rec.append("</nsat>\r\n");
 //                }
-//                if((activeFields.dage!=0)) {
+//                if ((activeFields.dage!=0)) {
 //                    rec.append("<ageofdgpsdata>");
 //                    rec.append(Convert.toString(s.dage)); 
 //                    rec.append("</ageofdgpsdata>\r\n");
 //                }
 //                
 //                //                    <dgpsid> dgpsStationType </dgpsid> [0..1] ?
-//                if((activeFields.dsta!=0)) {
+//                if ((activeFields.dsta!=0)) {
 //                    rec.append("<dgpsid>");
 //                    rec.append(Convert.toString(s.dsta)); 
 //                    rec.append("</dgpsid>\r\n");
 //                }
 //                //                    <extensions> extensionsType </extensions> [0..1] ?                
 //                
-//                if((activeFields.speed!=0)) {
+//                if ((activeFields.speed!=0)) {
 //                    rec.append("<speed>");
 //                    rec.append(Convert.toString(s.speed,3));
 //                    rec.append("</speed>\r\n");
 //                }
 //                
-//                if((activeFields.distance!=0)) {
+//                if ((activeFields.distance!=0)) {
 //                    rec.append("<distance>");
 //                    rec.append(Convert.toString(s.distance,2)); //+" m\r\n" 
 //                    rec.append("</distance>\r\n");
@@ -615,7 +619,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 //                rec.append("]]>");
 //                rec.append("</cmt>\r\n");
 //                
-//                if(m_isWayType) {
+//                if (m_isWayType) {
 //                    rec.append("</wpt>\r\n");
 //                } else {
 //                    rec.append("</trkpt>\r\n");
@@ -630,31 +634,31 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#FinaliseFile()
      */
-    public void finaliseFile() {
-        if(this.isOpen()) {
+    public final void finaliseFile() {
+        if (this.isOpen()) {
             String footer;
             writeDataFooter();
-            footer=  "clickString();\r\n" +
-                    "map.setCenter(new GLatLng(" +
-                    Convert.toString((maxlat+minlat)/2) +
-                    "," +
-                    Convert.toString((maxlon+minlon)/2) +
-                    "));" +
-                    "map.setZoom(map.getBoundsZoomLevel(new GLatLngBounds(new GLatLng(" +
-                    minlat+','+minlon+
-                    "),new GLatLng(" +
-                    maxlat+','+maxlon+
-                    "))));" +
-                    "\r\n" + 
-                    "   }\r\n" + 
-                    "   else {\r\n" + 
-                    "     document.getElementById(\"quicklinks\").innerHTML = \"Your web browser is not compatible with this website.\"\r\n" + 
-                    "   }\r\n" + 
-                    "//]]>\r\n" + 
-                    "</script>\r\n" + 
-                    " </div>\r\n" + 
-                    "</body>\r\n" + 
-                    "</html>";
+            footer = "clickString();\r\n"
+                + "map.setCenter(new GLatLng("
+                + Convert.toString((maxlat + minlat) / 2)
+                + ","
+                + Convert.toString((maxlon + minlon) / 2)
+                + "));"
+                + "map.setZoom(map.getBoundsZoomLevel(new GLatLngBounds(new GLatLng("
+                + minlat + ',' + minlon
+                + "),new GLatLng("
+                + maxlat + ',' + maxlon
+                + "))));"
+                + "\r\n"
+                + "   }\r\n"
+                + "   else {\r\n"
+                + "     document.getElementById(\"quicklinks\").innerHTML = \"Your web browser is not compatible with this website.\"\r\n"
+                + "   }\r\n"
+                + "//]]>\r\n"
+                + "</script>\r\n"
+                + " </div>\r\n"
+                + "</body>\r\n"
+                + "</html>";
             writeTxt(footer);
         }
         super.finaliseFile();
@@ -664,13 +668,13 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     /**
      * @return Returns the googleKeyCode.
      */
-    public String getGoogleKeyCode() {
+    public final String getGoogleKeyCode() {
         return googleKeyCode;
     }
     /**
      * @param googleKeyCode The googleKeyCode to set.
      */
-    public void setGoogleKeyCode(String googleKeyCode) {
+    public final void setGoogleKeyCode(final String googleKeyCode) {
         this.googleKeyCode = googleKeyCode;
     }
 }

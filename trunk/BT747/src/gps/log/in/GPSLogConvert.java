@@ -15,14 +15,16 @@ import gps.log.out.GPSFile;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public interface GPSLogConvert {
-    public abstract int parseFile(final GPSFile gpsFile);
+    int parseFile(final GPSFile gpsFile);
 
-    public abstract void setTimeOffset(long offset);
+    void setTimeOffset(final long offset);
 
-    public abstract void setNoGeoid(boolean b);
+    void setNoGeoid(final boolean b);
 
-    public abstract int toGPSFile(final String fileName,
-            final GPSFile gpsFile, final int Card);
+    int toGPSFile(
+            final String fileName,
+            final GPSFile gpsFile,
+            final int card);
     
-    public abstract String getErrorInfo();
+    String getErrorInfo();
 }

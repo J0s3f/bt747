@@ -22,6 +22,7 @@ package gps.log.out;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
+import bt747.Version;
 import bt747.sys.Convert;
 
 /**Class to write a CompeGPS TRK file or WPT file.
@@ -48,10 +49,10 @@ public class GPSCompoGPSTrkFile extends GPSFile {
 //    
 //    data lines:
 //    
-//    "W": if(route) routepoint; else waypoint
+//    "W": if (route) routepoint; else waypoint
 //    "T": trackpoint    
-//        "t": if(track) additionally track info
-//         if(!track) additionally trackpoint info
+//        "t": if (track) additionally track info
+//         if (!track) additionally trackpoint info
 //    "a": link to ...
 //    "w": waypoint additional info
     // End fo gpsbabel info
@@ -59,23 +60,29 @@ public class GPSCompoGPSTrkFile extends GPSFile {
     // "P": device information, version, ...
     
 
-    private boolean m_isWayType;
+    private boolean isWayType;
     
     public GPSCompoGPSTrkFile() {
         super();
-        C_NUMBER_OF_PASSES=2;
+        C_NUMBER_OF_PASSES = 2;
     }
 
-    public void initialiseFile(final String basename, final String ext, final int Card, int oneFilePerDay) {
-        super.initialiseFile(basename, ext, Card, oneFilePerDay);
-        m_isWayType=false;
+    public final void initialiseFile(
+            final String basename,
+            final String ext,
+            final int card,
+            final int oneFilePerDay) {
+        super.initialiseFile(basename, ext, card, oneFilePerDay);
+        isWayType = false;
     }
      
-    public void writeFileHeader(final String s) {
+    public final void writeFileHeader(final String s) {
         super.writeFileHeader(s);
         writeTxt("G  WGS 84\r\n"  // WGS 84
-                +"U  1\r\n"       // LAT .LON FORMAT
-                +"M  Generated using BT747 http://sf.net/projects/bt747 for CompeGPS\r\n"
+                + "U  1\r\n"       // LAT .LON FORMAT
+                + "M  Generated using BT747 "
+                + Version.VERSION_NUMBER
+                + "http://sf.net/projects/bt747 for CompeGPS\r\n"
                 );
         //"NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
     }
@@ -85,8 +92,8 @@ public class GPSCompoGPSTrkFile extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected boolean recordIsNeeded(GPSRecord s) {
-        return m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+    protected final boolean recordIsNeeded(final GPSRecord s) {
+        return ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
     }
     
     
@@ -108,59 +115,74 @@ public class GPSCompoGPSTrkFile extends GPSFile {
     /* (non-Javadoc)
      * @see gps.GPSFile#WriteRecord()
      */
-    private StringBuffer rec=new StringBuffer(1024);
-    private StringBuffer wrec=new StringBuffer(1024);
+    private StringBuffer rec = new StringBuffer(1024);
+    private StringBuffer wrec = new StringBuffer(1024);
 
-    public void writeRecord(final GPSRecord s) {
+    public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         boolean trackpt;
         boolean waypt;
-        trackpt=!m_isWayType&&m_Filters[GPSFilter.C_TRKPT_IDX].doFilter(s);
-        waypt=m_isWayType&&m_Filters[GPSFilter.C_WAYPT_IDX].doFilter(s);
+        trackpt = !isWayType && ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+        waypt = isWayType && ptFilters[GPSFilter.C_WAYPT_IDX].doFilter(s);
         
-        if(activeFields!=null && (trackpt || waypt) ) {
+        if ((activeFields != null) && (trackpt || waypt)) {
             rec.setLength(0);
             
             rec.append("T  A ");
 
-            if(activeFields.latitude!=0) {
-                if(s.latitude>=0) {
-                    rec.append(Convert.toString(s.latitude,8)+(char)0xBA+"N");
+            if (activeFields.latitude != 0) {
+                if (s.latitude >= 0) {
+                    rec.append(Convert.toString(s.latitude, 8)
+                            + ((char) 0xBA) + "N");
                 } else {
-                    rec.append(Convert.toString(-s.latitude,8)+(char)0xBA+"S");
+                    rec.append(Convert.toString(-s.latitude, 8)
+                            + ((char) 0xBA) + "S");
                 }
             } else {
-                rec.append("0°N");
+                rec.append("0" + ((char) 0xBA) + "N");
             }
 
             rec.append(" ");
-            if(activeFields.longitude!=0) {
-                if(s.longitude>=0) {
-                    rec.append(Convert.toString(s.longitude,8)+(char)0xBA+"E");
+            if (activeFields.longitude != 0) {
+                if (s.longitude >= 0) {
+                    rec.append(Convert.toString(s.longitude, 8)
+                            + ((char) 0xBA) + "E");
                 } else {
-                    rec.append(Convert.toString(-s.longitude,8)+(char)0xBA+"W");
+                    rec.append(Convert.toString(-s.longitude, 8)
+                            + ((char) 0xBA) + "W");
                 }
             } else {
                 rec.append("0°E");
             }
             rec.append(" ");
 
-            if(activeFields.utc!=0) {
+            if (activeFields.utc != 0) {
 //                rec.append(Convert.toString(
 //                        (s.utc+(activeFields.milisecond!=0?(s.milisecond/1000.0):0))
 //                        /86400.0+25569,  //Days since 30/12/1899
 //                        7));  // 7 fractional digits
 //                rec.append(",");
                 rec.append(
-                    (   t.getDay()<10?"0":"")+Convert.toString(t.getDay())+"-"
-                    +C_MONTHS[t.getMonth()-1]+"-"
-                    +((t.getYear()%100)<10?"0":"")+Convert.toString(t.getYear()%100)
-                    +" "
-                    +(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())+":"
-                    +(t.getMinute()<10?"0":"")+Convert.toString(t.getMinute())+":"
-                    +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
+                        // Day calculation
+                    ((t.getDay() < 10) ? "0" : "") 
+                    + Convert.toString(t.getDay()) + "-"
+                    // Month calculation
+                    + MONTHS_AS_TEXT[t.getMonth() - 1] + "-"
+                    + (((t.getYear() % 100) < 10) ? "0" : "")
+                    // Year calculation
+                    + Convert.toString(t.getYear() % 100)
+                    + " "
+                    // Hour
+                    + ((t.getHour() < 10) ? "0" : "") 
+                    + Convert.toString(t.getHour()) + ":"
+                    // Minute
+                    + ((t.getMinute() < 10) ? "0" : "")
+                    + Convert.toString(t.getMinute()) + ":"
+                    // Second
+                    + ((t.getSecond() < 10) ? "0" : "")
+                    + Convert.toString(t.getSecond())
                     );
-//                if(activeFields.milisecond!=0) {
+//                if (activeFields.milisecond!=0) {
 //                    rec+=".";
 //                    rec+=(s.milisecond<100)?"0":"";
 //                    rec+=(s.milisecond<10)?"0":"";
@@ -171,33 +193,33 @@ public class GPSCompoGPSTrkFile extends GPSFile {
                 rec.append("01-JAN-70 00:00:00 ");
             }
 
-            if(waypt) {
+            if (waypt) {
                 wrec.setLength(0);
                 wrec.append("W  ");
-                wrec.append("waypt-"+s.recCount); // name
+                wrec.append("waypt-" + s.recCount); // name
                 wrec.append(rec.toString().substring(2));
             }
             rec.append("s ");
             
             
 
-            if(activeFields.height!=0) {
-                rec.append(Convert.toString(s.height,1));
-                if(waypt) {
-                    wrec.append(Convert.toString(s.height,1));
+            if (activeFields.height != 0) {
+                rec.append(Convert.toString(s.height, 1));
+                if (waypt) {
+                    wrec.append(Convert.toString(s.height, 1));
                 }
             } else {
                 rec.append("0.0");
-                if(waypt) {
+                if (waypt) {
                     wrec.append("0.0");
                 }
             }
             rec.append(" 0.0 0.0 0.0 0 -1000.0 -1.0 ");
-//            if(waypt) {
+//            if (waypt) {
 //                wrec.append("Description")
 //            }
-            if(activeFields.nsat!=0) {
-                rec.append((s.nsat&0xFF00)>>8);  // in use
+            if (activeFields.nsat != 0) {
+                rec.append((s.nsat & 0xFF00) >> 8);  // in use
                 rec.append(" ");
             } else {
                 rec.append("-1 ");
@@ -205,10 +227,10 @@ public class GPSCompoGPSTrkFile extends GPSFile {
             rec.append("-1.0 -1.0");
 
             rec.append("\r\n");
-            if(!trackpt) {
+            if (!trackpt) {
                 rec.setLength(0);
             }
-            if(waypt) {
+            if (waypt) {
               rec.append(wrec.toString());
               rec.append("\r\n");
             }
@@ -217,12 +239,12 @@ public class GPSCompoGPSTrkFile extends GPSFile {
         } // activeFields!=null
     }    
 
-    public boolean nextPass() {
+    public final boolean nextPass() {
         super.nextPass();
-        if(!m_isWayType) {
-            m_prevdate=0;
-            m_isWayType=true;
-            m_ext=".WPT";
+        if (!isWayType) {
+            previousDate = 0;
+            isWayType = true;
+            ext = ".WPT";
             return true;
         } else {
             return false;
@@ -231,7 +253,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
 
 
 //    public void finaliseFile() {
-//        if(m_File!=null) {
+//        if (m_File!=null) {
 //            String footer;
 //            //writeDataFooter();
 //            footer= "F  1234";

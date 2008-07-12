@@ -15,9 +15,9 @@ package bt747;
 //***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
+//***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
-//********************************************************************                              
+//********************************************************************
 
 /** This class has a partial automatic update in the build script.
  * and is used to reference the version.
@@ -46,4 +46,4 @@ public final class Version {
    public static final String NUMBER_JAVAMIN = "1.4";
    /** Title of this project. */
    public static final String TITLE = "BT747";
-}//Version
+}

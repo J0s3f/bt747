@@ -14,7 +14,7 @@
 //***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
+//***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************  
 package gps.log.in;
@@ -37,27 +37,27 @@ import bt747.sys.Convert;
 public final class HoluxTrlLogConvert implements GPSLogConvert {
     private int recordSize;
     private int logFormat;
-    private File m_File=null;
-    private long timeOffsetSeconds=0;
-    protected boolean passToFindFieldsActivatedInLog= false;
-    protected int activeFileFields=
-        (1<<BT747Constants.FMT_UTC_IDX)
-        |(1<<BT747Constants.FMT_LATITUDE_IDX)
-        |(1<<BT747Constants.FMT_LONGITUDE_IDX)
-        |(1<<BT747Constants.FMT_HEIGHT_IDX)
+    private File inFile = null;
+    private long timeOffsetSeconds = 0;
+    protected boolean passToFindFieldsActivatedInLog = false;
+    protected int activeFileFields =
+        (1 << BT747Constants.FMT_UTC_IDX)
+        | (1 << BT747Constants.FMT_LATITUDE_IDX)
+        | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+        | (1 << BT747Constants.FMT_HEIGHT_IDX)
         ;
     
-    private boolean noGeoid=false; // If true,remove geoid difference from height
+    private boolean noGeoid = false; // If true,remove geoid difference from height
     
     private String errorInfo;
-    public final String getErrorInfo() {
+    public String getErrorInfo() {
         return errorInfo;
     }
 
-    public final int parseFile(final GPSFile gpsFile) {
+    public int parseFile(final GPSFile gpsFile) {
         try {
-        GPSRecord gpsRec=new GPSRecord();
-        final int C_BUF_SIZE=0x800;
+        GPSRecord gpsRec = new GPSRecord();
+        final int C_BUF_SIZE = 0x800;
         byte[] bytes=new byte[C_BUF_SIZE];
         int sizeToRead;
         int nextAddrToRead;
@@ -68,102 +68,104 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
             gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
         }
 
-        recordSize=15;
+        recordSize = 15;
         
-        recCount=0;
-        logFormat=0;
-        nextAddrToRead=0;
-        fileSize=m_File.getSize();
-        while(nextAddrToRead+recordSize+1<fileSize) {
-            sizeToRead=C_BUF_SIZE;
-            if((sizeToRead+nextAddrToRead)>fileSize) {
-                sizeToRead=fileSize-nextAddrToRead;
+        recCount = 0;
+        logFormat = 0;
+        nextAddrToRead = 0;
+        fileSize = inFile.getSize();
+        while ((nextAddrToRead + recordSize + 1) < fileSize) {
+            sizeToRead = C_BUF_SIZE;
+            if ((sizeToRead + nextAddrToRead) > fileSize) {
+                sizeToRead = (fileSize - nextAddrToRead);
             }
             
             /* Read the bytes from the file */
             int readResult;
-            int offsetInBuffer=0;
+            int offsetInBuffer = 0;
             
-            m_File.setPos(nextAddrToRead);
+            inFile.setPos(nextAddrToRead);
             
             /*******************************
              * Not reading header - reading data.
              */
-            readResult=m_File.readBytes(bytes, 0, sizeToRead);
-            if(readResult!=sizeToRead) {
-                errorInfo=m_File.getPath()+"|"+m_File.lastError;
+            readResult = inFile.readBytes(bytes, 0, sizeToRead);
+            if (readResult != sizeToRead) {
+                errorInfo = inFile.getPath() + "|" + inFile.lastError;
                 return BT747Constants.ERROR_READING_FILE;
             }
-            nextAddrToRead+=sizeToRead;
+            nextAddrToRead += sizeToRead;
             
             /***************************************************************************
              * Interpret the data read in the Buffer as long as the records are complete
              */
             // A block of bytes has been read, read the records
-            while(sizeToRead>offsetInBuffer+recordSize) {
+            while (sizeToRead > (offsetInBuffer + recordSize)) {
                 // As long as record may fit in data still to read.
-                int indexInBuffer=offsetInBuffer;
-                int checkSum=0;
+                int indexInBuffer = offsetInBuffer;
+                int checkSum = 0;
                 
-                while((indexInBuffer<recordSize+offsetInBuffer)&&(indexInBuffer<sizeToRead-1)) {
-                    checkSum^=bytes[indexInBuffer++];
+                while ((indexInBuffer < (recordSize + offsetInBuffer))
+                        && (indexInBuffer < (sizeToRead - 1))) {
+                    checkSum ^= bytes[indexInBuffer++];
                 }
                 
-                indexInBuffer+=1;
+                indexInBuffer += 1;
                 
-                int recIdx=offsetInBuffer;
-                offsetInBuffer=indexInBuffer;
+                int recIdx = offsetInBuffer;
+                offsetInBuffer = indexInBuffer;
                 
                 recCount++;
                 
-                if(((checkSum&0xFF)==(0xFF&bytes[indexInBuffer-1]))) {
+                if (((checkSum & 0xFF) == (0xFF & bytes[indexInBuffer - 1]))) {
                     /******************************************
                      * Get all the information in the record.
                      */
-                    gpsRec.recCount=recCount;
-                    if(!passToFindFieldsActivatedInLog) {
+                    gpsRec.recCount = recCount;
+                    if (!passToFindFieldsActivatedInLog) {
                         gpsRec.valid = 0xFFFF;
-                        gpsRec.rcr=0x0001;  // For filter
+                        gpsRec.rcr = 0x0001;  // For filter
                         // Only interpret fiels if not looking for logFormat changes only
                         gpsRec.utc=
-                            (0xFF&bytes[recIdx++])<<0
-                            |(0xFF&bytes[recIdx++])<<8
-                            |(0xFF&bytes[recIdx++])<<16
-                            |(0xFF&bytes[recIdx++])<<24
+                            (0xFF & bytes[recIdx++]) << 0
+                            | (0xFF & bytes[recIdx++]) << 8
+                            | (0xFF & bytes[recIdx++]) << 16
+                            | (0xFF & bytes[recIdx++]) << 24
                             ;
                         gpsRec.utc+=timeOffsetSeconds;
                         
                         int latitude=
-                            (0xFF&bytes[recIdx++])<<0
-                            |(0xFF&bytes[recIdx++])<<8
-                            |(0xFF&bytes[recIdx++])<<16
-                            |(0xFF&bytes[recIdx++])<<24
+                            (0xFF & bytes[recIdx++]) << 0
+                            | (0xFF & bytes[recIdx++]) << 8
+                            | (0xFF & bytes[recIdx++]) << 16
+                            | (0xFF & bytes[recIdx++]) << 24
                             ;
                         gpsRec.latitude=Convert.toFloatBitwise(latitude);
                         
                         int longitude=
-                            (0xFF&bytes[recIdx++])<<0
-                            |(0xFF&bytes[recIdx++])<<8
-                            |(0xFF&bytes[recIdx++])<<16
-                            |(0xFF&bytes[recIdx++])<<24
+                            (0xFF & bytes[recIdx++]) << 0
+                            | (0xFF & bytes[recIdx++]) << 8
+                            | (0xFF & bytes[recIdx++]) << 16
+                            | (0xFF & bytes[recIdx++]) << 24
                             ;
                         gpsRec.longitude=Convert.toFloatBitwise(longitude);//*1.0;
                         
                         int height=
                             
-                            (0xFF&bytes[recIdx++])<<8
-                            |(0xFF&bytes[recIdx++])<<16
-                            |(0xFF&bytes[recIdx++])<<24
+                            (0xFF & bytes[recIdx++]) << 8
+                            | (0xFF & bytes[recIdx++]) << 16
+                            | (0xFF & bytes[recIdx++]) << 24
                             ;
-                        gpsRec.height=Convert.toFloatBitwise(height);
-                        if(noGeoid) {
-                            gpsRec.height-=Conv.wgs84Separation(gpsRec.latitude, gpsRec.longitude);
+                        gpsRec.height = Convert.toFloatBitwise(height);
+                        if (noGeoid) {
+                            gpsRec.height -=
+                                Conv.wgs84Separation(gpsRec.latitude, gpsRec.longitude);
                         }
                         gpsFile.writeRecord(gpsRec);
                     }
                 }
             } /* ContinueInBuffer*/
-            nextAddrToRead-=(sizeToRead-offsetInBuffer);
+            nextAddrToRead -= (sizeToRead - offsetInBuffer);
         } /* nextAddrToRead<fileSize */
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,31 +173,36 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         return BT747Constants.NO_ERROR;
     }
     
-    public final void setTimeOffset(long offset) {
-        timeOffsetSeconds= offset;
+    public void setTimeOffset(final long offset) {
+        timeOffsetSeconds = offset;
     }
     
-    public final void setNoGeoid(boolean b) {
-        noGeoid=b;
+    public void setNoGeoid(final boolean b) {
+        noGeoid = b;
     }
     
     
-    public final int toGPSFile(final String fileName, final GPSFile gpsFile, final int Card) {
-        int error=BT747Constants.NO_ERROR;
+    public int toGPSFile(
+            final String fileName,
+            final GPSFile gpsFile,
+            final int card) {
+        int error = BT747Constants.NO_ERROR;
         try {
-        if(File.isAvailable()) {
-            m_File=new File(fileName,File.READ_ONLY, Card);
-            if(!m_File.isOpen()) {
-                errorInfo=fileName + "|" + m_File.lastError;
-                error=BT747Constants.ERROR_COULD_NOT_OPEN;
-                m_File = null;
+        if (File.isAvailable()) {
+            inFile = new File(fileName, File.READ_ONLY, card);
+            if (!inFile.isOpen()) {
+                errorInfo = fileName + "|" + inFile.lastError;
+                error = BT747Constants.ERROR_COULD_NOT_OPEN;
+                inFile = null;
             } else {
-                passToFindFieldsActivatedInLog=gpsFile.needPassToFindFieldsActivatedInLog();
-                if(passToFindFieldsActivatedInLog) {
-                    gpsFile.setActiveFileFields(getLogFormatRecord(activeFileFields));
+                passToFindFieldsActivatedInLog = 
+                    gpsFile.needPassToFindFieldsActivatedInLog();
+                if (passToFindFieldsActivatedInLog) {
+                    gpsFile.setActiveFileFields(
+                            getLogFormatRecord(activeFileFields));
                 }
-                passToFindFieldsActivatedInLog=false;
-                if(error==BT747Constants.NO_ERROR) {
+                passToFindFieldsActivatedInLog = false;
+                if (error == BT747Constants.NO_ERROR) {
                     do {
                         error=parseFile(gpsFile);
                     } while (gpsFile.nextPass());
@@ -203,8 +210,8 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
                 gpsFile.finaliseFile();
             }
             
-            if(m_File!=null) {
-                m_File.close();
+            if (inFile != null) {
+                inFile.close();
             }
         }
         } catch (Exception e) {
@@ -213,17 +220,15 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         return error;
     }
     
-    public static final GPSRecord getLogFormatRecord(final int logFormat) {
-        GPSRecord gpsRec=new GPSRecord();
+    public static GPSRecord getLogFormatRecord(final int logFormat) {
+        GPSRecord gpsRec = new GPSRecord();
         
-        gpsRec.utc=-1;
-        gpsRec.latitude=-1;
-        gpsRec.longitude=-1;
-        gpsRec.height=-1;
+        gpsRec.utc = -1;
+        gpsRec.latitude = -1;
+        gpsRec.longitude = -1;
+        gpsRec.height = -1;
         
         /* End handling record */
         return gpsRec;
     }
-    
-    
 }
