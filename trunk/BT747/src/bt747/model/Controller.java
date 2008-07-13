@@ -791,7 +791,7 @@ public class Controller {
     }
 
     public final void reqBTAddr() {
-        m.gpsModel().reqBT_MAC_ADDR();
+        m.gpsModel().reqBtMacAddr();
     }
 
     public final void setHoluxName(final String s) {
