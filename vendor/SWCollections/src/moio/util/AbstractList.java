@@ -307,7 +307,7 @@ while (i.hasNext())
       private int pos = 0;
       private int size = size();
       private int last = -1;
-      private int knownMod = modCount;
+      //private int knownMod = modCount;
 
       // This will get inlined, since it is private.
       /**
@@ -377,7 +377,7 @@ while (i.hasNext())
         pos--;
         size--;
         last = -1;
-        knownMod = modCount;
+        //knownMod = modCount;
       }
     };
   }
@@ -438,7 +438,7 @@ while (i.hasNext())
 
     return new ListIterator()
     {
-      private int knownMod = modCount;
+      //private int knownMod = modCount;
       private int position = index;
       private int lastReturned = -1;
       private int size = size();
@@ -573,7 +573,7 @@ while (i.hasNext())
         size--;
         position = lastReturned;
         lastReturned = -1;
-        knownMod = modCount;
+        //knownMod = modCount;
       }
 
      /**
@@ -622,7 +622,7 @@ while (i.hasNext())
         AbstractList.this.add(position++, o);
         size++;
         lastReturned = -1;
-        knownMod = modCount;
+        //knownMod = modCount;
       }
     };
   }

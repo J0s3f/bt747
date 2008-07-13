@@ -39,7 +39,6 @@ exception statement from your version. */
 
 package moio.util;
 
-import java.io.IOException;
 import java.util.ConcurrentModificationException;
 
 //import java.io.IOException;
@@ -745,7 +744,7 @@ public class HashMap extends AbstractMap
         while (e != null)
           {
             int idx = hash(e.key);
-            HashEntry dest = buckets[idx];
+            //HashEntry dest = buckets[idx];
             HashEntry next = e.next;
             e.next = buckets[idx];
             buckets[idx] = e;

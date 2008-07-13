@@ -38,7 +38,6 @@ exception statement from your version. */
 
 package moio.util;
 
-import java.io.IOException;
 import java.util.ConcurrentModificationException;
 
 //import java.io.IOException;

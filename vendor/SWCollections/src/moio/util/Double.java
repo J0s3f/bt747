@@ -39,7 +39,6 @@ exception statement from your version. */
 package moio.util;
 
 import waba.sys.Convert;
-import waba.sys.Vm;
 
 //import gnu.classpath.Configuration;
 
