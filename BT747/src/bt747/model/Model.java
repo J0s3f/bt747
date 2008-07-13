@@ -478,7 +478,7 @@ public class Model extends AppSettings {
     }
 
     public final String getBTAddr() {
-        return gpsModel.getBT_MAC_ADDR();
+        return gpsModel.getBtMacAddr();
     }
 
     public final int getNMEAPeriod(final int i) {
