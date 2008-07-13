@@ -1,3 +1,7 @@
+Version 1.52.1
+* Refactoring & commenting of code.
+* Bug correction regarding holux log record size estimation (and number of max records)
+
 Version 1.52
 * Corrected another problem regarding connection.
 * Work on symbian target
