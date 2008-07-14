@@ -393,4 +393,6 @@ public class Txt_de {
     public static final String BT_MAC_ADDR = "BT Mac Addr:";
 
     public static final String S_OUTPUT_LOGCONDITIONS = "Bed. für Log-Ausgabe";
+    public static final String MEM_FREE = "frei";
+
 }

@@ -188,6 +188,11 @@ public class GPSstate implements Thread {
         return (int) ((logMemSize >> 16) * (0x10000 - 0x200)); // 16Mb
     }
 
+    public final int logFreeMemUsefullSize() {
+        return (int) ((logMemSize - logMemUsed) - (((logMemSize - logMemUsed) >> 16)
+                * (0x200))); // 16Mb
+    }
+
     /**
      * Start the timer To be called once the port is opened. The timer is used
      * to launch functions that will check if there is information on the serial
@@ -1304,7 +1309,8 @@ public class GPSstate implements Thread {
     private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
 
     private byte[] readDataBuffer = new byte[0x800]; // buffer used for
-                                                        // reading data.
+
+    // reading data.
 
     /**
      * Request the block to validate that log in device is log in file.
@@ -1596,7 +1602,7 @@ public class GPSstate implements Thread {
     private void analyzeLogPart(final int startAddr, final String sData) {
         int dataLength;
         dataLength = Conv.hexStringToBytes(sData, readDataBuffer) / 2; // Fills
-                                                                        // m_data
+        // m_data
         // debugMsg("Got "+p_StartAddr+" "+Convert.toString(p_Data.length())+"):
         // "+Convert.toString(dataLength));
         switch (logState) {

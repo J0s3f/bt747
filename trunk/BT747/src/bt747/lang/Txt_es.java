@@ -410,5 +410,7 @@ public class Txt_es {
     public static final String S_GISTEQTYPE2 = "iTrackU-PhotoTrackr"; 
     public static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII"; 
     public static final String BT_MAC_ADDR = "Dirección Mac BT:"; //     (you can also use "Direc. Mac BT") 
-    public static final String S_OUTPUT_LOGCONDITIONS = "Cond. del log de salida"; // //"Condiciones del log de salida";                         (you can also use ) 
+    public static final String S_OUTPUT_LOGCONDITIONS = "Cond. del log de salida"; // //"Condiciones del log de salida";                         (you can also use )
+    public static final String MEM_FREE = "disp.";
+
 }
