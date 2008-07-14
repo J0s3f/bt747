@@ -1,4 +1,5 @@
 package bt747.waba_view;
+
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -58,47 +59,33 @@ public class GPSLogGet extends Container {
     private Button m_btToGMAP;
     private Edit m_edTrkSep;
     private ComboBox m_cbTimeOffsetHours;
-    
-    private static final String[] offsetStr = {
-        "-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1",
-        "+0",
-        "+1", "+2", "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12",
-        "+13", "+14"
-    };
+
+    private static final String[] offsetStr = { "-12", "-11", "-10", "-9",
+            "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "+0", "+1", "+2",
+            "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12",
+            "+13", "+14" };
     private ComboBox m_cbColors;
-    private static final String[] colors = {
-        "FF0000",
-        "0000FF",
-        "800000",
-        "000080",
-        "00FF00",
-        "008000"
-    };
+    private static final String[] colors = { "FF0000", "0000FF", "800000",
+            "000080", "00FF00", "008000" };
     private MyCheck m_chkIncremental;
     private ComboBox m_chkOneFilePerDay;
-    private static final String[] fileStr = {
-        Txt.ONE_FILE,
-        Txt.ONE_FILE_DAY,
-        Txt.ONE_FILE_TRK
-    };
+    private static final String[] fileStr = { Txt.ONE_FILE, Txt.ONE_FILE_DAY,
+            Txt.ONE_FILE_TRK };
     private Model m;
     private Controller c;
     private Color BackupBackColor;
     private Label m_UsedLabel;
     private Label m_RecordsLabel;
 
-    public GPSLogGet(
-            final Model m,
-            final Controller c) {
+    public GPSLogGet(final Model m, final Controller c) {
         this.m = m;
         this.c = c;
     }
 
-
     /*
      * (non-Javadoc)
      * 
-     * @see waba.ui.Container#onStart() 
+     * @see waba.ui.Container#onStart()
      */
     protected final void onStart() {
         super.onStart();
@@ -107,10 +94,12 @@ public class GPSLogGet extends Container {
         m_chkIncremental.setChecked(m.isIncremental());
         add(chkLogOverwriteStop = new MyCheck(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
         add(new Label(Txt.DATE_RANGE), LEFT, AFTER); //$NON-NLS-1$
-        add(btStartDate = new Button(m.getStartDate().getDateString()), AFTER, SAME); //$NON-NLS-1$
-        //m_btStartDate.setMode(Edit.DATE);
-        add(m_btEndDate = new Button(m.getEndDate().getDateString()), RIGHT, SAME); //$NON-NLS-1$
-        //m_btEndDate.setMode(Edit.DATE);
+        add(btStartDate = new Button(m.getStartDate().getDateString()), AFTER,
+                SAME); //$NON-NLS-1$
+        // m_btStartDate.setMode(Edit.DATE);
+        add(m_btEndDate = new Button(m.getEndDate().getDateString()), RIGHT,
+                SAME); //$NON-NLS-1$
+        // m_btEndDate.setMode(Edit.DATE);
         add(m_btGetLog = new Button(Txt.GET_LOG), LEFT, AFTER + 2); //$NON-NLS-1$
         add(m_btCancelGetLog = new Button(Txt.CANCEL_GET), AFTER + 5, SAME); //$NON-NLS-1$
 
@@ -127,7 +116,7 @@ public class GPSLogGet extends Container {
 
         int offsetIdx = m.getTimeOffsetHours() + 12;
         if (offsetIdx > 26) {
-            c.setTimeOffsetHours(0);  // TODO: Change in call to control
+            c.setTimeOffsetHours(0); // TODO: Change in call to control
             offsetIdx = 12;
         }
         m_cbTimeOffsetHours = new ComboBox(offsetStr);
@@ -135,7 +124,7 @@ public class GPSLogGet extends Container {
         m_cbTimeOffsetHours.select(offsetIdx);
         add(new Label(Txt.UTC), BEFORE, SAME);
 
-        //add(new Label("End"),BEFORE,SAME);
+        // add(new Label("End"),BEFORE,SAME);
         add(m_chkOneFilePerDay = new ComboBox(fileStr), LEFT, AFTER + 2);
         m_chkOneFilePerDay.select(m.getFileSeparationFreq());
         add(m_chkNoGeoid = new MyCheck(Txt.HGHT_GEOID_DIFF), AFTER + 5, SAME); //$NON-NLS-1$
@@ -164,7 +153,7 @@ public class GPSLogGet extends Container {
             }
         }
     }
-    
+
     private void reqLogInfo() {
         // Request device info for this control
         c.reqLogStatus();
@@ -179,163 +168,176 @@ public class GPSLogGet extends Container {
 
     public final void updateButtons() {
         chkLogOnOff.setChecked(m.isLoggingActive());
-//        m_chkLogOnOff.repaintNow();
+        // m_chkLogOnOff.repaintNow();
         chkLogOverwriteStop.setChecked(m.isLogFullOverwrite());
-//        m_chkLogOverwriteStop.repaintNow();
-        m_UsedLabel.setText(Txt.MEM_USED + Convert.toString(m.logMemUsed()) + "(" + Convert.toString(m.logMemUsedPercent()) + "%)");
-//        m_UsedLabel.repaintNow();
-        m_RecordsLabel.setText(Txt.NBR_RECORDS + Convert.toString(m.logNbrLogPts()));
-//        m_RecordsLabel.repaintNow();
+        // m_chkLogOverwriteStop.repaintNow();
+        m_UsedLabel.setText(Txt.MEM_USED + Convert.toString(m.logMemUsed())
+                + "(" + Convert.toString(m.logMemUsedPercent()) + "%)");
+        // m_UsedLabel.repaintNow();
+        m_RecordsLabel.setText(Txt.NBR_RECORDS
+                + Convert.toString(m.logNbrLogPts())
+                + " ("
+                + m.getEstimatedNbrRecordsFree(m.getLogFormat())
+                + " "+ Txt.MEM_FREE + ")"
+                );
+        // m_RecordsLabel.repaintNow();
     }
+
     private Calendar cal;
     private Button calBt;
 
     /*
      * (non-Javadoc)
      * 
-     * @see waba.ui.Control#onEvent(waba.ui.Event)
-     *      configureable.
+     * @see waba.ui.Control#onEvent(waba.ui.Event) configureable.
      */
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see waba.ui.Control#onEvent(waba.ui.Event)
      */
     public final void onEvent(final Event event) {
-        //Vm.debug("Event:"+event.type+" "+event.consumed);
+        // Vm.debug("Event:"+event.type+" "+event.consumed);
         super.onEvent(event);
         switch (event.type) {
-            case ControlEvent.PRESSED:
-                event.consumed = true;
-                if (event.target == m_btGetLog) {
-                    c.startDownload();
-                    //m_btGetLog.press(false);
-                } else if (event.target == m_btCancelGetLog) {
-                    c.cancelGetLog();
-                } else if (event.target == m_chkIncremental) {
-                    c.setIncremental(m_chkIncremental.getChecked());
-                } else if (event.target == chkLogOnOff) {
-                    if (chkLogOnOff.getChecked()) {
-                        c.startLog();
-                    } else {
-                        c.stopLog();
-                    }
-                } else if (event.target == m_cbColors) {
-                    c.setColorInvalidTrack((String) m_cbColors.getSelectedItem());
-                } else if (event.target == m_cbTimeOffsetHours) {
-                    // Work around superwaba bug
-                    String tmp = (String) m_cbTimeOffsetHours.getSelectedItem();
-                    if (tmp.charAt(0) == '+') {
-                        c.setTimeOffsetHours(Convert.toInt((String) tmp.substring(1)));
-                    } else {
-                        c.setTimeOffsetHours(Convert.toInt(tmp));
-                    }
-                } else if (event.target == chkLogOverwriteStop) {
-                    c.setLogOverwrite(chkLogOverwriteStop.getChecked());
-                } else if (event.target == m_chkOneFilePerDay) {
-                    c.setOneFilePerDay(m_chkOneFilePerDay.getSelectedIndex());
-                } else if (event.target == m_chkNoGeoid) {
-                    c.setNoGeoid(m_chkNoGeoid.getChecked());
-                } else if (event.target == m_btEndDate) {
-                    if (cal == null) {
-                        cal = new Calendar();
-                    }
-                    calBt = m_btEndDate;
-                    cal.popupModal();
-                } else if (event.target == btStartDate) {
-                    if (cal == null) {
-                        cal = new Calendar();
-                    }
-                    calBt = btStartDate;
-                    cal.popupModal();
-                } else if (event.target == m_btToCSV || event.target == m_btToKML || event.target == m_btToPLT || event.target == m_btToGPX || event.target == m_btToTRK || event.target == m_btToGMAP || event.target == m_btToNMEA) {
-                    int logType = Model.NO_LOG_LOGTYPE;
-                    if (event.target == m_btToCSV) {
-                        logType = Model.CSV_LOGTYPE;
-                    } else if (event.target == m_btToTRK) {
-                        logType = Model.TRK_LOGTYPE;
-                    } else if (event.target == m_btToKML) {
-                        logType = Model.KML_LOGTYPE;
-                    } else if (event.target == m_btToPLT) {
-                        logType = Model.PLT_LOGTYPE;
-                    } else if (event.target == m_btToGPX) {
-                        logType = Model.GPX_LOGTYPE;
-                    } else if (event.target == m_btToNMEA) {
-                        logType = Model.NMEA_LOGTYPE;
-                    } else if (event.target == m_btToGMAP) {
-                        logType = Model.GMAP_LOGTYPE;
-                    }
-                    c.convertLog(logType);
-                } else if (event.target == this) {
-                    // Enters focus
-                    reqLogInfo();
+        case ControlEvent.PRESSED:
+            event.consumed = true;
+            if (event.target == m_btGetLog) {
+                c.startDownload();
+                // m_btGetLog.press(false);
+            } else if (event.target == m_btCancelGetLog) {
+                c.cancelGetLog();
+            } else if (event.target == m_chkIncremental) {
+                c.setIncremental(m_chkIncremental.getChecked());
+            } else if (event.target == chkLogOnOff) {
+                if (chkLogOnOff.getChecked()) {
+                    c.startLog();
                 } else {
-                    event.consumed = false;
+                    c.stopLog();
                 }
-                break;
-            case ControlEvent.FOCUS_OUT:
-                if (event.target == m_edTrkSep) {
-                    c.setTrkSep(Convert.toInt(m_edTrkSep.getText()));
-                    m_edTrkSep.setText(Convert.toString(m.getTrkSep()));
+            } else if (event.target == m_cbColors) {
+                c.setColorInvalidTrack((String) m_cbColors.getSelectedItem());
+            } else if (event.target == m_cbTimeOffsetHours) {
+                // Work around superwaba bug
+                String tmp = (String) m_cbTimeOffsetHours.getSelectedItem();
+                if (tmp.charAt(0) == '+') {
+                    c.setTimeOffsetHours(Convert.toInt((String) tmp
+                            .substring(1)));
+                } else {
+                    c.setTimeOffsetHours(Convert.toInt(tmp));
                 }
-                break;
+            } else if (event.target == chkLogOverwriteStop) {
+                c.setLogOverwrite(chkLogOverwriteStop.getChecked());
+            } else if (event.target == m_chkOneFilePerDay) {
+                c.setOneFilePerDay(m_chkOneFilePerDay.getSelectedIndex());
+            } else if (event.target == m_chkNoGeoid) {
+                c.setNoGeoid(m_chkNoGeoid.getChecked());
+            } else if (event.target == m_btEndDate) {
+                if (cal == null) {
+                    cal = new Calendar();
+                }
+                calBt = m_btEndDate;
+                cal.popupModal();
+            } else if (event.target == btStartDate) {
+                if (cal == null) {
+                    cal = new Calendar();
+                }
+                calBt = btStartDate;
+                cal.popupModal();
+            } else if (event.target == m_btToCSV || event.target == m_btToKML
+                    || event.target == m_btToPLT || event.target == m_btToGPX
+                    || event.target == m_btToTRK || event.target == m_btToGMAP
+                    || event.target == m_btToNMEA) {
+                int logType = Model.NO_LOG_LOGTYPE;
+                if (event.target == m_btToCSV) {
+                    logType = Model.CSV_LOGTYPE;
+                } else if (event.target == m_btToTRK) {
+                    logType = Model.TRK_LOGTYPE;
+                } else if (event.target == m_btToKML) {
+                    logType = Model.KML_LOGTYPE;
+                } else if (event.target == m_btToPLT) {
+                    logType = Model.PLT_LOGTYPE;
+                } else if (event.target == m_btToGPX) {
+                    logType = Model.GPX_LOGTYPE;
+                } else if (event.target == m_btToNMEA) {
+                    logType = Model.NMEA_LOGTYPE;
+                } else if (event.target == m_btToGMAP) {
+                    logType = Model.GMAP_LOGTYPE;
+                }
+                c.convertLog(logType);
+            } else if (event.target == this) {
+                // Enters focus
+                reqLogInfo();
+            } else {
+                event.consumed = false;
+            }
+            break;
+        case ControlEvent.FOCUS_OUT:
+            if (event.target == m_edTrkSep) {
+                c.setTrkSep(Convert.toInt(m_edTrkSep.getText()));
+                m_edTrkSep.setText(Convert.toString(m.getTrkSep()));
+            }
+            break;
 
-            case ControlEvent.WINDOW_CLOSED:
-                if (event.target == cal) {
-                    waba.util.Date d= cal.getSelectedDate();
-                    if (d != null) {
-                        calBt.setText(d.toString());
-                        // Can't change the value of the date, changing all
-                        c.setStartDate(new Date(btStartDate.getText()));
-                        c.setEndDate(new Date(m_btEndDate.getText()));
-                    }
+        case ControlEvent.WINDOW_CLOSED:
+            if (event.target == cal) {
+                waba.util.Date d = cal.getSelectedDate();
+                if (d != null) {
+                    calBt.setText(d.toString());
+                    // Can't change the value of the date, changing all
+                    c.setStartDate(new Date(btStartDate.getText()));
+                    c.setEndDate(new Date(m_btEndDate.getText()));
                 }
-                /*cal = null;
-                Note: If your program uses the Calendar control only a few
-                times, i suggest that you set cal to null so it can get garbage
-                collected. Calendar objects waste memory and it is always a
-                good idea to save memory when possible*/
-                break;
-            default:
-                if (event.type == GpsEvent.DATA_UPDATE) {
-                    updateButtons();
-                } else if (event.type == ModelEvent.INCREMENTAL_CHANGE) {
-                    m_chkIncremental.setChecked(m.isIncremental());
-                } else if (event.type == ModelEvent.CONVERSION_ENDED
-                        || event.type == ModelEvent.CONVERSION_STARTED) {
-                    Button b = null;
-                    switch (m.getLastConversionOngoing()) {
-                        case Model.CSV_LOGTYPE:
-                            b = m_btToCSV;
-                            break;
-                        case Model.TRK_LOGTYPE:
-                            b = m_btToTRK;
-                            break;
-                        case Model.KML_LOGTYPE:
-                            b = m_btToKML;
-                            break;
-                        case Model.PLT_LOGTYPE:
-                            b = m_btToPLT;
-                            break;
-                        case Model.GPX_LOGTYPE:
-                            b = m_btToGPX;
-                            break;
-                        case Model.NMEA_LOGTYPE:
-                            b = m_btToNMEA;
-                            break;
-                        case Model.GMAP_LOGTYPE:
-                            b = m_btToGMAP;
-                            break;
-                        default:
-                            break;
-                    }
-                    if (b != null) {
-                        if (m.isConversionOngoing()) {
-                            b.setBackColor(Color.GREEN);
-                        } else {
-                            b.setBackColor(BackupBackColor);
-                        }
-                        b.repaintNow();
-                    }
+            }
+            /*
+             * cal = null; Note: If your program uses the Calendar control only
+             * a few times, i suggest that you set cal to null so it can get
+             * garbage collected. Calendar objects waste memory and it is always
+             * a good idea to save memory when possible
+             */
+            break;
+        default:
+            if (event.type == GpsEvent.DATA_UPDATE) {
+                updateButtons();
+            } else if (event.type == ModelEvent.INCREMENTAL_CHANGE) {
+                m_chkIncremental.setChecked(m.isIncremental());
+            } else if (event.type == ModelEvent.CONVERSION_ENDED
+                    || event.type == ModelEvent.CONVERSION_STARTED) {
+                Button b = null;
+                switch (m.getLastConversionOngoing()) {
+                case Model.CSV_LOGTYPE:
+                    b = m_btToCSV;
+                    break;
+                case Model.TRK_LOGTYPE:
+                    b = m_btToTRK;
+                    break;
+                case Model.KML_LOGTYPE:
+                    b = m_btToKML;
+                    break;
+                case Model.PLT_LOGTYPE:
+                    b = m_btToPLT;
+                    break;
+                case Model.GPX_LOGTYPE:
+                    b = m_btToGPX;
+                    break;
+                case Model.NMEA_LOGTYPE:
+                    b = m_btToNMEA;
+                    break;
+                case Model.GMAP_LOGTYPE:
+                    b = m_btToGMAP;
+                    break;
+                default:
+                    break;
                 }
+                if (b != null) {
+                    if (m.isConversionOngoing()) {
+                        b.setBackColor(Color.GREEN);
+                    } else {
+                        b.setBackColor(BackupBackColor);
+                    }
+                    b.repaintNow();
+                }
+            }
         }
     }
 }

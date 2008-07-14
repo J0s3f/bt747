@@ -382,6 +382,7 @@ public class Txt_ko {
 
     public static final String BT_MAC_ADDR = "BT Mac Addr:";
     public static final String S_OUTPUT_LOGCONDITIONS = "Output log conditions";
+    public static final String MEM_FREE = "free";
 }
 
 

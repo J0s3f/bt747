@@ -429,6 +429,10 @@ public class Model extends AppSettings {
         return gpsModel.logMemUsefullSize();
     }
 
+    public final int logFreeMemUsefullSize() {
+        return gpsModel.logFreeMemUsefullSize();
+    }
+
     public final int getDtUpdateRate() {
         return gpsModel.getDtUpdateRate();
     }
@@ -557,6 +561,30 @@ public class Model extends AppSettings {
             }
             if (size != 0) {
                 count = logMemUsefullSize() / size;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    // TODO: merge this function with the above.
+    public final int getEstimatedNbrRecordsFree(final int logFormat) {
+        int count = 0;
+        boolean forHolux;
+        // Calculate for a holux either because this is the default setting or
+        // because a holux was detected.
+        forHolux = (isHolux() && gpsRxTx.isConnected())
+                   || getForceHolux241();
+        try {
+            int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
+            if (forHolux) {
+                size += 1;
+            } else {
+                size += 2;
+            }
+            if (size != 0) {
+                count = logFreeMemUsefullSize() / size;
             }
         } catch (Exception e) {
             e.printStackTrace();
