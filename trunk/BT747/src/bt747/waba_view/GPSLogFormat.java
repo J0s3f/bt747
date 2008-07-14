@@ -51,10 +51,6 @@ public class GPSLogFormat extends Container {
 
     /**
      * Initialiser of this Container.<br>
-     * Requires Object to communicate with GPS device.
-     * 
-     * @param p_GPSstate
-     *            Object to communicate with GPS device.
      */
     public GPSLogFormat(final Model m, final Controller c) {
         // super("Log ON/OFF", Container.);

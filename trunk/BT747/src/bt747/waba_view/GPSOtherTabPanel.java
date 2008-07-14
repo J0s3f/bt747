@@ -53,11 +53,7 @@ public class GPSOtherTabPanel extends Container {
     private final String c_tpCaptions[] = { Txt.TAB_FLSH, Txt.TAB_NMEA_OUT,
             Txt.TAB_NMEA_FILE, Txt.TAB_HOLUX };
 
-    /**
-     * @param settings
-     *            TODO
-     * 
-     */
+
     public GPSOtherTabPanel(final Controller c, Model m) {
         this.c = c;
         this.m = m;

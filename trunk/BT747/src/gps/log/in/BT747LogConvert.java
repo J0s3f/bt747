@@ -112,7 +112,10 @@ public final class BT747LogConvert implements GPSLogConvert {
     }
 
     /**
-     * @return
+     * Parse the binary input file and convert it.
+     * 
+     * @return non zero in case of err. The error text can be retrieved using
+     *         {@link #getErrorInfo()}.
      * @param gpsFile -
      *            object doing actual write to files
      * 

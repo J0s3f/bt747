@@ -86,8 +86,7 @@ public class PolylineEncoder {
         String encodedPoints, encodedLevels;
 
         if (track.getTrackpoints().size() > 2) {
-            int[] stackVal =
-                new int[] { 0, (track.getTrackpoints().size() - 1) };
+            int[] stackVal = new int[] { 0, (track.getTrackpoints().size() - 1) };
             stack.mypush(stackVal);
 
             while (stack.size() > 0) {
@@ -97,9 +96,8 @@ public class PolylineEncoder {
                 for (i = current[0] + 1; i < current[1]; i++) {
                     temp = this.distance((Trackpoint) track.getTrackpoints()
                             .elementAt(i), (Trackpoint) track.getTrackpoints()
-                            .elementAt(current[0]),
-                            (Trackpoint) track.getTrackpoints()
-                                        .elementAt(current[1]));
+                            .elementAt(current[0]), (Trackpoint) track
+                            .getTrackpoints().elementAt(current[1]));
                     if (temp > maxDist) {
                         maxDist = temp;
                         maxLoc = i;
@@ -136,9 +134,7 @@ public class PolylineEncoder {
 
     }
 
-    public static final String replace(
-            final String s,
-            final String one,
+    public static final String replace(final String s, final String one,
             final String another) {
         // In a string replace one substring with another
         if (s.equals("")) {
@@ -162,13 +158,14 @@ public class PolylineEncoder {
      * bit more numerically stable.
      * 
      * @param p0
+     *            Point.
      * @param p1
+     *            First point of segment.
      * @param p2
-     * @return
+     *            Second point of segment.
+     * @return Distance between point p0 and the segment [p1,p2].
      */
-    public final double distance(
-            final Trackpoint p0,
-            final Trackpoint p1,
+    public final double distance(final Trackpoint p0, final Trackpoint p1,
             final Trackpoint p2) {
         double u, out = 0.0;
 
@@ -293,9 +290,7 @@ public class PolylineEncoder {
      * encode the levels. Like createEncodings, we ignore points whose distance
      * (in dists) is undefined.
      */
-    private String encodeLevels(
-            final Track points,
-            final double[] dists,
+    private String encodeLevels(final Track points, final double[] dists,
             final double absMaxDist) {
         int i;
         StringBuffer encodedLevels = new StringBuffer();
@@ -399,9 +394,7 @@ public class PolylineEncoder {
         this.bounds = pbounds;
     }
 
-    public final Hashtable createEncodings(
-            final Track track,
-            final int level,
+    public final Hashtable createEncodings(final Track track, final int level,
             final int step) {
 
         Hashtable resultMap = new Hashtable(0);
