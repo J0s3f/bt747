@@ -47,7 +47,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         | (1 << BT747Constants.FMT_HEIGHT_IDX)
         ;
     
-    private boolean noGeoid = false; // If true,remove geoid difference from height
+    private boolean isConvertWGL84ToMSL = false; // If true,remove geoid difference from height
     
     private String errorInfo;
     public String getErrorInfo() {
@@ -157,7 +157,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
                             | (0xFF & bytes[recIdx++]) << 24
                             ;
                         gpsRec.height = Convert.toFloatBitwise(height);
-                        if (noGeoid) {
+                        if (isConvertWGL84ToMSL) {
                             gpsRec.height -=
                                 Conv.wgs84Separation(gpsRec.latitude, gpsRec.longitude);
                         }
@@ -177,8 +177,8 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         timeOffsetSeconds = offset;
     }
     
-    public void setNoGeoid(final boolean b) {
-        noGeoid = b;
+    public void setConvertWGS84ToMSL(final boolean b) {
+        isConvertWGL84ToMSL = b;
     }
     
     

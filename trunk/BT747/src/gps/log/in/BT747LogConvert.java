@@ -44,7 +44,7 @@ public final class BT747LogConvert implements GPSLogConvert {
     private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
-    private boolean noGeoid = false; // If true,remove geoid difference from
+    private boolean isConvertWGL84ToMSL = false; // If true,remove geoid difference from
     // height
 
     private int satIdxOffset;
@@ -428,8 +428,8 @@ public final class BT747LogConvert implements GPSLogConvert {
         timeOffsetSeconds = offset;
     }
 
-    public void setNoGeoid(final boolean b) {
-        noGeoid = b;
+    public void setConvertWGS84ToMSL(final boolean b) {
+        isConvertWGL84ToMSL = b;
     }
 
     private String errorInfo;
@@ -767,7 +767,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                         | (0xFF & bytes[recIdx++]) << 24;
                 gpsRec.height = Convert.toFloatBitwise(height);
             }
-            if (noGeoid
+            if (isConvertWGL84ToMSL
                     && ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
                     && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)
                     && valid) {

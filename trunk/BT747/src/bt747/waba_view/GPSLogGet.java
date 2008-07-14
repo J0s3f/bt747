@@ -128,7 +128,7 @@ public class GPSLogGet extends Container {
         add(m_chkOneFilePerDay = new ComboBox(fileStr), LEFT, AFTER + 2);
         m_chkOneFilePerDay.select(m.getFileSeparationFreq());
         add(m_chkNoGeoid = new MyCheck(Txt.HGHT_GEOID_DIFF), AFTER + 5, SAME); //$NON-NLS-1$
-        m_chkNoGeoid.setChecked(m.getNoGeoid());
+        m_chkNoGeoid.setChecked(m.isConvertWGS84ToMSL());
 
         add(m_btToCSV = new Button(Txt.TO_CSV), LEFT, AFTER + 5); //$NON-NLS-1$
         add(m_btToGPX = new Button(Txt.TO_GPX), AFTER + 5, SAME); //$NON-NLS-1$
@@ -229,7 +229,7 @@ public class GPSLogGet extends Container {
             } else if (event.target == chkLogOverwriteStop) {
                 c.setLogOverwrite(chkLogOverwriteStop.getChecked());
             } else if (event.target == m_chkOneFilePerDay) {
-                c.setOneFilePerDay(m_chkOneFilePerDay.getSelectedIndex());
+                c.setOutputFileSplitType(m_chkOneFilePerDay.getSelectedIndex());
             } else if (event.target == m_chkNoGeoid) {
                 c.setNoGeoid(m_chkNoGeoid.getChecked());
             } else if (event.target == m_btEndDate) {

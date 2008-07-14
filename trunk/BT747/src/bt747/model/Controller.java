@@ -37,7 +37,15 @@ import bt747.ui.MessageBox;
  */
 public class Controller {
 
-    private static final int _100 = 100;
+    /**
+     * Fixed number indicating that the port number does not correspond to an
+     * actual port.
+     */
+    private static final int NOT_A_PORT_NUMBER = 0x5555;
+    /**
+     * Multiplier to convert floating *DOP value to int value for device.
+     */
+    private static final int XDOP_FLOAT_TO_INT_100 = 100;
     /**
      * The number of seconds in a minute.
      */
@@ -74,7 +82,7 @@ public class Controller {
         m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
 
         int port = m.getPortnbr();
-        if (port != 0x5555) {
+        if (port != NOT_A_PORT_NUMBER) {
             // TODO: review this, especially with 'freetext port'
             m.gpsRxTx().setDefaults(port, m.getBaudRate());
         }
@@ -113,12 +121,25 @@ public class Controller {
         m.saveSettings();
     }
 
-    public final void setLogFilePath(final String s) {
-        m.setLogFile(s);
+    /**
+     * Set the log file path (including basename) relative to the BaseDirPath.
+     * 
+     * @param s
+     *            The relative log file path (including basename)
+     */
+    public final void setLogFileRelPath(final String s) {
+        m.setLogFileRelPath(s);
         m.saveSettings();
     }
 
-    public final void setOutputFileBasePath(final String s) {
+    /**
+     * Set the output file path (including basename, no extension) relative to
+     * the BaseDirPath.
+     * 
+     * @param s
+     *            The relative log file path (including basename)
+     */
+    public final void setOutputFileRelPath(final String s) {
         m.setReportFileBase(s);
         m.saveSettings();
     }
@@ -232,7 +253,7 @@ public class Controller {
             usedFilters = m.getLogFilters();
         }
         lc.setTimeOffset(m.getTimeOffsetHours() * SECONDS_PER_HOUR);
-        lc.setNoGeoid(m.getNoGeoid());
+        lc.setConvertWGS84ToMSL(m.isConvertWGS84ToMSL());
 
         switch (logType) {
         default:
@@ -352,7 +373,7 @@ public class Controller {
             usedFilters = m.getLogFilters();
         }
         lc.setTimeOffset(m.getTimeOffsetHours() * SECONDS_PER_HOUR);
-        lc.setNoGeoid(m.getNoGeoid());
+        lc.setConvertWGS84ToMSL(m.isConvertWGS84ToMSL());
 
         gpsFile = new GPSArray();
 
@@ -380,6 +401,14 @@ public class Controller {
         return gpsFile.getGpsTrackPoints();
     }
 
+    /**
+     * Report an error.
+     * 
+     * @param error
+     *            The error number.
+     * @param errorInfo
+     *            A text string related to the error (filename, ...).
+     */
     private void reportError(final int error, final String errorInfo) {
         String errorMsg;
         switch (error) {
@@ -643,6 +672,9 @@ public class Controller {
         m.gpsModel().setLogFormat(newLogFormat);
     }
 
+    /**
+     * Do the actual erase.
+     */
     private void eraseLog() {
         // TODO: Handle erase popup.
         m.gpsModel().eraseLog();
@@ -720,7 +752,11 @@ public class Controller {
         }
     }
 
-    public final void forceErase() {
+    /**
+     * A 'recovery Erase' attempts to recover memory that was previously
+     * identified as 'bad'.
+     */
+    public final void recoveryErase() {
         /** Object to open multiple message boxes */
         MessageBox mb;
         mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
@@ -741,6 +777,9 @@ public class Controller {
      * SECTION FOR CONNECTION RELATED METHODS.
      **************************************************************************/
 
+    /**
+     * Connect to the GPS (open the serial connection).
+     */
     public final void connectGPS() {
         closeGPS();
         m.gpsRxTx().openPort();
@@ -795,20 +834,42 @@ public class Controller {
         performOperationsAfterGPSConnect();
     }
 
-    public final void setSpeed(final int speed) {
-        m.gpsRxTx().setSpeed(speed);
+    /**
+     * Sets the port's speed (baud rate).
+     * 
+     * @param baudRate
+     *            The baud rate to set.
+     */
+    public final void setBaudRate(final int baudRate) {
+        m.gpsRxTx().setBaudRate(baudRate);
     }
 
-    public final void setFreeTextPort(final String s) {
+    /**
+     * Select a port by its 'path' (/dev/usb9 for example or /dev/com1.
+     * 
+     * @param portName
+     *            The path to the port.
+     */
+    public final void setFreeTextPort(final String portName) {
         closeGPS();
-        m.gpsRxTx().setFreeTextPortAndOpen(s);
+        m.gpsRxTx().setFreeTextPortAndOpen(portName);
         performOperationsAfterGPSConnect();
     }
 
+    /**
+     * Get the port text string.
+     * 
+     * @return A text string for the serial port (if not a port number).
+     */
     public final String getFreeTextPort() {
         return m.gpsRxTx().getFreeTextPort();
     }
 
+    /**
+     * This does a number of operations once the GPS is effectively connected.
+     * It stores the settings related to the port (since the connection was
+     * successful) and starts of the Model to do port queries.
+     */
     private void performOperationsAfterGPSConnect() {
         if (m.gpsRxTx().isConnected()) {
             m.gpsModel().getStatus();
@@ -930,17 +991,58 @@ public class Controller {
         getLogFilterSettings();
     }
 
-    public final void setTrkPtValid(final int i) {
-        m.setTrkPtValid(i);
+    /**
+     * Sets the 'Valid' filter mask for the current track filter.
+     * 
+     * @param validMask
+     *            The filter mask to set for the validity filter. Use the
+     *            following constants:<br>-
+     *            {@link BT747Constants#VALID_NO_FIX_MASK} <br>-
+     *            {@link BT747Constants#VALID_SPS_MASK} <br>-
+     *            {@link BT747Constants#VALID_DGPS_MASK} <br>-
+     *            {@link BT747Constants#VALID_PPS_MASK} <br>-
+     *            {@link BT747Constants#VALID_RTK_MASK} <br>-
+     *            {@link BT747Constants#VALID_FRTK_MASK} <br>-
+     *            {@link BT747Constants#VALID_ESTIMATED_MASK} <br>-
+     *            {@link BT747Constants#VALID_MANUAL_MASK} <br>-
+     *            {@link BT747Constants#VALID_SIMULATOR_MASK} <br>-
+     * 
+     */
+    public final void setTrkPtValid(final int validMask) {
+        m.setTrkPtValid(validMask);
         getLogFilterSettings();
     }
 
-    public final void setWayPtValid(final int i) {
-        m.setWayPtValid(i);
+    /**
+     * Sets the 'Valid' filter mask for the current waypoint filter.
+     * 
+     * @param validMask
+     *            The filter mask to set for the validity filter. Use the
+     *            following constants:<br>-
+     *            {@link BT747Constants#VALID_NO_FIX_MASK} <br>-
+     *            {@link BT747Constants#VALID_SPS_MASK} <br>-
+     *            {@link BT747Constants#VALID_DGPS_MASK} <br>-
+     *            {@link BT747Constants#VALID_PPS_MASK} <br>-
+     *            {@link BT747Constants#VALID_RTK_MASK} <br>-
+     *            {@link BT747Constants#VALID_FRTK_MASK} <br>-
+     *            {@link BT747Constants#VALID_ESTIMATED_MASK} <br>-
+     *            {@link BT747Constants#VALID_MANUAL_MASK} <br>-
+     *            {@link BT747Constants#VALID_SIMULATOR_MASK} <br>-
+     * 
+     */
+    public final void setWayPtValid(final int validMask) {
+        m.setWayPtValid(validMask);
         getLogFilterSettings();
     }
 
-    // The way logfilter are handle should be reviewed.
+    // The way logfilters are handled should be reviewed.
+
+    /**
+     * Get the settings for the filters (from the settings).
+     * 
+     * @param logFilters
+     *            logFilters to replicate the settings to.
+     */
     private void getSettings(final GPSFilter[] logFilters) {
         logFilters[GPSFilter.C_TRKPT_IDX].setRcrMask(m.getTrkPtRCR());
         logFilters[GPSFilter.C_TRKPT_IDX].setValidMask(m.getTrkPtValid());
@@ -948,11 +1050,57 @@ public class Controller {
         logFilters[GPSFilter.C_WAYPT_IDX].setValidMask(m.getWayPtValid());
     };
 
+    /**
+     * Get the settings for the filters and restore the common settings to the
+     * normal and advanced log filters.
+     */
     private void getLogFilterSettings() {
         getSettings(m.getLogFilters());
         getSettings(m.getLogFiltersAdv());
     }
 
+    /**
+     * This sets MTK specific settings into its flash.<br>
+     * The MTK device stores a number of settings in its internal flash which is
+     * different from the log memory. These settings are restored after loss of
+     * power for example.
+     * 
+     * 
+     * @param lock
+     *            When true, subsequent changes in these settings will be
+     *            impossible.
+     * @param updateRate
+     *            The 'fix period' of the GPS in ms. When this is 200, then the
+     *            Fix is 5Hz.
+     * @param baudRate
+     *            The speed of the serial communication of the MTK chipset. Be
+     *            carefull - this may be the internal speed - not the external
+     *            speed!
+     * @param periodGLL
+     *            The period of emission of the GLL sentence (relative to the
+     *            fix).
+     * @param periodRMC
+     *            The period of emission of the RMC sentence (relative to the
+     *            fix).
+     * @param periodVTG
+     *            The period of emission of the VTG sentence (relative to the
+     *            fix).
+     * @param periodGSA
+     *            The period of emission of the GSA sentence (relative to the
+     *            fix).
+     * @param periodGSV
+     *            The period of emission of the GSV sentence (relative to the
+     *            fix).
+     * @param periodGGA
+     *            The period of emission of the GGA sentence (relative to the
+     *            fix).
+     * @param periodZDA
+     *            The period of emission of the ZDA sentence (relative to the
+     *            fix).
+     * @param periodMCHN
+     *            The period of emission of the MCHN sentence (relative to the
+     *            fix).
+     */
     public final void setFlashUserOption(final boolean lock,
             final int updateRate, final int baudRate, final int periodGLL,
             final int periodRMC, final int periodVTG, final int periodGSA,
@@ -964,85 +1112,197 @@ public class Controller {
         reqFlashUserOption();
     }
 
+    /**
+     * Request the flash user settings from the device. Following the relevant
+     * event, the settings must be retrieved using
+     * {@link Model#getDtUpdateRate()}<br>- {@link Model#getDtGLL_Period()}<br>-
+     * {@link Model#getDtRMC_Period()}<br>- {@link Model#getDtVTG_Period()}<br>-
+     * {@link Model#getDtGSA_Period()}<br>- {@link Model#getDtGSV_Period()}<br>-
+     * {@link Model#getDtGGA_Period()}<br>- {@link Model#getDtZDA_Period()}<br>-
+     * {@link Model#getDtMCHN_Period()}<br>- {@link Model#getDtBaudRate()}<br>-
+     * {@link Model#getDtUserOptionTimesLeft()}<br>-
+     * 
+     */
     public final void reqFlashUserOption() {
         m.gpsModel().reqFlashUserOption();
     }
 
+    /**
+     * Get the flash user settings from the device.
+     */
     public final void reqHoluxName() {
         m.gpsModel().reqHoluxName();
     }
 
+    /**
+     * Request the bluetooth Mac Address from the device.
+     */
     public final void reqBTAddr() {
         m.gpsModel().reqBtMacAddr();
     }
 
-    public final void setHoluxName(final String s) {
-        m.gpsModel().setHoluxName(s);
+    /**
+     * Set the textual description of the holux device.
+     * 
+     * @param holuxName
+     *            The string to set as the Holux Name.
+     */
+    public final void setHoluxName(final String holuxName) {
+        m.gpsModel().setHoluxName(holuxName);
         reqHoluxName();
     }
 
+    /**
+     * Request the current NMEA period settings of the device.
+     */
     public final void reqNMEAPeriods() {
         m.gpsModel().reqNMEAPeriods();
     }
 
+    /**
+     * Set the NMEA period settings of the device.
+     * 
+     * @param periods
+     *            The array indexes are given by:<br>-
+     *            {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>-
+     */
     public final void setNMEAPeriods(final int[] periods) {
         m.gpsModel().setNMEAPeriods(periods);
         reqNMEAPeriods();
     }
 
+    /**
+     * Sets default NMEA periods (as observed on one iBlue 747 device).
+     */
     public final void setNMEADefaultPeriods() {
         m.gpsModel().setNMEADefaultPeriods();
     }
 
-    public final void setSBASTestEnabled(final boolean set) {
-        m.gpsModel().setSBASEnabled(set);
+    /**
+     * Sets the enable of SBAS (DGPS) satellites that are in test.
+     * 
+     * @param isSBASTestEnabled
+     *            When true, enable test satellites.
+     */
+    public final void setSBASTestEnabled(final boolean isSBASTestEnabled) {
+        m.gpsModel().setSBASTestEnabled(isSBASTestEnabled);
         reqSBASTestEnabled();
     }
 
+    /**
+     * Request the current status of SBAS (DGPS) satellites in test enable
+     * setting. Actual value to be retrieved later with
+     * {@link Model#isSBASTestEnabled()}.
+     */
     public final void reqSBASTestEnabled() {
         m.gpsModel().reqSBASTestEnabled();
     }
 
+    /**
+     * Enable SBAS (DGPS).
+     * 
+     * @param set
+     *            When true, enables SBAS.
+     */
     public final void setSBASEnabled(final boolean set) {
         m.gpsModel().setSBASEnabled(set);
         reqSBASEnabled();
     }
 
+    /**
+     * Request the current status of SBAS (DGPS) enable setting. Actual value to
+     * be retrieved later with {@link Model#isSBASEnabled()}.
+     */
     public final void reqSBASEnabled() {
         m.gpsModel().reqSBASEnabled();
     }
 
+    /**
+     * Request the GPS's Datum mode. To be retrieved later using
+     * {@link Model#getDatum()}.
+     */
     public final void reqDatumMode() {
         m.gpsModel().reqDatumMode();
     }
 
+    /**
+     * Set GPS's Datum mode.
+     * 
+     * @param mode
+     *            The datum mode to set.
+     */
     public final void setDatumMode(final int mode) {
         m.gpsModel().setDatumMode(mode);
         reqDatumMode();
     }
 
+    /**
+     * Set the DGPS mode to use when SBAS enabled.
+     * 
+     * @param mode
+     *            The mode to use.
+     */
     public final void setDGPSMode(final int mode) {
         m.gpsModel().setDGPSMode(mode);
         reqDGPSMode();
     }
 
+    /**
+     * Request the current DGPS mode in use. Get actual setting with
+     * {@link Model#getDgpsMode()} later.
+     */
     public final void reqDGPSMode() {
         m.gpsModel().reqDGPSMode();
     }
 
+    /**
+     * Enable the power save mode on the device - this setting is untested.
+     * 
+     * @param set
+     *            If true, enable power save mode.
+     */
     public final void setPowerSaveEnabled(final boolean set) {
         m.gpsModel().setPowerSaveEnabled(set);
         reqPowerSaveEnabled();
     }
 
+    /**
+     * Request the power save mode setting of the device. Need to get the actual
+     * setting later with {@link Model#isPowerSaveEnabled()}.
+     */
     public final void reqPowerSaveEnabled() {
         m.gpsModel().reqPowerSaveEnabled();
     }
 
+    /**
+     * Request the log condition (reason) settings of the device. Need to get
+     * actual values through:<br>
+     * {@link Model#getLogTimeInterval()<br>
+     * {@link Model#getLogDistanceInterval()} <br>
+     * {@link Model#getLogSpeedInterval()}
+     */
     public final void reqLogReasonStatus() {
         m.gpsModel().reqLogReasonStatus();
     }
 
+    /**
+     * Request the fix interval setting from the device. Need to get the actual
+     * value through {@link Model#getLogFixPeriod()}.
+     * 
+     */
     public final void reqFixInterval() {
         m.gpsModel().reqFixInterval();
     }
@@ -1256,9 +1516,12 @@ public class Controller {
             filter.setMaxSpeed(m.getFilterMaxSpeed());
             filter.setMinDist(m.getFilterMinDist());
             filter.setMaxDist(m.getFilterMaxDist());
-            filter.setMaxPDOP((int) (m.getFilterMaxPDOP() * _100));
-            filter.setMaxHDOP((int) (m.getFilterMaxHDOP() * _100));
-            filter.setMaxVDOP((int) (m.getFilterMaxVDOP() * _100));
+            filter
+                    .setMaxPDOP((int) (m.getFilterMaxPDOP() * XDOP_FLOAT_TO_INT_100));
+            filter
+                    .setMaxHDOP((int) (m.getFilterMaxHDOP() * XDOP_FLOAT_TO_INT_100));
+            filter
+                    .setMaxVDOP((int) (m.getFilterMaxVDOP() * XDOP_FLOAT_TO_INT_100));
             filter.setMinNSAT(m.getFilterMinNSAT());
         }
     }
@@ -1347,16 +1610,34 @@ public class Controller {
         m.getLogFilters()[filterType].setRcrMask(rcrMask);
     }
 
+    /**
+     * Set the local time offset versus UTC (used in adjusting the time in the
+     * output formats).
+     * 
+     * @param timeOffsetHours
+     *            The offset in hours.
+     */
     public final void setTimeOffsetHours(final int timeOffsetHours) {
         m.setTimeOffsetHours(timeOffsetHours);
     }
 
-    public final void setOneFilePerDay(final int value) {
-        m.setOneFilePerDay(value);
+    /**
+     * @param value
+     *            0=all data in one file;<br>
+     *            1=one file per day (split at midnight after time offset
+     *            calculation)<br>
+     *            2=one file per track (a track separation occurs when the time
+     *            between two log points is bigger than a given number.
+     */
+    public final void setOutputFileSplitType(final int value) {
+        m.setOutputFileSplitType(value);
     }
 
+    /**
+     * @param value
+     */
     public final void setNoGeoid(final boolean value) {
-        m.setNoGeoid(value);
+        m.setConvertWGS84ToMSL(value);
     }
 
     /**

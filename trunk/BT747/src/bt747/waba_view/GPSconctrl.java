@@ -214,7 +214,7 @@ public class GPSconctrl extends Container {
             if (event.target == btnBluetooth) {
                 GPS_setChannel(SerialPort.BLUETOOTH);
             } else if (event.target == btnConnectPort) {
-                c.setSpeed(Convert.toInt((String) cbBaud.getSelectedItem()));
+                c.setBaudRate(Convert.toInt((String) cbBaud.getSelectedItem()));
                 GPS_setChannel(Convert.toInt(((String) cbPorts
                         .getSelectedItem())));
                 // } else if (event.target == btnUSB) {

@@ -146,7 +146,7 @@ public class GPSLogEasy extends Container {
                     c.doFullColdStart();
                 }
             } else if (event.target == m_btForceErase) {
-                c.forceErase();
+                c.recoveryErase();
             } else {
                 for (int i = 0; i < BT747Constants.C_RCR_COUNT; i++) {
                     if (event.target == chkRCR[i]) {

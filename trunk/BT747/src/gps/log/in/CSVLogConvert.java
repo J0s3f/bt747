@@ -45,7 +45,7 @@ public final class CSVLogConvert implements GPSLogConvert {
     private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
-    private boolean noGeoid = false; // If true,remove geoid difference from
+    private boolean isConvertWGL84ToMSL = false; // If true,remove geoid difference from
                                         // height
 
     private static final int C_LOGTIME = -9;
@@ -600,7 +600,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     // if (!passToFindFieldsActivatedInLog) {
                                     field_nbr++;
                                 }
-                                if (noGeoid
+                                if (isConvertWGL84ToMSL
                                         && ((curLogFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0)
                                         && ((curLogFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
                                         && ((curLogFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)) {
@@ -632,8 +632,8 @@ public final class CSVLogConvert implements GPSLogConvert {
         timeOffsetSeconds = offset;
     }
 
-    public final void setNoGeoid(boolean b) {
-        noGeoid = b;
+    public final void setConvertWGS84ToMSL(boolean b) {
+        isConvertWGL84ToMSL = b;
     }
 
     public final int toGPSFile(final String fileName, final GPSFile gpsFile,

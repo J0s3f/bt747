@@ -3550,7 +3550,7 @@ public class BT747_Main2 extends javax.swing.JFrame implements
     private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btOutputFileActionPerformed
         getOutputFilePath();
         if (OutputFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            c.setOutputFileBasePath(FileUtil.getRelativePath(
+            c.setOutputFileRelPath(FileUtil.getRelativePath(
                     m.getBaseDirPath(), OutputFileChooser.getSelectedFile()
                             .getAbsolutePath(), File.separatorChar));
         }
@@ -3559,7 +3559,7 @@ public class BT747_Main2 extends javax.swing.JFrame implements
     private void btRawLogFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btRawLogFileActionPerformed
         getRawLogFilePath();
         if (RawLogFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            c.setLogFilePath(FileUtil.getRelativePath(m.getBaseDirPath(),
+            c.setLogFileRelPath(FileUtil.getRelativePath(m.getBaseDirPath(),
                     RawLogFileChooser.getSelectedFile().getAbsolutePath(),
                     File.separatorChar));
         }

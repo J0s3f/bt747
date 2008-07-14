@@ -156,8 +156,8 @@ public class GPSLogFile extends Container {
             if (event.target == btChangeSettings) {
                 setting = true;
                 c.setBaseDirPath(edBaseDirName.getText());
-                c.setLogFilePath(edLogFileName.getText());
-                c.setOutputFileBasePath(edReportBaseName.getText());
+                c.setLogFileRelPath(edLogFileName.getText());
+                c.setOutputFileRelPath(edReportBaseName.getText());
                 c.setChunkSize(Convert.toInt(edChunkSize.getText()));
                 c.setDownloadTimeOut(Convert.toInt(edTimeout.getText()));
                 if (Settings.platform.startsWith("Palm")) {
@@ -191,7 +191,7 @@ public class GPSLogFile extends Container {
                 }
                 fs.popupBlockingModal();
                 // m_edLogFileName.setText(fs.getRelPath());
-                c.setLogFilePath(fs.getRelPath());
+                c.setLogFileRelPath(fs.getRelPath());
             } else if (event.target == btDefaultSettings) {
                 m.defaultSettings();
                 updateValues();
@@ -199,11 +199,11 @@ public class GPSLogFile extends Container {
             break;
         case ControlEvent.FOCUS_OUT:
             if (event.target == edLogFileName) {
-                c.setLogFilePath(edLogFileName.getText());
+                c.setLogFileRelPath(edLogFileName.getText());
             } else if (event.target == edBaseDirName) {
                 c.setBaseDirPath(edBaseDirName.getText());
             } else if (event.target == edReportBaseName) {
-                c.setOutputFileBasePath(edReportBaseName.getText());
+                c.setOutputFileRelPath(edReportBaseName.getText());
             }
             break;
         default:

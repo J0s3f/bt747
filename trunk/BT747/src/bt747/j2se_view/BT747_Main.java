@@ -5874,7 +5874,7 @@ public class BT747_Main extends javax.swing.JFrame implements
 
     private void tfRawLogFilePathFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_tfRawLogFilePathFocusLost
 
-        c.setLogFilePath(tfRawLogFilePath.getText());
+        c.setLogFileRelPath(tfRawLogFilePath.getText());
     }// GEN-LAST:event_tfRawLogFilePathFocusLost
 
     private void btFormatAndEraseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btFormatAndEraseActionPerformed
@@ -5894,7 +5894,7 @@ public class BT747_Main extends javax.swing.JFrame implements
 
     private void btRecoverMemoryActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btRecoverMemoryActionPerformed
 
-        c.forceErase();
+        c.recoveryErase();
     }// GEN-LAST:event_btRecoverMemoryActionPerformed
 
     private void cbSIDItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbSIDItemStateChanged
@@ -5960,7 +5960,7 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         getOutputFilePath();
         if (OutputFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            c.setOutputFileBasePath(gps.convert.FileUtil.getRelativePath(m
+            c.setOutputFileRelPath(gps.convert.FileUtil.getRelativePath(m
                     .getBaseDirPath(), OutputFileChooser.getSelectedFile()
                     .getAbsolutePath(), File.separatorChar));
         }
@@ -5970,7 +5970,7 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         getRawLogFilePath();
         if (RawLogFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            c.setLogFilePath(gps.convert.FileUtil.getRelativePath(m
+            c.setLogFileRelPath(gps.convert.FileUtil.getRelativePath(m
                     .getBaseDirPath(), RawLogFileChooser.getSelectedFile()
                     .getAbsolutePath(), File.separatorChar));
         }
