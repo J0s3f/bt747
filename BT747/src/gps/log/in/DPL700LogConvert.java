@@ -14,7 +14,7 @@
 //***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
+//***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************  
 package gps.log.in;
@@ -35,6 +35,7 @@ import bt747.io.File;
  * @author Mario De Weerd
  */
 public final class DPL700LogConvert implements GPSLogConvert {
+    private static final int X_FF = 0xFF;
     private int recordSize = 16;
     private int logFormat;
     private File inFile = null;
@@ -48,9 +49,9 @@ public final class DPL700LogConvert implements GPSLogConvert {
     private boolean noGeoid = false; // If true,remove geoid difference from
     // height
 
-    final int ITRACKU_NUMERIX = 0;
-    final int PHOTOTRACKR = 1;
-    final int ITRACKU_SIRFIII = 2;
+    static final int ITRACKU_NUMERIX = 0;
+    static final int PHOTOTRACKR = 1;
+    static final int ITRACKU_SIRFIII = 2;
 
     private int logType = ITRACKU_NUMERIX;
 
@@ -150,7 +151,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
                     //
                     // indexInBuffer += 1;
 
-                    indexInBuffer += 16;
+                    indexInBuffer += recordSize;
                     int recIdx = offsetInBuffer;
                     offsetInBuffer = indexInBuffer;
 
@@ -203,47 +204,47 @@ public final class DPL700LogConvert implements GPSLogConvert {
                             case ITRACKU_SIRFIII:
                                 // NEMERIX
                                 // Get information from log file
-                                longitude = (0xFF & bytes[recIdx++]) << 0
-                                        | (0xFF & bytes[recIdx++]) << 8
-                                        | (0xFF & bytes[recIdx++]) << 16
-                                        | (0xFF & bytes[recIdx++]) << 24;
-                                latitude = (0xFF & bytes[recIdx++]) << 0
-                                        | (0xFF & bytes[recIdx++]) << 8
-                                        | (0xFF & bytes[recIdx++]) << 16
-                                        | (0xFF & bytes[recIdx++]) << 24;
-                                gpsRec.utc = (0xFF & bytes[recIdx++]) << 0
-                                        | (0xFF & bytes[recIdx++]) << 8
-                                        | (0xFF & bytes[recIdx++]) << 16
-                                        | (0xFF & bytes[recIdx++]) << 24;
-                                altitude = (0xFF & bytes[recIdx++]) << 0
-                                        | (0xFF & bytes[recIdx++]) << 8;
+                                longitude = (X_FF & bytes[recIdx++]) << 0
+                                        | (X_FF & bytes[recIdx++]) << 8
+                                        | (X_FF & bytes[recIdx++]) << 16
+                                        | (X_FF & bytes[recIdx++]) << 24;
+                                latitude = (X_FF & bytes[recIdx++]) << 0
+                                        | (X_FF & bytes[recIdx++]) << 8
+                                        | (X_FF & bytes[recIdx++]) << 16
+                                        | (X_FF & bytes[recIdx++]) << 24;
+                                gpsRec.utc = (X_FF & bytes[recIdx++]) << 0
+                                        | (X_FF & bytes[recIdx++]) << 8
+                                        | (X_FF & bytes[recIdx++]) << 16
+                                        | (X_FF & bytes[recIdx++]) << 24;
+                                altitude = (X_FF & bytes[recIdx++]) << 0
+                                        | (X_FF & bytes[recIdx++]) << 8;
                                 gpsRec.height = altitude;
                                 if (noGeoid) {
                                     gpsRec.height -= Conv.wgs84Separation(
                                             gpsRec.latitude, gpsRec.longitude);
                                 }
-                                speed = (0xFF & bytes[recIdx++]) << 0;
-                                tag = (0xFF & bytes[recIdx++]) << 0;
+                                speed = (X_FF & bytes[recIdx++]) << 0;
+                                tag = (X_FF & bytes[recIdx++]) << 0;
                                 break;
                             default:
                                 // NEMERIX
                                 // Get information from log file
-                                longitude = (0xFF & bytes[recIdx++]) << 0
-                                | (0xFF & bytes[recIdx++]) << 8
-                                | (0xFF & bytes[recIdx++]) << 16
-                                | (0xFF & bytes[recIdx++]) << 24;
-                                latitude = (0xFF & bytes[recIdx++]) << 0
-                                        | (0xFF & bytes[recIdx++]) << 8
-                                        | (0xFF & bytes[recIdx++]) << 16
-                                        | (0xFF & bytes[recIdx++]) << 24;
-                                year = (0xFF & bytes[recIdx++]) << 0;
-                                month = (0xFF & bytes[recIdx++]) << 0;
-                                day = (0xFF & bytes[recIdx++]) << 0;
-                                hour = (0xFF & bytes[recIdx++]) << 0;
-                                minutes = (0xFF & bytes[recIdx++]) << 0;
-                                seconds = (0xFF & bytes[recIdx++]) << 0;
-                                speed = (0xFF & bytes[recIdx++]) << 0;
-                                tag = (0xFF & bytes[recIdx++]) << 0;
+                                longitude = (X_FF & bytes[recIdx++]) << 0
+                                | (X_FF & bytes[recIdx++]) << 8
+                                | (X_FF & bytes[recIdx++]) << 16
+                                | (X_FF & bytes[recIdx++]) << 24;
+                                latitude = (X_FF & bytes[recIdx++]) << 0
+                                        | (X_FF & bytes[recIdx++]) << 8
+                                        | (X_FF & bytes[recIdx++]) << 16
+                                        | (X_FF & bytes[recIdx++]) << 24;
+                                year = (X_FF & bytes[recIdx++]) << 0;
+                                month = (X_FF & bytes[recIdx++]) << 0;
+                                day = (X_FF & bytes[recIdx++]) << 0;
+                                hour = (X_FF & bytes[recIdx++]) << 0;
+                                minutes = (X_FF & bytes[recIdx++]) << 0;
+                                seconds = (X_FF & bytes[recIdx++]) << 0;
+                                speed = (X_FF & bytes[recIdx++]) << 0;
+                                tag = (X_FF & bytes[recIdx++]) << 0;
                                 gpsRec.utc = Conv
                                         .dateToUTCepoch1970(new bt747.util.Date(
                                                 day, month, year + 2000));

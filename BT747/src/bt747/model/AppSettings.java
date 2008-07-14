@@ -19,6 +19,7 @@ package bt747.model;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+import gps.BT747Constants;
 import gps.convert.Conv;
 import moio.util.HashSet;
 import moio.util.Iterator;
@@ -402,6 +403,9 @@ public class AppSettings {
         setWayPtRCR(0x00000008);
     }
 
+    /**
+     * Save all the user settings to disk. 
+     */
     protected final void saveSettings() {
         if (isWin32LikeDevice()
         // #if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")
@@ -806,12 +810,53 @@ public class AppSettings {
         setIntOpt(0, value, C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
     }
 
+    /**
+     * Gets the NMEA string types to write to the NMEA output file format.
+     * 
+     * @param formatNMEA
+     *            Bit format using following bit indexes:<br>-
+     *            {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     */
+
     public final int getNMEAset() {
         return getIntOpt(C_NMEASET_IDX, C_NMEASET_SIZE);
     }
 
-    protected final void setNMEAset(final int value) {
-        setIntOpt(0, value, C_NMEASET_IDX, C_NMEASET_SIZE);
+    /**
+     * Sets the NMEA string types to write to the NMEA output file format.
+     * 
+     * @param formatNMEA
+     *            Bit format using following bit indexes:<br>-
+     *            {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     */
+    protected final void setNMEAset(final int formatNMEA) {
+        setIntOpt(0, formatNMEA, C_NMEASET_IDX, C_NMEASET_SIZE);
     }
 
     public final boolean getGpxUTC0() {

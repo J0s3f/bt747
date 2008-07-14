@@ -35,7 +35,7 @@ public final class BT747Constants { // dev as in device
      * Entries are in order. The entry position corresponds to the bit position
      * in the log format 'byte'.
      */
-    public static final String[] logFmtItems = Txt.logFmtItems;
+    public static String[] logFmtItems = Txt.logFmtItems;
     /** Index of bit for log format setting */
     public static final int FMT_UTC_IDX = 0;
     /** Index of bit for log format setting */
@@ -88,7 +88,7 @@ public final class BT747Constants { // dev as in device
      * Entries are in order. The entry position corresponds to the bit position
      * in the log format 'byte'.
      */
-    public static final int[] logFmtByteSizes = { 4, // "UTC", // = 0x00001
+    public static int[] logFmtByteSizes = { 4, // "UTC", // = 0x00001
                                                         // // // 0
             2, // "VALID", // = 0x00002 // 1
             8, // "LATITUDE", // = 0x00004 // 2
@@ -123,7 +123,7 @@ public final class BT747Constants { // dev as in device
             0, // 1F // Log points with valid fix only
     };
 
-    public static final int[] logFmtByteSizesHolux = { 4, // "UTC", // = //
+    public static int[] logFmtByteSizesHolux = { 4, // "UTC", // = //
                                                             // 0x00001 // 0
             2, // "VALID", // = 0x00002 // 1
             4, // "LATITUDE", // = 0x00004 // 2
@@ -560,7 +560,7 @@ public final class BT747Constants { // dev as in device
      * Number of NMEA sentence types
      */
     public static final int C_NMEA_SEN_COUNT = 19;
-    public static final String[] NMEA_strings = { "GLL", // 0 // GPGLL
+    public static final String[] NMEA_STRINGS = { "GLL", // 0 // GPGLL
             // interval -
             // Geographic
             // Position -

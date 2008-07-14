@@ -36,46 +36,122 @@ public class GPSFilter {
     private int validMask = 0xFFFFFFFE; // Valid mask
     private int rcrMask = 0xFFFFFFFF;
 
+    /**
+     * Index to trackpoint filter (in array of GPSFilter).
+     */
     public static final int C_TRKPT_IDX = 0;
+    /**
+     * Index to waypoint filter (in array of GPSFilter).
+     */
     public static final int C_WAYPT_IDX = 1;
 
-    public int getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(int endDate) {
-        this.endDate = endDate;
-    }
-
-    public int getRcrMask() {
-        return rcrMask;
-    }
-
-    public void setRcrMask(int rcrMask) {
-        this.rcrMask = rcrMask;
-    }
-
+    /**
+     * Get the first date of the period to include.
+     * 
+     * @return The first date of the period to include (UTC time value).
+     */
     public int getStartDate() {
         return startDate;
     }
 
+    /**
+     * Set the first date of the period to include (UTC time value).
+     */
     public void setStartDate(int startDate) {
         this.startDate = startDate;
     }
 
+    /**
+     * Get the last date of the period to include.
+     * 
+     * @return The last date of the period to include (UTC time value).
+     */
+    public int getEndDate() {
+        return endDate;
+    }
+
+    /**
+     * Set the last date of the period to include (UTC time value).
+     */
+    public void setEndDate(int endDate) {
+        this.endDate = endDate;
+    }
+
+    /**
+     * Sets the 'RCR' filter mask for the given filter type and the currently
+     * active filters.
+     * 
+     * Use the following constants:<br>- {@link   VALID_NO_FIX_MASK} <br>-
+     * {@link VALID_SPS_MASK} <br>- {@link VALID_DGPS_MASK} <br>-
+     * {@link VALID_PPS_MASK} <br>- {@link VALID_RTK_MASK} <br>-
+     * {@link VALID_FRTK_MASK} <br>- {@link VALID_ESTIMATED_MASK} <br>-
+     * {@link VALID_MANUAL_MASK} <br>- {@link VALID_SIMULATOR_MASK} <br>-
+     * 
+     */
+    public int getRcrMask() {
+        return rcrMask;
+    }
+
+    /**
+     * Sets the 'RCR' filter mask for the given filter type and the currently
+     * active filters.
+     * 
+     * @param rcrMask
+     *            The filter mask to set for the rcr filter. Use the following
+     *            constants:<br>- {@link   VALID_NO_FIX_MASK} <br>-
+     *            {@link VALID_SPS_MASK} <br>- {@link VALID_DGPS_MASK} <br>-
+     *            {@link VALID_PPS_MASK} <br>- {@link VALID_RTK_MASK} <br>-
+     *            {@link VALID_FRTK_MASK} <br>- {@link VALID_ESTIMATED_MASK}
+     *            <br>- {@link VALID_MANUAL_MASK} <br>-
+     *            {@link VALID_SIMULATOR_MASK} <br>-
+     * 
+     */
+    public void setRcrMask(int rcrMask) {
+        this.rcrMask = rcrMask;
+    }
+
+    /**
+     * Gets the 'Valid' filter mask.
+     * 
+     * Use the following constants:<br>- {@link   VALID_NO_FIX_MASK} <br>-
+     * {@link VALID_SPS_MASK} <br>- {@link VALID_DGPS_MASK} <br>-
+     * {@link VALID_PPS_MASK} <br>- {@link VALID_RTK_MASK} <br>-
+     * {@link VALID_FRTK_MASK} <br>- {@link VALID_ESTIMATED_MASK} <br>-
+     * {@link VALID_MANUAL_MASK} <br>- {@link VALID_SIMULATOR_MASK}
+     * 
+     */
     public int getValidMask() {
         return validMask;
     }
 
+    /**
+     * Sets the 'Valid' filter mask.
+     * 
+     * @param validMask
+     *            The filter mask to set for the validity filter. Use the
+     *            following constants:<br>- {@link   VALID_NO_FIX_MASK} <br>-
+     *            {@link VALID_SPS_MASK} <br>- {@link VALID_DGPS_MASK} <br>-
+     *            {@link VALID_PPS_MASK} <br>- {@link VALID_RTK_MASK} <br>-
+     *            {@link VALID_FRTK_MASK} <br>- {@link VALID_ESTIMATED_MASK}
+     *            <br>- {@link VALID_MANUAL_MASK} <br>-
+     *            {@link VALID_SIMULATOR_MASK}
+     * 
+     */
     public void setValidMask(int validMask) {
         this.validMask = validMask;
     }
 
+    /**
+     * Filter the GPS record
+     * 
+     * @param r
+     *            The GPS record
+     * @return true if the record is selected by the filter
+     */
     public boolean doFilter(final GPSRecord r) {
         // Filter the record information
         boolean result;
-        result = ((r.utc < 1001)
-                || ((r.utc >= startDate) && (r.utc <= endDate)))
+        result = ((r.utc < 1001) || ((r.utc >= startDate) && (r.utc <= endDate)))
                 && ((r.valid & validMask) != 0) && ((r.rcr & rcrMask) != 0);
 
         return result;

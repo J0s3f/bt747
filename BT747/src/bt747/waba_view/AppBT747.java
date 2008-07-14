@@ -48,7 +48,7 @@ import bt747.ui.MessageBox;
  * 
  * @author Mario De Weerd
  */
-public class BT747 extends MainWindow implements ModelListener, GPSListener {
+public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
 
     /*
      * Using Model, Controller, View.
@@ -179,7 +179,7 @@ public class BT747 extends MainWindow implements ModelListener, GPSListener {
     /**
      * Initialiser of the application.
      */
-    public BT747() {
+    public AppBT747() {
         if (Settings.onDevice) {
             bt747.sys.Vm.debug(bt747.sys.Vm.ERASE_DEBUG);
         }
@@ -303,13 +303,13 @@ public class BT747 extends MainWindow implements ModelListener, GPSListener {
         case Controller.GPS_TYPE_DEFAULT:
             miDefaultDevice.isChecked = true;
             break;
-        case Controller.GPS_TYPE_GISTEQ1:
+        case Controller.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
             miGisteqType1.isChecked = true;
             break;
-        case Controller.GPS_TYPE_GISTEQ2:
+        case Controller.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
             miGisteqType2.isChecked = true;
             break;
-        case Controller.GPS_TYPE_GISTEQ3:
+        case Controller.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             miGisteqType3.isChecked = true;
             break;
         default:
@@ -407,15 +407,15 @@ public class BT747 extends MainWindow implements ModelListener, GPSListener {
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE1:
-                    c.setGPSType(Controller.GPS_TYPE_GISTEQ1);
+                    c.setGPSType(Controller.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE2:
-                    c.setGPSType(Controller.GPS_TYPE_GISTEQ2);
+                    c.setGPSType(Controller.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE3:
-                    c.setGPSType(Controller.GPS_TYPE_GISTEQ3);
+                    c.setGPSType(Controller.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
                     gpsType();
                     break;
                 default:

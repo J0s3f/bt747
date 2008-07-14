@@ -192,7 +192,7 @@ public class Txt_en {
     public static final String DEFAULT_SET = "Default settings";
 
     // Log filter
-    public static final String[] STR_VALID= {
+    public static String[] STR_VALID= {
             "No fix",
             "SPS",
             "DGPS",

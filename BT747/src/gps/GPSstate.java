@@ -271,7 +271,7 @@ public class GPSstate implements Thread {
         sendNMEA("PMTK" + BT747Constants.PMTK_Q_VERSION_STR);
         sendNMEA("PMTK" + BT747Constants.PMTK_Q_RELEASE_STR);
         reqFlashManuID(); // Should be last
-        reqLoggerVersion();
+        reqMtkLogVersion();
     }
 
     /**
@@ -431,13 +431,13 @@ public class GPSstate implements Thread {
                 + BT747Constants.PMTK_LOG_MEM_USED_STR);
     }
 
-    public final void reqLogMemPoints() {
+    public final void reqLogMemPtsLogged() {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_QUERY_STR + ","
                 + BT747Constants.PMTK_LOG_NBR_LOG_PTS_STR);
     }
 
-    public final void reqLoggerVersion() {
+    public final void reqMtkLogVersion() {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_QUERY_STR + ","
                 + BT747Constants.PMTK_LOG_VERSION_STR);
@@ -555,11 +555,11 @@ public class GPSstate implements Thread {
     }
 
     private final void getLogCtrlInfo() {
-        reqLoggerVersion();
+        reqMtkLogVersion();
         // Request mem size from device
         reqLogMemUsed();
         // Request number of log points
-        reqLogMemPoints();
+        reqLogMemPtsLogged();
         reqLogOverwrite();
     }
 

@@ -77,7 +77,7 @@ public class GPSNMEAOutput extends Container {
                                     : (getClientRect().width / 2)),
                             ((i == 0) || i == ((BT747Constants.C_NMEA_SEN_COUNT / 2) + 1)) ? TOP
                                     : AFTER - 1, PREFERRED, PREFERRED - 1);
-            add(new Label(BT747Constants.NMEA_strings[i]), AFTER, SAME);
+            add(new Label(BT747Constants.NMEA_STRINGS[i]), AFTER, SAME);
             // chkNMEAItems[i].setEnabled(true);
         }
         btSet = new Button(Txt.SET);
