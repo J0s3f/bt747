@@ -31,12 +31,27 @@ import bt747.ui.MessageBox;
  * @author Mario De Weerd
  * 
  */
+/**
+ * @author Mario
+ * 
+ */
 public class Controller {
 
+    private static final int _100 = 100;
+    /**
+     * The number of seconds in a minute.
+     */
+    private static final int SECONDS_PER_MINUTE = 60;
+    /**
+     * The number of seconds in a day.
+     */
     private static final int SECONDS_PER_DAY = 24 * 60 * 60;
+    /**
+     * The number of seconds in an hour.
+     */
     private static final int SECONDS_PER_HOUR = 3600;
     /**
-     * Reference to the model
+     * Reference to the model.
      */
     private Model m;
 
@@ -187,7 +202,8 @@ public class Controller {
             lc = new DPL700LogConvert();
             // / TODO: set SR Log type correctly.
             ((DPL700LogConvert) lc)
-                    .setLogType(m.getGPSType() == GPS_TYPE_GISTEQ2 ? 0 : 1);
+                    .setLogType(m.getGPSType() == GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR ? 0
+                            : 1);
         } else {
             switch (m.getBinDecoder()) {
             case DECODER_THOMAS:
@@ -276,7 +292,7 @@ public class Controller {
             gpsFile.setFilters(usedFilters);
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
                     m.getFileSeparationFreq());
-            gpsFile.setTrackSepTime(m.getTrkSep() * 60);
+            gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
             int error;
             error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
             reportError(error, lc.getErrorInfo());
@@ -306,7 +322,8 @@ public class Controller {
             lc = new DPL700LogConvert();
             // / TODO: set SR Log type correctly.
             ((DPL700LogConvert) lc)
-                    .setLogType(m.getGPSType() == GPS_TYPE_GISTEQ2 ? 0 : 1);
+                    .setLogType(m.getGPSType() == GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR ? 0
+                            : 1);
         } else {
             switch (m.getBinDecoder()) {
             case DECODER_THOMAS:
@@ -410,9 +427,9 @@ public class Controller {
         case GPS_TYPE_DEFAULT:
             startDefaultDownload();
             break;
-        case GPS_TYPE_GISTEQ1:
-        case GPS_TYPE_GISTEQ2:
-        case GPS_TYPE_GISTEQ3:
+        case GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
+        case GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+        case GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             startDPL700Download();
             break;
         }
@@ -456,18 +473,43 @@ public class Controller {
         m.gpsModel().stopErase();
     }
 
+    /**
+     * Initiate the download of a 'DPL700' log.
+     */
     public final void startDPL700Download() {
         m.gpsModel().getDPL700Log(m.getLogFilePath(), m.getCard());
     }
 
-    public final void setGPSType(final int i) {
-        m.setGPSType(i);
+    /**
+     * Set the gpsType used for log conversion and some other operations (needed
+     * in cases where the type can not be automatically detected).
+     * 
+     * @param gpsType
+     *            A value out of: - {@link #GPS_TYPE_DEFAULT}<br> -
+     *            {@link #GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}<br> -
+     *            {@link #GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}<br> -
+     *            {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
+     */
+    public final void setGPSType(final int gpsType) {
+        m.setGPSType(gpsType);
     }
 
+    /**
+     * Default gps type selection (MTK Logger).
+     */
     public static final int GPS_TYPE_DEFAULT = 0;
-    public static final int GPS_TYPE_GISTEQ1 = 1;
-    public static final int GPS_TYPE_GISTEQ2 = 2;
-    public static final int GPS_TYPE_GISTEQ3 = 3;
+    /**
+     * ITrackU-Nemerix type.
+     */
+    public static final int GPS_TYPE_GISTEQ_ITRACKU_NEMERIX = 1;
+    /**
+     * ITrackU-Phototrackr type.
+     */
+    public static final int GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR = 2;
+    /**
+     * ITrackU-SirfIII type.
+     */
+    public static final int GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII = 3;
 
     /***************************************************************************
      * Device state
@@ -490,47 +532,115 @@ public class Controller {
     };
 
     /**
-     * Set log overwrite mode on the device
+     * Set log overwrite mode on the device.
      * 
-     * @param b
+     * @param isOverWriteLog
      *            true - overwrite data in device when full false - stop logging
      *            when device is full
      */
-    public final void setLogOverwrite(final boolean b) {
-        m.gpsModel().setLogOverwrite(b);
+    public final void setLogOverwrite(final boolean isOverWriteLog) {
+        m.gpsModel().setLogOverwrite(isOverWriteLog);
         m.gpsModel().reqLogOverwrite();
     };
 
-    public final void reqLogVersion() {
-        m.gpsModel().reqLoggerVersion();
+    /**
+     * Request the Logger Version data from the device.<br>
+     * Once retrieved an event {@link gps.GpsEvent#DATA_UPDATE} will be
+     * generated so that {@link Model#getMtkLogVersion()} can be used to
+     * retrieve the actual value.
+     * 
+     */
+    public final void reqMtkLogVersion() {
+        m.gpsModel().reqMtkLogVersion();
     }
 
+    /**
+     * Request the amount of memory in use from the device.
+     */
     public final void reqLogMemUsed() {
         m.gpsModel().reqLogMemUsed();
     }
 
-    public final void reqLogMemPoints() {
-        m.gpsModel().reqLogMemPoints();
+    /**
+     * Request the number of points logged in memory.
+     */
+    public final void reqLogMemPtsLogged() {
+        m.gpsModel().reqLogMemPtsLogged();
     }
 
+    /**
+     * Request the log overwrite status from the device.<br>
+     * {@link Model#isLogFullOverwrite()} must be used on a {link
+     * {@link gps.GpsEvent#DATA_UPDATE} event to get the data.
+     */
     public final void reqLogOverwrite() {
         m.gpsModel().reqLogOverwrite();
     }
 
+    /**
+     * Request a set of device information from the GPS device that can be after
+     * {@link gps.GpsEvent#DATA_UPDATE} events.
+     */
     public final void reqDeviceInfo() {
         m.gpsModel().reqDeviceInfo();
     }
 
-    public void reqLogStatus() {
+    /**
+     * Request the status register from the device.<br>
+     * After the associated {@link gps.GpsEvent#DATA_UPDATE} event one can
+     * retrieve the data using:<br> - {@link Model#isLoggingActive()} <br> -
+     * {@link GPSstate#loggerIsFull} (not currently public)<br> -
+     * {@link GPSstate#loggerNeedsInit} (not currently public)<br> -
+     * {@link GPSstate#loggerIsDisabled} (not currently public)<br>
+     */
+    public final void reqLogStatus() {
         m.gpsModel().reqLogStatus();
     }
 
-    public void reqLogFormat() {
+    /**
+     * Request the current log format from the device.<br>
+     * After the associated {@link gps.GpsEvent#DATA_UPDATE} event one can
+     * retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
+     */
+    public final void reqLogFormat() {
         m.gpsModel().reqLogFormat();
     }
 
-    public void setLogFormat(int i) {
-        m.gpsModel().setLogFormat(i);
+    /**
+     * Sets a new log format on the device.<br>
+     * 
+     * @param newLogFormat
+     *            <br>
+     *            The bits in the newLogFormat can be defined using a bitwise OR
+     *            of expressions like<br>
+     *            (1<< IDX) <br>
+     *            where IDX is one of the following:<br> -
+     *            {@link BT747Constants#FMT_UTC_IDX} <br> -
+     *            {@link BT747Constants#FMT_UTC_IDX} <br> -
+     *            {@link BT747Constants#FMT_VALID_IDX} <br> -
+     *            {@link BT747Constants#FMT_LATITUDE_IDX} <br> -
+     *            {@link BT747Constants#FMT_LONGITUDE_IDX} <br> -
+     *            {@link BT747Constants#FMT_HEIGHT_IDX} <br> -
+     *            {@link BT747Constants#FMT_SPEED_IDX} <br> -
+     *            {@link BT747Constants#FMT_HEADING_IDX} <br> -
+     *            {@link BT747Constants#FMT_DSTA_IDX} <br> -
+     *            {@link BT747Constants#FMT_DAGE_IDX} <br> -
+     *            {@link BT747Constants#FMT_PDOP_IDX} <br> -
+     *            {@link BT747Constants#FMT_HDOP_IDX} <br> -
+     *            {@link BT747Constants#FMT_VDOP_IDX} <br> -
+     *            {@link BT747Constants#FMT_NSAT_IDX} <br> -
+     *            {@link BT747Constants#FMT_SID_IDX} <br> -
+     *            {@link BT747Constants#FMT_ELEVATION_IDX} <br> -
+     *            {@link BT747Constants#FMT_AZIMUTH_IDX} <br> -
+     *            {@link BT747Constants#FMT_SNR_IDX} <br> -
+     *            {@link BT747Constants#FMT_RCR_IDX} <br> -
+     *            {@link BT747Constants#FMT_MILLISECOND_IDX} <br> -
+     *            {@link BT747Constants#FMT_DISTANCE_IDX} <br> -
+     *            {@link BT747Constants#FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX}
+     *            <br>
+     */
+    public final void setLogFormat(final int newLogFormat) {
+        m.gpsModel().setLogFormat(newLogFormat);
     }
 
     private void eraseLog() {
@@ -538,19 +648,22 @@ public class Controller {
         m.gpsModel().eraseLog();
     }
 
-    /** Options for the first warning message */
+    /** Options for the first warning message. */
     private static final String[] C_ERASE_OR_CANCEL = { Txt.ERASE, Txt.CANCEL };
-    /** Options for the first warning message */
+    /** Options for the first warning message. */
     private static final String[] C_YES_OR_CANCEL = { Txt.YES, Txt.CANCEL };
-    /** Options for the second warning message - reverse order on purpose */
+    /** Options for the second warning message - reverse order on purpose. */
     private static final String[] C_CANCEL_OR_CONFIRM_ERASE = { Txt.CANCEL,
             Txt.CONFIRM_ERASE };
 
     /**
      * (User) request to change the log format. Warns about requirement to erase
      * the log too.
+     * 
+     * @param logFormat
+     *            The logFormat to set upon erase.
      */
-    public void changeLogFormatAndErase(final int logFormat) {
+    public final void changeLogFormatAndErase(final int logFormat) {
         /** Object to open multiple message boxes */
         MessageBox mb;
         mb = new MessageBox(Txt.TITLE_ATTENTION,
@@ -570,7 +683,10 @@ public class Controller {
 
     /**
      * (User) request to change the log format. The log is not erased and may be
-     * incompatible with other applications
+     * incompatible with other applications.
+     * 
+     * @param logFormat
+     *            The new log format to set.
      */
     public final void changeLogFormat(final int logFormat) {
         /** Object to open multiple message boxes */
@@ -622,7 +738,7 @@ public class Controller {
     }
 
     /***************************************************************************
-     * SECTION FOR CONNECTION RELATED METHODS
+     * SECTION FOR CONNECTION RELATED METHODS.
      **************************************************************************/
 
     public final void connectGPS() {
@@ -707,35 +823,57 @@ public class Controller {
         }
     }
 
-    public final void setDebugConn(final boolean dbg) {
-        m.gpsRxTx().setDebugConn(dbg, m.getBaseDirPath());
+    /**
+     * Set the debugging state of the connection.
+     * 
+     * @param isConnDebugActive
+     *            When true, the connection debug information is active.
+     */
+    public final void setDebugConn(final boolean isConnDebugActive) {
+        m.gpsRxTx().setDebugConn(isConnDebugActive, m.getBaseDirPath());
     }
 
     /***************************************************************************
      * END OF SECTION FOR CONNECTION RELATED METHODS
      **************************************************************************/
 
-    public final void setDebug(final boolean b) {
-        m.gpsModel().setDebug(b);
-    }
-
-    public final void addGPSListener(GPSListener l) {
-        m.gpsModel().addListener(l);
-    }
-
-    public final void removeGPSListener(GPSListener l) {
-        m.gpsModel().removeListener(l);
-    }
-
-    public static final int DECODER_ORG = 1;
-    public static final int DECODER_THOMAS = 2;
-
-    public final void setBinDecoder(final int decoder_idx) {
-        m.setBinDecoder(decoder_idx);
-    }
-
+    /**
+     * Save all the user settings to disk.
+     */
     public final void saveSettings() {
         m.saveSettings(); // Explicitly save settings
+    }
+
+    /**
+     * Set the general debugging state.
+     * 
+     * @param isDebugActive
+     *            If true, activate general debug.
+     * 
+     * @see #setDebugConn(boolean) for other debug functionality.
+     */
+    public final void setDebug(final boolean isDebugActive) {
+        m.gpsModel().setDebug(isDebugActive);
+    }
+
+    /**
+     * Selects the original decoder.
+     */
+    public static final int DECODER_ORG = 1;
+    /**
+     * Selects an experimental decoder - not fully debugged yet.
+     */
+    public static final int DECODER_THOMAS = 2;
+
+    /**
+     * Sets the MTK binary log decoder to use.
+     * 
+     * @param logDecoderType
+     *            One of the following values:<br> - {@link #DECODER_ORG}<br> -
+     *            {@link #DECODER_THOMAS}
+     */
+    public final void setBinDecoder(final int logDecoderType) {
+        m.setBinDecoder(logDecoderType);
     }
 
     public final void setTrkPtRCR(final int i) {
@@ -759,14 +897,14 @@ public class Controller {
     }
 
     // The way logfilter are handle should be reviewed.
-    private final void getSettings(GPSFilter[] logFilters) {
+    private void getSettings(final GPSFilter[] logFilters) {
         logFilters[GPSFilter.C_TRKPT_IDX].setRcrMask(m.getTrkPtRCR());
         logFilters[GPSFilter.C_TRKPT_IDX].setValidMask(m.getTrkPtValid());
         logFilters[GPSFilter.C_WAYPT_IDX].setRcrMask(m.getWayPtRCR());
         logFilters[GPSFilter.C_WAYPT_IDX].setValidMask(m.getWayPtValid());
     };
 
-    private final void getLogFilterSettings() {
+    private void getLogFilterSettings() {
         getSettings(m.getLogFilters());
         getSettings(m.getLogFiltersAdv());
     }
@@ -803,7 +941,7 @@ public class Controller {
         m.gpsModel().reqNMEAPeriods();
     }
 
-    public final void setNMEAPeriods(final int periods[]) {
+    public final void setNMEAPeriods(final int[] periods) {
         m.gpsModel().setNMEAPeriods(periods);
         reqNMEAPeriods();
     }
@@ -1074,45 +1212,80 @@ public class Controller {
             filter.setMaxSpeed(m.getFilterMaxSpeed());
             filter.setMinDist(m.getFilterMinDist());
             filter.setMaxDist(m.getFilterMaxDist());
-            filter.setMaxPDOP((int) (m.getFilterMaxPDOP() * 100));
-            filter.setMaxHDOP((int) (m.getFilterMaxHDOP() * 100));
-            filter.setMaxVDOP((int) (m.getFilterMaxVDOP() * 100));
+            filter.setMaxPDOP((int) (m.getFilterMaxPDOP() * _100));
+            filter.setMaxHDOP((int) (m.getFilterMaxHDOP() * _100));
+            filter.setMaxVDOP((int) (m.getFilterMaxVDOP() * _100));
             filter.setMinNSAT(m.getFilterMinNSAT());
         }
     }
 
-    public final void setNMEAset(final int value) {
-        m.setNMEAset(value);
+    /**
+     * Sets the NMEA string types to write to the NMEA output file format.
+     * 
+     * @param formatNMEA
+     *            Bit format using following bit indexes:<br>-
+     *            {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
+     *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     */
+    public final void setNMEAset(final int formatNMEA) {
+        m.setNMEAset(formatNMEA);
     }
 
-    public final void setValidMask(final int i, final int mask) {
+    /**
+     * Sets the 'Valid' filter mask for the given filter type and the currently
+     * active filters.
+     * 
+     * @param filterType
+     *            A value out of:<br> - {@link GPSFilter#C_TRKPT_IDX} ;<br> -
+     *            {@link GPSFilter#C_WAYPT_IDX} .<br>
+     * @param mask
+     *            The filter mask to set for the validity filter. Use the
+     *            following constants:<br>- {@link   VALID_NO_FIX_MASK} <br>-
+     *            {@link VALID_SPS_MASK} <br>- {@link VALID_DGPS_MASK} <br>-
+     *            {@link VALID_PPS_MASK} <br>- {@link VALID_RTK_MASK} <br>-
+     *            {@link VALID_FRTK_MASK} <br>- {@link VALID_ESTIMATED_MASK}
+     *            <br>- {@link VALID_MANUAL_MASK} <br>-
+     *            {@link VALID_SIMULATOR_MASK} <br>-
+     * 
+     */
+    public final void setValidMask(final int filterType, final int mask) {
         // TODO: not sure this is needed anymore
-        m.getLogFilters()[i].setValidMask(mask);
+        m.getLogFilters()[filterType].setValidMask(mask);
     }
 
-    public final void setRcrMask(final int i, final int rcrmask) {
+    /**
+     * Sets the 'RCR' filter mask for the given filter type and the currently
+     * active filters.
+     * 
+     * @param filterType
+     *            A value out of:<br> - {@link GPSFilter#C_TRKPT_IDX} ;<br> -
+     *            {@link GPSFilter#C_WAYPT_IDX} .<br>
+     * @param rcrMask
+     *            The filter mask to set for the rcr filter. Use the following
+     *            constants:<br>- {@link   VALID_NO_FIX_MASK} <br>-
+     *            {@link VALID_SPS_MASK} <br>- {@link VALID_DGPS_MASK} <br>-
+     *            {@link VALID_PPS_MASK} <br>- {@link VALID_RTK_MASK} <br>-
+     *            {@link VALID_FRTK_MASK} <br>- {@link VALID_ESTIMATED_MASK}
+     *            <br>- {@link VALID_MANUAL_MASK} <br>-
+     *            {@link VALID_SIMULATOR_MASK} <br>-
+     * 
+     */
+    public final void setRcrMask(final int filterType, final int rcrMask) {
         // TODO: not sure this is needed anymore
-        m.getLogFilters()[i].setRcrMask(rcrmask);
+        m.getLogFilters()[filterType].setRcrMask(rcrMask);
     }
-
-    // View handling.
-    private HashSet views = new HashSet();
-
-    /** add a listener to event thrown by this class. */
-    public final void addView(final BT747View v) {
-        views.add(v);
-        v.setController(this);
-        v.setModel(this.m);
-    }
-
-    // protected void postEvent(final int type) {
-    // Iterator it = views.iterator();
-    // while (it.hasNext()) {
-    // BT747View l=(BT747View)it.next();
-    // Event e=new Event(l, type, null);
-    // l.newEvent(e);
-    // }
-    // }
 
     public final void setTimeOffsetHours(final int timeOffsetHours) {
         m.setTimeOffsetHours(timeOffsetHours);
@@ -1125,5 +1298,51 @@ public class Controller {
     public final void setNoGeoid(final boolean value) {
         m.setNoGeoid(value);
     }
+
+    /**
+     * Add a listener of GPS events.
+     * 
+     * @param listener
+     *            The listener to add.
+     */
+    public final void addGPSListener(final GPSListener listener) {
+        m.gpsModel().addListener(listener);
+    }
+
+    /**
+     * Remove a listener of GPS events.
+     * 
+     * @param listener
+     *            The listener to remove.
+     */
+    public final void removeGPSListener(final GPSListener listener) {
+        m.gpsModel().removeListener(listener);
+    }
+
+    /**
+     * The list of views attached to this controller.
+     */
+    private HashSet views = new HashSet();
+
+    /**
+     * Attach a view to the controller.
+     * 
+     * @param view
+     *            The view that must be attached.
+     */
+    public final void addView(final BT747View view) {
+        views.add(view);
+        view.setController(this);
+        view.setModel(this.m);
+    }
+
+    // protected void postEvent(final int type) {
+    // Iterator it = views.iterator();
+    // while (it.hasNext()) {
+    // BT747View l=(BT747View)it.next();
+    // Event e=new Event(l, type, null);
+    // l.newEvent(e);
+    // }
+    // }
 
 }

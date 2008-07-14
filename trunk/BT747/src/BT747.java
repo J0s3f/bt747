@@ -22,6 +22,6 @@
  * 
  * @author Mario De Weerd
  */
-public class BT747 extends bt747.waba_view.BT747 {
+public class BT747 extends bt747.waba_view.AppBT747 {
 
 }

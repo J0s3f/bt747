@@ -24,7 +24,7 @@ package bt747.j2se_view;
  * 
  * @author Mario De Weerd
  */
-public class BT747 extends bt747.waba_view.BT747 {
+public class BT747 extends bt747.waba_view.AppBT747 {
     
     BT747_Main j2se_view;
     
