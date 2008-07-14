@@ -107,10 +107,10 @@ public class AppSettings {
     private static final int C_ONEFILEPERDAY_IDX = C_TRKPT_VALID_IDX
             + C_TRKPT_VALID_SIZE;
     private static final int C_ONEFILEPERDAY_SIZE = 1;
-    private static final int C_NOGEOID_IDX = C_ONEFILEPERDAY_IDX
+    private static final int C_WGS84_TO_MSL_IDX = C_ONEFILEPERDAY_IDX
             + C_ONEFILEPERDAY_SIZE;
-    private static final int C_NOGEOID_SIZE = 4;
-    private static final int C_LOGAHEAD_IDX = C_NOGEOID_IDX + C_NOGEOID_SIZE;
+    private static final int C_WGS84_TO_MSL_SIZE = 4;
+    private static final int C_LOGAHEAD_IDX = C_WGS84_TO_MSL_IDX + C_WGS84_TO_MSL_SIZE;
     private static final int C_LOGAHEAD_SIZE = 1;
     private static final int C_NMEASET_IDX = C_LOGAHEAD_IDX + C_LOGAHEAD_SIZE;
     private static final int C_NMEASET_SIZE = 8;
@@ -307,7 +307,7 @@ public class AppSettings {
                 setBaseDirPath("/BT747");
             }
 
-            setLogFile("BT747log.bin");
+            setLogFileRelPath("BT747log.bin");
             setReportFileBase("GPSDATA");
             setStartupOpenPort(false);
             setChunkSize(bt747.sys.Settings.onDevice ? 220 : 0x10000);
@@ -318,10 +318,10 @@ public class AppSettings {
             /* fall through */
         case 2:
             /* fall through */
-            setOneFilePerDay(0);
+            setOutputFileSplitType(0);
             /* fall through */
         case 3:
-            setNoGeoid(false);
+            setConvertWGS84ToMSL(false);
             /* fall through */
         case 4:
             setLogRequestAhead(C_DEFAULT_LOG_REQUEST_AHEAD);
@@ -633,7 +633,7 @@ public class AppSettings {
     }
 
     /**
-     * @return The default chunk size
+     * @return The time off set (UTC vs. local time)
      */
     public final int getTimeOffsetHours() {
         int timeOffsetHours = getIntOpt(C_TIMEOFFSETHOURS_IDX,
@@ -677,6 +677,7 @@ public class AppSettings {
     }
 
     public final String getLogFile() {
+        // Done this way to avoid 'refresh' of text with stored value.
         return logFile;
     }
 
@@ -684,7 +685,7 @@ public class AppSettings {
      * @param logFile
      *            The logFile to set.
      */
-    public final void setLogFile(final String logFile) {
+    public final void setLogFileRelPath(final String logFile) {
         this.logFile = logFile;
         setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, this.logFile,
                 C_LOGFILE_IDX, C_LOGFILE_SIZE);
@@ -774,20 +775,20 @@ public class AppSettings {
      * @param value
      *            The default value for opening the port.
      */
-    public final void setOneFilePerDay(final int value) {
+    public final void setOutputFileSplitType(final int value) {
         setIntOpt(0, value, C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
     }
 
-    public final boolean getNoGeoid() {
-        return getBooleanOpt(C_NOGEOID_IDX, C_NOGEOID_SIZE);
+    public final boolean isConvertWGS84ToMSL() {
+        return getBooleanOpt(C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
     }
 
     /**
      * @param value
-     *            The default value for opening the port.
+     *            true - Setting is to convert the WGS84 height to MSL height.
      */
-    public final void setNoGeoid(final boolean value) {
-        setBooleanOpt(0, value, C_NOGEOID_IDX, C_NOGEOID_SIZE);
+    public final void setConvertWGS84ToMSL(final boolean value) {
+        setBooleanOpt(0, value, C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
     }
 
     public final boolean getAdvFilterActive() {

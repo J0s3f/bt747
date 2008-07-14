@@ -19,7 +19,7 @@ public interface GPSLogConvert {
 
     void setTimeOffset(final long offset);
 
-    void setNoGeoid(final boolean b);
+    void setConvertWGS84ToMSL(final boolean b);
 
     int toGPSFile(final String fileName, final GPSFile gpsFile, final int card);
 

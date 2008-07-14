@@ -46,7 +46,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
             | (1 << BT747Constants.FMT_LONGITUDE_IDX)
             | (1 << BT747Constants.FMT_HEIGHT_IDX);
 
-    private boolean noGeoid = false; // If true,remove geoid difference from
+    private boolean isConvertWGL84ToMSL = false; // If true,remove geoid difference from
     // height
 
     static final int ITRACKU_NUMERIX = 0;
@@ -219,7 +219,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
                                 altitude = (X_FF & bytes[recIdx++]) << 0
                                         | (X_FF & bytes[recIdx++]) << 8;
                                 gpsRec.height = altitude;
-                                if (noGeoid) {
+                                if (isConvertWGL84ToMSL) {
                                     gpsRec.height -= Conv.wgs84Separation(
                                             gpsRec.latitude, gpsRec.longitude);
                                 }
@@ -294,8 +294,8 @@ public final class DPL700LogConvert implements GPSLogConvert {
         timeOffsetSeconds = offset;
     }
 
-    public void setNoGeoid(final boolean b) {
-        noGeoid = b;
+    public void setConvertWGS84ToMSL(final boolean b) {
+        isConvertWGL84ToMSL = b;
     }
 
     public int toGPSFile(

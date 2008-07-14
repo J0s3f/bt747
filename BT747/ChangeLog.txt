@@ -1,3 +1,7 @@
+Version 1.52.2
+* Added indication of number of available records.
+* Fixed bug regarding enable of test SBAS following code reading.
+
 Version 1.52.1
 * Refactoring & commenting of code.
 * Bug correction regarding holux log record size estimation (and number of max records)

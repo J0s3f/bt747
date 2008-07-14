@@ -145,7 +145,7 @@ public class GPSrxtx {
         return gpsPort.getSpeed();
     }
 
-    public void setSpeed(int speed) {
+    public void setBaudRate(int speed) {
         gpsPort.setSpeed(speed);
     }
 

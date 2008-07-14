@@ -87,7 +87,7 @@ public final class NewLogConvert implements GPSLogConvert {
     public final void setTimeOffset(final long offset) {
     }
 
-    public final void setNoGeoid(final boolean b) {
+    public final void setConvertWGS84ToMSL(final boolean b) {
     }
 
     public final int toGPSFile(final String fileName, final GPSFile gpsFile,
