@@ -1,6 +1,8 @@
 Version 1.52.2
 * Added indication of number of available records.
 * Fixed bug regarding enable of test SBAS following code reading.
+* Fixed two issue with google map generation: one due to changes for style (\r\n in output),
+  the other due to old changes (no separate labels for tracks). 
 
 Version 1.52.1
 * Refactoring & commenting of code.

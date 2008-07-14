@@ -43,7 +43,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     
     private int trackIndex = 0;  // Index for tracks
 
-    private String trackOnclickFuncCalls = ""; // Javascript function calls if click.
+    private String trackOnClickFuncCalls = ""; // Javascript function calls if click.
     
     /**
      * 
@@ -189,7 +189,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 + "  if (windowHeight-footerHeight>400) {\r\n"
                 + "   document.getElementById(\'map\').style.height=\r\n"
                 + "    (windowHeight-footerHeight)+\'px\';\r\n"
-                + "  } else {\\r\\n"
+                + "  } else {\r\n"
                 + "   document.getElementById(\'map\').style.height=400;\r\n"
 //              + "     footerElement.style.position=\'static\';\r\n"
                 + "  }\r\n"  // else
@@ -263,7 +263,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             rec.setLength(0);
             
             // Track assignment
-            trackOnclickFuncCalls +=
+            trackOnClickFuncCalls +=
                 "trackClick(track" + trackIndex
                 + ",this.checked);";
             rec.append("var track");
@@ -327,23 +327,23 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     
     private void splitOrEndTrack() {
         StringBuffer lrec = new StringBuffer();
-        if (!isWayType && (trackOnclickFuncCalls.length() != 0)) {
+        if (!isWayType && (trackOnClickFuncCalls.length() != 0)) {
             lrec.setLength(0);
-            //Vm.debug("Do:"+m_TrackDescription);
+            //Vm.debug("Do:"trackDescription);
 
             lrec.append(
                     "clickStr+= \"" + trackDescription
                     + "<input type=\\\"checkbox\\\""
                     + "           onClick=\\\""
-                    + trackOnclickFuncCalls
+                    + trackOnClickFuncCalls
                     + "\\\" checked/>\";\r\n");
             writeTxt(lrec.toString());
-            trackOnclickFuncCalls = "";
+            trackOnClickFuncCalls = "";
             trackDescription = "";
         }
     }
 
-    private int m_PreviousTime = 0;
+    private int previousTime = 0;
     private String trackDescription = "";
     
     private String getTimeStr(final GPSRecord s) {
@@ -396,19 +396,24 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 // This log item is to be transcribed in the output file.
                 
                 //StringBuffer rec=new StringBuffer(1024);
+                boolean isTimeSPlit;
+                isTimeSPlit=(activeFields.utc!=0)
+                           &&((s.utc - previousTime) > trackSepTime);
                 rec.setLength(0);
-                if (isNewTrack) {
+                if (isNewTrack||isTimeSPlit) {
                     isNewTrack = false;
                     if ((activeFields.latitude != 0)
                         && (activeFields.longitude != 0)
                        ) {
-                        if ((s.utc - m_PreviousTime) < trackSepTime) {
+                        if (!isTimeSPlit) {
                             track.addTrackpoint(
                                     new Trackpoint(s.latitude, s.longitude));
                             endTrack(badTrackColor);
                         } else {
                             // points quite separated - 
                             //   No line, but separate track
+                            //bt747.sys.Vm.debug(""+(s.utc-previousTime)+":"+isTimeSPlit);
+                            endTrack(goodTrackColor);
                             splitOrEndTrack();
                         }
                     }
@@ -416,12 +421,12 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     //Vm.debug("Pos:"+getTimeStr(s));
                     if (trackDescription.length() == 0) {
                         trackDescription = getTimeStr(s);
-                        //Vm.debug(m_TrackDescription);
+                        //bt747.sys.Vm.debug(trackDescription);
                     }
                 }
                 
                 if ((activeFields.utc != 0)) {
-                    m_PreviousTime = s.utc;
+                    previousTime = s.utc;
                 }
                 //                "  <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 //                "    <ele>12.863281</ele>"+
