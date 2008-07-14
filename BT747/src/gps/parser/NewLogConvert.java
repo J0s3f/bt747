@@ -45,8 +45,9 @@ public final class NewLogConvert implements GPSLogConvert {
         return errorInfo;
     }
 
-    /**
-     * @return
+    /** Parse the input file and convert.
+     * @return returns non zero in case of error. error text is available
+     *         through {@link #getErrorInfo()}
      * @param gpsFile -
      *            object doing actual write to files
      * 

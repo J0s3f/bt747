@@ -89,7 +89,7 @@ public final class BT747Constants { // dev as in device
      * in the log format 'byte'.
      */
     public static int[] logFmtByteSizes = { 4, // "UTC", // = 0x00001
-                                                        // // // 0
+            // // // 0
             2, // "VALID", // = 0x00002 // 1
             8, // "LATITUDE", // = 0x00004 // 2
             8, // "LONGITUDE",// = 0x00008 // 3
@@ -124,7 +124,7 @@ public final class BT747Constants { // dev as in device
     };
 
     public static int[] logFmtByteSizesHolux = { 4, // "UTC", // = //
-                                                            // 0x00001 // 0
+            // 0x00001 // 0
             2, // "VALID", // = 0x00002 // 1
             4, // "LATITUDE", // = 0x00004 // 2
             4, // "LONGITUDE",// = 0x00008 // 3
@@ -521,7 +521,7 @@ public final class BT747Constants { // dev as in device
      *            M241 device.
      * @param sats
      *            Estimated number of satellites per record.
-     * @return
+     * @return The estimated record size.
      */
     public static int logRecordSize(final int logFormat, final boolean holux,
             final int sats) {

@@ -54,7 +54,6 @@ public abstract class GPSPort {
     /** Set and open a normal port (giving the port number)
      * 
      * @param port Port number of the port to open
-     * @return result of opening the port, 0 if success.
      */
     public void setPort(int port) {
         spPortNbr= port;

@@ -404,7 +404,7 @@ public class AppSettings {
     }
 
     /**
-     * Save all the user settings to disk. 
+     * Save all the user settings to disk.
      */
     protected final void saveSettings() {
         if (isWin32LikeDevice()
@@ -569,6 +569,8 @@ public class AppSettings {
     }
 
     /**
+     * Get the chunk size (or the default).
+     * 
      * @return The default chunk size
      */
     public final int getChunkSize() {
@@ -581,7 +583,9 @@ public class AppSettings {
     }
 
     /**
-     * @param ChunkSize
+     * Set the chunk size.
+     * 
+     * @param chunkSize
      *            The ChunkSize to set as a default.
      */
     public final void setChunkSize(final int chunkSize) {
@@ -813,22 +817,21 @@ public class AppSettings {
     /**
      * Gets the NMEA string types to write to the NMEA output file format.
      * 
-     * @param formatNMEA
-     *            Bit format using following bit indexes:<br>-
-     *            {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     * Bit format using following bit indexes:<br>-
+     * {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
+     * {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
      */
 
     public final int getNMEAset() {
@@ -1238,14 +1241,17 @@ public class AppSettings {
     }
 
     /**
+     * Google map file name (basename).
+     */
+    public static final String C_GMAP_KEY_FILENAME = "gmapkey.txt";
+
+    /**
      * Look for the google map site key in a file called "gmapkey.txt" Will look
      * in the output dir first, then in the source dir, then in the settings
      * dir.
      * 
-     * @return
+     * @return The google map key
      */
-    public static final String C_GMAP_KEY_FILENAME = "gmapkey.txt";
-
     public final String getGoogleMapKey() {
         String path = "";
         String gkey = "";
