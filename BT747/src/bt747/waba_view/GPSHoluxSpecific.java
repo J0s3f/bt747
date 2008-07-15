@@ -29,7 +29,7 @@ import waba.ui.Label;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 
 /**
@@ -40,7 +40,7 @@ import bt747.model.Model;
 public class GPSHoluxSpecific extends Container {
 
     private Model m;
-    private Controller c;
+    private AppController c;
 
     private Label lbHoluxName;
     private Edit edHoluxName;
@@ -52,7 +52,7 @@ public class GPSHoluxSpecific extends Container {
     /**
      * 
      */
-    public GPSHoluxSpecific(final Model m, final Controller c) {
+    public GPSHoluxSpecific(final Model m, final AppController c) {
         this.m = m;
         this.c = c;
     }

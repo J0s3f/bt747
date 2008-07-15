@@ -29,7 +29,7 @@ import waba.ui.Window;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 
 /**
@@ -39,13 +39,13 @@ import bt747.model.Model;
 public class GPSFiltersTabPanel extends Container {
 
     private Model m;
-    private Controller c;
+    private AppController c;
 
     private TabPanel m_TabPanel;
 
     private final String[] c_tpCaptions = { Txt.STANDARD, Txt.ADVANCED };
 
-    public GPSFiltersTabPanel(final Model m, final Controller c) {
+    public GPSFiltersTabPanel(final Model m, final AppController c) {
         this.m = m;
         this.c = c;
     }

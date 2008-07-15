@@ -29,7 +29,7 @@ import waba.ui.Event;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.sys.Convert;
 
@@ -38,7 +38,7 @@ import bt747.sys.Convert;
  */
 public class GPSLogReason extends Container {
     private static final boolean ENABLE_PWR_SAVE_CONTROL = false;
-    private Controller c;
+    private AppController c;
     private Model m;
 
     private MyCheck chkTimeOnOff;
@@ -62,7 +62,7 @@ public class GPSLogReason extends Container {
             "TOKYO-A" };
     private ComboBox cbDatumMode;
 
-    public GPSLogReason(final Controller c, final Model m) {
+    public GPSLogReason(final AppController c, final Model m) {
         this.c = c;
         this.m = m;
 

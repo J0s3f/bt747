@@ -29,7 +29,7 @@ import waba.ui.Label;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.sys.Convert;
 import bt747.ui.MessageBox;
@@ -38,7 +38,7 @@ import bt747.ui.MessageBox;
  * @author Mario De Weerd
  */
 public class GPSFlashOption extends Container {
-    private Controller c;
+    private AppController c;
     private Model m;
 
     private Edit userOptionTimesLeft;
@@ -55,7 +55,7 @@ public class GPSFlashOption extends Container {
 
     private Button btSet;
 
-    public GPSFlashOption(final Model m, final Controller c) {
+    public GPSFlashOption(final Model m, final AppController c) {
         this.m = m;
         this.c = c;
     }

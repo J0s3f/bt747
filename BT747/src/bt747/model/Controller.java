@@ -3,7 +3,6 @@ package bt747.model;
 import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GPSstate;
-import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
@@ -21,11 +20,6 @@ import gps.log.out.GPSGmapsHTMLEncodedFile;
 import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
-import moio.util.HashSet;
-import moio.util.Iterator;
-
-import bt747.Txt;
-import bt747.ui.MessageBox;
 
 /**
  * @author Mario De Weerd
@@ -36,7 +30,6 @@ import bt747.ui.MessageBox;
  * 
  */
 public class Controller {
-
     /**
      * Fixed number indicating that the port number does not correspond to an
      * actual port.
@@ -68,6 +61,16 @@ public class Controller {
      *            The model to associate with this controller.
      */
     public Controller(final Model model) {
+        setModel(m);
+    }
+
+    /**
+     * Currently needed because class is extended.
+     */
+    public Controller() {
+    }
+
+    public final void setModel(final Model model) {
         this.m = model;
         init();
     }
@@ -207,10 +210,12 @@ public class Controller {
      * @see Model#NMEA_LOGTYPE
      * @see Model#GMAP_LOGTYPE
      */
-    public final void convertLog(final int logType) {
+    public final int doConvertLog(final int logType) {
+        int result;
         String ext = "";
         GPSFile gpsFile = null;
         GPSLogConvert lc;
+        result = 0;
 
         /*
          * Check the input file
@@ -256,7 +261,6 @@ public class Controller {
         lc.setConvertWGS84ToMSL(m.isConvertWGS84ToMSL());
 
         switch (logType) {
-        default:
         case Model.CSV_LOGTYPE:
             gpsFile = new GPSCSVFile();
             ext = ".csv";
@@ -294,6 +298,10 @@ public class Controller {
                     .getGoogleMapKey());
             ext = ".html";
             break;
+        default:
+            lastError = BT747Constants.ERROR_UNKNOWN_OUTPUT_FORMAT;
+            lastErrorInfo = ext;
+            result = lastError;
         }
 
         if (gpsFile != null) {
@@ -304,31 +312,36 @@ public class Controller {
             gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
             gpsFile.setBadTrackColor(m.getColorInvalidTrack());
             for (int i = 0; i < usedFilters.length; i++) {
-                usedFilters[i].setStartDate(Conv.dateToUTCepoch1970(m
-                        .getStartDate()));
-                usedFilters[i].setEndDate(Conv.dateToUTCepoch1970(m
-                        .getEndDate())
+                usedFilters[i].setStartTime(m.getFilterStartTime());
+                usedFilters[i].setEndTime(m.getFilterEndTime()
                         + (SECONDS_PER_DAY - 1));
             }
             gpsFile.setFilters(usedFilters);
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
                     m.getFileSeparationFreq());
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
-            int error;
-            error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
-            reportError(error, lc.getErrorInfo());
+            lastError = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+            lastErrorInfo = lc.getErrorInfo();
+            result = lastError;
         } else {
             // TODO report error
         }
         m.logConversionEnded(logType);
+        return result;
     }
+
+    private int lastError;
+    private String lastErrorInfo = "";
 
     /**
      * Convert the log into an array of trackpoints.
      * 
      * @return Array of selected trackpoints.
      */
-    public final GPSRecord[] convertLogToTrackPoints() {
+
+    public final GPSRecord[] doConvertLogToTrackPoints() {
+        int error = 0;
+        GPSRecord[] result;
         GPSArray gpsFile = null;
         GPSLogConvert lc;
 
@@ -385,49 +398,23 @@ public class Controller {
         // gpsFile.setBadTrackColor(m.getColorInvalidTrack());
 
         for (int i = 0; i < usedFilters.length; i++) {
-            usedFilters[i].setStartDate(Conv.dateToUTCepoch1970(m
-                    .getStartDate()));
-            usedFilters[i].setEndDate(Conv.dateToUTCepoch1970(m.getEndDate())
-                    + (SECONDS_PER_DAY - 1));
+            usedFilters[i].setStartTime(m
+                    .getFilterStartTime());
+            usedFilters[i].setEndTime(m.getFilterEndTime());
         }
         gpsFile.setFilters(usedFilters);
         // gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
         // m.getFileSeparationFreq());
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
-        int error;
         error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
-        reportError(error, lc.getErrorInfo());
-        // m.logConversionEnded(log_type);
-        return gpsFile.getGpsTrackPoints();
-    }
-
-    /**
-     * Report an error.
-     * 
-     * @param error
-     *            The error number.
-     * @param errorInfo
-     *            A text string related to the error (filename, ...).
-     */
-    private void reportError(final int error, final String errorInfo) {
-        String errorMsg;
-        switch (error) {
-        case BT747Constants.ERROR_COULD_NOT_OPEN:
-            errorMsg = Txt.COULD_NOT_OPEN + errorInfo;
-            bt747.sys.Vm.debug(errorMsg);
-            new MessageBox(Txt.ERROR, errorMsg).popupBlockingModal();
-            break;
-        case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
-            (new MessageBox(Txt.WARNING, Txt.NO_FILES_WERE_CREATED))
-                    .popupBlockingModal();
-            break;
-        case BT747Constants.ERROR_READING_FILE:
-            new MessageBox(Txt.ERROR, Txt.PROBLEM_READING + errorInfo)
-                    .popupBlockingModal();
-            break;
-        default:
-            break;
+        if (error != 0) {
+            lastError = error;
+            lastErrorInfo = lc.getErrorInfo();
+            result = null;
+        } else {
+            result = gpsFile.getGpsTrackPoints();
         }
+        return result;
     }
 
     /**
@@ -675,102 +662,17 @@ public class Controller {
     /**
      * Do the actual erase.
      */
-    private void eraseLog() {
+    public final void eraseLog() {
         // TODO: Handle erase popup.
         m.gpsModel().eraseLog();
-    }
-
-    /** Options for the first warning message. */
-    private static final String[] C_ERASE_OR_CANCEL = { Txt.ERASE, Txt.CANCEL };
-    /** Options for the first warning message. */
-    private static final String[] C_YES_OR_CANCEL = { Txt.YES, Txt.CANCEL };
-    /** Options for the second warning message - reverse order on purpose. */
-    private static final String[] C_CANCEL_OR_CONFIRM_ERASE = { Txt.CANCEL,
-            Txt.CONFIRM_ERASE };
-
-    /**
-     * (User) request to change the log format. Warns about requirement to erase
-     * the log too.
-     * 
-     * @param logFormat
-     *            The logFormat to set upon erase.
-     */
-    public final void changeLogFormatAndErase(final int logFormat) {
-        /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(Txt.TITLE_ATTENTION,
-                Txt.C_msgWarningFormatAndErase, C_ERASE_OR_CANCEL);
-        mb.popupBlockingModal();
-        if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(Txt.TITLE_ATTENTION,
-                    Txt.C_msgWarningFormatAndErase2, C_CANCEL_OR_CONFIRM_ERASE);
-            mb.popupBlockingModal();
-            if (mb.getPressedButtonIndex() == 1) {
-                // Set format and reset log
-                setLogFormat(logFormat);
-                eraseLog();
-            }
-        }
-    }
-
-    /**
-     * (User) request to change the log format. The log is not erased and may be
-     * incompatible with other applications.
-     * 
-     * @param logFormat
-     *            The new log format to set.
-     */
-    public final void changeLogFormat(final int logFormat) {
-        /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(true, Txt.TITLE_ATTENTION,
-                Txt.C_msgWarningFormatIncompatibilityRisk, C_YES_OR_CANCEL);
-        mb.popupBlockingModal();
-        if (mb.getPressedButtonIndex() == 0) {
-            setLogFormat(logFormat);
-        }
-    }
-
-    /**
-     * (User) request to change the log format. Warns about requirement to erase
-     * the log too.
-     */
-    public final void eraseLogFormat() {
-        /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
-                C_ERASE_OR_CANCEL);
-        mb.popupBlockingModal();
-        if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
-                    C_CANCEL_OR_CONFIRM_ERASE);
-            mb.popupBlockingModal();
-            if (mb.getPressedButtonIndex() == 1) {
-                // Erase log
-                eraseLog();
-            }
-        }
     }
 
     /**
      * A 'recovery Erase' attempts to recover memory that was previously
      * identified as 'bad'.
      */
-    public final void recoveryErase() {
-        /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
-                C_ERASE_OR_CANCEL);
-        mb.popupBlockingModal();
-        if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
-                    C_CANCEL_OR_CONFIRM_ERASE);
-            mb.popupBlockingModal();
-            if (mb.getPressedButtonIndex() == 1) {
-                // Erase log
-                m.gpsModel().recoveryEraseLog();
-            }
-        }
+    public final void recoveryEraseLog() {
+        m.gpsModel().recoveryEraseLog();
     }
 
     /***************************************************************************
@@ -1385,12 +1287,12 @@ public class Controller {
         m.setTraversableFocus(b);
     }
 
-    public final void setEndDate(final bt747.util.Date d) {
-        m.setEndDate(d);
+    public final void setEndDate(final int d) {
+        m.setFilterEndTime(d);
     }
 
-    public final void setStartDate(final bt747.util.Date d) {
-        m.setStartDate(d);
+    public final void setStartDate(final int d) {
+        m.setFilterStartTime(d);
     }
 
     public final void setRecordNbrInLogs(final boolean b) {
@@ -1661,29 +1563,17 @@ public class Controller {
     }
 
     /**
-     * The list of views attached to this controller.
+     * @return the lastError
      */
-    private HashSet views = new HashSet();
-
-    /**
-     * Attach a view to the controller.
-     * 
-     * @param view
-     *            The view that must be attached.
-     */
-    public final void addView(final BT747View view) {
-        views.add(view);
-        view.setController(this);
-        view.setModel(this.m);
+    public final int getLastError() {
+        return lastError;
     }
 
-    // protected void postEvent(final int type) {
-    // Iterator it = views.iterator();
-    // while (it.hasNext()) {
-    // BT747View l=(BT747View)it.next();
-    // Event e=new Event(l, type, null);
-    // l.newEvent(e);
-    // }
-    // }
+    /**
+     * @return the lastErrorInfo
+     */
+    public final String getLastErrorInfo() {
+        return lastErrorInfo;
+    }
 
 }

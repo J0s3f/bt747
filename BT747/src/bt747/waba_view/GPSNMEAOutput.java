@@ -31,7 +31,7 @@ import gps.BT747Constants;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 
 /**
@@ -52,12 +52,12 @@ public class GPSNMEAOutput extends Container {
     private Button btSetDefaults;
 
     private Model m;
-    private Controller c;
+    private AppController c;
 
     /**
      * 
      */
-    public GPSNMEAOutput(final Model m, final Controller c) {
+    public GPSNMEAOutput(final Model m, final AppController c) {
         this.m = m;
         this.c = c;
     }

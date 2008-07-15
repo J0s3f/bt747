@@ -31,7 +31,7 @@ import gps.BT747Constants;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 
 /**
@@ -57,9 +57,9 @@ public class GPSLogEasy extends Container {
     private Label lbLogUserTxt;
 
     private Model m;
-    private Controller c;
+    private AppController c;
 
-    public GPSLogEasy(final Model m, final Controller c) {
+    public GPSLogEasy(final Model m, final AppController c) {
         this.m = m;
         this.c = c;
     }

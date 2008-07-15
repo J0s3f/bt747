@@ -30,9 +30,9 @@ package gps.log;
  * @author Mario De Weerd
  */
 public class GPSFilter {
-    private int startDate = 0; // Seconds since 1/1/1970
+    private int startTime = 0; // Seconds since 1/1/1970
     // TODO: could fix potential problem with negative values for date.
-    private int endDate = 0x7FFFFFFF; // Seconds since 1/1/1970
+    private int endTime = 0x7FFFFFFF; // Seconds since 1/1/1970
     private int validMask = 0xFFFFFFFE; // Valid mask
     private int rcrMask = 0xFFFFFFFF;
 
@@ -50,15 +50,15 @@ public class GPSFilter {
      * 
      * @return The first date of the period to include (UTC time value).
      */
-    public int getStartDate() {
-        return startDate;
+    public int getStartTime() {
+        return startTime;
     }
 
     /**
      * Set the first date of the period to include (UTC time value).
      */
-    public void setStartDate(int startDate) {
-        this.startDate = startDate;
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
     }
 
     /**
@@ -66,15 +66,15 @@ public class GPSFilter {
      * 
      * @return The last date of the period to include (UTC time value).
      */
-    public int getEndDate() {
-        return endDate;
+    public int getEndTime() {
+        return endTime;
     }
 
     /**
      * Set the last date of the period to include (UTC time value).
      */
-    public void setEndDate(int endDate) {
-        this.endDate = endDate;
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
     }
 
     /**
@@ -183,7 +183,7 @@ public class GPSFilter {
     public boolean doFilter(final GPSRecord r) {
         // Filter the record information
         boolean result;
-        result = ((r.utc < 1001) || ((r.utc >= startDate) && (r.utc <= endDate)))
+        result = ((r.utc < 1001) || ((r.utc >= startTime) && (r.utc <= endTime)))
                 && ((r.valid & validMask) != 0) && ((r.rcr & rcrMask) != 0);
 
         return result;

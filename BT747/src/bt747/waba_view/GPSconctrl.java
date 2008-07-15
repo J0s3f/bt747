@@ -33,7 +33,7 @@ import gps.log.GPSRecord;
 
 import bt747.Txt;
 import bt747.Version;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.sys.Convert;
 import bt747.sys.Time;
@@ -51,7 +51,7 @@ public class GPSconctrl extends Container {
     // private Button btnUSB;
     private Button btnConnectPort;
 
-    private Controller c;
+    private AppController c;
 
     private Label lbLat; // GPS information
     private Label lbLon; // GPS information
@@ -70,7 +70,7 @@ public class GPSconctrl extends Container {
     private static final int C_MAX_PORTNBR = 32;
     private Model m;
 
-    public GPSconctrl(final Controller c, final Model m) {
+    public GPSconctrl(final AppController c, final Model m) {
         this.c = c;
         this.m = m;
     }

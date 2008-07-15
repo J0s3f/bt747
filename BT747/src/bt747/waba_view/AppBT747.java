@@ -35,7 +35,7 @@ import gps.GPSListener;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -51,10 +51,10 @@ import bt747.ui.MessageBox;
 public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
 
     /*
-     * Using Model, Controller, View.
+     * Using Model, AppController, View.
      */
     protected Model m = new Model();
-    protected Controller c = new Controller(m);
+    protected AppController c = new AppController(m);
 
     /**
      * The 'GPS state'. Used to get current GPS information and get access to
@@ -300,16 +300,16 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
         miGisteqType2.isChecked = false;
         miGisteqType3.isChecked = false;
         switch (m.getGPSType()) {
-        case Controller.GPS_TYPE_DEFAULT:
+        case AppController.GPS_TYPE_DEFAULT:
             miDefaultDevice.isChecked = true;
             break;
-        case Controller.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
+        case AppController.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
             miGisteqType1.isChecked = true;
             break;
-        case Controller.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+        case AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
             miGisteqType2.isChecked = true;
             break;
-        case Controller.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
+        case AppController.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             miGisteqType3.isChecked = true;
             break;
         default:
@@ -403,19 +403,19 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
                             .popupModal();
                     break;
                 case C_MENU_DEFAULTDEVICE:
-                    c.setGPSType(Controller.GPS_TYPE_DEFAULT);
+                    c.setGPSType(AppController.GPS_TYPE_DEFAULT);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE1:
-                    c.setGPSType(Controller.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX);
+                    c.setGPSType(AppController.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE2:
-                    c.setGPSType(Controller.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR);
+                    c.setGPSType(AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE3:
-                    c.setGPSType(Controller.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
+                    c.setGPSType(AppController.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
                     gpsType();
                     break;
                 default:

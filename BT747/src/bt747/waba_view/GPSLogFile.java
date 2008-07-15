@@ -32,7 +32,7 @@ import waba.util.Vector;
 
 import bt747.Txt;
 import bt747.io.File;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
@@ -46,9 +46,9 @@ import bt747.waba_view.ui.FileSelect;
 public class GPSLogFile extends Container {
 
     private Model m;
-    private Controller c;
+    private AppController c;
 
-    public GPSLogFile(final Controller c, final Model m) {
+    public GPSLogFile(final AppController c, final Model m) {
         this.c = c;
         this.m = m;
     }
