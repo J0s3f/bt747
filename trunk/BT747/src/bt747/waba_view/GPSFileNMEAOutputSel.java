@@ -25,7 +25,7 @@ import waba.ui.Event;
 
 import gps.BT747Constants;
 
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 
 /**
@@ -41,12 +41,12 @@ public class GPSFileNMEAOutputSel extends Container {
     private static final int C_NMEAactiveFilters = 0x0002003A;
 
     private Model m;
-    private Controller c;
+    private AppController c;
 
     /**
      * 
      */
-    public GPSFileNMEAOutputSel(final Controller c, final Model m) {
+    public GPSFileNMEAOutputSel(final AppController c, final Model m) {
         this.m = m;
         this.c = c;
     }

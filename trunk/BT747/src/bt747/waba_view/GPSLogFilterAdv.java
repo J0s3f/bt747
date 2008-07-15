@@ -28,7 +28,7 @@ import waba.ui.Label;
 import waba.ui.PushButtonGroup;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.sys.Convert;
 
@@ -55,9 +55,9 @@ public class GPSLogFilterAdv extends Container {
     private String[] C_PB_TYPE_NAMES = { Txt.ACTIVE, Txt.INACTIVE };
 
     private Model m;
-    private Controller c;
+    private AppController c;
 
-    public GPSLogFilterAdv(final Controller c, final Model m) {
+    public GPSLogFilterAdv(final AppController c, final Model m) {
         this.m = m;
         this.c = c;
     }

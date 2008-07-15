@@ -32,11 +32,12 @@ import waba.ui.Label;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
 import bt747.util.Date;
+import bt747.sys.Time;
 
 /**
  * @author Mario De Weerd
@@ -72,14 +73,26 @@ public class GPSLogGet extends Container {
     private static final String[] fileStr = { Txt.ONE_FILE, Txt.ONE_FILE_DAY,
             Txt.ONE_FILE_TRK };
     private Model m;
-    private Controller c;
+    private AppController c;
     private Color BackupBackColor;
     private Label m_UsedLabel;
     private Label m_RecordsLabel;
 
-    public GPSLogGet(final Model m, final Controller c) {
+    public GPSLogGet(final Model m, final AppController c) {
         this.m = m;
         this.c = c;
+    }
+
+    private String convertUTCtoDateString(int utcTime) {
+        Time t = new Time();
+        String dateString;
+        t.setUTCTime(utcTime);
+        int day = t.getDay();
+        int month = t.getMonth();
+        int year = t.getYear();
+        dateString = (day < 10 ? "0" : "") + day + "/"
+                + (month < 10 ? "0" : "") + t.getMonth() + "/" + year;
+        return dateString;
     }
 
     /*
@@ -94,11 +107,12 @@ public class GPSLogGet extends Container {
         m_chkIncremental.setChecked(m.isIncremental());
         add(chkLogOverwriteStop = new MyCheck(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
         add(new Label(Txt.DATE_RANGE), LEFT, AFTER); //$NON-NLS-1$
-        add(btStartDate = new Button(m.getStartDate().getDateString()), AFTER,
-                SAME); //$NON-NLS-1$
+
+        add(btStartDate = new Button(convertUTCtoDateString(m.getFilterStartTime())),
+                AFTER, SAME); //$NON-NLS-1$
         // m_btStartDate.setMode(Edit.DATE);
-        add(m_btEndDate = new Button(m.getEndDate().getDateString()), RIGHT,
-                SAME); //$NON-NLS-1$
+        add(m_btEndDate = new Button(convertUTCtoDateString(m.getFilterEndTime())),
+                RIGHT, SAME); //$NON-NLS-1$
         // m_btEndDate.setMode(Edit.DATE);
         add(m_btGetLog = new Button(Txt.GET_LOG), LEFT, AFTER + 2); //$NON-NLS-1$
         add(m_btCancelGetLog = new Button(Txt.CANCEL_GET), AFTER + 5, SAME); //$NON-NLS-1$
@@ -175,16 +189,19 @@ public class GPSLogGet extends Container {
                 + "(" + Convert.toString(m.logMemUsedPercent()) + "%)");
         // m_UsedLabel.repaintNow();
         m_RecordsLabel.setText(Txt.NBR_RECORDS
-                + Convert.toString(m.logNbrLogPts())
-                + " ("
-                + m.getEstimatedNbrRecordsFree(m.getLogFormat())
-                + " "+ Txt.MEM_FREE + ")"
-                );
+                + Convert.toString(m.logNbrLogPts()) + " ("
+                + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
+                + Txt.MEM_FREE + ")");
         // m_RecordsLabel.repaintNow();
     }
 
     private Calendar cal;
     private Button calBt;
+
+    /**
+     * The number of seconds in a day.
+     */
+    private static final int SECONDS_PER_DAY = 24 * 60 * 60;
 
     /*
      * (non-Javadoc)
@@ -285,8 +302,11 @@ public class GPSLogGet extends Container {
                 if (d != null) {
                     calBt.setText(d.toString());
                     // Can't change the value of the date, changing all
-                    c.setStartDate(new Date(btStartDate.getText()));
-                    c.setEndDate(new Date(m_btEndDate.getText()));
+                    c.setStartDate((new Date(btStartDate.getText()))
+                            .dateToUTCepoch1970());
+                    c.setEndDate((new Date(m_btEndDate.getText()))
+                            .dateToUTCepoch1970()
+                            + SECONDS_PER_DAY - 1);
                 }
             }
             /*

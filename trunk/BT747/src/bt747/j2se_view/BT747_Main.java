@@ -23,10 +23,11 @@ import javax.swing.UIManager;
 
 import bt747.Txt;
 import bt747.model.BT747View;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
+import bt747.sys.Time;
 
 /**
  * 
@@ -40,7 +41,7 @@ public class BT747_Main extends javax.swing.JFrame implements
      */
     private static final long serialVersionUID = 1L;
     Model m;
-    Controller c;
+    AppController c;
 
     /** Creates new form BT747_Main */
     public BT747_Main() {
@@ -48,7 +49,7 @@ public class BT747_Main extends javax.swing.JFrame implements
         initAppData();
     }
 
-    public BT747_Main(Model m, Controller c) {
+    public BT747_Main(Model m, AppController c) {
         setModel(m);
         setController(c);
         initComponents();
@@ -62,8 +63,10 @@ public class BT747_Main extends javax.swing.JFrame implements
         // TODO: finish message box handling and send back events
         // to controller.
     }
+    
+    
 
-    public void setController(Controller c) {
+    public void setController(AppController c) {
         if (this.c != null) {
             this.c.removeGPSListener(this);
         }
@@ -116,13 +119,12 @@ public class BT747_Main extends javax.swing.JFrame implements
         cbAdvancedActive.setSelected(m.getAdvFilterActive());
         cbGPSType.setSelectedIndex(m.getGPSType() == 0 ? 0 : 1);
         cbDisableLoggingDuringDownload.setSelected(m.isIncremental());
-        bt747.util.Date d;
-        d = m.getStartDate();
-        System.err.println(d.getDateString());
+        Time d;
+        d= new Time();
+        d.setUTCTime(m.getFilterStartTime());
         startDate.setDate(new GregorianCalendar(d.getYear(), d.getMonth(), d
                 .getDay()).getTime());
-        d = m.getEndDate();
-        System.err.println(d.getDateString());
+        d.setUTCTime(m.getFilterEndTime());
         endDate.setDate(new GregorianCalendar(d.getYear(), d.getMonth(), d
                 .getDay()).getTime());
         // TODO: Deactivate debug by default
@@ -133,10 +135,10 @@ public class BT747_Main extends javax.swing.JFrame implements
         // c.setChunkSize(256); // Small for debug
 
         switch (m.getBinDecoder()) {
-        case Controller.DECODER_ORG:
+        case AppController.DECODER_ORG:
             cbDecoderChoice.setSelectedIndex(0);
             break;
-        case Controller.DECODER_THOMAS:
+        case AppController.DECODER_THOMAS:
             cbDecoderChoice.setSelectedIndex(1);
             break;
         }
@@ -5931,10 +5933,10 @@ public class BT747_Main extends javax.swing.JFrame implements
 
         switch (cbDecoderChoice.getSelectedIndex()) {
         case 0:
-            c.setBinDecoder(Controller.DECODER_ORG);
+            c.setBinDecoder(AppController.DECODER_ORG);
             break;
         case 1:
-            c.setBinDecoder(Controller.DECODER_THOMAS);
+            c.setBinDecoder(AppController.DECODER_THOMAS);
             break;
         }
     }// GEN-LAST:event_cbDecoderChoiceActionPerformed
@@ -6277,7 +6279,7 @@ public class BT747_Main extends javax.swing.JFrame implements
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             Model m = new Model();
-            Controller c = new Controller(m);
+            AppController c = new AppController(m);
 
             public void run() {
                 BT747_Main app = new BT747_Main(m, c);

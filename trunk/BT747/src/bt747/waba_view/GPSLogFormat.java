@@ -29,7 +29,7 @@ import gps.BT747Constants;
 import gps.GpsEvent;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 
 /**
@@ -39,7 +39,7 @@ public class GPSLogFormat extends Container {
     private static final int C_LOG_FMT_COUNT = 21;
     /** The object that is used to communicate with the GPS device. */
     private Model m;
-    private Controller c;
+    private AppController c;
     /** The tickboxes for the format items */
     private MyCheck[] chkLogFmtItems = new MyCheck[C_LOG_FMT_COUNT];
     /** The button that requests to change the log format of the device */
@@ -52,7 +52,7 @@ public class GPSLogFormat extends Container {
     /**
      * Initialiser of this Container.<br>
      */
-    public GPSLogFormat(final Model m, final Controller c) {
+    public GPSLogFormat(final Model m, final AppController c) {
         // super("Log ON/OFF", Container.);
         this.m = m;
         this.c = c;

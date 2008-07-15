@@ -3,6 +3,7 @@ package bt747.model;
 import gps.BT747Constants;
 import gps.GPSstate;
 import gps.connection.GPSrxtx;
+import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 
@@ -66,15 +67,21 @@ public class Model extends AppSettings {
     public static final int TRK_LOGTYPE = 7;
 
     /**
+     * The number of seconds in a day.
+     */
+    private static final int SECONDS_PER_DAY = 24 * 60 * 60;
+
+    /**
      * Start date for the date filter. 01/01/1983 is the earliest date that can
      * be logged. This ensures that all logged data points are retrieved by
      * default if the date filter is not changed.
      */
-    private Date startDate = new Date(1, 1, 1983);
+    private int filterStartTime = Conv.dateToUTCepoch1970(new Date(1, 1, 1983));
     /**
-     * End date for the date filter.
+     * End date for the date filter. Defaults to end of current day.
      */
-    private Date endDate = new Date();
+    private int filterEndTime = Conv.dateToUTCepoch1970(new Date())
+            + (SECONDS_PER_DAY - 1);
 
     /**
      * Indicate which conversion is ongoing. Helps for GUI interface.
@@ -98,8 +105,7 @@ public class Model extends AppSettings {
     /**
      * Advanced log filters.
      */
-    private GPSFilterAdvanced[] logFiltersAdv =
-        new GPSFilterAdvanced[C_NBR_FILTERS];
+    private GPSFilterAdvanced[] logFiltersAdv = new GPSFilterAdvanced[C_NBR_FILTERS];
 
     /**
      * When true, then dynamic download is active.
@@ -227,37 +233,37 @@ public class Model extends AppSettings {
      * 
      * @return the startDate
      */
-    public final Date getStartDate() {
-        return startDate;
+    public final int getFilterStartTime() {
+        return filterStartTime;
     }
 
     /**
      * Set the start date for the filters.
      * 
-     * @param filterStartDate
+     * @param filterStartTime
      *            the startDate to set
      */
-    protected final void setStartDate(final Date filterStartDate) {
-        this.startDate = filterStartDate;
+    protected final void setFilterStartTime(final int filterStartTime) {
+        this.filterStartTime = filterStartTime;
     }
 
     /**
-     * Get the filter end date.
+     * Get the filter end time.
      * 
-     * @return the endDate
+     * @return the filter end time.
      */
-    public final Date getEndDate() {
-        return endDate;
+    public final int getFilterEndTime() {
+        return filterEndTime;
     }
 
     /**
      * Set the filter end date.
      * 
-     * @param filterEndDate
+     * @param filterEndTime
      *            the endDate to set
      */
-    protected final void setEndDate(final Date filterEndDate) {
-        this.endDate = filterEndDate;
+    protected final void setFilterEndTime(final int filterEndTime) {
+        this.filterEndTime = filterEndTime;
     }
 
     /**
@@ -550,8 +556,7 @@ public class Model extends AppSettings {
         boolean forHolux;
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
-        forHolux = (isHolux() && gpsRxTx.isConnected())
-                   || getForceHolux241();
+        forHolux = (isHolux() && gpsRxTx.isConnected()) || getForceHolux241();
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {
@@ -574,8 +579,7 @@ public class Model extends AppSettings {
         boolean forHolux;
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
-        forHolux = (isHolux() && gpsRxTx.isConnected())
-                   || getForceHolux241();
+        forHolux = (isHolux() && gpsRxTx.isConnected()) || getForceHolux241();
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {

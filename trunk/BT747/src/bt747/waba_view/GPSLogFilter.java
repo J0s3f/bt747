@@ -29,7 +29,7 @@ import gps.BT747Constants;
 import gps.log.GPSFilter;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 
 /**
@@ -38,9 +38,9 @@ import bt747.model.Model;
 public class GPSLogFilter extends Container {
     private int currentLogFilter = 0;
     private Model m;
-    private Controller c;
+    private AppController c;
 
-    public GPSLogFilter(Controller c, Model m) {
+    public GPSLogFilter(AppController c, Model m) {
         this.m = m;
         this.c = c;
     }

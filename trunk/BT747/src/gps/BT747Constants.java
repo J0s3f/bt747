@@ -672,4 +672,8 @@ public final class BT747Constants { // dev as in device
     public static final int ERROR_COULD_NOT_OPEN = -1;
     public static final int ERROR_NO_FILES_WERE_CREATED = -2;
     public static final int ERROR_READING_FILE = -3;
+    /**
+     * The requested output format is unknown.
+     */
+    public static final int ERROR_UNKNOWN_OUTPUT_FORMAT = -4;
 }

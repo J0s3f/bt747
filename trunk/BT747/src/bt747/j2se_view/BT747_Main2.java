@@ -21,7 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bt747.Txt;
-import bt747.model.Controller;
+import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
@@ -38,14 +38,14 @@ public class BT747_Main2 extends javax.swing.JFrame implements
      */
     private static final long serialVersionUID = 1L;
     Model m;
-    Controller c;
+    AppController c;
 
     /** Creates new form BT747_Main2 */
     public BT747_Main2() {
         initComponents();
     }
 
-    public BT747_Main2(Model m, Controller c) {
+    public BT747_Main2(Model m, AppController c) {
         this.m = m;
         this.c = c;
         initComponents();
@@ -3853,7 +3853,7 @@ public class BT747_Main2 extends javax.swing.JFrame implements
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             Model m = new Model();
-            Controller c = new Controller(m);
+            AppController c = new AppController(m);
 
             public void run() {
                 BT747_Main2 app = new BT747_Main2(m, c);
