@@ -174,14 +174,10 @@ public class FileSelect extends Window {
 
         int added = buildFileList(root, dirOnly ? relPath : basePath, v, 2, 15);
         String[] files = (String[]) v.toObjectArray();
-        if (added != 0 && files[firstFoundIndex].charAt(1) == '[') { // is it
-                                                                        // a
-                                                                        // volume
-                                                                        // label?
-            files[firstFoundIndex] = files[firstFoundIndex].substring(1); // remove
-                                                                            // the
-                                                                            // preceding
-                                                                            // slash
+        if (added != 0 && files[firstFoundIndex].charAt(1) == '[') {
+            // It is a volume label.
+            files[firstFoundIndex] = files[firstFoundIndex].substring(1);
+            // remove the preceding slash
         }
 
         if (cb != null) {
@@ -197,15 +193,16 @@ public class FileSelect extends Window {
      * @see waba.ui.Control#onEvent(waba.ui.Event)
      */
     public final void onEvent(final Event event) {
-        switch (event.type) {
-        case ControlEvent.PRESSED:
-            if (event.target == cb) {
-                relPath = (String) cb.getSelectedItem();
-                unpop();
-            }
+        if (event.target != null) {
+            switch (event.type) {
+            case ControlEvent.PRESSED:
+                if (event.target == cb) {
+                    relPath = (String) cb.getSelectedItem();
+                    unpop();
+                }
             default:
                 break;
+            }
         }
     }
-
 }
