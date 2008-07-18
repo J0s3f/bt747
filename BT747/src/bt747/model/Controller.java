@@ -199,6 +199,9 @@ public class Controller {
     /**
      * Convert the log given the provided parameters using other methods.
      * 
+     * @return 0 if success, otherwise an error was encountered (error number
+     *         returned and related text in {@link #getLastErrorInfo()}
+     * 
      * @param logType
      *            Indicates the type of log that should be written. For example
      *            Model.CSV_LOGTYPE .
@@ -398,8 +401,7 @@ public class Controller {
         // gpsFile.setBadTrackColor(m.getColorInvalidTrack());
 
         for (int i = 0; i < usedFilters.length; i++) {
-            usedFilters[i].setStartTime(m
-                    .getFilterStartTime());
+            usedFilters[i].setStartTime(m.getFilterStartTime());
             usedFilters[i].setEndTime(m.getFilterEndTime());
         }
         gpsFile.setFilters(usedFilters);
@@ -1536,10 +1538,12 @@ public class Controller {
     }
 
     /**
-     * @param value
+     * @param isConvertHeightToMSL
+     *            When true the height (WGS84) will be converted to Mean Sea
+     *            Level.
      */
-    public final void setNoGeoid(final boolean value) {
-        m.setConvertWGS84ToMSL(value);
+    public final void setNoGeoid(final boolean isConvertHeightToMSL) {
+        m.setConvertWGS84ToMSL(isConvertHeightToMSL);
     }
 
     /**
