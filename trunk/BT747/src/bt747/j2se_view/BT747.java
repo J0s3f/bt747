@@ -26,15 +26,15 @@ package bt747.j2se_view;
  */
 public class BT747 extends bt747.waba_view.AppBT747 {
     
-    BT747_Main j2se_view;
+    BT747Main j2se_view;
     
     @Override
     public void onStart() {
         super.onStart();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                BT747_Main.myLookAndFeel();
-                j2se_view= new BT747_Main(m,c);
+                BT747Main.myLookAndFeel();
+                j2se_view= new BT747Main(m,c);
                 j2se_view.setVisible(true);
             }
         });

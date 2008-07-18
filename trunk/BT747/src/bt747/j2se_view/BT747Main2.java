@@ -1,5 +1,5 @@
 /*
- * BT747_Main.java
+ * BT747Main.java
  *
  * Created on 23 mars 2008, 10:37
  */
@@ -24,13 +24,12 @@ import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
-import bt747.sys.Convert;
 
 /**
  * 
  * @author Mario De Weerd
  */
-public class BT747_Main2 extends javax.swing.JFrame implements
+public class BT747Main2 extends javax.swing.JFrame implements
         bt747.model.ModelListener, GPSListener {
 
     /**
@@ -40,12 +39,12 @@ public class BT747_Main2 extends javax.swing.JFrame implements
     Model m;
     AppController c;
 
-    /** Creates new form BT747_Main2 */
-    public BT747_Main2() {
+    /** Creates new form BT747Main2 */
+    public BT747Main2() {
         initComponents();
     }
 
-    public BT747_Main2(Model m, AppController c) {
+    public BT747Main2(Model m, AppController c) {
         this.m = m;
         this.c = c;
         initComponents();
@@ -104,14 +103,14 @@ public class BT747_Main2 extends javax.swing.JFrame implements
             bt747.sys.Time t = new bt747.sys.Time();
             t.setUTCTime(gps.utc);
             TimeStr =
-            // Convert.toString(t.getYear())+"/"
-            // +( t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
-            // +( t.getDay()<10?"0":"")+Convert.toString(t.getDay())+" " +
-            (t.getHour() < 10 ? "0" : "") + Convert.toString(t.getHour()) + ":"
+            // String.valueOf(t.getYear())+"/"
+            // +( t.getMonth()<10?"0":"")+String.valueOf(t.getMonth())+"/"
+            // +( t.getDay()<10?"0":"")+String.valueOf(t.getDay())+" " +
+            (t.getHour() < 10 ? "0" : "") + String.valueOf(t.getHour()) + ":"
                     + (t.getMinute() < 10 ? "0" : "")
-                    + Convert.toString(t.getMinute()) + ":"
+                    + String.valueOf(t.getMinute()) + ":"
                     + (t.getSecond() < 10 ? "0" : "")
-                    + Convert.toString(t.getSecond());
+                    + String.valueOf(t.getSecond());
             lbTime.setText(TimeStr);
         }
         updateGPSData(gps);
@@ -119,14 +118,14 @@ public class BT747_Main2 extends javax.swing.JFrame implements
 
     private void updateGPSData(final GPSRecord gps) {
 
-        lbLatitude.setText(Convert.toString(gps.latitude, 5));
-        // lbHeight.setText(Convert.toString(gps.height,3)+Txt.METERS_ABBR);
-        lbLongitude.setText(Convert.toString(gps.longitude, 5));
-        lbGeoid.setText(Convert.toString(gps.geoid, 3)
+        lbLatitude.setText(String.valueOf(gps.latitude));
+        // lbHeight.setText(String.valueOf(gps.height,3)+Txt.METERS_ABBR);
+        lbLongitude.setText(String.valueOf(gps.longitude));
+        lbGeoid.setText(String.valueOf(gps.geoid)
                 + Txt.METERS_ABBR
                 + Txt.CALC
-                + Convert.toString(Conv.wgs84Separation(gps.latitude,
-                        gps.longitude), 3) + Txt.METERS_ABBR + ")");
+                + String.valueOf(Conv.wgs84Separation(gps.latitude,
+                        gps.longitude)) + Txt.METERS_ABBR + ")");
 
     }
 
@@ -3750,8 +3749,8 @@ public class BT747_Main2 extends javax.swing.JFrame implements
         boolean foundPort = false;
         int port = 0;
         try {
-            port = Convert.toInt(s);
-            if (Convert.toString(port).equals(s)) {
+            port = Integer.parseInt(s);
+            if (String.valueOf(port).equals(s)) {
                 foundPort = true;
             }
         } catch (Exception e) {
@@ -3760,11 +3759,11 @@ public class BT747_Main2 extends javax.swing.JFrame implements
         try {
             if (!foundPort && s.toUpperCase().startsWith("COM")) {
                 if (s.length() == 5 && s.charAt(4) == ':') {
-                    port = Convert.toInt(s.substring(3, 4));
+                    port = Integer.parseInt(s.substring(3, 4));
                 } else if (s.length() == 6 && s.charAt(5) == ':') {
-                    port = Convert.toInt(s.substring(3, 5));
+                    port = Integer.parseInt(s.substring(3, 5));
                 } else {
-                    port = Convert.toInt(s.substring(3));
+                    port = Integer.parseInt(s.substring(3));
                 }
                 if (s.toUpperCase().equals("COM" + port)
                         || s.toUpperCase().equals("COM" + port + ":")) {
@@ -3856,7 +3855,7 @@ public class BT747_Main2 extends javax.swing.JFrame implements
             AppController c = new AppController(m);
 
             public void run() {
-                BT747_Main2 app = new BT747_Main2(m, c);
+                BT747Main2 app = new BT747Main2(m, c);
                 app.setVisible(true);
             }
         });
