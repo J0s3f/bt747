@@ -280,15 +280,17 @@
 	</path>
 
 	<uptodate property="libj2se.uptodate"
-              targetfile="${dist}/lib${ant.project.name}.jar"
-    >
-        <srcfiles dir="${src.dir}/bt747/model" includes="**" />
-        <srcfiles dir="${src.dir}/gps" includes="**" />
-        <srcfiles dir="src_forj2se" includes="**" />
-    </uptodate>	<target name="build.j2seapp">
-
+	          targetfile="${dist}/lib${ant.project.name}.jar"
+	>
+		<srcfiles dir="${src.dir}/bt747/model" includes="**" />
+		<srcfiles dir="${src.dir}/gps" includes="**" />
+		<srcfiles dir="src_forj2se" includes="**" />
+	</uptodate>
+	
+	
+	<target name="build.j2seapp">
 		<!--Need this in stead of dependency because when files are erase 'up-to-date' is not correct. -->
-		<ant inheritall="false" target="dist.libj2se"/>
+		<ant inheritall="false" target="dist.libj2se" />
 		<delete dir="${j2sebuild.dir}" />
 		<mkdir dir="${j2sebuild.dir}" />
 
@@ -665,8 +667,8 @@
 
 	<!-- The target is currently not working since ant references the rt.jar
 	 regardless of the parameters. -->
-	<property name="wabalang.uptodate" value="true"/>
-	
+	<property name="wabalang.uptodate" value="true" />
+
 	<uptodate property="wabalang.uptodate" targetfile="${waba_lang.jar}">
 		<srcfiles dir="${superwaba_root}/src/java/waba/lang" includes="**" />
 	</uptodate>
