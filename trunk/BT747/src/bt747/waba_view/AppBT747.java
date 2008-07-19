@@ -211,8 +211,12 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
         super.onStart();
 
         if (Settings.version < Settings.requiredVersion) {
-            new MessageBox(Txt.TITLE_ATTENTION, Txt.BAD_SUPERWABAVERSION)
-                    .popupBlockingModal();
+            new MessageBox(Txt.TITLE_ATTENTION, Txt.BAD_SUPERWABAVERSION
+                    + Settings.requiredVersionStr
+                    + Txt.BAD_SUPERWABAVERSION_CONT + Settings.versionStr
+                    + Txt.BAD_SUPERWABAVERSION_CONT2
+
+            ).popupBlockingModal();
             MainWindow.getMainWindow().exit(0);
         }
 
@@ -396,7 +400,8 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
                     break;
                 case C_MENU_ABOUT_SW:
                     new MessageBox(Txt.ABOUT_SUPERWABA_TITLE,
-                            Txt.ABOUT_SUPERWABA_TXT).popupModal();
+                            Txt.ABOUT_SUPERWABA_TXT + Settings.versionStr
+                                    + Txt.ABOUT_SUPERWABA_TXT).popupModal();
                     break;
                 case C_MENU_INFO:
                     new MessageBox(Txt.DISCLAIMER_TITLE, Txt.DISCLAIMER_TXT)
@@ -411,11 +416,13 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE2:
-                    c.setGPSType(AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR);
+                    c
+                            .setGPSType(AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE3:
-                    c.setGPSType(AppController.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
+                    c
+                            .setGPSType(AppController.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
                     gpsType();
                     break;
                 default:

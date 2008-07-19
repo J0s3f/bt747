@@ -19,7 +19,7 @@
 //********************************************************************                              
 package gps;
 
-import bt747.Txt;
+import gps.Txt;
 import bt747.sys.Convert;
 import bt747.sys.Vm;
 

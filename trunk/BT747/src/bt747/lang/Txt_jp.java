@@ -1,7 +1,6 @@
 package bt747.lang;
 
 import bt747.Version;
-import bt747.sys.Settings;
 
 /**
  * @author Mario De Weerd
@@ -71,8 +70,9 @@ public class Txt_jp {
     public static final String ABOUT_SUPERWABA_TITLE=
         "About SuperWaba";
     public static final String ABOUT_SUPERWABA_TXT=
-        "SuperWaba Virtual Machine "+ Settings.versionStr
-        + "|Copyright (c)2000-2007"
+        "SuperWaba Virtual Machine ";
+    public static final String ABOUT_SUPERWABA_TXT_CONTINUE=
+          "|Copyright (c)2000-2007"
         + "|Guilherme Campos Hazan"
         + "|www.superwaba.com|"
         + "|"
@@ -407,10 +407,11 @@ public class Txt_jp {
     public static final String S_DEBUG_CONN= "Debug conn.";
     public static final String S_IMPERIAL= "Imperial Units";
     public static final String BAD_SUPERWABAVERSION =
-        "This application was built for|SuperWaba V"
-        + Settings.requiredVersionStr + "."
-        +"|This version is V"+Settings.versionStr+"."
-        +"|Exiting application";
+        "This application was built for|SuperWaba V";
+    public static final String BAD_SUPERWABAVERSION_CONT =
+          ".|This version is V";
+    public static final String BAD_SUPERWABAVERSION_CONT2 =
+        ".|Exiting application";
 
     public static final String S_DEVICE = "Device";
     public static final String S_DEFAULTDEVICE = "Default Device";
