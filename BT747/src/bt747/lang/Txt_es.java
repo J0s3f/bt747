@@ -1,7 +1,6 @@
 package bt747.lang;
 
 import bt747.Version;
-import bt747.sys.Settings;
 
 /**
  * @author Mario De Weerd
@@ -64,11 +63,12 @@ public class Txt_es {
         + "|allststr@terra.es"; 
 
     
-    public static final String ABOUT_SUPERWABA_TITLE=
+    public static final String ABOUT_SUPERWABA_TITLE =
         "Acerca de SuperWaba";
-    public static final String ABOUT_SUPERWABA_TXT=
-        "SuperWaba Virtual Machine "+ Settings.versionStr
-        + "|Copyright (c)2000-2007"
+    public static final String ABOUT_SUPERWABA_TXT =
+        "SuperWaba Virtual Machine ";
+    public static final String ABOUT_SUPERWABA_TXT_CONTINUE =
+          "|Copyright (c)2000-2007"
         + "|Guilherme Campos Hazan"
         + "|www.superwaba.com|"
         + "|"
@@ -400,10 +400,12 @@ public class Txt_es {
     public static final String S_DEBUG_CONN= "Depurar conn.";
     public static final String S_IMPERIAL= "Unid Imperiales"; 
     public static final String BAD_SUPERWABAVERSION = 
-    "Esta aplicación se creó para|SuperWaba V"
-    + Settings.requiredVersionStr + "." 
-    +    "|Esta es la versión V"+Settings.versionStr+"." 
-    +    "|Cerrando aplicación"; 
+      "Esta aplicación se creó para|SuperWaba V";
+    
+    public static final String BAD_SUPERWABAVERSION_CONT = 
+         ".|Esta es la versión V"; 
+    public static final String BAD_SUPERWABAVERSION_CONT2 = 
+       "|Cerrando aplicación"; 
     public static final String S_DEVICE = "Dispositivo"; 
     public static final String S_DEFAULTDEVICE = "Disp. por defecto"; //"Dispositivo por defecto";                        (you can also use "") 
     public static final String S_GISTEQTYPE1 = "iTrackU-Nemerix"; 

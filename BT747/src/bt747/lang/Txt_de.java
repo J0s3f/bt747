@@ -1,7 +1,6 @@
 package bt747.lang;
 
 import bt747.Version;
-import bt747.sys.Settings;
 
 /**
  * @author Mario De Weerd
@@ -65,8 +64,9 @@ public class Txt_de {
     public static final String ABOUT_SUPERWABA_TITLE =
         "Über SuperWaba";
     public static final String ABOUT_SUPERWABA_TXT =
-        "SuperWaba Virtual Machine "+ Settings.versionStr
-        + "|Copyright (c)2000-2007"
+        "SuperWaba Virtual Machine ";
+    public static final String ABOUT_SUPERWABA_TXT_CONTINUE =
+          "|Copyright (c)2000-2007"
         + "|Guilherme Campos Hazan"
         + "|www.superwaba.com|"
         + "|"
@@ -378,10 +378,11 @@ public class Txt_de {
     public static final String S_DEBUG_CONN= "Debug Verbindung";
     public static final String S_IMPERIAL= "Britische Einheiten";
     public static final String BAD_SUPERWABAVERSION =
-        "Diese Anwendung wurde erstellt|für SuperWaba V"
-        + Settings.requiredVersionStr + "."
-        + "|Diese Version ist V" + Settings.versionStr + "."
-        + "|bt747 beenden";
+        "Diese Anwendung wurde erstellt|für SuperWaba V";
+    public static final String BAD_SUPERWABAVERSION_CONT =
+        ".|Diese Version ist V";
+    public static final String BAD_SUPERWABAVERSION_CONT2 =
+        "|bt747 beenden";
 
     public static final String S_DEVICE = "Gerät";
     public static final String S_DEFAULTDEVICE = "Vorgegeb. Gerät";
