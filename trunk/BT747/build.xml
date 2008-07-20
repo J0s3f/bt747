@@ -50,7 +50,7 @@
 	</path>
 
 	<path id="rxtxclasspath">
-		<pathelement location="${waba_forwaba.jar}" />
+		<pathelement location="${waba_forj2se.jar}" />
 		<pathelement location="${jcalendar.jar}" />
 		<pathelement location="${waba.jar}" />
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar" />
@@ -706,7 +706,7 @@
 	</fileset>
 
 	<!-- rxtxbuild -->
-	<target name="rxtxbuild" depends="build.waba_forwaba">
+	<target name="rxtxbuild" depends="build.waba_forj2se">
 		<getsuffix />
 		<delete dir="${rxtxbuild.dir}" />
 		<mkdir dir="${rxtxbuild.dir}" />
