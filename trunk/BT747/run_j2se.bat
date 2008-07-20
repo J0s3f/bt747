@@ -10,6 +10,6 @@ REM java -Dbt747_prefix="COM" -Dbt747_settings="bt747settings.pdb" waba.applet.A
 
 REM Change javaw to java in next line to see startup and debug messages
 start javaw bt747.j2se_view.BT747Main
-java -verbose bt747.j2se_view.BT747Main | more
+REM java -verbose bt747.j2se_view.BT747Main | more
 pause
 endlocal

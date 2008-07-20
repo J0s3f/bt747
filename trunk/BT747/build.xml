@@ -1784,7 +1784,7 @@
 	<!-- ======================================== -->
 
 	<target name="sign" if="keytool.sign">
-		<!-- Sign only if keytool.sign is true, this indicates parameters are set -->
+		<!-- Sign only if keytool.sign is set, this indicates parameters are set -->
 		<signjar jar="${jar.tosign}"
 		         alias="${keytool.alias}"
 		         storepass="${keytool.passwd}"
