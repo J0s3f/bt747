@@ -231,7 +231,7 @@
 			          verbose="true"
 			          ignorewarnings="true"
 			>
-				<libraryjar file="${java.home}/lib/rt.jar" />
+				<libraryjar file="${proguard.java.rt.lib}" />
 				<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 				<injar path="${rxtxbuild.dir}/${ant.project.name}@{suffix}_tmp.jar"
 				/>
@@ -286,8 +286,8 @@
 		<srcfiles dir="${src.dir}/gps" includes="**" />
 		<srcfiles dir="src_forj2se" includes="**" />
 	</uptodate>
-	
-	
+
+
 	<target name="build.j2seapp">
 		<!--Need this in stead of dependency because when files are erase 'up-to-date' is not correct. -->
 		<ant inheritall="false" target="dist.libj2se" />
@@ -357,7 +357,7 @@
 		          verbose="true"
 		          ignorewarnings="true"
 		>
-			<libraryjar file="${java.home}/lib/rt.jar" />
+			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
 			<outjar path="${dist}/${ant.project.name}_j2se.jar" />
                         -injar ${j2sebuild.dir}/${ant.project.name}_j2se.jar
@@ -400,7 +400,7 @@
 		          verbose="true"
 		          ignorewarnings="true"
 		>
-			<libraryjar file="${java.home}/lib/rt.jar" />
+			<libraryjar file="${proguard.java.rt.lib}" />
 			<outjar path="${dist}/lib${ant.project.name}.jar" />
 	                    -injar ${rxtxbuild.dir}/${ant.project.name}${tmp_suffix}.jar(!BT747.class,!bt747/*_view/**,!bt747/gps/connection/GPSWabaPort.class)
 	                    -injar ${waba_forj2se.jar}(!META-INF/**)
@@ -464,7 +464,7 @@
               <libraryjar file="${waba_forwaba.jar}" />
               <libraryjar file="${swcollections.jar}" />
               -->
-			<libraryjar file="${java.home}/lib/rt.jar" />
+			<libraryjar file="${proguard.java.rt.lib}" />
 			<injar path="" filter="" />
 			<outjar path="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar"
 			/>
@@ -554,6 +554,7 @@
 		<move file="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar"
 		      tofile="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
 		/>
+
 		<proguard shrink="false"
 		          defaultpackage=""
 		          optimize="false"
@@ -578,7 +579,7 @@
             <libraryjar file="${waba_forwaba.jar}" />
 			-->
 			<keep name="bt747.j2se_view.BT747" />
-			<libraryjar file="${java.home}/lib/rt.jar" />
+			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${swcollections.jar}" />
 			<libraryjar file="${waba_forj2se.jar}" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
@@ -978,7 +979,7 @@
 			<libraryjar file="${wabalang.jar}" />
 
 			<!--
-            <libraryjar file="${java.home}/lib/rt.jar" />
+            <libraryjar file="${proguard.java.rt.lib}" />
             -->
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${symbianbuild.dir}/${ant.project.name}_symbian_unopt.jar"
@@ -1053,7 +1054,7 @@
 			<libraryjar file="${wabalang.jar}" />
 
 			<!--
-			<libraryjar file="${java.home}/lib/rt.jar" />
+			<libraryjar file="${proguard.java.rt.lib}" />
 			-->
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${build.dir}/${ant.project.name}_unopt.jar" />
@@ -1074,7 +1075,7 @@
 		>
 			<arg line="-injars ${build.dir}/${ant.project.name}_unopt.jar" />
 			<arg line="-outjars ${build.dir}/${ant.project.name}.jar" />
-			<arg line="-libraryjars ${java.home}/lib/rt.jar${path.separator}${superwaba_root}/lib/SuperWaba.jar"
+			<arg line="-libraryjars ${proguard.java.rt.lib}${path.separator}${superwaba_root}/lib/SuperWaba.jar"
 			/>
 			<arg line="-keep public class ${mainClass}" />
 			<arg line="-allowaccessmodification" />
