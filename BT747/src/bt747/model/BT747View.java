@@ -7,7 +7,7 @@ public interface BT747View {
             final String msg,
             final String[] buttonCaptions);
     
-    void setController(AppController c);
+    void setController(Controller c);
     
     void setModel(Model m);
     

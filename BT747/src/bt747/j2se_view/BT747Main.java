@@ -25,6 +25,7 @@ import javax.swing.UIManager;
 import bt747.Txt;
 import bt747.model.BT747View;
 import bt747.model.AppController;
+import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Time;
@@ -64,11 +65,11 @@ public class BT747Main extends javax.swing.JFrame implements
         // to controller.
     }
 
-    public void setController(AppController c) {
+    public void setController(Controller c) {
         if (this.c != null) {
             this.c.removeGPSListener(this);
         }
-        this.c = c;
+        this.c = (AppController) c;  // Should check that c is an AppController or do it differently
         c.addGPSListener(this);
     }
 
