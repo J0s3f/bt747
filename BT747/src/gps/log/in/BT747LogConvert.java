@@ -451,7 +451,10 @@ public final class BT747LogConvert implements GPSLogConvert {
                 e.printStackTrace();
             }
             if (m_File == null || !m_File.isOpen()) {
-                errorInfo = fileName + "|" + (m_File!=null?m_File.lastError:"");
+                errorInfo = fileName;
+                if(m_File!=null) {
+                    errorInfo += "|" + m_File.lastError;
+                }
                 error = BT747Constants.ERROR_COULD_NOT_OPEN;
                 m_File = null;
             } else {
