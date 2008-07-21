@@ -179,11 +179,13 @@
 		<attribute name="suffix" default="_waba_j2se" />
 		<attribute name="build.j2se" default="" />
 		<attribute name="no.waba" default="" />
+		<attribute name="build.lib" default="" />
 		<sequential>
 			<antcall target="proguard.rxtx">
 				<param name="build.j2se" value="@{build.j2se}" />
 				<param name="name.suffix" value="@{suffix}" />
 				<param name="no.waba" value="@{no.waba}" />
+				<param name="build.lib" value="@{build.lib}" />
 			</antcall>
 		</sequential>
 	</macrodef>
@@ -277,6 +279,7 @@
 		<pathelement location="${jcalendar.jar}" />
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
+		<pathelement location="${waba_forj2se.jar}" />
 	</path>
 
 	<uptodate property="libj2se.uptodate"
@@ -300,6 +303,7 @@
 		       optimize="true"
 		       classpathref="j2seclasspath"
 		>
+			<include name="bt747/model/AppController.java" />
 			<include name="bt747/j2se_view/**" />
 			<include name="bt747/lang/Txt_en.java" />
 			<exclude name="bt747/j2se_view/BT747.java" />
@@ -313,6 +317,37 @@
         </copy>
         -->
 	</target>
+
+	<target name="proguard.j2seapp_task" unless="skip.proguard">
+		<taskdef name="proguard"
+		         classpath="${proguardLib}"
+		         classname="proguard.ant.ProGuardTask"
+		/>
+		<move file="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
+		      tofile="${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar"
+		/>
+		<proguard forceprocessing="true"
+		          shrink="true"
+		          defaultpackage=""
+		          optimize="true"
+		          obfuscate="false"
+		          repackageclasses="false"
+		          printusage="false"
+		          overloadaggressively="false"
+		          verbose="true"
+		          ignorewarnings="true"
+		>
+			<libraryjar file="${proguard.java.rt.lib}" />
+			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
+			<outjar path="${j2sebuild.dir}/${ant.project.name}_j2se.jar" />
+                     -injar ${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar
+                     -optimizationpasses 1
+                     -keepclasseswithmembers public class * {
+                          public static void main(java.lang.String[]); }
+            </proguard>
+	</target>
+
+	<target name="proguard.j2seapp" depends="proguard.j2seapp_task" />
 
 	<target name="dist.j2se" depends="build.j2seapp">
 		<buildnumber file="build.num" />
@@ -342,6 +377,29 @@
 		>
 			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
 		</jar>
+
+		<antcall target="proguard.j2seapp" />
+
+		<copy file="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
+		      tofile="${dist}/${ant.project.name}_j2se.jar"
+		/>
+
+		<antcall target="sign">
+			<param name="jar.tosign"
+			       value="${dist}/${ant.project.name}_j2se.jar"
+			/>
+		</antcall>
+
+	</target>
+
+	<target name="proguard.lib" depends="proguard.lib_task" />
+
+	<property name="libtmp_suffix" value="_j2se_libtmp" />
+	<property name="libj2se_suffix" value="_j2se" />
+	<target name="proguard.lib_task" unless="skip.proguard">
+		<move file="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
+		      tofile="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar"
+		/>
 		<taskdef name="proguard"
 		         classpath="${proguardLib}"
 		         classname="proguard.ant.ProGuardTask"
@@ -358,19 +416,28 @@
 		          ignorewarnings="true"
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
-			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
-			<outjar path="${dist}/${ant.project.name}_j2se.jar" />
-                        -injar ${j2sebuild.dir}/${ant.project.name}_j2se.jar
+			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar" />
+                        -injar ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar(!BT747.class,!bt747/*_view/**,!bt747/gps/connection/GPSWabaPort.class)
+                        -injar ${waba_forj2se.jar}(!META-INF/**)
+                        -injar ${swcollections.jar}(!META-INF/**)
                         -optimizationpasses 1
-                        -keepclasseswithmembers public class * {
-                             public static void main(java.lang.String[]); }
+                        -keep public class gps.BT747Constants { *; }
+                        -keep public class gps.GpsEvent { *; }
+                        -keep public class gps.GPSListener { *; }
+                        -keep public class gps.log.GPSRecord { *; }
+                        -keep public class gps.log.GPSFilter { *; }
+                        -keep public class gps.log.GPSFilterAdvanced { *; }
+                        -keep public class bt747.model.* { *; }
+                        -keep public class bt747.model.BT747View { *; }
+                        -keep public class gps.convert.FileUtil {*; }
+                        -keep public class bt747.sys.Time { *; }
+                        -keep public class gps.log.in.GPSLogConvert { *; }
+                        -keep public class * implements gps.log.in.GPSLogConvert { *; }
+                        -keep public class * implements gps.log.out.GPSFile { *; }
+                        -keep public class gps.log.out.GPSFile { *; }
+                        -keep public class * extends gps.connection.GPSPort { *; }
+                        -keep public class gps.connection.GPSPort  { *; }
                </proguard>
-
-		<antcall target="sign">
-			<param name="jar.tosign"
-			       value="${dist}/lib${ant.project.name}.jar"
-			/>
-		</antcall>
 
 	</target>
 
@@ -380,50 +447,16 @@
 	        unless="libj2se.uptodate"
 	>
 		<!-- First build normal target -->
-		<property name="tmp_suffix" value="_j2se_libtmp" />
-		<property name="j2se_suffix" value="_j2se" />
-		<build.rxtx suffix="_j2se_libtmp" build.j2se="yes" no.waba="yes" />
-
-		<delete file="${dist}/lib${ant.project.name}.jar" />
-		<taskdef name="proguard"
-		         classpath="${proguardLib}"
-		         classname="proguard.ant.ProGuardTask"
+		<build.rxtx suffix="${libtmp_suffix}"
+		            build.j2se="yes"
+		            no.waba="yes"
+		            build.lib="yes"
 		/>
-		<proguard forceprocessing="true"
-		          shrink="true"
-		          defaultpackage=""
-		          optimize="true"
-		          obfuscate="false"
-		          repackageclasses="false"
-		          printusage="false"
-		          overloadaggressively="false"
-		          verbose="true"
-		          ignorewarnings="true"
-		>
-			<libraryjar file="${proguard.java.rt.lib}" />
-			<outjar path="${dist}/lib${ant.project.name}.jar" />
-	                    -injar ${rxtxbuild.dir}/${ant.project.name}${tmp_suffix}.jar(!BT747.class,!bt747/*_view/**,!bt747/gps/connection/GPSWabaPort.class)
-	                    -injar ${waba_forj2se.jar}(!META-INF/**)
-                        -injar ${swcollections.jar}(!META-INF/**)
-	                    -optimizationpasses 1
-	                    -keep public class gps.BT747Constants { *; }
-	                    -keep public class gps.GpsEvent { *; }
-	                    -keep public class gps.GPSListener { *; }
-	                    -keep public class gps.log.GPSRecord { *; }
-	                    -keep public class gps.log.GPSFilter { *; }
-	                    -keep public class gps.log.GPSFilterAdvanced { *; }
-	                    -keep public class bt747.model.* { *; }
-                        -keep public class bt747.model.BT747View { *; }
-			            -keep public class gps.convert.FileUtil {*; }
-                        -keep public class bt747.sys.Time { *; }
-	                    -keep public class gps.log.in.GPSLogConvert { *; }
-	                    -keep public class * implements gps.log.in.GPSLogConvert { *; }
-	                    -keep public class * implements gps.log.out.GPSFile { *; }
-	                    -keep public class gps.log.out.GPSFile { *; }
-	                    -keep public class * extends gps.connection.GPSPort { *; }
-	                    -keep public class gps.connection.GPSPort  { *; }
-	           </proguard>
 
+		<antcall target="proguard.lib" />
+		<copy file="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
+		      tofile="${dist}/lib${ant.project.name}.jar"
+		/>
 
 		<antcall target="sign">
 			<param name="jar.tosign"
@@ -431,59 +464,6 @@
 			/>
 		</antcall>
 	</target>
-
-
-	<target name="libtask.rxtx" depends="rxtxjar" unless="use.proguard_java">
-		<taskdef name="proguard"
-		         classpath="${proguardLib}"
-		         classname="proguard.ant.ProGuardTask"
-		/>
-		<getsuffix />
-		<move file="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar"
-		      tofile="${rxtxbuild.dir}/lib${ant.project.name}${suffix}_unopt.jar"
-		/>
-		<proguard shrink="true"
-		          defaultpackage=""
-		          optimize="false"
-		          obfuscate="false"
-		          allowaccessmodification="no"
-		          flattenpackagehierarchy=""
-		          repackageclasses="false"
-		          printusage="false"
-		          overloadaggressively="false"
-		          verbose="true"
-		          ignorewarnings="true"
-		>
-			<!--
-              <keep name="${mainClass}" />
-              <keep name="gps.parser.*" />
-              <keep name="bt747.j2se_view.BT747" />
-              <keep name="gps.connection.GPSRxTxPort" />
-              <keep name="gps.parser.NewLogConvert" />
-              <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
-              <libraryjar file="${waba_forwaba.jar}" />
-              <libraryjar file="${swcollections.jar}" />
-              -->
-			<libraryjar file="${proguard.java.rt.lib}" />
-			<injar path="" filter="" />
-			<outjar path="${rxtxbuild.dir}/lib${ant.project.name}${suffix}.jar"
-			/>
-                  -optimizationpasses 1
-          	      -injar ${rxtxbuild.dir}/lib${ant.project.name}${suffix}_unopt.jar(!bt747/waba_view/**,!BT747.class) 
-                  -injar ${waba_forj2se.jar}(!META-INF/**)
-                  -keep public class * implements gps.log.in.GPSLogConvert  { *; }
-                  -keep public class * extends gps.connection.GPSPort  { *; }
-                  -keep public class gps.GPSListener  { *; }
-                  -keep public class gps.GpsEvent { *; }
-                  -keep public class bt747.model.Model*  { *; }
-                  -keep public class bt747.model.Controller  { *; }
-              </proguard>
-		<delete file="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar">
-		</delete>
-	</target>
-
-
-
 
 	<macrodef name="macro.run.rxtx">
 		<attribute name="main-class" />
@@ -544,8 +524,10 @@
 		/>
 	</target>
 
+	<target name="proguard.rxtx" depends="rxtxjar,proguard.rxtx_task">
+	</target>
 
-	<target name="proguard.rxtx" depends="rxtxjar" unless="use.proguard_java">
+	<target name="proguard.rxtx_task" unless="skip.proguard">
 		<taskdef name="proguard"
 		         classpath="${proguardLib}"
 		         classname="proguard.ant.ProGuardTask"
@@ -604,7 +586,6 @@
 		<antcall target="proguard.rxtx">
 			<param name="build.j2se" value="_j2se" />
 		</antcall>
-
 
 		<!--
         <antcall target="rxtxjar">
@@ -728,6 +709,10 @@
 				<include name="bt747/waba_view/**" if="no.waba" />
 				<include name="bt747/j2se_view/BT747.java" if="no.waba" />
 				<include name="BT747.java" if="no.waba" />
+				<include name="bt747/*view/**" if="build.lib" />
+				<include name="bt747/lang/**" if="build.lib" />
+				<include name="bt747/Txt.java" if="build.lib" />
+				<include name="bt747/model/AppController.java" if="build.lib" />
 			</fileset>
 		</delete>
 		<javac verbose="no"
@@ -1022,10 +1007,7 @@
 
 	</target>
 
-	<target name="proguard_task"
-	        depends="waba.lang,jar"
-	        unless="use.proguard_java"
-	>
+	<target name="proguard_task" depends="waba.lang,jar" unless="skip.proguard">
 		<taskdef name="proguard"
 		         classpath="${proguardLib}"
 		         classname="proguard.ant.ProGuardTask"
@@ -1064,32 +1046,9 @@
 	</target>
 
 
-	<target name="proguard_java" depends="jar" if="use.proguard_java">
-		<move file="${build.dir}/${ant.project.name}.jar"
-		      tofile="${build.dir}/${ant.project.name}_unopt.jar"
-		/>
-		<echo message="${proguardLib}" />
-		<java classname="proguard.ProGuard"
-		      fork="yes"
-		      classpath="${proguardLib}"
-		>
-			<arg line="-injars ${build.dir}/${ant.project.name}_unopt.jar" />
-			<arg line="-outjars ${build.dir}/${ant.project.name}.jar" />
-			<arg line="-libraryjars ${proguard.java.rt.lib}${path.separator}${superwaba_root}/lib/SuperWaba.jar"
-			/>
-			<arg line="-keep public class ${mainClass}" />
-			<arg line="-allowaccessmodification" />
-			<arg line="-overloadaggressively" />
-			<!--
-			<arg line="-repackageclasses"/>
-			<arg line="-optimizationpasses 3"/>
-			-->
-		</java>
-
-	</target>
-
-
-	<target name="proguard" depends="proguard_task,proguard_java">
+	<target name="proguard" depends="jar">
+		<antcall target="proguard_task">
+		</antcall>
 	</target>
 
 

@@ -94,7 +94,7 @@ public final class AppController extends Controller {
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
                 // Erase log
-                m.gpsModel().recoveryEraseLog();
+                c.recoveryEraseLog();
             }
         }
     }
