@@ -12,8 +12,9 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import java.io.File;
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
@@ -62,8 +63,6 @@ public class BT747Main extends javax.swing.JFrame implements
         // TODO: finish message box handling and send back events
         // to controller.
     }
-    
-    
 
     public void setController(AppController c) {
         if (this.c != null) {
@@ -119,13 +118,21 @@ public class BT747Main extends javax.swing.JFrame implements
         cbGPSType.setSelectedIndex(m.getGPSType() == 0 ? 0 : 1);
         cbDisableLoggingDuringDownload.setSelected(m.isIncremental());
         Time d;
-        d= new Time();
+        d = new Time();
         d.setUTCTime(m.getFilterStartTime());
-        startDate.setDate(new GregorianCalendar(d.getYear(), d.getMonth(), d
-                .getDay()).getTime());
+        Calendar cal = Calendar.getInstance();
+        //cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+        cal.set(d.getYear(), d.getMonth() - 1, d.getDay());
+        startDate.setDate(cal.getTime());
+        //startDate.setCalendar(cal);
         d.setUTCTime(m.getFilterEndTime());
-        endDate.setDate(new GregorianCalendar(d.getYear(), d.getMonth(), d
-                .getDay()).getTime());
+        cal = Calendar.getInstance();
+        //cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+        cal.set(d.getYear(), d.getMonth() - 1, d.getDay());
+        endDate.setDate(cal.getTime());
+        //endDate.setCalendar(cal);
+//        startDate.getCalendar().setTimeZone(TimeZone.getTimeZone("GMT"));
+//        endDate.getCalendar().setTimeZone(TimeZone.getTimeZone("GMT"));
         // TODO: Deactivate debug by default
         c.setDebug(true);
         btGPSDebug.setSelected(m.isDebug());
@@ -275,11 +282,13 @@ public class BT747Main extends javax.swing.JFrame implements
         int wayRCR = m.getWayPtRCR();
         int wayValid = m.getWayPtValid();
 
-        cbTrkNoFix.setSelected((trkValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
+        cbTrkNoFix
+                .setSelected((trkValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
         cbTrkPPS.setSelected((trkValid & BT747Constants.VALID_PPS_MASK) != 0);
         cbTrkEstimate
                 .setSelected((trkValid & BT747Constants.VALID_ESTIMATED_MASK) != 0);
-        cbTrkManual.setSelected((trkValid & BT747Constants.VALID_MANUAL_MASK) != 0);
+        cbTrkManual
+                .setSelected((trkValid & BT747Constants.VALID_MANUAL_MASK) != 0);
         cbTrkSPS.setSelected((trkValid & BT747Constants.VALID_SPS_MASK) != 0);
         cbTrkFRTK.setSelected((trkValid & BT747Constants.VALID_FRTK_MASK) != 0);
         cbTrkDGPS.setSelected((trkValid & BT747Constants.VALID_DGPS_MASK) != 0);
@@ -289,7 +298,8 @@ public class BT747Main extends javax.swing.JFrame implements
 
         cbTrkTime.setSelected((BT747Constants.RCR_TIME_MASK & trkRCR) != 0);
         cbTrkSpeed.setSelected((BT747Constants.RCR_SPEED_MASK & trkRCR) != 0);
-        cbTrkDistance.setSelected((BT747Constants.RCR_DISTANCE_MASK & trkRCR) != 0);
+        cbTrkDistance
+                .setSelected((BT747Constants.RCR_DISTANCE_MASK & trkRCR) != 0);
         cbTrkButton.setSelected((BT747Constants.RCR_BUTTON_MASK & trkRCR) != 0);
         cbTrkUser1.setSelected((BT747Constants.RCR_APP1_MASK & trkRCR) != 0);
         cbTrkUser2.setSelected((BT747Constants.RCR_APP2_MASK & trkRCR) != 0);
@@ -304,11 +314,13 @@ public class BT747Main extends javax.swing.JFrame implements
         cbTrkUser11.setSelected((BT747Constants.RCR_APPY_MASK & trkRCR) != 0);
         cbTrkUser12.setSelected((BT747Constants.RCR_APPZ_MASK & trkRCR) != 0);
 
-        cbWayNoFix.setSelected((wayValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
+        cbWayNoFix
+                .setSelected((wayValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
         cbWayPPS.setSelected((wayValid & BT747Constants.VALID_PPS_MASK) != 0);
         cbWayEstimate
                 .setSelected((wayValid & BT747Constants.VALID_ESTIMATED_MASK) != 0);
-        cbWayManual.setSelected((wayValid & BT747Constants.VALID_MANUAL_MASK) != 0);
+        cbWayManual
+                .setSelected((wayValid & BT747Constants.VALID_MANUAL_MASK) != 0);
         cbWaySPS.setSelected((wayValid & BT747Constants.VALID_SPS_MASK) != 0);
         cbWayFRTK.setSelected((wayValid & BT747Constants.VALID_FRTK_MASK) != 0);
         cbWayDGPS.setSelected((wayValid & BT747Constants.VALID_DGPS_MASK) != 0);
@@ -318,7 +330,8 @@ public class BT747Main extends javax.swing.JFrame implements
 
         cbWayTime.setSelected((BT747Constants.RCR_TIME_MASK & wayRCR) != 0);
         cbWaySpeed.setSelected((BT747Constants.RCR_SPEED_MASK & wayRCR) != 0);
-        cbWayDistance.setSelected((BT747Constants.RCR_DISTANCE_MASK & wayRCR) != 0);
+        cbWayDistance
+                .setSelected((BT747Constants.RCR_DISTANCE_MASK & wayRCR) != 0);
         cbWayButton.setSelected((BT747Constants.RCR_BUTTON_MASK & wayRCR) != 0);
         cbWayUser1.setSelected((BT747Constants.RCR_APP1_MASK & wayRCR) != 0);
         cbWayUser2.setSelected((BT747Constants.RCR_APP2_MASK & wayRCR) != 0);
@@ -506,6 +519,7 @@ public class BT747Main extends javax.swing.JFrame implements
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
@@ -976,12 +990,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                         .add(
                                                                 tfWorkDirectory,
                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                661,
+                                                                675,
                                                                 Short.MAX_VALUE)
                                                         .add(
                                                                 tfRawLogFilePath,
                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                661,
+                                                                675,
                                                                 Short.MAX_VALUE))
                                         .addContainerGap()));
         jPanel1Layout
@@ -1032,7 +1046,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
                                                                                 btOutputFile)))
-                                        .addContainerGap(16, Short.MAX_VALUE)));
+                                        .addContainerGap(22, Short.MAX_VALUE)));
 
         tfWorkDirectory.setText(m.getBaseDirPath());
 
@@ -1277,7 +1291,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                                 lbConversionTime))
                                                                                         .add(
                                                                                                 jLabel5))))
-                                        .addContainerGap(67, Short.MAX_VALUE)));
+                                        .addContainerGap(24, Short.MAX_VALUE)));
         pnConvertLayout
                 .setVerticalGroup(pnConvertLayout
                         .createParallelGroup(
@@ -1355,38 +1369,35 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                         .add(
-                                                                pnConvert,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                                                LogOperationsPanelLayout
+                                                                        .createSequentialGroup()
+                                                                        .add(
+                                                                                pnConvert,
+                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)
+                                                                        .add(
+                                                                                202,
+                                                                                202,
+                                                                                202)))
                                         .addContainerGap()));
-        LogOperationsPanelLayout
-                .setVerticalGroup(LogOperationsPanelLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                org.jdesktop.layout.GroupLayout.TRAILING,
-                                LogOperationsPanelLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                jPanel1,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                Short.MAX_VALUE)
-                                        .add(5, 5, 5)
-                                        .add(
-                                                pnDownload,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                pnConvert,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap()));
+        LogOperationsPanelLayout.setVerticalGroup(LogOperationsPanelLayout
+                .createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(
+                        org.jdesktop.layout.GroupLayout.TRAILING,
+                        LogOperationsPanelLayout.createSequentialGroup().add(
+                                jPanel1,
+                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).add(5, 5, 5).add(pnDownload,
+                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addPreferredGap(
+                                org.jdesktop.layout.LayoutStyle.RELATED).add(
+                                pnConvert,
+                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE).addContainerGap()));
 
         jTabbedPane1.addTab("Log operations", LogOperationsPanel);
 
@@ -1654,7 +1665,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                        .addContainerGap(485, Short.MAX_VALUE)));
+                                        .addContainerGap(499, Short.MAX_VALUE)));
         FileSettingsPanelLayout
                 .setVerticalGroup(FileSettingsPanelLayout
                         .createParallelGroup(
@@ -1675,7 +1686,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(138, Short.MAX_VALUE)));
+                                        .addContainerGap(144, Short.MAX_VALUE)));
 
         jTabbedPane1.addTab("Output Settings", FileSettingsPanel);
 
@@ -2740,9 +2751,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                Short.MAX_VALUE)));
+                                        .addContainerGap(18, Short.MAX_VALUE)));
         LogFiltersPanelLayout
                 .setVerticalGroup(LogFiltersPanelLayout
                         .createParallelGroup(
@@ -2774,7 +2783,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                 Short.MAX_VALUE))
-                                        .addContainerGap(25, Short.MAX_VALUE)));
+                                        .addContainerGap(31, Short.MAX_VALUE)));
 
         jTabbedPane1.addTab("Filters", LogFiltersPanel);
 
@@ -3062,9 +3071,9 @@ public class BT747Main extends javax.swing.JFrame implements
         cbOtherFormat.setBorder(javax.swing.BorderFactory
                 .createTitledBorder("Other"));
 
-        cbValidFixOnly.setText("Holux M-241");
+        cbValidFixOnly.setText("Valid Fix Only");
         cbValidFixOnly
-                .setToolTipText("Usually indicates that this is a Holux M241 device using a 'different format'.\n\nKeep the original device setting.");
+                .setToolTipText("This works only on the more recent models.  Only positions with a fix will be logged to the device if activated.");
         cbValidFixOnly.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
@@ -3768,7 +3777,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))))
-                                        .addContainerGap(44, Short.MAX_VALUE)));
+                                        .addContainerGap(50, Short.MAX_VALUE)));
 
         jTabbedPane1.addTab("Device settings", DeviceSettingsPanel);
 
@@ -3849,7 +3858,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 lbTime).add(
                                                                 lbLongitude)
                                                         .add(lbLatitude))
-                                        .addContainerGap(686, Short.MAX_VALUE)));
+                                        .addContainerGap(700, Short.MAX_VALUE)));
         GPSDecodePanelLayout
                 .setVerticalGroup(GPSDecodePanelLayout
                         .createParallelGroup(
@@ -3936,7 +3945,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                         .add(jLabel17).add(
                                                                 jLabel19))
-                                        .addContainerGap(161, Short.MAX_VALUE)));
+                                        .addContainerGap(167, Short.MAX_VALUE)));
 
         jTabbedPane1.addTab("GPS Decode", GPSDecodePanel);
 
@@ -4833,7 +4842,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(401, Short.MAX_VALUE)));
+                                        .addContainerGap(415, Short.MAX_VALUE)));
         AdvancedSettingsPanelLayout
                 .setVerticalGroup(AdvancedSettingsPanelLayout
                         .createParallelGroup(
@@ -5522,7 +5531,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(306, Short.MAX_VALUE)));
+                                        .addContainerGap(320, Short.MAX_VALUE)));
         AdvancedfileSettingsPanelLayout
                 .setVerticalGroup(AdvancedfileSettingsPanelLayout
                         .createParallelGroup(
@@ -5572,7 +5581,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 org.jdesktop.layout.GroupLayout.TRAILING,
                 InfoPanelLayout.createSequentialGroup().addContainerGap().add(
                         jScrollPane1,
-                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 826,
+                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 840,
                         Short.MAX_VALUE)));
         InfoPanelLayout.setVerticalGroup(InfoPanelLayout.createParallelGroup(
                 org.jdesktop.layout.GroupLayout.LEADING).add(
@@ -5580,7 +5589,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         jScrollPane1,
                         org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 316,
                         org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(19, Short.MAX_VALUE)));
+                        .addContainerGap(25, Short.MAX_VALUE)));
 
         jTabbedPane1.addTab("INFO", InfoPanel);
 
@@ -5661,11 +5670,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                 layout
                                                         .createParallelGroup(
                                                                 org.jdesktop.layout.GroupLayout.LEADING)
-                                                        .add(
-                                                                jTabbedPane1,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                841,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                                        .add(jTabbedPane1)
                                                         .add(
                                                                 layout
                                                                         .createSequentialGroup()
@@ -5689,7 +5694,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                         .add(
                                                                                 DownloadProgressBar,
                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                                420,
+                                                                                434,
                                                                                 Short.MAX_VALUE)))
                                         .addContainerGap()));
         layout
@@ -5700,18 +5705,16 @@ public class BT747Main extends javax.swing.JFrame implements
                                 layout
                                         .createSequentialGroup()
                                         .addContainerGap()
-                                        .add(
-                                                jTabbedPane1,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                371,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        .add(jTabbedPane1)
                                         .addPreferredGap(
                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(
                                                 layout
                                                         .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.LEADING)
+                                                                org.jdesktop.layout.GroupLayout.LEADING,
+                                                                false)
                                                         .add(
+                                                                org.jdesktop.layout.GroupLayout.TRAILING,
                                                                 layout
                                                                         .createParallelGroup(
                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
@@ -5726,9 +5729,9 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                 DownloadProgressLabel))
                                                         .add(
                                                                 DownloadProgressBar,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                 23,
-                                                                Short.MAX_VALUE))
+                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                                         .addContainerGap()));
 
         jTabbedPane1.getAccessibleContext().setAccessibleName(
@@ -5760,12 +5763,12 @@ public class BT747Main extends javax.swing.JFrame implements
     }// GEN-LAST:event_cbDisableLoggingDuringDownloadFocusLost
 
     private void cbUTCOffsetFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbUTCOffsetFocusLost
-    // TODO: Initialse offset
+        // TODO: Initialse offset
         String tmp = (String) cbUTCOffset.getSelectedItem();
-        if (tmp.charAt(0) == '+') {
-            c.setTimeOffsetHours(Integer.parseInt((String) tmp.substring(1)));
+        if (tmp.charAt(4) == '+') {
+            c.setTimeOffsetHours(Integer.parseInt((String) tmp.substring(5)));
         } else {
-            c.setTimeOffsetHours(Integer.parseInt(tmp));
+            c.setTimeOffsetHours(Integer.parseInt(tmp.substring(4)));
         }
 
     }// GEN-LAST:event_cbUTCOffsetFocusLost
@@ -5953,6 +5956,12 @@ public class BT747Main extends javax.swing.JFrame implements
     }// GEN-LAST:event_cbFormatItemStateChanged
 
     private void btConvertActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btConvertActionPerformed
+        // TODO: Change upon action in date change.
+        //System.out.println(startDate.getCalendar().getTimeZone());
+        // TODO: The date returned takes local timezone into account.
+        // Needs to be corrected 
+        c.setStartDate((int)(startDate.getDate().getTime()/1000));
+        c.setEndDate((int)(endDate.getDate().getTime()/1000));
 
         c.convertLog(selectedFormat);
     }// GEN-LAST:event_btConvertActionPerformed
@@ -6021,23 +6030,32 @@ public class BT747Main extends javax.swing.JFrame implements
     private void updateLogFormatData() {
         int logFormat = m.getLogFormat();
 
-        cbUTCTime.setSelected((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0);
+        cbUTCTime
+                .setSelected((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0);
         cbFixType
                 .setSelected((logFormat & (1 << BT747Constants.FMT_VALID_IDX)) != 0);
-        cbLat.setSelected((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0);
+        cbLat
+                .setSelected((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0);
         cbLong
                 .setSelected((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0);
         cbHeight
                 .setSelected((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0);
-        cbSpeed.setSelected((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0);
+        cbSpeed
+                .setSelected((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0);
         cbHeading
                 .setSelected((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) != 0);
-        cbDSTA.setSelected((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0);
-        cbDAGE.setSelected((logFormat & (1 << BT747Constants.FMT_DAGE_IDX)) != 0);
-        cbPDOP.setSelected((logFormat & (1 << BT747Constants.FMT_PDOP_IDX)) != 0);
-        cbHDOP.setSelected((logFormat & (1 << BT747Constants.FMT_HDOP_IDX)) != 0);
-        cbVDOP.setSelected((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) != 0);
-        cbNSAT.setSelected((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) != 0);
+        cbDSTA
+                .setSelected((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0);
+        cbDAGE
+                .setSelected((logFormat & (1 << BT747Constants.FMT_DAGE_IDX)) != 0);
+        cbPDOP
+                .setSelected((logFormat & (1 << BT747Constants.FMT_PDOP_IDX)) != 0);
+        cbHDOP
+                .setSelected((logFormat & (1 << BT747Constants.FMT_HDOP_IDX)) != 0);
+        cbVDOP
+                .setSelected((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) != 0);
+        cbNSAT
+                .setSelected((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) != 0);
         cbSID.setSelected((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0);
         cbElevation
                 .setSelected((logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) != 0);
@@ -6372,7 +6390,6 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JCheckBox cbHeading;
     private javax.swing.JCheckBox cbHeight;
     private javax.swing.JComboBox cbHeightOverMeanSeaLevel;
-    private javax.swing.JCheckBox cbValidFixOnly;
     private javax.swing.JCheckBox cbImperialUnits;
     private javax.swing.JCheckBox cbIncremental;
     private javax.swing.JCheckBox cbLat;
@@ -6445,6 +6462,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JLabel cbVTGOut;
     private javax.swing.JLabel cbVTGOut1;
     private javax.swing.JLabel cbVTGOut2;
+    private javax.swing.JCheckBox cbValidFixOnly;
     private javax.swing.JCheckBox cbWayButton;
     private javax.swing.JCheckBox cbWayDGPS;
     private javax.swing.JCheckBox cbWayDistance;

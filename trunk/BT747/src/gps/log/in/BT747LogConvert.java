@@ -44,7 +44,8 @@ public final class BT747LogConvert implements GPSLogConvert {
     private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
-    private boolean isConvertWGL84ToMSL = false; // If true,remove geoid difference from
+    private boolean isConvertWGL84ToMSL = false; // If true,remove geoid
+                                                    // difference from
     // height
 
     private int satIdxOffset;
@@ -444,11 +445,13 @@ public final class BT747LogConvert implements GPSLogConvert {
         if (File.isAvailable()) {
             try {
                 m_File = new File(fileName, File.READ_ONLY, Card);
+                errorInfo = fileName + "|" + m_File.lastError;
             } catch (Exception e) {
                 // TODO: handle exception
+                e.printStackTrace();
             }
-            if (!m_File.isOpen()) {
-                errorInfo = fileName + "|" + m_File.lastError;
+            if (m_File == null || !m_File.isOpen()) {
+                errorInfo = fileName + "|" + (m_File!=null?m_File.lastError:"");
                 error = BT747Constants.ERROR_COULD_NOT_OPEN;
                 m_File = null;
             } else {
