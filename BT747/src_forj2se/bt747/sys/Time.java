@@ -6,11 +6,9 @@
  */
 package bt747.sys;
 
-import java.util.GregorianCalendar;
-
-import bt747.util.Date;
-
-
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * @author Mario De Weerd
@@ -18,50 +16,63 @@ import bt747.util.Date;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Time extends java.util.GregorianCalendar {
+public class Time {
+    static private SimpleDateFormat FORMAT_YYYYMMDD = new SimpleDateFormat(
+    "yyyy/MM/dd");
+    static private SimpleDateFormat FORMAT_DDMMYYYY = new SimpleDateFormat(
+"dd/MM/yyyy");
+    static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+    private Calendar cal = Calendar.getInstance();
 
+    private void init() {
+        cal.setTimeZone(GMT_ZONE);
+    }
+    
+    public Time() {
+        init();
+    }
     /**
      * 
      */
     private static final long serialVersionUID = -4377529854748199705L;
     
     public int getHour() {
-        return this.get(GregorianCalendar.HOUR_OF_DAY);
+        return cal.get(Calendar.HOUR_OF_DAY);
     }
     public void setHour(int hours) {
-        super.set(HOUR_OF_DAY, hours);
+        cal.set(Calendar.HOUR_OF_DAY, hours);
     }
     public int getMinute() {
-        return this.get(GregorianCalendar.MINUTE);
+        return cal.get(Calendar.MINUTE);
     }
     public void setMinute(int hours) {
-        super.set(MINUTE, hours);
+        cal.set(Calendar.MINUTE, hours);
     }
     public int getSecond() {
-        return this.get(GregorianCalendar.SECOND);
+        return cal.get(Calendar.SECOND);
     }
     public void setSecond(int hours) {
-        super.set(SECOND, hours);
+        cal.set(Calendar.SECOND, hours);
     }
     public void setDay(int date) {
-        super.set(DAY_OF_MONTH, date);
+        cal.set(Calendar.DAY_OF_MONTH, date);
     }
    
     public int getYear() {
-        return super.get(GregorianCalendar.YEAR);
+        return cal.get(Calendar.YEAR);
     }
 
     public void setYear(int year) {
-        super.set(YEAR, year);
+        cal.set(Calendar.YEAR, year);
     }
     public int getMonth() {
-        return super.get(GregorianCalendar.MONTH);
+        return cal.get(Calendar.MONTH)+1;
     }
     public void setMonth(int month) {
-        super.set(MONTH, month);
+        cal.set(Calendar.MONTH, month-1);
     }
     public int getDay() {
-        return super.get(GregorianCalendar.DAY_OF_MONTH);
+        return cal.get(Calendar.DAY_OF_MONTH);
     }
     
     
@@ -80,11 +91,11 @@ public class Time extends java.util.GregorianCalendar {
         utc /= 60;
         hour=utc%24;
         utc /= 24;
-        this.set(1970,1,1,hour,minute,second);
-        this.add(DAY_OF_YEAR, utc-1);
+        cal.set(1970,0,1,hour,minute,second);
+        cal.add(Calendar.DAY_OF_YEAR, utc);
     }
 
 //    public  final void setUTCTime(final int utc_int) {
-//        super.setTime(new java.util.Date(utc_int*1000L));
+//        cal.setTime(new java.util.Date(utc_int*1000L));
 //    }
 }
