@@ -1547,26 +1547,6 @@ public class Controller {
     }
 
     /**
-     * Add a listener of GPS events.
-     * 
-     * @param listener
-     *            The listener to add.
-     */
-    public final void addGPSListener(final GPSListener listener) {
-        m.gpsModel().addListener(listener);
-    }
-
-    /**
-     * Remove a listener of GPS events.
-     * 
-     * @param listener
-     *            The listener to remove.
-     */
-    public final void removeGPSListener(final GPSListener listener) {
-        m.gpsModel().removeListener(listener);
-    }
-
-    /**
      * @return the lastError
      */
     public final int getLastError() {

@@ -6,15 +6,12 @@
 package bt747.j2se_view;
 
 import gps.BT747Constants;
-import gps.GPSListener;
-import gps.GpsEvent;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import java.io.File;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
@@ -23,8 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bt747.Txt;
-import bt747.model.BT747View;
 import bt747.model.AppController;
+import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -35,7 +32,7 @@ import bt747.sys.Time;
  * @author Mario De Weerd
  */
 public class BT747Main extends javax.swing.JFrame implements
-        bt747.model.ModelListener, GPSListener, BT747View {
+        bt747.model.ModelListener, BT747View {
 
     /**
      * 
@@ -66,11 +63,11 @@ public class BT747Main extends javax.swing.JFrame implements
     }
 
     public void setController(Controller c) {
-        if (this.c != null) {
-            this.c.removeGPSListener(this);
+        if (this.m != null) {
+            this.m.removeListener(this);
         }
         this.c = (AppController) c;  // Should check that c is an AppController or do it differently
-        c.addGPSListener(this);
+        m.addListener(this);
     }
 
     public void setModel(Model m) {
@@ -79,11 +76,6 @@ public class BT747Main extends javax.swing.JFrame implements
         }
         this.m = m;
         this.m.addListener(this);
-        m.addListener(this);
-    }
-
-    public void modelEvent(bt747.ui.Event e) {
-        onEvent(e);
     }
 
     private void initAppData() {
@@ -156,38 +148,6 @@ public class BT747Main extends javax.swing.JFrame implements
 
     private long conversionStartTime;
 
-    public void onEvent(bt747.ui.Event e) {
-        int type = e.getType();
-        if (type == ModelEvent.LOGFILEPATH_UPDATE) {
-            getRawLogFilePath();
-        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
-            getOutputFilePath();
-        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
-            getWorkDirPath();
-        } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
-            getIncremental();
-        } else if (type == ModelEvent.TRK_VALID_CHANGE
-                || type == ModelEvent.TRK_RCR_CHANGE
-                || type == ModelEvent.WAY_VALID_CHANGE
-                || type == ModelEvent.WAY_RCR_CHANGE) {
-            updateGuiLogFilterSettings();
-        } else if (type == ModelEvent.CONVERSION_STARTED) {
-            conversionStartTime = System.currentTimeMillis();
-        } else if (type == ModelEvent.CONVERSION_ENDED) {
-            lbConversionTime
-                    .setText("Time to convert: "
-                            + ((int) (System.currentTimeMillis() - conversionStartTime))
-                            + " ms");
-            lbConversionTime.setVisible(true);
-        } else if (type == ModelEvent.CONNECTED) {
-            btConnect.setText("Disconnect");
-            btConnectFunctionIsConnect = false;
-        } else if (type == ModelEvent.DISCONNECTED) {
-            btConnect.setText("Connect");
-            btConnectFunctionIsConnect = true;
-        }
-    }
-
     private void updateRMCData(final GPSRecord gps) {
         if (gps.utc > 0) {
             // Da
@@ -235,17 +195,45 @@ public class BT747Main extends javax.swing.JFrame implements
 
     boolean btConnectFunctionIsConnect = true;
 
-    public void gpsEvent(GpsEvent e) {
+    public void modelEvent(ModelEvent e) {
         // TODO Auto-generated method stub
         int type = e.getType();
-        if (type == GpsEvent.GPRMC) {
+        if (type == ModelEvent.GPRMC) {
             updateRMCData((GPSRecord) e.getArg());
-        } else if (type == GpsEvent.DATA_UPDATE) {
-        } else if (type == GpsEvent.GPGGA) {
+        } else if (type == ModelEvent.DATA_UPDATE) {
+        } else if (type == ModelEvent.GPGGA) {
             updateGPSData((GPSRecord) e.getArg());
-        } else if (type == GpsEvent.LOG_FORMAT_UPDATE) {
+        } else if (type == ModelEvent.LOG_FORMAT_UPDATE) {
             updateLogFormatData();
+        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+            getRawLogFilePath();
+        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+            getOutputFilePath();
+        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
+            getWorkDirPath();
+        } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
+            getIncremental();
+        } else if (type == ModelEvent.TRK_VALID_CHANGE
+                || type == ModelEvent.TRK_RCR_CHANGE
+                || type == ModelEvent.WAY_VALID_CHANGE
+                || type == ModelEvent.WAY_RCR_CHANGE) {
+            updateGuiLogFilterSettings();
+        } else if (type == ModelEvent.CONVERSION_STARTED) {
+            conversionStartTime = System.currentTimeMillis();
+        } else if (type == ModelEvent.CONVERSION_ENDED) {
+            lbConversionTime
+                    .setText("Time to convert: "
+                            + ((int) (System.currentTimeMillis() - conversionStartTime))
+                            + " ms");
+            lbConversionTime.setVisible(true);
+        } else if (type == ModelEvent.CONNECTED) {
+            btConnect.setText("Disconnect");
+            btConnectFunctionIsConnect = false;
+        } else if (type == ModelEvent.DISCONNECTED) {
+            btConnect.setText("Connect");
+            btConnectFunctionIsConnect = true;
         }
+
     }
 
     InputVerifier IntVerifier = new InputVerifier() {

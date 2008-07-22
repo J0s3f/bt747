@@ -19,14 +19,14 @@
 //********************************************************************       
 package bt747.model;
 
-import bt747.ui.Event;
+import gps.GpsEvent;
 
 /**
  * Defines some events for the gps package.
  * 
  * @author Mario De Weerd
  */
-public class ModelEvent extends Event {
+public class ModelEvent extends GpsEvent {
     public static final int CONVERSION_STARTED = getNextAvailableEventId();
     public static final int CONVERSION_ENDED = getNextAvailableEventId();
     public static final int WORKDIRPATH_UPDATE = getNextAvailableEventId();
@@ -42,5 +42,9 @@ public class ModelEvent extends Event {
 
     public ModelEvent(int type, Object arg) {
         super(type,arg);
+    }
+    
+    public ModelEvent(GpsEvent event) {
+        super(event.getType(),event.getArg());
     }
 }

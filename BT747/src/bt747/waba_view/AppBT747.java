@@ -31,9 +31,6 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
-import gps.GPSListener;
-import gps.GpsEvent;
-
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
@@ -48,7 +45,7 @@ import bt747.ui.MessageBox;
  * 
  * @author Mario De Weerd
  */
-public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
+public class AppBT747 extends MainWindow implements ModelListener {
 
     /*
      * Using Model, AppController, View.
@@ -294,7 +291,6 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
         miTraversableFocus.isChecked = m.isTraversableFocus();
 
         m.addListener(this);
-        c.addGPSListener(this);
         addTimer(this, 55);
 
         gpsType();
@@ -462,32 +458,28 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
         }
     }
 
-    public final void modelEvent(final bt747.ui.Event event) {
-        if ((event.getType() == ModelEvent.CONNECTED)) {
-            m_TabPanel.setActiveTab(TAB_LOG_GET_IDX);
-        }
-        // TODO: Should handle these events here.
-        this.postEvent(new waba.ui.Event(event.getType(),event.getArg(),0));
-    }
-
-    public final void gpsEvent(final GpsEvent event) {
+    public final void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
-        if ((event.getType() == GpsEvent.DOWNLOAD_STATE_CHANGE)) {
+        
+        if (eventType == ModelEvent.CONNECTED) {
+            m_TabPanel.setActiveTab(TAB_LOG_GET_IDX);
+        } else if ((event.getType() == ModelEvent.DOWNLOAD_STATE_CHANGE)) {
             updateProgressBar();
-        } else if ((event.getType() == GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY)) {
+        } else if ((event.getType() == ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY)) {
             requestLogOverwriteConfirmation();
-        } else if ((event.getType() == GpsEvent.ERASE_ONGOING_NEED_POPUP)) {
+        } else if ((event.getType() == ModelEvent.ERASE_ONGOING_NEED_POPUP)) {
             createErasePopup();
-        } else if ((event.getType() == GpsEvent.COULD_NOT_OPEN_FILE)) {
+        } else if ((event.getType() == ModelEvent.COULD_NOT_OPEN_FILE)) {
             couldNotOpenFileMessage((String) event.getArg());
-        } else if ((event.getType() == GpsEvent.DEBUG_MSG)) {
+        } else if ((event.getType() == ModelEvent.DEBUG_MSG)) {
             Vm.debug((String) event.getArg());
         } else {
             Control cntrl;
             cntrl = m_TabPanel.getPanel(m_TabPanel.getActiveTab());
             cntrl.postEvent(new Event(eventType, cntrl, 0));
         }
-
+        // TODO: Should handle these events here.
+        this.postEvent(new waba.ui.Event(eventType,event.getArg(),0));
     }
 
     public final void onExit() {

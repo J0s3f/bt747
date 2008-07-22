@@ -1,7 +1,9 @@
 package bt747.model;
 
 import gps.BT747Constants;
+import gps.GPSListener;
 import gps.GPSstate;
+import gps.GpsEvent;
 import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSFilter;
@@ -16,7 +18,7 @@ import bt747.util.Date;
  * @author Mario
  * 
  */
-public class Model extends AppSettings {
+public class Model extends AppSettings implements GPSListener {
 
     /**
      * The gpsModel communicates with the GPS device and stores some information
@@ -122,6 +124,7 @@ public class Model extends AppSettings {
         }
         gpsRxTx = new GPSrxtx();
         gpsModel = new GPSstate(gpsRxTx);
+        gpsModel.addListener(this);
         // gpsModel.setGPSRxtx(gpsRxTx);
     }
 
@@ -613,5 +616,9 @@ public class Model extends AppSettings {
      */
     public final boolean isDebugConn() {
         return gpsRxTx.isDebugConn();
+    }
+    
+    public void gpsEvent(GpsEvent event) {
+        postEvent(new ModelEvent(event));
     }
 }

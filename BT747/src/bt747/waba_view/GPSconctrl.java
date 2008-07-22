@@ -35,6 +35,8 @@ import bt747.Txt;
 import bt747.Version;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
+import bt747.model.ModelListener;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 
@@ -42,7 +44,7 @@ import bt747.sys.Time;
  * @author Mario De Weerd
  */
 
-public class GPSconctrl extends Container implements gps.GPSListener {
+public class GPSconctrl extends Container implements ModelListener {
     // private PushButtonGroup btnChannelSelect;
 
     private Button btnRestartGps;
@@ -78,6 +80,11 @@ public class GPSconctrl extends Container implements gps.GPSListener {
     public final void onStart() {
 
         btnBluetooth = new Button(Txt.BT_BLUETOOTH);
+        // Functionality only valid on Palm and Mac platform.
+//        if (!bt747.sys.Settings.platform.startsWith("Palm")) {
+//            btnBluetooth.setVisible(false);
+//        }
+
         // btnUSB=new Button("USB");
         btnConnectPort = new Button(Txt.BT_CONNECT_PRT);
         btnStopGps = new Button(Txt.BT_CLOSE_PRT);
@@ -128,7 +135,7 @@ public class GPSconctrl extends Container implements gps.GPSListener {
         add(lbModel = new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbFlashInfo = new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         updateButtons();
-        c.addGPSListener(this);
+        m.addListener(this);
     }
 
     private void GPS_setChannel(final int channel) {
@@ -244,13 +251,13 @@ public class GPSconctrl extends Container implements gps.GPSListener {
 
     }
 
-    public final void gpsEvent(final GpsEvent event) {
+    public final void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
-        if (eventType == GpsEvent.GPGGA) {
+        if (eventType == ModelEvent.GPGGA) {
             updateGPSData((GPSRecord) (event.getArg()));
-        } else if (eventType == GpsEvent.GPRMC) {
+        } else if (eventType == ModelEvent.GPRMC) {
             updateRMCData((GPSRecord) (event.getArg()));
             updateGPSData((GPSRecord) (event.getArg()));
-        }
+        } 
     }
 }

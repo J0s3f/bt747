@@ -673,7 +673,7 @@ public class AppSettings {
      * @return Returns the logFile full path.
      */
     public final String getLogFilePath() {
-        return baseDirPath + File.separatorChar + logFile;
+        return baseDirPath + File.separatorStr + logFile;
     }
 
     public final String getLogFile() {
@@ -1340,6 +1340,14 @@ public class AppSettings {
             ModelListener l = (ModelListener) it.next();
             ModelEvent e = new ModelEvent(type,l);
             l.modelEvent(e);
+        }
+    }
+
+    protected final void postEvent(final ModelEvent e) {
+        Iterator it = listeners.iterator();
+        while (it.hasNext()) {
+            ModelListener l = (ModelListener) it.next();
+            l.modelEvent(new ModelEvent(e));
         }
     }
 
