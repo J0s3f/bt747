@@ -8,12 +8,14 @@ package bt747.io;
 
 /**
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 public class File extends waba.io.File {
-    public static final char separatorChar='/';
+    public static char separatorChar = '/';
+    public static String separatorStr = "/";
+
     /**
      * @param path
      */
@@ -40,13 +42,13 @@ public class File extends waba.io.File {
         super(path, mode, slot);
         // TODO Auto-generated constructor stub
     }
-    
+
     public static String getCardVolumePath() {
-        if(getCardVolume()!=null) {
+        if (getCardVolume() != null) {
             return getCardVolume().getPath();
         } else {
             return null;
         }
     }
-    
+
 }

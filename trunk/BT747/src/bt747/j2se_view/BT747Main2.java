@@ -6,8 +6,6 @@
 package bt747.j2se_view;
 
 import gps.BT747Constants;
-import gps.GPSListener;
-import gps.GpsEvent;
 import gps.convert.Conv;
 import gps.convert.FileUtil;
 import gps.log.GPSRecord;
@@ -30,7 +28,7 @@ import bt747.model.ModelEvent;
  * @author Mario De Weerd
  */
 public class BT747Main2 extends javax.swing.JFrame implements
-        bt747.model.ModelListener, GPSListener {
+        bt747.model.ModelListener {
 
     /**
      * 
@@ -50,11 +48,29 @@ public class BT747Main2 extends javax.swing.JFrame implements
         initComponents();
         initAppData();
         m.addListener(this);
-        c.addGPSListener(this);
     }
 
-    public void modelEvent(bt747.ui.Event e) {
-        onEvent(e);
+    public void modelEvent(ModelEvent e) {
+            // TODO Auto-generated method stub
+            int type = e.getType();
+            if (type == ModelEvent.GPRMC) {
+                updateRMCData((GPSRecord) e.getArg());
+            } else if (type == ModelEvent.DATA_UPDATE) {
+            } else if (type == ModelEvent.GPGGA) {
+                updateGPSData((GPSRecord) e.getArg());
+            } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE) {
+                progressBarUpdate();
+            } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+                getRawLogFilePath();
+            } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+                getOutputFilePath();
+            } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
+                getWorkDirPath();
+            } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
+                getIncremental();
+            } else if (type == ModelEvent.CONNECTED) {
+
+            }
     }
 
     private void initAppData() {
@@ -69,21 +85,6 @@ public class BT747Main2 extends javax.swing.JFrame implements
         c.setDebug(true);
         c.setDebugConn(true);
 
-    }
-
-    public void onEvent(bt747.ui.Event e) {
-        int type = e.getType();
-        if (type == ModelEvent.LOGFILEPATH_UPDATE) {
-            getRawLogFilePath();
-        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
-            getOutputFilePath();
-        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
-            getWorkDirPath();
-        } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
-            getIncremental();
-        } else if (type == ModelEvent.CONNECTED) {
-
-        }
     }
 
     private void updateRMCData(final GPSRecord gps) {
@@ -127,19 +128,6 @@ public class BT747Main2 extends javax.swing.JFrame implements
                 + String.valueOf(Conv.wgs84Separation(gps.latitude,
                         gps.longitude)) + Txt.METERS_ABBR + ")");
 
-    }
-
-    public void gpsEvent(GpsEvent e) {
-        // TODO Auto-generated method stub
-        int type = e.getType();
-        if (type == GpsEvent.GPRMC) {
-            updateRMCData((GPSRecord) e.getArg());
-        } else if (type == GpsEvent.DATA_UPDATE) {
-        } else if (type == GpsEvent.GPGGA) {
-            updateGPSData((GPSRecord) e.getArg());
-        } else if (type == GpsEvent.DOWNLOAD_STATE_CHANGE) {
-            progressBarUpdate();
-        }
     }
 
     InputVerifier IntVerifier = new InputVerifier() {

@@ -100,7 +100,9 @@ public class File {
         return false;
     }
 
-    public static final char separatorChar = java.io.File.separatorChar;
+    public static char separatorChar = java.io.File.separatorChar;
+    public static String separatorStr = String.valueOf(separatorChar);
+
 
     boolean isopen = false;
 
