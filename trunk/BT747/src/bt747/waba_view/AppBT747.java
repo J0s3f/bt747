@@ -53,9 +53,8 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
     /*
      * Using Model, AppController, View.
      */
-    protected Model m = new Model();
-    protected AppController c = new AppController(m);
-
+    protected Model m;
+    protected AppController c;
     /**
      * The 'GPS state'. Used to get current GPS information and get access to
      * it.
@@ -180,6 +179,8 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
      * Initialiser of the application.
      */
     public AppBT747() {
+        m = new Model();
+        c = new AppController(m);
         if (Settings.onDevice) {
             bt747.sys.Vm.debug(bt747.sys.Vm.ERASE_DEBUG);
         }
@@ -271,6 +272,7 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
         numPanels++;
         m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX, new GPSLogEasy(m, c));
         numPanels++;
+        GPSconctrl gpsContCtrl = new GPSconctrl(c, m);
         m_TabPanel.setPanel(C_GPS_CONCTRL_IDX, new GPSconctrl(c, m));
         numPanels++;
         // m_TabPanel.setPanel(C_GPS_FLASH_IDX,m_GPSFlash = new
@@ -291,7 +293,7 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
         waba.sys.Settings.keyboardFocusTraversable = m.isTraversableFocus();
         miTraversableFocus.isChecked = m.isTraversableFocus();
 
-        m.addListener((ModelListener) this);
+        m.addListener(this);
         c.addGPSListener(this);
         addTimer(this, 55);
 
@@ -460,22 +462,17 @@ public class AppBT747 extends MainWindow implements ModelListener, GPSListener {
         }
     }
 
-    public final void newEvent(final bt747.ui.Event event) {
+    public final void modelEvent(final bt747.ui.Event event) {
         if ((event.getType() == ModelEvent.CONNECTED)) {
             m_TabPanel.setActiveTab(TAB_LOG_GET_IDX);
         }
-        this.postEvent(event);
+        // TODO: Should handle these events here.
+        this.postEvent(new waba.ui.Event(event.getType(),event.getArg(),0));
     }
 
     public final void gpsEvent(final GpsEvent event) {
         int eventType = event.getType();
-        if ((event.getType() == GpsEvent.GPRMC)
-                || (event.getType() == GpsEvent.GPGGA)) {
-            Control cntrl;
-            cntrl = m_TabPanel.getPanel(m_TabPanel.getActiveTab());
-            event.target = cntrl;
-            cntrl.postEvent(event);
-        } else if ((event.getType() == GpsEvent.DOWNLOAD_STATE_CHANGE)) {
+        if ((event.getType() == GpsEvent.DOWNLOAD_STATE_CHANGE)) {
             updateProgressBar();
         } else if ((event.getType() == GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY)) {
             requestLogOverwriteConfirmation();

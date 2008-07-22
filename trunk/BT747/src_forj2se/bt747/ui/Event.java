@@ -35,20 +35,14 @@ public class Event extends java.awt.Event {
     public Event(Event e) {
         super(e.target, e.id, e.arg);
     }
-    /**
-     * @param type
-     * @param target
-     * @param timeStamp
-     */
-    public Event(int type, Object target, int timeStamp) {
-        super(target, type, null);
-        // TODO Auto-generated constructor stub
-    }
 
-    public Event(Object target, int type, Object arg) {
-        super(target, type, arg);
+    public Event(int type, Object arg) {
+        super((Object)null, type, arg);
         // TODO Auto-generated constructor stub
     }
+    
+    
+
 
     
     static private int next_id=10000;

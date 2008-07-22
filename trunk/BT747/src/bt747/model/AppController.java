@@ -15,7 +15,7 @@ public final class AppController extends Controller {
      * The lower level controller. This should become a separate instance in the
      * future.
      */
-    private Controller c = this;
+    private Controller c;
 
     /**
      * Reference to the model.
@@ -30,7 +30,7 @@ public final class AppController extends Controller {
         this.m = model;
         c = this; // Temporary solution until application controller methods
         // moved from lower level Controller.
-        c.setModel(m);
+        super.setModel(m);
         // c = new Controller(model);
     }
 

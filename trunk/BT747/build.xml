@@ -556,6 +556,9 @@
 			<keep name="gps.connection.GPSRxTxPort" />
 			<keep name="gps.parser.NewLogConvert" />
 
+
+            <libraryjar file="${waba_forj2se.jar}" />
+
             When using Superwaba libraries for reference:
             <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
             <libraryjar file="${waba_forwaba.jar}" />
@@ -563,7 +566,8 @@
 			<keep name="bt747.j2se_view.BT747" />
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${swcollections.jar}" />
-			<libraryjar file="${waba_forj2se.jar}" />
+            <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+            <libraryjar file="${waba_forwaba.jar}" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
 			/>
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
@@ -702,17 +706,30 @@
 		          dest.dir="${rxtxsrc.dir}"
 		          rxtx="true"
 		/>
+		
+        <condition property="exclude.waba" >
+        	<istrue value="${no.waba}"/>
+        </condition>
+        <condition property="is.lib" >
+            <istrue value="${build.lib}"/>
+        </condition>
+        <condition property="is.j2se" >
+            <istrue value="${build.j2se}"/>
+        </condition>
 
-		<delete>
+
+		<echoproperties prefix="exclude.waba"></echoproperties>
+        <echoproperties prefix="is.j2se"></echoproperties>
+		<delete verbose="no">
 			<fileset dir="${rxtxsrc.dir}">
-				<include name="bt747/j2se_view/**" unless="build.j2se" />
-				<include name="bt747/waba_view/**" if="no.waba" />
-				<include name="bt747/j2se_view/BT747.java" if="no.waba" />
-				<include name="BT747.java" if="no.waba" />
-				<include name="bt747/*view/**" if="build.lib" />
-				<include name="bt747/lang/**" if="build.lib" />
-				<include name="bt747/Txt.java" if="build.lib" />
-				<include name="bt747/model/AppController.java" if="build.lib" />
+				<include name="bt747/j2se_view/**" unless="is.j2se" />
+				<include name="bt747/waba_view/**" if="exclude.waba" />
+				<include name="bt747/j2se_view/BT747.java" if="exclude.waba" />
+				<include name="BT747.java" if="exclude.waba" />
+				<include name="bt747/*view/**" if="is.lib" />
+				<include name="bt747/lang/**" if="is.lib" />
+				<include name="bt747/Txt.java" if="is.lib" />
+				<include name="bt747/model/AppController.java" if="is.lib" />
 			</fileset>
 		</delete>
 		<javac verbose="no"
@@ -948,7 +965,7 @@
 		<proguard shrink="true"
 		          defaultpackage=""
 		          optimize="true"
-		          obfuscate="true"
+		          obfuscate="${obfuscate}"
 		          allowaccessmodification="true"
 		          flattenpackagehierarchy=""
 		          repackageclasses=""
@@ -1018,7 +1035,7 @@
 		<proguard shrink="true"
 		          defaultpackage=""
 		          optimize="true"
-		          obfuscate="true"
+		          obfuscate="${obfuscate}"
 		          allowaccessmodification="true"
 		          flattenpackagehierarchy=""
 		          repackageclasses=""
@@ -1026,7 +1043,7 @@
 		          overloadaggressively="true"
 		          verbose="true"
 		          ignorewarnings="true"
-		          optimizationpasses="4"
+		          optimizationpasses="3"
 		          printmapping="${dist}/${ant.project.name}.mapping"
 		>
 

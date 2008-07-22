@@ -31,13 +31,12 @@ public class Event extends waba.ui.Event {
         super(type, target, timeStamp);
         // TODO Auto-generated constructor stub
     }
-    
-    public Event(Object target, int type, Object arg) {
-        super(type,target,0);
+
+    public Event(int type, Object arg) {
+        super(type,(Object)null,0);
         this.arg=arg;
-        
     }
-    
+
     public final static int getNextAvailableEventId()
     {
        return waba.ui.Event.getNextAvailableEventId();
