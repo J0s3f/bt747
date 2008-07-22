@@ -37,11 +37,11 @@ public class GpsEvent extends bt747.ui.Event {
     public static final int DEBUG_MSG = getNextAvailableEventId();
     
     public GpsEvent(final int type) {
-        super(null, type, null);
+        super(type, null);
     }
 
     public GpsEvent(final int type, final Object arg) {
-        super(null, type, arg);
+        super(type, arg);
     }
 
 }

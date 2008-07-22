@@ -53,7 +53,7 @@ public class BT747Main2 extends javax.swing.JFrame implements
         c.addGPSListener(this);
     }
 
-    public void newEvent(bt747.ui.Event e) {
+    public void modelEvent(bt747.ui.Event e) {
         onEvent(e);
     }
 

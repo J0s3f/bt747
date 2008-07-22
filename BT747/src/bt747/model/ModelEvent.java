@@ -40,8 +40,7 @@ public class ModelEvent extends Event {
     public static final int CONNECTED   = getNextAvailableEventId();
     public static final int DISCONNECTED   = getNextAvailableEventId();
 
-    public ModelEvent(final int type, final Object target, final int timeStamp) {
-        super(type, target, timeStamp);
+    public ModelEvent(int type, Object arg) {
+        super(type,arg);
     }
-
 }

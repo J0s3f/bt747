@@ -42,7 +42,7 @@ import bt747.sys.Time;
  * @author Mario De Weerd
  */
 
-public class GPSconctrl extends Container {
+public class GPSconctrl extends Container implements gps.GPSListener {
     // private PushButtonGroup btnChannelSelect;
 
     private Button btnRestartGps;
@@ -128,6 +128,7 @@ public class GPSconctrl extends Container {
         add(lbModel = new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         add(lbFlashInfo = new Label(""), LEFT, BEFORE); //$NON-NLS-1$)
         updateButtons();
+        c.addGPSListener(this);
     }
 
     private void GPS_setChannel(final int channel) {
@@ -238,14 +239,18 @@ public class GPSconctrl extends Container {
                     updateButtons();
                     event.consumed = true;
                 }
-            } else if (event.type == GpsEvent.GPGGA) {
-                updateGPSData((GPSRecord) (((GpsEvent) event).getArg()));
-            } else if (event.type == GpsEvent.GPRMC) {
-                updateRMCData((GPSRecord) (((GpsEvent) event).getArg()));
-                updateGPSData((GPSRecord) (((GpsEvent) event).getArg()));
-            }
+            } 
         }
 
     }
 
+    public final void gpsEvent(final GpsEvent event) {
+        int eventType = event.getType();
+        if (eventType == GpsEvent.GPGGA) {
+            updateGPSData((GPSRecord) (event.getArg()));
+        } else if (eventType == GpsEvent.GPRMC) {
+            updateRMCData((GPSRecord) (event.getArg()));
+            updateGPSData((GPSRecord) (event.getArg()));
+        }
+    }
 }

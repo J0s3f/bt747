@@ -82,7 +82,7 @@ public class BT747Main extends javax.swing.JFrame implements
         m.addListener(this);
     }
 
-    public void newEvent(bt747.ui.Event e) {
+    public void modelEvent(bt747.ui.Event e) {
         onEvent(e);
     }
 

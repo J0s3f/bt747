@@ -1329,8 +1329,8 @@ public class AppSettings {
         Iterator it = listeners.iterator();
         while (it.hasNext()) {
             ModelListener l = (ModelListener) it.next();
-            Event e = new Event(l, type, o);
-            l.newEvent(e);
+            ModelEvent e = new ModelEvent(type, o);
+            l.modelEvent(e);
         }
     }
 
@@ -1338,8 +1338,8 @@ public class AppSettings {
         Iterator it = listeners.iterator();
         while (it.hasNext()) {
             ModelListener l = (ModelListener) it.next();
-            Event e = new Event(l, type, null);
-            l.newEvent(e);
+            ModelEvent e = new ModelEvent(type,l);
+            l.modelEvent(e);
         }
     }
 
