@@ -46,6 +46,11 @@ public abstract class GPSFile {
 
     protected GPSRecord activeFileFields;
 
+    /**
+     * The fields that are selected for the file output.
+     */
+    protected GPSRecord selectedFileFields;
+
     protected boolean firstRecord;
 
     protected String basename;
@@ -78,9 +83,6 @@ public abstract class GPSFile {
     protected String goodTrackColor = "0000FF";
 
     protected boolean imperial = false; // If true, use English units
-
-    protected static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
-            "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
     public void initialiseFile(final String baseName, final String extension,
             final int fileCard, final int fileSeparationFreq) {
@@ -115,6 +117,10 @@ public abstract class GPSFile {
 
     public final void setActiveFileFields(final GPSRecord full) {
         activeFileFields = full;
+    }
+
+    public final void setOutputFields(final GPSRecord fields) {
+        selectedFileFields = fields;
     }
 
     public final void writeLogFmtHeader(final GPSRecord f) {

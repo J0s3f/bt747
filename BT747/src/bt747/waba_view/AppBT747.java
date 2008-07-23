@@ -265,11 +265,10 @@ public class AppBT747 extends MainWindow implements ModelListener {
         numPanels++;
         m_TabPanel.setPanel(C_GPS_FILECTRL_IDX, new GPSLogFile(c, m));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX, new GPSFiltersTabPanel(m, c));
+        m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX, new GpsFilterTabPanel(m, c));
         numPanels++;
         m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX, new GPSLogEasy(m, c));
         numPanels++;
-        GPSconctrl gpsContCtrl = new GPSconctrl(c, m);
         m_TabPanel.setPanel(C_GPS_CONCTRL_IDX, new GPSconctrl(c, m));
         numPanels++;
         // m_TabPanel.setPanel(C_GPS_FLASH_IDX,m_GPSFlash = new

@@ -183,7 +183,7 @@ public class GPSFilter {
     public boolean doFilter(final GPSRecord r) {
         // Filter the record information
         boolean result;
-        result = ((r.utc < 1001) || ((r.utc >= startTime) && (r.utc <= endTime)))
+        result = ((r.utc <= 3600*24) || ((r.utc >= startTime) && (r.utc <= endTime)))
                 && ((r.valid & validMask) != 0) && ((r.rcr & rcrMask) != 0);
 
         return result;

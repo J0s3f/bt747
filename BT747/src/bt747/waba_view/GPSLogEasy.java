@@ -28,7 +28,7 @@ import waba.ui.Label;
 import waba.ui.MessageBox;
 
 import gps.BT747Constants;
-import gps.GpsEvent;
+import bt747.model.ModelEvent;
 
 import bt747.Txt;
 import bt747.model.AppController;
@@ -157,7 +157,7 @@ public class GPSLogEasy extends Container {
             }
             break;
         default:
-            if (event.type == GpsEvent.DATA_UPDATE) {
+            if (event.type == ModelEvent.DATA_UPDATE) {
                 if (event.target == this) {
                     enableStore();
                 }

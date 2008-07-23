@@ -27,7 +27,6 @@ import moio.util.Iterator;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Settings;
-import bt747.ui.Event;
 
 /**
  * @author Mario De Weerd

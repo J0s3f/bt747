@@ -27,7 +27,6 @@ import waba.ui.ControlEvent;
 import waba.ui.Event;
 import waba.ui.Label;
 
-import gps.GpsEvent;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 
@@ -241,7 +240,7 @@ public class GPSconctrl extends Container implements ModelListener {
             }
             break;
         default:
-            if (event.type == GpsEvent.DATA_UPDATE) {
+            if (event.type == ModelEvent.DATA_UPDATE) {
                 if (event.target == this) {
                     updateButtons();
                     event.consumed = true;

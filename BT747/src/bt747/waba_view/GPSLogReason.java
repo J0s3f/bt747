@@ -26,7 +26,7 @@ import waba.ui.ControlEvent;
 import waba.ui.Edit;
 import waba.ui.Event;
 
-import gps.GpsEvent;
+import bt747.model.ModelEvent;
 
 import bt747.Txt;
 import bt747.model.AppController;
@@ -190,7 +190,7 @@ public class GPSLogReason extends Container {
             }
             break;
         default:
-            if (event.type == GpsEvent.DATA_UPDATE) {
+            if (event.type == ModelEvent.DATA_UPDATE) {
                 if (event.target == this) {
                     updateButtons();
                     event.consumed = true;
