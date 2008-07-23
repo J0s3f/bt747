@@ -40,13 +40,17 @@ import moio.util.StringTokenizer;
  * @author Mario De Weerd
  */
 public final class CSVLogConvert implements GPSLogConvert {
+    private static final int EOL = 0x0D;
+    private static final int CR = 0x0A;
     private int logFormat;
     private File inFile = null;
     private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
-    private boolean isConvertWGL84ToMSL = false; // If true,remove geoid difference from
-                                        // height
+    /**
+     * When true, corrects height by removing MSL to WGS84 offset.
+     */
+    private boolean isConvertWGS84ToMSL = false;
 
     private static final int C_LOGTIME = -9;
     private static final int C_LOGDIST = -8;
@@ -59,31 +63,46 @@ public final class CSVLogConvert implements GPSLogConvert {
     private static final int FMT_NO_FIELD = -1;
 
     // private static final int DAYS_BETWEEN_1970_1983 = 4748;
-    private static final int DAYS_Julian_1970 = (new Date(1, 1, 1970))
+    private static final int DAYS_JULIAN_1970 = (new Date(1, 1, 1970))
             .getJulianDay();
 
     private String errorInfo;
 
-    public final String getErrorInfo() {
+    public String getErrorInfo() {
         return errorInfo;
     }
 
-    private final int FMT_HEIGHT_FT_IDX = BT747Constants.FMT_HEIGHT_IDX + 100;
-    private final int FMT_SPEED_MPH_IDX = BT747Constants.FMT_SPEED_IDX + 100;
-    private final int FMT_DISTANCE_FT_IDX = BT747Constants.FMT_DISTANCE_IDX + 100;
+    private static final int FMT_HEIGHT_FT_IDX = BT747Constants.FMT_HEIGHT_IDX + 100;
+    private static final int FMT_SPEED_MPH_IDX = BT747Constants.FMT_SPEED_IDX + 100;
+    private static final int FMT_DISTANCE_FT_IDX = BT747Constants.FMT_DISTANCE_IDX + 100;
+    /**
+     * Maximum number of fields allowed/expected in CSV file.
+     */
+    private static final int MAX_RECORDS = 30;
+    /**
+     * The size of the file read buffer.
+     */
+    private static final int BUF_SIZE = 0x800;
 
-    public final int parseFile(final GPSFile gpsFile) {
+    /**
+     * Convert the input file set using other methods towards gpsFile. ({@link #toGPSFile(String, GPSFile, int)}
+     * is one of them.
+     * 
+     * @param gpsFile
+     *            The object representing the output format.
+     * @return {@link BT747Constants#NO_ERROR} if no error (0)
+     * @see gps.log.in.GPSLogConvert#parseFile(gps.log.out.GPSFile)
+     */
+    public int parseFile(final GPSFile gpsFile) {
         GPSRecord gpsRec = new GPSRecord();
-        final int C_BUF_SIZE = 0x800;
-        byte[] bytes = new byte[C_BUF_SIZE];
+        byte[] bytes = new byte[BUF_SIZE];
         int sizeToRead;
         int nextAddrToRead;
         int recCount;
         int fileSize;
 
         boolean firstline = true;
-        final int C_MAX_RECORDS = 30;
-        int[] records = new int[C_MAX_RECORDS];
+        int[] records = new int[MAX_RECORDS];
         try {
             records[0] = FMT_NO_FIELD; // Indicates that there are no records
 
@@ -97,7 +116,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                  * Read data from the data file into the local buffer.
                  */
                 // Determine size to read
-                sizeToRead = C_BUF_SIZE;
+                sizeToRead = BUF_SIZE;
                 if ((sizeToRead + nextAddrToRead) > fileSize) {
                     sizeToRead = fileSize - nextAddrToRead;
                 }
@@ -131,11 +150,12 @@ public final class CSVLogConvert implements GPSLogConvert {
                 do {
                     int eolPos;
                     // Find end of line
-                    for (eolPos = offsetInBuffer; eolPos < sizeToRead
-                            && bytes[eolPos] != 0x0A && bytes[eolPos] != 0x0D; eolPos++)
+                    for (eolPos = offsetInBuffer; (eolPos < sizeToRead)
+                            && (bytes[eolPos] != CR) && (bytes[eolPos] != EOL); eolPos++) {
                         ; // Empty on purpose
+                    }
                     continueInBuffer = (eolPos < sizeToRead); // True when
-                                                                // \r\n
+                    // \r\n
 
                     if (continueInBuffer) {
                         StringBuffer s = new StringBuffer(eolPos
@@ -145,20 +165,21 @@ public final class CSVLogConvert implements GPSLogConvert {
                             s.append((char) bytes[i]);
                         }
 
-                        StringTokenizer Fields = new StringTokenizer(s
+                        StringTokenizer fields = new StringTokenizer(s
                                 .toString(), ",");
                         offsetInBuffer = eolPos;
                         for (; offsetInBuffer < sizeToRead
-                                && (bytes[offsetInBuffer] == 0x0A || bytes[offsetInBuffer] == 0x0D); offsetInBuffer++)
+                                && (bytes[offsetInBuffer] == CR || bytes[offsetInBuffer] == EOL); offsetInBuffer++) {
                             ; // Empty on purpose
+                        }
                         if (s.length() != 0) {
                             if (firstline) {
                                 // Get header
                                 firstline = false;
                                 activeFileFields = 0;
-                                for (int i = 0; Fields.hasMoreTokens()
-                                        && (i < C_MAX_RECORDS); i++) {
-                                    String string = Fields.nextToken();
+                                for (int i = 0; fields.hasMoreTokens()
+                                        && (i < MAX_RECORDS); i++) {
+                                    String string = fields.nextToken();
                                     if (string.equals("INDEX")) {
                                         records[i] = FMT_REC_NBR;
 
@@ -261,23 +282,23 @@ public final class CSVLogConvert implements GPSLogConvert {
                                 // Split fields
                                 // Interpret fields
 
-                                int field_nbr = 0;
+                                int fieldNbr = 0;
                                 int curLogFormat = 0;
                                 // Defaults
                                 gpsRec = new GPSRecord(); // Value after
-                                                            // earliest date
+                                // earliest date
                                 gpsRec.recCount = ++recCount;
                                 gpsRec.valid = 0xFFFF; // In case valid is not
-                                                        // logged
+                                // logged
                                 gpsRec.rcr = 1; // In case RCR is not logged -
-                                                // default = time
+                                // default = time
 
-                                while (Fields.hasMoreElements()
-                                        && (field_nbr < C_MAX_RECORDS)
-                                        && (records[field_nbr] != FMT_NO_FIELD)) {
-                                    String field = Fields.nextToken();
+                                while (fields.hasMoreElements()
+                                        && (fieldNbr < MAX_RECORDS)
+                                        && (records[fieldNbr] != FMT_NO_FIELD)) {
+                                    String field = fields.nextToken();
                                     if (field.length() != 0) {
-                                        switch (records[field_nbr]) {
+                                        switch (records[fieldNbr]) {
                                         case C_LOGTIME:
                                             gpsRec.logPeriod = (int) (Convert
                                                     .toFloat(field) * 10);
@@ -326,7 +347,7 @@ public final class CSVLogConvert implements GPSLogConvert {
 
                                             long date = (new Date(field, format))
                                                     .getJulianDay()
-                                                    - DAYS_Julian_1970;
+                                                    - DAYS_JULIAN_1970;
                                             gpsRec.utc += date * (24 * 3600);
                                         }
                                             break;
@@ -598,9 +619,9 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     // stopping
                                     // interpretation after the first line.
                                     // if (!passToFindFieldsActivatedInLog) {
-                                    field_nbr++;
+                                    fieldNbr++;
                                 }
-                                if (isConvertWGL84ToMSL
+                                if (isConvertWGS84ToMSL
                                         && ((curLogFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0)
                                         && ((curLogFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
                                         && ((curLogFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)) {
@@ -628,15 +649,15 @@ public final class CSVLogConvert implements GPSLogConvert {
         return BT747Constants.NO_ERROR;
     }
 
-    public final void setTimeOffset(long offset) {
+    public void setTimeOffset(final long offset) {
         timeOffsetSeconds = offset;
     }
 
-    public final void setConvertWGS84ToMSL(boolean b) {
-        isConvertWGL84ToMSL = b;
+    public void setConvertWGS84ToMSL(final boolean b) {
+        isConvertWGS84ToMSL = b;
     }
 
-    public final int toGPSFile(final String fileName, final GPSFile gpsFile,
+    public int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int card) {
         int error = BT747Constants.NO_ERROR;
         try {
@@ -675,8 +696,7 @@ public final class CSVLogConvert implements GPSLogConvert {
         return error;
     }
 
-    private final void updateLogFormat(final GPSFile gpsFile,
-            final int newLogFormat) {
+    private void updateLogFormat(final GPSFile gpsFile, final int newLogFormat) {
         logFormat = newLogFormat;
         activeFileFields |= logFormat;
         if (!passToFindFieldsActivatedInLog) {
@@ -684,7 +704,7 @@ public final class CSVLogConvert implements GPSLogConvert {
         }
     }
 
-    public static final GPSRecord getLogFormatRecord(final int logFormat) {
+    public static GPSRecord getLogFormatRecord(final int logFormat) {
         GPSRecord gpsRec = new GPSRecord();
         if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
             gpsRec.utc = -1;

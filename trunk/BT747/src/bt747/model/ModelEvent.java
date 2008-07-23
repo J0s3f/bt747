@@ -39,6 +39,7 @@ public class ModelEvent extends GpsEvent {
     public static final int WAY_RCR_CHANGE = getNextAvailableEventId();
     public static final int CONNECTED   = getNextAvailableEventId();
     public static final int DISCONNECTED   = getNextAvailableEventId();
+    public static final int FILE_LOG_FORMAT_UPDATE = getNextAvailableEventId();
 
     public ModelEvent(int type, Object arg) {
         super(type,arg);

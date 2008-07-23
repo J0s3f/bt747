@@ -1,7 +1,6 @@
 package bt747.model;
 
 import gps.BT747Constants;
-import gps.GPSListener;
 import gps.GPSstate;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
@@ -11,6 +10,7 @@ import gps.log.in.CSVLogConvert;
 import gps.log.in.DPL700LogConvert;
 import gps.log.in.GPSLogConvert;
 import gps.log.in.HoluxTrlLogConvert;
+import gps.log.in.NMEALogConvert;
 import gps.log.out.GPSArray;
 import gps.log.out.GPSCSVFile;
 import gps.log.out.GPSCompoGPSTrkFile;
@@ -92,7 +92,11 @@ public class Controller {
         if (m.getStartupOpenPort()) {
             connectGPS();
         }
+        // By default all fields are selected for the output
+        setFileLogFormat(0xFFFFFFFF);
     }
+    
+    
 
     /**
      * @param on
@@ -227,6 +231,12 @@ public class Controller {
             lc = new HoluxTrlLogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".csv")) {
             lc = new CSVLogConvert();
+        } else if (m.getLogFilePath().toLowerCase().endsWith(".nmea")
+                ||m.getLogFilePath().toLowerCase().endsWith(".nme")
+                ||m.getLogFilePath().toLowerCase().endsWith(".nma")
+                ||m.getLogFilePath().toLowerCase().endsWith(".txt")
+                ) {
+            lc = new NMEALogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
             lc = new DPL700LogConvert();
             // / TODO: set SR Log type correctly.
@@ -320,6 +330,7 @@ public class Controller {
                         + (SECONDS_PER_DAY - 1));
             }
             gpsFile.setFilters(usedFilters);
+            gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m.getFileLogFormat()));
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
                     m.getFileSeparationFreq());
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
@@ -355,6 +366,12 @@ public class Controller {
             lc = new HoluxTrlLogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".csv")) {
             lc = new CSVLogConvert();
+        } else if (m.getLogFilePath().toLowerCase().endsWith(".nmea")
+                ||m.getLogFilePath().toLowerCase().endsWith(".nme")
+                ||m.getLogFilePath().toLowerCase().endsWith(".nma")
+                ||m.getLogFilePath().toLowerCase().endsWith(".txt")
+                ) {
+            lc = new NMEALogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
             lc = new DPL700LogConvert();
             // / TODO: set SR Log type correctly.
@@ -634,7 +651,6 @@ public class Controller {
      *            (1<< IDX) <br>
      *            where IDX is one of the following:<br> -
      *            {@link BT747Constants#FMT_UTC_IDX} <br> -
-     *            {@link BT747Constants#FMT_UTC_IDX} <br> -
      *            {@link BT747Constants#FMT_VALID_IDX} <br> -
      *            {@link BT747Constants#FMT_LATITUDE_IDX} <br> -
      *            {@link BT747Constants#FMT_LONGITUDE_IDX} <br> -
@@ -659,6 +675,41 @@ public class Controller {
      */
     public final void setLogFormat(final int newLogFormat) {
         m.gpsModel().setLogFormat(newLogFormat);
+    }
+
+    /**
+     * Selects the fields to write to the output files.
+     * 
+     * @param newLogFormat
+     *            <br>
+     *            The bits in the newLogFormat can be defined using a bitwise OR
+     *            of expressions like<br>
+     *            (1<< IDX) <br>
+     *            where IDX is one of the following:<br> -
+     *            {@link BT747Constants#FMT_UTC_IDX} <br> -
+     *            {@link BT747Constants#FMT_VALID_IDX} <br> -
+     *            {@link BT747Constants#FMT_LATITUDE_IDX} <br> -
+     *            {@link BT747Constants#FMT_LONGITUDE_IDX} <br> -
+     *            {@link BT747Constants#FMT_HEIGHT_IDX} <br> -
+     *            {@link BT747Constants#FMT_SPEED_IDX} <br> -
+     *            {@link BT747Constants#FMT_HEADING_IDX} <br> -
+     *            {@link BT747Constants#FMT_DSTA_IDX} <br> -
+     *            {@link BT747Constants#FMT_DAGE_IDX} <br> -
+     *            {@link BT747Constants#FMT_PDOP_IDX} <br> -
+     *            {@link BT747Constants#FMT_HDOP_IDX} <br> -
+     *            {@link BT747Constants#FMT_VDOP_IDX} <br> -
+     *            {@link BT747Constants#FMT_NSAT_IDX} <br> -
+     *            {@link BT747Constants#FMT_SID_IDX} <br> -
+     *            {@link BT747Constants#FMT_ELEVATION_IDX} <br> -
+     *            {@link BT747Constants#FMT_AZIMUTH_IDX} <br> -
+     *            {@link BT747Constants#FMT_SNR_IDX} <br> -
+     *            {@link BT747Constants#FMT_RCR_IDX} <br> -
+     *            {@link BT747Constants#FMT_MILLISECOND_IDX} <br> -
+     *            {@link BT747Constants#FMT_DISTANCE_IDX} <br> -
+     *            <br>
+     */
+    public final void setFileLogFormat(final int fileLogFormat) {
+        m.setFileLogFormat(fileLogFormat);
     }
 
     /**

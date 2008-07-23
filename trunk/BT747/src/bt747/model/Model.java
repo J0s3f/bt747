@@ -268,6 +268,25 @@ public class Model extends AppSettings implements GPSListener {
     protected final void setFilterEndTime(final int filterEndTime) {
         this.filterEndTime = filterEndTime;
     }
+    
+    /**
+     * The file log format (the files selected for the output file)
+     */
+    private int fileLogFormat; 
+    /**
+     * @param fileLogFormat the fileLogFormat to set
+     */
+    protected void setFileLogFormat(int fileLogFormat) {
+        this.fileLogFormat = fileLogFormat;
+    }
+
+    /**
+     * @return the fileLogFormat
+     */
+    public int getFileLogFormat() {
+        return fileLogFormat;
+    }
+
 
     /**
      * Indicate that the log conversion started for the given log type.

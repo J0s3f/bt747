@@ -19,40 +19,35 @@ package bt747.waba_view;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
-import waba.ui.Button;
 import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
-import waba.ui.Label;
 
 import gps.BT747Constants;
-import bt747.model.ModelEvent;
 
-import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
 
 /**
+ * Defines the container that allows the selection of the fields that will be
+ * kept in the output format.
+ * 
  * @author Mario De Weerd
  */
-public class GPSLogFormat extends Container {
-    private static final int C_LOG_FMT_COUNT = 21;
+public class GpsFileLogFormat extends Container {
+    private static final int C_LOG_FMT_COUNT = 21 - 1;
     /** The object that is used to communicate with the GPS device. */
     private Model m;
     private AppController c;
     /** The tickboxes for the format items */
     private MyCheck[] chkLogFmtItems = new MyCheck[C_LOG_FMT_COUNT];
     /** The button that requests to change the log format of the device */
-    private Button btChangeFormatErase;
-    private Button btChangeFormat;
-    private Button btErase;
-
-    private Label m_lbEstNbrRecords;
 
     /**
      * Initialiser of this Container.<br>
      */
-    public GPSLogFormat(final Model m, final AppController c) {
+    public GpsFileLogFormat(final AppController c, final Model m) {
         // super("Log ON/OFF", Container.);
         this.m = m;
         this.c = c;
@@ -66,18 +61,6 @@ public class GPSLogFormat extends Container {
         // Add all tick buttons.
         for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
             chkLogFmtItems[i] = new MyCheck(BT747Constants.logFmtItems[i]);
-            // int
-            // extra_offset=chkLogFmtItems[i].fm.height-chkLogFmtItems[i].getPreferredHeight();
-            // add(chkLogFmtItems[i]);
-            // int x=((i==0)?LEFT:((i==((C_LOG_FMT_COUNT/2)))?
-            // getClientRect().width/2:SAME));
-            // if(((i==0) ||i==((C_LOG_FMT_COUNT/2)))) {
-            // chkLogFmtItems[i].setRect(x, TOP, PREFERRED+extra_offset-1,
-            // chkLogFmtItems[i].fm.height-1);
-            // } else {
-            // chkLogFmtItems[i].setRect(x, AFTER-1, PREFERRED+extra_offset-1,
-            // chkLogFmtItems[i].fm.height-1);
-            // }
             add(
                     chkLogFmtItems[i],
                     ((i == 0) ? LEFT
@@ -87,15 +70,6 @@ public class GPSLogFormat extends Container {
                             : AFTER - 1);
             chkLogFmtItems[i].setEnabled(true);
         }
-        m_lbEstNbrRecords = new Label("0000000" + Txt.REC_ESTIMATED);
-        add(m_lbEstNbrRecords, LEFT, AFTER);
-        m_lbEstNbrRecords.setText("");
-
-        // Add button confirming change of log format.
-        btChangeFormatErase = new Button(Txt.SET_ERASE);
-        add(btChangeFormatErase, LEFT, AFTER + 5);
-        add(btChangeFormat = new Button(Txt.SET_NOERASE), AFTER + 10, SAME);
-        add(btErase = new Button(Txt.ERASE), RIGHT, SAME);
         setLogFormatControls();
     }
 
@@ -103,16 +77,13 @@ public class GPSLogFormat extends Container {
     private int getSelectedLogFormat() {
         int bitMask = 1;
         int logFormat = 0;
-        for (int i = 0; i < C_LOG_FMT_COUNT - 1; i++) {
+        for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
             if (chkLogFmtItems[i].getChecked()) {
                 logFormat |= bitMask;
             }
             bitMask <<= 1;
         }
         // Special case : valid fix only
-        if (chkLogFmtItems[C_LOG_FMT_COUNT - 1].getChecked()) {
-            logFormat |= (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX);
-        }
         return logFormat;
     }
 
@@ -129,13 +100,11 @@ public class GPSLogFormat extends Container {
         // if(GPS_DEBUG) {
         // waba.sys.Vm.debug("UPD:"+Convert.unsigned2hex(p_logFormat,2)+"\n");}
 
-        for (int i = 0; i < C_LOG_FMT_COUNT - 1; i++) {
+        for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
             chkLogFmtItems[i].setChecked((pLogFormat & bitMask) != 0);
             // chkLogFmtItems[i].repaintNow();
             bitMask <<= 1;
         }
-        chkLogFmtItems[C_LOG_FMT_COUNT - 1]
-                .setChecked((pLogFormat & (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX)) != 0);
         setLogFormatControls();
     }
 
@@ -145,10 +114,6 @@ public class GPSLogFormat extends Container {
         chkLogFmtItems[BT747Constants.FMT_ELEVATION_IDX].setEnabled(sidSet);
         chkLogFmtItems[BT747Constants.FMT_AZIMUTH_IDX].setEnabled(sidSet);
         chkLogFmtItems[BT747Constants.FMT_SNR_IDX].setEnabled(sidSet);
-
-        m_lbEstNbrRecords.setText(m
-                .getEstimatedNbrRecords(getSelectedLogFormat())
-                + Txt.REC_ESTIMATED);
     }
 
     /**
@@ -160,14 +125,8 @@ public class GPSLogFormat extends Container {
     public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
-            if (event.target == btChangeFormatErase) {
-                c.changeLogFormatAndErase(getSelectedLogFormat());
-            } else if (event.target == btChangeFormat) {
-                c.changeLogFormat(getSelectedLogFormat());
-            } else if (event.target == btErase) {
-                c.eraseLogFormat();
-            } else if (event.target == this) {
-                c.reqLogFormat();
+            if (event.target == this) {
+                updateLogFormat(m.getFileLogFormat());
                 event.consumed = true;
             } else {
                 boolean isLogFmtUpdated = false;
@@ -179,12 +138,13 @@ public class GPSLogFormat extends Container {
                 if (isLogFmtUpdated) {
                     setLogFormatControls();
                 }
+                c.setFileLogFormat(getSelectedLogFormat());
             }
 
             break;
         default:
-            if (event.type == ModelEvent.LOG_FORMAT_UPDATE) {
-                updateLogFormat(m.getLogFormat());
+            if (event.type == ModelEvent.FILE_LOG_FORMAT_UPDATE) {
+                updateLogFormat(m.getFileLogFormat());
             }
         }
     }

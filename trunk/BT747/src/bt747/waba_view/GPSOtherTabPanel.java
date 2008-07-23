@@ -27,7 +27,7 @@ import waba.ui.Event;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
-import gps.GpsEvent;
+import bt747.model.ModelEvent;
 
 import bt747.Txt;
 import bt747.model.AppController;
@@ -84,11 +84,11 @@ public class GPSOtherTabPanel extends Container {
             }
             break;
         default:
-            if (event.type == GpsEvent.DATA_UPDATE) {
+            if (event.type == ModelEvent.DATA_UPDATE) {
                 if (event.target == this) {
                     Control c;
                     c = m_TabPanel.getChildren()[0];
-                    c.postEvent(new Event(GpsEvent.DATA_UPDATE, c, 0));
+                    c.postEvent(new Event(ModelEvent.DATA_UPDATE, c, 0));
                     event.consumed = true;
                 }
             }

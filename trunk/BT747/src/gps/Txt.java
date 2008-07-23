@@ -1,8 +1,5 @@
 package gps;
 
-import bt747.Version;
-import bt747.sys.Settings;
-
 /**
  * @author Mario De Weerd
  *
