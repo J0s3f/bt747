@@ -60,9 +60,7 @@ public class GPSRecord {
     public int logDistance; // Programmed distance between logged points
 
     public GPSRecord() {
-    }
-
-    {
+        utc = 0;
     }
 
     /**
@@ -186,7 +184,7 @@ public class GPSRecord {
         if ((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) {
             gpsRec.distance = -1;
         }
-    
+
         /* End handling record */
         return gpsRec;
     }
