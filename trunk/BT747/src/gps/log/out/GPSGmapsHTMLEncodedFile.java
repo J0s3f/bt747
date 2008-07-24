@@ -19,7 +19,6 @@
 //********************************************************************  
 package gps.log.out;
 
-import sun.rmi.runtime.GetThreadPoolAction;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 import gps.tracks.PolylineEncoder;
@@ -296,13 +295,12 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 
             rec.append("\",\r\n" + "  zoomFactor: 2,\r\n"
                     + "  numLevels: 18\r\n" + "}));\r\n");
-            
+
             rec.append("GEvent.addListener(track");
             rec.append(trackIndex);
-            rec.append(",'click',function(){track" +trackIndex+
-            		".openInfoWindowHtml(\"" +
-            		trackStartInfo +"<br>"+ CommonOut.getTimeStr(previousTime)+
-            		"\");});\r\n");
+            rec.append(",'click',function(){track" + trackIndex
+                    + ".openInfoWindowHtml(\"" + trackStartInfo + "<br>"
+                    + CommonOut.getTimeStr(previousTime) + "\");});\r\n");
             // writeTxt(PolylineEncoder.replace(rec.toString(),"\\", "\\\\"));
             writeTxt(rec.toString());
             rec.setLength(0);
@@ -334,7 +332,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 }
                 rec.append("];");
                 rec.append("infoHtmls=[");
-                rec.append(infoHtmls);
+                rec.append(infoHtmls.toString());
                 rec.append("];");
                 rec.append("for (var i=0; i<markers.length; ++i) {\r\n");
                 rec
@@ -359,9 +357,8 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             // Vm.debug("Do:"trackDescription);
 
             lrec.append("clickStr+= \"" + trackDescription
-                    + "<input type=\\\"checkbox\\\""
-                    + "onClick=\\\"" + trackOnClickFuncCalls
-                    + "\\\" checked/>\";\r\n");
+                    + "<input type=\\\"checkbox\\\"" + "onClick=\\\""
+                    + trackOnClickFuncCalls + "\\\" checked/>\";\r\n");
             writeTxt(lrec.toString());
             trackOnClickFuncCalls = "";
             trackDescription = "";
@@ -472,8 +469,8 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 
                 if (isWayType) {
                     infoHtmls.append("\"");
-                    CommonOut.getHtml(infoHtmls, s, activeFields, selectedFileFields, t,
-                            recordNbrInLogs, imperial);
+                    CommonOut.getHtml(infoHtmls, s, activeFields,
+                            selectedFileFields, t, recordNbrInLogs, imperial);
                     infoHtmls.append("\",\r\n");
                 }
 
@@ -507,6 +504,8 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     + maxlon
                     + "))));"
                     + "\r\n"
+                    + "map.enableContinuousZoom(); \r\n"
+                    + "map.enableDoubleClickZoom();\r\n"
                     + "   }\r\n"
                     + "   else {\r\n"
                     + "     document.getElementById(\"quicklinks\").innerHTML = \"Your web browser is not compatible with this website.\"\r\n"
