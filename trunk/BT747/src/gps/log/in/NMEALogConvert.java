@@ -20,17 +20,14 @@
 package gps.log.in;
 
 import gps.BT747Constants;
-import gps.GpsEvent;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
+import gps.parser.LogFormat;
+import moio.util.StringTokenizer;
 
 import bt747.io.File;
 import bt747.sys.Convert;
-import bt747.sys.Settings;
-import bt747.util.Date;
-
-import moio.util.StringTokenizer;
 
 /**
  * This class is used to convert the binary log to a new format. Basically this
@@ -45,7 +42,6 @@ public final class NMEALogConvert implements GPSLogConvert {
     private static final int CR = 0x0A;
     private int logFormat;
     private File inFile = null;
-    private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
     /**
@@ -53,33 +49,12 @@ public final class NMEALogConvert implements GPSLogConvert {
      */
     private boolean isConvertWGS84ToMSL = false;
 
-    private static final int C_LOGTIME = -9;
-    private static final int C_LOGDIST = -8;
-    private static final int C_LOGSPD = -7;
-    private static final int FMT_NS = -6;
-    private static final int FMT_EW = -5;
-    private static final int FMT_REC_NBR = -4;
-    private static final int FMT_DATE = -3;
-    private static final int FMT_TIME = -2;
-    private static final int FMT_NO_FIELD = -1;
-
-    // private static final int DAYS_BETWEEN_1970_1983 = 4748;
-    private static final int DAYS_JULIAN_1970 = (new Date(1, 1, 1970))
-            .getJulianDay();
-
     private String errorInfo;
 
     public String getErrorInfo() {
         return errorInfo;
     }
 
-    private static final int FMT_HEIGHT_FT_IDX = BT747Constants.FMT_HEIGHT_IDX + 100;
-    private static final int FMT_SPEED_MPH_IDX = BT747Constants.FMT_SPEED_IDX + 100;
-    private static final int FMT_DISTANCE_FT_IDX = BT747Constants.FMT_DISTANCE_IDX + 100;
-    /**
-     * Maximum number of fields allowed/expected in CSV file.
-     */
-    private static final int MAX_RECORDS = 30;
     /**
      * The size of the file read buffer.
      */
@@ -102,10 +77,7 @@ public final class NMEALogConvert implements GPSLogConvert {
         int recCount;
         int fileSize;
 
-        boolean firstline = true;
-        int[] records = new int[MAX_RECORDS];
         try {
-            records[0] = FMT_NO_FIELD; // Indicates that there are no records
 
             recCount = 0;
             logFormat = 0;
@@ -190,95 +162,24 @@ public final class NMEALogConvert implements GPSLogConvert {
                             // on
                             // time change.
                             cmd = fields.nextToken();
-                            sNmea = new String[fields.countTokens()];
+                            sNmea = new String[fields.countTokens() + 1];
                             int idx;
                             idx = 0;
+                            sNmea[idx++] = cmd;
                             while (fields.hasMoreTokens()) {
                                 sNmea[idx++] = fields.nextToken();
                             }
-                            if (cmd.equals("GPGGA")) {
-                                if (sNmea.length == 11) {
-                                    gpsRec = new GPSRecord(); // Value after
-
-                                    try {
-                                        // Time only!
-                                        gpsRec.utc = Convert.toInt(sNmea[0]
-                                                .substring(0, 2))
-                                                * 3600
-                                                + Convert.toInt(sNmea[0]
-                                                        .substring(2, 4))
-                                                * 60
-                                                + Convert.toInt(sNmea[0]
-                                                        .substring(4, 6));
-                                        curLogFormat |= (1 << BT747Constants.FMT_UTC_IDX);
-                                    } catch (Exception e) {
-                                        // TODO: handle exception
-                                    }
-                                    try {
-                                        // GPSRecord gps = new GPSRecord();
-                                        gpsRec.latitude = (Convert
-                                                .toDouble(sNmea[1].substring(0,
-                                                        2)) + Convert
-                                                .toDouble(sNmea[1].substring(2)) / 60)
-                                                * (sNmea[2].equals("N") ? 1
-                                                        : -1);
-                                        curLogFormat |= (1 << BT747Constants.FMT_LATITUDE_IDX);
-
-                                    } catch (Exception e) {
-                                        // TODO: handle exception
-                                    }
-                                    try {
-                                        gpsRec.longitude = (Convert
-                                                .toDouble(sNmea[3].substring(0,
-                                                        3)) + Convert
-                                                .toDouble(sNmea[3].substring(3)) / 60)
-                                                * (sNmea[4].equals("E") ? 1
-                                                        : -1);
-                                        curLogFormat |= (1 << BT747Constants.FMT_LONGITUDE_IDX);
-                                    } catch (Exception e) {
-                                        // TODO: handle exception
-                                    }
-                                    try {
-                                        gpsRec.height = Convert
-                                                .toFloat(sNmea[8]);
-                                        curLogFormat |= (1 << BT747Constants.FMT_HEIGHT_IDX);
-                                    } catch (Exception e) {
-                                        // TODO: handle exception
-                                    }
-                                    try {
-                                        gpsRec.geoid = Convert
-                                                .toFloat(sNmea[10]);
-                                    } catch (Exception e) {
-                                        // TODO: handle exception
-                                    }
-                                }
-                            } // GPGGA
+                            gpsRec = new GPSRecord(); // Value after
+                            curLogFormat |= analyzeGPGGA(sNmea, gpsRec);
 
                             if (!passToFindFieldsActivatedInLog) {
-                                if (isConvertWGS84ToMSL
-                                        && ((curLogFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0)
-                                        && ((curLogFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
-                                        && ((curLogFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)) {
-                                    gpsRec.height -= Conv.wgs84Separation(
-                                            gpsRec.latitude, gpsRec.longitude);
-                                }
-                                if (curLogFormat != logFormat) {
-                                    updateLogFormat(gpsFile, curLogFormat);
-                                }
-                                if (gpsRec.rcr == 0) {
-                                    gpsRec.rcr = 1; // Suppose time (for filter)
-                                }
-                                // if (valid) {
-                                if (gpsRec.valid == 0) {
-                                    gpsRec.valid = BT747Constants.VALID_SPS_MASK;
-                                }
-                                if (curLogFormat != 0) { // Should add time
-                                    // or
-                                    // position change
-                                    // condition.
-                                    gpsFile.writeRecord(gpsRec);
+                                if(curLogFormat!=0) {
+                                    recCount++;
+                                    gpsRec.recCount=recCount;
+                                    finalizeRecord(gpsFile, gpsRec, curLogFormat);
                                 }
                             }
+
                             // } // offsetInBuffer++;
                         }
                     } // line found
@@ -290,6 +191,81 @@ public final class NMEALogConvert implements GPSLogConvert {
         }
         return BT747Constants.NO_ERROR;
     }
+
+    private void finalizeRecord(GPSFile gpsFile, GPSRecord gpsRec,
+            int curLogFormat) {
+        if (isConvertWGS84ToMSL
+                && ((curLogFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0)
+                && ((curLogFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
+                && ((curLogFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)) {
+            gpsRec.height -= Conv.wgs84Separation(gpsRec.latitude,
+                    gpsRec.longitude);
+        }
+        if (curLogFormat != logFormat) {
+            updateLogFormat(gpsFile, curLogFormat);
+        }
+        if (gpsRec.rcr == 0) {
+            gpsRec.rcr = 1; // Suppose time (for filter)
+        }
+        // if (valid) {
+        if (gpsRec.valid == 0) {
+            gpsRec.valid = BT747Constants.VALID_SPS_MASK;
+        }
+        if (curLogFormat != 0) { // Should add time
+            // or
+            // position change
+            // condition.
+            gpsFile.writeRecord(gpsRec);
+        }
+    }
+
+    private int analyzeGPGGA(String[] sNmea, GPSRecord gpsRec) {
+        int logFormat = 0;
+        if (sNmea[0].equals("GPGGA") && (sNmea.length == 12)) {
+
+            try {
+                // Time only!
+                gpsRec.utc = Convert.toInt(sNmea[1].substring(0, 2)) * 3600
+                        + Convert.toInt(sNmea[1].substring(2, 4)) * 60
+                        + Convert.toInt(sNmea[1].substring(4, 6));
+                logFormat |= (1 << BT747Constants.FMT_UTC_IDX);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            try {
+                // GPSRecord gps = new GPSRecord();
+                gpsRec.latitude = (Convert.toDouble(sNmea[2].substring(0, 2)) + Convert
+                        .toDouble(sNmea[2].substring(2)) / 60)
+                        * (sNmea[3].equals("N") ? 1 : -1);
+                logFormat |= (1 << BT747Constants.FMT_LATITUDE_IDX);
+
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            try {
+                gpsRec.longitude = (Convert.toDouble(sNmea[4].substring(0, 3)) + Convert
+                        .toDouble(sNmea[4].substring(3)) / 60)
+                        * (sNmea[5].equals("E") ? 1 : -1);
+                logFormat |= (1 << BT747Constants.FMT_LONGITUDE_IDX);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            try {
+                gpsRec.height = Convert.toFloat(sNmea[8]);
+                logFormat |= (1 << BT747Constants.FMT_HEIGHT_IDX);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            try {
+                gpsRec.geoid = Convert.toFloat(sNmea[10]);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+        } // GPGGA
+        return logFormat;
+    }
+
+    private long timeOffsetSeconds;
 
     public void setTimeOffset(final long offset) {
         timeOffsetSeconds = offset;
@@ -315,8 +291,8 @@ public final class NMEALogConvert implements GPSLogConvert {
                     if (passToFindFieldsActivatedInLog) {
                         activeFileFields = 0;
                         error = parseFile(gpsFile);
-                        gpsFile
-                                .setActiveFileFields(getLogFormatRecord(activeFileFields));
+                        gpsFile.setActiveFileFields(CommonIn
+                                .getLogFormatRecord(activeFileFields));
                     }
                     passToFindFieldsActivatedInLog = false;
                     if (error == BT747Constants.NO_ERROR) {
@@ -342,75 +318,7 @@ public final class NMEALogConvert implements GPSLogConvert {
         logFormat = newLogFormat;
         activeFileFields |= logFormat;
         if (!passToFindFieldsActivatedInLog) {
-            gpsFile.writeLogFmtHeader(getLogFormatRecord(logFormat));
+            gpsFile.writeLogFmtHeader(CommonIn.getLogFormatRecord(logFormat));
         }
-    }
-
-    public static GPSRecord getLogFormatRecord(final int logFormat) {
-        GPSRecord gpsRec = new GPSRecord();
-        if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
-            gpsRec.utc = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_VALID_IDX)) != 0) {
-            gpsRec.valid = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0) {
-            gpsRec.latitude = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0) {
-            gpsRec.longitude = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0) {
-            gpsRec.height = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
-            gpsRec.speed = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) != 0) {
-            gpsRec.heading = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0) {
-            gpsRec.dsta = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_DAGE_IDX)) != 0) {
-            gpsRec.dage = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_PDOP_IDX)) != 0) {
-            gpsRec.pdop = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_HDOP_IDX)) != 0) {
-            gpsRec.hdop = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) != 0) {
-            gpsRec.vdop = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) != 0) {
-            gpsRec.nsat = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0) {
-            gpsRec.sid = new int[0];
-            gpsRec.sidinuse = new boolean[0];
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) != 0) {
-            gpsRec.ele = new int[0];
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_AZIMUTH_IDX)) != 0) {
-            gpsRec.azi = new int[0];
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_SNR_IDX)) != 0) {
-            gpsRec.snr = new int[0];
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
-            gpsRec.rcr = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) {
-            gpsRec.milisecond = -1;
-        }
-        if ((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) {
-            gpsRec.distance = -1;
-        }
-
-        /* End handling record */
-        return gpsRec;
     }
 }

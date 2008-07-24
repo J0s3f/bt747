@@ -177,7 +177,8 @@ public abstract class GPSFile {
             previousDate = dateref;
 
             if (activeFields.utc != 0) {
-                if (t.getYear() > 2000) {
+                if ((s.utc < 24 * 3600) // No date provided by log.
+                        || (t.getYear() > 2000)) {
                     extraExt = "-" + Convert.toString(t.getYear())
                             + (t.getMonth() < 10 ? "0" : "")
                             + Convert.toString(t.getMonth())
