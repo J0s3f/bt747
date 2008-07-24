@@ -23,7 +23,6 @@ import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
-import gps.parser.LogFormat;
 import moio.util.StringTokenizer;
 
 import bt747.io.File;
