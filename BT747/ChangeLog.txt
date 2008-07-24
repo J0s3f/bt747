@@ -1,3 +1,10 @@
+Version 1.52.3
+* Started adding support for reading NMEA (not operational yet).
+* Added support to select output fields (implemented for some formats: KML, CSV, GMaps, to be done for others).
+* Added functionality to GMAPS: description of waypoints.
+* Other internal changes.
+
+
 Version 1.52.2
 * Added indication of number of available records.
 * Fixed bug regarding enable of test SBAS following code reading.
