@@ -319,6 +319,7 @@
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
 		       classpathref="j2seclasspath"
+		       encoding="iso-8859-15"
 		>
 			<include name="bt747/model/AppController.java" />
 			<include name="bt747/j2se_view/**" />
@@ -665,6 +666,7 @@
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
 		       deprecation="true"
+		       encoding="iso-8859-15"
 		>
 			<include name="**/*.java" />
 			<classpath refid="classpath" />
@@ -678,7 +680,8 @@
 		<srcfiles dir="${superwaba_root}/src/java/waba/lang" includes="**" />
 	</uptodate>
 
-	<target name="waba.lang" unless="wabalang.uptodate">
+	<target name="waba.lang" unless="wabalang.uptodate"/>
+    <target name="waba.lang.do" >
 		<delete dir="${build.dir}/wabalang" />
 		<mkdir dir="${build.dir}/wabalang" />
 		<property name="build.sysclasspath" value="ignore" />
@@ -696,6 +699,7 @@
 		       extdirs=""
 		       bootclasspath=""
                classpath=""
+            encoding="iso-8859-15"
 		>
 			<include name="*.java" />
 		</javac>
@@ -763,6 +767,7 @@
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
 		       classpathref="rxtxclasspath"
+            encoding="iso-8859-15"
 		>
 			<include name="**/*.java" />
 			<exclude name="gps/connection/GPSWabaPort.java*" />
@@ -808,6 +813,7 @@
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
 		       deprecation="true"
+            encoding="iso-8859-15"
 		>
 			<include name="**/*.java" />
 			<classpath refid="classpath" />
@@ -857,6 +863,7 @@
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
 		       classpathref="classpath"
+            encoding="iso-8859-15"
 		>
 			<include name="**/*.java" />
 			<exclude name="gps/connection/GPSWabaPort.java*" />
@@ -887,6 +894,7 @@
 		       source="1.5"
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
+            encoding="iso-8859-15"
 		>
 			<include name="src_forj2se/**/*.java" />
 			<classpath refid="classpath" />
@@ -916,6 +924,7 @@
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
 		       deprecation="true"
+            encoding="iso-8859-15"
 		>
 			<include name="src_forwaba/**/*.java" />
 			<classpath refid="classpath" />
