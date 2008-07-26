@@ -61,7 +61,7 @@ public class Controller {
      *            The model to associate with this controller.
      */
     public Controller(final Model model) {
-        setModel(m);
+        setModel(model);
     }
 
     /**
