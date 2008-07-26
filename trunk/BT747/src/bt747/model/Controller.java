@@ -74,6 +74,10 @@ public class Controller {
         this.m = model;
         init();
     }
+    
+    public Model getModel() {
+        return m;
+    }
 
     /**
      * Called when the Controller starts. Used for initialization.
