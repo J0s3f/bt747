@@ -190,19 +190,61 @@
 		</sequential>
 	</macrodef>
 
+
+	<target name="cond.proguard.rxtx-dist" depends="proguard.rxtx-dist" />
+	<target name="proguard.rxtx-dist" unless="skip.proguard">
+		<taskdef name="proguard"
+		         classpath="${proguardLib}"
+		         classname="proguard.ant.ProGuardTask"
+		/>
+		<move tofile="${rxtxbuild.dir}/tmp.jar" file="${proguard.infile}" />
+
+		<!-- Then, build a single jar -->
+		<!--
+              -overloadaggressively
+              -repackageclasses ''
+              -allowaccessmodification
+          -->
+
+		<proguard shrink="${proguard.shrink}"
+		          defaultpackage=""
+		          optimize="{proguard.optimize}"
+		          obfuscate="false"
+		          allowaccessmodification="${proguard.accessmodification}"
+		          flattenpackagehierarchy=""
+		          repackageclasses="false"
+		          printusage="false"
+		          overloadaggressively="false"
+		          verbose="true"
+		          ignorewarnings="true"
+		>
+			<libraryjar file="${proguard.java.rt.lib}" />
+			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+			<injar path="${rxtxbuild.dir}/tmp.jar" />
+			<outjar path="${proguard.infile}" />
+          -optimizationpasses 1
+          ${extralib}
+          -injar ${swcollections.jar}(!META-INF/**)
+          -printmapping ${dist}/${ant.project.name}${suffix}.map
+          -keep public class BT747
+          -keep public class bt747.j2se_view.BT747
+          -keep public class * implements gps.log.in.GPSLogConvert
+          -keep public class * extends waba.ui.MainWindow
+          -keep public class * extends gps.connection.GPSPort
+          -keepclasseswithmembers public class * {
+               public static void main(java.lang.String[]); }
+      </proguard>
+	</target>
+
 	<macrodef name="dist-jar">
 		<attribute name="suffix" default="_rxtx" />
 		<attribute name="build.j2se" default="" />
 		<attribute name="extralib" default="${waba_forwaba.jar}" />
 		<sequential>
 			<build.rxtx suffix="@{suffix}_tmp" build.j2se="@{build.j2se}" />
-
-			<!-- Then, optimize to build a single jar -->
-			<!--
-	            -overloadaggressively
-	            -repackageclasses ''
-	            -allowaccessmodification
-	        -->
+			<move file="${rxtxbuild.dir}/${ant.project.name}@{suffix}_tmp.jar"
+			      tofile="${dist}/${ant.project.name}@{suffix}.jar"
+			/>
 			<condition property="@{suffix}extralib_opt"
 			           value="-injar @{extralib}(!META-INF/**)"
 			>
@@ -217,39 +259,13 @@
 			</condition>
 
 			<echo message="EXTRALIB: ${@{suffix}extralib_opt}" />
-			<taskdef name="proguard"
-			         classpath="${proguardLib}"
-			         classname="proguard.ant.ProGuardTask"
-			/>
-			<proguard shrink="true"
-			          defaultpackage=""
-			          optimize="true"
-			          obfuscate="false"
-			          allowaccessmodification="yes"
-			          flattenpackagehierarchy=""
-			          repackageclasses="false"
-			          printusage="false"
-			          overloadaggressively="false"
-			          verbose="true"
-			          ignorewarnings="true"
-			>
-				<libraryjar file="${proguard.java.rt.lib}" />
-				<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
-				<injar path="${rxtxbuild.dir}/${ant.project.name}@{suffix}_tmp.jar"
+			<antcall target="proguard.rxtx-dist">
+				<param name="proguard.infile"
+				       value="${dist}/${ant.project.name}@{suffix}.jar"
 				/>
-				<outjar path="${dist}/${ant.project.name}@{suffix}.jar" />
-	                -optimizationpasses 1
-			        ${@{suffix}extralib_opt}
-	                -injar ${swcollections.jar}(!META-INF/**)
-	                -printmapping ${dist}/${ant.project.name}@{suffix}.map
-	                -keep public class BT747
-	                -keep public class bt747.j2se_view.BT747
-	                -keep public class * implements gps.log.in.GPSLogConvert
-	                -keep public class * extends waba.ui.MainWindow
-	                -keep public class * extends gps.connection.GPSPort
-	                -keepclasseswithmembers public class * {
-	                     public static void main(java.lang.String[]); }
-	       </proguard>
+				<param name="extralib" value="${@{suffix}extralib_opt}" />
+				<param name="suffix" value="@{suffix}" />
+			</antcall>
 			<antcall target="sign">
 				<param name="jar.tosign"
 				       value="${dist}/${ant.project.name}@{suffix}.jar"
@@ -300,7 +316,8 @@
 		<javac verbose="no"
 		       srcdir="src"
 		       destdir="${j2sebuild.dir}"
-		       optimize="true"
+		       optimize="${java.optimize}"
+		       debug="${java.debug}"
 		       classpathref="j2seclasspath"
 		>
 			<include name="bt747/model/AppController.java" />
@@ -327,9 +344,9 @@
 		      tofile="${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar"
 		/>
 		<proguard forceprocessing="true"
-		          shrink="true"
+		          shrink="${proguard.shrink}"
 		          defaultpackage=""
-		          optimize="true"
+		          optimize="${proguard.optimize}"
 		          obfuscate="false"
 		          repackageclasses="false"
 		          printusage="false"
@@ -405,9 +422,9 @@
 		         classname="proguard.ant.ProGuardTask"
 		/>
 		<proguard forceprocessing="true"
-		          shrink="true"
+		          shrink="${proguard.shrink}"
 		          defaultpackage=""
-		          optimize="true"
+		          optimize="${proguard.optimize}"
 		          obfuscate="false"
 		          repackageclasses="false"
 		          printusage="false"
@@ -416,7 +433,8 @@
 		          ignorewarnings="true"
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
-			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar" />
+			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
+			/>
                         -injar ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar(!BT747.class,!bt747/*_view/**,!bt747/gps/connection/GPSWabaPort.class)
                         -injar ${waba_forj2se.jar}(!META-INF/**)
                         -injar ${swcollections.jar}(!META-INF/**)
@@ -566,8 +584,8 @@
 			<keep name="bt747.j2se_view.BT747" />
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${swcollections.jar}" />
-            <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
-            <libraryjar file="${waba_forwaba.jar}" />
+			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+			<libraryjar file="${waba_forwaba.jar}" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
 			/>
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
@@ -620,6 +638,7 @@
 		<exclude name="bt747/j2se_view/*" unless="build.j2se" />
 		<exclude name="bt747/waba_view/*" if="build.j2se" />
 		<exclude name="gps/model/*" />
+		<exclude name="gps/connection/GPSFilePort.java" />
 		<exclude name="gps/connection/GPSRxTxPort.java" />
 		<exclude name="gps/connection/GPSWabaSocketPort.java" />
 		<exclude name="gps/parser/**" />
@@ -643,7 +662,8 @@
 		       destdir="${build.dir}/waba"
 		       target="1.1"
 		       source="1.2"
-		       optimize="true"
+		       optimize="${java.optimize}"
+		       debug="${java.debug}"
 		       deprecation="true"
 		>
 			<include name="**/*.java" />
@@ -653,7 +673,6 @@
 
 	<!-- The target is currently not working since ant references the rt.jar
 	 regardless of the parameters. -->
-	<property name="wabalang.uptodate" value="true" />
 
 	<uptodate property="wabalang.uptodate" targetfile="${waba_lang.jar}">
 		<srcfiles dir="${superwaba_root}/src/java/waba/lang" includes="**" />
@@ -670,11 +689,15 @@
 		       target="1.1"
 		       source="1.2"
 		       includeantruntime="no"
-		       includeJavaRuntime="false"
-		       classpath=""
+		       includejavaruntime="false"
+		       optimize="${java.optimize}"
+		       debug="${java.debug}"
 		       classpathref="wabalangclasspath"
+		       extdirs=""
+		       bootclasspath=""
+               classpath=""
 		>
-			<include name="**/*.java" />
+			<include name="*.java" />
 		</javac>
 		<jar jarfile="${wabalang.jar}" compress="true">
 			<fileset dir="${build.dir}/wabalang" includes="**/*.class" />
@@ -706,20 +729,22 @@
 		          dest.dir="${rxtxsrc.dir}"
 		          rxtx="true"
 		/>
-		
-        <condition property="exclude.waba" >
-        	<istrue value="${no.waba}"/>
-        </condition>
-        <condition property="is.lib" >
-            <istrue value="${build.lib}"/>
-        </condition>
-        <condition property="is.j2se" >
-            <istrue value="${build.j2se}"/>
-        </condition>
+
+		<condition property="exclude.waba">
+			<istrue value="${no.waba}" />
+		</condition>
+		<condition property="is.lib">
+			<istrue value="${build.lib}" />
+		</condition>
+		<condition property="is.j2se">
+			<istrue value="${build.j2se}" />
+		</condition>
 
 
-		<echoproperties prefix="exclude.waba"></echoproperties>
-        <echoproperties prefix="is.j2se"></echoproperties>
+		<echoproperties prefix="exclude.waba">
+		</echoproperties>
+		<echoproperties prefix="is.j2se">
+		</echoproperties>
 		<delete verbose="no">
 			<fileset dir="${rxtxsrc.dir}">
 				<include name="bt747/j2se_view/**" unless="is.j2se" />
@@ -735,7 +760,8 @@
 		<javac verbose="no"
 		       srcdir="${rxtxsrc.dir}"
 		       destdir="${rxtxbuild.dir}"
-		       optimize="true"
+		       optimize="${java.optimize}"
+		       debug="${java.debug}"
 		       classpathref="rxtxclasspath"
 		>
 			<include name="**/*.java" />
@@ -779,7 +805,8 @@
 		       destdir="${symbianbuild.dir}"
 		       target="1.1"
 		       source="1.2"
-		       optimize="true"
+		       optimize="${java.optimize}"
+		       debug="${java.debug}"
 		       deprecation="true"
 		>
 			<include name="**/*.java" />
@@ -827,7 +854,8 @@
 		       destdir="${filebuild.dir}"
 		       source="1.3"
 		       target="1.1"
-		       optimize="true"
+		       optimize="${java.optimize}"
+		       debug="${java.debug}"
 		       classpathref="classpath"
 		>
 			<include name="**/*.java" />
@@ -857,7 +885,8 @@
 		       destdir="${build.dir}/forj2se"
 		       target="1.5"
 		       source="1.5"
-		       optimize="true"
+		       optimize="${java.optimize}"
+		       debug="${java.debug}"
 		>
 			<include name="src_forj2se/**/*.java" />
 			<classpath refid="classpath" />
@@ -884,7 +913,8 @@
 		       destdir="${build.dir}/forwaba"
 		       target="1.1"
 		       source="1.3"
-		       optimize="true"
+		       optimize="${java.optimize}"
+		       debug="${java.debug}"
 		       deprecation="true"
 		>
 			<include name="src_forwaba/**/*.java" />
@@ -964,13 +994,13 @@
 		/>
 		<proguard shrink="true"
 		          defaultpackage=""
-		          optimize="true"
-		          obfuscate="${obfuscate}"
-		          allowaccessmodification="true"
+		          optimize="${proguard.optimize}"
+		          obfuscate="${proguard.obfuscate}"
+		          allowaccessmodification="${proguard.accessmodification}"
 		          flattenpackagehierarchy=""
 		          repackageclasses=""
 		          printusage="false"
-		          overloadaggressively="true"
+		          overloadaggressively="${proguard.overload}"
 		          verbose="true"
 		          ignorewarnings="true"
 		          printmapping="${dist}/${ant.project.name}_symbian.mapping"
@@ -1034,16 +1064,16 @@
 		/>
 		<proguard shrink="true"
 		          defaultpackage=""
-		          optimize="true"
+		          optimize="${proguard.optimize}"
 		          obfuscate="${obfuscate}"
-		          allowaccessmodification="true"
+		          allowaccessmodification="${proguard.accessmodification}"
 		          flattenpackagehierarchy=""
 		          repackageclasses=""
 		          printusage="false"
-		          overloadaggressively="true"
+		          overloadaggressively="${proguard.overload}"
 		          verbose="true"
 		          ignorewarnings="true"
-		          optimizationpasses="3"
+		          optimizationpasses="${proguard.optimizationpasses}"
 		          printmapping="${dist}/${ant.project.name}.mapping"
 		>
 

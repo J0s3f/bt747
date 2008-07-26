@@ -29,6 +29,8 @@ import bt747.sys.Convert;
  * @author Mario De Weerd
  */
 public class GPSNMEAFile extends GPSFile {
+    private static final double KMH_PER_KNOT = 0.53995680345572354211663066954644;
+
     private StringBuffer rec=new StringBuffer(1024);  // reused stringbuffer
 
     private int m_NMEAout;
@@ -341,7 +343,7 @@ public class GPSNMEAFile extends GPSFile {
                 //          11   = E or W
                 //          12   = Checksum
                 if(activeFields.speed!=0) {
-                    rec.append(Convert.toString(s.speed*0.53995680345572354211663066954644,3));
+                    rec.append(Convert.toString(s.speed*KMH_PER_KNOT,3));
                 }
                 rec.append(",");
                 if(activeFields.heading!=0) {

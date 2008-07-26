@@ -30,11 +30,11 @@ public class File {
 
     RandomAccessFile raf = null;
 
-    public final static int DONT_OPEN = 0;
-    public final static int READ_ONLY = 1;
-    public final static int CREATE = 2;
-    public final static int WRITE_ONLY = 3;
-    public final static int READ_WRITE = 4;
+    public static final int DONT_OPEN = 0;
+    public static final int READ_ONLY  = 1;
+    public static final int WRITE_ONLY = 2;
+    public static final int READ_WRITE = 3; // READ | WRITE
+    public static final int CREATE = 4;
 
     public File(String path, int mode, int card) throws FileNotFoundException {
         this(path, mode);
