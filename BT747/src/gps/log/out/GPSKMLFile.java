@@ -23,6 +23,7 @@ import gps.BT747Constants;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
+import bt747.Version;
 import bt747.sys.Convert;
 
 /**
@@ -96,19 +97,24 @@ public class GPSKMLFile extends GPSFile {
         String header;
         trackName = name;
         header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
-                + "<kml xmlns=\"http://earth.google.com/kml/2.0\">\r\n"
-                + "<Document>\r\n" + "  <name>i-Blue 747"
+                + "<kml xmlns=\"http://www.opengis.net/kml/2.2\""
+                + " xmlns:atom=\"http://www.w3.org/2005/Atom\">\r\n"
+                + "<Document>\r\n"
+                + "<atom:generator uri=\"http://sf.net/projects/bt747\" "
+                + "version=\""
+                + Version.VERSION_NUMBER
+                + "\""
+                + ">"
+                + "BT747"
+                + "</atom:generator>\r\n"
+                + "<name>"
                 + name
                 + "</name>\r\n"
-                + "    <open>1</open>\r\n"
+                + "  <open>1</open>\r\n"
                 + "  <Style id=\"TimeStamp0\">\r\n"
                 + "    <IconStyle>\r\n"
                 + "      <Icon>\r\n"
                 + "        <href>root://icons/palette-3.png</href>\r\n"
-                + "        <x>128</x>\r\n"
-                + "        <y>128</y>\r\n"
-                + "        <w>32</w>\r\n"
-                + "        <h>32</h>\r\n"
                 + "      </Icon>\r\n"
                 + "    </IconStyle>\r\n"
                 + "    <LabelStyle>\r\n"
@@ -119,10 +125,6 @@ public class GPSKMLFile extends GPSFile {
                 + "    <IconStyle>\r\n"
                 + "      <Icon>\r\n"
                 + "        <href>root://icons/palette-3.png</href>\r\n"
-                + "        <x>128</x>\r\n"
-                + "        <y>128</y>\r\n"
-                + "        <w>32</w>\r\n"
-                + "        <h>32</h>\r\n"
                 + "      </Icon>\r\n"
                 + "    </IconStyle>\r\n"
                 + "    <LabelStyle>\r\n"
@@ -143,10 +145,6 @@ public class GPSKMLFile extends GPSFile {
                 + "      <IconStyle>\r\n"
                 + "        <Icon>\r\n"
                 + "          <href>root://icons/palette-2.png</href>\r\n"
-                + "          <x>160</x>\r\n"
-                + "          <y>192</y>\r\n"
-                + "          <w>32</w>\r\n"
-                + "          <h>32</h>\r\n"
                 + "        </Icon>\r\n"
                 + "      </IconStyle>\r\n"
                 + "      <LabelStyle>\r\n"
@@ -157,10 +155,6 @@ public class GPSKMLFile extends GPSFile {
                 + "      <IconStyle>\r\n"
                 + "        <Icon>\r\n"
                 + "          <href>root://icons/palette-2.png</href>\r\n"
-                + "          <x>160</x>\r\n"
-                + "          <y>192</y>\r\n"
-                + "          <w>32</w>\r\n"
-                + "          <h>32</h>\r\n"
                 + "        </Icon>\r\n"
                 + "      </IconStyle>\r\n"
                 + "      <LabelStyle>\r\n"
@@ -181,10 +175,6 @@ public class GPSKMLFile extends GPSFile {
                 + "      <IconStyle>\r\n"
                 + "        <Icon>\r\n"
                 + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "          <x>224</x>\r\n"
-                + "          <y>192</y>\r\n"
-                + "          <w>32</w>\r\n"
-                + "          <h>32</h>\r\n"
                 + "        </Icon>\r\n"
                 + "      </IconStyle>\r\n"
                 + "      <LabelStyle>\r\n"
@@ -195,10 +185,6 @@ public class GPSKMLFile extends GPSFile {
                 + "      <IconStyle>\r\n"
                 + "        <Icon>\r\n"
                 + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "          <x>224</x>\r\n"
-                + "          <y>192</y>\r\n"
-                + "          <w>32</w>\r\n"
-                + "          <h>32</h>\r\n"
                 + "        </Icon>\r\n"
                 + "      </IconStyle>\r\n"
                 + "      <LabelStyle>\r\n"
@@ -219,9 +205,6 @@ public class GPSKMLFile extends GPSFile {
                 + "      <IconStyle>\r\n"
                 + "        <Icon>\r\n"
                 + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "          <x>224</x>\r\n"
-                + "          <w>32</w>\r\n"
-                + "          <h>32</h>\r\n"
                 + "        </Icon>\r\n"
                 + "      </IconStyle>\r\n"
                 + "      <LabelStyle>\r\n"
@@ -232,9 +215,6 @@ public class GPSKMLFile extends GPSFile {
                 + "      <IconStyle>\r\n"
                 + "        <Icon>\r\n"
                 + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "          <x>224</x>\r\n"
-                + "          <w>32</w>\r\n"
-                + "          <h>32</h>\r\n"
                 + "        </Icon>\r\n"
                 + "      </IconStyle>\r\n"
                 + "      <LabelStyle>\r\n"
@@ -255,10 +235,6 @@ public class GPSKMLFile extends GPSFile {
                 + "      <IconStyle>\r\n"
                 + "        <Icon>\r\n"
                 + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "          <x>192</x>\r\n"
-                + "          <y>64</y>\r\n"
-                + "          <w>32</w>\r\n"
-                + "          <h>32</h>\r\n"
                 + "        </Icon>\r\n"
                 + "      </IconStyle>\r\n"
                 + "      <LabelStyle>\r\n"
@@ -269,10 +245,6 @@ public class GPSKMLFile extends GPSFile {
                 + "      <IconStyle>\r\n"
                 + "        <Icon>\r\n"
                 + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "          <x>192</x>\r\n"
-                + "          <y>64</y>\r\n"
-                + "          <w>32</w>\r\n"
-                + "          <h>32</h>\r\n"
                 + "        </Icon>\r\n"
                 + "      </IconStyle>\r\n"
                 + "      <LabelStyle>\r\n"
@@ -295,7 +267,7 @@ public class GPSKMLFile extends GPSFile {
         String header;
         if (isWayType) {
             header = "  <Folder>\r\n" + "    <name>My Waypoints</name>\r\n"
-                    + "    <open>0</open>\r\n";
+                    + "  <open>0</open>\r\n";
         } else if (isTrackType) {
             header = "  <Folder>\r\n"// " <name>My Tracks</name>\r\n"+
                     + "    <name>My Trackpoints</name>\r\n"
@@ -312,10 +284,10 @@ public class GPSKMLFile extends GPSFile {
                     + "        <width>3.0</width>\r\n"
                     + "      </LineStyle>\r\n" + "    </Style>\r\n"
                     + "    <LineString>\r\n"
-                    + "    <altitudeMode>absolute</altitudeMode>\r\n"
                     + "    <extrude>1</extrude>\r\n"
-                    + "      <tessellate>1</tessellate>\r\n"
-                    + "      <coordinates>\r\n";
+                    + "    <tessellate>1</tessellate>\r\n"
+                    + "    <altitudeMode>absolute</altitudeMode>\r\n"
+                    + "    <coordinates>\r\n";
         }
         writeTxt(header);
     }
@@ -346,9 +318,6 @@ public class GPSKMLFile extends GPSFile {
             if (ptFilters[currentFilter].doFilter(s)) {
                 if (isWayType || isTrackType) {
                     rec.append("<Placemark>\r\n");
-                    if (isTrackType) {
-                        rec.append("<visibility>0</visibility>\r\n");
-                    }
                     rec.append("<name>");
                     if (activeFields.utc != 0) {
                         rec.append("TIME: " + (t.getHour() < 10 ? "0" : "")
@@ -362,6 +331,17 @@ public class GPSKMLFile extends GPSFile {
                         rec.append(Convert.toString(s.recCount));
                     }
                     rec.append("</name>\r\n");
+
+                    if (isTrackType) {
+                        rec.append("<visibility>0</visibility>\r\n");
+                    }
+
+                    rec.append("<description>");
+                    rec.append("<![CDATA[");
+                    CommonOut.getHtml(rec, s, activeFields, selectedFileFields,
+                            t, recordNbrInLogs, imperial);
+                    rec.append("]]>");
+                    rec.append("</description>");
 
                     if ((activeFields.utc != 0)) {
                         rec.append("<TimeStamp><when>");
@@ -428,12 +408,6 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("</Point>\r\n");
                     }
 
-                    rec.append("<description>");
-                    rec.append("<![CDATA[");
-                    CommonOut.getHtml(rec, s, activeFields, selectedFileFields,
-                            t, recordNbrInLogs, imperial);
-                    rec.append("]]>");
-                    rec.append("</description>");
                     rec.append("</Placemark>\r\n");
 
                     rec.append("\r\n");

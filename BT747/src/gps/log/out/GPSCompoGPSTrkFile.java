@@ -80,7 +80,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
                 + "U  1\r\n" // LAT .LON FORMAT
                 + "M  Generated using BT747 "
                 + Version.VERSION_NUMBER
-                + "http://sf.net/projects/bt747 for CompeGPS\r\n");
+                + " http://sf.net/projects/bt747 for CompeGPS\r\n");
         // "NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
     }
 

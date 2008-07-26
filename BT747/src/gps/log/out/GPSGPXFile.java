@@ -25,6 +25,7 @@ package gps.log.out;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
+import bt747.Version;
 import bt747.sys.Convert;
 
 /**
@@ -82,20 +83,17 @@ public class GPSGPXFile extends GPSFile {
 
     protected void writeFileHeader(final String Name) {
         String header;
-        header = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>"
-                + "<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" creator=\"BT747\" version=\""
-                +
-                // MS20080327 Must not be bt747 version number ...
-                // bt747.Version.VERSION_NUMBER +
-                "1.1"
-                + "\" "
-                + "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                + "    xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\">"
-        // MS20080327 Filename element isn't understood by MapSource?!
-        // +"<name>" +
-        // Name +
-        // "</name>"
-        ;
+        header = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\r\n"
+                + "<gpx xmlns=\"http://www.topografix.com/GPX/1/0\"\r\n"
+                + " creator=\"BT747 V"
+                + Version.VERSION_NUMBER
+                + "\""
+                + " version=\"1.0\"\r\n" // GPX version
+                + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                + " xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0"
+                + " http://www.topografix.com/GPX/1/0/gpx.xsd\">\r\n"
+                // MS20080327 Filename element isn't understood by MapSource?!
+                + "<name>" + Name + "</name>";
         writeTxt(header);
     }
 
@@ -175,7 +173,53 @@ public class GPSGPXFile extends GPSFile {
                 String rcrStr = ""; // String that will represent log reason
                 String hdopStr = ""; // String that will represent HDOP
                 String nsatStr = ""; // String that will represent number of
-                                        // sats
+                // sats
+
+                if ((activeFields.valid != 0)) {
+                    switch (s.valid) {
+                    case 0x0001:
+                        fixStr += "none"; // "No fix";
+                        break;
+                    case 0x0002:
+                        fixStr += "3d"; // "SPS";
+                        break;
+                    case 0x0004:
+                        fixStr += "dgps";
+                        break;
+                    case 0x0008:
+                        fixStr += "pps"; // Military signal
+                        break;
+                    case 0x0010:
+                        // tmp+="RTK";
+                        break;
+                    case 0x0020:
+                        // tmp+="FRTK";
+                        break;
+                    case 0x0040:
+                        // tmp+= "Estimated mode";
+                        break;
+                    case 0x0080:
+                        // tmp+= "Manual input mode";
+                        break;
+                    case 0x0100:
+                        // tmp+= "Simulator mode";
+                        break;
+                    default:
+                        // tmp+="Unknown mode";
+                    }
+                }
+                if ((activeFields.rcr != 0)) {
+                    rec.append("<type>");
+                    rcrStr = getRCRstr(s);
+                    rec.append("</type>\r\n");
+                }
+
+                if ((activeFields.hdop != 0)) {
+                    hdopStr = Convert.toString(s.hdop / 100.0, 2);
+                }
+                if ((activeFields.nsat != 0)) {
+                    nsatStr += Convert.toString(s.nsat / 256);
+                }
 
                 // StringBuffer rec=new StringBuffer(1024);
                 rec.setLength(0);
@@ -265,6 +309,14 @@ public class GPSGPXFile extends GPSFile {
                     rec.append("</course>\r\n");
                 }
 
+                if ((activeFields.speed != 0)) {
+                    rec.append("<speed>");
+                    rec.append(Convert.toString(s.speed / 3.6f, 4)); // must
+                    // be
+                    // meters/second
+                    rec.append("</speed>\r\n");
+                }
+
                 // <magvar> degreesType </magvar> [0..1] ?
                 // <geoidheight> xsd:decimal </geoidheight> [0..1] ?
 
@@ -303,53 +355,19 @@ public class GPSGPXFile extends GPSFile {
                 // <type> xsd:string </type> [0..1] ?
                 if ((activeFields.rcr != 0)) {
                     rec.append("<type>");
-                    rec.append(getRCRstr(s));
+                    rec.append(rcrStr);
                     rec.append("</type>\r\n");
                 }
 
                 // <fix> fixType </fix> [0..1] ?
-                if ((activeFields.valid != 0)) {
-                    switch (s.valid) {
-                    case 0x0001:
-                        fixStr += "none"; // "No fix";
-                        break;
-                    case 0x0002:
-                        fixStr += "3d"; // "SPS";
-                        break;
-                    case 0x0004:
-                        fixStr += "dgps";
-                        break;
-                    case 0x0008:
-                        fixStr += "pps"; // Military signal
-                        break;
-                    case 0x0010:
-                        // tmp+="RTK";
-                        break;
-                    case 0x0020:
-                        // tmp+="FRTK";
-                        break;
-                    case 0x0040:
-                        // tmp+= "Estimated mode";
-                        break;
-                    case 0x0080:
-                        // tmp+= "Manual input mode";
-                        break;
-                    case 0x0100:
-                        // tmp+= "Simulator mode";
-                        break;
-                    default:
-                        // tmp+="Unknown mode";
-                    }
-                    if (fixStr.length() != 0) {
-                        rec.append("<fix>");
-                        rec.append(fixStr);
-                        rec.append("</fix>\r\n");
-                    }
+                if (fixStr.length() != 0) {
+                    rec.append("<fix>");
+                    rec.append(fixStr);
+                    rec.append("</fix>\r\n");
                 }
 
                 // <sat> xsd:nonNegativeInteger </sat> [0..1] ?
                 if ((activeFields.nsat != 0)) {
-                    nsatStr += Convert.toString(s.nsat / 256);
                     rec.append("<sat>");
                     rec.append(nsatStr); // Sat used
                     rec.append("</sat>\r\n");
@@ -360,7 +378,6 @@ public class GPSGPXFile extends GPSFile {
 
                 // <hdop> xsd:decimal </hdop> [0..1] ?
                 if ((activeFields.hdop != 0)) {
-                    hdopStr = Convert.toString(s.hdop / 100.0, 2);
                     rec.append("<hdop>");
                     rec.append(hdopStr);
                     rec.append("</hdop>\r\n");
@@ -395,27 +412,23 @@ public class GPSGPXFile extends GPSFile {
 
                 // <link> linkType </link> [0..*] ?
 
-                // <extensions> extensionsType </extensions> [0..1] ?
-                if ((activeFields.distance != 0 || activeFields.speed != 0)) {
-                    rec.append("<extensions>");
-                    // MS 20080327 seems to be unsupported in GPX 1.0:
-                    // MS 20080327 don't know why but "speed" isn't understood
-                    // by MapSource
-                    if ((activeFields.speed != 0)) {
-                        rec.append("<speed>");
-                        rec.append(Convert.toString(s.speed / 3.6f, 4)); // must
-                                                                            // be
-                                                                            // meters/second
-                        rec.append("</speed>\r\n");
-                    }
+                if (false) {
+                    // <extensions> extensionsType </extensions> [0..1] ?
+                    if (activeFields.distance != 0) {
+                        rec.append("<extensions>");
+                        // MS 20080327 seems to be unsupported in GPX 1.0:
+                        // MS 20080327 don't know why but "speed" isn't
+                        // understood
+                        // by MapSource
 
-                    if ((activeFields.distance != 0)) {
-                        rec.append("<distance>");
-                        rec.append(Convert.toString(s.distance, 2)); // +"
-                                                                        // m\r\n"
-                        rec.append("</distance>\r\n");
+                        if ((activeFields.distance != 0)) {
+                            rec.append("<distance>");
+                            rec.append(Convert.toString(s.distance, 2)); // +"
+                            // m\r\n"
+                            rec.append("</distance>\r\n");
+                        }
+                        rec.append("</extensions>");
                     }
-                    rec.append("</extensions>");
                 }
                 if (m_isWayType) {
                     rec.append("</wpt>\r\n");

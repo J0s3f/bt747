@@ -20,8 +20,8 @@ import bt747.sys.Thread;
  */
 public class Generic {
 
-    static HashSet h = new HashSet();
-    static HashSet oos = new HashSet();
+    private static HashSet h = new HashSet();
+    private static HashSet oos = new HashSet();
 
     //java.util.HashSet<Object> tt = new java.util.HashSet<Object>();
     

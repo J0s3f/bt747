@@ -261,13 +261,20 @@ public abstract class GPSFile {
         int error = BT747Constants.NO_ERROR;
 
         try {
-            outFile = new BufFile(fileName, File.DONT_OPEN, card);
-            if (createNewFile && outFile.exists()) {
-                outFile.delete();
+            File tmpFile = new File(fileName, File.DONT_OPEN, card);
+            if (createNewFile && tmpFile.exists()) {
+                tmpFile.delete();
             }
-            outFile = new BufFile(fileName, createNewFile ? File.CREATE
-                    : File.READ_WRITE, card);
         } catch (Exception e) {
+            e.printStackTrace();
+            // TODO: handle exception
+        }
+        try {
+            int mode = createNewFile ? File.CREATE
+                    : File.READ_WRITE;
+            outFile = new BufFile(fileName, mode, card);
+        } catch (Exception e) {
+            e.printStackTrace();
             // TODO: handle exception
         }
         if (outFile != null && !outFile.isOpen()) {
