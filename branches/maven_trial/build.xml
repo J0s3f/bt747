@@ -117,7 +117,7 @@
 		/>
 		<!--
         <scp file="BT747.jar"
-            todir="shell.sourceforge.net:bt747/htdocs/"/>
+            todir="shell.sourceforge.net:net/sourceforge/bt747/bt747/htdocs/"/>
             -->
 
 		<exec executable="upload.bat" failifexecutionfails="false" />
@@ -301,9 +301,9 @@
 	<uptodate property="libj2se.uptodate"
 	          targetfile="${dist}/lib${ant.project.name}.jar"
 	>
-		<srcfiles dir="${src.dir}/bt747/model" includes="**" />
+		<srcfiles dir="${src.dir}/net/sourceforge/bt747/bt747/model" includes="**" />
 		<srcfiles dir="${src.dir}/gps" includes="**" />
-		<srcfiles dir="src_forj2se" includes="**" />
+		<srcfiles dir="src/forj2se" includes="**" />
 	</uptodate>
 
 
@@ -321,10 +321,10 @@
 		       classpathref="j2seclasspath"
 		       encoding="iso-8859-15"
 		>
-			<include name="bt747/model/AppController.java" />
-			<include name="bt747/j2se_view/**" />
-			<include name="bt747/lang/Txt_en.java" />
-			<exclude name="bt747/j2se_view/BT747.java" />
+			<include name="net/sourceforge/bt747/bt747/model/AppController.java" />
+			<include name="net/sourceforge/bt747/bt747/j2se_view/**" />
+			<include name="net/sourceforge/bt747/bt747/lang/Txt_en.java" />
+			<exclude name="net/sourceforge/bt747/bt747/j2se_view/BT747.java" />
 		</javac>
 
 		<!--
@@ -436,7 +436,7 @@
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
 			/>
-                        -injar ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar(!BT747.class,!bt747/*_view/**,!bt747/gps/connection/GPSWabaPort.class)
+                        -injar ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar(!BT747.class,!net/sourceforge/bt747/bt747/*_view/**,!net/sourceforge/bt747/bt747/gps/connection/GPSWabaPort.class)
                         -injar ${waba_forj2se.jar}(!META-INF/**)
                         -injar ${swcollections.jar}(!META-INF/**)
                         -optimizationpasses 1
@@ -631,13 +631,13 @@
 	<property name="java.target.version" value="1.1" />
 
 	<!-- Filesets for normal build -->
-	<fileset dir="src_forwaba" id="waba_lib">
+	<fileset dir="src/forwaba" id="waba_lib">
 		<include name="**/*.java" />
 	</fileset>
 	<fileset dir="${src.dir}" id="waba_only_sources">
 		<include name="**/*.java" />
-		<exclude name="bt747/j2se_view/*" unless="build.j2se" />
-		<exclude name="bt747/waba_view/*" if="build.j2se" />
+		<exclude name="net/sourceforge/bt747/bt747/j2se_view/*" unless="build.j2se" />
+		<exclude name="net/sourceforge/bt747/bt747/waba_view/*" if="build.j2se" />
 		<exclude name="gps/model/*" />
 		<exclude name="gps/connection/GPSFilePort.java" />
 		<exclude name="gps/connection/GPSRxTxPort.java" />
@@ -751,14 +751,14 @@
 		</echoproperties>
 		<delete verbose="no">
 			<fileset dir="${rxtxsrc.dir}">
-				<include name="bt747/j2se_view/**" unless="is.j2se" />
-				<include name="bt747/waba_view/**" if="exclude.waba" />
-				<include name="bt747/j2se_view/BT747.java" if="exclude.waba" />
+				<include name="net/sourceforge/bt747/bt747/j2se_view/**" unless="is.j2se" />
+				<include name="net/sourceforge/bt747/bt747/waba_view/**" if="exclude.waba" />
+				<include name="net/sourceforge/bt747/bt747/j2se_view/BT747.java" if="exclude.waba" />
 				<include name="BT747.java" if="exclude.waba" />
-				<include name="bt747/*view/**" if="is.lib" />
-				<include name="bt747/lang/**" if="is.lib" />
-				<include name="bt747/Txt.java" if="is.lib" />
-				<include name="bt747/model/AppController.java" if="is.lib" />
+				<include name="net/sourceforge/bt747/bt747/*view/**" if="is.lib" />
+				<include name="net/sourceforge/bt747/bt747/lang/**" if="is.lib" />
+				<include name="net/sourceforge/bt747/bt747/Txt.java" if="is.lib" />
+				<include name="net/sourceforge/bt747/bt747/model/AppController.java" if="is.lib" />
 			</fileset>
 		</delete>
 		<javac verbose="no"
@@ -836,10 +836,10 @@
 		<copy todir="${filesrc.dir}">
 			<fileset dir="src">
 				<include name="**/*.java" />
-				<exclude name="bt747/j2se_view/*" unless="build.j2se" />
-				<exclude name="bt747/j2me_view/*" unless="build.j2me" />
+				<exclude name="net/sourceforge/bt747/bt747/j2se_view/*" unless="build.j2se" />
+				<exclude name="net/sourceforge/bt747/bt747/j2me_view/*" unless="build.j2me" />
 			</fileset>
-			<fileset dir="src_forwaba">
+			<fileset dir="src/forwaba">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
@@ -849,7 +849,7 @@
 		         summary="yes"
 		         value="GPSFilePort"
 		/>
-		<replace file="${filesrc.dir}/bt747/model/AppSettings.java"
+		<replace file="${filesrc.dir}/net/sourceforge/bt747/bt747/model/AppSettings.java"
 		         encoding="${encoding}"
 		         token="//#if RXTX"
 		         summary="yes"
@@ -882,7 +882,7 @@
 
 	<!-- Target for pur j2se environment - builds library. -->
 	<uptodate property="waba_forj2se.uptodate" targetfile="${waba_forj2se.jar}">
-		<srcfiles dir="src_forj2se" includes="**" />
+		<srcfiles dir="src/forj2se" includes="**" />
 	</uptodate>
 
 	<target name="build.waba_forj2se" unless="waba_forj2se.uptodate">
@@ -896,7 +896,7 @@
 		       debug="${java.debug}"
             encoding="iso-8859-15"
 		>
-			<include name="src_forj2se/**/*.java" />
+			<include name="src/forj2se/**/*.java" />
 			<classpath refid="classpath" />
 			<!-- included for now -->
 		</javac>
@@ -911,7 +911,7 @@
 
 
 	<uptodate property="waba_forwaba.uptodate" targetfile="${waba_forwaba.jar}">
-		<srcfiles dir="src_forwaba" includes="**" />
+		<srcfiles dir="src/forwaba" includes="**" />
 	</uptodate>
 
 	<target name="build.waba_forwaba" unless="waba_forwaba.uptodate">
@@ -926,7 +926,7 @@
 		       deprecation="true"
             encoding="iso-8859-15"
 		>
-			<include name="src_forwaba/**/*.java" />
+			<include name="src/forwaba/**/*.java" />
 			<classpath refid="classpath" />
 
 			<!-- included for now -->
@@ -1665,22 +1665,22 @@
 				<fileset refid="@{libid}" />
 			</copy>
 			<!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
-			<replaceregexp file="@{dest.dir}/bt747/Version.java"
+			<replaceregexp file="@{dest.dir}/net/sourceforge/bt747/bt747/Version.java"
 			               encoding="${encoding}"
 			               match="BUILD = [0-9]+L;"
 			               replace="BUILD = ${TIMESTAMP}L;"
 			/>
-			<replaceregexp file="@{dest.dir}/bt747/Version.java"
+			<replaceregexp file="@{dest.dir}/net/sourceforge/bt747/bt747/Version.java"
 			               encoding="${encoding}"
 			               match='BUILD_STR = \".*\";'
 			               replace='BUILD_STR = "${full.build.version}.${TIMESTAMP}";'
 			/>
-			<replaceregexp file="@{dest.dir}/bt747/Version.java"
+			<replaceregexp file="@{dest.dir}/net/sourceforge/bt747/bt747/Version.java"
 			               encoding="${encoding}"
 			               match="DATE = [^\s]*;"
 			               replace='DATE = "${DATE_DE}";'
 			/>
-			<replaceregexp file="@{dest.dir}/bt747/Version.java"
+			<replaceregexp file="@{dest.dir}/net/sourceforge/bt747/bt747/Version.java"
 			               encoding="${encoding}"
 			               match="VERSION_NUMBER = [^\s]*;"
 			               replace='VERSION_NUMBER = "${build_version}";'
@@ -1701,7 +1701,7 @@
 			         summary="yes"
 			         value=""
 			>
-				<include name="${@{dest.dir}rxtxfilter}bt747/model/AppSettings.java"
+				<include name="${@{dest.dir}rxtxfilter}net/sourceforge/bt747/bt747/model/AppSettings.java"
 				/>
 			</replace>
 
@@ -1711,7 +1711,7 @@
 				</not>
 			</condition>
 			<echo message="Preparing for language ${lang}" />
-			<replaceregexp file="@{dest.dir}/bt747/Txt.java"
+			<replaceregexp file="@{dest.dir}/net/sourceforge/bt747/bt747/Txt.java"
 			               match="extends Txt_.."
 			               replace="extends Txt_${lang}"
 			/>
