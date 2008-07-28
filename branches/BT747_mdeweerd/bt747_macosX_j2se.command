@@ -15,7 +15,7 @@ if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
 RXTX_PATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
 RXTX_BIN_PATH=${RXTX_PATH}/Mac_OS_X
 
-CLASSPATH=${RXTX_PATH}:${RXTX_BIN_PATH}:${ROOT_DIR}/dist/BT747_j2se.jar:${ROOT_DIR}/lib/swing-layout-1.0.3.jar:.:$CLASSPATH
+CLASSPATH=${RXTX_PATH}:${RXTX_BIN_PATH}:${ROOT_DIR}/dist/BT747_j2se.jar:${ROOT_DIR}/lib/swing-layout-1.0.3.jar:${ROOT_DIR}/lib/jcalendar-1.3.2.jar:.:$CLASSPATH
 export CLASSPATH
 
 which javaw 2>1 >/dev/null && JAVA=javaw
