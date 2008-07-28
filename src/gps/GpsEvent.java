@@ -29,6 +29,7 @@ public class GpsEvent extends bt747.ui.Event {
     public static final int LOG_FORMAT_UPDATE = getNextAvailableEventId();
     public static final int GPRMC = getNextAvailableEventId();
     public static final int GPGGA = getNextAvailableEventId();
+    public static final int LOG_DOWNLOAD_STARTED = getNextAvailableEventId();
     public static final int DOWNLOAD_STATE_CHANGE = getNextAvailableEventId();
     public static final int LOG_DOWNLOAD_DONE = getNextAvailableEventId();
     public static final int DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY = getNextAvailableEventId();

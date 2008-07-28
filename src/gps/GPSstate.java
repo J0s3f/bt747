@@ -246,7 +246,7 @@ public class GPSstate implements Thread {
         if (isEraseOngoing && (logState == C_LOG_ERASE_STATE)) {
             logState = C_LOG_NOLOGGING;
             gpsRxTx.setIgnoreNMEA(!gpsDecode);
-            postEvent(GpsEvent.ERASE_DONE_REMOVE_POPUP);
+            signalEraseDone();
         }
     }
 
@@ -1491,7 +1491,7 @@ public class GPSstate implements Thread {
                 logState = C_LOG_ACTIVE;
             }
             if (logState != C_LOG_NOLOGGING) {
-                postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
+                postEvent(GpsEvent.LOG_DOWNLOAD_STARTED);
             }
         } catch (Exception e) {
             // TODO: handle exception
