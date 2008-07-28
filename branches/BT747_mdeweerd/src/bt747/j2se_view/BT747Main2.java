@@ -58,7 +58,10 @@ public class BT747Main2 extends javax.swing.JFrame implements
             } else if (type == ModelEvent.DATA_UPDATE) {
             } else if (type == ModelEvent.GPGGA) {
                 updateGPSData((GPSRecord) e.getArg());
-            } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE) {
+            } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
+                    || type == ModelEvent.LOG_DOWNLOAD_DONE
+                    || type == ModelEvent.LOG_DOWNLOAD_STARTED
+                    ) {
                 progressBarUpdate();
             } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
                 getRawLogFilePath();

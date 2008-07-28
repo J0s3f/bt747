@@ -18,9 +18,11 @@ import gps.BT747Constants;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
+import bt747.Txt;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.ui.MessageBox;
 
 /**
  * 
@@ -76,9 +78,11 @@ public class SimpleExample implements bt747.model.ModelListener {
         // Successfull connection will result in modelEvent.
         // The next release will have an isConnected method in the model.
 
-        // For the moment see 'ModelEvent.CONNECTED in modelEvent
+        // In this example we wait for the ModelEvent#CONNECTED
+        // in modelEvent
+        // Could also check isConnected.
         // if(m.isConnected()) {
-        // ;
+        // afterConnection();
         // }
     }
 
@@ -119,6 +123,7 @@ public class SimpleExample implements bt747.model.ModelListener {
     }
 
     private void handleDownloadEnded() {
+        int error;
         // In the example, we disconnect.
         c.closeGPS();
         // If the binary corresponds to a holux log, one might want to force
@@ -127,7 +132,10 @@ public class SimpleExample implements bt747.model.ModelListener {
 
         // After the download we convert to CSV
         // Uses previously stored settings
-        c.doConvertLog(Model.CSV_LOGTYPE);
+        error=c.doConvertLog(Model.CSV_LOGTYPE);
+        if (error!=0) {
+            reportError(c.getLastError(),c.getLastErrorInfo());
+        }
 
         // And we can do something more complex
         // We do not like the previously stored settings or we want to use our
@@ -151,14 +159,16 @@ public class SimpleExample implements bt747.model.ModelListener {
         c.setFileLogFormat((1 << BT747Constants.FMT_LATITUDE_IDX)
                 | (1 << BT747Constants.FMT_LONGITUDE_IDX)
                 | (1 << BT747Constants.FMT_HEIGHT_IDX));
-        c.doConvertLog(Model.GPX_LOGTYPE);
+        error = c.doConvertLog(Model.GPX_LOGTYPE);
+        if (error!=0) {
+            reportError(c.getLastError(),c.getLastErrorInfo());
+        }
 
         // We can do the same thing to an array for internal treatment
         GPSRecord[] positions = c.doConvertLogToTrackPoints();
         if (positions == null) {
             // Error occured
-            System.err.println("Error:" + c.getLastError() + ":"
-                    + c.getLastErrorInfo());
+            reportError(c.getLastError(),c.getLastErrorInfo());
         } else {
             // Print the first ten positions
             for (int i = 0; i < positions.length && i < 10; i++) {
@@ -173,6 +183,22 @@ public class SimpleExample implements bt747.model.ModelListener {
         // Dirty exit from example
         System.exit(0);
     }
+    
+        private void reportError(final int error, final String errorInfo) {
+            switch (error) {
+            case BT747Constants.ERROR_COULD_NOT_OPEN:
+                System.err.println("Could not open "+errorInfo);
+                break;
+            case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
+                System.err.println("No files were created ");
+                break;
+            case BT747Constants.ERROR_READING_FILE:
+                System.err.println("Problem reading" + errorInfo);
+                break;
+            default:
+                break;
+            }
+        }
 
     public void modelEvent(ModelEvent e) {
         // TODO Auto-generated method stub
@@ -211,7 +237,8 @@ public class SimpleExample implements bt747.model.ModelListener {
             System.out
                     .println("Overwriting previously downloaded data that looks different.");
             c.replyToOkToOverwrite(true);
-        } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE) {
+        } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
+                || type == ModelEvent.LOG_DOWNLOAD_STARTED) {
             progressUpdate();
         } else if (type == ModelEvent.LOG_DOWNLOAD_DONE) {
             progressUpdate();

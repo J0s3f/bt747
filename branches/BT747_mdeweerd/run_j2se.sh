@@ -16,7 +16,9 @@ else
 fi
 
 export CLASSPATH
-CLASSPATH=${RXTXJAR}:$CLASSPATH
+CLASSPATH=${ROOT_DIR}/lib/jcalendar-1.3.2.jar:$CLASSPATH
+CLASSPATH=${ROOT_DIR}/lib/swing-layout-1.0.3.jar:$CLASSPATH
+CLASSPATH=${RXTXJAR}:${ROOT_DIR}/dist/libBT747.jar:$CLASSPATH
 
 # Change the port prefix by adding the following option to the java invocation:
 #     (the example is for ports like /dev/ttyUSB0)

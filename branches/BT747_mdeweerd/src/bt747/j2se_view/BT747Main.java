@@ -201,6 +201,7 @@ public class BT747Main extends javax.swing.JFrame implements
         if (type == ModelEvent.GPRMC) {
             updateRMCData((GPSRecord) e.getArg());
         } else if (type == ModelEvent.DATA_UPDATE) {
+            
         } else if (type == ModelEvent.GPGGA) {
             updateGPSData((GPSRecord) e.getArg());
         } else if (type == ModelEvent.LOG_FORMAT_UPDATE) {
@@ -232,7 +233,10 @@ public class BT747Main extends javax.swing.JFrame implements
         } else if (type == ModelEvent.DISCONNECTED) {
             btConnect.setText("Connect");
             btConnectFunctionIsConnect = true;
-        } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE) {
+        } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
+                || type == ModelEvent.LOG_DOWNLOAD_DONE
+                || type == ModelEvent.LOG_DOWNLOAD_STARTED
+                ) {
             progressBarUpdate();
         }
 

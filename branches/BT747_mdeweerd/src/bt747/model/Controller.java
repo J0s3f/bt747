@@ -239,6 +239,7 @@ public class Controller {
                 ||m.getLogFilePath().toLowerCase().endsWith(".nme")
                 ||m.getLogFilePath().toLowerCase().endsWith(".nma")
                 ||m.getLogFilePath().toLowerCase().endsWith(".txt")
+                ||m.getLogFilePath().toLowerCase().endsWith(".log")
                 ) {
             lc = new NMEALogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
@@ -373,6 +374,7 @@ public class Controller {
         } else if (m.getLogFilePath().toLowerCase().endsWith(".nmea")
                 ||m.getLogFilePath().toLowerCase().endsWith(".nme")
                 ||m.getLogFilePath().toLowerCase().endsWith(".nma")
+                ||m.getLogFilePath().toLowerCase().endsWith(".log")
                 ||m.getLogFilePath().toLowerCase().endsWith(".txt")
                 ) {
             lc = new NMEALogConvert();

@@ -462,15 +462,19 @@ public class AppBT747 extends MainWindow implements ModelListener {
         
         if (eventType == ModelEvent.CONNECTED) {
             m_TabPanel.setActiveTab(TAB_LOG_GET_IDX);
-        } else if ((event.getType() == ModelEvent.DOWNLOAD_STATE_CHANGE)) {
+        } else if (eventType == ModelEvent.DOWNLOAD_STATE_CHANGE
+                || eventType == ModelEvent.LOG_DOWNLOAD_STARTED
+                || eventType == ModelEvent.LOG_DOWNLOAD_DONE) {
             updateProgressBar();
-        } else if ((event.getType() == ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY)) {
+        } else if ((eventType == ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY)) {
             requestLogOverwriteConfirmation();
-        } else if ((event.getType() == ModelEvent.ERASE_ONGOING_NEED_POPUP)) {
+        } else if ((eventType == ModelEvent.ERASE_ONGOING_NEED_POPUP)) {
             createErasePopup();
-        } else if ((event.getType() == ModelEvent.COULD_NOT_OPEN_FILE)) {
+        } else if ((eventType == ModelEvent.ERASE_DONE_REMOVE_POPUP)) {
+            removeErasePopup();
+        } else if ((eventType == ModelEvent.COULD_NOT_OPEN_FILE)) {
             couldNotOpenFileMessage((String) event.getArg());
-        } else if ((event.getType() == ModelEvent.DEBUG_MSG)) {
+        } else if ((eventType == ModelEvent.DEBUG_MSG)) {
             Vm.debug((String) event.getArg());
         } else {
             Control cntrl;
@@ -503,6 +507,10 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
     private void createErasePopup() {
         mbErase.popupModal();
+    }
+
+    private void removeErasePopup() {
+        mbErase.unpop();
     }
 
     private void stopErase() {
