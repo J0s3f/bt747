@@ -148,9 +148,9 @@ public class SimpleExample implements bt747.model.ModelListener {
         // Trackpoints : anything
         c.setFilterRcrMask(GPSFilter.WAYPT, BT747Constants.RCR_BUTTON_MASK);
         // To limit the output data, we only select lat,lon and height.
-        c.setFileLogFormat(BT747Constants.FMT_LATITUDE_IDX
-                | BT747Constants.FMT_LONGITUDE_IDX
-                | BT747Constants.FMT_HEIGHT_IDX);
+        c.setFileLogFormat((1 << BT747Constants.FMT_LATITUDE_IDX)
+                | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+                | (1 << BT747Constants.FMT_HEIGHT_IDX));
         c.doConvertLog(Model.GPX_LOGTYPE);
 
         // We can do the same thing to an array for internal treatment
