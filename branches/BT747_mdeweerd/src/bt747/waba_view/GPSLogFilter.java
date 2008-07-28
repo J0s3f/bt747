@@ -53,8 +53,8 @@ public class GPSLogFilter extends Container {
     private PushButtonGroup pbPtType;
 
     public void onStart() {
-        C_PB_TYPE_NAMES[GPSFilter.C_TRKPT_IDX] = Txt.TRKPT;
-        C_PB_TYPE_NAMES[GPSFilter.C_WAYPT_IDX] = Txt.WAYPT;
+        C_PB_TYPE_NAMES[GPSFilter.TRKPT] = Txt.TRKPT;
+        C_PB_TYPE_NAMES[GPSFilter.WAYPT] = Txt.WAYPT;
         add(pbPtType = new PushButtonGroup(C_PB_TYPE_NAMES, // labes for buttons
                 true, // atleastone
                 0, 1, 2, 1, true, // selected, gap, insidegap, rows,
@@ -203,14 +203,14 @@ public class GPSLogFilter extends Container {
                     }
                 }
                 if (z_updated) {
-                    c.setValidMask(currentLogFilter, getValid()); // TODO: may
+                    c.setFilterValidMask(currentLogFilter, getValid()); // TODO: may
                                                                     // not be
                                                                     // needed
                     switch (currentLogFilter) {
-                    case GPSFilter.C_TRKPT_IDX:
+                    case GPSFilter.TRKPT:
                         c.setTrkPtValid(getValid());
                         break;
-                    case GPSFilter.C_WAYPT_IDX:
+                    case GPSFilter.WAYPT:
                         c.setWayPtValid(getValid());
                         break;
                     }
@@ -222,13 +222,13 @@ public class GPSLogFilter extends Container {
                     }
                 }
                 if (z_updated) {
-                    c.setRcrMask(currentLogFilter, getRCR()); // TODO: may not
+                    c.setFilterRcrMask(currentLogFilter, getRCR()); // TODO: may not
                                                                 // be needed
                     switch (currentLogFilter) {
-                    case GPSFilter.C_TRKPT_IDX:
+                    case GPSFilter.TRKPT:
                         c.setTrkPtRCR(getRCR());
                         break;
-                    case GPSFilter.C_WAYPT_IDX:
+                    case GPSFilter.WAYPT:
                         c.setWayPtRCR(getRCR());
                         break;
                     }

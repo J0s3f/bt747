@@ -60,7 +60,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
     /** The label next to the progressbar. Hidden when not in use. */
     private Label progressLabel;
     /** The progress bar itself. Hidden when not in use. */
-    private ProgressBar pb;
+    private ProgressBar progressBar;
 
     // private BT747model m_model;
     /** The application's MenuBar. */
@@ -240,17 +240,17 @@ public class AppBT747 extends MainWindow implements ModelListener {
         add(m_TabPanel, CENTER, CENTER);
         // Progress bar to show download progress (separate thread)
         progressLabel = new Label(Txt.LB_DOWNLOAD);
-        pb = new ProgressBar();
+        progressBar = new ProgressBar();
         add(progressLabel, LEFT, BOTTOM);
         progressLabel.setRect(LEFT, BOTTOM, PREFERRED, PREFERRED);
         progressLabel.setVisible(false);
         // m_ProgressLabel.setVisible(false);
         m_TabPanel.setBorderStyle(Window.NO_BORDER);
         m_TabPanel.setRect(getClientRect().modifiedBy(0, 0, 0,
-                -pb.getPreferredHeight()));
+                -progressBar.getPreferredHeight()));
 
-        add(pb, RIGHT, SAME);
-        pb.setRect(RIGHT,
+        add(progressBar, RIGHT, SAME);
+        progressBar.setRect(RIGHT,
                 BOTTOM, // BOTTOM,RIGHT,
                 getClientRect().width - progressLabel.getRect().width - 2,
                 PREFERRED);
@@ -446,13 +446,13 @@ public class AppBT747 extends MainWindow implements ModelListener {
     }
 
     private void updateProgressBar() {
-        if (pb != null) {
+        if (progressBar != null) {
             if (m.isDownloadOnGoing()) {
-                pb.min = m.getStartAddr();
-                pb.max = m.getEndAddr();
-                pb.setValue(m.getNextReadAddr(), "", " b");
+                progressBar.min = m.getStartAddr();
+                progressBar.max = m.getEndAddr();
+                progressBar.setValue(m.getNextReadAddr(), "", " b");
             }
-            pb.setVisible(m.isDownloadOnGoing());
+            progressBar.setVisible(m.isDownloadOnGoing());
             progressLabel.setVisible(m.isDownloadOnGoing());
         }
     }

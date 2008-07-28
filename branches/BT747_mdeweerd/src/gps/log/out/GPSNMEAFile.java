@@ -55,7 +55,7 @@ public class GPSNMEAFile extends GPSFile {
      * Override parent class because only the trackpoint filter is used.
      */
     protected boolean recordIsNeeded(GPSRecord s) {
-        return ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+        return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
     
     /* (non-Javadoc)
@@ -64,7 +64,7 @@ public class GPSNMEAFile extends GPSFile {
     public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         String timeStr="";
-        if(activeFields!=null && ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
+        if(activeFields!=null && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
             
             if((activeFields.utc!=0)) {
                 timeStr=(  t.getHour()<10?"0":"")+Convert.toString(t.getHour())

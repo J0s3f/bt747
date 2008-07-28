@@ -39,11 +39,11 @@ public class GPSFilter {
     /**
      * Index to trackpoint filter (in array of GPSFilter).
      */
-    public static final int C_TRKPT_IDX = 0;
+    public static final int TRKPT = 0;
     /**
      * Index to waypoint filter (in array of GPSFilter).
      */
-    public static final int C_WAYPT_IDX = 1;
+    public static final int WAYPT = 1;
 
     /**
      * Get the first date of the period to include.

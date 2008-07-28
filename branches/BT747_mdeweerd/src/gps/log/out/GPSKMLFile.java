@@ -47,7 +47,7 @@ public class GPSKMLFile extends GPSFile {
      */
     public GPSKMLFile() {
         super();
-        C_NUMBER_OF_PASSES = 3;
+        numberOfPasses = 3;
     }
 
     /*
@@ -58,7 +58,7 @@ public class GPSKMLFile extends GPSFile {
     public void initialiseFile(final String basename, final String ext,
             final int ard, int oneFilePerDay) {
         super.initialiseFile(basename, ext, ard, oneFilePerDay);
-        currentFilter = GPSFilter.C_WAYPT_IDX;
+        currentFilter = GPSFilter.WAYPT;
         isWayType = true;
         isTrackType = false;
         isPathType = false;
@@ -83,7 +83,7 @@ public class GPSKMLFile extends GPSFile {
                 isTrackType = false;
                 isPathType = true;
             }
-            currentFilter = GPSFilter.C_TRKPT_IDX;
+            currentFilter = GPSFilter.TRKPT;
             // if(!m_multipleFiles) {
             // writeDataHeader();
             // }

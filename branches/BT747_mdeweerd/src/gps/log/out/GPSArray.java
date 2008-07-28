@@ -34,7 +34,7 @@ public class GPSArray extends GPSFile {
 
     public GPSArray() {
         super();
-        C_NUMBER_OF_PASSES = 2;
+        numberOfPasses = 2;
         trackPointCount = 0;
         wayPointCount = 0;
     }
@@ -49,7 +49,7 @@ public class GPSArray extends GPSFile {
      * Override parent class because only the trackpoint filter is used.
      */
     protected final boolean recordIsNeeded(final GPSRecord s) {
-        return ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+        return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 
     public final boolean nextPass() {
@@ -60,9 +60,9 @@ public class GPSArray extends GPSFile {
             if (nbrOfPassesToGo == 0) {
                 gpsTrackPoints = new GPSRecord[trackPointCount];
                 gpsWayPoints = new GPSRecord[wayPointCount];
-                trackPointCount = 0;
-                wayPointCount = 0;
             }
+            trackPointCount = 0;
+            wayPointCount = 0;
             return true;
         } else {
             return false;
@@ -80,15 +80,15 @@ public class GPSArray extends GPSFile {
      * @see gps.GPSFile#WriteRecord()
      */
     public final void writeRecord(final GPSRecord s) {
-        // NO CALL TO super.writeRecord(s); TO INHIBIT FILE CREATION
-        if (ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
+        super.writeRecord(s);
+        if (ptFilters[GPSFilter.TRKPT].doFilter(s)) {
             if (nbrOfPassesToGo == 0) {
                 gpsTrackPoints[trackPointCount] = s.cloneRecord();
             }
             trackPointCount++;
         }
 
-        if (ptFilters[GPSFilter.C_WAYPT_IDX].doFilter(s)) {
+        if (ptFilters[GPSFilter.WAYPT].doFilter(s)) {
             if (nbrOfPassesToGo == 0) {
                 gpsWayPoints[wayPointCount] = s.cloneRecord();
             }
@@ -97,6 +97,7 @@ public class GPSArray extends GPSFile {
     }
 
     protected final int createFile(final String extra_ext) {
+        filesCreated++;  // Always a success
         // Override to avoid file creation.
         return BT747Constants.NO_ERROR;
     }
@@ -112,4 +113,5 @@ public class GPSArray extends GPSFile {
     public final GPSRecord[] getGpsWayPoints() {
         return gpsWayPoints;
     }
+    
 }

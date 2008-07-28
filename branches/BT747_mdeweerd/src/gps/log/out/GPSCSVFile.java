@@ -135,7 +135,7 @@ public class GPSCSVFile extends GPSFile {
      * Override parent class because only the trackpoint filter is used.
      */
     protected final boolean recordIsNeeded(final GPSRecord s) {
-        return ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+        return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 
     // private GPSRecord prevRecord=null;
@@ -148,7 +148,7 @@ public class GPSCSVFile extends GPSFile {
         super.writeRecord(s);
 
         if (activeFields != null
-                && ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
+                && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
             rec.setLength(0);
             rec.append(Convert.toString(s.recCount));
             if ((activeFields.rcr != 0) && (selectedFileFields.rcr != 0)) {

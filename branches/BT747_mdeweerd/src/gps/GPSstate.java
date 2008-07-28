@@ -189,8 +189,7 @@ public class GPSstate implements Thread {
     }
 
     public final int logFreeMemUsefullSize() {
-        return (int) ((logMemSize - logMemUsed) - (((logMemSize - logMemUsed) >> 16)
-                * (0x200))); // 16Mb
+        return (int) ((logMemSize - logMemUsed) - (((logMemSize - logMemUsed) >> 16) * (0x200))); // 16Mb
     }
 
     /**
@@ -354,6 +353,10 @@ public class GPSstate implements Thread {
     static final int C_MAX_CMDS_SENT = 4;
 
     static final int C_MIN_TIME_BETWEEN_CMDS = 30;
+
+    public final int getOutStandingCmdsCount() {
+        return sentCmds.size() + toSendCmds.size();
+    }
 
     public final void sendNMEA(final String cmd) {
         int cmdsWaiting;
@@ -886,186 +889,191 @@ public class GPSstate implements Thread {
         int cmd;
         int result;
         result = 0;
-        // if(GPS_DEBUG&&!p_nmea[0].startsWith("G")) {
-        // waba.sys.debugMsg("ANA:"+p_nmea[0]+","+p_nmea[1]);}
-        if (sNmea.length == 0) {
-            // Should not happen, problem in program
-            debugMsg("Problem - report NMEA is 0 length");
-        } else if (sNmea.length == 1 && sNmea[0].startsWith("WP")) {
-            AnalyseDPL700Data(sNmea[0]);
-        } else if (gpsDecode && (logState == C_LOG_NOLOGGING) // Not during
-                // log
-                // download for
-                // performance.
-                && sNmea[0].startsWith("G")) {
-            // Commented - not interpreted.
-            if (sNmea[0].startsWith("GPGGA")) {
-                analyzeGPGGA(sNmea);
-            } else if (sNmea[0].startsWith("GPRMC")) {
-                analyzeGPRMC(sNmea);
-            }
-            // else if(p_nmea[0].startsWith("GPZDA")) {
-            // // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
-            // } else if(p_nmea[0].startsWith("GPRMC")) {
-            // //
-            // GPRMC,$time,$fix,$latf1,$ns,$lonf1,$ew,$knots,$bear,$date,$magnvar,$magnew,$magnfix
-            // } else if(p_nmea[0].startsWith("GPSTPV")) {
-            // // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
-            // }
-        } else if (sNmea[0].startsWith("PMTK")) {
-            if (GPS_DEBUG) {
-                String s;
-                int length = sNmea.length;
-                if (sNmea[1].charAt(0) == '8') {
-                    length = 3;
+        try {
+            // if(GPS_DEBUG&&!p_nmea[0].startsWith("G")) {
+            // waba.sys.debugMsg("ANA:"+p_nmea[0]+","+p_nmea[1]);}
+            if (sNmea.length == 0) {
+                // Should not happen, problem in program
+                debugMsg("Problem - report NMEA is 0 length");
+            } else if (sNmea.length == 1 && sNmea[0].startsWith("WP")) {
+                AnalyseDPL700Data(sNmea[0]);
+            } else if (gpsDecode && (logState == C_LOG_NOLOGGING) // Not
+                                                                    // during
+                    // log
+                    // download for
+                    // performance.
+                    && sNmea[0].startsWith("G")) {
+                // Commented - not interpreted.
+                if (sNmea[0].startsWith("GPGGA")) {
+                    analyzeGPGGA(sNmea);
+                } else if (sNmea[0].startsWith("GPRMC")) {
+                    analyzeGPRMC(sNmea);
                 }
-                s = "<";
-                for (int i = 0; i < length; i++) {
-                    s += sNmea[i];
-                    s += ",";
-                }
-                debugMsg(s);
-            }
-            cmd = Convert.toInt(sNmea[0].substring(4));
-
-            result = -1; // Suppose cmd not treated
-            switch (cmd) {
-            case BT747Constants.PMTK_CMD_LOG: // CMD 182;
-                result = analyseLogNmea(sNmea);
-                break;
-            case BT747Constants.PMTK_TEST: // CMD 000
-                break;
-            case BT747Constants.PMTK_ACK: // CMD 001
-                result = analyseMTK_Ack(sNmea);
-                break;
-            case BT747Constants.PMTK_SYS_MSG: // CMD 010
-                break;
-            case BT747Constants.PMTK_DT_FIX_CTL: // CMD 500
-                if (sNmea.length >= 2) {
-                    logFixPeriod = Convert.toInt(sNmea[1]);
-                }
-                dataOK |= C_OK_FIX;
-                break;
-            case BT747Constants.PMTK_DT_DGPS_MODE: // CMD 501
-                if (sNmea.length == 2) {
-                    dgpsMode = Convert.toInt(sNmea[1]);
-                }
-                dataOK |= C_OK_DGPS;
-                PostStatusUpdateEvent();
-                break;
-            case BT747Constants.PMTK_DT_SBAS: // CMD 513
-                if (sNmea.length == 2) {
-                    SBASEnabled = (sNmea[1].equals("1"));
-                }
-                dataOK |= C_OK_SBAS;
-                PostStatusUpdateEvent();
-                break;
-            case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
-                if (sNmea.length - 1 == BT747Constants.C_NMEA_SEN_COUNT) {
-                    for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
-                        NMEA_periods[i] = Convert.toInt(sNmea[i + 1]);
+                // else if(p_nmea[0].startsWith("GPZDA")) {
+                // // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
+                // } else if(p_nmea[0].startsWith("GPRMC")) {
+                // //
+                // GPRMC,$time,$fix,$latf1,$ns,$lonf1,$ew,$knots,$bear,$date,$magnvar,$magnew,$magnfix
+                // } else if(p_nmea[0].startsWith("GPSTPV")) {
+                // // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
+                // }
+            } else if (sNmea[0].startsWith("PMTK")) {
+                if (GPS_DEBUG) {
+                    String s;
+                    int length = sNmea.length;
+                    if (sNmea[1].charAt(0) == '8') {
+                        length = 3;
                     }
+                    s = "<";
+                    for (int i = 0; i < length; i++) {
+                        s += sNmea[i];
+                        s += ",";
+                    }
+                    debugMsg(s);
                 }
-                dataOK |= C_OK_NMEA;
-                PostStatusUpdateEvent();
-                break;
-            case BT747Constants.PMTK_DT_SBAS_TEST: // CMD 513
-                if (sNmea.length == 2) {
-                    SBASTestEnabled = (sNmea[1].equals("0"));
-                }
-                dataOK |= C_OK_SBAS_TEST;
-                PostStatusUpdateEvent();
-                break;
-            case BT747Constants.PMTK_DT_PWR_SAV_MODE: // CMD 520
-                if (sNmea.length == 2) {
-                    powerSaveEnabled = (sNmea[1].equals("1"));
-                }
-                PostStatusUpdateEvent();
-                break;
-            case BT747Constants.PMTK_DT_DATUM: // CMD 530
-                if (sNmea.length == 2) {
-                    datum = Convert.toInt(sNmea[1]);
-                }
-                dataOK |= C_OK_DATUM;
-                PostStatusUpdateEvent();
-                break;
-            case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
+                cmd = Convert.toInt(sNmea[0].substring(4));
 
-                dtUserOptionTimesLeft = Convert.toInt(sNmea[1]);
-                dtUpdateRate = Convert.toInt(sNmea[2]);
-                dtBaudRate = Convert.toInt(sNmea[3]);
-                dtGLL_Period = Convert.toInt(sNmea[4]);
-                dtRMC_Period = Convert.toInt(sNmea[5]);
-                dtVTG_Period = Convert.toInt(sNmea[6]);
-                dtGSA_Period = Convert.toInt(sNmea[7]);
-                dtGSV_Period = Convert.toInt(sNmea[8]);
-                dtGGA_Period = Convert.toInt(sNmea[9]);
-                dtZDA_Period = Convert.toInt(sNmea[10]);
-                dtMCHN_Period = Convert.toInt(sNmea[11]);
-
-                PostStatusUpdateEvent();
-                break;
-            case BT747Constants.PMTK_DT_BT_MAC_ADDR: // CMD 592
-                if (sNmea[1].length() == 12) {
-                    sBtMacAddr = sNmea[1].substring(10, 12) + ":"
-                            + sNmea[1].substring(8, 10) + ":"
-                            + sNmea[1].substring(6, 8) + ":"
-                            + sNmea[1].substring(4, 6) + ":"
-                            + sNmea[1].substring(2, 4) + ":"
-                            + sNmea[1].substring(0, 2);
-                }
-                PostStatusUpdateEvent();
-                break;
-            case BT747Constants.PMTK_DT_DGPS_INFO: // CMD 702
-                /* Not handled */
-                break;
-            case BT747Constants.PMTK_DT_VERSION: // CMD 704
-                mainVersion = sNmea[1] + "." + sNmea[2] + "." + sNmea[3];
-                PostStatusUpdateEvent();
-                break;
-            case BT747Constants.PMTK_DT_RELEASE: // CMD 705
-                firmwareVersion = sNmea[1];
-                model = sNmea[2];
-                if (sNmea.length >= 4) {
-                    device = sNmea[3];
-                    firmwareVersion += " (" + device + ")";
-                } else {
-                    device = "";
-                }
-                PostStatusUpdateEvent();
-                break;
-
-            default:
-                break;
-            } // End switch
-        } else if (sNmea[0].equals("HOLUX001")) {
-            holux = true;
-            result = -1; // Suppose cmd not treated
-            if (GPS_DEBUG) {
-                String s;
-                int length = sNmea.length;
-
-                s = "<";
-                for (int i = 0; i < length; i++) {
-                    s += sNmea[i];
-                    s += ",";
-                }
-                debugMsg(s);
-            }
-            cmd = Convert.toInt(sNmea[1]);
-
-            result = -1; // Suppose cmd not treated
-            switch (cmd) {
-            case BT747Constants.HOLUX_API_DT_NAME:
-                if (sNmea.length == 3) {
-                    this.holuxName = sNmea[2];
+                result = -1; // Suppose cmd not treated
+                switch (cmd) {
+                case BT747Constants.PMTK_CMD_LOG: // CMD 182;
+                    result = analyseLogNmea(sNmea);
+                    break;
+                case BT747Constants.PMTK_TEST: // CMD 000
+                    break;
+                case BT747Constants.PMTK_ACK: // CMD 001
+                    result = analyseMTK_Ack(sNmea);
+                    break;
+                case BT747Constants.PMTK_SYS_MSG: // CMD 010
+                    break;
+                case BT747Constants.PMTK_DT_FIX_CTL: // CMD 500
+                    if (sNmea.length >= 2) {
+                        logFixPeriod = Convert.toInt(sNmea[1]);
+                    }
+                    dataOK |= C_OK_FIX;
+                    break;
+                case BT747Constants.PMTK_DT_DGPS_MODE: // CMD 501
+                    if (sNmea.length == 2) {
+                        dgpsMode = Convert.toInt(sNmea[1]);
+                    }
+                    dataOK |= C_OK_DGPS;
                     PostStatusUpdateEvent();
+                    break;
+                case BT747Constants.PMTK_DT_SBAS: // CMD 513
+                    if (sNmea.length == 2) {
+                        SBASEnabled = (sNmea[1].equals("1"));
+                    }
+                    dataOK |= C_OK_SBAS;
+                    PostStatusUpdateEvent();
+                    break;
+                case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
+                    if (sNmea.length - 1 == BT747Constants.C_NMEA_SEN_COUNT) {
+                        for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
+                            NMEA_periods[i] = Convert.toInt(sNmea[i + 1]);
+                        }
+                    }
+                    dataOK |= C_OK_NMEA;
+                    PostStatusUpdateEvent();
+                    break;
+                case BT747Constants.PMTK_DT_SBAS_TEST: // CMD 513
+                    if (sNmea.length == 2) {
+                        SBASTestEnabled = (sNmea[1].equals("0"));
+                    }
+                    dataOK |= C_OK_SBAS_TEST;
+                    PostStatusUpdateEvent();
+                    break;
+                case BT747Constants.PMTK_DT_PWR_SAV_MODE: // CMD 520
+                    if (sNmea.length == 2) {
+                        powerSaveEnabled = (sNmea[1].equals("1"));
+                    }
+                    PostStatusUpdateEvent();
+                    break;
+                case BT747Constants.PMTK_DT_DATUM: // CMD 530
+                    if (sNmea.length == 2) {
+                        datum = Convert.toInt(sNmea[1]);
+                    }
+                    dataOK |= C_OK_DATUM;
+                    PostStatusUpdateEvent();
+                    break;
+                case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
+
+                    dtUserOptionTimesLeft = Convert.toInt(sNmea[1]);
+                    dtUpdateRate = Convert.toInt(sNmea[2]);
+                    dtBaudRate = Convert.toInt(sNmea[3]);
+                    dtGLL_Period = Convert.toInt(sNmea[4]);
+                    dtRMC_Period = Convert.toInt(sNmea[5]);
+                    dtVTG_Period = Convert.toInt(sNmea[6]);
+                    dtGSA_Period = Convert.toInt(sNmea[7]);
+                    dtGSV_Period = Convert.toInt(sNmea[8]);
+                    dtGGA_Period = Convert.toInt(sNmea[9]);
+                    dtZDA_Period = Convert.toInt(sNmea[10]);
+                    dtMCHN_Period = Convert.toInt(sNmea[11]);
+
+                    PostStatusUpdateEvent();
+                    break;
+                case BT747Constants.PMTK_DT_BT_MAC_ADDR: // CMD 592
+                    if (sNmea[1].length() == 12) {
+                        sBtMacAddr = sNmea[1].substring(10, 12) + ":"
+                                + sNmea[1].substring(8, 10) + ":"
+                                + sNmea[1].substring(6, 8) + ":"
+                                + sNmea[1].substring(4, 6) + ":"
+                                + sNmea[1].substring(2, 4) + ":"
+                                + sNmea[1].substring(0, 2);
+                    }
+                    PostStatusUpdateEvent();
+                    break;
+                case BT747Constants.PMTK_DT_DGPS_INFO: // CMD 702
+                    /* Not handled */
+                    break;
+                case BT747Constants.PMTK_DT_VERSION: // CMD 704
+                    mainVersion = sNmea[1] + "." + sNmea[2] + "." + sNmea[3];
+                    PostStatusUpdateEvent();
+                    break;
+                case BT747Constants.PMTK_DT_RELEASE: // CMD 705
+                    firmwareVersion = sNmea[1];
+                    model = sNmea[2];
+                    if (sNmea.length >= 4) {
+                        device = sNmea[3];
+                        firmwareVersion += " (" + device + ")";
+                    } else {
+                        device = "";
+                    }
+                    PostStatusUpdateEvent();
+                    break;
+
+                default:
+                    break;
+                } // End switch
+            } else if (sNmea[0].equals("HOLUX001")) {
+                holux = true;
+                result = -1; // Suppose cmd not treated
+                if (GPS_DEBUG) {
+                    String s;
+                    int length = sNmea.length;
+
+                    s = "<";
+                    for (int i = 0; i < length; i++) {
+                        s += sNmea[i];
+                        s += ",";
+                    }
+                    debugMsg(s);
                 }
-                break;
-            default:
-                break;
-            }
-        } // End if
+                cmd = Convert.toInt(sNmea[1]);
+
+                result = -1; // Suppose cmd not treated
+                switch (cmd) {
+                case BT747Constants.HOLUX_API_DT_NAME:
+                    if (sNmea.length == 3) {
+                        this.holuxName = sNmea[2];
+                        PostStatusUpdateEvent();
+                    }
+                    break;
+                default:
+                    break;
+                }
+            } // End if
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return result;
     } // End method
 
@@ -1344,7 +1352,7 @@ public class GPSstate implements Thread {
             startLog();
             reqLogOnOffStatus();
         }
-        postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
+        postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
     }
 
     public final boolean isDownloadOnGoing() {
@@ -1713,6 +1721,7 @@ public class GPSstate implements Thread {
                     }
                     logState = C_LOG_ACTIVE;
                 } else {
+                    logState = C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY;
                     postEvent(GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY);
                 }
             }

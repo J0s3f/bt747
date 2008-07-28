@@ -65,7 +65,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
 
     public GPSCompoGPSTrkFile() {
         super();
-        C_NUMBER_OF_PASSES = 2;
+        numberOfPasses = 2;
     }
 
     public final void initialiseFile(final String basename, final String ext,
@@ -90,7 +90,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
      * Override parent class because only the trackpoint filter is used.
      */
     protected final boolean recordIsNeeded(final GPSRecord s) {
-        return ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+        return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 
     // Trackpoint data
@@ -121,15 +121,16 @@ public class GPSCompoGPSTrkFile extends GPSFile {
         super.writeRecord(s);
         boolean trackpt;
         boolean waypt;
-        trackpt = !isWayType && ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
-        waypt = isWayType && ptFilters[GPSFilter.C_WAYPT_IDX].doFilter(s);
+        trackpt = !isWayType && ptFilters[GPSFilter.TRKPT].doFilter(s);
+        waypt = isWayType && ptFilters[GPSFilter.WAYPT].doFilter(s);
 
         if ((activeFields != null) && (trackpt || waypt)) {
             rec.setLength(0);
 
             rec.append("T  A ");
 
-            if (activeFields.latitude != 0) {
+            if ((activeFields.latitude != 0)
+                    && (selectedFileFields.latitude != 0)) {
                 if (s.latitude >= 0) {
                     rec.append(Convert.toString(s.latitude, 8) + ((char) 0xBA)
                             + "N");
@@ -142,7 +143,8 @@ public class GPSCompoGPSTrkFile extends GPSFile {
             }
 
             rec.append(" ");
-            if (activeFields.longitude != 0) {
+            if ((activeFields.longitude != 0)
+                    && (selectedFileFields.longitude != 0)) {
                 if (s.longitude >= 0) {
                     rec.append(Convert.toString(s.longitude, 8) + ((char) 0xBA)
                             + "E");
@@ -155,7 +157,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
             }
             rec.append(" ");
 
-            if (activeFields.utc != 0) {
+            if ((activeFields.utc != 0) && (selectedFileFields.utc != 0)) {
                 // rec.append(Convert.toString(
                 // (s.utc+(activeFields.milisecond!=0?(s.milisecond/1000.0):0))
                 // /86400.0+25569, //Days since 30/12/1899
@@ -202,7 +204,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
             }
             rec.append("s ");
 
-            if (activeFields.height != 0) {
+            if ((activeFields.height != 0) && (selectedFileFields.height != 0)) {
                 rec.append(Convert.toString(s.height, 1));
                 if (waypt) {
                     wrec.append(Convert.toString(s.height, 1));
@@ -217,7 +219,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
             // if (waypt) {
             // wrec.append("Description")
             // }
-            if (activeFields.nsat != 0) {
+            if ((activeFields.nsat != 0) && (selectedFileFields.nsat != 0)) {
                 rec.append((s.nsat & 0xFF00) >> 8); // in use
                 rec.append(" ");
             } else {

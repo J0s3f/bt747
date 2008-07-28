@@ -136,10 +136,26 @@ public class Model extends AppSettings implements GPSListener {
     }
 
     /**
-     * @return The gpsRxTx instantiatiation (low level communication)
+     * @return The gpsRxTx instantiation (low level communication)
      */
     protected final GPSrxtx gpsRxTx() {
         return this.gpsRxTx;
+    }
+
+    /**
+     * Determine the connection status
+     * 
+     * @return true if the connection is made
+     */
+    public final boolean isConnected() {
+        return this.gpsRxTx.isConnected();
+    }
+
+    /**
+     * @return Get the number of commands waiting for a response.
+     */
+    public final int getOutstandingCommandsCount() {
+        return this.gpsModel.getOutStandingCmdsCount();
     }
 
     /**
@@ -268,13 +284,15 @@ public class Model extends AppSettings implements GPSListener {
     protected final void setFilterEndTime(final int filterEndTime) {
         this.filterEndTime = filterEndTime;
     }
-    
+
     /**
      * The file log format (the files selected for the output file)
      */
-    private int fileLogFormat; 
+    private int fileLogFormat;
+
     /**
-     * @param fileLogFormat the fileLogFormat to set
+     * @param fileLogFormat
+     *            the fileLogFormat to set
      */
     protected void setFileLogFormat(int fileLogFormat) {
         this.fileLogFormat = fileLogFormat;
@@ -286,7 +304,6 @@ public class Model extends AppSettings implements GPSListener {
     public int getFileLogFormat() {
         return fileLogFormat;
     }
-
 
     /**
      * Indicate that the log conversion started for the given log type.
@@ -636,7 +653,7 @@ public class Model extends AppSettings implements GPSListener {
     public final boolean isDebugConn() {
         return gpsRxTx.isDebugConn();
     }
-    
+
     public void gpsEvent(GpsEvent event) {
         postEvent(new ModelEvent(event));
     }

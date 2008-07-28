@@ -426,8 +426,8 @@ public class Controller {
             usedFilters[i].setEndTime(m.getFilterEndTime());
         }
         gpsFile.setFilters(usedFilters);
-        // gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
-        // m.getFileSeparationFreq());
+        // Next line must be called for initialisation.
+        gpsFile.initialiseFile("", "", -1,m.getFileSeparationFreq());
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
         if (error != 0) {
@@ -1003,10 +1003,10 @@ public class Controller {
      *            logFilters to replicate the settings to.
      */
     private void getSettings(final GPSFilter[] logFilters) {
-        logFilters[GPSFilter.C_TRKPT_IDX].setRcrMask(m.getTrkPtRCR());
-        logFilters[GPSFilter.C_TRKPT_IDX].setValidMask(m.getTrkPtValid());
-        logFilters[GPSFilter.C_WAYPT_IDX].setRcrMask(m.getWayPtRCR());
-        logFilters[GPSFilter.C_WAYPT_IDX].setValidMask(m.getWayPtValid());
+        logFilters[GPSFilter.TRKPT].setRcrMask(m.getTrkPtRCR());
+        logFilters[GPSFilter.TRKPT].setValidMask(m.getTrkPtValid());
+        logFilters[GPSFilter.WAYPT].setRcrMask(m.getWayPtRCR());
+        logFilters[GPSFilter.WAYPT].setValidMask(m.getWayPtValid());
     };
 
     /**
@@ -1514,8 +1514,8 @@ public class Controller {
      * active filters.
      * 
      * @param filterType
-     *            A value out of:<br> - {@link GPSFilter#C_TRKPT_IDX} ;<br> -
-     *            {@link GPSFilter#C_WAYPT_IDX} .<br>
+     *            A value out of:<br> - {@link GPSFilter#TRKPT} ;<br> -
+     *            {@link GPSFilter#WAYPT} .<br>
      * @param mask
      *            The filter mask to set for the validity filter. Use the
      *            following constants:<br>-
@@ -1530,7 +1530,7 @@ public class Controller {
      *            {@link BT747Constants#VALID_SIMULATOR_MASK} <br>-
      * 
      */
-    public final void setValidMask(final int filterType, final int mask) {
+    public final void setFilterValidMask(final int filterType, final int mask) {
         // TODO: not sure this is needed anymore
         m.getLogFilters()[filterType].setValidMask(mask);
     }
@@ -1540,8 +1540,8 @@ public class Controller {
      * active filters.
      * 
      * @param filterType
-     *            A value out of:<br> - {@link GPSFilter#C_TRKPT_IDX} ;<br> -
-     *            {@link GPSFilter#C_WAYPT_IDX} .<br>
+     *            A value out of:<br> - {@link GPSFilter#TRKPT} ;<br> -
+     *            {@link GPSFilter#WAYPT} .<br>
      * @param rcrMask
      *            The filter mask to set for the rcr filter. Use the following
      *            constants:<br>
@@ -1564,7 +1564,7 @@ public class Controller {
      *            {@link BT747Constants#RCR_ALL_APP_MASK}
      * 
      */
-    public final void setRcrMask(final int filterType, final int rcrMask) {
+    public final void setFilterRcrMask(final int filterType, final int rcrMask) {
         // TODO: not sure this is needed anymore
         m.getLogFilters()[filterType].setRcrMask(rcrMask);
     }
