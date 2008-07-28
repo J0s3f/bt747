@@ -1,3 +1,8 @@
+Version 1.53.2
+* Added 'SimpleExample.java' to show how to use basic functionality of the library.
+  In the process, renamed some methods for consistency and added some methods to the controller and model.
+  Also fixed issues in GPSArray creation.
+
 Version 1.52.3
 * Started adding support for reading NMEA (not operational yet).
 * Added support to select output fields (implemented for some formats: KML, CSV, GMaps, to be done for others).

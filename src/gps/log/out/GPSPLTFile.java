@@ -63,17 +63,17 @@ public class GPSPLTFile extends GPSFile {
                 + bt747.Version.VERSION_NUMBER + "\r\n" + "WGS 84\r\n"
                 + "Altitude is in feet\r\n" + "Reserved 3\r\n"
                 + "0,2,255,BT747 Track,0,0,2,8421376\r\n" + "50000\r\n" // number
-                                                                        // of
-                                                                        // points
-                                                                        // in
-                                                                        // the
-                                                                        // track,
-                                                                        // not
-                                                                        // used,
-                                                                        // unknown
-                                                                        // at
-                                                                        // this
-                                                                        // point.
+                // of
+        // points
+        // in
+        // the
+        // track,
+        // not
+        // used,
+        // unknown
+        // at
+        // this
+        // point.
         );
         // "NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
     }
@@ -84,7 +84,7 @@ public class GPSPLTFile extends GPSFile {
      * Override parent class because only the trackpoint filter is used.
      */
     protected boolean recordIsNeeded(GPSRecord s) {
-        return ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s);
+        return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 
     // Trackpoint data
@@ -111,25 +111,26 @@ public class GPSPLTFile extends GPSFile {
     public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
-        if (activeFields != null
-                && ptFilters[GPSFilter.C_TRKPT_IDX].doFilter(s)) {
+        if (activeFields != null && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
             String rec = "";
 
             // Field 1 : Latitude - decimal degrees.
-            if (activeFields.latitude != 0) {
+            if ((activeFields.latitude != 0)
+                    && (selectedFileFields.latitude != 0)) {
                 rec += Convert.toString(s.latitude, 6);
             }
             rec += ",";
             // Field 2 : Longitude - decimal degrees.
-            if (activeFields.longitude != 0) {
+            if ((activeFields.longitude != 0)
+                    && (selectedFileFields.longitude != 0)) {
                 rec += Convert.toString(s.longitude, 6);
             }
             rec += ",";
             // Field 3 : Code - 0 if normal, 1 if break in track line
             rec += "0,"; // Normal for the moment - could detect break later
-                            // ...
+            // ...
             // Field 4 : Altitude in feet (-777 if not valid)
-            if (activeFields.height != 0) {
+            if ((activeFields.height != 0) && (selectedFileFields.height != 0)) {
                 rec += Convert
                         .toString((int) (s.height * 3.2808398950131233595800524934383));
             } else {
@@ -144,13 +145,14 @@ public class GPSPLTFile extends GPSFile {
 
             // Field 6 : Date as a string
             // Field 7 : Time as a string
-            if (activeFields.utc != 0) {
+            if ((activeFields.utc != 0) && (selectedFileFields.utc != 0)) {
                 rec += Convert
                         .toString(
-                                (s.utc + (activeFields.milisecond != 0 ? (s.milisecond / 1000.0)
+                                (s.utc + ((activeFields.milisecond != 0)
+                                        && (selectedFileFields.milisecond != 0) ? (s.milisecond / 1000.0)
                                         : 0)) / 86400.0 + 25569, // Days
-                                                                    // since
-                                                                    // 30/12/1899
+                                // since
+                                // 30/12/1899
                                 7); // 7 fractional digits
                 rec += ",";
                 rec += (t.getMonth() < 10 ? "0" : "")
@@ -164,7 +166,8 @@ public class GPSPLTFile extends GPSFile {
                         + Convert.toString(t.getMinute()) + ":"
                         + (t.getSecond() < 10 ? "0" : "")
                         + Convert.toString(t.getSecond());
-                if (activeFields.milisecond != 0) {
+                if ((activeFields.milisecond != 0)
+                        && (selectedFileFields.milisecond != 0)) {
                     rec += ".";
                     rec += (s.milisecond < 100) ? "0" : "";
                     rec += (s.milisecond < 10) ? "0" : "";

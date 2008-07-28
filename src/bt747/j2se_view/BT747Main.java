@@ -232,6 +232,8 @@ public class BT747Main extends javax.swing.JFrame implements
         } else if (type == ModelEvent.DISCONNECTED) {
             btConnect.setText("Connect");
             btConnectFunctionIsConnect = true;
+        } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE) {
+            progressBarUpdate();
         }
 
     }

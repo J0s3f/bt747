@@ -57,7 +57,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
      */
     public GPSGmapsHTMLEncodedFile() {
         super();
-        C_NUMBER_OF_PASSES = 2;
+        numberOfPasses = 2;
     }
 
     /*
@@ -68,7 +68,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     public final void initialiseFile(final String basename, final String ext,
             final int card, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, card, oneFilePerDay);
-        currentFilter = GPSFilter.C_WAYPT_IDX;
+        currentFilter = GPSFilter.WAYPT;
         isWayType = true;
 
         trackDescription = "";
@@ -90,7 +90,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             nbrOfPassesToGo--;
             previousDate = 0;
             isWayType = false;
-            currentFilter = GPSFilter.C_TRKPT_IDX;
+            currentFilter = GPSFilter.TRKPT;
             // if (!m_multipleFiles) {
             // writeDataHeader();
             // }

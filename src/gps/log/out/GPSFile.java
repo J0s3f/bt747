@@ -61,7 +61,7 @@ public abstract class GPSFile {
 
     protected int nbrOfPassesToGo;
 
-    protected int C_NUMBER_OF_PASSES = 1;
+    protected int numberOfPasses = 1;
 
     private BufFile outFile = null;
 
@@ -87,7 +87,7 @@ public abstract class GPSFile {
     public void initialiseFile(final String baseName, final String extension,
             final int fileCard, final int fileSeparationFreq) {
         firstRecord = true;
-        nbrOfPassesToGo = C_NUMBER_OF_PASSES - 1;
+        nbrOfPassesToGo = numberOfPasses - 1;
         ext = extension;
         basename = baseName;
         card = fileCard;
@@ -257,7 +257,7 @@ public abstract class GPSFile {
 
     protected int createFile(final String extra_ext) {
         String fileName = basename + extra_ext + ext;
-        boolean createNewFile = C_NUMBER_OF_PASSES - 1 == nbrOfPassesToGo;
+        boolean createNewFile = numberOfPasses - 1 == nbrOfPassesToGo;
         int error = BT747Constants.NO_ERROR;
 
         try {
