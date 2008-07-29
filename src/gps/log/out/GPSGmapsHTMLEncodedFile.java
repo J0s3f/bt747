@@ -135,20 +135,20 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 .append("\" type=\"text/javascript\">\r\n"
                         + "</script>\r\n"
                         + "<style type=\"text/css\">\r\n"
-                        + "             v\\:* {\r\n"
-                        + "             behavior:url(#default#VML);\r\n"
-                        + "             }\r\n"
-                        + "             html, body, #map\r\n"
-                        + "             {\r\n"
-                        + "               width: 100%;\r\n"
-                        + "               height: 100%;\r\n"
-                        + "             }\r\n"
-                        + "           body             {\r\n"
-                        + "             margin-top: 0px;\r\n"
-                        + "             margin-right: 0px;\r\n"
-                        + "             margin-left: 0px;\r\n"
-                        + "             margin-bottom: 0px;\r\n"
-                        + "             }\r\n"
+                        + " v\\:* {\r\n"
+                        + "  behavior:url(#default#VML);\r\n"
+                        + " }\r\n"
+                        + " html, body, #map\r\n"
+                        + "  {\r\n"
+                        + "   width: 100%;\r\n"
+                        + "   height: 100%;\r\n"
+                        + "  }\r\n"
+                        + " body {\r\n"
+                        + "  margin-top: 0px;\r\n"
+                        + "  margin-right: 0px;\r\n"
+                        + "  margin-left: 0px;\r\n"
+                        + "  margin-bottom: 0px;\r\n"
+                        + " }\r\n"
                         + "\r\n"
                         + "</style>\r\n"
                         + "</head>\r\n"
@@ -159,7 +159,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "<div id=\"footer\">\r\n"
                         + "\r\n"
                         + "<script type=\"text/javascript\">\r\n"
-                        + "//<![CDATA[ \r\n" // check for compatibility
+                        + "//<![CDATA[\r\n" // check for compatibility
                         + "\r\n"
                         // call the info window opener for the given index
                         + "if (GBrowserIsCompatible()) {\r\n"
@@ -205,16 +205,16 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "  }\r\n" // else
                         + " }\r\n"
                         + "}\r\n" // Function
-                        + "    function trackClick(trk,val) {\r\n"
-                        + "      if (val == 1) {\r\n"
-                        + "        map.addOverlay(trk);\r\n"
-                        + "      } else {\r\n"
-                        + "        map.removeOverlay(trk);\r\n"
-                        + "      } }\r\n"
-                        + "    var clickStr; clickStr=\"\";"
-                        + "    function clickString() {\r\n"
-                        + "    document.write(clickStr);"
-                        + "    }\r\n"
+                        + "function trackClick(trk,val) {\r\n"
+                        + " if (val == 1) {\r\n"
+                        + "  map.addOverlay(trk);\r\n"
+                        + " } else {\r\n"
+                        + "  map.removeOverlay(trk);\r\n"
+                        + " } }\r\n"
+                        + " var clickStr; clickStr=\"\";"
+                        + " function clickString() {\r\n"
+                        + "  document.write(clickStr);"
+                        + " }\r\n"
 
                         // + "var blueIcon = new GIcon(G_DEFAULT_ICON);"
                         // + "blueIcon.image =
@@ -222,17 +222,18 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         // + "markerOptions = { icon:blueIcon };" + // Set up
                         // our GMarkerOptions object
 
-                        + "     var map = new GMap2(document.getElementById(\"map\"));\r\n"
-                        + "     map.setCenter(new GLatLng(0,0));\r\n"
+                        + " var map = new GMap2(document.getElementById(\"map\"));\r\n"
+                        + " map.setCenter(new GLatLng(0,0));\r\n"
                         // + "var mgrOptions = { borderPadding: 50, maxZoom: 15,
                         // trackMarkers: true };\r\n"
-                        + "var mgr = new GMarkerManager(map);\r\n"
-                        + "     map.setMapType(G_SATELLITE_MAP);\r\n"
-                        + "     map.enableScrollWheelZoom();\r\n"
-                        + "     map.addControl(new GLargeMapControl());\r\n"
-                        + "     map.addControl(new GMapTypeControl());\r\n"
-                        + "     map.addControl(new GScaleControl());\r\n"
-                        + "     map.addControl(new GOverviewMapControl());\r\n"
+                        + " var mgr = new GMarkerManager(map);\r\n"
+                        + " map.setMapType(G_SATELLITE_MAP);\r\n"
+                        + " map.addMapType(G_PHYSICAL_MAP);\r\n "
+                        + " map.enableScrollWheelZoom();\r\n"
+                        + " map.addControl(new GLargeMapControl());\r\n"
+                        + " map.addControl(new GMapTypeControl());\r\n"
+                        + " map.addControl(new GScaleControl());\r\n"
+                        + " map.addControl(new GOverviewMapControl());\r\n"
                         // + " if (window.attachEvent) {\r\n"
                         // + " window.attachEvent(\"onresize\", function()
                         // {this.map.onResize()} );\r\n"
@@ -240,7 +241,14 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         // + " window.addEventListener(\"resize\", function()
                         // {this.map.onResize()} , false);\r\n"
                         // + " }\r\n" + // add a polyline overlay
-                        + "");
+                        + "var OSM = new GMapType(\r\n"
+                        + "[ new GTileLayer( null, 1, 14,\r\n"
+                        + "{ tileUrlTemplate: 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',\r\n"
+                        + " isPng: true, opacity: 1.0 })],\r\n"
+                        + "new GMercatorProjection(19),\r\n"
+                        + "'OSM',\r\n"
+                        + "{ errorMessage:\"More OSM coming soon\"}\n"
+                        + ");\r\n" + "map.addMapType(OSM)\r\n");
         // "points.push(new GPoint(3.11492833333333,45.75697))";
         // map.addOverlay(new GPolyline(points,"#960000",2,.75));
         writeTxt(l_header.toString());
