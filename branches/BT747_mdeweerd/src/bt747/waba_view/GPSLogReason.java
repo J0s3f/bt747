@@ -25,18 +25,19 @@ import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Edit;
 import waba.ui.Event;
-
-import bt747.model.ModelEvent;
+import waba.ui.Label;
 
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
+import bt747.model.ModelListener;
 import bt747.sys.Convert;
 
 /**
  * @author Mario De Weerd
  */
-public class GPSLogReason extends Container {
+public class GPSLogReason extends Container implements ModelListener {
     private static final boolean ENABLE_PWR_SAVE_CONTROL = false;
     private AppController c;
     private Model m;
@@ -44,7 +45,6 @@ public class GPSLogReason extends Container {
     private MyCheck chkTimeOnOff;
     private MyCheck chkDistanceOnOff;
     private MyCheck chkSpeedOnOff;
-    private MyCheck chkFixOnOff;
     private Edit edTime;
     private Edit edDistance;
     private Edit edSpeed;
@@ -76,8 +76,8 @@ public class GPSLogReason extends Container {
         add(edSpeed = new Edit(), AFTER, SAME); //$NON-NLS-1$
         add(chkDistanceOnOff = new MyCheck(Txt.RCR_DIST), LEFT, AFTER); //$NON-NLS-1$
         add(edDistance = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(chkFixOnOff = new MyCheck(Txt.FIX_PER), LEFT, AFTER); //$NON-NLS-1$
-        add(edFix = new Edit(), AFTER, SAME); //$NON-NLS-1$
+        add(edFix = new Edit(), SAME, AFTER); //$NON-NLS-1$
+        add(new Label(Txt.FIX_PER),BEFORE, SAME);
         edSpeed.setValidChars(Edit.numbersSet);
         edDistance.setValidChars(Edit.numbersSet);
         edTime.setValidChars(Edit.numbersSet + ".");
@@ -116,11 +116,7 @@ public class GPSLogReason extends Container {
             edDistance.setText(Convert.toString((float) m
                     .getLogDistanceInterval() / 10, 1));
         }
-        chkFixOnOff.setChecked(m.getLogFixPeriod() != 0);
-        edFix.setEnabled(m.getLogFixPeriod() != 0);
-        if (m.getLogFixPeriod() != 0) {
-            edFix.setText(Convert.toString(m.getLogFixPeriod()));
-        }
+        edFix.setText(Convert.toString(m.getLogFixPeriod()));
         chkSBASOnOff.setChecked(m.isSBASEnabled());
         chkSBASTestOnOff.setChecked(m.isSBASTestEnabled());
         cbDGPSMode.select(m.getDgpsMode());
@@ -149,9 +145,7 @@ public class GPSLogReason extends Container {
         } else {
             c.setLogDistanceInterval(0);
         }
-        if (chkFixOnOff.getChecked()) {
-            c.setFixInterval(Convert.toInt(edFix.getText()));
-        }
+        c.setFixInterval(Convert.toInt(edFix.getText()));
         c.reqLogReasonStatus();
     }
 
@@ -166,8 +160,6 @@ public class GPSLogReason extends Container {
                 edSpeed.setEnabled(chkSpeedOnOff.getChecked());
             } else if (event.target == chkDistanceOnOff) {
                 edDistance.setEnabled(chkDistanceOnOff.getChecked());
-            } else if (event.target == chkFixOnOff) {
-                edFix.setEnabled(chkFixOnOff.getChecked());
             } else if (event.target == btSet) {
                 setSettings();
             } else if (event.target == this) {
@@ -190,12 +182,12 @@ public class GPSLogReason extends Container {
             }
             break;
         default:
-            if (event.type == ModelEvent.DATA_UPDATE) {
-                if (event.target == this) {
-                    updateButtons();
-                    event.consumed = true;
-                }
-            }
+        }
+    }
+    
+    public final void modelEvent(final ModelEvent event) {
+        if (event.getType() == ModelEvent.DATA_UPDATE) {
+            updateButtons();
         }
     }
 

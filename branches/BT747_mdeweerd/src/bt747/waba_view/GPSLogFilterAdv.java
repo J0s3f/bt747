@@ -30,6 +30,7 @@ import waba.ui.PushButtonGroup;
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
 import bt747.sys.Convert;
 
 /**
@@ -188,5 +189,9 @@ public class GPSLogFilterAdv extends Container {
         default:
             break;
         }
+    }
+    
+    public final void modelEvent(final ModelEvent event) {
+        // Do nothing
     }
 }

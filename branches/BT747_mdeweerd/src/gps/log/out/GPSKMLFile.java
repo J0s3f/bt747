@@ -283,8 +283,7 @@ public class GPSKMLFile extends GPSFile {
                     + "        <color>ffff0000</color>\r\n"
                     + "        <width>3.0</width>\r\n"
                     + "      </LineStyle>\r\n" + "    </Style>\r\n"
-                    + "    <LineString>\r\n"
-                    + "    <extrude>1</extrude>\r\n"
+                    + "    <LineString>\r\n" + "    <extrude>1</extrude>\r\n"
                     + "    <tessellate>1</tessellate>\r\n"
                     + "    <altitudeMode>absolute</altitudeMode>\r\n"
                     + "    <coordinates>\r\n";
@@ -336,12 +335,15 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("<visibility>0</visibility>\r\n");
                     }
 
-                    rec.append("<description>");
-                    rec.append("<![CDATA[");
-                    CommonOut.getHtml(rec, s, activeFields, selectedFileFields,
-                            t, recordNbrInLogs, imperial);
-                    rec.append("]]>");
-                    rec.append("</description>");
+                    if (isWayType || !isTrkComment) {
+                        rec.append("<description>");
+                        rec.append("<![CDATA[");
+                        CommonOut.getHtml(rec, s, activeFields,
+                                selectedFileFields, t, recordNbrInLogs,
+                                imperial);
+                        rec.append("]]>");
+                        rec.append("</description>");
+                    }
 
                     if ((activeFields.utc != 0)) {
                         rec.append("<TimeStamp><when>");

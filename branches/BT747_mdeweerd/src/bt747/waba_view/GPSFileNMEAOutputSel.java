@@ -27,13 +27,15 @@ import gps.BT747Constants;
 
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
+import bt747.model.ModelListener;
 
 /**
  * @author Mario De Weerd
  * 
  * User interface to select NMEA output strings
  */
-public class GPSFileNMEAOutputSel extends Container {
+public class GPSFileNMEAOutputSel extends Container implements ModelListener{
     /** The object that is used to communicate with the GPS device. */
     private MyCheck[] chkNMEAItems = new MyCheck[BT747Constants.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
@@ -119,4 +121,7 @@ public class GPSFileNMEAOutputSel extends Container {
         }
     }
 
+    public final void modelEvent(final ModelEvent event) {
+        // Do nothing
+    }
 }

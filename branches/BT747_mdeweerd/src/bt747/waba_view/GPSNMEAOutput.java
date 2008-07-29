@@ -33,6 +33,7 @@ import bt747.model.ModelEvent;
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelListener;
 
 /**
  * @author Mario De Weerd
@@ -40,7 +41,7 @@ import bt747.model.Model;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class GPSNMEAOutput extends Container {
+public class GPSNMEAOutput extends Container implements ModelListener {
     /** The object that is used to communicate with the GPS device. */
     private ComboBox[] chkNMEAItems = new ComboBox[BT747Constants.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
@@ -134,14 +135,14 @@ public class GPSNMEAOutput extends Container {
             }
 
             break;
-        default:
-            if (event.type == ModelEvent.DATA_UPDATE) {
-                if (event.target == this) {
-                    // updateLogFormat(m_GPSstate.logFormat);
-                    updatePeriods();
-                    event.consumed = true;
-                }
-            }
+        }
+    }
+
+    public final void modelEvent(final ModelEvent event) {
+        int eventType = event.getType();
+        if (eventType == ModelEvent.DATA_UPDATE) {
+            // updateLogFormat(m_GPSstate.logFormat);
+            updatePeriods();
         }
     }
 

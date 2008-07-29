@@ -24,26 +24,39 @@ package gps;
  * 
  * @author Mario De Weerd
  */
-public class GpsEvent extends bt747.ui.Event {
-    public static final int DATA_UPDATE = getNextAvailableEventId();
-    public static final int LOG_FORMAT_UPDATE = getNextAvailableEventId();
-    public static final int GPRMC = getNextAvailableEventId();
-    public static final int GPGGA = getNextAvailableEventId();
-    public static final int LOG_DOWNLOAD_STARTED = getNextAvailableEventId();
-    public static final int DOWNLOAD_STATE_CHANGE = getNextAvailableEventId();
-    public static final int LOG_DOWNLOAD_DONE = getNextAvailableEventId();
-    public static final int DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY = getNextAvailableEventId();
-    public static final int ERASE_ONGOING_NEED_POPUP = getNextAvailableEventId();
-    public static final int ERASE_DONE_REMOVE_POPUP = getNextAvailableEventId();
-    public static final int COULD_NOT_OPEN_FILE = getNextAvailableEventId();
-    public static final int DEBUG_MSG = getNextAvailableEventId();
+public class GpsEvent {
+    public static final int DATA_UPDATE = 1;
+    public static final int LOG_FORMAT_UPDATE = 2;
+    public static final int GPRMC = 3;
+    public static final int GPGGA = 4;
+    public static final int LOG_DOWNLOAD_STARTED = 5;
+    public static final int DOWNLOAD_STATE_CHANGE = 6;
+    public static final int LOG_DOWNLOAD_DONE = 7;
+    public static final int DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY = 8;
+    public static final int ERASE_ONGOING_NEED_POPUP = 9;
+    public static final int ERASE_DONE_REMOVE_POPUP = 10;
+    public static final int COULD_NOT_OPEN_FILE = 11;
+    public static final int DEBUG_MSG = 12;
+
+    private int type;
+    private Object arg;
 
     public GpsEvent(final int type) {
-        super(type, null);
+        this.type = type;
+        arg = null;
     }
 
     public GpsEvent(final int type, final Object arg) {
-        super(type, arg);
+        this.type = type;
+        this.arg = arg;
+    }
+
+    public final int getType() {
+        return type;
+    }
+
+    public final Object getArg() {
+        return arg;
     }
 
 }

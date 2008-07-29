@@ -26,20 +26,24 @@ import gps.GpsEvent;
  * 
  * @author Mario De Weerd
  */
-public class ModelEvent extends GpsEvent {
-    public static final int CONVERSION_STARTED = getNextAvailableEventId();
-    public static final int CONVERSION_ENDED = getNextAvailableEventId();
-    public static final int WORKDIRPATH_UPDATE = getNextAvailableEventId();
-    public static final int OUTPUTFILEPATH_UPDATE = getNextAvailableEventId();
-    public static final int LOGFILEPATH_UPDATE = getNextAvailableEventId();
-    public static final int INCREMENTAL_CHANGE = getNextAvailableEventId();
-    public static final int TRK_VALID_CHANGE = getNextAvailableEventId();
-    public static final int TRK_RCR_CHANGE = getNextAvailableEventId();
-    public static final int WAY_VALID_CHANGE = getNextAvailableEventId();
-    public static final int WAY_RCR_CHANGE = getNextAvailableEventId();
-    public static final int CONNECTED   = getNextAvailableEventId();
-    public static final int DISCONNECTED   = getNextAvailableEventId();
-    public static final int FILE_LOG_FORMAT_UPDATE = getNextAvailableEventId();
+public class ModelEvent extends GpsEvent{
+    public static final int CONVERSION_STARTED = 256;
+    public static final int CONVERSION_ENDED = 257;
+    public static final int WORKDIRPATH_UPDATE = 258;
+    public static final int OUTPUTFILEPATH_UPDATE = 259;
+    public static final int LOGFILEPATH_UPDATE = 260;
+    public static final int INCREMENTAL_CHANGE = 261;
+    public static final int TRK_VALID_CHANGE = 262;
+    public static final int TRK_RCR_CHANGE = 263;
+    public static final int WAY_VALID_CHANGE = 264;
+    public static final int WAY_RCR_CHANGE = 265;
+    public static final int CONNECTED   = 266;
+    public static final int DISCONNECTED   = 267;
+    public static final int FILE_LOG_FORMAT_UPDATE = 268;
+    /**
+     * A setting changed - int param = index of changed setting
+     */
+    public static final int SETTING_CHANGE = 269;
 
     public ModelEvent(int type, Object arg) {
         super(type,arg);

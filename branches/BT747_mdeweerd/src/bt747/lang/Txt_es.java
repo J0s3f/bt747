@@ -415,4 +415,7 @@ public class Txt_es {
     public static final String S_OUTPUT_LOGCONDITIONS = "Cond. del log de salida"; // //"Condiciones del log de salida";                         (you can also use )
     public static final String MEM_FREE = "disp.";
 
+    public static final String TRKPTCOMMENT = "TRK PT INFO";
+    public static final String TRKPTNAME = "TRK PT NAME";
+
 }

@@ -31,13 +31,14 @@ import bt747.model.ModelEvent;
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelListener;
 import bt747.sys.Convert;
 import bt747.ui.MessageBox;
 
 /**
  * @author Mario De Weerd
  */
-public class GPSFlashOption extends Container {
+public class GPSFlashOption extends Container implements ModelListener {
     private AppController c;
     private Model m;
 
@@ -158,13 +159,12 @@ public class GPSFlashOption extends Container {
             }
             break;
         default:
-            if (event.type == ModelEvent.DATA_UPDATE) {
-                if (event.target == this) {
-                    updateButtons();
-                    event.consumed = true;
-                }
-            }
         }
     }
 
+    public final void modelEvent(final ModelEvent event) {
+        if (event.getType() == ModelEvent.DATA_UPDATE) {
+            updateButtons();
+        }
+    }
 }

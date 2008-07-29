@@ -541,7 +541,7 @@ public class GPSstate implements Thread {
     }
 
     /** Get the current status of the device */
-    public final void getStatus() {
+    public final void reqStatus() {
         reqLogFormat();
         getLogCtrlInfo();
         // getLogReasonStatus();

@@ -31,20 +31,20 @@ import bt747.model.ModelEvent;
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelListener;
 
 /**
  * @author Mario De Weerd
  * 
  */
-public class GpsFilterTabPanel extends Container {
+public class GpsFilterTabPanel extends Container implements ModelListener {
 
     private Model m;
     private AppController c;
 
     private TabPanel tabPanel;
 
-    private final String[] tpCaptions = { Txt.STANDARD, Txt.ADVANCED,
-            Txt.C_FMT };
+    private final String[] tpCaptions = { Txt.STANDARD, Txt.ADVANCED, Txt.C_FMT };
 
     public GpsFilterTabPanel(final Model m, final AppController c) {
         this.m = m;
@@ -75,16 +75,17 @@ public class GpsFilterTabPanel extends Container {
             }
             break;
         default:
-            if (event.type == ModelEvent.DATA_UPDATE) {
-                if (event.target == this) {
-                    Control ctrnl;
-                    ctrnl = tabPanel.getChildren()[0];
-                    ctrnl
-                            .postEvent(new Event(ModelEvent.DATA_UPDATE, ctrnl,
-                                    0));
-                    event.consumed = true;
-                }
-            }
         }
     }
+
+    public final void modelEvent(final ModelEvent event) {
+        int eventType = event.getType();
+        if (eventType == ModelEvent.DATA_UPDATE) {
+            // Todo - avoid event transofrmation.
+            Control ctrnl;
+            ctrnl = tabPanel.getChildren()[0];
+            ctrnl.postEvent(new Event(ModelEvent.DATA_UPDATE, ctrnl, 0));
+        }
+    }
+
 }

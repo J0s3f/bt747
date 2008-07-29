@@ -239,15 +239,7 @@ public class GPSconctrl extends Container implements ModelListener {
                 c.connectGPS();
             }
             break;
-        default:
-            if (event.type == ModelEvent.DATA_UPDATE) {
-                if (event.target == this) {
-                    updateButtons();
-                    event.consumed = true;
-                }
-            } 
         }
-
     }
 
     public final void modelEvent(final ModelEvent event) {
@@ -257,6 +249,10 @@ public class GPSconctrl extends Container implements ModelListener {
         } else if (eventType == ModelEvent.GPRMC) {
             updateRMCData((GPSRecord) (event.getArg()));
             updateGPSData((GPSRecord) (event.getArg()));
+        } if (eventType == ModelEvent.DATA_UPDATE) {
+            if(this.isVisible()) {
+                updateButtons();
+            }
         } 
     }
 }

@@ -19,6 +19,7 @@ package bt747.model;
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+
 import gps.BT747Constants;
 import gps.convert.Conv;
 import moio.util.HashSet;
@@ -109,7 +110,8 @@ public class AppSettings {
     private static final int C_WGS84_TO_MSL_IDX = C_ONEFILEPERDAY_IDX
             + C_ONEFILEPERDAY_SIZE;
     private static final int C_WGS84_TO_MSL_SIZE = 4;
-    private static final int C_LOGAHEAD_IDX = C_WGS84_TO_MSL_IDX + C_WGS84_TO_MSL_SIZE;
+    private static final int C_LOGAHEAD_IDX = C_WGS84_TO_MSL_IDX
+            + C_WGS84_TO_MSL_SIZE;
     private static final int C_LOGAHEAD_SIZE = 1;
     private static final int C_NMEASET_IDX = C_LOGAHEAD_IDX + C_LOGAHEAD_SIZE;
     private static final int C_NMEASET_SIZE = 8;
@@ -206,13 +208,43 @@ public class AppSettings {
     private static final int C_OUTPUTLOGCONDITIONS_IDX = C_GPSType_IDX
             + C_GPSType_SIZE;
     private static final int C_OUTPUTLOGCONDITIONS_SIZE = 1;
-    private static final int C_NEXT_IDX = C_OUTPUTLOGCONDITIONS_IDX
+    private static final int C_IS_WRITE_TRACKPOINT_COMMENT_IDX = C_OUTPUTLOGCONDITIONS_IDX
             + C_OUTPUTLOGCONDITIONS_SIZE;
+    private static final int C_IS_WRITE_TRACKPOINT_COMMENT_SIZE = 4;
+    private static final int C_IS_WRITE_TRACKPOINT_NAME_IDX = C_IS_WRITE_TRACKPOINT_COMMENT_IDX
+            + C_IS_WRITE_TRACKPOINT_COMMENT_SIZE;
+    private static final int C_IS_WRITE_TRACKPOINT_NAME_SIZE = 4;
+    private static final int C_NEXT_IDX = C_IS_WRITE_TRACKPOINT_NAME_IDX
+            + C_IS_WRITE_TRACKPOINT_NAME_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
     private static final int C_NEW_NEXT_IDX = C_NEXT_IDX + C_NEXT_SIZE;
+
     private static final int C_DEFAULT_DEVICE_TIMEOUT = 3500; // ms
     private static final int C_DEFAULT_LOG_REQUEST_AHEAD = 3;
+
+    // Parameter types
+    //
+    public static final int INT = 1;
+    public static final int BOOL = 2;
+    public static final int STRING = 3;
+    public static final int FLOAT = 4;
+
+    // New method for parameters.
+    public static final int IS_WRITE_TRACKPOINT_COMMENT = 0;
+    public static final int IS_WRITE_TRACKPOINT_NAME = 1;
+    private static final int paramsList[][] =
+    // Type, idx, start, size
+    {
+            { BOOL, IS_WRITE_TRACKPOINT_COMMENT,
+                    C_IS_WRITE_TRACKPOINT_COMMENT_IDX,
+                    C_IS_WRITE_TRACKPOINT_COMMENT_SIZE },
+            { BOOL, IS_WRITE_TRACKPOINT_NAME, C_IS_WRITE_TRACKPOINT_NAME_IDX,
+                    C_IS_WRITE_TRACKPOINT_NAME_SIZE }, };
+    private int TYPE_IDX = 0;
+    private int PARAM_IDX = 1;
+    private int START_IDX = 2;
+    private int SIZE_IDX = 3;
 
     private String baseDirPath;
     private String logFile;
@@ -237,6 +269,12 @@ public class AppSettings {
     public final void init() {
         String mVersion;
         int VersionX100 = 0;
+        // Sanity check of paramList
+        for (int i = 0; i < paramsList.length; i++) {
+            if (paramsList[i][PARAM_IDX] != i) {
+                bt747.sys.Vm.debug("ASSERT:Problem with param index " + i);
+            }
+        }
         if ((Settings.getAppSettings() == null)
                 || (Settings.getAppSettings().length() < 100)
         // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
@@ -383,8 +421,12 @@ public class AppSettings {
             setOutputLogConditions(false);
             /* fall through */
 
-            /* Must be last line in case (not 'default') */
-            setStringOpt(0, "0.21", C_VERSION_IDX, C_VERSION_SIZE);
+        case 21:
+            setBooleanOpt(IS_WRITE_TRACKPOINT_COMMENT, true);
+            setBooleanOpt(IS_WRITE_TRACKPOINT_NAME, true);
+
+            /* Must be last line in case (not 'default'), sets settings version */
+            setStringOpt(0, "0.22", C_VERSION_IDX, C_VERSION_SIZE);
         default:
             break;
         }
@@ -479,12 +521,12 @@ public class AppSettings {
         return Conv.hex2Int(getStringOpt(idx, size));
     }
 
-    private final void setBooleanOpt(final int eventType, final boolean value,
+    private final void setLocalBooleanOpt(final int param, final boolean value,
             final int idx, final int size) {
-        setStringOpt(eventType, (value ? "1" : "0"), idx, size);
+        setStringOpt(ModelEvent.SETTING_CHANGE, (value ? "1" : "0"), idx, size);
     }
 
-    private final boolean getBooleanOpt(final int idx, final int size) {
+    private final boolean getLocalBooleanOpt(final int idx, final int size) {
         return getIntOpt(idx, size) == 1;
     }
 
@@ -526,6 +568,31 @@ public class AppSettings {
             }
         } else {
             return "";
+        }
+    }
+
+    // the new way of setting parameters - not a method per parameter, but an
+    // index ;-).
+    public final boolean getBooleanOpt(final int param) {
+        if ((param < paramsList.length)
+                && (paramsList[param][TYPE_IDX] == BOOL)) {
+            return getLocalBooleanOpt(paramsList[param][START_IDX],
+                    paramsList[param][SIZE_IDX]);
+        } else {
+            // TODO: throw something
+            bt747.sys.Vm.debug("Invalid parameter index " + param);
+            return false;
+        }
+    }
+
+    protected final void setBooleanOpt(final int param, final boolean value) {
+        if ((param < paramsList.length)
+                && (paramsList[param][TYPE_IDX] == BOOL)) {
+            setLocalBooleanOpt(param, value, paramsList[param][START_IDX],
+                    paramsList[param][SIZE_IDX]);
+        } else {
+            // TODO: throw something
+            bt747.sys.Vm.debug("Invalid parameter index " + param);
         }
     }
 
@@ -653,7 +720,7 @@ public class AppSettings {
     }
 
     public final boolean getStartupOpenPort() {
-        return getBooleanOpt(C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
+        return getLocalBooleanOpt(C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
     }
 
     /**
@@ -661,7 +728,7 @@ public class AppSettings {
      *            The default value for opening the port.
      */
     public final void setStartupOpenPort(final boolean value) {
-        setBooleanOpt(0, value, C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
+        setLocalBooleanOpt(0, value, C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
     }
 
     /**
@@ -779,7 +846,7 @@ public class AppSettings {
     }
 
     public final boolean isConvertWGS84ToMSL() {
-        return getBooleanOpt(C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
+        return getLocalBooleanOpt(C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
     }
 
     /**
@@ -787,11 +854,11 @@ public class AppSettings {
      *            true - Setting is to convert the WGS84 height to MSL height.
      */
     public final void setConvertWGS84ToMSL(final boolean value) {
-        setBooleanOpt(0, value, C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
+        setLocalBooleanOpt(0, value, C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
     }
 
     public final boolean getAdvFilterActive() {
-        return getBooleanOpt(C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
+        return getLocalBooleanOpt(C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
     }
 
     /**
@@ -799,7 +866,7 @@ public class AppSettings {
      *            The default value for opening the port.
      */
     protected final void setAdvFilterActive(final boolean value) {
-        setBooleanOpt(0, value, C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
+        setLocalBooleanOpt(0, value, C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
     }
 
     public final int getLogRequestAhead() {
@@ -863,27 +930,27 @@ public class AppSettings {
     }
 
     public final boolean getGpxUTC0() {
-        return getBooleanOpt(C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
+        return getLocalBooleanOpt(C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
     }
 
     protected final void setGpxUTC0(final boolean value) {
-        setBooleanOpt(0, value, C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
+        setLocalBooleanOpt(0, value, C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
     }
 
     public final boolean getGpsDecode() {
-        return getBooleanOpt(C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
+        return getLocalBooleanOpt(C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
     }
 
     protected final void setGpsDecode(final boolean value) {
-        setBooleanOpt(0, value, C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
+        setLocalBooleanOpt(0, value, C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
     }
 
     public final boolean getGpxTrkSegWhenBig() {
-        return getBooleanOpt(C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
+        return getLocalBooleanOpt(C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
     }
 
     protected final void setGpxTrkSegWhenBig(final boolean value) {
-        setBooleanOpt(0, value, C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
+        setLocalBooleanOpt(0, value, C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
     }
 
     public final int getTrkSep() {
@@ -1072,7 +1139,7 @@ public class AppSettings {
      * @return Returns the solveMacLagProblem.
      */
     public final boolean isTraversableFocus() {
-        return getBooleanOpt(C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE);
+        return getLocalBooleanOpt(C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE);
     }
 
     /**
@@ -1080,7 +1147,7 @@ public class AppSettings {
      *            The traversableFocus to set.
      */
     protected final void setTraversableFocus(final boolean traversableFocus) {
-        setBooleanOpt(0, traversableFocus, C_ISTRAVERSABLE_IDX,
+        setLocalBooleanOpt(0, traversableFocus, C_ISTRAVERSABLE_IDX,
                 C_ISTRAVERSABLE_SIZE);
     }
 
@@ -1135,11 +1202,11 @@ public class AppSettings {
     }
 
     protected final void setSBASSetting1(final boolean value) {
-        setBooleanOpt(0, value, C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
+        setLocalBooleanOpt(0, value, C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
     }
 
     public final boolean getSBASSetting1() {
-        return getBooleanOpt(C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
+        return getLocalBooleanOpt(C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
     }
 
     protected final void setDGPSSetting1(final int value) {
@@ -1151,19 +1218,21 @@ public class AppSettings {
     }
 
     public final boolean getTestSBASSetting1() {
-        return getBooleanOpt(C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
+        return getLocalBooleanOpt(C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
     }
 
     protected final void setTestSBASSetting1(final boolean value) {
-        setBooleanOpt(0, value, C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
+        setLocalBooleanOpt(0, value, C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
     }
 
     public final boolean getLogOverwriteSetting1() {
-        return getBooleanOpt(C_SETTING1_LOG_OVR_IDX, C_SETTING1_LOG_OVR_SIZE);
+        return getLocalBooleanOpt(C_SETTING1_LOG_OVR_IDX,
+                C_SETTING1_LOG_OVR_SIZE);
     }
 
     protected final void setLogOverwriteSetting1(final boolean value) {
-        setBooleanOpt(0, value, C_SETTING1_LOG_OVR_IDX, C_SETTING1_LOG_OVR_SIZE);
+        setLocalBooleanOpt(0, value, C_SETTING1_LOG_OVR_IDX,
+                C_SETTING1_LOG_OVR_SIZE);
     }
 
     public final String getNMEASetting1() {
@@ -1175,11 +1244,12 @@ public class AppSettings {
     }
 
     public final boolean getRecordNbrInLogs() {
-        return getBooleanOpt(C_RECORDNBR_IN_LOGS_IDX, C_RECORDNBR_IN_LOGS_SIZE);
+        return getLocalBooleanOpt(C_RECORDNBR_IN_LOGS_IDX,
+                C_RECORDNBR_IN_LOGS_SIZE);
     }
 
     protected final void setRecordNbrInLogs(final boolean value) {
-        setBooleanOpt(0, value, C_RECORDNBR_IN_LOGS_IDX,
+        setLocalBooleanOpt(0, value, C_RECORDNBR_IN_LOGS_IDX,
                 C_RECORDNBR_IN_LOGS_SIZE);
     }
 
@@ -1189,7 +1259,7 @@ public class AppSettings {
      * @return true - interpretation of data is as if data is from holux device.
      */
     public final boolean getForceHolux241() {
-        return getBooleanOpt(C_HOLUX241_IDX, C_HOLUX241_SIZE);
+        return getLocalBooleanOpt(C_HOLUX241_IDX, C_HOLUX241_SIZE);
     }
 
     /**
@@ -1199,15 +1269,15 @@ public class AppSettings {
      *            true - Interprete data is as if data is from holux device.
      */
     protected final void setForceHolux241(final boolean value) {
-        setBooleanOpt(0, value, C_HOLUX241_IDX, C_HOLUX241_SIZE);
+        setLocalBooleanOpt(0, value, C_HOLUX241_IDX, C_HOLUX241_SIZE);
     }
 
     public final boolean getImperial() {
-        return getBooleanOpt(C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
+        return getLocalBooleanOpt(C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
     }
 
     protected final void setImperial(final boolean value) {
-        setBooleanOpt(0, value, C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
+        setLocalBooleanOpt(0, value, C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
     }
 
     public final boolean isStoredSetting1() {
@@ -1231,12 +1301,12 @@ public class AppSettings {
     }
 
     public final boolean getOutputLogConditions() {
-        return getBooleanOpt(C_OUTPUTLOGCONDITIONS_IDX,
+        return getLocalBooleanOpt(C_OUTPUTLOGCONDITIONS_IDX,
                 C_OUTPUTLOGCONDITIONS_SIZE);
     }
 
     protected final void setOutputLogConditions(final boolean value) {
-        setBooleanOpt(0, value, C_OUTPUTLOGCONDITIONS_IDX,
+        setLocalBooleanOpt(0, value, C_OUTPUTLOGCONDITIONS_IDX,
                 C_OUTPUTLOGCONDITIONS_SIZE);
     }
 
@@ -1337,7 +1407,7 @@ public class AppSettings {
         Iterator it = listeners.iterator();
         while (it.hasNext()) {
             ModelListener l = (ModelListener) it.next();
-            ModelEvent e = new ModelEvent(type,l);
+            ModelEvent e = new ModelEvent(type, l);
             l.modelEvent(e);
         }
     }

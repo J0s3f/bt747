@@ -125,7 +125,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "<meta http-equiv=\"Content-Type\" "
                         + "content=\"text/html; charset=utf-8\" />\r\n"
                         + "<meta name=\"description\" "
-                        + "content=\"Tracks - Generated with BT747"
+                        + "content=\"Tracks - Generated with BT747 V"
                         + Version.VERSION_NUMBER
                         + " http://sf.net/projects/bt747 - powered by Google Maps\" />\r\n"
                         + "\r\n"

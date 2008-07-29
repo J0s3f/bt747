@@ -396,4 +396,6 @@ public class Txt_de {
     public static final String S_OUTPUT_LOGCONDITIONS = "Bed. für Log-Ausgabe";
     public static final String MEM_FREE = "frei";
 
+    public static final String TRKPTCOMMENT = "TRK PT INFO";
+    public static final String TRKPTNAME = "TRK PT NAME";
 }

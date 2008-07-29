@@ -153,7 +153,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
     private static final int C_MENU_INFO = 303;
 
     /** The tab panel */
-    private TabPanel m_TabPanel;
+    private TabPanel tabPanel;
     /** The captions for the tab panel */
     private final String[] c_tpCaptions = { Txt.C_FMT, Txt.C_CTRL, Txt.C_LOG,
             Txt.C_FILE, Txt.C_FLTR, Txt.C_EASY, Txt.C_CON, Txt.C_OTHR };
@@ -236,8 +236,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
         miImperial.isChecked = m.getImperial();
         miOutputLogConditions.isChecked = m.getOutputLogConditions();
 
-        m_TabPanel = new TabPanel(c_tpCaptions);
-        add(m_TabPanel, CENTER, CENTER);
+        tabPanel = new TabPanel(c_tpCaptions);
+        add(tabPanel, CENTER, CENTER);
         // Progress bar to show download progress (separate thread)
         progressLabel = new Label(Txt.LB_DOWNLOAD);
         progressBar = new ProgressBar();
@@ -245,8 +245,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
         progressLabel.setRect(LEFT, BOTTOM, PREFERRED, PREFERRED);
         progressLabel.setVisible(false);
         // m_ProgressLabel.setVisible(false);
-        m_TabPanel.setBorderStyle(Window.NO_BORDER);
-        m_TabPanel.setRect(getClientRect().modifiedBy(0, 0, 0,
+        tabPanel.setBorderStyle(Window.NO_BORDER);
+        tabPanel.setRect(getClientRect().modifiedBy(0, 0, 0,
                 -progressBar.getPreferredHeight()));
 
         add(progressBar, RIGHT, SAME);
@@ -257,24 +257,24 @@ public class AppBT747 extends MainWindow implements ModelListener {
         updateProgressBar();
 
         numPanels = 0;
-        m_TabPanel.setPanel(TAB_LOG_CTRL_IDX, new GPSLogFormat(m, c));
+        tabPanel.setPanel(TAB_LOG_CTRL_IDX, new GPSLogFormat(m, c));
         numPanels++;
-        m_TabPanel.setPanel(TAB_LOGINFO_IDX, new GPSLogReason(c, m));
+        tabPanel.setPanel(TAB_LOGINFO_IDX, new GPSLogReason(c, m));
         numPanels++;
-        m_TabPanel.setPanel(TAB_LOG_GET_IDX, new GPSLogGet(m, c));
+        tabPanel.setPanel(TAB_LOG_GET_IDX, new GPSLogGet(m, c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_FILECTRL_IDX, new GPSLogFile(c, m));
+        tabPanel.setPanel(C_GPS_FILECTRL_IDX, new GPSLogFile(c, m));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_FILTERCTRL_IDX, new GpsFilterTabPanel(m, c));
+        tabPanel.setPanel(C_GPS_FILTERCTRL_IDX, new GpsFilterTabPanel(m, c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_EASYCTRL_IDX, new GPSLogEasy(m, c));
+        tabPanel.setPanel(C_GPS_EASYCTRL_IDX, new GPSLogEasy(m, c));
         numPanels++;
-        m_TabPanel.setPanel(C_GPS_CONCTRL_IDX, new GPSconctrl(c, m));
+        tabPanel.setPanel(C_GPS_CONCTRL_IDX, new GPSconctrl(c, m));
         numPanels++;
         // m_TabPanel.setPanel(C_GPS_FLASH_IDX,m_GPSFlash = new
         // GPSFlashOption(m_GPSstate));
         // C_NUM_PANELS++;
-        m_TabPanel.setPanel(C_GPS_FLASH_IDX, new GPSOtherTabPanel(c, m));
+        tabPanel.setPanel(C_GPS_FLASH_IDX, new GPSOtherTabPanel(c, m));
         numPanels++;
         // m_TabPanel.setPanel(1,dataEdit = new dataEdit());
         // m_TabPanel.setPanel(2,grid = new Grid(gridCaptions,false));
@@ -284,7 +284,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         // m_ProgressBar.setRect(m_ProgressLabel.getRect().x2(),m_ProgressLabel.getRect().y,//BOTTOM,RIGHT,
         // 10,//getClientRect().width-m_ProgressLabel.getRect().width,
         // 10+0*PREFERRED);
-        m_TabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
+        tabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
 
         waba.sys.Settings.keyboardFocusTraversable = m.isTraversableFocus();
         miTraversableFocus.isChecked = m.isTraversableFocus();
@@ -430,16 +430,16 @@ public class AppBT747 extends MainWindow implements ModelListener {
             }
             break;
         case ControlEvent.PRESSED:
-            if (event.target == m_TabPanel) {
+            if (event.target == tabPanel) {
                 Control cntrl;
-                cntrl = m_TabPanel.getPanel(m_TabPanel.getActiveTab());
+                cntrl = tabPanel.getPanel(tabPanel.getActiveTab());
                 cntrl.postEvent(new Event(ControlEvent.PRESSED, cntrl, 0));
             }
             break;
         default:
             if (event.target == this) {
                 for (int i = 0; i < numPanels; i++) {
-                    m_TabPanel.getPanel(i).onEvent(event);
+                    tabPanel.getPanel(i).onEvent(event);
                 }
             }
         }
@@ -458,31 +458,35 @@ public class AppBT747 extends MainWindow implements ModelListener {
     }
 
     public final void modelEvent(final ModelEvent event) {
-        int eventType = event.getType();
-        
-        if (eventType == ModelEvent.CONNECTED) {
-            m_TabPanel.setActiveTab(TAB_LOG_GET_IDX);
-        } else if (eventType == ModelEvent.DOWNLOAD_STATE_CHANGE
-                || eventType == ModelEvent.LOG_DOWNLOAD_STARTED
-                || eventType == ModelEvent.LOG_DOWNLOAD_DONE) {
+        switch (event.getType()) {
+        case ModelEvent.CONNECTED:
+            tabPanel.setActiveTab(TAB_LOG_GET_IDX);
+            break;
+        case ModelEvent.DOWNLOAD_STATE_CHANGE:
+        case ModelEvent.LOG_DOWNLOAD_STARTED:
+        case ModelEvent.LOG_DOWNLOAD_DONE:
             updateProgressBar();
-        } else if ((eventType == ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY)) {
+            break;
+        case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
             requestLogOverwriteConfirmation();
-        } else if ((eventType == ModelEvent.ERASE_ONGOING_NEED_POPUP)) {
+            break;
+        case ModelEvent.ERASE_ONGOING_NEED_POPUP:
             createErasePopup();
-        } else if ((eventType == ModelEvent.ERASE_DONE_REMOVE_POPUP)) {
+            break;
+        case ModelEvent.ERASE_DONE_REMOVE_POPUP:
             removeErasePopup();
-        } else if ((eventType == ModelEvent.COULD_NOT_OPEN_FILE)) {
+            break;
+        case ModelEvent.COULD_NOT_OPEN_FILE:
             couldNotOpenFileMessage((String) event.getArg());
-        } else if ((eventType == ModelEvent.DEBUG_MSG)) {
+            break;
+        case ModelEvent.DEBUG_MSG:
             Vm.debug((String) event.getArg());
-        } else {
-            Control cntrl;
-            cntrl = m_TabPanel.getPanel(m_TabPanel.getActiveTab());
-            cntrl.postEvent(new Event(eventType, cntrl, 0));
+            break;
+        default:
+            ModelListener cntrl;
+            cntrl = (ModelListener) tabPanel.getPanel(tabPanel.getActiveTab());
+            cntrl.modelEvent(event);
         }
-        // TODO: Should handle these events here.
-        this.postEvent(new waba.ui.Event(eventType,event.getArg(),0));
     }
 
     public final void onExit() {
