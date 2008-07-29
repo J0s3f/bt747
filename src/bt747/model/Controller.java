@@ -74,7 +74,7 @@ public class Controller {
         this.m = model;
         init();
     }
-    
+
     public Model getModel() {
         return m;
     }
@@ -99,8 +99,6 @@ public class Controller {
         // By default all fields are selected for the output
         setFileLogFormat(0xFFFFFFFF);
     }
-    
-    
 
     /**
      * @param on
@@ -236,11 +234,10 @@ public class Controller {
         } else if (m.getLogFilePath().toLowerCase().endsWith(".csv")) {
             lc = new CSVLogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".nmea")
-                ||m.getLogFilePath().toLowerCase().endsWith(".nme")
-                ||m.getLogFilePath().toLowerCase().endsWith(".nma")
-                ||m.getLogFilePath().toLowerCase().endsWith(".txt")
-                ||m.getLogFilePath().toLowerCase().endsWith(".log")
-                ) {
+                || m.getLogFilePath().toLowerCase().endsWith(".nme")
+                || m.getLogFilePath().toLowerCase().endsWith(".nma")
+                || m.getLogFilePath().toLowerCase().endsWith(".txt")
+                || m.getLogFilePath().toLowerCase().endsWith(".log")) {
             lc = new NMEALogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
             lc = new DPL700LogConvert();
@@ -329,13 +326,18 @@ public class Controller {
             gpsFile.setImperial(m.getImperial());
             gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
             gpsFile.setBadTrackColor(m.getColorInvalidTrack());
+            gpsFile.setIncludeTrkComment(m
+                    .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
+            gpsFile.setIncludeTrkName(m
+                    .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME));
             for (int i = 0; i < usedFilters.length; i++) {
                 usedFilters[i].setStartTime(m.getFilterStartTime());
                 usedFilters[i].setEndTime(m.getFilterEndTime()
                         + (SECONDS_PER_DAY - 1));
             }
             gpsFile.setFilters(usedFilters);
-            gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m.getFileLogFormat()));
+            gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m
+                    .getFileLogFormat()));
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
                     m.getFileSeparationFreq());
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
@@ -372,11 +374,10 @@ public class Controller {
         } else if (m.getLogFilePath().toLowerCase().endsWith(".csv")) {
             lc = new CSVLogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".nmea")
-                ||m.getLogFilePath().toLowerCase().endsWith(".nme")
-                ||m.getLogFilePath().toLowerCase().endsWith(".nma")
-                ||m.getLogFilePath().toLowerCase().endsWith(".log")
-                ||m.getLogFilePath().toLowerCase().endsWith(".txt")
-                ) {
+                || m.getLogFilePath().toLowerCase().endsWith(".nme")
+                || m.getLogFilePath().toLowerCase().endsWith(".nma")
+                || m.getLogFilePath().toLowerCase().endsWith(".log")
+                || m.getLogFilePath().toLowerCase().endsWith(".txt")) {
             lc = new NMEALogConvert();
         } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
             lc = new DPL700LogConvert();
@@ -422,6 +423,10 @@ public class Controller {
         // gpsFile.setImperial(m.getImperial());
         // gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
         // gpsFile.setBadTrackColor(m.getColorInvalidTrack());
+        gpsFile.setIncludeTrkComment(m
+                .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
+        gpsFile.setIncludeTrkName(m
+                .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
 
         for (int i = 0; i < usedFilters.length; i++) {
             usedFilters[i].setStartTime(m.getFilterStartTime());
@@ -429,7 +434,7 @@ public class Controller {
         }
         gpsFile.setFilters(usedFilters);
         // Next line must be called for initialisation.
-        gpsFile.initialiseFile("", "", -1,m.getFileSeparationFreq());
+        gpsFile.initialiseFile("", "", -1, m.getFileSeparationFreq());
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
         if (error != 0) {
@@ -711,8 +716,7 @@ public class Controller {
      *            {@link BT747Constants#FMT_SNR_IDX} <br> -
      *            {@link BT747Constants#FMT_RCR_IDX} <br> -
      *            {@link BT747Constants#FMT_MILLISECOND_IDX} <br> -
-     *            {@link BT747Constants#FMT_DISTANCE_IDX} <br> -
-     *            <br>
+     *            {@link BT747Constants#FMT_DISTANCE_IDX} <br> - <br>
      */
     public final void setFileLogFormat(final int fileLogFormat) {
         m.setFileLogFormat(fileLogFormat);
@@ -758,6 +762,14 @@ public class Controller {
             // TODO Move event posting to appropriate place (in model)
             m.postEvent(ModelEvent.DISCONNECTED);
         }
+    }
+
+    /**
+     * Send an arbitrary NMEA string.
+     * 
+     */
+    public final void sendNMEA(String s) {
+        m.gpsModel().sendNMEA(s);
     }
 
     /**
@@ -833,7 +845,8 @@ public class Controller {
      */
     private void performOperationsAfterGPSConnect() {
         if (m.gpsRxTx().isConnected()) {
-            m.gpsModel().getStatus();
+            m.gpsModel().reqStatus();
+            reqLogFormat();
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
             m.gpsModel().setupTimer();
             // Remember defaults
@@ -1273,8 +1286,10 @@ public class Controller {
     }
 
     public final void setFixInterval(final int value) {
-        m.gpsModel().setFixInterval(value);
-        reqFixInterval();
+        if (value != 0) {
+            m.gpsModel().setFixInterval(value);
+            reqFixInterval();
+        }
     }
 
     public final void setLogTimeInterval(final int value) {
@@ -1615,6 +1630,10 @@ public class Controller {
      */
     public final String getLastErrorInfo() {
         return lastErrorInfo;
+    }
+
+    public final void setBooleanOpt(int param, final boolean value) {
+        m.setBooleanOpt(param, value);
     }
 
 }

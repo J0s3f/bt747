@@ -26,6 +26,7 @@ import gps.Txt;
 
 import bt747.io.File;
 import bt747.io.BufFile;
+import bt747.model.AppSettings;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 import bt747.sys.Vm;
@@ -270,8 +271,7 @@ public abstract class GPSFile {
             // TODO: handle exception
         }
         try {
-            int mode = createNewFile ? File.CREATE
-                    : File.READ_WRITE;
+            int mode = createNewFile ? File.CREATE : File.READ_WRITE;
             outFile = new BufFile(fileName, mode, card);
         } catch (Exception e) {
             e.printStackTrace();
@@ -435,6 +435,18 @@ public abstract class GPSFile {
 
     public final String getErrorInfo() {
         return errorInfo;
+    }
+
+    protected boolean isTrkComment = true;
+
+    public final void setIncludeTrkComment(boolean isTrkComment) {
+        this.isTrkComment = isTrkComment;
+    }
+
+    protected boolean isIncludeTrkName = true;
+
+    public final void setIncludeTrkName(boolean isIncludeTrkName) {
+        this.isIncludeTrkName = isIncludeTrkName;
     }
 
 }

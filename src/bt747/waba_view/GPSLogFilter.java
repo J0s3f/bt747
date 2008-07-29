@@ -31,11 +31,13 @@ import gps.log.GPSFilter;
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
+import bt747.model.ModelListener;
 
 /**
  * The purpose of this container is to set the log filter settings.
  */
-public class GPSLogFilter extends Container {
+public class GPSLogFilter extends Container implements ModelListener {
     private int currentLogFilter = 0;
     private Model m;
     private AppController c;
@@ -238,4 +240,7 @@ public class GPSLogFilter extends Container {
         }
     }
 
+    public final void modelEvent(final ModelEvent event) {
+        // Do nothing.
+    }
 }

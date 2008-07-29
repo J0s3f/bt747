@@ -262,13 +262,17 @@ public final class NMEALogConvert implements GPSLogConvert {
                 + Convert.toInt(nmeaTimeStr.substring(2, 4)) * 60
                 + Convert.toInt(nmeaTimeStr.substring(4, 6));
         setTime(gpsRec, timePart);
+        try {
         if (nmeaTimeStr.charAt(6) == '.') {
             gpsRec.milisecond = (int) (Convert
                     .toFloat(nmeaTimeStr.substring(6)) * 1000);
             return true;
-        } else {
+        } 
+        } catch (Exception e) {
+            // Conversion did not work, so millisecond input format no good.
             return false;
         }
+        return false;
     }
 
     private void setDate(GPSRecord gpsRec, int date) {

@@ -27,11 +27,11 @@ import waba.ui.Event;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
-import bt747.model.ModelEvent;
-
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
+import bt747.model.ModelListener;
 
 /*
  * Created on 3 sept. 2007
@@ -44,9 +44,9 @@ import bt747.model.Model;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class GPSOtherTabPanel extends Container {
+public class GPSOtherTabPanel extends Container implements ModelListener {
 
-    private TabPanel m_TabPanel;
+    private TabPanel tabPanel;
     private AppController c;
     private Model m;
 
@@ -63,34 +63,35 @@ public class GPSOtherTabPanel extends Container {
      * 
      */
     public void onStart() {
-        add(m_TabPanel = new TabPanel(c_tpCaptions), CENTER, CENTER);
-        m_TabPanel.setBorderStyle(Window.NO_BORDER);
-        m_TabPanel.setRect(getClientRect().modifiedBy(0, 0, 0, 0));
+        add(tabPanel = new TabPanel(c_tpCaptions), CENTER, CENTER);
+        tabPanel.setBorderStyle(Window.NO_BORDER);
+        tabPanel.setRect(getClientRect().modifiedBy(0, 0, 0, 0));
         // TODO Auto-generated method stub
-        m_TabPanel.setPanel(0, new GPSFlashOption(m, c));
-        m_TabPanel.setPanel(1, new GPSNMEAOutput(m, c));
-        m_TabPanel.setPanel(2, new GPSFileNMEAOutputSel(c, m));
-        m_TabPanel.setPanel(3, new GPSHoluxSpecific(m, c));
+        tabPanel.setPanel(0, new GPSFlashOption(m, c));
+        tabPanel.setPanel(1, new GPSNMEAOutput(m, c));
+        tabPanel.setPanel(2, new GPSFileNMEAOutputSel(c, m));
+        tabPanel.setPanel(3, new GPSHoluxSpecific(m, c));
     }
 
     public void onEvent(Event event) {
         //
         switch (event.type) {
         case ControlEvent.PRESSED:
-            if (event.target == m_TabPanel || event.target == this) {
+            if (event.target == tabPanel || event.target == this) {
                 Control c;
-                c = m_TabPanel.getChildren()[0];
+                c = tabPanel.getChildren()[0];
                 c.postEvent(new Event(ControlEvent.PRESSED, c, 0));
             }
             break;
-        default:
-            if (event.type == ModelEvent.DATA_UPDATE) {
-                if (event.target == this) {
-                    Control c;
-                    c = m_TabPanel.getChildren()[0];
-                    c.postEvent(new Event(ModelEvent.DATA_UPDATE, c, 0));
-                    event.consumed = true;
-                }
+        }
+    }
+    
+    public final void modelEvent(final ModelEvent event) {
+        if (event.getType() == ModelEvent.DATA_UPDATE) {
+            if(this.isVisible()) {
+                ModelListener c;
+                c = (ModelListener)tabPanel.getChildren()[0];
+                c.modelEvent(event);
             }
         }
     }

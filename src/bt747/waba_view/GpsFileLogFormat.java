@@ -25,9 +25,11 @@ import waba.ui.Event;
 
 import gps.BT747Constants;
 
+import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.model.ModelListener;
 
 /**
  * Defines the container that allows the selection of the fields that will be
@@ -35,14 +37,17 @@ import bt747.model.ModelEvent;
  * 
  * @author Mario De Weerd
  */
-public class GpsFileLogFormat extends Container {
+public class GpsFileLogFormat extends Container implements ModelListener {
     private static final int C_LOG_FMT_COUNT = 21 - 1;
     /** The object that is used to communicate with the GPS device. */
     private Model m;
     private AppController c;
     /** The tickboxes for the format items */
     private MyCheck[] chkLogFmtItems = new MyCheck[C_LOG_FMT_COUNT];
-    /** The button that requests to change the log format of the device */
+    /** When selected output 'comments' in certain formats */
+    private MyCheck commentCheck;
+    /** When selected give a name to individual trackpoints */
+    private MyCheck nameCheck;
 
     /**
      * Initialiser of this Container.<br>
@@ -70,6 +75,10 @@ public class GpsFileLogFormat extends Container {
                             : AFTER - 1);
             chkLogFmtItems[i].setEnabled(true);
         }
+        commentCheck = new MyCheck(Txt.TRKPTCOMMENT);
+        nameCheck = new MyCheck(Txt.TRKPTNAME);
+        add(commentCheck,LEFT,AFTER+6);
+        add(nameCheck,getClientRect().width / 2,SAME);
         setLogFormatControls();
     }
 
@@ -105,6 +114,9 @@ public class GpsFileLogFormat extends Container {
             // chkLogFmtItems[i].repaintNow();
             bitMask <<= 1;
         }
+        commentCheck.setChecked(m
+                .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
+        nameCheck.setChecked(m.getBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME));
         setLogFormatControls();
     }
 
@@ -128,6 +140,12 @@ public class GpsFileLogFormat extends Container {
             if (event.target == this) {
                 updateLogFormat(m.getFileLogFormat());
                 event.consumed = true;
+            } else if (event.target == commentCheck) {
+                c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, commentCheck
+                        .getChecked());
+            } else if (event.target == nameCheck) {
+                c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, nameCheck
+                        .getChecked());
             } else {
                 boolean isLogFmtUpdated = false;
                 for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
@@ -142,10 +160,17 @@ public class GpsFileLogFormat extends Container {
             }
 
             break;
-        default:
-            if (event.type == ModelEvent.FILE_LOG_FORMAT_UPDATE) {
-                updateLogFormat(m.getFileLogFormat());
-            }
+        }
+    }
+
+    final public void modelEvent(ModelEvent event) {
+        int eventType = event.getType();
+        if (eventType == ModelEvent.FILE_LOG_FORMAT_UPDATE) {
+            updateLogFormat(m.getFileLogFormat());
+        } else if (eventType == ModelEvent.SETTING_CHANGE) {
+            // switch (event.getArg()) {
+            //            
+            // }
         }
     }
 }

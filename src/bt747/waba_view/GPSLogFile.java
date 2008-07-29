@@ -30,11 +30,14 @@ import waba.ui.Event;
 import waba.ui.Label;
 import waba.util.Vector;
 
+import gps.log.GPSRecord;
+
 import bt747.Txt;
 import bt747.io.File;
 import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.model.ModelListener;
 import bt747.sys.Convert;
 import bt747.waba_view.ui.FileSelect;
 
@@ -43,7 +46,7 @@ import bt747.waba_view.ui.FileSelect;
  * 
  * @author Mario De Weerd
  */
-public class GPSLogFile extends Container {
+public class GPSLogFile extends Container implements ModelListener {
 
     private Model m;
     private AppController c;
@@ -207,13 +210,15 @@ public class GPSLogFile extends Container {
             }
             break;
         default:
-            if (event.type == ModelEvent.LOGFILEPATH_UPDATE
-                    || event.type == ModelEvent.OUTPUTFILEPATH_UPDATE
-                    || event.type == ModelEvent.WORKDIRPATH_UPDATE) {
-                updateValues();
-            }
-            break;
         }
     }
 
+    public final void modelEvent(final ModelEvent event) {
+        int eventType = event.getType();
+        if (eventType == ModelEvent.LOGFILEPATH_UPDATE
+                || eventType == ModelEvent.OUTPUTFILEPATH_UPDATE
+                || eventType == ModelEvent.WORKDIRPATH_UPDATE) {
+            updateValues();
+        }
+    }
 }

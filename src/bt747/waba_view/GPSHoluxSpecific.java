@@ -31,13 +31,14 @@ import bt747.model.ModelEvent;
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelListener;
 
 /**
  * @author Mario De Weerd
  * 
  * Implements Holux Specific operations
  */
-public class GPSHoluxSpecific extends Container {
+public class GPSHoluxSpecific extends Container implements ModelListener {
 
     private Model m;
     private AppController c;
@@ -100,13 +101,12 @@ public class GPSHoluxSpecific extends Container {
             }
             break;
         default:
-            if (event.type == ModelEvent.DATA_UPDATE) {
-                if (event.target == this) {
-                    updateData();
-                    event.consumed = true;
-                }
-            }
         }
     }
 
+    public final void modelEvent(final ModelEvent event) {
+        if (event.getType() == ModelEvent.DATA_UPDATE) {
+            updateData();
+        }
+    }
 }

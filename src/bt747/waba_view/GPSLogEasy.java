@@ -33,6 +33,7 @@ import bt747.model.ModelEvent;
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelListener;
 
 /**
  * Implement some buttons to easily do more complex operations or to do some
@@ -40,7 +41,7 @@ import bt747.model.Model;
  * 
  * @author Mario De Weerd
  */
-public class GPSLogEasy extends Container {
+public class GPSLogEasy extends Container implements ModelListener {
     private Button m_btSet5Hz;
     private Button m_btSet2Hz;
     private Button m_btStore;
@@ -156,13 +157,12 @@ public class GPSLogEasy extends Container {
                 event.consumed = false;
             }
             break;
-        default:
-            if (event.type == ModelEvent.DATA_UPDATE) {
-                if (event.target == this) {
-                    enableStore();
-                }
-                event.consumed = true;
-            }
+        }
+    }
+    public final void modelEvent(final ModelEvent event) {
+        int eventType = event.getType();
+        if (eventType == ModelEvent.DATA_UPDATE) {
+            enableStore();
         }
     }
 }

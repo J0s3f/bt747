@@ -26,16 +26,17 @@ import waba.ui.Event;
 import waba.ui.Label;
 
 import gps.BT747Constants;
-import bt747.model.ModelEvent;
 
 import bt747.Txt;
 import bt747.model.AppController;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
+import bt747.model.ModelListener;
 
 /**
  * @author Mario De Weerd
  */
-public class GPSLogFormat extends Container {
+public class GPSLogFormat extends Container implements ModelListener {
     private static final int C_LOG_FMT_COUNT = 21;
     /** The object that is used to communicate with the GPS device. */
     private Model m;
@@ -183,9 +184,13 @@ public class GPSLogFormat extends Container {
 
             break;
         default:
-            if (event.type == ModelEvent.LOG_FORMAT_UPDATE) {
-                updateLogFormat(m.getLogFormat());
-            }
         }
+    }
+    
+    public final void modelEvent(ModelEvent event) {
+        if (event.getType() == ModelEvent.LOG_FORMAT_UPDATE) {
+            updateLogFormat(m.getLogFormat());
+        }
+        
     }
 }

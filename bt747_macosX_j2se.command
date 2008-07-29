@@ -24,5 +24,4 @@ which java 2>1 >/dev/null && JAVA=java
 # you may want to force the path to the settings file in the next call:
 # -Dbt747_settings="${USER}/bt747_settings.pdb"
 #$JAVA  -Djava.library.path=${RXTX_BIN_PATH} bt747.j2se_view.BT747_Main
-cd dist ; $JAVA  -Djava.library.path=${RXTX_BIN_PATH} -jar BT747_j2se.jar
-
+$JAVA  -Djava.library.path=${RXTX_BIN_PATH} -jar ${ROOT_DIR}/dist/BT747_j2se.jar

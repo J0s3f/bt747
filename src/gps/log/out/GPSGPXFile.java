@@ -103,8 +103,12 @@ public class GPSGPXFile extends GPSFile {
         if (isWayType) {
         } else {
             String header;
-            header = "<trk>" + "<name>" + trackName + "</name>" + "<trkseg>"
-                    + "\r\n";
+            header = "<trk>";
+            if (isIncludeTrkName) {
+                header += "<name>" + trackName + "</name>";
+            }
+            header += "<trkseg>" + "\r\n";
+
             isDataHeaderWritten = true;
             writeTxt(header);
         }
@@ -175,7 +179,8 @@ public class GPSGPXFile extends GPSFile {
                 String nsatStr = ""; // String that will represent number of
                 // sats
 
-                if ((activeFields.valid != 0) && (selectedFileFields.valid != 0)) {
+                if ((activeFields.valid != 0)
+                        && (selectedFileFields.valid != 0)) {
                     switch (s.valid) {
                     case 0x0001:
                         fixStr += "none"; // "No fix";
@@ -235,7 +240,8 @@ public class GPSGPXFile extends GPSFile {
                             + Convert.toString(t.getMinute()) + ":"
                             + (t.getSecond() < 10 ? "0" : "")
                             + Convert.toString(t.getSecond());
-                    if ((activeFields.milisecond != 0) && (selectedFileFields.milisecond != 0)) {
+                    if ((activeFields.milisecond != 0)
+                            && (selectedFileFields.milisecond != 0)) {
                         timeStr += ".";
                         timeStr += (s.milisecond < 100) ? "0" : "";
                         timeStr += (s.milisecond < 10) ? "0" : "";
@@ -253,7 +259,8 @@ public class GPSGPXFile extends GPSFile {
                     tx.append(zeros, 0, nZeros);
                     trackName = "#" + tx.toString()
                             + Convert.toString(s.recCount) + "#";
-                    if ((activeFields.utc != 0) && (selectedFileFields.utc != 0)) {
+                    if ((activeFields.utc != 0)
+                            && (selectedFileFields.utc != 0)) {
                         trackName += " " + timeStr;
                     }
 
@@ -273,12 +280,14 @@ public class GPSGPXFile extends GPSFile {
                 } else {
                     rec.append("<trkpt ");
                 }
-                if ((activeFields.latitude != 0) && (selectedFileFields.latitude != 0)) {
+                if ((activeFields.latitude != 0)
+                        && (selectedFileFields.latitude != 0)) {
                     rec.append("lat=\"");
                     rec.append(Convert.toString(s.latitude, 8));
                     rec.append("\" ");
                 }
-                if ((activeFields.longitude != 0) && (selectedFileFields.longitude != 0)) {
+                if ((activeFields.longitude != 0)
+                        && (selectedFileFields.longitude != 0)) {
                     rec.append("lon=\"");
                     rec.append(Convert.toString(s.longitude, 8));
                     rec.append("\"");
@@ -290,7 +299,8 @@ public class GPSGPXFile extends GPSFile {
                 // }
                 // <ele> xsd:decimal </ele> [0..1] ? (elevation in meters)
 
-                if ((activeFields.height != 0) && (selectedFileFields.height != 0)) {
+                if ((activeFields.height != 0)
+                        && (selectedFileFields.height != 0)) {
                     rec.append("<ele>");
                     rec.append(Convert.toString(s.height, 3));
                     rec.append("</ele>\r\n");
@@ -303,13 +313,15 @@ public class GPSGPXFile extends GPSFile {
                     rec.append("</time>\r\n");
                 }
 
-                if ((activeFields.heading != 0) && (selectedFileFields.heading != 0)) {
+                if ((activeFields.heading != 0)
+                        && (selectedFileFields.heading != 0)) {
                     rec.append("<course>");
                     rec.append(Convert.toString(s.heading));
                     rec.append("</course>\r\n");
                 }
 
-                if ((activeFields.speed != 0) && (selectedFileFields.speed != 0)) {
+                if ((activeFields.speed != 0)
+                        && (selectedFileFields.speed != 0)) {
                     rec.append("<speed>");
                     rec.append(Convert.toString(s.speed / 3.6f, 4)); // must
                     // be
@@ -338,15 +350,20 @@ public class GPSGPXFile extends GPSFile {
                 rec.append("</name>\r\n");
                 // <cmt> xsd:string </cmt> [0..1] ?
                 // No comments, so commented out.
-                rec.append("<cmt>");
-                rec.append("<![CDATA[");
-                if (recordNbrInLogs) {
-                    rec.append("#" + s.recCount + ",");
+                if (isTrkComment
+                        && (recordNbrInLogs || fixStr.length() != 0
+                                || rcrStr.length() != 0
+                                || hdopStr.length() != 0 || nsatStr.length() != 0)) {
+                    rec.append("<cmt>");
+                    rec.append("<![CDATA[");
+                    if (recordNbrInLogs) {
+                        rec.append("#" + s.recCount + ",");
+                    }
+                    rec.append(fixStr + "," + rcrStr + "," + hdopStr + ","
+                            + nsatStr);
+                    rec.append("]]>");
+                    rec.append("</cmt>\r\n");
                 }
-                rec.append(fixStr + "," + rcrStr + "," + hdopStr + ","
-                        + nsatStr);
-                rec.append("]]>");
-                rec.append("</cmt>\r\n");
 
                 // <desc> xsd:string </desc> [0..1] ?
                 // <src> xsd:string </src> [0..1] ? // Source of data
@@ -414,14 +431,16 @@ public class GPSGPXFile extends GPSFile {
 
                 if (false) {
                     // <extensions> extensionsType </extensions> [0..1] ?
-                    if ((activeFields.distance != 0) && (selectedFileFields.distance != 0)) {
+                    if ((activeFields.distance != 0)
+                            && (selectedFileFields.distance != 0)) {
                         rec.append("<extensions>");
                         // MS 20080327 seems to be unsupported in GPX 1.0:
                         // MS 20080327 don't know why but "speed" isn't
                         // understood
                         // by MapSource
 
-                        if ((activeFields.distance != 0) && (selectedFileFields.distance != 0)) {
+                        if ((activeFields.distance != 0)
+                                && (selectedFileFields.distance != 0)) {
                             rec.append("<distance>");
                             rec.append(Convert.toString(s.distance, 2)); // +"
                             // m\r\n"
