@@ -317,20 +317,22 @@ public class GPSKMLFile extends GPSFile {
             if (ptFilters[currentFilter].doFilter(s)) {
                 if (isWayType || isTrackType) {
                     rec.append("<Placemark>\r\n");
-                    rec.append("<name>");
-                    if (activeFields.utc != 0) {
-                        rec.append("TIME: " + (t.getHour() < 10 ? "0" : "")
-                                + Convert.toString(t.getHour()) + ":"
-                                + (t.getMinute() < 10 ? "0" : "")
-                                + Convert.toString(t.getMinute()) + ":"
-                                + (t.getSecond() < 10 ? "0" : "")
-                                + Convert.toString(t.getSecond()));
-                    } else {
-                        rec.append("IDX: ");
-                        rec.append(Convert.toString(s.recCount));
+                    if (!isTrackType || isIncludeTrkName) {
+                        rec.append("<name>");
+                        if ((activeFields.utc != 0)
+                                && (selectedFileFields.utc != 0)) {
+                            rec.append("TIME: " + (t.getHour() < 10 ? "0" : "")
+                                    + Convert.toString(t.getHour()) + ":"
+                                    + (t.getMinute() < 10 ? "0" : "")
+                                    + Convert.toString(t.getMinute()) + ":"
+                                    + (t.getSecond() < 10 ? "0" : "")
+                                    + Convert.toString(t.getSecond()));
+                        } else {
+                            rec.append("IDX: ");
+                            rec.append(Convert.toString(s.recCount));
+                        }
+                        rec.append("</name>\r\n");
                     }
-                    rec.append("</name>\r\n");
-
                     if (isTrackType) {
                         rec.append("<visibility>0</visibility>\r\n");
                     }
@@ -345,9 +347,10 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("</description>");
                     }
 
-                    if ((activeFields.utc != 0)) {
+                    if (((activeFields.utc != 0) && (selectedFileFields.utc != 0))) {
                         rec.append("<TimeStamp><when>");
-                        if (activeFields.utc != 0) {
+                        if ((activeFields.utc != 0)
+                                && (selectedFileFields.utc != 0)) {
                             rec.append(Convert.toString(t.getYear()) + "-"
                                     + (t.getMonth() < 10 ? "0" : "")
                                     + Convert.toString(t.getMonth()) + "-"
@@ -371,7 +374,8 @@ public class GPSKMLFile extends GPSFile {
                     }
 
                     rec.append("<styleUrl>");
-                    if (activeFields.rcr != 0) {
+                    if ((activeFields.rcr != 0)
+                            && (selectedFileFields.rcr != 0)) {
                         String style = getRCRstr(s);
 
                         if ((s.rcr & BT747Constants.RCR_TIME_MASK) != 0) {
@@ -395,14 +399,15 @@ public class GPSKMLFile extends GPSFile {
                     }
                     rec.append("</styleUrl>\r\n");
 
-                    if ((activeFields.longitude != 0)
-                            && (activeFields.latitude != 0)) {
+                    if (((activeFields.longitude != 0) && (selectedFileFields.longitude != 0))
+                            && ((activeFields.latitude != 0) && (selectedFileFields.latitude != 0))) {
                         rec.append("<Point>\r\n");
                         rec.append("<coordinates>");
                         rec.append(Convert.toString(s.longitude, 6));
                         rec.append(",");
                         rec.append(Convert.toString(s.latitude, 6));
-                        if (activeFields.height != 0) {
+                        if ((activeFields.height != 0)
+                                && (selectedFileFields.height != 0)) {
                             rec.append(",");
                             rec.append(Convert.toString(s.height, 3));
                         }
@@ -411,20 +416,21 @@ public class GPSKMLFile extends GPSFile {
                     }
 
                     rec.append("</Placemark>\r\n");
-
-                    rec.append("\r\n");
                     writeTxt(rec.toString());
                 } else if (isPathType) {
                     rec.setLength(0);
-                    if (activeFields.longitude != 0
-                            && activeFields.latitude != 0) {
-                        if ((activeFields.height != 0) != (altitudeMode == 0)) {
+                    if ((activeFields.longitude != 0)
+                            && (selectedFileFields.longitude != 0)
+                            && (activeFields.latitude != 0)
+                            && (selectedFileFields.latitude != 0)) {
+                        if (((activeFields.height != 0) && (selectedFileFields.height != 0)) != (altitudeMode == 0)) {
                             rec.append("</coordinates>");
                             rec.append("    </LineString><LineString>\r\n"
                                     + "    <extrude>1</extrude>\r\n"
                                     + "    <tessellate>1</tessellate>\r\n"
                                     + "    <altitudeMode>");
-                            if (activeFields.height != 0) {
+                            if ((activeFields.height != 0)
+                                    && (selectedFileFields.height != 0)) {
                                 altitudeMode = 0;
                                 // clampToGround, relativeToGround, absolute
                                 rec.append("absolute");
@@ -438,7 +444,8 @@ public class GPSKMLFile extends GPSFile {
                         rec.append(Convert.toString(s.longitude, 6));
                         rec.append(",");
                         rec.append(Convert.toString(s.latitude, 6));
-                        if (activeFields.height != 0) {
+                        if ((activeFields.height != 0)
+                                && (selectedFileFields.height != 0)) {
                             rec.append(",");
                             rec.append(Convert.toString(s.height, 3));
                         }
