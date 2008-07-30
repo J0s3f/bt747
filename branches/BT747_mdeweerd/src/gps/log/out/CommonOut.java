@@ -19,15 +19,11 @@ final class CommonOut {
             rec.append("<br/>");
         }
         if ((activeFields.utc != 0) && (selectedFields.utc != 0)) {
-            rec.append("DATE: ");
-            rec.append(Convert.toString(t.getYear()) + "-"
-                    + (t.getMonth() < 10 ? "0" : "")
-                    + Convert.toString(t.getMonth()) + "-"
-                    + (t.getDay() < 10 ? "0" : "")
-                    + Convert.toString(t.getDay()));
+            rec.append("TIME: ");
+            rec.append(getTimeStr(t));
         }
         if ((activeFields.rcr != 0) && (selectedFields.rcr != 0)) {
-            rec.append("<br />RCR: ");
+            rec.append("<br/>RCR: ");
             if ((s.rcr & BT747Constants.RCR_TIME_MASK) != 0) {
                 rec.append("T");
             }
@@ -60,7 +56,7 @@ final class CommonOut {
         // }
         if ((activeFields.valid != 0) && (selectedFields.valid != 0)) {
             // rec.append("<br />VALID: ");
-            rec.append(", VALID: ");
+            rec.append("<br/>VALID: ");
             switch (s.valid) {
             case 0x0001:
                 rec.append("No fix");

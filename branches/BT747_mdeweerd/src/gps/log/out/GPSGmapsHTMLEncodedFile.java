@@ -114,107 +114,111 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         l_header.setLength(0);
         l_header
                 .append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\""
-                        + " \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n"
+                        + " \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\""
-                        + " xmlns:v=\"urn:schemas-microsoft-com:vml\">\r\n"
-                        + "<head>\r\n" + "<title>");
+                        + " xmlns:v=\"urn:schemas-microsoft-com:vml\">\n"
+                        + "<head>\n" + "<title>");
         l_header.append(trackName);
 
         l_header
-                .append("</title>\r\n"
+                .append("</title>\n"
                         + "<meta http-equiv=\"Content-Type\" "
-                        + "content=\"text/html; charset=utf-8\" />\r\n"
+                        + "content=\"text/html; charset=utf-8\" />\n"
                         + "<meta name=\"description\" "
                         + "content=\"Tracks - Generated with BT747 V"
                         + Version.VERSION_NUMBER
-                        + " http://sf.net/projects/bt747 - powered by Google Maps\" />\r\n"
-                        + "\r\n"
+                        + " http://sf.net/projects/bt747 - powered by Google Maps\" />\n"
+                        + "\n"
                         + "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp");
         l_header.append(keyCode());
         l_header
-                .append("\" type=\"text/javascript\">\r\n"
-                        + "</script>\r\n"
-                        + "<style type=\"text/css\">\r\n"
-                        + " v\\:* {\r\n"
-                        + "  behavior:url(#default#VML);\r\n"
-                        + " }\r\n"
-                        + " html, body, #map\r\n"
-                        + "  {\r\n"
-                        + "   width: 100%;\r\n"
-                        + "   height: 100%;\r\n"
-                        + "  }\r\n"
-                        + " body {\r\n"
-                        + "  margin-top: 0px;\r\n"
-                        + "  margin-right: 0px;\r\n"
-                        + "  margin-left: 0px;\r\n"
-                        + "  margin-bottom: 0px;\r\n"
-                        + " }\r\n"
-                        + "\r\n"
-                        + "</style>\r\n"
-                        + "</head>\r\n"
-                        + "\r\n"
-                        + "<body onload=\"setFooter()\" onresize=\"setFooter()\""
-                        + " onunload=\"GUnload()\">\r\n"
-                        + "<div id=\"map\"> </div>\r\n"
-                        + "<div id=\"footer\">\r\n"
-                        + "\r\n"
-                        + "<script type=\"text/javascript\">\r\n"
-                        + "//<![CDATA[\r\n" // check for compatibility
-                        + "\r\n"
+                .append("\" type=\"text/javascript\">\n"
+                        + "</script>\n"
+                        + "<style type=\"text/css\">\n"
+                        + " v\\:* {\n"
+                        + "  behavior:url(#default#VML);\n"
+                        + " }\n"
+                        + " html, body, #map\n"
+                        + "  {\n"
+                        + "   width: 100%;\n"
+                        + "   height: 100%;\n"
+                        + "  }\n"
+                        + " body {\n"
+                        + "  margin-top: 0px;\n"
+                        + "  margin-right: 0px;\n"
+                        + "  margin-left: 0px;\n"
+                        + "  margin-bottom: 0px;\n"
+                        + " }\n"
+                        + "\n"
+                        + "</style>\n"
+                        + "</head>\n"
+                        + "\n"
+                        + "<body onload=\"setFooter()\""
+                        + " onresize=\"setFooter()\""
+                        + " onunload=\"GUnload()\">\n"
+                        + "<div id=\"map\"> </div>\n"
+                        + "<div id=\"footer\">\n"
+                        + "\n"
+                        + "<script type=\"text/javascript\">\n"
+                        + "//<![CDATA[\n" // check for compatibility
+                        + "\n"
                         // call the info window opener for the given index
-                        + "if (GBrowserIsCompatible()) {\r\n"
-                        + "\r\n"
-                        + "  function makeOpenerCaller(i) {"
-                        + "     return function() { showMarkerInfo(i); };"
-                        + "  }\r\n" // open an info window
-                        + "\r\n"
-                        + "  function showMarkerInfo(i) {\r\n"
-                        + "     markers[i].openInfoWindowHtml(infoHtmls[i]);\r\n"
-                        + "  }\r\n" // create the map
+                        + "if (GBrowserIsCompatible()) {\n"
+                        + "\n"
+                        + " function makeOpenerCaller(i) {"
+                        + "  return function() { showMarkerInfo(i); };"
+                        + " }\n" // open an info window
+                        + "\n"
+                        + "  function showMarkerInfo(i) {\n"
+                        + "   markers[i].openInfoWindowHtml(infoHtmls[i]);\n"
+                        + "  }\n" // create the map
                         // Code from http://www.pompage.net/pompe/pieds/
-                        + "function getWindowHeight() {\r\n"
-                        + "    var windowHeight=0;\r\n"
-                        + "    if (typeof(window.innerHeight)==\'number\') {\r\n"
-                        + "        windowHeight=window.innerHeight;\r\n"
-                        + "    }\r\n"
-                        + "    else {\r\n"
-                        + "     if (document.documentElement&&\r\n"
-                        + "       document.documentElement.clientHeight) {\r\n"
-                        + "         windowHeight = "
-                        + "document.documentElement.clientHeight;\r\n"
-                        + "    }\r\n"
-                        + "    else {\r\n"
-                        + "     if (document.body&&document.body.clientHeight) {\r\n"
-                        + "         windowHeight=document.body.clientHeight;\r\n"
-                        + "      }\r\n"
-                        + "     }\r\n"
-                        + "    }\r\n"
-                        + "    return windowHeight;\r\n"
+                        + "function getWindowHeight() {\n"
+                        + " var windowHeight=0;\n"
+                        + " if (typeof(window.innerHeight)==\'number\') {\n"
+                        + "  windowHeight=window.innerHeight;\n"
+                        + " } else {\n"
+                        + "  if (document.documentElement&&"
+                        + "document.documentElement.clientHeight) {\n"
+                        + "  windowHeight = "
+                        + "document.documentElement.clientHeight;\n"
+                        + "  } else {\n"
+                        + "   if (document.body&&document.body.clientHeight) {\n"
+                        + "    windowHeight=document.body.clientHeight;\n"
+                        + "   }\n"
+                        + "  }\n"
+                        + " }\n"
+                        + " return windowHeight;\n"
                         + "}"
-                        + "function setFooter() {\r\n"
-                        + " if (document.getElementById) {\r\n"
-                        + "  var windowHeight=getWindowHeight();\r\n"
-                        + "  var footerElement=document.getElementById(\'footer\');\r\n"
-                        + "  var footerHeight=footerElement.offsetHeight;\r\n"
-                        + "  if (windowHeight-footerHeight>400) {\r\n"
-                        + "   document.getElementById(\'map\').style.height=\r\n"
-                        + "    (windowHeight-footerHeight)+\'px\';\r\n"
-                        + "  } else {\r\n"
-                        + "   document.getElementById(\'map\').style.height=400;\r\n"
-                        // + " footerElement.style.position=\'static\';\r\n"
-                        + "  }\r\n" // else
-                        + " }\r\n"
-                        + "}\r\n" // Function
-                        + "function trackClick(trk,val) {\r\n"
-                        + " if (val == 1) {\r\n"
-                        + "  map.addOverlay(trk);\r\n"
-                        + " } else {\r\n"
-                        + "  map.removeOverlay(trk);\r\n"
-                        + " } }\r\n"
+                        + "function setFooter() {\n"
+                        + " if (document.getElementById) {\n"
+                        + "  var windowHeight=getWindowHeight();\n"
+                        + "  var footerElement=document.getElementById(\'footer\');\n"
+                        + "  var footerHeight=footerElement.offsetHeight;\n"
+                        + "  if (windowHeight-footerHeight>400) {\n"
+                        + "   document.getElementById(\'map\').style.height=\n"
+                        + "    (windowHeight-footerHeight)+\'px\';\n"
+                        + "  } else {\n"
+                        + "   document.getElementById(\'map\').style.height=400;\n"
+                        // + " footerElement.style.position=\'static\';\n"
+                        + "  }\n" // else
+                        + " }\n"
+                        + "}\n" // Function
+                        + "function trackClick(trk,val) {\n"
+                        + " if (val == 1) {\n"
+                        + "  map.addOverlay(trk);\n"
+                        + " } else {\n"
+                        + "  map.removeOverlay(trk);\n"
+                        + " } }\n"
+                        + "function makeLatLonInfo(h) {\n"
+                        + " return function(latlng) {\n"
+                        + "  map.openInfoWindowHtml(latlng, h);\n"
+                        + " };\n"
+                        + "}"
                         + " var clickStr; clickStr=\"\";"
-                        + " function clickString() {\r\n"
-                        + "  document.write(clickStr);"
-                        + " }\r\n"
+                        + " function clickString() {\n"
+                        + "  document.write(clickStr);\n"
+                        + " }\n"
 
                         // + "var blueIcon = new GIcon(G_DEFAULT_ICON);"
                         // + "blueIcon.image =
@@ -222,33 +226,32 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         // + "markerOptions = { icon:blueIcon };" + // Set up
                         // our GMarkerOptions object
 
-                        + " var map = new GMap2(document.getElementById(\"map\"));\r\n"
-                        + " map.setCenter(new GLatLng(0,0));\r\n"
+                        + " var map = new GMap2(document.getElementById(\"map\"));\n"
+                        + " map.setCenter(new GLatLng(0,0));\n"
                         // + "var mgrOptions = { borderPadding: 50, maxZoom: 15,
-                        // trackMarkers: true };\r\n"
-                        + " var mgr = new GMarkerManager(map);\r\n"
-                        + " map.setMapType(G_SATELLITE_MAP);\r\n"
-                        + " map.addMapType(G_PHYSICAL_MAP);\r\n "
-                        + " map.enableScrollWheelZoom();\r\n"
-                        + " map.addControl(new GLargeMapControl());\r\n"
-                        + " map.addControl(new GMapTypeControl());\r\n"
-                        + " map.addControl(new GScaleControl());\r\n"
-                        + " map.addControl(new GOverviewMapControl());\r\n"
-                        // + " if (window.attachEvent) {\r\n"
+                        // trackMarkers: true };\n"
+                        + " var mgr = new GMarkerManager(map);\n"
+                        + " map.setMapType(G_SATELLITE_MAP);\n"
+                        + " map.addMapType(G_PHYSICAL_MAP);\n "
+                        + " map.enableScrollWheelZoom();\n"
+                        + " map.addControl(new GLargeMapControl());\n"
+                        + " map.addControl(new GMapTypeControl());\n"
+                        + " map.addControl(new GScaleControl());\n"
+                        + " map.addControl(new GOverviewMapControl());\n"
+                        // + " if (window.attachEvent) {\n"
                         // + " window.attachEvent(\"onresize\", function()
-                        // {this.map.onResize()} );\r\n"
-                        // + " } else {\r\n"
+                        // {this.map.onResize()} );\n"
+                        // + " } else {\n"
                         // + " window.addEventListener(\"resize\", function()
-                        // {this.map.onResize()} , false);\r\n"
-                        // + " }\r\n" + // add a polyline overlay
-                        + "var OSM = new GMapType(\r\n"
-                        + "[ new GTileLayer( null, 1, 14,\r\n"
-                        + "{ tileUrlTemplate: 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',\r\n"
-                        + " isPng: true, opacity: 1.0 })],\r\n"
-                        + "new GMercatorProjection(19),\r\n"
-                        + "'OSM',\r\n"
-                        + "{ errorMessage:\"More OSM coming soon\"}\n"
-                        + ");\r\n" + "map.addMapType(OSM)\r\n");
+                        // {this.map.onResize()} , false);\n"
+                        // + " }\n" + // add a polyline overlay
+                        + "var OSM = new GMapType(\n"
+                        + "[ new GTileLayer(null,1,18,\n"
+                        + "{ tileUrlTemplate: 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',\n"
+                        + " isPng: true, opacity: 1.0 })],\n"
+                        + "new GMercatorProjection(19),\n" + "'OSM',\n"
+                        + "{ errorMessage:\"More OSM coming soon\"}\n" + ");\n"
+                        + "map.addMapType(OSM)\n");
         // "points.push(new GPoint(3.11492833333333,45.75697))";
         // map.addOverlay(new GPolyline(points,"#960000",2,.75));
         writeTxt(l_header.toString());
@@ -290,31 +293,30 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             rec.append("var track");
             rec.append(trackIndex);
 
-            rec.append(";\r\nmap.addOverlay(");
+            rec.append(";\nmap.addOverlay(");
             rec.append("track");
             rec.append(trackIndex);
-            rec.append("=new GPolyline.fromEncoded({\r\n" + "  color: \"#");
+            rec.append("=new GPolyline.fromEncoded({\n" + "  color: \"#");
             rec.append(hexColor);
-            rec.append("\",\r\n" + "  weight: 4,\r\n" + "  opacity: 0.8,\r\n"
+            rec.append("\",\n" + "  weight: 4,\n" + "  opacity: 0.8,\n"
                     + "  points: \"");
             rec.append(tmp);
-            rec.append("\",\r\n" + "  levels: \"");
+            rec.append("\",\n" + "  levels: \"");
             rec.append(res.get("encodedLevels"));
 
-            rec.append("\",\r\n" + "  zoomFactor: 2,\r\n"
-                    + "  numLevels: 18\r\n" + "}));\r\n");
+            rec.append("\",\n" + "  zoomFactor: 2,\n" + "  numLevels: 18\n"
+                    + "}));\n");
 
             rec.append("GEvent.addListener(track");
             rec.append(trackIndex);
-            rec.append(",'click',function(){track" + trackIndex
-                    + ".openInfoWindowHtml(\"" + trackStartInfo + "<br>"
-                    + CommonOut.getTimeStr(previousTime) + "\");});\r\n");
+            rec.append(",'click',makeLatLonInfo(\"<b>Track span</b><br/>" + trackStartInfo + "<br/>");
+            rec.append("<b>#" + previousRec + "# </b>"
+                    + CommonOut.getTimeStr(previousTime));
+            rec.append("\"));\n");
             // writeTxt(PolylineEncoder.replace(rec.toString(),"\\", "\\\\"));
             writeTxt(rec.toString());
             rec.setLength(0);
         }
-
-        // System.out.println(rec.toString());
         trackIndex++;
         resetTrack();
     }
@@ -342,12 +344,12 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                 rec.append("infoHtmls=[");
                 rec.append(infoHtmls.toString());
                 rec.append("];");
-                rec.append("for (var i=0; i<markers.length; ++i) {\r\n");
+                rec.append("for (var i=0; i<markers.length; ++i) {\n");
                 rec
-                        .append("GEvent.addListener(markers[i],\'click\',makeOpenerCaller(i));\r\n");
-                rec.append("}\r\n");
-                rec.append("mgr.addMarkers(markers,0);mgr.refresh();\r\n");
-                rec.append("\r\n");
+                        .append("GEvent.addListener(markers[i],\'click\',makeOpenerCaller(i));\n");
+                rec.append("}\n");
+                rec.append("mgr.addMarkers(markers,0);mgr.refresh();\n");
+                rec.append("\n");
                 // Small popup:
                 writeTxt(rec.toString());
             }
@@ -366,14 +368,21 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 
             lrec.append("clickStr+= \"" + trackDescription
                     + "<input type=\\\"checkbox\\\"" + "onClick=\\\""
-                    + trackOnClickFuncCalls + "\\\" checked/>\";\r\n");
+                    + trackOnClickFuncCalls + "\\\" checked/>\";\n");
             writeTxt(lrec.toString());
             trackOnClickFuncCalls = "";
             trackDescription = "";
         }
     }
 
+    /**
+     * UTC time of previous record.
+     */
     private int previousTime = 0;
+    /**
+     * Record number of previous record
+     */
+    private int previousRec = 0;
 
     /*
      * (non-Javadoc)
@@ -424,7 +433,8 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     }
                     resetTrack();
                     // Vm.debug("Pos:"+getTimeStr(s));
-                    trackStartInfo = CommonOut.getTimeStr(activeFields, t);
+                    trackStartInfo = "<b>#" + s.recCount + "# </b>"
+                            + CommonOut.getTimeStr(activeFields, t);
                     if (trackDescription.length() == 0) {
                         trackDescription = CommonOut
                                 .getTimeStr(activeFields, t);
@@ -432,8 +442,10 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     }
                 }
 
+
                 if ((activeFields.utc != 0)) {
                     previousTime = s.utc;
+                    previousRec = s.recCount;
                 }
                 // " <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 // " <ele>12.863281</ele>"+
@@ -479,7 +491,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     infoHtmls.append("\"");
                     CommonOut.getHtml(infoHtmls, s, activeFields,
                             selectedFileFields, t, recordNbrInLogs, imperial);
-                    infoHtmls.append("\",\r\n");
+                    infoHtmls.append("\",\n");
                 }
 
                 writeTxt(rec.toString());
@@ -497,7 +509,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         if (this.isOpen()) {
             String footer;
             writeDataFooter();
-            footer = "clickString();\r\n" + "map.setCenter(new GLatLng("
+            footer = "clickString();\n" + "map.setCenter(new GLatLng("
                     + Convert.toString((maxlat + minlat) / 2)
                     + ","
                     + Convert.toString((maxlon + minlon) / 2)
@@ -511,14 +523,14 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     + ','
                     + maxlon
                     + "))));"
-                    + "\r\n"
-                    + "map.enableContinuousZoom(); \r\n"
-                    + "map.enableDoubleClickZoom();\r\n"
-                    + "   }\r\n"
-                    + "   else {\r\n"
-                    + "     document.getElementById(\"quicklinks\").innerHTML = \"Your web browser is not compatible with this website.\"\r\n"
-                    + "   }\r\n" + "//]]>\r\n" + "</script>\r\n"
-                    + " </div>\r\n" + "</body>\r\n" + "</html>";
+                    + "\n"
+                    + "map.enableContinuousZoom();\n"
+                    + "map.enableDoubleClickZoom();\n"
+                    + "   }\n"
+                    + "   else {\n"
+                    + "     document.getElementById(\"quicklinks\").innerHTML = \"Your web browser is not compatible with this website.\"\n"
+                    + "   }\n" + "//]]>\n" + "</script>\n" + " </div>\n"
+                    + "</body>\n" + "</html>";
             writeTxt(footer);
         }
         super.finaliseFile();

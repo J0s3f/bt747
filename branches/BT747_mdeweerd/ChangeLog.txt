@@ -1,3 +1,9 @@
+Version 1.54
+* tracks on google map now clickable
+* Time information added to waypoints on google map.
+* NMEA input functional
+* Added extra output field filtering (for comments, trackpoint names)
+
 Version 1.53.2
 * Added 'SimpleExample.java' to show how to use basic functionality of the library.
   In the process, renamed some methods for consistency and added some methods to the controller and model.
