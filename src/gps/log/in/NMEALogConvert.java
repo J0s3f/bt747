@@ -211,6 +211,7 @@ public final class NMEALogConvert implements GPSLogConvert {
             } /* nextAddrToRead<fileSize */
             if ((curLogFormat != 0)) {
                 // Write the last record
+                gpsRec.recCount = ++recCount;
                 finalizeRecord(gpsFile, gpsRec, curLogFormat);
             }
 
