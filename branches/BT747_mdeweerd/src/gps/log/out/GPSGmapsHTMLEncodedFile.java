@@ -158,13 +158,18 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + " onunload=\"GUnload()\">\n"
                         + "<div id=\"map\"> </div>\n"
                         + "<div id=\"footer\">\n"
-                        + "\n"
+                        + "<span id=\"latlon\">Click on map to get position."
+                        + "  </span>Tracks: \n"
                         + "<script type=\"text/javascript\">\n"
-                        + "//<![CDATA[\n" // check for compatibility
-                        + "\n"
                         // call the info window opener for the given index
                         + "if (GBrowserIsCompatible()) {\n"
-                        + "\n"
+                        + "function latlonFunc() {\n"
+                        + " return function(overlay,latlon) { if(latlon) {\n"
+                        + "     var s=\'<b>Last click: \'+ latlon.toUrlValue()+\' </b>\';\n"
+                        + "  document.getElementById(\"latlon\").innerHTML = s;\n"
+                        + " }};\n"
+                        + "}\n"
+                        + ""
                         + " function makeOpenerCaller(i) {"
                         + "  return function() { showMarkerInfo(i); };"
                         + " }\n" // open an info window
@@ -309,7 +314,8 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
 
             rec.append("GEvent.addListener(track");
             rec.append(trackIndex);
-            rec.append(",'click',makeLatLonInfo(\"<b>Track span</b><br/>" + trackStartInfo + "<br/>");
+            rec.append(",'click',makeLatLonInfo(\"<b>Track span</b><br/>"
+                    + trackStartInfo + "<br/>");
             rec.append("<b>#" + previousRec + "# </b>"
                     + CommonOut.getTimeStr(previousTime));
             rec.append("\"));\n");
@@ -397,7 +403,8 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             if (!ptFilters[currentFilter].doFilter(s)) {
                 // The track is interrupted by a removed log item.
                 // Break the track in the output file
-                if (!isWayType && !isNewTrack && !firstRecord) {
+                if (!isWayType && !isNewTrack && !firstRecord
+                        && !ignoreBadPoints) {
                     isNewTrack = true;
                     if (track.size() != 0) {
                         Trackpoint tp = track.get(track.size() - 1);
@@ -441,7 +448,6 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         // bt747.sys.Vm.debug(trackDescription);
                     }
                 }
-
 
                 if ((activeFields.utc != 0)) {
                     previousTime = s.utc;
@@ -509,7 +515,10 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
         if (this.isOpen()) {
             String footer;
             writeDataFooter();
-            footer = "clickString();\n" + "map.setCenter(new GLatLng("
+            footer = "clickString();\n"
+                    + "document.write(\'<div id=\"latlon\"></div>\');\n"
+                    + "GEvent.addListener(map,\'click\',latlonFunc());\n"
+                    + "map.setCenter(new GLatLng("
                     + Convert.toString((maxlat + minlat) / 2)
                     + ","
                     + Convert.toString((maxlon + minlon) / 2)
@@ -529,7 +538,10 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                     + "   }\n"
                     + "   else {\n"
                     + "     document.getElementById(\"quicklinks\").innerHTML = \"Your web browser is not compatible with this website.\"\n"
-                    + "   }\n" + "//]]>\n" + "</script>\n" + " </div>\n"
+                    + "   }\n"
+                    + "//]]>\n"
+                    + "</script>\n"
+                    + " </div>\n"
                     + "</body>\n" + "</html>";
             writeTxt(footer);
         }

@@ -80,7 +80,8 @@ public abstract class GPSFile {
 
     protected boolean recordNbrInLogs = false;
 
-    protected String badTrackColor = "FF0000";
+    // By default we ignore bad points (no red interconnect)
+    protected String badTrackColor = "0000FF";
     protected String goodTrackColor = "0000FF";
 
     protected boolean imperial = false; // If true, use English units
@@ -382,6 +383,7 @@ public abstract class GPSFile {
      */
     public final void setBadTrackColor(final String badTrackColor) {
         this.badTrackColor = badTrackColor;
+        checkColors();
     }
 
     /**
@@ -397,6 +399,13 @@ public abstract class GPSFile {
      */
     public final void setGoodTrackColor(final String goodTrackColor) {
         this.goodTrackColor = goodTrackColor;
+        checkColors();
+    }
+
+    protected boolean ignoreBadPoints = false;
+
+    private void checkColors() {
+        ignoreBadPoints = goodTrackColor.equalsIgnoreCase(badTrackColor);
     }
 
     /**

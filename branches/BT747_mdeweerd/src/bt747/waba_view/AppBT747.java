@@ -33,6 +33,7 @@ import waba.ui.Window;
 
 import bt747.Txt;
 import bt747.model.AppController;
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -231,10 +232,10 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
         miGpsDecode.isChecked = m.getGpsDecode();
 
-        miRecordNumberInLogs.isChecked = m.getRecordNbrInLogs();
-        miHolux.isChecked = m.getForceHolux241();
-        miImperial.isChecked = m.getImperial();
-        miOutputLogConditions.isChecked = m.getOutputLogConditions();
+        miRecordNumberInLogs.isChecked = m.getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS);
+        miHolux.isChecked = m.getBooleanOpt(AppSettings.IS_HOLUXM241);
+        miImperial.isChecked = m.getBooleanOpt(AppSettings.IMPERIAL);
+        miOutputLogConditions.isChecked = m.getBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS);
 
         tabPanel = new TabPanel(c_tpCaptions);
         add(tabPanel, CENTER, CENTER);
@@ -286,8 +287,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
         // 10+0*PREFERRED);
         tabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
 
-        waba.sys.Settings.keyboardFocusTraversable = m.isTraversableFocus();
-        miTraversableFocus.isChecked = m.isTraversableFocus();
+        waba.sys.Settings.keyboardFocusTraversable = m.getBooleanOpt(AppSettings.IS_TRAVERSABLE);
+        miTraversableFocus.isChecked = m.getBooleanOpt(AppSettings.IS_TRAVERSABLE);
 
         m.addListener(this);
         addTimer(this, 55);
@@ -359,8 +360,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     break;
                 case C_MENU_FOCUS_HIGHLIGHT:
                     c.setTraversableFocus(miTraversableFocus.isChecked);
-                    waba.sys.Settings.keyboardFocusTraversable = m
-                            .isTraversableFocus();
+                    waba.sys.Settings.keyboardFocusTraversable = m.getBooleanOpt(AppSettings.IS_TRAVERSABLE);
                     break;
                 case C_MENU_DEBUG_ACTIVE:
                     c.setDebug(miDebug.isChecked);
