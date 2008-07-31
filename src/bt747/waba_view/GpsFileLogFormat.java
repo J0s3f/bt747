@@ -138,7 +138,7 @@ public class GpsFileLogFormat extends Container implements ModelListener {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
-                updateLogFormat(m.getFileLogFormat());
+                updateLogFormat(m.getIntOpt(Model.FILEFIELDFORMAT));
                 event.consumed = true;
             } else if (event.target == commentCheck) {
                 c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, commentCheck
@@ -156,7 +156,7 @@ public class GpsFileLogFormat extends Container implements ModelListener {
                 if (isLogFmtUpdated) {
                     setLogFormatControls();
                 }
-                c.setFileLogFormat(getSelectedLogFormat());
+                c.setIntOpt(Model.FILEFIELDFORMAT,  getSelectedLogFormat());
             }
 
             break;
@@ -166,7 +166,7 @@ public class GpsFileLogFormat extends Container implements ModelListener {
     final public void modelEvent(ModelEvent event) {
         int eventType = event.getType();
         if (eventType == ModelEvent.FILE_LOG_FORMAT_UPDATE) {
-            updateLogFormat(m.getFileLogFormat());
+            updateLogFormat(m.getIntOpt(Model.FILEFIELDFORMAT));
         } else if (eventType == ModelEvent.SETTING_CHANGE) {
             // switch (event.getArg()) {
             //            

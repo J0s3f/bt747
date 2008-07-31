@@ -214,8 +214,11 @@ public class AppSettings {
     private static final int C_IS_WRITE_TRACKPOINT_NAME_IDX = C_IS_WRITE_TRACKPOINT_COMMENT_IDX
             + C_IS_WRITE_TRACKPOINT_COMMENT_SIZE;
     private static final int C_IS_WRITE_TRACKPOINT_NAME_SIZE = 4;
-    private static final int C_NEXT_IDX = C_IS_WRITE_TRACKPOINT_NAME_IDX
+    private static final int C_FILEFIELDFORMAT_IDX = C_IS_WRITE_TRACKPOINT_NAME_IDX
             + C_IS_WRITE_TRACKPOINT_NAME_SIZE;
+    private static final int C_FILEFIELDFORMAT_SIZE = 8;
+    private static final int C_NEXT_IDX = C_FILEFIELDFORMAT_IDX
+            + C_FILEFIELDFORMAT_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
     private static final int C_NEW_NEXT_IDX = C_NEXT_IDX + C_NEXT_SIZE;
@@ -233,14 +236,69 @@ public class AppSettings {
     // New method for parameters.
     public static final int IS_WRITE_TRACKPOINT_COMMENT = 0;
     public static final int IS_WRITE_TRACKPOINT_NAME = 1;
-    private static final int paramsList[][] =
+    public static final int OUTPUTLOGCONDITIONS = 2;
+    public static final int IMPERIAL = 3;
+    /**
+     * Param indicating forcing the data interpretation as holux.
+     */
+    public static final int IS_HOLUXM241 = 4;
+    /**
+     * Param indicating that the record number for a position is to be written
+     * to the log.
+     */
+    public static final int IS_RECORDNBR_IN_LOGS = 5;
+
+    /**
+     * Parameter indicating if on Waba the interface must be traversable.
+     */
+    public static final int IS_TRAVERSABLE = 6;
+    /**
+     * Parameter selecting the fields for the output file.
+     * 
+     * <br>
+     * The bits can be defined using a bitwise OR of expressions like<br>
+     * (1<< IDX) <br>
+     * where IDX is one of the following:<br> -
+     * {@link BT747Constants#FMT_UTC_IDX} <br> -
+     * {@link BT747Constants#FMT_VALID_IDX} <br> -
+     * {@link BT747Constants#FMT_LATITUDE_IDX} <br> -
+     * {@link BT747Constants#FMT_LONGITUDE_IDX} <br> -
+     * {@link BT747Constants#FMT_HEIGHT_IDX} <br> -
+     * {@link BT747Constants#FMT_SPEED_IDX} <br> -
+     * {@link BT747Constants#FMT_HEADING_IDX} <br> -
+     * {@link BT747Constants#FMT_DSTA_IDX} <br> -
+     * {@link BT747Constants#FMT_DAGE_IDX} <br> -
+     * {@link BT747Constants#FMT_PDOP_IDX} <br> -
+     * {@link BT747Constants#FMT_HDOP_IDX} <br> -
+     * {@link BT747Constants#FMT_VDOP_IDX} <br> -
+     * {@link BT747Constants#FMT_NSAT_IDX} <br> -
+     * {@link BT747Constants#FMT_SID_IDX} <br> -
+     * {@link BT747Constants#FMT_ELEVATION_IDX} <br> -
+     * {@link BT747Constants#FMT_AZIMUTH_IDX} <br> -
+     * {@link BT747Constants#FMT_SNR_IDX} <br> -
+     * {@link BT747Constants#FMT_RCR_IDX} <br> -
+     * {@link BT747Constants#FMT_MILLISECOND_IDX} <br> -
+     * {@link BT747Constants#FMT_DISTANCE_IDX} <br> - <br>
+     */
+    public static final int FILEFIELDFORMAT = 7;
+
+    private static final int[][] paramsList =
     // Type, idx, start, size
     {
             { BOOL, IS_WRITE_TRACKPOINT_COMMENT,
                     C_IS_WRITE_TRACKPOINT_COMMENT_IDX,
                     C_IS_WRITE_TRACKPOINT_COMMENT_SIZE },
             { BOOL, IS_WRITE_TRACKPOINT_NAME, C_IS_WRITE_TRACKPOINT_NAME_IDX,
-                    C_IS_WRITE_TRACKPOINT_NAME_SIZE }, };
+                    C_IS_WRITE_TRACKPOINT_NAME_SIZE },
+            { BOOL, OUTPUTLOGCONDITIONS, C_OUTPUTLOGCONDITIONS_IDX,
+                    C_OUTPUTLOGCONDITIONS_SIZE },
+            { BOOL, IMPERIAL, C_IMPERIAL_IDX, C_IMPERIAL_SIZE },
+            { BOOL, IS_HOLUXM241, C_HOLUX241_IDX, C_HOLUX241_SIZE },
+            { BOOL, IS_RECORDNBR_IN_LOGS, C_RECORDNBR_IN_LOGS_IDX,
+                    C_RECORDNBR_IN_LOGS_SIZE },
+            { BOOL, IS_TRAVERSABLE, C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE },
+            { INT, FILEFIELDFORMAT, C_FILEFIELDFORMAT_IDX,
+                    C_FILEFIELDFORMAT_SIZE }, };
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
     private int START_IDX = 2;
@@ -395,21 +453,21 @@ public class AppSettings {
             setColorInvalidTrack("FF0000");
             /* fall through */
         case 12:
-            setTraversableFocus(Settings.onDevice
+            setBooleanOpt(IS_TRAVERSABLE, Settings.onDevice
                     && (!bt747.sys.Settings.platform.startsWith("Palm")));
             /* fall through */
         case 13:
-            setRecordNbrInLogs(false);
+            setBooleanOpt(IS_RECORDNBR_IN_LOGS, false);
             /* fall through */
         case 14:
-            setForceHolux241(false);
+            setBooleanOpt(IS_HOLUXM241, false);
             /* fall through */
         case 15:
             /* Value interpretation changed */
             setDistConditionSetting1(getDistConditionSetting1() * 10);
             /* fall through */
         case 16:
-            setImperial(false);
+            setBooleanOpt(IMPERIAL, false);
             /* fall through */
         case 18:
             setFreeTextPort("");
@@ -418,16 +476,25 @@ public class AppSettings {
             setBinDecoder(0);
             setGPSType(0);
         case 20:
-            setOutputLogConditions(false);
+            setBooleanOpt(OUTPUTLOGCONDITIONS, false);
             /* fall through */
 
         case 21:
             setBooleanOpt(IS_WRITE_TRACKPOINT_COMMENT, true);
             setBooleanOpt(IS_WRITE_TRACKPOINT_NAME, true);
 
+        case 22:
+            setIntOpt(FILEFIELDFORMAT, -1);
             /* Must be last line in case (not 'default'), sets settings version */
-            setStringOpt(0, "0.22", C_VERSION_IDX, C_VERSION_SIZE);
+            setStringOpt(0, "0.23", C_VERSION_IDX, C_VERSION_SIZE);
         default:
+            // Always force lat and lon and utc and height active on restart for
+            // basic users.
+            setIntOpt(FILEFIELDFORMAT, getIntOpt(FILEFIELDFORMAT)
+                    | (1 << BT747Constants.FMT_LATITUDE_IDX)
+                    | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+                    | (1 << BT747Constants.FMT_UTC_IDX)
+                    | (1 << BT747Constants.FMT_HEIGHT_IDX));
             break;
         }
         getSettings();
@@ -512,12 +579,13 @@ public class AppSettings {
         }
     }
 
-    private final void setIntOpt(final int eventType, final int src,
+    private final void setLocalIntOpt(final int param, final int src,
             final int idx, final int size) {
-        setOpt(eventType, Convert.unsigned2hex(src, size), idx, size);
+        setOpt(ModelEvent.SETTING_CHANGE, Convert.unsigned2hex(src, size), idx,
+                size);
     }
 
-    private final int getIntOpt(final int idx, final int size) {
+    private final int getLocalIntOpt(final int idx, final int size) {
         return Conv.hex2Int(getStringOpt(idx, size));
     }
 
@@ -527,7 +595,7 @@ public class AppSettings {
     }
 
     private final boolean getLocalBooleanOpt(final int idx, final int size) {
-        return getIntOpt(idx, size) == 1;
+        return getLocalIntOpt(idx, size) == 1;
     }
 
     private final void setFloatOpt(final int eventType, final float src,
@@ -571,6 +639,9 @@ public class AppSettings {
         }
     }
 
+    // Next methods can be merged - eventually, setStringOpt should check
+    // the param type.
+
     // the new way of setting parameters - not a method per parameter, but an
     // index ;-).
     public final boolean getBooleanOpt(final int param) {
@@ -596,11 +667,32 @@ public class AppSettings {
         }
     }
 
+    public final int getIntOpt(final int param) {
+        if ((param < paramsList.length) && (paramsList[param][TYPE_IDX] == INT)) {
+            return getLocalIntOpt(paramsList[param][START_IDX],
+                    paramsList[param][SIZE_IDX]);
+        } else {
+            // TODO: throw something
+            bt747.sys.Vm.debug("Invalid parameter index " + param);
+            return 0;
+        }
+    }
+
+    protected final void setIntOpt(final int param, final int value) {
+        if ((param < paramsList.length) && (paramsList[param][TYPE_IDX] == INT)) {
+            setLocalIntOpt(param, value, paramsList[param][START_IDX],
+                    paramsList[param][SIZE_IDX]);
+        } else {
+            // TODO: throw something
+            bt747.sys.Vm.debug("Invalid parameter index " + param);
+        }
+    }
+
     /**
      * @return Returns the portnbr.
      */
     public final int getPortnbr() {
-        return getIntOpt(C_PORTNBR_IDX, C_PORTNBR_SIZE);
+        return getLocalIntOpt(C_PORTNBR_IDX, C_PORTNBR_SIZE);
     }
 
     /**
@@ -608,7 +700,7 @@ public class AppSettings {
      *            The portnbr to set.
      */
     public final void setPortnbr(final int portnbr) {
-        setIntOpt(0, portnbr, C_PORTNBR_IDX, C_PORTNBR_SIZE);
+        setLocalIntOpt(0, portnbr, C_PORTNBR_IDX, C_PORTNBR_SIZE);
     }
 
     public final String getFreeTextPort() {
@@ -623,7 +715,7 @@ public class AppSettings {
      * @return The default baud rate
      */
     public final int getBaudRate() {
-        return getIntOpt(C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
+        return getLocalIntOpt(C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
     }
 
     /**
@@ -631,7 +723,7 @@ public class AppSettings {
      *            The Baud rate to set as a default.
      */
     public final void setBaudRate(final int baudRate) {
-        setIntOpt(0, baudRate, C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
+        setLocalIntOpt(0, baudRate, C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
     }
 
     /**
@@ -641,7 +733,7 @@ public class AppSettings {
      */
     public final int getChunkSize() {
         // ChunkSize must be multiple of 2
-        int chunkSize = getIntOpt(C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE) & 0xFFFFFFFE;
+        int chunkSize = getLocalIntOpt(C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE) & 0xFFFFFFFE;
         if (chunkSize < 16) {
             chunkSize = 0x200;
         }
@@ -655,14 +747,14 @@ public class AppSettings {
      *            The ChunkSize to set as a default.
      */
     public final void setChunkSize(final int chunkSize) {
-        setIntOpt(0, chunkSize, C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE);
+        setLocalIntOpt(0, chunkSize, C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE);
     }
 
     /**
      * @return The default chunk size
      */
     public final int getDownloadTimeOut() {
-        int DownloadTimeOut = getIntOpt(C_DOWNLOADTIMEOUT_IDX,
+        int DownloadTimeOut = getLocalIntOpt(C_DOWNLOADTIMEOUT_IDX,
                 C_DOWNLOADTIMEOUT_SIZE);
         if (DownloadTimeOut <= 0) {
             DownloadTimeOut = 0x200;
@@ -675,7 +767,7 @@ public class AppSettings {
      *            The DownloadTimeOut to set as a default.
      */
     public final void setDownloadTimeOut(final int downloadTimeOut) {
-        setIntOpt(0, downloadTimeOut, C_DOWNLOADTIMEOUT_IDX,
+        setLocalIntOpt(0, downloadTimeOut, C_DOWNLOADTIMEOUT_IDX,
                 C_DOWNLOADTIMEOUT_SIZE);
     }
 
@@ -683,7 +775,7 @@ public class AppSettings {
      * @return The default chunk size
      */
     public final int getCard() {
-        int card = getIntOpt(C_CARD_IDX, C_CARD_SIZE);
+        int card = getLocalIntOpt(C_CARD_IDX, C_CARD_SIZE);
         if ((card <= 0) || (card >= 255)) {
             card = -1;
         }
@@ -695,14 +787,14 @@ public class AppSettings {
      *            The Card to set as a default.
      */
     public final void setCard(final int card) {
-        setIntOpt(0, card, C_CARD_IDX, C_CARD_SIZE);
+        setLocalIntOpt(0, card, C_CARD_IDX, C_CARD_SIZE);
     }
 
     /**
      * @return The time off set (UTC vs. local time)
      */
     public final int getTimeOffsetHours() {
-        int timeOffsetHours = getIntOpt(C_TIMEOFFSETHOURS_IDX,
+        int timeOffsetHours = getLocalIntOpt(C_TIMEOFFSETHOURS_IDX,
                 C_TIMEOFFSETHOURS_SIZE);
         if (timeOffsetHours > 100) {
             timeOffsetHours -= 0x10000;
@@ -715,7 +807,7 @@ public class AppSettings {
      *            The TIMEOFFSETHOURS to set as a default.
      */
     public final void setTimeOffsetHours(final int timeOffsetHours) {
-        setIntOpt(0, timeOffsetHours, C_TIMEOFFSETHOURS_IDX,
+        setLocalIntOpt(0, timeOffsetHours, C_TIMEOFFSETHOURS_IDX,
                 C_TIMEOFFSETHOURS_SIZE);
     }
 
@@ -782,7 +874,7 @@ public class AppSettings {
     }
 
     public final int getWayPtRCR() {
-        return getIntOpt(C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
+        return getLocalIntOpt(C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
     }
 
     /**
@@ -790,12 +882,12 @@ public class AppSettings {
      *            The default value for opening the port.
      */
     public final void setWayPtRCR(final int value) {
-        setIntOpt(0, value, C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
+        setLocalIntOpt(0, value, C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
         postEvent(ModelEvent.WAY_RCR_CHANGE);
     }
 
     public final int getWayPtValid() {
-        return getIntOpt(C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
+        return getLocalIntOpt(C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
     }
 
     /**
@@ -803,12 +895,12 @@ public class AppSettings {
      *            The default value for opening the port.
      */
     public final void setWayPtValid(final int value) {
-        setIntOpt(0, value, C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
+        setLocalIntOpt(0, value, C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
         postEvent(ModelEvent.WAY_VALID_CHANGE);
     }
 
     public final int getTrkPtRCR() {
-        return getIntOpt(C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
+        return getLocalIntOpt(C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
     }
 
     /**
@@ -816,12 +908,12 @@ public class AppSettings {
      *            The default value for opening the port.
      */
     public final void setTrkPtRCR(final int value) {
-        setIntOpt(0, value, C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
+        setLocalIntOpt(0, value, C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
         postEvent(ModelEvent.TRK_RCR_CHANGE);
     }
 
     public final int getTrkPtValid() {
-        return getIntOpt(C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
+        return getLocalIntOpt(C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
     }
 
     /**
@@ -829,12 +921,12 @@ public class AppSettings {
      *            The default value for opening the port.
      */
     public final void setTrkPtValid(final int value) {
-        setIntOpt(0, value, C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
+        setLocalIntOpt(0, value, C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
         postEvent(ModelEvent.TRK_VALID_CHANGE);
     }
 
     public final int getFileSeparationFreq() {
-        return getIntOpt(C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
+        return getLocalIntOpt(C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
     }
 
     /**
@@ -842,7 +934,7 @@ public class AppSettings {
      *            The default value for opening the port.
      */
     public final void setOutputFileSplitType(final int value) {
-        setIntOpt(0, value, C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
+        setLocalIntOpt(0, value, C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
     }
 
     public final boolean isConvertWGS84ToMSL() {
@@ -870,7 +962,7 @@ public class AppSettings {
     }
 
     public final int getLogRequestAhead() {
-        return getIntOpt(C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
+        return getLocalIntOpt(C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
     }
 
     /**
@@ -878,7 +970,7 @@ public class AppSettings {
      *            The default value for opening the port.
      */
     protected final void setLogRequestAhead(final int value) {
-        setIntOpt(0, value, C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
+        setLocalIntOpt(0, value, C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
     }
 
     /**
@@ -902,7 +994,7 @@ public class AppSettings {
      */
 
     public final int getNMEAset() {
-        return getIntOpt(C_NMEASET_IDX, C_NMEASET_SIZE);
+        return getLocalIntOpt(C_NMEASET_IDX, C_NMEASET_SIZE);
     }
 
     /**
@@ -926,7 +1018,7 @@ public class AppSettings {
      *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
      */
     protected final void setNMEAset(final int formatNMEA) {
-        setIntOpt(0, formatNMEA, C_NMEASET_IDX, C_NMEASET_SIZE);
+        setLocalIntOpt(0, formatNMEA, C_NMEASET_IDX, C_NMEASET_SIZE);
     }
 
     public final boolean getGpxUTC0() {
@@ -954,11 +1046,11 @@ public class AppSettings {
     }
 
     public final int getTrkSep() {
-        return getIntOpt(C_TRKSEP_IDX, C_TRKSEP_SIZE);
+        return getLocalIntOpt(C_TRKSEP_IDX, C_TRKSEP_SIZE);
     }
 
     protected final void setTrkSep(final int value) {
-        setIntOpt(0, value, C_TRKSEP_IDX, C_TRKSEP_SIZE);
+        setLocalIntOpt(0, value, C_TRKSEP_IDX, C_TRKSEP_SIZE);
     }
 
     /**
@@ -1010,7 +1102,7 @@ public class AppSettings {
      * @return Returns the maxRecCnt.
      */
     public final int getFilterMaxRecCount() {
-        return getIntOpt(C_maxRecCount_IDX, C_maxRecCount_SIZE);
+        return getLocalIntOpt(C_maxRecCount_IDX, C_maxRecCount_SIZE);
     }
 
     /**
@@ -1018,7 +1110,7 @@ public class AppSettings {
      *            The maxRecCnt to setFilter.
      */
     protected final void setFilterMaxRecCount(final int maxRecCnt) {
-        setIntOpt(0, maxRecCnt, C_maxRecCount_IDX, C_maxRecCount_SIZE);
+        setLocalIntOpt(0, maxRecCnt, C_maxRecCount_IDX, C_maxRecCount_SIZE);
     }
 
     /**
@@ -1070,7 +1162,7 @@ public class AppSettings {
      * @return Returns the minNSAT.
      */
     public final int getFilterMinNSAT() {
-        return getIntOpt(C_minNSAT_IDX, C_minNSAT_SIZE);
+        return getLocalIntOpt(C_minNSAT_IDX, C_minNSAT_SIZE);
     }
 
     /**
@@ -1078,14 +1170,14 @@ public class AppSettings {
      *            The minNSAT to setFilter.
      */
     protected final void setFilterMinNSAT(final int minNSAT) {
-        setIntOpt(0, minNSAT, C_minNSAT_IDX, C_minNSAT_SIZE);
+        setLocalIntOpt(0, minNSAT, C_minNSAT_IDX, C_minNSAT_SIZE);
     }
 
     /**
      * @return Returns the minRecCnt.
      */
     public final int getFilterMinRecCount() {
-        return getIntOpt(C_minRecCount_IDX, C_minRecCount_SIZE);
+        return getLocalIntOpt(C_minRecCount_IDX, C_minRecCount_SIZE);
     }
 
     /**
@@ -1093,7 +1185,7 @@ public class AppSettings {
      *            The minRecCnt to setFilter.
      */
     protected final void setFilterMinRecCount(final int minRecCnt) {
-        setIntOpt(0, minRecCnt, C_minRecCount_IDX, C_minRecCount_SIZE);
+        setLocalIntOpt(0, minRecCnt, C_minRecCount_IDX, C_minRecCount_SIZE);
     }
 
     /**
@@ -1135,70 +1227,46 @@ public class AppSettings {
         this.solveMacLagProblem = solveMacLagProblem;
     }
 
-    /**
-     * @return Returns the solveMacLagProblem.
-     */
-    public final boolean isTraversableFocus() {
-        return getLocalBooleanOpt(C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE);
-    }
-
-    /**
-     * @param traversableFocus
-     *            The traversableFocus to set.
-     */
-    protected final void setTraversableFocus(final boolean traversableFocus) {
-        setLocalBooleanOpt(0, traversableFocus, C_ISTRAVERSABLE_IDX,
-                C_ISTRAVERSABLE_SIZE);
-    }
-
-    // - Log conditions;
-    // - Time, Speed, Distance[3x 4 byte]
-    // - Log format; [4 byte]
-    // - Fix period [4 byte]
-    // - SBAS / TEST SBAS [byte, byte]
-    // - Log overwrite/STOP [byte, byte]
-    // - NMEA output [18 byte]
-    // - Total: 42 byte
-
     protected final void setTimeConditionSetting1(final int value) {
-        setIntOpt(0, value, C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE);
+        setLocalIntOpt(0, value, C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE);
     }
 
     public final int getTimeConditionSetting1() {
-        return getIntOpt(C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE);
+        return getLocalIntOpt(C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE);
     }
 
     protected final void setSpeedConditionSetting1(final int value) {
-        setIntOpt(0, value, C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
+        setLocalIntOpt(0, value, C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
     }
 
     public final int getSpeedConditionSetting1() {
-        return getIntOpt(C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
+        return getLocalIntOpt(C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
     }
 
     protected final void setDistConditionSetting1(final int value) {
-        setIntOpt(0, value, C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
+        setLocalIntOpt(0, value, C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
     }
 
     public final int getDistConditionSetting1() {
-        return getIntOpt(C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
+        return getLocalIntOpt(C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
     }
 
     protected final void setFixSetting1(final int value) {
-        setIntOpt(0, value, C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
+        setLocalIntOpt(0, value, C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
     }
 
     public final int getFixSetting1() {
-        return getIntOpt(C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
+        return getLocalIntOpt(C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
     }
 
     protected final void setLogFormatConditionSetting1(final int value) {
-        setIntOpt(0, value, C_SETTING1_LOG_FORMAT_IDX,
+        setLocalIntOpt(0, value, C_SETTING1_LOG_FORMAT_IDX,
                 C_SETTING1_LOG_FORMAT_SIZE);
     }
 
     public final int getLogFormatSetting1() {
-        return getIntOpt(C_SETTING1_LOG_FORMAT_IDX, C_SETTING1_LOG_FORMAT_SIZE);
+        return getLocalIntOpt(C_SETTING1_LOG_FORMAT_IDX,
+                C_SETTING1_LOG_FORMAT_SIZE);
     }
 
     protected final void setSBASSetting1(final boolean value) {
@@ -1210,11 +1278,11 @@ public class AppSettings {
     }
 
     protected final void setDGPSSetting1(final int value) {
-        setIntOpt(0, value, C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
+        setLocalIntOpt(0, value, C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
     }
 
     public final int getDPGSSetting1() {
-        return getIntOpt(C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
+        return getLocalIntOpt(C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
     }
 
     public final boolean getTestSBASSetting1() {
@@ -1243,71 +1311,24 @@ public class AppSettings {
         setStringOpt(0, value, C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
     }
 
-    public final boolean getRecordNbrInLogs() {
-        return getLocalBooleanOpt(C_RECORDNBR_IN_LOGS_IDX,
-                C_RECORDNBR_IN_LOGS_SIZE);
-    }
-
-    protected final void setRecordNbrInLogs(final boolean value) {
-        setLocalBooleanOpt(0, value, C_RECORDNBR_IN_LOGS_IDX,
-                C_RECORDNBR_IN_LOGS_SIZE);
-    }
-
-    /**
-     * Get the forced interpretation status of data as holux data.
-     * 
-     * @return true - interpretation of data is as if data is from holux device.
-     */
-    public final boolean getForceHolux241() {
-        return getLocalBooleanOpt(C_HOLUX241_IDX, C_HOLUX241_SIZE);
-    }
-
-    /**
-     * Set the forced interpretation of data as holux data.
-     * 
-     * @param value
-     *            true - Interprete data is as if data is from holux device.
-     */
-    protected final void setForceHolux241(final boolean value) {
-        setLocalBooleanOpt(0, value, C_HOLUX241_IDX, C_HOLUX241_SIZE);
-    }
-
-    public final boolean getImperial() {
-        return getLocalBooleanOpt(C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
-    }
-
-    protected final void setImperial(final boolean value) {
-        setLocalBooleanOpt(0, value, C_IMPERIAL_IDX, C_IMPERIAL_SIZE);
-    }
-
     public final boolean isStoredSetting1() {
         return getNMEASetting1().length() > 15;
     }
 
     protected final void setBinDecoder(final int value) {
-        setIntOpt(0, value, C_BIN_DECODER_IDX, C_BIN_DECODER_SIZE);
+        setLocalIntOpt(0, value, C_BIN_DECODER_IDX, C_BIN_DECODER_SIZE);
     }
 
     public final int getBinDecoder() {
-        return getIntOpt(C_BIN_DECODER_IDX, C_BIN_DECODER_SIZE);
+        return getLocalIntOpt(C_BIN_DECODER_IDX, C_BIN_DECODER_SIZE);
     }
 
     public final int getGPSType() {
-        return getIntOpt(C_GPSType_IDX, C_GPSType_SIZE);
+        return getLocalIntOpt(C_GPSType_IDX, C_GPSType_SIZE);
     }
 
     protected final void setGPSType(final int value) {
-        setIntOpt(0, value, C_GPSType_IDX, C_GPSType_SIZE);
-    }
-
-    public final boolean getOutputLogConditions() {
-        return getLocalBooleanOpt(C_OUTPUTLOGCONDITIONS_IDX,
-                C_OUTPUTLOGCONDITIONS_SIZE);
-    }
-
-    protected final void setOutputLogConditions(final boolean value) {
-        setLocalBooleanOpt(0, value, C_OUTPUTLOGCONDITIONS_IDX,
-                C_OUTPUTLOGCONDITIONS_SIZE);
+        setLocalIntOpt(0, value, C_GPSType_IDX, C_GPSType_SIZE);
     }
 
     /**

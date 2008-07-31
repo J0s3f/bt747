@@ -96,8 +96,6 @@ public class Controller {
         if (m.getStartupOpenPort()) {
             connectGPS();
         }
-        // By default all fields are selected for the output
-        setFileLogFormat(0xFFFFFFFF);
     }
 
     /**
@@ -105,7 +103,7 @@ public class Controller {
      *            True when Imperial units are to be used where possible
      */
     public final void setImperial(final boolean on) {
-        m.setImperial(on);
+        setBooleanOpt(AppSettings.IMPERIAL, on);
         m.saveSettings();
     }
 
@@ -117,7 +115,7 @@ public class Controller {
      * 
      */
     public final void setOutputLogConditions(final boolean on) {
-        m.setOutputLogConditions(on);
+        setBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS, on);
         m.saveSettings();
     }
 
@@ -260,7 +258,8 @@ public class Controller {
             default:
             case DECODER_ORG:
                 lc = new BT747LogConvert();
-                ((BT747LogConvert) lc).setHolux(m.getForceHolux241());
+                ((BT747LogConvert) lc).setHolux(m
+                        .getBooleanOpt(AppSettings.IS_HOLUXM241));
                 break;
             }
         }
@@ -322,9 +321,11 @@ public class Controller {
         if (gpsFile != null) {
             m.logConversionStarted(logType);
 
-            gpsFile.setAddLogConditionInfo(m.getOutputLogConditions());
-            gpsFile.setImperial(m.getImperial());
-            gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
+            gpsFile.setAddLogConditionInfo(m
+                    .getBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS));
+            gpsFile.setImperial(m.getBooleanOpt(AppSettings.IMPERIAL));
+            gpsFile.setRecordNbrInLogs(m
+                    .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));
             gpsFile.setBadTrackColor(m.getColorInvalidTrack());
             gpsFile.setIncludeTrkComment(m
                     .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
@@ -336,8 +337,7 @@ public class Controller {
                         + (SECONDS_PER_DAY - 1));
             }
             gpsFile.setFilters(usedFilters);
-            gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m
-                    .getFileLogFormat()));
+            gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m.getIntOpt(Model.FILEFIELDFORMAT)));
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
                     m.getFileSeparationFreq());
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
@@ -400,7 +400,8 @@ public class Controller {
             default:
             case DECODER_ORG:
                 lc = new BT747LogConvert();
-                ((BT747LogConvert) lc).setHolux(m.getForceHolux241());
+                ((BT747LogConvert) lc).setHolux(m
+                        .getBooleanOpt(AppSettings.IS_HOLUXM241));
                 break;
             }
         }
@@ -688,39 +689,6 @@ public class Controller {
         m.gpsModel().setLogFormat(newLogFormat);
     }
 
-    /**
-     * Selects the fields to write to the output files.
-     * 
-     * @param newLogFormat
-     *            <br>
-     *            The bits in the newLogFormat can be defined using a bitwise OR
-     *            of expressions like<br>
-     *            (1<< IDX) <br>
-     *            where IDX is one of the following:<br> -
-     *            {@link BT747Constants#FMT_UTC_IDX} <br> -
-     *            {@link BT747Constants#FMT_VALID_IDX} <br> -
-     *            {@link BT747Constants#FMT_LATITUDE_IDX} <br> -
-     *            {@link BT747Constants#FMT_LONGITUDE_IDX} <br> -
-     *            {@link BT747Constants#FMT_HEIGHT_IDX} <br> -
-     *            {@link BT747Constants#FMT_SPEED_IDX} <br> -
-     *            {@link BT747Constants#FMT_HEADING_IDX} <br> -
-     *            {@link BT747Constants#FMT_DSTA_IDX} <br> -
-     *            {@link BT747Constants#FMT_DAGE_IDX} <br> -
-     *            {@link BT747Constants#FMT_PDOP_IDX} <br> -
-     *            {@link BT747Constants#FMT_HDOP_IDX} <br> -
-     *            {@link BT747Constants#FMT_VDOP_IDX} <br> -
-     *            {@link BT747Constants#FMT_NSAT_IDX} <br> -
-     *            {@link BT747Constants#FMT_SID_IDX} <br> -
-     *            {@link BT747Constants#FMT_ELEVATION_IDX} <br> -
-     *            {@link BT747Constants#FMT_AZIMUTH_IDX} <br> -
-     *            {@link BT747Constants#FMT_SNR_IDX} <br> -
-     *            {@link BT747Constants#FMT_RCR_IDX} <br> -
-     *            {@link BT747Constants#FMT_MILLISECOND_IDX} <br> -
-     *            {@link BT747Constants#FMT_DISTANCE_IDX} <br> - <br>
-     */
-    public final void setFileLogFormat(final int fileLogFormat) {
-        m.setFileLogFormat(fileLogFormat);
-    }
 
     /**
      * Do the actual erase.
@@ -909,6 +877,26 @@ public class Controller {
      */
     public final void setBinDecoder(final int logDecoderType) {
         m.setBinDecoder(logDecoderType);
+    }
+
+    public final void resetFilters() {
+        setTrkPtValid(0xFFFFFFFE);
+        setTrkPtRCR(0xFFFFFFFF);
+        setWayPtValid(0xFFFFFFFE);
+        setWayPtRCR(0x00000008);
+        setAdvFilterActive(false);
+        setFilterMinRecCount(0);
+        setFilterMaxRecCount(0);
+        setFilterMinSpeed(0);
+        setFilterMaxSpeed(0);
+        setFilterMinDist(0);
+        setFilterMaxDist(0);
+        setFilterMaxPDOP(0);
+        setFilterMaxHDOP(0);
+        setFilterMaxVDOP(0);
+        setFilterMinNSAT(0);
+        setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT, true);
+        setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME, true);
     }
 
     /**
@@ -1345,7 +1333,7 @@ public class Controller {
     }
 
     public final void setForceHolux241(final boolean b) {
-        m.setForceHolux241(b);
+        setBooleanOpt(AppSettings.IS_HOLUXM241, b);
     }
 
     public final void setGpxTrkSegWhenBig(final boolean b) {
@@ -1358,7 +1346,7 @@ public class Controller {
 
     // For PDA - move through the menus using the arrows.
     public final void setTraversableFocus(final boolean b) {
-        m.setTraversableFocus(b);
+        setBooleanOpt(AppSettings.IS_TRAVERSABLE, b);
     }
 
     public final void setEndDate(final int d) {
@@ -1370,7 +1358,7 @@ public class Controller {
     }
 
     public final void setRecordNbrInLogs(final boolean b) {
-        m.setRecordNbrInLogs(b);
+        setBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS, b);
     }
 
     public final void setTrkSep(final int value) {
@@ -1634,6 +1622,10 @@ public class Controller {
 
     public final void setBooleanOpt(int param, final boolean value) {
         m.setBooleanOpt(param, value);
+    }
+
+    public final void setIntOpt(int param, final int value) {
+        m.setIntOpt(param, value);
     }
 
 }

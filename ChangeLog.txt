@@ -1,3 +1,9 @@
+Version 1.54.1
+* For GMAP, the encoding is improved when the bad track color is the same as the good track color.
+* For GMAP, added code to show position where clicked.
+* File format output settings now stored in settings, but partially reverted on restart of the app.
+
+
 Version 1.54
 * tracks on google map now clickable
 * Time information added to waypoints on google map.

@@ -286,26 +286,6 @@ public class Model extends AppSettings implements GPSListener {
     }
 
     /**
-     * The file log format (the files selected for the output file)
-     */
-    private int fileLogFormat;
-
-    /**
-     * @param fileLogFormat
-     *            the fileLogFormat to set
-     */
-    protected void setFileLogFormat(int fileLogFormat) {
-        this.fileLogFormat = fileLogFormat;
-    }
-
-    /**
-     * @return the fileLogFormat
-     */
-    public int getFileLogFormat() {
-        return fileLogFormat;
-    }
-
-    /**
      * Indicate that the log conversion started for the given log type.
      * 
      * @param outputLogType
@@ -595,7 +575,7 @@ public class Model extends AppSettings implements GPSListener {
         boolean forHolux;
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
-        forHolux = (isHolux() && gpsRxTx.isConnected()) || getForceHolux241();
+        forHolux = (isHolux() && gpsRxTx.isConnected()) || getBooleanOpt(IS_HOLUXM241);
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {
@@ -618,7 +598,7 @@ public class Model extends AppSettings implements GPSListener {
         boolean forHolux;
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
-        forHolux = (isHolux() && gpsRxTx.isConnected()) || getForceHolux241();
+        forHolux = (isHolux() && gpsRxTx.isConnected()) || getBooleanOpt(IS_HOLUXM241);
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {
