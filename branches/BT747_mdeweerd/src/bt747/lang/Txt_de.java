@@ -398,4 +398,9 @@ public class Txt_de {
 
     public static final String TRKPTCOMMENT = "TRK PT INFO";
     public static final String TRKPTNAME = "TRK PT NAME";
+    
+    public static final String DOWNLOAD_INCREMENTAL = "Smart dwnld";
+    public static final String DOWNLOAD_FULL = "Full dwnld";
+    public static final String DOWNLOAD_NORMAL = "Normal dwnld";
+
 }

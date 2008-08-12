@@ -77,9 +77,8 @@ public class GpsFileLogFormat extends Container implements ModelListener {
         }
         commentCheck = new MyCheck(Txt.TRKPTCOMMENT);
         nameCheck = new MyCheck(Txt.TRKPTNAME);
-        add(commentCheck,LEFT,AFTER+6);
-        add(nameCheck,getClientRect().width / 2,SAME);
-        setLogFormatControls();
+        add(commentCheck, LEFT, AFTER + 6);
+        add(nameCheck, getClientRect().width / 2, SAME);
     }
 
     /** Get the format set by the user in the user interface. */
@@ -117,15 +116,6 @@ public class GpsFileLogFormat extends Container implements ModelListener {
         commentCheck.setChecked(m
                 .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
         nameCheck.setChecked(m.getBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME));
-        setLogFormatControls();
-    }
-
-    private void setLogFormatControls() {
-        boolean sidSet;
-        sidSet = chkLogFmtItems[BT747Constants.FMT_SID_IDX].getChecked();
-        chkLogFmtItems[BT747Constants.FMT_ELEVATION_IDX].setEnabled(sidSet);
-        chkLogFmtItems[BT747Constants.FMT_AZIMUTH_IDX].setEnabled(sidSet);
-        chkLogFmtItems[BT747Constants.FMT_SNR_IDX].setEnabled(sidSet);
     }
 
     /**
@@ -154,9 +144,8 @@ public class GpsFileLogFormat extends Container implements ModelListener {
                     }
                 }
                 if (isLogFmtUpdated) {
-                    setLogFormatControls();
+                    c.setIntOpt(Model.FILEFIELDFORMAT, getSelectedLogFormat());
                 }
-                c.setIntOpt(Model.FILEFIELDFORMAT,  getSelectedLogFormat());
             }
 
             break;

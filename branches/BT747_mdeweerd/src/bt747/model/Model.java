@@ -110,11 +110,6 @@ public class Model extends AppSettings implements GPSListener {
     private GPSFilterAdvanced[] logFiltersAdv = new GPSFilterAdvanced[C_NBR_FILTERS];
 
     /**
-     * When true, then dynamic download is active.
-     */
-    private boolean incremental = true; // Incremental download - default
-
-    /**
      * The default constructor of the model.
      */
     public Model() {
@@ -348,24 +343,65 @@ public class Model extends AppSettings implements GPSListener {
         return gpsModel.getNextReadAddr();
     }
 
+    private int downloadMethod = DOWNLOAD_INCREMENTAL;
+
     /**
      * Get the 'incremental download' status.
      * 
+     * @deprecated
      * @return true if the Incremental log download is activated.
      */
     public final boolean isIncremental() {
-        return incremental;
+        return downloadMethod == DOWNLOAD_INCREMENTAL;
     }
 
     /**
      * Set the 'incremental download' configuration.
      * 
+     * @deprecated
      * @param incrementalDownload
      *            true if the log download should be incremental.
      */
     protected final void setIncremental(final boolean incrementalDownload) {
-        this.incremental = incrementalDownload;
+        if (incrementalDownload) {
+            this.downloadMethod = DOWNLOAD_INCREMENTAL;
+        } else {
+            this.downloadMethod = DOWNLOAD_FILLED;
+        }
         postEvent(ModelEvent.INCREMENTAL_CHANGE);
+    }
+
+    /**
+     * Download reported filled memory.
+     */
+    public static final int DOWNLOAD_FILLED = 0;
+    /**
+     * Download reported memory - incremental.
+     */
+    public static final int DOWNLOAD_INCREMENTAL = 1;
+    
+    /**
+     * Download full memory.
+     */
+    public static final int DOWNLOAD_FULL = 2;
+    
+    /**
+     * Get the download method.
+     * 
+     * @return The set download method.
+     */
+    public final int getDownloadMethod() {
+        return this.downloadMethod;
+    }
+
+    /**
+     * Set the download method.
+     * 
+     * @return The set download method.
+     */
+    public final void setDownloadMethod(final int downloadMethod) {
+        this.downloadMethod = downloadMethod;
+        postEvent(ModelEvent.DOWNLOAD_METHOD_CHANGE);
     }
 
     /**
@@ -384,7 +420,7 @@ public class Model extends AppSettings implements GPSListener {
      *         for other information than locations (e.g., headers)
      */
     public final int logMemUsed() {
-        return gpsModel.logMemUsed;
+        return gpsModel.getLogMemUsed();
     }
 
     /**
@@ -575,7 +611,8 @@ public class Model extends AppSettings implements GPSListener {
         boolean forHolux;
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
-        forHolux = (isHolux() && gpsRxTx.isConnected()) || getBooleanOpt(IS_HOLUXM241);
+        forHolux = (isHolux() && gpsRxTx.isConnected())
+                || getBooleanOpt(IS_HOLUXM241);
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {
@@ -598,7 +635,8 @@ public class Model extends AppSettings implements GPSListener {
         boolean forHolux;
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
-        forHolux = (isHolux() && gpsRxTx.isConnected()) || getBooleanOpt(IS_HOLUXM241);
+        forHolux = (isHolux() && gpsRxTx.isConnected())
+                || getBooleanOpt(IS_HOLUXM241);
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {
