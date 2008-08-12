@@ -32,6 +32,9 @@ public class ModelEvent extends GpsEvent{
     public static final int WORKDIRPATH_UPDATE = 258;
     public static final int OUTPUTFILEPATH_UPDATE = 259;
     public static final int LOGFILEPATH_UPDATE = 260;
+    /**
+     * @deprecated Use {@link #DOWNLOAD_METHOD_CHANGE} instead.
+     */
     public static final int INCREMENTAL_CHANGE = 261;
     public static final int TRK_VALID_CHANGE = 262;
     public static final int TRK_RCR_CHANGE = 263;
@@ -44,6 +47,10 @@ public class ModelEvent extends GpsEvent{
      * A setting changed - int param = index of changed setting
      */
     public static final int SETTING_CHANGE = 269;
+    /**
+     * Notifies a change in the download method setting.
+     */
+    public static final int DOWNLOAD_METHOD_CHANGE = 270;
 
     public ModelEvent(int type, Object arg) {
         super(type,arg);

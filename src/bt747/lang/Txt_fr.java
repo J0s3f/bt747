@@ -423,6 +423,10 @@ public class Txt_fr {
     public static final String TRKPTCOMMENT = "TRK PT INFO";
     public static final String TRKPTNAME = "TRK PT NAME";
 
+    public static final String DOWNLOAD_INCREMENTAL = "Téléchmt incr.";
+    public static final String DOWNLOAD_FULL = "Téléchmt cmplt";
+    public static final String DOWNLOAD_NORMAL = "Téléchmt nrml";
+
 }
 
 

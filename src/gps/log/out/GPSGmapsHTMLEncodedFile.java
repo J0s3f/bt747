@@ -520,7 +520,6 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             String footer;
             writeDataFooter();
             footer = "clickString();\n"
-                    + "document.write(\'<div id=\"latlon\"></div>\');\n"
                     + "GEvent.addListener(map,\'click\',latlonFunc());\n"
                     + "map.setCenter(new GLatLng("
                     + Convert.toString((maxlat + minlat) / 2)

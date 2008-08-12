@@ -264,7 +264,7 @@ public class Txt_en {
     public static final String ONE_FILE_TRK = "One file/ trk";
     public static final String DEV_LOGONOFF = "Device log on(/off)";
     public static final String INCREMENTAL = "Incremental";
-    
+
     public static final String LOG_OVRWR_FULL = "Log overwrite(/stop) when full";
     public static final String DATE_RANGE = "Date range";
     public static final String GET_LOG = "Get Log";
@@ -399,6 +399,10 @@ public class Txt_en {
     
     public static final String TRKPTCOMMENT = "TRK PT INFO";
     public static final String TRKPTNAME = "TRK PT NAME";
+
+    public static final String DOWNLOAD_INCREMENTAL = "Smart dwnld";
+    public static final String DOWNLOAD_FULL = "Full dwnld";
+    public static final String DOWNLOAD_NORMAL = "Normal dwnld";
 }
 
 

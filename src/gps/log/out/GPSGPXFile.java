@@ -333,21 +333,24 @@ public class GPSGPXFile extends GPSFile {
                 // <geoidheight> xsd:decimal </geoidheight> [0..1] ?
 
                 // <name> xsd:string </name> [0..1] ?
-                rec.append("<name>");
-                if (isWayType) {
-                    rec.append("wpt-");
-                } else {
-                    rec.append("trkpt-");
-                }
-                if ((activeFields.utc != 0) && (selectedFileFields.utc != 0)) {
-                    rec.append(timeStr);
-                    if (isNewTrack) {
-                        trackName += " " + timeStr;
+                if (isWayType || isIncludeTrkName) {
+                    rec.append("<name>");
+                    if (isWayType) {
+                        rec.append("wpt-");
+                    } else {
+                        rec.append("trkpt-");
                     }
-                } else {
-                    rec.append(Convert.toString(s.recCount));
+                    if ((activeFields.utc != 0)
+                            && (selectedFileFields.utc != 0)) {
+                        rec.append(timeStr);
+                        if (isNewTrack) {
+                            trackName += " " + timeStr;
+                        }
+                    } else {
+                        rec.append(Convert.toString(s.recCount));
+                    }
+                    rec.append("</name>\r\n");
                 }
-                rec.append("</name>\r\n");
                 // <cmt> xsd:string </cmt> [0..1] ?
                 // No comments, so commented out.
                 if (isTrkComment

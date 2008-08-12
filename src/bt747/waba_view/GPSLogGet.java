@@ -67,7 +67,9 @@ public class GPSLogGet extends Container implements ModelListener {
     private ComboBox m_cbColors;
     private static final String[] colors = { "FF0000", "0000FF", "800000",
             "000080", "00FF00", "008000" };
-    private MyCheck m_chkIncremental;
+    private ComboBox cbDownload;
+    private static final String[] downloadStr = { Txt.DOWNLOAD_NORMAL, Txt.DOWNLOAD_INCREMENTAL, 
+        Txt.DOWNLOAD_FULL };
     private ComboBox m_chkOneFilePerDay;
     private static final String[] fileStr = { Txt.ONE_FILE, Txt.ONE_FILE_DAY,
             Txt.ONE_FILE_TRK };
@@ -102,8 +104,9 @@ public class GPSLogGet extends Container implements ModelListener {
     protected final void onStart() {
         super.onStart();
         add(chkLogOnOff = new MyCheck(Txt.DEV_LOGONOFF), LEFT, TOP); //$NON-NLS-1$
-        add(m_chkIncremental = new MyCheck(Txt.INCREMENTAL), RIGHT, SAME); //$NON-NLS-1$
-        m_chkIncremental.setChecked(m.isIncremental());
+        cbDownload = new ComboBox(downloadStr);
+        add(cbDownload,RIGHT,SAME);
+        cbDownload.select(m.getDownloadMethod());
         add(chkLogOverwriteStop = new MyCheck(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
         add(new Label(Txt.DATE_RANGE), LEFT, AFTER); //$NON-NLS-1$
 
@@ -223,8 +226,8 @@ public class GPSLogGet extends Container implements ModelListener {
                 // m_btGetLog.press(false);
             } else if (event.target == m_btCancelGetLog) {
                 c.cancelGetLog();
-            } else if (event.target == m_chkIncremental) {
-                c.setIncremental(m_chkIncremental.getChecked());
+            } else if (event.target == cbDownload) {
+                c.setDownloadMethod(cbDownload.getSelectedIndex());
             } else if (event.target == chkLogOnOff) {
                 if (chkLogOnOff.getChecked()) {
                     c.startLog();
@@ -322,8 +325,8 @@ public class GPSLogGet extends Container implements ModelListener {
         int eventType = event.getType();
         if (eventType == ModelEvent.DATA_UPDATE) {
             updateButtons();
-        } else if (eventType == ModelEvent.INCREMENTAL_CHANGE) {
-            m_chkIncremental.setChecked(m.isIncremental());
+        } else if (eventType == ModelEvent.DOWNLOAD_METHOD_CHANGE) {
+            cbDownload.select(m.getDownloadMethod());
         } else if (eventType == ModelEvent.CONVERSION_ENDED
                 || eventType == ModelEvent.CONVERSION_STARTED) {
             Button b = null;

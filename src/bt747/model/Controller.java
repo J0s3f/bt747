@@ -337,7 +337,8 @@ public class Controller {
                         + (SECONDS_PER_DAY - 1));
             }
             gpsFile.setFilters(usedFilters);
-            gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m.getIntOpt(Model.FILEFIELDFORMAT)));
+            gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m
+                    .getIntOpt(Model.FILEFIELDFORMAT)));
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
                     m.getFileSeparationFreq());
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
@@ -451,11 +452,21 @@ public class Controller {
     /**
      * Set the 'incremental download' configuration.
      * 
+     * @deprecated Use {@link #setDownloadMethod(int)} instead
      * @param incrementalDownload
      *            true if the log download should be incremental.
      */
     public final void setIncremental(final boolean incrementalDownload) {
         m.setIncremental(incrementalDownload);
+    }
+
+    /**
+     * Set the download method.
+     * 
+     * @return The set download method.
+     */
+    public final void setDownloadMethod(final int downloadMethod) {
+        m.setDownloadMethod(downloadMethod);
     }
 
     /**
@@ -488,12 +499,20 @@ public class Controller {
      */
     public final void startDefaultDownload() {
         try {
+            int endAddress;
+            if (m.getDownloadMethod() == Model.DOWNLOAD_FULL
+                    || m.gpsModel().isInitialLogOverwrite()) {
+                endAddress = m.gpsModel().getLogMemSize() - 1;
+            } else {
+                endAddress = m.gpsModel().getLogMemUsed() - 1;
+            }
             m.gpsModel().getLogInit(0, /* StartPosition */
-            m.gpsModel().logMemUsed - 1, /* EndPosition */
+            endAddress, /* EndPosition */
             m.getChunkSize(), /* Size per request */
             m.getLogFilePath(), /* Log file name */
             m.getCard(), /* Card for file operations */
-            m.isIncremental() /* Incremental download */);
+            /** Incremental download */
+            m.getDownloadMethod() == Model.DOWNLOAD_INCREMENTAL);
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -689,7 +708,6 @@ public class Controller {
         m.gpsModel().setLogFormat(newLogFormat);
     }
 
-
     /**
      * Do the actual erase.
      */
@@ -813,8 +831,11 @@ public class Controller {
      */
     private void performOperationsAfterGPSConnect() {
         if (m.gpsRxTx().isConnected()) {
+            m.gpsModel().reqInitialLogMode(); // First may fail.
             m.gpsModel().reqStatus();
+            m.gpsModel().reqFlashManuID(); // Should be last
             reqLogFormat();
+            m.gpsModel().reqInitialLogMode();
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
             m.gpsModel().setupTimer();
             // Remember defaults

@@ -52,7 +52,7 @@ public class GPSstate implements Thread {
 
     private GPSrxtx gpsRxTx = null;
 
-    private boolean m_getFullLog = true; // If true, get the entire log
+    private boolean getFullLogBlocks = true; // If true, get the entire log
     // (based
     // on block head)
 
@@ -67,20 +67,20 @@ public class GPSstate implements Thread {
     private int logDistanceInterval = 0;
 
     public int logStatus = 0;
+    public int initialLogMode = 0;
+    
 
     public int logRecMethod = 0;
 
     public int logNbrLogPts = 0;
 
-    public int logMemSize = 16 * 1024 * 1024 / 8; // 16Mb -> 2MB
+    private int logMemSize = 16 * 1024 * 1024 / 8; // 16Mb -> 2MB
 
-    public int logMemUsed = 0;
+    private int logMemUsed = 0;
 
     public int logMemUsedPercent = 0;
 
     public int logMemFree = 0;
-
-    public int logMemMax = 0;
 
     private int logFixPeriod = 0; // Time between fixes
 
@@ -134,9 +134,9 @@ public class GPSstate implements Thread {
 
     // (1FH = ATMEL), followed by the device code, 65H.
     // Manufacturer and Product ID
-    private int FlashManuProdID = 0;
+    private int flashManuProdID = 0;
 
-    private String FlashDesc = "";
+    private String flashDesc = "";
 
     private String sBtMacAddr = "";
 
@@ -185,11 +185,11 @@ public class GPSstate implements Thread {
      * @return The usefull bytes int the log.
      */
     public final int logMemUsefullSize() {
-        return (int) ((logMemSize >> 16) * (0x10000 - 0x200)); // 16Mb
+        return (int) ((getLogMemSize() >> 16) * (0x10000 - 0x200)); // 16Mb
     }
 
     public final int logFreeMemUsefullSize() {
-        return (int) ((logMemSize - logMemUsed) - (((logMemSize - logMemUsed) >> 16) * (0x200))); // 16Mb
+        return (int) ((getLogMemSize() - getLogMemUsed()) - (((getLogMemSize() - getLogMemUsed()) >> 16) * (0x200))); // 16Mb
     }
 
     /**
@@ -331,6 +331,11 @@ public class GPSstate implements Thread {
                 + BT747Constants.PMTK_LOG_REQ_DATA_STR + ","
                 + Convert.unsigned2hex(startAddr, 8) + ","
                 + Convert.unsigned2hex(size, 8));
+    }
+    
+    public final void reqInitialLogMode() {
+        readLog(6,2);  // 6 is the log mode offset in the log, 2 is the size
+        // Required to know if log is in overwrite mode.
     }
 
     public final void reqFlashManuID() {
@@ -898,7 +903,7 @@ public class GPSstate implements Thread {
             } else if (sNmea.length == 1 && sNmea[0].startsWith("WP")) {
                 AnalyseDPL700Data(sNmea[0]);
             } else if (gpsDecode && (logState == C_LOG_NOLOGGING) // Not
-                                                                    // during
+                    // during
                     // log
                     // download for
                     // performance.
@@ -1085,10 +1090,39 @@ public class GPSstate implements Thread {
         return mainVersion;
     }
 
+    /**
+     * @param logMemSize
+     *            the logMemSize to set
+     */
+    private void setLogMemSize(int logMemSize) {
+        this.logMemSize = logMemSize;
+    }
+
+    /**
+     * @return the logMemSize
+     */
+    public int getLogMemSize() {
+        return logMemSize;
+    }
+
+    /**
+     * @param logMemUsed
+     *            the logMemUsed to set
+     */
+    private void setLogMemUsed(int logMemUsed) {
+        this.logMemUsed = logMemUsed;
+    }
+
+    /**
+     * @return the logMemUsed
+     */
+    public int getLogMemUsed() {
+        return logMemUsed;
+    }
+
     private final String modelName() {
         int md = Conv.hex2Int(model);
         String mdStr;
-        logMemSize = 16 * 1024 * 1024 / 8; // 16Mb -> 2MB
         holux = false;
         switch (md) {
         case 0x0000:
@@ -1158,8 +1192,8 @@ public class GPSstate implements Thread {
         int manufacturer;
         int devType;
 
-        manufacturer = (FlashManuProdID >> 24) & 0xFF;
-        devType = (FlashManuProdID >> 16) & 0xFF;
+        manufacturer = (flashManuProdID >> 24) & 0xFF;
+        devType = (flashManuProdID >> 16) & 0xFF;
 
         switch (manufacturer) {
         case BT747Constants.SPI_MAN_ID_MACRONIX:
@@ -1177,8 +1211,8 @@ public class GPSstate implements Thread {
                 // +#define MX_25L6405 0x2017 /* MX25L3205{,D} */
                 // +#define MX_25L1635D 0x2415
                 // +#define MX_25L3235D 0x2416
-                logMemSize = 0x1 << ((FlashManuProdID >> 8) & 0xFF);
-                FlashDesc = "(MX," + logMemSize / (1024 * 1024) + "MB)";
+                setLogMemSize(0x1 << ((flashManuProdID >> 8) & 0xFF));
+                flashDesc = "(MX," + getLogMemSize() / (1024 * 1024) + "MB)";
 
             }
             break;
@@ -1186,8 +1220,8 @@ public class GPSstate implements Thread {
             if ((devType == 0x20)) { // || (DevType == 0x24)) {
                 // Supposing the same rule as macronix.
                 // Example device: EN25P16
-                logMemSize = 0x1 << ((FlashManuProdID >> 8) & 0xFF);
-                FlashDesc = "(EON," + logMemSize / (1024 * 1024) + "MB)";
+                setLogMemSize(0x1 << ((flashManuProdID >> 8) & 0xFF));
+                flashDesc = "(EON," + getLogMemSize() / (1024 * 1024) + "MB)";
 
             }
             break;
@@ -1265,6 +1299,7 @@ public class GPSstate implements Thread {
     /***************************************************************************
      * LOGGING FUNCTIONALITY
      **************************************************************************/
+
     // Fields to keep track of logging status
     private int logTimer = 0;
 
@@ -1653,7 +1688,7 @@ public class GPSstate implements Thread {
                     }
                     logNextReadAddr += dataLength;
                     // m_ProgressBar.repaintNow();
-                    if (m_getFullLog
+                    if (getFullLogBlocks
                             && (((startAddr - 1 + dataLength) & 0xFFFF0000) >= startAddr)) {
                         // Block boundery (0xX0000) is inside data.
                         int blockStart = 0xFFFF & (0x10000 - (startAddr & 0xFFFF));
@@ -1665,8 +1700,8 @@ public class GPSstate implements Thread {
                             // and
                             // next
                             // one.
-                            if (minEndAddr > logMemSize - 1) {
-                                minEndAddr = logMemSize - 1;
+                            if (minEndAddr > getLogMemSize() - 1) {
+                                minEndAddr = getLogMemSize() - 1;
                             }
                             if (minEndAddr > logDownloadEndAddr) {
                                 logDownloadEndAddr = minEndAddr;
@@ -1688,12 +1723,12 @@ public class GPSstate implements Thread {
             if ((startAddr == C_BLOCKVERIF_START)
                     && (dataLength == C_BLOCKVERIF_SIZE)) {
                 // The block we got should be the block to check
-                byte[] m_localdata = new byte[dataLength];
+                byte[] dataBuffer = new byte[dataLength];
                 int result = 0;
                 boolean success = false;
                 try {
                     logFile.setPos(startAddr);
-                    result = logFile.readBytes(m_localdata, 0, dataLength);
+                    result = logFile.readBytes(dataBuffer, 0, dataLength);
                 } catch (Exception e) {
                     // TODO: handle exception
                     e.printStackTrace();
@@ -1701,7 +1736,7 @@ public class GPSstate implements Thread {
                 if (result == dataLength) {
                     success = true;
                     for (int i = dataLength - 1; i >= 0; i--) {
-                        if (readDataBuffer[i] != m_localdata[i]) {
+                        if (readDataBuffer[i] != dataBuffer[i]) {
                             // The log is not the same, data is different
                             success = false;
                             break; // Exit from the loop
@@ -1846,6 +1881,7 @@ public class GPSstate implements Thread {
                         // logging
                         // on/off
                         logStatus = Convert.toInt(sNmea[3]);
+                        //logFullOverwrite = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) != 0));
                         isLoggingActive = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
                         loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
@@ -1853,13 +1889,13 @@ public class GPSstate implements Thread {
                         PostStatusUpdateEvent();
                         break;
                     case BT747Constants.PMTK_LOG_MEM_USED: // 8;
-                        logMemUsed = Conv.hex2Int(sNmea[3]);
-                        logMemUsedPercent = (100 * (logMemUsed - (0x200 * ((logMemUsed + 0xFFFF) / 0x10000))))
+                        setLogMemUsed(Conv.hex2Int(sNmea[3]));
+                        logMemUsedPercent = (100 * (getLogMemUsed() - (0x200 * ((getLogMemUsed() + 0xFFFF) / 0x10000))))
                                 / logMemUsefullSize();
                         PostStatusUpdateEvent();
                         break;
                     case BT747Constants.PMTK_LOG_FLASH: // 9;
-                        FlashManuProdID = Conv.hex2Int(sNmea[3]);
+                        flashManuProdID = Conv.hex2Int(sNmea[3]);
                         analyseFlashManuProdID();
                         break;
                     case BT747Constants.PMTK_LOG_NBR_LOG_PTS: // 10;
@@ -1880,6 +1916,19 @@ public class GPSstate implements Thread {
             case BT747Constants.PMTK_LOG_DT_LOG:
                 // Data from the log
                 // $PMTK182,8,START_ADDRESS,DATA
+
+                try {
+                    // Get the initial mode.
+                    if (Conv.hex2Int(sNmea[2]) == 6) {
+                        initialLogMode = Conv.hex2Int(sNmea[3].substring(0, 4));
+                        // correct endian.
+                        initialLogMode = (initialLogMode & 0xFF << 8)
+                                | (initialLogMode >> 8);
+                    }
+                } catch (Exception e) {
+                    // Do not care about exception
+                }
+                //logFullOverwrite = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) != 0));
 
                 try {
                     // waba.sys.debugMsg("Before
@@ -1924,14 +1973,14 @@ public class GPSstate implements Thread {
      * @return Returns the flashManuProdID.
      */
     public final int getFlashManuProdID() {
-        return FlashManuProdID;
+        return flashManuProdID;
     }
 
     /**
      * @return Returns the flashDesc.
      */
     public final String getFlashDesc() {
-        return FlashDesc;
+        return flashDesc;
     }
 
     /**
@@ -2072,6 +2121,10 @@ public class GPSstate implements Thread {
 
     public final boolean isPowerSaveEnabled() {
         return powerSaveEnabled;
+    }
+    
+    public final boolean isInitialLogOverwrite() {
+        return (initialLogMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK)==0;
     }
 
     public final int getDgpsMode() {
