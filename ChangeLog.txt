@@ -1,3 +1,6 @@
+Version 1.54.3
+* Added possibility to set BT mac address.
+
 Version 1.54.2
 * For GPX, trackpoint naming removed.
 * Added detection of overwrite status in log - full download done when overwrite is active for first record.

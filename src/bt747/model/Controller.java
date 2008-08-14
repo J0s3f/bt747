@@ -1123,6 +1123,18 @@ public class Controller {
     public final void reqBTAddr() {
         m.gpsModel().reqBtMacAddr();
     }
+    
+    /**
+     * Sets the MAC address for bluetooth (for devices that support it).
+     * 
+     * @param btMacAddr
+     *            The Mac address to set in the following format:<br>
+     *            00:1F:14:15:12:13.
+     */
+    public final void setBTMacAddr(final String btMacAddr) {
+        m.gpsModel().setBtMacAddr(btMacAddr);
+        reqBTAddr();
+    }
 
     /**
      * Set the textual description of the holux device.
