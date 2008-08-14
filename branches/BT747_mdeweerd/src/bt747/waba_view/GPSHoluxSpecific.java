@@ -49,6 +49,7 @@ public class GPSHoluxSpecific extends Container implements ModelListener {
     private Edit edHoluxBT_MacAddr;
 
     private Button btSet;
+    private Button btMacSet;
 
     /**
      * 
@@ -71,11 +72,18 @@ public class GPSHoluxSpecific extends Container implements ModelListener {
         lbBTMacAddr = new Label(Txt.BT_MAC_ADDR);
         add(lbBTMacAddr, LEFT, AFTER + 5);
         add(edHoluxBT_MacAddr = new Edit(""), AFTER, SAME);
-        // add(btBTMacSet=new Button(Txt.SET),CENTER,AFTER+5);
+        add(btMacSet=new Button(Txt.SET),CENTER,AFTER+5);
     }
 
     private void doSet() {
         c.setHoluxName(edHoluxName.getText().replace(',', ';'));
+    }
+    
+    /**
+     * Sets the MAC address for bluetooth (for devices that support it).
+     */
+    private void doSetBTAddr() {
+        c.setBTMacAddr(edHoluxBT_MacAddr.getText());
     }
 
     private void updateData() {
@@ -98,6 +106,8 @@ public class GPSHoluxSpecific extends Container implements ModelListener {
                 event.consumed = true;
             } else if (event.target == btSet) {
                 doSet();
+            } else if (event.target == btMacSet) {
+                doSetBTAddr();
             }
             break;
         default:

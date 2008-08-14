@@ -30,8 +30,6 @@ import waba.ui.Event;
 import waba.ui.Label;
 import waba.util.Vector;
 
-import gps.log.GPSRecord;
-
 import bt747.Txt;
 import bt747.io.File;
 import bt747.model.AppController;
