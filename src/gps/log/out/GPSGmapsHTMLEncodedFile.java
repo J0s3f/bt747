@@ -35,8 +35,14 @@ import bt747.util.Hashtable;
  * @author Mario De Weerd
  */
 public class GPSGmapsHTMLEncodedFile extends GPSFile {
+    /**
+     * Local StringBuffer for output.
+     */
     private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
 
+    /**
+     * When true, currently handling waypoints, otherwise trackpoints.
+     */
     private boolean isWayType;
     private boolean isNewTrack = true;
     private int currentFilter;
@@ -49,7 +55,6 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
     // click.
     private StringBuffer infoHtmls = new StringBuffer(1024);
     private String trackStartInfo = "";
-    private String trackLastTime = "";
     private String trackDescription = "";
 
     /**

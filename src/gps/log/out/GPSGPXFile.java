@@ -159,7 +159,7 @@ public class GPSGPXFile extends GPSFile {
             if (!ptFilters[currentFilter].doFilter(s)) {
                 // The track is interrupted by a removed log item.
                 // Break the track in the output file
-                if (!isWayType && !isNewTrack && !firstRecord) {
+                if (!isWayType && !isNewTrack && !firstRecord && !ignoreBadPoints) {
                     if (isTrkSegSplitOnlyWhenSmall
                             && ((activeFields.utc == 0) || (previousTime
                                     + trackSepTime > s.utc))) {

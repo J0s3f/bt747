@@ -444,13 +444,13 @@ public class AppSettings {
             setFilterMinNSAT(0);
             /* fall through */
         case 9:
-            setGpxTrkSegWhenBig(false);
+            setGpxTrkSegWhenBig(true);
             /* fall through */
         case 10:
             setGpsDecode(true);
             /* fall through */
         case 11:
-            setColorInvalidTrack("FF0000");
+            setColorInvalidTrack("0000FF");
             /* fall through */
         case 12:
             setBooleanOpt(IS_TRAVERSABLE, Settings.onDevice

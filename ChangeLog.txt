@@ -1,3 +1,9 @@
+Version 1.54.4
+* Changed default for GPX track splitting 'trkseg when small'.
+* Changed default for bad track color.
+* When bad track color is equal to good track color (0000FF), this also has effect on GPX format.
+  No new track or tracksegment when the color is the same (bad positions are ignored).
+
 Version 1.54.3
 * Added possibility to set BT mac address.
 
