@@ -21,7 +21,7 @@ public class Txt_zh {
     public static final String S_EXIT_APPLICATION = "\u51FA\u53E3\u5E94\u7528";
 
     public static final String S_SETTINGS = "\u8BBE\u7F6E";
-    public static final String S_RESTART_CONNECTION = "\u518D\u5F00\u59CB\u8FDE\u63A5";
+    public static final String S_STOP_LOGGING_ON_CONNECT = "Stop log on connect";
     public static final String S_STOP_CONNECTION = "\u4E2D\u6B62\u8FDE\u63A5";
     public static final String S_GPX_UTC_OFFSET_0= "GPX UTC\u62B5\u9500\u4E860";
     public static final String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg\uFF0C\u5F53\u5C0F";

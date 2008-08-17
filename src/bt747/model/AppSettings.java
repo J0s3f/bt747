@@ -217,8 +217,11 @@ public class AppSettings {
     private static final int C_FILEFIELDFORMAT_IDX = C_IS_WRITE_TRACKPOINT_NAME_IDX
             + C_IS_WRITE_TRACKPOINT_NAME_SIZE;
     private static final int C_FILEFIELDFORMAT_SIZE = 8;
-    private static final int C_NEXT_IDX = C_FILEFIELDFORMAT_IDX
+    private static final int C_STOP_LOG_ON_CONNECT_IDX = C_FILEFIELDFORMAT_IDX
             + C_FILEFIELDFORMAT_SIZE;
+    private static final int C_STOP_LOG_ON_CONNECT_SIZE = 1;
+    private static final int C_NEXT_IDX = C_STOP_LOG_ON_CONNECT_IDX
+            + C_STOP_LOG_ON_CONNECT_SIZE;
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
     private static final int C_NEW_NEXT_IDX = C_NEXT_IDX + C_NEXT_SIZE;
@@ -234,6 +237,9 @@ public class AppSettings {
     public static final int FLOAT = 4;
 
     // New method for parameters.
+
+    // List of indexes to parameters.
+    // To be used as parameter to functions to get the values.
     public static final int IS_WRITE_TRACKPOINT_COMMENT = 0;
     public static final int IS_WRITE_TRACKPOINT_NAME = 1;
     public static final int OUTPUTLOGCONDITIONS = 2;
@@ -282,6 +288,12 @@ public class AppSettings {
      */
     public static final int FILEFIELDFORMAT = 7;
 
+    /**
+     * boolean setting to indicate that logging should be stopped on connect.
+     * Application specific.
+     */
+    public static final int IS_STOP_LOGGING_ON_CONNECT = 8;
+
     private static final int[][] paramsList =
     // Type, idx, start, size
     {
@@ -298,7 +310,11 @@ public class AppSettings {
                     C_RECORDNBR_IN_LOGS_SIZE },
             { BOOL, IS_TRAVERSABLE, C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE },
             { INT, FILEFIELDFORMAT, C_FILEFIELDFORMAT_IDX,
-                    C_FILEFIELDFORMAT_SIZE }, };
+                    C_FILEFIELDFORMAT_SIZE },
+            // Application parameter
+            { BOOL, IS_STOP_LOGGING_ON_CONNECT, C_STOP_LOG_ON_CONNECT_IDX,
+                    C_STOP_LOG_ON_CONNECT_SIZE }, };
+
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
     private int START_IDX = 2;
@@ -482,11 +498,17 @@ public class AppSettings {
         case 21:
             setBooleanOpt(IS_WRITE_TRACKPOINT_COMMENT, true);
             setBooleanOpt(IS_WRITE_TRACKPOINT_NAME, true);
-
+            /* fall through */
         case 22:
             setIntOpt(FILEFIELDFORMAT, -1);
+            /* fall through */
+        case 23:
+            /* Next line is application specific */
+            setBooleanOpt(IS_STOP_LOGGING_ON_CONNECT, false);
+            /* fall through */
+
             /* Must be last line in case (not 'default'), sets settings version */
-            setStringOpt(0, "0.23", C_VERSION_IDX, C_VERSION_SIZE);
+            setStringOpt(0, "0.24", C_VERSION_IDX, C_VERSION_SIZE);
         default:
             // Always force lat and lon and utc and height active on restart for
             // basic users.

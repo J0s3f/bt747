@@ -71,8 +71,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
     private MenuItem miFile = new MenuItem(Txt.S_FILE);
     private MenuItem miExitApplication = new MenuItem(Txt.S_EXIT_APPLICATION);
     private MenuItem miSettings = new MenuItem(Txt.S_SETTINGS);
-    private MenuItem miRestartConnection = new MenuItem(
-            Txt.S_RESTART_CONNECTION);
+    private MenuItem miStopLogOnConnect = new MenuItem(
+            Txt.S_STOP_LOGGING_ON_CONNECT, false);
     private MenuItem miStopConnection = new MenuItem(Txt.S_STOP_CONNECTION);
     private MenuItem miGpxUTC0 = new MenuItem(Txt.S_GPX_UTC_OFFSET_0, false);
     private MenuItem miGpxTrkSegWhenBig = new MenuItem(
@@ -103,8 +103,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
     private final MenuItem[][] menu = {
             { miFile, miExitApplication },
-            { miSettings, miRestartConnection, miStopConnection,
-                    new MenuItem(), miGpxUTC0, miGpxTrkSegWhenBig, miGpsDecode,
+            { miSettings, miStopConnection, miStopLogOnConnect, new MenuItem(),
+                    miGpxUTC0, miGpxTrkSegWhenBig, miGpsDecode,
                     miRecordNumberInLogs, new MenuItem(), miTraversableFocus,
                     new MenuItem(), miDebug, miDebugConn, miStats, miImperial,
                     miOutputLogConditions, },
@@ -113,12 +113,11 @@ public class AppBT747 extends MainWindow implements ModelListener {
             { miInfo, miAboutBT747, miAboutSuperWaba, miInfo } };
     /** MenuBar item for File->Exit */
     private static final int C_MENU_FILE_EXIT = 001;
-    /** MenuBar item for Settings->Restart connection */
     // private static final int C_MENU_CONNECTION_SETTINGS = 101;
-    // /** MenuBar item for Settings->Restart connection */
-    private static final int C_MENU_RESTART_CONNECTION = 101;
     /** MenuBar item for Settings->Stop connection */
-    private static final int C_MENU_STOP_CONNECTION = 102;
+    private static final int C_MENU_STOP_CONNECTION = 101;
+    /** MenuBar item for Settings->Stop logging on connect */
+    private static final int C_MENU_STOP_LOG_ON_CONNECT = 102;
     /** MenuBar item for Settings->GPX UTC 0 */
     private static final int C_MENU_GPX_UTC0 = 104;
     /** MenuBar item for Settings->GPX Trk Sep when big only */
@@ -232,10 +231,12 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
         miGpsDecode.isChecked = m.getGpsDecode();
 
-        miRecordNumberInLogs.isChecked = m.getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS);
+        miRecordNumberInLogs.isChecked = m
+                .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS);
         miHolux.isChecked = m.getBooleanOpt(AppSettings.IS_HOLUXM241);
         miImperial.isChecked = m.getBooleanOpt(AppSettings.IMPERIAL);
-        miOutputLogConditions.isChecked = m.getBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS);
+        miOutputLogConditions.isChecked = m
+                .getBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS);
 
         tabPanel = new TabPanel(c_tpCaptions);
         add(tabPanel, CENTER, CENTER);
@@ -287,8 +288,12 @@ public class AppBT747 extends MainWindow implements ModelListener {
         // 10+0*PREFERRED);
         tabPanel.setActiveTab(C_GPS_CONCTRL_IDX);
 
-        waba.sys.Settings.keyboardFocusTraversable = m.getBooleanOpt(AppSettings.IS_TRAVERSABLE);
-        miTraversableFocus.isChecked = m.getBooleanOpt(AppSettings.IS_TRAVERSABLE);
+        waba.sys.Settings.keyboardFocusTraversable = m
+                .getBooleanOpt(AppSettings.IS_TRAVERSABLE);
+        miTraversableFocus.isChecked = m
+                .getBooleanOpt(AppSettings.IS_TRAVERSABLE);
+        miStopLogOnConnect.isChecked = m
+                .getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT);
 
         m.addListener(this);
         addTimer(this, 55);
@@ -352,15 +357,17 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     }
                     // Back to application
                     break;
-                case C_MENU_RESTART_CONNECTION:
-                    c.connectGPS();
+                case C_MENU_STOP_LOG_ON_CONNECT:
+                    c.setBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT,
+                            miStopLogOnConnect.isChecked);
                     break;
                 case C_MENU_STOP_CONNECTION:
                     c.closeGPS();
                     break;
                 case C_MENU_FOCUS_HIGHLIGHT:
                     c.setTraversableFocus(miTraversableFocus.isChecked);
-                    waba.sys.Settings.keyboardFocusTraversable = m.getBooleanOpt(AppSettings.IS_TRAVERSABLE);
+                    waba.sys.Settings.keyboardFocusTraversable = m
+                            .getBooleanOpt(AppSettings.IS_TRAVERSABLE);
                     break;
                 case C_MENU_DEBUG_ACTIVE:
                     c.setDebug(miDebug.isChecked);

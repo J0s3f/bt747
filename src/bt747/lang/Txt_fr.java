@@ -16,7 +16,7 @@ public class Txt_fr {
     public static final String S_EXIT_APPLICATION = "Quitter";
     
     public static final String S_SETTINGS = "Options";
-    public static final String S_RESTART_CONNECTION = "Reouverture connection";
+    public static final String S_STOP_LOGGING_ON_CONNECT = "Arrêt log après conn";
     public static final String S_STOP_CONNECTION = "Arrêt connection";
     public static final String S_GPX_UTC_OFFSET_0= "GPX UTC offset 0";
     public static final String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg qnd petit";

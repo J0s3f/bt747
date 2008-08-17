@@ -734,7 +734,7 @@ public class Controller {
     public final void connectGPS() {
         closeGPS();
         m.gpsRxTx().openPort();
-        if (m.gpsRxTx().isConnected()) {
+        if (m.isConnected()) {
             performOperationsAfterGPSConnect();
         }
     }
@@ -743,7 +743,7 @@ public class Controller {
      * Close the GPS connection.
      */
     public final void closeGPS() {
-        if (m.gpsRxTx().isConnected()) {
+        if (m.isConnected()) {
             m.gpsRxTx().closePort();
             // TODO Move event posting to appropriate place (in model)
             m.postEvent(ModelEvent.DISCONNECTED);
@@ -826,11 +826,13 @@ public class Controller {
 
     /**
      * This does a number of operations once the GPS is effectively connected.
+     * Can be extended by the application.
+     * It gets certain informations required by the application.
      * It stores the settings related to the port (since the connection was
      * successful) and starts of the Model to do port queries.
      */
-    private void performOperationsAfterGPSConnect() {
-        if (m.gpsRxTx().isConnected()) {
+    protected void performOperationsAfterGPSConnect() {
+        if (m.isConnected()) {
             m.gpsModel().reqInitialLogMode(); // First may fail.
             m.gpsModel().reqStatus();
             m.gpsModel().reqFlashManuID(); // Should be last
@@ -842,7 +844,6 @@ public class Controller {
             m.setPortnbr(m.gpsRxTx().getPort());
             m.setBaudRate(m.gpsRxTx().getSpeed());
             m.setFreeTextPort(m.gpsRxTx().getFreeTextPort());
-            m.saveSettings();
             m.postEvent(ModelEvent.CONNECTED);
         }
     }
