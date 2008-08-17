@@ -19,7 +19,7 @@ public class Txt_jp {
     public static final String S_EXIT_APPLICATION = "\u7D42\u4E86"; 
     
     public static final String S_SETTINGS = "\u8A2D\u5B9A"; 
-    public static final String S_RESTART_CONNECTION = "\u518D\u63A5\u7D9A"; 
+    public static final String S_STOP_LOGGING_ON_CONNECT = "Stop log on connect";
     public static final String S_STOP_CONNECTION = "\u63A5\u7D9A\u7D42\u4E86"; 
     public static final String S_GPX_UTC_OFFSET_0= "GPX UTC 0\u88DC\u6B63"; 
     public static final String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg\u8A2D\u5B9A\u5024\u3092\u6709\u52B9\u306B\u3059\u308B"; 

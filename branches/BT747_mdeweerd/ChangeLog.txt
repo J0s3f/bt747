@@ -1,3 +1,8 @@
+Version 1.54.5
+* Added extra maps to 'GMaps' output: Cycle map and OSM map using the Osmarender.
+* Removed 'restart connection' in settings menu.
+* Added 'stop log after connection' in settings menu.
+
 Version 1.54.4
 * Changed default for GPX track splitting 'trkseg when small'.
 * Changed default for bad track color.

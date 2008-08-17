@@ -2,11 +2,11 @@ package bt747.model;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;
+import moio.util.HashSet;
 
 import bt747.Txt;
 import bt747.ui.MessageBox;
 
-import moio.util.HashSet;
 //import moio.util.Iterator;  Needed later when communicating with views.
 
 public final class AppController extends Controller {
@@ -77,7 +77,6 @@ public final class AppController extends Controller {
     private static final String[] C_CANCEL_OR_CONFIRM_ERASE = { Txt.CANCEL,
             Txt.CONFIRM_ERASE };
 
-    
     /**
      * A 'recovery Erase' attempts to recover memory that was previously
      * identified as 'bad'.
@@ -124,7 +123,6 @@ public final class AppController extends Controller {
         }
     }
 
-    
     /**
      * (User) request to change the log format. The log is not erased and may be
      * incompatible with other applications.
@@ -164,8 +162,6 @@ public final class AppController extends Controller {
         }
     }
 
-    
-    
     /**
      * Report an error.
      * 
@@ -212,6 +208,21 @@ public final class AppController extends Controller {
         view.setModel(this.m);
     }
 
+    /*
+     * Overriding the operations to be performed after successfull connect.
+     * 
+     * @see bt747.model.Controller#performOperationsAfterGPSConnect()
+     */
+    protected void performOperationsAfterGPSConnect() {
+        if (m.isConnected()) {
+            if (m.getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT)) {
+                c.stopLog(); // First command could fail, so repeat.
+                c.stopLog();
+            }
+            super.performOperationsAfterGPSConnect();
+            m.saveSettings();
+        }
+    }
     // protected void postEvent(final int type) {
     // Iterator it = views.iterator();
     // while (it.hasNext()) {

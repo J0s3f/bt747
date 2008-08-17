@@ -263,9 +263,27 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "[ new GTileLayer(null,1,18,\n"
                         + "{ tileUrlTemplate: 'http://tile.openstreetmap.org/{Z}/{X}/{Y}.png',\n"
                         + " isPng: true, opacity: 1.0 })],\n"
-                        + "new GMercatorProjection(19),\n" + "'OSM',\n"
+                        + "new GMercatorProjection(19),\n"
+                        + "'OSM',\n"
+                        + "{ errorMessage:\"More OSM coming soon\"}\n"
+                        + ");\n"
+                        + "var OSMcycle = new GMapType(\n"
+                        + "[ new GTileLayer(null,1,15,\n"
+                        + "{ tileUrlTemplate: \'http://www.thunderflames.org/tiles/cycle/{Z}/{X}/{Y}.png\',\n"
+                        + " isPng: true, opacity: 1.0 })],\n"
+                        + "new GMercatorProjection(19),\n"
+                        + "\'Cycle\',\n"
+                        + "{ errorMessage:\"More OSM coming soon\"}\n"
+                        + ");\n"
+                        + "var Osmarender = new GMapType(\n"
+                        + "[ new GTileLayer(null,1,18,\n"
+                        + "{ tileUrlTemplate: \'http://tah.openstreetmap.org/Tiles/tile/{Z}/{X}/{Y}.png\',\n"
+                        + " isPng: true, opacity: 1.0 })],\n"
+                        + "new GMercatorProjection(19),\n" + "\'Osmardr\',\n"
                         + "{ errorMessage:\"More OSM coming soon\"}\n" + ");\n"
-                        + "map.addMapType(OSM)\n");
+                        + "map.addMapType(OSM);\n"
+                        + "map.addMapType(OSMcycle);\n"
+                        + "map.addMapType(Osmarender);\n");
         // "points.push(new GPoint(3.11492833333333,45.75697))";
         // map.addOverlay(new GPolyline(points,"#960000",2,.75));
         writeTxt(l_header.toString());

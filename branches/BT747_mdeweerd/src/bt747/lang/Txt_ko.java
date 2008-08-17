@@ -17,7 +17,7 @@ public class Txt_ko {
     public static final String S_EXIT_APPLICATION = "\uD504\uB85C\uADF8\uB7A8 \uB05D\uB0B4\uAE30";
     
     public static final String S_SETTINGS = "\uC124\uC815";
-    public static final String S_RESTART_CONNECTION = "\uB2E4\uC2DC \uC811\uC18D\uD558\uAE30";
+    public static final String S_STOP_LOGGING_ON_CONNECT = "Stop log on connect";
     public static final String S_STOP_CONNECTION = "\uC811\uC18D \uB05D\uB0B4\uAE30";
     public static final String S_GPX_UTC_OFFSET_0= "GPX UTC \uC624\uD504\uC14B 0";
     public static final String S_GPX_TRKSEG_WHEN_SMALL = "GPX Trkseg when small";
