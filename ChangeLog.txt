@@ -1,3 +1,6 @@
+Version 1.55
+* Added goto functionality to GMaps output.  Improved page layout setup (adding space for footer earlier).
+
 Version 1.54.5
 * Added extra maps to 'GMaps' output: Cycle map and OSM map using the Osmarender.
 * Removed 'restart connection' in settings menu.
