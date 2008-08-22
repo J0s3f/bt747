@@ -82,4 +82,12 @@ public class Generic {
 
     }
 
+    public static double pow(double x, double y) {
+        return Math.pow(x,y);
+    }
+
+    public static double acos(final double x) {
+        return Math.acos(x);
+    }
+
 }
