@@ -34,37 +34,6 @@ import bt747.sys.Settings;
  * @author Herbert Geus (initial code for saving settings on WindowsCE)
  */
 public class AppSettings {
-    private static String CONFIG_FILE_NAME =
-    // #if RXTX java.lang.System.getProperty("bt747_settings", // bt747_settings
-    // or default value
-    // #if RXTX ((java.lang.System.getProperty("user.home").length()!=0) ?
-    // #if RXTX
-    // java.lang.System.getProperty("user.home")+java.lang.System.getProperty("file.separator")+"SettingsBT747.pdb":(
-
-    (bt747.sys.Settings.platform.startsWith("Win32")
-            || bt747.sys.Settings.platform.startsWith("Windows") || bt747.sys.Settings.platform
-            .startsWith("Mac")
-    // #if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")
-    ) ? "SettingsBT747.pdb" : "/My Documents/BT747/SettingsBT747.pdb"
-    // #if RXTX )
-    // #if RXTX ))
-    ;
-    // private static final String CONFIG_FILE_NAME =
-    // java.lang.System.getProperty("bt747_settings",
-    // ((java.lang.System.getProperty("user.home").length()!=0) ?
-    // java.lang.System.getProperty("user.home")+java.lang.System.getProperty("file.separator")+"SettingsBT747.pdb":(
-    //
-    // (bt747.sys.Settings.platform.startsWith("Win32")||bt747.sys.Settings.platform.startsWith("Windows")
-    // ||bt747.sys.Settings.platform.startsWith("Mac")
-    // || java.lang.System.getProperty("os.name").startsWith("Mac")
-    // ) ?
-    // "SettingsBT747.pdb"
-    // :
-    // "/My Documents/BT747/SettingsBT747.pdb"
-    // )
-    // ) )
-    // ;
-
     private static final int C_PORTNBR_IDX = 0;
     private static final int C_PORTNBR_SIZE = 8;
     private static final int C_BAUDRATE_IDX = C_PORTNBR_IDX + C_PORTNBR_SIZE;
@@ -324,20 +293,12 @@ public class AppSettings {
     private String logFile;
     private String reportFileBase;
 
-    private boolean solveMacLagProblem = false;
+    private static boolean solveMacLagProblem = false;
 
+    /**
+     * Controller must get settings and call {@link #init()} afterwards before actual use of the model.
+     */
     public AppSettings() {
-        init();
-        // bt747.sys.Vm.debug(CONFIG_FILE_NAME);
-        // #if RXTX
-        // bt747.sys.Vm.debug(java.lang.System.getProperty("bt747_settings"));
-    }
-
-    private boolean isWin32LikeDevice() {
-        return bt747.sys.Settings.platform.startsWith("WindowsCE")
-                || bt747.sys.Settings.platform.startsWith("PocketPC")
-                || (bt747.sys.Settings.platform.startsWith("Win32") && Settings.onDevice)
-                || !Settings.isWaba();
     }
 
     public final void init() {
@@ -349,47 +310,6 @@ public class AppSettings {
                 bt747.sys.Vm.debug("ASSERT:Problem with param index " + i);
             }
         }
-        if ((Settings.getAppSettings() == null)
-                || (Settings.getAppSettings().length() < 100)
-        // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
-        ) {
-            Settings.setAppSettings(new String(new byte[2048]));
-            if (isWin32LikeDevice()
-            // #if RXTX ||
-            // java.lang.System.getProperty("os.name").startsWith("Mac")
-            // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
-            // #if RXTX ||java.lang.System.getProperty("user.home").length()!=0
-            ) {
-                int readLength = 0;
-
-                // bt747.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
-                // bt747.sys.Vm.debug("loading config file "+CONFIG_FILE_NAME);
-                File preferencesFile = new File("");
-                try {
-                    preferencesFile = new File(CONFIG_FILE_NAME, File.READ_ONLY);
-                    readLength = preferencesFile.getSize();
-                    if (readLength >= 100) {
-                        byte[] appSettingsArray = new byte[2048];
-
-                        preferencesFile.readBytes(appSettingsArray, 0,
-                                readLength);
-                        Settings.setAppSettings(new String(appSettingsArray));
-                    }
-                } catch (Exception e) {
-                    // Vm.debug("Exception new log create");
-                }
-                try {
-                    preferencesFile.close();
-                } catch (Exception e) {
-
-                }
-            }
-        }
-        // #if RXTX
-        // if(Convert.toInt(java.lang.System.getProperty("bt747_Mac_solvelag",java.lang.System.getProperty("os.name").startsWith("Mac")?"1":"0"))==1)
-        // {
-        // #if RXTX solveMacLagProblem=true;
-        // #if RXTX }
 
         mVersion = getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
         if ((mVersion.length() == 4) && (mVersion.charAt(1) == '.')) {
@@ -399,6 +319,8 @@ public class AppSettings {
         }
         updateSettings(VersionX100);
     }
+    
+    public static String defaultBaseDirPath="";
 
     private void updateSettings(final int versionX100) {
         switch (versionX100) {
@@ -406,18 +328,7 @@ public class AppSettings {
             setPortnbr(-1);
             setBaudRate(115200);
             setCard(-1);
-            if (bt747.sys.Settings.platform.startsWith("Palm")) {
-                setBaseDirPath("/Palm");
-            } else if (isWin32LikeDevice()) {
-                if (bt747.io.File.getCardVolumePath() == null) {
-                    setBaseDirPath("/EnterYourDir");
-                } else {
-                    setBaseDirPath(File.getCardVolumePath());
-                }
-            } else {
-                setBaseDirPath("/BT747");
-            }
-
+            setBaseDirPath(defaultBaseDirPath);
             setLogFileRelPath("BT747log.bin");
             setReportFileBase("GPSDATA");
             setStartupOpenPort(false);
@@ -531,52 +442,6 @@ public class AppSettings {
         setTrkPtRCR(0xFFFFFFFF);
         setWayPtValid(0xFFFFFFFE);
         setWayPtRCR(0x00000008);
-    }
-
-    /**
-     * Save all the user settings to disk.
-     */
-    protected final void saveSettings() {
-        if (isWin32LikeDevice()
-        // #if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")
-        // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
-        ) {
-            // bt747.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
-            // bt747.sys.Vm.debug("saving config file "+CONFIG_FILE_NAME);
-            File preferencesFile = new File("");
-            try {
-                File m_Dir = new File(CONFIG_FILE_NAME.substring(0,
-                        CONFIG_FILE_NAME.lastIndexOf('/')), File.DONT_OPEN);
-                if (!m_Dir.exists()) {
-                    m_Dir.createDir();
-                }
-            } catch (Exception e) {
-                // Vm.debug("Exception new log delete");
-                // e.printStackTrace();
-            }
-            try {
-                preferencesFile = new File(CONFIG_FILE_NAME, File.DONT_OPEN);
-                if (preferencesFile.exists()) {
-                    preferencesFile.delete();
-                }
-            } catch (Exception e) {
-                // Vm.debug("Exception new log delete");
-            }
-            try {
-                preferencesFile = new File(CONFIG_FILE_NAME, File.CREATE);
-                preferencesFile.close();
-                preferencesFile = new File(CONFIG_FILE_NAME, File.READ_WRITE);
-                preferencesFile.writeBytes(
-                        Settings.getAppSettings().getBytes(), 0, Settings
-                                .getAppSettings().length());
-                preferencesFile.close();
-            } catch (Exception e) {
-                // Vm.debug("Exception new log create");
-                e.printStackTrace();
-            }
-            // bt747.sys.Vm.debug("saved config file length
-            // "+Settings.appSettings.length());
-        }
     }
 
     public final void getSettings() {
@@ -1237,7 +1102,7 @@ public class AppSettings {
     /**
      * @return Returns the solveMacLagProblem.
      */
-    public final boolean isSolveMacLagProblem() {
+    public final static boolean isSolveMacLagProblem() {
         return solveMacLagProblem;
     }
 
@@ -1245,8 +1110,8 @@ public class AppSettings {
      * @param solveMacLagProblem
      *            The solveMacLagProblem to set.
      */
-    protected final void setSolveMacLagProblem(final boolean solveMacLagProblem) {
-        this.solveMacLagProblem = solveMacLagProblem;
+    protected final static void setSolveMacLagProblem(final boolean arg) {
+        solveMacLagProblem = arg;
     }
 
     protected final void setTimeConditionSetting1(final int value) {
@@ -1374,8 +1239,8 @@ public class AppSettings {
         while (notok && (i >= 0)) {
             switch (i--) {
             case 0:
-                path = CONFIG_FILE_NAME;
-                break;
+                //path = CONFIG_FILE_NAME;
+                //break;
             case 1:
                 path = getBaseDirPath() + "/";
                 break;
