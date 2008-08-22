@@ -23,11 +23,11 @@ public class Generic {
     private static HashSet h = new HashSet();
     private static HashSet oos = new HashSet();
 
-    //java.util.HashSet<Object> tt = new java.util.HashSet<Object>();
-    
+    // java.util.HashSet<Object> tt = new java.util.HashSet<Object>();
+
     // TODO: Improve next code - for the moment it is functional.
 
-    public static void addThread(Thread t, final boolean b) {
+    public static void addThread(final Thread t, final boolean b) {
         // MainWindow.getMainWindow().addThread(t, b);
         if (!oos.contains(t)) {
             removeIfStoppedThread(t);
@@ -50,7 +50,7 @@ public class Generic {
         }
     }
 
-    public static void removeThread(Thread t) {
+    public static void removeThread(final Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
         Iterator it = h.iterator();
         while (it.hasNext()) {
@@ -65,14 +65,14 @@ public class Generic {
 
     }
 
-    public static void removeIfStoppedThread(Thread t) {
+    public static void removeIfStoppedThread(final Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
         Iterator it = h.iterator();
         while (it.hasNext()) {
             MyThread tt = (MyThread) it.next();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
-                if(tt.running) {
+                if (tt.running) {
                     // When this is null, the thread stops.)
                     h.remove(tt);
                     oos.remove(t);
@@ -80,6 +80,14 @@ public class Generic {
             }
         }
 
+    }
+
+    public static double pow(final double x, final double y) {
+        return Float11.pow(x, y);
+    }
+
+    public static double acos(final double x) {
+        return Float11.acos(x);
     }
 
 }
