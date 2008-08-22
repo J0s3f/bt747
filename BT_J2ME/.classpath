@@ -2,6 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
+	<classpathentry kind="src" path="src_bt747"/>
+	<classpathentry kind="src" path="srcc"/>
 	<classpathentry kind="con" path="J2MELIB"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/J4ME"/>
 	<classpathentry kind="lib" path="/BT747/lib/collections-superwaba.jar" sourcepath="/SWCollections/src"/>
