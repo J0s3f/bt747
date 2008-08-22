@@ -7,6 +7,7 @@
 package bt747.generic;
 
 import waba.ui.MainWindow;
+
 import bt747.sys.Thread;
 
 /**
@@ -17,12 +18,20 @@ import bt747.sys.Thread;
  */
 public class Generic {
 
-    public static void addThread(Thread t, final boolean b) {
+    public static void addThread(final Thread t, final boolean b) {
         MainWindow.getMainWindow().addThread(t, b);
     }
 
-    public static void removeThread(Thread t) {
+    public static void removeThread(final Thread t) {
         MainWindow.getMainWindow().removeThread(t);
+    }
+    
+    public static double pow(double x, double y) {
+        return Math.pow(x,y);
+    }
+
+    public static double acos(final double x) {
+        return Math.acos(x);
     }
 
 }
