@@ -17,46 +17,46 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************       
-package gps;
+package bt747.model;
+
+import gps.GpsEvent;
 
 /**
  * Defines some events for the gps package.
  * 
  * @author Mario De Weerd
  */
-public class GpsEvent {
-    public static final int DATA_UPDATE = 1;
-    public static final int LOG_FORMAT_UPDATE = 2;
-    public static final int GPRMC = 3;
-    public static final int GPGGA = 4;
-    public static final int LOG_DOWNLOAD_STARTED = 5;
-    public static final int DOWNLOAD_STATE_CHANGE = 6;
-    public static final int LOG_DOWNLOAD_DONE = 7;
-    public static final int DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY = 8;
-    public static final int ERASE_ONGOING_NEED_POPUP = 9;
-    public static final int ERASE_DONE_REMOVE_POPUP = 10;
-    public static final int COULD_NOT_OPEN_FILE = 11;
-    public static final int DEBUG_MSG = 12;
+public class ModelEvent extends GpsEvent{
+    public static final int CONVERSION_STARTED = 256;
+    public static final int CONVERSION_ENDED = 257;
+    public static final int WORKDIRPATH_UPDATE = 258;
+    public static final int OUTPUTFILEPATH_UPDATE = 259;
+    public static final int LOGFILEPATH_UPDATE = 260;
+    /**
+     * @deprecated Use {@link #DOWNLOAD_METHOD_CHANGE} instead.
+     */
+    public static final int INCREMENTAL_CHANGE = 261;
+    public static final int TRK_VALID_CHANGE = 262;
+    public static final int TRK_RCR_CHANGE = 263;
+    public static final int WAY_VALID_CHANGE = 264;
+    public static final int WAY_RCR_CHANGE = 265;
+    public static final int CONNECTED   = 266;
+    public static final int DISCONNECTED   = 267;
+    public static final int FILE_LOG_FORMAT_UPDATE = 268;
+    /**
+     * A setting changed - int param = index of changed setting
+     */
+    public static final int SETTING_CHANGE = 269;
+    /**
+     * Notifies a change in the download method setting.
+     */
+    public static final int DOWNLOAD_METHOD_CHANGE = 270;
 
-    private int type;
-    private Object arg;
-
-    public GpsEvent(final int type) {
-        this.type = type;
-        arg = null;
+    public ModelEvent(int type, Object arg) {
+        super(type,arg);
     }
-
-    public GpsEvent(final int type, final Object arg) {
-        this.type = type;
-        this.arg = arg;
+    
+    public ModelEvent(GpsEvent event) {
+        super(event.getType(),event.getArg());
     }
-
-    public final int getType() {
-        return type;
-    }
-
-    public final Object getArg() {
-        return arg;
-    }
-
 }
