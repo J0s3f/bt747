@@ -193,6 +193,11 @@ public class GPSstate implements Thread {
     }
 
     /**
+     * How long to wait to initialize the connection (to avoid certain connection problems).
+     */
+    public static final short INITIAL_CONNECTION_SLEEP = 200;
+
+    /**
      * Start the timer To be called once the port is opened. The timer is used
      * to launch functions that will check if there is information on the serial
      * connection or to send to the GPS device.
@@ -200,6 +205,8 @@ public class GPSstate implements Thread {
     public final void setupTimer() {
         // TODO: set up thread in gpsRxTx directly (through controller)
         if (gpsRxTx.isConnected()) {
+            // Do not question the bluetooth connection too early on.
+            nextRun = Vm.getTimeStamp() + INITIAL_CONNECTION_SLEEP;
             Generic.addThread(this, false);
         }
     }

@@ -35,9 +35,8 @@ import bt747.util.Vector;
  */
 public class GPSrxtx {
     private boolean GPS_DEBUG = !Settings.hasWaba || false; // !Settings.onDevice;
-    private boolean hasWaba = Settings.isWaba();
 
-    private GPSPort gpsPort;
+    private static GPSPort gpsPort;
 
     private Semaphore m_writeOngoing = new Semaphore(1);
 
@@ -51,19 +50,10 @@ public class GPSrxtx {
      * Class constructor.
      */
     public GPSrxtx() {
-        if (hasWaba) {
-            gpsPort = new GPSWabaPort();
-        } else {
-            try {
-                // gpsPort=new GPSRxTxPort();
-                gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
-                        .newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-                gpsPort = new GPSWabaPort();
-            }
-        }
-        setDefaults();
+    }
+    
+    public static void setGpsPortInstance(final GPSPort portInstance) {
+        gpsPort = portInstance;
     }
 
     /**
@@ -75,26 +65,6 @@ public class GPSrxtx {
     public void setDefaults(final int port, final int speed) {
         gpsPort.setPort(port);
         gpsPort.setSpeed(speed);
-    }
-
-    /**
-     * Set the defaults of the device according to preset, guessed values.
-     */
-    public void setDefaults() {
-        // Settings.platform:
-        // PalmOS, PalmOS/SDL, WindowsCE, PocketPC, MS_SmartPhone,
-        // Win32, Symbian, Linux, Posix
-        String Platform = Settings.platform;
-
-        if ((Platform.equals("Java")) || (Platform.equals("Win32"))
-                || (Platform.equals("Posix")) || (Platform.equals("Linux"))) {
-            // Try USB Port
-            gpsPort.setUSB();
-        } else if (Platform.startsWith("PalmOS")) {
-            gpsPort.setBlueTooth();
-        } else {
-            gpsPort.setPort(0); // Should be bluetooth in WinCE
-        }
     }
 
     public void setBluetoothAndOpen() {
