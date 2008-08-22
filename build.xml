@@ -843,13 +843,13 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-		<replace file="${filesrc.dir}/gps/connection/GPSrxtx.java"
+		<replace file="${filesrc.dir}bt747/model/AppController.java"
 		         encoding="${encoding}"
 		         token="GPSWabaPort"
 		         summary="yes"
 		         value="GPSFilePort"
 		/>
-		<replace file="${filesrc.dir}/bt747/model/AppSettings.java"
+		<replace file="${filesrc.dir}/bt747/model/AppController.java"
 		         encoding="${encoding}"
 		         token="//#if RXTX"
 		         summary="yes"
@@ -1692,7 +1692,7 @@
 			         summary="yes"
 			         value="GPSRxTxPort"
 			>
-				<include name="${@{dest.dir}rxtxfilter}gps/connection/GPSrxtx.java"
+				<include name="${@{dest.dir}rxtxfilter}bt747/model/AppController.java"
 				/>
 			</replace>
 			<!-- <echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" /> -->
@@ -1701,7 +1701,7 @@
 			         summary="yes"
 			         value=""
 			>
-				<include name="${@{dest.dir}rxtxfilter}bt747/model/AppSettings.java"
+				<include name="${@{dest.dir}rxtxfilter}bt747/model/AppController.java"
 				/>
 			</replace>
 
