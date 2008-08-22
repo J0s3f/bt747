@@ -40,7 +40,7 @@ public class PolylineEncoder {
 
         for (int i = 0; i < pNumLevels; i++) {
             this.zoomLevelBreaks[i] = pVerySmall
-                    * Math.pow(this.zoomFactor, pNumLevels - i - 1);
+                    * bt747.sys.Float11.pow(this.zoomFactor, pNumLevels - i - 1);
         }
     }
 
@@ -49,7 +49,7 @@ public class PolylineEncoder {
 
         for (int i = 0; i < numLevels; i++) {
             this.zoomLevelBreaks[i] = verySmall
-                    * Math.pow(this.zoomFactor, numLevels - i - 1);
+                    * bt747.sys.Float11.pow(this.zoomFactor, numLevels - i - 1);
         }
     }
 
@@ -171,30 +171,30 @@ public class PolylineEncoder {
 
         if (p1.getLatDouble() == p2.getLatDouble()
                 && p1.getLonDouble() == p2.getLonDouble()) {
-            out = Math.sqrt(Math.pow(p2.getLatDouble() - p0.getLatDouble(), 2)
-                    + Math.pow(p2.getLonDouble() - p0.getLonDouble(), 2));
+            out = Math.sqrt(bt747.sys.Float11.pow(p2.getLatDouble() - p0.getLatDouble(), 2)
+                    + bt747.sys.Float11.pow(p2.getLonDouble() - p0.getLonDouble(), 2));
         } else {
             u = ((p0.getLatDouble() - p1.getLatDouble())
                     * (p2.getLatDouble() - p1.getLatDouble()) + (p0
                     .getLonDouble() - p1.getLonDouble())
                     * (p2.getLonDouble() - p1.getLonDouble()))
-                    / (Math.pow(p2.getLatDouble() - p1.getLatDouble(), 2) + Math
+                    / (bt747.sys.Float11.pow(p2.getLatDouble() - p1.getLatDouble(), 2) + bt747.sys.Float11
                             .pow(p2.getLonDouble() - p1.getLonDouble(), 2));
 
             if (u <= 0) {
-                out = Math.sqrt(Math.pow(p0.getLatDouble() - p1.getLatDouble(),
+                out = Math.sqrt(bt747.sys.Float11.pow(p0.getLatDouble() - p1.getLatDouble(),
                         2)
-                        + Math.pow(p0.getLonDouble() - p1.getLonDouble(), 2));
+                        + bt747.sys.Float11.pow(p0.getLonDouble() - p1.getLonDouble(), 2));
             }
             if (u >= 1) {
-                out = Math.sqrt(Math.pow(p0.getLatDouble() - p2.getLatDouble(),
+                out = Math.sqrt(bt747.sys.Float11.pow(p0.getLatDouble() - p2.getLatDouble(),
                         2)
-                        + Math.pow(p0.getLonDouble() - p2.getLonDouble(), 2));
+                        + bt747.sys.Float11.pow(p0.getLonDouble() - p2.getLonDouble(), 2));
             }
             if (0 < u && u < 1) {
-                out = Math.sqrt(Math.pow(p0.getLatDouble() - p1.getLatDouble()
+                out = Math.sqrt(bt747.sys.Float11.pow(p0.getLatDouble() - p1.getLatDouble()
                         - u * (p2.getLatDouble() - p1.getLatDouble()), 2)
-                        + Math.pow(p0.getLonDouble() - p1.getLonDouble() - u
+                        + bt747.sys.Float11.pow(p0.getLonDouble() - p1.getLonDouble() - u
                                 * (p2.getLonDouble() - p1.getLonDouble()), 2));
             }
         }

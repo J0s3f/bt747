@@ -305,7 +305,7 @@ public final class Conv {
         double y2 = calcR(lat2) * Math.sin(rad2deg(lon2)) * Math.sin(rad2deg(90 - lat2));
         double z1 = calcR(lat1) * Math.cos(rad2deg(90 - lat1));
         double z2 = calcR(lat2) * Math.cos(rad2deg(90 - lat2));
-        double a = Math.acos(((x1 * x2) + (y1 * y2) + (z1 * z2))/Math.pow(calcR((double) (lat1 + lat2) / 2),2));
+        double a = bt747.sys.Float11.acos(((x1 * x2) + (y1 * y2) + (z1 * z2))/bt747.sys.Float11.pow(calcR((double) (lat1 + lat2) / 2),2));
         
         return calcR((double) (lat1 + lat2) / 2) * a;
     }
@@ -342,7 +342,7 @@ public final class Conv {
         sc = Math.sin(lat);
         x = a * (1.0 - e2);
         z = 1.0 - e2 * sc * sc;
-        y = Math.pow(z, 1.5);
+        y = bt747.sys.Float11.pow(z, 1.5);
         r = x / y;
         
         r = r * 1000.0;
