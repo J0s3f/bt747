@@ -6,8 +6,6 @@
  */
 package bt747.sys;
 
-import com.sun.kvem.midp.pim.formats.FormatSupport;
-
 /**
  * @author Mario De Weerd
  * 
@@ -32,7 +30,7 @@ public class Convert {
     }
 
     public static String toString(final double p, final int i) {
-//        return format String.format(null, "%." + i + "f", new Double(p));
+        // return format String.format(null, "%." + i + "f", new Double(p));
         return Double.toString(p);
     }
 
