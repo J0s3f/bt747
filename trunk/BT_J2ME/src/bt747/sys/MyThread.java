@@ -16,7 +16,7 @@ public class MyThread implements java.lang.Runnable {
         while (btThread != null) {
             try {
                 btThread.run();
-                jvThread.sleep(2);
+                java.lang.Thread.sleep(2);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

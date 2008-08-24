@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="src_bt747"/>
 	<classpathentry kind="con" path="J2MELIB"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/J4ME"/>
+	<classpathentry exported="true" kind="lib" path="C:/Download/j2meunit-all/lib/j2meunit.jar"/>
 	<classpathentry exported="true" kind="lib" path="/BT747/lib/collections-superwaba.jar" sourcepath="/SWCollections/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

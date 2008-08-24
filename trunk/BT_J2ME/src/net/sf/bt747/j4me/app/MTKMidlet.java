@@ -65,6 +65,7 @@ public class MTKMidlet extends MIDlet
         DeviceScreen first = new FindingGPSDevicesAlert(c,next);
         first.show();
         Log.debug("Start app end");
+        c.setDebug(true);
     }
 
     /**

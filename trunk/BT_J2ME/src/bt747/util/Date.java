@@ -8,15 +8,15 @@ package bt747.util;
 
 // import java.text.DateFormat;
 // import java.text.SimpleDateFormat;
+import gov.nist.core.StringTokenizer;
+
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import org.j4me.logging.Log;
 
-import moio.util.StringTokenizer;
-
-import bt747.sys.Settings;
 import bt747.sys.Convert;
+import bt747.sys.Settings;
 
 /**
  * @author Mario De Weerd
@@ -25,7 +25,7 @@ import bt747.sys.Convert;
  * Preferences - Java - Code Style - Code Templates
  */
 public class Date {
-    //static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+    // static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
     private Calendar cal = Calendar.getInstance();
 
     /**
@@ -75,28 +75,26 @@ public class Date {
      */
     public Date(String strDate, byte dateFormat) {
         init();
-        StringTokenizer fields = new StringTokenizer(strDate.toString(), "/");
+        StringTokenizer fields = new StringTokenizer(strDate.toString(), '/');
 
         try {
             int arg0;
             int arg1;
             int arg2;
 
-            if (fields.countTokens() == 3) {
-                arg0 = Convert.toInt(fields.nextToken());
-                arg1 = Convert.toInt(fields.nextToken());
-                arg2 = Convert.toInt(fields.nextToken());
+            arg0 = Convert.toInt(fields.nextToken());
+            arg1 = Convert.toInt(fields.nextToken());
+            arg2 = Convert.toInt(fields.nextToken());
 
-                // TODO: may need to correct year.
-                if (dateFormat == Settings.DATE_YMD) {
-                    cal.set(Calendar.DAY_OF_MONTH, arg2);
-                    cal.set(Calendar.MONTH, arg1);
-                    cal.set(Calendar.YEAR, arg0);
-                } else {
-                    cal.set(Calendar.DAY_OF_MONTH, arg0);
-                    cal.set(Calendar.MONTH, arg1);
-                    cal.set(Calendar.YEAR, arg2);
-                }
+            // TODO: may need to correct year.
+            if (dateFormat == Settings.DATE_YMD) {
+                cal.set(Calendar.DAY_OF_MONTH, arg2);
+                cal.set(Calendar.MONTH, arg1);
+                cal.set(Calendar.YEAR, arg0);
+            } else {
+                cal.set(Calendar.DAY_OF_MONTH, arg0);
+                cal.set(Calendar.MONTH, arg1);
+                cal.set(Calendar.YEAR, arg2);
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -115,7 +113,7 @@ public class Date {
     // super(t);
     // }
     public void advance(int s) {
-        cal.setTime(new java.util.Date(cal.getTime().getTime()+s*1000L));
+        cal.setTime(new java.util.Date(cal.getTime().getTime() + s * 1000L));
 
     }
 
@@ -135,15 +133,15 @@ public class Date {
         try {
             return (int) (cal.getTime().getTime() / 1000L);
         } catch (Exception e) {
-            Log.error("dateToUTCepoch1970 problem ...",e);
-            Log.info("Timezone:"+cal.getTimeZone().getID());
+            Log.error("dateToUTCepoch1970 problem ...", e);
+            Log.info("Timezone:" + cal.getTimeZone().getID());
             // TODO: handle exception
             return 0;
         }
     }
 
     public String getDateString() {
-        return getDay()+"/"+getMonth()+"/"+getYear();
+        return getDay() + "/" + getMonth() + "/" + getYear();
     }
 
     // private static final int DAYS_Julian_1970 = (new
