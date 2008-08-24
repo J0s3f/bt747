@@ -63,6 +63,7 @@ public abstract class GPSPort {
     public int openPort() {
         return -1;
     }
+    
     public void closePort() { }
     
     public void setBlueTooth() {

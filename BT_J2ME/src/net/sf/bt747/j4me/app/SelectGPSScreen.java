@@ -15,7 +15,7 @@ public class SelectGPSScreen
 	/**
 	 * The location information for this application.
 	 */
-	private final BTConnectionModel model;
+	private final AppController c;
 	
 	/**
 	 * The screen to return to if the user cancels this one.
@@ -28,11 +28,11 @@ public class SelectGPSScreen
 	 * @param model is the application's location data.
 	 * @param previous is the screen to return to if this one is canceled.
 	 */
-	public SelectGPSScreen (BTConnectionModel model, DeviceScreen previous)
+	public SelectGPSScreen (AppController c, DeviceScreen previous)
 	{
 		setTitle( "Select GPS Device" );
 
-		this.model = model;
+		this.c = c;
 		this.previous = previous;
 	}
 	
@@ -71,7 +71,7 @@ public class SelectGPSScreen
 
 				public void onSelection ()
 				{
-					FindingGPSDevicesAlert alert = new FindingGPSDevicesAlert( model, previous );
+					FindingGPSDevicesAlert alert = new FindingGPSDevicesAlert( c, previous );
 					alert.show();
 				}
 			} ));
@@ -157,11 +157,14 @@ public class SelectGPSScreen
 		public void onSelection ()
 		{
 			// Record the selected device.
-			model.setBluetoothGPS( name, address );
+			c.getAppModel().setBluetoothGPS( name, address );
 			
 			// Connect to the GPS.
-			InitializingGPSAlert alert = new InitializingGPSAlert( model, SelectGPSScreen.this );
-			alert.show();
+			//InitializingGPSAlert alert = new InitializingGPSAlert( c, SelectGPSScreen.this );
+			//alert.show();
+			
+			// Device is selected
+			previous.show();
 		}
 	}
 }
