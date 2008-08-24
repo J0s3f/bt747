@@ -21,7 +21,7 @@ public class FindingGPSDevicesAlert
 	/**
 	 * The location information for this application.
 	 */
-	private final BTConnectionModel model;
+	private final AppController c;
 	
 	/**
 	 * An object to use for locking the Bluetooth discovery process.  Only one can
@@ -50,11 +50,11 @@ public class FindingGPSDevicesAlert
 	 * @param model is the application's location data.
 	 * @param previous is the screen that came before this one.
 	 */
-	public FindingGPSDevicesAlert (BTConnectionModel model, DeviceScreen previous)
+	public FindingGPSDevicesAlert (AppController c, DeviceScreen previous)
 	{
 		super( "Finding GPS...", "Looking for nearby Bluetooth devices." );
 
-		this.model = model;
+		this.c = c;
 		this.previous = previous;
 	}
 
@@ -81,7 +81,7 @@ public class FindingGPSDevicesAlert
 		{
 			// Stop any providers in case they were using Bluetooth and therefore have
 			// a lock on the Bluetooth socket.
-			BluetoothGPS provider = model.getGpsBluetoothConnection();
+			BluetoothGPS provider = c.getAppModel().getGpsBluetoothConnection();
 			
 			if ( provider != null )
 			{
@@ -133,7 +133,7 @@ public class FindingGPSDevicesAlert
 				// Successful device discovery.
 				Log.info( "Found list of " + devices.length + " available devices and presenting them to the user." );
 				
-				SelectGPSScreen selectGPS = new SelectGPSScreen( model, previous );
+				SelectGPSScreen selectGPS = new SelectGPSScreen( c, previous );
 				selectGPS.setAvailableDevices( devices );
 				
 				if ( devices.length == 0 )

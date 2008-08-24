@@ -2,6 +2,9 @@ package net.sf.bt747.j4me.app;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
+import org.j4me.logging.Level;
+import org.j4me.logging.Log;
+import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.UIManager;
 
 /**
@@ -14,12 +17,19 @@ public class MTKMidlet extends MIDlet
      */
     private static MTKMidlet instance;
     
+    AppModel m;
+    AppController c;
     /**
      * Constructs the midlet.  This is called before &lt;code&gt;startApp&lt;/code&gt;.
      */
     public MTKMidlet ()
     {
         instance = this;
+        Log.setLevel(Level.DEBUG);
+        Log.debug("Started");
+        m = new AppModel();
+        c = new AppController(m);
+
     }
 
     /**
@@ -47,8 +57,14 @@ public class MTKMidlet extends MIDlet
         //UIManager.setTheme( new org.j4me.examples.ui.themes.RedTheme() );
         
         // Show the first screen.
-        HelloWorldScreen screen = new HelloWorldScreen();
-        screen.show();
+        
+        // FindingGPSDevicesAlert creates a list of devices, then calls
+        // SelectGPSScreen which will in turn call
+        // InitializingGPSAlert
+        DeviceScreen next = new InitializingGPSAlert(c,null);
+        DeviceScreen first = new FindingGPSDevicesAlert(c,next);
+        first.show();
+        Log.debug("Start app end");
     }
 
     /**

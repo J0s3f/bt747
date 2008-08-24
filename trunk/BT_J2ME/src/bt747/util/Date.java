@@ -11,6 +11,8 @@ package bt747.util;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import org.j4me.logging.Log;
+
 import moio.util.StringTokenizer;
 
 import bt747.sys.Settings;
@@ -23,7 +25,7 @@ import bt747.sys.Convert;
  * Preferences - Java - Code Style - Code Templates
  */
 public class Date {
-    static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+    //static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
     private Calendar cal = Calendar.getInstance();
 
     /**
@@ -44,7 +46,7 @@ public class Date {
     public Date(int sentDate) {
         init();
         cal.set(Calendar.DAY_OF_MONTH, sentDate / 10000);
-        cal.set(Calendar.MONTH, sentDate / 100 % 100 - 1);
+        cal.set(Calendar.MONTH, sentDate / 100 % 100);
         cal.set(Calendar.YEAR, sentDate % 100);
     }
 
@@ -130,7 +132,14 @@ public class Date {
     }
 
     public final int dateToUTCepoch1970() {
-        return (int) (cal.getTime().getTime() / 1000L);
+        try {
+            return (int) (cal.getTime().getTime() / 1000L);
+        } catch (Exception e) {
+            Log.error("dateToUTCepoch1970 problem ...",e);
+            Log.info("Timezone:"+cal.getTimeZone().getID());
+            // TODO: handle exception
+            return 0;
+        }
     }
 
     public String getDateString() {

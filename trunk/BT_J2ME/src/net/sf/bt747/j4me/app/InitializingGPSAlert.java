@@ -16,7 +16,7 @@ public class InitializingGPSAlert extends ProgressAlert {
     /**
      * The location information for this application.
      */
-    private final BTConnectionModel model;
+    private final AppController c;
 
     /**
      * The screen that came before this one. If the user cancels the the process
@@ -32,15 +32,10 @@ public class InitializingGPSAlert extends ProgressAlert {
      * @param previous
      *            is the screen that came before this one.
      */
-    public InitializingGPSAlert(BTConnectionModel model, DeviceScreen previous) {
+    public InitializingGPSAlert(AppController c, DeviceScreen previous) {
         super("Initializing GPS...", "Connecting to the location provider.");
 
-        String deviceName = model.getBluetoothGPSName();
-
-        String text = getText() + "\n" + "Using device:  " + deviceName;
-        setText(text);
-
-        this.model = model;
+        this.c = c;
         this.previous = previous;
     }
 
@@ -62,6 +57,12 @@ public class InitializingGPSAlert extends ProgressAlert {
         BluetoothGPS provider = null;
         DeviceScreen next = null;
 
+        String deviceName = c.getAppModel().getBluetoothGPSName();
+
+        String text = getText() + "\n" + "Using device:  " + deviceName;
+        setText(text);
+
+
         try {
             // Get the GPS provider.
             // Synchronize on our Bluetooth lock in case the user hits the
@@ -73,7 +74,7 @@ public class InitializingGPSAlert extends ProgressAlert {
                 // For example if connected to one GPS device and are switching
                 // to
                 // another.
-                BluetoothGPS old = model.getGpsBluetoothConnection();
+                BluetoothGPS old = c.getAppModel().getGpsBluetoothConnection();
 
                 if (old != null) {
                     old.close();
@@ -88,7 +89,9 @@ public class InitializingGPSAlert extends ProgressAlert {
             // the method that will throw the SecurityException, not the above
             // getProvider() method (which would throw it for GPS through
             // Bluetooth).
-            model.setGpsBluetoothConnection(provider);
+            c.getAppModel().setGpsBluetoothConnection(provider);
+            c.setFreeTextPort(c.getAppModel().getBluetoothGPSURL());
+            c.connectGPS();
 
             // Did we get a GPS location provider?
             if (provider != null) {
