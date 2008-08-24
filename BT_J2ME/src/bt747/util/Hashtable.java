@@ -12,7 +12,7 @@ package bt747.util;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Hashtable extends moio.util.Hashtable {
+public class Hashtable extends java.util.Hashtable {
 
     static final long serialVersionUID=1L;
     /**
@@ -22,24 +22,5 @@ public class Hashtable extends moio.util.Hashtable {
         super(initialCapacity);
         // TODO Auto-generated constructor stub
     }
-
-    /**
-     * @param initialCapacity
-     * @param loadFactor
-     */
-    public Hashtable(int initialCapacity, float loadFactor) {
-        super(initialCapacity, loadFactor);
-        // TODO Auto-generated constructor stub
-    }
-
-    /**
-     * @param res
-     */
-//    public Hashtable(String res) {
-//        //res is a string of "key1=value1,key2=value2" etc.
-//        waba.util.Hashtable
-//        super(res);
-//        // TODO Auto-generated constructor stub
-//    }
 
 }

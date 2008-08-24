@@ -6,7 +6,7 @@
  */
 package bt747.util;
 
-import moio.util.Stack;
+import java.util.Stack;
 
 /**
  * @author Mario De Weerd
@@ -26,26 +26,22 @@ public class Vector extends Stack {
     }
 
     public void del(Object o) {
-        remove(o);
+        super.removeElement(o);
     }
     
     public void del(int i) {
-        try {
-            remove(i);
-        } catch (Exception e) {
-            //return false;
-        }
-            
+        super.removeElementAt(i);
     }
     public Object[] toObjectArray() {
-        return toArray();
+        Object[] a = new Object[super.elementCount];
+        super.copyInto(a);
+        return a;
     }
 
     public String[]   toStringArray() {
         String[] s= new String[elementCount];
         for (int i = 0; i < s.length; i++) {
             s[i]=(String)elementData[i];
-            //System.out.println(s[i]);
         }
         
         return s;

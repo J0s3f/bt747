@@ -1,6 +1,5 @@
 package net.sf.bt747.j4me.app;
 
-import org.j4me.bluetoothgps.*;
 import org.j4me.ui.*;
 import org.j4me.ui.components.*;
 

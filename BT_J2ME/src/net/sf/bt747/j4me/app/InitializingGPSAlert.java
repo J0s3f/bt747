@@ -1,7 +1,5 @@
 package net.sf.bt747.j4me.app;
 
-import java.io.*;
-import org.j4me.bluetoothgps.*;
 import org.j4me.examples.ui.screens.*;
 import org.j4me.logging.*;
 import org.j4me.ui.*;
@@ -91,7 +89,7 @@ public class InitializingGPSAlert extends ProgressAlert {
             // Bluetooth).
             c.getAppModel().setGpsBluetoothConnection(provider);
             c.setFreeTextPort(c.getAppModel().getBluetoothGPSURL());
-            c.connectGPS();
+            //c.connectGPS();
 
             // Did we get a GPS location provider?
             if (provider != null) {

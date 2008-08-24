@@ -1,8 +1,0 @@
-MIDlet-1: HelloWorldMidlet,,HelloWorldMidlet
-MIDlet-Jar-Size: 389822
-MIDlet-Jar-URL: BT_J2ME.jar
-MIDlet-Name: BT_J2ME Midlet Suite
-MIDlet-Vendor: Midlet Suite Vendor
-MIDlet-Version: 1.0.0
-MicroEdition-Configuration: CLDC-1.1
-MicroEdition-Profile: MIDP-2.0

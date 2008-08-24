@@ -2,8 +2,6 @@ package net.sf.bt747.j4me.app;
 
 import gps.connection.GPSrxtx;
 
-import bt747.io.File;
-import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.sys.Settings;
 

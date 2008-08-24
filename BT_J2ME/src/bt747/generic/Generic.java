@@ -6,8 +6,8 @@
  */
 package bt747.generic;
 
-import moio.util.HashSet;
-import moio.util.Iterator;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 import bt747.sys.MyThread;
 import bt747.sys.Thread;
@@ -20,8 +20,8 @@ import bt747.sys.Thread;
  */
 public class Generic {
 
-    private static HashSet h = new HashSet();
-    private static HashSet oos = new HashSet();
+    private static Hashtable h = new Hashtable();
+    private static Hashtable oos = new Hashtable();
 
     // java.util.HashSet<Object> tt = new java.util.HashSet<Object>();
 
@@ -43,8 +43,8 @@ public class Generic {
                 System.out.println("new Thread() failed");
             }
             mt.jvThread.start();
-            h.add(mt);
-            oos.add(t);
+            h.put(mt,h);
+            oos.put(t,oos);
         } else {
             System.out.println("Already present thread " + t);
         }
@@ -52,9 +52,9 @@ public class Generic {
 
     public static void removeThread(final Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
-        Iterator it = h.iterator();
-        while (it.hasNext()) {
-            MyThread tt = (MyThread) it.next();
+        Enumeration e = h.keys();
+        while (e.hasMoreElements()) {
+            MyThread tt = (MyThread) e.nextElement();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
                 tt.btThread = null; // When this is null, the thread stops.
@@ -67,9 +67,9 @@ public class Generic {
 
     public static void removeIfStoppedThread(final Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
-        Iterator it = h.iterator();
-        while (it.hasNext()) {
-            MyThread tt = (MyThread) it.next();
+        Enumeration e = h.keys();
+        while (e.hasMoreElements()) {
+            MyThread tt = (MyThread) e.nextElement();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
                 if (tt.running) {
