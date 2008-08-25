@@ -1,0 +1,6 @@
+org.j4me.examples.ui.UIDemoMidlet
+net.sf.bt747.j4me.app.MTKMidlet
+org.j4me.examples.log.LogDemoMidlet
+j2meunit.midletui.TestRunner
+org.j4me.TestsMidlet
+org.j4me.examples.bluetoothgps.GPSDemoMidlet
