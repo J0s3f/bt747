@@ -53,8 +53,8 @@ public class InitializingGPSAlert extends ProgressAlert {
      */
     protected DeviceScreen doWork() {
         BluetoothGPS provider = null;
-        DeviceScreen next = null;
 
+        DeviceScreen next = previous;
         String deviceName = c.getAppModel().getBluetoothGPSName();
 
         String text = getText() + "\n" + "Using device:  " + deviceName;
@@ -110,6 +110,6 @@ public class InitializingGPSAlert extends ProgressAlert {
                     null);
         }
 
-        return next;
+        return previous;
     }
 }

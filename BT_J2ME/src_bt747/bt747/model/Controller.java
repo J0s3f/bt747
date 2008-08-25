@@ -1571,7 +1571,7 @@ public class Controller {
      */
     public final void setFilterValidMask(final int filterType, final int mask) {
         // TODO: not sure this is needed anymore
-        m.getLogFilters()[filterType].setValidMask(mask);
+        m.setFilterValidMask(filterType,mask);
     }
 
     /**
@@ -1604,8 +1604,7 @@ public class Controller {
      * 
      */
     public final void setFilterRcrMask(final int filterType, final int rcrMask) {
-        // TODO: not sure this is needed anymore
-        m.getLogFilters()[filterType].setRcrMask(rcrMask);
+        m.setFilterRcrMask(filterType, rcrMask);
     }
 
     /**

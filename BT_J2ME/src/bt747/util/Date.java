@@ -57,7 +57,7 @@ public class Date {
      */
     public Date(int sentDay, int sentMonth, int sentYear) {
         init();
-        cal.set(Calendar.DAY_OF_MONTH, sentDay / 10000);
+        cal.set(Calendar.DAY_OF_MONTH, sentDay);
         cal.set(Calendar.MONTH, sentMonth);
         cal.set(Calendar.YEAR, sentYear);
     }
@@ -134,8 +134,7 @@ public class Date {
             return (int) (cal.getTime().getTime() / 1000L);
         } catch (Exception e) {
             Log.error("dateToUTCepoch1970 problem ...", e);
-            Log.info("Timezone:" + cal.getTimeZone().getID());
-            // TODO: handle exception
+            Log.info("DD/MM/YY:" + getDateString());
             return 0;
         }
     }
