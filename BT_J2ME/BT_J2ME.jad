@@ -1,4 +1,4 @@
-MIDlet-1: MTKMidlet,,MTKMidlet
+MIDlet-1: MTKMidlet,,net.sf.bt747.j4me.app.MTKMidlet
 MIDlet-Jar-URL: BT_J2ME.jar
 MIDlet-Name: BT_J2ME Midlet Suite
 MIDlet-Vendor: Midlet Suite Vendor

@@ -1,14 +1,14 @@
 package net.sf.bt747.j4me.app;
 
-import java.util.Enumeration;
-
 import gps.log.GPSRecord;
 
-import javax.microedition.io.file.FileConnection;
+import java.util.Enumeration;
+
 import javax.microedition.io.file.FileSystemRegistry;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
+import org.j4me.examples.log.LogScreen;
 import org.j4me.logging.Level;
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
@@ -34,10 +34,16 @@ public class MTKMidlet extends MIDlet implements ModelListener {
      * &lt;code&gt;startApp&lt;/code&gt;.
      */
     public MTKMidlet() {
-        instance = this;
-        Log.setLevel(Level.DEBUG);
-        m = new AppModel();
-        c = new AppController(m);
+        try {
+            instance = this;
+            Log.setLevel(Level.DEBUG);
+            m = new AppModel();
+            c = new AppController(m);
+        } catch (Throwable t) {
+            Log.warn("Unhandled exception ", t);
+            LogScreen l = new LogScreen(null);
+            l.show();
+        }
 
     }
 
@@ -58,6 +64,7 @@ public class MTKMidlet extends MIDlet implements ModelListener {
      */
     protected void startApp() throws MIDletStateChangeException {
         // Initialize the J4ME UI manager.
+        try {
         UIManager.init(this);
 
         Enumeration roots = FileSystemRegistry.listRoots();
@@ -86,6 +93,11 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         DeviceScreen next = new InitializingGPSAlert(c, last);
         DeviceScreen first = new FindingGPSDevicesAlert(c, next);
         first.show();
+        } catch (Throwable t) {
+            Log.warn("Unhandled exception ",t);
+            LogScreen l = new LogScreen(null);
+            l.show();
+        }
     }
 
     /**
