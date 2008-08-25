@@ -77,6 +77,10 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         }
         c.setBaseDirPath(dir);
         Log.info("Basedir set to:" + m.getBaseDirPath());
+        // Input is "/BT747/BT747_sample.bin"
+        c.setLogFileRelPath("BT747_sample.bin");
+        // Output is "/BT747/GPSDATA*"
+        c.setOutputFileRelPath("GPSDATA");
         c.setDebug(true);
         c.setDebugConn(false);
         m.addListener(this);
@@ -89,14 +93,14 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         // FindingGPSDevicesAlert creates a list of devices, then calls
         // SelectGPSScreen which will in turn call
         // InitializingGPSAlert
-        DeviceScreen last = new GPSInfo(c);
-        DeviceScreen next = new InitializingGPSAlert(c, last);
+        DeviceScreen main = new MainScreen(c);
+        DeviceScreen next = new InitializingGPSAlert(c, main);
         DeviceScreen first = new FindingGPSDevicesAlert(c, next);
         first.show();
         } catch (Throwable t) {
             Log.warn("Unhandled exception ",t);
-            LogScreen l = new LogScreen(null);
-            l.show();
+            //LogScreen l = new LogScreen(null);
+            //l.show();
         }
     }
 

@@ -24,6 +24,7 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
 
+import bt747.generic.Generic;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Vm;
@@ -252,6 +253,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                 try {
                     readResult = m_File.readBytes(bytes, 0, sizeToRead);
                 } catch (Exception e) {
+                    Generic.debug("Error during read", e);
                     // TODO: handle exception
                     readResult = 0;
                 }
@@ -451,8 +453,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                 m_File = new File(fileName, File.READ_ONLY, Card);
                 errorInfo = fileName + "|" + m_File.lastError;
             } catch (Exception e) {
-                // TODO: handle exception
-                e.printStackTrace();
+                Generic.debug("Error during initial open", e);
             }
             if (m_File == null || !m_File.isOpen()) {
                 errorInfo = fileName;
