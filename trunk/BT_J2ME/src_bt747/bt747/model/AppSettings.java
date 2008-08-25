@@ -740,7 +740,7 @@ public class AppSettings {
         return baseDirPath;
     }
 
-    public final void setBaseDirPath(final String baseDirPath) {
+    protected final void setBaseDirPath(final String baseDirPath) {
         this.baseDirPath = baseDirPath;
         setStringOpt(ModelEvent.WORKDIRPATH_UPDATE, this.baseDirPath,
                 C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE);

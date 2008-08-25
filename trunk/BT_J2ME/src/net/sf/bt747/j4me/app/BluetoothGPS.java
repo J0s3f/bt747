@@ -175,15 +175,17 @@ class BluetoothGPS extends gps.connection.GPSPort {
         try {
             return inputStream.available();
         } catch (Exception e) {
+            Log.error("readCheck",e);
             return 0;
         }
     }
 
-    public final int getBytes(byte[] b, int start, int end) {
+    public final int readBytes(byte[] b, int start, int end) {
         try {
             return inputStream.read(b, start, end);
         } catch (Exception e) {
             // TODO: handle exception
+            Log.error("getBytes",e);
             return 0;
         }
     }
