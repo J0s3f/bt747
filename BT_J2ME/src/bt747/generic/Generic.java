@@ -9,6 +9,8 @@ package bt747.generic;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.j4me.logging.Log;
+
 import bt747.sys.MyThread;
 import bt747.sys.Thread;
 
@@ -89,5 +91,8 @@ public class Generic {
     public static double acos(final double x) {
         return Float11.acos(x);
     }
-
+    
+    public static void debug(final String s, final Exception e) {
+        Log.debug(s,e);
+    }
 }

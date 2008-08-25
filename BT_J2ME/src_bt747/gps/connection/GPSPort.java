@@ -21,6 +21,7 @@
 package gps.connection;
 
 //import bt747.io.DataStream;
+import bt747.generic.Generic;
 import bt747.io.File;
 
 /** abstract class defining interface for serial port implementation.
@@ -145,12 +146,13 @@ public abstract class GPSPort {
                 File tmp=new File(debugFileName,File.CREATE);
                 tmp.close();
             } catch (Exception e) {
+                Generic.debug(debugFileName,e);
                 // TODO: handle exception
             }
             try {
                 m_debugFile=new File(debugFileName,File.READ_WRITE);
             } catch (Exception e) {
-                // TODO: handle exception
+                Generic.debug(debugFileName,e);
             }
         }
     }
