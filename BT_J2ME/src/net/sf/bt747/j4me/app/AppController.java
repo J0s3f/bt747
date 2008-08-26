@@ -7,7 +7,7 @@ import bt747.sys.Settings;
 
 public class AppController extends Controller {
 
-    AppModel m;
+    private AppModel m;
     
     public AppController(AppModel m) {
        this.m = m;

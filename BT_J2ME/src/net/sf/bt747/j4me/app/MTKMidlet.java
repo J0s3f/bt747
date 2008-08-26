@@ -96,7 +96,9 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         DeviceScreen main = new MainScreen(c);
         DeviceScreen next = new InitializingGPSAlert(c, main);
         DeviceScreen first = new FindingGPSDevicesAlert(c, next);
-        first.show();
+        //first.show();
+        (new ConvertTo(c, main)).doWork();
+        //(new ConvertTo(c, main)).show();
         } catch (Throwable t) {
             Log.warn("Unhandled exception ",t);
             //LogScreen l = new LogScreen(null);
@@ -132,9 +134,6 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         case ModelEvent.DEBUG_MSG:
             Log.debug((String) e.getArg());
             break;
-        case ModelEvent.GPGGA:
-            GPSRecord g = (GPSRecord) e.getArg();
-            Log.debug("Lat:" + g.latitude + " Lon:" + g.longitude);
         }
     }
 }

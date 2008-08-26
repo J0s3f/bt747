@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
+import bt747.generic.Generic;
+
 /**
  * @author Mario De Weerd
  * 
@@ -48,26 +50,35 @@ public class File {
     public File(String path, int mode) throws IOException {
         int lMode;
         this.path = path;
+        String urlOpt = "";
         switch (mode) {
         case READ_ONLY:
             lMode = Connector.READ;
             break;
         case WRITE_ONLY:
             lMode = Connector.WRITE;
+            //urlOpt = ";append=true";
             break;
         case CREATE:
-            lMode = Connector.READ_WRITE;
-            tmpFileConnection(path).create();
+            lMode = Connector.WRITE;
+            {
+                FileConnection f = tmpFileConnection(path);
+                f.create();
+                f.close();
+                f = null;
+            }
+            //urlOpt = ";append=true";
             break;
         case READ_WRITE:
             lMode = Connector.READ_WRITE;
+            //urlOpt = ";append=true";
             break;
         default:
             lMode = Connector.READ;
         }
         if (mode != DONT_OPEN) {
-            fileConnection = (FileConnection) Connector.open("file://" + path,
-                    lMode);
+            fileConnection = (FileConnection) Connector.open("file://" + path
+                    + urlOpt, lMode);
             System.out.println("Opened file " + path);
             isopen = true;
             switch (mode) {
@@ -78,7 +89,7 @@ public class File {
                 os = fileConnection.openOutputStream();
                 break;
             case CREATE:
-                is = fileConnection.openInputStream();
+                os = fileConnection.openOutputStream();
                 break;
             case READ_WRITE:
                 is = fileConnection.openInputStream();
@@ -129,7 +140,7 @@ public class File {
 
     boolean isopen = false;
 
-    public boolean close() throws IOException {
+    public boolean close() throws Exception {
         try {
             if (isopen && fileConnection != null) {
                 isopen = false;
@@ -137,7 +148,7 @@ public class File {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("File close", e);
             // TODO: handle exceptions
             return false;
         }

@@ -46,10 +46,10 @@ public class ConvertTo extends ProgressAlert {
      * Called when the user presses the alert's dismiss button.
      */
     public void onCancel() {
-//        Log.debug("Canceling GPS initialization.");
-//
-//        // Go back to the previous screen.
-//        previous.show();
+        // Log.debug("Canceling GPS initialization.");
+        //
+        // // Go back to the previous screen.
+        // previous.show();
     }
 
     /**
@@ -59,37 +59,58 @@ public class ConvertTo extends ProgressAlert {
     protected DeviceScreen doWork() {
         DeviceScreen next = previous;
 
-        //String text = getText() + "\n" + "Using device:  " + deviceName;
-        //setText(text);
-
+        // String text = getText() + "\n" + "Using device: " + deviceName;
+        // setText(text);
 
         try {
             Log.info("Starting log conversion");
-            
-            // We select all positions that do not have an invalid fix or estimated
+
+            // We select all positions that do not have an invalid fix or
+            // estimated
             // fix.
             c
-                    .setFilterValidMask(
-                            GPSFilter.TRKPT,
-                            0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                    .setTrkPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
             c
-                    .setFilterValidMask(
-                            GPSFilter.WAYPT,
-                            0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                    .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
             // Waypoints only when button pressed.
-            c.setFilterRcrMask(GPSFilter.WAYPT, BT747Constants.RCR_BUTTON_MASK);
+            c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK);
             // Trackpoints : anything
-            c.setFilterRcrMask(GPSFilter.WAYPT, BT747Constants.RCR_BUTTON_MASK);
+            c.setTrkPtRCR(BT747Constants.RCR_TIME_MASK
+                    | BT747Constants.RCR_DISTANCE_MASK
+                    | BT747Constants.RCR_SPEED_MASK
+                    | BT747Constants.RCR_BUTTON_MASK);
             // To limit the output data, we only select lat,lon and height.
-            c.setIntOpt(Model.FILEFIELDFORMAT,  (1 << BT747Constants.FMT_LATITUDE_IDX)
-            | (1 << BT747Constants.FMT_LONGITUDE_IDX)
-            | (1 << BT747Constants.FMT_HEIGHT_IDX));
+            c.setIntOpt(Model.FILEFIELDFORMAT,
+                    (1 << BT747Constants.FMT_LATITUDE_IDX)
+                            | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+                            | (1 << BT747Constants.FMT_HEIGHT_IDX));
+            GPSFilter[] filters = c.getAppModel().getLogFilters();
+
+            Log.debug("RCR0:" + filters[0].getRcrMask());
+            Log.debug("Valid0:" + filters[0].getValidMask());
+            Log.debug("RCR1:" + filters[1].getRcrMask());
+            Log.debug("Valid1:" + filters[1].getValidMask());
+
+            Log.debug(c.getModel().toString());
+            Log.debug(c.getAppModel().toString());
+
+            filters = c.getModel().getLogFilters();
+
+            Log.debug("RCR0:" + filters[0].getRcrMask());
+            Log.debug("Valid0:" + filters[0].getValidMask());
+            Log.debug("RCR1:" + filters[1].getRcrMask());
+            Log.debug("Valid1:" + filters[1].getValidMask());
+
+            Log.debug(c.getModel().toString());
+            Log.debug(c.getAppModel().toString());
+
+            c.setIntOpt(AppModel.FILEFIELDFORMAT, -1);
 
             int error;
             error = c.doConvertLog(Model.GPX_LOGTYPE);
-            
-            if (error!=0) {
-                Log.error(c.getLastError()+" "+c.getLastErrorInfo());
+
+            if (error != 0) {
+                Log.error(c.getLastError() + " " + c.getLastErrorInfo());
             }
         } catch (Exception e) {
             Log.error("Exception during log convert", e);

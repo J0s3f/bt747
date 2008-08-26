@@ -82,20 +82,7 @@ public class Time {
 
     // UTC time in java depends on implementation (leap seconds, ...)
     // So we need to implement our own function.
-    public final void setUTCTime(final int utc_int) {
-        // long utc=utc_int&0xFFFFFFFFL;
-        int utc = utc_int;
-        int hour;
-        int minute;
-        int second;
-        // Time t=new Time();
-        second = utc % 60;
-        utc /= 60;
-        minute = utc % 60;
-        utc /= 60;
-        hour = utc % 24;
-        utc /= 24;
-        java.util.Date d = new java.util.Date();
+    public final void setUTCTime(final int utc) {
         cal.set(Calendar.YEAR, 1970);
         cal.set(Calendar.MONTH, 0);
         cal.set(Calendar.DAY_OF_MONTH, 1);
