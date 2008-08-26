@@ -20,15 +20,15 @@
 package gps.log.out;
 
 import gps.BT747Constants;
+import gps.Txt;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
-import gps.Txt;
 
-import bt747.io.File;
+import bt747.generic.Generic;
 import bt747.io.BufFile;
+import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Time;
-import bt747.sys.Vm;
 
 /**
  * @author Mario De Weerd
@@ -152,6 +152,8 @@ public abstract class GPSFile {
         return result;
     }
 
+    final static private int UTC_20000101 = 0;
+    
     public void writeRecord(final GPSRecord s) {
         String extraExt; // Extra extension for log file
         boolean newDate = false;
@@ -226,6 +228,7 @@ public abstract class GPSFile {
             try {
                 outFile.close();
             } catch (Exception e) {
+                Generic.debug("finaliseFile",e);
                 // TODO: handle exception
             }
             outFile = null;
@@ -267,14 +270,14 @@ public abstract class GPSFile {
                 tmpFile.delete();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            // TODO: handle exception
+            Generic.debug("File deletion",e);
+            // TODO: handle problem
         }
         try {
-            int mode = createNewFile ? File.CREATE : File.READ_WRITE;
+            int mode = createNewFile ? File.CREATE : File.WRITE_ONLY;
             outFile = new BufFile(fileName, mode, card);
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("File creation",e);
             // TODO: handle exception
         }
         if (outFile != null && !outFile.isOpen()) {
@@ -290,12 +293,13 @@ public abstract class GPSFile {
                     // is
                     // opened.
                 } else {
-                    // Append to existing file
-                    outFile.setPos(outFile.getSize());
+                    // Append to existing file (file open must be append)
+                    // outFile.setPos(outFile.getSize());
                 }
                 writeLogFmtHeader(activeFields);
                 writeDataHeader();
             } catch (Exception e) {
+                Generic.debug("Initial header or append",e);
                 // TODO: handle exception
             }
         }
@@ -307,8 +311,8 @@ public abstract class GPSFile {
         try {
             outFile.close();
         } catch (Exception e) {
+            Generic.debug("closeFile",e);
             // TODO: handle exception
-            Vm.debug(Txt.CLOSE_FAILED);
         }
     }
 
@@ -358,10 +362,10 @@ public abstract class GPSFile {
             if (outFile != null) {
                 outFile.writeBytes(s.getBytes(), 0, s.length());
             } else {
-                Vm.debug(Txt.WRITING_CLOSED);
+                Generic.debug(Txt.WRITING_CLOSED,null);
             }
         } catch (Exception e) {
-
+            Generic.debug("writeTxt", e);
         }
     }
 

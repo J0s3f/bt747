@@ -153,7 +153,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
                             + ((char) 0xBA) + "W");
                 }
             } else {
-                rec.append("0°E");
+                rec.append("0" + (char) 0xBA + "E");
             }
             rec.append(" ");
 

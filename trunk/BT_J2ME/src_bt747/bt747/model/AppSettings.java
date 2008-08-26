@@ -768,7 +768,7 @@ public class AppSettings {
      * @param value
      *            The default value for opening the port.
      */
-    public final void setWayPtRCR(final int value) {
+    protected final void setWayPtRCR(final int value) {
         setLocalIntOpt(0, value, C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
         postEvent(ModelEvent.WAY_RCR_CHANGE);
     }
@@ -781,7 +781,7 @@ public class AppSettings {
      * @param value
      *            The default value for opening the port.
      */
-    public final void setWayPtValid(final int value) {
+    protected final void setWayPtValid(final int value) {
         setLocalIntOpt(0, value, C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
         postEvent(ModelEvent.WAY_VALID_CHANGE);
     }
@@ -794,7 +794,7 @@ public class AppSettings {
      * @param value
      *            The default value for opening the port.
      */
-    public final void setTrkPtRCR(final int value) {
+    protected final void setTrkPtRCR(final int value) {
         setLocalIntOpt(0, value, C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
         postEvent(ModelEvent.TRK_RCR_CHANGE);
     }
@@ -807,7 +807,7 @@ public class AppSettings {
      * @param value
      *            The default value for opening the port.
      */
-    public final void setTrkPtValid(final int value) {
+    protected final void setTrkPtValid(final int value) {
         setLocalIntOpt(0, value, C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
         postEvent(ModelEvent.TRK_VALID_CHANGE);
     }
@@ -820,7 +820,7 @@ public class AppSettings {
      * @param value
      *            The default value for opening the port.
      */
-    public final void setOutputFileSplitType(final int value) {
+    protected final void setOutputFileSplitType(final int value) {
         setLocalIntOpt(0, value, C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
     }
 
