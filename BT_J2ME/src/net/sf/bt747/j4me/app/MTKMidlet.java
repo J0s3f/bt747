@@ -83,6 +83,9 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         c.setOutputFileRelPath("GPSDATA");
         c.setDebug(true);
         c.setDebugConn(false);
+        c.setLogRequestAhead(0);
+        c.setChunkSize(0x400);
+        c.setDownloadMethod(AppModel.DOWNLOAD_FILLED);
         m.addListener(this);
 
         // Change the theme.
@@ -96,8 +99,8 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         DeviceScreen main = new MainScreen(c);
         DeviceScreen next = new InitializingGPSAlert(c, main);
         DeviceScreen first = new FindingGPSDevicesAlert(c, next);
-        //first.show();
-        (new ConvertTo(c, main)).doWork();
+        //(new ConvertTo(c, main)).doWork();  // Debug conversion
+        first.show();
         //(new ConvertTo(c, main)).show();
         } catch (Throwable t) {
             Log.warn("Unhandled exception ",t);

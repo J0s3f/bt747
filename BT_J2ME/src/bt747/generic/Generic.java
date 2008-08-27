@@ -35,20 +35,20 @@ public class Generic {
             removeIfStoppedThread(t);
         }
         if (!oos.contains(t)) {
-            System.out.println("Adding " + t);
+            Log.debug("Adding " + t);
             MyThread mt = new MyThread(t);
             t.started();
             mt.jvThread = new java.lang.Thread(mt);
             if (mt != null) {
                 // System.out.println("new Thread() succeed");
             } else {
-                System.out.println("new Thread() failed");
+                Log.debug("new Thread() failed");
             }
             mt.jvThread.start();
             h.put(mt,h);
             oos.put(t,oos);
         } else {
-            System.out.println("Already present thread " + t);
+            Log.debug("Already present thread " + t);
         }
     }
 
