@@ -16,15 +16,11 @@ import java.util.TimeZone;
  * Preferences - Java - Code Style - Code Templates
  */
 public class Time {
-    static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
-    private Calendar cal = Calendar.getInstance();
+    final static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+    private Calendar cal = Calendar.getInstance(GMT_ZONE);
 
-    private void init() {
-        cal.setTimeZone(GMT_ZONE);
-    }
 
     public Time() {
-        init();
     }
 
     /**
@@ -83,10 +79,12 @@ public class Time {
     // UTC time in java depends on implementation (leap seconds, ...)
     // So we need to implement our own function.
     public final void setUTCTime(final int utc) {
-        cal.set(Calendar.YEAR, 1970);
-        cal.set(Calendar.MONTH, 0);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        cal.setTime(new java.util.Date(cal.getTime().getTime() + utc * 1000L));
+//        cal.set(Calendar.YEAR, 1970);
+//        cal.set(Calendar.MONTH, 0);
+//        cal.set(Calendar.DAY_OF_MONTH, 1);
+//        cal.getInstance(GMT_ZONE).setTime(new java.util.Date())
+
+        cal.setTime(new java.util.Date(utc * 1000L));
     }
 
     // public final void setUTCTime(final int utc_int) {

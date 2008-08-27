@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
+import org.j4me.logging.Log;
+
 import bt747.generic.Generic;
 
 /**
@@ -50,50 +52,46 @@ public class File {
     public File(String path, int mode) throws IOException {
         int lMode;
         this.path = path;
-        String urlOpt = "";
         switch (mode) {
         case READ_ONLY:
             lMode = Connector.READ;
             break;
         case WRITE_ONLY:
-            lMode = Connector.WRITE;
-            //urlOpt = ";append=true";
+            lMode = Connector.READ_WRITE;
             break;
         case CREATE:
-            lMode = Connector.WRITE;
+            lMode = Connector.READ_WRITE;
             {
                 FileConnection f = tmpFileConnection(path);
                 f.create();
                 f.close();
                 f = null;
             }
-            //urlOpt = ";append=true";
             break;
         case READ_WRITE:
             lMode = Connector.READ_WRITE;
-            //urlOpt = ";append=true";
             break;
         default:
             lMode = Connector.READ;
         }
         if (mode != DONT_OPEN) {
-            fileConnection = (FileConnection) Connector.open("file://" + path
-                    + urlOpt, lMode);
-            System.out.println("Opened file " + path);
+            fileConnection = (FileConnection) Connector.open("file://" + path,
+                    lMode);
+            Log.debug("Opened file " + path);
             isopen = true;
             switch (mode) {
             case READ_ONLY:
                 is = fileConnection.openInputStream();
                 break;
             case WRITE_ONLY:
-                os = fileConnection.openOutputStream();
+                os = fileConnection.openOutputStream(this.getSize());
                 break;
             case CREATE:
-                os = fileConnection.openOutputStream();
+                os = fileConnection.openOutputStream(this.getSize());
                 break;
             case READ_WRITE:
                 is = fileConnection.openInputStream();
-                os = fileConnection.openOutputStream();
+                os = fileConnection.openOutputStream(this.getSize());
                 break;
             default:
             }
@@ -159,10 +157,15 @@ public class File {
 
     public boolean setPos(int pos) throws IOException {
         if (fileConnection != null) {
-            is.reset();
-            is.skip(pos);
-            // TODO: set outputstream offset ?
-            // fileConnection.
+            if (is != null) {
+                is.close();
+                is = fileConnection.openInputStream();
+                is.skip(pos);
+            }
+            if (os != null) {
+                os.close();
+                os = fileConnection.openOutputStream(pos);
+            }
             return true;
         }
         return false;

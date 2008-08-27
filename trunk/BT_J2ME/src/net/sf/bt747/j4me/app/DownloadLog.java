@@ -140,6 +140,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
 
             bar.setMaxValue(max);
             bar.setValue(value);
+            bar.repaint();
         }
     }
 
