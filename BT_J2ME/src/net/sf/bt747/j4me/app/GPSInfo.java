@@ -12,6 +12,7 @@ import org.j4me.bluetoothgps.LocationProvider;
 import org.j4me.examples.bluetoothgps.CriteriaSelectionScreen;
 import org.j4me.examples.log.LogScreen;
 import org.j4me.logging.Log;
+import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
 import org.j4me.ui.MenuItem;
@@ -119,13 +120,17 @@ implements ModelListener
      */
     private long startTime;
 
+    DeviceScreen previous;
     
     Controller c;
     
-    public GPSInfo(Controller c) {
-        // Set the menu bar options.
-        setMenuText( null, "Menu" );
+    public GPSInfo(Controller c, DeviceScreen previous) {
         
+        this.previous = previous;
+        
+        // Set the menu bar options.
+        setMenuText( "Back", "Menu" );
+
         // Show the state of the location provider.
         //state.setHorizontalAlignment( Graphics.HCENTER );
         //setStateLabel( model.getLocationProvider().getState() );
@@ -219,6 +224,21 @@ implements ModelListener
         // Continue processing the event.
         super.acceptNotify();
     }
+    
+    /**
+     * Called when the user presses the "Back" button.
+     * 
+     * @see DeviceScreen#declineNotify()
+     */
+    protected void declineNotify ()
+    {
+        // Go back to the previous screen.
+        if ( previous != null )
+        {
+            previous.show();
+        }
+    }
+
 
     /**
      * Shows a field and its value such as "Speed (m/s):  5.0".

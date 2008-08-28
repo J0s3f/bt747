@@ -13,7 +13,6 @@ public class AppController extends Controller {
        this.m = m;
        init();
        super.setModel(m);
-       init();
     }
     
     public final AppModel getAppModel() {
@@ -24,6 +23,7 @@ public class AppController extends Controller {
         GPSrxtx.setGpsPortInstance(new BluetoothGPS());
         initAppSettings();
         // TODO: Should load settings for Model
+        m.init();
     }
     
     private void initAppSettings() {
