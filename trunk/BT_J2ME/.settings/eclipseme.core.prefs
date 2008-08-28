@@ -1,4 +1,4 @@
-#Tue Aug 26 01:21:11 CEST 2008
+#Wed Aug 27 19:15:21 CEST 2008
 eclipse.preferences.version=1
 obfuscate_use_project=true
 pkg_autoversion=true
@@ -6,3 +6,5 @@ pkg_use_project=true
 preverify_config_location=specified
 preverify_config_value=CLDC-1.1
 proguard_keep=public class * extends javax.microedition.midlet.MIDlet|public class BluetoothGPS extends gps.connection.GPSPort
+proguard_options=-allowaccessmodification  -microedition -optimizationpasses 1
+proguard_use_specified=true

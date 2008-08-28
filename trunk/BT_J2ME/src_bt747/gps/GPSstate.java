@@ -68,7 +68,6 @@ public class GPSstate implements Thread {
 
     public int logStatus = 0;
     public int initialLogMode = 0;
-    
 
     public int logRecMethod = 0;
 
@@ -332,9 +331,9 @@ public class GPSstate implements Thread {
                 + Convert.unsigned2hex(startAddr, 8) + ","
                 + Convert.unsigned2hex(size, 8));
     }
-    
+
     public final void reqInitialLogMode() {
-        readLog(6,2);  // 6 is the log mode offset in the log, 2 is the size
+        readLog(6, 2); // 6 is the log mode offset in the log, 2 is the size
         // Required to know if log is in overwrite mode.
     }
 
@@ -407,6 +406,8 @@ public class GPSstate implements Thread {
         if (logStatus != C_LOG_ERASE_STATE) {
             if ((sentCmds.size() != 0) && (cTime - logTimer) >= downloadTimeOut) {
                 // TimeOut!!
+                Generic.debug("Timeout: " + cTime + "-" + logTimer + ">"
+                        + downloadTimeOut, null);
                 sentCmds.removeElementAt(0);
                 logTimer = cTime;
             }
@@ -1881,7 +1882,9 @@ public class GPSstate implements Thread {
                         // logging
                         // on/off
                         logStatus = Convert.toInt(sNmea[3]);
-                        //logFullOverwrite = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) != 0));
+                        // logFullOverwrite = (((logStatus &
+                        // BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) !=
+                        // 0));
                         isLoggingActive = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
                         loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
@@ -1928,7 +1931,8 @@ public class GPSstate implements Thread {
                 } catch (Exception e) {
                     // Do not care about exception
                 }
-                //logFullOverwrite = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) != 0));
+                // logFullOverwrite = (((logStatus &
+                // BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) != 0));
 
                 try {
                     // waba.sys.debugMsg("Before
@@ -2122,9 +2126,9 @@ public class GPSstate implements Thread {
     public final boolean isPowerSaveEnabled() {
         return powerSaveEnabled;
     }
-    
+
     public final boolean isInitialLogOverwrite() {
-        return (initialLogMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK)==0;
+        return (initialLogMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0;
     }
 
     public final int getDgpsMode() {
