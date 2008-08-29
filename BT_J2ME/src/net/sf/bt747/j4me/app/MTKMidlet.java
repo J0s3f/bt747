@@ -35,7 +35,7 @@ public class MTKMidlet extends MIDlet implements ModelListener {
      */
     public MTKMidlet() {
         try {
-            instance = this;
+            MTKMidlet.setInstance(this);
             Log.setLevel(Level.DEBUG);
             m = new AppModel();
             c = new AppController(m);
@@ -45,6 +45,10 @@ public class MTKMidlet extends MIDlet implements ModelListener {
             l.show();
         }
 
+    }
+
+    private static void setInstance(MTKMidlet midlet) {
+        instance = midlet;
     }
 
     /**
@@ -65,48 +69,48 @@ public class MTKMidlet extends MIDlet implements ModelListener {
     protected void startApp() throws MIDletStateChangeException {
         // Initialize the J4ME UI manager.
         try {
-        UIManager.init(this);
+            UIManager.init(this);
 
-        Enumeration roots = FileSystemRegistry.listRoots();
-        String dir = "";
-        while (roots.hasMoreElements()) {
-            dir = "/" + (String) roots.nextElement();
-        }
-        if (dir.endsWith("/")) {
-            dir = dir.substring(0, dir.length() - 1);
-        }
-        c.setBaseDirPath(dir);
-        Log.info("Basedir set to:" + m.getBaseDirPath());
-        // Input is "/BT747/BT747_sample.bin"
-        c.setLogFileRelPath("BT747_sample.bin");
-        // Output is "/BT747/GPSDATA*"
-        c.setOutputFileRelPath("GPSDATA");
-        c.setDebug(true);
-        c.setDebugConn(false);
-        c.setLogRequestAhead(0);
-        c.setChunkSize(0x400);
-        c.setChunkSize(0x100);  // For trial, small size for data.
-        c.setDownloadMethod(AppModel.DOWNLOAD_FILLED);
-        m.addListener(this);
+            Enumeration roots = FileSystemRegistry.listRoots();
+            String dir = "";
+            while (roots.hasMoreElements()) {
+                dir = "/" + (String) roots.nextElement();
+            }
+            if (dir.endsWith("/")) {
+                dir = dir.substring(0, dir.length() - 1);
+            }
+            c.setBaseDirPath(dir);
+            Log.info("Basedir set to:" + m.getBaseDirPath());
+            // Input is "/BT747/BT747_sample.bin"
+            c.setLogFileRelPath("BT747_sample.bin");
+            // Output is "/BT747/GPSDATA*"
+            c.setOutputFileRelPath("GPSDATA");
+            c.setDebug(true);
+            c.setDebugConn(false);
+            c.setLogRequestAhead(0);
+            c.setChunkSize(0x400);
+            c.setChunkSize(0x100); // For trial, small size for data.
+            c.setDownloadMethod(AppModel.DOWNLOAD_FILLED);
+            m.addListener(this);
 
-        // Change the theme.
-        // UIManager.setTheme( new org.j4me.examples.ui.themes.RedTheme() );
+            // Change the theme.
+            // UIManager.setTheme( new org.j4me.examples.ui.themes.RedTheme() );
 
-        // Show the first screen.
+            // Show the first screen.
 
-        // FindingGPSDevicesAlert creates a list of devices, then calls
-        // SelectGPSScreen which will in turn call
-        // InitializingGPSAlert
-        DeviceScreen main = new MainScreen(c);
-        DeviceScreen next = new InitializingGPSAlert(c, main);
-        DeviceScreen first = new FindingGPSDevicesAlert(c, next);
-        //(new ConvertTo(c, main)).doWork();  // Debug conversion
-        first.show();
-        //(new ConvertTo(c, main)).show();
+            // FindingGPSDevicesAlert creates a list of devices, then calls
+            // SelectGPSScreen which will in turn call
+            // InitializingGPSAlert
+            DeviceScreen main = new MainScreen(c);
+            DeviceScreen next = new InitializingGPSAlert(c, main);
+            DeviceScreen first = new FindingGPSDevicesAlert(c, next);
+            // (new ConvertTo(c, main)).doWork(); // Debug conversion
+            first.show();
+            // (new ConvertTo(c, main)).show();
         } catch (Throwable t) {
-            Log.warn("Unhandled exception ",t);
-            //LogScreen l = new LogScreen(null);
-            //l.show();
+            Log.warn("Unhandled exception ", t);
+            // LogScreen l = new LogScreen(null);
+            // l.show();
         }
     }
 
