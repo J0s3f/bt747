@@ -70,7 +70,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
         // Add the menu buttons.
         Theme theme = UIManager.getTheme();
         String cancel = theme.getMenuTextForCancel();
-        setMenuText("App Log",cancel);
+        setMenuText("App Log", cancel);
     }
 
     /**
@@ -99,8 +99,11 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
      * @see DeviceScreen#showNotify()
      */
     public void showNotify() {
-        Thread worker = new Thread(this);
-        worker.start();
+
+        if (!c.getModel().isDownloadOnGoing()) {
+            Thread worker = new Thread(this);
+            worker.start();
+        }
 
         // Continue processing the event.
         super.showNotify();
@@ -110,22 +113,21 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
      * Goes to the next screen after the user hits the cancel button.
      */
     protected void declineNotify() {
+        (new LogScreen(this)).show();
+
+        // Continue processing the event.
+        super.acceptNotify();
+    }
+
+    /**
+     * Goes to the next screen after the user hits the cancel button.
+     */
+    protected void acceptNotify() {
         c.cancelGetLog();
         downloadDone();
 
         // Continue processing the event.
         super.declineNotify();
-    }
-
-    
-    /**
-     * Goes to the next screen after the user hits the cancel button.
-     */
-    protected void acceptNotify() {
-        (new LogScreen(this)).show();
-
-        // Continue processing the event.
-        super.acceptNotify();
     }
 
     private void downloadDone() {
