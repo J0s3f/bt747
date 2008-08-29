@@ -3,6 +3,7 @@ Licence: GPL
 MIDlet-1: MTKMidlet,,net.sf.bt747.j4me.app.MTKMidlet
 MIDlet-Description: MTK GPS Mouse Control
 MIDlet-Info-URL: http://sf.net/projects/bt747
+MIDlet-Jar-Size: 166637
 MIDlet-Jar-URL: BT_J2ME.jar
 MIDlet-Name: BT_J2ME Midlet Suite
 MIDlet-Permissions-Opt: javax.microedition.io.Connector.bluetooth.client,javax.microedition.io.Connector.file.read, javax.microedition.io.Connector.file.write

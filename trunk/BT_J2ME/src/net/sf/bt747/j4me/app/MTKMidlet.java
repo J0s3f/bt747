@@ -85,6 +85,7 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         c.setDebugConn(false);
         c.setLogRequestAhead(0);
         c.setChunkSize(0x400);
+        c.setChunkSize(0x100);  // For trial, small size for data.
         c.setDownloadMethod(AppModel.DOWNLOAD_FILLED);
         m.addListener(this);
 
