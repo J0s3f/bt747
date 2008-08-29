@@ -53,7 +53,7 @@ public class MainScreen extends Dialog {
 
         menu.appendMenuOption(new DownloadLog(c, this));
         menu.appendMenuOption("To GPX", new ConvertTo(c, this));
-        menu.appendMenuOption("Info from GPS",new GPSInfo(c,this));
+        menu.appendMenuOption("Info from GPS", new GPSInfo(c, this));
         /*
          * menu.appendMenuOption( new MenuItem() { public String getText () {
          * return "Download"; }
@@ -90,7 +90,7 @@ public class MainScreen extends Dialog {
         });
 
         // See the application's log.
-        menu.appendMenuOption(new LogScreen(this));
+        menu.appendMenuOption("Application Log", new LogScreen(this));
 
         menu.show();
 

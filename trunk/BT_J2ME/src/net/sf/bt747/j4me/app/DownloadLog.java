@@ -2,6 +2,7 @@ package net.sf.bt747.j4me.app;
 
 import javax.microedition.lcdui.Graphics;
 
+import org.j4me.examples.log.LogScreen;
 import org.j4me.examples.ui.screens.ErrorAlert;
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
@@ -69,7 +70,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
         // Add the menu buttons.
         Theme theme = UIManager.getTheme();
         String cancel = theme.getMenuTextForCancel();
-        setMenuText(cancel, null);
+        setMenuText("App Log",cancel);
     }
 
     /**
@@ -114,6 +115,17 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
 
         // Continue processing the event.
         super.declineNotify();
+    }
+
+    
+    /**
+     * Goes to the next screen after the user hits the cancel button.
+     */
+    protected void acceptNotify() {
+        (new LogScreen(this)).show();
+
+        // Continue processing the event.
+        super.acceptNotify();
     }
 
     private void downloadDone() {

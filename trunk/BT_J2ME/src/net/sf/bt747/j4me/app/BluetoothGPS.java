@@ -193,6 +193,7 @@ class BluetoothGPS extends gps.connection.GPSPort {
     public void write(String s) {
         try {
             outputStream.write(s.getBytes());
+            outputStream.flush();
         } catch (IOException e) {
         }
         ;
@@ -202,6 +203,7 @@ class BluetoothGPS extends gps.connection.GPSPort {
     public void write(byte[] b) {
         try {
             outputStream.write(b);
+            outputStream.flush();
         } catch (IOException e) {
         }
         ;
