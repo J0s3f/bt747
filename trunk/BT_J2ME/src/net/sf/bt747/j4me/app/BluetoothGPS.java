@@ -21,14 +21,14 @@ class BluetoothGPS extends gps.connection.GPSPort {
      * The protocol portion of the URL for Bluetooth addresses.
      */
     private static final String BLUETOOTH_PROTOCOL = "btspp://";
-    
+
     /**
-     * The Bluetooth connection string options for communicating with a
-     * GPS device.
+     * The Bluetooth connection string options for communicating with a GPS
+     * device.
      * <ul>
-     *  <li>master is false because the current device is the master
-     *  <li>encryption is false because no sensitive data is transmitted
-     *  <li>authentication is false because the data is not personalized
+     * <li>master is false because the current device is the master
+     * <li>encryption is false because no sensitive data is transmitted
+     * <li>authentication is false because the data is not personalized
      * </ul>
      */
     private static final String BLUETOOTH_GPS_OPTIONS = ";master=false;encrypt=false;authenticate=false";
@@ -175,35 +175,40 @@ class BluetoothGPS extends gps.connection.GPSPort {
         try {
             return inputStream.available();
         } catch (Exception e) {
-            Log.error("readCheck",e);
+            Log.error("readCheck", e);
             return 0;
         }
     }
 
-    public final int readBytes(byte[] b, int start, int end) {
+    public final int readBytes(final byte[] b, final int start, final int end) {
         try {
             return inputStream.read(b, start, end);
         } catch (Exception e) {
             // TODO: handle exception
-            Log.error("getBytes",e);
+            Log.error("getBytes", e);
             return 0;
         }
     }
 
-    public void write(String s) {
+    public void write(final String s) {
         try {
-            outputStream.write(s.getBytes());
-            outputStream.flush();
+            synchronized (outputStream) {
+                outputStream.write(s.getBytes());
+                outputStream.flush();
+            }
         } catch (IOException e) {
+            Log.error("writeString", e);
         }
         ;
 
     }
 
-    public void write(byte[] b) {
+    public void write(final byte[] b) {
         try {
-            outputStream.write(b);
-            outputStream.flush();
+            synchronized (outputStream) {
+                outputStream.write(b);
+                outputStream.flush();
+            }
         } catch (IOException e) {
         }
         ;
@@ -222,10 +227,10 @@ class BluetoothGPS extends gps.connection.GPSPort {
         try {
             makeConnection(url);
         } catch (Exception e) {
-            Log.debug("bt open",e);
+            Log.debug("bt open", e);
             // TODO: handle exception
         }
-        
+
         return 0;
     }
 
@@ -240,44 +245,53 @@ class BluetoothGPS extends gps.connection.GPSPort {
     public String getFreeTextPort() {
         return url;
     }
-    
-    
+
     String channelId = null;
+
     /**
-     * Construct the instance of this class.  If the <code>channelId</code> is <code>null</code>
-     * this method will attempt to guess at the channel id.
-     *
-     * @param remoteDeviceBTAddress - The remote GPS device bluetooth address
-     * @param channelId - The channel id for the remote device.  This may be <code>null</code>.  If this
-     *  is the case we will simply guess at the channel ID for the device.
-     * @throws ConnectionNotFoundException - If the target of the name cannot be found, or if the requested protocol type is not supported. 
-     * @throws IOException - If error occurs while establishing bluetooth connection or opening input stream. 
-     * @throws SecurityException - May be thrown if access to the protocol handler is prohibited.
+     * Construct the instance of this class. If the <code>channelId</code> is
+     * <code>null</code> this method will attempt to guess at the channel id.
+     * 
+     * @param remoteDeviceBTAddress -
+     *            The remote GPS device bluetooth address
+     * @param channelId -
+     *            The channel id for the remote device. This may be
+     *            <code>null</code>. If this is the case we will simply guess
+     *            at the channel ID for the device.
+     * @throws ConnectionNotFoundException -
+     *             If the target of the name cannot be found, or if the
+     *             requested protocol type is not supported.
+     * @throws IOException -
+     *             If error occurs while establishing bluetooth connection or
+     *             opening input stream.
+     * @throws SecurityException -
+     *             May be thrown if access to the protocol handler is
+     *             prohibited.
      */
     private void makeConnection(String url
-        //, String channelId
-        ) throws ConnectionNotFoundException, IOException, SecurityException {
+    // , String channelId
+    ) throws ConnectionNotFoundException, IOException, SecurityException {
         // The number of channels to try connecting on.
-        //  Bluetooth address have channels 1-9 typically.  However, GPS
-        //  devices seem to only have 1 channel.  We'll use two just to
-        //  be safe in case the Bluetooth GPS device allows multiple
-        //  connections.
+        // Bluetooth address have channels 1-9 typically. However, GPS
+        // devices seem to only have 1 channel. We'll use two just to
+        // be safe in case the Bluetooth GPS device allows multiple
+        // connections.
         final int maxTries = 2;
-        
+
         // If the channel id is null, we need to guess at the channel id
         if (channelId == null) {
             // Try a few channels
             for (int i = 1; i <= maxTries; i++) {
                 String localUrl;
                 try {
-                    localUrl = constructBTURL(this.url,
-                            Integer.toString(i));
+                    localUrl = constructBTURL(this.url, Integer.toString(i));
                     this.url = localUrl;
                     this.connect();
                     break;
                 } catch (IOException e) {
                     if (Log.isDebugEnabled()) {
-                        Log.debug("Channel ID = " + i + " failed:  " + e.toString());
+                        Log.debug("Channel ID = " + i + " failed:  "
+                                + e.toString());
                     }
 
                     // If there are still more to try, then try them
@@ -292,45 +306,44 @@ class BluetoothGPS extends gps.connection.GPSPort {
             connect();
         }
     }
-    
+
     /**
      * Construct the Bluetooth URL
      * 
-     * @param deviceBluetoothAddress - The address of the remote device
-     * @param channelId - The channel ID to use
+     * @param deviceBluetoothAddress -
+     *            The address of the remote device
+     * @param channelId -
+     *            The channel ID to use
      */
-    protected static String constructBTURL (String deviceBluetoothAddress, String channelId)
-    {
-        if ( (channelId == null) || (deviceBluetoothAddress == null) )
-        {
+    protected static String constructBTURL(String deviceBluetoothAddress,
+            String channelId) {
+        if ((channelId == null) || (deviceBluetoothAddress == null)) {
             return null;
         }
-        
+
         StringBuffer url = new StringBuffer();
-        
+
         // Add the "btspp://" prefix (if not already there).
-        if ( deviceBluetoothAddress.substring(0, BLUETOOTH_PROTOCOL.length())
-                .equalsIgnoreCase(BLUETOOTH_PROTOCOL) == false )
-        {
-            url.append( BLUETOOTH_PROTOCOL );
+        if (deviceBluetoothAddress.substring(0, BLUETOOTH_PROTOCOL.length())
+                .equalsIgnoreCase(BLUETOOTH_PROTOCOL) == false) {
+            url.append(BLUETOOTH_PROTOCOL);
         }
-        
+
         // Add the address.
-        url.append( deviceBluetoothAddress );
-        
+        url.append(deviceBluetoothAddress);
+
         // Add the channel ID (if not already there).
-        if ( deviceBluetoothAddress.indexOf(':', BLUETOOTH_PROTOCOL.length() + 1) < 0 )
-        {
-            url.append( ':' );
-            url.append( channelId );
+        if (deviceBluetoothAddress
+                .indexOf(':', BLUETOOTH_PROTOCOL.length() + 1) < 0) {
+            url.append(':');
+            url.append(channelId);
         }
-        
+
         // Add the Bluetooth options (if not already there).
-        if ( deviceBluetoothAddress.indexOf(';') < 0 )
-        {
-            url.append( BLUETOOTH_GPS_OPTIONS );
+        if (deviceBluetoothAddress.indexOf(';') < 0) {
+            url.append(BLUETOOTH_GPS_OPTIONS);
         }
-        
+
         String bturl = url.toString();
         return bturl;
     }

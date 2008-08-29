@@ -18,7 +18,7 @@ import bt747.model.ModelListener;
 /**
  * This is a base class for alert screens. It provides a background thread for
  * doing lengthy tasks such as retrieving data from the network. While the task
- * runs this screen shows an indefinate progress bar (a spinner) with some text
+ * runs this screen shows an indefinite progress bar (a spinner) with some text
  * about what operation is going on. When the background thread completes the
  * screen dismisses itself and goes to the next screen.
  * <p>
@@ -59,7 +59,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
 
         // Add the label to the form.
         label.setHorizontalAlignment(Graphics.HCENTER);
-        label.setLabel("Log download in progress");
+        label.setLabel("Log download progress");
         append(label);
 
         // Add a progress bar.
@@ -80,8 +80,9 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
      */
     public void run() {
         try {
-            c.startDefaultDownload();
             m().addListener(this);
+            c.startDefaultDownload();
+            Log.info("Download requested");
         } catch (Throwable t) {
             Log.error("Unhandled exception in UI worker thread for "
                     + getTitle(), t);
@@ -100,9 +101,11 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
      */
     public void showNotify() {
 
-        if (!c.getModel().isDownloadOnGoing()) {
+        if (!m().isDownloadOnGoing()) {
             Thread worker = new Thread(this);
             worker.start();
+        } else {
+            Log.info("Download ongoing");
         }
 
         // Continue processing the event.
@@ -159,10 +162,10 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
     }
 
     public void modelEvent(ModelEvent e) {
-        // TODO Auto-generated method stub
         switch (e.getType()) {
-        case ModelEvent.DOWNLOAD_STATE_CHANGE:
         case ModelEvent.LOG_DOWNLOAD_STARTED:
+            Log.debug("Download started");
+        case ModelEvent.DOWNLOAD_STATE_CHANGE:
             Log.debug("Progress update");
             progressUpdate();
             break;

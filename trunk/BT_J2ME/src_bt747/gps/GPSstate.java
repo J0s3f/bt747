@@ -199,6 +199,7 @@ public class GPSstate implements Thread {
     public final void setupTimer() {
         // TODO: set up thread in gpsRxTx directly (through controller)
         if (gpsRxTx.isConnected()) {
+            nextRun = Vm.getTimeStamp() + 50; // Delay before first transaction
             Generic.addThread(this, false);
         }
     }
