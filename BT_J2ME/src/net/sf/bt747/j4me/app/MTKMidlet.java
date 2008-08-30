@@ -71,26 +71,6 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         try {
             UIManager.init(this);
 
-            Enumeration roots = FileSystemRegistry.listRoots();
-            String dir = "";
-            while (roots.hasMoreElements()) {
-                dir = "/" + (String) roots.nextElement();
-            }
-            if (dir.endsWith("/")) {
-                dir = dir.substring(0, dir.length() - 1);
-            }
-            c.setBaseDirPath(dir);
-            Log.info("Basedir set to:" + m.getBaseDirPath());
-            // Input is "/BT747/BT747_sample.bin"
-            c.setLogFileRelPath("BT747_sample.bin");
-            // Output is "/BT747/GPSDATA*"
-            c.setOutputFileRelPath("GPSDATA");
-            c.setDebug(true);
-            c.setDebugConn(false);
-            c.setLogRequestAhead(0);
-            c.setChunkSize(0x400);
-            c.setChunkSize(0x100); // For trial, small size for data.
-            c.setDownloadMethod(AppModel.DOWNLOAD_FILLED);
             m.addListener(this);
 
             // Change the theme.
@@ -123,6 +103,7 @@ public class MTKMidlet extends MIDlet implements ModelListener {
             throws MIDletStateChangeException {
         // Add cleanup code here.
 
+        c.saveSettings();
         // Exit the application.
         notifyDestroyed();
     }
