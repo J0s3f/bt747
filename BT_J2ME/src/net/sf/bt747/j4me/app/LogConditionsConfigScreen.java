@@ -46,17 +46,26 @@ public class LogConditionsConfigScreen extends Dialog implements ModelListener {
         tbFix.setLabel("GPS Fix period (m)");
         append(tbFix);
 
-        c.reqLogReasonStatus(); // TODO: Should be done on actual initial entry
-        c.reqFixInterval();
-        updateButtons();
     }
 
     private final AppModel m() {
         return c.getAppModel();
     }
 
+    private boolean isDataRequested = false;
+
     public void showNotify() {
+        if(!isDataRequested) {
+            c.reqLogReasonStatus(); // TODO: Should be done on actual initial entry
+            c.reqFixInterval();
+            updateButtons();
+        }
         m().addListener(this); // Does not matter if double addition.
+    }
+    
+    public void hideNotify() {
+        m().removeListener(this); // Does not matter if double addition.
+        super.hideNotify();
     }
 
     public final void updateButtons() {
@@ -95,9 +104,12 @@ public class LogConditionsConfigScreen extends Dialog implements ModelListener {
     }
 
     public void modelEvent(ModelEvent e) {
-        if (e.getType() == ModelEvent.DATA_UPDATE) {
+        switch(e.getType()) {
+        case ModelEvent.DATA_UPDATE:
+        case ModelEvent.GPS_FIX_DATA:
             updateButtons();
             repaint();
+            break;
         }
     }
 }

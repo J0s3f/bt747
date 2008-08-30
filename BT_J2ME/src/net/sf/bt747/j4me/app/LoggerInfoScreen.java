@@ -75,7 +75,6 @@ public class LoggerInfoScreen extends Dialog implements ModelListener {
 
         // Register for location updates.
         // LocationProvider provider = model.getLocationProvider();
-        c.getModel().addListener(this);
     }
 
     /**
@@ -94,9 +93,15 @@ public class LoggerInfoScreen extends Dialog implements ModelListener {
     }
 
     public final void showNotify() {
+        c.getAppModel().addListener(this);
         reqLogInfo();
         // updateData();
         super.showNotify();
+    }
+    
+    public void hideNotify() {
+        c.getAppModel().removeListener(this);
+        super.hideNotify();
     }
 
     private void reqLogInfo() {

@@ -25,7 +25,7 @@ import bt747.model.ModelListener;
  * Alerts have a "Cancel" button on them if the user wants to stop the
  * operation.
  */
-public class DownloadLog extends Dialog implements ModelListener, Runnable {
+public class DownloadLogScreen extends Dialog implements ModelListener, Runnable {
     /**
      * The label that displays the alert's text.
      */
@@ -37,6 +37,8 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
     private ProgressBar bar;
 
     private DeviceScreen previous;
+    
+    private LogScreen logScreen;
     /**
      * This applications' controller
      */
@@ -50,7 +52,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
      * @param text
      *            is the alert message.
      */
-    public DownloadLog(final AppController c, final DeviceScreen previous) {
+    public DownloadLogScreen(final AppController c, final DeviceScreen previous) {
         this.c = c;
         this.previous = previous;
 
@@ -71,6 +73,8 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
         Theme theme = UIManager.getTheme();
         String cancel = theme.getMenuTextForCancel();
         setMenuText("App Log", cancel);
+        
+        logScreen = new LogScreen(this);
     }
 
     /**
@@ -100,23 +104,30 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
      * @see DeviceScreen#showNotify()
      */
     public final void showNotify() {
+        m().addListener(this);
 
         if (!m().isDownloadOnGoing()) {
             Thread worker = new Thread(this);
             worker.start();
         } else {
+            progressUpdate();
             Log.info("Download ongoing");
         }
 
         // Continue processing the event.
         super.showNotify();
     }
+    
+    public void hideNotify() {
+        m().removeListener(this);
+        super.hideNotify();
+    }
 
     /**
      * Goes to the next screen after the user hits the cancel button.
      */
     protected final void declineNotify() {
-        (new LogScreen(this)).show();
+        logScreen.show();
 
         // Continue processing the event.
         super.acceptNotify();

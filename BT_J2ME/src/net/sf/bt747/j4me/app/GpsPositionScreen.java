@@ -128,7 +128,7 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         this.previous = previous;
         
         // Set the menu bar options.
-        setMenuText("Back", "Menu");
+        setMenuText("Back", null);
 
         // Show the state of the location provider.
         // state.setHorizontalAlignment( Graphics.HCENTER );
@@ -213,9 +213,6 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         // show();
         // }
         // } );
-
-        // See the application's log.
-        menu.appendMenuOption(new LogScreen(this));
 
         menu.show();
 

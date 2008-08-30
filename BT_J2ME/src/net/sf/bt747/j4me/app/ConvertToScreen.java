@@ -15,7 +15,7 @@ import bt747.model.Model;
  * provider on the device. But if it cannot it will get a GPS provider through a
  * Bluetooth connection.
  */
-public class ConvertTo extends ProgressAlert {
+public class ConvertToScreen extends ProgressAlert {
     /**
      * The location information for this application.
      */
@@ -35,7 +35,7 @@ public class ConvertTo extends ProgressAlert {
      * @param previous
      *            is the screen that came before this one.
      */
-    public ConvertTo(final AppController c, final DeviceScreen previous) {
+    public ConvertToScreen(final AppController c, final DeviceScreen previous) {
         super("Convert Log", "Converting Log File");
 
         this.c = c;

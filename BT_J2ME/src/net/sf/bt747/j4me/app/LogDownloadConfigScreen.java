@@ -44,6 +44,11 @@ public class LogDownloadConfigScreen extends Dialog implements ModelListener {
     public void showNotify() {
         m().addListener(this); // Does not matter if double addition.
     }
+    
+    public void hideNotify() {
+        m().removeListener(this); // Does not matter if double addition.
+        super.hideNotify();
+    }
 
     public final void updateButtons() {
         tbChunkSize.setString(Convert.toString(m().getChunkSize()));
