@@ -108,6 +108,7 @@ public class Server implements SerialPortEventListener {
         this.textArea.setCaretPosition(this.textArea.getText().length());
         textArea.repaint();
         System.out.println(message);
+        System.out.flush();
     }
 
     public void startServer() {
@@ -148,6 +149,7 @@ public class Server implements SerialPortEventListener {
                                 logMessage("received from mobile phone: "
                                         + s.substring(0, numChars));
                                 spOs.write(buffer, 0, numChars);
+                                spOs.flush();
                             } else {
                                 Thread.sleep(10);
                             }
@@ -186,11 +188,15 @@ public class Server implements SerialPortEventListener {
                     int numChars = spIs.read(buffer);
                     if (numChars > 0) {
                         String s = new String(buffer);
-                        // logMessage("sent to mobile phone: " + s.substring(0, numChars));
+                        /*
+                        logMessage("sent to mobile phone: " + s.substring(0,
+                         numChars));*/
                         os.write(buffer, 0, numChars);
+                        os.flush();
                     }
                 }
             } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
