@@ -38,6 +38,7 @@ public class MainScreen extends Dialog {
                         + "implementatation of BT747 (http://sf.net/projects/bt747)."
                         + " This application demonstrates log sownload (very slow currently)"
                         + " and enables you to set some basic log conditions.");
+        append(lbText);
 
         // Add the menu buttons.
         setFullScreenMode(false);
