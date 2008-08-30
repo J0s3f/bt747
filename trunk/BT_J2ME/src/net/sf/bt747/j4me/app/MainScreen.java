@@ -20,6 +20,14 @@ public class MainScreen extends Dialog {
 
     private Label lbText;
 
+    final DownloadLogScreen downloadLogScreen;
+    final ConvertToScreen convertToScreen;
+    final GpsPositionScreen gpsPositionScreen;
+    final LogConditionsConfigScreen logConditionsConfigScreen;
+    final LogDownloadConfigScreen logDownloadConfigScreen;
+    final LoggerInfoScreen loggerInfoScreen;
+    final LogScreen logScreen;
+
     /**
      * Constructs the "Log" screen.
      * 
@@ -43,7 +51,15 @@ public class MainScreen extends Dialog {
         // Add the menu buttons.
         setFullScreenMode(false);
 
-        setMenuText("Log", "Other");
+        setMenuText("Logger Menu", "App Menu");
+
+        downloadLogScreen = new DownloadLogScreen(c, this);
+        convertToScreen = new ConvertToScreen(c, this);
+        gpsPositionScreen = new GpsPositionScreen(c, this);
+        logConditionsConfigScreen = new LogConditionsConfigScreen(c, this);
+        logDownloadConfigScreen = new LogDownloadConfigScreen(c, this);
+        loggerInfoScreen = new LoggerInfoScreen(c, this);
+        logScreen = new LogScreen(this);
     }
 
     /**
@@ -63,18 +79,17 @@ public class MainScreen extends Dialog {
      * @see DeviceScreen#declineNotify()
      */
     protected final void declineNotify() {
+        getSelected();
         Menu menu = new Menu("Log", this);
         // Reset the current location provider.
 
-        menu.appendMenuOption(new DownloadLog(c, this));
-        menu.appendMenuOption("To GPX", new ConvertTo(c, this));
-        menu.appendMenuOption("GPS Position", new GpsPositionScreen(c, this));
-        menu.appendMenuOption("Log Conditions", new LogConditionsConfigScreen(
-                c, this));
-        menu.appendMenuOption("Download Settings", new LogDownloadConfigScreen(
-                c, this));
+        menu.appendMenuOption(downloadLogScreen);
+        menu.appendMenuOption("To GPX", convertToScreen);
+        menu.appendMenuOption("GPS Position", gpsPositionScreen);
+        menu.appendMenuOption("Log Conditions", logConditionsConfigScreen);
+        menu.appendMenuOption("Download Settings", logDownloadConfigScreen);
         menu.appendMenuOption("MTK Logger Config",
-                new LoggerInfoScreen(c, this));
+                loggerInfoScreen);
         /*
          * menu.appendMenuOption( new MenuItem() { public String getText () {
          * return "Download"; }
@@ -111,7 +126,7 @@ public class MainScreen extends Dialog {
         });
 
         // See the application's log.
-        menu.appendMenuOption("Application Log", new LogScreen(this));
+        menu.appendMenuOption("Application Log", logScreen);
         // TODO: not very clean for an exit.
         menu.appendMenuOption(new MenuItem() {
             public String getText() {
@@ -122,8 +137,7 @@ public class MainScreen extends Dialog {
                 c.closeGPS();
                 midlet.notifyDestroyed();
             }
-        }
-                );
+        });
 
         menu.show();
 
