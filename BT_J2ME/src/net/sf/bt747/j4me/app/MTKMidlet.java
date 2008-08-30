@@ -47,7 +47,7 @@ public class MTKMidlet extends MIDlet implements ModelListener {
 
     }
 
-    private static void setInstance(MTKMidlet midlet) {
+    private static void setInstance(final MTKMidlet midlet) {
         instance = midlet;
     }
 
@@ -66,7 +66,7 @@ public class MTKMidlet extends MIDlet implements ModelListener {
      * 
      * @see javax.microedition.midlet.MIDlet#startApp()
      */
-    protected void startApp() throws MIDletStateChangeException {
+    protected final void startApp() throws MIDletStateChangeException {
         // Initialize the J4ME UI manager.
         try {
             UIManager.init(this);
@@ -101,7 +101,7 @@ public class MTKMidlet extends MIDlet implements ModelListener {
             // FindingGPSDevicesAlert creates a list of devices, then calls
             // SelectGPSScreen which will in turn call
             // InitializingGPSAlert
-            DeviceScreen main = new MainScreen(c);
+            DeviceScreen main = new MainScreen(c,this);
             DeviceScreen next = new InitializingGPSAlert(c, main);
             DeviceScreen first = new FindingGPSDevicesAlert(c, next);
             // (new ConvertTo(c, main)).doWork(); // Debug conversion
@@ -119,7 +119,8 @@ public class MTKMidlet extends MIDlet implements ModelListener {
      * 
      * @see javax.microedition.midlet.MIDlet#destroyApp(boolean)
      */
-    protected void destroyApp(boolean arg0) throws MIDletStateChangeException {
+    protected final void destroyApp(final boolean arg0)
+            throws MIDletStateChangeException {
         // Add cleanup code here.
 
         // Exit the application.
@@ -137,10 +138,12 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         }
     }
 
-    public void modelEvent(ModelEvent e) {
+    public final void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
         case ModelEvent.DEBUG_MSG:
             Log.debug((String) e.getArg());
+            break;
+        default:
             break;
         }
     }

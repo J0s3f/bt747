@@ -21,12 +21,12 @@ public class Vm {
     public static final int getTimeStamp() {
         // Returns the time in ms since the program started.
         // TODO: Find function
-        return (int)(System.currentTimeMillis()-appStartTime);
+        return (int) (System.currentTimeMillis() - appStartTime);
         // return waba.sys.Vm.getTimeStamp();
         // Date.
     }
 
     public static final void debug(final String s) {
-        Log.debug(getTimeStamp()+" - "+s);
-   }
+        Log.debug(getTimeStamp() + " - " + s);
+    }
 }

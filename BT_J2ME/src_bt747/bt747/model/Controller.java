@@ -502,9 +502,9 @@ public class Controller {
             int endAddress;
             if (m.getDownloadMethod() == Model.DOWNLOAD_FULL
                     || m.gpsModel().isInitialLogOverwrite()) {
-                endAddress = m.gpsModel().getLogMemSize() - 1;
+                endAddress = m.logMemSize() - 1;
             } else {
-                endAddress = m.gpsModel().getLogMemUsed() - 1;
+                endAddress = m.logMemUsed() - 1;
             }
             m.gpsModel().getLogInit(0, /* StartPosition */
             endAddress, /* EndPosition */

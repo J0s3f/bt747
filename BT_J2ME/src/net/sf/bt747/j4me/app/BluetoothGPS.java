@@ -87,7 +87,7 @@ class BluetoothGPS extends gps.connection.GPSPort {
      * @param url -
      *            URL of bluetooth device to connect to.
      */
-    public BluetoothGPS(String url) {
+    public BluetoothGPS(final String url) {
         this.url = url;
     }
 
@@ -199,7 +199,6 @@ class BluetoothGPS extends gps.connection.GPSPort {
         } catch (IOException e) {
             Log.error("writeString", e);
         }
-        ;
 
     }
 
@@ -210,8 +209,8 @@ class BluetoothGPS extends gps.connection.GPSPort {
                 outputStream.flush();
             }
         } catch (IOException e) {
+            Log.error("writeByte", e);
         }
-        ;
     }
 
     public int openPort() {
@@ -238,7 +237,7 @@ class BluetoothGPS extends gps.connection.GPSPort {
         close();
     }
 
-    public void setFreeTextPort(String s) {
+    public void setFreeTextPort(final String s) {
         url = s;
     }
 
@@ -268,9 +267,9 @@ class BluetoothGPS extends gps.connection.GPSPort {
      *             May be thrown if access to the protocol handler is
      *             prohibited.
      */
-    private void makeConnection(String url
+    private void makeConnection(final String urlProvided
     // , String channelId
-    ) throws ConnectionNotFoundException, IOException, SecurityException {
+    ) throws IOException, SecurityException {
         // The number of channels to try connecting on.
         // Bluetooth address have channels 1-9 typically. However, GPS
         // devices seem to only have 1 channel. We'll use two just to
@@ -290,19 +289,22 @@ class BluetoothGPS extends gps.connection.GPSPort {
                     break;
                 } catch (IOException e) {
                     if (Log.isDebugEnabled()) {
-                        Log.debug("Channel ID = " + i + " failed:  "
-                                + e.toString());
+                        Log.debug("Channel ID = " + i + " failed:  ", e);
                     }
 
                     // If there are still more to try, then try them
                     if (i == maxTries) {
                         throw e;
                     }
+                } catch (SecurityException e) {
+                    if (Log.isDebugEnabled()) {
+                        Log.debug("Channel ID = " + i + " failed:  ", e);
+                    }
                 }
             }
         } else {
             // Connect to the remote GPS device
-            url = constructBTURL(url, channelId);
+            this.url = constructBTURL(urlProvided, channelId);
             connect();
         }
     }
@@ -315,8 +317,8 @@ class BluetoothGPS extends gps.connection.GPSPort {
      * @param channelId -
      *            The channel ID to use
      */
-    protected static String constructBTURL(String deviceBluetoothAddress,
-            String channelId) {
+    protected static String constructBTURL(final String deviceBluetoothAddress,
+            final String channelId) {
         if ((channelId == null) || (deviceBluetoothAddress == null)) {
             return null;
         }
