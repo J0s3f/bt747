@@ -6,6 +6,12 @@
  */
 package bt747.sys;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
+import javax.microedition.global.Formatter;
+
 /**
  * @author Mario De Weerd
  * 
@@ -30,10 +36,29 @@ public class Convert {
     }
 
     public static String toString(final double p, final int i) {
-        // return format String.format(null, "%." + i + "f", new Double(p));
-        return Double.toString(p);
+        String s;
+        if (p >= 1.) {
+            s = Double.toString(p);
+        } else {
+            s = Double.toString(p + 1.);
+            s = "0" + s.substring(1);
+        }
+
+        int dotPos;
+        dotPos = s.indexOf('.');
+        if (dotPos == 0) {
+            s.concat("." + ZEROSTRING.substring(0, i));
+        } else if (dotPos + i + 1 > s.length()) {
+            s.concat(ZEROSTRING.substring(0, dotPos + i + 1 - s.length()));
+        } else {
+            s = s.substring(0, dotPos + i + 1);
+        }
+        return s;
     }
 
+    /**
+     * Constant string of zeros used for padding.
+     */
     private static final String ZEROSTRING = "0000000000000000";
 
     public static String unsigned2hex(final int p, final int i) {

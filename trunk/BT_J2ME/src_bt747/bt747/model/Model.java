@@ -201,8 +201,6 @@ public class Model extends AppSettings implements GPSListener {
     public final int getValidMask(final int logFilterType) {
         return logFilters[logFilterType].getValidMask();
     }
-    
-
 
     /**
      * Get the record reason mask.
@@ -417,6 +415,15 @@ public class Model extends AppSettings implements GPSListener {
      */
     public final boolean isLoggingActive() {
         return gpsModel.isLoggingActive;
+    }
+
+    /**
+     * Get memory size.
+     * 
+     * @return The ammount of memory available in bytes.
+     */
+    public final int logMemSize() {
+        return gpsModel.getLogMemSize();
     }
 
     /**

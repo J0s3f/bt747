@@ -50,7 +50,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
      * @param text
      *            is the alert message.
      */
-    public DownloadLog(AppController c, DeviceScreen previous) {
+    public DownloadLog(final AppController c, final DeviceScreen previous) {
         this.c = c;
         this.previous = previous;
 
@@ -78,7 +78,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
      * thread to avoid any race conditions involved with the order screens are
      * set.
      */
-    public void run() {
+    public final void run() {
         try {
             m().addListener(this);
             c.startDefaultDownload();
@@ -99,7 +99,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
      * 
      * @see DeviceScreen#showNotify()
      */
-    public void showNotify() {
+    public final void showNotify() {
 
         if (!m().isDownloadOnGoing()) {
             Thread worker = new Thread(this);
@@ -115,7 +115,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
     /**
      * Goes to the next screen after the user hits the cancel button.
      */
-    protected void declineNotify() {
+    protected final void declineNotify() {
         (new LogScreen(this)).show();
 
         // Continue processing the event.
@@ -125,7 +125,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
     /**
      * Goes to the next screen after the user hits the cancel button.
      */
-    protected void acceptNotify() {
+    protected final void acceptNotify() {
         c.cancelGetLog();
         downloadDone();
 
@@ -161,7 +161,7 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
         }
     }
 
-    public void modelEvent(ModelEvent e) {
+    public final void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
         case ModelEvent.LOG_DOWNLOAD_STARTED:
             Log.debug("Download started");
@@ -171,6 +171,8 @@ public class DownloadLog extends Dialog implements ModelListener, Runnable {
             break;
         case ModelEvent.LOG_DOWNLOAD_DONE:
             downloadDone();
+        default:
+            break;
         }
     }
 

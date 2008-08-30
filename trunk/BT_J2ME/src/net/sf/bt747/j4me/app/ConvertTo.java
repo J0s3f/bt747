@@ -35,7 +35,7 @@ public class ConvertTo extends ProgressAlert {
      * @param previous
      *            is the screen that came before this one.
      */
-    public ConvertTo(AppController c, DeviceScreen previous) {
+    public ConvertTo(final AppController c, final DeviceScreen previous) {
         super("Convert Log", "Converting Log File");
 
         this.c = c;
@@ -56,7 +56,7 @@ public class ConvertTo extends ProgressAlert {
      * A worker thread that gets the GPS <c>LocationProvider</c>. The thread
      * will set the next screen when it is done.
      */
-    protected DeviceScreen doWork() {
+    protected final DeviceScreen doWork() {
         DeviceScreen next = previous;
 
         // String text = getText() + "\n" + "Using device: " + deviceName;

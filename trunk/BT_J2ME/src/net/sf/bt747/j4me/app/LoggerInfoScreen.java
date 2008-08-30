@@ -4,18 +4,17 @@ import java.util.Date;
 
 import javax.microedition.lcdui.Font;
 
-import org.j4me.examples.log.LogScreen;
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
-import org.j4me.ui.Menu;
 import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
 
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
+import bt747.sys.Convert;
 
-public class LoggerInfo extends Dialog implements ModelListener {
+public class LoggerInfoScreen extends Dialog implements ModelListener {
 
     /**
      * A large font used for section headings.
@@ -34,7 +33,7 @@ public class LoggerInfo extends Dialog implements ModelListener {
     private FieldValue logRCRDistance = new FieldValue(
             "Distance log interval (m)");
 
-    private FieldValue memoryTotal = new FieldValue("Memory size (MB)");
+    private FieldValue memoryTotal = new FieldValue("Memory size (bytes)");
     private FieldValue memoryUsed = new FieldValue("Memory used (bytes)");
     private FieldValue memoryUsedPercent = new FieldValue("Memory used (%)");
     private FieldValue memoryUsedRecords = new FieldValue(
@@ -46,7 +45,7 @@ public class LoggerInfo extends Dialog implements ModelListener {
 
     private AppController c;
 
-    public LoggerInfo(AppController c, DeviceScreen previous) {
+    public LoggerInfoScreen(final AppController c, final DeviceScreen previous) {
 
         this.c = c;
         this.previous = previous;
@@ -77,7 +76,6 @@ public class LoggerInfo extends Dialog implements ModelListener {
         // Register for location updates.
         // LocationProvider provider = model.getLocationProvider();
         c.getModel().addListener(this);
-
     }
 
     /**
@@ -86,7 +84,7 @@ public class LoggerInfo extends Dialog implements ModelListener {
      * @param title
      *            is the name of the section.
      */
-    private void createNewSection(String title) {
+    private void createNewSection(final String title) {
         append(new HorizontalRule());
 
         Label header = new Label();
@@ -94,34 +92,32 @@ public class LoggerInfo extends Dialog implements ModelListener {
         header.setLabel(title);
         append(header);
     }
-    
-    public void showNotify() {
+
+    public final void showNotify() {
         reqLogInfo();
-        //updateData();
+        // updateData();
         super.showNotify();
     }
-    
+
     private void reqLogInfo() {
         c.reqLogReasonStatus();
         // Request device info for this control
         c.reqLogStatus();
         // Request log version from device
-        //c.reqMtkLogVersion();
+        // c.reqMtkLogVersion();
         // Request mem size from device
         c.reqLogMemUsed();
         // Request number of log points
         c.reqLogMemPtsLogged();
-        //c.reqLogOverwrite();
+        // c.reqLogOverwrite();
     }
-
-
 
     /**
      * Called when the user presses the "Back" button.
      * 
      * @see DeviceScreen#declineNotify()
      */
-    protected void declineNotify() {
+    protected final void declineNotify() {
         // Go back to the previous screen.
         if (previous != null) {
             previous.show();
@@ -134,27 +130,27 @@ public class LoggerInfo extends Dialog implements ModelListener {
     private static final class FieldValue extends Label {
         private final String name;
 
-        public FieldValue(String name) {
+        public FieldValue(final String name) {
             this.name = name;
 
             setFont(NORMAL_FONT);
         }
 
-        public void setLabel(String label) {
+        public void setLabel(final String label) {
             super.setLabel(name + ":  " + label);
         }
 
-        public void setLabel(double d) {
+        public void setLabel(final double d) {
             String s = Double.toString(d);
             setLabel(s);
         }
 
-        public void setLabel(float f) {
+        public void setLabel(final float f) {
             String s = Float.toString(f);
             setLabel(s);
         }
 
-        public void setLabel(Date d) {
+        public void setLabel(final Date d) {
             String s = d.toString();
             setLabel(s);
         }
@@ -165,32 +161,34 @@ public class LoggerInfo extends Dialog implements ModelListener {
         }
     }
 
-    final private AppModel m() {
+    private final AppModel m() {
         return c.getAppModel();
     }
-    
+
     private void updateData() {
         try {
-        logRCRTime.setLabel(m().getLogTimeInterval());
-        logRCRSpeed.setLabel(m().getLogSpeedInterval());
-        logRCRDistance.setLabel(m().getLogDistanceInterval());
+            logRCRTime.setLabel(Convert.toString(m().getLogTimeInterval()/10.,1));
+            logRCRSpeed.setLabel(m().getLogSpeedInterval());
+            logRCRDistance.setLabel(Convert.toString(m().getLogDistanceInterval()/10.,1));
 
-        memoryTotal.setLabel(m().logMemUsefullSize());
-        memoryUsed.setLabel(m().logMemUsed());
-        memoryUsedPercent.setLabel(m().logMemUsedPercent());
-        memoryUsedRecords.setLabel(m().logNbrLogPts());
-        memoryAvailRecords.setLabel(m().getEstimatedNbrRecordsFree(
-                m().getLogFormat()));
+            memoryTotal.setLabel(m().logMemSize());
+            memoryUsed.setLabel(m().logMemUsed());
+            memoryUsedPercent.setLabel(m().logMemUsedPercent());
+            memoryUsedRecords.setLabel(m().logNbrLogPts());
+            memoryAvailRecords.setLabel(m().getEstimatedNbrRecordsFree(
+                    m().getLogFormat()));
         } catch (Exception e) {
-            Log.error("updateData",e);
+            Log.error("updateData", e);
         }
         repaint();
     }
 
-    public void modelEvent(ModelEvent e) {
+    public final void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
         case ModelEvent.DATA_UPDATE:
             updateData();
+            break;
+        default:
             break;
         }
 

@@ -19,7 +19,6 @@ public class Time {
     final static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
     private Calendar cal = Calendar.getInstance(GMT_ZONE);
 
-
     public Time() {
     }
 

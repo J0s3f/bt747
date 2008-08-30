@@ -1,10 +1,13 @@
 package net.sf.bt747.j4me.app;
 
+import javax.microedition.midlet.MIDlet;
+
 import org.j4me.examples.log.LogScreen;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
 import org.j4me.ui.MenuItem;
+import org.j4me.ui.components.Label;
 
 /**
  * The "Log" screen. This shows the contents of the application's log. It is an
@@ -12,7 +15,10 @@ import org.j4me.ui.MenuItem;
  */
 public class MainScreen extends Dialog {
 
-    AppController c;
+    private AppController c;
+    private MIDlet midlet;
+
+    private Label lbText;
 
     /**
      * Constructs the "Log" screen.
@@ -21,13 +27,21 @@ public class MainScreen extends Dialog {
      *            is the screen that invoked this one. If this is <c>null</c>
      *            the application will exit when this screen is dismissed.
      */
-    public MainScreen(AppController c) {
+    public MainScreen(final AppController c, final MIDlet midlet) {
         this.c = c;
+        this.midlet = midlet;
         // Set the title.
         setTitle("MTK Log Control (BT747)");
 
+        lbText = new Label(
+                "Demonstration/BETA version of a J2ME "
+                        + "implementatation of BT747 (http://sf.net/projects/bt747)."
+                        + " This application demonstrates log sownload (very slow currently)"
+                        + " and enables you to set some basic log conditions.");
+
         // Add the menu buttons.
         setFullScreenMode(false);
+
         setMenuText("Log", "Other");
     }
 
@@ -36,7 +50,7 @@ public class MainScreen extends Dialog {
      * 
      * @see DeviceScreen#showNotify()
      */
-    public void showNotify() {
+    public final void showNotify() {
         // Clear this form.
         deleteAll();
 
@@ -47,14 +61,19 @@ public class MainScreen extends Dialog {
      * 
      * @see DeviceScreen#declineNotify()
      */
-    protected void declineNotify() {
+    protected final void declineNotify() {
         Menu menu = new Menu("Log", this);
         // Reset the current location provider.
 
         menu.appendMenuOption(new DownloadLog(c, this));
         menu.appendMenuOption("To GPX", new ConvertTo(c, this));
-        menu.appendMenuOption("Info from GPS", new GPSInfo(c, this));
-        menu.appendMenuOption("MTK Logger Config", new LoggerInfo(c, this));
+        menu.appendMenuOption("GPS Position", new GpsPositionScreen(c, this));
+        menu.appendMenuOption("Log Conditions", new LogConditionsConfigScreen(
+                c, this));
+        menu.appendMenuOption("Download Settings", new LogDownloadConfigScreen(
+                c, this));
+        menu.appendMenuOption("MTK Logger Config",
+                new LoggerInfoScreen(c, this));
         /*
          * menu.appendMenuOption( new MenuItem() { public String getText () {
          * return "Download"; }
@@ -72,7 +91,7 @@ public class MainScreen extends Dialog {
      * 
      * @see DeviceScreen#acceptNotify()
      */
-    protected void acceptNotify() {
+    protected final void acceptNotify() {
         Menu menu = new Menu("Other", this);
 
         // Choose different location provider criteria.
@@ -92,6 +111,18 @@ public class MainScreen extends Dialog {
 
         // See the application's log.
         menu.appendMenuOption("Application Log", new LogScreen(this));
+        // TODO: not very clean for an exit.
+        menu.appendMenuOption(new MenuItem() {
+            public String getText() {
+                return "Exit application";
+            }
+
+            public void onSelection() {
+                c.closeGPS();
+                midlet.notifyDestroyed();
+            }
+        }
+                );
 
         menu.show();
 

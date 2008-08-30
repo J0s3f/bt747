@@ -30,7 +30,8 @@ public class InitializingGPSAlert extends ProgressAlert {
      * @param previous
      *            is the screen that came before this one.
      */
-    public InitializingGPSAlert(AppController c, DeviceScreen previous) {
+    public InitializingGPSAlert(final AppController c,
+            final DeviceScreen previous) {
         super("Initializing GPS...", "Connecting to the location provider.");
 
         this.c = c;
@@ -40,7 +41,7 @@ public class InitializingGPSAlert extends ProgressAlert {
     /**
      * Called when the user presses the alert's dismiss button.
      */
-    public void onCancel() {
+    public final void onCancel() {
         Log.debug("Canceling GPS initialization.");
 
         // Go back to the previous screen.
@@ -51,7 +52,7 @@ public class InitializingGPSAlert extends ProgressAlert {
      * A worker thread that gets the GPS <c>LocationProvider</c>. The thread
      * will set the next screen when it is done.
      */
-    protected DeviceScreen doWork() {
+    protected final DeviceScreen doWork() {
         BluetoothGPS provider = null;
 
         DeviceScreen next = previous;
@@ -59,7 +60,6 @@ public class InitializingGPSAlert extends ProgressAlert {
 
         String text = getText() + "\n" + "Using device:  " + deviceName;
         setText(text);
-
 
         try {
             // Get the GPS provider.
@@ -89,13 +89,13 @@ public class InitializingGPSAlert extends ProgressAlert {
             // Bluetooth).
             c.getAppModel().setGpsBluetoothConnection(provider);
             c.setFreeTextPort(c.getAppModel().getBluetoothGPSURL());
-            //c.connectGPS();
+            // c.connectGPS();
 
             // Did we get a GPS location provider?
             if (provider != null) {
                 // Alert the user we are waiting for a fix from the GPS.
                 // TODO: continue application
-                //next = new AcquiringLocationAlert(model, previous);
+                // next = new AcquiringLocationAlert(model, previous);
             } else {
                 // There was no location provider that matched the criteria.
                 Log.info("No location provider matched the criteria.");
