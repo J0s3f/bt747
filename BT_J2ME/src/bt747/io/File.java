@@ -77,8 +77,7 @@ public class File {
         if (mode != DONT_OPEN) {
             String urlPath = "file://" + path;
             Log.debug("Try to open " + path);
-            fileConnection = (FileConnection) Connector.open(urlPath,
-                    lMode);
+            fileConnection = (FileConnection) Connector.open(urlPath, lMode);
             isopen = true;
             switch (mode) {
             case READ_ONLY:
@@ -145,7 +144,28 @@ public class File {
         try {
             if (isopen && fileConnection != null) {
                 isopen = false;
+                try {
+                    if (is != null) {
+                        is.close();
+                        is = null;
+                    }
+                } catch (Exception e) {
+                    Generic.debug("inputstream close", e);
+                    // TODO: handle exceptions
+                    return false;
+                }
+                try {
+                    if (os != null) {
+                        os.close();
+                        os = null;
+                    }
+                } catch (Exception e) {
+                    Generic.debug("outputstream close", e);
+                    // TODO: handle exceptions
+                    return false;
+                }
                 fileConnection.close();
+                fileConnection = null;
             }
             return true;
         } catch (Exception e) {

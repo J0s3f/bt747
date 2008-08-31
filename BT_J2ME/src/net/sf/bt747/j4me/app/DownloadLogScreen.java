@@ -30,6 +30,8 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
      * The label that displays the alert's text.
      */
     private Label label = new Label();
+    private Label bytesDownloaded = new Label();
+    private Label bytes = new Label();
 
     /**
      * An progress bar that informs the user about the download progress.
@@ -68,6 +70,13 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
         bar = new ProgressBar();
         bar.setHorizontalAlignment(Graphics.HCENTER);
         append(bar);
+        
+        bytes = new Label("Bytes downloaded:");
+        append(bytes);
+        
+        bytesDownloaded = new Label();
+        append(bytesDownloaded);
+        
 
         // Add the menu buttons.
         Theme theme = UIManager.getTheme();
@@ -153,6 +162,7 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
         return c.getAppModel();
     }
 
+    private long nextUpdate = 0;
     /**
      * Update the progress status
      */
@@ -166,9 +176,15 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
             max = m().getEndAddr();
             value = m().getNextReadAddr();
 
-            bar.setMaxValue(max);
-            bar.setValue(value);
-            bar.repaint();
+            long currentTime = System.currentTimeMillis();
+            if(currentTime>=nextUpdate) {
+                nextUpdate=currentTime+50L;
+                bar.setMaxValue(max);
+                bar.setValue(value);
+                bar.repaint();
+                bytes.setLabel(Integer.toString(value));
+                bytes.repaint();
+            }
         }
     }
 
@@ -177,7 +193,7 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
         case ModelEvent.LOG_DOWNLOAD_STARTED:
             Log.debug("Download started");
         case ModelEvent.DOWNLOAD_STATE_CHANGE:
-            Log.debug("Progress update");
+            //Log.debug("Progress update");
             progressUpdate();
             break;
         case ModelEvent.LOG_DOWNLOAD_DONE:

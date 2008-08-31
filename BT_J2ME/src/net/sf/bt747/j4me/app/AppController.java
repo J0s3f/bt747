@@ -3,10 +3,6 @@ package net.sf.bt747.j4me.app;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.util.Enumeration;
 
 import javax.microedition.io.file.FileSystemRegistry;
@@ -47,13 +43,16 @@ public class AppController extends Controller {
         RecordStore recordStore;
         try {
             recordStore = RecordStore.openRecordStore(RECORDSTORENAME, false);
+            recordStore.closeRecordStore(); // generate throwable for debug
             byte[] bytes = recordStore.getRecord(1);
             recordStore.closeRecordStore();
             if (bytes.length >= 2048) {
                 Settings.setAppSettings(new String(bytes));
+                m.init();
                 Log.debug("Recovered settings");
             } else {
                 Log.debug("Initialising settings");
+                m.init();
                 resetSettings();
                 saveSettings();
             }
@@ -85,11 +84,11 @@ public class AppController extends Controller {
             // mObexUrl = null;
             // mEmailAddress = "";
             // mUserName = "guest";
+            m.init();
             resetSettings();
             saveSettings();
             return;
         }
-        m.init();
     }
 
     private void resetSettings() {
@@ -102,6 +101,7 @@ public class AppController extends Controller {
             if (dir.endsWith("/")) {
                 dir = dir.substring(0, dir.length() - 1);
             }
+            Log.info("Setting basedir set to:" + dir);
             setBaseDirPath(dir);
         } catch (Exception e) {
             Log.debug("Problem finding root", e);
@@ -109,7 +109,7 @@ public class AppController extends Controller {
         }
         setChunkSize(0x400);
         setChunkSize(0x100); // For trial, small size for data.
-        Log.info("Basedir set to:" + m.getBaseDirPath());
+        Log.info("Reset basedir set to:" + m.getBaseDirPath());
         // Input is "/BT747/BT747_sample.bin"
         setLogFileRelPath("BT747_sample.bin");
         // Output is "/BT747/GPSDATA*"
