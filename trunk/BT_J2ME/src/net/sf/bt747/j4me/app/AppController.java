@@ -43,7 +43,6 @@ public class AppController extends Controller {
         RecordStore recordStore;
         try {
             recordStore = RecordStore.openRecordStore(RECORDSTORENAME, false);
-            recordStore.closeRecordStore(); // generate throwable for debug
             byte[] bytes = recordStore.getRecord(1);
             recordStore.closeRecordStore();
             if (bytes.length >= 2048) {

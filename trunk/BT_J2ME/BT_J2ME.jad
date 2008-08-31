@@ -7,7 +7,7 @@ MIDlet-Jar-URL: BT_J2ME.jar
 MIDlet-Name: BT_J2ME Midlet Suite
 MIDlet-Permissions-Opt: javax.microedition.io.Connector.bluetooth.client,javax.microedition.io.Connector.file.read, javax.microedition.io.Connector.file.write
 MIDlet-Vendor: m.deweerd@ieee.org
-MIDlet-Version: 0.0.29
+MIDlet-Version: 0.0.30
 MicroEdition-Configuration: CLDC-1.1
 MicroEdition-Profile: MIDP-2.0
 URL: http://sf.net/projects/bt747
