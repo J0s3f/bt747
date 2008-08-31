@@ -5,10 +5,8 @@ import gps.log.GPSRecord;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.microedition.global.Formatter;
 import javax.microedition.lcdui.Font;
 
-import org.j4me.examples.log.LogScreen;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
@@ -118,14 +116,15 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
      */
     private long startTime;
 
-    DeviceScreen previous;
+    private DeviceScreen previous;
 
-    Controller c;
+    private AppController c;
 
-    public GpsPositionScreen(final Controller c, final DeviceScreen previous) {
+    public GpsPositionScreen(final AppController c, final DeviceScreen previous) {
 
 
         this.previous = previous;
+        this.c = c;
         
         // Set the menu bar options.
         setMenuText("Back", null);
@@ -136,9 +135,9 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         // append( state );
 
         // Create a UI section for pedometer information.
-        createNewSection("Pedometer");
-        append(traveled);
-        append(avgSpeed);
+        //createNewSection("Pedometer");
+        //append(traveled);
+        //append(avgSpeed);
 
         // Create a UI section for location information.
         createNewSection("Location");
@@ -160,8 +159,6 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
 
         // Register for location updates.
         // LocationProvider provider = model.getLocationProvider();
-        c.getModel().addListener(this);
-
     }
 
     /**
@@ -177,6 +174,16 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         header.setFont(LARGE_FONT);
         header.setLabel(title);
         append(header);
+    }
+    
+    public void showNotify() {
+        c.getAppModel().addListener(this);
+        super.showNotify();
+    }
+
+    public void hideNotify() {
+        c.getAppModel().removeListener(this);
+        super.hideNotify();
     }
 
     /**
@@ -274,16 +281,15 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
             latitude.setLabel(g.latitude, 6);
             longitude.setLabel(g.longitude, 6);
             Calendar cal = Calendar.getInstance();
-            cal.setTime(new Date(g.utc));
-            ;
-
-            try {
-                Formatter fmt;
-                fmt = new Formatter();
-                fvTime.setLabel(fmt.formatDateTime(cal, Formatter.DATETIME_LONG));
-            } catch (NoClassDefFoundError error) {
-                // TODO:very likely class not found - implement our solution
-            }
+            Date d = new Date(g.utc);
+            String dateStr;
+            cal.setTime(d);
+            dateStr = cal.get(Calendar.YEAR)+"/"+ (cal.get(Calendar.MONTH)+1)+"/"+ cal.get(Calendar.DAY_OF_MONTH)
+            +" "
+            +cal.get(Calendar.HOUR_OF_DAY)+":"+ (cal.get(Calendar.MINUTE))+":"+ cal.get(Calendar.SECOND);
+            
+            //fvTime.setLabel(fmt.formatDateTime(cal, Formatter.DATETIME_LONG));
+            fvTime.setLabel(g.utc);
             fvSpeed.setLabel(g.speed,1);
             fvCourse.setLabel(g.heading,1);
             fvAltitude.setLabel(g.height,1);

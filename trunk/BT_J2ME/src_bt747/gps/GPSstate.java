@@ -199,7 +199,8 @@ public class GPSstate implements Thread {
     public final void setupTimer() {
         // TODO: set up thread in gpsRxTx directly (through controller)
         if (gpsRxTx.isConnected()) {
-            nextRun = Vm.getTimeStamp() + 50; // Delay before first transaction
+            nextRun = Vm.getTimeStamp() + 50; // Delay before first
+                                                // transaction
             Generic.addThread(this, false);
         }
     }
@@ -955,7 +956,7 @@ public class GPSstate implements Thread {
                 case BT747Constants.PMTK_DT_FIX_CTL: // CMD 500
                     if (sNmea.length >= 2) {
                         logFixPeriod = Convert.toInt(sNmea[1]);
-                        postGpsEvent(GpsEvent.GPS_FIX_DATA,null);
+                        postGpsEvent(GpsEvent.GPS_FIX_DATA, null);
                     }
                     dataOK |= C_OK_FIX;
                     break;
@@ -1377,6 +1378,7 @@ public class GPSstate implements Thread {
         try {
             if (logFile != null && logFile.isOpen()) {
                 logFile.close();
+                logFile = null;
             }
         } catch (Exception e) {
         }

@@ -289,10 +289,6 @@ public class AppSettings {
     private int START_IDX = 2;
     private int SIZE_IDX = 3;
 
-    private String baseDirPath;
-    private String logFile;
-    private String reportFileBase;
-
     private static boolean solveMacLagProblem = false;
 
     /**
@@ -313,7 +309,6 @@ public class AppSettings {
 
         mVersion = getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
         if ((mVersion.length() == 4) && (mVersion.charAt(1) == '.')) {
-            getSettings();
             VersionX100 = Convert.toInt(mVersion.charAt(0)
                     + mVersion.substring(2, 4));
         }
@@ -430,7 +425,6 @@ public class AppSettings {
                     | (1 << BT747Constants.FMT_HEIGHT_IDX));
             break;
         }
-        getSettings();
     }
 
     public final void defaultSettings() {
@@ -442,15 +436,6 @@ public class AppSettings {
         setTrkPtRCR(0xFFFFFFFF);
         setWayPtValid(0xFFFFFFFE);
         setWayPtRCR(0x00000008);
-    }
-
-    public final void getSettings() {
-        // setPortnbr(0);
-        // setBaudRate(115200);
-        baseDirPath = getStringOpt(C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE);
-        reportFileBase = getStringOpt(C_REPORTFILEBASE_IDX,
-                C_REPORTFILEBASE_SIZE);
-        logFile = getStringOpt(C_LOGFILE_IDX, C_LOGFILE_SIZE);
     }
 
     private final void setOpt(final int eventType, final String src,
@@ -718,12 +703,12 @@ public class AppSettings {
      * @return Returns the logFile full path.
      */
     public final String getLogFilePath() {
-        return baseDirPath + File.separatorStr + logFile;
+        return getBaseDirPath() + File.separatorStr + getLogFile();
     }
 
     public final String getLogFile() {
         // Done this way to avoid 'refresh' of text with stored value.
-        return logFile;
+        return getStringOpt(C_LOGFILE_IDX, C_LOGFILE_SIZE);
     }
 
     /**
@@ -731,33 +716,31 @@ public class AppSettings {
      *            The logFile to set.
      */
     public final void setLogFileRelPath(final String logFile) {
-        this.logFile = logFile;
-        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, this.logFile,
+        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile,
                 C_LOGFILE_IDX, C_LOGFILE_SIZE);
     }
 
     public final String getBaseDirPath() {
-        return baseDirPath;
+        return getStringOpt(C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE);
     }
 
     protected final void setBaseDirPath(final String baseDirPath) {
-        this.baseDirPath = baseDirPath;
-        setStringOpt(ModelEvent.WORKDIRPATH_UPDATE, this.baseDirPath,
+        setStringOpt(ModelEvent.WORKDIRPATH_UPDATE, baseDirPath,
                 C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE);
     }
 
     public final String getReportFileBase() {
-        return reportFileBase;
+        return getStringOpt(C_REPORTFILEBASE_IDX,
+                C_REPORTFILEBASE_SIZE);
     }
 
     public final void setReportFileBase(final String reportFileBase) {
-        this.reportFileBase = reportFileBase;
-        setStringOpt(ModelEvent.OUTPUTFILEPATH_UPDATE, this.reportFileBase,
+        setStringOpt(ModelEvent.OUTPUTFILEPATH_UPDATE, reportFileBase,
                 C_REPORTFILEBASE_IDX, C_REPORTFILEBASE_SIZE);
     }
 
     public final String getReportFileBasePath() {
-        return this.baseDirPath + "/" + reportFileBase;
+        return getBaseDirPath() + "/" + getReportFileBase();
     }
 
     public final int getWayPtRCR() {
