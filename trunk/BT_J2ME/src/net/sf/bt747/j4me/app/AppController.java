@@ -91,17 +91,24 @@ public class AppController extends Controller {
         }
         m.init();
     }
-    
+
     private void resetSettings() {
-        Enumeration roots = FileSystemRegistry.listRoots();
-        String dir = "";
-        while (roots.hasMoreElements()) {
-            dir = "/" + (String) roots.nextElement();
+        try {
+            Enumeration roots = FileSystemRegistry.listRoots();
+            String dir = "";
+            while (roots.hasMoreElements()) {
+                dir = "/" + (String) roots.nextElement();
+            }
+            if (dir.endsWith("/")) {
+                dir = dir.substring(0, dir.length() - 1);
+            }
+            setBaseDirPath(dir);
+        } catch (Exception e) {
+            Log.debug("Problem finding root", e);
+            // TODO: handle exception
         }
-        if (dir.endsWith("/")) {
-            dir = dir.substring(0, dir.length() - 1);
-        }
-        setBaseDirPath(dir);
+        setChunkSize(0x400);
+        setChunkSize(0x100); // For trial, small size for data.
         Log.info("Basedir set to:" + m.getBaseDirPath());
         // Input is "/BT747/BT747_sample.bin"
         setLogFileRelPath("BT747_sample.bin");
@@ -110,8 +117,6 @@ public class AppController extends Controller {
         setDebug(true);
         setDebugConn(false);
         setLogRequestAhead(0);
-        setChunkSize(0x400);
-        setChunkSize(0x100); // For trial, small size for data.
 
         setTrkPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
         setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
@@ -123,10 +128,9 @@ public class AppController extends Controller {
                 | BT747Constants.RCR_SPEED_MASK
                 | BT747Constants.RCR_BUTTON_MASK);
         // To limit the output data, we only select lat,lon and height.
-        setIntOpt(Model.FILEFIELDFORMAT,
-                (1 << BT747Constants.FMT_LATITUDE_IDX)
-                        | (1 << BT747Constants.FMT_LONGITUDE_IDX)
-                        | (1 << BT747Constants.FMT_HEIGHT_IDX));
+        setIntOpt(Model.FILEFIELDFORMAT, (1 << BT747Constants.FMT_LATITUDE_IDX)
+                | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+                | (1 << BT747Constants.FMT_HEIGHT_IDX));
 
         setIntOpt(AppModel.FILEFIELDFORMAT, -1);
 
