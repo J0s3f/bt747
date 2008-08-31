@@ -274,28 +274,23 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
 
 
     public final void modelEvent(final ModelEvent e) {
+        GPSRecord g;
         switch (e.getType()) {
         case ModelEvent.GPRMC:
-            GPSRecord g = (GPSRecord) e.getArg();
-
+            g = (GPSRecord) e.getArg();
             latitude.setLabel(g.latitude, 6);
             longitude.setLabel(g.longitude, 6);
-            Calendar cal = Calendar.getInstance();
-            Date d = new Date(g.utc);
-            String dateStr;
-            cal.setTime(d);
-            dateStr = cal.get(Calendar.YEAR)+"/"+ (cal.get(Calendar.MONTH)+1)+"/"+ cal.get(Calendar.DAY_OF_MONTH)
-            +" "
-            +cal.get(Calendar.HOUR_OF_DAY)+":"+ (cal.get(Calendar.MINUTE))+":"+ cal.get(Calendar.SECOND);
-            
-            //fvTime.setLabel(fmt.formatDateTime(cal, Formatter.DATETIME_LONG));
-            fvTime.setLabel(g.utc);
+            fvTime.setLabel(((long)g.utc)*1000L);
             fvSpeed.setLabel(g.speed,1);
             fvCourse.setLabel(g.heading,1);
-            fvAltitude.setLabel(g.height,1);
-            
             repaint();
             break;
+        case ModelEvent.GPGGA:
+            g = (GPSRecord) e.getArg();
+            latitude.setLabel(g.latitude, 6);
+            longitude.setLabel(g.longitude, 6);
+            fvAltitude.setLabel(g.height,1);
+            repaint();
         default:
             break;
         }

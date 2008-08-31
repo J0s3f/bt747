@@ -115,6 +115,10 @@ public class WindowedFile {
         }
         return buffer;
     }
+    
+    public final int getBufferFill() {
+        return bufferFill;
+    }
 
     public final boolean close() throws Exception {
         boolean result;
