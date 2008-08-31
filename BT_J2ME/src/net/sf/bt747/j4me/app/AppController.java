@@ -1,5 +1,6 @@
 package net.sf.bt747.j4me.app;
 
+import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 
 import java.io.ByteArrayInputStream;
@@ -15,6 +16,7 @@ import javax.microedition.rms.RecordStoreException;
 import org.j4me.logging.Log;
 
 import bt747.model.Controller;
+import bt747.model.Model;
 import bt747.sys.Settings;
 
 public class AppController extends Controller {
@@ -23,15 +25,18 @@ public class AppController extends Controller {
 
     public AppController(final AppModel m) {
         this.m = m;
-        init();
         super.setModel(m);
+        appInit();
+        super.init();
+        Log.info("Basedir set to:" + m.getBaseDirPath());
+
     }
 
     public final AppModel getAppModel() {
         return m;
     }
 
-    private void init() {
+    private void appInit() {
         GPSrxtx.setGpsPortInstance(new BluetoothGPS());
         initAppSettings();
         // TODO: Should load settings for Model
@@ -46,30 +51,10 @@ public class AppController extends Controller {
             recordStore.closeRecordStore();
             if (bytes.length >= 2048) {
                 Settings.setAppSettings(new String(bytes));
+                Log.debug("Recovered settings");
             } else {
-                init();
-
-                Enumeration roots = FileSystemRegistry.listRoots();
-                String dir = "";
-                while (roots.hasMoreElements()) {
-                    dir = "/" + (String) roots.nextElement();
-                }
-                if (dir.endsWith("/")) {
-                    dir = dir.substring(0, dir.length() - 1);
-                }
-                setBaseDirPath(dir);
-                Log.info("Basedir set to:" + m.getBaseDirPath());
-                // Input is "/BT747/BT747_sample.bin"
-                setLogFileRelPath("BT747_sample.bin");
-                // Output is "/BT747/GPSDATA*"
-                setOutputFileRelPath("GPSDATA");
-                setDebug(true);
-                setDebugConn(false);
-                setLogRequestAhead(0);
-                setChunkSize(0x400);
-                setChunkSize(0x100); // For trial, small size for data.
-                setDownloadMethod(AppModel.DOWNLOAD_FILLED);
-
+                Log.debug("Initialising settings");
+                resetSettings();
                 saveSettings();
             }
             // mUnitType = inputStream.readInt();
@@ -100,11 +85,52 @@ public class AppController extends Controller {
             // mObexUrl = null;
             // mEmailAddress = "";
             // mUserName = "guest";
-            m.init();
+            resetSettings();
             saveSettings();
             return;
         }
+        m.init();
+    }
+    
+    private void resetSettings() {
+        Enumeration roots = FileSystemRegistry.listRoots();
+        String dir = "";
+        while (roots.hasMoreElements()) {
+            dir = "/" + (String) roots.nextElement();
+        }
+        if (dir.endsWith("/")) {
+            dir = dir.substring(0, dir.length() - 1);
+        }
+        setBaseDirPath(dir);
+        Log.info("Basedir set to:" + m.getBaseDirPath());
+        // Input is "/BT747/BT747_sample.bin"
+        setLogFileRelPath("BT747_sample.bin");
+        // Output is "/BT747/GPSDATA*"
+        setOutputFileRelPath("GPSDATA");
+        setDebug(true);
+        setDebugConn(false);
+        setLogRequestAhead(0);
+        setChunkSize(0x400);
+        setChunkSize(0x100); // For trial, small size for data.
 
+        setTrkPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+        setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+        // Waypoints only when button pressed.
+        setWayPtRCR(BT747Constants.RCR_BUTTON_MASK);
+        // Trackpoints : anything
+        setTrkPtRCR(BT747Constants.RCR_TIME_MASK
+                | BT747Constants.RCR_DISTANCE_MASK
+                | BT747Constants.RCR_SPEED_MASK
+                | BT747Constants.RCR_BUTTON_MASK);
+        // To limit the output data, we only select lat,lon and height.
+        setIntOpt(Model.FILEFIELDFORMAT,
+                (1 << BT747Constants.FMT_LATITUDE_IDX)
+                        | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+                        | (1 << BT747Constants.FMT_HEIGHT_IDX));
+
+        setIntOpt(AppModel.FILEFIELDFORMAT, -1);
+
+        setDownloadMethod(AppModel.DOWNLOAD_FILLED);
     }
 
     String RECORDSTORENAME = "BT747";
@@ -116,8 +142,6 @@ public class AppController extends Controller {
         } catch (RecordStoreException rsc) {
             return;
         }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream outputStream = new DataOutputStream(baos);
         try {
             // outputStream.writeInt(mUnitType);
             // outputStream.writeInt(mBacklightSeconds);
@@ -137,7 +161,6 @@ public class AppController extends Controller {
                 recordStore.addRecord(bytes, 0, bytes.length);
             else
                 recordStore.setRecord(1, bytes, 0, bytes.length);
-            outputStream.close();
             recordStore.closeRecordStore();
         } catch (Exception exception) {
         }

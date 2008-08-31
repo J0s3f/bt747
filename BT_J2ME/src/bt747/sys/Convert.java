@@ -6,12 +6,6 @@
  */
 package bt747.sys;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-
-import javax.microedition.global.Formatter;
-
 /**
  * @author Mario De Weerd
  * 
@@ -36,30 +30,33 @@ public class Convert {
     }
 
     public static String toString(final double p, final int i) {
-        String s;
+        StringBuffer s;
         if (p >= 1.) {
-            s = Double.toString(p);
+            s = new StringBuffer(Double.toString(p));
         } else {
-            s = Double.toString(p + 1.);
-            s = "0" + s.substring(1);
+            s = new StringBuffer(Double.toString(p + 1.));
+            s.setCharAt(0, '0');
         }
 
         int dotPos;
-        dotPos = s.indexOf('.');
-        if (dotPos == 0) {
-            s.concat("." + ZEROSTRING.substring(0, i));
-        } else if (dotPos + i + 1 > s.length()) {
-            s.concat(ZEROSTRING.substring(0, dotPos + i + 1 - s.length()));
+        int diff;
+        dotPos = s.toString().indexOf('.');
+        if ((diff = (dotPos + i + 1 - s.length())) > 0) {
+            s.append(ZEROCHARS, 1, diff);
+        } else if (dotPos == 0) {
+            s.append(ZEROCHARS, 0, i + 1);
         } else {
-            s = s.substring(0, dotPos + i + 1);
+            s.setLength(dotPos + i + 1);
         }
-        return s;
+        return s.toString();
     }
 
     /**
      * Constant string of zeros used for padding.
      */
     private static final String ZEROSTRING = "0000000000000000";
+    private static final char[] ZEROCHARS = { '.', '0', '0', '0', '0', '0',
+            '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', };
 
     public static String unsigned2hex(final int p, final int i) {
         String s = Integer.toHexString(p).toUpperCase();

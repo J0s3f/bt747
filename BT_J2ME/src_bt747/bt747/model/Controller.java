@@ -72,7 +72,6 @@ public class Controller {
 
     public final void setModel(final Model model) {
         this.m = model;
-        init();
     }
 
     public Model getModel() {
@@ -82,7 +81,7 @@ public class Controller {
     /**
      * Called when the Controller starts. Used for initialization.
      */
-    private void init() {
+    public void init() {
         getLogFilterSettings();
         m.setGpsDecode(m.getGpsDecode());
         m.gpsModel().setDownloadTimeOut(m.getDownloadTimeOut());

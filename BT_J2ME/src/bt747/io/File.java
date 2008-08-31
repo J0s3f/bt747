@@ -75,9 +75,10 @@ public class File {
             lMode = Connector.READ;
         }
         if (mode != DONT_OPEN) {
-            fileConnection = (FileConnection) Connector.open("file://" + path,
+            String urlPath = "file://" + path;
+            Log.debug("Try to open " + path);
+            fileConnection = (FileConnection) Connector.open(urlPath,
                     lMode);
-            Log.debug("Opened file " + path);
             isopen = true;
             switch (mode) {
             case READ_ONLY:
@@ -100,7 +101,9 @@ public class File {
 
     private FileConnection tmpFileConnection(final String path)
             throws IOException {
-        return ((FileConnection) Connector.open("file://" + path));
+        String urlPath = "file://" + path;
+        Log.debug("File: " + urlPath);
+        return ((FileConnection) Connector.open(urlPath));
     }
 
     public int getSize() throws IOException {
