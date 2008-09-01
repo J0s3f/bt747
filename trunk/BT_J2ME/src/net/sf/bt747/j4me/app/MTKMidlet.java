@@ -124,6 +124,12 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         case ModelEvent.DEBUG_MSG:
             Log.debug((String) e.getArg());
             break;
+        case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
+            // When the data on the device is not the same, overwrite
+            // automatically.
+            Log.info("Confirmed to overwrite different data");
+            c.replyToOkToOverwrite(true);
+            break;
         default:
             break;
         }

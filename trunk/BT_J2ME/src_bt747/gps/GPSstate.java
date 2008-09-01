@@ -32,6 +32,7 @@ import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Thread;
 import bt747.sys.Vm;
+import bt747.util.Date;
 import bt747.util.Vector;
 
 /*
@@ -200,7 +201,7 @@ public class GPSstate implements Thread {
     public final void setupTimer() {
         // TODO: set up thread in gpsRxTx directly (through controller)
         if (gpsRxTx.isConnected()) {
-            nextRun = Vm.getTimeStamp() + 50; // Delay before first
+            nextRun = Vm.getTimeStamp() + 300; // Delay before first
             // transaction
             Generic.addThread(this, false);
         }
@@ -385,9 +386,10 @@ public class GPSstate implements Thread {
         if (cmd.startsWith("PMTK")) {
             sentCmds.addElement(cmd);
         }
+
         gpsRxTx.sendPacket(cmd);
         if (GPS_DEBUG) {
-            debugMsg(">" + cmd);
+            debugMsg(">" + cmd + " " + gpsRxTx.isConnected());
         }
         nextCmdSendTime = Vm.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
         if (sentCmds.size() > C_MAX_SENT_COMMANDS) {
@@ -859,30 +861,39 @@ public class GPSstate implements Thread {
     final void analyzeGPRMC(final String[] sNmea) {
         if (sNmea.length >= 11) {
             try {
-                gps.utc = Convert.toInt(sNmea[1].substring(0, 2)) * 3600
-                        + Convert.toInt(sNmea[1].substring(2, 4)) * 60
-                        + Convert.toInt(sNmea[1].substring(4, 6));
+                gps.setTime(sNmea[1]);
             } catch (Exception e) {
+                Generic.debug(sNmea[1], e);
             }
             try {
                 gps.latitude = (Convert.toDouble(sNmea[3].substring(0, 2)) + Convert
                         .toDouble(sNmea[3].substring(2)) / 60)
                         * (sNmea[4].equals("N") ? 1 : -1);
             } catch (Exception e) {
+                Generic.debug(sNmea[3], e);
             }
             try {
                 gps.longitude = (Convert.toDouble(sNmea[5].substring(0, 3)) + Convert
                         .toDouble(sNmea[5].substring(3)) / 60)
                         * (sNmea[6].equals("E") ? 1 : -1);
             } catch (Exception e) {
+                Generic.debug(sNmea[5], e);
             }
             try {
                 gps.speed = Convert.toFloat(sNmea[7]);
             } catch (Exception e) {
+                Generic.debug(sNmea[7], e);
             }
             try {
                 gps.heading = Convert.toFloat(sNmea[8]);
             } catch (Exception e) {
+                Generic.debug(sNmea[8], e);
+            }
+            try {
+                //Generic.debug(sNmea[9],null);
+                gps.setDate(sNmea[9]);
+            } catch (Exception e) {
+                Generic.debug(sNmea[9], e);
             }
 
             postGpsEvent(GpsEvent.GPRMC, gps);
@@ -891,28 +902,74 @@ public class GPSstate implements Thread {
 
     final void analyzeGPGGA(final String[] sNmea) {
         // Partial decode to compare height with calculated geoid.
-        if (sNmea.length >= 15) {
+        if (sNmea.length >= 12) {
             try {
-                // GPSRecord gps = new GPSRecord();
+                gps.setTime(sNmea[1]);
+            } catch (Exception e) {
+                Generic.debug(sNmea[1], e);
+            }
+            try {
                 gps.latitude = (Convert.toDouble(sNmea[2].substring(0, 2)) + Convert
                         .toDouble(sNmea[2].substring(2)) / 60)
                         * (sNmea[3].equals("N") ? 1 : -1);
+            } catch (Exception e) {
+                Generic.debug(sNmea[2], e);
+            }
+            try {
                 gps.longitude = (Convert.toDouble(sNmea[4].substring(0, 3)) + Convert
                         .toDouble(sNmea[4].substring(3)) / 60)
                         * (sNmea[5].equals("E") ? 1 : -1);
-                gps.height = Convert.toFloat(sNmea[9]);
-                gps.geoid = Convert.toFloat(sNmea[11]);
-                // if(GPS_DEBUG) {
-                // double geoid=Conv.wgs84_separation(gps.latitude,
-                // gps.longitude);
-                // debugMsg("geoid GPS: "+Convert.toString(gps.geoid,3)
-                // + " geoid calc:"+Convert.toString(geoid)
-                // );
-                // }
-                postGpsEvent(GpsEvent.GPRMC, gps);
             } catch (Exception e) {
-                Generic.debug("", e);
+                Generic.debug(sNmea[4], e);
             }
+
+            try {
+                gps.valid = 1 << Convert.toInt(sNmea[6]);
+            } catch (Exception e) {
+                Generic.debug(sNmea[6], e);
+            }
+            try {
+                gps.nsat = (Convert.toInt(sNmea[7]) << 8) | (gps.nsat & 0xFF);
+            } catch (Exception e) {
+                Generic.debug(sNmea[7], e);
+            }
+            try {
+                gps.hdop = (int) (Convert.toFloat(sNmea[8]) * 100);
+            } catch (Exception e) {
+                Generic.debug(sNmea[8], e);
+            }
+            try {
+                gps.height = (Convert.toFloat(sNmea[9]));
+                logFormat |= (1 << BT747Constants.FMT_HEIGHT_IDX);
+                gps.geoid = Convert.toFloat(sNmea[11]);
+                // gpsRec.height += gpsRec.geoid;
+            } catch (Exception e) {
+                Generic.debug(sNmea[9], e);
+            }
+
+            try {
+                if (sNmea[13].length() != 0) {
+                    gps.dage = Convert.toInt(sNmea[13]);
+                }
+            } catch (Exception e) {
+                Generic.debug(sNmea[13], e);
+            }
+            try {
+                if (sNmea[14].length() != 0) {
+                    gps.dsta = Convert.toInt(sNmea[14]);
+                }
+            } catch (Exception e) {
+                Generic.debug(sNmea[14], e);
+            }
+
+            // if(GPS_DEBUG) {
+            // double geoid=Conv.wgs84_separation(gps.latitude,
+            // gps.longitude);
+            // debugMsg("geoid GPS: "+Convert.toString(gps.geoid,3)
+            // + " geoid calc:"+Convert.toString(geoid)
+            // );
+            // }
+            postGpsEvent(GpsEvent.GPRMC, gps);
         }
     }
 
@@ -1603,7 +1660,7 @@ public class GPSstate implements Thread {
             logFileName = fileName;
             logFileCard = card;
             logFile.close();
-            logFile = new File(fileName, bt747.io.File.READ_WRITE, card);
+            logFile = new File(fileName, bt747.io.File.WRITE_ONLY, card);
             logFileName = fileName;
             logFileCard = card;
 
@@ -1622,7 +1679,7 @@ public class GPSstate implements Thread {
     private void reOpenLogWrite(final String fileName, final int card) {
         closeLog();
         try {
-            logFile = new File(fileName, File.READ_WRITE, card);
+            logFile = new File(fileName, File.WRITE_ONLY, card);
             logFileCard = card;
         } catch (Exception e) {
             Generic.debug("", e);
