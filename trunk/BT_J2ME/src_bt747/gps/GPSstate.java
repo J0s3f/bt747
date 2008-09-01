@@ -890,7 +890,7 @@ public class GPSstate implements Thread {
                 Generic.debug(sNmea[8], e);
             }
             try {
-                //Generic.debug(sNmea[9],null);
+                // Generic.debug(sNmea[9],null);
                 gps.setDate(sNmea[9]);
             } catch (Exception e) {
                 Generic.debug(sNmea[9], e);
@@ -934,14 +934,21 @@ public class GPSstate implements Thread {
                 Generic.debug(sNmea[7], e);
             }
             try {
-                gps.hdop = (int) (Convert.toFloat(sNmea[8]) * 100);
+                if (sNmea[8].length() != 0) {
+                    gps.hdop = (int) (Convert.toFloat(sNmea[8]) * 100);
+                }
             } catch (Exception e) {
                 Generic.debug(sNmea[8], e);
             }
             try {
-                gps.height = (Convert.toFloat(sNmea[9]));
-                logFormat |= (1 << BT747Constants.FMT_HEIGHT_IDX);
-                gps.geoid = Convert.toFloat(sNmea[11]);
+                if (sNmea[8].length() != 0) {
+
+                    gps.height = (Convert.toFloat(sNmea[9]));
+                    logFormat |= (1 << BT747Constants.FMT_HEIGHT_IDX);
+                }
+                if (sNmea[11].length() != 0) {
+                    gps.geoid = Convert.toFloat(sNmea[11]);
+                }
                 // gpsRec.height += gpsRec.geoid;
             } catch (Exception e) {
                 Generic.debug(sNmea[9], e);

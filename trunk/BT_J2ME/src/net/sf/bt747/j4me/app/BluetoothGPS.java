@@ -199,7 +199,7 @@ class BluetoothGPS extends gps.connection.GPSPort {
             synchronized (outputStream) {
                 outputStream.write(b);
                 outputStream.flush();
-                Log.info("Bt>"+new String(b));
+                //Log.info("Bt>"+new String(b));
             }
         } catch (IOException e) {
             Log.error("writeByte", e);

@@ -28,6 +28,8 @@ public class MainScreen extends Dialog {
     final LoggerInfoScreen loggerInfoScreen;
     final LogScreen logScreen;
     final DebugConfigScreen debugConfigScreen;
+    final InitializingGPSAlert initialiseGPSAlert;
+    final FindingGPSDevicesAlert findingGPSDevicesAlert;
 
     /**
      * Constructs the "Log" screen.
@@ -42,11 +44,11 @@ public class MainScreen extends Dialog {
         // Set the title.
         setTitle("MTK Log Control (BT747)");
 
-        lbText = new Label(
-                "Demonstration/BETA version of a J2ME "
-                        + "implementatation of BT747 (http://sf.net/projects/bt747)."
-                        + " This application demonstrates log sownload (very slow currently)"
-                        + " and enables you to set some basic log conditions.");
+        lbText = new Label("ALPHA/BETA version of a J2ME "
+                + "implementation of BT747\n"
+                + "(http://sf.net/projects/bt747).\n"
+                + " This application demonstrates log download\n"
+                + " and enables you to set some basic log conditions.");
         append(lbText);
 
         // Add the menu buttons.
@@ -62,17 +64,29 @@ public class MainScreen extends Dialog {
         loggerInfoScreen = new LoggerInfoScreen(c, this);
         logScreen = new LogScreen(this);
         debugConfigScreen = new DebugConfigScreen(c, this);
+        initialiseGPSAlert = new InitializingGPSAlert(c, this);
+        findingGPSDevicesAlert = new FindingGPSDevicesAlert(c,
+                initialiseGPSAlert);
     }
 
+    private static boolean isFirstLaunch = true;
+
+    public void show() {
+
+        if (isFirstLaunch) {
+            isFirstLaunch = false;
+            findingGPSDevicesAlert.show();
+        } else {
+            super.show();
+        }
+
+    }
     /**
      * Called when this screen is going to be displayed.
      * 
      * @see DeviceScreen#showNotify()
      */
     public final void showNotify() {
-        // Clear this form.
-        deleteAll();
-
     }
 
     /**
@@ -81,7 +95,6 @@ public class MainScreen extends Dialog {
      * @see DeviceScreen#declineNotify()
      */
     protected final void declineNotify() {
-        getSelected();
         Menu menu = new Menu("Log", this);
         // Reset the current location provider.
 
@@ -91,8 +104,9 @@ public class MainScreen extends Dialog {
         menu.appendMenuOption("Log Conditions", logConditionsConfigScreen);
         menu.appendMenuOption("Debug Conditions", debugConfigScreen);
         menu.appendMenuOption("Download Settings", logDownloadConfigScreen);
-        menu.appendMenuOption("MTK Logger Config",
-                loggerInfoScreen);
+        menu.appendMenuOption("MTK Logger Config", loggerInfoScreen);
+        menu.appendMenuOption("Reconnect to GPS", initialiseGPSAlert);
+        menu.appendMenuOption("Find and Connect", findingGPSDevicesAlert);
         /*
          * menu.appendMenuOption( new MenuItem() { public String getText () {
          * return "Download"; }
@@ -147,4 +161,5 @@ public class MainScreen extends Dialog {
         // Continue processing the event.
         super.acceptNotify();
     }
+    
 }
