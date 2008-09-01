@@ -68,7 +68,7 @@ public class InitializingGPSAlert extends ProgressAlert {
             // cancel
             // button and tries to do Bluetooth device discovery to find new
             // GPS.
-            synchronized (FindingGPSDevicesAlert.bluetoothLock) {
+            synchronized (FindingGPSDevicesAlert.BLUETOOTH_LOCK) {
                 // First close any open provider.
                 // For example if connected to one GPS device and are switching
                 // to
@@ -108,9 +108,9 @@ public class InitializingGPSAlert extends ProgressAlert {
             next = new ErrorAlert(
                     "GPS Error",
                     "You must allow access for the application to work.\nPlease restart and allow all connections.",
-                    null);
+                    previous);
         }
 
-        return previous;
+        return next;
     }
 }

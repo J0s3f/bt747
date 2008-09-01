@@ -23,7 +23,7 @@ import bt747.sys.Settings;
  * Preferences - Java - Code Style - Code Templates
  */
 public class Date {
-    static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+    private static TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
     // private Calendar cal = Calendar.getInstance();
     private java.util.Date date;
 
@@ -42,7 +42,7 @@ public class Date {
     /**
      * @param sentDate
      */
-    public Date(int sentDate) {
+    public Date(final int sentDate) {
         Calendar cal = Calendar.getInstance(GMT_ZONE);
         cal.set(Calendar.DAY_OF_MONTH, sentDate / 10000);
         cal.set(Calendar.MONTH, sentDate / 100 % 100 - (1 + Calendar.JANUARY));
@@ -55,7 +55,7 @@ public class Date {
      * @param sentMonth
      * @param sentYear
      */
-    public Date(int sentDay, int sentMonth, int sentYear) {
+    public Date(final int sentDay, final int sentMonth, final int sentYear) {
         Calendar cal = Calendar.getInstance(GMT_ZONE);
         cal.set(Calendar.DAY_OF_MONTH, sentDay);
         cal.set(Calendar.MONTH - (1 + Calendar.JANUARY), sentMonth);
@@ -66,7 +66,7 @@ public class Date {
     /**
      * @param strDate
      */
-    public Date(String strDate) {
+    public Date(final String strDate) {
         this(strDate, Settings.DATE_YMD);
     }
 
@@ -74,7 +74,7 @@ public class Date {
      * @param strDate
      * @param dateFormat
      */
-    public Date(String strDate, byte dateFormat) {
+    public Date(final String strDate, final byte dateFormat) {
         Calendar cal = Calendar.getInstance(GMT_ZONE);
 
         try {
@@ -111,7 +111,7 @@ public class Date {
     // public Date(Time t) {
     // super(t);
     // }
-    public void advance(int s) {
+    public void advance(final int s) {
         date.setTime(date.getTime() + s * 1000L);
     }
 
@@ -119,11 +119,11 @@ public class Date {
         date = new java.util.Date(d.getTime());
     }
 
-    public Date(Date d) {
+    public Date(final Date d) {
         date.setTime(d.getTime().getTime());
     }
 
-    public java.util.Date getTime() {
+    public final java.util.Date getTime() {
         return date;
     }
 
@@ -131,7 +131,7 @@ public class Date {
         return (int) (date.getTime() / 1000L);
     }
 
-    public String getDateString() {
+    public final String getDateString() {
         return getDay() + "/" + getMonth() + "/" + getYear();
     }
 

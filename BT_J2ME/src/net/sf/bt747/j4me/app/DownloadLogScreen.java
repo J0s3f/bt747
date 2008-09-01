@@ -192,6 +192,7 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
         switch (e.getType()) {
         case ModelEvent.LOG_DOWNLOAD_STARTED:
             Log.debug("Download started");
+            /* fall through */
         case ModelEvent.DOWNLOAD_STATE_CHANGE:
             //Log.debug("Progress update");
             progressUpdate();

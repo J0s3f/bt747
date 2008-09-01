@@ -152,8 +152,6 @@ public abstract class GPSFile {
         return result;
     }
 
-    final static private int UTC_20000101 = 0;
-    
     public void writeRecord(final GPSRecord s) {
         String extraExt; // Extra extension for log file
         boolean newDate = false;
