@@ -1,5 +1,6 @@
 package net.sf.bt747.j4me.app;
 
+
 import org.j4me.logging.Log;
 
 import bt747.model.Model;

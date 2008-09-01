@@ -27,6 +27,7 @@ public class MainScreen extends Dialog {
     final LogDownloadConfigScreen logDownloadConfigScreen;
     final LoggerInfoScreen loggerInfoScreen;
     final LogScreen logScreen;
+    final DebugConfigScreen debugConfigScreen;
 
     /**
      * Constructs the "Log" screen.
@@ -60,6 +61,7 @@ public class MainScreen extends Dialog {
         logDownloadConfigScreen = new LogDownloadConfigScreen(c, this);
         loggerInfoScreen = new LoggerInfoScreen(c, this);
         logScreen = new LogScreen(this);
+        debugConfigScreen = new DebugConfigScreen(c, this);
     }
 
     /**
@@ -87,6 +89,7 @@ public class MainScreen extends Dialog {
         menu.appendMenuOption("To GPX", convertToScreen);
         menu.appendMenuOption("GPS Position", gpsPositionScreen);
         menu.appendMenuOption("Log Conditions", logConditionsConfigScreen);
+        menu.appendMenuOption("Debug Conditions", debugConfigScreen);
         menu.appendMenuOption("Download Settings", logDownloadConfigScreen);
         menu.appendMenuOption("MTK Logger Config",
                 loggerInfoScreen);

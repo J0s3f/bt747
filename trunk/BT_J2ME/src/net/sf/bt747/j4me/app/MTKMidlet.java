@@ -1,10 +1,5 @@
 package net.sf.bt747.j4me.app;
 
-import gps.log.GPSRecord;
-
-import java.util.Enumeration;
-
-import javax.microedition.io.file.FileSystemRegistry;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
