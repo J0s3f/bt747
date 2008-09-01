@@ -36,7 +36,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
      * This lock is declared <c>protected static</c> because it is shared
      * throughout the package.
      */
-    protected static Object bluetoothLock = new Object();
+    protected static final Object BLUETOOTH_LOCK = new Object();
 
     /**
      * The screen that came before this one. If the user cancels this alert, it
@@ -47,12 +47,13 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
     /**
      * Constructs the "Finding GPS Devices..." alert screen.
      * 
-     * @param model
-     *            is the application's location data.
+     * @param c
+     *            is the application's controller.
      * @param previous
      *            is the screen that came before this one.
      */
-    public FindingGPSDevicesAlert(AppController c, DeviceScreen previous) {
+    public FindingGPSDevicesAlert(final AppController c,
+            final DeviceScreen previous) {
         super("Finding GPS...", "Looking for nearby Bluetooth devices.");
 
         this.c = c;
@@ -62,7 +63,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
     /**
      * Called when the user presses the alert's dismiss button.
      */
-    public void onCancel() {
+    public final void onCancel() {
         Log.info("Canceling Bluetooth device discovery.");
         previous.show();
     }
@@ -70,13 +71,15 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
     /**
      * A thread that finds nearby Bluetooth devices and sets them on a select
      * GPS device screen.
+     * 
+     * @return the screen to show after this thread finishes.
      */
-    protected DeviceScreen doWork() {
+    protected final DeviceScreen doWork() {
         DeviceScreen next;
         String[][] devices = null;
         String errorText = null;
 
-        synchronized (bluetoothLock) {
+        synchronized (BLUETOOTH_LOCK) {
             // Stop any providers in case they were using Bluetooth and
             // therefore have
             // a lock on the Bluetooth socket.
@@ -95,22 +98,25 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
 
                 if (devices == null) {
                     // The operation failed for an unknown Bluetooth reason.
-                    Log
-                            .error("Problem with Bluetooh device discovery.  Operation returned null.");
+                    Log.error("Problem with Bluetooh device discovery."
+                            + "  Operation returned null.");
                     errorText = "Bluetooth GPS device discovery failed.";
                 }
             } catch (SecurityException e) {
                 // The user prevented communication with the server.
                 // Inform them to allow it.
                 Log.error("User denied Bluetooth access.", e);
-                errorText = "You must allow access for the GPS to work.\nPlease restart and allow all connections.";
+                errorText = "You must allow access for the GPS to work.\n"
+                        + "Please restart and allow all connections.";
             } catch (IOException e) {
                 // There was an unknown I/O error preventing us from going
                 // farther.
                 Log.error("Problem with Bluetooth device discovery.", e);
                 errorText = "Bluetooth GPS device discovery failed.\n"
-                        + "Exit the application and verify your phone's Bluetooth is on.  "
-                        + "If it is please restart your phone and GPS device and try again.";
+                        + "Exit the application and verify your phone's"
+                        + " Bluetooth is on.  "
+                        + "If it is please restart your phone and"
+                        + " GPS device and try again.";
             }
 
             // Go to the next screen.
@@ -119,10 +125,9 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
                 next = new ErrorAlert("Discovery Error", errorText, previous);
             } else {
                 // Successful device discovery.
-                Log
-                        .info("Found list of "
-                                + devices.length
-                                + " available devices and presenting them to the user.");
+                Log.info("Found list of " + devices.length
+                        + " available devices and presenting"
+                        + " them to the user.");
 
                 SelectGPSScreen selectGPS = new SelectGPSScreen(c, previous);
                 selectGPS.setAvailableDevices(devices);
@@ -130,7 +135,8 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
                 if (devices.length == 0) {
                     // No devices were found.
                     String message = "No devices were found.\n"
-                            + "Make sure your Bluetooth GPS device is on and within 10 feet of you.";
+                            + "Make sure your Bluetooth GPS device is on"
+                            + " and within 10 feet of you.";
 
                     next = new ErrorAlert("Discovery Error", message, selectGPS);
                 } else {

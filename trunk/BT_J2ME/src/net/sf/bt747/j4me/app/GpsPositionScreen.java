@@ -2,7 +2,6 @@ package net.sf.bt747.j4me.app;
 
 import gps.log.GPSRecord;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.microedition.lcdui.Font;
@@ -13,7 +12,6 @@ import org.j4me.ui.Menu;
 import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
 
-import bt747.model.Controller;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;

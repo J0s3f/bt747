@@ -194,20 +194,18 @@ class BluetoothGPS extends gps.connection.GPSPort {
         write(s.getBytes());
     }
 
-    public void write(final byte[] b) {
+    public synchronized void write(final byte[] b) {
         try {
-            synchronized (outputStream) {
-                outputStream.write(b);
-                outputStream.flush();
-                //Log.info("Bt>"+new String(b));
-            }
+            outputStream.write(b);
+            outputStream.flush();
+            // Log.info("Bt>"+new String(b));
         } catch (IOException e) {
             Log.error("writeByte", e);
         }
     }
 
     public int openPort() {
-        synchronized (FindingGPSDevicesAlert.bluetoothLock) {
+        synchronized (FindingGPSDevicesAlert.BLUETOOTH_LOCK) {
             // First close any open provider.
             // For example if connected to one GPS device and are switching
             // to

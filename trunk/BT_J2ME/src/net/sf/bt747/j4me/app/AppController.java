@@ -142,10 +142,6 @@ public class AppController extends Controller {
         RecordStore recordStore;
         try {
             recordStore = RecordStore.openRecordStore(RECORDSTORENAME, true);
-        } catch (RecordStoreException rsc) {
-            return;
-        }
-        try {
             // outputStream.writeInt(mUnitType);
             // outputStream.writeInt(mBacklightSeconds);
             // outputStream.writeInt(mConnectType);
@@ -165,7 +161,8 @@ public class AppController extends Controller {
             else
                 recordStore.setRecord(1, bytes, 0, bytes.length);
             recordStore.closeRecordStore();
-        } catch (Exception exception) {
+        } catch (Throwable exception) {
+            Log.error("Problem saving settings", exception);
         }
     }
 
