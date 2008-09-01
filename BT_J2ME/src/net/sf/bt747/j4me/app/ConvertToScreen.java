@@ -1,11 +1,8 @@
 package net.sf.bt747.j4me.app;
 
-import gps.BT747Constants;
-import gps.log.GPSFilter;
-
-import org.j4me.examples.ui.screens.*;
-import org.j4me.logging.*;
-import org.j4me.ui.*;
+import org.j4me.examples.ui.screens.ProgressAlert;
+import org.j4me.logging.Log;
+import org.j4me.ui.DeviceScreen;
 
 import bt747.model.Model;
 

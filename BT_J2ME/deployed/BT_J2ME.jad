@@ -6,9 +6,11 @@ MIDlet-Info-URL: http://sf.net/projects/bt747
 MIDlet-Jar-Size: 172477
 MIDlet-Jar-URL: BT_J2ME.jar
 MIDlet-Name: BT_J2ME Midlet Suite
-MIDlet-Permissions-Opt: javax.microedition.io.Connector.bluetooth.client,javax.microedition.io.Connector.file.read, javax.microedition.io.Connector.file.write
 MIDlet-Vendor: m.deweerd@ieee.org
 MIDlet-Version: 0.0.32
 MicroEdition-Configuration: CLDC-1.1
 MicroEdition-Profile: MIDP-2.0
 URL: http://sf.net/projects/bt747
+MIDlet-Certificate-1-1: MIIB4jCCAUsCBENWB4QwDQYJKoZIhvcNAQEFBQAwODENMAsGA1UEBhMEVEVBTTEWMBQGA1UEChMNTW9iaWxlLVJldmlldzEPMA0GA1UECxMGaGFsbWVyMB4XDTA1MTAxOTA4NDQ1MloXDTEwMTAxODA4NDQ1MlowODENMAsGA1UEBhMEVEVBTTEWMBQGA1UEChMNTW9iaWxlLVJldmlldzEPMA0GA1UECxMGaGFsbWVyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDfBoqoUcx6C+MCfG09t09em4b2pIfFPPZBnO2DzH2bBb7V3ocfNPw8s+8tyqQ4phjYGt/2lQ84p7ANNlcNdf0jAqJeYAyY9YIMxftfQdtn6ULKcVvhhpIQDVW7JJhWez2JB+gqX2wywusKl2NmmjHke3h5t8BEF+iL0sGys5yBnQIDAQABMA0GCSqGSIb3DQEBBQUAA4GBAMyn/geg9+OKY9XpT2JUDOEdnNsAZVEfZYiRVm5VhmJsEwIZ/3qE5vUzMMtZmPkkLL+vD6JjHOq34orap5h8nLANcRw5h2e1IuKfRXBNn3DFNxIkzxTprShqB5FAoANVGVET0kGWCCfBg2NXtmPoM7KMynKfQb+UXWwFdBOiFiu4
+MIDlet-Jar-RSA-SHA1: c5LJjS15jBLF4OBde/0TJM9gbfd1G4OnqV35ba+2BWjbRQW6BbSU1fvk1vj1rNBYiVhq6/LgT/Lc2VRh3cie4wUGAOSacfLhsOwQxavu0Y295erh1m6YGmd69YTbpRpcxVl7zqYi7ukE+mbTxK8qVU/7irZO6cllfwq6hgCLr4Q=
+MIDlet-Permissions: javax.microedition.io.PushRegistry,javax.microedition.io.Connector.file.read,javax.microedition.io.Connector.file.write,javax.microedition.io.Connector.http,javax.microedition.io.Connector.https,javax.microedition.io.Connector.ssl,javax.microedition.io.Connector.socket,javax.microedition.io.Connector.datagram,javax.microedition.io.Connector.serversocket,javax.microedition.io.Connector.datagramreceiver 
