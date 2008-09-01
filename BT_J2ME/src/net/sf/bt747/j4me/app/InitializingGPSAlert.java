@@ -59,7 +59,7 @@ public class InitializingGPSAlert extends ProgressAlert {
         DeviceScreen next = previous;
         String deviceName = c.getAppModel().getBluetoothGPSName();
 
-        String text = getText() + "\n" + "Using device:  " + deviceName;
+        String text = "Connecting to the location provider.\n" + "Using device:  " + deviceName;
         setText(text);
 
         try {

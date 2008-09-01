@@ -1,5 +1,7 @@
 package net.sf.bt747.j4me.app;
 
+import java.io.IOException;
+
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
@@ -33,12 +35,12 @@ public class DebugConfigScreen extends Dialog {
 
         cbGpsRawDebug = new CheckBox();
         cbGpsRawDebug.setChecked(false);
-        cbGpsRawDebug.setLabel("Write console to file");
+        cbGpsRawDebug.setLabel("Write all serial communication to file");
         append(cbGpsRawDebug);
 
         cbGeneralDebug = new CheckBox();
         cbGeneralDebug.setChecked(false);
-        cbGeneralDebug.setLabel("Write console to file");
+        cbGeneralDebug.setLabel("Enable extra debug console info");
         append(cbGeneralDebug);
     }
 
@@ -60,6 +62,7 @@ public class DebugConfigScreen extends Dialog {
     private boolean consoleIsOpen = false;
 
     private void setupConsoleFile(boolean doOpen) {
+        Log.info("Setup up console to file");
         if (!doOpen) {
             if (consoleIsOpen) {
                 Log.setOutputStream(null);
@@ -73,21 +76,26 @@ public class DebugConfigScreen extends Dialog {
                     FileConnection fc;
                     try {
                         fc = (FileConnection) Connector.open(fn);
-                        fc.delete();
+                        if (fc.exists()) {
+                            fc.delete();
+                        }
                         fc.close();
-                    } catch (Exception e) {
-                        // TODO: handle exception
+                    } catch (Throwable e) {
+                        Log.debug("Delete", e);
                     }
 
                     try {
                         fc = (FileConnection) Connector.open(fn);
+                        fc.create();
+                        fc = (FileConnection) Connector.open(fn,
+                                Connector.WRITE);
                         Log.setOutputStream(fc.openOutputStream());
-                    } catch (Exception e) {
-                        // TODO: handle exception
+                    } catch (IOException e) {
+                        Log.debug("Open " + fn, e);
                     }
                     consoleIsOpen = true;
-                } catch (Exception e) {
-                    // TODO: handle exception
+                } catch (Throwable e) {
+                    Log.debug("Open console", e);
                 }
             }
         }
@@ -97,9 +105,7 @@ public class DebugConfigScreen extends Dialog {
         c.setDebug(cbGeneralDebug.isChecked());
         c.setDebugConn(cbGpsRawDebug.isChecked());
 
-        if (cbConsoleToFile.isChecked()) {
-            setupConsoleFile(cbConsoleToFile.isChecked());
-        }
+        setupConsoleFile(cbConsoleToFile.isChecked());
     }
 
     protected void acceptNotify() {

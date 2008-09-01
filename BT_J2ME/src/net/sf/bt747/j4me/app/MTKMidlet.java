@@ -77,10 +77,8 @@ public class MTKMidlet extends MIDlet implements ModelListener {
             // SelectGPSScreen which will in turn call
             // InitializingGPSAlert
             DeviceScreen main = new MainScreen(c,this);
-            DeviceScreen next = new InitializingGPSAlert(c, main);
-            DeviceScreen first = new FindingGPSDevicesAlert(c, next);
             // (new ConvertTo(c, main)).doWork(); // Debug conversion
-            first.show();
+            main.show();
             // (new ConvertTo(c, main)).show();
         } catch (Throwable t) {
             Log.warn("Unhandled exception ", t);

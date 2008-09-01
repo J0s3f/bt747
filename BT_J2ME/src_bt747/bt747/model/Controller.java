@@ -21,6 +21,8 @@ import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
 
+import bt747.generic.Generic;
+
 /**
  * @author Mario De Weerd
  * 
@@ -250,7 +252,7 @@ public class Controller {
                     lc = (GPSLogConvert) Class.forName(
                             "gps.parser.NewLogConvert").newInstance();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Generic.debug("DECODER_THOMAS", e);
                     lc = new BT747LogConvert();
                 }
                 break;
@@ -393,7 +395,7 @@ public class Controller {
                     lc = (GPSLogConvert) Class.forName(
                             "gps.parser.NewLogConvert").newInstance();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Generic.debug("DECODER_THOMAS", e);
                     lc = new BT747LogConvert();
                 }
                 break;
@@ -513,6 +515,7 @@ public class Controller {
             /** Incremental download */
             m.getDownloadMethod() == Model.DOWNLOAD_INCREMENTAL);
         } catch (Exception e) {
+            Generic.debug("StartDefaultDownload", e);
             // TODO: handle exception
         }
     }

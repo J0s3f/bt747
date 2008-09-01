@@ -84,6 +84,7 @@ public class FindingGPSDevicesAlert extends ProgressAlert {
 
             if (provider != null) {
                 provider.close();
+                c.getAppModel().setGpsBluetoothConnection(null);
             }
 
             // Search for Bluetooth devices (this takes several seconds).

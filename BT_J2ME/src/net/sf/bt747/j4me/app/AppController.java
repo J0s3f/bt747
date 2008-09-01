@@ -69,7 +69,7 @@ public class AppController extends Controller {
             // mEmailAddress = restoreNull(inputStream.readUTF());
             // mUserName = restoreNull(inputStream.readUTF());
             // inputStream.close();
-        } catch (Exception exception) {
+        } catch (RecordStoreException exception) {
             // mUnitType = UNITTYPE_METRIC;
             // mBacklightSeconds = 0;
             // mConnectType = CONNECTTYPE_NONE;
