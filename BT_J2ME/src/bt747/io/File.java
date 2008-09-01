@@ -179,6 +179,7 @@ public class File {
     private OutputStream os;
 
     public boolean setPos(int pos) throws IOException {
+        Log.debug("Enter setPos");
         if (fileConnection != null) {
             if (is != null) {
                 is.close();
@@ -191,6 +192,7 @@ public class File {
             }
             return true;
         }
+        Log.debug("Exit setPos");
         return false;
     }
 

@@ -13,8 +13,6 @@ import gov.nist.core.StringTokenizer;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import org.j4me.logging.Log;
-
 import bt747.sys.Convert;
 import bt747.sys.Settings;
 
@@ -25,8 +23,9 @@ import bt747.sys.Settings;
  * Preferences - Java - Code Style - Code Templates
  */
 public class Date {
-    // static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
-    private Calendar cal = Calendar.getInstance();
+    static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+    // private Calendar cal = Calendar.getInstance();
+    private java.util.Date date;
 
     /**
      * Calendar cal = Calendar.getInstance();
@@ -37,17 +36,18 @@ public class Date {
      * 
      */
     public Date() {
-        init();
+        date = new java.util.Date();
     }
 
     /**
      * @param sentDate
      */
     public Date(int sentDate) {
-        init();
+        Calendar cal = Calendar.getInstance(GMT_ZONE);
         cal.set(Calendar.DAY_OF_MONTH, sentDate / 10000);
-        cal.set(Calendar.MONTH, sentDate / 100 % 100);
-        cal.set(Calendar.YEAR, sentDate % 100);
+        cal.set(Calendar.MONTH, sentDate / 100 % 100 - (1 + Calendar.JANUARY));
+        cal.set(Calendar.YEAR, 2000 + sentDate % 100);
+        date = cal.getTime();
     }
 
     /**
@@ -56,10 +56,11 @@ public class Date {
      * @param sentYear
      */
     public Date(int sentDay, int sentMonth, int sentYear) {
-        init();
+        Calendar cal = Calendar.getInstance(GMT_ZONE);
         cal.set(Calendar.DAY_OF_MONTH, sentDay);
-        cal.set(Calendar.MONTH, sentMonth);
+        cal.set(Calendar.MONTH - (1 + Calendar.JANUARY), sentMonth);
         cal.set(Calendar.YEAR, sentYear);
+        date = cal.getTime();
     }
 
     /**
@@ -74,10 +75,11 @@ public class Date {
      * @param dateFormat
      */
     public Date(String strDate, byte dateFormat) {
-        init();
-        StringTokenizer fields = new StringTokenizer(strDate.toString(), '/');
+        Calendar cal = Calendar.getInstance(GMT_ZONE);
 
         try {
+            StringTokenizer fields = new StringTokenizer(strDate.toString(),
+                    '/');
             int arg0;
             int arg1;
             int arg2;
@@ -89,21 +91,18 @@ public class Date {
             // TODO: may need to correct year.
             if (dateFormat == Settings.DATE_YMD) {
                 cal.set(Calendar.DAY_OF_MONTH, arg2);
-                cal.set(Calendar.MONTH, arg1);
+                cal.set(Calendar.MONTH, arg1 - (1 + Calendar.JANUARY));
                 cal.set(Calendar.YEAR, arg0);
             } else {
                 cal.set(Calendar.DAY_OF_MONTH, arg0);
-                cal.set(Calendar.MONTH, arg1);
+                cal.set(Calendar.MONTH, arg1 - (1 + Calendar.JANUARY));
                 cal.set(Calendar.YEAR, arg2);
             }
+            date = cal.getTime();
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
         }
-    }
-
-    private void init() {
-        cal.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     /**
@@ -113,30 +112,23 @@ public class Date {
     // super(t);
     // }
     public void advance(int s) {
-        cal.setTime(new java.util.Date(cal.getTime().getTime() + s * 1000L));
-
+        date.setTime(date.getTime() + s * 1000L);
     }
 
-    public Date(java.util.Date d) {
-        cal.setTime(d);
+    public Date(final java.util.Date d) {
+        date = new java.util.Date(d.getTime());
     }
 
     public Date(Date d) {
-        cal.setTime(d.getTime());
+        date.setTime(d.getTime().getTime());
     }
 
     public java.util.Date getTime() {
-        return cal.getTime();
+        return date;
     }
 
     public final int dateToUTCepoch1970() {
-        try {
-            return (int) (cal.getTime().getTime() / 1000L);
-        } catch (Exception e) {
-            Log.error("dateToUTCepoch1970 problem ...", e);
-            Log.info("DD/MM/YY:" + getDateString());
-            return 0;
-        }
+        return (int) (date.getTime() / 1000L);
     }
 
     public String getDateString() {
@@ -150,15 +142,20 @@ public class Date {
     }
 
     public final int getYear() {
+        Calendar cal = Calendar.getInstance(GMT_ZONE);
+        cal.setTime(date);
         return cal.get(Calendar.YEAR);
     }
 
     public final int getMonth() {
-        return cal.get(Calendar.MONTH);
+        Calendar cal = Calendar.getInstance(GMT_ZONE);
+        cal.setTime(date);
+        return cal.get(Calendar.MONTH + (1 + Calendar.JANUARY));
     }
 
     public final int getDay() {
+        Calendar cal = Calendar.getInstance(GMT_ZONE);
+        cal.setTime(date);
         return cal.get(Calendar.DAY_OF_MONTH);
     }
-
 }
