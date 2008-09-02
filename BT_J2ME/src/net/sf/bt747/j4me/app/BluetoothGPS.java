@@ -60,6 +60,11 @@ class BluetoothGPS extends gps.connection.GPSPort {
     public static final short READ_TIMEOUT = SLEEP_BEFORE_READ + 3000;
 
     /**
+     * The delay in milliseconds between reconnects.
+     */
+    private static final long DELAY_BETWEEN_OPENTRIALS = 3000L;
+
+    /**
      * Connection to bluetooth device.
      */
     private StreamConnection connection;
@@ -133,6 +138,12 @@ class BluetoothGPS extends gps.connection.GPSPort {
     }
 
     /**
+     * Indicates if the connection is supposed to be open or not. This is to
+     * enable the automatic reconnect functionality.
+     */
+    private boolean internalIsConnected = false;
+
+    /**
      * Closes input stream and bluetooth connection as well as sets the
      * corresponding objects to null.
      * 
@@ -161,6 +172,7 @@ class BluetoothGPS extends gps.connection.GPSPort {
     }
 
     public final void close() {
+        internalIsConnected = false;
         this.disconnect();
     }
 
@@ -171,11 +183,19 @@ class BluetoothGPS extends gps.connection.GPSPort {
         return (connection != null) && (inputStream != null);
     }
 
+    private boolean isReconnectAutomatically = true;
+
     public final int readCheck() {
         try {
-            return inputStream.available();
-        } catch (Exception e) {
+            if (isConnected()) {
+                return inputStream.available();
+            } else {
+                Log.error("readCheck on closed stream");
+                return 0;
+            }
+        } catch (IOException e) {
             Log.error("readCheck", e);
+            reconnectPort();
             return 0;
         }
     }
@@ -198,13 +218,36 @@ class BluetoothGPS extends gps.connection.GPSPort {
         try {
             outputStream.write(b);
             outputStream.flush();
-            // Log.info("Bt>"+new String(b));
         } catch (IOException e) {
             Log.error("writeByte", e);
+            reconnectPort();
+        }
+    }
+
+    long nextOpentrial = 0;
+
+    private void reconnectPort() {
+        if (internalIsConnected && isReconnectAutomatically
+                && (nextOpentrial <= System.currentTimeMillis())) {
+            nextOpentrial = System.currentTimeMillis() + 10
+                    * DELAY_BETWEEN_OPENTRIALS;
+            try {
+                Log.info("Reconnecting after apparent disconnect");
+                try {
+                    disconnect();
+                } catch (Exception e) {
+                    Log.error("Failure (expected) on disconnect",e);
+                }
+                connect();
+            } catch (Exception e) {
+                Log.error("Failure on reconnect",e);
+            }
         }
     }
 
     public int openPort() {
+        internalIsConnected = true;
+
         synchronized (FindingGPSDevicesAlert.BLUETOOTH_LOCK) {
             // First close any open provider.
             // For example if connected to one GPS device and are switching
@@ -268,6 +311,7 @@ class BluetoothGPS extends gps.connection.GPSPort {
         // connections.
         final int maxTries = 2;
 
+        nextOpentrial = System.currentTimeMillis() + DELAY_BETWEEN_OPENTRIALS;
         // If the channel id is null, we need to guess at the channel id
         if (channelId == null) {
             // Try a few channels

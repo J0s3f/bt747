@@ -8,11 +8,10 @@ package bt747.util;
 
 // import java.text.DateFormat;
 // import java.text.SimpleDateFormat;
-import gov.nist.core.StringTokenizer;
-
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import bt747.generic.Generic;
 import bt747.sys.Convert;
 import bt747.sys.Settings;
 
@@ -100,8 +99,7 @@ public class Date {
             }
             date = cal.getTime();
         } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
+            Generic.debug("Date",e);
         }
     }
 
