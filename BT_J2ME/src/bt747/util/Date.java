@@ -1,159 +1,70 @@
-/*
- * Created on 14 nov. 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+//********************************************************************
+//***                           BT 747                             ***
+//***                  (c)2008 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
+//***  for more details.                                           ***
+//********************************************************************
+
 package bt747.util;
 
-// import java.text.DateFormat;
-// import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
-
-import bt747.generic.Generic;
-import bt747.sys.Convert;
-import bt747.sys.Settings;
+import bt747.interfaces.BT747Date;
+import bt747.interfaces.Interface;
 
 /**
- * @author Mario De Weerd
+ * Generic Implementation for BT747Date.
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * @author Mario De Weerd
  */
-public class Date {
-    private static TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
-    // private Calendar cal = Calendar.getInstance();
-    private java.util.Date date;
+public final class Date implements BT747Date {
 
-    /**
-     * Calendar cal = Calendar.getInstance();
-     */
-    private static final long serialVersionUID = -8694258139978808370L;
+    private BT747Date date;
 
-    /**
-     * 
-     */
     public Date() {
-        date = new java.util.Date();
+        date = Interface.tr.getDateInstance();
     }
 
-    /**
-     * @param sentDate
-     */
-    public Date(final int sentDate) {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
-        cal.set(Calendar.DAY_OF_MONTH, sentDate / 10000);
-        cal.set(Calendar.MONTH, sentDate / 100 % 100 - (1 + Calendar.JANUARY));
-        cal.set(Calendar.YEAR, 2000 + sentDate % 100);
-        date = cal.getTime();
-    }
-
-    /**
-     * @param sentDay
-     * @param sentMonth
-     * @param sentYear
-     */
     public Date(final int sentDay, final int sentMonth, final int sentYear) {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
-        cal.set(Calendar.DAY_OF_MONTH, sentDay);
-        cal.set(Calendar.MONTH - (1 + Calendar.JANUARY), sentMonth);
-        cal.set(Calendar.YEAR, sentYear);
-        date = cal.getTime();
+        date = Interface.tr.getDateInstance(sentDay, sentMonth, sentYear);
     }
 
-    /**
-     * @param strDate
-     */
-    public Date(final String strDate) {
-        this(strDate, Settings.DATE_YMD);
-    }
-
-    /**
-     * @param strDate
-     * @param dateFormat
-     */
     public Date(final String strDate, final byte dateFormat) {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
-
-        try {
-            StringTokenizer fields = new StringTokenizer(strDate.toString(),
-                    '/');
-            int arg0;
-            int arg1;
-            int arg2;
-
-            arg0 = Convert.toInt(fields.nextToken());
-            arg1 = Convert.toInt(fields.nextToken());
-            arg2 = Convert.toInt(fields.nextToken());
-
-            // TODO: may need to correct year.
-            if (dateFormat == Settings.DATE_YMD) {
-                cal.set(Calendar.DAY_OF_MONTH, arg2);
-                cal.set(Calendar.MONTH, arg1 - (1 + Calendar.JANUARY));
-                cal.set(Calendar.YEAR, arg0);
-            } else {
-                cal.set(Calendar.DAY_OF_MONTH, arg0);
-                cal.set(Calendar.MONTH, arg1 - (1 + Calendar.JANUARY));
-                cal.set(Calendar.YEAR, arg2);
-            }
-            date = cal.getTime();
-        } catch (Exception e) {
-            Generic.debug("Date",e);
-        }
+        date = Interface.tr.getDateInstance(strDate, dateFormat);
     }
 
-    /**
-     * @param t
-     */
-    // public Date(Time t) {
-    // super(t);
-    // }
-    public void advance(final int s) {
-        date.setTime(date.getTime() + s * 1000L);
-    }
-
-    public Date(final java.util.Date d) {
-        date = new java.util.Date(d.getTime());
-    }
-
-    public Date(final Date d) {
-        date.setTime(d.getTime().getTime());
-    }
-
-    public final java.util.Date getTime() {
-        return date;
+    public final void advance(final int s) {
+        date.advance(s);
     }
 
     public final int dateToUTCepoch1970() {
-        return (int) (date.getTime() / 1000L);
+        return date.dateToUTCepoch1970();
     }
 
     public final String getDateString() {
-        return getDay() + "/" + getMonth() + "/" + getYear();
-    }
-
-    // private static final int DAYS_Julian_1970 = (new
-    // Date(1,1,1970)).getJulianDay();
-    public final int getJulianDay() {
-        return this.dateToUTCepoch1970();
-    }
-
-    public final int getYear() {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
-        cal.setTime(date);
-        return cal.get(Calendar.YEAR);
-    }
-
-    public final int getMonth() {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
-        cal.setTime(date);
-        return cal.get(Calendar.MONTH + (1 + Calendar.JANUARY));
+        return date.getDateString();
     }
 
     public final int getDay() {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
-        cal.setTime(date);
-        return cal.get(Calendar.DAY_OF_MONTH);
+        return date.getDay();
+    }
+
+    public final int getJulianDay() {
+        return date.getJulianDay();
+    }
+
+    public final int getMonth() {
+        // TODO Auto-generated method stub
+        return date.getMonth();
+    }
+
+    public final int getYear() {
+        // TODO Auto-generated method stub
+        return date.getYear();
     }
 }

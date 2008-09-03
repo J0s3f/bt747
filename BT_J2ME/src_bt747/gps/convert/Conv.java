@@ -19,6 +19,8 @@
 //********************************************************************                              
 package gps.convert;
 
+import bt747.interfaces.BT747Date;
+
 
 /**
  * Implement some conversion functions
@@ -350,7 +352,7 @@ public final class Conv {
         return r;
     }
 
-    public static int dateToUTCepoch1970(final bt747.util.Date d) {
+    public static int dateToUTCepoch1970(final BT747Date d) {
         return d.dateToUTCepoch1970();
     }
 

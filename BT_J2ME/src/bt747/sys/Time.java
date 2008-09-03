@@ -6,8 +6,8 @@
  */
 package bt747.sys;
 
-import java.util.Calendar;
-import java.util.TimeZone;
+import bt747.interfaces.BT747Time;
+import bt747.interfaces.Interface;
 
 /**
  * @author Mario De Weerd
@@ -15,78 +15,39 @@ import java.util.TimeZone;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class Time {
-    final static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
-    private Calendar cal = Calendar.getInstance(GMT_ZONE);
+public final class Time implements BT747Time {
+
+    private BT747Time time;
 
     public Time() {
+        time = Interface.tr.getTimeInstance();
     }
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4377529854748199705L;
-
-    public int getHour() {
-        return cal.get(Calendar.HOUR_OF_DAY);
+    public final int getDay() {
+        return time.getDay();
     }
 
-    public void setHour(int hours) {
-        cal.set(Calendar.HOUR_OF_DAY, hours);
+    public final int getHour() {
+        return time.getHour();
     }
 
-    public int getMinute() {
-        return cal.get(Calendar.MINUTE);
+    public final int getMinute() {
+        return time.getMinute();
     }
 
-    public void setMinute(int hours) {
-        cal.set(Calendar.MINUTE, hours);
+    public final int getMonth() {
+        return time.getMonth();
     }
 
-    public int getSecond() {
-        return cal.get(Calendar.SECOND);
+    public final int getSecond() {
+        return time.getSecond();
     }
 
-    public void setSecond(int hours) {
-        cal.set(Calendar.SECOND, hours);
+    public final int getYear() {
+        return time.getYear();
     }
 
-    public void setDay(int date) {
-        cal.set(Calendar.DAY_OF_MONTH, date);
-    }
-
-    public int getYear() {
-        return cal.get(Calendar.YEAR);
-    }
-
-    public void setYear(int year) {
-        cal.set(Calendar.YEAR, year);
-    }
-
-    public int getMonth() {
-        return cal.get(Calendar.MONTH) + 1;
-    }
-
-    public void setMonth(int month) {
-        cal.set(Calendar.MONTH, month - 1);
-    }
-
-    public int getDay() {
-        return cal.get(Calendar.DAY_OF_MONTH);
-    }
-
-    // UTC time in java depends on implementation (leap seconds, ...)
-    // So we need to implement our own function.
     public final void setUTCTime(final int utc) {
-//        cal.set(Calendar.YEAR, 1970);
-//        cal.set(Calendar.MONTH, 0);
-//        cal.set(Calendar.DAY_OF_MONTH, 1);
-//        cal.getInstance(GMT_ZONE).setTime(new java.util.Date())
-
-        cal.setTime(new java.util.Date(utc * 1000L));
+        time.setUTCTime(utc);
     }
-
-    // public final void setUTCTime(final int utc_int) {
-    // cal.setTime(new java.util.Date(utc_int*1000L));
-    // }
 }
