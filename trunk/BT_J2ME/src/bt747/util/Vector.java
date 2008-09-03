@@ -6,7 +6,9 @@
  */
 package bt747.util;
 
-import java.util.Stack;
+import bt747.interfaces.BT747Vector;
+import bt747.interfaces.Interface;
+
 
 /**
  * @author Mario De Weerd
@@ -14,40 +16,44 @@ import java.util.Stack;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Vector extends Stack {
+public final class Vector implements BT747Vector {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-
-    public int getCount() {
-        return this.elementCount;
-    }
-
-    public void del(Object o) {
-        super.removeElement(o);
+    BT747Vector vector;
+    
+    public Vector() {
+        vector = Interface.tr.getVectorInstance();
     }
     
-    public void del(int i) {
-        super.removeElementAt(i);
-    }
-    public Object[] toObjectArray() {
-        Object[] a = new Object[super.elementCount];
-        super.copyInto(a);
-        return a;
-    }
-
-    public String[]   toStringArray() {
-        String[] s= new String[elementCount];
-        for (int i = 0; i < s.length; i++) {
-            s[i]=(String)elementData[i];
-        }
-        
-        return s;
+    public final void addElement(final Object o) {
+        vector.addElement(o);
     }
     
+    public final int size() {
+        return vector.size();
+    }
+
+    public final Object elementAt(final int arg0) {
+        return vector.elementAt(arg0);
+    }
+
+    public final void removeAllElements() {
+        vector.removeAllElements();
+    }
+    
+    public final Object pop() {
+        return vector.pop();
+    }
+    public final void removeElementAt(final int index) {
+        vector.removeElementAt(index);
+    }
+
     public final void mypush(Object item) {
-        super.push(item);
+        vector.mypush(item);
+        
     }
+
+    public final String[] toStringArray() {
+        return vector.toStringArray();
+    }
+
 }

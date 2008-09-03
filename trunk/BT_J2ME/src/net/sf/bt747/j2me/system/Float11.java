@@ -1,5 +1,4 @@
-package bt747.generic;
-
+package net.sf.bt747.j2me.system;
 /*
  * <p>Title: Class for float-point calculations in J2ME applications CLDC 1.1</p>
  * <p>Description: Useful methods for float-point calculations which absent in native Math class</p>

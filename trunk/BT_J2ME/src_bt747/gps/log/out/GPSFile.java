@@ -25,6 +25,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.generic.Generic;
+import bt747.interfaces.BT747Time;
 import bt747.io.BufFile;
 import bt747.io.File;
 import bt747.sys.Convert;
@@ -65,7 +66,7 @@ public abstract class GPSFile {
 
     private BufFile outFile = null;
 
-    protected Time t = new Time(); // Time from log, already transformed
+    protected BT747Time t = new Time(); // Time from log, already transformed
 
     protected int previousDate = 0;
     protected int previousTime = 0;

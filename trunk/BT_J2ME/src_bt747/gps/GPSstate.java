@@ -28,9 +28,9 @@ import moio.util.Iterator;
 import moio.util.StringTokenizer;
 
 import bt747.generic.Generic;
+import bt747.interfaces.BT747Thread;
 import bt747.io.File;
 import bt747.sys.Convert;
-import bt747.sys.Thread;
 import bt747.sys.Vm;
 import bt747.util.Vector;
 
@@ -48,7 +48,7 @@ import bt747.util.Vector;
  * @see GPSrxtx
  * 
  */
-public class GPSstate implements Thread {
+public class GPSstate implements BT747Thread {
     private boolean GPS_DEBUG = false; // (!Settings.onDevice);
 
     private GPSrxtx gpsRxTx = null;
