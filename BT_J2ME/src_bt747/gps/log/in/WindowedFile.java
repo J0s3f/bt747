@@ -73,7 +73,7 @@ public class WindowedFile {
         }
     }
 
-    public final byte[] fillBuffer(int newPosition) throws Exception {
+    public final byte[] fillBuffer(final int newPosition) throws Exception {
         sanitizeBuffer();
         if (newPosition < currentPosition) {
             file.close();
@@ -103,11 +103,12 @@ public class WindowedFile {
             bufferFill -= newPosition - currentPosition;
         } else if (newPosition == currentPosition) {
             // No operation
+        } else {
+            bufferFill = 0;
         }
-        bufferFill = 0;
         try {
             currentPosition = newPosition;
-            bufferFill = file.readBytes(buffer, bufferFill, bufferSize
+            bufferFill += file.readBytes(buffer, bufferFill, bufferSize
                     - bufferFill);
         } catch (Exception e) {
             Generic.debug("Read problem during fillBuffer", e);

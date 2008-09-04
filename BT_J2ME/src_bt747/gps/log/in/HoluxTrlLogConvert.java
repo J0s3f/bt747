@@ -54,6 +54,12 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         return errorInfo;
     }
 
+    private boolean stop = false;
+    
+    public void stopConversion() {
+        stop = true;
+    }
+
     public int parseFile(final GPSFile gpsFile) {
         try {
         GPSRecord gpsRec = new GPSRecord();
@@ -74,7 +80,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         logFormat = 0;
         nextAddrToRead = 0;
         fileSize = inFile.getSize();
-        while ((nextAddrToRead + recordSize + 1) < fileSize) {
+        while (!stop && (nextAddrToRead + recordSize + 1) < fileSize) {
             sizeToRead = C_BUF_SIZE;
             if ((sizeToRead + nextAddrToRead) > fileSize) {
                 sizeToRead = (fileSize - nextAddrToRead);
@@ -187,6 +193,8 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
             final GPSFile gpsFile,
             final int card) {
         int error = BT747Constants.NO_ERROR;
+        stop = false;
+
         try {
         if (File.isAvailable()) {
             inFile = new File(fileName, File.READ_ONLY, card);

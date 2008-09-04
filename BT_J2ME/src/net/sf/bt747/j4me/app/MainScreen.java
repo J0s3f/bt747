@@ -9,6 +9,8 @@ import org.j4me.ui.Menu;
 import org.j4me.ui.MenuItem;
 import org.j4me.ui.components.Label;
 
+import bt747.model.Model;
+
 /**
  * The "Log" screen. This shows the contents of the application's log. It is an
  * advanced screen intended for us to diagnose the application.
@@ -67,6 +69,9 @@ public class MainScreen extends Dialog {
         initialiseGPSAlert = new InitializingGPSAlert(c, this);
         findingGPSDevicesAlert = new FindingGPSDevicesAlert(c,
                 initialiseGPSAlert);
+
+        // Call here for debug
+        //c.doConvertLog(Model.GPX_LOGTYPE);
     }
 
     private static boolean isFirstLaunch = true;
@@ -107,6 +112,7 @@ public class MainScreen extends Dialog {
         menu.appendMenuOption("MTK Logger Config", loggerInfoScreen);
         menu.appendMenuOption("Reconnect to GPS", initialiseGPSAlert);
         menu.appendMenuOption("Find and Connect", findingGPSDevicesAlert);
+
         /*
          * menu.appendMenuOption( new MenuItem() { public String getText () {
          * return "Download"; }

@@ -207,12 +207,20 @@ public class File {
     }
 
     public int writeBytes(byte[] b, int off, int len) throws IOException {
-        os.write(b, off, len);
-        return len;
+        if(os!=null) {
+            os.write(b, off, len);
+            return len;
+        } else {
+            throw new IOException("Write stream is closed");
+        }
     }
 
     public int readBytes(byte[] b, int off, int len) throws IOException {
-        return is.read(b, off, len);
+        if(is!=null) {
+            return is.read(b, off, len);
+        } else {
+            throw new IOException("Read stream is closed");
+        }
     }
 
     public static String getCardVolumePath() {

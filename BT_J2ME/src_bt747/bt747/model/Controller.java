@@ -202,6 +202,21 @@ public class Controller {
     }
 
     /**
+     * Points to the object that is currently converting (to be able to stop
+     * it).
+     */
+    private GPSLogConvert currentGPSLogConvert;
+
+    /**
+     * Stop the conversion that is ongoing.
+     */
+    public final void stopLogConvert() {
+        if (currentGPSLogConvert != null) {
+            currentGPSLogConvert.stopConversion();
+        }
+    }
+
+    /**
      * Convert the log given the provided parameters using other methods.
      * 
      * @return 0 if success, otherwise an error was encountered (error number
@@ -343,7 +358,13 @@ public class Controller {
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
                     m.getFileSeparationFreq());
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
-            lastError = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+            currentGPSLogConvert = lc;
+            try {
+                lastError = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+            } catch (Throwable e) {
+                Generic.debug("During conversion", e);
+            }
+            currentGPSLogConvert = null;
             lastErrorInfo = lc.getErrorInfo();
             result = lastError;
         } else {
@@ -439,7 +460,14 @@ public class Controller {
         // Next line must be called for initialisation.
         gpsFile.initialiseFile("", "", -1, m.getFileSeparationFreq());
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
-        error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+        currentGPSLogConvert = lc;
+        try {
+            error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+        } catch (Throwable e) {
+            Generic.debug("During conversion", e);
+        }
+        currentGPSLogConvert = null;
+
         if (error != 0) {
             lastError = error;
             lastErrorInfo = lc.getErrorInfo();
@@ -828,10 +856,9 @@ public class Controller {
 
     /**
      * This does a number of operations once the GPS is effectively connected.
-     * Can be extended by the application.
-     * It gets certain informations required by the application.
-     * It stores the settings related to the port (since the connection was
-     * successful) and starts of the Model to do port queries.
+     * Can be extended by the application. It gets certain informations required
+     * by the application. It stores the settings related to the port (since the
+     * connection was successful) and starts of the Model to do port queries.
      */
     protected void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
@@ -1126,7 +1153,7 @@ public class Controller {
     public final void reqBTAddr() {
         m.gpsModel().reqBtMacAddr();
     }
-    
+
     /**
      * Sets the MAC address for bluetooth (for devices that support it).
      * 

@@ -43,11 +43,18 @@ public class ConvertToScreen extends ProgressAlert {
      * Called when the user presses the alert's dismiss button.
      */
     public void onCancel() {
-        // Log.debug("Canceling GPS initialization.");
+        Log.debug("Canceling Log conversion.");
         //
         // // Go back to the previous screen.
         // previous.show();
+        c.stopLogConvert();
+        previous.show();
     }
+    
+    
+    
+//    public void showNotify() {
+//    }
 
     /**
      * A worker thread that gets the GPS <c>LocationProvider</c>. The thread

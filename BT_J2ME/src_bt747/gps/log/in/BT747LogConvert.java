@@ -117,6 +117,11 @@ public final class BT747LogConvert implements GPSLogConvert {
      */
     private static int BUF_SIZE = 0x800;
 
+    private boolean stop = false;
+    
+    public void stopConversion() {
+        stop = true;
+    }
     /**
      * Parse the binary input file and convert it.
      * 
@@ -148,7 +153,7 @@ public final class BT747LogConvert implements GPSLogConvert {
             // TODO: handle exception
             fileSize = 0;
         }
-        while (nextAddrToRead < fileSize) {
+        while (!stop && nextAddrToRead < fileSize) {
             int okInBuffer = -1; // Last ending position in buffer
 
             /*******************************************************************
@@ -157,7 +162,7 @@ public final class BT747LogConvert implements GPSLogConvert {
             // Determine size to read
             if ((nextAddrToRead & 0xFFFF) < 0x200) {
                 // Read the header
-                nextAddrToRead = (nextAddrToRead & 0xFFFF0000) | 0x200;
+                
                 nextAddrToRead = (nextAddrToRead & 0xFFFF0000);
             }
             int endOfBlock = (nextAddrToRead & 0xFFFF0000) | 0xFFFF;
@@ -422,6 +427,7 @@ public final class BT747LogConvert implements GPSLogConvert {
     public int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int Card) {
         int error = BT747Constants.NO_ERROR;
+        stop = false;
         if (File.isAvailable()) {
             try {
                 mFile = new WindowedFile(fileName, File.READ_ONLY, Card);
