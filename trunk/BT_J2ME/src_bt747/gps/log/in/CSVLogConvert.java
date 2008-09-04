@@ -84,6 +84,13 @@ public final class CSVLogConvert implements GPSLogConvert {
      */
     private static final int BUF_SIZE = 0x800;
 
+    
+    private boolean stop = false;
+    
+    public void stopConversion() {
+        stop = true;
+    }
+
     /**
      * Convert the input file set using other methods towards gpsFile. ({@link #toGPSFile(String, GPSFile, int)}
      * is one of them.
@@ -660,6 +667,7 @@ public final class CSVLogConvert implements GPSLogConvert {
     public int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int card) {
         int error = BT747Constants.NO_ERROR;
+        stop = false;
         try {
             if (File.isAvailable()) {
                 inFile = new File(fileName, File.READ_ONLY, card);

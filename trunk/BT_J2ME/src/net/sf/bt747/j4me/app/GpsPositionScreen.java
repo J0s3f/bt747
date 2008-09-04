@@ -101,7 +101,7 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
     /**
      * The time of the last location.
      */
-    private FieldValue fvTime = new FieldValue("Timestamp");
+    private FieldValue fvTime = new FieldValue("");
 
     /**
      * The total distance traveled in meters.

@@ -41,11 +41,23 @@ public class Convert {
         int dotPos;
         int diff;
         dotPos = s.toString().indexOf('.');
-        if ((diff = (dotPos + i + 1 - s.length())) > 0) {
+        diff = (dotPos + i + 1 - s.length());
+        if (diff == 0) {
+            // Do nothing
+        } else if (diff > 0) {
             s.append(ZEROCHARS, 1, diff);
         } else if (dotPos == 0) {
             s.append(ZEROCHARS, 0, i + 1);
         } else {
+            // Truncrate - some limited notion of rounding.
+            if (s.charAt(dotPos + i + 1) >= '5') {
+                char c;
+                c = s.charAt(dotPos + i);
+                c += 1;
+                if (c <= '9') {
+                    s.setCharAt(dotPos + i, c);
+                }
+            }
             s.setLength(dotPos + i + 1);
         }
         return s.toString();

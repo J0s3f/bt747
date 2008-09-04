@@ -55,4 +55,6 @@ public interface GPSLogConvert {
      * @return
      */
     String getErrorInfo();
+    
+    void stopConversion();
 }
