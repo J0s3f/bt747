@@ -15,7 +15,7 @@ import bt747.interfaces.Interface;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public final class Time implements BT747Time {
+public final class Time {
 
     private BT747Time time;
 
