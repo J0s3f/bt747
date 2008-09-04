@@ -66,7 +66,7 @@ public abstract class GPSFile {
 
     private BufFile outFile = null;
 
-    protected BT747Time t = new Time(); // Time from log, already transformed
+    protected Time t = new Time(); // Time from log, already transformed
 
     protected int previousDate = 0;
     protected int previousTime = 0;

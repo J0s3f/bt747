@@ -16,7 +16,7 @@ import bt747.interfaces.Interface;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public final class Vector implements BT747Vector {
+public final class Vector {
 
     BT747Vector vector;
     

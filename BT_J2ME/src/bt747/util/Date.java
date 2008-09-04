@@ -22,7 +22,7 @@ import bt747.interfaces.Interface;
  * 
  * @author Mario De Weerd
  */
-public final class Date implements BT747Date {
+public final class Date {
 
     private BT747Date date;
 

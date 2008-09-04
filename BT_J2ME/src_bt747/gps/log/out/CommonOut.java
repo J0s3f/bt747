@@ -3,7 +3,6 @@ package gps.log.out;
 import gps.BT747Constants;
 import gps.log.GPSRecord;
 
-import bt747.interfaces.BT747Time;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 
@@ -13,7 +12,7 @@ final class CommonOut {
 
     public static final void getHtml(final StringBuffer rec, final GPSRecord s,
             final GPSRecord activeFields, final GPSRecord selectedFields,
-            BT747Time t, final boolean recordNbrInLogs, final boolean imperial) {
+            Time t, final boolean recordNbrInLogs, final boolean imperial) {
         if (recordNbrInLogs) {
             rec.append("IDX: ");
             rec.append(Convert.toString(s.recCount));
@@ -169,13 +168,13 @@ final class CommonOut {
     }
 
     public static final String getTimeStr(final int utcTime) {
-        BT747Time t = new Time();
+        Time t = new Time();
         t.setUTCTime(utcTime);
         return getTimeStr(t);
     }
 
     public static final String getTimeStr(final GPSRecord activeFields,
-            final BT747Time time) {
+            final Time time) {
         if ((activeFields.utc != 0)) {
             return getTimeStr(time);
         } else {
@@ -183,7 +182,7 @@ final class CommonOut {
         }
     }
 
-    public static final String getTimeStr(final BT747Time time) {
+    public static final String getTimeStr(final Time time) {
         return // Day
         ((time.getDay() < 10) ? "0" : "")
                 + Convert.toString(time.getDay())

@@ -9,7 +9,6 @@
  */
 package gps.tracks;
 
-import bt747.interfaces.BT747Hashtable;
 import bt747.sys.Convert;
 import bt747.util.Hashtable;
 import bt747.util.Vector;
@@ -26,7 +25,7 @@ public class PolylineEncoder {
 
     private double[] zoomLevelBreaks;
 
-    private BT747Hashtable bounds;
+    private Hashtable bounds;
 
     // constructor
     public PolylineEncoder(final int pNumLevels, final int pZoomFactor,
@@ -400,7 +399,7 @@ public class PolylineEncoder {
         return encodedPoints.toString();
     }
 
-    private void setBounds(final BT747Hashtable pbounds) {
+    private void setBounds(final Hashtable pbounds) {
         this.bounds = pbounds;
     }
 
@@ -448,7 +447,7 @@ public class PolylineEncoder {
         return resultMap;
     }
 
-    public final BT747Hashtable getBounds() {
+    public final Hashtable getBounds() {
         return bounds;
     }
 }
