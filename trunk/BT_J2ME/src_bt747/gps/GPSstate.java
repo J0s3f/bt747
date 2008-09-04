@@ -1686,6 +1686,7 @@ public class GPSstate implements BT747Thread {
         closeLog();
         try {
             logFile = new File(fileName, File.WRITE_ONLY, card);
+            logFileName = fileName;
             logFileCard = card;
         } catch (Exception e) {
             Generic.debug("", e);
@@ -1867,8 +1868,7 @@ public class GPSstate implements BT747Thread {
     public final void replyToOkToOverwrite(final boolean overwrite) {
         if (logState == C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
             if (overwrite) {
-                String fileName = logFile.getPath();
-                openNewLog(fileName, logFileCard);
+                openNewLog(logFileName, logFileCard);
                 logNextReadAddr = 0;
                 logNextReadAddr = 0;
                 logState = C_LOG_ACTIVE;

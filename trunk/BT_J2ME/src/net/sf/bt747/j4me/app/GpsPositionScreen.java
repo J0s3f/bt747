@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.microedition.lcdui.Font;
 
+import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
@@ -141,10 +142,10 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         createNewSection("Location");
         append(latitude);
         append(longitude);
-        append(horizontalAccuracy);
+        //append(horizontalAccuracy);
         append(new Label()); // Blank line
         append(fvAltitude);
-        append(verticalAccuracy);
+        //append(verticalAccuracy);
 
         // Create a section for movement information.
         createNewSection("Movement");
@@ -281,6 +282,7 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
             fvTime.setLabel(((long)g.utc)*1000L);
             fvSpeed.setLabel(g.speed,1);
             fvCourse.setLabel(g.heading,1);
+            //Log.info("GPRMC");
             repaint();
             break;
         case ModelEvent.GPGGA:
