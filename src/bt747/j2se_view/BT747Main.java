@@ -134,10 +134,10 @@ public class BT747Main extends javax.swing.JFrame implements
         // c.setChunkSize(256); // Small for debug
 
         switch (m.getBinDecoder()) {
-        case AppController.DECODER_ORG:
+        case J2SEAppController.DECODER_ORG:
             cbDecoderChoice.setSelectedIndex(0);
             break;
-        case AppController.DECODER_THOMAS:
+        case J2SEAppController.DECODER_THOMAS:
             cbDecoderChoice.setSelectedIndex(1);
             break;
         }
@@ -5930,10 +5930,10 @@ public class BT747Main extends javax.swing.JFrame implements
 
         switch (cbDecoderChoice.getSelectedIndex()) {
         case 0:
-            c.setBinDecoder(AppController.DECODER_ORG);
+            c.setBinDecoder(J2SEAppController.DECODER_ORG);
             break;
         case 1:
-            c.setBinDecoder(AppController.DECODER_THOMAS);
+            c.setBinDecoder(J2SEAppController.DECODER_THOMAS);
             break;
         }
     }// GEN-LAST:event_cbDecoderChoiceActionPerformed

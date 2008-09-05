@@ -1,9 +1,6 @@
 package bt747.model;
 
 import gps.BT747Constants;
-import gps.connection.GPSPort;
-import gps.connection.GPSWabaPort;
-import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 import moio.util.HashSet;
 
@@ -14,7 +11,7 @@ import bt747.ui.MessageBox;
 
 //import moio.util.Iterator;  Needed later when communicating with views.
 
-public final class AppController extends Controller {
+public class AppController extends Controller {
 
     private static String CONFIG_FILE_NAME =
     // #if RXTX java.lang.System.getProperty("bt747_settings", // bt747_settings
@@ -51,7 +48,6 @@ public final class AppController extends Controller {
         this.m = model;
         c = this; // Temporary solution until application controller methods
 
-        initGpsPort();
         initAppSettings();
         m.init();
         // moved from lower level Controller.
@@ -60,46 +56,6 @@ public final class AppController extends Controller {
         // c = new Controller(model);
 
         // Set up the (default) port handler
-    }
-
-    // Get an instance for the port handler and hand it over to GPSrxtx.
-    private boolean hasWaba = Settings.isWaba();
-
-    private void initGpsPort() {
-        GPSPort gpsPort;
-
-        if (hasWaba) {
-            gpsPort = new GPSWabaPort();
-        } else {
-            try {
-                // gpsPort=new GPSRxTxPort();
-                gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
-                        .newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-                gpsPort = new GPSWabaPort();
-            }
-        }
-
-        /**
-         * Set the defaults of the device according to preset, guessed values.
-         */
-        // Settings.platform:
-        // PalmOS, PalmOS/SDL, WindowsCE, PocketPC, MS_SmartPhone,
-        // Win32, Symbian, Linux, Posix
-        String Platform = Settings.platform;
-
-        if ((Platform.equals("Java")) || (Platform.equals("Win32"))
-                || (Platform.equals("Posix")) || (Platform.equals("Linux"))) {
-            // Try USB Port
-            gpsPort.setUSB();
-        } else if (Platform.startsWith("PalmOS")) {
-            gpsPort.setBlueTooth();
-        } else {
-            gpsPort.setPort(0); // Should be bluetooth in WinCE
-        }
-
-        GPSrxtx.setGpsPortInstance(gpsPort);
     }
 
     // The next methods are to be moved to the application controller.
