@@ -231,6 +231,11 @@
           -keep public class * implements gps.log.in.GPSLogConvert
           -keep public class * extends waba.ui.MainWindow
           -keep public class * extends gps.connection.GPSPort
+	      -keep public class * {
+			public static void setGpsPortInstance(gps.connection.GPSPort);
+		  }
+	      -keep public class bt747.Version { *; }
+		  -keep public class bt747.ui.MessageBox { *; }
           -keepclasseswithmembers public class * {
                public static void main(java.lang.String[]); }
       </proguard>
@@ -321,10 +326,9 @@
 		       classpathref="j2seclasspath"
 		       encoding="iso-8859-15"
 		>
-			<include name="bt747/model/AppController.java" />
-			<include name="bt747/j2se_view/**" />
+			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/lang/Txt_en.java" />
-			<exclude name="bt747/j2se_view/BT747.java" />
+			<exclude name="bt747/waba_view/**" />
 		</javac>
 
 		<!--
@@ -455,6 +459,11 @@
                         -keep public class * implements gps.log.out.GPSFile { *; }
                         -keep public class gps.log.out.GPSFile { *; }
                         -keep public class * extends gps.connection.GPSPort { *; }
+			            -keep public class bt747.Version { *; }
+    		            -keep public class bt747.ui.MessageBox { *; }
+                        -keep public class * {
+	                       public static void setGpsPortInstance(gps.connection.GPSPort);
+	                    }
                         -keep public class gps.connection.GPSPort  { *; }
                </proguard>
 
@@ -593,6 +602,11 @@
                 -keep public class * implements gps.log.in.GPSLogConvert
                 -keep public class * extends waba.ui.MainWindow
                 -keep public class * extends gps.connection.GPSPort
+    	        -keep public class * {
+    	          public static void setGpsPortInstance(gps.connection.GPSPort);
+    	        }
+			    -keep public class bt747.Version { *; }
+			    -keep public class bt747.ui.MessageBox { *; }
     			-keep public class BT747
 		        -keep public class bt747.j2se_view.BT747
                 -keepclasseswithmembers public class * {
@@ -1692,7 +1706,7 @@
 			         summary="yes"
 			         value="GPSRxTxPort"
 			>
-				<include name="${@{dest.dir}rxtxfilter}bt747/model/AppController.java"
+				<include name="${@{dest.dir}rxtxfilter}bt747/waba_view/AppController.java"
 				/>
 			</replace>
 			<!-- <echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" /> -->

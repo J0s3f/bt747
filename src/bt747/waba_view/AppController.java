@@ -1,11 +1,16 @@
-package bt747.model;
+package bt747.waba_view;
 
 import gps.BT747Constants;
+import gps.connection.*;
 import gps.log.GPSRecord;
 import moio.util.HashSet;
 
 import bt747.Txt;
 import bt747.io.File;
+import bt747.model.AppSettings;
+import bt747.model.BT747View;
+import bt747.model.Controller;
+import bt747.model.Model;
 import bt747.sys.Settings;
 import bt747.ui.MessageBox;
 
@@ -45,6 +50,8 @@ public class AppController extends Controller {
      *            The model to associate with this controller.
      */
     public AppController(final Model model) {
+        initGpsPort();
+
         this.m = model;
         c = this; // Temporary solution until application controller methods
 
@@ -361,6 +368,47 @@ public class AppController extends Controller {
             // bt747.sys.Vm.debug("saved config file length
             // "+Settings.appSettings.length());
         }
+    }
+
+    static {
+        
+    }
+    
+    private void initGpsPort() {
+        GPSPort gpsPort;
+
+        if (Settings.hasWaba) {
+            gpsPort = new GPSWabaPort();
+        } else {
+            try {
+                // gpsPort=new GPSRxTxPort();
+                gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
+                        .newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+                gpsPort = new GPSWabaPort();
+            }
+        }
+
+        /**
+         * Set the defaults of the device according to preset, guessed values.
+         */
+        // Settings.platform:
+        // PalmOS, PalmOS/SDL, WindowsCE, PocketPC, MS_SmartPhone,
+        // Win32, Symbian, Linux, Posix
+        String Platform = Settings.platform;
+
+        if ((Platform.equals("Java")) || (Platform.equals("Win32"))
+                || (Platform.equals("Posix")) || (Platform.equals("Linux"))) {
+            // Try USB Port
+            gpsPort.setUSB();
+        } else if (Platform.startsWith("PalmOS")) {
+            gpsPort.setBlueTooth();
+        } else {
+            gpsPort.setPort(0); // Should be bluetooth in WinCE
+        }
+
+        GPSrxtx.setGpsPortInstance(gpsPort);
     }
 
 }

@@ -35,7 +35,6 @@ import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 
 import bt747.Txt;
-import bt747.model.AppController;
 import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -179,8 +178,6 @@ public class AppBT747 extends MainWindow implements ModelListener {
      * Initialiser of the application.
      */
     public AppBT747() {
-        initGpsPort();
-        
         m = new Model();
         c = new AppController(m);
         if (Settings.onDevice) {
@@ -536,43 +533,5 @@ public class AppBT747 extends MainWindow implements ModelListener {
     private void couldNotOpenFileMessage(final String fileName) {
         (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName + Txt.CHK_PATH))
                 .popupBlockingModal();
-    }
-
-
-    private void initGpsPort() {
-        GPSPort gpsPort;
-
-        if (Settings.hasWaba) {
-            gpsPort = new GPSWabaPort();
-        } else {
-            try {
-                // gpsPort=new GPSRxTxPort();
-                gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
-                        .newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-                gpsPort = new GPSWabaPort();
-            }
-        }
-
-        /**
-         * Set the defaults of the device according to preset, guessed values.
-         */
-        // Settings.platform:
-        // PalmOS, PalmOS/SDL, WindowsCE, PocketPC, MS_SmartPhone,
-        // Win32, Symbian, Linux, Posix
-        String Platform = Settings.platform;
-
-        if ((Platform.equals("Java")) || (Platform.equals("Win32"))
-                || (Platform.equals("Posix")) || (Platform.equals("Linux"))) {
-            // Try USB Port
-            gpsPort.setUSB();
-        } else if (Platform.startsWith("PalmOS")) {
-            gpsPort.setBlueTooth();
-        } else {
-            gpsPort.setPort(0); // Should be bluetooth in WinCE
-        }
-
-        GPSrxtx.setGpsPortInstance(gpsPort);
     }
 }
