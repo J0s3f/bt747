@@ -28,7 +28,6 @@ import waba.ui.TabPanel;
 import waba.ui.Window;
 
 import bt747.Txt;
-import bt747.model.AppController;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
