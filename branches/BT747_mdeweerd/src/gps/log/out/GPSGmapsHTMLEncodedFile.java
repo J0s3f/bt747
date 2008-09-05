@@ -380,7 +380,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
             if (track.size() != 0) {
                 rec.setLength(0);
                 rec.append("var markers;markers=[");
-                for (int i = track.size() - 1; i >= 0; i--) {
+                for (int i = 0; i < track.size(); i--) {
                     rec.append("new GMarker(new GLatLng(");
                     rec
                             .append(Convert.toString(track.get(i)

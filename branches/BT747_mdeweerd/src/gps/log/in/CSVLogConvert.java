@@ -557,6 +557,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
 
                                         case BT747Constants.FMT_RCR_IDX: {
+                                            gpsRec.rcr = 0;
                                             curLogFormat |= (1 << BT747Constants.FMT_RCR_IDX);
                                             if (field.indexOf('B', 0) != -1) {
                                                 gpsRec.rcr |= BT747Constants.RCR_BUTTON_MASK;

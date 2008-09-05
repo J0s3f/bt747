@@ -156,7 +156,6 @@ public final class BT747LogConvert implements GPSLogConvert {
             // Determine size to read
             if ((nextAddrToRead & 0xFFFF) < 0x200) {
                 // Read the header
-                nextAddrToRead = (nextAddrToRead & 0xFFFF0000) | 0x200;
                 nextAddrToRead = (nextAddrToRead & 0xFFFF0000);
             }
             int endOfBlock = (nextAddrToRead & 0xFFFF0000) | 0xFFFF;
