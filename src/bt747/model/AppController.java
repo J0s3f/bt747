@@ -56,6 +56,7 @@ public final class AppController extends Controller {
         m.init();
         // moved from lower level Controller.
         super.setModel(m);
+        super.init();
         // c = new Controller(model);
 
         // Set up the (default) port handler

@@ -18,11 +18,9 @@ import gps.BT747Constants;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
-import bt747.Txt;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
-import bt747.ui.MessageBox;
 
 /**
  * 

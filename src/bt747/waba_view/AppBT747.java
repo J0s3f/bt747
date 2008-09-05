@@ -330,7 +330,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         // "+event.consumed); }
         switch (event.type) {
         case ControlEvent.TIMER:
-            if ((topMost == this) && m.isSolveMacLagProblem()
+            if ((topMost == this) && Model.isSolveMacLagProblem()
                     && (event.target == this)) {
                 this._doPaint();
             }

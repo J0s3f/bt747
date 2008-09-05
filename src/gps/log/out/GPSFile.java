@@ -20,13 +20,12 @@
 package gps.log.out;
 
 import gps.BT747Constants;
+import gps.Txt;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
-import gps.Txt;
 
-import bt747.io.File;
 import bt747.io.BufFile;
-import bt747.model.AppSettings;
+import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 import bt747.sys.Vm;
