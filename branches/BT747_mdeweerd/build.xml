@@ -772,7 +772,7 @@
 				<include name="bt747/*view/**" if="is.lib" />
 				<include name="bt747/lang/**" if="is.lib" />
 				<include name="bt747/Txt.java" if="is.lib" />
-				<include name="bt747/model/AppController.java" if="is.lib" />
+				<include name="bt747/waba_view/AppController.java" if="is.lib" />
 			</fileset>
 		</delete>
 		<javac verbose="no"
@@ -857,13 +857,13 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-		<replace file="${filesrc.dir}bt747/model/AppController.java"
+		<replace file="${filesrc.dir}bt747/waba_view/AppController.java"
 		         encoding="${encoding}"
 		         token="GPSWabaPort"
 		         summary="yes"
 		         value="GPSFilePort"
 		/>
-		<replace file="${filesrc.dir}/bt747/model/AppController.java"
+		<replace file="${filesrc.dir}/bt747/waba_view/AppController.java"
 		         encoding="${encoding}"
 		         token="//#if RXTX"
 		         summary="yes"
@@ -1715,7 +1715,7 @@
 			         summary="yes"
 			         value=""
 			>
-				<include name="${@{dest.dir}rxtxfilter}bt747/model/AppController.java"
+				<include name="${@{dest.dir}rxtxfilter}bt747/waba_view/AppController.java"
 				/>
 			</replace>
 
