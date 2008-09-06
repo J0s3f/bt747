@@ -346,20 +346,20 @@ public class GPSstate implements BT747Thread {
                 + BT747Constants.PMTK_LOG_FLASH_STR + "," + "9F");
     }
 
-    static final int C_SEND_BUF_SIZE = 5;
+    private Vector sentCmds = new Vector(); // List of sent commands
 
-    Vector sentCmds = new Vector(); // List of sent commands
+    private static final int C_MAX_SENT_COMMANDS = 10; // Max commands to put
+                                                        // in list
 
-    static final int C_MAX_SENT_COMMANDS = 10; // Max commands to put in list
+    private Vector toSendCmds = new Vector(); // List of sent commands
 
-    Vector toSendCmds = new Vector(); // List of sent commands
-
-    static final int C_MAX_TOSEND_COMMANDS = 20; // Max commands to put in
+    private static final int C_MAX_TOSEND_COMMANDS = 20; // Max commands to
+                                                            // put in
     // list
 
-    static final int C_MAX_CMDS_SENT = 4;
+    private static final int C_MAX_CMDS_SENT = 4;
 
-    static final int C_MIN_TIME_BETWEEN_CMDS = 30;
+    private static final int C_MIN_TIME_BETWEEN_CMDS = 30;
 
     public final int getOutStandingCmdsCount() {
         return sentCmds.size() + toSendCmds.size();
@@ -412,7 +412,10 @@ public class GPSstate implements BT747Thread {
                 // TimeOut!!
                 Generic.debug("Timeout: " + cTime + "-" + logTimer + ">"
                         + downloadTimeOut, null);
-                sentCmds.removeElementAt(0);
+                // sentCmds.removeElementAt(0); // Previous cleaning
+                // Since the last command that was sent is a timeout ago, we
+                // suppose that all the subsequent ones are forfeit too.
+                sentCmds.removeAllElements();
                 logTimer = cTime;
             }
             if ((toSendCmds.size() != 0) && (sentCmds.size() < C_MAX_CMDS_SENT)
@@ -1823,7 +1826,7 @@ public class GPSstate implements BT747Thread {
                     getNextLogPart();
                 }
             } else {
-               recoverFromLogError();
+                recoverFromLogError();
             }
             break;
         case C_LOG_CHECK:
