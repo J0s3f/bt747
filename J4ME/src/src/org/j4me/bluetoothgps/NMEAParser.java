@@ -1,6 +1,6 @@
 package org.j4me.bluetoothgps;
 
-import org.j4me.logging.*;
+import org.j4me.logging.Log;
 
 /**
  * Parses chunks of data from a GPS device.

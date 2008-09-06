@@ -1,13 +1,22 @@
 package org.j4me.examples.bluetoothgps;
 
-import java.io.*;
-import java.util.*;
-import javax.microedition.lcdui.*;
-import org.j4me.bluetoothgps.*;
-import org.j4me.examples.log.*;
-import org.j4me.logging.*;
-import org.j4me.ui.*;
-import org.j4me.ui.components.*;
+import java.io.IOException;
+import java.util.Date;
+
+import javax.microedition.lcdui.Font;
+import javax.microedition.lcdui.Graphics;
+
+import org.j4me.bluetoothgps.Location;
+import org.j4me.bluetoothgps.LocationListener;
+import org.j4me.bluetoothgps.LocationProvider;
+import org.j4me.bluetoothgps.QualifiedCoordinates;
+import org.j4me.examples.log.LogScreen;
+import org.j4me.logging.Log;
+import org.j4me.ui.Dialog;
+import org.j4me.ui.Menu;
+import org.j4me.ui.MenuItem;
+import org.j4me.ui.components.HorizontalRule;
+import org.j4me.ui.components.Label;
 
 /**
  * Shows the current location information.  At the top of the screen is a

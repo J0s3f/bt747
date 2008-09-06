@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="examples"/>
-	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="con" path="J2MELIB"/>
-	<classpathentry kind="lib" path="/Build/lib/J2MEUnit-1.1.1/j2meunit.jar"/>
+	<classpathentry kind="lib" path="C:/Download/j2meunit-all/lib/j2meunit.jar"/>
+	<classpathentry kind="lib" path="C:/WTK2.5.2/lib/jsr179.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

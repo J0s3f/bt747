@@ -1,10 +1,12 @@
 package org.j4me.examples.bluetoothgps;
 
-import java.io.*;
-import org.j4me.bluetoothgps.*;
-import org.j4me.examples.ui.screens.*;
-import org.j4me.logging.*;
-import org.j4me.ui.*;
+import java.io.IOException;
+
+import org.j4me.bluetoothgps.LocationProvider;
+import org.j4me.examples.ui.screens.ErrorAlert;
+import org.j4me.examples.ui.screens.ProgressAlert;
+import org.j4me.logging.Log;
+import org.j4me.ui.DeviceScreen;
 
 /**
  * The "Finding GPS Devices..." alert screen.  This checks for nearby

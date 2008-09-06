@@ -1,6 +1,6 @@
 package org.j4me.bluetoothgps;
 
-import org.j4me.logging.*;
+import org.j4me.logging.Log;
 
 /**
  * A <code>LocationProvider</code> for testing MIDlets.  Methods on this class

@@ -1,8 +1,9 @@
 package org.j4me.examples.ui.components;
 
-import org.j4me.logging.*;
-import org.j4me.ui.*;
-import org.j4me.ui.components.*;
+import org.j4me.logging.Level;
+import org.j4me.ui.DeviceScreen;
+import org.j4me.ui.Dialog;
+import org.j4me.ui.components.RadioButton;
 
 /**
  * Example of a <code>RadioButton</code> component.

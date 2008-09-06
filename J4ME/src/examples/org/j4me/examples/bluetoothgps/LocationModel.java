@@ -1,7 +1,8 @@
 package org.j4me.examples.bluetoothgps;
 
-import org.j4me.bluetoothgps.*;
-import org.j4me.logging.*;
+import org.j4me.bluetoothgps.Criteria;
+import org.j4me.bluetoothgps.LocationProvider;
+import org.j4me.logging.Log;
 
 /**
  * Stores data about the LBS (Location Based Services) configuration.

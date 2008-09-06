@@ -1,7 +1,8 @@
 package org.j4me.bluetoothgps;
 
-import java.io.*;
-import org.j4me.logging.*;
+import java.io.IOException;
+
+import org.j4me.logging.Log;
 
 /**
  * This is the starting point for applications using this API and represents a
