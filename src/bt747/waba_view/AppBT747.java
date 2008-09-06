@@ -31,9 +31,6 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
-import gps.connection.GPSPort;
-import gps.connection.GPSrxtx;
-
 import bt747.Txt;
 import bt747.model.AppSettings;
 import bt747.model.Model;

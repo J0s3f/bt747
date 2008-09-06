@@ -1,3 +1,6 @@
+Version 1.55.2
+* Saving the settings was broken - should be solved.
+
 Version 1.55.1
 * Waypoint list got inverted.
 * When CSV was read, T was always added as log reason - corrected.
