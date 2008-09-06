@@ -6,7 +6,7 @@
  */
 package bt747.io;
 
-import java.io.IOException;
+import bt747.interfaces.Interface;
 
 /**
  * @author Mario De Weerd
@@ -16,14 +16,15 @@ import java.io.IOException;
  */
 public class BufFile extends bt747.io.File {
     public BufFile(String path) {
-        super(path);
+        file = Interface.tr.getBufFileInstance(path);
     }
 
-    public BufFile(String path, int mode, int card) throws IOException {
-        super(path, mode, card);
+    public BufFile(String path, int mode, int card) {
+        file = Interface.tr.getBufFileInstance(path,mode,card);
     }
 
-    public BufFile(String path, int mode) throws IOException {
-        super(path, mode);
+    public BufFile(String path, int mode)  {
+        file = Interface.tr.getBufFileInstance(path,mode);
     }
+
 }

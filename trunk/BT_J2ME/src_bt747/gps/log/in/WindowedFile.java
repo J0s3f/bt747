@@ -49,7 +49,7 @@ public class WindowedFile {
     }
     
     public final int getLastError() {
-        return file.lastError;
+        return file.getLastError();
     }
     
     public final boolean isOpen() {

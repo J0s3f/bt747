@@ -97,7 +97,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
              */
             readResult = inFile.readBytes(bytes, 0, sizeToRead);
             if (readResult != sizeToRead) {
-                errorInfo = inFile.getPath() + "|" + inFile.lastError;
+                errorInfo = inFile.getPath() + "|" + inFile.getLastError();
                 return BT747Constants.ERROR_READING_FILE;
             }
             nextAddrToRead += sizeToRead;
@@ -199,7 +199,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         if (File.isAvailable()) {
             inFile = new File(fileName, File.READ_ONLY, card);
             if (!inFile.isOpen()) {
-                errorInfo = fileName + "|" + inFile.lastError;
+                errorInfo = fileName + "|" + inFile.getLastError();
                 error = BT747Constants.ERROR_COULD_NOT_OPEN;
                 inFile = null;
             } else {
