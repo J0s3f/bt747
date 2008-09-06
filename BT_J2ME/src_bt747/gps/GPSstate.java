@@ -349,12 +349,12 @@ public class GPSstate implements BT747Thread {
     private Vector sentCmds = new Vector(); // List of sent commands
 
     private static final int C_MAX_SENT_COMMANDS = 10; // Max commands to put
-                                                        // in list
+    // in list
 
     private Vector toSendCmds = new Vector(); // List of sent commands
 
     private static final int C_MAX_TOSEND_COMMANDS = 20; // Max commands to
-                                                            // put in
+    // put in
     // list
 
     private static final int C_MAX_CMDS_SENT = 4;
@@ -1749,7 +1749,7 @@ public class GPSstate implements BT747Thread {
     }
 
     private void recoverFromLogError() {
-        logNextReqAddr = logNextReadAddr;
+        // logNextReqAddr = logNextReadAddr;
         logState = C_LOG_RECOVER; // recover through timeout.
     }
 
@@ -1826,6 +1826,9 @@ public class GPSstate implements BT747Thread {
                     getNextLogPart();
                 }
             } else {
+                Generic.debug("Expected:"
+                        + Convert.unsigned2hex(logNextReadAddr, 8) + " Got:"
+                        + Convert.unsigned2hex(startAddr, 8), null);
                 recoverFromLogError();
             }
             break;
