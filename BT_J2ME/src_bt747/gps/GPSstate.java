@@ -1735,7 +1735,7 @@ public class GPSstate implements BT747Thread {
         switch (logState) {
         case C_LOG_ACTIVE:
         case C_LOG_RECOVER:
-            logNextReqAddr = logNextReadAddr;
+            logNextReqAddr = logNextReadAddr; // Recover from timeout.
             getNextLogPart();
             break;
         case C_LOG_CHECK:
@@ -1747,7 +1747,7 @@ public class GPSstate implements BT747Thread {
 
     private void recoverFromLogError() {
         logNextReqAddr = logNextReadAddr;
-        logState = C_LOG_RECOVER;
+        logState = C_LOG_RECOVER; // recover through timeout.
     }
 
     private void analyzeLogPart(final int startAddr, final String sData) {
@@ -1823,7 +1823,7 @@ public class GPSstate implements BT747Thread {
                     getNextLogPart();
                 }
             } else {
-                recoverFromLogError();
+               recoverFromLogError();
             }
             break;
         case C_LOG_CHECK:

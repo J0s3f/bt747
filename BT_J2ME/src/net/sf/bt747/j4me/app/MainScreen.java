@@ -168,4 +168,9 @@ public class MainScreen extends Dialog {
         super.acceptNotify();
     }
     
+    protected void returnNotify() {
+        // Override
+        // Do nothing for the moment - should prompt to exit the application.
+    }
+    
 }
