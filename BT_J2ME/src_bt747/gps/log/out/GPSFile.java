@@ -280,7 +280,7 @@ public abstract class GPSFile {
             // TODO: handle exception
         }
         if (outFile != null && !outFile.isOpen()) {
-            errorInfo = fileName + "|" + outFile.lastError;
+            errorInfo = fileName + "|" + outFile.getLastError();
             error = BT747Constants.ERROR_COULD_NOT_OPEN;
             outFile = null;
         } else {

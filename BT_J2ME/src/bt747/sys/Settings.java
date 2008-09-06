@@ -40,8 +40,4 @@ public class Settings {
     public static void setAppSettings(final String appSettings) {
         Settings.appSettings = appSettings;
     }
-
-    public static boolean isWaba() {
-        return hasWaba;
-    }
 }

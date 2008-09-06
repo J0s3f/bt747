@@ -6,16 +6,8 @@
  */
 package bt747.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import javax.microedition.io.Connector;
-import javax.microedition.io.file.FileConnection;
-
-import org.j4me.logging.Log;
-
-import bt747.generic.Generic;
+import bt747.interfaces.BT747File;
+import bt747.interfaces.Interface;
 
 /**
  * @author Mario De Weerd
@@ -24,233 +16,90 @@ import bt747.generic.Generic;
  * Preferences - Java - Code Style - Code Templates
  */
 public class File {
-
-    // public static final char separatorChar='/';
-    // /**
-    // * @param path
-    // */
-    String path = null;
-
-    public File(String path) {
-        this.path = path;
-    }
-
-    FileConnection fileConnection;
-
-    // FileSystemRegistry.listRoots();
-
     public static final int DONT_OPEN = 0;
     public static final int READ_ONLY = 1;
     public static final int WRITE_ONLY = 2;
     public static final int READ_WRITE = 3; // READ | WRITE
     public static final int CREATE = 4;
 
-    public File(String path, int mode, int card) throws IOException {
-        this(path, mode);
+    protected BT747File file;
+
+    protected File() {
+    }
+    
+    public File(String path) {
+        file = Interface.tr.getFileInstance(path);
     }
 
-    public File(String path, int mode) throws IOException {
-        int lMode;
-        this.path = path;
-        switch (mode) {
-        case READ_ONLY:
-            lMode = Connector.READ;
-            break;
-        case WRITE_ONLY:
-            lMode = Connector.READ_WRITE;
-            break;
-        case CREATE:
-            lMode = Connector.READ_WRITE;
-            {
-                FileConnection f = tmpFileConnection(path);
-                f.create();
-                f.close();
-                f = null;
-            }
-            break;
-        case READ_WRITE:
-            lMode = Connector.READ_WRITE;
-            break;
-        default:
-            lMode = Connector.READ;
-        }
-        if (mode != DONT_OPEN) {
-            String urlPath = "file://" + path;
-            Log.debug("Try to open " + path);
-            fileConnection = (FileConnection) Connector.open(urlPath, lMode);
-            isopen = true;
-            switch (mode) {
-            case READ_ONLY:
-                is = fileConnection.openInputStream();
-                break;
-            case WRITE_ONLY:
-                os = fileConnection.openOutputStream(this.getSize());
-                break;
-            case CREATE:
-                os = fileConnection.openOutputStream(this.getSize());
-                break;
-            case READ_WRITE:
-                is = fileConnection.openInputStream();
-                os = fileConnection.openOutputStream(this.getSize());
-                break;
-            default:
-            }
-        }
+    public File(String path, int mode, int card) {
+        file = Interface.tr.getFileInstance(path,mode,card);
     }
 
-    private FileConnection tmpFileConnection(final String path)
-            throws IOException {
-        String urlPath = "file://" + path;
-        Log.debug("File: " + urlPath);
-        return ((FileConnection) Connector.open(urlPath));
+    public File(String path, int mode)  {
+        file = Interface.tr.getFileInstance(path,mode);
     }
 
-    public int getSize() throws IOException {
-        if (fileConnection == null) {
-            return (int) tmpFileConnection(path).fileSize();
-        } else {
-            return (int) fileConnection.fileSize();
-        }
+    public final int getSize()  {
+            return file.getSize();
     }
 
-    public boolean exists() throws IOException {
-        return tmpFileConnection(path).exists();
+    public final boolean exists()  {
+        return file.exists();
     }
 
-    public boolean delete() throws IOException {
-        tmpFileConnection(path).delete();
-        return true;
+    public final boolean delete()  {
+        return file.delete();
     }
 
-    public boolean createDir() throws IOException {
-        tmpFileConnection(path).mkdir();
-        return true;
+    public final boolean createDir()  {
+        return file.createDir();
     }
 
     public static boolean isAvailable() {
-        return true; // File system is available
+        return Interface.tr.isAvailable();
     }
-
-    public static boolean isCardInserted(int i) {
-        return false;
-    }
+    
+//    public static boolean isCardInserted(int i) {
+//        return false;
+//    }
 
     public static char separatorChar = '/';
     public static String separatorStr = "/";
 
     boolean isopen = false;
 
-    public boolean close() throws Exception {
-        try {
-            if (isopen && fileConnection != null) {
-                isopen = false;
-                try {
-                    if (is != null) {
-                        is.close();
-                        is = null;
-                    }
-                } catch (Exception e) {
-                    Generic.debug("inputstream close", e);
-                    // TODO: handle exceptions
-                    return false;
-                }
-                try {
-                    if (os != null) {
-                        os.close();
-                        os = null;
-                    }
-                } catch (Exception e) {
-                    Generic.debug("outputstream close", e);
-                    // TODO: handle exceptions
-                    return false;
-                }
-                fileConnection.close();
-                fileConnection = null;
-            }
-            return true;
-        } catch (Exception e) {
-            Generic.debug("File close", e);
-            // TODO: handle exceptions
-            return false;
-        }
+    public final boolean close()  {
+        return file.close();
     }
 
-    private InputStream is;
-    private OutputStream os;
-
-    public boolean setPos(int pos) throws IOException {
-        Log.debug("Enter setPos");
-        if (fileConnection != null) {
-            if (is != null) {
-                is.close();
-                is = fileConnection.openInputStream();
-                is.skip(pos);
-            }
-            if (os != null) {
-                os.close();
-                os = fileConnection.openOutputStream(pos);
-            }
-            return true;
-        }
-        Log.debug("Exit setPos");
-        return false;
+    public final boolean setPos(int pos)  {
+        return file.setPos(pos);
     }
 
-    public int lastError = 0;
-
-    public boolean isOpen() {
-        if (fileConnection != null) {
-            return isopen;
-        } else {
-            return false;
-        }
+    public final boolean isOpen() {
+        return file.isOpen();
     }
 
-    public int writeBytes(byte[] b, int off, int len) throws IOException {
-        if(os!=null) {
-            os.write(b, off, len);
-            return len;
-        } else {
-            throw new IOException("Write stream is closed");
-        }
+    public final int writeBytes(byte[] b, int off, int len)  {
+        return file.writeBytes(b, off, len);
     }
 
-    public int readBytes(byte[] b, int off, int len) throws IOException {
-        if(is!=null) {
-            return is.read(b, off, len);
-        } else {
-            throw new IOException("Read stream is closed");
-        }
+    public final int readBytes(byte[] b, int off, int len)  {
+        return file.readBytes(b, off, len);
     }
 
-    public static String getCardVolumePath() {
-        return null;
+//    public static final String getCardVolumePath() {
+//        return null;
+//    }
+
+    public final String getPath() {
+        return file.getPath();
     }
 
-    public String getPath() {
-        return path;
+    /**
+     * @return the lastError
+     */
+    public final int getLastError() {
+        return file.getLastError();
     }
-
-    // super(path);
-    // // TODO Auto-generated constructor stub
-    // }
-    //
-    // /**
-    // * @param path
-    // * @param mode
-    // */
-    // public File(String path, int mode) {
-    // super(path, mode);
-    // // TODO Auto-generated constructor stub
-    // }
-    //
-    // /**
-    // * @param path
-    // * @param mode
-    // * @param slot
-    // */
-    // public File(String path, int mode, int slot) {
-    // super(path, mode, slot);
-    // // TODO Auto-generated constructor stub
-    // }
 }

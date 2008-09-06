@@ -15,7 +15,6 @@ import org.j4me.logging.Log;
  * Preferences - Java - Code Style - Code Templates
  */
 public class Vm {
-    public static final String ERASE_DEBUG = "Erase Debug";
     private static final long appStartTime = System.currentTimeMillis();
 
     public static final int getTimeStamp() {
