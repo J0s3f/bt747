@@ -152,6 +152,11 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
         // Continue processing the event.
         super.declineNotify();
     }
+    
+    protected void returnNotify() {
+        // Override because declineNotify is not the correct default.
+        acceptNotify();
+    }
 
     private void downloadDone() {
         m().removeListener(this);

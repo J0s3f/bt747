@@ -83,13 +83,13 @@ public final class CSVLogConvert implements GPSLogConvert {
      * The size of the file read buffer.
      */
     private static final int BUF_SIZE = 0x800;
-
     
     private boolean stop = false;
     
     public void stopConversion() {
         stop = true;
     }
+
 
     /**
      * Convert the input file set using other methods towards gpsFile. ({@link #toGPSFile(String, GPSFile, int)}
@@ -118,7 +118,7 @@ public final class CSVLogConvert implements GPSLogConvert {
             nextAddrToRead = 0;
             fileSize = inFile.getSize();
 
-            while (nextAddrToRead < fileSize) {
+            while (!stop && (nextAddrToRead < fileSize)) {
                 /***************************************************************
                  * Read data from the data file into the local buffer.
                  */
@@ -564,6 +564,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
 
                                         case BT747Constants.FMT_RCR_IDX: {
+                                            gpsRec.rcr = 0;
                                             curLogFormat |= (1 << BT747Constants.FMT_RCR_IDX);
                                             if (field.indexOf('B', 0) != -1) {
                                                 gpsRec.rcr |= BT747Constants.RCR_BUTTON_MASK;
@@ -667,7 +668,6 @@ public final class CSVLogConvert implements GPSLogConvert {
     public int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int card) {
         int error = BT747Constants.NO_ERROR;
-        stop = false;
         try {
             if (File.isAvailable()) {
                 inFile = new File(fileName, File.READ_ONLY, card);
