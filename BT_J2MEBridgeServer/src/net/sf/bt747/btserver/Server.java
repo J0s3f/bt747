@@ -26,9 +26,9 @@ import javax.swing.JTextArea;
 import com.sun.kvem.bluetooth.DiscoveryAgent;
 import com.sun.kvem.bluetooth.LocalDevice;
 
-public class Server implements SerialPortEventListener {
+public class Server implements SerialPortEventListener, Runnable {
     public static final String UUID_STRING = "A781FDBA229B486A8C21CEBD00000000";
-    public static final String SERVICE_NAME = "BTCHATSVR";
+    public static final String SERVICE_NAME = "btGPSBridge";
     private StreamConnectionNotifier server;
 
     JFrame jframe;
@@ -59,9 +59,8 @@ public class Server implements SerialPortEventListener {
                 CommPort commPort = portIdentifier.open(getClass().getName(),
                         2000);
                 if (commPort instanceof SerialPort) {
-                    SerialPort serialPort = (SerialPort) commPort;
-                    sp = serialPort;
-                    serialPort.setSerialPortParams(115200, 8, 1, 0);
+                    sp = (SerialPort) commPort;
+                    sp.setSerialPortParams(115200, 8, 1, 0);
                     spIs = sp.getInputStream();
                     spOs = sp.getOutputStream();
                     logMessage("opened");
@@ -99,16 +98,85 @@ public class Server implements SerialPortEventListener {
         this.jframe.pack();
         this.jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.jframe.setVisible(true);
+        this.jframe.repaint();
 
-        startServer();
+        myStartServer();
     }
+
+    StreamConnection conn;
 
     public void logMessage(String message) {
         this.textArea.setText(this.textArea.getText() + message + "\n");
         this.textArea.setCaretPosition(this.textArea.getText().length());
-        textArea.repaint();
+        this.textArea.repaint();
         System.out.println(message);
         System.out.flush();
+    }
+
+    public void disconnect() {
+        logMessage("Disconnecting");
+        try {
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        is = null;
+        try {
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        os = null;
+        try {
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        conn = null;
+        try {
+            sp.removeEventListener();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            sp.close();
+        } catch (Exception e) {
+            this.logMessage(e.getMessage());
+            e.printStackTrace();
+        }
+        sp = null;
+        try {
+            spIs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        spIs = null;
+        try {
+            spOs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        spOs = null;
+
+        try {
+            server.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        server = null;
+        myStartServer();
+    }
+
+    private void myStartServer() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                if (server == null) {
+                    startServer();
+                }
+            }
+        });
     }
 
     public void startServer() {
@@ -127,7 +195,8 @@ public class Server implements SerialPortEventListener {
             server = (StreamConnectionNotifier) Connector.open(url);
             this.logMessage("waiting for connection...");
 
-            StreamConnection conn = server.acceptAndOpen();
+            // while (true) {
+            conn = server.acceptAndOpen();
             this.logMessage("connection opened");
             connectLocalSerial();
             is = conn.openInputStream();
@@ -136,35 +205,39 @@ public class Server implements SerialPortEventListener {
             sp.addEventListener(this);
             sp.notifyOnDataAvailable(true);
 
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                public void run() {
-                    byte buffer[] = new byte[1000];
-                    boolean c = true;
-                    while (c) {
-                        try {
-                            if (is.available() > 0) {
-                                int numChars = is.read(buffer);
-                                String s = new String(buffer);
-                                logMessage("received from mobile phone: "
-                                        + s.substring(0, numChars));
-                                spOs.write(buffer, 0, numChars);
-                                spOs.flush();
-                            } else {
-                                Thread.sleep(10);
-                            }
-                        } catch (Exception e) {
-                            // TODO: handle exception
-                            e.printStackTrace();
-                            c = false;
-                        }
-                    }
-                }
-            });
-
+            java.awt.EventQueue.invokeLater(this);
+            // }
         } catch (Exception e) {
+            e.printStackTrace();
             this.logMessage(e.getMessage());
         }
+    }
+
+    public void run() {
+        byte buffer[] = new byte[1000];
+        boolean c = true;
+        logMessage("Run");
+
+        while (c) {
+            try {
+                // logMessage("Loop");
+                if (is.available() > 0) {
+                    int numChars = is.read(buffer);
+                    String s = new String(buffer);
+                    logMessage("received from mobile phone: "
+                            + s.substring(0, numChars));
+                    spOs.write(buffer, 0, numChars);
+                    spOs.flush();
+                } else {
+                    Thread.sleep(20);
+                }
+            } catch (Throwable e) {
+                // TODO: handle exception
+                e.printStackTrace();
+                c = false;
+            }
+        }
+        disconnect();
     }
 
     public static void main(String args[]) {
@@ -184,19 +257,24 @@ public class Server implements SerialPortEventListener {
             byte[] buffer = new byte[1000];
 
             try {
-                while (spIs.available() > 0) {
+                while (spIs != null && spIs.available() > 0) {
                     int numChars = spIs.read(buffer);
                     if (numChars > 0) {
                         String s = new String(buffer);
                         /*
-                        logMessage("sent to mobile phone: " + s.substring(0,
-                         numChars));*/
+                         * logMessage("sent to mobile phone: " + s.substring(0,
+                         * numChars));
+                         */
                         os.write(buffer, 0, numChars);
                         os.flush();
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    disconnect();
+                } catch (Throwable n) {
+                    n.printStackTrace();
+                }
             }
         }
 
