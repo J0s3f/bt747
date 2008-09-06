@@ -1,8 +1,10 @@
 package org.j4me.bluetoothgps;
 
-import java.io.*;
-import javax.microedition.io.*;
-import org.j4me.logging.*;
+import java.io.IOException;
+
+import javax.microedition.io.ConnectionNotFoundException;
+
+import org.j4me.logging.Log;
 
 /**
  * Maps the communications with a Bluetooth GPS device to the <code>LocationProvider</code>

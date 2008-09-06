@@ -1,8 +1,11 @@
 package org.j4me.examples.log;
 
-import org.j4me.logging.*;
-import org.j4me.ui.*;
-import org.j4me.ui.components.*;
+import org.j4me.logging.Level;
+import org.j4me.logging.Log;
+import org.j4me.ui.DeviceScreen;
+import org.j4me.ui.Dialog;
+import org.j4me.ui.components.CheckBox;
+import org.j4me.ui.components.RadioButton;
 
 /**
  * The "Log Options" screen.  It changes the logging options for the

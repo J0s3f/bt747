@@ -1,7 +1,7 @@
 package org.j4me.bluetoothgps;
 
-import org.j4me.collections.*;
-import org.j4me.logging.*;
+import org.j4me.collections.CubbyHole;
+import org.j4me.logging.Log;
 
 /**
  * Wraps all <code>LocationProvider</code>s returned by the JSR 179 implementation.

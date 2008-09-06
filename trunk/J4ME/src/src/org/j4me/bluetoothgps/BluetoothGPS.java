@@ -1,9 +1,16 @@
 package org.j4me.bluetoothgps;
 
-import java.io.*;
-import javax.microedition.io.*;
-import org.j4me.logging.*;
-import org.j4me.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InterruptedIOException;
+import java.io.OutputStream;
+
+import javax.microedition.io.ConnectionNotFoundException;
+import javax.microedition.io.Connector;
+import javax.microedition.io.StreamConnection;
+
+import org.j4me.logging.Log;
+import org.j4me.util.ConnectorHelper;
 
 /**
  * Main class for communication with GPS receiver. Use this class to access GPS

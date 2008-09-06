@@ -1,8 +1,10 @@
 package org.j4me.examples.log;
 
-import org.j4me.logging.*;
-import org.j4me.ui.*;
-import org.j4me.ui.components.*;
+import org.j4me.logging.Log;
+import org.j4me.logging.LogMessage;
+import org.j4me.ui.DeviceScreen;
+import org.j4me.ui.Dialog;
+import org.j4me.ui.components.HorizontalRule;
 
 /**
  * The "Log" screen.  This shows the contents of the application's

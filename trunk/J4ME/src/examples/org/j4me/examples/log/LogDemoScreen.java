@@ -1,6 +1,6 @@
 package org.j4me.examples.log;
 
-import org.j4me.logging.*;
+import org.j4me.logging.Log;
 
 /**
  * Shows properties about the phone.  On startup it scans the device for

@@ -1,8 +1,9 @@
 package org.j4me.examples.log;
 
-import org.j4me.logging.*;
-import org.j4me.ui.*;
-import org.j4me.ui.components.*;
+import org.j4me.logging.Level;
+import org.j4me.logging.LogMessage;
+import org.j4me.ui.Theme;
+import org.j4me.ui.components.Label;
 
 /**
  * A UI component that displays a single log message.

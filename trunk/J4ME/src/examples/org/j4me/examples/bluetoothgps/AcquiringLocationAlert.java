@@ -1,9 +1,11 @@
 package org.j4me.examples.bluetoothgps;
 
-import org.j4me.bluetoothgps.*;
-import org.j4me.examples.ui.screens.*;
-import org.j4me.logging.*;
-import org.j4me.ui.*;
+import org.j4me.bluetoothgps.Location;
+import org.j4me.bluetoothgps.LocationProvider;
+import org.j4me.bluetoothgps.QualifiedCoordinates;
+import org.j4me.examples.ui.screens.ProgressAlert;
+import org.j4me.logging.Log;
+import org.j4me.ui.DeviceScreen;
 
 /**
  * The "Acquiring Location..." alert screen.  This is shown while the application

@@ -8,7 +8,6 @@
 package org.j4me.bluetoothgps;
 
 import java.io.IOException;
-
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -21,7 +20,8 @@ import javax.bluetooth.LocalDevice;
 import javax.bluetooth.RemoteDevice;
 import javax.bluetooth.ServiceRecord;
 import javax.bluetooth.UUID;
-import org.j4me.logging.*;
+
+import org.j4me.logging.Log;
 
 /**
  * Looks for Bluetooth devices (within 10 meters) and returns their

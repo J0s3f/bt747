@@ -1,8 +1,10 @@
 package org.j4me.ui;
 
-import javax.microedition.lcdui.*;
-import javax.microedition.midlet.*;
-import org.j4me.logging.*;
+import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.midlet.MIDlet;
+
+import org.j4me.logging.Log;
 
 /**
  * The UI manager orchestrates the UI for a MIDlet.  There is one
