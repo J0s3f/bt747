@@ -3,13 +3,12 @@ package net.sf.bt747.j4me.app;
 import javax.microedition.midlet.MIDlet;
 
 import org.j4me.examples.log.LogScreen;
+import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
 import org.j4me.ui.MenuItem;
 import org.j4me.ui.components.Label;
-
-import bt747.model.Model;
 
 /**
  * The "Log" screen. This shows the contents of the application's log. It is an
@@ -76,11 +75,19 @@ public class MainScreen extends Dialog {
 
     private static boolean isFirstLaunch = true;
 
+    private final AppModel m() {
+        return c.getAppModel();
+    }
     public void show() {
 
         if (isFirstLaunch) {
             isFirstLaunch = false;
-            findingGPSDevicesAlert.show();
+            if(m().getBluetoothGPSURL()!=null) {
+                Log.debug("Port:"+m().getBluetoothGPSURL());
+                initialiseGPSAlert.show();
+            } else {
+                findingGPSDevicesAlert.show();
+            }
         } else {
             super.show();
         }

@@ -3,6 +3,10 @@ package net.sf.bt747.j4me.app;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.util.Enumeration;
 
 import javax.microedition.io.file.FileSystemRegistry;
@@ -44,7 +48,6 @@ public class AppController extends Controller {
         try {
             recordStore = RecordStore.openRecordStore(RECORDSTORENAME, false);
             byte[] bytes = recordStore.getRecord(1);
-            recordStore.closeRecordStore();
             if (bytes.length >= 2048) {
                 Settings.setAppSettings(new String(bytes));
                 m.init();
@@ -55,6 +58,18 @@ public class AppController extends Controller {
                 resetSettings();
                 saveSettings();
             }
+            bytes = recordStore.getRecord(2);
+            Log.debug("Size:"+bytes.length);
+            DataInputStream is = new DataInputStream(new ByteArrayInputStream(
+                    bytes));
+            try {
+                String BtHost = restoreNull(is.readUTF());
+                String BtURL = restoreNull(is.readUTF());
+                m.setBluetoothGPS(BtHost, BtURL);
+                Log.debug("Recovered BT URL " + BtHost + " " + BtURL);
+            } catch (Exception e) {
+            }
+            recordStore.closeRecordStore();
             // mUnitType = inputStream.readInt();
             // mBacklightSeconds = inputStream.readInt();
             // mConnectType = inputStream.readInt();
@@ -70,6 +85,7 @@ public class AppController extends Controller {
             // mUserName = restoreNull(inputStream.readUTF());
             // inputStream.close();
         } catch (RecordStoreException exception) {
+            m.setBluetoothGPS(null, null);
             // mUnitType = UNITTYPE_METRIC;
             // mBacklightSeconds = 0;
             // mConnectType = CONNECTTYPE_NONE;
@@ -106,8 +122,8 @@ public class AppController extends Controller {
             Log.debug("Problem finding root", e);
             // TODO: handle exception
         }
-        setChunkSize(0x400);
-        setChunkSize(0x100); // For trial, small size for data.
+        setChunkSize(500);
+        setLogRequestAhead(4); // For trial, small size for data.
         Log.info("Reset basedir set to:" + m.getBaseDirPath());
         // Input is "/BT747/BT747_sample.bin"
         setLogFileRelPath("BT747_sample.bin");
@@ -115,7 +131,6 @@ public class AppController extends Controller {
         setOutputFileRelPath("GPSDATA");
         setDebug(true);
         setDebugConn(false);
-        setLogRequestAhead(0);
 
         setTrkPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
         setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
@@ -133,37 +148,61 @@ public class AppController extends Controller {
 
         setIntOpt(AppModel.FILEFIELDFORMAT, -1);
 
-        setDownloadMethod(AppModel.DOWNLOAD_FILLED);
+        // setDownloadMethod(AppModel.DOWNLOAD_FILLED);
     }
 
     String RECORDSTORENAME = "BT747";
 
     public final void saveSettings() {
         RecordStore recordStore;
+        Log.debug("Store settings");
         try {
+            byte[] bytes;
             recordStore = RecordStore.openRecordStore(RECORDSTORENAME, true);
-            // outputStream.writeInt(mUnitType);
-            // outputStream.writeInt(mBacklightSeconds);
-            // outputStream.writeInt(mConnectType);
-            // outputStream.writeInt(mMinDistance);
-            // outputStream.writeInt(mMinTime);
-            // outputStream.writeUTF(removeNull(mBluetoothHost));
-            // outputStream.writeUTF(removeNull(mBluetoothUrl));
-            // outputStream.writeUTF(removeNull(mPort));
-            // outputStream.writeUTF(removeNull(mBaud));
-            // outputStream.writeUTF(removeNull(mObexHost));
-            // outputStream.writeUTF(removeNull(mObexUrl));
-            // outputStream.writeUTF(removeNull(mEmailAddress));
-            // outputStream.writeUTF(removeNull(mUserName));
-            byte[] bytes = Settings.getAppSettings().getBytes();
+
+            // Save original BT747 settings
+            bytes = Settings.getAppSettings().getBytes();
             if (recordStore.getNumRecords() == 0)
                 recordStore.addRecord(bytes, 0, bytes.length);
             else
                 recordStore.setRecord(1, bytes, 0, bytes.length);
+
+            // Save application settings
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream os = new DataOutputStream(bos);
+            try {
+                os.writeUTF(removeNull(m.getBluetoothGPSName()));
+                os.writeUTF(removeNull(m.getBluetoothGPSURL()));
+                os.flush();
+                bytes = bos.toByteArray();
+                if (recordStore.getNumRecords() == 1) {
+                    recordStore.addRecord(bytes, 0, bytes.length);
+                    Log.debug("1 Size:"+bytes.length);
+                }
+                else {
+                    Log.debug("2 Size:"+bytes.length);
+                    recordStore.setRecord(2, bytes, 0, bytes.length);
+                }
+                os.close();
+                os = null;
+                bos = null;
+                Log.debug("Stored BT URL " + m.getBluetoothGPSName() + " "
+                        + m.getBluetoothGPSURL());
+            } catch (Exception exception) {
+                Log.error("While BT save", exception);
+            }
             recordStore.closeRecordStore();
         } catch (Throwable exception) {
             Log.error("Problem saving settings", exception);
         }
+    }
+
+    private String removeNull(String text) {
+        return text != null ? text : "";
+    }
+
+    private String restoreNull(String text) {
+        return text.length() > 0 ? text : null;
     }
 
 }

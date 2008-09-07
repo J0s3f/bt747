@@ -89,7 +89,7 @@ public class InitializingGPSAlert extends ProgressAlert {
             // getProvider() method (which would throw it for GPS through
             // Bluetooth).
             c.getAppModel().setGpsBluetoothConnection(provider);
-            c.setFreeTextPort(c.getAppModel().getBluetoothGPSURL());
+            c.openFreeTextPort(c.getAppModel().getBluetoothGPSURL());
             // c.connectGPS();
 
             // Did we get a GPS location provider?

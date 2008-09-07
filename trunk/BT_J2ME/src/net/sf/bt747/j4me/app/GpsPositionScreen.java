@@ -177,6 +177,7 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
     
     public void showNotify() {
         c.getAppModel().addListener(this);
+        c.setGpsDecode(true);
         super.showNotify();
     }
 

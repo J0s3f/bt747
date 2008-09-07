@@ -391,7 +391,7 @@ public class GPSGmapsHTMLEncodedFile extends GPSFile {
                                     .getLonDouble(), 5));
                     rec.append(")),");
                 }
-                rec.setCharAt(rec.length()-1,']');  // Delete last ','
+                rec.setCharAt(rec.length() - 1, ']'); // Delete last ','
                 rec.append(";infoHtmls=[");
                 rec.append(infoHtmls.toString());
                 rec.append("];");

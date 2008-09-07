@@ -7,6 +7,8 @@ import org.j4me.examples.ui.screens.ErrorAlert;
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
+import org.j4me.ui.Menu;
+import org.j4me.ui.MenuItem;
 import org.j4me.ui.Theme;
 import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
@@ -25,7 +27,8 @@ import bt747.model.ModelListener;
  * Alerts have a "Cancel" button on them if the user wants to stop the
  * operation.
  */
-public class DownloadLogScreen extends Dialog implements ModelListener, Runnable {
+public class DownloadLogScreen extends Dialog implements ModelListener,
+        Runnable {
     /**
      * The label that displays the alert's text.
      */
@@ -39,7 +42,7 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
     private ProgressBar bar;
 
     private DeviceScreen previous;
-    
+
     private LogScreen logScreen;
     /**
      * This applications' controller
@@ -70,19 +73,18 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
         bar = new ProgressBar();
         bar.setHorizontalAlignment(Graphics.HCENTER);
         append(bar);
-        
+
         bytes = new Label("Bytes downloaded:");
         append(bytes);
-        
+
         bytesDownloaded = new Label();
         append(bytesDownloaded);
-        
 
         // Add the menu buttons.
         Theme theme = UIManager.getTheme();
         String cancel = theme.getMenuTextForCancel();
-        setMenuText("App Log", cancel);
-        
+        setMenuText("Menu", cancel);
+
         logScreen = new LogScreen(this);
     }
 
@@ -126,7 +128,7 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
         // Continue processing the event.
         super.showNotify();
     }
-    
+
     public void hideNotify() {
         m().removeListener(this);
         super.hideNotify();
@@ -136,10 +138,23 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
      * Goes to the next screen after the user hits the cancel button.
      */
     protected final void declineNotify() {
-        logScreen.show();
+        // logScreen.show();
 
-        // Continue processing the event.
-        super.acceptNotify();
+        Menu menu = new Menu("Log menu", this);
+        menu.appendMenuOption("Application Log", logScreen);
+        menu.appendMenuOption(new MenuItem() {
+            public String getText() {
+                return "To background";
+            }
+
+            public void onSelection() {
+                previous.show();
+            }
+        });
+        menu.appendMenuOption("Reconnect", new InitializingGPSAlert(c, this));
+
+        menu.show();
+        menu = null;
     }
 
     /**
@@ -148,11 +163,8 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
     protected final void acceptNotify() {
         c.cancelGetLog();
         downloadDone();
-
-        // Continue processing the event.
-        super.declineNotify();
     }
-    
+
     protected void returnNotify() {
         // Override because declineNotify is not the correct default.
         acceptNotify();
@@ -168,6 +180,7 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
     }
 
     private long nextUpdate = 0;
+
     /**
      * Update the progress status
      */
@@ -182,8 +195,8 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
             value = m().getNextReadAddr();
 
             long currentTime = System.currentTimeMillis();
-            if(currentTime>=nextUpdate) {
-                nextUpdate=currentTime+50L;
+            if (currentTime >= nextUpdate) {
+                nextUpdate = currentTime + 50L;
                 bar.setMaxValue(max);
                 bar.setValue(value);
                 bar.repaint();
@@ -199,7 +212,7 @@ public class DownloadLogScreen extends Dialog implements ModelListener, Runnable
             Log.debug("Download started");
             /* fall through */
         case ModelEvent.DOWNLOAD_STATE_CHANGE:
-            //Log.debug("Progress update");
+            // Log.debug("Progress update");
             progressUpdate();
             break;
         case ModelEvent.LOG_DOWNLOAD_DONE:

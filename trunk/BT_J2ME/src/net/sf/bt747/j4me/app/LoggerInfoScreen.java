@@ -28,18 +28,18 @@ public class LoggerInfoScreen extends Dialog implements ModelListener {
     private static final Font NORMAL_FONT = Font.getFont(Font.FACE_SYSTEM,
             Font.STYLE_PLAIN, Font.SIZE_MEDIUM);
 
-    private FieldValue logRCRTime = new FieldValue("Time log interval (ms)");
-    private FieldValue logRCRSpeed = new FieldValue("Speed log interval (km/h)");
+    private FieldValue logRCRTime = new FieldValue("Time interval (s)");
+    private FieldValue logRCRSpeed = new FieldValue("Speed interval (km/h)");
     private FieldValue logRCRDistance = new FieldValue(
-            "Distance log interval (m)");
+            "Distance interval (m)");
 
-    private FieldValue memoryTotal = new FieldValue("Memory size (bytes)");
-    private FieldValue memoryUsed = new FieldValue("Memory used (bytes)");
-    private FieldValue memoryUsedPercent = new FieldValue("Memory used (%)");
+    private FieldValue memoryTotal = new FieldValue("Size (bytes)");
+    private FieldValue memoryUsed = new FieldValue("Used (bytes)");
+    private FieldValue memoryUsedPercent = new FieldValue("Used (%)");
     private FieldValue memoryUsedRecords = new FieldValue(
-            "Logged positions (#)");
+            "Logged pos (#)");
     private FieldValue memoryAvailRecords = new FieldValue(
-            "Available positions (#)");
+            "Available pos (#)");
 
     private DeviceScreen previous;
 
@@ -58,13 +58,7 @@ public class LoggerInfoScreen extends Dialog implements ModelListener {
         // setStateLabel( model.getLocationProvider().getState() );
         // append( state );
 
-        // Create a UI section for pedometer information.
-        createNewSection("Log conditions");
-        append(logRCRTime);
-        append(logRCRSpeed);
-        append(logRCRDistance);
-
-        // Create a UI section for location information.
+        // Create a UI section for memory information.
         createNewSection("Memory");
 
         append(memoryTotal);
@@ -72,6 +66,13 @@ public class LoggerInfoScreen extends Dialog implements ModelListener {
         append(memoryUsedPercent);
         append(memoryUsedRecords);
         append(memoryAvailRecords);
+
+
+        // Create a UI section for pedometer information.
+        createNewSection("Log conditions");
+        append(logRCRTime);
+        append(logRCRSpeed);
+        append(logRCRDistance);
 
         // Register for location updates.
         // LocationProvider provider = model.getLocationProvider();
