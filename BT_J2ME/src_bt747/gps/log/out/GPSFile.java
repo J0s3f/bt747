@@ -25,7 +25,6 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.generic.Generic;
-import bt747.interfaces.BT747Time;
 import bt747.io.BufFile;
 import bt747.io.File;
 import bt747.sys.Convert;
@@ -227,7 +226,7 @@ public abstract class GPSFile {
             try {
                 outFile.close();
             } catch (Exception e) {
-                Generic.debug("finaliseFile",e);
+                Generic.debug("finaliseFile", e);
                 // TODO: handle exception
             }
             outFile = null;
@@ -269,14 +268,14 @@ public abstract class GPSFile {
                 tmpFile.delete();
             }
         } catch (Exception e) {
-            Generic.debug("File deletion",e);
+            Generic.debug("File deletion", e);
             // TODO: handle problem
         }
         try {
             int mode = createNewFile ? File.CREATE : File.WRITE_ONLY;
             outFile = new BufFile(fileName, mode, card);
         } catch (Exception e) {
-            Generic.debug("File creation",e);
+            Generic.debug("File creation", e);
             // TODO: handle exception
         }
         if (outFile != null && !outFile.isOpen()) {
@@ -298,7 +297,7 @@ public abstract class GPSFile {
                 writeLogFmtHeader(activeFields);
                 writeDataHeader();
             } catch (Exception e) {
-                Generic.debug("Initial header or append",e);
+                Generic.debug("Initial header or append", e);
                 // TODO: handle exception
             }
         }
@@ -310,7 +309,7 @@ public abstract class GPSFile {
         try {
             outFile.close();
         } catch (Exception e) {
-            Generic.debug("closeFile",e);
+            Generic.debug("closeFile", e);
             // TODO: handle exception
         }
     }
@@ -361,7 +360,7 @@ public abstract class GPSFile {
             if (outFile != null) {
                 outFile.writeBytes(s.getBytes(), 0, s.length());
             } else {
-                Generic.debug(Txt.WRITING_CLOSED,null);
+                Generic.debug(Txt.WRITING_CLOSED, null);
             }
         } catch (Exception e) {
             Generic.debug("writeTxt", e);

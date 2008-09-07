@@ -6,7 +6,7 @@
  */
 package bt747.sys;
 
-import org.j4me.logging.Log;
+import bt747.interfaces.Interface;
 
 /**
  * @author Mario De Weerd
@@ -15,17 +15,11 @@ import org.j4me.logging.Log;
  * Preferences - Java - Code Style - Code Templates
  */
 public class Vm {
-    private static final long appStartTime = System.currentTimeMillis();
-
     public static final int getTimeStamp() {
-        // Returns the time in ms since the program started.
-        // TODO: Find function
-        return (int) (System.currentTimeMillis() - appStartTime);
-        // return waba.sys.Vm.getTimeStamp();
-        // Date.
+        return Interface.tr.getTimeStamp();
     }
 
     public static final void debug(final String s) {
-        Log.debug(getTimeStamp() + " - " + s);
+        Interface.tr.debug(getTimeStamp() + " - " + s);
     }
 }

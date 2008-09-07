@@ -65,4 +65,8 @@ public interface JavaTranslationsInterface {
 
     public abstract int toIntBitwise(final float f);
 
+    public abstract void debug(final String s);
+
+    public abstract int getTimeStamp();
+
 }

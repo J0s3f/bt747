@@ -13,12 +13,15 @@
 //********************************************************************
 package net.sf.bt747.j2me.system;
 
+import org.j4me.logging.Log;
+
 import bt747.interfaces.BT747Date;
 import bt747.interfaces.BT747File;
 import bt747.interfaces.BT747Hashtable;
 import bt747.interfaces.BT747Thread;
 import bt747.interfaces.BT747Time;
 import bt747.interfaces.BT747Vector;
+import bt747.interfaces.Interface;
 import bt747.interfaces.JavaTranslationsInterface;
 
 public class JavaTranslations implements JavaTranslationsInterface {
@@ -192,6 +195,19 @@ public class JavaTranslations implements JavaTranslationsInterface {
 
     public final int toIntBitwise(final float f) {
         return Float.floatToIntBits(f);
+    }
+
+    public final void debug(final String s) {
+        if (Log.isDebugEnabled()) {
+            Log.debug(s);
+        }
+    }
+
+    private static final long appStartTime = System.currentTimeMillis();
+
+    public final int getTimeStamp() {
+        // Returns the time in ms since the program started.
+        return (int) (System.currentTimeMillis() - appStartTime);
     }
 
 }

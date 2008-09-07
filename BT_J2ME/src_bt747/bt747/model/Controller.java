@@ -839,19 +839,21 @@ public class Controller {
      * @param portName
      *            The path to the port.
      */
-    public final void setFreeTextPort(final String portName) {
+    public final void openFreeTextPort(final String portName) {
         closeGPS();
         m.gpsRxTx().setFreeTextPortAndOpen(portName);
         performOperationsAfterGPSConnect();
     }
 
+    
     /**
-     * Get the port text string.
+     * Select a port by its 'path' (/dev/usb9 for example or /dev/com1.
      * 
-     * @return A text string for the serial port (if not a port number).
+     * @param portName
+     *            The path to the port.
      */
-    public final String getFreeTextPort() {
-        return m.gpsRxTx().getFreeTextPort();
+    public final void setFreeTextPort(final String portName) {
+        m.setFreeTextPort(portName);
     }
 
     /**
