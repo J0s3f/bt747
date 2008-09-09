@@ -51,15 +51,15 @@ public class AppController extends Controller {
             if (bytes.length >= 2048) {
                 Settings.setAppSettings(new String(bytes));
                 m.init();
-                Log.debug("Recovered settings");
+                //Log.debug("Recovered settings");
             } else {
-                Log.debug("Initialising settings");
+                //Log.debug("Initialising settings");
                 m.init();
                 resetSettings();
                 saveSettings();
             }
             bytes = recordStore.getRecord(2);
-            Log.debug("Size:"+bytes.length);
+            //Log.debug("Size:"+bytes.length);
             DataInputStream is = new DataInputStream(new ByteArrayInputStream(
                     bytes));
             try {
@@ -108,7 +108,8 @@ public class AppController extends Controller {
 
     private void resetSettings() {
         try {
-            Enumeration roots = FileSystemRegistry.listRoots();
+            FileManager fm = new FileManager();
+            Enumeration roots = fm.listRoots();
             String dir = "";
             while (roots.hasMoreElements()) {
                 dir = "/" + (String) roots.nextElement();
@@ -116,7 +117,8 @@ public class AppController extends Controller {
             if (dir.endsWith("/")) {
                 dir = dir.substring(0, dir.length() - 1);
             }
-            Log.info("Setting basedir set to:" + dir);
+            fm.close();
+            //Log.info("Setting basedir set to:" + dir);
             setBaseDirPath(dir);
         } catch (Exception e) {
             Log.debug("Problem finding root", e);
@@ -155,7 +157,7 @@ public class AppController extends Controller {
 
     public final void saveSettings() {
         RecordStore recordStore;
-        Log.debug("Store settings");
+        //Log.debug("Store settings");
         try {
             byte[] bytes;
             recordStore = RecordStore.openRecordStore(RECORDSTORENAME, true);
@@ -177,10 +179,10 @@ public class AppController extends Controller {
                 bytes = bos.toByteArray();
                 if (recordStore.getNumRecords() == 1) {
                     recordStore.addRecord(bytes, 0, bytes.length);
-                    Log.debug("1 Size:"+bytes.length);
+                    //Log.debug("1 Size:"+bytes.length);
                 }
                 else {
-                    Log.debug("2 Size:"+bytes.length);
+                    //Log.debug("2 Size:"+bytes.length);
                     recordStore.setRecord(2, bytes, 0, bytes.length);
                 }
                 os.close();

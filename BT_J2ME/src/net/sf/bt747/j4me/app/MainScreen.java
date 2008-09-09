@@ -21,16 +21,17 @@ public class MainScreen extends Dialog {
 
     private Label lbText;
 
-    final DownloadLogScreen downloadLogScreen;
+    final LogDownloadScreen downloadLogScreen;
     final ConvertToScreen convertToScreen;
     final GpsPositionScreen gpsPositionScreen;
     final LogConditionsConfigScreen logConditionsConfigScreen;
     final LogDownloadConfigScreen logDownloadConfigScreen;
-    final LoggerInfoScreen loggerInfoScreen;
+    final LoggerStatusScreen loggerInfoScreen;
     final LogScreen logScreen;
     final DebugConfigScreen debugConfigScreen;
     final InitializingGPSAlert initialiseGPSAlert;
     final FindingGPSDevicesAlert findingGPSDevicesAlert;
+    final PathSelectionScreen baseDirScreen;
 
     /**
      * Constructs the "Log" screen.
@@ -57,20 +58,26 @@ public class MainScreen extends Dialog {
 
         setMenuText("Logger Menu", "App Menu");
 
-        downloadLogScreen = new DownloadLogScreen(c, this);
+        downloadLogScreen = new LogDownloadScreen(c, this);
         convertToScreen = new ConvertToScreen(c, this);
         gpsPositionScreen = new GpsPositionScreen(c, this);
         logConditionsConfigScreen = new LogConditionsConfigScreen(c, this);
         logDownloadConfigScreen = new LogDownloadConfigScreen(c, this);
-        loggerInfoScreen = new LoggerInfoScreen(c, this);
+        loggerInfoScreen = new LoggerStatusScreen(c, this);
         logScreen = new LogScreen(this);
         debugConfigScreen = new DebugConfigScreen(c, this);
         initialiseGPSAlert = new InitializingGPSAlert(c, this);
         findingGPSDevicesAlert = new FindingGPSDevicesAlert(c,
                 initialiseGPSAlert);
+        baseDirScreen = new PathSelectionScreen("Base directory", this, m()
+                .getBaseDirPath(), true) {
+            protected void notifyPathSelected(final String path) {
+                c.setBaseDirPath(path);
+            }
+        };
 
         // Call here for debug
-        //c.doConvertLog(Model.GPX_LOGTYPE);
+        // c.doConvertLog(Model.GPX_LOGTYPE);
     }
 
     private static boolean isFirstLaunch = true;
@@ -78,12 +85,13 @@ public class MainScreen extends Dialog {
     private final AppModel m() {
         return c.getAppModel();
     }
+
     public void show() {
 
         if (isFirstLaunch) {
             isFirstLaunch = false;
-            if(m().getBluetoothGPSURL()!=null) {
-                Log.debug("Port:"+m().getBluetoothGPSURL());
+            if (m().getBluetoothGPSURL() != null) {
+                Log.debug("Port:" + m().getBluetoothGPSURL());
                 initialiseGPSAlert.show();
             } else {
                 findingGPSDevicesAlert.show();
@@ -93,6 +101,7 @@ public class MainScreen extends Dialog {
         }
 
     }
+
     /**
      * Called when this screen is going to be displayed.
      * 
@@ -111,6 +120,7 @@ public class MainScreen extends Dialog {
         // Reset the current location provider.
 
         menu.appendMenuOption(downloadLogScreen);
+        menu.appendMenuOption("Working dir", baseDirScreen);
         menu.appendMenuOption("To GPX", convertToScreen);
         menu.appendMenuOption("GPS Position", gpsPositionScreen);
         menu.appendMenuOption("Log Conditions", logConditionsConfigScreen);
@@ -174,10 +184,10 @@ public class MainScreen extends Dialog {
         // Continue processing the event.
         super.acceptNotify();
     }
-    
+
     protected void returnNotify() {
         // Override
         // Do nothing for the moment - should prompt to exit the application.
     }
-    
+
 }

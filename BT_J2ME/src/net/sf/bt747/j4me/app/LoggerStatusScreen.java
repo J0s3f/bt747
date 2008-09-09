@@ -14,7 +14,7 @@ import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
 
-public class LoggerInfoScreen extends Dialog implements ModelListener {
+public class LoggerStatusScreen extends Dialog implements ModelListener {
 
     /**
      * A large font used for section headings.
@@ -45,7 +45,7 @@ public class LoggerInfoScreen extends Dialog implements ModelListener {
 
     private AppController c;
 
-    public LoggerInfoScreen(final AppController c, final DeviceScreen previous) {
+    public LoggerStatusScreen(final AppController c, final DeviceScreen previous) {
 
         this.c = c;
         this.previous = previous;
