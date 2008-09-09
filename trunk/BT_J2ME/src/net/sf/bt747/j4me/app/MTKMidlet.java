@@ -84,6 +84,7 @@ public class MTKMidlet extends MIDlet implements ModelListener {
             // SelectGPSScreen which will in turn call
             // InitializingGPSAlert
             DeviceScreen main = new MainScreen(c,this);
+            
             // (new ConvertTo(c, main)).doWork(); // Debug conversion
             main.show();
             // (new ConvertTo(c, main)).show();

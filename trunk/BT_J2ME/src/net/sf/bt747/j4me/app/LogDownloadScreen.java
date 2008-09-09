@@ -27,7 +27,7 @@ import bt747.model.ModelListener;
  * Alerts have a "Cancel" button on them if the user wants to stop the
  * operation.
  */
-public class DownloadLogScreen extends Dialog implements ModelListener,
+public class LogDownloadScreen extends Dialog implements ModelListener,
         Runnable {
     /**
      * The label that displays the alert's text.
@@ -35,6 +35,7 @@ public class DownloadLogScreen extends Dialog implements ModelListener,
     private Label label = new Label();
     private Label bytesDownloaded = new Label();
     private Label bytes = new Label();
+    private Label file = new Label();
 
     /**
      * An progress bar that informs the user about the download progress.
@@ -57,7 +58,7 @@ public class DownloadLogScreen extends Dialog implements ModelListener,
      * @param text
      *            is the alert message.
      */
-    public DownloadLogScreen(final AppController c, final DeviceScreen previous) {
+    public LogDownloadScreen(final AppController c, final DeviceScreen previous) {
         this.c = c;
         this.previous = previous;
 
@@ -79,6 +80,11 @@ public class DownloadLogScreen extends Dialog implements ModelListener,
 
         bytesDownloaded = new Label();
         append(bytesDownloaded);
+        
+        //createNewSection("Log conditions");
+        file = new Label("Bin file:");
+        append(file);
+
 
         // Add the menu buttons.
         Theme theme = UIManager.getTheme();
@@ -119,6 +125,7 @@ public class DownloadLogScreen extends Dialog implements ModelListener,
 
         if (!m().isDownloadOnGoing()) {
             Thread worker = new Thread(this);
+            file.setLabel(m().getLogFilePath());
             worker.start();
         } else {
             progressUpdate();

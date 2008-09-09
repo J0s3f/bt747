@@ -4,10 +4,15 @@
 
 package net.sf.bt747.j4me.app;
 
-import java.util.*;
-import java.io.*;
-import javax.microedition.io.*;
-import javax.microedition.io.file.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Enumeration;
+
+import javax.microedition.io.Connector;
+import javax.microedition.io.file.FileConnection;
+import javax.microedition.io.file.FileSystemRegistry;
+
+import org.j4me.logging.Log;
 
 // optional package wrapper class
 // technique described in Chapter 8 of JSR 248
