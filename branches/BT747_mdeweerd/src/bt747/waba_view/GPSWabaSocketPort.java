@@ -17,9 +17,11 @@
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************  
-package gps.connection;
+package bt747.waba_view;
 
-import bt747.ui.MessageBox;
+import gps.connection.GPSPort;
+
+import bt747.waba_view.ui.MessageBox;
 
 /**
  * Implements the serial port for the standard Waba SerialPort
