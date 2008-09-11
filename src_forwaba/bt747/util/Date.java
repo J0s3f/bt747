@@ -1,83 +1,70 @@
-/*
- * Created on 14 nov. 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+//********************************************************************
+//***                           BT 747                             ***
+//***                  (c)2008 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
+//***  for more details.                                           ***
+//********************************************************************
+
 package bt747.util;
 
-import waba.sys.Time;
+import bt747.interfaces.BT747Date;
+import bt747.interfaces.Interface;
 
 /**
+ * Generic Implementation for BT747Date.
+ * 
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Date extends waba.util.Date {
+public final class Date {
 
-    /**
-     * 
-     */
+    private BT747Date date;
+
     public Date() {
-        super();
-        // TODO Auto-generated constructor stub
+        date = Interface.tr.getDateInstance();
     }
 
-    /**
-     * @param sentDate
-     */
-    public Date(int sentDate) {
-        super(sentDate);
-        // TODO Auto-generated constructor stub
+    public Date(final int sentDay, final int sentMonth, final int sentYear) {
+        date = Interface.tr.getDateInstance(sentDay, sentMonth, sentYear);
     }
 
-    /**
-     * @param sentDay
-     * @param sentMonth
-     * @param sentYear
-     */
-    public Date(int sentDay, int sentMonth, int sentYear) {
-        super(sentDay, sentMonth, sentYear);
-        // TODO Auto-generated constructor stub
+    public Date(final String strDate, final byte dateFormat) {
+        date = Interface.tr.getDateInstance(strDate, dateFormat);
     }
 
-    /**
-     * @param strDate
-     */
-    public Date(String strDate) {
-        super(strDate);
-        // TODO Auto-generated constructor stub
+    public final void advance(final int s) {
+        date.advance(s);
     }
-
-    /**
-     * @param strDate
-     * @param dateFormat
-     */
-    public Date(String strDate, byte dateFormat) {
-        super(strDate, dateFormat);
-        // TODO Auto-generated constructor stub
-    }
-
-    /**
-     * @param t
-     */
-    public Date(Time t) {
-        super(t);
-        // TODO Auto-generated constructor stub
-    }
-    
-    public String getDateString() {
-        return getDate();
-    }
-
-    public Date (waba.util.Date d) {
-        super(d.getDay(),d.getMonth(),d.getYear());
-    }
-    
-    private final static int JULIAN_DAY_1_1_1970=18264;   
 
     public final int dateToUTCepoch1970() {
-        return (getJulianDay()-JULIAN_DAY_1_1_1970)*24*60*60;
+        return date.dateToUTCepoch1970();
+    }
+
+    public final String getDateString() {
+        return date.getDateString();
+    }
+
+    public final int getDay() {
+        return date.getDay();
+    }
+
+    public final int getJulianDay() {
+        return date.getJulianDay();
+    }
+
+    public final int getMonth() {
+        // TODO Auto-generated method stub
+        return date.getMonth();
+    }
+
+    public final int getYear() {
+        // TODO Auto-generated method stub
+        return date.getYear();
     }
 }

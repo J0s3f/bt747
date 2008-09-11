@@ -6,87 +6,48 @@
  */
 package bt747.sys;
 
-import bt747.sys.Time;
-import bt747.util.Date;
-
+import bt747.interfaces.BT747Time;
+import bt747.interfaces.Interface;
 
 /**
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
-public class Time {
-    private waba.sys.Time m_Time;
-    public Time()
-    {
-       m_Time=new waba.sys.Time();
+public final class Time {
+
+    private BT747Time time;
+
+    public Time() {
+        time = Interface.tr.getTimeInstance();
     }
 
-    public Time(long t) {
-        m_Time=new waba.sys.Time(t);
+    public final int getDay() {
+        return time.getDay();
     }
-    
-    public int getYear() {
-        return m_Time.year;
-    }
-    public void setYear(int year) {
-        m_Time.year=year;
-    }
-    public int getMonth() {
-        return m_Time.month;
-    }
-    public void setMonth(int month) {
-        m_Time.month=month;
-    }
-    public int getDay() {
-        return m_Time.day;
-    }
-    public void setDay(int day) {
-        m_Time.day=day;
-    }
-    public int getHour() {
-        return m_Time.hour;
-    }
-    public void setHour(int hour) {
-        m_Time.hour=hour;
-    }
-    public int getMinute() {
-        return m_Time.minute;
-    }
-    public void setMinute(int minute) {
-        m_Time.minute=minute;
-    }
-    public int getSecond() {
-        return m_Time.second;
-    }
-    public void setSecond(int second) {
-        m_Time.second=second;
-    }
-    public int getMillis() {
-        return m_Time.millis;
-    }
-    public void setMillis(int millis) {
-        m_Time.millis=millis;
-    }
-    
-    private static final int DAYS_BETWEEN_1970_1983 = 4748;
 
-    public final void setUTCTime(final int utc_int) {
-        // long utc=utc_int&0xFFFFFFFFL;
-        int utc = utc_int;
-        // Time t=new Time();
-        setSecond((int) utc % 60);
-        utc /= 60;
-        setMinute((int) utc % 60);
-        utc /= 60;
-        setHour((int) utc % 24);
-        utc /= 24;
-        // Now days since 1/1/1970
-        Date d = new Date(1, 1, 1983); // Minimum = 1983
-        d.advance(((int) utc) - DAYS_BETWEEN_1970_1983);
-        setYear(d.getYear());
-        setMonth(d.getMonth());
-        setDay(d.getDay());
+    public final int getHour() {
+        return time.getHour();
+    }
+
+    public final int getMinute() {
+        return time.getMinute();
+    }
+
+    public final int getMonth() {
+        return time.getMonth();
+    }
+
+    public final int getSecond() {
+        return time.getSecond();
+    }
+
+    public final int getYear() {
+        return time.getYear();
+    }
+
+    public final void setUTCTime(final int utc) {
+        time.setUTCTime(utc);
     }
 }

@@ -6,32 +6,35 @@
  */
 package bt747.generic;
 
-import waba.ui.MainWindow;
+import bt747.interfaces.BT747Thread;
+import bt747.interfaces.Interface;
 
-import bt747.sys.Thread;
 
 /**
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
-public class Generic {
-
-    public static void addThread(final Thread t, final boolean b) {
-        MainWindow.getMainWindow().addThread(t, b);
-    }
-
-    public static void removeThread(final Thread t) {
-        MainWindow.getMainWindow().removeThread(t);
+public final class Generic {
+    public static final void debug(final String s, 
+            Throwable e) {
+        Interface.tr.debug(s,e);
     }
     
-    public static double pow(double x, double y) {
-        return Math.pow(x,y);
+    public final static double pow(final double x, final double y) {
+        return Interface.tr.pow(x,y);
     }
 
-    public static double acos(final double x) {
-        return Math.acos(x);
+    public final static double acos(final double x) {
+        return Interface.tr.acos(x);
     }
-
+    
+    public final static void addThread(final BT747Thread o, final boolean highPrio) {
+        Interface.tr.addThread(o,highPrio);
+    }
+    
+    public final static void removeThread(final BT747Thread o) {
+        Interface.tr.removeThread(o); 
+    }
 }
