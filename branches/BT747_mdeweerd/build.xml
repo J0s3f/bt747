@@ -653,7 +653,8 @@
 		<include name="**/*.java" />
 		<exclude name="bt747/j2se_view/*" unless="build.j2se" />
 		<exclude name="bt747/waba_view/*" if="build.j2se" />
-		<exclude name="gps/model/*" />
+        <exclude name="net/sf/net/bt747/waba/**" if="build.j2se" />
+	    <exclude name="gps/model/*" />
 		<exclude name="gps/connection/GPSFilePort.java" />
 		<exclude name="gps/connection/GPSRxTxPort.java" />
 		<exclude name="gps/connection/GPSWabaSocketPort.java" />
@@ -768,6 +769,7 @@
 			<fileset dir="${rxtxsrc.dir}">
 				<include name="bt747/j2se_view/**" unless="is.j2se" />
 				<include name="bt747/waba_view/**" if="exclude.waba" />
+	            <exclude name="net/sf/net/bt747/waba/**" if="exclude.waba"/>
 				<include name="bt747/j2se_view/BT747.java" if="exclude.waba" />
 				<include name="BT747.java" if="exclude.waba" />
 				<include name="bt747/*view/**" if="is.lib" />
