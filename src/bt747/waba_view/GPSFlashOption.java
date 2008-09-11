@@ -32,7 +32,7 @@ import bt747.Txt;
 import bt747.model.Model;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
-import bt747.ui.MessageBox;
+import bt747.waba_view.ui.MessageBox;
 
 /**
  * @author Mario De Weerd

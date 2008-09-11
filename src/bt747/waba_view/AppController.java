@@ -13,7 +13,7 @@ import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
 
-import bt747.ui.MessageBox;
+import bt747.waba_view.ui.MessageBox;
 
 //import moio.util.Iterator;  Needed later when communicating with views.
 
