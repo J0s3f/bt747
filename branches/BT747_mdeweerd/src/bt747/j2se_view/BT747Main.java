@@ -56,7 +56,7 @@ public class BT747Main extends javax.swing.JFrame implements
     public void createMessageBoxModal(String title, String msg,
             String[] buttonCaptions) {
             MessageBox mb;
-        mb = new bt747.ui.MessageBox(title, msg, buttonCaptions);
+        mb = new MessageBox(title, msg, buttonCaptions);
         // TODO: finish message box handling and send back events
         // to controller.
     }
