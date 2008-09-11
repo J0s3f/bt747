@@ -23,8 +23,9 @@ public class AppController extends Controller {
     // #if RXTX java.lang.System.getProperty("bt747_settings", // bt747_settings
     // or default value
     // #if RXTX ((java.lang.System.getProperty("user.home").length()!=0) ?
-    // #if RXTX
-    // java.lang.System.getProperty("user.home")+java.lang.System.getProperty("file.separator")+"SettingsBT747.pdb":(
+    // #if RXTX java.lang.System.getProperty("user.home")
+    // #if RXTX +java.lang.System.getProperty("file.separator")
+    // #if RXTX +"SettingsBT747.pdb":(
 
     (Settings.platform.startsWith("Win32")
             || Settings.platform.startsWith("Windows") || Settings.platform
@@ -294,8 +295,8 @@ public class AppController extends Controller {
             bt747.sys.Settings.setAppSettings(new String(new byte[2048]));
 
             if (isWin32LikeDevice()
-            // #if RXTX
-            // ||java.lang.System.getProperty("os.name").startsWith("Mac")
+            // #if RXTX ||java.lang.System.getProperty("os.name")
+            // #if RXTX .startsWith("Mac")
             // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
             // #if RXTX ||java.lang.System.getProperty("user.home").length()!=0
             ) {
@@ -326,9 +327,10 @@ public class AppController extends Controller {
             }
         }
 
-        // #if RXTX
-        // if(Convert.toInt(java.lang.System.getProperty("bt747_Mac_solvelag",java.lang.System.getProperty("os.name").startsWith("Mac")?"1":"0"))==1)
-        // {
+        // #if RXTX if(Convert.toInt(
+        // #if RXTX java.lang.System.getProperty("bt747_Mac_solvelag",
+        // #if RXTX java.lang.System.getProperty("os.name")
+        // #if RXTX .startsWith("Mac")?"1":"0"))==1) {
         // #if RXTX AppSettings.solveMacLagProblem=true;
         // #if RXTX }
     }
