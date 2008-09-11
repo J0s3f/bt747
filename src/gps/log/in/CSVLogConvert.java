@@ -83,6 +83,13 @@ public final class CSVLogConvert implements GPSLogConvert {
      * The size of the file read buffer.
      */
     private static final int BUF_SIZE = 0x800;
+    
+    private boolean stop = false;
+    
+    public void stopConversion() {
+        stop = true;
+    }
+
 
     /**
      * Convert the input file set using other methods towards gpsFile. ({@link #toGPSFile(String, GPSFile, int)}
@@ -111,7 +118,7 @@ public final class CSVLogConvert implements GPSLogConvert {
             nextAddrToRead = 0;
             fileSize = inFile.getSize();
 
-            while (nextAddrToRead < fileSize) {
+            while (!stop && (nextAddrToRead < fileSize)) {
                 /***************************************************************
                  * Read data from the data file into the local buffer.
                  */
@@ -133,7 +140,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                  */
                 readResult = inFile.readBytes(bytes, 0, sizeToRead);
                 if (readResult != sizeToRead) {
-                    errorInfo = inFile.getPath() + "|" + inFile.lastError;
+                    errorInfo = inFile.getPath() + "|" + inFile.getLastError();
                     return BT747Constants.ERROR_READING_FILE;
                 }
                 nextAddrToRead += sizeToRead;
@@ -665,7 +672,7 @@ public final class CSVLogConvert implements GPSLogConvert {
             if (File.isAvailable()) {
                 inFile = new File(fileName, File.READ_ONLY, card);
                 if (!inFile.isOpen()) {
-                    errorInfo = fileName + "|" + inFile.lastError;
+                    errorInfo = fileName + "|" + inFile.getLastError();
                     error = BT747Constants.ERROR_COULD_NOT_OPEN;
                     inFile = null;
                 } else {

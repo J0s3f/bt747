@@ -78,12 +78,11 @@ public class Model extends AppSettings implements GPSListener {
      * be logged. This ensures that all logged data points are retrieved by
      * default if the date filter is not changed.
      */
-    private int filterStartTime = Conv.dateToUTCepoch1970(new Date(1, 1, 1983));
+    private int filterStartTime;
     /**
      * End date for the date filter. Defaults to end of current day.
      */
-    private int filterEndTime = Conv.dateToUTCepoch1970(new Date())
-            + (SECONDS_PER_DAY - 1);
+    private int filterEndTime;
 
     /**
      * Indicate which conversion is ongoing. Helps for GUI interface.
@@ -117,6 +116,11 @@ public class Model extends AppSettings implements GPSListener {
             logFilters[i] = new GPSFilter();
             logFiltersAdv[i] = new GPSFilterAdvanced();
         }
+        // Initialise times
+        filterStartTime = Conv.dateToUTCepoch1970(new Date(1, 1, 1983));
+        filterEndTime = Conv.dateToUTCepoch1970(new Date())
+                + (SECONDS_PER_DAY - 1);
+
         gpsRxTx = new GPSrxtx();
         gpsModel = new GPSstate(gpsRxTx);
         gpsModel.addListener(this);
@@ -180,7 +184,7 @@ public class Model extends AppSettings implements GPSListener {
     /**
      * @return the logFilters
      */
-    protected final GPSFilter[] getLogFilters() {
+    public final GPSFilter[] getLogFilters() {
         return logFilters;
     }
 
@@ -379,12 +383,12 @@ public class Model extends AppSettings implements GPSListener {
      * Download reported memory - incremental.
      */
     public static final int DOWNLOAD_INCREMENTAL = 1;
-    
+
     /**
      * Download full memory.
      */
     public static final int DOWNLOAD_FULL = 2;
-    
+
     /**
      * Get the download method.
      * 
@@ -411,6 +415,15 @@ public class Model extends AppSettings implements GPSListener {
      */
     public final boolean isLoggingActive() {
         return gpsModel.isLoggingActive;
+    }
+
+    /**
+     * Get memory size.
+     * 
+     * @return The ammount of memory available in bytes.
+     */
+    public final int logMemSize() {
+        return gpsModel.getLogMemSize();
     }
 
     /**
@@ -672,7 +685,7 @@ public class Model extends AppSettings implements GPSListener {
         return gpsRxTx.isDebugConn();
     }
 
-    public void gpsEvent(GpsEvent event) {
+    public final void gpsEvent(GpsEvent event) {
         postEvent(new ModelEvent(event));
     }
 }

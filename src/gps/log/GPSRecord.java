@@ -19,6 +19,9 @@
 //********************************************************************       
 package gps.log;
 
+import bt747.sys.Convert;
+import bt747.util.Date;
+
 import gps.BT747Constants;
 
 /**
@@ -188,4 +191,46 @@ public class GPSRecord {
         /* End handling record */
         return gpsRec;
     }
+
+    public final void setTime(final int time) {
+        int newTime;
+        newTime = utc;
+        newTime -= utc % (24 * 3600);
+        newTime += time;
+        utc = newTime;
+    }
+
+    public final boolean setTime(final String nmeaTimeStr) {
+        int timePart = Convert.toInt(nmeaTimeStr.substring(0, 2)) * 3600
+                + Convert.toInt(nmeaTimeStr.substring(2, 4)) * 60
+                + Convert.toInt(nmeaTimeStr.substring(4, 6));
+        setTime(timePart);
+        try {
+            if (nmeaTimeStr.charAt(6) == '.') {
+                milisecond = (int) (Convert.toFloat(nmeaTimeStr.substring(6)) * 1000);
+                return true;
+            }
+        } catch (Exception e) {
+            // Conversion did not work, so millisecond input format no good.
+            return false;
+        }
+        return false;
+    }
+
+    public final void setDate(final int date) {
+        int newTime;
+        newTime = utc;
+        newTime = utc % (24 * 3600);
+        newTime += (date / (24 * 3600)) * (24 * 3600);
+        utc = newTime;
+    }
+
+    public final void setDate(final String date) {
+        int dateInt = Convert.toInt(date);
+        int day = dateInt / 10000;
+        int month = (dateInt / 100) % 100;
+        int year = dateInt % 100 + 2000;
+        setDate((new Date(day, month, year)).dateToUTCepoch1970());
+    }
+
 }

@@ -59,7 +59,7 @@ public class TestDevice implements bt747.model.ModelListener {
         // Activate some debug.
         c.setDebug(true);
         // Make the connection
-        c.setFreeTextPort("COM4");
+        c.openFreeTextPort("COM4");
         // Successfull connection will result in modelEvent.
         // The next release will have an isConnected method in the model.
 

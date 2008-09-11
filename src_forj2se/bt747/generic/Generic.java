@@ -10,7 +10,8 @@ import moio.util.HashSet;
 import moio.util.Iterator;
 
 import bt747.sys.MyThread;
-import bt747.sys.Thread;
+import bt747.interfaces.BT747Thread;
+import bt747.sys.Vm;
 
 /**
  * @author Mario De Weerd
@@ -27,11 +28,7 @@ public class Generic {
     
     // TODO: Improve next code - for the moment it is functional.
 
-    public static void addThread(Thread t, final boolean b) {
-        // MainWindow.getMainWindow().addThread(t, b);
-        if (!oos.contains(t)) {
-            removeIfStoppedThread(t);
-        }
+    public static void addThread(BT747Thread t, final boolean b) {
         if (!oos.contains(t)) {
             System.out.println("Adding " + t);
             MyThread mt = new MyThread(t);
@@ -50,7 +47,7 @@ public class Generic {
         }
     }
 
-    public static void removeThread(Thread t) {
+    public static void removeThread(BT747Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
         Iterator it = h.iterator();
         while (it.hasNext()) {
@@ -88,6 +85,11 @@ public class Generic {
 
     public static double acos(final double x) {
         return Math.acos(x);
+    }
+
+    public static void debug(String s, Throwable e ) {
+        Vm.debug(s);
+        e.printStackTrace();
     }
 
 }

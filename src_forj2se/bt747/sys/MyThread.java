@@ -3,10 +3,10 @@ package bt747.sys;
 public class MyThread implements java.lang.Runnable {
 
     public java.lang.Thread jvThread;
-    public bt747.sys.Thread btThread = null;
+    public bt747.interfaces.BT747Thread btThread = null;
     public boolean running = false;
 
-    public MyThread(final bt747.sys.Thread t) {
+    public MyThread(final bt747.interfaces.BT747Thread t) {
         btThread = t;
     }
 

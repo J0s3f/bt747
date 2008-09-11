@@ -292,11 +292,15 @@ public class AppSettings {
     private String baseDirPath;
     private String logFile;
     private String reportFileBase;
+    
+    public static boolean defaultTraversable = false;
+    public static int defaultChunkSize = 0x10000;
 
     private static boolean solveMacLagProblem = false;
 
     /**
-     * Controller must get settings and call {@link #init()} afterwards before actual use of the model.
+     * Controller must get settings and call {@link #init()} afterwards before
+     * actual use of the model.
      */
     public AppSettings() {
     }
@@ -319,8 +323,8 @@ public class AppSettings {
         }
         updateSettings(VersionX100);
     }
-    
-    public static String defaultBaseDirPath="";
+
+    public static String defaultBaseDirPath = "";
 
     private void updateSettings(final int versionX100) {
         switch (versionX100) {
@@ -332,7 +336,7 @@ public class AppSettings {
             setLogFileRelPath("BT747log.bin");
             setReportFileBase("GPSDATA");
             setStartupOpenPort(false);
-            setChunkSize(bt747.sys.Settings.onDevice ? 220 : 0x10000);
+            setChunkSize(defaultChunkSize);
             setDownloadTimeOut(C_DEFAULT_DEVICE_TIMEOUT);
             /* fall through */
         case 1:
@@ -380,8 +384,7 @@ public class AppSettings {
             setColorInvalidTrack("0000FF");
             /* fall through */
         case 12:
-            setBooleanOpt(IS_TRAVERSABLE, Settings.onDevice
-                    && (!bt747.sys.Settings.platform.startsWith("Palm")));
+            setBooleanOpt(IS_TRAVERSABLE, defaultTraversable);
             /* fall through */
         case 13:
             setBooleanOpt(IS_RECORDNBR_IN_LOGS, false);
@@ -1239,8 +1242,8 @@ public class AppSettings {
         while (notok && (i >= 0)) {
             switch (i--) {
             case 0:
-                //path = CONFIG_FILE_NAME;
-                //break;
+                // path = CONFIG_FILE_NAME;
+                // break;
             case 1:
                 path = getBaseDirPath() + "/";
                 break;

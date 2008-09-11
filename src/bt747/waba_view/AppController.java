@@ -1,7 +1,8 @@
 package bt747.waba_view;
 
+import waba.sys.Settings;
+import net.sf.net.bt747.waba.system.WabaFile;
 import gps.BT747Constants;
-import gps.connection.*;
 import gps.log.GPSRecord;
 import moio.util.HashSet;
 
@@ -11,7 +12,7 @@ import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
-import bt747.sys.Settings;
+
 import bt747.ui.MessageBox;
 
 //import moio.util.Iterator;  Needed later when communicating with views.
@@ -25,8 +26,8 @@ public class AppController extends Controller {
     // #if RXTX
     // java.lang.System.getProperty("user.home")+java.lang.System.getProperty("file.separator")+"SettingsBT747.pdb":(
 
-    (bt747.sys.Settings.platform.startsWith("Win32")
-            || bt747.sys.Settings.platform.startsWith("Windows") || bt747.sys.Settings.platform
+    (Settings.platform.startsWith("Win32")
+            || Settings.platform.startsWith("Windows") || Settings.platform
             .startsWith("Mac")
     // #if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")
     ) ? "SettingsBT747.pdb" : "/My Documents/BT747/SettingsBT747.pdb"
@@ -50,8 +51,6 @@ public class AppController extends Controller {
      *            The model to associate with this controller.
      */
     public AppController(final Model model) {
-        initGpsPort();
-
         this.m = model;
         c = this; // Temporary solution until application controller methods
 
@@ -264,34 +263,39 @@ public class AppController extends Controller {
     // }
     // }
     private boolean isWin32LikeDevice() {
-        return bt747.sys.Settings.platform.startsWith("WindowsCE")
-                || bt747.sys.Settings.platform.startsWith("PocketPC")
-                || (bt747.sys.Settings.platform.startsWith("Win32") && Settings.onDevice)
-                || !Settings.isWaba();
+        return waba.sys.Settings.platform.startsWith("WindowsCE")
+                || waba.sys.Settings.platform.startsWith("PocketPC")
+                || (waba.sys.Settings.platform.startsWith("Win32") && Settings.onDevice);
     }
 
     private void initAppSettings() {
-        if (bt747.sys.Settings.platform.startsWith("Palm")) {
+        AppSettings.defaultChunkSize = waba.sys.Settings.onDevice ? 220
+                : 0x10000;
+        AppSettings.defaultTraversable = waba.sys.Settings.onDevice
+                && (!waba.sys.Settings.platform.startsWith("Palm"));
+
+        if (waba.sys.Settings.platform.startsWith("Palm")) {
             AppSettings.defaultBaseDirPath = "/Palm";
         } else if (isWin32LikeDevice()) {
-            if (bt747.io.File.getCardVolumePath() == null) {
+            if (WabaFile.getCardVolumePath() == null) {
                 AppSettings.defaultBaseDirPath = "/EnterYourDir";
             } else {
-                AppSettings.defaultBaseDirPath = File.getCardVolumePath();
+                AppSettings.defaultBaseDirPath = WabaFile.getCardVolumePath();
 
             }
         } else {
             AppSettings.defaultBaseDirPath = "/BT747";
         }
 
-        if ((Settings.getAppSettings() == null)
-                || (Settings.getAppSettings().length() < 100)
+        if ((bt747.sys.Settings.getAppSettings() == null)
+                || (bt747.sys.Settings.getAppSettings().length() < 100)
         // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
         ) {
-            Settings.setAppSettings(new String(new byte[2048]));
+            bt747.sys.Settings.setAppSettings(new String(new byte[2048]));
+
             if (isWin32LikeDevice()
-            // #if RXTX ||
-            // java.lang.System.getProperty("os.name").startsWith("Mac")
+            // #if RXTX
+            // ||java.lang.System.getProperty("os.name").startsWith("Mac")
             // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
             // #if RXTX ||java.lang.System.getProperty("user.home").length()!=0
             ) {
@@ -308,7 +312,8 @@ public class AppController extends Controller {
 
                         preferencesFile.readBytes(appSettingsArray, 0,
                                 readLength);
-                        Settings.setAppSettings(new String(appSettingsArray));
+                        bt747.sys.Settings.setAppSettings(new String(
+                                appSettingsArray));
                     }
                 } catch (Exception e) {
                     // Vm.debug("Exception new log create");
@@ -320,13 +325,14 @@ public class AppController extends Controller {
                 }
             }
         }
+
         // #if RXTX
         // if(Convert.toInt(java.lang.System.getProperty("bt747_Mac_solvelag",java.lang.System.getProperty("os.name").startsWith("Mac")?"1":"0"))==1)
         // {
         // #if RXTX AppSettings.solveMacLagProblem=true;
         // #if RXTX }
     }
-    
+
     public final void saveSettings() {
         if (isWin32LikeDevice()
         // #if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")
@@ -357,9 +363,9 @@ public class AppController extends Controller {
                 preferencesFile = new File(CONFIG_FILE_NAME, File.CREATE);
                 preferencesFile.close();
                 preferencesFile = new File(CONFIG_FILE_NAME, File.READ_WRITE);
-                preferencesFile.writeBytes(
-                        Settings.getAppSettings().getBytes(), 0, Settings
-                                .getAppSettings().length());
+                preferencesFile.writeBytes(bt747.sys.Settings.getAppSettings()
+                        .getBytes(), 0, bt747.sys.Settings.getAppSettings()
+                        .length());
                 preferencesFile.close();
             } catch (Exception e) {
                 // Vm.debug("Exception new log create");
@@ -368,47 +374,6 @@ public class AppController extends Controller {
             // bt747.sys.Vm.debug("saved config file length
             // "+Settings.appSettings.length());
         }
-    }
-
-    static {
-        
-    }
-    
-    private void initGpsPort() {
-        GPSPort gpsPort;
-
-        if (Settings.hasWaba) {
-            gpsPort = new GPSWabaPort();
-        } else {
-            try {
-                // gpsPort=new GPSRxTxPort();
-                gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
-                        .newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-                gpsPort = new GPSWabaPort();
-            }
-        }
-
-        /**
-         * Set the defaults of the device according to preset, guessed values.
-         */
-        // Settings.platform:
-        // PalmOS, PalmOS/SDL, WindowsCE, PocketPC, MS_SmartPhone,
-        // Win32, Symbian, Linux, Posix
-        String Platform = Settings.platform;
-
-        if ((Platform.equals("Java")) || (Platform.equals("Win32"))
-                || (Platform.equals("Posix")) || (Platform.equals("Linux"))) {
-            // Try USB Port
-            gpsPort.setUSB();
-        } else if (Platform.startsWith("PalmOS")) {
-            gpsPort.setBlueTooth();
-        } else {
-            gpsPort.setPort(0); // Should be bluetooth in WinCE
-        }
-
-        GPSrxtx.setGpsPortInstance(gpsPort);
     }
 
 }

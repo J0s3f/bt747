@@ -204,9 +204,6 @@ public class GPSLogFilter extends Container implements ModelListener {
                     }
                 }
                 if (z_updated) {
-                    c.setFilterValidMask(currentLogFilter, getValid()); // TODO: may
-                                                                    // not be
-                                                                    // needed
                     switch (currentLogFilter) {
                     case GPSFilter.TRKPT:
                         c.setTrkPtValid(getValid());
@@ -223,8 +220,6 @@ public class GPSLogFilter extends Container implements ModelListener {
                     }
                 }
                 if (z_updated) {
-                    c.setFilterRcrMask(currentLogFilter, getRCR()); // TODO: may not
-                                                                // be needed
                     switch (currentLogFilter) {
                     case GPSFilter.TRKPT:
                         c.setTrkPtRCR(getRCR());

@@ -21,6 +21,7 @@ import bt747.ui.MessageBox;
 
 public final class J2SEAppController extends Controller {
 
+    private static String platform = java.lang.System.getProperty("os.name");
     private static String CONFIG_FILE_NAME = java.lang.System
             .getProperty(
                     "bt747_settings", // bt747_settings or default value
@@ -30,9 +31,8 @@ public final class J2SEAppController extends Controller {
                             + "SettingsBT747.pdb"
                             : (
 
-                            (bt747.sys.Settings.platform.startsWith("Win32")
-                                    || bt747.sys.Settings.platform
-                                            .startsWith("Windows") || bt747.sys.Settings.platform
+                            (platform.startsWith("Win32")
+                                    || platform.startsWith("Windows") || platform
                                     .startsWith("Mac")) ? "SettingsBT747.pdb"
                                     : "/My Documents/BT747/SettingsBT747.pdb")));
 
@@ -314,8 +314,8 @@ public final class J2SEAppController extends Controller {
             preferencesFile.createNewFile();
             FileOutputStream os;
             os = new FileOutputStream(CONFIG_FILE_NAME);
-            os.write(Settings.getAppSettings().getBytes(), 0,
-                    Settings.getAppSettings().length());
+            os.write(Settings.getAppSettings().getBytes(), 0, Settings
+                    .getAppSettings().length());
             os.close();
         } catch (Exception e) {
             e.printStackTrace();

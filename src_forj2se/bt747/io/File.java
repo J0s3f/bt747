@@ -129,6 +129,10 @@ public class File {
     }
 
     public int lastError = 0;
+    
+    public int getLastError() {
+        return lastError;
+    }
 
     public boolean isOpen() {
         if (raf != null) {

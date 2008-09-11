@@ -72,7 +72,7 @@ public class SimpleExample implements bt747.model.ModelListener {
         // Activate some debug.
         c.setDebug(true);
         // Make the connection
-        c.setFreeTextPort("COM4");
+        c.openFreeTextPort("COM4");
         // Successfull connection will result in modelEvent.
         // The next release will have an isConnected method in the model.
 
@@ -130,9 +130,9 @@ public class SimpleExample implements bt747.model.ModelListener {
 
         // After the download we convert to CSV
         // Uses previously stored settings
-        error=c.doConvertLog(Model.CSV_LOGTYPE);
-        if (error!=0) {
-            reportError(c.getLastError(),c.getLastErrorInfo());
+        error = c.doConvertLog(Model.CSV_LOGTYPE);
+        if (error != 0) {
+            reportError(c.getLastError(), c.getLastErrorInfo());
         }
 
         // And we can do something more complex
@@ -142,31 +142,30 @@ public class SimpleExample implements bt747.model.ModelListener {
         // We select all positions that do not have an invalid fix or estimated
         // fix.
         c
-                .setFilterValidMask(
-                        GPSFilter.TRKPT,
-                        0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                .setTrkPtValid(
+
+                0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
         c
-                .setFilterValidMask(
-                        GPSFilter.WAYPT,
-                        0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
         // Waypoints only when button pressed.
-        c.setFilterRcrMask(GPSFilter.WAYPT, BT747Constants.RCR_BUTTON_MASK);
+        c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK);
         // Trackpoints : anything
-        c.setFilterRcrMask(GPSFilter.WAYPT, BT747Constants.RCR_BUTTON_MASK);
+        c.setTrkPtRCR(BT747Constants.RCR_BUTTON_MASK);
         // To limit the output data, we only select lat,lon and height.
-        c.setIntOpt(Model.FILEFIELDFORMAT,  (1 << BT747Constants.FMT_LATITUDE_IDX)
-        | (1 << BT747Constants.FMT_LONGITUDE_IDX)
-        | (1 << BT747Constants.FMT_HEIGHT_IDX));
+        c.setIntOpt(Model.FILEFIELDFORMAT,
+                (1 << BT747Constants.FMT_LATITUDE_IDX)
+                        | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+                        | (1 << BT747Constants.FMT_HEIGHT_IDX));
         error = c.doConvertLog(Model.GPX_LOGTYPE);
-        if (error!=0) {
-            reportError(c.getLastError(),c.getLastErrorInfo());
+        if (error != 0) {
+            reportError(c.getLastError(), c.getLastErrorInfo());
         }
 
         // We can do the same thing to an array for internal treatment
         GPSRecord[] positions = c.doConvertLogToTrackPoints();
         if (positions == null) {
             // Error occured
-            reportError(c.getLastError(),c.getLastErrorInfo());
+            reportError(c.getLastError(), c.getLastErrorInfo());
         } else {
             // Print the first ten positions
             for (int i = 0; i < positions.length && i < 10; i++) {
@@ -181,22 +180,22 @@ public class SimpleExample implements bt747.model.ModelListener {
         // Dirty exit from example
         System.exit(0);
     }
-    
-        private void reportError(final int error, final String errorInfo) {
-            switch (error) {
-            case BT747Constants.ERROR_COULD_NOT_OPEN:
-                System.err.println("Could not open "+errorInfo);
-                break;
-            case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
-                System.err.println("No files were created ");
-                break;
-            case BT747Constants.ERROR_READING_FILE:
-                System.err.println("Problem reading" + errorInfo);
-                break;
-            default:
-                break;
-            }
+
+    private void reportError(final int error, final String errorInfo) {
+        switch (error) {
+        case BT747Constants.ERROR_COULD_NOT_OPEN:
+            System.err.println("Could not open " + errorInfo);
+            break;
+        case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
+            System.err.println("No files were created ");
+            break;
+        case BT747Constants.ERROR_READING_FILE:
+            System.err.println("Problem reading" + errorInfo);
+            break;
+        default:
+            break;
         }
+    }
 
     public void modelEvent(ModelEvent e) {
         // TODO Auto-generated method stub

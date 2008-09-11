@@ -29,6 +29,8 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 
+import net.sf.net.bt747.waba.system.WabaDate;
+
 import bt747.Txt;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -303,9 +305,9 @@ public class GPSLogGet extends Container implements ModelListener {
                 if (d != null) {
                     calBt.setText(d.toString());
                     // Can't change the value of the date, changing all
-                    c.setStartDate((new Date(btStartDate.getText()))
+                    c.setStartDate((new WabaDate(btStartDate.getText()))
                             .dateToUTCepoch1970());
-                    c.setEndDate((new Date(m_btEndDate.getText()))
+                    c.setEndDate((new WabaDate(m_btEndDate.getText()))
                             .dateToUTCepoch1970()
                             + SECONDS_PER_DAY - 1);
                 }
