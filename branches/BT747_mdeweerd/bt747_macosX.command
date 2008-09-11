@@ -10,7 +10,7 @@ if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
 
 #Change to appropriate directory (suppose that we are already in it 
 # (or that ROOT_DIR is ok) -> commented)
-#cd /Applications/gps ; ROOT_DIR=$PWD*
+#cd /Applications/gps ; ROOT_DIR=$PWD
 
 RXTX_PATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
 RXTX_BIN_PATH=${RXTX_PATH}/Mac_OS_X

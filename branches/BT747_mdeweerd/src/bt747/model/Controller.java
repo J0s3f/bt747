@@ -21,6 +21,8 @@ import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
 
+import bt747.generic.Generic;
+
 /**
  * @author Mario De Weerd
  * 
@@ -200,6 +202,21 @@ public class Controller {
     }
 
     /**
+     * Points to the object that is currently converting (to be able to stop
+     * it).
+     */
+    private GPSLogConvert currentGPSLogConvert;
+
+    /**
+     * Stop the conversion that is ongoing.
+     */
+    public final void stopLogConvert() {
+        if (currentGPSLogConvert != null) {
+            currentGPSLogConvert.stopConversion();
+        }
+    }
+
+    /**
      * Convert the log given the provided parameters using other methods.
      * 
      * @return 0 if success, otherwise an error was encountered (error number
@@ -250,7 +267,7 @@ public class Controller {
                     lc = (GPSLogConvert) Class.forName(
                             "gps.parser.NewLogConvert").newInstance();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Generic.debug("DECODER_THOMAS", e);
                     lc = new BT747LogConvert();
                 }
                 break;
@@ -341,7 +358,13 @@ public class Controller {
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
                     m.getFileSeparationFreq());
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
-            lastError = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+            currentGPSLogConvert = lc;
+            try {
+                lastError = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+            } catch (Throwable e) {
+                Generic.debug("During conversion", e);
+            }
+            currentGPSLogConvert = null;
             lastErrorInfo = lc.getErrorInfo();
             result = lastError;
         } else {
@@ -393,7 +416,7 @@ public class Controller {
                     lc = (GPSLogConvert) Class.forName(
                             "gps.parser.NewLogConvert").newInstance();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Generic.debug("DECODER_THOMAS", e);
                     lc = new BT747LogConvert();
                 }
                 break;
@@ -437,7 +460,14 @@ public class Controller {
         // Next line must be called for initialisation.
         gpsFile.initialiseFile("", "", -1, m.getFileSeparationFreq());
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
-        error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+        currentGPSLogConvert = lc;
+        try {
+            error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+        } catch (Throwable e) {
+            Generic.debug("During conversion", e);
+        }
+        currentGPSLogConvert = null;
+
         if (error != 0) {
             lastError = error;
             lastErrorInfo = lc.getErrorInfo();
@@ -501,9 +531,9 @@ public class Controller {
             int endAddress;
             if (m.getDownloadMethod() == Model.DOWNLOAD_FULL
                     || m.gpsModel().isInitialLogOverwrite()) {
-                endAddress = m.gpsModel().getLogMemSize() - 1;
+                endAddress = m.logMemSize() - 1;
             } else {
-                endAddress = m.gpsModel().getLogMemUsed() - 1;
+                endAddress = m.logMemUsed() - 1;
             }
             m.gpsModel().getLogInit(0, /* StartPosition */
             endAddress, /* EndPosition */
@@ -513,6 +543,7 @@ public class Controller {
             /** Incremental download */
             m.getDownloadMethod() == Model.DOWNLOAD_INCREMENTAL);
         } catch (Exception e) {
+            Generic.debug("StartDefaultDownload", e);
             // TODO: handle exception
         }
     }
@@ -808,27 +839,28 @@ public class Controller {
      * @param portName
      *            The path to the port.
      */
-    public final void setFreeTextPort(final String portName) {
+    public final void openFreeTextPort(final String portName) {
         closeGPS();
         m.gpsRxTx().setFreeTextPortAndOpen(portName);
         performOperationsAfterGPSConnect();
     }
 
+    
     /**
-     * Get the port text string.
+     * Select a port by its 'path' (/dev/usb9 for example or /dev/com1.
      * 
-     * @return A text string for the serial port (if not a port number).
+     * @param portName
+     *            The path to the port.
      */
-    public final String getFreeTextPort() {
-        return m.gpsRxTx().getFreeTextPort();
+    public final void setFreeTextPort(final String portName) {
+        m.setFreeTextPort(portName);
     }
 
     /**
      * This does a number of operations once the GPS is effectively connected.
-     * Can be extended by the application.
-     * It gets certain informations required by the application.
-     * It stores the settings related to the port (since the connection was
-     * successful) and starts of the Model to do port queries.
+     * Can be extended by the application. It gets certain informations required
+     * by the application. It stores the settings related to the port (since the
+     * connection was successful) and starts of the Model to do port queries.
      */
     protected void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
@@ -1123,7 +1155,7 @@ public class Controller {
     public final void reqBTAddr() {
         m.gpsModel().reqBtMacAddr();
     }
-    
+
     /**
      * Sets the MAC address for bluetooth (for devices that support it).
      * 
@@ -1545,66 +1577,6 @@ public class Controller {
      */
     public final void setNMEAset(final int formatNMEA) {
         m.setNMEAset(formatNMEA);
-    }
-
-    /**
-     * Sets the 'Valid' filter mask for the given filter type and the currently
-     * active filters.
-     * 
-     * @param filterType
-     *            A value out of:<br> - {@link GPSFilter#TRKPT} ;<br> -
-     *            {@link GPSFilter#WAYPT} .<br>
-     * @param mask
-     *            The filter mask to set for the validity filter. Use the
-     *            following constants:<br>-
-     *            {@link BT747Constants#VALID_NO_FIX_MASK} <br>-
-     *            {@link BT747Constants#VALID_SPS_MASK} <br>-
-     *            {@link BT747Constants#VALID_DGPS_MASK} <br>-
-     *            {@link BT747Constants#VALID_PPS_MASK} <br>-
-     *            {@link BT747Constants#VALID_RTK_MASK} <br>-
-     *            {@link BT747Constants#VALID_FRTK_MASK} <br>-
-     *            {@link BT747Constants#VALID_ESTIMATED_MASK} <br>-
-     *            {@link BT747Constants#VALID_MANUAL_MASK} <br>-
-     *            {@link BT747Constants#VALID_SIMULATOR_MASK} <br>-
-     * 
-     */
-    public final void setFilterValidMask(final int filterType, final int mask) {
-        // TODO: not sure this is needed anymore
-        m.getLogFilters()[filterType].setValidMask(mask);
-    }
-
-    /**
-     * Sets the 'RCR' filter mask for the given filter type and the currently
-     * active filters.
-     * 
-     * @param filterType
-     *            A value out of:<br> - {@link GPSFilter#TRKPT} ;<br> -
-     *            {@link GPSFilter#WAYPT} .<br>
-     * @param rcrMask
-     *            The filter mask to set for the rcr filter. Use the following
-     *            constants:<br>
-     *            <br>- {@link BT747Constants#RCR_TIME_MASK}<br>-
-     *            {@link BT747Constants#RCR_SPEED_MASK}<br>-
-     *            {@link BT747Constants#RCR_DISTANCE_MASK}<br>-
-     *            {@link BT747Constants#RCR_BUTTON_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP1_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP2_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP3_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP4_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP5_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP6_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP7_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP8_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP9_MASK}<br>-
-     *            {@link BT747Constants#RCR_APPX_MASK}<br>-
-     *            {@link BT747Constants#RCR_APPY_MASK}<br>-
-     *            {@link BT747Constants#RCR_APPZ_MASK}<br>-
-     *            {@link BT747Constants#RCR_ALL_APP_MASK}
-     * 
-     */
-    public final void setFilterRcrMask(final int filterType, final int rcrMask) {
-        // TODO: not sure this is needed anymore
-        m.getLogFilters()[filterType].setRcrMask(rcrMask);
     }
 
     /**

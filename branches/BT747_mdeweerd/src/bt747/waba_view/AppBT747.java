@@ -20,6 +20,7 @@ package bt747.waba_view;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.fx.Font;
+import waba.sys.Settings;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
@@ -31,14 +32,17 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
+import gps.connection.GPSPort;
+import gps.connection.GPSrxtx;
+
 import bt747.Txt;
+import bt747.interfaces.Interface;
 import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
-import bt747.sys.Settings;
 import bt747.sys.Vm;
-import bt747.ui.MessageBox;
+import bt747.waba_view.ui.MessageBox;
 
 /**
  * Main class (application entry)
@@ -46,6 +50,43 @@ import bt747.ui.MessageBox;
  * @author Mario De Weerd
  */
 public class AppBT747 extends MainWindow implements ModelListener {
+
+    static {
+        Interface.tr = new net.sf.net.bt747.waba.system.JavaTranslations();
+        GPSPort gpsPort;
+
+        gpsPort = new GPSWabaPort();
+
+        // try {
+        // // gpsPort=new GPSRxTxPort();
+        // gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
+        // .newInstance();
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // gpsPort = new GPSWabaPort();
+        // }
+        // }
+
+        /**
+         * Set the defaults of the device according to preset, guessed values.
+         */
+        // Settings.platform:
+        // PalmOS, PalmOS/SDL, WindowsCE, PocketPC, MS_SmartPhone,
+        // Win32, Symbian, Linux, Posix
+        String Platform = waba.sys.Settings.platform;
+
+        if ((Platform.equals("Java")) || (Platform.equals("Win32"))
+                || (Platform.equals("Posix")) || (Platform.equals("Linux"))) {
+            // Try USB Port
+            gpsPort.setUSB();
+        } else if (Platform.startsWith("PalmOS")) {
+            gpsPort.setBlueTooth();
+        } else {
+            gpsPort.setPort(0); // Should be bluetooth in WinCE
+        }
+
+        GPSrxtx.setGpsPortInstance(gpsPort);
+    }
 
     /*
      * Using Model, AppController, View.
@@ -178,7 +219,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         m = new Model();
         c = new AppController(m);
         if (Settings.onDevice) {
-            bt747.sys.Vm.debug(bt747.sys.Vm.ERASE_DEBUG);
+            bt747.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
         }
         orgAutoOnOff = waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off
         // causing BT trouble
@@ -207,9 +248,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
     public void onStart() {
         super.onStart();
 
-        if (Settings.version < Settings.requiredVersion) {
+        if (Settings.version < net.sf.net.bt747.waba.system.Settings.requiredVersion) {
             new MessageBox(Txt.TITLE_ATTENTION, Txt.BAD_SUPERWABAVERSION
-                    + Settings.requiredVersionStr
+                    + net.sf.net.bt747.waba.system.Settings.requiredVersionStr
                     + Txt.BAD_SUPERWABAVERSION_CONT + Settings.versionStr
                     + Txt.BAD_SUPERWABAVERSION_CONT2
 

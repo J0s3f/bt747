@@ -4,19 +4,16 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package bt747.ui;
+package bt747.j2se_view;
 
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /**
  * @author Mario De Weerd
@@ -25,6 +22,11 @@ import javax.swing.JPanel;
  * Preferences - Java - Code Style - Code Templates
  */
 public class MessageBox extends javax.swing.JDialog implements ActionListener {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5854970044555876452L;
 
     /**
      * @param title

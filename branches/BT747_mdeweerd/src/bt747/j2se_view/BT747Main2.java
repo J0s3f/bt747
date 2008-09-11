@@ -3773,7 +3773,7 @@ public class BT747Main2 extends javax.swing.JFrame implements
             } else if (s.toUpperCase().startsWith("USB")) {
                 c.setUsb();
             } else {
-                c.setFreeTextPort(s);
+                c.openFreeTextPort(s);
             }
         }
     }

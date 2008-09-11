@@ -811,7 +811,7 @@
 				<include name="gps/connection/GPSWabaSocketPort.java" />
 			</fileset>
 		</copy>
-		<replace file="${symbiansrc.dir}/gps/connection/GPSrxtx.java"
+        <replace file="${symbiansrc.dir}bt747/waba_view/AppBT747.java"
 		         encoding="${encoding}"
 		         token="GPSWabaPort"
 		         summary="yes"
@@ -857,7 +857,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-		<replace file="${filesrc.dir}bt747/waba_view/AppController.java"
+		<replace file="${filesrc.dir}bt747/waba_view/AppBT747.java"
 		         encoding="${encoding}"
 		         token="GPSWabaPort"
 		         summary="yes"
@@ -1706,7 +1706,7 @@
 			         summary="yes"
 			         value="GPSRxTxPort"
 			>
-				<include name="${@{dest.dir}rxtxfilter}bt747/waba_view/AppController.java"
+				<include name="${@{dest.dir}rxtxfilter}bt747/waba_view/AppBT747.java"
 				/>
 			</replace>
 			<!-- <echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" /> -->

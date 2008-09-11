@@ -73,6 +73,9 @@ public final class NewLogConvert implements GPSLogConvert {
                     r.recCount = i;
                     gpsFile.writeRecord(r);
                 }
+                if(stop) {
+                    return -1;  // TODO: better error identification
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -264,6 +267,11 @@ public final class NewLogConvert implements GPSLogConvert {
 
         /* End handling record */
         return gpsRec;
+    }
+    
+    private boolean stop = false;
+    public final void stopConversion() {
+        stop = true;
     }
 
 }

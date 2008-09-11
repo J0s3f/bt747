@@ -269,7 +269,7 @@ public class GPSGPXFile extends GPSFile {
                 // " <wpt lat=\"39.921055008\" lon=\"3.054223107\">"+
                 // " <ele>12.863281</ele>"+
                 // " <time>2005-05-16T11:49:06Z</time>"+
-                // " <name>Cala Sant Vicenç - Mallorca</name>"+
+                // " <name>Cala Sant Vicen - Mallorca</name>"+
                 // " <sym>City</sym>"+
                 // " </wpt>"+
 

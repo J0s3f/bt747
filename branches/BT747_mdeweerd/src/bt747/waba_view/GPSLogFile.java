@@ -30,6 +30,8 @@ import waba.ui.Event;
 import waba.ui.Label;
 import waba.util.Vector;
 
+import net.sf.net.bt747.waba.system.WabaFile;
+
 import bt747.Txt;
 import bt747.io.File;
 import bt747.model.Model;
@@ -112,7 +114,7 @@ public class GPSLogFile extends Container implements ModelListener {
             Vector v = new Vector(50);
             int Card = m.getCard();
             for (int i = 0; i < 255; i++) {
-                if (File.isCardInserted(i)) {
+                if (WabaFile.isCardInserted(i)) {
                     v.addElement("" + i);
                     if (Card == i) {
                         idx = v.size() - 1;
