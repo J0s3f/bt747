@@ -6,57 +6,60 @@
  */
 package bt747.sys;
 
+import bt747.interfaces.Interface;
+
 /**
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 public class Convert {
-    public static String toString(boolean p)
-    {
-       return waba.sys.Convert.toString(p);
+    public static String toString(final boolean p) {
+        return Interface.tr.toString(p);
     }
 
-    public static String toString(int p)
-    {
-       return waba.sys.Convert.toString(p);
+    public static String toString(final int p) {
+        return Interface.tr.toString(p);
     }
 
-    public static String toString(float p)
-    {
-       return waba.sys.Convert.toString(p);
-    }
-    public static String toString(double p)
-    {
-       return waba.sys.Convert.toString(p);
-    }
-    
-    public static String toString(double p, int i)
-    {
-       return waba.sys.Convert.toString(p,i);
-    }
-    public static String unsigned2hex(int p, int i)
-    {
-       return waba.sys.Convert.unsigned2hex(p,i);
-    }
-    public static int toInt(String s) {
-        return waba.sys.Convert.toInt(s);
-    }
-    public static float toFloat(String s) {
-        return waba.sys.Convert.toFloat(s);
-    }
-    public static double toDouble(String s) {
-        return waba.sys.Convert.toDouble(s);
-    }
-    public static double longBitsToDouble(long l) {
-        return waba.sys.Convert.longBitsToDouble(l);
+    public static String toString(final float p) {
+        return Interface.tr.toString(p);
     }
 
-    public static float toFloatBitwise(int l) {
-        return waba.sys.Convert.toFloatBitwise(l);
+    public static String toString(final double p) {
+        return Interface.tr.toString(p);
     }
-    public static int toIntBitwise(float f) {
-        return waba.sys.Convert.toIntBitwise(f);
+
+    public static String toString(final double p, final int i) {
+        return Interface.tr.toString(p,i);
+    }
+
+    public static String unsigned2hex(final int p, final int i) {
+        return Interface.tr.unsigned2hex(p, i);
+    }
+
+    public static int toInt(final String s) {
+        return Interface.tr.toInt(s);
+    }
+
+    public static float toFloat(final String s) {
+        return Interface.tr.toFloat(s);
+    }
+
+    public static double toDouble(final String s) {
+        return Interface.tr.toDouble(s);
+    }
+
+    public static double longBitsToDouble(final long l) {
+        return Interface.tr.longBitsToDouble(l);
+    }
+
+    public static float toFloatBitwise(final int l) {
+        return Interface.tr.toFloatBitwise(l);
+    }
+
+    public static int toIntBitwise(final float f) {
+        return Interface.tr.toIntBitwise(f);
     }
 }

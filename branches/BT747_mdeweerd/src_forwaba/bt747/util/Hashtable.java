@@ -6,37 +6,32 @@
  */
 package bt747.util;
 
+import bt747.interfaces.BT747Hashtable;
+import bt747.interfaces.Interface;
+
 /**
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
-public class Hashtable extends waba.util.Hashtable {
+public final class Hashtable {
+
+    private BT747Hashtable hash;
 
     /**
      * @param initialCapacity
      */
     public Hashtable(int initialCapacity) {
-        super(initialCapacity);
-        // TODO Auto-generated constructor stub
+        hash = Interface.tr.getHashtableInstance(initialCapacity);
     }
 
-    /**
-     * @param initialCapacity
-     * @param loadFactor
-     */
-    public Hashtable(int initialCapacity, float loadFactor) {
-        super(initialCapacity, loadFactor);
-        // TODO Auto-generated constructor stub
+    public final Object get(Object arg1) {
+        return hash.get(arg1);
     }
 
-    /**
-     * @param res
-     */
-    public Hashtable(String res) {
-        super(res);
-        // TODO Auto-generated constructor stub
+    public final Object put(Object arg1, Object arg2) {
+        return hash.put(arg1, arg2);
     }
 
 }
