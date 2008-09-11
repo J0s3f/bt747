@@ -329,6 +329,7 @@
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/lang/Txt_en.java" />
 			<exclude name="bt747/waba_view/**" />
+            <exclude name="net/sf/net/bt747/waba/**" />
 		</javac>
 
 		<!--
