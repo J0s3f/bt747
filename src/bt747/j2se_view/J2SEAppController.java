@@ -17,7 +17,6 @@ import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.sys.Settings;
-import bt747.ui.MessageBox;
 
 public final class J2SEAppController extends Controller {
 
