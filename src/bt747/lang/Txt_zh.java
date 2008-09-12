@@ -275,7 +275,7 @@ public class Txt_zh {
     public static final String TRK_SEP = "Trk 9\u6708\uFF1A";
     public static final String MIN = "\u6781\u5C0F\u503C";
     public static final String UTC = "UTC";
-    public static final String HGHT_GEOID_DIFF = "hght - geiod diff";
+    public static final String HGHT_GEOID_DIFF = "hght - geoid diff";
     public static final String TO_CSV = "\u5BF9CSV";
     public static final String TO_GPX = "\u5BF9GPX";
     public static final String TO_KML = "\u5BF9KML";

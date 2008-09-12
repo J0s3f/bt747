@@ -51,7 +51,7 @@ import bt747.waba_view.ui.MessageBox;
 public class AppBT747 extends MainWindow implements ModelListener {
 
     static {
-        Interface.tr = new net.sf.net.bt747.waba.system.JavaTranslations();
+        Interface.tr = new net.sf.bt747.waba.system.JavaTranslations();
         GPSPort gpsPort;
 
         gpsPort = new GPSWabaPort();
@@ -247,9 +247,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
     public void onStart() {
         super.onStart();
 
-        if (Settings.version < net.sf.net.bt747.waba.system.Settings.requiredVersion) {
+        if (Settings.version < net.sf.bt747.waba.system.Settings.requiredVersion) {
             new MessageBox(Txt.TITLE_ATTENTION, Txt.BAD_SUPERWABAVERSION
-                    + net.sf.net.bt747.waba.system.Settings.requiredVersionStr
+                    + net.sf.bt747.waba.system.Settings.requiredVersionStr
                     + Txt.BAD_SUPERWABAVERSION_CONT + Settings.versionStr
                     + Txt.BAD_SUPERWABAVERSION_CONT2
 

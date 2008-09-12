@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bt747.Txt;
+import bt747.interfaces.Interface;
 import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
@@ -32,6 +33,14 @@ import bt747.sys.Time;
  */
 public class BT747Main extends javax.swing.JFrame implements
         bt747.model.ModelListener, BT747View {
+
+    /**
+     * Initialise the lower level interface class. Needed for BT747 to work.
+     */
+    static {
+        Interface
+                .setJavaTranslationInterface(new net.sf.bt747.j2se.system.JavaTranslations());
+    }
 
     /**
      * 
@@ -55,7 +64,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
     public void createMessageBoxModal(String title, String msg,
             String[] buttonCaptions) {
-            MessageBox mb;
+        MessageBox mb;
         mb = new MessageBox(title, msg, buttonCaptions);
         // TODO: finish message box handling and send back events
         // to controller.
@@ -65,7 +74,8 @@ public class BT747Main extends javax.swing.JFrame implements
         if (this.m != null) {
             this.m.removeListener(this);
         }
-        this.c = (J2SEAppController) c;  // Should check that c is an AppController or do it differently
+        this.c = (J2SEAppController) c; // Should check that c is an
+        // AppController or do it differently
         m.addListener(this);
     }
 
@@ -113,18 +123,18 @@ public class BT747Main extends javax.swing.JFrame implements
         d = new Time();
         d.setUTCTime(m.getFilterStartTime());
         Calendar cal = Calendar.getInstance();
-        //cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+        // cal.setTimeZone(TimeZone.getTimeZone("GMT"));
         cal.set(d.getYear(), d.getMonth() - 1, d.getDay());
         startDate.setDate(cal.getTime());
-        //startDate.setCalendar(cal);
+        // startDate.setCalendar(cal);
         d.setUTCTime(m.getFilterEndTime());
         cal = Calendar.getInstance();
-        //cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+        // cal.setTimeZone(TimeZone.getTimeZone("GMT"));
         cal.set(d.getYear(), d.getMonth() - 1, d.getDay());
         endDate.setDate(cal.getTime());
-        //endDate.setCalendar(cal);
-//        startDate.getCalendar().setTimeZone(TimeZone.getTimeZone("GMT"));
-//        endDate.getCalendar().setTimeZone(TimeZone.getTimeZone("GMT"));
+        // endDate.setCalendar(cal);
+        // startDate.getCalendar().setTimeZone(TimeZone.getTimeZone("GMT"));
+        // endDate.getCalendar().setTimeZone(TimeZone.getTimeZone("GMT"));
         // TODO: Deactivate debug by default
         c.setDebug(true);
         btGPSDebug.setSelected(m.isDebug());
@@ -200,7 +210,7 @@ public class BT747Main extends javax.swing.JFrame implements
         if (type == ModelEvent.GPRMC) {
             updateRMCData((GPSRecord) e.getArg());
         } else if (type == ModelEvent.DATA_UPDATE) {
-            
+
         } else if (type == ModelEvent.GPGGA) {
             updateGPSData((GPSRecord) e.getArg());
         } else if (type == ModelEvent.LOG_FORMAT_UPDATE) {
@@ -234,8 +244,7 @@ public class BT747Main extends javax.swing.JFrame implements
             btConnectFunctionIsConnect = true;
         } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
                 || type == ModelEvent.LOG_DOWNLOAD_DONE
-                || type == ModelEvent.LOG_DOWNLOAD_STARTED
-                ) {
+                || type == ModelEvent.LOG_DOWNLOAD_STARTED) {
             progressBarUpdate();
         }
 
@@ -5951,11 +5960,11 @@ public class BT747Main extends javax.swing.JFrame implements
 
     private void btConvertActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btConvertActionPerformed
         // TODO: Change upon action in date change.
-        //System.out.println(startDate.getCalendar().getTimeZone());
+        // System.out.println(startDate.getCalendar().getTimeZone());
         // TODO: The date returned takes local timezone into account.
-        // Needs to be corrected 
-        c.setStartDate((int)(startDate.getDate().getTime()/1000));
-        c.setEndDate((int)(endDate.getDate().getTime()/1000));
+        // Needs to be corrected
+        c.setStartDate((int) (startDate.getDate().getTime() / 1000));
+        c.setEndDate((int) (endDate.getDate().getTime() / 1000));
 
         c.convertLog(selectedFormat);
     }// GEN-LAST:event_btConvertActionPerformed

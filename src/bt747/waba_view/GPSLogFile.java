@@ -30,7 +30,7 @@ import waba.ui.Event;
 import waba.ui.Label;
 import waba.util.Vector;
 
-import net.sf.net.bt747.waba.system.WabaFile;
+import net.sf.bt747.waba.system.WabaFile;
 
 import bt747.Txt;
 import bt747.io.File;

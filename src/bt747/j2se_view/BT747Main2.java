@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bt747.Txt;
+import bt747.interfaces.Interface;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 
@@ -28,6 +29,11 @@ import bt747.model.ModelEvent;
  */
 public class BT747Main2 extends javax.swing.JFrame implements
         bt747.model.ModelListener {
+
+    static {
+        Interface.tr = new net.sf.bt747.j2se.system.JavaTranslations();
+    }
+
 
     /**
      * 
