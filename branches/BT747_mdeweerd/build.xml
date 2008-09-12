@@ -31,8 +31,6 @@
 	<property name="swinglayout.jar"
 	          value="${lib.dir}/swing-layout-1.0.3.jar"
 	/>
-	<property name="waba_forj2se.jar" value="${lib.dir}/waba_forj2se.jar" />
-	<property name="waba_forwaba.jar" value="${lib.dir}/waba_forwaba.jar" />
 	<property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
 
 	<property name="j2se.main" value="bt747.j2se_view.BT747Main" />
@@ -50,7 +48,6 @@
 	</path>
 
 	<path id="rxtxclasspath">
-		<pathelement location="${waba_forj2se.jar}" />
 		<pathelement location="${jcalendar.jar}" />
 		<pathelement location="${waba.jar}" />
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar" />
@@ -204,6 +201,9 @@
               -overloadaggressively
               -repackageclasses ''
               -allowaccessmodification
+              
+                      -keep public class bt747.ui.MessageBox { *; }
+              
           -->
 
 		<proguard shrink="${proguard.shrink}"
@@ -223,7 +223,6 @@
 			<injar path="${rxtxbuild.dir}/tmp.jar" />
 			<outjar path="${proguard.infile}" />
           -optimizationpasses 1
-          ${extralib}
           -injar ${swcollections.jar}(!META-INF/**)
           -printmapping ${dist}/${ant.project.name}${suffix}.map
           -keep public class BT747
@@ -235,7 +234,6 @@
 			public static void setGpsPortInstance(gps.connection.GPSPort);
 		  }
 	      -keep public class bt747.Version { *; }
-		  -keep public class bt747.ui.MessageBox { *; }
           -keepclasseswithmembers public class * {
                public static void main(java.lang.String[]); }
       </proguard>
@@ -244,31 +242,16 @@
 	<macrodef name="dist-jar">
 		<attribute name="suffix" default="_rxtx" />
 		<attribute name="build.j2se" default="" />
-		<attribute name="extralib" default="${waba_forwaba.jar}" />
 		<sequential>
 			<build.rxtx suffix="@{suffix}_tmp" build.j2se="@{build.j2se}" />
 			<move file="${rxtxbuild.dir}/${ant.project.name}@{suffix}_tmp.jar"
 			      tofile="${dist}/${ant.project.name}@{suffix}.jar"
 			/>
-			<condition property="@{suffix}extralib_opt"
-			           value="-injar @{extralib}(!META-INF/**)"
-			>
-				<not>
-					<equals arg1="" arg2="@{extralib}" />
-				</not>
-			</condition>
-			<condition property="@{suffix}extralib_opt" value="">
-				<not>
-					<isset property="@{suffix}extralib_opt" />
-				</not>
-			</condition>
 
-			<echo message="EXTRALIB: ${@{suffix}extralib_opt}" />
 			<antcall target="proguard.rxtx-dist">
 				<param name="proguard.infile"
 				       value="${dist}/${ant.project.name}@{suffix}.jar"
 				/>
-				<param name="extralib" value="${@{suffix}extralib_opt}" />
 				<param name="suffix" value="@{suffix}" />
 			</antcall>
 			<antcall target="sign">
@@ -280,18 +263,12 @@
 	</macrodef>
 
 
-	<target name="dist.waba" depends="build.waba_forwaba">
-		<dist-jar suffix="_rxtx"
-		          extralib="${waba_forwaba.jar}"
-		          build.j2se="false"
-		/>
+	<target name="dist.waba">
+		<dist-jar suffix="_rxtx" build.j2se="false" />
 	</target>
 
-	<target name="dist.rxtx" depends="build.waba_forwaba">
-		<dist-jar suffix="_rxtx"
-		          extralib="${waba_forwaba.jar}"
-		          build.j2se="false"
-		/>
+	<target name="dist.rxtx">
+		<dist-jar suffix="_rxtx" build.j2se="false" />
 	</target>
 
 
@@ -300,7 +277,6 @@
 		<pathelement location="${jcalendar.jar}" />
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
-		<pathelement location="${waba_forj2se.jar}" />
 	</path>
 
 	<uptodate property="libj2se.uptodate"
@@ -308,7 +284,6 @@
 	>
 		<srcfiles dir="${src.dir}/bt747/model" includes="**" />
 		<srcfiles dir="${src.dir}/gps" includes="**" />
-		<srcfiles dir="src_forj2se" includes="**" />
 	</uptodate>
 
 
@@ -329,7 +304,7 @@
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/lang/Txt_en.java" />
 			<exclude name="bt747/waba_view/**" />
-            <exclude name="net/sf/net/bt747/waba/**" />
+			<exclude name="net/sf/net/bt747/waba/**" />
 		</javac>
 
 		<!--
@@ -441,8 +416,11 @@
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
 			/>
-                        -injar ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar(!BT747.class,!bt747/*_view/**,!bt747/gps/connection/GPSWabaPort.class)
-                        -injar ${waba_forj2se.jar}(!META-INF/**)
+                        -injar ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar
+			             (!BT747.class,
+                          !net/sf/bt747/waba/**,
+			              !bt747/*_view/**,
+			              !bt747/gps/connection/GPSWabaPort.class)
                         -injar ${swcollections.jar}(!META-INF/**)
                         -optimizationpasses 1
                         -keep public class gps.BT747Constants { *; }
@@ -454,27 +432,29 @@
                         -keep public class bt747.model.* { *; }
                         -keep public class bt747.model.BT747View { *; }
                         -keep public class gps.convert.FileUtil {*; }
-                        -keep public class bt747.sys.Time { *; }
                         -keep public class gps.log.in.GPSLogConvert { *; }
                         -keep public class * implements gps.log.in.GPSLogConvert { *; }
                         -keep public class * implements gps.log.out.GPSFile { *; }
                         -keep public class gps.log.out.GPSFile { *; }
                         -keep public class * extends gps.connection.GPSPort { *; }
 			            -keep public class bt747.Version { *; }
-    		            -keep public class bt747.ui.MessageBox { *; }
+            -keep public interface bt747.interfaces.* {
+                public *;
+            }
+        -keep public class bt747.interfaces.* {
+            public *;
+        }
                         -keep public class * {
 	                       public static void setGpsPortInstance(gps.connection.GPSPort);
 	                    }
                         -keep public class gps.connection.GPSPort  { *; }
+			            -printseeds
                </proguard>
 
 	</target>
 
 
-	<target name="dist.libj2se"
-	        depends="build.waba_forj2se"
-	        unless="libj2se.uptodate"
-	>
+	<target name="dist.libj2se" unless="libj2se.uptodate">
 		<!-- First build normal target -->
 		<build.rxtx suffix="${libtmp_suffix}"
 		            build.j2se="yes"
@@ -497,7 +477,6 @@
 	<macrodef name="macro.run.rxtx">
 		<attribute name="main-class" />
 		<attribute name="main-class-args" />
-		<attribute name="wabajar" default="${waba.jar}" />
 		<attribute name="suffix" default="_waba_j2se" />
 		<sequential>
 			<build.rxtx suffix="@{suffix}" build.j2se="@{suffix}" />
@@ -513,14 +492,12 @@
 	        -->
 			<java classname="@{main-class}" fork="true" spawn="false">
 				<classpath>
-					<pathelement path="@{wabajar}" />
 					<pathelement path="${rxtxcomm.jar}" />
 					<pathelement path="${swinglayout.jar}" />
 					<pathelement path="${jcalendar.jar}" />
 					<pathelement path="${swcollections.jar}" />
 					<pathelement path="${rxtxbuild.dir}/${ant.project.name}@{suffix}.jar"
 					/>
-					<pathelement path="${waba_forwaba.jar}" />
 				</classpath>
 				<arg line="@{main-class-args}" />
 			</java>
@@ -533,18 +510,12 @@
 		/>
 	</target>
 
-	<target name="run.j2se" depends="build.waba_forj2se">
-		<macro.run.rxtx main-class="${j2se.main}"
-		                main-class-args=""
-		                wabajar="${waba_forj2se.jar}"
-		/>
+	<target name="run.j2se">
+		<macro.run.rxtx main-class="${j2se.main}" main-class-args="" />
 	</target>
 
-	<target name="run.j2se2" depends="build.waba_forj2se">
-		<macro.run.rxtx main-class="${j2se.main2}"
-		                main-class-args=""
-		                wabajar="${waba_forj2se.jar}"
-		/>
+	<target name="run.j2se2">
+		<macro.run.rxtx main-class="${j2se.main2}" main-class-args="" />
 	</target>
 
 	<target name="run.rxtx">
@@ -585,18 +556,13 @@
 			<keep name="gps.connection.GPSRxTxPort" />
 			<keep name="gps.parser.NewLogConvert" />
 
-
-            <libraryjar file="${waba_forj2se.jar}" />
-
             When using Superwaba libraries for reference:
             <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
-            <libraryjar file="${waba_forwaba.jar}" />
 			-->
 			<keep name="bt747.j2se_view.BT747" />
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${swcollections.jar}" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
-			<libraryjar file="${waba_forwaba.jar}" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
 			/>
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
@@ -607,14 +573,19 @@
     	          public static void setGpsPortInstance(gps.connection.GPSPort);
     	        }
 			    -keep public class bt747.Version { *; }
-			    -keep public class bt747.ui.MessageBox { *; }
+                -keep public interface bt747.interfaces.* {
+			        public *;
+			    }
+            -keep public class bt747.interfaces.* {
+                public *;
+            }
     			-keep public class BT747
 		        -keep public class bt747.j2se_view.BT747
                 -keepclasseswithmembers public class * {
                     public static void main(java.lang.String[]); }
 	            -keepclasseswithmembers public class * {
 	                public static void main(java.lang.String[]); }
-
+			    -printseeds
 	        </proguard>
 		<delete file="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar">
 		</delete>
@@ -646,15 +617,12 @@
 	<property name="java.target.version" value="1.1" />
 
 	<!-- Filesets for normal build -->
-	<fileset dir="src_forwaba" id="waba_lib">
-		<include name="**/*.java" />
-	</fileset>
 	<fileset dir="${src.dir}" id="waba_only_sources">
 		<include name="**/*.java" />
 		<exclude name="bt747/j2se_view/*" unless="build.j2se" />
 		<exclude name="bt747/waba_view/*" if="build.j2se" />
-        <exclude name="net/sf/net/bt747/waba/**" if="build.j2se" />
-	    <exclude name="gps/model/*" />
+		<exclude name="net/sf/net/bt747/waba/**" if="build.j2se" />
+		<exclude name="gps/model/*" />
 		<exclude name="gps/connection/GPSFilePort.java" />
 		<exclude name="gps/connection/GPSRxTxPort.java" />
 		<exclude name="gps/connection/GPSWabaSocketPort.java" />
@@ -669,12 +637,12 @@
 
 		<mkdir dir="${dist}" />
 		<copy_src srcid="waba_only_sources"
-		          libid="waba_lib"
 		          dest.dir="${build.dir}/waba/src"
 		/>
 
-		<delete dir="${build.dir}/waba/gps/parser">
-		</delete>
+		<delete dir="${build.dir}/waba/src/gps/parser" />
+		<delete dir="${build.dir}/waba/src/net/sf/bt747/j2se/system" />
+
 		<javac srcdir="${build.dir}/waba/src"
 		       destdir="${build.dir}/waba"
 		       target="1.1"
@@ -696,8 +664,8 @@
 		<srcfiles dir="${superwaba_root}/src/java/waba/lang" includes="**" />
 	</uptodate>
 
-	<target name="waba.lang" unless="wabalang.uptodate"/>
-    <target name="waba.lang.do" >
+	<target name="waba.lang" unless="wabalang.uptodate" />
+	<target name="waba.lang.do">
 		<delete dir="${build.dir}/wabalang" />
 		<mkdir dir="${build.dir}/wabalang" />
 		<property name="build.sysclasspath" value="ignore" />
@@ -714,8 +682,8 @@
 		       classpathref="wabalangclasspath"
 		       extdirs=""
 		       bootclasspath=""
-               classpath=""
-            encoding="iso-8859-15"
+		       classpath=""
+		       encoding="iso-8859-15"
 		>
 			<include name="*.java" />
 		</javac>
@@ -735,7 +703,7 @@
 	</fileset>
 
 	<!-- rxtxbuild -->
-	<target name="rxtxbuild" depends="build.waba_forj2se">
+	<target name="rxtxbuild">
 		<getsuffix />
 		<delete dir="${rxtxbuild.dir}" />
 		<mkdir dir="${rxtxbuild.dir}" />
@@ -745,7 +713,6 @@
 		<echoproperties prefix="no.waba" />
 
 		<copy_src srcid="rxtx_src"
-		          libid="empty"
 		          dest.dir="${rxtxsrc.dir}"
 		          rxtx="true"
 		/>
@@ -769,13 +736,15 @@
 			<fileset dir="${rxtxsrc.dir}">
 				<include name="bt747/j2se_view/**" unless="is.j2se" />
 				<include name="bt747/waba_view/**" if="exclude.waba" />
-	            <exclude name="net/sf/net/bt747/waba/**" if="exclude.waba"/>
+				<exclude name="net/sf/net/bt747/waba/**" if="exclude.waba" />
 				<include name="bt747/j2se_view/BT747.java" if="exclude.waba" />
 				<include name="BT747.java" if="exclude.waba" />
 				<include name="bt747/*view/**" if="is.lib" />
 				<include name="bt747/lang/**" if="is.lib" />
 				<include name="bt747/Txt.java" if="is.lib" />
-				<include name="bt747/waba_view/AppController.java" if="is.lib" />
+				<include name="bt747/waba_view/AppController.java"
+				         if="is.lib"
+				/>
 			</fileset>
 		</delete>
 		<javac verbose="no"
@@ -784,7 +753,7 @@
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
 		       classpathref="rxtxclasspath"
-            encoding="iso-8859-15"
+		       encoding="iso-8859-15"
 		>
 			<include name="**/*.java" />
 			<exclude name="gps/connection/GPSWabaPort.java*" />
@@ -798,14 +767,13 @@
 		</copy>
 	</target>
 
-	<target name="symbianbuild" depends="build.waba_forwaba">
+	<target name="symbianbuild">
 
 		<mkdir dir="${symbianbuild.dir}" />
 		<delete dir="${symbiansrc.dir}" />
 		<mkdir dir="${symbiansrc.dir}" />
 
 		<copy_src srcid="waba_only_sources"
-		          libid="waba_lib"
 		          dest.dir="${symbiansrc.dir}"
 		/>
 
@@ -814,7 +782,7 @@
 				<include name="gps/connection/GPSWabaSocketPort.java" />
 			</fileset>
 		</copy>
-        <replace file="${symbiansrc.dir}bt747/waba_view/AppBT747.java"
+		<replace file="${symbiansrc.dir}bt747/waba_view/AppBT747.java"
 		         encoding="${encoding}"
 		         token="GPSWabaPort"
 		         summary="yes"
@@ -830,7 +798,7 @@
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
 		       deprecation="true"
-            encoding="iso-8859-15"
+		       encoding="iso-8859-15"
 		>
 			<include name="**/*.java" />
 			<classpath refid="classpath" />
@@ -856,9 +824,6 @@
 				<exclude name="bt747/j2se_view/*" unless="build.j2se" />
 				<exclude name="bt747/j2me_view/*" unless="build.j2me" />
 			</fileset>
-			<fileset dir="src_forwaba">
-				<include name="**/*.java" />
-			</fileset>
 		</copy>
 		<replace file="${filesrc.dir}bt747/waba_view/AppBT747.java"
 		         encoding="${encoding}"
@@ -880,7 +845,7 @@
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
 		       classpathref="classpath"
-            encoding="iso-8859-15"
+		       encoding="iso-8859-15"
 		>
 			<include name="**/*.java" />
 			<exclude name="gps/connection/GPSWabaPort.java*" />
@@ -898,64 +863,6 @@
 
 
 	<!-- Target for pur j2se environment - builds library. -->
-	<uptodate property="waba_forj2se.uptodate" targetfile="${waba_forj2se.jar}">
-		<srcfiles dir="src_forj2se" includes="**" />
-	</uptodate>
-
-	<target name="build.waba_forj2se" unless="waba_forj2se.uptodate">
-		<delete dir="${build.dir}/forj2se" />
-		<mkdir dir="${build.dir}/forj2se" />
-		<javac srcdir="."
-		       destdir="${build.dir}/forj2se"
-		       target="1.5"
-		       source="1.5"
-		       optimize="${java.optimize}"
-		       debug="${java.debug}"
-            encoding="iso-8859-15"
-		>
-			<include name="src_forj2se/**/*.java" />
-			<classpath refid="classpath" />
-			<!-- included for now -->
-		</javac>
-		<jar jarfile="${waba_forj2se.jar}" compress="true">
-			<fileset dir="${build.dir}/forj2se" includes="**/*.class" />
-		</jar>
-		<antcall target="sign">
-			<param name="jar.tosign" value="${waba_forj2se.jar}" />
-		</antcall>
-
-	</target>
-
-
-	<uptodate property="waba_forwaba.uptodate" targetfile="${waba_forwaba.jar}">
-		<srcfiles dir="src_forwaba" includes="**" />
-	</uptodate>
-
-	<target name="build.waba_forwaba" unless="waba_forwaba.uptodate">
-		<delete dir="${build.dir}/forwaba" />
-		<mkdir dir="${build.dir}/forwaba" />
-		<javac srcdir="."
-		       destdir="${build.dir}/forwaba"
-		       target="1.1"
-		       source="1.3"
-		       optimize="${java.optimize}"
-		       debug="${java.debug}"
-		       deprecation="true"
-            encoding="iso-8859-15"
-		>
-			<include name="src_forwaba/**/*.java" />
-			<classpath refid="classpath" />
-
-			<!-- included for now -->
-		</javac>
-		<jar jarfile="${waba_forwaba.jar}" compress="true">
-			<fileset dir="${build.dir}/forwaba" includes="**/*.class" />
-		</jar>
-		<antcall target="sign">
-			<param name="jar.tosign" value="${waba_forwaba.jar}" />
-		</antcall>
-	</target>
-
 	<!-- Package classes -->
 
 	<target name="jar" depends="build">
@@ -1665,7 +1572,6 @@
 		<attribute name="dest.dir" default="src" />
 		<attribute name="rxtx" default="false" />
 		<attribute name="srcid" />
-		<attribute name="libid" />
 		<sequential>
 			<setupdates />
 			<condition property="@{dest.dir}rxtxfilter" value="">
@@ -1677,9 +1583,6 @@
 			<delete dir="@{dest.dir}" />
 			<copy todir="@{dest.dir}">
 				<fileset refid="@{srcid}" />
-			</copy>
-			<copy todir="@{dest.dir}">
-				<fileset refid="@{libid}" />
 			</copy>
 			<!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
 			<replaceregexp file="@{dest.dir}/bt747/Version.java"
