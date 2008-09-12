@@ -1,7 +1,8 @@
 package bt747.waba_view;
 
 import waba.sys.Settings;
-import net.sf.net.bt747.waba.system.WabaFile;
+
+import net.sf.bt747.waba.system.WabaFile;
 import gps.BT747Constants;
 import gps.log.GPSRecord;
 import moio.util.HashSet;

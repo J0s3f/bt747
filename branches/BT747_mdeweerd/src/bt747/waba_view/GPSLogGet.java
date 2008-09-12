@@ -29,7 +29,7 @@ import waba.ui.Edit;
 import waba.ui.Event;
 import waba.ui.Label;
 
-import net.sf.net.bt747.waba.system.WabaDate;
+import net.sf.bt747.waba.system.WabaDate;
 
 import bt747.Txt;
 import bt747.model.Model;

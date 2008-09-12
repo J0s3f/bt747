@@ -18,6 +18,7 @@ import gps.BT747Constants;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
+import bt747.interfaces.Interface;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -27,6 +28,11 @@ import bt747.model.ModelEvent;
  * @author Mario De Weerd
  */
 public class SimpleExample implements bt747.model.ModelListener {
+
+    static {
+        Interface.tr = new net.sf.bt747.j2se.system.JavaTranslations();
+    }
+
 
     /**
      * 

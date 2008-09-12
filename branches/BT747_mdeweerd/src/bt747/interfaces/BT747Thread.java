@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package net.sf.net.bt747.waba.system;
+package bt747.interfaces;
 
 /**
  * @author Mario De Weerd
@@ -12,15 +12,12 @@ package net.sf.net.bt747.waba.system;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Vm {
-    public static final String ERASE_DEBUG = waba.sys.Vm.ERASE_DEBUG;
-    
-    public static final int getTimeStamp() {
-        return waba.sys.Vm.getTimeStamp();
-    }
-    
-    public static final void debug(final String s) {
-        waba.sys.Vm.debug(s);
-    }
+public interface BT747Thread {
+    public void run();
 
+    /** Called just before the thread is started */
+    public void started();
+
+    /** Called just after the thread is stopped */
+    public void stopped();
 }

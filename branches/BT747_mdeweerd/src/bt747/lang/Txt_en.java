@@ -273,7 +273,7 @@ public class Txt_en {
     public static final String TRK_SEP = "Trk sep:";
     public static final String MIN = "min";
     public static final String UTC = "UTC";
-    public static final String HGHT_GEOID_DIFF = "hght - geiod diff";
+    public static final String HGHT_GEOID_DIFF = "hght - geoid diff";
     public static final String TO_CSV = "To CSV";
     public static final String TO_GPX = "To GPX";
     public static final String TO_KML = "To KML";
