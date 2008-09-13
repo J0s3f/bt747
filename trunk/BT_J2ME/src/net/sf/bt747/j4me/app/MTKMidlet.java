@@ -4,7 +4,8 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
-import org.j4me.examples.log.LogScreen;
+import net.sf.bt747.j4me.app.log.LogScreen;
+
 import org.j4me.logging.Level;
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;

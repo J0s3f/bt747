@@ -2,10 +2,9 @@ package net.sf.bt747.j4me.app;
 
 import javax.microedition.lcdui.Graphics;
 
-import net.sf.bt747.j2me.system.MyThread;
+import net.sf.bt747.j4me.app.log.LogScreen;
+import net.sf.bt747.j4me.app.screens.ErrorAlert;
 
-import org.j4me.examples.log.LogScreen;
-import org.j4me.examples.ui.screens.ErrorAlert;
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
