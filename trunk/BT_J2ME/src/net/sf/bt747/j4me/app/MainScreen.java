@@ -1,8 +1,10 @@
 package net.sf.bt747.j4me.app;
 
+import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 
 import net.sf.bt747.j4me.app.log.LogScreen;
+import net.sf.bt747.j4me.app.screens.ProgressAlert;
 
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
@@ -11,11 +13,14 @@ import org.j4me.ui.Menu;
 import org.j4me.ui.MenuItem;
 import org.j4me.ui.components.Label;
 
+import bt747.model.ModelEvent;
+import bt747.model.ModelListener;
+
 /**
  * The "Log" screen. This shows the contents of the application's log. It is an
  * advanced screen intended for us to diagnose the application.
  */
-public class MainScreen extends Dialog {
+public class MainScreen extends Dialog implements ModelListener {
 
     private AppController c;
     private MIDlet midlet;
@@ -52,6 +57,9 @@ public class MainScreen extends Dialog {
     public MainScreen(final AppController c, final MIDlet midlet) {
         this.c = c;
         this.midlet = midlet;
+
+        m().addListener(this);
+
         // Set the title.
         setTitle("MTK Logger Control V"
                 + midlet.getAppProperty("MIDlet-Version"));
@@ -103,6 +111,7 @@ public class MainScreen extends Dialog {
         // Reset the current location provider.
 
         rootMenu.appendMenuOption(downloadLogScreen);
+        rootMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
         rootMenu.appendMenuOption("GPS Position", gpsPositionScreen);
 
         Menu subMenu;
@@ -123,7 +132,7 @@ public class MainScreen extends Dialog {
 
         subMenu = new Menu("Logger", rootMenu);
         subMenu.appendMenuOption("Log Conditions", logConditionsConfigScreen);
-        subMenu.appendMenuOption("MTK Logger Config", loggerInfoScreen);
+        subMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
         subMenu.appendMenuOption(new MenuItem() {
             public final String getText() {
                 return "Erase";
@@ -133,9 +142,9 @@ public class MainScreen extends Dialog {
                 confirmScreenOption = ERASE_CONFIRM;
                 confirmScreen = new ConfirmScreen(
                         "Confirm erasal",
-                        "Do you confirm erasal of all data in memory."
-                                + "If you did not download, you remove this info.",
-                        "Do you confirm erasal.  YOU MIGHT LOOSE DATA.", myself);
+                        "Do you confirm erasal of all data in memory ???\n"
+                                + "If you did not download, YOU WILL REMOVE ALL DATA LOGGED BY THE LOGGER.",
+                        "Do you confirm erasal?\nYOU MIGHT LOOSE DATA.", myself);
                 confirmScreen.show();
             }
         });
@@ -150,8 +159,13 @@ public class MainScreen extends Dialog {
         return c.getAppModel();
     }
 
-    public void show() {
+    private boolean waitErase;
 
+    public void show() {
+        // When this screen is shown, we are no longer waiting for erasal end
+        // whatever happens.
+
+        waitErase = false;
         if (isFirstLaunch) {
             isFirstLaunch = false;
             if (m().getBluetoothGPSURL() != null) {
@@ -164,14 +178,38 @@ public class MainScreen extends Dialog {
             if (confirmScreen != null) {
                 switch (confirmScreenOption) {
                 case NO_CONFIRM:
+                    // The confirm screen has no purpose
                     break;
                 case ERASE_CONFIRM:
+                    // The confirm screen confirms erasal or not
                     if (confirmScreen.getConfirmation()) {
-                        Log.debug("Request erase");
-                        c.eraseLog();
+                        Thread erase;
+                        erase = new Thread(new Runnable() {
+                            public void run() {
+                                Log.debug("Request erase");
+                                c.eraseLog();
+                                ProgressAlert pa;
+                                pa = new ProgressAlert(
+                                        "Erasing",
+                                        "Waiting until erase is done.\n"
+                                                + "You can cancel waiting at your own risk") {
+                                    public void onCancel() {
+                                        myself.show();
+                                    }
+
+                                    protected DeviceScreen doWork() {
+                                        return null;
+                                    }
+                                };
+                                pa.show();
+                            }
+                        });
+                        waitErase = true;
+                        erase.start();
                     }
                     break;
                 }
+                confirmScreen = null;
             }
             super.show();
         }
@@ -263,4 +301,23 @@ public class MainScreen extends Dialog {
         // Do nothing for the moment - should prompt to exit the application.
     }
 
+    public final void modelEvent(final ModelEvent e) {
+        switch (e.getType()) {
+        case ModelEvent.DEBUG_MSG:
+            Log.debug((String) e.getArg());
+            break;
+        case ModelEvent.DISCONNECTED:
+            // Display.getDisplay(this).flashBacklight(500);
+            Display.getDisplay(midlet).vibrate(200);
+            // com.nokia.mid.ui.DeviceControl
+            break;
+        case ModelEvent.ERASE_DONE_REMOVE_POPUP:
+            if (waitErase) {
+                this.show();
+            }
+            break;
+        default:
+            break;
+        }
+    }
 }

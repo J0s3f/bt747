@@ -104,12 +104,10 @@ public class ConfirmScreen extends Dialog {
             previous.show();
         } else {
             if (next != null) {
-                lbText = new Label(next);
                 setMenuText("Yes", "No");
                 isAcceptNotifyAConfirmation = false;
-                next = null;
                 lbText.setLabel(next);
-                isAcceptNotifyAConfirmation = false;
+                next = null;
                 this.show();
             } else {
                 confirmation = true;

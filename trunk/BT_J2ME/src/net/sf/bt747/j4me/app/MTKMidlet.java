@@ -18,7 +18,7 @@ import bt747.model.ModelListener;
 /**
  * The entry point for the application.
  */
-public class MTKMidlet extends MIDlet implements ModelListener {
+public class MTKMidlet extends MIDlet {
     /**
      * The one and only instance of this class.
      */
@@ -76,9 +76,6 @@ public class MTKMidlet extends MIDlet implements ModelListener {
             // Change the theme.
             UIManager.setTheme( new BlueTheme() );
 
-
-            m.addListener(this);
-
             // Show the first screen.
 
             // FindingGPSDevicesAlert creates a list of devices, then calls
@@ -122,18 +119,4 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         }
     }
 
-    public final void modelEvent(final ModelEvent e) {
-        switch (e.getType()) {
-        case ModelEvent.DEBUG_MSG:
-            Log.debug((String) e.getArg());
-            break;
-        case ModelEvent.DISCONNECTED:
-            //Display.getDisplay(this).flashBacklight(500);
-            Display.getDisplay(this).vibrate(200);
-            // com.nokia.mid.ui.DeviceControl
-            break;
-        default:
-            break;
-        }
-    }
 }
