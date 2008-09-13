@@ -294,7 +294,7 @@
 		<mkdir dir="${j2sebuild.dir}" />
 
 		<javac verbose="no"
-		       srcdir="src"
+		       srcdir="${src_j2se.dir}"
 		       destdir="${j2sebuild.dir}"
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
@@ -617,17 +617,20 @@
 	<property name="java.target.version" value="1.1" />
 
 	<!-- Filesets for normal build -->
-	<fileset dir="${src.dir}" id="waba_only_sources">
-		<include name="**/*.java" />
-		<exclude name="bt747/j2se_view/*" unless="build.j2se" />
-		<exclude name="bt747/waba_view/*" if="build.j2se" />
-		<exclude name="net/sf/net/bt747/waba/**" if="build.j2se" />
-		<exclude name="gps/model/*" />
-		<exclude name="gps/connection/GPSFilePort.java" />
-		<exclude name="gps/connection/GPSRxTxPort.java" />
-		<exclude name="gps/connection/GPSWabaSocketPort.java" />
-		<exclude name="gps/parser/**" />
+	<fileset dir="." id="waba_only_sources">
+		<include name="${src.dir}/**/*.java" />
+		<include name="${src_waba.dir}/**/*.java" unless="build.j2se" />
+		<include name="${src_j2se.dir}/**/*.java" if="build.j2se" />
 	</fileset>
+
+	<!-- filesets for rxtxbuild -->
+	<fileset dir="." id="rxtx_src">
+        <include name="${src.dir}/**/*.java" />
+        <include name="${src_waba.dir}/**/*.java" />
+        <include name="${src_j2se.dir}/**/*.java" />
+		<include name="${src_rxtx.dir}**/*.java" />
+	</fileset>
+
 
 	<!-- Compile -->
 	<target name="build">
@@ -636,12 +639,7 @@
 		<mkdir dir="${build.dir}/waba" />
 
 		<mkdir dir="${dist}" />
-		<copy_src srcid="waba_only_sources"
-		          dest.dir="${build.dir}/waba/src"
-		/>
-
-		<delete dir="${build.dir}/waba/src/gps/parser" />
-		<delete dir="${build.dir}/waba/src/net/sf/bt747/j2se/system" />
+		<copy_src srcid="waba_only_sources" dest.dir="${build.dir}/waba/src" />
 
 		<javac srcdir="${build.dir}/waba/src"
 		       destdir="${build.dir}/waba"
@@ -695,14 +693,10 @@
 		</antcall>
 	</target>
 
-	<!-- filesets for rxtxbuild -->
-	<fileset dir="src" id="rxtx_src">
-		<include name="**/*.java" />
-	</fileset>
-	<fileset dir="src" id="empty">
-	</fileset>
 
-	<!-- rxtxbuild -->
+	<!-- rxtxbuild
+	
+	 -->
 	<target name="rxtxbuild">
 		<getsuffix />
 		<delete dir="${rxtxbuild.dir}" />
@@ -712,10 +706,7 @@
 
 		<echoproperties prefix="no.waba" />
 
-		<copy_src srcid="rxtx_src"
-		          dest.dir="${rxtxsrc.dir}"
-		          rxtx="true"
-		/>
+		<copy_src srcid="rxtx_src" dest.dir="${rxtxsrc.dir}" rxtx="true" />
 
 		<condition property="exclude.waba">
 			<istrue value="${no.waba}" />
@@ -732,17 +723,17 @@
 		</echoproperties>
 		<echoproperties prefix="is.j2se">
 		</echoproperties>
-		<delete verbose="no">
+		<delete verbose="yes">
 			<fileset dir="${rxtxsrc.dir}">
-				<include name="bt747/j2se_view/**" unless="is.j2se" />
-				<include name="bt747/waba_view/**" if="exclude.waba" />
-				<exclude name="net/sf/net/bt747/waba/**" if="exclude.waba" />
-				<include name="bt747/j2se_view/BT747.java" if="exclude.waba" />
-				<include name="BT747.java" if="exclude.waba" />
-				<include name="bt747/*view/**" if="is.lib" />
-				<include name="bt747/lang/**" if="is.lib" />
-				<include name="bt747/Txt.java" if="is.lib" />
-				<include name="bt747/waba_view/AppController.java"
+				<include name="${src_j2se.dir}/**" unless="is.j2se" />
+				<include name="${src_waba.dir}/**" if="exclude.waba" />
+				<include name="${src_j2se.dir}/bt747/j2se_view/BT747.java"
+				         if="exclude.waba"
+				/>
+				<include name="*/bt747/*view/**" if="is.lib" />
+				<include name="*/bt747/lang/**" if="is.lib" />
+				<include name="*/bt747/Txt.java" if="is.lib" />
+				<include name="*/bt747/waba_view/AppController.java"
 				         if="is.lib"
 				/>
 			</fileset>
@@ -756,9 +747,6 @@
 		       encoding="iso-8859-15"
 		>
 			<include name="**/*.java" />
-			<exclude name="gps/connection/GPSWabaPort.java*" />
-			<exclude name="gps/connection/GPSWabaSocketPort.java*" />
-			<exclude name="gps/model/*" />
 		</javac>
 		<copy todir="${rxtxbuild.dir}">
 			<fileset dir="src">
@@ -773,9 +761,7 @@
 		<delete dir="${symbiansrc.dir}" />
 		<mkdir dir="${symbiansrc.dir}" />
 
-		<copy_src srcid="waba_only_sources"
-		          dest.dir="${symbiansrc.dir}"
-		/>
+		<copy_src srcid="waba_only_sources" dest.dir="${symbiansrc.dir}" />
 
 		<copy todir="${symbiansrc.dir}">
 			<fileset dir="src">
@@ -1104,9 +1090,9 @@
 
 	</target>
 
-	<!-- Execute EXEGEN -->
+	<!-- Execute EXEGEN 
+	  -->
 	<target name="exegen" depends="warp, prepare-exegen">
-
 		<java dir="${build.dir}"
 		      classname="superwaba.tools.Exegen"
 		      fork="true"
@@ -1229,9 +1215,11 @@
 
 	</target>
 
+	<!--
+	Build the distribution for PDA's
+	-->
 	<target name="dist.pda" depends="exegen, exegen-exe, exegen-cab, all-warp">
 		<move todir="${dist}">
-
 			<fileset dir="${build.dir}">
 				<include name="${ant.project.name}.prc" />
 				<include name="**/*.exe" />
@@ -1585,22 +1573,22 @@
 				<fileset refid="@{srcid}" />
 			</copy>
 			<!-- required lib: Jakarta ORO for optional task <replaceregexp> -->
-			<replaceregexp file="@{dest.dir}/bt747/Version.java"
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
 			               encoding="${encoding}"
 			               match="BUILD = [0-9]+L;"
 			               replace="BUILD = ${TIMESTAMP}L;"
 			/>
-			<replaceregexp file="@{dest.dir}/bt747/Version.java"
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
 			               encoding="${encoding}"
 			               match='BUILD_STR = \".*\";'
 			               replace='BUILD_STR = "${full.build.version}.${TIMESTAMP}";'
 			/>
-			<replaceregexp file="@{dest.dir}/bt747/Version.java"
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
 			               encoding="${encoding}"
 			               match="DATE = [^\s]*;"
 			               replace='DATE = "${DATE_DE}";'
 			/>
-			<replaceregexp file="@{dest.dir}/bt747/Version.java"
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Version.java"
 			               encoding="${encoding}"
 			               match="VERSION_NUMBER = [^\s]*;"
 			               replace='VERSION_NUMBER = "${build_version}";'
@@ -1612,7 +1600,7 @@
 			         summary="yes"
 			         value="GPSRxTxPort"
 			>
-				<include name="${@{dest.dir}rxtxfilter}bt747/waba_view/AppBT747.java"
+				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppBT747.java"
 				/>
 			</replace>
 			<!-- <echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" /> -->
@@ -1621,7 +1609,7 @@
 			         summary="yes"
 			         value=""
 			>
-				<include name="${@{dest.dir}rxtxfilter}bt747/waba_view/AppController.java"
+				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}bt747/waba_view/AppController.java"
 				/>
 			</replace>
 
@@ -1631,7 +1619,7 @@
 				</not>
 			</condition>
 			<echo message="Preparing for language ${lang}" />
-			<replaceregexp file="@{dest.dir}/bt747/Txt.java"
+			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Txt.java"
 			               match="extends Txt_.."
 			               replace="extends Txt_${lang}"
 			/>
