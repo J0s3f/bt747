@@ -33,17 +33,17 @@ public class LogConditionsConfigScreen extends Dialog implements ModelListener {
 
         tbSpeed = new TextBox();
         tbSpeed.setForNumericOnly();
-        tbSpeed.setLabel("Speed period (s)");
+        tbSpeed.setLabel("Speed threshold (s)");
         append(tbSpeed);
 
         tbDistance = new TextBox();
         tbDistance.setForDecimalOnly();
-        tbDistance.setLabel("Distance period (m)");
+        tbDistance.setLabel("Distance interval (m)");
         append(tbDistance);
 
         tbFix = new TextBox();
         tbFix.setForNumericOnly();
-        tbFix.setLabel("GPS Fix period (m)");
+        tbFix.setLabel("GPS Fix period (ms)");
         append(tbFix);
 
     }

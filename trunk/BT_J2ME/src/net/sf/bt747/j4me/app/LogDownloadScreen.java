@@ -209,7 +209,6 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
                 logDownload.show();
             }
         });
-        c.cancelGetLog();
 
         menu.appendMenuOption("Application Log", logScreen);
         menu.appendMenuOption(new MenuItem() {
