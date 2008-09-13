@@ -52,7 +52,7 @@ public class MainScreen extends Dialog {
         this.c = c;
         this.midlet = midlet;
         // Set the title.
-        setTitle("MTK Log Control (BT747) V"
+        setTitle("MTK Logger Control V"
                 + midlet.getAppProperty("MIDlet-Version"));
 
         lbText = new Label("ALPHA/BETA version of a J2ME "
