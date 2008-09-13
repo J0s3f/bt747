@@ -1,13 +1,13 @@
 bt747.generic.Generic -> aq:
     void debug(java.lang.String,java.lang.Throwable) -> a
-bt747.interfaces.BT747Vector -> aj:
+bt747.interfaces.BT747Vector -> ak:
     void addElement(java.lang.Object) -> addElement
     int size() -> size
     java.lang.Object elementAt(int) -> elementAt
     void removeAllElements() -> removeAllElements
     void removeElementAt(int) -> removeElementAt
     java.lang.String[] toStringArray() -> a
-bt747.interfaces.Interface -> cf:
+bt747.interfaces.Interface -> cg:
     net.sf.bt747.j2me.system.JavaTranslations tr$3348afd8 -> a
 bt747.io.File -> ck:
     net.sf.bt747.j2me.system.J2MEFile file$19161759 -> b
@@ -22,7 +22,7 @@ bt747.io.File -> ck:
     int readBytes(byte[],int,int) -> b
     java.lang.String getPath() -> f
     int getLastError() -> g
-bt747.model.AppSettings -> o:
+bt747.model.AppSettings -> n:
     int[][] paramsList -> a
     int PARAM_IDX -> b
     int START_IDX -> c
@@ -126,7 +126,7 @@ bt747.model.Model -> dd:
     int getEstimatedNbrRecordsFree(int) -> l
     void gpsEvent(gps.GpsEvent) -> a
 bt747.model.ModelEvent -> db:
-bt747.model.ModelListener -> cb:
+bt747.model.ModelListener -> cc:
     void modelEvent(bt747.model.ModelEvent) -> a
 bt747.sys.Convert -> df:
     java.lang.String toString(int) -> a
@@ -141,7 +141,7 @@ bt747.sys.Settings -> dm:
     java.lang.String appSettings -> c
     java.lang.String getAppSettings() -> a
     void setAppSettings(java.lang.String) -> a
-bt747.sys.Time -> bf:
+bt747.sys.Time -> be:
     net.sf.bt747.j2me.system.J2METime time$19db6428 -> a
     int getDay() -> a
     int getHour() -> b
@@ -154,14 +154,14 @@ bt747.sys.Vm -> do:
 bt747.util.Date -> ax:
     net.sf.bt747.j2me.system.J2MEDate date$18f66367 -> a
     int getJulianDay() -> a
-bt747.util.Vector -> bc:
+bt747.util.Vector -> bb:
     bt747.interfaces.BT747Vector vector -> a
     void addElement(java.lang.Object) -> a
     int size() -> a
     java.lang.Object elementAt(int) -> a
     void removeAllElements() -> b
     void removeElementAt$13462e() -> c
-gps.BT747Constants -> cd:
+gps.BT747Constants -> ce:
     int[] logFmtByteSizes -> a
     int[] logFmtByteSizesHolux -> b
     java.lang.String PMTK_LOG_SET_STR -> c
@@ -284,7 +284,7 @@ gps.connection.GPSPort -> g:
     void startDebug() -> i
     void endDebug() -> j
     void setDebugFileName(java.lang.String) -> d
-gps.connection.GPSrxtx -> bt:
+gps.connection.GPSrxtx -> bu:
     gps.connection.GPSPort gpsPort -> c
     gps.Semaphore m_writeOngoing -> d
     boolean ignoreNMEA -> e
@@ -434,13 +434,13 @@ gps.log.in.DPL700LogConvert -> ci:
     void setConvertWGS84ToMSL(boolean) -> a
     int toGPSFile(java.lang.String,gps.log.out.GPSFile,int) -> a
     gps.log.GPSRecord getLogFormatRecord$7cd0a50c() -> c
-gps.log.in.GPSLogConvert -> by:
+gps.log.in.GPSLogConvert -> bz:
     void setTimeOffset(long) -> a
     void setConvertWGS84ToMSL(boolean) -> a
     int toGPSFile(java.lang.String,gps.log.out.GPSFile,int) -> a
     java.lang.String getErrorInfo() -> a
     void stopConversion() -> b
-gps.log.in.HoluxTrlLogConvert -> bx:
+gps.log.in.HoluxTrlLogConvert -> by:
     int recordSize -> a
     bt747.io.File inFile -> b
     long timeOffsetSeconds -> c
@@ -565,13 +565,13 @@ moio.util.AbstractMap -> c:
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object,java.lang.Object) -> a
     int hashCode(java.lang.Object) -> a
-moio.util.AbstractMap$BasicMapEntry -> bo:
+moio.util.AbstractMap$BasicMapEntry -> bp:
     java.lang.Object key -> b
     java.lang.Object value -> c
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString() -> toString
-moio.util.AbstractSet -> bk:
+moio.util.AbstractSet -> bj:
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     int size() -> b
@@ -581,7 +581,7 @@ moio.util.Collection -> co:
     int hashCode() -> hashCode
     moio.util.HashMap$HashIterator iterator$1d77ccfc() -> a
     int size() -> b
-moio.util.HashMap -> bi:
+moio.util.HashMap -> bh:
     int threshold -> a
     float loadFactor -> b
     moio.util.HashMap$HashEntry[] buckets -> c
@@ -592,14 +592,14 @@ moio.util.HashMap -> bi:
     moio.util.Set entrySet() -> a
     int hash(java.lang.Object) -> b
     moio.util.HashMap$HashIterator iterator$c74cda3(int) -> a
-moio.util.HashMap$3 -> ca:
+moio.util.HashMap$3 -> cb:
     moio.util.HashMap this$0 -> a
     int size() -> b
     moio.util.HashMap$HashIterator iterator$1d77ccfc() -> a
     boolean contains(java.lang.Object) -> a
-moio.util.HashMap$HashEntry -> bd:
+moio.util.HashMap$HashEntry -> bc:
     moio.util.HashMap$HashEntry next -> a
-moio.util.HashMap$HashIterator -> br:
+moio.util.HashMap$HashIterator -> bs:
     int type -> a
     int count -> b
     int idx -> c
@@ -634,7 +634,7 @@ moio.util.StringTokenizer -> e:
     java.lang.String nextToken() -> b
     boolean hasMoreElements() -> c
     int countTokens() -> d
-net.sf.bt747.j2me.system.Generic -> bu:
+net.sf.bt747.j2me.system.Generic -> bv:
     java.util.Hashtable h -> a
     java.util.Hashtable oos -> b
     void addThread$6728a14$7ba9bf40(gps.GPSstate) -> a
@@ -673,9 +673,9 @@ net.sf.bt747.j2me.system.J2METime -> ao:
     int getMonth() -> e
     int getDay() -> f
     void setUTCTime(int) -> a
-net.sf.bt747.j2me.system.J2MEVector -> ak:
+net.sf.bt747.j2me.system.J2MEVector -> al:
     java.lang.String[] toStringArray() -> a
-net.sf.bt747.j2me.system.JavaTranslations -> bq:
+net.sf.bt747.j2me.system.JavaTranslations -> br:
     char[] ZEROCHARS -> a
     long appStartTime -> b
     net.sf.bt747.j2me.system.J2MEDate getDateInstance$2e433318() -> a
@@ -701,7 +701,7 @@ net.sf.bt747.j2me.system.JavaTranslations -> bq:
     int toIntBitwise(float) -> b
     void debug(java.lang.String) -> e
     int getTimeStamp() -> d
-net.sf.bt747.j2me.system.MyThread -> be:
+net.sf.bt747.j2me.system.MyThread -> bd:
     java.lang.Thread jvThread -> a
     gps.GPSstate btThread$f25320b -> b
     boolean running -> c
@@ -779,7 +779,7 @@ net.sf.bt747.j4me.app.ConvertToScreen -> dt:
     org.j4me.ui.DeviceScreen previous -> j
     void onCancel() -> e
     org.j4me.ui.DeviceScreen doWork() -> p
-net.sf.bt747.j4me.app.DebugConfigScreen -> cc:
+net.sf.bt747.j4me.app.DebugConfigScreen -> cd:
     org.j4me.ui.DeviceScreen previous -> d
     net.sf.bt747.j4me.app.AppController c -> j
     org.j4me.ui.components.CheckBox cbConsoleToFile -> k
@@ -792,7 +792,7 @@ net.sf.bt747.j4me.app.DebugConfigScreen -> cc:
     void declineNotify() -> d
 net.sf.bt747.j4me.app.FileManager -> x:
     java.util.Enumeration getFiles(java.lang.String) -> a
-net.sf.bt747.j4me.app.FindingGPSDevicesAlert -> bp:
+net.sf.bt747.j4me.app.FindingGPSDevicesAlert -> bq:
     net.sf.bt747.j4me.app.AppController c -> j
     java.lang.Object BLUETOOTH_LOCK -> d
     org.j4me.ui.DeviceScreen previous -> k
@@ -816,7 +816,7 @@ net.sf.bt747.j4me.app.GpsPositionScreen -> a:
     void declineNotify() -> d
     void modelEvent(bt747.model.ModelEvent) -> a
     javax.microedition.lcdui.Font access$0() -> e
-net.sf.bt747.j4me.app.GpsPositionScreen$FieldValue -> bz:
+net.sf.bt747.j4me.app.GpsPositionScreen$FieldValue -> ca:
     java.lang.String name -> g
     void setLabel(java.lang.String) -> a
     void setLabel$253acba(double) -> a
@@ -839,7 +839,7 @@ net.sf.bt747.j4me.app.LogConditionsConfigScreen -> ab:
     void acceptNotify() -> c
     void declineNotify() -> d
     void modelEvent(bt747.model.ModelEvent) -> a
-net.sf.bt747.j4me.app.LogDownloadConfigScreen -> bn:
+net.sf.bt747.j4me.app.LogDownloadConfigScreen -> bo:
     org.j4me.ui.DeviceScreen previous -> d
     net.sf.bt747.j4me.app.AppController c -> j
     org.j4me.ui.components.TextBox tbChunkSize -> k
@@ -850,7 +850,7 @@ net.sf.bt747.j4me.app.LogDownloadConfigScreen -> bn:
     void acceptNotify() -> c
     void declineNotify() -> d
     void modelEvent(bt747.model.ModelEvent) -> a
-net.sf.bt747.j4me.app.LogDownloadScreen -> bs:
+net.sf.bt747.j4me.app.LogDownloadScreen -> bt:
     org.j4me.ui.components.Label label -> m
     org.j4me.ui.components.Label bytesDownloaded -> n
     org.j4me.ui.components.Label bytes -> o
@@ -860,7 +860,7 @@ net.sf.bt747.j4me.app.LogDownloadScreen -> bs:
     org.j4me.ui.DeviceScreen logDownload -> j
     org.j4me.ui.components.ProgressBar bar -> r
     org.j4me.ui.DeviceScreen previous -> k
-    org.j4me.examples.log.LogScreen logScreen -> s
+    net.sf.bt747.j4me.app.log.LogScreen logScreen -> s
     net.sf.bt747.j4me.app.AppController c -> l
     long nextUpdate -> t
     java.lang.Object lock -> u
@@ -875,7 +875,7 @@ net.sf.bt747.j4me.app.LogDownloadScreen -> bs:
     void keyPressed(int) -> c
     void progressUpdate() -> p
     void modelEvent(bt747.model.ModelEvent) -> a
-net.sf.bt747.j4me.app.LogDownloadScreen$1 -> p:
+net.sf.bt747.j4me.app.LogDownloadScreen$1 -> o:
     net.sf.bt747.j4me.app.LogDownloadScreen this$0 -> j
     void showNotify() -> a
 net.sf.bt747.j4me.app.LogDownloadScreen$2 -> l:
@@ -913,7 +913,7 @@ net.sf.bt747.j4me.app.LoggerStatusScreen -> dj:
     void declineNotify() -> d
     void modelEvent(bt747.model.ModelEvent) -> a
     javax.microedition.lcdui.Font access$0() -> e
-net.sf.bt747.j4me.app.LoggerStatusScreen$FieldValue -> bj:
+net.sf.bt747.j4me.app.LoggerStatusScreen$FieldValue -> bi:
     java.lang.String name -> g
     void setLabel(java.lang.String) -> a
     void setLabel(int) -> c
@@ -934,7 +934,7 @@ net.sf.bt747.j4me.app.MainScreen -> ay:
     net.sf.bt747.j4me.app.LogConditionsConfigScreen logConditionsConfigScreen -> o
     net.sf.bt747.j4me.app.LogDownloadConfigScreen logDownloadConfigScreen -> p
     net.sf.bt747.j4me.app.LoggerStatusScreen loggerInfoScreen -> q
-    org.j4me.examples.log.LogScreen logScreen -> r
+    net.sf.bt747.j4me.app.log.LogScreen logScreen -> r
     net.sf.bt747.j4me.app.DebugConfigScreen debugConfigScreen -> s
     net.sf.bt747.j4me.app.InitializingGPSAlert initialiseGPSAlert -> t
     net.sf.bt747.j4me.app.FindingGPSDevicesAlert findingGPSDevicesAlert -> u
@@ -963,7 +963,7 @@ net.sf.bt747.j4me.app.MainScreen$2 -> dn:
     net.sf.bt747.j4me.app.MainScreen this$0 -> a
     java.lang.String getText() -> a
     void onSelection() -> b
-net.sf.bt747.j4me.app.MainScreen$3 -> bw:
+net.sf.bt747.j4me.app.MainScreen$3 -> bx:
     net.sf.bt747.j4me.app.MainScreen this$0 -> a
     java.lang.String getText() -> a
     void onSelection() -> b
@@ -985,7 +985,7 @@ net.sf.bt747.j4me.app.PathSelectionScreen$1 -> k:
     java.lang.String val$p -> b
     java.lang.String getText() -> a
     void onSelection() -> b
-net.sf.bt747.j4me.app.PathSelectionScreen$2 -> r:
+net.sf.bt747.j4me.app.PathSelectionScreen$2 -> q:
     net.sf.bt747.j4me.app.PathSelectionScreen this$0 -> a
     java.lang.String val$p -> b
     java.lang.String getText() -> a
@@ -998,7 +998,7 @@ net.sf.bt747.j4me.app.PathSelectionScreen$4 -> af:
     net.sf.bt747.j4me.app.PathSelectionScreen this$0 -> a
     java.lang.String getText() -> a
     void onSelection() -> b
-net.sf.bt747.j4me.app.SelectGPSScreen -> bv:
+net.sf.bt747.j4me.app.SelectGPSScreen -> bw:
     net.sf.bt747.j4me.app.AppController c -> d
     org.j4me.ui.DeviceScreen previous -> j
     void setAvailableDevices(java.lang.String[][]) -> a
@@ -1014,7 +1014,35 @@ net.sf.bt747.j4me.app.SelectGPSScreen$GPSDeviceOption -> dq:
     net.sf.bt747.j4me.app.SelectGPSScreen this$0 -> c
     java.lang.String getText() -> a
     void onSelection() -> b
-org.j4me.bluetoothgps.BluetoothDeviceDiscovery -> bm:
+net.sf.bt747.j4me.app.log.LogOptionsScreen -> r:
+    org.j4me.ui.DeviceScreen previous -> d
+    org.j4me.ui.components.RadioButton logLevel -> j
+    org.j4me.ui.components.CheckBox clear -> k
+    void showNotify() -> a
+    void declineNotify() -> d
+    void acceptNotify() -> c
+net.sf.bt747.j4me.app.log.LogScreen -> at:
+    org.j4me.ui.DeviceScreen previous -> d
+    void showNotify() -> a
+    void declineNotify() -> d
+    void acceptNotify() -> c
+net.sf.bt747.j4me.app.log.LogStatement -> aj:
+net.sf.bt747.j4me.app.screens.ErrorAlert -> bk:
+    org.j4me.ui.DeviceScreen parent -> d
+    org.j4me.ui.components.Label label -> j
+    void declineNotify() -> d
+    void showNotify() -> a
+net.sf.bt747.j4me.app.screens.ProgressAlert -> bm:
+    org.j4me.ui.components.Label label -> d
+    org.j4me.ui.components.ProgressBar spinner -> j
+    boolean canceled -> k
+    void setText(java.lang.String) -> b
+    void showNotify() -> a
+    void declineNotify() -> d
+    void onCancel() -> e
+    void run() -> run
+    org.j4me.ui.DeviceScreen doWork() -> p
+org.j4me.bluetoothgps.BluetoothDeviceDiscovery -> bn:
     javax.bluetooth.DiscoveryAgent discoveryAgent -> a
     java.util.Vector discoveredDevices -> b
     java.util.Vector services -> c
@@ -1027,34 +1055,6 @@ org.j4me.bluetoothgps.BluetoothDeviceDiscovery -> bm:
 org.j4me.bluetoothgps.LocationProvider -> m:
     java.lang.String[][] discoverBluetoothDevices() -> a
     boolean supportsBluetoothAPI() -> b
-org.j4me.examples.log.LogOptionsScreen -> cg:
-    org.j4me.ui.DeviceScreen previous -> d
-    org.j4me.ui.components.RadioButton logLevel -> j
-    org.j4me.ui.components.CheckBox clear -> k
-    void showNotify() -> a
-    void declineNotify() -> d
-    void acceptNotify() -> c
-org.j4me.examples.log.LogScreen -> n:
-    org.j4me.ui.DeviceScreen previous -> d
-    void showNotify() -> a
-    void declineNotify() -> d
-    void acceptNotify() -> c
-org.j4me.examples.log.LogStatement -> al:
-org.j4me.examples.ui.screens.ErrorAlert -> au:
-    org.j4me.ui.DeviceScreen parent -> d
-    org.j4me.ui.components.Label label -> j
-    void declineNotify() -> d
-    void showNotify() -> a
-org.j4me.examples.ui.screens.ProgressAlert -> bb:
-    org.j4me.ui.components.Label label -> d
-    org.j4me.ui.components.ProgressBar spinner -> j
-    boolean canceled -> k
-    void setText(java.lang.String) -> b
-    void showNotify() -> a
-    void declineNotify() -> d
-    void onCancel() -> e
-    void run() -> run
-    org.j4me.ui.DeviceScreen doWork() -> p
 org.j4me.logging.Level -> cu:
     org.j4me.logging.Level DEBUG -> a
     org.j4me.logging.Level INFO -> b
@@ -1089,7 +1089,7 @@ org.j4me.logging.LogMessage -> u:
     java.lang.String message -> b
     void setLogMessage(org.j4me.logging.Level,java.lang.String) -> a
     java.lang.String toString() -> toString
-org.j4me.ui.CanvasWrapper -> bh:
+org.j4me.ui.CanvasWrapper -> bg:
     boolean blackberry -> a
     boolean ibmJ9 -> b
     boolean tao -> c
@@ -1188,7 +1188,7 @@ org.j4me.ui.Menu -> ai:
     void acceptNotify() -> c
     void keyPressed(int) -> c
     void selection(int) -> f
-org.j4me.ui.MenuItem -> at:
+org.j4me.ui.MenuItem -> au:
     java.lang.String getText() -> a
     void onSelection() -> b
 org.j4me.ui.Theme -> an:
@@ -1280,7 +1280,7 @@ org.j4me.ui.components.Label -> cy:
     int[] getPreferredComponentSize(org.j4me.ui.Theme,int,int) -> b
     int getHeight() -> b
     java.lang.String[] breakIntoLines(javax.microedition.lcdui.Font,java.lang.String,int) -> a
-org.j4me.ui.components.MenuOption -> q:
+org.j4me.ui.components.MenuOption -> p:
     org.j4me.ui.MenuItem menuItem -> f
     org.j4me.ui.DeviceScreen screen -> g
     java.lang.String screenText -> h
@@ -1314,7 +1314,7 @@ org.j4me.ui.components.ProgressBar -> cz:
 org.j4me.ui.components.ProgressBar$SpinnerTask -> j:
     org.j4me.ui.components.ProgressBar this$0 -> a
     void run() -> run
-org.j4me.ui.components.RadioButton -> ce:
+org.j4me.ui.components.RadioButton -> cf:
     org.j4me.ui.components.Label label -> f
     java.util.Vector choices -> g
     int selected -> e
@@ -1367,5 +1367,5 @@ org.j4me.util.ConnectorHelper -> da:
     java.lang.Exception exception -> e
     void run() -> run
     javax.microedition.io.StreamConnection blockUntilConnected() -> a
-org.j4me.util.MathFunc -> bg:
+org.j4me.util.MathFunc -> bf:
     long round(double) -> a

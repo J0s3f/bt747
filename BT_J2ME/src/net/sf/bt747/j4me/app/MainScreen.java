@@ -2,7 +2,8 @@ package net.sf.bt747.j4me.app;
 
 import javax.microedition.midlet.MIDlet;
 
-import org.j4me.examples.log.LogScreen;
+import net.sf.bt747.j4me.app.log.LogScreen;
+
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;

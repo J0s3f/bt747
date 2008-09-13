@@ -1,7 +1,8 @@
 package net.sf.bt747.j4me.app;
 
-import org.j4me.examples.ui.screens.ErrorAlert;
-import org.j4me.examples.ui.screens.ProgressAlert;
+import net.sf.bt747.j4me.app.screens.ErrorAlert;
+import net.sf.bt747.j4me.app.screens.ProgressAlert;
+
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 
