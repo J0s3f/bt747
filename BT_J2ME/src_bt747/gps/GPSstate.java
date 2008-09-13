@@ -1822,6 +1822,7 @@ public class GPSstate implements BT747Thread {
                 }
                 if (logNextReadAddr > logDownloadEndAddr) {
                     endGetLog();
+                    postEvent(GpsEvent.LOG_DOWNLOAD_SUCCESS);
                 } else {
                     getNextLogPart();
                 }

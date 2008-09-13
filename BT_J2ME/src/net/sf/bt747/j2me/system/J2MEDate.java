@@ -123,7 +123,7 @@ public final class J2MEDate implements BT747Date {
         Calendar cal = Calendar.getInstance(GMT_ZONE);
 
         try {
-            StringTokenizer fields = new StringTokenizer(strDate.toString(),
+            StringTokenizer fields = new StringTokenizer(strDate,
                     '/');
             int arg0;
             int arg1;

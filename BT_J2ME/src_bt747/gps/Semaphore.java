@@ -31,7 +31,7 @@ public class Semaphore
 
   public synchronized void down() {
     --value;
-    if (value < 0) {
+    while (value < 0) {
       try {	wait(); } catch( Exception e ) {}
     }
   }

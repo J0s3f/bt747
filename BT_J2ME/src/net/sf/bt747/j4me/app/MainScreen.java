@@ -21,18 +21,26 @@ public class MainScreen extends Dialog {
 
     private Label lbText;
 
-    final LogDownloadScreen downloadLogScreen;
-    final ConvertToScreen convertToScreen;
-    final GpsPositionScreen gpsPositionScreen;
-    final LogConditionsConfigScreen logConditionsConfigScreen;
-    final LogDownloadConfigScreen logDownloadConfigScreen;
-    final LoggerStatusScreen loggerInfoScreen;
-    final LogScreen logScreen;
-    final DebugConfigScreen debugConfigScreen;
-    final InitializingGPSAlert initialiseGPSAlert;
-    final FindingGPSDevicesAlert findingGPSDevicesAlert;
-    final PathSelectionScreen baseDirScreen;
+    private final LogDownloadScreen downloadLogScreen;
+    private final ConvertToScreen convertToScreen;
+    private final GpsPositionScreen gpsPositionScreen;
+    private final LogConditionsConfigScreen logConditionsConfigScreen;
+    private final LogDownloadConfigScreen logDownloadConfigScreen;
+    private final LoggerStatusScreen loggerInfoScreen;
+    private final LogScreen logScreen;
+    private final DebugConfigScreen debugConfigScreen;
+    private final InitializingGPSAlert initialiseGPSAlert;
+    private final FindingGPSDevicesAlert findingGPSDevicesAlert;
+    private final PathSelectionScreen baseDirScreen;
 
+    private final int NO_CONFIRM = 0;
+    private final int ERASE_CONFIRM = 1;
+    private int confirmScreenOption = 0;
+
+    final private Menu rootMenu;
+    final private DeviceScreen myself = this;
+    private ConfirmScreen confirmScreen;
+    
     /**
      * Constructs the "Log" screen.
      * 
@@ -49,8 +57,19 @@ public class MainScreen extends Dialog {
         lbText = new Label("ALPHA/BETA version of a J2ME "
                 + "implementation of BT747\n"
                 + "(http://sf.net/projects/bt747).\n"
-                + " This application demonstrates log download\n"
-                + " and enables you to set some basic log conditions.");
+                + " This application demonstrates log download"
+                + " and enables you to set some basic log conditions.\n"
+                + "It is available under the GNU GENERAL PUBLIC LICENSE v3.\n"
+                + "Portions of the code are subject to the APACHE V2"
+                + " license http://www.apache.org/licenses/LICENSE-2.0 .\n"
+                + "This SW uses code from http://www.j4me.org, "
+                + "http://gpsd.berlios.de/, and, "
+                + "http://sourceforge.net/projects/swcollections.\n"
+                + "For a list of people that made this happen,"
+                + "see the documentation and the project site.\n"
+                + "DISCLAIMER\n"
+                + "This SW is free and comes without any guarantee\n"
+                + "Use this SW at your own risk.");
         append(lbText);
 
         // Add the menu buttons.
@@ -78,6 +97,49 @@ public class MainScreen extends Dialog {
 
         // Call here for debug
         // c.doConvertLog(Model.GPX_LOGTYPE);
+        rootMenu = new Menu("Log", this);
+        // Reset the current location provider.
+
+        rootMenu.appendMenuOption(downloadLogScreen);
+        rootMenu.appendMenuOption("GPS Position", gpsPositionScreen);
+
+        Menu subMenu;
+        subMenu = new Menu("App Settings", rootMenu);
+        subMenu.appendMenuOption("Working dir", baseDirScreen);
+        subMenu.appendMenuOption("Debug Conditions", debugConfigScreen);
+        subMenu.appendMenuOption("Download Settings", logDownloadConfigScreen);
+        rootMenu.appendSubmenu(subMenu);
+
+        subMenu = new Menu("Convert", rootMenu);
+        subMenu.appendMenuOption("To GPX", convertToScreen);
+        rootMenu.appendSubmenu(subMenu);
+
+        subMenu = new Menu("Connection", rootMenu);
+        subMenu.appendMenuOption("Reconnect to GPS", initialiseGPSAlert);
+        subMenu.appendMenuOption("Find and Connect", findingGPSDevicesAlert);
+        rootMenu.appendSubmenu(subMenu);
+
+        subMenu = new Menu("Logger", rootMenu);
+        subMenu.appendMenuOption("Log Conditions", logConditionsConfigScreen);
+        subMenu.appendMenuOption("MTK Logger Config", loggerInfoScreen);
+        subMenu.appendMenuOption(new MenuItem() {
+            public final String getText() {
+                return "Erase";
+            }
+
+            public final void onSelection() {
+                confirmScreenOption = ERASE_CONFIRM;
+                confirmScreen = new ConfirmScreen(
+                        "Confirm erasal",
+                        "Do you confirm erasal of all data in memory."
+                                + "If you did not download, you remove this info.",
+                        "Do you confirm erasal.  YOU MIGHT LOOSE DATA.", myself);
+                confirmScreen.show();
+            }
+        });
+
+        rootMenu.appendSubmenu(subMenu);
+
     }
 
     private static boolean isFirstLaunch = true;
@@ -97,6 +159,18 @@ public class MainScreen extends Dialog {
                 findingGPSDevicesAlert.show();
             }
         } else {
+            if(confirmScreen!=null) {
+                switch(confirmScreenOption) {
+                case NO_CONFIRM:
+                    break;
+                case ERASE_CONFIRM:
+                    if(confirmScreen.getConfirmation()) {
+                        Log.debug("Request erase");
+                        c.eraseLog();
+                    }
+                    break;
+                }
+            }
             super.show();
         }
 
@@ -116,19 +190,6 @@ public class MainScreen extends Dialog {
      * @see DeviceScreen#declineNotify()
      */
     protected final void declineNotify() {
-        Menu menu = new Menu("Log", this);
-        // Reset the current location provider.
-
-        menu.appendMenuOption(downloadLogScreen);
-        menu.appendMenuOption("Working dir", baseDirScreen);
-        menu.appendMenuOption("To GPX", convertToScreen);
-        menu.appendMenuOption("GPS Position", gpsPositionScreen);
-        menu.appendMenuOption("Log Conditions", logConditionsConfigScreen);
-        menu.appendMenuOption("Debug Conditions", debugConfigScreen);
-        menu.appendMenuOption("Download Settings", logDownloadConfigScreen);
-        menu.appendMenuOption("MTK Logger Config", loggerInfoScreen);
-        menu.appendMenuOption("Reconnect to GPS", initialiseGPSAlert);
-        menu.appendMenuOption("Find and Connect", findingGPSDevicesAlert);
 
         /*
          * menu.appendMenuOption( new MenuItem() { public String getText () {
@@ -136,7 +197,7 @@ public class MainScreen extends Dialog {
          * 
          * public void onSelection () { show(); } } );
          */
-        menu.show();
+        rootMenu.show();
 
         // Continue processing the event.
         super.declineNotify();
