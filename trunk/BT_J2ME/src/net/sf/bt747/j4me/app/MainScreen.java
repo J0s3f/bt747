@@ -40,7 +40,7 @@ public class MainScreen extends Dialog {
     final private Menu rootMenu;
     final private DeviceScreen myself = this;
     private ConfirmScreen confirmScreen;
-    
+
     /**
      * Constructs the "Log" screen.
      * 
@@ -52,7 +52,8 @@ public class MainScreen extends Dialog {
         this.c = c;
         this.midlet = midlet;
         // Set the title.
-        setTitle("MTK Log Control (BT747)");
+        setTitle("MTK Log Control (BT747) V"
+                + midlet.getAppProperty("MIDlet-Version"));
 
         lbText = new Label("ALPHA/BETA version of a J2ME "
                 + "implementation of BT747\n"
@@ -159,12 +160,12 @@ public class MainScreen extends Dialog {
                 findingGPSDevicesAlert.show();
             }
         } else {
-            if(confirmScreen!=null) {
-                switch(confirmScreenOption) {
+            if (confirmScreen != null) {
+                switch (confirmScreenOption) {
                 case NO_CONFIRM:
                     break;
                 case ERASE_CONFIRM:
-                    if(confirmScreen.getConfirmation()) {
+                    if (confirmScreen.getConfirmation()) {
                         Log.debug("Request erase");
                         c.eraseLog();
                     }
@@ -204,6 +205,7 @@ public class MainScreen extends Dialog {
     }
 
     Menu menu;
+
     /**
      * Called when the user presses the "Other" button.
      * 
@@ -246,9 +248,9 @@ public class MainScreen extends Dialog {
         // Continue processing the event.
         super.acceptNotify();
     }
-    
+
     protected void keyPressed(int keyCode) {
-        if(keyCode == DeviceScreen.RIGHT) {
+        if (keyCode == DeviceScreen.RIGHT) {
             rootMenu.show();
         } else {
             super.keyPressed(keyCode);

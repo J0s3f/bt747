@@ -72,11 +72,11 @@ public class MTKMidlet extends MIDlet implements ModelListener {
         // Initialize the J4ME UI manager.
         try {
             UIManager.init(this);
+            // Change the theme.
+            UIManager.setTheme( new BlueTheme() );
+
 
             m.addListener(this);
-
-            // Change the theme.
-            // UIManager.setTheme( new org.j4me.examples.ui.themes.RedTheme() );
 
             // Show the first screen.
 

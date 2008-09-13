@@ -104,6 +104,7 @@ public class PathSelectionScreen extends Menu {
 
     private void setup() {
         this.deleteAll();
+        this.setTitle(currentPath);
         // // Log.info(System.getProperty("file.separator"));
         // Log.info(currentPath);
         // Log.info("Before enum");
