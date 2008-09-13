@@ -2,6 +2,8 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src_waba"/>
+	<classpathentry kind="src" path="src_j2se"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SuperwabaSDK"/>
 	<classpathentry kind="lib" path="lib/collections-superwaba.jar" sourcepath="/SWCollections/src"/>
 	<classpathentry kind="lib" path="lib/swing-layout-1.0.3.jar"/>
