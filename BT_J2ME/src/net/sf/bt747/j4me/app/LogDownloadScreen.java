@@ -40,7 +40,7 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
     private Label status = new Label();
 
     private TextBox tb = new TextBox();
-    
+
     private DeviceScreen logDownload = this;
 
     /**
@@ -166,7 +166,7 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
 
         Menu menu = new Menu("Log menu", this) {
             public void showNotify() {
-                if(tb.getString().length()!=0) {
+                if (tb.getString().length() != 0) {
                     c.setLogFileRelPath(tb.getString());
                     tb.setString(null);
                     logDownload.show();
@@ -174,7 +174,7 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
                 super.showNotify();
             }
         };
-        
+
         menu.appendMenuOption(new MenuItem() {
             public String getText() {
                 return "Start download";
@@ -238,6 +238,20 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
         acceptNotify();
     }
 
+    protected void keyPressed(int keyCode) {
+        if (keyCode == DeviceScreen.RIGHT) {
+            // Show the menu
+            declineNotify();
+        } else if (keyCode == DeviceScreen.LEFT) {
+            // Show the menu
+            acceptNotify();
+        } else if (keyCode == DeviceScreen.FIRE) {
+            startDownload();
+        } else {
+            super.keyPressed(keyCode);
+        }
+    }
+
     private void downloadDone() {
         m().removeListener(this);
     }
@@ -263,13 +277,13 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
 
             long currentTime = System.currentTimeMillis();
             if (currentTime >= nextUpdate || !isShown()) {
-                nextUpdate = currentTime + 100L;
+                nextUpdate = currentTime + 50L;
                 bar.setMaxValue(max);
                 bar.setValue(value);
                 bytesDownloaded.setLabel(Integer.toString(value));
                 if (isShown()) {
                     bar.repaint();
-                    bytes.repaint();
+                    bytesDownloaded.repaint();
                 }
             }
         }
@@ -286,6 +300,7 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
                 success = false;
             }
             status.setLabel("Downloading");
+            status.repaint();
             /* fall through */
         case ModelEvent.DOWNLOAD_STATE_CHANGE:
             // Log.debug("Progress update");
@@ -296,6 +311,7 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
                 if (!success) {
                     status.setLabel(status.getLabel()
                             + "\n**Download interrupted**");
+                    this.repaint();
                 }
             }
             downloadDone();
@@ -305,6 +321,7 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
                 success = true;
             }
             status.setLabel("Download success");
+            status.repaint();
             Log.debug("Download success");
             break;
         case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
