@@ -128,10 +128,6 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
 
     private final void startDownload() {
         if (!m().isDownloadOnGoing()) {
-            bar.visible(true);
-            label.visible(true);
-            bytesDownloaded.visible(true);
-            bytes.visible(true);
             m().addListener(this);
             Thread worker = new Thread(this);
             worker.start();
@@ -271,7 +267,7 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
                 nextUpdate = currentTime + 100L;
                 bar.setMaxValue(max);
                 bar.setValue(value);
-                bytes.setLabel(Integer.toString(value));
+                bytesDownloaded.setLabel(Integer.toString(value));
                 if (isShown()) {
                     bar.repaint();
                     bytes.repaint();
