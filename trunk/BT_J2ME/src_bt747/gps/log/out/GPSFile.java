@@ -12,11 +12,6 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************       
 package gps.log.out;
 
 import gps.BT747Constants;
@@ -25,7 +20,6 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.generic.Generic;
-import bt747.io.BufFile;
 import bt747.io.File;
 import bt747.sys.Convert;
 import bt747.sys.Time;
@@ -63,7 +57,7 @@ public abstract class GPSFile {
 
     protected int numberOfPasses = 1;
 
-    private BufFile outFile = null;
+    private File outFile = null;
 
     protected Time t = new Time(); // Time from log, already transformed
 
@@ -263,9 +257,11 @@ public abstract class GPSFile {
         int error = BT747Constants.NO_ERROR;
 
         try {
-            File tmpFile = new File(fileName, File.DONT_OPEN, card);
-            if (createNewFile && tmpFile.exists()) {
-                tmpFile.delete();
+            if (createNewFile) {
+                File tmpFile = new File(fileName, File.DONT_OPEN, card);
+                if (tmpFile.exists()) {
+                    tmpFile.delete();
+                }
             }
         } catch (Exception e) {
             Generic.debug("File deletion", e);
@@ -273,7 +269,7 @@ public abstract class GPSFile {
         }
         try {
             int mode = createNewFile ? File.CREATE : File.WRITE_ONLY;
-            outFile = new BufFile(fileName, mode, card);
+            outFile = new File(fileName, mode, card);
         } catch (Exception e) {
             Generic.debug("File creation", e);
             // TODO: handle exception

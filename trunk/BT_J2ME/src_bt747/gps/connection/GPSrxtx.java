@@ -34,7 +34,7 @@ import bt747.util.Vector;
  * @author Mario De Weerd
  */
 public class GPSrxtx {
-    private boolean GPS_DEBUG = !Settings.hasWaba || false; // !Settings.onDevice;
+    private boolean GPS_DEBUG = false;
 
     private static GPSPort gpsPort;
 

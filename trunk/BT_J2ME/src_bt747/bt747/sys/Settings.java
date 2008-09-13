@@ -13,14 +13,14 @@ package bt747.sys;
  * Preferences - Java - Code Style - Code Templates
  */
 public class Settings {
-    public static boolean hasWaba = false;
-    public static String platform = java.lang.System.getProperty("os.name");
-    public static int requiredVersion = 582;
-    public static String requiredVersionStr = "5.82";
-    public static int version = 582;
-    public static String versionStr = java.lang.System
-            .getProperty("os.version");
-    public static boolean onDevice = false;
+//    public static boolean hasWaba = false;
+//    public static String platform = java.lang.System.getProperty("os.name");
+//    public static int requiredVersion = 582;
+//    public static String requiredVersionStr = "5.82";
+//    public static int version = 582;
+//    public static String versionStr = java.lang.System
+//            .getProperty("os.version");
+//    public static boolean onDevice = false;
     public static byte DATE_YMD = 1;
     public static byte DATE_DMY = 2;
 
