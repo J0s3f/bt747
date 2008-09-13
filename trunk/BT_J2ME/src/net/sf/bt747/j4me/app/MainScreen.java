@@ -203,6 +203,7 @@ public class MainScreen extends Dialog {
         super.declineNotify();
     }
 
+    Menu menu;
     /**
      * Called when the user presses the "Other" button.
      * 
@@ -244,6 +245,14 @@ public class MainScreen extends Dialog {
 
         // Continue processing the event.
         super.acceptNotify();
+    }
+    
+    protected void keyPressed(int keyCode) {
+        if(keyCode == DeviceScreen.RIGHT) {
+            rootMenu.show();
+        } else {
+            super.keyPressed(keyCode);
+        }
     }
 
     protected void returnNotify() {
