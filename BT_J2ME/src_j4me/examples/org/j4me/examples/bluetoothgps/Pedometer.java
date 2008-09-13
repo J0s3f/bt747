@@ -6,11 +6,12 @@ import java.util.Date;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
+import net.sf.bt747.j4me.app.log.LogScreen;
+
 import org.j4me.bluetoothgps.Location;
 import org.j4me.bluetoothgps.LocationListener;
 import org.j4me.bluetoothgps.LocationProvider;
 import org.j4me.bluetoothgps.QualifiedCoordinates;
-import org.j4me.examples.log.LogScreen;
 import org.j4me.logging.Log;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
