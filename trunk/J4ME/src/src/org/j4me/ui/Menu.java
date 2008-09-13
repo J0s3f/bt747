@@ -164,6 +164,8 @@ public class Menu
 	{
 		boolean goToFirst = false;
 		boolean goToLast = false;
+		boolean select = false;
+		boolean back = false;
 		
 		// Wrap the scroll around the screen?
 		if ( key == DOWN )
@@ -181,6 +183,19 @@ public class Menu
 				// Go to the last menu choice.
 				goToLast = true;
 			}
+		} else if (key == RIGHT) {
+		    Component component = get(getSelected());
+		    if(component instanceof MenuOption) {
+		        MenuOption mo = (MenuOption) component;
+		        if(mo.isSubmenu()) {
+		            select = true;
+		        }
+		    }
+//		    Object get(getS)
+//		    if(get(getSelected()).)
+		    
+		} else if (key == LEFT) {
+		    back = true;
 		}
 
 		// Process the key event.
@@ -197,6 +212,10 @@ public class Menu
 		else if ( goToLast )
 		{
 			setSelected( size() - 1 );
+		} else if (select) {
+            selection(getSelected());
+		} else if (back) {
+		    declineNotify();
 		}
 	}
 	
