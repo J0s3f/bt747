@@ -12,11 +12,6 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************                              
 package gps;
 
 import gps.Txt;
@@ -584,9 +579,9 @@ public final class BT747Constants { // dev as in device
             "MEPH", // 14 // PMTKEPH interval - GPS ephemeris information
             "MDGP", // 15 // PMTKDGP interval - GPS differential correction
             // information
-            "MDBG", // 16 // PMTKDBG interval – MTK debug information
-            "ZDA", // 17 // GPZDA interval – Time & Date
-            "MCHN", // 18 // PMTKCHN interval – GPS channel status
+            "MDBG", // 16 // PMTKDBG interval - MTK debug information
+            "ZDA", // 17 // GPZDA interval - Time & Date
+            "MCHN", // 18 // PMTKCHN interval - GPS channel status
     };
     public static final int NMEA_SEN_GLL_IDX = 0; // GPGLL interval -
     // Geographic Position -
@@ -613,15 +608,14 @@ public final class BT747Constants { // dev as in device
     // almanac information
     public static final int NMEA_SEN_MEPH_IDX = 14; // PMTKEPH interval - GPS
     // ephemeris information
-    public static final int NMEA_SEN_MDGP_IDX = 15; // PMTKDGP interval - GPS
-    // differential correction
-    // information
-    public static final int NMEA_SEN_MDBG_IDX = 16; // PMTKDBG interval – MTK
-    // debug information
-    public static final int NMEA_SEN_ZDA_IDX = 17; // GPZDA interval – Time &
-    // Date
-    public static final int NMEA_SEN_MCHN_IDX = 18; // PMTKCHN interval – GPS
-    // channel status
+    /** PMTKDGP interval - GPS differential correction information */
+    public static final int NMEA_SEN_MDGP_IDX = 15;
+    /** PMTKDBG interval - MTK debug information */
+    public static final int NMEA_SEN_MDBG_IDX = 16;
+    /** GPZDA interval - Time & Date */
+    public static final int NMEA_SEN_ZDA_IDX = 17;
+    /** PMTKCHN interval - GPS channel status */
+    public static final int NMEA_SEN_MCHN_IDX = 18; 
 
     public static final int SPI_Y2_MAN_ID_MASK = 0xff00;
     public static final int SPI_Y2_DEV_ID_MASK = 0x00ff;
