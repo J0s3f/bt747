@@ -1,1 +1,0 @@
-net.sf.bt747.j4me.app.MTKMidlet
