@@ -1,5 +1,6 @@
 package net.sf.bt747.j4me.app;
 
+import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
 
@@ -15,15 +16,15 @@ public final class BlueTheme extends Theme {
     private static Font MEDIUM_FONT;
     private static Font MEDIUM_FONT_BOLD;
 
-    public BlueTheme() {
+    public BlueTheme(final int width) {
+        Log.debug("BlueTheme");
         if (MEDIUM_FONT == null) {
             Font base;
             int baseFace = Font.getDefaultFont().getFace();
             int maxsize;
-            Display d = UIManager.getDisplay();
-            maxsize = d.getCurrent().getWidth() / 24;
-            Log.debug("BlueTheme");
             Log.debug("Default size " + Font.getDefaultFont().charWidth('0'));
+            Log.debug("Width " + width);
+            maxsize = width / 24;
             Log.debug("Target size " + maxsize);
             base = Font.getFont(baseFace, Font.STYLE_PLAIN, Font.SIZE_LARGE);
             if (base.charWidth('0') > maxsize) {
@@ -172,7 +173,7 @@ public final class BlueTheme extends Theme {
     public final int getScrollbarTrackbarColor() {
         return BLUE;
     }
-    
+
     public String getMenuTextForCancel() {
         return "Back";
     }
