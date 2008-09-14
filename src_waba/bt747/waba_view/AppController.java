@@ -32,7 +32,7 @@ public class AppController extends Controller {
             || Settings.platform.startsWith("Windows") || Settings.platform
             .startsWith("Mac")
     // #if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")
-    ) ? "SettingsBT747.pdb" : "/My Documents/BT747/SettingsBT747.pdb"
+    ) ? "SettingsBT747.pdb" : "/My Documents/SettingsBT747.pdb"
     // #if RXTX )
     // #if RXTX ))
     ;

@@ -25,7 +25,9 @@ import bt747.interfaces.BT747Hashtable;
 import bt747.interfaces.BT747Thread;
 import bt747.interfaces.BT747Time;
 import bt747.interfaces.BT747Vector;
+import bt747.interfaces.Interface;
 import bt747.interfaces.JavaTranslationsInterface;
+import bt747.sys.Settings;
 
 public class JavaTranslations implements JavaTranslationsInterface {
     public final BT747Date getDateInstance() {
@@ -165,6 +167,21 @@ public class JavaTranslations implements JavaTranslationsInterface {
 
     public final int getTimeStamp() {
         return waba.sys.Vm.getTimeStamp();
+    }
+
+    /**
+     * @return the appSettings
+     */
+    public final String getAppSettings() {
+        return waba.sys.Settings.appSettings;
+    }
+
+    /**
+     * @param appSettings
+     *            the appSettings to set
+     */
+    public final void setAppSettings(final String appSettings) {
+        waba.sys.Settings.appSettings = appSettings;
     }
 
 }
