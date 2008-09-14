@@ -283,7 +283,7 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
             g = (GPSRecord) e.getArg();
             latitude.setLabel(g.latitude, 6);
             longitude.setLabel(g.longitude, 6);
-            NSAT.setLabel(Convert.toString(g.nsat));
+            NSAT.setLabel((g.nsat / 256) + "(" + (g.nsat & 0xFF) + ")");
             fvAltitude.setLabel(g.height, 1);
             fvHdop.setLabel(g.hdop / 10., 1);
             repaint();
@@ -292,5 +292,4 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         }
 
     }
-
 }
