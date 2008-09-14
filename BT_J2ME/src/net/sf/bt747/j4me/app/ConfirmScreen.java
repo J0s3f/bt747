@@ -1,9 +1,8 @@
 package net.sf.bt747.j4me.app;
 
-import javax.microedition.lcdui.Font;
-
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
+import org.j4me.ui.UIManager;
 import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
 
@@ -19,9 +18,6 @@ public class ConfirmScreen extends Dialog {
 
     private String next;
     private DeviceScreen previous;
-
-    private static final Font LARGE_FONT = Font.getFont(Font.FACE_SYSTEM,
-            Font.STYLE_BOLD, Font.SIZE_LARGE);
 
     /**
      * Constructs the "Log" screen.
@@ -48,7 +44,7 @@ public class ConfirmScreen extends Dialog {
             isAcceptNotifyAConfirmation = false;
             next = null;
         }
-        lbText.setFont(LARGE_FONT);
+        lbText.setFont(UIManager.getTheme().getMenuFont());
 
         append(lbText);
         append(new HorizontalRule());

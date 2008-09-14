@@ -1,9 +1,11 @@
 package net.sf.bt747.j4me.app;
 
+import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
 
 import org.j4me.logging.Log;
 import org.j4me.ui.Theme;
+import org.j4me.ui.UIManager;
 
 /**
  * A red on white theme.
@@ -17,18 +19,22 @@ public final class BlueTheme extends Theme {
         if (MEDIUM_FONT == null) {
             Font base;
             int baseFace = Font.getDefaultFont().getFace();
+            int maxsize;
+            Display d = UIManager.getDisplay();
+            maxsize = d.getCurrent().getWidth() / 24;
             Log.debug("BlueTheme");
-            Log.debug("Default size "+Font.getDefaultFont().charWidth('0'));
+            Log.debug("Default size " + Font.getDefaultFont().charWidth('0'));
+            Log.debug("Target size " + maxsize);
             base = Font.getFont(baseFace, Font.STYLE_PLAIN, Font.SIZE_LARGE);
-            if (base.charWidth('0') > 10) {
+            if (base.charWidth('0') > maxsize) {
                 base = Font.getFont(baseFace, Font.STYLE_PLAIN,
                         Font.SIZE_MEDIUM);
-                if (base.charWidth('0') > 10) {
+                if (base.charWidth('0') > maxsize) {
                     base = Font.getFont(baseFace, Font.STYLE_PLAIN,
                             Font.SIZE_SMALL);
                 }
             }
-            Log.debug("New size "+base.charWidth('0'));
+            Log.debug("New size " + base.charWidth('0'));
 
             MEDIUM_FONT = base;
             MEDIUM_FONT_BOLD = Font.getFont(base.getFace(), Font.STYLE_BOLD
@@ -165,5 +171,9 @@ public final class BlueTheme extends Theme {
      */
     public final int getScrollbarTrackbarColor() {
         return BLUE;
+    }
+    
+    public String getMenuTextForCancel() {
+        return "Back";
     }
 }
