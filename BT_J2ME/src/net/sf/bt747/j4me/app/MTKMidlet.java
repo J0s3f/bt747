@@ -1,6 +1,5 @@
 package net.sf.bt747.j4me.app;
 
-import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
@@ -12,8 +11,6 @@ import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.UIManager;
 
 import bt747.interfaces.Interface;
-import bt747.model.ModelEvent;
-import bt747.model.ModelListener;
 
 /**
  * The entry point for the application.
@@ -72,15 +69,16 @@ public class MTKMidlet extends MIDlet {
         // Initialize the J4ME UI manager.
         try {
             UIManager.init(this);
+            DeviceScreen main = new MainScreen(c, this);
             // Change the theme.
-            UIManager.setTheme(new BlueTheme());
+            UIManager.setTheme(new BlueTheme(main.getScreenWidth()));
 
             // Show the first screen.
 
             // FindingGPSDevicesAlert creates a list of devices, then calls
             // SelectGPSScreen which will in turn call
             // InitializingGPSAlert
-            DeviceScreen main = new MainScreen(c, this);
+            
 
             // (new ConvertTo(c, main)).doWork(); // Debug conversion
             main.show();

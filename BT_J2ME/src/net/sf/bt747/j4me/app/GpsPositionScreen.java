@@ -283,8 +283,8 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
             g = (GPSRecord) e.getArg();
             latitude.setLabel(g.latitude, 6);
             longitude.setLabel(g.longitude, 6);
+            NSAT.setLabel(Convert.toString(g.nsat));
             fvAltitude.setLabel(g.height, 1);
-            NSAT.setLabel(g.nsat);
             fvHdop.setLabel(g.hdop / 10., 1);
             repaint();
         default:
