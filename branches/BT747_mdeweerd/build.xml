@@ -438,9 +438,11 @@
                         -keep public class gps.log.out.GPSFile { *; }
                         -keep public class * extends gps.connection.GPSPort { *; }
 			            -keep public class bt747.Version { *; }
+            -keep public class bt747.lang.*
+            -keep public class bt747.Txt
             -keep public interface bt747.interfaces.* {
                 public *;
-            }
+			}
         -keep public class bt747.interfaces.* {
             public *;
         }
@@ -448,7 +450,6 @@
 	                       public static void setGpsPortInstance(gps.connection.GPSPort);
 	                    }
                         -keep public class gps.connection.GPSPort  { *; }
-			            -printseeds
                </proguard>
 
 	</target>
@@ -585,7 +586,8 @@
                     public static void main(java.lang.String[]); }
 	            -keepclasseswithmembers public class * {
 	                public static void main(java.lang.String[]); }
-			    -printseeds
+            -keep public class bt747.lang.*
+            -keep public class bt747.Txt
 	        </proguard>
 		<delete file="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar">
 		</delete>
@@ -625,10 +627,10 @@
 
 	<!-- filesets for rxtxbuild -->
 	<fileset dir="." id="rxtx_src">
+        <include name="${src_rxtx.dir}/**/*.java" />
         <include name="${src.dir}/**/*.java" />
         <include name="${src_waba.dir}/**/*.java" />
         <include name="${src_j2se.dir}/**/*.java" />
-		<include name="${src_rxtx.dir}**/*.java" />
 	</fileset>
 
 
@@ -723,7 +725,7 @@
 		</echoproperties>
 		<echoproperties prefix="is.j2se">
 		</echoproperties>
-		<delete verbose="yes">
+		<delete verbose="no">
 			<fileset dir="${rxtxsrc.dir}">
 				<include name="${src_j2se.dir}/**" unless="is.j2se" />
 				<include name="${src_waba.dir}/**" if="exclude.waba" />
@@ -1569,7 +1571,7 @@
 				<isfalse value="@{rxtx}" />
 			</condition>
 			<delete dir="@{dest.dir}" />
-			<copy todir="@{dest.dir}">
+			<copy todir="@{dest.dir}" verbose="no">
 				<fileset refid="@{srcid}" />
 			</copy>
 			<!-- required lib: Jakarta ORO for optional task <replaceregexp> -->

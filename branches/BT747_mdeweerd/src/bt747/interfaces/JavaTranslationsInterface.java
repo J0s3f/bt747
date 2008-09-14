@@ -1,5 +1,7 @@
 package bt747.interfaces;
 
+import bt747.sys.Settings;
+
 public interface JavaTranslationsInterface {
 
     public abstract BT747Date getDateInstance();
@@ -22,7 +24,7 @@ public interface JavaTranslationsInterface {
     public abstract BT747File getFileInstance(String path, int mode, int card);
 
     public abstract BT747File getFileInstance(String path, int mode);
-    
+
     public abstract boolean isAvailable();
 
     public abstract void debug(final String s, final Throwable e);
@@ -62,5 +64,9 @@ public interface JavaTranslationsInterface {
     public abstract void debug(final String s);
 
     public abstract int getTimeStamp();
+
+    public abstract String getAppSettings();
+
+    public abstract void setAppSettings(final String appSettings);
 
 }

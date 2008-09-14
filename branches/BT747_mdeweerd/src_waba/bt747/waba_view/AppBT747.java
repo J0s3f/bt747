@@ -244,12 +244,15 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
     private int numPanels;
 
+    public static String requiredVersionStr = "5.82";
+    public static int requiredVersion = 582;
+
     public void onStart() {
         super.onStart();
 
-        if (Settings.version < net.sf.bt747.waba.system.Settings.requiredVersion) {
+        if (Settings.version < requiredVersion) {
             new MessageBox(Txt.TITLE_ATTENTION, Txt.BAD_SUPERWABAVERSION
-                    + net.sf.bt747.waba.system.Settings.requiredVersionStr
+                    + requiredVersionStr
                     + Txt.BAD_SUPERWABAVERSION_CONT + Settings.versionStr
                     + Txt.BAD_SUPERWABAVERSION_CONT2
 

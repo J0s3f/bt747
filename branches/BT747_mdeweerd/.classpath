@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src_waba"/>
 	<classpathentry kind="src" path="src_j2se"/>
-	<classpathentry kind="src" path="scr_rxtx"/>
+	<classpathentry kind="src" path="src_rxtx"/>
 	<classpathentry kind="src" path="src_test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SuperwabaSDK"/>
 	<classpathentry kind="lib" path="lib/collections-superwaba.jar" sourcepath="/SWCollections/src"/>

@@ -1,3 +1,8 @@
+Version 1.57
+* Negative UTCs were not handled as an error in the filter 
+  - now negative dates are 'filtered' and identified as a 
+    bad field in raw logs.
+
 Version 1.55.3
 * Further corrections to save the settings
 * Internal changes.

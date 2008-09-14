@@ -118,10 +118,11 @@ public final class BT747LogConvert implements GPSLogConvert {
     private static int BUF_SIZE = 0x800;
 
     private boolean stop = false;
-    
+
     public void stopConversion() {
         stop = true;
     }
+
     /**
      * Parse the binary input file and convert it.
      * 
@@ -162,7 +163,7 @@ public final class BT747LogConvert implements GPSLogConvert {
             // Determine size to read
             if ((nextAddrToRead & 0xFFFF) < 0x200) {
                 // Read the header
-                
+
                 nextAddrToRead = (nextAddrToRead & 0xFFFF0000);
             }
             int endOfBlock = (nextAddrToRead & 0xFFFF0000) | 0xFFFF;
@@ -323,8 +324,8 @@ public final class BT747LogConvert implements GPSLogConvert {
                             int recIdx = offsetInBuffer;
 
                             offsetInBuffer = indexInBuffer;
-                            okInBuffer = indexInBuffer;
-                            foundRecord = true;
+                            //okInBuffer = indexInBuffer;
+                            //foundRecord = true;
 
                             int rcrIdx; // Offset to first field after sat data.
                             if (!holux) {
@@ -348,8 +349,6 @@ public final class BT747LogConvert implements GPSLogConvert {
                             recCount++;
                             // System.out.println(recCount);
 
-                            foundAnyRecord = true;
-
                             /***************************************************
                              * Get all the information in the record.
                              */
@@ -370,13 +369,21 @@ public final class BT747LogConvert implements GPSLogConvert {
                                         rcrIdx, satcnt);
                                 if (valid) {
                                     gpsFile.writeRecord(gpsRec);
+                                    okInBuffer = offsetInBuffer;
+                                    foundRecord = true;
                                 } else {
+                                    Generic.debug("Bad record @"+gpsRec.recCount, null);
+                                    // Recover ...
+                                    recCount--;
+                                    foundRecord = false;
+                                    offsetInBuffer = recIdx;
                                     badrecord_count++;
                                 }
                             }
                             /***************************************************
                              * Information from record retrieved
                              **************************************************/
+                            foundAnyRecord |= foundRecord;
                         } else {
                             // Problem in checksum, data format, ... .
                             if (allFF != 0xFF) {
@@ -622,7 +629,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
-            if (gpsRec.utc == 0xFFFFFFFF) {
+            if ((gpsRec.utc & 0x80000000) != 0) {
                 valid = false;
             }
             gpsRec.utc += timeOffsetSeconds;
@@ -700,6 +707,9 @@ public final class BT747LogConvert implements GPSLogConvert {
                 gpsRec.height -= Conv.wgs84Separation(gpsRec.latitude,
                         gpsRec.longitude);
             }
+            if (gpsRec.height < -10000. || gpsRec.height > 10000.) {
+                valid = false;
+            }
         }
         if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
             int speed = (0xFF & bytes[recIdx++]) << 0
@@ -707,6 +717,9 @@ public final class BT747LogConvert implements GPSLogConvert {
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
             gpsRec.speed = Convert.toFloatBitwise(speed);
+            if (gpsRec.speed < -10.) {
+                valid = false;
+            }
         }
         if ((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) != 0) {
             int heading = (0xFF & bytes[recIdx++]) << 0
@@ -784,11 +797,11 @@ public final class BT747LogConvert implements GPSLogConvert {
                 satidx++;
             }
         } else {
-            Generic.debug("Problem in sat decode",null);
+            Generic.debug("Problem in sat decode", null);
         }
         // Generic.debug("Offset1:"+recIdx+" "+rcrIdx);
         if (recIdx != rcrIdx) {
-            Generic.debug("Problem in sat decode (end idx)",null);
+            Generic.debug("Problem in sat decode (end idx)", null);
         }
         recIdx = rcrIdx; // Sat information limit is rcrIdx
         if ((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {

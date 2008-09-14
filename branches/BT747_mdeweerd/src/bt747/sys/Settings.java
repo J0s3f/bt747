@@ -6,6 +6,8 @@
  */
 package bt747.sys;
 
+import bt747.interfaces.Interface;
+
 /**
  * @author Mario De Weerd
  * 
@@ -30,7 +32,7 @@ public class Settings {
      * @return the appSettings
      */
     public static String getAppSettings() {
-        return Settings.appSettings;
+        return Interface.tr.getAppSettings();
     }
 
     /**
@@ -38,6 +40,6 @@ public class Settings {
      *            the appSettings to set
      */
     public static void setAppSettings(final String appSettings) {
-        Settings.appSettings = appSettings;
+        Interface.tr.setAppSettings(appSettings);
     }
 }
