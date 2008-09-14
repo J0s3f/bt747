@@ -23,10 +23,9 @@ public class MTKMidlet extends MIDlet {
      * The one and only instance of this class.
      */
     private static MTKMidlet instance;
-    
+
     static {
-        Interface.tr =
-            new net.sf.bt747.j2me.system.JavaTranslations();
+        Interface.tr = new net.sf.bt747.j2me.system.JavaTranslations();
     }
 
     static AppModel m;
@@ -74,15 +73,15 @@ public class MTKMidlet extends MIDlet {
         try {
             UIManager.init(this);
             // Change the theme.
-            UIManager.setTheme( new BlueTheme() );
+            UIManager.setTheme(new BlueTheme());
 
             // Show the first screen.
 
             // FindingGPSDevicesAlert creates a list of devices, then calls
             // SelectGPSScreen which will in turn call
             // InitializingGPSAlert
-            DeviceScreen main = new MainScreen(c,this);
-            
+            DeviceScreen main = new MainScreen(c, this);
+
             // (new ConvertTo(c, main)).doWork(); // Debug conversion
             main.show();
             // (new ConvertTo(c, main)).show();
@@ -101,7 +100,7 @@ public class MTKMidlet extends MIDlet {
     protected final void destroyApp(final boolean arg0)
             throws MIDletStateChangeException {
         // Add cleanup code here.
-        if(c!=null) {
+        if (c != null) {
             c.saveSettings();
         }
         // Exit the application.

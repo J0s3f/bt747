@@ -10,6 +10,7 @@ import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
+import org.j4me.ui.UIManager;
 import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
 
@@ -41,18 +42,6 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
     private static final int MAX_AGE = -1; // Default
 
     /**
-     * A large font used for section headings.
-     */
-    private static final Font LARGE_FONT = Font.getFont(Font.FACE_SYSTEM,
-            Font.STYLE_BOLD, Font.SIZE_LARGE);
-
-    /**
-     * The normal font used for data.
-     */
-    private static final Font NORMAL_FONT = Font.getFont(Font.FACE_SYSTEM,
-            Font.STYLE_PLAIN, Font.SIZE_MEDIUM);
-
-    /**
      * The total distance traveled in meters.
      */
     private FieldValue traveled = new FieldValue("Traveled (ft)");
@@ -73,10 +62,14 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
     private FieldValue longitude = new FieldValue("Longitude");
 
     /**
+     * An indication of accuracy.
+     */
+    private FieldValue fvHdop = new FieldValue("HDOP");
+
+    /**
      * The current accuracy of the latitude and longitude in meters.
      */
-    private FieldValue horizontalAccuracy = new FieldValue(
-            "Horizontal accuracy (ft)");
+    private FieldValue NSAT = new FieldValue("Satellites (#):");
 
     /**
      * The current altitude in meters.
@@ -121,10 +114,9 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
 
     public GpsPositionScreen(final AppController c, final DeviceScreen previous) {
 
-
         this.previous = previous;
         this.c = c;
-        
+
         // Set the menu bar options.
         setMenuText("Back", null);
 
@@ -134,18 +126,18 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         // append( state );
 
         // Create a UI section for pedometer information.
-        //createNewSection("Pedometer");
-        //append(traveled);
-        //append(avgSpeed);
+        // createNewSection("Pedometer");
+        // append(traveled);
+        // append(avgSpeed);
 
         // Create a UI section for location information.
         createNewSection("Location");
         append(latitude);
         append(longitude);
-        //append(horizontalAccuracy);
+        // append(horizontalAccuracy);
         append(new Label()); // Blank line
         append(fvAltitude);
-        //append(verticalAccuracy);
+        // append(verticalAccuracy);
 
         // Create a section for movement information.
         createNewSection("Movement");
@@ -155,6 +147,10 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         // Create a section for the time.
         createNewSection("Time");
         append(fvTime);
+
+        createNewSection("Precision");
+        append(fvHdop);
+        append(NSAT);
 
         // Register for location updates.
         // LocationProvider provider = model.getLocationProvider();
@@ -170,11 +166,11 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         append(new HorizontalRule());
 
         Label header = new Label();
-        header.setFont(LARGE_FONT);
+        header.setFont(UIManager.getTheme().getMenuFont());
         header.setLabel(title);
         append(header);
     }
-    
+
     public void showNotify() {
         c.getAppModel().addListener(this);
         c.setGpsDecode(true);
@@ -247,8 +243,6 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
 
         public FieldValue(final String name) {
             this.name = name;
-
-            setFont(NORMAL_FONT);
         }
 
         public void setLabel(final String label) {
@@ -272,7 +266,6 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         }
     }
 
-
     public final void modelEvent(final ModelEvent e) {
         GPSRecord g;
         switch (e.getType()) {
@@ -280,17 +273,19 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
             g = (GPSRecord) e.getArg();
             latitude.setLabel(g.latitude, 6);
             longitude.setLabel(g.longitude, 6);
-            fvTime.setLabel(((long)g.utc)*1000L);
-            fvSpeed.setLabel(g.speed,1);
-            fvCourse.setLabel(g.heading,1);
-            //Log.info("GPRMC");
+            fvTime.setLabel(((long) g.utc) * 1000L);
+            fvSpeed.setLabel(g.speed, 1);
+            fvCourse.setLabel(g.heading, 1);
+            // Log.info("GPRMC");
             repaint();
             break;
         case ModelEvent.GPGGA:
             g = (GPSRecord) e.getArg();
             latitude.setLabel(g.latitude, 6);
             longitude.setLabel(g.longitude, 6);
-            fvAltitude.setLabel(g.height,1);
+            fvAltitude.setLabel(g.height, 1);
+            NSAT.setLabel(g.nsat);
+            fvHdop.setLabel(g.hdop / 10., 1);
             repaint();
         default:
             break;

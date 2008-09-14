@@ -55,14 +55,16 @@ public class LogConditionsConfigScreen extends Dialog implements ModelListener {
     private boolean isDataRequested = false;
 
     public void showNotify() {
-        if(!isDataRequested) {
-            c.reqLogReasonStatus(); // TODO: Should be done on actual initial entry
+        if (!isDataRequested) {
+            isDataRequested = true;
+            c.reqLogReasonStatus(); // TODO: Should be done on actual initial
+                                    // entry
             c.reqFixInterval();
             updateButtons();
         }
         m().addListener(this); // Does not matter if double addition.
     }
-    
+
     public void hideNotify() {
         m().removeListener(this); // Does not matter if double addition.
         super.hideNotify();
@@ -104,7 +106,7 @@ public class LogConditionsConfigScreen extends Dialog implements ModelListener {
     }
 
     public void modelEvent(ModelEvent e) {
-        switch(e.getType()) {
+        switch (e.getType()) {
         case ModelEvent.DATA_UPDATE:
         case ModelEvent.GPS_FIX_DATA:
             updateButtons();

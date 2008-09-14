@@ -7,6 +7,7 @@ import javax.microedition.lcdui.Font;
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
+import org.j4me.ui.UIManager;
 import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
 
@@ -15,18 +16,6 @@ import bt747.model.ModelListener;
 import bt747.sys.Convert;
 
 public class LoggerStatusScreen extends Dialog implements ModelListener {
-
-    /**
-     * A large font used for section headings.
-     */
-    private static final Font LARGE_FONT = Font.getFont(Font.FACE_SYSTEM,
-            Font.STYLE_BOLD, Font.SIZE_LARGE);
-
-    /**
-     * The normal font used for data.
-     */
-    private static final Font NORMAL_FONT = Font.getFont(Font.FACE_SYSTEM,
-            Font.STYLE_PLAIN, Font.SIZE_MEDIUM);
 
     private FieldValue logRCRTime = new FieldValue("Time interval (s)");
     private FieldValue logRCRSpeed = new FieldValue("Speed interval (km/h)");
@@ -88,7 +77,7 @@ public class LoggerStatusScreen extends Dialog implements ModelListener {
         append(new HorizontalRule());
 
         Label header = new Label();
-        header.setFont(LARGE_FONT);
+        header.setFont(UIManager.getTheme().getMenuFont());
         header.setLabel(title);
         append(header);
     }
@@ -138,8 +127,6 @@ public class LoggerStatusScreen extends Dialog implements ModelListener {
 
         public FieldValue(final String name) {
             this.name = name;
-
-            setFont(NORMAL_FONT);
         }
 
         public void setLabel(final String label) {

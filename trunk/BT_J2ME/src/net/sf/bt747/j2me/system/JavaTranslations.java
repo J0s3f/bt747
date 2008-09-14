@@ -210,4 +210,20 @@ public class JavaTranslations implements JavaTranslationsInterface {
         return (int) (System.currentTimeMillis() - appStartTime);
     }
 
+    private static String appSettings = ""; // TODO: Implement other solution
+
+    /**
+     * @return the appSettings
+     */
+    public final String getAppSettings() {
+        return appSettings;
+    }
+
+    /**
+     * @param appSettings
+     *            the appSettings to set
+     */
+    public final void setAppSettings(final String settings) {
+        appSettings = settings;
+    }
 }
