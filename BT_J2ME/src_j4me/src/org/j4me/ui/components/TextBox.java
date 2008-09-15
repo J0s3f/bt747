@@ -3,6 +3,8 @@ package org.j4me.ui.components;
 /**
  * Changes by Mario De Weerd
  *    added #setForDecimalOnly .
+ *       Had to change field and constraint initialisation to make
+ *       DECIMAL work on german platform for example.
  */
 
 import javax.microedition.lcdui.*;
@@ -517,12 +519,18 @@ public class TextBox extends Component {
         String label = getLabel();
         String contents = getString();
         int maxSize = getMaxSize();
-        TextInput entry = new TextInput(current, this, label, contents,
-                maxSize, constraints);
+//        TextInput entry = new TextInput(current, this, label, contents,
+//                maxSize, constraints);
+        TextInput entry = new TextInput(current, this, label, "",
+                maxSize, TextField.ANY);
 
+        entry.setConstraints(constraints);
+        entry.setString(contents);
+        
         // Display the text entry screen.
         Display display = UIManager.getDisplay();
         display.setCurrent(entry);
+        
     }
 
     /**
@@ -573,6 +581,7 @@ public class TextBox extends Component {
                 String contents, int maxSize, int constraints) {
             super(label, contents, maxSize, constraints);
 
+            TextField t;
             // Record the owners.
             this.parent = parent;
             this.component = box;
@@ -598,6 +607,9 @@ public class TextBox extends Component {
             if (c == ok) {
                 // Update the contents of owning box.
                 String input = this.getString();
+                if(this.getConstraints()==TextField.DECIMAL) {
+                    input.replace(',', '.');
+                }
                 component.setString(input);
             }
 
