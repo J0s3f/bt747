@@ -438,7 +438,7 @@
                         -keep public class gps.log.out.GPSFile { *; }
                         -keep public class * extends gps.connection.GPSPort { *; }
 			            -keep public class bt747.Version { *; }
-            -keep public class bt747.lang.*
+            -keep public class bt747.lang.* { public *; }
             -keep public class bt747.Txt
             -keep public interface bt747.interfaces.* {
                 public *;
@@ -586,7 +586,7 @@
                     public static void main(java.lang.String[]); }
 	            -keepclasseswithmembers public class * {
 	                public static void main(java.lang.String[]); }
-            -keep public class bt747.lang.*
+            -keep public class bt747.lang.* { public *; }
             -keep public class bt747.Txt
 	        </proguard>
 		<delete file="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar">
@@ -627,10 +627,10 @@
 
 	<!-- filesets for rxtxbuild -->
 	<fileset dir="." id="rxtx_src">
-        <include name="${src_rxtx.dir}/**/*.java" />
-        <include name="${src.dir}/**/*.java" />
-        <include name="${src_waba.dir}/**/*.java" />
-        <include name="${src_j2se.dir}/**/*.java" />
+		<include name="${src_rxtx.dir}/**/*.java" />
+		<include name="${src.dir}/**/*.java" />
+		<include name="${src_waba.dir}/**/*.java" />
+		<include name="${src_j2se.dir}/**/*.java" />
 	</fileset>
 
 
@@ -725,6 +725,11 @@
 		</echoproperties>
 		<echoproperties prefix="is.j2se">
 		</echoproperties>
+		<!-- No longer deleting these for the libary until
+			     Txt is really local.
+          <include name="*/bt747/lang/**" if="is.lib" />
+          <include name="*/bt747/Txt.java" if="is.lib" />
+		-->
 		<delete verbose="no">
 			<fileset dir="${rxtxsrc.dir}">
 				<include name="${src_j2se.dir}/**" unless="is.j2se" />
@@ -733,8 +738,6 @@
 				         if="exclude.waba"
 				/>
 				<include name="*/bt747/*view/**" if="is.lib" />
-				<include name="*/bt747/lang/**" if="is.lib" />
-				<include name="*/bt747/Txt.java" if="is.lib" />
 				<include name="*/bt747/waba_view/AppController.java"
 				         if="is.lib"
 				/>

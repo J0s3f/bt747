@@ -973,7 +973,7 @@ public class GPSstate implements BT747Thread {
             // + " geoid calc:"+Convert.toString(geoid)
             // );
             // }
-            postGpsEvent(GpsEvent.GPRMC, gps);
+            postGpsEvent(GpsEvent.GPGGA, gps);
         }
     }
 
