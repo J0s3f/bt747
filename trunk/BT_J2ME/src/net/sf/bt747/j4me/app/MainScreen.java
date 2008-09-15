@@ -170,6 +170,7 @@ public class MainScreen extends Dialog implements ModelListener {
             isFirstLaunch = false;
             if (m().getBluetoothGPSURL() != null) {
                 Log.debug("Port:" + m().getBluetoothGPSURL());
+
                 initialiseGPSAlert.show();
             } else {
                 findingGPSDevicesAlert.show();

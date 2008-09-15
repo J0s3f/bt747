@@ -62,5 +62,7 @@ public interface JavaTranslationsInterface {
     public abstract void debug(final String s);
 
     public abstract int getTimeStamp();
+    
+    public abstract BT747Semaphore getSemaphoreInstance(final int value);
 
 }

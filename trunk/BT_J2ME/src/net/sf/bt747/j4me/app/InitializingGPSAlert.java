@@ -22,7 +22,7 @@ public class InitializingGPSAlert extends ProgressAlert {
      * The screen that came before this one. If the user cancels the the process
      * or if it fails it will be returned to.
      */
-    private final DeviceScreen previous;
+    private DeviceScreen previous;
 
     /**
      * Constructs the "Initializing GPS..." alert screen.

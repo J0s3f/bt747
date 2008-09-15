@@ -18,6 +18,7 @@ import org.j4me.logging.Log;
 import bt747.interfaces.BT747Date;
 import bt747.interfaces.BT747File;
 import bt747.interfaces.BT747Hashtable;
+import bt747.interfaces.BT747Semaphore;
 import bt747.interfaces.BT747Thread;
 import bt747.interfaces.BT747Time;
 import bt747.interfaces.BT747Vector;
@@ -226,4 +227,10 @@ public class JavaTranslations implements JavaTranslationsInterface {
     public final void setAppSettings(final String settings) {
         appSettings = settings;
     }
+
+    public final BT747Semaphore getSemaphoreInstance(final int value) {
+        return new J2MESemaphore(value);
+    }
+    
+    
 }
