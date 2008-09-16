@@ -71,8 +71,6 @@ public class MTKMidlet extends MIDlet {
             UIManager.init(this);
             DeviceScreen main = new MainScreen(c, this);
             // Change the theme.
-            UIManager.setTheme(new BlueTheme(main.getScreenWidth()));
-
             // Show the first screen.
 
             // FindingGPSDevicesAlert creates a list of devices, then calls

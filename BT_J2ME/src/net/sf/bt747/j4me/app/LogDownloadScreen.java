@@ -10,6 +10,7 @@ import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
 import org.j4me.ui.MenuItem;
+import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
 import org.j4me.ui.components.ProgressBar;
 import org.j4me.ui.components.TextBox;
@@ -37,6 +38,7 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
     private Label bytes = new Label();
     private Label file = new Label();
     private Label status = new Label();
+    private Label stats = new Label();
 
     private TextBox tb = new TextBox();
 
@@ -83,23 +85,24 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
         bar.setValue(0);
         append(bar);
 
-        bytes = new Label("Bytes downloaded:");
+        bytes.setLabel("Bytes downloaded:");
         append(bytes);
 
-        bytesDownloaded = new Label("0");
+        bytesDownloaded.setLabel("0");
         append(bytesDownloaded);
+        append(stats);
 
         // createNewSection("Log conditions");
-        file = new Label("Bin file:");
+        file.setLabel("Bin file:");
         file.setLabel(m().getLogFilePath());
         append(file);
 
-        status = new Label("Download inactive");
+        status.setLabel("Download inactive");
         append(status);
 
         tb.setString(null); // Indicates unused
         // Add the menu buttons.
-        setMenuText("Menu", "Back");
+        setMenuText(UIManager.getTheme().getMenuTextForCancel(), "Menu");
 
         logScreen = new LogScreen(this);
     }
@@ -160,7 +163,7 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
     /**
      * Goes to the next screen after the user hits the cancel button.
      */
-    protected final void declineNotify() {
+    protected final void acceptNotify() {
         // logScreen.show();
 
         Menu menu = new Menu("Log menu", this) {
@@ -228,13 +231,8 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
     /**
      * Goes to the next screen after the user hits the cancel button.
      */
-    protected final void acceptNotify() {
+    protected final void declineNotify() {
         previous.show();
-    }
-
-    protected void returnNotify() {
-        // Override because declineNotify is not the correct default.
-        acceptNotify();
     }
 
     protected void keyPressed(int keyCode) {
@@ -260,6 +258,17 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
     }
 
     private long nextUpdate = 0;
+    private long smallIntervalStartTime;
+    private long smallIntervalStartDataIndex;
+    private long smallIntervalEndTime;
+    private long downloadStartTime;
+    private long startDataIndex;
+
+    private void initStats() {
+        smallIntervalStartTime = System.currentTimeMillis();
+        downloadStartTime = smallIntervalStartTime;
+        smallIntervalEndTime = smallIntervalStartTime + 5000;
+    }
 
     /**
      * Update the progress status
@@ -269,21 +278,52 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
         int max;
         int value;
 
-        if (m().isDownloadOnGoing()) {
-            // min = m().getStartAddr();
-            max = m().getEndAddr();
-            value = m().getNextReadAddr();
+        // min = m().getStartAddr();
+        max = m().getEndAddr();
+        value = m().getNextReadAddr();
+        if (value > 0 && value < startDataIndex) {
+            startDataIndex = value;
+        }
 
-            long currentTime = System.currentTimeMillis();
-            if (currentTime >= nextUpdate || !isShown()) {
-                nextUpdate = currentTime + 50L;
-                bar.setMaxValue(max);
-                bar.setValue(value);
-                bytesDownloaded.setLabel(Integer.toString(value));
-                if (isShown()) {
-                    bar.repaint();
-                    bytesDownloaded.repaint();
+        long currentTime = System.currentTimeMillis();
+        if (!isShown() || !m().isDownloadOnGoing() || currentTime >= nextUpdate) {
+            nextUpdate = currentTime + 50L;
+            bar.setMaxValue(max);
+            bar.setValue(value);
+            bytesDownloaded.setLabel(Integer.toString(value));
+            if (isShown()) {
+                bar.repaint();
+                bytesDownloaded.repaint();
+            }
+
+            if (currentTime > smallIntervalEndTime || !m().isDownloadOnGoing()) {
+                long smallSpeedBytesPerSecond;
+                long bytesPerSecond;
+                int minutes;
+                long seconds = 0;
+                int minutesDone;
+                int secondsDone;
+                smallSpeedBytesPerSecond = (long) ((1000. * (value - smallIntervalStartDataIndex)) / (currentTime - smallIntervalStartTime));
+                bytesPerSecond = (long) ((1000. * (value - startDataIndex)) / (currentTime - downloadStartTime));
+                // Log.debug(bytesPerSecond + " " + value + " "+ startDataIndex
+                // + " " +currentTime + " " + downloadStartTime);
+                if (bytesPerSecond > 0) {
+                    seconds = (max - value) / (bytesPerSecond);
                 }
+                minutes = (int) (seconds / 60);
+                seconds %= 60;
+                secondsDone = (int) ((currentTime - downloadStartTime) / 1000);
+                minutesDone = secondsDone / 60;
+                secondsDone %= 60;
+
+                stats.setLabel(bytesPerSecond + " B/s  "
+                        + smallSpeedBytesPerSecond + " B/s\n" + minutesDone
+                        + " min " + secondsDone + " s done " + minutes
+                        + " min " + seconds + " s left");
+                smallIntervalEndTime = currentTime + 5000;
+                smallIntervalStartTime = currentTime;
+                smallIntervalStartDataIndex = value;
+                stats.repaint();
             }
         }
     }
@@ -297,16 +337,21 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
             Log.debug("Download started");
             synchronized (lock) {
                 success = false;
+                smallIntervalStartTime = 0;
+                initStats();
             }
             status.setLabel("Downloading");
             status.repaint();
-            /* fall through */
+            progressUpdate();
+            break;
+        /* fall through */
         case ModelEvent.DOWNLOAD_STATE_CHANGE:
             // Log.debug("Progress update");
             progressUpdate();
             break;
         case ModelEvent.LOG_DOWNLOAD_DONE:
             synchronized (lock) {
+                progressUpdate();
                 if (!success) {
                     status.setLabel(status.getLabel()
                             + "\n**Download interrupted**");

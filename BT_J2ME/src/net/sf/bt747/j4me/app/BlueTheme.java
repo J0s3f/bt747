@@ -174,7 +174,7 @@ public final class BlueTheme extends Theme {
         return BLUE;
     }
 
-    public String getMenuTextForCancel() {
+    public final String getMenuTextForCancel() {
         return "Back";
     }
 }
