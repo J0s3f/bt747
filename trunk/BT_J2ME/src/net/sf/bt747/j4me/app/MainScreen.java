@@ -11,6 +11,7 @@ import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
 import org.j4me.ui.MenuItem;
+import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
 
 import bt747.model.ModelEvent;
@@ -57,6 +58,7 @@ public class MainScreen extends Dialog implements ModelListener {
     public MainScreen(final AppController c, final MIDlet midlet) {
         this.c = c;
         this.midlet = midlet;
+        UIManager.setTheme(new BlueTheme(getScreenWidth()));
 
         m().addListener(this);
 
