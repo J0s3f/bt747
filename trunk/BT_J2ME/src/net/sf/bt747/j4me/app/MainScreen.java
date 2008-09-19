@@ -1,5 +1,7 @@
 package net.sf.bt747.j4me.app;
 
+import gps.BT747Constants;
+
 import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 
@@ -26,8 +28,6 @@ public class MainScreen extends Dialog implements ModelListener {
     private AppController c;
     private MIDlet midlet;
 
-    private Label lbText;
-
     private final LogDownloadScreen downloadLogScreen;
     private final ConvertToScreen convertToScreen;
     private final GpsPositionScreen gpsPositionScreen;
@@ -39,6 +39,7 @@ public class MainScreen extends Dialog implements ModelListener {
     private final InitializingGPSAlert initialiseGPSAlert;
     private final FindingGPSDevicesAlert findingGPSDevicesAlert;
     private final PathSelectionScreen baseDirScreen;
+    private final CreditsScreen creditsScreen;
 
     private final int NO_CONFIRM = 0;
     private final int ERASE_CONFIRM = 1;
@@ -66,24 +67,6 @@ public class MainScreen extends Dialog implements ModelListener {
         setTitle("MTK Logger Control V"
                 + midlet.getAppProperty("MIDlet-Version"));
 
-        lbText = new Label("ALPHA/BETA version of a J2ME "
-                + "implementation of BT747\n"
-                + "(http://sf.net/projects/bt747).\n"
-                + " This application demonstrates log download"
-                + " and enables you to set some basic log conditions.\n"
-                + "It is available under the GNU GENERAL PUBLIC LICENSE v3.\n"
-                + "Portions of the code are subject to the APACHE V2"
-                + " license http://www.apache.org/licenses/LICENSE-2.0 .\n"
-                + "This SW uses code from http://www.j4me.org, "
-                + "http://gpsd.berlios.de/, and, "
-                + "http://sourceforge.net/projects/swcollections.\n"
-                + "For a list of people that made this happen,"
-                + "see the documentation and the project site.\n"
-                + "DISCLAIMER\n"
-                + "This SW is free and comes without any guarantee\n"
-                + "Use this SW at your own risk.");
-        append(lbText);
-
         // Add the menu buttons.
         setFullScreenMode(false);
 
@@ -106,6 +89,21 @@ public class MainScreen extends Dialog implements ModelListener {
                 c.setBaseDirPath(path);
             }
         };
+        creditsScreen = new CreditsScreen(this);
+        
+        
+        append(new Label("0. Took a picture"));
+        append(new Label("1. Gaz station"));
+        append(new Label("2. Phone booth"));
+        append(new Label("3. ATM"));
+        append(new Label("4. Bus stop"));
+        append(new Label("5. Parking"));
+        append(new Label("6. Post box"));
+        append(new Label("7. Railway"));
+        append(new Label("8. Restaurant"));
+        append(new Label("9. Bridge"));
+        append(new Label("*. Magnificent View"));
+        append(new Label("#. Other 3"));
 
         // Call here for debug
         // c.doConvertLog(Model.GPX_LOGTYPE);
@@ -273,6 +271,7 @@ public class MainScreen extends Dialog implements ModelListener {
 
         // See the application's log.
         menu.appendMenuOption("Application Log", logScreen);
+        menu.appendMenuOption("Credits", creditsScreen);
         // TODO: not very clean for an exit.
         menu.appendMenuOption(new MenuItem() {
             public String getText() {
@@ -296,6 +295,46 @@ public class MainScreen extends Dialog implements ModelListener {
             rootMenu.show();
         } else {
             super.keyPressed(keyCode);
+        }
+        switch (keyCode) {
+        case DeviceScreen.KEY_NUM0:
+            c.logImmediate(BT747Constants.RCR_APP1_MASK);
+            break;
+        case DeviceScreen.KEY_NUM1:
+            c.logImmediate(BT747Constants.RCR_APP2_MASK);
+            break;
+        case DeviceScreen.KEY_NUM2:
+            c.logImmediate(BT747Constants.RCR_APP3_MASK);
+            break;
+        case DeviceScreen.KEY_NUM3:
+            c.logImmediate(BT747Constants.RCR_APP4_MASK);
+            break;
+        case DeviceScreen.KEY_NUM4:
+            c.logImmediate(BT747Constants.RCR_APP5_MASK);
+            break;
+        case DeviceScreen.KEY_NUM5:
+            c.logImmediate(BT747Constants.RCR_APP6_MASK);
+            break;
+        case DeviceScreen.KEY_NUM6:
+            c.logImmediate(BT747Constants.RCR_APP7_MASK);
+            break;
+        case DeviceScreen.KEY_NUM7:
+            c.logImmediate(BT747Constants.RCR_APP8_MASK);
+            break;
+        case DeviceScreen.KEY_NUM8:
+            c.logImmediate(BT747Constants.RCR_APP9_MASK);
+            break;
+        case DeviceScreen.KEY_NUM9:
+            c.logImmediate(BT747Constants.RCR_APPX_MASK);
+            break;
+        case DeviceScreen.KEY_STAR:
+            c.logImmediate(BT747Constants.RCR_APPY_MASK);
+            break;
+        case DeviceScreen.KEY_POUND:
+            c.logImmediate(BT747Constants.RCR_APPZ_MASK);
+            break;
+        default:
+            break;
         }
     }
 

@@ -384,7 +384,7 @@ public class TextBox extends Component {
 
                 display = builder.toString();
             } else if (isPhoneNumber()) {
-                // Modifiy phone numbers with an area code.
+                // Modify phone numbers with an area code.
                 if (display.length() == 10) {
                     StringBuffer builder = new StringBuffer(15);
 
