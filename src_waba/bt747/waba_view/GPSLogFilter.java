@@ -83,7 +83,7 @@ public class GPSLogFilter extends Container implements ModelListener {
         Control rel = null;
         final int RCR_COL = 4;
         for (int i = 0; i < BT747Constants.C_RCR_COUNT; i++) {
-            chkRCR[i] = new MyCheck(BT747Constants.C_STR_RCR[i]);
+            chkRCR[i] = new MyCheck(Txt.C_STR_RCR[i]);
             // add( chkRCR[i], LEFT, AFTER);
             if (i == 0) {
                 x = LEFT;
