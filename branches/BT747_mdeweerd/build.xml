@@ -124,7 +124,7 @@
 	<!-- all.lang.* - language package building   -->
 	<!-- ======================================== -->
 	<target name="all.lang"
-	        depends="all.lang.en, all.lang.de, all.lang.es, all.lang.fr, all.lang.zh, all.lang.jp"
+	        depends="all.lang.en, all.lang.de, all.lang.es, all.lang.fr, all.lang.nl, all.lang.zh, all.lang.jp"
 	/>
 	<target name="all.lang.en">
 		<antcall target="all.package">
@@ -141,6 +141,11 @@
 			<param name="lang" value="de" />
 		</antcall>
 	</target>
+    <target name="all.lang.nl">
+        <antcall target="all.package">
+            <param name="lang" value="nl" />
+        </antcall>
+    </target>
 	<target name="all.lang.fr">
 		<antcall target="all.package">
 			<param name="lang" value="fr" />

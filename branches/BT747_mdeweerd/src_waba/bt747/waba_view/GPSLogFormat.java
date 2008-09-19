@@ -65,7 +65,7 @@ public class GPSLogFormat extends Container implements ModelListener {
     public final void onStart() {
         // Add all tick buttons.
         for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
-            chkLogFmtItems[i] = new MyCheck(BT747Constants.logFmtItems[i]);
+            chkLogFmtItems[i] = new MyCheck(Txt.logFmtItems[i]);
             // int
             // extra_offset=chkLogFmtItems[i].fm.height-chkLogFmtItems[i].getPreferredHeight();
             // add(chkLogFmtItems[i]);
