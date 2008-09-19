@@ -1,12 +1,9 @@
 package net.sf.bt747.j4me.app;
 
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
 
 import org.j4me.logging.Log;
 import org.j4me.ui.Theme;
-import org.j4me.ui.UIManager;
 
 /**
  * A red on white theme.
