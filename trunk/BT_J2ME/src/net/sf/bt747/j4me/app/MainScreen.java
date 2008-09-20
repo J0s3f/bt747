@@ -3,7 +3,6 @@ package net.sf.bt747.j4me.app;
 import gps.BT747Constants;
 
 import javax.microedition.lcdui.Display;
-import javax.microedition.midlet.MIDlet;
 
 import net.sf.bt747.j4me.app.log.LogScreen;
 import net.sf.bt747.j4me.app.screens.ProgressAlert;
@@ -26,7 +25,7 @@ import bt747.model.ModelListener;
 public class MainScreen extends Dialog implements ModelListener {
 
     private AppController c;
-    private MIDlet midlet;
+    private MTKMidlet midlet;
 
     private final LogDownloadScreen downloadLogScreen;
     private final ConvertToScreen convertToScreen;
@@ -40,6 +39,7 @@ public class MainScreen extends Dialog implements ModelListener {
     private final FindingGPSDevicesAlert findingGPSDevicesAlert;
     private final PathSelectionScreen baseDirScreen;
     private final CreditsScreen creditsScreen;
+    private final FileFieldSelectScreen fileFieldSelectScreen;
 
     private final int NO_CONFIRM = 0;
     private final int ERASE_CONFIRM = 1;
@@ -56,7 +56,7 @@ public class MainScreen extends Dialog implements ModelListener {
      *            is the screen that invoked this one. If this is <c>null</c>
      *            the application will exit when this screen is dismissed.
      */
-    public MainScreen(final AppController c, final MIDlet midlet) {
+    public MainScreen(final AppController c, final MTKMidlet midlet) {
         this.c = c;
         this.midlet = midlet;
         UIManager.setTheme(new BlueTheme(getScreenWidth()));
@@ -90,6 +90,7 @@ public class MainScreen extends Dialog implements ModelListener {
             }
         };
         creditsScreen = new CreditsScreen(this);
+        fileFieldSelectScreen = new FileFieldSelectScreen(c, this);
         
         
         append(new Label("0. Took a picture"));
@@ -121,8 +122,9 @@ public class MainScreen extends Dialog implements ModelListener {
         subMenu.appendMenuOption("Download Settings", logDownloadConfigScreen);
         rootMenu.appendSubmenu(subMenu);
 
-        subMenu = new Menu("Convert", rootMenu);
-        subMenu.appendMenuOption("To GPX", convertToScreen);
+        subMenu = new Menu("Convert Menu", rootMenu);
+        subMenu.appendMenuOption("Select File Fields", fileFieldSelectScreen);
+        subMenu.appendMenuOption("Convert", convertToScreen);
         rootMenu.appendSubmenu(subMenu);
 
         subMenu = new Menu("Connection", rootMenu);
@@ -280,7 +282,11 @@ public class MainScreen extends Dialog implements ModelListener {
 
             public void onSelection() {
                 c.closeGPS();
-                midlet.notifyDestroyed();
+                try {
+                    midlet.destroyApp(true);
+                } catch (Exception e) {
+                    Log.debug("When closing app",e);
+                }
             }
         });
 

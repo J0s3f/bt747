@@ -1,9 +1,18 @@
 package net.sf.bt747.j4me.app;
 
-import net.sf.bt747.j4me.app.screens.ProgressAlert;
+import gps.BT747Constants;
+import gps.log.out.GPSCSVFile;
+import gps.log.out.GPSCompoGPSTrkFile;
+import gps.log.out.GPSGPXFile;
+import gps.log.out.GPSGmapsHTMLEncodedFile;
+import gps.log.out.GPSKMLFile;
+import gps.log.out.GPSNMEAFile;
+import gps.log.out.GPSPLTFile;
 
-import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
+import org.j4me.ui.Dialog;
+import org.j4me.ui.components.Label;
+import org.j4me.ui.components.RadioButton;
 
 import bt747.model.Model;
 
@@ -13,7 +22,7 @@ import bt747.model.Model;
  * provider on the device. But if it cannot it will get a GPS provider through a
  * Bluetooth connection.
  */
-public class ConvertToScreen extends ProgressAlert {
+public class ConvertToScreen extends Dialog {
     /**
      * The location information for this application.
      */
@@ -25,6 +34,8 @@ public class ConvertToScreen extends ProgressAlert {
      */
     private final DeviceScreen previous;
 
+    private RadioButton rbFormats;
+
     /**
      * Constructs the "Initializing GPS..." alert screen.
      * 
@@ -34,56 +45,119 @@ public class ConvertToScreen extends ProgressAlert {
      *            is the screen that came before this one.
      */
     public ConvertToScreen(final AppController c, final DeviceScreen previous) {
-        super("Convert Log", "Converting Log File");
-
+        setTitle("Convert Log");
         this.c = c;
         this.previous = previous;
-    }
-
-    /**
-     * Called when the user presses the alert's dismiss button.
-     */
-    public void onCancel() {
-        Log.debug("Canceling Log conversion.");
-        //
-        // // Go back to the previous screen.
-        // previous.show();
-        c.stopLogConvert();
-        previous.show();
+        
+        setUpScreen();
     }
     
-    
-    
-//    public void showNotify() {
-//    }
-
-    /**
-     * A worker thread that gets the GPS <c>LocationProvider</c>. The thread
-     * will set the next screen when it is done.
-     */
-    protected final DeviceScreen doWork() {
-        DeviceScreen next = previous;
-
-        // String text = getText() + "\n" + "Using device: " + deviceName;
-        // setText(text);
-
-        try {
-            Log.info("Starting log conversion");
-
-            // We select all positions that do not have an invalid fix or
-            // estimated
-            // fix.
-
-            int error;
-            error = c.doConvertLog(Model.GPX_LOGTYPE);
-
-            if (error != 0) {
-                Log.error(c.getLastError() + " " + c.getLastErrorInfo());
-            }
-        } catch (Exception e) {
-            Log.error("Exception during log convert", e);
+    private void setUpScreen() {
+        deleteAll();
+        Label l;
+        l = new Label("Select output format:");
+        append(l);
+        rbFormats = new RadioButton();
+        rbFormats.append("CSV - Comma sep");
+        rbFormats.append("GMAP - Google Map Html");
+        rbFormats.append("GPX - ");
+        rbFormats.append("KML - Google Earth");
+        rbFormats.append("NMEA - NMEA strings");
+        rbFormats.append("PLT - CompeGPS");
+        rbFormats.append("TRK - ");
+        int index;
+        switch (c.getAppModel().getSelectedOutputFormat()) {
+        case Model.CSV_LOGTYPE:
+            index = 0;
+            break;
+        case Model.GMAP_LOGTYPE:
+            index = 1;
+            break;
+        case Model.GPX_LOGTYPE:
+            index = 2;
+            break;
+        case Model.KML_LOGTYPE:
+            index = 3;
+            break;
+        case Model.NMEA_LOGTYPE:
+            index = 4;
+            break;
+        case Model.PLT_LOGTYPE:
+            index = 5;
+            break;
+        case Model.TRK_LOGTYPE:
+            index = 6;
+            break;
+        default:
+            index = 2;
         }
+        rbFormats.setSelectedIndex(index);
+        append(rbFormats);
+        setSelected(rbFormats);
+        l = new Label("'"+getRightMenuText()+"' to start conversion.");
+        append(l);
+        l = new Label("WARNING: Conversion is very slow.");
+        append(l);
+    }
+    
+    public void showNotify() {
+        super.showNotify();
+    }
 
-        return next;
+    
+    protected void acceptNotify() {
+        ConvertToProgressScreen progressScreen;
+        c.getAppModel().setSelectedOutputFormat(getSelectedLogType());
+        progressScreen = new ConvertToProgressScreen(c, previous, getSelectedLogType());
+        progressScreen.show();
+        progressScreen = null;
+    }
+
+    protected void declineNotify() {
+        previous.show();
+        super.declineNotify();
+    }
+
+    private int getSelectedLogType() {
+        switch (rbFormats.getSelectedIndex()) {
+        case 0:
+            /**
+             * CSV log type (Comma Separated Values).
+             */
+            return (AppModel.CSV_LOGTYPE);
+        case 1:
+            /**
+             * GMAP log type (Google Map - html output).
+             */
+            return (AppModel.GMAP_LOGTYPE);
+        case 2:
+            /**
+             * GPX log type (gpx format).
+             */
+            return (AppModel.GPX_LOGTYPE);
+        case 3:
+            /**
+             * KML log type ('Google Earth' format).
+             */
+            return (AppModel.KML_LOGTYPE);
+        case 4:
+            /**
+             * NMEA log type (NMEA strings - text format - similar to GPS
+             * output).
+             */
+            return (AppModel.NMEA_LOGTYPE);
+        case 5:
+            /**
+             * Compe GPS log type (Writes PLT and WPT files).
+             */
+            return (AppModel.PLT_LOGTYPE);
+        case 6:
+            /**
+             * log type (Writes TRK and WPT files).
+             */
+            return (AppModel.TRK_LOGTYPE);
+        default:
+            return (AppModel.CSV_LOGTYPE);
+        }
     }
 }
