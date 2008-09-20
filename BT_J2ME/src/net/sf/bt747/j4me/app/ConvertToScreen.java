@@ -1,14 +1,5 @@
 package net.sf.bt747.j4me.app;
 
-import gps.BT747Constants;
-import gps.log.out.GPSCSVFile;
-import gps.log.out.GPSCompoGPSTrkFile;
-import gps.log.out.GPSGPXFile;
-import gps.log.out.GPSGmapsHTMLEncodedFile;
-import gps.log.out.GPSKMLFile;
-import gps.log.out.GPSNMEAFile;
-import gps.log.out.GPSPLTFile;
-
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.components.Label;
