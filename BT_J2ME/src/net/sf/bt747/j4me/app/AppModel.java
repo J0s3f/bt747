@@ -92,4 +92,22 @@ public class AppModel extends Model {
         return gpsBluetoothURL;
     }
 
+    
+    private int selectedOutputFormat = AppModel.GPX_LOGTYPE;
+
+    /**
+     * @param selectedOutputFormat the selectedOutputFormat to set
+     */
+    public void setSelectedOutputFormat(int selectedOutputFormat) {
+        this.selectedOutputFormat = selectedOutputFormat;
+    }
+
+    /**
+     * @return the selectedOutputFormat
+     */
+    public int getSelectedOutputFormat() {
+        return selectedOutputFormat;
+    }
+
+
 }

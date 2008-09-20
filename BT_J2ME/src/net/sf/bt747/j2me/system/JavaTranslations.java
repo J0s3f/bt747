@@ -64,7 +64,7 @@ public class JavaTranslations implements JavaTranslationsInterface {
     }
 
     // Currently buffered files are the same as normal files.
-    
+
     public final BT747File getBufFileInstance(String path) {
         return new J2MEFile(path);
     }
@@ -123,11 +123,14 @@ public class JavaTranslations implements JavaTranslationsInterface {
 
     public final String toString(final double p, final int i) {
         StringBuffer s;
-        if (p >= 1.) {
+        if (p >= 1. || p <= -1.) {
             s = new StringBuffer(Double.toString(p));
-        } else {
+        } else if (p >= 0.) {
             s = new StringBuffer(Double.toString(p + 1.));
             s.setCharAt(0, '0');
+        } else {
+            s = new StringBuffer(Double.toString(p - 1.));
+            s.setCharAt(1, '0');
         }
 
         int dotPos;
@@ -141,7 +144,7 @@ public class JavaTranslations implements JavaTranslationsInterface {
         } else if (dotPos == 0) {
             s.append(ZEROCHARS, 0, i + 1);
         } else {
-            // Truncrate - some limited notion of rounding.
+            // Truncate - some limited notion of rounding.
             if (s.charAt(dotPos + i + 1) >= '5') {
                 char c;
                 c = s.charAt(dotPos + i);
@@ -231,6 +234,5 @@ public class JavaTranslations implements JavaTranslationsInterface {
     public final BT747Semaphore getSemaphoreInstance(final int value) {
         return new J2MESemaphore(value);
     }
-    
-    
+
 }

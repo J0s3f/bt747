@@ -87,7 +87,7 @@ public class MTKMidlet extends MIDlet {
             // l.show();
         }
     }
-
+    
     /**
      * Called when the application is exiting.
      * 

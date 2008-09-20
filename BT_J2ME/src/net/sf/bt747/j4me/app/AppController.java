@@ -51,7 +51,7 @@ public class AppController extends Controller {
             if (bytes.length >= 2048) {
                 Settings.setAppSettings(new String(bytes));
                 m.init();
-                //Log.debug("Recovered settings");
+                Log.debug("Recovered settings");
             } else {
                 //Log.debug("Initialising settings");
                 m.init();
@@ -67,6 +67,8 @@ public class AppController extends Controller {
                 String BtURL = restoreNull(is.readUTF());
                 m.setBluetoothGPS(BtHost, BtURL);
                 Log.debug("Recovered BT URL " + BtHost + " " + BtURL);
+
+                m.setSelectedOutputFormat(is.readInt());
             } catch (Exception e) {
             }
             recordStore.closeRecordStore();
@@ -144,20 +146,17 @@ public class AppController extends Controller {
                 | BT747Constants.RCR_SPEED_MASK
                 | BT747Constants.RCR_BUTTON_MASK);
         // To limit the output data, we only select lat,lon and height.
-        setIntOpt(Model.FILEFIELDFORMAT, (1 << BT747Constants.FMT_LATITUDE_IDX)
-                | (1 << BT747Constants.FMT_LONGITUDE_IDX)
-                | (1 << BT747Constants.FMT_HEIGHT_IDX));
-
-        setIntOpt(AppModel.FILEFIELDFORMAT, -1);
-
-        // setDownloadMethod(AppModel.DOWNLOAD_FILLED);
+//        setIntOpt(Model.FILEFIELDFORMAT, (1 << BT747Constants.FMT_LATITUDE_IDX)
+//                | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+//                | (1 << BT747Constants.FMT_HEIGHT_IDX));
     }
 
     String RECORDSTORENAME = "BT747";
 
     public final void saveSettings() {
         RecordStore recordStore;
-        //Log.debug("Store settings");
+        Log.debug("Store settings");
+        m.getIntOpt(AppModel.FILEFIELDFORMAT);
         try {
             byte[] bytes;
             recordStore = RecordStore.openRecordStore(RECORDSTORENAME, true);
@@ -175,6 +174,7 @@ public class AppController extends Controller {
             try {
                 os.writeUTF(removeNull(m.getBluetoothGPSName()));
                 os.writeUTF(removeNull(m.getBluetoothGPSURL()));
+                os.writeInt(m.getSelectedOutputFormat());
                 os.flush();
                 bytes = bos.toByteArray();
                 if (recordStore.getNumRecords() == 1) {
@@ -197,6 +197,7 @@ public class AppController extends Controller {
         } catch (Throwable exception) {
             Log.error("Problem saving settings", exception);
         }
+        m.getIntOpt(AppModel.FILEFIELDFORMAT);
     }
 
     private String removeNull(String text) {
@@ -206,5 +207,4 @@ public class AppController extends Controller {
     private String restoreNull(String text) {
         return text.length() > 0 ? text : null;
     }
-
 }
