@@ -12,11 +12,6 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************  
 package gps.log.in;
 
 import gps.BT747Constants;
@@ -324,8 +319,8 @@ public final class BT747LogConvert implements GPSLogConvert {
                             int recIdx = offsetInBuffer;
 
                             offsetInBuffer = indexInBuffer;
-                            //okInBuffer = indexInBuffer;
-                            //foundRecord = true;
+                            // okInBuffer = indexInBuffer;
+                            // foundRecord = true;
 
                             int rcrIdx; // Offset to first field after sat data.
                             if (!holux) {
@@ -372,7 +367,8 @@ public final class BT747LogConvert implements GPSLogConvert {
                                     okInBuffer = offsetInBuffer;
                                     foundRecord = true;
                                 } else {
-                                    Generic.debug("Bad record @"+gpsRec.recCount, null);
+                                    Generic.debug("Bad record @"
+                                            + gpsRec.recCount, null);
                                     // Recover ...
                                     recCount--;
                                     foundRecord = false;
@@ -386,7 +382,20 @@ public final class BT747LogConvert implements GPSLogConvert {
                             foundAnyRecord |= foundRecord;
                         } else {
                             // Problem in checksum, data format, ... .
-                            if (allFF != 0xFF) {
+                            // Skip FF
+                            if (((bytes[indexInBuffer] & 0xFF) == 0xFF)
+                                    && (holux || ((0xFF & bytes[indexInBuffer + 1]) == 0xFF))) {
+                                if (!holux) {
+                                    indexInBuffer += 2; // Point just past
+                                    // end ('*'
+                                } else {
+                                    indexInBuffer += 1;
+                                }
+                                offsetInBuffer = indexInBuffer;
+                                okInBuffer = indexInBuffer;
+                                foundAnyRecord = true; // Fake to avoid extra byte skip.
+                                // Generic.debug(indexInBuffer +"skip ff",null);
+                            } else {
                                 badrecord_count++;
                             }
                         }

@@ -155,7 +155,7 @@ public class GPSCSVFile extends GPSFile {
                 rec.append(fieldSep);
             }
             if ((activeFields.rcr != 0) && (selectedFileFields.rcr != 0)) {
-                rec.append(getRCRstr(s));
+                rec.append(CommonOut.getRCRstr(s));
             }
             if ((activeFields.utc != 0) && (selectedFileFields.utc != 0)) {
                 rec.append(fieldSep + Convert.toString(t.getYear()) + "/"

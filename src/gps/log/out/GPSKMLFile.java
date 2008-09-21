@@ -97,7 +97,7 @@ public class GPSKMLFile extends GPSFile {
         String header;
         trackName = name;
         header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
-                + "<kml xmlns=\"http://www.opengis.net/kml/2.2\""
+                + "<kml xmlns=\"http://schemas.opengis.net/kml/2.2.0\""
                 + " xmlns:atom=\"http://www.w3.org/2005/Atom\">\r\n"
                 + "<Document>\r\n"
                 + "<atom:generator uri=\"http://sf.net/projects/bt747\" "
@@ -376,20 +376,8 @@ public class GPSKMLFile extends GPSFile {
                     rec.append("<styleUrl>");
                     if ((activeFields.rcr != 0)
                             && (selectedFileFields.rcr != 0)) {
-                        String style = getRCRstr(s);
+                        String style = CommonOut.getRCRstr(s);
 
-                        if ((s.rcr & BT747Constants.RCR_TIME_MASK) != 0) {
-                            style += "T";
-                        }
-                        if ((s.rcr & BT747Constants.RCR_SPEED_MASK) != 0) {
-                            style += "S";
-                        }
-                        if ((s.rcr & BT747Constants.RCR_DISTANCE_MASK) != 0) {
-                            style += "D";
-                        }
-                        if ((s.rcr & BT747Constants.RCR_BUTTON_MASK) != 0) {
-                            style += "B";
-                        }
                         if (style.length() > 1
                                 || ((s.rcr & BT747Constants.RCR_ALL_APP_MASK) != 0)) {
                             style = "M";
