@@ -2,8 +2,6 @@ package net.sf.bt747.j4me.app;
 
 import java.util.Date;
 
-import javax.microedition.lcdui.Font;
-
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
@@ -11,24 +9,23 @@ import org.j4me.ui.UIManager;
 import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
 
+import bt747.generic.Semaphore;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
 
-public class LoggerStatusScreen extends Dialog implements ModelListener {
+public class LoggerStatusScreen extends Dialog implements ModelListener,
+        Runnable {
 
     private FieldValue logRCRTime = new FieldValue("Time interval (s)");
     private FieldValue logRCRSpeed = new FieldValue("Speed interval (km/h)");
-    private FieldValue logRCRDistance = new FieldValue(
-            "Distance interval (m)");
+    private FieldValue logRCRDistance = new FieldValue("Distance interval (m)");
 
     private FieldValue memoryTotal = new FieldValue("Size (bytes)");
     private FieldValue memoryUsed = new FieldValue("Used (bytes)");
     private FieldValue memoryUsedPercent = new FieldValue("Used (%)");
-    private FieldValue memoryUsedRecords = new FieldValue(
-            "Logged pos (#)");
-    private FieldValue memoryAvailRecords = new FieldValue(
-            "Available pos (#)");
+    private FieldValue memoryUsedRecords = new FieldValue("Logged pos (#)");
+    private FieldValue memoryAvailRecords = new FieldValue("Available pos (#)");
 
     private DeviceScreen previous;
 
@@ -55,7 +52,6 @@ public class LoggerStatusScreen extends Dialog implements ModelListener {
         append(memoryUsedPercent);
         append(memoryUsedRecords);
         append(memoryAvailRecords);
-
 
         // Create a UI section for pedometer information.
         createNewSection("Log conditions");
@@ -85,10 +81,15 @@ public class LoggerStatusScreen extends Dialog implements ModelListener {
     public final void showNotify() {
         c.getAppModel().addListener(this);
         reqLogInfo();
+        planUpdateLock.down();
+        planUpdate = true;
+        planUpdateLock.up();
+        Thread worker = new Thread( this );
+        worker.start();
         // updateData();
         super.showNotify();
     }
-    
+
     public void hideNotify() {
         c.getAppModel().removeListener(this);
         super.hideNotify();
@@ -160,9 +161,12 @@ public class LoggerStatusScreen extends Dialog implements ModelListener {
 
     private void updateData() {
         try {
-            logRCRTime.setLabel(Convert.toString(m().getLogTimeInterval()/10.,1));
+            //Log.debug(System.currentTimeMillis()+" Update data");
+            logRCRTime.setLabel(Convert.toString(
+                    m().getLogTimeInterval() / 10., 1));
             logRCRSpeed.setLabel(m().getLogSpeedInterval());
-            logRCRDistance.setLabel(Convert.toString(m().getLogDistanceInterval()/10.,1));
+            logRCRDistance.setLabel(Convert.toString(m()
+                    .getLogDistanceInterval() / 10., 1));
 
             memoryTotal.setLabel(m().logMemSize());
             memoryUsed.setLabel(m().logMemUsed());
@@ -176,10 +180,15 @@ public class LoggerStatusScreen extends Dialog implements ModelListener {
         repaint();
     }
 
+    private Semaphore planUpdateLock = new Semaphore(1);
+    private boolean planUpdate = true;
+
     public final void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
         case ModelEvent.DATA_UPDATE:
-            updateData();
+            planUpdateLock.down();
+            planUpdate = true;
+            planUpdateLock.up();
             break;
         default:
             break;
@@ -187,4 +196,21 @@ public class LoggerStatusScreen extends Dialog implements ModelListener {
 
     }
 
+    public void run() {
+        while (isShown()) {
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+            planUpdateLock.down();
+            if (planUpdate) {
+                planUpdateLock.up();
+                updateData();
+                planUpdate = false;
+            } else {
+                planUpdateLock.up();
+            }
+        }
+    }
 }
