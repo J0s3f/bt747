@@ -342,13 +342,16 @@ public final class BT747LogConvert implements GPSLogConvert {
                             }
 
                             recCount++;
-                            // System.out.println(recCount);
+                            //System.out.println(recCount);
 
                             /***************************************************
                              * Get all the information in the record.
                              */
                             gpsRec.recCount = recCount;
-                            if (!passToFindFieldsActivatedInLog) {
+                            if (passToFindFieldsActivatedInLog) {
+                                okInBuffer = indexInBuffer;
+                                foundRecord = true;
+                            } else {
                                 // Only interpret fields if not looking for
                                 // logFormat changes only
 
