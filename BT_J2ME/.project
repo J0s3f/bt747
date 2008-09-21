@@ -20,4 +20,11 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>eclipseme.core.nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>BT747_PROJECT_COMMON_SRC</name>
+			<type>2</type>
+			<locationURI>BT747_PROJECT_COMMON_SRC</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
