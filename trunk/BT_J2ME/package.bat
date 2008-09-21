@@ -11,7 +11,10 @@ REM unix2dos *.bat
 
 rm -rf dist
 mkdir dist
+svn commit -m "Commit before packaging"
+svn commit -m "Commit before packaging" ../BT747
 svnversion -n -c > dist/SVNVERSION.txt
+svnversion ../BT747 -n -c >> dist/SVNVERSION.txt
 
 SET FILES=
 
