@@ -314,43 +314,6 @@ public abstract class GPSFile {
         return outFile != null;
     }
 
-    StringBuffer rcrStr = new StringBuffer(16);
-
-    protected final String getRCRstr(final GPSRecord s) {
-        rcrStr.setLength(0);
-        if ((s.rcr & BT747Constants.RCR_TIME_MASK) != 0) {
-            rcrStr.append("T");
-        }
-        if ((s.rcr & BT747Constants.RCR_SPEED_MASK) != 0) {
-            rcrStr.append("S");
-        }
-        if ((s.rcr & BT747Constants.RCR_DISTANCE_MASK) != 0) {
-            rcrStr.append("D");
-        }
-        if ((s.rcr & BT747Constants.RCR_BUTTON_MASK) != 0) {
-            rcrStr.append("B");
-        }
-
-        // Still 16-4 = 12 possibilities.
-        // Taking numbers from 1 to 9
-        // Then letters X, Y and Z
-        char c = '1';
-        int i;
-        for (i = 0x10; c <= '9'; i <<= 1, c++) {
-            if ((s.rcr & i) != 0) {
-                rcrStr.append(c);
-            }
-        }
-        c = 'X';
-        for (; i < 0x10000; i <<= 1, c++) {
-            if ((s.rcr & i) != 0) {
-                rcrStr.append(c);
-            }
-        }
-
-        return rcrStr.toString();
-    }
-
     protected final void writeTxt(final String s) {
         try {
             if (outFile != null) {
