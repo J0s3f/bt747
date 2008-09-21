@@ -43,6 +43,6 @@ public class WabaSemaphore implements BT747Semaphore {
 
     public void up() {
         ++value;
-        notify();
+        //notify();
     }
 }
