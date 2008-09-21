@@ -424,10 +424,10 @@ public class AppSettings {
                     | (1 << BT747Constants.FMT_HEIGHT_IDX));
             break;
         }
-//        Generic.debug(
-//                "File field selection is "
-//                        + bt747.sys.Convert.unsigned2hex(
-//                                getIntOpt(FILEFIELDFORMAT), 8), null);
+        // Generic.debug(
+        // "File field selection is "
+        // + bt747.sys.Convert.unsigned2hex(
+        // getIntOpt(FILEFIELDFORMAT), 8), null);
     }
 
     public final void defaultSettings() {
@@ -543,13 +543,13 @@ public class AppSettings {
     }
 
     public final int getIntOpt(final int param) {
-//        if (param == FILEFIELDFORMAT) {
-//            Generic.debug("File field selection is "
-//                    + bt747.sys.Convert.unsigned2hex(
-//                            getLocalIntOpt(paramsList[param][START_IDX],
-//                                    paramsList[param][SIZE_IDX]),8), null);
-//
-//        }
+        // if (param == FILEFIELDFORMAT) {
+        // Generic.debug("File field selection is "
+        // + bt747.sys.Convert.unsigned2hex(
+        // getLocalIntOpt(paramsList[param][START_IDX],
+        // paramsList[param][SIZE_IDX]),8), null);
+        //
+        // }
         if ((param < paramsList.length) && (paramsList[param][TYPE_IDX] == INT)) {
             return getLocalIntOpt(paramsList[param][START_IDX],
                     paramsList[param][SIZE_IDX]);
@@ -561,13 +561,13 @@ public class AppSettings {
     }
 
     protected final void setIntOpt(final int param, final int value) {
-//        if (param == FILEFIELDFORMAT) {
-//            Generic.debug("File field selection is "
-//                    + bt747.sys.Convert.unsigned2hex(
-//                            getIntOpt(FILEFIELDFORMAT), 8) + " to "
-//                    + bt747.sys.Convert.unsigned2hex(value, 8), null);
-//
-//        }
+        // if (param == FILEFIELDFORMAT) {
+        // Generic.debug("File field selection is "
+        // + bt747.sys.Convert.unsigned2hex(
+        // getIntOpt(FILEFIELDFORMAT), 8) + " to "
+        // + bt747.sys.Convert.unsigned2hex(value, 8), null);
+        //
+        // }
         if ((param < paramsList.length) && (paramsList[param][TYPE_IDX] == INT)) {
             setLocalIntOpt(param, value, paramsList[param][START_IDX],
                     paramsList[param][SIZE_IDX]);
