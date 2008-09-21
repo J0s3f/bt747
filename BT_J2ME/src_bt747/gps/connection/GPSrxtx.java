@@ -19,8 +19,6 @@
 //********************************************************************                              
 package gps.connection;
 
-import java.security.GeneralSecurityException;
-
 import bt747.generic.Generic;
 import bt747.generic.Semaphore;
 import bt747.sys.Convert;

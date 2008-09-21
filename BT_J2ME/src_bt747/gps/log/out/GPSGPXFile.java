@@ -215,7 +215,7 @@ public class GPSGPXFile extends GPSFile {
                 }
                 if ((activeFields.rcr != 0) && (selectedFileFields.rcr != 0)) {
                     rec.append("<type>");
-                    rcrStr = getRCRstr(s);
+                    rcrStr = CommonOut.getRCRstr(s);
                     rec.append("</type>\r\n");
                 }
 
