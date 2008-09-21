@@ -360,7 +360,8 @@ public class Controller {
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
             currentGPSLogConvert = lc;
             try {
-                lastError = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+                lastError = lc.toGPSFile(m.getLogFilePath(), gpsFile, m
+                        .getCard());
             } catch (Throwable e) {
                 Generic.debug("During conversion", e);
             }
@@ -845,7 +846,6 @@ public class Controller {
         performOperationsAfterGPSConnect();
     }
 
-    
     /**
      * Select a port by its 'path' (/dev/usb9 for example or /dev/com1.
      * 
@@ -1334,6 +1334,29 @@ public class Controller {
         m.gpsModel().reqFixInterval();
     }
 
+    /**
+     * Force the logger to record the current position tagged with the given log
+     * reason.
+     * 
+     * @param value
+     *            {@link BT747Constants#RCR_TIME_MASK}
+     *            {@link BT747Constants#RCR_SPEED_MASK}
+     *            {@link BT747Constants#RCR_DISTANCE_MASK}
+     *            {@link BT747Constants#RCR_BUTTON_MASK}
+     *            {@link BT747Constants#RCR_APP1_MASK}
+     *            {@link BT747Constants#RCR_APP2_MASK}
+     *            {@link BT747Constants#RCR_APP3_MASK}
+     *            {@link BT747Constants#RCR_APP4_MASK}
+     *            {@link BT747Constants#RCR_APP5_MASK}
+     *            {@link BT747Constants#RCR_APP6_MASK}
+     *            {@link BT747Constants#RCR_APP7_MASK}
+     *            {@link BT747Constants#RCR_APP8_MASK}
+     *            {@link BT747Constants#RCR_APP9_MASK}
+     *            {@link BT747Constants#RCR_APPX_MASK}
+     *            {@link BT747Constants#RCR_APPY_MASK}
+     *            {@link BT747Constants#RCR_APPZ_MASK}
+     *            {@link BT747Constants#RCR_ALL_APP_MASK}
+     */
     public final void logImmediate(final int value) {
         m.gpsModel().logImmediate(value);
     }

@@ -1,4 +1,7 @@
-package gps;
+package net.sf.bt747.waba.system;
+
+import bt747.interfaces.BT747Semaphore;
+
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -21,23 +24,25 @@ package gps;
 /**
  * @author Mario De Weerd
  */
-public class Semaphore 
-{
-  private int value;
+public class WabaSemaphore implements BT747Semaphore {
+    private int value;
 
-  public Semaphore( int value ) {
-  	this.value = value;
-  }
-
-  public synchronized void down() {
-    --value;
-    if (value < 0) {
-      try {	wait(); } catch( Exception e ) {}
+    public WabaSemaphore(int value) {
+        this.value = value;
     }
-  }
 
-  public synchronized void up() {
-    ++value;
-    notify();
-  }
+    public void down() {
+        --value;
+        while (value < 0) {
+            try {
+                wait();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public void up() {
+        ++value;
+        notify();
+    }
 }

@@ -12,11 +12,6 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************       
 package gps;
 
 /**
@@ -38,6 +33,7 @@ public class GpsEvent {
     public static final int COULD_NOT_OPEN_FILE = 11;
     public static final int DEBUG_MSG = 12;
     public static final int GPS_FIX_DATA = 13;
+    public static final int LOG_DOWNLOAD_SUCCESS = 14;
 
     private int type;
     private Object arg;

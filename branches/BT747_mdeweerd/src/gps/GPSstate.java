@@ -12,6 +12,11 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
+//***  The application was written using the SuperWaba toolset.    ***
+//***  This is a proprietary development environment based in      ***
+//***  part on the Waba development environment developed by       ***
+//***  WabaSoft, Inc.                                              ***
+//********************************************************************
 package gps;
 
 import gps.connection.GPSrxtx;
@@ -23,6 +28,7 @@ import moio.util.Iterator;
 import moio.util.StringTokenizer;
 
 import bt747.generic.Generic;
+import bt747.generic.Semaphore;
 import bt747.interfaces.BT747Thread;
 import bt747.io.File;
 import bt747.sys.Convert;
@@ -357,41 +363,55 @@ public class GPSstate implements BT747Thread {
     private static final int C_MIN_TIME_BETWEEN_CMDS = 30;
 
     public final int getOutStandingCmdsCount() {
-        return sentCmds.size() + toSendCmds.size();
+        int total;
+        cmdBuffersAccess.down();
+        total = sentCmds.size() + toSendCmds.size();
+        cmdBuffersAccess.up();
+
+        return total;
     }
 
     public final void sendNMEA(final String cmd) {
         int cmdsWaiting;
+        cmdBuffersAccess.down();
         cmdsWaiting = sentCmds.size();
+        cmdBuffersAccess.up();
         if ((logStatus != C_LOG_ERASE_STATE) && (cmdsWaiting == 0)
                 && (Vm.getTimeStamp() > nextCmdSendTime)) {
             // All sent commands were acknowledged, send cmd immediately
             doSendNMEA(cmd);
         } else if (cmdsWaiting < C_MAX_TOSEND_COMMANDS) {
             // Ok to buffer more cmds
+            cmdBuffersAccess.down();
             toSendCmds.addElement(cmd);
+            cmdBuffersAccess.up();
         }
     }
 
     private int nextCmdSendTime = 0;
 
+    private Semaphore cmdBuffersAccess = new Semaphore(1);
+
     private void doSendNMEA(final String cmd) {
         resetLogTimeOut();
-        if (cmd.startsWith("PMTK")) {
-            sentCmds.addElement(cmd);
-        }
+        cmdBuffersAccess.down();
+        try {
+            if (cmd.startsWith("PMTK")) {
+                sentCmds.addElement(cmd);
+            }
 
-        gpsRxTx.sendPacket(cmd);
-        if (GPS_DEBUG) {
-            debugMsg(">" + cmd + " " + gpsRxTx.isConnected());
+            gpsRxTx.sendPacket(cmd);
+            if (GPS_DEBUG) {
+                debugMsg(">" + cmd + " " + gpsRxTx.isConnected());
+            }
+            nextCmdSendTime = Vm.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
+            if (sentCmds.size() > C_MAX_SENT_COMMANDS) {
+                sentCmds.removeElementAt(0);
+            }
+        } catch (Exception e) {
+            Generic.debug("doSendNMEA", e);
         }
-        nextCmdSendTime = Vm.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
-        if (sentCmds.size() > C_MAX_SENT_COMMANDS) {
-            sentCmds.removeElementAt(0);
-        }
-        // if (GPS_DEBUG) {
-        // debugMsg(p_Cmd);
-        // }
+        cmdBuffersAccess.up();
     }
 
     private int downloadTimeOut = 3500;
@@ -403,22 +423,32 @@ public class GPSstate implements BT747Thread {
     private void checkSendCmdFromQueue() {
         int cTime = Vm.getTimeStamp();
         if (logStatus != C_LOG_ERASE_STATE) {
-            if ((sentCmds.size() != 0) && (cTime - logTimer) >= downloadTimeOut) {
-                // TimeOut!!
-                Generic.debug("Timeout: " + cTime + "-" + logTimer + ">"
-                        + downloadTimeOut, null);
-                // sentCmds.removeElementAt(0); // Previous cleaning
-                // Since the last command that was sent is a timeout ago, we
-                // suppose that all the subsequent ones are forfeit too.
-                sentCmds.removeAllElements();
-                logTimer = cTime;
+            cmdBuffersAccess.down();
+            try {
+                if ((sentCmds.size() != 0)
+                        && (cTime - logTimer) >= downloadTimeOut) {
+                    // TimeOut!!
+                    Generic.debug("Timeout: " + cTime + "-" + logTimer + ">"
+                            + downloadTimeOut, null);
+                    // sentCmds.removeElementAt(0); // Previous cleaning
+                    // Since the last command that was sent is a timeout ago, we
+                    // suppose that all the subsequent ones are forfeit too.
+                    sentCmds.removeAllElements();
+                    logTimer = cTime;
+                }
+                if ((toSendCmds.size() != 0)
+                        && (sentCmds.size() < C_MAX_CMDS_SENT)
+                        && (Vm.getTimeStamp() > nextCmdSendTime)) {
+                    // No more commands waiting for acknowledge
+                    cmdBuffersAccess.up();
+                    doSendNMEA((String) toSendCmds.elementAt(0));
+                    cmdBuffersAccess.down();
+                    toSendCmds.removeElementAt(0);
+                }
+            } catch (Exception e) {
+                Generic.debug("checkSendCmdFromQueue", e);
             }
-            if ((toSendCmds.size() != 0) && (sentCmds.size() < C_MAX_CMDS_SENT)
-                    && (Vm.getTimeStamp() > nextCmdSendTime)) {
-                // No more commands waiting for acknowledge
-                doSendNMEA((String) toSendCmds.elementAt(0));
-                toSendCmds.removeElementAt(0);
-            }
+            cmdBuffersAccess.up();
         }
     }
 
@@ -781,20 +811,26 @@ public class GPSstate implements BT747Thread {
 
     final boolean removeFromSentCmds(final String match) {
         int cmdIdx = -1;
-        for (int i = 0; i < sentCmds.size(); i++) {
-            if (((String) sentCmds.elementAt(i)).startsWith(match)) {
-                cmdIdx = i;
-                break;
-            }
+        cmdBuffersAccess.down();
+        try {
+            for (int i = 0; i < sentCmds.size(); i++) {
+                if (((String) sentCmds.elementAt(i)).startsWith(match)) {
+                    cmdIdx = i;
+                    break;
+                }
 
+            }
+            // Remove all cmds up to
+            for (int i = cmdIdx; i >= 0; i--) {
+                // if(GPS_DEBUG) {
+                // debugMsg("Remove:"+(String)sentCmds.items[0]);
+                // }
+                sentCmds.removeElementAt(0);
+            }
+        } catch (Exception e) {
+            Generic.debug("removeFromSentCmds", e);
         }
-        // Remove all cmds up to
-        for (int i = cmdIdx; i >= 0; i--) {
-            // if(GPS_DEBUG) {
-            // debugMsg("Remove:"+(String)sentCmds.items[0]);
-            // }
-            sentCmds.removeElementAt(0);
-        }
+        cmdBuffersAccess.up();
         return cmdIdx != -1;
     }
 
@@ -1340,8 +1376,14 @@ public class GPSstate implements BT747Thread {
             int loopsToGo = 0; // Setting to 0 for more responsiveness
             if (gpsRxTx.isConnected()) {
                 // debugMsg(Convert.toString(m_logState));
-                if (((logState != C_LOG_NOLOGGING) && (logState != C_LOG_ERASE_STATE))
-                        && (sentCmds.size() == 0) && (toSendCmds.size() == 0)) {
+                boolean cmdsCondition;
+                cmdBuffersAccess.down();
+                cmdsCondition = (sentCmds.size() == 0)
+                        && (toSendCmds.size() == 0);
+                cmdBuffersAccess.up();
+
+                if (cmdsCondition && (logState != C_LOG_NOLOGGING)
+                        && (logState != C_LOG_ERASE_STATE)) {
                     // Sending command on next timer adds some delay after
                     // the end of the previous command (reception)
                     getLogPartNoOutstandingRequests();
@@ -1816,6 +1858,7 @@ public class GPSstate implements BT747Thread {
                     }
                 }
                 if (logNextReadAddr > logDownloadEndAddr) {
+                    postEvent(GpsEvent.LOG_DOWNLOAD_SUCCESS);
                     endGetLog();
                 } else {
                     getNextLogPart();
