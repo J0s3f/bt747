@@ -21,76 +21,91 @@
 package gps.connection;
 
 //import bt747.io.DataStream;
+import bt747.generic.Generic;
 import bt747.io.File;
 
-/** abstract class defining interface for serial port implementation.
- * Allows differentiation according to platform.
+/**
+ * abstract class defining interface for serial port implementation. Allows
+ * differentiation according to platform.
  * 
  * @author Mario De Weerd
  */
 public abstract class GPSPort {
-    //protected DataStream ds=null;
+    // protected DataStream ds=null;
 
     protected int spPortNbr;
-    protected int spSpeed=115200;  // Does not really matter on most platforms
-    
-    protected static final boolean GPS_FILE_LOG = true;  // When true log communication to file for debug
+    protected int spSpeed = 115200; // Does not really matter on most platforms
 
-    protected File m_debugFile=null;
-    protected String debugFileName="/Palm/gpsRAW.txt";
-    
-    // Hooked reference to java os string h ere to avoid creating extra classes and
+    protected static final boolean GPS_FILE_LOG = true; // When true log
+                                                        // communication to file
+                                                        // for debug
+
+    protected File m_debugFile = null;
+    protected String debugFileName = "/Palm/gpsRAW.txt";
+
+    // Hooked reference to java os string h ere to avoid creating extra classes
+    // and
     // exceptions in compilation flow.
-    public static String os_name="unknown";  
+    public static String os_name = "unknown";
 
-    public GPSPort() {}
-    
-    /** Indicates if the device is connected or not.
+    public GPSPort() {
+    }
+
+    /**
+     * Indicates if the device is connected or not.
      * 
      * @return <code>true</code> if the device is connected.
      */
-    public boolean isConnected() { return false; }
+    public boolean isConnected() {
+        return false;
+    }
 
-    /** Set and open a normal port (giving the port number)
+    /**
+     * Set and open a normal port (giving the port number)
      * 
-     * @param port Port number of the port to open
+     * @param port
+     *            Port number of the port to open
      */
     public void setPort(int port) {
-        spPortNbr= port;
-        freeTextPort="";
+        spPortNbr = port;
+        freeTextPort = "";
     }
-    
+
     public int openPort() {
         return -1;
     }
-    public void closePort() { }
-    
+
+    public void closePort() {
+    }
+
     public void setBlueTooth() {
-        freeTextPort="";
+        freeTextPort = "";
     }
+
     public void setUSB() {
-        freeTextPort="";
+        freeTextPort = "";
     }
-    
-    protected String freeTextPort="";
+
+    protected String freeTextPort = "";
+
     public void setFreeTextPort(String s) {
-        freeTextPort=s;
+        freeTextPort = s;
     }
 
     public String getFreeTextPort() {
         return freeTextPort;
     }
-    
-    
+
     public final void setSpeed(int speed) {
-        spSpeed= speed;
+        spSpeed = speed;
     }
 
     public final int getSpeed() {
         return spSpeed;
     }
-    
-    /** Get the port number (getter for spPortNbr)
+
+    /**
+     * Get the port number (getter for spPortNbr)
      * 
      * @return Port number
      */
@@ -105,35 +120,41 @@ public abstract class GPSPort {
     public void writeDebug(final String s) {
         byte[] b;
         int l;
-        if(GPS_FILE_LOG&&(m_debugFile!=null)) {
-            b=s.getBytes();
-            l=b.length;
+        if (GPS_FILE_LOG && (m_debugFile != null)) {
+            b = s.getBytes();
+            l = b.length;
             try {
-                m_debugFile.writeBytes(b,0,l);
+                m_debugFile.writeBytes(b, 0, l);
             } catch (Exception e) {
-            	//e.printStackTrace();
+                // e.printStackTrace();
             }
         }
     }
 
     public final void writeDebug(final byte[] b, final int index, final int len) {
-        if(debugActive()) {
+        if (debugActive()) {
             try {
-                m_debugFile.writeBytes(b,index,len);
+                m_debugFile.writeBytes(b, index, len);
             } catch (Exception e) {
-            	//e.printStackTrace();
+                // e.printStackTrace();
             }
         }
     }
 
-    public int readCheck() { return -1; }
-    public int readBytes(byte[]b,int start, int max) { return -1; }
-    public final boolean debugActive() {
-        return GPS_FILE_LOG&&(m_debugFile!=null);
+    public int readCheck() {
+        return -1;
     }
-    
+
+    public int readBytes(byte[] b, int start, int max) {
+        return -1;
+    }
+
+    public final boolean debugActive() {
+        return GPS_FILE_LOG && (m_debugFile != null);
+    }
+
     public final void startDebug() {
-        if(GPS_FILE_LOG&&(m_debugFile==null)) {
+        if (GPS_FILE_LOG && (m_debugFile == null)) {
             try {
                 new File(debugFileName).delete();
             } catch (Exception e) {
@@ -141,30 +162,29 @@ public abstract class GPSPort {
             }
             try {
                 // Having some trouble on Palm - doing it like this.
-                File tmp=new File(debugFileName,File.CREATE);
+                File tmp = new File(debugFileName, File.CREATE);
                 tmp.close();
             } catch (Exception e) {
                 // TODO: handle exception
             }
             try {
-                m_debugFile=new File(debugFileName,File.READ_WRITE);
+                m_debugFile = new File(debugFileName, File.READ_WRITE);
             } catch (Exception e) {
-                // TODO: handle exception
+                Generic.debug(debugFileName, e);
             }
         }
     }
 
     public final void endDebug() {
-        if(m_debugFile!=null) {
+        if (m_debugFile != null) {
             try {
                 m_debugFile.close();
             } catch (Exception e) {
-                // TODO: handle exception
+                Generic.debug(debugFileName, e);
             }
-            m_debugFile=null;
+            m_debugFile = null;
         }
     }
-
 
     /**
      * @return Returns the debugFileName.
@@ -172,8 +192,10 @@ public abstract class GPSPort {
     public String getDebugFileName() {
         return debugFileName;
     }
+
     /**
-     * @param debugFileName The debugFileName to set.
+     * @param debugFileName
+     *            The debugFileName to set.
      */
     public final void setDebugFileName(final String debugFileName) {
         this.debugFileName = debugFileName;
