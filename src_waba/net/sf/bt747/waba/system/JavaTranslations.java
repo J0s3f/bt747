@@ -22,6 +22,7 @@ package net.sf.bt747.waba.system;
 import bt747.interfaces.BT747Date;
 import bt747.interfaces.BT747File;
 import bt747.interfaces.BT747Hashtable;
+import bt747.interfaces.BT747Semaphore;
 import bt747.interfaces.BT747Thread;
 import bt747.interfaces.BT747Time;
 import bt747.interfaces.BT747Vector;
@@ -182,6 +183,11 @@ public class JavaTranslations implements JavaTranslationsInterface {
      */
     public final void setAppSettings(final String appSettings) {
         waba.sys.Settings.appSettings = appSettings;
+    }
+
+    public final BT747Semaphore getSemaphoreInstance(final int value) {
+        // TODO Auto-generated method stub
+        return new WabaSemaphore(value);
     }
 
 }

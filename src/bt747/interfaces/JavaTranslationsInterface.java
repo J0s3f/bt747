@@ -1,7 +1,5 @@
 package bt747.interfaces;
 
-import bt747.sys.Settings;
-
 public interface JavaTranslationsInterface {
 
     public abstract BT747Date getDateInstance();
@@ -69,4 +67,5 @@ public interface JavaTranslationsInterface {
 
     public abstract void setAppSettings(final String appSettings);
 
+    public abstract BT747Semaphore getSemaphoreInstance(final int value);
 }
