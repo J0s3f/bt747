@@ -15,6 +15,7 @@ import org.j4me.ui.MenuItem;
 import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
 
+import bt747.generic.Generic;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 
@@ -40,6 +41,7 @@ public class MainScreen extends Dialog implements ModelListener {
     private final PathSelectionScreen baseDirScreen;
     private final CreditsScreen creditsScreen;
     private final FileFieldSelectScreen fileFieldSelectScreen;
+    private final LogFieldSelectScreen logFieldSelectScreen;
 
     private final int NO_CONFIRM = 0;
     private final int ERASE_CONFIRM = 1;
@@ -60,8 +62,6 @@ public class MainScreen extends Dialog implements ModelListener {
         this.c = c;
         this.midlet = midlet;
         UIManager.setTheme(new BlueTheme(getScreenWidth()));
-
-        m().addListener(this);
 
         // Set the title.
         setTitle("MTK Logger Control V"
@@ -91,20 +91,7 @@ public class MainScreen extends Dialog implements ModelListener {
         };
         creditsScreen = new CreditsScreen(this);
         fileFieldSelectScreen = new FileFieldSelectScreen(c, this);
-        
-        
-        append(new Label("0. Took a picture"));
-        append(new Label("1. Gaz station"));
-        append(new Label("2. Phone booth"));
-        append(new Label("3. ATM"));
-        append(new Label("4. Bus stop"));
-        append(new Label("5. Parking"));
-        append(new Label("6. Post box"));
-        append(new Label("7. Railway"));
-        append(new Label("8. Restaurant"));
-        append(new Label("9. Bridge"));
-        append(new Label("*. Magnificent View"));
-        append(new Label("#. Other 3"));
+        logFieldSelectScreen = new LogFieldSelectScreen(c,this);
 
         // Call here for debug
         // c.doConvertLog(Model.GPX_LOGTYPE);
@@ -134,6 +121,7 @@ public class MainScreen extends Dialog implements ModelListener {
 
         subMenu = new Menu("Logger", rootMenu);
         subMenu.appendMenuOption("Log Conditions", logConditionsConfigScreen);
+        subMenu.appendMenuOption("Log Fields", logFieldSelectScreen);
         subMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
         subMenu.appendMenuOption(new MenuItem() {
             public final String getText() {
@@ -153,6 +141,41 @@ public class MainScreen extends Dialog implements ModelListener {
 
         rootMenu.appendSubmenu(subMenu);
 
+        m().addListener(this);
+    }
+
+    private int dataShown;
+
+    private void setupScreen() {
+        if ((m().getLogFormat() & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
+            if (dataShown != 1) {
+                dataShown = 1;
+                deleteAll();
+                append(new Label("0. Took a picture"));
+                append(new Label("1. Gaz station"));
+                append(new Label("2. Phone booth"));
+                append(new Label("3. ATM"));
+                append(new Label("4. Bus stop"));
+                append(new Label("5. Parking"));
+                append(new Label("6. Post box"));
+                append(new Label("7. Railway"));
+                append(new Label("8. Restaurant"));
+                append(new Label("9. Bridge"));
+                append(new Label("*. Magnificent View"));
+                append(new Label("#. Other 3"));
+                repaint();
+            }
+        } else {
+            if (dataShown != 2) {
+                dataShown = 2;
+                deleteAll();
+                append(new Label("Enable the RCR log field to enable"
+                        + " advanced waypoint selection.\n"
+                        + "(This message disappears once connected"
+                        + " with RCR log field set)."));
+                repaint();
+            }
+        }
     }
 
     private static boolean isFirstLaunch = true;
@@ -225,6 +248,7 @@ public class MainScreen extends Dialog implements ModelListener {
      * @see DeviceScreen#showNotify()
      */
     public final void showNotify() {
+        setupScreen();
     }
 
     /**
@@ -285,7 +309,7 @@ public class MainScreen extends Dialog implements ModelListener {
                 try {
                     midlet.destroyApp(true);
                 } catch (Exception e) {
-                    Log.debug("When closing app",e);
+                    Log.debug("When closing app", e);
                 }
             }
         });
@@ -363,6 +387,12 @@ public class MainScreen extends Dialog implements ModelListener {
             if (waitErase) {
                 this.show();
             }
+            break;
+        case ModelEvent.LOG_FORMAT_UPDATE:
+            setupScreen();
+            break;
+        case ModelEvent.CONNECTED:
+            c.reqLogFormat();
             break;
         default:
             break;
