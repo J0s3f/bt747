@@ -19,6 +19,7 @@
 //********************************************************************                              
 package gps.connection;
 
+import bt747.generic.Generic;
 import bt747.generic.Semaphore;
 import bt747.sys.Convert;
 import bt747.sys.Vm;
@@ -32,7 +33,7 @@ import bt747.util.Vector;
  * @author Mario De Weerd
  */
 public class GPSrxtx {
-    private boolean GPS_DEBUG = false; // !Settings.onDevice;
+    private boolean GPS_DEBUG = false;
 
     private static GPSPort gpsPort;
 
@@ -173,53 +174,61 @@ public class GPSrxtx {
             }
             m_writeOngoing.down(); // Semaphore - reserve link
 
-            rec.setLength(0);
-            rec.append('$');
-            rec.append(p_Packet);
-            rec.append('*');
-            rec.append(Convert.unsigned2hex(z_Checksum, 2));
-            if (GPS_DEBUG) {
-                bt747.sys.Vm.debug(">" + rec.toString());
-            }
-            gpsPort.writeDebug(">" + rec.toString());
+            try {
+                rec.setLength(0);
+                rec.append('$');
+                rec.append(p_Packet);
+                rec.append('*');
+                rec.append(Convert.unsigned2hex(z_Checksum, 2));
+                if (GPS_DEBUG) {
+                    bt747.sys.Vm.debug(">" + rec.toString());
+                }
+                gpsPort.writeDebug(">" + rec.toString());
 
-            rec.append(EOL_BYTES);
-            gpsPort.write(rec.toString());
+                rec.append(EOL_BYTES);
+                gpsPort.write(rec.toString());
+            } catch (Exception e) {
+                Generic.debug("sendPacket", e);
+            }
             m_writeOngoing.up(); // Semaphore - release link
         }
     }
 
-    final static int NORMAL_MODE = 0;
-    final static int DPL700_MODE = 1;
+    private final static int NORMAL_MODE = 0;
+    private final static int DPL700_MODE = 1;
 
     private int rxtxMode = NORMAL_MODE;
 
     public byte[] DPL700_buffer;
     public int DPL700_buffer_idx;
-    byte[] DPL700_EndString = new byte[200];
-    int endStringIdx;
+    private byte[] DPL700_EndString = new byte[200];
+    private int endStringIdx;
 
     public void sendCmdAndGetDPL700Response(int cmd, int buffer_size) {
         if (isConnected()) {
             byte[] sendbuffer = new byte[7];
             m_writeOngoing.down(); // Semaphore - reserve link
-            DPL700_buffer = new byte[buffer_size];
-            rxtxMode = DPL700_MODE;
-            endStringIdx = 0;
-            current_state = C_DPL700_STATE;
-            DPL700_buffer_idx = 0;
-            if (GPS_DEBUG) {
-                bt747.sys.Vm.debug(">0x" + Convert.unsigned2hex(cmd, 8)
-                        + "000000");
+            try {
+                DPL700_buffer = new byte[buffer_size];
+                rxtxMode = DPL700_MODE;
+                endStringIdx = 0;
+                current_state = C_DPL700_STATE;
+                DPL700_buffer_idx = 0;
+                if (GPS_DEBUG) {
+                    bt747.sys.Vm.debug(">0x" + Convert.unsigned2hex(cmd, 8)
+                            + "000000");
+                }
+                sendbuffer[0] = (byte) ((cmd >> 24) & 0xFF);
+                sendbuffer[1] = (byte) ((cmd >> 16) & 0xFF);
+                sendbuffer[2] = (byte) ((cmd >> 8) & 0xFF);
+                sendbuffer[3] = (byte) ((cmd >> 0) & 0xFF);
+                sendbuffer[4] = 0;
+                sendbuffer[5] = 0;
+                sendbuffer[6] = 0;
+                gpsPort.write(sendbuffer);
+            } catch (Exception e) {
+                Generic.debug("sendAndGetDPL700", e);
             }
-            sendbuffer[0] = (byte) ((cmd >> 24) & 0xFF);
-            sendbuffer[1] = (byte) ((cmd >> 16) & 0xFF);
-            sendbuffer[2] = (byte) ((cmd >> 8) & 0xFF);
-            sendbuffer[3] = (byte) ((cmd >> 0) & 0xFF);
-            sendbuffer[4] = 0;
-            sendbuffer[5] = 0;
-            sendbuffer[6] = 0;
-            gpsPort.write(sendbuffer);
             m_writeOngoing.up(); // Semaphore - release link
         }
     }
@@ -227,18 +236,22 @@ public class GPSrxtx {
     public void sendCmdAndGetDPL700Response(String cmd, int buffer_size) {
         if (isConnected()) {
             m_writeOngoing.down(); // Semaphore - reserve link
-            DPL700_buffer = new byte[buffer_size];
-            rxtxMode = DPL700_MODE;
-            endStringIdx = 0;
-            current_state = C_DPL700_STATE;
-            DPL700_buffer_idx = 0;
-            if (GPS_DEBUG) {
-                bt747.sys.Vm.debug(">" + cmd);
+            try {
+                DPL700_buffer = new byte[buffer_size];
+                rxtxMode = DPL700_MODE;
+                endStringIdx = 0;
+                current_state = C_DPL700_STATE;
+                DPL700_buffer_idx = 0;
+                if (GPS_DEBUG) {
+                    bt747.sys.Vm.debug(">" + cmd);
+                }
+                rec.setLength(0);
+                rec.append(cmd);
+                rec.append("\0");
+                gpsPort.write(rec.toString());
+            } catch (Exception e) {
+                Generic.debug("send and get resp", e);
             }
-            rec.setLength(0);
-            rec.append(cmd);
-            rec.append("\0");
-            gpsPort.write(rec.toString());
             m_writeOngoing.up(); // Semaphore - release link
         }
     }
@@ -246,15 +259,19 @@ public class GPSrxtx {
     public void sendDPL700Cmd(String cmd) {
         if (isConnected()) {
             m_writeOngoing.down(); // Semaphore - reserve link
-            current_state = C_DPL700_STATE;
-            rxtxMode = DPL700_MODE;
-            if (GPS_DEBUG) {
-                bt747.sys.Vm.debug(">" + cmd);
+            try {
+                current_state = C_DPL700_STATE;
+                rxtxMode = DPL700_MODE;
+                if (GPS_DEBUG) {
+                    bt747.sys.Vm.debug(">" + cmd);
+                }
+                rec.setLength(0);
+                rec.append(cmd);
+                rec.append("\0");
+                gpsPort.write(rec.toString());
+            } catch (Exception e) {
+                Generic.debug("sendDPL700Cmd", e);
             }
-            rec.setLength(0);
-            rec.append(cmd);
-            rec.append("\0");
-            gpsPort.write(rec.toString());
             m_writeOngoing.up(); // Semaphore - release link
         }
     }
@@ -270,6 +287,8 @@ public class GPSrxtx {
         }
     }
 
+    private Semaphore getResponseOngoing = new Semaphore(1);
+
     public String[] getResponse() {
         boolean continueReading;
         boolean readAgain = true;
@@ -277,6 +296,7 @@ public class GPSrxtx {
         final boolean skipError = true;
         continueReading = gpsPort.isConnected();
 
+        getResponseOngoing.down();
         if (gpsPort.debugActive()) {
             // Test to avoid unnecessary lost time
             gpsPort.writeDebug("\r\nR:"
@@ -611,6 +631,7 @@ public class GPSrxtx {
             // ((String[])vCmd.toObjectArray())[i].length()));
             // };
             // }
+            getResponseOngoing.up();
             return vCmd.toStringArray();
         } else if (current_state == C_DPL700_END_STATE) {
             current_state = C_FOUND_STATE;
@@ -620,8 +641,10 @@ public class GPSrxtx {
                 // Test to avoid unnecessary lost time
                 gpsPort.writeDebug("\r\nDPL700:" + resp[0]);
             }
+            getResponseOngoing.up();
             return resp;
         } else {
+            getResponseOngoing.up();
             return null;
         }
     }
