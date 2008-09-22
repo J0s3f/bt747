@@ -12,6 +12,7 @@ import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
 import org.j4me.ui.MenuItem;
+import org.j4me.ui.Theme;
 import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
 
@@ -91,7 +92,7 @@ public class MainScreen extends Dialog implements ModelListener {
         };
         creditsScreen = new CreditsScreen(this);
         fileFieldSelectScreen = new FileFieldSelectScreen(c, this);
-        logFieldSelectScreen = new LogFieldSelectScreen(c,this);
+        logFieldSelectScreen = new LogFieldSelectScreen(c, this);
 
         // Call here for debug
         // c.doConvertLog(Model.GPX_LOGTYPE);
@@ -146,23 +147,27 @@ public class MainScreen extends Dialog implements ModelListener {
 
     private int dataShown;
 
+    private Label[] labels = null;
+
     private void setupScreen() {
         if ((m().getLogFormat() & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
             if (dataShown != 1) {
                 dataShown = 1;
+                labels = null;
                 deleteAll();
-                append(new Label("0. Took a picture"));
-                append(new Label("1. Gaz station"));
-                append(new Label("2. Phone booth"));
-                append(new Label("3. ATM"));
-                append(new Label("4. Bus stop"));
-                append(new Label("5. Parking"));
-                append(new Label("6. Post box"));
-                append(new Label("7. Railway"));
-                append(new Label("8. Restaurant"));
-                append(new Label("9. Bridge"));
-                append(new Label("*. Magnificent View"));
-                append(new Label("#. Other 3"));
+                labels = new Label[12];
+                append(labels[0] = new Label("0. Took a picture"));
+                append(labels[1] = new Label("1. Gaz station"));
+                append(labels[2] = new Label("2. Phone booth"));
+                append(labels[3] = new Label("3. ATM"));
+                append(labels[4] = new Label("4. Bus stop"));
+                append(labels[5] = new Label("5. Parking"));
+                append(labels[6] = new Label("6. Post box"));
+                append(labels[7] = new Label("7. Railway"));
+                append(labels[8] = new Label("8. Restaurant"));
+                append(labels[9] = new Label("9. Bridge"));
+                append(labels[10] = new Label("*. Magnificent View"));
+                append(labels[11] = new Label("#. Other 3"));
                 repaint();
             }
         } else {
@@ -320,6 +325,28 @@ public class MainScreen extends Dialog implements ModelListener {
         super.acceptNotify();
     }
 
+    private long nextResetLabelTime = 0;
+
+    private synchronized void hightlightLabel(final int i) {
+        if (labels != null) {
+            labels[i].setFontColor(Theme.RED);
+            labels[i].repaint();
+            nextResetLabelTime = System.currentTimeMillis() + 500;
+        }
+    }
+
+    private synchronized void resetLabels() {
+        if (labels != null) {
+            int color = UIManager.getTheme().getFontColor();
+            for (int i = 0; i < labels.length; i++) {
+                if (labels[i].getFontColor() != color) {
+                    labels[i].setFontColor(color);
+                    labels[i].repaint();
+                }
+            }
+        }
+    }
+
     protected void keyPressed(int keyCode) {
         if (keyCode == DeviceScreen.RIGHT) {
             rootMenu.show();
@@ -329,39 +356,51 @@ public class MainScreen extends Dialog implements ModelListener {
         switch (keyCode) {
         case DeviceScreen.KEY_NUM0:
             c.logImmediate(BT747Constants.RCR_APP1_MASK);
+            hightlightLabel(0);
             break;
         case DeviceScreen.KEY_NUM1:
             c.logImmediate(BT747Constants.RCR_APP2_MASK);
+            hightlightLabel(1);
             break;
         case DeviceScreen.KEY_NUM2:
             c.logImmediate(BT747Constants.RCR_APP3_MASK);
+            hightlightLabel(2);
             break;
         case DeviceScreen.KEY_NUM3:
             c.logImmediate(BT747Constants.RCR_APP4_MASK);
+            hightlightLabel(3);
             break;
         case DeviceScreen.KEY_NUM4:
             c.logImmediate(BT747Constants.RCR_APP5_MASK);
+            hightlightLabel(4);
             break;
         case DeviceScreen.KEY_NUM5:
             c.logImmediate(BT747Constants.RCR_APP6_MASK);
+            hightlightLabel(5);
             break;
         case DeviceScreen.KEY_NUM6:
             c.logImmediate(BT747Constants.RCR_APP7_MASK);
+            hightlightLabel(6);
             break;
         case DeviceScreen.KEY_NUM7:
             c.logImmediate(BT747Constants.RCR_APP8_MASK);
+            hightlightLabel(7);
             break;
         case DeviceScreen.KEY_NUM8:
             c.logImmediate(BT747Constants.RCR_APP9_MASK);
+            hightlightLabel(8);
             break;
         case DeviceScreen.KEY_NUM9:
             c.logImmediate(BT747Constants.RCR_APPX_MASK);
+            hightlightLabel(9);
             break;
         case DeviceScreen.KEY_STAR:
             c.logImmediate(BT747Constants.RCR_APPY_MASK);
+            hightlightLabel(10);
             break;
         case DeviceScreen.KEY_POUND:
             c.logImmediate(BT747Constants.RCR_APPZ_MASK);
+            hightlightLabel(11);
             break;
         default:
             break;
@@ -374,6 +413,12 @@ public class MainScreen extends Dialog implements ModelListener {
     }
 
     public final void modelEvent(final ModelEvent e) {
+        // This gets called often enough to use as a timer
+        if (nextResetLabelTime != 0
+                && nextResetLabelTime < System.currentTimeMillis()) {
+            nextResetLabelTime = 0;
+            resetLabels();
+        }
         switch (e.getType()) {
         case ModelEvent.DEBUG_MSG:
             Log.debug((String) e.getArg());

@@ -1,14 +1,16 @@
 package net.sf.bt747.j4me.app;
 
+import gps.BT747Constants;
 import gps.Txt;
 
+import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.components.CheckBox;
 
 public class LogFieldSelectScreen extends Dialog {
 
-    private static final int C_LOG_FMT_COUNT = 21 - 1;
+    private static final int C_LOG_FMT_COUNT = 21;
 
     private CheckBox[] chkLogFmtItems = new CheckBox[C_LOG_FMT_COUNT];
     private DeviceScreen previous;
@@ -31,19 +33,25 @@ public class LogFieldSelectScreen extends Dialog {
     private int getSelectedLogFormat() {
         int bitMask = 1;
         int logFormat = 0;
-        for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
+        for (int i = 0; i < C_LOG_FMT_COUNT - 1; i++) {
             if (chkLogFmtItems[i].isChecked()) {
                 logFormat |= bitMask;
             }
             bitMask <<= 1;
         }
         // Special case : valid fix only
+        if (chkLogFmtItems[C_LOG_FMT_COUNT - 1].isChecked()) {
+            logFormat |= (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX);
+        }
+        Log.debug("getSelectedLogFormat:"
+                + bt747.sys.Convert.unsigned2hex(logFormat, 8));
+
         return logFormat;
     }
 
     public void show() {
+        Log.debug("show");
         updateLogFormat(m().getLogFormat());
-        invalidate();
         super.show();
     }
 
@@ -65,16 +73,47 @@ public class LogFieldSelectScreen extends Dialog {
      *            LogFormat to set
      */
     private void updateLogFormat(final int pLogFormat) {
-        // Log.debug("Update FileFieldFormat:" +
-        // bt747.sys.Convert.unsigned2hex(pLogFormat, 8));
+        Log.debug("updateLogFormat");
         int bitMask = 1;
         for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
             chkLogFmtItems[i].setChecked((pLogFormat & bitMask) != 0);
             // chkLogFmtItems[i].repaintNow();
             bitMask <<= 1;
         }
-        invalidate();
-        repaint();
+        chkLogFmtItems[C_LOG_FMT_COUNT - 1]
+                .setChecked((pLogFormat & (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX)) != 0);
+        setLogFormatControls();
+    }
+
+    private int prevLogFormat = 0;
+
+    private void setLogFormatControls() {
+        int curLogFormat;
+        curLogFormat = getSelectedLogFormat();
+        if (curLogFormat != prevLogFormat) {
+            prevLogFormat = curLogFormat;
+            // Should enable/disable sat settings
+            // boolean sidSet;
+            // sidSet = chkLogFmtItems[BT747Constants.FMT_SID_IDX].isChecked();
+            // chkLogFmtItems[BT747Constants.FMT_ELEVATION_IDX].
+            // setEnabled(sidSet);
+            // chkLogFmtItems[BT747Constants.FMT_AZIMUTH_IDX].setEnabled(sidSet);
+            // chkLogFmtItems[BT747Constants.FMT_SNR_IDX].setEnabled(sidSet);
+
+            setTitle(m().getEstimatedNbrRecords(curLogFormat) + " est. pos.");
+            Log.debug(getTitle());
+            this.repaint();
+        }
+    }
+
+    protected void keyReleased(int keyCode) {
+        setLogFormatControls();
+        super.keyReleased(keyCode);
+    }
+
+    protected void pointerReleased(int x, int y) {
+        setLogFormatControls();
+        super.pointerReleased(x, y);
     }
 
     private void saveLogFormat() {
