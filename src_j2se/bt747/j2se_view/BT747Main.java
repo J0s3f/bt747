@@ -304,16 +304,16 @@ public class BT747Main extends javax.swing.JFrame implements
         cbTrkDistance
                 .setSelected((BT747Constants.RCR_DISTANCE_MASK & trkRCR) != 0);
         cbTrkButton.setSelected((BT747Constants.RCR_BUTTON_MASK & trkRCR) != 0);
-        cbTrkUser1.setSelected((BT747Constants.RCR_APP1_MASK & trkRCR) != 0);
-        cbTrkUser2.setSelected((BT747Constants.RCR_APP2_MASK & trkRCR) != 0);
-        cbTrkUser3.setSelected((BT747Constants.RCR_APP3_MASK & trkRCR) != 0);
-        cbTrkUser4.setSelected((BT747Constants.RCR_APP4_MASK & trkRCR) != 0);
-        cbTrkUser5.setSelected((BT747Constants.RCR_APP5_MASK & trkRCR) != 0);
-        cbTrkUser6.setSelected((BT747Constants.RCR_APP6_MASK & trkRCR) != 0);
-        cbTrkUser7.setSelected((BT747Constants.RCR_APP7_MASK & trkRCR) != 0);
-        cbTrkUser8.setSelected((BT747Constants.RCR_APP8_MASK & trkRCR) != 0);
-        cbTrkUser9.setSelected((BT747Constants.RCR_APP9_MASK & trkRCR) != 0);
-        cbTrkUser10.setSelected((BT747Constants.RCR_APPX_MASK & trkRCR) != 0);
+        cbTrkUser1.setSelected((BT747Constants.RCR_APP0_MASK & trkRCR) != 0);
+        cbTrkUser2.setSelected((BT747Constants.RCR_APP1_MASK & trkRCR) != 0);
+        cbTrkUser3.setSelected((BT747Constants.RCR_APP2_MASK & trkRCR) != 0);
+        cbTrkUser4.setSelected((BT747Constants.RCR_APP3_MASK & trkRCR) != 0);
+        cbTrkUser5.setSelected((BT747Constants.RCR_APP4_MASK & trkRCR) != 0);
+        cbTrkUser6.setSelected((BT747Constants.RCR_APP5_MASK & trkRCR) != 0);
+        cbTrkUser7.setSelected((BT747Constants.RCR_APP6_MASK & trkRCR) != 0);
+        cbTrkUser8.setSelected((BT747Constants.RCR_APP7_MASK & trkRCR) != 0);
+        cbTrkUser9.setSelected((BT747Constants.RCR_APP8_MASK & trkRCR) != 0);
+        cbTrkUser10.setSelected((BT747Constants.RCR_APP9_MASK & trkRCR) != 0);
         cbTrkUser11.setSelected((BT747Constants.RCR_APPY_MASK & trkRCR) != 0);
         cbTrkUser12.setSelected((BT747Constants.RCR_APPZ_MASK & trkRCR) != 0);
 
@@ -336,16 +336,16 @@ public class BT747Main extends javax.swing.JFrame implements
         cbWayDistance
                 .setSelected((BT747Constants.RCR_DISTANCE_MASK & wayRCR) != 0);
         cbWayButton.setSelected((BT747Constants.RCR_BUTTON_MASK & wayRCR) != 0);
-        cbWayUser1.setSelected((BT747Constants.RCR_APP1_MASK & wayRCR) != 0);
-        cbWayUser2.setSelected((BT747Constants.RCR_APP2_MASK & wayRCR) != 0);
-        cbWayUser3.setSelected((BT747Constants.RCR_APP3_MASK & wayRCR) != 0);
-        cbWayUser4.setSelected((BT747Constants.RCR_APP4_MASK & wayRCR) != 0);
-        cbWayUser5.setSelected((BT747Constants.RCR_APP5_MASK & wayRCR) != 0);
-        cbWayUser6.setSelected((BT747Constants.RCR_APP6_MASK & wayRCR) != 0);
-        cbWayUser7.setSelected((BT747Constants.RCR_APP7_MASK & wayRCR) != 0);
-        cbWayUser8.setSelected((BT747Constants.RCR_APP8_MASK & wayRCR) != 0);
-        cbWayUser9.setSelected((BT747Constants.RCR_APP9_MASK & wayRCR) != 0);
-        cbWayUser10.setSelected((BT747Constants.RCR_APPX_MASK & wayRCR) != 0);
+        cbWayUser1.setSelected((BT747Constants.RCR_APP0_MASK & wayRCR) != 0);
+        cbWayUser2.setSelected((BT747Constants.RCR_APP1_MASK & wayRCR) != 0);
+        cbWayUser3.setSelected((BT747Constants.RCR_APP2_MASK & wayRCR) != 0);
+        cbWayUser4.setSelected((BT747Constants.RCR_APP3_MASK & wayRCR) != 0);
+        cbWayUser5.setSelected((BT747Constants.RCR_APP4_MASK & wayRCR) != 0);
+        cbWayUser6.setSelected((BT747Constants.RCR_APP5_MASK & wayRCR) != 0);
+        cbWayUser7.setSelected((BT747Constants.RCR_APP6_MASK & wayRCR) != 0);
+        cbWayUser8.setSelected((BT747Constants.RCR_APP7_MASK & wayRCR) != 0);
+        cbWayUser9.setSelected((BT747Constants.RCR_APP8_MASK & wayRCR) != 0);
+        cbWayUser10.setSelected((BT747Constants.RCR_APP9_MASK & wayRCR) != 0);
         cbWayUser11.setSelected((BT747Constants.RCR_APPY_MASK & wayRCR) != 0);
         cbWayUser12.setSelected((BT747Constants.RCR_APPZ_MASK & wayRCR) != 0);
     }
@@ -428,34 +428,34 @@ public class BT747Main extends javax.swing.JFrame implements
             trkRCR |= BT747Constants.RCR_BUTTON_MASK;
         }
         if (cbTrkUser1.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP1_MASK;
+            trkRCR |= BT747Constants.RCR_APP0_MASK;
         }
         if (cbTrkUser2.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP2_MASK;
+            trkRCR |= BT747Constants.RCR_APP1_MASK;
         }
         if (cbTrkUser3.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP3_MASK;
+            trkRCR |= BT747Constants.RCR_APP2_MASK;
         }
         if (cbTrkUser4.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP4_MASK;
+            trkRCR |= BT747Constants.RCR_APP3_MASK;
         }
         if (cbTrkUser5.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP5_MASK;
+            trkRCR |= BT747Constants.RCR_APP4_MASK;
         }
         if (cbTrkUser6.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP6_MASK;
+            trkRCR |= BT747Constants.RCR_APP5_MASK;
         }
         if (cbTrkUser7.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP7_MASK;
+            trkRCR |= BT747Constants.RCR_APP6_MASK;
         }
         if (cbTrkUser8.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP8_MASK;
+            trkRCR |= BT747Constants.RCR_APP7_MASK;
         }
         if (cbTrkUser9.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP9_MASK;
+            trkRCR |= BT747Constants.RCR_APP8_MASK;
         }
         if (cbTrkUser10.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APPX_MASK;
+            trkRCR |= BT747Constants.RCR_APP9_MASK;
         }
         if (cbTrkUser11.isSelected()) {
             trkRCR |= BT747Constants.RCR_APPY_MASK;
@@ -480,34 +480,34 @@ public class BT747Main extends javax.swing.JFrame implements
             wayRCR |= BT747Constants.RCR_BUTTON_MASK;
         }
         if (cbWayUser1.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP1_MASK;
+            wayRCR |= BT747Constants.RCR_APP0_MASK;
         }
         if (cbWayUser2.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP2_MASK;
+            wayRCR |= BT747Constants.RCR_APP1_MASK;
         }
         if (cbWayUser3.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP3_MASK;
+            wayRCR |= BT747Constants.RCR_APP2_MASK;
         }
         if (cbWayUser4.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP4_MASK;
+            wayRCR |= BT747Constants.RCR_APP3_MASK;
         }
         if (cbWayUser5.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP5_MASK;
+            wayRCR |= BT747Constants.RCR_APP4_MASK;
         }
         if (cbWayUser6.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP6_MASK;
+            wayRCR |= BT747Constants.RCR_APP5_MASK;
         }
         if (cbWayUser7.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP7_MASK;
+            wayRCR |= BT747Constants.RCR_APP6_MASK;
         }
         if (cbWayUser8.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP8_MASK;
+            wayRCR |= BT747Constants.RCR_APP7_MASK;
         }
         if (cbWayUser9.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP9_MASK;
+            wayRCR |= BT747Constants.RCR_APP8_MASK;
         }
         if (cbWayUser10.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APPX_MASK;
+            wayRCR |= BT747Constants.RCR_APP9_MASK;
         }
         if (cbWayUser11.isSelected()) {
             wayRCR |= BT747Constants.RCR_APPY_MASK;

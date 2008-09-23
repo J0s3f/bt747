@@ -208,9 +208,9 @@ final class CommonOut {
         }
 
         // Still 16-4 = 12 possibilities.
-        // Taking numbers from 1 to 9
+        // Taking numbers from 0 to 9
         // Then letters X, Y and Z
-        char c = '1';
+        char c = '0';
         int i;
         for (i = 0x10; c <= '9'; i <<= 1, c++) {
             if ((s.rcr & i) != 0) {
