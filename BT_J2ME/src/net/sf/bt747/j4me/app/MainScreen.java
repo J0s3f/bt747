@@ -355,43 +355,43 @@ public class MainScreen extends Dialog implements ModelListener {
         }
         switch (keyCode) {
         case DeviceScreen.KEY_NUM0:
-            c.logImmediate(BT747Constants.RCR_APP1_MASK);
+            c.logImmediate(BT747Constants.RCR_APP0_MASK);
             hightlightLabel(0);
             break;
         case DeviceScreen.KEY_NUM1:
-            c.logImmediate(BT747Constants.RCR_APP2_MASK);
+            c.logImmediate(BT747Constants.RCR_APP1_MASK);
             hightlightLabel(1);
             break;
         case DeviceScreen.KEY_NUM2:
-            c.logImmediate(BT747Constants.RCR_APP3_MASK);
+            c.logImmediate(BT747Constants.RCR_APP2_MASK);
             hightlightLabel(2);
             break;
         case DeviceScreen.KEY_NUM3:
-            c.logImmediate(BT747Constants.RCR_APP4_MASK);
+            c.logImmediate(BT747Constants.RCR_APP3_MASK);
             hightlightLabel(3);
             break;
         case DeviceScreen.KEY_NUM4:
-            c.logImmediate(BT747Constants.RCR_APP5_MASK);
+            c.logImmediate(BT747Constants.RCR_APP4_MASK);
             hightlightLabel(4);
             break;
         case DeviceScreen.KEY_NUM5:
-            c.logImmediate(BT747Constants.RCR_APP6_MASK);
+            c.logImmediate(BT747Constants.RCR_APP5_MASK);
             hightlightLabel(5);
             break;
         case DeviceScreen.KEY_NUM6:
-            c.logImmediate(BT747Constants.RCR_APP7_MASK);
+            c.logImmediate(BT747Constants.RCR_APP6_MASK);
             hightlightLabel(6);
             break;
         case DeviceScreen.KEY_NUM7:
-            c.logImmediate(BT747Constants.RCR_APP8_MASK);
+            c.logImmediate(BT747Constants.RCR_APP7_MASK);
             hightlightLabel(7);
             break;
         case DeviceScreen.KEY_NUM8:
-            c.logImmediate(BT747Constants.RCR_APP9_MASK);
+            c.logImmediate(BT747Constants.RCR_APP8_MASK);
             hightlightLabel(8);
             break;
         case DeviceScreen.KEY_NUM9:
-            c.logImmediate(BT747Constants.RCR_APPX_MASK);
+            c.logImmediate(BT747Constants.RCR_APP9_MASK);
             hightlightLabel(9);
             break;
         case DeviceScreen.KEY_STAR:
