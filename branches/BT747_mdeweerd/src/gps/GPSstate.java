@@ -12,11 +12,6 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************
 package gps;
 
 import gps.connection.GPSrxtx;
@@ -515,9 +510,13 @@ public class GPSstate implements BT747Thread {
     }
 
     public final void logImmediate(final int value) {
+        if(!isLoggingActive) {
+            startLog();
+        }
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_SET_STR + ","
-                + BT747Constants.PMTK_LOG_USER + "," + Convert.toString(value));
+                + BT747Constants.PMTK_LOG_USER + "," + 
+        Convert.unsigned2hex(value, 4));
     }
 
     public final void setLogTimeInterval(final int value) {

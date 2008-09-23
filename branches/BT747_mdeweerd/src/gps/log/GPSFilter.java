@@ -86,6 +86,7 @@ public class GPSFilter {
      * {@link gps.BT747Constants#RCR_SPEED_MASK}<br>-
      * {@link gps.BT747Constants#RCR_DISTANCE_MASK}<br>-
      * {@link gps.BT747Constants#RCR_BUTTON_MASK}<br>-
+     * {@link gps.BT747Constants#RCR_APP0_MASK}<br>-
      * {@link gps.BT747Constants#RCR_APP1_MASK}<br>-
      * {@link gps.BT747Constants#RCR_APP2_MASK}<br>-
      * {@link gps.BT747Constants#RCR_APP3_MASK}<br>-
@@ -95,7 +96,6 @@ public class GPSFilter {
      * {@link gps.BT747Constants#RCR_APP7_MASK}<br>-
      * {@link gps.BT747Constants#RCR_APP8_MASK}<br>-
      * {@link gps.BT747Constants#RCR_APP9_MASK}<br>-
-     * {@link gps.BT747Constants#RCR_APPX_MASK}<br>-
      * {@link gps.BT747Constants#RCR_APPY_MASK}<br>-
      * {@link gps.BT747Constants#RCR_APPZ_MASK}<br>-
      * {@link gps.BT747Constants#RCR_ALL_APP_MASK}
@@ -115,6 +115,7 @@ public class GPSFilter {
      *            {@link gps.BT747Constants#RCR_SPEED_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_DISTANCE_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_BUTTON_MASK}<br>-
+     *            {@link gps.BT747Constants#RCR_APP0_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_APP1_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_APP2_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_APP3_MASK}<br>-
@@ -124,7 +125,6 @@ public class GPSFilter {
      *            {@link gps.BT747Constants#RCR_APP7_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_APP8_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_APP9_MASK}<br>-
-     *            {@link gps.BT747Constants#RCR_APPX_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_APPY_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_APPZ_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_ALL_APP_MASK}

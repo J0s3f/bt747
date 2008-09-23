@@ -1,3 +1,7 @@
+Version 1.57.2
+* Changed identification of special way points (count starting from 0).
+* Corrected logging way points and activating logging if needed.
+
 Version 1.57
 * Negative UTCs were not handled as an error in the filter 
   - now negative dates are 'filtered' and identified as a 
