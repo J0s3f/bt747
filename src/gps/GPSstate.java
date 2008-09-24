@@ -968,13 +968,15 @@ public class GPSstate implements BT747Thread {
             try {
                 if (sNmea[8].length() != 0) {
                     gps.hdop = (int) (Convert.toFloat(sNmea[8]) * 100);
+                } else {
+                    // No hdop, so very big.
+                    gps.hdop = 999;
                 }
             } catch (Exception e) {
                 Generic.debug(sNmea[8], e);
             }
             try {
                 if (sNmea[8].length() != 0) {
-
                     gps.height = (Convert.toFloat(sNmea[9]));
                     logFormat |= (1 << BT747Constants.FMT_HEIGHT_IDX);
                 }

@@ -176,37 +176,7 @@ public class GPSCSVFile extends GPSFile {
 
             if ((activeFields.valid != 0) && (selectedFileFields.valid != 0)) {
                 rec.append(fieldSep);
-                switch (s.valid) {
-                case 0x0001:
-                    rec.append("No fix");
-                    break;
-                case 0x0002:
-                    rec.append("SPS");
-                    break;
-                case 0x0004:
-                    rec.append("DGPS");
-                    break;
-                case 0x0008:
-                    rec.append("PPS");
-                    break;
-                case 0x0010:
-                    rec.append("RTK");
-                    break;
-                case 0x0020:
-                    rec.append("FRTK");
-                    break;
-                case 0x0040:
-                    rec.append("Estimated mode");
-                    break;
-                case 0x0080:
-                    rec.append("Manual input mode");
-                    break;
-                case 0x0100:
-                    rec.append("Simulator mode");
-                    break;
-                default:
-                    rec.append("Unknown mode");
-                }
+                rec.append(CommonOut.getFixText(s.valid));
             } else if ((activeFileFields.valid != 0)
                     && (selectedFileFields.valid != 0)) {
                 rec.append(fieldSep);

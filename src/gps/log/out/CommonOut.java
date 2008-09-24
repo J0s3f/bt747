@@ -6,7 +6,7 @@ import gps.log.GPSRecord;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 
-final class CommonOut {
+final public class CommonOut {
     protected static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
             "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
@@ -46,37 +46,7 @@ final class CommonOut {
         if ((activeFields.valid != 0) && (selectedFields.valid != 0)) {
             // rec.append("<br />VALID: ");
             rec.append("<br/>VALID: ");
-            switch (s.valid) {
-            case 0x0001:
-                rec.append("No fix");
-                break;
-            case 0x0002:
-                rec.append("SPS");
-                break;
-            case 0x0004:
-                rec.append("DGPS");
-                break;
-            case 0x0008:
-                rec.append("PPS");
-                break;
-            case 0x0010:
-                rec.append("RTK");
-                break;
-            case 0x0020:
-                rec.append("FRTK");
-                break;
-            case 0x0040:
-                rec.append("Estimated mode");
-                break;
-            case 0x0080:
-                rec.append("Manual input mode");
-                break;
-            case 0x0100:
-                rec.append("Simulator mode");
-                break;
-            default:
-                rec.append("Unknown mode");
-            }
+            rec.append(getFixText(s.valid));
         }
         if ((activeFields.latitude != 0) && (selectedFields.latitude != 0)) {
             rec.append("<br />LATITUDE: ");
@@ -225,5 +195,30 @@ final class CommonOut {
         }
 
         return rcrStr.toString();
+    }
+    
+    public static final String getFixText(final int valid) {
+        switch (valid) {
+        case 0x0001:
+            return("No fix");
+        case 0x0002:
+            return("SPS");
+        case 0x0004:
+            return("DGPS");
+        case 0x0008:
+            return("PPS");
+        case 0x0010:
+            return("RTK");
+        case 0x0020:
+            return("FRTK");
+        case 0x0040:
+            return("Estimated mode");
+        case 0x0080:
+            return("Manual input mode");
+        case 0x0100:
+            return("Simulator mode");
+        default:
+            return("Unknown mode");
+        }
     }
  }
