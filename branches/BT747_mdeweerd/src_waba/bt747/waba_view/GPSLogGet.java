@@ -43,48 +43,57 @@ import bt747.sys.Time;
  */
 public class GPSLogGet extends Container implements ModelListener {
 
+    private Model m;
+    private AppController c;
+
     private MyCheck chkLogOnOff;
     private MyCheck chkLogOverwriteStop;
     private Button btStartDate;
-    private Button m_btEndDate;
-    private Button m_btGetLog;
-    private MyCheck m_chkNoGeoid;
-    private Button m_btCancelGetLog;
-    private Button m_btToCSV;
-    private Button m_btToKML;
-    private Button m_btToGPX;
-    private Button m_btToTRK;
-    private Button m_btToPLT;
-    private Button m_btToNMEA;
-    private Button m_btToGMAP;
-    private Edit m_edTrkSep;
-    private ComboBox m_cbTimeOffsetHours;
+    private Button btEndDate;
+    private Button btGetLog;
+    private MyCheck chkConvertWGSToMSL;
+    private Button btCancelGetLog;
+    private Button btToCSV;
+    private Button btToKML;
+    private Button btToGPX;
+    private Button btToTRK;
+    private Button btToPLT;
+    private Button btToNMEA;
+    private Button btToGMAP;
+    private Edit edTrkSep;
+    private ComboBox cbTimeOffsetHours;
+
+    private Calendar cal;
+    private Button btCal;
 
     private static final String[] offsetStr = { "-12", "-11", "-10", "-9",
             "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "+0", "+1", "+2",
             "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12",
             "+13", "+14" };
-    private ComboBox m_cbColors;
+    private ComboBox cbColors;
     private static final String[] colors = { "FF0000", "0000FF", "800000",
             "000080", "00FF00", "008000" };
     private ComboBox cbDownload;
     private static final String[] downloadStr = { Txt.DOWNLOAD_NORMAL,
             Txt.DOWNLOAD_INCREMENTAL, Txt.DOWNLOAD_FULL };
-    private ComboBox m_chkOneFilePerDay;
+    private ComboBox cbFileSplitType;
     private static final String[] fileStr = { Txt.ONE_FILE, Txt.ONE_FILE_DAY,
             Txt.ONE_FILE_TRK };
-    private Model m;
-    private AppController c;
-    private Color BackupBackColor;
-    private Label m_UsedLabel;
-    private Label m_RecordsLabel;
+    private Color savedBackColor;
+    private Label lbUsedMem;
+    private Label lbUsedRecords;
+
+    /**
+     * The number of seconds in a day.
+     */
+    private static final int SECONDS_PER_DAY = 24 * 60 * 60;
 
     public GPSLogGet(final Model m, final AppController c) {
         this.m = m;
         this.c = c;
     }
 
-    private String convertUTCtoDateString(int utcTime) {
+    private String convertUTCtoDateString(final int utcTime) {
         Time t = new Time();
         String dateString;
         t.setUTCTime(utcTime);
@@ -93,6 +102,7 @@ public class GPSLogGet extends Container implements ModelListener {
         int year = t.getYear();
         dateString = (day < 10 ? "0" : "") + day + "/"
                 + (month < 10 ? "0" : "") + t.getMonth() + "/" + year;
+        t = null; // Release object.
         return dateString;
     }
 
@@ -113,58 +123,60 @@ public class GPSLogGet extends Container implements ModelListener {
         add(btStartDate = new Button(convertUTCtoDateString(m
                 .getFilterStartTime())), AFTER, SAME); //$NON-NLS-1$
         // m_btStartDate.setMode(Edit.DATE);
-        add(m_btEndDate = new Button(convertUTCtoDateString(m
-                .getFilterEndTime())), RIGHT, SAME); //$NON-NLS-1$
+        add(
+                btEndDate = new Button(convertUTCtoDateString(m
+                        .getFilterEndTime())), RIGHT, SAME); //$NON-NLS-1$
         // m_btEndDate.setMode(Edit.DATE);
-        add(m_btGetLog = new Button(Txt.GET_LOG), LEFT, AFTER + 2); //$NON-NLS-1$
-        add(m_btCancelGetLog = new Button(Txt.CANCEL_GET), AFTER + 5, SAME); //$NON-NLS-1$
+        add(btGetLog = new Button(Txt.GET_LOG), LEFT, AFTER + 2); //$NON-NLS-1$
+        add(btCancelGetLog = new Button(Txt.CANCEL_GET), AFTER + 5, SAME); //$NON-NLS-1$
 
-        m_cbColors = new ComboBox(colors);
-        add(m_cbColors, RIGHT, SAME);
+        cbColors = new ComboBox(colors);
+        add(cbColors, RIGHT, SAME);
         add(new Label(Txt.NOFIX_COL), BEFORE, SAME);
 
         add(new Label(Txt.TRK_SEP), LEFT, AFTER); //$NON-NLS-1$
-        add(m_edTrkSep = new Edit("00000"), AFTER, SAME); //$NON-NLS-1$
-        m_edTrkSep.setValidChars(Edit.numbersSet);
+        add(edTrkSep = new Edit("00000"), AFTER, SAME); //$NON-NLS-1$
+        edTrkSep.setValidChars(Edit.numbersSet);
         add(new Label(Txt.MIN), AFTER, SAME); //$NON-NLS-1$
-        m_edTrkSep.setText(Convert.toString(m.getTrkSep()));
-        m_edTrkSep.alignment = RIGHT;
+        edTrkSep.setText(Convert.toString(m.getTrkSep()));
+        edTrkSep.alignment = RIGHT;
 
         int offsetIdx = m.getTimeOffsetHours() + 12;
         if (offsetIdx > 26) {
             c.setTimeOffsetHours(0); // TODO: Change in call to control
             offsetIdx = 12;
         }
-        m_cbTimeOffsetHours = new ComboBox(offsetStr);
-        add(m_cbTimeOffsetHours, RIGHT, SAME);
-        m_cbTimeOffsetHours.select(offsetIdx);
+        cbTimeOffsetHours = new ComboBox(offsetStr);
+        add(cbTimeOffsetHours, RIGHT, SAME);
+        cbTimeOffsetHours.select(offsetIdx);
         add(new Label(Txt.UTC), BEFORE, SAME);
 
         // add(new Label("End"),BEFORE,SAME);
-        add(m_chkOneFilePerDay = new ComboBox(fileStr), LEFT, AFTER + 2);
-        m_chkOneFilePerDay.select(m.getFileSeparationFreq());
-        add(m_chkNoGeoid = new MyCheck(Txt.HGHT_GEOID_DIFF), AFTER + 5, SAME); //$NON-NLS-1$
-        m_chkNoGeoid.setChecked(m.isConvertWGS84ToMSL());
+        add(cbFileSplitType = new ComboBox(fileStr), LEFT, AFTER + 2);
+        cbFileSplitType.select(m.getOutputFileSplitType());
+        add(chkConvertWGSToMSL = new MyCheck(Txt.HGHT_GEOID_DIFF), AFTER + 5,
+                SAME); //$NON-NLS-1$
+        chkConvertWGSToMSL.setChecked(m.isConvertWGS84ToMSL());
 
-        add(m_btToCSV = new Button(Txt.TO_CSV), LEFT, AFTER + 5); //$NON-NLS-1$
-        add(m_btToGPX = new Button(Txt.TO_GPX), AFTER + 5, SAME); //$NON-NLS-1$
-        add(m_btToKML = new Button(Txt.TO_KML), RIGHT, SAME); //$NON-NLS-1$
-        add(m_btToTRK = new Button(Txt.TO_TRK), BEFORE - 5, SAME); //$NON-NLS-1$
+        add(btToCSV = new Button(Txt.TO_CSV), LEFT, AFTER + 5); //$NON-NLS-1$
+        add(btToGPX = new Button(Txt.TO_GPX), AFTER + 5, SAME); //$NON-NLS-1$
+        add(btToKML = new Button(Txt.TO_KML), RIGHT, SAME); //$NON-NLS-1$
+        add(btToTRK = new Button(Txt.TO_TRK), BEFORE - 5, SAME); //$NON-NLS-1$
 
-        add(m_btToPLT = new Button(Txt.TO_PLT), LEFT, AFTER + 2); //$NON-NLS-1$
-        add(m_btToGMAP = new Button(Txt.TO_GMAP), CENTER, SAME); //$NON-NLS-1$
-        add(m_btToNMEA = new Button(Txt.TO_NMEA), RIGHT, SAME); //$NON-NLS-1$
+        add(btToPLT = new Button(Txt.TO_PLT), LEFT, AFTER + 2); //$NON-NLS-1$
+        add(btToGMAP = new Button(Txt.TO_GMAP), CENTER, SAME); //$NON-NLS-1$
+        add(btToNMEA = new Button(Txt.TO_NMEA), RIGHT, SAME); //$NON-NLS-1$
 
-        BackupBackColor = m_btToCSV.getBackColor();
+        savedBackColor = btToCSV.getBackColor();
 
-        add(m_UsedLabel = new Label(""), LEFT, AFTER + 3);
-        add(m_RecordsLabel = new Label(""), LEFT, AFTER + 3);
+        add(lbUsedMem = new Label(""), LEFT, AFTER + 3);
+        add(lbUsedRecords = new Label(""), LEFT, AFTER + 3);
 
         String s = m.getColorInvalidTrack();
-        m_cbColors.select(0);
-        for (int i = 0; i < m_cbColors.size() - 1; i++) {
-            if (s.equals((String) m_cbColors.getItemAt(i))) {
-                m_cbColors.select(i);
+        cbColors.select(0);
+        for (int i = 0; i < cbColors.size() - 1; i++) {
+            if (s.equals((String) cbColors.getItemAt(i))) {
+                cbColors.select(i);
                 break;
             }
         }
@@ -187,23 +199,15 @@ public class GPSLogGet extends Container implements ModelListener {
         // m_chkLogOnOff.repaintNow();
         chkLogOverwriteStop.setChecked(m.isLogFullOverwrite());
         // m_chkLogOverwriteStop.repaintNow();
-        m_UsedLabel.setText(Txt.MEM_USED + Convert.toString(m.logMemUsed())
-                + "(" + Convert.toString(m.logMemUsedPercent()) + "%)");
+        lbUsedMem.setText(Txt.MEM_USED + Convert.toString(m.logMemUsed()) + "("
+                + Convert.toString(m.logMemUsedPercent()) + "%)");
         // m_UsedLabel.repaintNow();
-        m_RecordsLabel.setText(Txt.NBR_RECORDS
+        lbUsedRecords.setText(Txt.NBR_RECORDS
                 + Convert.toString(m.logNbrLogPts()) + " ("
                 + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
                 + Txt.MEM_FREE + ")");
         // m_RecordsLabel.repaintNow();
     }
-
-    private Calendar cal;
-    private Button calBt;
-
-    /**
-     * The number of seconds in a day.
-     */
-    private static final int SECONDS_PER_DAY = 24 * 60 * 60;
 
     /*
      * (non-Javadoc)
@@ -221,10 +225,10 @@ public class GPSLogGet extends Container implements ModelListener {
         switch (event.type) {
         case ControlEvent.PRESSED:
             event.consumed = true;
-            if (event.target == m_btGetLog) {
+            if (event.target == btGetLog) {
                 c.startDownload();
                 // m_btGetLog.press(false);
-            } else if (event.target == m_btCancelGetLog) {
+            } else if (event.target == btCancelGetLog) {
                 c.cancelGetLog();
             } else if (event.target == cbDownload) {
                 c.setDownloadMethod(cbDownload.getSelectedIndex());
@@ -234,53 +238,53 @@ public class GPSLogGet extends Container implements ModelListener {
                 } else {
                     c.stopLog();
                 }
-            } else if (event.target == m_cbColors) {
-                c.setColorInvalidTrack((String) m_cbColors.getSelectedItem());
-            } else if (event.target == m_cbTimeOffsetHours) {
+            } else if (event.target == cbColors) {
+                c.setColorInvalidTrack((String) cbColors.getSelectedItem());
+            } else if (event.target == cbTimeOffsetHours) {
+                int index = 0;
                 // Work around superwaba bug
-                String tmp = (String) m_cbTimeOffsetHours.getSelectedItem();
+                String tmp = (String) cbTimeOffsetHours.getSelectedItem();
                 if (tmp.charAt(0) == '+') {
-                    c.setTimeOffsetHours(Convert.toInt((String) tmp
-                            .substring(1)));
-                } else {
-                    c.setTimeOffsetHours(Convert.toInt(tmp));
+                    index = 1;
                 }
+                c.setTimeOffsetHours(Convert.toInt((String) tmp
+                        .substring(index)));
             } else if (event.target == chkLogOverwriteStop) {
                 c.setLogOverwrite(chkLogOverwriteStop.getChecked());
-            } else if (event.target == m_chkOneFilePerDay) {
-                c.setOutputFileSplitType(m_chkOneFilePerDay.getSelectedIndex());
-            } else if (event.target == m_chkNoGeoid) {
-                c.setNoGeoid(m_chkNoGeoid.getChecked());
-            } else if (event.target == m_btEndDate) {
+            } else if (event.target == cbFileSplitType) {
+                c.setOutputFileSplitType(cbFileSplitType.getSelectedIndex());
+            } else if (event.target == chkConvertWGSToMSL) {
+                c.setConvertWGS84ToMSL(chkConvertWGSToMSL.getChecked());
+            } else if (event.target == btEndDate) {
                 if (cal == null) {
                     cal = new Calendar();
                 }
-                calBt = m_btEndDate;
+                btCal = btEndDate;
                 cal.popupModal();
             } else if (event.target == btStartDate) {
                 if (cal == null) {
                     cal = new Calendar();
                 }
-                calBt = btStartDate;
+                btCal = btStartDate;
                 cal.popupModal();
-            } else if (event.target == m_btToCSV || event.target == m_btToKML
-                    || event.target == m_btToPLT || event.target == m_btToGPX
-                    || event.target == m_btToTRK || event.target == m_btToGMAP
-                    || event.target == m_btToNMEA) {
+            } else if (event.target == btToCSV || event.target == btToKML
+                    || event.target == btToPLT || event.target == btToGPX
+                    || event.target == btToTRK || event.target == btToGMAP
+                    || event.target == btToNMEA) {
                 int logType = Model.NO_LOG_LOGTYPE;
-                if (event.target == m_btToCSV) {
+                if (event.target == btToCSV) {
                     logType = Model.CSV_LOGTYPE;
-                } else if (event.target == m_btToTRK) {
+                } else if (event.target == btToTRK) {
                     logType = Model.TRK_LOGTYPE;
-                } else if (event.target == m_btToKML) {
+                } else if (event.target == btToKML) {
                     logType = Model.KML_LOGTYPE;
-                } else if (event.target == m_btToPLT) {
+                } else if (event.target == btToPLT) {
                     logType = Model.PLT_LOGTYPE;
-                } else if (event.target == m_btToGPX) {
+                } else if (event.target == btToGPX) {
                     logType = Model.GPX_LOGTYPE;
-                } else if (event.target == m_btToNMEA) {
+                } else if (event.target == btToNMEA) {
                     logType = Model.NMEA_LOGTYPE;
-                } else if (event.target == m_btToGMAP) {
+                } else if (event.target == btToGMAP) {
                     logType = Model.GMAP_LOGTYPE;
                 }
                 c.convertLog(logType);
@@ -292,9 +296,9 @@ public class GPSLogGet extends Container implements ModelListener {
             }
             break;
         case ControlEvent.FOCUS_OUT:
-            if (event.target == m_edTrkSep) {
-                c.setTrkSep(Convert.toInt(m_edTrkSep.getText()));
-                m_edTrkSep.setText(Convert.toString(m.getTrkSep()));
+            if (event.target == edTrkSep) {
+                c.setTrkSep(Convert.toInt(edTrkSep.getText()));
+                edTrkSep.setText(Convert.toString(m.getTrkSep()));
             }
             break;
 
@@ -302,11 +306,11 @@ public class GPSLogGet extends Container implements ModelListener {
             if (event.target == cal) {
                 waba.util.Date d = cal.getSelectedDate();
                 if (d != null) {
-                    calBt.setText(d.toString());
+                    btCal.setText(d.toString());
                     // Can't change the value of the date, changing all
                     c.setStartDate((new WabaDate(btStartDate.getText()))
                             .dateToUTCepoch1970());
-                    c.setEndDate((new WabaDate(m_btEndDate.getText()))
+                    c.setEndDate((new WabaDate(btEndDate.getText()))
                             .dateToUTCepoch1970()
                             + SECONDS_PER_DAY - 1);
                 }
@@ -332,25 +336,25 @@ public class GPSLogGet extends Container implements ModelListener {
             Button b = null;
             switch (m.getLastConversionOngoing()) {
             case Model.CSV_LOGTYPE:
-                b = m_btToCSV;
+                b = btToCSV;
                 break;
             case Model.TRK_LOGTYPE:
-                b = m_btToTRK;
+                b = btToTRK;
                 break;
             case Model.KML_LOGTYPE:
-                b = m_btToKML;
+                b = btToKML;
                 break;
             case Model.PLT_LOGTYPE:
-                b = m_btToPLT;
+                b = btToPLT;
                 break;
             case Model.GPX_LOGTYPE:
-                b = m_btToGPX;
+                b = btToGPX;
                 break;
             case Model.NMEA_LOGTYPE:
-                b = m_btToNMEA;
+                b = btToNMEA;
                 break;
             case Model.GMAP_LOGTYPE:
-                b = m_btToGMAP;
+                b = btToGMAP;
                 break;
             default:
                 break;
@@ -359,7 +363,7 @@ public class GPSLogGet extends Container implements ModelListener {
                 if (m.isConversionOngoing()) {
                     b.setBackColor(Color.GREEN);
                 } else {
-                    b.setBackColor(BackupBackColor);
+                    b.setBackColor(savedBackColor);
                 }
                 b.repaintNow();
             }
