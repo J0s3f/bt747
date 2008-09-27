@@ -2,10 +2,13 @@ package net.sf.bt747.j4me.app;
 
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
+import org.j4me.ui.components.CheckBox;
 import org.j4me.ui.components.Label;
 import org.j4me.ui.components.RadioButton;
+import org.j4me.ui.components.TextBox;
 
 import bt747.model.Model;
+import bt747.sys.Convert;
 
 /**
  * The "Initializing GPS..." alert screen. This screen is used to get the
@@ -25,7 +28,35 @@ public class ConvertToScreen extends Dialog {
      */
     private final DeviceScreen previous;
 
+    /**
+     * Output format selection.
+     */
     private RadioButton rbFormats;
+    
+    /**
+     * Select how files are split.
+     */
+    private RadioButton rbFiles;
+    
+    /**
+     * Select whether height must be corrected or not.
+     */
+    private CheckBox cbHeightCorrection;
+    
+    /**
+     * Select the time in minutes that will separate a track.
+     */
+    private TextBox tbTrackSeparation;
+
+    /**
+     * List of UTC offsets.
+     */
+    private static final String[] offsetStr = { "-12", "-11", "-10", "-9",
+        "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "+0", "+1", "+2",
+        "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12",
+        "+13", "+14" };
+    
+    private RadioButton rbTimeOffsetHours;
 
     /**
      * Constructs the "Initializing GPS..." alert screen.
@@ -39,10 +70,13 @@ public class ConvertToScreen extends Dialog {
         setTitle("Convert Log");
         this.c = c;
         this.previous = previous;
-        
         setUpScreen();
     }
     
+    
+    /**
+     * Sets up the screen.
+     */
     private void setUpScreen() {
         deleteAll();
         Label l;
@@ -89,6 +123,36 @@ public class ConvertToScreen extends Dialog {
         append(l);
         l = new Label("WARNING: Conversion is very slow.");
         append(l);
+        
+        rbFiles = new RadioButton();
+        rbFiles.append("One file");
+        rbFiles.append("One file/day");
+        rbFiles.append("One file/track");
+        rbFiles.setSelectedIndex(c.getModel().getOutputFileSplitType());
+        append(rbFiles);
+        
+        cbHeightCorrection = new CheckBox();
+        cbHeightCorrection.setLabel("Correct Height");
+        cbHeightCorrection.setChecked(c.getModel().isConvertWGS84ToMSL());
+        append(cbHeightCorrection);
+        
+        tbTrackSeparation = new TextBox();
+        tbTrackSeparation.setForNumericOnly();
+        tbTrackSeparation.setLabel("Trk separation time (min)");
+        tbTrackSeparation.setString(Integer.toString(c.getModel().getTrkSep()));
+        append(tbTrackSeparation);
+        
+        rbTimeOffsetHours = new RadioButton();
+        for (int i = 0; i < offsetStr.length; i++) {
+            rbTimeOffsetHours.append(offsetStr[i]);
+        }
+        int offsetIdx = c.getModel().getTimeOffsetHours() + 12;
+        if (offsetIdx > 26) {
+            c.setTimeOffsetHours(0); // TODO: Change in call to control
+            offsetIdx = 12;
+        }
+        rbTimeOffsetHours.setSelectedIndex(offsetIdx);
+        append(rbTimeOffsetHours);
     }
     
     public void showNotify() {
@@ -99,12 +163,26 @@ public class ConvertToScreen extends Dialog {
     protected void acceptNotify() {
         ConvertToProgressScreen progressScreen;
         c.getAppModel().setSelectedOutputFormat(getSelectedLogType());
+        c.setOutputFileSplitType(rbFiles.getSelectedIndex());
+        c.setConvertWGS84ToMSL(cbHeightCorrection.isChecked());
+        c.setTrkSep(Integer.parseInt(tbTrackSeparation.getString()));
+        int index = 0;
+        // Work around superwaba bug
+        String tmp = (String) rbTimeOffsetHours.getSelectedValue();
+        if (tmp.charAt(0) == '+') {
+            index = 1;
+        }
+        c.setTimeOffsetHours(Convert.toInt((String) tmp
+                .substring(index)));
+
         progressScreen = new ConvertToProgressScreen(c, previous, getSelectedLogType());
+        deleteAll();  // Clean up screen.
         progressScreen.show();
         progressScreen = null;
     }
 
     protected void declineNotify() {
+        deleteAll();
         previous.show();
         super.declineNotify();
     }
