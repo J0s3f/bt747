@@ -145,7 +145,9 @@ public class JavaTranslations implements JavaTranslationsInterface {
             s.append(ZEROCHARS, 0, i + 1);
         } else {
             // Truncate - some limited notion of rounding.
+            // TODO: generalize this.
             if (s.charAt(dotPos + i + 1) >= '5') {
+                // Rounding is needed
                 char c;
                 c = s.charAt(dotPos + i);
                 c += 1;

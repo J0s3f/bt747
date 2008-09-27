@@ -1,13 +1,20 @@
-package net.sf.bt747.j4me.app;
+package net.sf.bt747.j4me.app.screens;
 
 import java.util.Enumeration;
 
-import org.j4me.logging.Log;
+
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Menu;
 import org.j4me.ui.MenuItem;
 import org.j4me.ui.components.MenuOption;
 
+/**
+ * Let the user select a path - file or directory depending on the parameters.
+ * One directory is shown at a time. Kind of extension to J4ME.
+ * 
+ * @author Mario De Weerd
+ * 
+ */
 public class PathSelectionScreen extends Menu {
 
     private FileUsage fileUsage = new FileManager();
@@ -175,11 +182,10 @@ public class PathSelectionScreen extends Menu {
         notifyPathSelected(currentPath);
         previous.show();
     }
-    
+
     protected void notifyPathSelected(final String path) {
-        
+
     }
-    
 
     public String getPath() {
         return currentPath;

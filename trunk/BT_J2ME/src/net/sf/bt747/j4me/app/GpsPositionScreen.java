@@ -4,12 +4,10 @@ import gps.log.GPSRecord;
 
 import java.util.Date;
 
-import javax.microedition.lcdui.Font;
-
-import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
+import org.j4me.ui.Theme;
 import org.j4me.ui.UIManager;
 import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
@@ -19,38 +17,6 @@ import bt747.model.ModelListener;
 import bt747.sys.Convert;
 
 public class GpsPositionScreen extends Dialog implements ModelListener {
-
-    /**
-     * The number of yards in a meter.
-     */
-    private static final float YARDS_PER_METER = 1.09361329833771f;
-
-    /**
-     * How many seconds between getting new location information.
-     */
-    private static final int INTERVAL = 5;
-
-    /**
-     * How many seconds to wait for new location information before giving up.
-     */
-    private static final int TIMEOUT = -1; // Default
-
-    /**
-     * The maximum number of seconds ago a location can be for it to be valid.
-     * We will never get locations older than this.
-     */
-    private static final int MAX_AGE = -1; // Default
-
-    /**
-     * The total distance traveled in meters.
-     */
-    private FieldValue traveled = new FieldValue("Traveled (ft)");
-
-    /**
-     * The average speed traveled in meters per second.
-     */
-    private FieldValue avgSpeed = new FieldValue("Avg speed (MPH)");
-
     /**
      * The current latitude.
      */
@@ -60,6 +26,11 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
      * The current longitude.
      */
     private FieldValue longitude = new FieldValue("Longitude");
+
+    /**
+     * Indication of fix.
+     */
+    private FieldValue fvFix = new FieldValue("Fix");
 
     /**
      * An indication of accuracy.
@@ -97,17 +68,6 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
      */
     private FieldValue fvTime = new FieldValue("");
 
-    /**
-     * The total distance traveled in meters.
-     */
-    private float totalDistance;
-
-    /**
-     * The time when the first distance was recorded. Dividing this into
-     * <code>totalDistance</code> gives the average speed.
-     */
-    private long startTime;
-
     private DeviceScreen previous;
 
     private AppController c;
@@ -131,24 +91,28 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         // append(avgSpeed);
 
         // Create a UI section for location information.
-        createNewSection("Location");
+        // createNewSection("Location");
+        append(fvFix);
         append(latitude);
         append(longitude);
+        append(new HorizontalRule());
         // append(horizontalAccuracy);
-        append(new Label()); // Blank line
+        // append(new Label()); // Blank line
         append(fvAltitude);
         // append(verticalAccuracy);
 
         // Create a section for movement information.
-        createNewSection("Movement");
+        // createNewSection("Movement");
         append(fvSpeed);
         append(fvCourse);
 
+        append(new HorizontalRule());
         // Create a section for the time.
-        createNewSection("Time");
+        // createNewSection("Time");
         append(fvTime);
 
-        createNewSection("Precision");
+        append(new HorizontalRule());
+        // createNewSection("Precision");
         append(fvHdop);
         append(NSAT);
 
@@ -190,33 +154,6 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
     protected final void acceptNotify() {
         Menu menu = new Menu("Menu", this);
 
-        // Choose different location provider criteria.
-        // menu.appendMenuOption( new CriteriaSelectionScreen(model) );
-
-        // Reset the current location provider.
-        // menu.appendMenuOption( new MenuItem()
-        // {
-        // public String getText ()
-        // {
-        // return "Reset Location Provider";
-        // }
-        //
-        // public void onSelection ()
-        // {
-        // // Reset the location provider.
-        // try
-        // {
-        // model.getLocationProvider().reset();
-        // }
-        // catch (IOException e)
-        // {
-        // Log.warn("Could not reset the location provider", e);
-        // }
-        //                    
-        // show();
-        // }
-        // } );
-
         menu.show();
 
         // Continue processing the event.
@@ -246,7 +183,11 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         }
 
         public void setLabel(final String label) {
-            super.setLabel(name + ":  " + label);
+            if (name.length() != 0) {
+                super.setLabel(name + ":  " + label);
+            } else {
+                super.setLabel(label);
+            }
         }
 
         public void setLabel(final double d, final int i) {
@@ -266,26 +207,59 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
         }
     }
 
+    /**
+     * Updates the lat and lon color according to the validity of the fix.
+     * 
+     * @param valid
+     */
+    private void updateValidColor(final int valid) {
+        int currentColor = latitude.getFontColor();
+        int newColor;
+        if (valid != 0x0001) {
+            newColor = UIManager.getTheme().getFontColor();
+        } else {
+            newColor = Theme.RED;
+        }
+
+        if (currentColor != newColor) {
+            latitude.setFontColor(newColor);
+            longitude.setFontColor(newColor);
+            latitude.repaint();
+            longitude.repaint();
+        }
+    }
+
+    /**
+     * Handel the event coming from the GPS model. In this screen we retrieve
+     * the position information.
+     * 
+     * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
+     */
     public final void modelEvent(final ModelEvent e) {
         GPSRecord g;
         switch (e.getType()) {
         case ModelEvent.GPRMC:
+            // GPRMC string received. Taking GPRMC parameters from GPS record.
             g = (GPSRecord) e.getArg();
             latitude.setLabel(g.latitude, 6);
             longitude.setLabel(g.longitude, 6);
-            fvTime.setLabel(((long) g.utc) * 1000L);
+            fvTime.setLabel(((long) g.utc) * 1000L + g.milisecond);
             fvSpeed.setLabel(g.speed, 1);
             fvCourse.setLabel(g.heading, 1);
+            updateValidColor(g.valid);
             // Log.info("GPRMC");
             repaint();
             break;
         case ModelEvent.GPGGA:
+            // GPGGA string received. Taking GPGGA parameters from GPS record.
             g = (GPSRecord) e.getArg();
             latitude.setLabel(g.latitude, 6);
             longitude.setLabel(g.longitude, 6);
             NSAT.setLabel((g.nsat / 256) + "(" + (g.nsat & 0xFF) + ")");
             fvAltitude.setLabel(g.height, 1);
             fvHdop.setLabel(g.hdop / 10., 1);
+            fvFix.setLabel(gps.log.out.CommonOut.getFixText(g.valid));
+            updateValidColor(g.valid);
             repaint();
         default:
             break;
