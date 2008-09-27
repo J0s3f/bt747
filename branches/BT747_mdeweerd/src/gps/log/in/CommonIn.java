@@ -7,13 +7,13 @@ import bt747.util.Date;
 import gps.BT747Constants;
 import gps.log.GPSRecord;
 
-public class CommonIn {
+public final class CommonIn {
     /**
      * Conversion factor of KMH to KNOTS.
      */
     private static final double KNOT_PER_KMH = 1.852;
 
-    public static GPSRecord getLogFormatRecord(final int logFormat) {
+    public static final GPSRecord getLogFormatRecord(final int logFormat) {
         GPSRecord gpsRec = new GPSRecord();
         if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
             gpsRec.utc = -1;
@@ -349,5 +349,4 @@ public class CommonIn {
         } // GPGGA
         return logFormat;
     }
-
 }
