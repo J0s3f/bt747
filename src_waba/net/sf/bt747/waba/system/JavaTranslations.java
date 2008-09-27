@@ -26,9 +26,7 @@ import bt747.interfaces.BT747Semaphore;
 import bt747.interfaces.BT747Thread;
 import bt747.interfaces.BT747Time;
 import bt747.interfaces.BT747Vector;
-import bt747.interfaces.Interface;
 import bt747.interfaces.JavaTranslationsInterface;
-import bt747.sys.Settings;
 
 public class JavaTranslations implements JavaTranslationsInterface {
     public final BT747Date getDateInstance() {

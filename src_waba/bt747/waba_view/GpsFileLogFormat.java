@@ -23,8 +23,6 @@ import waba.ui.Container;
 import waba.ui.ControlEvent;
 import waba.ui.Event;
 
-import gps.BT747Constants;
-
 import bt747.Txt;
 import bt747.model.Model;
 import bt747.model.ModelEvent;

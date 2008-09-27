@@ -1,3 +1,17 @@
+//********************************************************************
+//***                           BT 747                             ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
+//***  for more details.                                           ***
+//***  *********************************************************** ***
 package bt747.model;
 
 import gps.BT747Constants;
@@ -25,10 +39,6 @@ import bt747.generic.Generic;
 
 /**
  * @author Mario De Weerd
- * 
- */
-/**
- * @author Mario
  * 
  */
 public class Controller {
@@ -1449,6 +1459,13 @@ public class Controller {
         setBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS, b);
     }
 
+    /**
+     * Set the track separation time. When two positions are seperated by this
+     * time or more, a track separation is inserted.
+     * 
+     * @param value
+     *            Time in minutes for a track separation.
+     */
     public final void setTrkSep(final int value) {
         m.setTrkSep(value);
     }
