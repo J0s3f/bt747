@@ -2,7 +2,7 @@
 // Copyright (C) 2007 Dana Peters
 // http://www.qcontinuum.org/gpstrack
 
-package net.sf.bt747.j4me.app;
+package net.sf.bt747.j4me.app.screens;
 
 import java.util.*;
 import java.io.*;

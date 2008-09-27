@@ -5,6 +5,7 @@ import gps.BT747Constants;
 import javax.microedition.lcdui.Display;
 
 import net.sf.bt747.j4me.app.log.LogScreen;
+import net.sf.bt747.j4me.app.screens.PathSelectionScreen;
 import net.sf.bt747.j4me.app.screens.ProgressAlert;
 
 import org.j4me.logging.Log;
@@ -16,19 +17,29 @@ import org.j4me.ui.Theme;
 import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
 
-import bt747.generic.Generic;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 
 /**
- * The "Log" screen. This shows the contents of the application's log. It is an
- * advanced screen intended for us to diagnose the application.
+ * The "Main" screen. This is the application's entry screen. It will show the
+ * available special waypoints when the device is available. It will show a
+ * message remembering that the device must be available if it is not available.
  */
 public class MainScreen extends Dialog implements ModelListener {
-
+    /**
+     * Reference to the Application Controller.
+     */
     private AppController c;
+
+    /**
+     * Reference to the application Midlet instantiation because we need it.
+     */
     private MTKMidlet midlet;
 
+    /**
+     * The different screens that we can go to from the main screen. J4ME
+     * requires that those are all created when the menu is created.
+     */
     private final LogDownloadScreen downloadLogScreen;
     private final ConvertToScreen convertToScreen;
     private final GpsPositionScreen gpsPositionScreen;
@@ -44,20 +55,38 @@ public class MainScreen extends Dialog implements ModelListener {
     private final FileFieldSelectScreen fileFieldSelectScreen;
     private final LogFieldSelectScreen logFieldSelectScreen;
 
+    /**
+     * We use only one instantiation of the confirmation screen (sequence). This
+     * property says what it is for. This information is required when the
+     * confirm screen sequence hands over control to the main screen again where
+     * the result is analyzed. {@link #NO_CONFIRM} indicates the screen is
+     * unused. {@link #ERASE_CONFIRM} indicates that the confirmScreen is used
+     * for erase confirmation.
+     */
+    private int confirmScreenOption = 0;
     private final int NO_CONFIRM = 0;
     private final int ERASE_CONFIRM = 1;
-    private int confirmScreenOption = 0;
-
-    final private Menu rootMenu;
-    final private DeviceScreen myself = this;
-    private ConfirmScreen confirmScreen;
 
     /**
-     * Constructs the "Log" screen.
+     * A reference to the confirmation screen.
+     */
+    private ConfirmScreen confirmScreen;
+    /**
+     * The left menu for this screen.
+     */
+    final private Menu rootMenu;
+    /**
+     * A reference to this object to use in local classes.
+     */
+    final private DeviceScreen myself = this;
+
+    /**
+     * Constructs the "Main" screen.
      * 
-     * @param previous
-     *            is the screen that invoked this one. If this is <c>null</c>
-     *            the application will exit when this screen is dismissed.
+     * @param c
+     *            Reference to the application controller
+     * @param midlet
+     *            Reference to the midlet object.
      */
     public MainScreen(final AppController c, final MTKMidlet midlet) {
         this.c = c;
@@ -145,14 +174,20 @@ public class MainScreen extends Dialog implements ModelListener {
         m().addListener(this);
     }
 
-    private int dataShown;
+    /**
+     * Indicates which data is shown
+     */
+    private int dataShown = SHOWN_NOTHING;
+    private final static int SHOWN_NOTHING = 0;
+    private final static int SHOWN_WAYPOINTS_DATA = 1;
+    private final static int SHOWN_NOCONNECTION = 2;
 
     private Label[] labels = null;
 
     private void setupScreen() {
         if ((m().getLogFormat() & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
-            if (dataShown != 1) {
-                dataShown = 1;
+            if (dataShown != SHOWN_WAYPOINTS_DATA) {
+                dataShown = SHOWN_WAYPOINTS_DATA;
                 labels = null;
                 deleteAll();
                 labels = new Label[12];
@@ -171,8 +206,8 @@ public class MainScreen extends Dialog implements ModelListener {
                 repaint();
             }
         } else {
-            if (dataShown != 2) {
-                dataShown = 2;
+            if (dataShown != SHOWN_NOCONNECTION) {
+                dataShown = SHOWN_NOCONNECTION;
                 deleteAll();
                 append(new Label("Enable the RCR log field to enable"
                         + " advanced waypoint selection.\n"
@@ -183,14 +218,32 @@ public class MainScreen extends Dialog implements ModelListener {
         }
     }
 
+    /**
+     * Is true when the application is launched and when initialisation is
+     * required when the main screen is shown.
+     */
     private static boolean isFirstLaunch = true;
 
+    /**
+     * Get the application model
+     * 
+     * @return Reference to applicaiton model object.
+     */
     private final AppModel m() {
         return c.getAppModel();
     }
 
+    /**
+     * When true, the apllication waits until the erase is done (when erase is
+     * ongoing).
+     */
     private boolean waitErase;
 
+    /**
+     * Called when this display is displayed
+     * 
+     * @see org.j4me.ui.DeviceScreen#show()
+     */
     public void show() {
         // When this screen is shown, we are no longer waiting for erasal end
         // whatever happens.
@@ -275,8 +328,6 @@ public class MainScreen extends Dialog implements ModelListener {
         super.declineNotify();
     }
 
-    Menu menu;
-
     /**
      * Called when the user presses the "Other" button.
      * 
@@ -325,8 +376,21 @@ public class MainScreen extends Dialog implements ModelListener {
         super.acceptNotify();
     }
 
+    /**
+     * Indicates when the label(s) must be set to the initial color. The color
+     * is changed to notify the user which waypoint he is logging.
+     */
     private long nextResetLabelTime = 0;
 
+    /**
+     * Called to highlight a label (corresponding to a waypoint logged by the
+     * user).
+     * 
+     * This is synchronized to avoid potential problems from multiple threads.
+     * 
+     * @param i
+     *            The index of the label to be highlighted.
+     */
     private synchronized void hightlightLabel(final int i) {
         if (labels != null) {
             labels[i].setFontColor(Theme.RED);
@@ -335,6 +399,10 @@ public class MainScreen extends Dialog implements ModelListener {
         }
     }
 
+    /**
+     * Called to reset all labels to the initial caller. To be called after
+     * timeout indicated by {@link #nextResetLabelTime}.
+     */
     private synchronized void resetLabels() {
         if (labels != null) {
             int color = UIManager.getTheme().getFontColor();
@@ -347,6 +415,11 @@ public class MainScreen extends Dialog implements ModelListener {
         }
     }
 
+    /**
+     * Called when key is pressed by user. Handles key.
+     * 
+     * @see org.j4me.ui.Dialog#keyPressed(int)
+     */
     protected void keyPressed(int keyCode) {
         if (keyCode == DeviceScreen.RIGHT) {
             rootMenu.show();
@@ -407,11 +480,21 @@ public class MainScreen extends Dialog implements ModelListener {
         }
     }
 
+    /**
+     * Override because default would select main menu.
+     * 
+     * @see org.j4me.ui.DeviceScreen#returnNotify()
+     */
     protected void returnNotify() {
         // Override
         // Do nothing for the moment - should prompt to exit the application.
     }
 
+    /**
+     * Call back from the GPS Model to provide data.
+     * 
+     * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
+     */
     public final void modelEvent(final ModelEvent e) {
         // This gets called often enough to use as a timer
         if (nextResetLabelTime != 0
