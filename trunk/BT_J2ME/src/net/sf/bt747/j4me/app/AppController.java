@@ -9,7 +9,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.Enumeration;
 
-import javax.microedition.io.file.FileSystemRegistry;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 
@@ -18,7 +17,6 @@ import net.sf.bt747.j4me.app.screens.FileManager;
 import org.j4me.logging.Log;
 
 import bt747.model.Controller;
-import bt747.model.Model;
 import bt747.sys.Settings;
 
 public class AppController extends Controller {

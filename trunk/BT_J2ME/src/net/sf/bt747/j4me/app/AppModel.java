@@ -98,7 +98,7 @@ public class AppModel extends Model {
     /**
      * @param selectedOutputFormat the selectedOutputFormat to set
      */
-    public void setSelectedOutputFormat(int selectedOutputFormat) {
+    public void setSelectedOutputFormat(final int selectedOutputFormat) {
         this.selectedOutputFormat = selectedOutputFormat;
     }
 
