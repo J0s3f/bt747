@@ -528,6 +528,8 @@ public class BT747Main extends javax.swing.JFrame implements
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -566,17 +568,17 @@ public class BT747Main extends javax.swing.JFrame implements
         FileSettingsPanel = new javax.swing.JPanel();
         pnVarious = new javax.swing.JPanel();
         cbOneFilePerDay = new javax.swing.JComboBox();
-        jLabel46 = new javax.swing.JLabel();
+        lbTimeZone = new javax.swing.JLabel();
         cbUTCOffset = new javax.swing.JComboBox();
         cbStandardOrDaylightSaving = new javax.swing.JComboBox();
-        jLabel33 = new javax.swing.JLabel();
+        lbNoFixColor = new javax.swing.JLabel();
         cbHeightOverMeanSeaLevel = new javax.swing.JComboBox();
         cbRecordNumberInfoInLog = new javax.swing.JCheckBox();
         cbImperialUnits = new javax.swing.JCheckBox();
         cbFixColor = new java.awt.Button();
         pnSeparation = new javax.swing.JPanel();
-        jLabel47 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
+        lbNewTrackAfter = new javax.swing.JLabel();
+        tfTrackSeparationTime = new javax.swing.JTextField();
         jLabel48 = new javax.swing.JLabel();
         LogFiltersPanel = new javax.swing.JPanel();
         pnTrackpoint = new javax.swing.JPanel();
@@ -732,15 +734,15 @@ public class BT747Main extends javax.swing.JFrame implements
         jLabel4 = new javax.swing.JLabel();
         lbGeoid = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        lbFlashInfo = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        lbModel = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        lbFirmWare = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
+        lbLoggerSWVersion = new javax.swing.JLabel();
+        lbThisSWVersion = new javax.swing.JLabel();
         AdvancedSettingsPanel = new javax.swing.JPanel();
         pnFlashSettings = new javax.swing.JPanel();
         jLabel30 = new javax.swing.JLabel();
@@ -748,7 +750,7 @@ public class BT747Main extends javax.swing.JFrame implements
         jLabel32 = new javax.swing.JLabel();
         lbGLLOut = new javax.swing.JLabel();
         lbRMCOut = new javax.swing.JLabel();
-        cbVTGOut = new javax.swing.JLabel();
+        lbVTGOut = new javax.swing.JLabel();
         cbGSVOut = new javax.swing.JLabel();
         cbGSAOut = new javax.swing.JLabel();
         cbGGAOut = new javax.swing.JLabel();
@@ -765,15 +767,15 @@ public class BT747Main extends javax.swing.JFrame implements
         txtFlashBaudRate = new javax.swing.JTextField();
         btSetFlash = new javax.swing.JButton();
         pnNMEAOutput = new javax.swing.JPanel();
-        jComboBox11 = new javax.swing.JComboBox();
-        jLabel21 = new javax.swing.JLabel();
-        jComboBox12 = new javax.swing.JComboBox();
-        jComboBox13 = new javax.swing.JComboBox();
-        jComboBox14 = new javax.swing.JComboBox();
-        jComboBox15 = new javax.swing.JComboBox();
-        jComboBox16 = new javax.swing.JComboBox();
-        jComboBox17 = new javax.swing.JComboBox();
-        jComboBox18 = new javax.swing.JComboBox();
+        cbNMEAOutType10 = new javax.swing.JComboBox();
+        lbNMEAOutType10 = new javax.swing.JLabel();
+        cbNMEAOutType11 = new javax.swing.JComboBox();
+        cbNMEAOutType12 = new javax.swing.JComboBox();
+        cbNMEAOutMALM = new javax.swing.JComboBox();
+        cbNMEAOutMDGP = new javax.swing.JComboBox();
+        cbNMEAOutMEPH = new javax.swing.JComboBox();
+        cbNMEAOutMDBG = new javax.swing.JComboBox();
+        cbNMEAOutMZDA = new javax.swing.JComboBox();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
@@ -803,12 +805,12 @@ public class BT747Main extends javax.swing.JFrame implements
         cbNMEAOutType8 = new javax.swing.JComboBox();
         cbNMEAOutGST = new javax.swing.JComboBox();
         cbNMEAOutGRS = new javax.swing.JComboBox();
-        jComboBox21 = new javax.swing.JComboBox();
+        cbNMEAOutMCHN = new javax.swing.JComboBox();
         jLabel34 = new javax.swing.JLabel();
         AdvancedfileSettingsPanel = new javax.swing.JPanel();
         pnNMEAOutput1 = new javax.swing.JPanel();
         cbNMEAFileType10 = new javax.swing.JComboBox();
-        jLabel45 = new javax.swing.JLabel();
+        lbNMEAFileType10 = new javax.swing.JLabel();
         cbNMEAFileType11 = new javax.swing.JComboBox();
         cbNMEAFileType12 = new javax.swing.JComboBox();
         cbNMEAFileMALM = new javax.swing.JComboBox();
@@ -816,39 +818,39 @@ public class BT747Main extends javax.swing.JFrame implements
         cbNMEAFileMEPH = new javax.swing.JComboBox();
         cbNMEAFileMDBG = new javax.swing.JComboBox();
         cbNMEAFileMZDA = new javax.swing.JComboBox();
-        jLabel49 = new javax.swing.JLabel();
-        jLabel50 = new javax.swing.JLabel();
-        jLabel51 = new javax.swing.JLabel();
-        jLabel52 = new javax.swing.JLabel();
-        jLabel53 = new javax.swing.JLabel();
-        jLabel54 = new javax.swing.JLabel();
-        jLabel55 = new javax.swing.JLabel();
+        lbNMEAFileType11 = new javax.swing.JLabel();
+        lbNMEAFileType12 = new javax.swing.JLabel();
+        lbNMEAFileMALM = new javax.swing.JLabel();
+        lbNMEAFileMEPH = new javax.swing.JLabel();
+        lbNMEAFileMDGP = new javax.swing.JLabel();
+        lbNMEAFileMDBG = new javax.swing.JLabel();
+        lbNMEAFileMZDA = new javax.swing.JLabel();
         btSetNMEAOutput1 = new javax.swing.JButton();
         btSetNMEAOutputDefaults1 = new javax.swing.JButton();
-        lbGLLOut2 = new javax.swing.JLabel();
+        lbNMEAFileGLL = new javax.swing.JLabel();
         cbNMEAFileGLL = new javax.swing.JComboBox();
-        jComboBox43 = new javax.swing.JComboBox();
-        lbRMCOut2 = new javax.swing.JLabel();
-        cbVTGOut2 = new javax.swing.JLabel();
-        jComboBox44 = new javax.swing.JComboBox();
-        jComboBox45 = new javax.swing.JComboBox();
-        cbGGAOut2 = new javax.swing.JLabel();
-        cbGSAOut2 = new javax.swing.JLabel();
-        jComboBox46 = new javax.swing.JComboBox();
-        jComboBox47 = new javax.swing.JComboBox();
-        cbGSVOut2 = new javax.swing.JLabel();
-        cbGRSOut1 = new javax.swing.JLabel();
-        cbGSTOut1 = new javax.swing.JLabel();
-        cbType9Out1 = new javax.swing.JLabel();
-        cbType8Out1 = new javax.swing.JLabel();
-        jComboBox48 = new javax.swing.JComboBox();
-        jComboBox49 = new javax.swing.JComboBox();
-        jComboBox50 = new javax.swing.JComboBox();
-        jComboBox51 = new javax.swing.JComboBox();
-        jComboBox52 = new javax.swing.JComboBox();
-        jLabel56 = new javax.swing.JLabel();
+        cbNMEAFileRMC = new javax.swing.JComboBox();
+        lbNMEAFileRMC = new javax.swing.JLabel();
+        lbNMEAFileVTG = new javax.swing.JLabel();
+        cbNMEAFileVTG = new javax.swing.JComboBox();
+        cbNMEAFileGGA = new javax.swing.JComboBox();
+        lbNMEAFileGGA = new javax.swing.JLabel();
+        lbNMEAFileGSA = new javax.swing.JLabel();
+        cbNMEAFileGSA = new javax.swing.JComboBox();
+        cbNMEAFileGSV = new javax.swing.JComboBox();
+        lbNMEAFileGSV = new javax.swing.JLabel();
+        lbNMEAFileGRS = new javax.swing.JLabel();
+        lbNMEAFileGST = new javax.swing.JLabel();
+        lbNMEAFileType9 = new javax.swing.JLabel();
+        lbNMEAFileType8 = new javax.swing.JLabel();
+        cbNMEAFileType9 = new javax.swing.JComboBox();
+        cbNMEAFileType8 = new javax.swing.JComboBox();
+        cbNMEAFileGST = new javax.swing.JComboBox();
+        cbNMEAFileGRS = new javax.swing.JComboBox();
+        cbNMEAFileMCHN = new javax.swing.JComboBox();
+        lbNMEAFileMCHN = new javax.swing.JLabel();
         pnGPXFileSettings = new javax.swing.JPanel();
-        cbUTCOffset0 = new javax.swing.JCheckBox();
+        cbNotApplyUTCOffset = new javax.swing.JCheckBox();
         cbGPXTrkSegWhenSmall = new javax.swing.JCheckBox();
         InfoPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -1410,8 +1412,13 @@ public class BT747Main extends javax.swing.JFrame implements
         cbOneFilePerDay.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { "One file per day", "One file per track",
                         "Everything in one file" }));
+        cbOneFilePerDay.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbOneFilePerDayFocusLost(evt);
+            }
+        });
 
-        jLabel46.setText("TimeZone");
+        lbTimeZone.setText("TimeZone");
 
         cbUTCOffset.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
                 "UTC -12", "UTC -11", "UTC -10", "UTC -9", "UTC -8", "UTC -7",
@@ -1435,7 +1442,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     }
                 });
 
-        jLabel33.setText("No Fix Color");
+        lbNoFixColor.setText("No Fix Color");
 
         cbHeightOverMeanSeaLevel
                 .addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1445,10 +1452,26 @@ public class BT747Main extends javax.swing.JFrame implements
                 });
 
         cbRecordNumberInfoInLog.setText("RecordNumberInfoInLog");
+        cbRecordNumberInfoInLog
+                .addFocusListener(new java.awt.event.FocusAdapter() {
+                    public void focusLost(java.awt.event.FocusEvent evt) {
+                        cbRecordNumberInfoInLogFocusLost(evt);
+                    }
+                });
 
         cbImperialUnits.setText("ImperialUnits");
+        cbImperialUnits.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbImperialUnitsFocusLost(evt);
+            }
+        });
 
         cbFixColor.setLabel("Color");
+        cbFixColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbFixColorActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout pnVariousLayout = new org.jdesktop.layout.GroupLayout(
                 pnVarious);
@@ -1469,7 +1492,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 pnVariousLayout
                                                                         .createSequentialGroup()
                                                                         .add(
-                                                                                jLabel46)
+                                                                                lbTimeZone)
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -1494,7 +1517,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                 52,
                                                                                 Short.MAX_VALUE)
                                                                         .add(
-                                                                                jLabel33)
+                                                                                lbNoFixColor)
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -1537,7 +1560,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                 pnVariousLayout
                                                         .createParallelGroup(
                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
-                                                        .add(jLabel46)
+                                                        .add(lbTimeZone)
                                                         .add(
                                                                 cbUTCOffset,
                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
@@ -1580,7 +1603,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .add(
                                                                                                 cbRecordNumberInfoInLog)
                                                                                         .add(
-                                                                                                jLabel33))
+                                                                                                lbNoFixColor))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED,
                                                                                 2,
@@ -1602,9 +1625,15 @@ public class BT747Main extends javax.swing.JFrame implements
         pnSeparation.setMaximumSize(new java.awt.Dimension(300, 32767));
         pnSeparation.setOpaque(false);
 
-        jLabel47.setText("New Track after");
+        lbNewTrackAfter.setText("New Track after");
 
-        jTextField10.setText("jTextField7");
+        tfTrackSeparationTime.setText("jTextField7");
+        tfTrackSeparationTime
+                .addFocusListener(new java.awt.event.FocusAdapter() {
+                    public void focusLost(java.awt.event.FocusEvent evt) {
+                        tfTrackSeparationTimeFocusLost(evt);
+                    }
+                });
 
         jLabel48.setText("min. pause");
 
@@ -1618,11 +1647,11 @@ public class BT747Main extends javax.swing.JFrame implements
                         .add(
                                 pnSeparationLayout
                                         .createSequentialGroup()
-                                        .add(jLabel47)
+                                        .add(lbNewTrackAfter)
                                         .addPreferredGap(
                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(
-                                                jTextField10,
+                                                tfTrackSeparationTime,
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1637,7 +1666,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(
                         pnSeparationLayout.createParallelGroup(
                                 org.jdesktop.layout.GroupLayout.BASELINE).add(
-                                jLabel47).add(jTextField10,
+                                lbNewTrackAfter).add(tfTrackSeparationTime,
                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1700,27 +1729,67 @@ public class BT747Main extends javax.swing.JFrame implements
                 .createTitledBorder("Fix Type (Valid)"));
 
         cbTrkNoFix.setText("No fix");
-        cbTrkNoFix.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cbTrkNoFix.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkFixTypeAction(evt);
             }
         });
 
         cbTrkPPS.setText("PPS");
+        cbTrkPPS.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkFixTypeAction(evt);
+            }
+        });
 
         cbTrkEstimate.setText("Estimate");
+        cbTrkEstimate.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkFixTypeAction(evt);
+            }
+        });
 
         cbTrkManual.setText("Manual");
+        cbTrkManual.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkFixTypeAction(evt);
+            }
+        });
 
         cbTrkSPS.setText("SPS");
+        cbTrkSPS.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkFixTypeAction(evt);
+            }
+        });
 
         cbTrkFRTK.setText("FRTK");
+        cbTrkFRTK.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkFixTypeAction(evt);
+            }
+        });
 
         cbTrkDGPS.setText("DGPS");
+        cbTrkDGPS.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkFixTypeAction(evt);
+            }
+        });
 
         cbTrkSimulate.setText("Sim");
+        cbTrkSimulate.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkFixTypeAction(evt);
+            }
+        });
 
         cbTrkRTK.setText("RTK");
+        cbTrkRTK.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkFixTypeAction(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout jPanel11Layout = new org.jdesktop.layout.GroupLayout(
                 jPanel11);
@@ -1761,41 +1830,116 @@ public class BT747Main extends javax.swing.JFrame implements
                 .createTitledBorder("Log Reason (RCR)"));
 
         cbTrkTime.setText("Time");
-        cbTrkTime.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cbTrkTime.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
         cbTrkSpeed.setText("Speed");
+        cbTrkSpeed.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkDistance.setText("Distance");
+        cbTrkDistance.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkButton.setText("Button");
+        cbTrkButton.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser1.setText("User 1");
+        cbTrkUser1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser2.setText("User 2");
+        cbTrkUser2.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser3.setText("User 3");
+        cbTrkUser3.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser4.setText("User 4");
+        cbTrkUser4.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser5.setText("User 5");
+        cbTrkUser5.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser6.setText("User 6");
+        cbTrkUser6.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser7.setText("User 7");
+        cbTrkUser7.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser8.setText("User 8");
+        cbTrkUser8.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser9.setText("User 9");
+        cbTrkUser9.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser10.setText("User 10");
+        cbTrkUser10.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser11.setText("User 11");
+        cbTrkUser11.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         cbTrkUser12.setText("User 12");
+        cbTrkUser12.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TrkRCRAction(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout jPanel12Layout = new org.jdesktop.layout.GroupLayout(
                 jPanel12);
@@ -1971,7 +2115,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 org.jdesktop.layout.GroupLayout.LEADING,
                                                                 jPanel11,
                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                263,
+                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                 Short.MAX_VALUE)
                                                         .add(
                                                                 org.jdesktop.layout.GroupLayout.LEADING,
@@ -1989,27 +2133,45 @@ public class BT747Main extends javax.swing.JFrame implements
 
         txtRecCntMin.setText("jTextField2");
         txtRecCntMin.setInputVerifier(IntVerifier);
-        txtRecCntMin.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtRecCntMinFocusLost(evt);
-            }
-        });
+        txtRecCntMin
+                .addInputMethodListener(new java.awt.event.InputMethodListener() {
+                    public void caretPositionChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                    }
+
+                    public void inputMethodTextChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                        txtRecCntMinInputMethodTextChanged(evt);
+                    }
+                });
 
         txtDistanceMin.setText("jTextField3");
         txtDistanceMin.setInputVerifier(FloatVerifier);
-        txtDistanceMin.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtDistanceMinFocusLost(evt);
-            }
-        });
+        txtDistanceMin
+                .addInputMethodListener(new java.awt.event.InputMethodListener() {
+                    public void caretPositionChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                    }
+
+                    public void inputMethodTextChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                        txtDistanceMinInputMethodTextChanged(evt);
+                    }
+                });
 
         txtSpeedMin.setText("jTextField4");
         txtSpeedMin.setInputVerifier(FloatVerifier);
-        txtSpeedMin.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtSpeedMinFocusLost(evt);
-            }
-        });
+        txtSpeedMin
+                .addInputMethodListener(new java.awt.event.InputMethodListener() {
+                    public void caretPositionChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                    }
+
+                    public void inputMethodTextChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                        txtSpeedMinInputMethodTextChanged(evt);
+                    }
+                });
 
         lbDistanceFltr.setText("<= distance <=");
 
@@ -2031,29 +2193,47 @@ public class BT747Main extends javax.swing.JFrame implements
 
         txtDistanceMax.setText("jTextField3");
         txtDistanceMax.setInputVerifier(FloatVerifier);
-        txtDistanceMax.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtDistanceMaxFocusLost(evt);
-            }
-        });
+        txtDistanceMax
+                .addInputMethodListener(new java.awt.event.InputMethodListener() {
+                    public void caretPositionChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                    }
+
+                    public void inputMethodTextChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                        txtDistanceMaxInputMethodTextChanged(evt);
+                    }
+                });
 
         txtSpeedMax.setText("jTextField4");
         txtSpeedMax.setInputVerifier(FloatVerifier);
-        txtSpeedMax.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtSpeedMaxFocusLost(evt);
-            }
-        });
+        txtSpeedMax
+                .addInputMethodListener(new java.awt.event.InputMethodListener() {
+                    public void caretPositionChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                    }
+
+                    public void inputMethodTextChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                        txtSpeedMaxInputMethodTextChanged(evt);
+                    }
+                });
 
         lbNSATFltr.setText("<= NSAT    ");
 
         txtNSATMin.setText("jTextField4");
         txtNSATMin.setInputVerifier(IntVerifier);
-        txtNSATMin.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtNSATMinFocusLost(evt);
-            }
-        });
+        txtNSATMin
+                .addInputMethodListener(new java.awt.event.InputMethodListener() {
+                    public void caretPositionChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                    }
+
+                    public void inputMethodTextChanged(
+                            java.awt.event.InputMethodEvent evt) {
+                        txtNSATMinInputMethodTextChanged(evt);
+                    }
+                });
 
         lbRecNbrFltr.setText("<= rec nbr <=");
 
@@ -2234,33 +2414,18 @@ public class BT747Main extends javax.swing.JFrame implements
 
         txtPDOPMax.setText("jTextField1");
         txtPDOPMax.setInputVerifier(FloatVerifier);
-        txtPDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtPDOPMaxFocusLost(evt);
-            }
-        });
 
         jLabel9.setLabelFor(txtPDOPMax);
         jLabel9.setText("PDOP <=");
 
         txtHDOPMax.setText("jTextField1");
         txtHDOPMax.setInputVerifier(FloatVerifier);
-        txtHDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtHDOPMaxFocusLost(evt);
-            }
-        });
 
         jLabel12.setLabelFor(txtHDOPMax);
         jLabel12.setText("HDOP <=");
 
         txtVDOPMax.setText("jTextField1");
         txtVDOPMax.setInputVerifier(FloatVerifier);
-        txtVDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtVDOPMaxFocusLost(evt);
-            }
-        });
 
         jLabel13.setLabelFor(txtVDOPMax);
         jLabel13.setText("VDOP <=");
@@ -2429,27 +2594,67 @@ public class BT747Main extends javax.swing.JFrame implements
                 .createTitledBorder("Fix Type (Valid)"));
 
         cbWayNoFix.setText("No fix");
-        cbWayNoFix.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                WayFixTypeAction(evt);
+        cbWayNoFix.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayTypeFixAction(evt);
             }
         });
 
         cbWayPPS.setText("PPS");
+        cbWayPPS.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayTypeFixAction(evt);
+            }
+        });
 
         cbWayEstimate.setText("Estimate");
+        cbWayEstimate.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayTypeFixAction(evt);
+            }
+        });
 
         cbWayManual.setText("Manual");
+        cbWayManual.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayTypeFixAction(evt);
+            }
+        });
 
         cbWaySPS.setText("SPS");
+        cbWaySPS.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayTypeFixAction(evt);
+            }
+        });
 
         cbWayFRTK.setText("FRTK");
+        cbWayFRTK.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayTypeFixAction(evt);
+            }
+        });
 
         cbWayDGPS.setText("DGPS");
+        cbWayDGPS.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayTypeFixAction(evt);
+            }
+        });
 
         cbWaySimulate.setText("Sim");
+        cbWaySimulate.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayTypeFixAction(evt);
+            }
+        });
 
         cbWayRTK.setText("RTK");
+        cbWayRTK.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayTypeFixAction(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout pnWayPointFixLayout = new org.jdesktop.layout.GroupLayout(
                 pnWayPointFix);
@@ -2504,41 +2709,116 @@ public class BT747Main extends javax.swing.JFrame implements
                 .createTitledBorder("Log Reason (RCR)"));
 
         cbWayTime.setText("Time");
-        cbWayTime.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cbWayTime.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
         cbWaySpeed.setText("Speed");
+        cbWaySpeed.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayDistance.setText("Distance");
+        cbWayDistance.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayButton.setText("Button");
+        cbWayButton.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser1.setText("User 1");
+        cbWayUser1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser2.setText("User 2");
+        cbWayUser2.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser3.setText("User 3");
+        cbWayUser3.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser4.setText("User 4");
+        cbWayUser4.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser5.setText("User 5");
+        cbWayUser5.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser6.setText("User 6");
+        cbWayUser6.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser7.setText("User 7");
+        cbWayUser7.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser8.setText("User 8");
+        cbWayUser8.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser9.setText("User 9");
+        cbWayUser9.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser10.setText("User 10");
+        cbWayUser10.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser11.setText("User 11");
+        cbWayUser11.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         cbWayUser12.setText("User 12");
+        cbWayUser12.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                WayRCRAction(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout pnWayPointRCRLayout = new org.jdesktop.layout.GroupLayout(
                 pnWayPointRCR);
@@ -2714,7 +2994,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 org.jdesktop.layout.GroupLayout.LEADING,
                                                                 pnWayPointFix,
                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                256,
+                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                 Short.MAX_VALUE)
                                                         .add(
                                                                 org.jdesktop.layout.GroupLayout.LEADING,
@@ -3276,6 +3556,11 @@ public class BT747Main extends javax.swing.JFrame implements
         txtHoluxName.setText("jTextField1");
 
         btSetHoluxName.setText("SET");
+        btSetHoluxName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSetHoluxNameActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout pnHoluxSettingsLayout = new org.jdesktop.layout.GroupLayout(
                 pnHoluxSettings);
@@ -3322,16 +3607,43 @@ public class BT747Main extends javax.swing.JFrame implements
                                                 Short.MAX_VALUE)));
 
         btHotStart.setText("Hot Start");
+        btHotStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btHotStartActionPerformed(evt);
+            }
+        });
 
         btWarmStart.setText("Warm Start");
+        btWarmStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btWarmStartActionPerformed(evt);
+            }
+        });
 
         btColdStart.setText("Cold Start");
+        btColdStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btColdStartActionPerformed(evt);
+            }
+        });
 
         btFactoryResetDevice.setText("Factory Reset");
+        btFactoryResetDevice
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        btFactoryResetDeviceActionPerformed(evt);
+                    }
+                });
 
         cbStopOrOverwriteWhenFull
                 .setModel(new javax.swing.DefaultComboBoxModel(new String[] {
                         "Stop when full", "Stop when full" }));
+        cbStopOrOverwriteWhenFull
+                .addFocusListener(new java.awt.event.FocusAdapter() {
+                    public void focusLost(java.awt.event.FocusEvent evt) {
+                        cbStopOrOverwriteWhenFullFocusLost(evt);
+                    }
+                });
 
         pnLogBy.setBorder(javax.swing.BorderFactory
                 .createTitledBorder("Log by . . ."));
@@ -3361,6 +3673,11 @@ public class BT747Main extends javax.swing.JFrame implements
         jLabel40.setText("every");
 
         btLogByApply.setText("Apply");
+        btLogByApply.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLogByApplyActionPerformed(evt);
+            }
+        });
 
         jLabel41.setText("Fix every");
 
@@ -3550,6 +3867,11 @@ public class BT747Main extends javax.swing.JFrame implements
         jCheckBox27.setText("incl. Test SBAS");
 
         btApplySBAS.setText("Apply");
+        btApplySBAS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btApplySBASActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout pnSBASLayout = new org.jdesktop.layout.GroupLayout(
                 pnSBAS);
@@ -3802,23 +4124,23 @@ public class BT747Main extends javax.swing.JFrame implements
 
         jLabel6.setText("FlashInfo:");
 
-        jLabel8.setText("jLabel8");
+        lbFlashInfo.setText("jLabel8");
 
         jLabel10.setText("Model:");
 
-        jLabel11.setText("jLabel11");
+        lbModel.setText("jLabel11");
 
         jLabel14.setText("FirmWare:");
 
-        jLabel15.setText("jLabel15");
+        lbFirmWare.setText("jLabel15");
 
         jLabel16.setText("Logger SW Version:");
 
         jLabel17.setText("This SW Version");
 
-        jLabel18.setText("jLabel18");
+        lbLoggerSWVersion.setText("jLabel18");
 
-        jLabel19.setText("jLabel19");
+        lbThisSWVersion.setText("jLabel19");
 
         org.jdesktop.layout.GroupLayout GPSDecodePanelLayout = new org.jdesktop.layout.GroupLayout(
                 GPSDecodePanel);
@@ -3852,12 +4174,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                 GPSDecodePanelLayout
                                                         .createParallelGroup(
                                                                 org.jdesktop.layout.GroupLayout.LEADING)
-                                                        .add(jLabel19).add(
-                                                                jLabel18).add(
-                                                                jLabel15).add(
-                                                                jLabel11).add(
-                                                                jLabel8).add(
-                                                                lbGeoid).add(
+                                                        .add(lbThisSWVersion)
+                                                        .add(lbLoggerSWVersion)
+                                                        .add(lbFirmWare).add(
+                                                                lbModel).add(
+                                                                lbFlashInfo)
+                                                        .add(lbGeoid).add(
                                                                 lbTime).add(
                                                                 lbLongitude)
                                                         .add(lbLatitude))
@@ -3915,14 +4237,14 @@ public class BT747Main extends javax.swing.JFrame implements
                                                         .createParallelGroup(
                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                         .add(jLabel6).add(
-                                                                jLabel8))
+                                                                lbFlashInfo))
                                         .addPreferredGap(
                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(
                                                 GPSDecodePanelLayout
                                                         .createParallelGroup(
                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
-                                                        .add(jLabel11).add(
+                                                        .add(lbModel).add(
                                                                 jLabel10))
                                         .addPreferredGap(
                                                 org.jdesktop.layout.LayoutStyle.RELATED)
@@ -3931,23 +4253,23 @@ public class BT747Main extends javax.swing.JFrame implements
                                                         .createParallelGroup(
                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                         .add(jLabel14).add(
-                                                                jLabel15))
+                                                                lbFirmWare))
                                         .addPreferredGap(
                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(
                                                 GPSDecodePanelLayout
                                                         .createParallelGroup(
                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
-                                                        .add(jLabel16).add(
-                                                                jLabel18))
+                                                        .add(jLabel16)
+                                                        .add(lbLoggerSWVersion))
                                         .addPreferredGap(
                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(
                                                 GPSDecodePanelLayout
                                                         .createParallelGroup(
                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
-                                                        .add(jLabel17).add(
-                                                                jLabel19))
+                                                        .add(jLabel17)
+                                                        .add(lbThisSWVersion))
                                         .addContainerGap(167, Short.MAX_VALUE)));
 
         jTabbedPane1.addTab("GPS Decode", GPSDecodePanel);
@@ -3966,7 +4288,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         lbRMCOut.setText("RMC Period");
 
-        cbVTGOut.setText("VTG Period");
+        lbVTGOut.setText("VTG Period");
 
         cbGSVOut.setText("GSV Period");
 
@@ -4007,6 +4329,11 @@ public class BT747Main extends javax.swing.JFrame implements
         txtFlashBaudRate.setText("jTextField3");
 
         btSetFlash.setText("Set");
+        btSetFlash.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSetFlashActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout pnFlashSettingsLayout = new org.jdesktop.layout.GroupLayout(
                 pnFlashSettings);
@@ -4029,7 +4356,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 jLabel31).add(
                                                                 lbGLLOut).add(
                                                                 lbRMCOut).add(
-                                                                cbVTGOut).add(
+                                                                lbVTGOut).add(
                                                                 cbGGAOut).add(
                                                                 cbGSAOut).add(
                                                                 cbGSVOut).add(
@@ -4172,7 +4499,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                                        .add(cbVTGOut))
+                                                        .add(lbVTGOut))
                                         .addPreferredGap(
                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                         .add(
@@ -4228,31 +4555,31 @@ public class BT747Main extends javax.swing.JFrame implements
         pnNMEAOutput.setBorder(javax.swing.BorderFactory
                 .createTitledBorder("NMEA Output Settings"));
 
-        jComboBox11.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAOutType10.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jLabel21.setText("Type 10 (?)");
+        lbNMEAOutType10.setText("Type 10 (?)");
 
-        jComboBox12.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAOutType11.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox13.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAOutType12.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox14.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAOutMALM.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAOutMDGP.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox16.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAOutMEPH.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox17.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAOutMDBG.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox18.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAOutMZDA.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
         jLabel22.setText("Type 11 (?)");
 
@@ -4269,13 +4596,29 @@ public class BT747Main extends javax.swing.JFrame implements
         jLabel28.setText("MZDA Period");
 
         btSetNMEAOutput.setText("Set");
+        btSetNMEAOutput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSetNMEAOutputActionPerformed(evt);
+            }
+        });
 
         btSetNMEAOutputDefaults.setText("Defaults");
+        btSetNMEAOutputDefaults
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        btSetNMEAOutputDefaultsActionPerformed(evt);
+                    }
+                });
 
         lbGLLOut1.setText("GLL Period");
 
         cbNMEAOutGLL.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { "0", "1", "2", "3", "4", "5" }));
+        cbNMEAOutGLL.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbNMEAOutGLLActionPerformed(evt);
+            }
+        });
 
         cbNMEAOutRMC.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { "0", "1", "2", "3", "4", "5" }));
@@ -4322,8 +4665,8 @@ public class BT747Main extends javax.swing.JFrame implements
         cbNMEAOutGRS.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox21.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAOutMCHN.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
         jLabel34.setText("MCHN Period");
 
@@ -4349,11 +4692,11 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 pnNMEAOutputLayout
                                                                         .createSequentialGroup()
                                                                         .add(
-                                                                                jLabel21)
+                                                                                lbNMEAOutType10)
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
-                                                                                jComboBox11,
+                                                                                cbNMEAOutType10,
                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -4463,7 +4806,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
-                                                                                                                jComboBox12,
+                                                                                                                cbNMEAOutType11,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -4475,7 +4818,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
-                                                                                                                jComboBox13,
+                                                                                                                cbNMEAOutType12,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -4487,7 +4830,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
-                                                                                                                jComboBox14,
+                                                                                                                cbNMEAOutMALM,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -4499,7 +4842,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
-                                                                                                                jComboBox16,
+                                                                                                                cbNMEAOutMEPH,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -4511,7 +4854,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
-                                                                                                                jComboBox15,
+                                                                                                                cbNMEAOutMDGP,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -4523,7 +4866,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
-                                                                                                                jComboBox17,
+                                                                                                                cbNMEAOutMDBG,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -4535,7 +4878,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
-                                                                                                                jComboBox18,
+                                                                                                                cbNMEAOutMZDA,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -4547,7 +4890,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
-                                                                                                                jComboBox21,
+                                                                                                                cbNMEAOutMCHN,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -4696,12 +5039,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox11,
+                                                                                                cbNMEAOutType10,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jLabel21))
+                                                                                                lbNMEAOutType10))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -4709,7 +5052,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox12,
+                                                                                                cbNMEAOutType11,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -4722,7 +5065,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox13,
+                                                                                                cbNMEAOutType12,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -4735,7 +5078,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox14,
+                                                                                                cbNMEAOutMALM,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -4748,7 +5091,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox16,
+                                                                                                cbNMEAOutMEPH,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -4761,7 +5104,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox15,
+                                                                                                cbNMEAOutMDGP,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -4774,7 +5117,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox17,
+                                                                                                cbNMEAOutMDBG,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -4787,7 +5130,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox18,
+                                                                                                cbNMEAOutMZDA,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -4796,7 +5139,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
-                                                                                jComboBox21,
+                                                                                cbNMEAOutMCHN,
                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
@@ -4882,7 +5225,7 @@ public class BT747Main extends javax.swing.JFrame implements
         cbNMEAFileType10.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jLabel45.setText("Type 10 (?)");
+        lbNMEAFileType10.setText("Type 10 (?)");
 
         cbNMEAFileType11.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { "0", "1", "2", "3", "4", "5" }));
@@ -4905,78 +5248,89 @@ public class BT747Main extends javax.swing.JFrame implements
         cbNMEAFileMZDA.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jLabel49.setText("Type 11 (?)");
+        lbNMEAFileType11.setText("Type 11 (?)");
 
-        jLabel50.setText("Type 12 (?)");
+        lbNMEAFileType12.setText("Type 12 (?)");
 
-        jLabel51.setText("MALM Period");
+        lbNMEAFileMALM.setText("MALM Period");
 
-        jLabel52.setText("MEPH Period");
+        lbNMEAFileMEPH.setText("MEPH Period");
 
-        jLabel53.setText("MDGP Period");
+        lbNMEAFileMDGP.setText("MDGP Period");
 
-        jLabel54.setText("MDBG Period");
+        lbNMEAFileMDBG.setText("MDBG Period");
 
-        jLabel55.setText("MZDA Period");
+        lbNMEAFileMZDA.setText("MZDA Period");
 
         btSetNMEAOutput1.setText("Set");
+        btSetNMEAOutput1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSetNMEAOutput1ActionPerformed(evt);
+            }
+        });
 
         btSetNMEAOutputDefaults1.setText("Defaults");
+        btSetNMEAOutputDefaults1
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        btSetNMEAOutputDefaults1ActionPerformed(evt);
+                    }
+                });
 
-        lbGLLOut2.setText("GLL Period");
+        lbNMEAFileGLL.setText("GLL Period");
 
         cbNMEAFileGLL.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox43.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileRMC.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        lbRMCOut2.setText("RMC Period");
+        lbNMEAFileRMC.setText("RMC Period");
 
-        cbVTGOut2.setText("VTG Period");
+        lbNMEAFileVTG.setText("VTG Period");
 
-        jComboBox44.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileVTG.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox45.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileGGA.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        cbGGAOut2.setText("GGA Period");
+        lbNMEAFileGGA.setText("GGA Period");
 
-        cbGSAOut2.setText("GSA Period");
+        lbNMEAFileGSA.setText("GSA Period");
 
-        jComboBox46.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileGSA.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox47.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileGSV.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        cbGSVOut2.setText("GSV Period");
+        lbNMEAFileGSV.setText("GSV Period");
 
-        cbGRSOut1.setText("GRS Period");
+        lbNMEAFileGRS.setText("GRS Period");
 
-        cbGSTOut1.setText("GST Period");
+        lbNMEAFileGST.setText("GST Period");
 
-        cbType9Out1.setText("Type 9 (?)");
+        lbNMEAFileType9.setText("Type 9 (?)");
 
-        cbType8Out1.setText("Type 8 (?)");
+        lbNMEAFileType8.setText("Type 8 (?)");
 
-        jComboBox48.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileType9.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox49.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileType8.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox50.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileGST.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox51.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileGRS.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jComboBox52.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                "0", "1", "2", "3", "4", "5" }));
+        cbNMEAFileMCHN.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jLabel56.setText("MCHN Period");
+        lbNMEAFileMCHN.setText("MCHN Period");
 
         org.jdesktop.layout.GroupLayout pnNMEAOutput1Layout = new org.jdesktop.layout.GroupLayout(
                 pnNMEAOutput1);
@@ -5000,7 +5354,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                 pnNMEAOutput1Layout
                                                                         .createSequentialGroup()
                                                                         .add(
-                                                                                jLabel45)
+                                                                                lbNMEAFileType10)
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5017,25 +5371,25 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.TRAILING)
                                                                                         .add(
-                                                                                                lbGLLOut2)
+                                                                                                lbNMEAFileGLL)
                                                                                         .add(
-                                                                                                cbGSVOut2)
+                                                                                                lbNMEAFileGSV)
                                                                                         .add(
-                                                                                                cbGSAOut2)
+                                                                                                lbNMEAFileGSA)
                                                                                         .add(
-                                                                                                cbGGAOut2)
+                                                                                                lbNMEAFileGGA)
                                                                                         .add(
-                                                                                                cbVTGOut2)
+                                                                                                lbNMEAFileVTG)
                                                                                         .add(
-                                                                                                lbRMCOut2)
+                                                                                                lbNMEAFileRMC)
                                                                                         .add(
-                                                                                                cbGRSOut1)
+                                                                                                lbNMEAFileGRS)
                                                                                         .add(
-                                                                                                cbType9Out1)
+                                                                                                lbNMEAFileType9)
                                                                                         .add(
-                                                                                                cbType8Out1)
+                                                                                                lbNMEAFileType8)
                                                                                         .add(
-                                                                                                cbGSTOut1))
+                                                                                                lbNMEAFileGST))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5048,27 +5402,27 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jComboBox43,
+                                                                                                cbNMEAFileRMC,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jComboBox44,
+                                                                                                cbNMEAFileVTG,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jComboBox45,
+                                                                                                cbNMEAFileGGA,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jComboBox46,
+                                                                                                cbNMEAFileGSA,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jComboBox47,
+                                                                                                cbNMEAFileGSV,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -5078,25 +5432,25 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                                 org.jdesktop.layout.GroupLayout.LEADING)
                                                                                                         .add(
                                                                                                                 org.jdesktop.layout.GroupLayout.TRAILING,
-                                                                                                                jComboBox51,
+                                                                                                                cbNMEAFileGRS,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                                         .add(
                                                                                                                 org.jdesktop.layout.GroupLayout.TRAILING,
-                                                                                                                jComboBox50,
+                                                                                                                cbNMEAFileGST,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                                         .add(
                                                                                                                 org.jdesktop.layout.GroupLayout.TRAILING,
-                                                                                                                jComboBox49,
+                                                                                                                cbNMEAFileType8,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                                         .add(
                                                                                                                 org.jdesktop.layout.GroupLayout.TRAILING,
-                                                                                                                jComboBox48,
+                                                                                                                cbNMEAFileType9,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
@@ -5110,7 +5464,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 pnNMEAOutput1Layout
                                                                                                         .createSequentialGroup()
                                                                                                         .add(
-                                                                                                                jLabel49)
+                                                                                                                lbNMEAFileType11)
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
@@ -5122,7 +5476,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 pnNMEAOutput1Layout
                                                                                                         .createSequentialGroup()
                                                                                                         .add(
-                                                                                                                jLabel50)
+                                                                                                                lbNMEAFileType12)
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
@@ -5134,7 +5488,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 pnNMEAOutput1Layout
                                                                                                         .createSequentialGroup()
                                                                                                         .add(
-                                                                                                                jLabel51)
+                                                                                                                lbNMEAFileMALM)
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
@@ -5146,7 +5500,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 pnNMEAOutput1Layout
                                                                                                         .createSequentialGroup()
                                                                                                         .add(
-                                                                                                                jLabel52)
+                                                                                                                lbNMEAFileMEPH)
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
@@ -5158,7 +5512,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 pnNMEAOutput1Layout
                                                                                                         .createSequentialGroup()
                                                                                                         .add(
-                                                                                                                jLabel53)
+                                                                                                                lbNMEAFileMDGP)
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
@@ -5170,7 +5524,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 pnNMEAOutput1Layout
                                                                                                         .createSequentialGroup()
                                                                                                         .add(
-                                                                                                                jLabel54)
+                                                                                                                lbNMEAFileMDBG)
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
@@ -5182,7 +5536,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 pnNMEAOutput1Layout
                                                                                                         .createSequentialGroup()
                                                                                                         .add(
-                                                                                                                jLabel55)
+                                                                                                                lbNMEAFileMZDA)
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
@@ -5194,11 +5548,11 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 pnNMEAOutput1Layout
                                                                                                         .createSequentialGroup()
                                                                                                         .add(
-                                                                                                                jLabel56)
+                                                                                                                lbNMEAFileMCHN)
                                                                                                         .addPreferredGap(
                                                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                                                         .add(
-                                                                                                                jComboBox52,
+                                                                                                                cbNMEAFileMCHN,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -5232,7 +5586,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                lbGLLOut2))
+                                                                                                lbNMEAFileGLL))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5240,12 +5594,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox43,
+                                                                                                cbNMEAFileRMC,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                lbRMCOut2))
+                                                                                                lbNMEAFileRMC))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5253,12 +5607,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox44,
+                                                                                                cbNMEAFileVTG,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                cbVTGOut2))
+                                                                                                lbNMEAFileVTG))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5266,12 +5620,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox45,
+                                                                                                cbNMEAFileGGA,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                cbGGAOut2))
+                                                                                                lbNMEAFileGGA))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5279,12 +5633,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox46,
+                                                                                                cbNMEAFileGSA,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                cbGSAOut2))
+                                                                                                lbNMEAFileGSA))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5292,12 +5646,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox47,
+                                                                                                cbNMEAFileGSV,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                cbGSVOut2))
+                                                                                                lbNMEAFileGSV))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5305,12 +5659,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox51,
+                                                                                                cbNMEAFileGRS,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                cbGRSOut1))
+                                                                                                lbNMEAFileGRS))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5318,12 +5672,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox50,
+                                                                                                cbNMEAFileGST,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                cbGSTOut1))
+                                                                                                lbNMEAFileGST))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5331,14 +5685,14 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                         .createParallelGroup(
                                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                                         .add(
-                                                                                                jComboBox49,
+                                                                                                cbNMEAFileType8,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                cbType8Out1)
+                                                                                                lbNMEAFileType8)
                                                                                         .add(
-                                                                                                jLabel56)))
+                                                                                                lbNMEAFileMCHN)))
                                                         .add(
                                                                 pnNMEAOutput1Layout
                                                                         .createSequentialGroup()
@@ -5352,7 +5706,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jLabel45))
+                                                                                                lbNMEAFileType10))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5365,7 +5719,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jLabel49))
+                                                                                                lbNMEAFileType11))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5378,7 +5732,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jLabel50))
+                                                                                                lbNMEAFileType12))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5391,7 +5745,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jLabel51))
+                                                                                                lbNMEAFileMALM))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5404,7 +5758,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jLabel52))
+                                                                                                lbNMEAFileMEPH))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5417,7 +5771,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jLabel53))
+                                                                                                lbNMEAFileMDGP))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5430,7 +5784,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jLabel54))
+                                                                                                lbNMEAFileMDBG))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
@@ -5443,11 +5797,11 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                                         .add(
-                                                                                                jLabel55))
+                                                                                                lbNMEAFileMZDA))
                                                                         .addPreferredGap(
                                                                                 org.jdesktop.layout.LayoutStyle.RELATED)
                                                                         .add(
-                                                                                jComboBox52,
+                                                                                cbNMEAFileMCHN,
                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
@@ -5462,12 +5816,12 @@ public class BT747Main extends javax.swing.JFrame implements
                                                                         .createParallelGroup(
                                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
                                                                         .add(
-                                                                                jComboBox48,
+                                                                                cbNMEAFileType9,
                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                                                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                                                         .add(
-                                                                                cbType9Out1))
+                                                                                lbNMEAFileType9))
                                                         .add(btSetNMEAOutput1))
                                         .addPreferredGap(
                                                 org.jdesktop.layout.LayoutStyle.RELATED)
@@ -5476,10 +5830,22 @@ public class BT747Main extends javax.swing.JFrame implements
         pnGPXFileSettings.setBorder(javax.swing.BorderFactory
                 .createTitledBorder("GPX File Settings"));
 
-        cbUTCOffset0.setText("Do not apply UTC offset");
+        cbNotApplyUTCOffset.setText("Do not apply UTC offset");
+        cbNotApplyUTCOffset
+                .addChangeListener(new javax.swing.event.ChangeListener() {
+                    public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                        cbNotApplyUTCOffsetStateChanged(evt);
+                    }
+                });
 
         cbGPXTrkSegWhenSmall
                 .setText("Make a new track segment even if time split is small");
+        cbGPXTrkSegWhenSmall
+                .addChangeListener(new javax.swing.event.ChangeListener() {
+                    public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                        cbGPXTrkSegWhenSmallStateChanged(evt);
+                    }
+                });
 
         org.jdesktop.layout.GroupLayout pnGPXFileSettingsLayout = new org.jdesktop.layout.GroupLayout(
                 pnGPXFileSettings);
@@ -5495,7 +5861,8 @@ public class BT747Main extends javax.swing.JFrame implements
                                                 pnGPXFileSettingsLayout
                                                         .createParallelGroup(
                                                                 org.jdesktop.layout.GroupLayout.LEADING)
-                                                        .add(cbUTCOffset0)
+                                                        .add(
+                                                                cbNotApplyUTCOffset)
                                                         .add(
                                                                 cbGPXTrkSegWhenSmall))
                                         .addContainerGap(
@@ -5505,7 +5872,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                 .add(
                         pnGPXFileSettingsLayout.createSequentialGroup().add(
-                                cbUTCOffset0).addPreferredGap(
+                                cbNotApplyUTCOffset).addPreferredGap(
                                 org.jdesktop.layout.LayoutStyle.RELATED).add(
                                 cbGPXTrkSegWhenSmall).addContainerGap(
                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
@@ -5745,6 +6112,142 @@ public class BT747Main extends javax.swing.JFrame implements
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cbNotApplyUTCOffsetStateChanged(
+            javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_cbNotApplyUTCOffsetStateChanged
+    // TODO add your handling code here:
+    }// GEN-LAST:event_cbNotApplyUTCOffsetStateChanged
+
+    private void cbStopOrOverwriteWhenFullFocusLost(
+            java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbStopOrOverwriteWhenFullFocusLost
+    // TODO add your handling code here:
+    }// GEN-LAST:event_cbStopOrOverwriteWhenFullFocusLost
+
+    private void cbGPXTrkSegWhenSmallStateChanged(
+            javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_cbGPXTrkSegWhenSmallStateChanged
+    // TODO add your handling code here:
+    }// GEN-LAST:event_cbGPXTrkSegWhenSmallStateChanged
+
+    private void cbNMEAOutGLLActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbNMEAOutGLLActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_cbNMEAOutGLLActionPerformed
+
+    private void cbOneFilePerDayFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbOneFilePerDayFocusLost
+        // TODO add your handling code here:
+    }// GEN-LAST:event_cbOneFilePerDayFocusLost
+
+    private void cbRecordNumberInfoInLogFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbRecordNumberInfoInLogFocusLost
+        // TODO add your handling code here:
+    }// GEN-LAST:event_cbRecordNumberInfoInLogFocusLost
+
+    private void cbImperialUnitsFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbImperialUnitsFocusLost
+        // TODO add your handling code here:
+    }// GEN-LAST:event_cbImperialUnitsFocusLost
+
+    private void tfTrackSeparationTimeFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_tfTrackSeparationTimeFocusLost
+        // TODO add your handling code here:
+    }// GEN-LAST:event_tfTrackSeparationTimeFocusLost
+
+    private void cbFixColorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbFixColorActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_cbFixColorActionPerformed
+
+    private void txtRecCntMinInputMethodTextChanged(
+            java.awt.event.InputMethodEvent evt) {// GEN-FIRST:event_txtRecCntMinInputMethodTextChanged
+        // TODO add your handling code here:
+    }// GEN-LAST:event_txtRecCntMinInputMethodTextChanged
+
+    private void txtDistanceMinInputMethodTextChanged(
+            java.awt.event.InputMethodEvent evt) {// GEN-FIRST:event_txtDistanceMinInputMethodTextChanged
+        // TODO add your handling code here:
+    }// GEN-LAST:event_txtDistanceMinInputMethodTextChanged
+
+    private void txtSpeedMinInputMethodTextChanged(
+            java.awt.event.InputMethodEvent evt) {// GEN-FIRST:event_txtSpeedMinInputMethodTextChanged
+        // TODO add your handling code here:
+    }// GEN-LAST:event_txtSpeedMinInputMethodTextChanged
+
+    private void txtNSATMinInputMethodTextChanged(
+            java.awt.event.InputMethodEvent evt) {// GEN-FIRST:event_txtNSATMinInputMethodTextChanged
+        // TODO add your handling code here:
+    }// GEN-LAST:event_txtNSATMinInputMethodTextChanged
+
+    private void txtSpeedMaxInputMethodTextChanged(
+            java.awt.event.InputMethodEvent evt) {// GEN-FIRST:event_txtSpeedMaxInputMethodTextChanged
+        // TODO add your handling code here:
+    }// GEN-LAST:event_txtSpeedMaxInputMethodTextChanged
+
+    private void txtDistanceMaxInputMethodTextChanged(
+            java.awt.event.InputMethodEvent evt) {// GEN-FIRST:event_txtDistanceMaxInputMethodTextChanged
+        // TODO add your handling code here:
+    }// GEN-LAST:event_txtDistanceMaxInputMethodTextChanged
+
+    private void TrkFixTypeAction(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_TrkFixTypeAction
+        setTrkValidFilterSettings();
+    }// GEN-LAST:event_TrkFixTypeAction
+
+    private void WayTypeFixAction(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_WayTypeFixAction
+        setWayValidFilterSettings();
+    }// GEN-LAST:event_WayTypeFixAction
+
+    private void WayRCRAction(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_WayRCRAction
+        setWayRCRFilterSettings();
+    }// GEN-LAST:event_WayRCRAction
+
+    private void TrkRCRAction(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_TrkRCRAction
+        setTrkRCRFilterSettings();
+    }// GEN-LAST:event_TrkRCRAction
+
+    private void btSetFlashActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btSetHoluxNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btApplySBASActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btSetNMEAOutputActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btSetNMEAOutputDefaultsActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btSetNMEAOutput1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btSetNMEAOutputDefaults1ActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btHotStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btWarmStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btColdStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btFactoryResetDeviceActionPerformed(
+            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
+
+    private void btLogByApplyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btDownloadFromNumerixActionPerformed(
             java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btDownloadFromNumerixActionPerformed
@@ -6376,19 +6879,14 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JComboBox cbFormat;
     private javax.swing.JLabel cbGGAOut;
     private javax.swing.JLabel cbGGAOut1;
-    private javax.swing.JLabel cbGGAOut2;
     private javax.swing.JComboBox cbGPSType;
     private javax.swing.JCheckBox cbGPXTrkSegWhenSmall;
     private javax.swing.JLabel cbGRSOut;
-    private javax.swing.JLabel cbGRSOut1;
     private javax.swing.JLabel cbGSAOut;
     private javax.swing.JLabel cbGSAOut1;
-    private javax.swing.JLabel cbGSAOut2;
     private javax.swing.JLabel cbGSTOut;
-    private javax.swing.JLabel cbGSTOut1;
     private javax.swing.JLabel cbGSVOut;
     private javax.swing.JLabel cbGSVOut1;
-    private javax.swing.JLabel cbGSVOut2;
     private javax.swing.JCheckBox cbHDOP;
     private javax.swing.JCheckBox cbHeading;
     private javax.swing.JCheckBox cbHeight;
@@ -6398,26 +6896,46 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JCheckBox cbLat;
     private javax.swing.JCheckBox cbLong;
     private javax.swing.JCheckBox cbMilliSeconds;
+    private javax.swing.JComboBox cbNMEAFileGGA;
     private javax.swing.JComboBox cbNMEAFileGLL;
+    private javax.swing.JComboBox cbNMEAFileGRS;
+    private javax.swing.JComboBox cbNMEAFileGSA;
+    private javax.swing.JComboBox cbNMEAFileGST;
+    private javax.swing.JComboBox cbNMEAFileGSV;
     private javax.swing.JComboBox cbNMEAFileMALM;
+    private javax.swing.JComboBox cbNMEAFileMCHN;
     private javax.swing.JComboBox cbNMEAFileMDBG;
     private javax.swing.JComboBox cbNMEAFileMDGP;
     private javax.swing.JComboBox cbNMEAFileMEPH;
     private javax.swing.JComboBox cbNMEAFileMZDA;
+    private javax.swing.JComboBox cbNMEAFileRMC;
     private javax.swing.JComboBox cbNMEAFileType10;
     private javax.swing.JComboBox cbNMEAFileType11;
     private javax.swing.JComboBox cbNMEAFileType12;
+    private javax.swing.JComboBox cbNMEAFileType8;
+    private javax.swing.JComboBox cbNMEAFileType9;
+    private javax.swing.JComboBox cbNMEAFileVTG;
     private javax.swing.JComboBox cbNMEAOutGGA;
     private javax.swing.JComboBox cbNMEAOutGLL;
     private javax.swing.JComboBox cbNMEAOutGRS;
     private javax.swing.JComboBox cbNMEAOutGSA;
     private javax.swing.JComboBox cbNMEAOutGST;
     private javax.swing.JComboBox cbNMEAOutGSV;
+    private javax.swing.JComboBox cbNMEAOutMALM;
+    private javax.swing.JComboBox cbNMEAOutMCHN;
+    private javax.swing.JComboBox cbNMEAOutMDBG;
+    private javax.swing.JComboBox cbNMEAOutMDGP;
+    private javax.swing.JComboBox cbNMEAOutMEPH;
+    private javax.swing.JComboBox cbNMEAOutMZDA;
     private javax.swing.JComboBox cbNMEAOutRMC;
+    private javax.swing.JComboBox cbNMEAOutType10;
+    private javax.swing.JComboBox cbNMEAOutType11;
+    private javax.swing.JComboBox cbNMEAOutType12;
     private javax.swing.JComboBox cbNMEAOutType8;
     private javax.swing.JComboBox cbNMEAOutType9;
     private javax.swing.JComboBox cbNMEAOutVTG;
     private javax.swing.JCheckBox cbNSAT;
+    private javax.swing.JCheckBox cbNotApplyUTCOffset;
     private javax.swing.JComboBox cbOneFilePerDay;
     private javax.swing.JPanel cbOtherFormat;
     private javax.swing.JCheckBox cbPDOP;
@@ -6455,16 +6973,11 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JCheckBox cbTrkUser8;
     private javax.swing.JCheckBox cbTrkUser9;
     private javax.swing.JLabel cbType8Out;
-    private javax.swing.JLabel cbType8Out1;
     private javax.swing.JLabel cbType9Out;
-    private javax.swing.JLabel cbType9Out1;
     private javax.swing.JComboBox cbUTCOffset;
-    private javax.swing.JCheckBox cbUTCOffset0;
     private javax.swing.JCheckBox cbUTCTime;
     private javax.swing.JCheckBox cbVDOP;
-    private javax.swing.JLabel cbVTGOut;
     private javax.swing.JLabel cbVTGOut1;
-    private javax.swing.JLabel cbVTGOut2;
     private javax.swing.JCheckBox cbValidFixOnly;
     private javax.swing.JCheckBox cbWayButton;
     private javax.swing.JCheckBox cbWayDGPS;
@@ -6498,41 +7011,17 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JCheckBox jCheckBox26;
     private javax.swing.JCheckBox jCheckBox27;
     private javax.swing.JColorChooser jColorChooser1;
-    private javax.swing.JComboBox jComboBox11;
-    private javax.swing.JComboBox jComboBox12;
-    private javax.swing.JComboBox jComboBox13;
-    private javax.swing.JComboBox jComboBox14;
-    private javax.swing.JComboBox jComboBox15;
-    private javax.swing.JComboBox jComboBox16;
-    private javax.swing.JComboBox jComboBox17;
-    private javax.swing.JComboBox jComboBox18;
-    private javax.swing.JComboBox jComboBox21;
     private javax.swing.JComboBox jComboBox23;
-    private javax.swing.JComboBox jComboBox43;
-    private javax.swing.JComboBox jComboBox44;
-    private javax.swing.JComboBox jComboBox45;
-    private javax.swing.JComboBox jComboBox46;
-    private javax.swing.JComboBox jComboBox47;
-    private javax.swing.JComboBox jComboBox48;
-    private javax.swing.JComboBox jComboBox49;
-    private javax.swing.JComboBox jComboBox50;
-    private javax.swing.JComboBox jComboBox51;
-    private javax.swing.JComboBox jComboBox52;
     private javax.swing.JComboBox jComboBox6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
@@ -6545,7 +7034,6 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
@@ -6558,23 +7046,11 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel43;
     private javax.swing.JLabel jLabel44;
-    private javax.swing.JLabel jLabel45;
-    private javax.swing.JLabel jLabel46;
-    private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
-    private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel50;
-    private javax.swing.JLabel jLabel51;
-    private javax.swing.JLabel jLabel52;
-    private javax.swing.JLabel jLabel53;
-    private javax.swing.JLabel jLabel54;
-    private javax.swing.JLabel jLabel55;
-    private javax.swing.JLabel jLabel56;
     private javax.swing.JLabel jLabel57;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JPanel jPanel1;
@@ -6586,23 +7062,49 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JLabel lbConversionTime;
     private javax.swing.JLabel lbDistanceFltr;
+    private javax.swing.JLabel lbFirmWare;
+    private javax.swing.JLabel lbFlashInfo;
     private javax.swing.JLabel lbGLLOut;
     private javax.swing.JLabel lbGLLOut1;
-    private javax.swing.JLabel lbGLLOut2;
     private javax.swing.JLabel lbGeoid;
     private javax.swing.JLabel lbLatitude;
+    private javax.swing.JLabel lbLoggerSWVersion;
     private javax.swing.JLabel lbLongitude;
+    private javax.swing.JLabel lbModel;
+    private javax.swing.JLabel lbNMEAFileGGA;
+    private javax.swing.JLabel lbNMEAFileGLL;
+    private javax.swing.JLabel lbNMEAFileGRS;
+    private javax.swing.JLabel lbNMEAFileGSA;
+    private javax.swing.JLabel lbNMEAFileGST;
+    private javax.swing.JLabel lbNMEAFileGSV;
+    private javax.swing.JLabel lbNMEAFileMALM;
+    private javax.swing.JLabel lbNMEAFileMCHN;
+    private javax.swing.JLabel lbNMEAFileMDBG;
+    private javax.swing.JLabel lbNMEAFileMDGP;
+    private javax.swing.JLabel lbNMEAFileMEPH;
+    private javax.swing.JLabel lbNMEAFileMZDA;
+    private javax.swing.JLabel lbNMEAFileRMC;
+    private javax.swing.JLabel lbNMEAFileType10;
+    private javax.swing.JLabel lbNMEAFileType11;
+    private javax.swing.JLabel lbNMEAFileType12;
+    private javax.swing.JLabel lbNMEAFileType8;
+    private javax.swing.JLabel lbNMEAFileType9;
+    private javax.swing.JLabel lbNMEAFileVTG;
+    private javax.swing.JLabel lbNMEAOutType10;
     private javax.swing.JLabel lbNSATFltr;
+    private javax.swing.JLabel lbNewTrackAfter;
+    private javax.swing.JLabel lbNoFixColor;
     private javax.swing.JLabel lbRMCOut;
     private javax.swing.JLabel lbRMCOut1;
-    private javax.swing.JLabel lbRMCOut2;
     private javax.swing.JLabel lbRecNbrFltr;
     private javax.swing.JLabel lbSpeedFltr;
+    private javax.swing.JLabel lbThisSWVersion;
     private javax.swing.JLabel lbTime;
+    private javax.swing.JLabel lbTimeZone;
+    private javax.swing.JLabel lbVTGOut;
     private javax.swing.JPanel pnCommonFilter;
     private javax.swing.JPanel pnConvert;
     private javax.swing.JPanel pnDownload;
@@ -6628,6 +7130,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private com.toedter.calendar.JDateChooser startDate;
     private javax.swing.JTextField tfOutputFileBaseName;
     private javax.swing.JTextField tfRawLogFilePath;
+    private javax.swing.JTextField tfTrackSeparationTime;
     private javax.swing.JTextField tfWorkDirectory;
     private javax.swing.JTextField txtDistanceMax;
     private javax.swing.JTextField txtDistanceMin;

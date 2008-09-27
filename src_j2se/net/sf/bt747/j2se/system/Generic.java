@@ -23,8 +23,8 @@ public class Generic {
     private static HashSet h = new HashSet();
     private static HashSet oos = new HashSet();
 
-    //java.util.HashSet<Object> tt = new java.util.HashSet<Object>();
-    
+    // java.util.HashSet<Object> tt = new java.util.HashSet<Object>();
+
     // TODO: Improve next code - for the moment it is functional.
 
     public static void addThread(BT747Thread t, final boolean b) {
@@ -68,7 +68,7 @@ public class Generic {
             J2SEThread tt = (J2SEThread) it.next();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
-                if(tt.running) {
+                if (tt.running) {
                     // When this is null, the thread stops.)
                     h.remove(tt);
                     oos.remove(t);
@@ -79,16 +79,18 @@ public class Generic {
     }
 
     public static double pow(double x, double y) {
-        return Math.pow(x,y);
+        return Math.pow(x, y);
     }
 
     public static double acos(final double x) {
         return Math.acos(x);
     }
 
-    public static void debug(String s, Throwable e ) {
+    public static void debug(String s, Throwable e) {
         Vm.debug(s);
-        e.printStackTrace();
+        if (e != null) {
+            e.printStackTrace();
+        }
     }
 
 }
