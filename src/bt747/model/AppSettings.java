@@ -19,6 +19,7 @@ import gps.convert.Conv;
 import moio.util.HashSet;
 import moio.util.Iterator;
 
+import bt747.Txt;
 import bt747.generic.Generic;
 import bt747.io.File;
 import bt747.sys.Convert;
@@ -810,13 +811,25 @@ public class AppSettings {
         postEvent(ModelEvent.TRK_VALID_CHANGE);
     }
 
-    public final int getFileSeparationFreq() {
+    /**
+     * The way we split the input track:<br>
+     * ONE_FILE = 0<br>
+     * ONE_FILE_PER_DAY = 1<br>
+     * ONE_FILE_PER_TRACK = 2
+     * 
+     * @return Current setting.
+     */
+    public final int getOutputFileSplitType() {
         return getLocalIntOpt(C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
     }
 
     /**
+     * The way we split the input track:<br>
+     * ONE_FILE = 0<br>
+     * ONE_FILE_PER_DAY = 1<br>
+     * ONE_FILE_PER_TRACK = 2
      * @param value
-     *            The default value for opening the port.
+     *            New setting
      */
     protected final void setOutputFileSplitType(final int value) {
         setLocalIntOpt(0, value, C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);

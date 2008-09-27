@@ -6347,7 +6347,7 @@ public class BT747Main extends javax.swing.JFrame implements
     }// GEN-LAST:event_cbStandardOrDaylightSavingFocusLost
 
     private void cbHeightOverMeanSeaLevelFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbHeightOverMeanSeaLevelFocusLost
-        c.setNoGeoid(cbHeightOverMeanSeaLevel.getSelectedIndex() == 0);
+        c.setConvertWGS84ToMSL(cbHeightOverMeanSeaLevel.getSelectedIndex() == 0);
     }// GEN-LAST:event_cbHeightOverMeanSeaLevelFocusLost
 
     private void btGPSDebugStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_btGPSDebugStateChanged

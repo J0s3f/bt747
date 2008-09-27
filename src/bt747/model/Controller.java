@@ -366,7 +366,7 @@ public class Controller {
             gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m
                     .getIntOpt(Model.FILEFIELDFORMAT)));
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
-                    m.getFileSeparationFreq());
+                    m.getOutputFileSplitType());
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
             currentGPSLogConvert = lc;
             try {
@@ -469,7 +469,7 @@ public class Controller {
         }
         gpsFile.setFilters(usedFilters);
         // Next line must be called for initialisation.
-        gpsFile.initialiseFile("", "", -1, m.getFileSeparationFreq());
+        gpsFile.initialiseFile("", "", -1, m.getOutputFileSplitType());
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         currentGPSLogConvert = lc;
         try {
@@ -1631,6 +1631,8 @@ public class Controller {
     }
 
     /**
+     * The way we split the input data.
+     * 
      * @param value
      *            0=all data in one file;<br>
      *            1=one file per day (split at midnight after time offset
@@ -1647,7 +1649,7 @@ public class Controller {
      *            When true the height (WGS84) will be converted to Mean Sea
      *            Level.
      */
-    public final void setNoGeoid(final boolean isConvertHeightToMSL) {
+    public final void setConvertWGS84ToMSL(final boolean isConvertHeightToMSL) {
         m.setConvertWGS84ToMSL(isConvertHeightToMSL);
     }
 

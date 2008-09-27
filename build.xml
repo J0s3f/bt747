@@ -1111,6 +1111,8 @@
 			<arg value="/INST" />
 			<!-- <arg value="/SIS"/> -->
 			<!-- <arg value="/SH"/> -->
+            <arg value="/I" />
+            <arg value="BT747_" />
 			<arg value="/V" />
 			<arg value="${build_version}" />
 			<arg value="/c" />
@@ -1132,6 +1134,8 @@
 		>
 			<!-- <arg value="/INST"/> -->
 			<arg value="/SIS" />
+            <arg value="/I" />
+            <arg value="BT747_" />
 			<arg value="/c" />
 			<arg value="BT74" />
 			<arg value="${ant.project.name}" />
@@ -1150,6 +1154,8 @@
 		      fork="true"
 		      classpathref="utils"
 		>
+            <arg value="/I" />
+            <arg value="BT747_" />
 			<arg value="/c" />
 			<arg value="BT74" />
 			<arg value="/e" />
@@ -1160,14 +1166,16 @@
 
 	</target>
 
-	<!-- Execute EXEGEN with WinCE CAB -->
-	<target name="exegen-cab" depends="warp, prepare-exegen">
+	<!-- Execute EXEGEN with WinCE CAB   -->
+	<target name="exegen-cab" depends="warp, prepare-exegen" >
 
 		<java dir="${build.dir}"
 		      classname="superwaba.tools.Exegen"
 		      fork="true"
 		      classpathref="utils"
 		>
+            <arg value="/I" />
+            <arg value="BT747_" />
 			<arg value="/c" />
 			<arg value="BT74" />
 			<arg value="/z" />
