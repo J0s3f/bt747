@@ -1555,6 +1555,9 @@
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtPDOPMaxInputMethodTextChanged"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel9">
                       <Properties>
@@ -1571,6 +1574,9 @@
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtHDOPMaxInputMethodTextChanged"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel12">
                       <Properties>
@@ -1587,6 +1593,9 @@
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtVDOPMaxInputMethodTextChanged"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel13">
                       <Properties>

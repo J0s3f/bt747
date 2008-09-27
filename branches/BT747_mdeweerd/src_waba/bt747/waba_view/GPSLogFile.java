@@ -33,7 +33,6 @@ import waba.util.Vector;
 import net.sf.bt747.waba.system.WabaFile;
 
 import bt747.Txt;
-import bt747.io.File;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;

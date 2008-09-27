@@ -37,7 +37,6 @@ import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
 import bt747.sys.Time;
-import bt747.util.Date;
 
 /**
  * @author Mario De Weerd
@@ -69,8 +68,8 @@ public class GPSLogGet extends Container implements ModelListener {
     private static final String[] colors = { "FF0000", "0000FF", "800000",
             "000080", "00FF00", "008000" };
     private ComboBox cbDownload;
-    private static final String[] downloadStr = { Txt.DOWNLOAD_NORMAL, Txt.DOWNLOAD_INCREMENTAL, 
-        Txt.DOWNLOAD_FULL };
+    private static final String[] downloadStr = { Txt.DOWNLOAD_NORMAL,
+            Txt.DOWNLOAD_INCREMENTAL, Txt.DOWNLOAD_FULL };
     private ComboBox m_chkOneFilePerDay;
     private static final String[] fileStr = { Txt.ONE_FILE, Txt.ONE_FILE_DAY,
             Txt.ONE_FILE_TRK };
@@ -106,7 +105,7 @@ public class GPSLogGet extends Container implements ModelListener {
         super.onStart();
         add(chkLogOnOff = new MyCheck(Txt.DEV_LOGONOFF), LEFT, TOP); //$NON-NLS-1$
         cbDownload = new ComboBox(downloadStr);
-        add(cbDownload,RIGHT,SAME);
+        add(cbDownload, RIGHT, SAME);
         cbDownload.select(m.getDownloadMethod());
         add(chkLogOverwriteStop = new MyCheck(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
         add(new Label(Txt.DATE_RANGE), LEFT, AFTER); //$NON-NLS-1$

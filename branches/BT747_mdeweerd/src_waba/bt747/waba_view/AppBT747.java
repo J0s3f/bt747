@@ -13,9 +13,9 @@ package bt747.waba_view;
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
+//***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
-//***  *********************************************************** ***
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
