@@ -626,7 +626,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel46" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbTimeZone" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="cbUTCOffset" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -635,7 +635,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="cbRecordNumberInfoInLog" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="52" max="32767" attributes="0"/>
-                                  <Component id="jLabel33" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbNoFixColor" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="cbFixColor" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -657,7 +657,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel46" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbTimeZone" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbUTCOffset" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbStandardOrDaylightSaving" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -671,7 +671,7 @@
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbRecordNumberInfoInLog" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel33" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNoFixColor" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace pref="2" max="32767" attributes="0"/>
                                   <Component id="cbImperialUnits" min="-2" max="-2" attributes="0"/>
@@ -696,8 +696,11 @@
                       </StringArray>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbOneFilePerDayFocusLost"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel46">
+                <Component class="javax.swing.JLabel" name="lbTimeZone">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="TimeZone"/>
                   </Properties>
@@ -751,7 +754,7 @@
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbStandardOrDaylightSavingFocusLost"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel33">
+                <Component class="javax.swing.JLabel" name="lbNoFixColor">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="No Fix Color"/>
                   </Properties>
@@ -765,16 +768,25 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="RecordNumberInfoInLog"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbRecordNumberInfoInLogFocusLost"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="cbImperialUnits">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="ImperialUnits"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbImperialUnitsFocusLost"/>
+                  </Events>
                 </Component>
                 <Component class="java.awt.Button" name="cbFixColor">
                   <Properties>
                     <Property name="label" type="java.lang.String" value="Color"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbFixColorActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -795,9 +807,9 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabel47" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNewTrackAfter" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextField10" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfTrackSeparationTime" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel48" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
@@ -807,23 +819,26 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel47" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField10" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNewTrackAfter" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfTrackSeparationTime" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel48" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel47">
+                <Component class="javax.swing.JLabel" name="lbNewTrackAfter">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="New Track after"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField10">
+                <Component class="javax.swing.JTextField" name="tfTrackSeparationTime">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="jTextField7"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfTrackSeparationTimeFocusLost"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel48">
                   <Properties>
@@ -895,7 +910,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jPanel11" alignment="0" pref="263" max="32767" attributes="1"/>
+                              <Component id="jPanel11" alignment="0" max="32767" attributes="1"/>
                               <Component id="jPanel12" alignment="0" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace pref="21" max="32767" attributes="0"/>
@@ -964,48 +979,72 @@
                         <Property name="text" type="java.lang.String" value="No fix"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TrkFixTypeAction"/>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkFixTypeAction"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkPPS">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="PPS"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkFixTypeAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkEstimate">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Estimate"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkFixTypeAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkManual">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Manual"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkFixTypeAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkSPS">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="SPS"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkFixTypeAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkFRTK">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="FRTK"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkFixTypeAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkDGPS">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="DGPS"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkFixTypeAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkSimulate">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Sim"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkFixTypeAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkRTK">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="RTK"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkFixTypeAction"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -1102,83 +1141,128 @@
                         <Property name="text" type="java.lang.String" value="Time"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TrkRCRAction"/>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkSpeed">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Speed"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkDistance">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Distance"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Button"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser1">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 1"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser2">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 2"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser3">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 3"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser4">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 4"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser5">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 5"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser6">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 6"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser7">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 7"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser8">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 8"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser9">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 9"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser10">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 10"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser11">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 11"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbTrkUser12">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 12"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TrkRCRAction"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -1316,7 +1400,7 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtRecCntMinFocusLost"/>
+                        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtRecCntMinInputMethodTextChanged"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtDistanceMin">
@@ -1327,7 +1411,7 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtDistanceMinFocusLost"/>
+                        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtDistanceMinInputMethodTextChanged"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtSpeedMin">
@@ -1338,7 +1422,7 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSpeedMinFocusLost"/>
+                        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtSpeedMinInputMethodTextChanged"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="lbDistanceFltr">
@@ -1370,7 +1454,7 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtDistanceMaxFocusLost"/>
+                        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtDistanceMaxInputMethodTextChanged"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtSpeedMax">
@@ -1381,7 +1465,7 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSpeedMaxFocusLost"/>
+                        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtSpeedMaxInputMethodTextChanged"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="lbNSATFltr">
@@ -1397,7 +1481,7 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtNSATMinFocusLost"/>
+                        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtNSATMinInputMethodTextChanged"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="lbRecNbrFltr">
@@ -1471,9 +1555,6 @@
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPDOPMaxFocusLost"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel9">
                       <Properties>
@@ -1490,9 +1571,6 @@
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtHDOPMaxFocusLost"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel12">
                       <Properties>
@@ -1509,9 +1587,6 @@
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtVDOPMaxFocusLost"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel13">
                       <Properties>
@@ -1562,7 +1637,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="pnWayPointFix" alignment="0" pref="256" max="32767" attributes="1"/>
+                              <Component id="pnWayPointFix" alignment="0" max="32767" attributes="1"/>
                               <Component id="pnWayPointRCR" alignment="0" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace pref="28" max="32767" attributes="0"/>
@@ -1631,48 +1706,72 @@
                         <Property name="text" type="java.lang.String" value="No fix"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="WayFixTypeAction"/>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayTypeFixAction"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayPPS">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="PPS"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayTypeFixAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayEstimate">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Estimate"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayTypeFixAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayManual">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Manual"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayTypeFixAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWaySPS">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="SPS"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayTypeFixAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayFRTK">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="FRTK"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayTypeFixAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayDGPS">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="DGPS"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayTypeFixAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWaySimulate">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Sim"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayTypeFixAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayRTK">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="RTK"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayTypeFixAction"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -1768,83 +1867,128 @@
                         <Property name="text" type="java.lang.String" value="Time"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="WayRCRAction"/>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWaySpeed">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Speed"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayDistance">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Distance"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayButton">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Button"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser1">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 1"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser2">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 2"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser3">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 3"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser4">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 4"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser5">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 5"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser6">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 6"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser7">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 7"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser8">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 8"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser9">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 9"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser10">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 10"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser11">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 11"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbWayUser12">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="User 12"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="WayRCRAction"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -2489,6 +2633,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="SET"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetHoluxNameActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -2496,21 +2643,33 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Hot Start"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btHotStartActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btWarmStart">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Warm Start"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btWarmStartActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btColdStart">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cold Start"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btColdStartActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btFactoryResetDevice">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Factory Reset"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFactoryResetDeviceActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="cbStopOrOverwriteWhenFull">
               <Properties>
@@ -2521,6 +2680,9 @@
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbStopOrOverwriteWhenFullFocusLost"/>
+              </Events>
             </Component>
             <Container class="javax.swing.JPanel" name="pnLogBy">
               <Properties>
@@ -2679,6 +2841,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Apply"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLogByApplyActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel41">
                   <Properties>
@@ -2772,6 +2937,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Apply"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btApplySBASActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -2804,11 +2972,11 @@
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel19" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel18" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel15" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbThisSWVersion" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbLoggerSWVersion" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbFirmWare" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbModel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbFlashInfo" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lbGeoid" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lbTime" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lbLongitude" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -2847,27 +3015,27 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbFlashInfo" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbModel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbFirmWare" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel18" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbLoggerSWVersion" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbThisSWVersion" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="167" max="32767" attributes="0"/>
                   </Group>
@@ -2920,7 +3088,7 @@
                 <Property name="text" type="java.lang.String" value="FlashInfo:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel8">
+            <Component class="javax.swing.JLabel" name="lbFlashInfo">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jLabel8"/>
               </Properties>
@@ -2930,7 +3098,7 @@
                 <Property name="text" type="java.lang.String" value="Model:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel11">
+            <Component class="javax.swing.JLabel" name="lbModel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jLabel11"/>
               </Properties>
@@ -2940,7 +3108,7 @@
                 <Property name="text" type="java.lang.String" value="FirmWare:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel15">
+            <Component class="javax.swing.JLabel" name="lbFirmWare">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jLabel15"/>
               </Properties>
@@ -2955,12 +3123,12 @@
                 <Property name="text" type="java.lang.String" value="This SW Version"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel18">
+            <Component class="javax.swing.JLabel" name="lbLoggerSWVersion">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jLabel18"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel19">
+            <Component class="javax.swing.JLabel" name="lbThisSWVersion">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jLabel19"/>
               </Properties>
@@ -3023,7 +3191,7 @@
                               <Component id="jLabel31" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="lbGLLOut" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="lbRMCOut" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbVTGOut" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbVTGOut" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="cbGGAOut" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="cbGSAOut" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="cbGSVOut" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -3076,7 +3244,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="cbFlashVTG" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbVTGOut" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbVTGOut" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -3134,7 +3302,7 @@
                     <Property name="text" type="java.lang.String" value="RMC Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="cbVTGOut">
+                <Component class="javax.swing.JLabel" name="lbVTGOut">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="VTG Period"/>
                   </Properties>
@@ -3281,6 +3449,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Set"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetFlashActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -3300,9 +3471,9 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jLabel21" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbNMEAOutType10" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jComboBox11" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbNMEAOutType10" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
@@ -3337,42 +3508,42 @@
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel22" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox12" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAOutType11" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox13" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAOutType12" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox14" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAOutMALM" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel25" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox16" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAOutMEPH" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox15" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAOutMDGP" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel27" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox17" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAOutMDBG" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel28" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox18" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAOutMZDA" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel34" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox21" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAOutMCHN" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="btSetNMEAOutput" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -3436,46 +3607,46 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox11" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel21" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAOutType10" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAOutType10" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox12" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAOutType11" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel22" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox13" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAOutType12" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel23" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox14" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAOutMALM" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox16" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAOutMEPH" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel25" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox15" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAOutMDGP" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel26" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox17" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAOutMDBG" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel27" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox18" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAOutMZDA" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel28" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jComboBox21" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbNMEAOutMCHN" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -3493,7 +3664,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JComboBox" name="jComboBox11">
+                <Component class="javax.swing.JComboBox" name="cbNMEAOutType10">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -3507,12 +3678,12 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel21">
+                <Component class="javax.swing.JLabel" name="lbNMEAOutType10">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 10 (?)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox12">
+                <Component class="javax.swing.JComboBox" name="cbNMEAOutType11">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -3526,7 +3697,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox13">
+                <Component class="javax.swing.JComboBox" name="cbNMEAOutType12">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -3540,7 +3711,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox14">
+                <Component class="javax.swing.JComboBox" name="cbNMEAOutMALM">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -3554,7 +3725,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox15">
+                <Component class="javax.swing.JComboBox" name="cbNMEAOutMDGP">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -3568,7 +3739,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox16">
+                <Component class="javax.swing.JComboBox" name="cbNMEAOutMEPH">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -3582,7 +3753,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox17">
+                <Component class="javax.swing.JComboBox" name="cbNMEAOutMDBG">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -3596,7 +3767,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox18">
+                <Component class="javax.swing.JComboBox" name="cbNMEAOutMZDA">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -3649,11 +3820,17 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Set"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetNMEAOutputActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btSetNMEAOutputDefaults">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Defaults"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetNMEAOutputDefaultsActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbGLLOut1">
                   <Properties>
@@ -3673,6 +3850,9 @@
                       </StringArray>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbNMEAOutGLLActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cbNMEAOutRMC">
                   <Properties>
@@ -3845,7 +4025,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox21">
+                <Component class="javax.swing.JComboBox" name="cbNMEAOutMCHN">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -3919,79 +4099,79 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jLabel45" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbNMEAFileType10" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="cbNMEAFileType10" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="lbGLLOut2" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbGSVOut2" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbGSAOut2" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbGGAOut2" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbVTGOut2" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbRMCOut2" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbGRSOut1" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbType9Out1" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbType8Out1" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbGSTOut1" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGLL" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGSV" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGSA" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGGA" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileVTG" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileRMC" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGRS" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType9" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType8" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGST" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="cbNMEAFileGLL" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jComboBox43" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jComboBox44" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jComboBox45" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jComboBox46" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jComboBox47" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileRMC" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileVTG" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileGGA" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileGSA" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileGSV" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                                          <Component id="jComboBox51" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jComboBox50" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jComboBox49" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jComboBox48" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileGRS" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileGST" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileType8" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileType9" alignment="1" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel49" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbNMEAFileType11" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="cbNMEAFileType11" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel50" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbNMEAFileType12" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="cbNMEAFileType12" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel51" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbNMEAFileMALM" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="cbNMEAFileMALM" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel52" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbNMEAFileMEPH" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="cbNMEAFileMEPH" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel53" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbNMEAFileMDGP" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="cbNMEAFileMDGP" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel54" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbNMEAFileMDBG" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="cbNMEAFileMDBG" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel55" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbNMEAFileMZDA" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="cbNMEAFileMZDA" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel56" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbNMEAFileMCHN" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jComboBox52" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbNMEAFileMCHN" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="btSetNMEAOutput1" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -4009,99 +4189,99 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbNMEAFileGLL" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbGLLOut2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGLL" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox43" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbRMCOut2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileRMC" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileRMC" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox44" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbVTGOut2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileVTG" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileVTG" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox45" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbGGAOut2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileGGA" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGGA" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox46" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbGSAOut2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileGSA" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGSA" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox47" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbGSVOut2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileGSV" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGSV" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox51" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbGRSOut1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileGRS" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGRS" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox50" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbGSTOut1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileGST" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGST" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox49" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbType8Out1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel56" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileType8" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType8" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMCHN" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbNMEAFileType10" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel45" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType10" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbNMEAFileType11" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel49" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType11" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbNMEAFileType12" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel50" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType12" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbNMEAFileMALM" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel51" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMALM" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbNMEAFileMEPH" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel52" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMEPH" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbNMEAFileMDGP" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel53" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMDGP" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbNMEAFileMDBG" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel54" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMDBG" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbNMEAFileMZDA" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel55" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMZDA" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jComboBox52" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbNMEAFileMCHN" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jComboBox48" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbType9Out1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbNMEAFileType9" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbNMEAFileType9" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="btSetNMEAOutput1" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -4126,7 +4306,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel45">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileType10">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 10 (?)"/>
                   </Properties>
@@ -4229,37 +4409,37 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel49">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileType11">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 11 (?)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel50">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileType12">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 12 (?)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel51">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileMALM">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MALM Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel52">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileMEPH">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MEPH Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel53">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileMDGP">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MDGP Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel54">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileMDBG">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MDBG Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel55">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileMZDA">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MZDA Period"/>
                   </Properties>
@@ -4268,13 +4448,19 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Set"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetNMEAOutput1ActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btSetNMEAOutputDefaults1">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Defaults"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetNMEAOutputDefaults1ActionPerformed"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbGLLOut2">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileGLL">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GLL Period"/>
                   </Properties>
@@ -4293,7 +4479,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox43">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileRMC">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4307,17 +4493,17 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbRMCOut2">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileRMC">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="RMC Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="cbVTGOut2">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileVTG">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="VTG Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox44">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileVTG">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4331,7 +4517,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox45">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileGGA">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4345,17 +4531,17 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="cbGGAOut2">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileGGA">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GGA Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="cbGSAOut2">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileGSA">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GSA Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox46">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileGSA">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4369,7 +4555,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox47">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileGSV">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4383,32 +4569,32 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="cbGSVOut2">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileGSV">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GSV Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="cbGRSOut1">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileGRS">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GRS Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="cbGSTOut1">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileGST">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GST Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="cbType9Out1">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileType9">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 9 (?)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="cbType8Out1">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileType8">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 8 (?)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox48">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileType9">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4422,7 +4608,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox49">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileType8">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4436,7 +4622,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox50">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileGST">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4450,7 +4636,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox51">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileGRS">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4464,7 +4650,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox52">
+                <Component class="javax.swing.JComboBox" name="cbNMEAFileMCHN">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="6">
@@ -4478,7 +4664,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel56">
+                <Component class="javax.swing.JLabel" name="lbNMEAFileMCHN">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MCHN Period"/>
                   </Properties>
@@ -4499,7 +4685,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbUTCOffset0" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbNotApplyUTCOffset" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="cbGPXTrkSegWhenSmall" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
@@ -4509,7 +4695,7 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="cbUTCOffset0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbNotApplyUTCOffset" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cbGPXTrkSegWhenSmall" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
@@ -4518,15 +4704,21 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JCheckBox" name="cbUTCOffset0">
+                <Component class="javax.swing.JCheckBox" name="cbNotApplyUTCOffset">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Do not apply UTC offset"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbNotApplyUTCOffsetStateChanged"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="cbGPXTrkSegWhenSmall">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Make a new track segment even if time split is small"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbGPXTrkSegWhenSmallStateChanged"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
