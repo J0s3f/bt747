@@ -24,7 +24,7 @@ import waba.ui.MainWindow;
 
 import moio.util.Enumeration;
 
-import bt747.interfaces.BT747Thread;
+import bt747.sys.interfaces.BT747Thread;
 
 /**
  * @author Mario De Weerd

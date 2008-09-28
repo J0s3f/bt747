@@ -19,7 +19,7 @@
 //********************************************************************
 package net.sf.bt747.waba.system;
 
-import bt747.interfaces.BT747Time;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * @author Mario De Weerd

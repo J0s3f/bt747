@@ -29,11 +29,11 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bt747.Txt;
-import bt747.interfaces.Interface;
 import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.sys.Interface;
 import bt747.sys.Time;
 
 /**
@@ -80,7 +80,7 @@ public class BT747Main extends javax.swing.JFrame implements
         // to controller.
     }
 
-    public void setController(Controller c) {
+    public void setController(final Controller c) {
         if (this.m != null) {
             this.m.removeListener(this);
         }
@@ -89,7 +89,7 @@ public class BT747Main extends javax.swing.JFrame implements
         m.addListener(this);
     }
 
-    public void setModel(Model m) {
+    public void setModel(final Model m) {
         if (this.m != null) {
             this.m.removeListener(this);
         }

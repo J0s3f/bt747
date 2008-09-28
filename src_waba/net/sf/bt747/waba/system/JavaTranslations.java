@@ -19,14 +19,14 @@
 //********************************************************************
 package net.sf.bt747.waba.system;
 
-import bt747.interfaces.BT747Date;
-import bt747.interfaces.BT747File;
-import bt747.interfaces.BT747Hashtable;
-import bt747.interfaces.BT747Semaphore;
-import bt747.interfaces.BT747Thread;
-import bt747.interfaces.BT747Time;
-import bt747.interfaces.BT747Vector;
-import bt747.interfaces.JavaTranslationsInterface;
+import bt747.sys.interfaces.BT747Date;
+import bt747.sys.interfaces.BT747File;
+import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747Semaphore;
+import bt747.sys.interfaces.BT747Thread;
+import bt747.sys.interfaces.BT747Time;
+import bt747.sys.interfaces.BT747Vector;
+import bt747.sys.interfaces.JavaTranslationsInterface;
 
 public class JavaTranslations implements JavaTranslationsInterface {
     public final BT747Date getDateInstance() {
@@ -60,7 +60,7 @@ public class JavaTranslations implements JavaTranslationsInterface {
 
     public final BT747File getFileInstance(String path, int mode, int card) {
         int localMode;
-        if (mode == bt747.io.File.WRITE_ONLY) {
+        if (mode == bt747.sys.File.WRITE_ONLY) {
             // On SuperWaba, WRITE_ONLY might erase, so transforming in READ_WRITE.
             // Must be in append mode too.
             localMode = waba.io.File.READ_WRITE;
@@ -72,7 +72,7 @@ public class JavaTranslations implements JavaTranslationsInterface {
 
     public final BT747File getFileInstance(String path, int mode) {
         int localMode;
-        if (mode == bt747.io.File.WRITE_ONLY) {
+        if (mode == bt747.sys.File.WRITE_ONLY) {
             // On SuperWaba, WRITE_ONLY might erase, so transforming in READ_WRITE.
             // Must be in append mode too.
             localMode = waba.io.File.READ_WRITE;

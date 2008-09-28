@@ -6,7 +6,7 @@
  */
 package net.sf.bt747.j2se.system;
 
-import bt747.interfaces.BT747Vector;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * @author Mario De Weerd

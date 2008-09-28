@@ -35,13 +35,13 @@ import waba.ui.Window;
 import gps.connection.*;
 
 import bt747.Txt;
-import bt747.interfaces.Interface;
 import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
+import bt747.sys.Interface;
 import bt747.sys.Vm;
-import bt747.waba_view.ui.MessageBox;
+import bt747.waba_view.ui.BT747MessageBox;
 
 /**
  * Main class (application entry)
@@ -244,14 +244,14 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
     private int numPanels;
 
-    public static String requiredVersionStr = "5.82";
-    public static int requiredVersion = 582;
+    public final static String requiredVersionStr = "5.82";
+    public final static int requiredVersion = 582;
 
     public void onStart() {
         super.onStart();
 
         if (Settings.version < requiredVersion) {
-            new MessageBox(Txt.TITLE_ATTENTION, Txt.BAD_SUPERWABAVERSION
+            new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.BAD_SUPERWABAVERSION
                     + requiredVersionStr
                     + Txt.BAD_SUPERWABAVERSION_CONT + Settings.versionStr
                     + Txt.BAD_SUPERWABAVERSION_CONT2
@@ -387,9 +387,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
                 case -1:
                     break; // No item selected
                 case C_MENU_FILE_EXIT:
-                    MessageBox mb;
+                    BT747MessageBox mb;
                     String[] szExitButtonArray = { Txt.YES, Txt.NO };
-                    mb = new MessageBox(Txt.TITLE_ATTENTION,
+                    mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
                             Txt.CONFIRM_APP_EXIT, szExitButtonArray);
                     mb.popupBlockingModal();
                     if (mb.getPressedButtonIndex() == 0) {
@@ -442,15 +442,15 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     c.setRecordNbrInLogs(miRecordNumberInLogs.isChecked);
                     break;
                 case C_MENU_ABOUT:
-                    new MessageBox(Txt.ABOUT_TITLE, Txt.ABOUT_TXT).popupModal();
+                    new BT747MessageBox(Txt.ABOUT_TITLE, Txt.ABOUT_TXT).popupModal();
                     break;
                 case C_MENU_ABOUT_SW:
-                    new MessageBox(Txt.ABOUT_SUPERWABA_TITLE,
+                    new BT747MessageBox(Txt.ABOUT_SUPERWABA_TITLE,
                             Txt.ABOUT_SUPERWABA_TXT + Settings.versionStr
                                     + Txt.ABOUT_SUPERWABA_TXT).popupModal();
                     break;
                 case C_MENU_INFO:
-                    new MessageBox(Txt.DISCLAIMER_TITLE, Txt.DISCLAIMER_TXT)
+                    new BT747MessageBox(Txt.DISCLAIMER_TITLE, Txt.DISCLAIMER_TXT)
                             .popupModal();
                     break;
                 case C_MENU_DEFAULTDEVICE:
@@ -547,15 +547,15 @@ public class AppBT747 extends MainWindow implements ModelListener {
     public final void requestLogOverwriteConfirmation() {
         // TODO: Make this non blocking (with multiple interfaces open)
         // Log is not the same - delete the log and reopen.
-        MessageBox mb;
+        BT747MessageBox mb;
         String[] mbStr = { Txt.OVERWRITE, Txt.ABORT_DOWNLOAD };
-        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.DATA_NOT_SAME, mbStr);
+        mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.DATA_NOT_SAME, mbStr);
         mb.popupBlockingModal();
         c.replyToOkToOverwrite(mb.getPressedButtonIndex() == 0);
     }
 
     private final String[] eraseWait = { Txt.CANCEL_WAITING };
-    private MessageBox mbErase = new MessageBox(Txt.TITLE_WAITING_ERASE,
+    private BT747MessageBox mbErase = new BT747MessageBox(Txt.TITLE_WAITING_ERASE,
             Txt.TXT_WAITING_ERASE, eraseWait);
 
     private void createErasePopup() {
@@ -571,7 +571,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
     }
 
     private void couldNotOpenFileMessage(final String fileName) {
-        (new MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName + Txt.CHK_PATH))
+        (new BT747MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName + Txt.CHK_PATH))
                 .popupBlockingModal();
     }
 }

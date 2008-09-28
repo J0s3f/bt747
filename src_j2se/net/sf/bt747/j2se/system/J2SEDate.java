@@ -19,8 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import bt747.interfaces.BT747Date;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747Date;
 
 /**
  * @author Mario De Weerd

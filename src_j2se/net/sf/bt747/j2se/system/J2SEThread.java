@@ -3,10 +3,10 @@ package net.sf.bt747.j2se.system;
 public class J2SEThread implements java.lang.Runnable {
 
     public java.lang.Thread jvThread;
-    public bt747.interfaces.BT747Thread btThread = null;
+    public bt747.sys.interfaces.BT747Thread btThread = null;
     public boolean running = false;
 
-    public J2SEThread(final bt747.interfaces.BT747Thread t) {
+    public J2SEThread(final bt747.sys.interfaces.BT747Thread t) {
         btThread = t;
     }
 

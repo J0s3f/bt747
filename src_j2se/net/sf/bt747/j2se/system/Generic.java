@@ -9,8 +9,8 @@ package net.sf.bt747.j2se.system;
 import moio.util.HashSet;
 import moio.util.Iterator;
 
-import bt747.interfaces.BT747Thread;
 import bt747.sys.Vm;
+import bt747.sys.interfaces.BT747Thread;
 
 /**
  * @author Mario De Weerd

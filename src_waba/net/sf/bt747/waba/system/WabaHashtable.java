@@ -19,7 +19,7 @@
 //********************************************************************
 package net.sf.bt747.waba.system;
 
-import bt747.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747Hashtable;
 
 /**
  * @author Mario De Weerd
