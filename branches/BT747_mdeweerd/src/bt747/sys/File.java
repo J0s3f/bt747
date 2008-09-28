@@ -14,8 +14,8 @@
 //***  *********************************************************** ***
 package bt747.sys;
 
-import bt747.interfaces.BT747File;
-import bt747.interfaces.Interface;
+import bt747.sys.interfaces.BT747File;
+import bt747.sys.interfaces.Interface;
 
 /**
  * @author Mario De Weerd

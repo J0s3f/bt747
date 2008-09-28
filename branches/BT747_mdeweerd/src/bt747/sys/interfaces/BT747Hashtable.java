@@ -1,4 +1,4 @@
-package bt747.interfaces;
+package bt747.sys.interfaces;
 
 public interface BT747Hashtable {
     public abstract Object get(final Object arg1);

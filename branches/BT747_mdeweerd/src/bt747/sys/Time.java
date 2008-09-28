@@ -6,8 +6,8 @@
  */
 package bt747.sys;
 
-import bt747.interfaces.BT747Time;
-import bt747.interfaces.Interface;
+import bt747.sys.interfaces.BT747Time;
+import bt747.sys.interfaces.Interface;
 
 /**
  * @author Mario De Weerd
