@@ -14,7 +14,7 @@
 //***  *********************************************************** ***
 package bt747.sys;
 
-import bt747.interfaces.Interface;
+import bt747.sys.interfaces.Interface;
 
 /**
  * Class providing a set of conversion methods.

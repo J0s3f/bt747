@@ -23,13 +23,13 @@ import moio.util.HashSet;
 import moio.util.Iterator;
 import moio.util.StringTokenizer;
 
-import bt747.interfaces.BT747Thread;
 import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.Semaphore;
 import bt747.sys.Vector;
 import bt747.sys.Vm;
+import bt747.sys.interfaces.BT747Thread;
 
 /*
  * Created on 12 may 2007

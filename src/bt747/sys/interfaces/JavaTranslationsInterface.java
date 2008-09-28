@@ -12,7 +12,7 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-package bt747.interfaces;
+package bt747.sys.interfaces;
 
 public interface JavaTranslationsInterface {
 
