@@ -21,7 +21,7 @@ package bt747.waba_view;
 
 import gps.connection.GPSPort;
 
-import bt747.waba_view.ui.MessageBox;
+import bt747.waba_view.ui.BT747MessageBox;
 
 /**
  * Implements the serial port for the standard Waba SerialPort
@@ -67,7 +67,7 @@ public class GPSWabaSocketPort extends GPSPort {
         try {
             sp = new waba.io.Socket(MacAddr, 1);
             result = sp.lastError;
-            new MessageBox("waba.io.Socket open",
+            new BT747MessageBox("waba.io.Socket open",
             "Result:"+result).popupBlockingModal();
             portIsOK = sp.isOpen();
             if (portIsOK) {
@@ -81,7 +81,7 @@ public class GPSWabaSocketPort extends GPSPort {
                 sp = null;
             }
         } catch (Exception e) {
-            new MessageBox("waba.io.Socket open",
+            new BT747MessageBox("waba.io.Socket open",
                     "Unexpected exception catched").popupBlockingModal();
             ;// if(GPS_DEBUG) {waba.sys.Vm.debug("Exception when opening
                 // port\n");};

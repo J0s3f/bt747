@@ -106,6 +106,11 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
         this(title, Text, Buttons);
     }
 
+    /**
+     * When true the application that set up the MessageBox is waiting for it to
+     * get an answer. This is also the object that is used to synchronize and
+     * must be accessed through the getter and setter.
+     */
     private Boolean WaitForAnswer = Boolean.valueOf(false);
 
     public final void popupBlockingModal() {
@@ -173,5 +178,4 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
     public final synchronized void setWaitForAnswer(final boolean waitForAnswer) {
         WaitForAnswer = Boolean.valueOf(waitForAnswer);
     }
-
 }

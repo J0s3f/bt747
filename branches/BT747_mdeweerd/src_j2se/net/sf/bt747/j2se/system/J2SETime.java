@@ -17,7 +17,7 @@ package net.sf.bt747.j2se.system;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import bt747.interfaces.BT747Time;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * @author Mario De Weerd

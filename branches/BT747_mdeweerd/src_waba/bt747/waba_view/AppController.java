@@ -8,13 +8,13 @@ import gps.log.GPSRecord;
 import moio.util.HashSet;
 
 import bt747.Txt;
-import bt747.io.File;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
 
-import bt747.waba_view.ui.MessageBox;
+import bt747.sys.File;
+import bt747.waba_view.ui.BT747MessageBox;
 
 //import moio.util.Iterator;  Needed later when communicating with views.
 
@@ -115,12 +115,12 @@ public class AppController extends Controller {
      */
     public final void recoveryErase() {
         /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
+        BT747MessageBox mb;
+        mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
                 C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
+            mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
                     C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
@@ -139,12 +139,12 @@ public class AppController extends Controller {
      */
     public final void changeLogFormatAndErase(final int logFormat) {
         /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(Txt.TITLE_ATTENTION,
+        BT747MessageBox mb;
+        mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
                 Txt.C_msgWarningFormatAndErase, C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(Txt.TITLE_ATTENTION,
+            mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
                     Txt.C_msgWarningFormatAndErase2, C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
@@ -164,8 +164,8 @@ public class AppController extends Controller {
      */
     public final void changeLogFormat(final int logFormat) {
         /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(true, Txt.TITLE_ATTENTION,
+        BT747MessageBox mb;
+        mb = new BT747MessageBox(true, Txt.TITLE_ATTENTION,
                 Txt.C_msgWarningFormatIncompatibilityRisk, C_YES_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
@@ -179,12 +179,12 @@ public class AppController extends Controller {
      */
     public final void eraseLogFormat() {
         /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
+        BT747MessageBox mb;
+        mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
                 C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
+            mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
                     C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
@@ -208,14 +208,14 @@ public class AppController extends Controller {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
             errorMsg = Txt.COULD_NOT_OPEN + errorInfo;
             bt747.sys.Vm.debug(errorMsg);
-            new MessageBox(Txt.ERROR, errorMsg).popupBlockingModal();
+            new BT747MessageBox(Txt.ERROR, errorMsg).popupBlockingModal();
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
-            (new MessageBox(Txt.WARNING, Txt.NO_FILES_WERE_CREATED))
+            (new BT747MessageBox(Txt.WARNING, Txt.NO_FILES_WERE_CREATED))
                     .popupBlockingModal();
             break;
         case BT747Constants.ERROR_READING_FILE:
-            new MessageBox(Txt.ERROR, Txt.PROBLEM_READING + errorInfo)
+            new BT747MessageBox(Txt.ERROR, Txt.PROBLEM_READING + errorInfo)
                     .popupBlockingModal();
             break;
         default:

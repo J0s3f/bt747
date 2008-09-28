@@ -21,7 +21,7 @@ package net.sf.bt747.waba.system;
 
 import waba.sys.Time;
 
-import bt747.interfaces.BT747Date;
+import bt747.sys.interfaces.BT747Date;
 
 /**
  * @author Mario De Weerd

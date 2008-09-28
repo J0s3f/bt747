@@ -32,7 +32,7 @@ import bt747.Txt;
 import bt747.model.Model;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
-import bt747.waba_view.ui.MessageBox;
+import bt747.waba_view.ui.BT747MessageBox;
 
 /**
  * @author Mario De Weerd
@@ -123,9 +123,9 @@ public class GPSFlashOption extends Container implements ModelListener {
     }
 
     public final void setSettings() {
-        MessageBox mb;
+        BT747MessageBox mb;
         String[] mbStr = { Txt.WRITEFLASH, Txt.ABORT };
-        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.TXT_FLASH_LIMITED_WRITES,
+        mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.TXT_FLASH_LIMITED_WRITES,
                 mbStr);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {

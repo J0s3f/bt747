@@ -13,13 +13,13 @@ package bt747.waba_view.ui;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class MessageBox extends waba.ui.MessageBox {
+public class BT747MessageBox extends waba.ui.MessageBox {
 
     /**
      * @param title
      * @param msg
      */
-    public MessageBox(String title, String msg) {
+    public BT747MessageBox(String title, String msg) {
         super(title, msg);
         // TODO Auto-generated constructor stub
     }
@@ -29,7 +29,7 @@ public class MessageBox extends waba.ui.MessageBox {
      * @param text
      * @param buttonCaptions
      */
-    public MessageBox(String title, String text, String[] buttonCaptions) {
+    public BT747MessageBox(String title, String text, String[] buttonCaptions) {
         super(title, text, buttonCaptions);
         // TODO Auto-generated constructor stub
     }
@@ -41,13 +41,13 @@ public class MessageBox extends waba.ui.MessageBox {
      * @param gap
      * @param insideGap
      */
-    public MessageBox(String title, String text, String[] buttonCaptions,
+    public BT747MessageBox(String title, String text, String[] buttonCaptions,
             int gap, int insideGap) {
         super(title, text, buttonCaptions, gap, insideGap);
         // TODO Auto-generated constructor stub
     }
     
-    public MessageBox(boolean n,String title,String Text,String[] Buttons) {
+    public BT747MessageBox(boolean n,String title,String Text,String[] Buttons) {
         this(title,
                 waba.sys.Convert.insertLineBreak(waba.sys.Settings.screenWidth-6,
                         '|',

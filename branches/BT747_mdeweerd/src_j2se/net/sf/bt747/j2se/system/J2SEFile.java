@@ -16,38 +16,65 @@ package net.sf.bt747.j2se.system;
 
 import java.io.RandomAccessFile;
 
-import bt747.interfaces.BT747File;
+import bt747.sys.interfaces.BT747File;
 
 /**
- * @author Mario De Weerd
+ * Implement the system interface of BT747File.
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * @author Mario De Weerd
  */
-public class J2SEFile implements BT747File {
+public final class J2SEFile implements BT747File {
 
-    private String path = null;
+    /**
+     * Path corresponding to current file. The current file is not necessarily
+     * open and the path must be memorized. The path does not necessarily
+     * correspond to the system path either, yet the path returned by the
+     * implementation must be the app's view of the path.
+     */
+    private String filePath = null;
 
-    public J2SEFile(final String path) {
-        this.path = path;
-    }
-
+    /**
+     * When open, pointer to the system file.
+     */
     private RandomAccessFile raf = null;
 
-    public static final int DONT_OPEN = bt747.io.File.DONT_OPEN;
-    public static final int READ_ONLY = bt747.io.File.READ_ONLY;
-    public static final int WRITE_ONLY = bt747.io.File.WRITE_ONLY;
-    public static final int READ_WRITE = bt747.io.File.READ_WRITE;
-    public static final int CREATE = bt747.io.File.CREATE;
+    /**
+     * Initializer called by the Interface.
+     * 
+     * @param path
+     *            The path to the file to operate on.
+     */
+    public J2SEFile(final String path) {
+        this.filePath = path;
+    }
 
+    /**
+     * Initializer called by the Interface.
+     * 
+     * @param path
+     *            The path to the file to operate on.
+     * @param mode
+     *            The way the file should be opened.
+     * @param card
+     *            The card where the file is located. Not applicable on this
+     *            system.
+     */
     public J2SEFile(final String path, final int mode, final int card) {
         this(path, mode);
     }
 
+    /**
+     * Initializer called by the Interface.
+     * 
+     * @param path
+     *            The path to the file to operate on.
+     * @param mode
+     *            The way the file should be opened.
+     */
     public J2SEFile(final String path, final int mode) {
         try {
             String modeStr = "";
-            this.path = path;
+            this.filePath = path;
             switch (mode) {
             case READ_ONLY:
                 modeStr = "r";
@@ -72,8 +99,8 @@ public class J2SEFile implements BT747File {
             }
             if (mode != DONT_OPEN) {
                 raf = new RandomAccessFile(path, modeStr);
-                if(mode==WRITE_ONLY) {
-                    raf.seek(raf.length()); // To append 
+                if (mode == WRITE_ONLY) {
+                    raf.seek(raf.length()); // To append
                 }
                 System.out.println("Opened file " + path + " in mode " + mode
                         + " " + modeStr);
@@ -81,15 +108,21 @@ public class J2SEFile implements BT747File {
             }
         } catch (Exception e) {
             Generic.debug("Problem in file open " + path, e);
-            this.path = null;
+            this.filePath = null;
             lastError = -1;
         }
     }
 
+    private static final int DONT_OPEN = bt747.sys.File.DONT_OPEN;
+    private static final int READ_ONLY = bt747.sys.File.READ_ONLY;
+    private static final int WRITE_ONLY = bt747.sys.File.WRITE_ONLY;
+    private static final int READ_WRITE = bt747.sys.File.READ_WRITE;
+    private static final int CREATE = bt747.sys.File.CREATE;
+
     public int getSize() {
         try {
             if (raf == null) {
-                return (int) (new java.io.File(path).length());
+                return (int) (new java.io.File(filePath).length());
             } else {
                 return (int) raf.length();
             }
@@ -101,7 +134,7 @@ public class J2SEFile implements BT747File {
 
     public boolean exists() {
         try {
-            return (new java.io.File(path).exists());
+            return (new java.io.File(filePath).exists());
         } catch (Exception e) {
             Generic.debug("exists", e);
             return false;
@@ -110,7 +143,7 @@ public class J2SEFile implements BT747File {
 
     public boolean delete() {
         try {
-            return new java.io.File(path).delete();
+            return new java.io.File(filePath).delete();
         } catch (Exception e) {
             Generic.debug("delete", e);
             return false;
@@ -119,17 +152,14 @@ public class J2SEFile implements BT747File {
 
     public boolean createDir() {
         try {
-            return new java.io.File(path).mkdir();
+            return new java.io.File(filePath).mkdir();
         } catch (Exception e) {
             Generic.debug("createDir", e);
             return false;
         }
     }
 
-    //public static char separatorChar = java.io.File.separatorChar;
-    //public static String separatorStr = String.valueOf(separatorChar);
-
-    boolean isopen = false;
+    private boolean isopen = false;
 
     public boolean close() {
         try {
@@ -155,7 +185,6 @@ public class J2SEFile implements BT747File {
             return false;
         } catch (Exception e) {
             Generic.debug("setPos", e);
-            // TODO: handle exceptions
             return false;
         }
     }
@@ -200,6 +229,10 @@ public class J2SEFile implements BT747File {
     }
 
     public String getPath() {
-        return path;
+        return filePath;
     }
+
+    // Kept for reference - unused.
+    // public static char separatorChar = java.io.File.separatorChar;
+    // public static String separatorStr = String.valueOf(separatorChar);
 }

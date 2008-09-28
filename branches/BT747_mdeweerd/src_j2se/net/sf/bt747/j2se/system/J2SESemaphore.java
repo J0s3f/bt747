@@ -1,6 +1,6 @@
 package net.sf.bt747.j2se.system;
 
-import bt747.interfaces.BT747Semaphore;
+import bt747.sys.interfaces.BT747Semaphore;
 
 //********************************************************************
 //***                           BT 747                             ***
