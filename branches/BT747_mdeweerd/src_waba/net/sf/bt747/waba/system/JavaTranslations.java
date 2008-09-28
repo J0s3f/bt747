@@ -184,8 +184,9 @@ public class JavaTranslations implements JavaTranslationsInterface {
     }
 
     public final BT747Semaphore getSemaphoreInstance(final int value) {
-        // TODO Auto-generated method stub
         return new WabaSemaphore(value);
     }
 
+    // Open resource
+    // Vm.getFile
 }

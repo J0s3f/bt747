@@ -37,6 +37,7 @@ import bt747.model.ModelEvent;
 import bt747.sys.Time;
 
 /**
+ * J2SE Implementation (GUI) of BT747.
  * 
  * @author Mario De Weerd
  */
@@ -96,6 +97,10 @@ public class BT747Main extends javax.swing.JFrame implements
         this.m.addListener(this);
     }
 
+    /**
+     * Initialize application data. Gets the values from the model to set them
+     * in the GUI.
+     */
     private void initAppData() {
         progressBarUpdate();
         getWorkDirPath();
@@ -127,6 +132,19 @@ public class BT747Main extends javax.swing.JFrame implements
 
         tfTrackSeparationTime.setText(Integer.toString(m.getTrkSep()));
 
+        int index = 0;
+        switch (m.getOutputFileSplitType()) {
+        case 0:
+            index = 2;
+            break;
+        case 1:
+            index = 0;
+            break;
+        case 2:
+            index = 1;
+            break;
+        }
+        cbOneFilePerDay.setSelectedIndex(index);
         cbImperialUnits.setSelected(m.getBooleanOpt(Model.IMPERIAL));
         cbAdvancedActive.setSelected(m.getAdvFilterActive());
         cbGPSType.setSelectedIndex(m.getGPSType() == 0 ? 0 : 1);
@@ -219,45 +237,72 @@ public class BT747Main extends javax.swing.JFrame implements
     public void modelEvent(ModelEvent e) {
         // TODO Auto-generated method stub
         int type = e.getType();
-        if (type == ModelEvent.GPRMC) {
+        switch (type) {
+        case ModelEvent.GPRMC:
             updateRMCData((GPSRecord) e.getArg());
-        } else if (type == ModelEvent.DATA_UPDATE) {
+            break;
+        case ModelEvent.DATA_UPDATE:
 
-        } else if (type == ModelEvent.GPGGA) {
+            break;
+        case ModelEvent.GPGGA:
             updateGPSData((GPSRecord) e.getArg());
-        } else if (type == ModelEvent.LOG_FORMAT_UPDATE) {
+            break;
+        case ModelEvent.LOG_FORMAT_UPDATE:
             updateLogFormatData();
-        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+            break;
+        case ModelEvent.LOGFILEPATH_UPDATE:
             getRawLogFilePath();
-        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+            break;
+        case ModelEvent.OUTPUTFILEPATH_UPDATE:
             getOutputFilePath();
-        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
+            break;
+        case ModelEvent.WORKDIRPATH_UPDATE:
             getWorkDirPath();
-        } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
+            break;
+        case ModelEvent.INCREMENTAL_CHANGE:
             getIncremental();
-        } else if (type == ModelEvent.TRK_VALID_CHANGE
-                || type == ModelEvent.TRK_RCR_CHANGE
-                || type == ModelEvent.WAY_VALID_CHANGE
-                || type == ModelEvent.WAY_RCR_CHANGE) {
+            break;
+        case ModelEvent.TRK_VALID_CHANGE:
+        case ModelEvent.TRK_RCR_CHANGE:
+        case ModelEvent.WAY_VALID_CHANGE:
+        case ModelEvent.WAY_RCR_CHANGE:
             updateGuiLogFilterSettings();
-        } else if (type == ModelEvent.CONVERSION_STARTED) {
+            break;
+        case ModelEvent.CONVERSION_STARTED:
             conversionStartTime = System.currentTimeMillis();
-        } else if (type == ModelEvent.CONVERSION_ENDED) {
+            break;
+        case ModelEvent.CONVERSION_ENDED:
             lbConversionTime
                     .setText("Time to convert: "
                             + ((int) (System.currentTimeMillis() - conversionStartTime))
                             + " ms");
             lbConversionTime.setVisible(true);
-        } else if (type == ModelEvent.CONNECTED) {
+            break;
+        case ModelEvent.CONNECTED:
             btConnect.setText("Disconnect");
             btConnectFunctionIsConnect = false;
-        } else if (type == ModelEvent.DISCONNECTED) {
+            break;
+        case ModelEvent.DISCONNECTED:
             btConnect.setText("Connect");
             btConnectFunctionIsConnect = true;
-        } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
-                || type == ModelEvent.LOG_DOWNLOAD_DONE
-                || type == ModelEvent.LOG_DOWNLOAD_STARTED) {
+            break;
+        case ModelEvent.DOWNLOAD_STATE_CHANGE:
+        case ModelEvent.LOG_DOWNLOAD_DONE:
+        case ModelEvent.LOG_DOWNLOAD_STARTED:
             progressBarUpdate();
+            break;
+        case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
+            MessageBox mb;
+            String[] yesNo = { "Yes", "No" };
+            mb = new MessageBox(
+                    "OVERWRITING DATA",
+                    "The current raw data file is not empty,<br>"
+                            + "and, the data in the GPS Logger is different!!!<br>"
+                            + "DO YOU CONFIRM OVERWRITING THE CURRENT DIFFERENT DATA?",
+                    yesNo);
+            mb.popupBlockingModal();
+            c.replyToOkToOverwrite(mb.getAnswer() == 0);
+            break;
         }
 
     }
@@ -6195,6 +6240,19 @@ public class BT747Main extends javax.swing.JFrame implements
 
     private void cbOneFilePerDayFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbOneFilePerDayFocusLost
         // TODO add your handling code here:
+        int type = 0;
+        switch (cbOneFilePerDay.getSelectedIndex()) {
+        case 0:
+            type = 1;
+            break;
+        case 1:
+            type = 2;
+            break;
+        case 2:
+            type = 0;
+            break;
+        }
+        c.setOutputFileSplitType(type);
     }// GEN-LAST:event_cbOneFilePerDayFocusLost
 
     private void cbRecordNumberInfoInLogFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbRecordNumberInfoInLogFocusLost
@@ -6347,7 +6405,9 @@ public class BT747Main extends javax.swing.JFrame implements
     }// GEN-LAST:event_cbStandardOrDaylightSavingFocusLost
 
     private void cbHeightOverMeanSeaLevelFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbHeightOverMeanSeaLevelFocusLost
-        c.setConvertWGS84ToMSL(cbHeightOverMeanSeaLevel.getSelectedIndex() == 0);
+        c
+                .setConvertWGS84ToMSL(cbHeightOverMeanSeaLevel
+                        .getSelectedIndex() == 0);
     }// GEN-LAST:event_cbHeightOverMeanSeaLevelFocusLost
 
     private void btGPSDebugStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_btGPSDebugStateChanged
@@ -6359,15 +6419,11 @@ public class BT747Main extends javax.swing.JFrame implements
     }// GEN-LAST:event_btGPSConnectDebugStateChanged
 
     private void cbAdvancedActiveStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_cbAdvancedActiveStateChanged
-        // TODO : Need to use control instead of model
-
         c.setAdvFilterActive(cbAdvancedActive.isSelected());
     }// GEN-LAST:event_cbAdvancedActiveStateChanged
 
     private void txtRecCntMaxInputMethodTextChanged(
             java.awt.event.InputMethodEvent evt) {// GEN-FIRST:event_txtRecCntMaxInputMethodTextChanged
-        // TODO : Need to use control instead of model
-
         c.setFilterMaxRecCount(Integer.parseInt(txtRecCntMax.getText()));
     }// GEN-LAST:event_txtRecCntMaxInputMethodTextChanged
 
