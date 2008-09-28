@@ -51,7 +51,8 @@ import bt747.waba_view.ui.BT747MessageBox;
 public class AppBT747 extends MainWindow implements ModelListener {
 
     static {
-        Interface.tr = new net.sf.bt747.waba.system.JavaTranslations();
+        Interface
+                .setJavaTranslationInterface(new net.sf.bt747.waba.system.JavaTranslations());
         GPSPort gpsPort;
 
         gpsPort = new GPSWabaPort();
@@ -252,9 +253,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
         if (Settings.version < requiredVersion) {
             new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.BAD_SUPERWABAVERSION
-                    + requiredVersionStr
-                    + Txt.BAD_SUPERWABAVERSION_CONT + Settings.versionStr
-                    + Txt.BAD_SUPERWABAVERSION_CONT2
+                    + requiredVersionStr + Txt.BAD_SUPERWABAVERSION_CONT
+                    + Settings.versionStr + Txt.BAD_SUPERWABAVERSION_CONT2
 
             ).popupBlockingModal();
             MainWindow.getMainWindow().exit(0);
@@ -442,7 +442,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     c.setRecordNbrInLogs(miRecordNumberInLogs.isChecked);
                     break;
                 case C_MENU_ABOUT:
-                    new BT747MessageBox(Txt.ABOUT_TITLE, Txt.ABOUT_TXT).popupModal();
+                    new BT747MessageBox(Txt.ABOUT_TITLE, Txt.ABOUT_TXT)
+                            .popupModal();
                     break;
                 case C_MENU_ABOUT_SW:
                     new BT747MessageBox(Txt.ABOUT_SUPERWABA_TITLE,
@@ -450,8 +451,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
                                     + Txt.ABOUT_SUPERWABA_TXT).popupModal();
                     break;
                 case C_MENU_INFO:
-                    new BT747MessageBox(Txt.DISCLAIMER_TITLE, Txt.DISCLAIMER_TXT)
-                            .popupModal();
+                    new BT747MessageBox(Txt.DISCLAIMER_TITLE,
+                            Txt.DISCLAIMER_TXT).popupModal();
                     break;
                 case C_MENU_DEFAULTDEVICE:
                     c.setGPSType(AppController.GPS_TYPE_DEFAULT);
@@ -555,8 +556,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
     }
 
     private final String[] eraseWait = { Txt.CANCEL_WAITING };
-    private BT747MessageBox mbErase = new BT747MessageBox(Txt.TITLE_WAITING_ERASE,
-            Txt.TXT_WAITING_ERASE, eraseWait);
+    private BT747MessageBox mbErase = new BT747MessageBox(
+            Txt.TITLE_WAITING_ERASE, Txt.TXT_WAITING_ERASE, eraseWait);
 
     private void createErasePopup() {
         mbErase.popupModal();
@@ -571,7 +572,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
     }
 
     private void couldNotOpenFileMessage(final String fileName) {
-        (new BT747MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName + Txt.CHK_PATH))
-                .popupBlockingModal();
+        (new BT747MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName
+                + Txt.CHK_PATH)).popupBlockingModal();
     }
 }

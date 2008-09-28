@@ -12,7 +12,9 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-package bt747.sys.interfaces;
+package bt747.sys;
+
+import bt747.sys.interfaces.JavaTranslationsInterface;
 
 
 /** This class holds the handle for the interface.
@@ -24,8 +26,8 @@ public final class Interface {
     /**
      * The pointer to the lower level translation class.
      */
-    public static JavaTranslationsInterface tr;
-
+    protected static JavaTranslationsInterface tr;
+    
     /** Set the low level translation class.
      * @param t is the class.
      */

@@ -40,9 +40,9 @@ public class BT747Main2 extends javax.swing.JFrame implements
         bt747.model.ModelListener {
 
     static {
-        Interface.tr = new net.sf.bt747.j2se.system.JavaTranslations();
+        Interface
+                .setJavaTranslationInterface(new net.sf.bt747.j2se.system.JavaTranslations());
     }
-
 
     /**
      * 
@@ -65,29 +65,28 @@ public class BT747Main2 extends javax.swing.JFrame implements
     }
 
     public void modelEvent(ModelEvent e) {
-            // TODO Auto-generated method stub
-            int type = e.getType();
-            if (type == ModelEvent.GPRMC) {
-                updateRMCData((GPSRecord) e.getArg());
-            } else if (type == ModelEvent.DATA_UPDATE) {
-            } else if (type == ModelEvent.GPGGA) {
-                updateGPSData((GPSRecord) e.getArg());
-            } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
-                    || type == ModelEvent.LOG_DOWNLOAD_DONE
-                    || type == ModelEvent.LOG_DOWNLOAD_STARTED
-                    ) {
-                progressBarUpdate();
-            } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
-                getRawLogFilePath();
-            } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
-                getOutputFilePath();
-            } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
-                getWorkDirPath();
-            } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
-                getIncremental();
-            } else if (type == ModelEvent.CONNECTED) {
+        // TODO Auto-generated method stub
+        int type = e.getType();
+        if (type == ModelEvent.GPRMC) {
+            updateRMCData((GPSRecord) e.getArg());
+        } else if (type == ModelEvent.DATA_UPDATE) {
+        } else if (type == ModelEvent.GPGGA) {
+            updateGPSData((GPSRecord) e.getArg());
+        } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
+                || type == ModelEvent.LOG_DOWNLOAD_DONE
+                || type == ModelEvent.LOG_DOWNLOAD_STARTED) {
+            progressBarUpdate();
+        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+            getRawLogFilePath();
+        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+            getOutputFilePath();
+        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
+            getWorkDirPath();
+        } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
+            getIncremental();
+        } else if (type == ModelEvent.CONNECTED) {
 
-            }
+        }
     }
 
     private void initAppData() {
@@ -181,11 +180,13 @@ public class BT747Main2 extends javax.swing.JFrame implements
         int wayRCR = m.getWayPtRCR();
         int wayValid = m.getWayPtValid();
 
-        cbTrkNoFix.setSelected((trkValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
+        cbTrkNoFix
+                .setSelected((trkValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
         cbTrkPPS.setSelected((trkValid & BT747Constants.VALID_PPS_MASK) != 0);
         cbTrkEstimate
                 .setSelected((trkValid & BT747Constants.VALID_ESTIMATED_MASK) != 0);
-        cbTrkManual.setSelected((trkValid & BT747Constants.VALID_MANUAL_MASK) != 0);
+        cbTrkManual
+                .setSelected((trkValid & BT747Constants.VALID_MANUAL_MASK) != 0);
         cbTrkSPS.setSelected((trkValid & BT747Constants.VALID_SPS_MASK) != 0);
         cbTrkFRTK.setSelected((trkValid & BT747Constants.VALID_FRTK_MASK) != 0);
         cbTrkDGPS.setSelected((trkValid & BT747Constants.VALID_DGPS_MASK) != 0);
@@ -195,7 +196,8 @@ public class BT747Main2 extends javax.swing.JFrame implements
 
         cbTrkTime.setSelected((BT747Constants.RCR_TIME_MASK & trkRCR) != 0);
         cbTrkSpeed.setSelected((BT747Constants.RCR_SPEED_MASK & trkRCR) != 0);
-        cbTrkDistance.setSelected((BT747Constants.RCR_DISTANCE_MASK & trkRCR) != 0);
+        cbTrkDistance
+                .setSelected((BT747Constants.RCR_DISTANCE_MASK & trkRCR) != 0);
         cbTrkButton.setSelected((BT747Constants.RCR_BUTTON_MASK & trkRCR) != 0);
         cbTrkUser1.setSelected((BT747Constants.RCR_APP0_MASK & trkRCR) != 0);
         cbTrkUser2.setSelected((BT747Constants.RCR_APP1_MASK & trkRCR) != 0);
@@ -210,11 +212,13 @@ public class BT747Main2 extends javax.swing.JFrame implements
         cbTrkUser11.setSelected((BT747Constants.RCR_APPY_MASK & trkRCR) != 0);
         cbTrkUser12.setSelected((BT747Constants.RCR_APPZ_MASK & trkRCR) != 0);
 
-        cbWayNoFix.setSelected((wayValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
+        cbWayNoFix
+                .setSelected((wayValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
         cbWayPPS.setSelected((wayValid & BT747Constants.VALID_PPS_MASK) != 0);
         cbWayEstimate
                 .setSelected((wayValid & BT747Constants.VALID_ESTIMATED_MASK) != 0);
-        cbWayManual.setSelected((wayValid & BT747Constants.VALID_MANUAL_MASK) != 0);
+        cbWayManual
+                .setSelected((wayValid & BT747Constants.VALID_MANUAL_MASK) != 0);
         cbWaySPS.setSelected((wayValid & BT747Constants.VALID_SPS_MASK) != 0);
         cbWayFRTK.setSelected((wayValid & BT747Constants.VALID_FRTK_MASK) != 0);
         cbWayDGPS.setSelected((wayValid & BT747Constants.VALID_DGPS_MASK) != 0);
@@ -224,7 +228,8 @@ public class BT747Main2 extends javax.swing.JFrame implements
 
         cbWayTime.setSelected((BT747Constants.RCR_TIME_MASK & wayRCR) != 0);
         cbWaySpeed.setSelected((BT747Constants.RCR_SPEED_MASK & wayRCR) != 0);
-        cbWayDistance.setSelected((BT747Constants.RCR_DISTANCE_MASK & wayRCR) != 0);
+        cbWayDistance
+                .setSelected((BT747Constants.RCR_DISTANCE_MASK & wayRCR) != 0);
         cbWayButton.setSelected((BT747Constants.RCR_BUTTON_MASK & wayRCR) != 0);
         cbWayUser1.setSelected((BT747Constants.RCR_APP0_MASK & wayRCR) != 0);
         cbWayUser2.setSelected((BT747Constants.RCR_APP1_MASK & wayRCR) != 0);
@@ -3554,9 +3559,9 @@ public class BT747Main2 extends javax.swing.JFrame implements
     private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btOutputFileActionPerformed
         getOutputFilePath();
         if (OutputFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            c.setOutputFileRelPath(FileUtil.getRelativePath(
-                    m.getBaseDirPath(), OutputFileChooser.getSelectedFile()
-                            .getAbsolutePath(), File.separatorChar));
+            c.setOutputFileRelPath(FileUtil.getRelativePath(m.getBaseDirPath(),
+                    OutputFileChooser.getSelectedFile().getAbsolutePath(),
+                    File.separatorChar));
         }
     }// GEN-LAST:event_btOutputFileActionPerformed
 

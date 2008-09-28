@@ -6,7 +6,6 @@
  */
 package bt747.sys;
 
-import bt747.sys.interfaces.Interface;
 
 /**
  * @author Mario De Weerd
