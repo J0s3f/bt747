@@ -24,10 +24,10 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
 
-import bt747.io.File;
 import bt747.sys.Convert;
+import bt747.sys.Date;
+import bt747.sys.File;
 import bt747.sys.Settings;
-import bt747.util.Date;
 
 import moio.util.StringTokenizer;
 

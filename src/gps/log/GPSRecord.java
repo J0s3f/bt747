@@ -20,7 +20,7 @@
 package gps.log;
 
 import bt747.sys.Convert;
-import bt747.util.Date;
+import bt747.sys.Date;
 
 import gps.BT747Constants;
 

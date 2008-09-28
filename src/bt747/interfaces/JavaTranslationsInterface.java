@@ -1,71 +1,178 @@
+//********************************************************************
+//***                           BT 747                             ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
+//***  for more details.                                           ***
+//***  *********************************************************** ***
 package bt747.interfaces;
 
 public interface JavaTranslationsInterface {
 
-    public abstract BT747Date getDateInstance();
+    BT747Date getDateInstance();
 
-    public abstract BT747Date getDateInstance(final int d, final int m,
+    BT747Date getDateInstance(final int d, final int m,
             final int y);
 
-    public abstract BT747Date getDateInstance(final String strDate,
+    BT747Date getDateInstance(final String strDate,
             final byte dateFormat);
 
-    public abstract BT747Hashtable getHashtableInstance(
+    BT747Hashtable getHashtableInstance(
             final int initialCapacity);
 
-    public abstract BT747Vector getVectorInstance();
+    BT747Vector getVectorInstance();
 
-    public abstract BT747Time getTimeInstance();
+    BT747Time getTimeInstance();
 
-    public abstract BT747File getFileInstance(String path);
+    BT747File getFileInstance(String path);
 
-    public abstract BT747File getFileInstance(String path, int mode, int card);
+    BT747File getFileInstance(String path, int mode, int card);
 
-    public abstract BT747File getFileInstance(String path, int mode);
+    BT747File getFileInstance(String path, int mode);
 
-    public abstract boolean isAvailable();
+    boolean isAvailable();
 
-    public abstract void debug(final String s, final Throwable e);
+    void debug(final String s, final Throwable e);
 
-    public abstract double pow(final double x, final double y);
+    double pow(final double x, final double y);
 
-    public abstract double acos(final double x);
+    double acos(final double x);
 
-    public abstract void addThread(final BT747Thread t, final boolean b);
+    void addThread(final BT747Thread t, final boolean b);
 
-    public abstract void removeThread(final BT747Thread t);
+    void removeThread(final BT747Thread t);
 
-    public abstract String toString(final boolean p);
+    /**
+     * System method to convert a boolean to a string.
+     * 
+     * @param p
+     *            boolean to convert.
+     * @return String corresponding to boolean.
+     */
+    String toString(final boolean p);
 
-    public abstract String toString(final int p);
+    /**
+     * System method to convert an int to a string.
+     * 
+     * @param p
+     *            int to convert.
+     * @return String corresponding to boolean.
+     */
+    String toString(final int p);
 
-    public abstract String toString(final float p);
+    /**
+     * System method to convert a float to a string.
+     * 
+     * @param p
+     *            float to convert.
+     * @return String corresponding to floating number.
+     */
+    String toString(final float p);
 
-    public abstract String toString(final double p);
+    /**
+     * System method to convert a double to a string.
+     * 
+     * @param p
+     *            double to convert.
+     * @return String corresponding to double number.
+     */
+    String toString(final double p);
 
-    public abstract String toString(final double p, final int i);
+    /**
+     * System method to convert a double to a string.
+     * 
+     * @param p
+     *            double to convert.
+     * @param i
+     *            Number of digits after the decimal point.
+     * @return String corresponding to double number.
+     */
+    String toString(final double p, final int i);
 
-    public abstract String unsigned2hex(final int p, final int i);
+    /**
+     * System method to convert an integer to a hexadecimal string.
+     * 
+     * @param p
+     *            The integer to convert. Interpreted as an unsigned.
+     * @param i
+     *            The number of characters in the hexadecimal string. For
+     *            instance, if this value is 8, a value of 0x123 would be
+     *            converted to "00000123"
+     * @return String value containing the hex representation of the integer
+     */
+    String unsigned2hex(final int p, final int i);
 
-    public abstract int toInt(final String s);
+    /**
+     * System method to convert a string to an integer.
+     * 
+     * @param s
+     *            The string to convert.
+     * @return The integer corresponding to the string.
+     */
+    int toInt(final String s);
 
-    public abstract float toFloat(final String s);
+    /**
+     * System method to convert a string to a float.
+     * 
+     * @param s
+     *            The string to convert.
+     * @return The float corresponding to the string.
+     */
+    float toFloat(final String s);
 
-    public abstract double toDouble(final String s);
+    /**
+     * System method to convert a string to a double.
+     * 
+     * @param s
+     *            The string to convert.
+     * @return The double corresponding to the string.
+     */
+    double toDouble(final String s);
 
-    public abstract double longBitsToDouble(final long l);
+    /**
+     * System method to bitwise convert a long to a double. The long corresponds
+     * to 8 bytes that represent a floating number in IEEE ... format.
+     * 
+     * @param l
+     *            The value to bitwise convert.
+     * @return The double corresponding to the bitwise conversion.
+     */
+    double longBitsToDouble(final long l);
 
-    public abstract float toFloatBitwise(final int l);
+    /**
+     * System method to bitwise convert a long to a float. The int corresponds
+     * to 4 bytes that represent a floating number in IEEE ... format.
+     * 
+     * @param l
+     *            The value to bitwise convert.
+     * @return The float corresponding to the bitwise conversion.
+     */
+    float toFloatBitwise(final int l);
 
-    public abstract int toIntBitwise(final float f);
+    /**
+     * System method to bitwise convert a float to an int.
+     * The int can then be written to a byte array for example.
+     * 
+     * @param l
+     *            The value to bitwise convert.
+     * @return The float corresponding to the bitwise conversion.
+     */
+    int toIntBitwise(final float f);
 
-    public abstract void debug(final String s);
+    void debug(final String s);
 
-    public abstract int getTimeStamp();
+    int getTimeStamp();
 
-    public abstract String getAppSettings();
+    String getAppSettings();
 
-    public abstract void setAppSettings(final String appSettings);
+    void setAppSettings(final String appSettings);
 
-    public abstract BT747Semaphore getSemaphoreInstance(final int value);
+    BT747Semaphore getSemaphoreInstance(final int value);
 }

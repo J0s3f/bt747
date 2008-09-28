@@ -14,9 +14,9 @@
 //***  *********************************************************** ***
 package gps.log.in;
 
-import bt747.generic.Generic;
 import bt747.sys.Convert;
-import bt747.util.Date;
+import bt747.sys.Date;
+import bt747.sys.Generic;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;

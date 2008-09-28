@@ -29,7 +29,7 @@ public final class Interface {
     /** Set the low level translation class.
      * @param t is the class.
      */
-    public static final void setJavaTranslationInterface(
+    public static void setJavaTranslationInterface(
             final JavaTranslationsInterface t) {
         tr = t;
     }

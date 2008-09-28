@@ -8,16 +8,16 @@ package bt747.interfaces;
 
 /**
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 public interface BT747Thread {
-    public void run();
+    void run();
 
-    /** Called just before the thread is started */
-    public void started();
+    /** Called just before the thread is started. */
+    void started();
 
-    /** Called just after the thread is stopped */
-    public void stopped();
+    /** Called just after the thread is stopped. */
+    void stopped();
 }

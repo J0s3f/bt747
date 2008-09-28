@@ -22,7 +22,7 @@ import gps.tracks.Trackpoint;
 
 import bt747.Version;
 import bt747.sys.Convert;
-import bt747.util.Hashtable;
+import bt747.sys.Hashtable;
 
 /**
  * Class to write a Google Maps HTML file.

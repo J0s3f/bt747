@@ -15,8 +15,8 @@
 package gps.connection;
 
 //import bt747.io.DataStream;
-import bt747.generic.Generic;
-import bt747.io.File;
+import bt747.sys.File;
+import bt747.sys.Generic;
 
 /**
  * abstract class defining interface for serial port implementation. Allows

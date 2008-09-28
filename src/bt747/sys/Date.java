@@ -12,7 +12,7 @@
 //***  for more details.                                           ***
 //********************************************************************
 
-package bt747.util;
+package bt747.sys;
 
 import bt747.interfaces.BT747Date;
 import bt747.interfaces.Interface;

@@ -25,9 +25,7 @@ import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
 import moio.util.StringTokenizer;
 
-import bt747.io.File;
-import bt747.sys.Convert;
-import bt747.util.Date;
+import bt747.sys.File;
 
 /**
  * This class is used to convert the binary log to a new format. Basically this

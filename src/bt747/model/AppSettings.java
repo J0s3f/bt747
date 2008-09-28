@@ -19,10 +19,9 @@ import gps.convert.Conv;
 import moio.util.HashSet;
 import moio.util.Iterator;
 
-import bt747.Txt;
-import bt747.generic.Generic;
-import bt747.io.File;
 import bt747.sys.Convert;
+import bt747.sys.File;
+import bt747.sys.Generic;
 import bt747.sys.Settings;
 
 /**

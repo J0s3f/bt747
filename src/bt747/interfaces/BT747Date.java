@@ -8,7 +8,7 @@ public interface BT747Date {
      * @param s
      *            The number of seconds to advance.
      */
-    public abstract void advance(final int s);
+    void advance(final int s);
 
     /**
      * Return the date in the format usually used in the GPS devices: number of
@@ -16,18 +16,18 @@ public interface BT747Date {
      * 
      * @return number of seconds since the epoch.
      */
-    public abstract int dateToUTCepoch1970();
+    int dateToUTCepoch1970();
 
-    public abstract String getDateString();
+    String getDateString();
 
     // private static final int DAYS_Julian_1970 = (new
     // Date(1,1,1970)).getJulianDay();
-    public abstract int getJulianDay();
+    int getJulianDay();
 
-    public abstract int getYear();
+    int getYear();
 
-    public abstract int getMonth();
+    int getMonth();
 
-    public abstract int getDay();
+    int getDay();
 
 }
