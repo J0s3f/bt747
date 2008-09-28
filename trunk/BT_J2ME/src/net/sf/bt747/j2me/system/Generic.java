@@ -18,7 +18,7 @@ import java.util.Hashtable;
 
 import org.j4me.logging.Log;
 
-import bt747.interfaces.BT747Thread;
+import bt747.sys.interfaces.BT747Thread;
 
 /**
  * @author Mario De Weerd

@@ -17,10 +17,9 @@ package net.sf.bt747.j2me.system;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import bt747.generic.Generic;
-import bt747.interfaces.BT747Date;
 import bt747.sys.Convert;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747Date;
 
 /** J2ME Implementation for BT747Date.
  * 

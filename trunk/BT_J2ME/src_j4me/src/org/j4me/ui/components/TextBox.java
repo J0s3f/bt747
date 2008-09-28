@@ -581,7 +581,6 @@ public class TextBox extends Component {
                 String contents, int maxSize, int constraints) {
             super(label, contents, maxSize, constraints);
 
-            TextField t;
             // Record the owners.
             this.parent = parent;
             this.component = box;

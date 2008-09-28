@@ -1,13 +1,10 @@
 package net.sf.bt747.j4me.app;
 
-import gps.log.in.CSVLogConvert;
 import net.sf.bt747.j4me.app.screens.ProgressAlert;
 
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.components.RadioButton;
-
-import bt747.model.Model;
 
 /**
  * The "Initializing GPS..." alert screen. This screen is used to get the

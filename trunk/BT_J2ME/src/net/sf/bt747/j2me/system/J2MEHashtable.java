@@ -14,7 +14,7 @@
 
 package net.sf.bt747.j2me.system;
 
-import bt747.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747Hashtable;
 
 /** J2ME Implementation of a hashtable.
  */

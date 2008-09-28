@@ -9,10 +9,10 @@ import org.j4me.ui.UIManager;
 import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
 
-import bt747.generic.Semaphore;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
+import bt747.sys.Semaphore;
 
 public class LoggerStatusScreen extends Dialog implements ModelListener,
         Runnable {
