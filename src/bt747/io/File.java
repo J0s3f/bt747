@@ -15,11 +15,27 @@ import bt747.interfaces.Interface;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class File {
+public final class File {
+    /**
+     * Mode: Do not open the file.
+     */
     public static final int DONT_OPEN = 0;
+    /**
+     * Mode: Opent the file as read only.
+     */
     public static final int READ_ONLY = 1;
+    /**
+     * Mode: Opent the file as write only, append.
+     */
     public static final int WRITE_ONLY = 2;
+    /**
+     * Mode: Open the file as read+write - avoid.
+     */
     public static final int READ_WRITE = 3; // READ | WRITE
+    
+    /**
+     * Create the file and open as write.
+     */
     public static final int CREATE = 4;
 
     protected BT747File file;
@@ -78,7 +94,7 @@ public class File {
         return file.writeBytes(b, off, len);
     }
 
-    public final int readBytes(byte[] b, int off, int len)  {
+    public final int readBytes(final byte[] b, final int off, final int len)  {
         return file.readBytes(b, off, len);
     }
 

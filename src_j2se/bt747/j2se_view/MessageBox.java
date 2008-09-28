@@ -1,9 +1,17 @@
-/*
- * Created on 14 nov. 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+//********************************************************************
+//***                           BT 747                             ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
+//***  for more details.                                           ***
+//***  *********************************************************** ***
 package bt747.j2se_view;
 
 import java.awt.GridLayout;
@@ -16,10 +24,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 /**
- * @author Mario De Weerd
+ * Implements a messageBox.
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * @author Mario De Weerd
  */
 public class MessageBox extends javax.swing.JDialog implements ActionListener {
 
@@ -32,53 +39,61 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
      * @param title
      * @param msg
      */
-    public MessageBox(String title, String msg) {
+    public MessageBox(final String title, final String msg) {
         this(title, msg, null, 2, 2);
     }
 
     /**
+     * Constructor.
+     * 
      * @param title
      * @param text
      * @param buttonCaptions
      */
-    public MessageBox(String title, String msg, String[] buttonCaptions) {
+    public MessageBox(final String title, final String msg,
+            final String[] buttonCaptions) {
         this(title, msg, buttonCaptions, 2, 2);
     }
 
     /**
+     * Constructor.
+     * 
      * @param title
      * @param text
      * @param buttonCaptions
      * @param gap
      * @param insideGap
      */
-    public MessageBox(String title, String msg, String[] buttonCaptions,
-            int gap, int insideGap) {
+    public MessageBox(final String title, final String msg,
+            final String[] buttonCaptions, final int gap, final int insideGap) {
         super((JFrame) null, title);
         // myPanel = new JPanel(new BoxLayout(null, BoxLayout.PAGE_AXIS));
-        
+
         Box myBox;
         Box myButtonBox;
+        String[] myButtonCaptions;
+        if (buttonCaptions == null) {
+            myButtonCaptions = new String[0];
+        } else {
+            myButtonCaptions = buttonCaptions;
+        }
         myBox = Box.createVerticalBox();
         myButtonBox = Box.createHorizontalBox();
         myButtonBox.setAlignmentX(Box.CENTER_ALIGNMENT);
 
-//        myPanel=new JPanel(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
-        getContentPane().setLayout(new GridLayout(2,1));
+        // myPanel=new JPanel(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+        getContentPane().setLayout(new GridLayout(2, 1));
         getContentPane().add(myBox);
-        //myPanel.add(myBox);
+        // myPanel.add(myBox);
         myBox.add(new JLabel("<html><p align=center>"
-                + msg.replaceAll("\\|", "<br>") + "</html>",JLabel.CENTER));
-        if (buttonCaptions == null) {
-            buttonCaptions = new String[0];
-        }
+                + msg.replaceAll("\\|", "<br>") + "</html>", JLabel.CENTER));
         yesButton = new JButton(
-                (buttonCaptions.length >= 1) ? buttonCaptions[0] : "Yes");
+                (myButtonCaptions.length >= 1) ? myButtonCaptions[0] : "Yes");
         yesButton.addActionListener(this);
         myButtonBox.add(yesButton);
-        if (buttonCaptions.length == 0 || buttonCaptions.length >= 2) {
+        if (myButtonCaptions.length == 0 || buttonCaptions.length >= 2) {
             noButton = new JButton(
-                    (buttonCaptions.length >= 2) ? buttonCaptions[1] : "No");
+                    (myButtonCaptions.length >= 2) ? myButtonCaptions[1] : "No");
             noButton.addActionListener(this);
             myButtonBox.add(noButton);
         }
@@ -86,17 +101,28 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
         pack();
     }
 
-    public MessageBox(boolean n, String title, String Text, String[] Buttons) {
+    public MessageBox(final boolean n, final String title, final String Text,
+            final String[] Buttons) {
         this(title, Text, Buttons);
     }
 
-    public void popupBlockingModal() {
+    private Boolean WaitForAnswer = Boolean.valueOf(false);
+
+    public final void popupBlockingModal() {
         setModal(true);
+        setWaitForAnswer(true);
         setVisible(true);
         toFront();
+        while (getWaitForAnswer()) {
+            try {
+                wait();
+            } catch (Exception e) {
+                setWaitForAnswer(false);
+            }
+        }
     }
 
-    public void popupModal() {
+    public final void popupModal() {
         setModal(false);
         setVisible(true);
         toFront();
@@ -105,16 +131,16 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
     /**
      * @return Returns the popped.
      */
-    public boolean isPopped() {
+    public final boolean isPopped() {
         return isVisible();
     }
 
-    public void unpop() {
+    public final void unpop() {
         setVisible(false);
         dispose();
     }
 
-    public int getPressedButtonIndex() {
+    public final int getPressedButtonIndex() {
         return answer;
     }
 
@@ -122,20 +148,30 @@ public class MessageBox extends javax.swing.JDialog implements ActionListener {
     private JButton noButton = null;
     private int answer = -1;
 
-    public int getAnswer() {
+    public final int getAnswer() {
         return answer;
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public final void actionPerformed(final ActionEvent e) {
         if (yesButton == e.getSource()) {
             // System.err.println("User chose yes.");
             answer = 0;
             setVisible(false);
+            setWaitForAnswer(false);
         } else if (noButton == e.getSource()) {
             // System.err.println("User chose no.");
             answer = 1;
             setVisible(false);
+            setWaitForAnswer(false);
         }
+    }
+
+    public final synchronized boolean getWaitForAnswer() {
+        return WaitForAnswer.booleanValue();
+    }
+
+    public final synchronized void setWaitForAnswer(final boolean waitForAnswer) {
+        WaitForAnswer = Boolean.valueOf(waitForAnswer);
     }
 
 }
