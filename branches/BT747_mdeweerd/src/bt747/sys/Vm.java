@@ -23,7 +23,7 @@ import bt747.interfaces.Interface;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class Vm {
+public final class Vm {
     public static final int getTimeStamp() {
         return Interface.tr.getTimeStamp();
     }

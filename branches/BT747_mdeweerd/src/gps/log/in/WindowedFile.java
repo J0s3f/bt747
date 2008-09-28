@@ -1,7 +1,7 @@
 package gps.log.in;
 
-import bt747.generic.Generic;
-import bt747.io.File;
+import bt747.sys.File;
+import bt747.sys.Generic;
 
 /**
  * This class copes with the inability of the VM to handle random access files

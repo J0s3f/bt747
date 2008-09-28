@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package bt747.util;
+package bt747.sys;
 
 import bt747.interfaces.BT747Hashtable;
 import bt747.interfaces.Interface;

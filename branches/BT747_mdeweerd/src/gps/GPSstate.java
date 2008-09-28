@@ -23,13 +23,13 @@ import moio.util.HashSet;
 import moio.util.Iterator;
 import moio.util.StringTokenizer;
 
-import bt747.generic.Generic;
-import bt747.generic.Semaphore;
 import bt747.interfaces.BT747Thread;
-import bt747.io.File;
 import bt747.sys.Convert;
+import bt747.sys.File;
+import bt747.sys.Generic;
+import bt747.sys.Semaphore;
+import bt747.sys.Vector;
 import bt747.sys.Vm;
-import bt747.util.Vector;
 
 /*
  * Created on 12 may 2007
@@ -1584,19 +1584,19 @@ public class GPSstate implements BT747Thread {
                 logFile.close();
             }
 
-            logFile = new File(fileName, bt747.io.File.DONT_OPEN, card);
+            logFile = new File(fileName, bt747.sys.File.DONT_OPEN, card);
             logFileName = fileName;
             logFileCard = card;
             if (logFile.exists()) {
                 logFile.delete();
             }
 
-            logFile = new File(fileName, bt747.io.File.CREATE, card);
+            logFile = new File(fileName, bt747.sys.File.CREATE, card);
             // lastError 10530 = Read only
             logFileName = fileName;
             logFileCard = card;
             logFile.close();
-            logFile = new File(fileName, bt747.io.File.WRITE_ONLY, card);
+            logFile = new File(fileName, bt747.sys.File.WRITE_ONLY, card);
             logFileName = fileName;
             logFileCard = card;
 

@@ -23,7 +23,7 @@ import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 
-import bt747.util.Date;
+import bt747.sys.Date;
 
 /**
  * The model in the Model-Controller-View schematic. Information regarding the

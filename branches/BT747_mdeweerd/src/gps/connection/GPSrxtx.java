@@ -14,11 +14,11 @@
 //***  *********************************************************** ***
 package gps.connection;
 
-import bt747.generic.Generic;
-import bt747.generic.Semaphore;
 import bt747.sys.Convert;
+import bt747.sys.Generic;
+import bt747.sys.Semaphore;
+import bt747.sys.Vector;
 import bt747.sys.Vm;
-import bt747.util.Vector;
 
 /**
  * This class implements the low level driver of the GPS device. It extracs NMEA

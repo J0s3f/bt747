@@ -12,7 +12,7 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-package bt747.generic;
+package bt747.sys;
 
 import bt747.interfaces.BT747Semaphore;
 import bt747.interfaces.Interface;

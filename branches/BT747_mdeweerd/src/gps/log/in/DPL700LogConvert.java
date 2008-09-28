@@ -24,7 +24,7 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
 
-import bt747.io.File;
+import bt747.sys.File;
 
 /**
  * This class is used to convert the binary log to a new format. Basically this
@@ -253,7 +253,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
                                 speed = (X_FF & bytes[recIdx++]) << 0;
                                 tag = (X_FF & bytes[recIdx++]) << 0;
                                 gpsRec.utc = Conv
-                                        .dateToUTCepoch1970(new bt747.util.Date(
+                                        .dateToUTCepoch1970(new bt747.sys.Date(
                                                 day, month, year + 2000));
                                 gpsRec.utc += 3600 * hour + 60 * minutes
                                         + seconds;

@@ -35,7 +35,7 @@ import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
 
-import bt747.generic.Generic;
+import bt747.sys.Generic;
 
 /**
  * @author Mario De Weerd

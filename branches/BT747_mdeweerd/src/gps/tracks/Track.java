@@ -10,7 +10,7 @@
 
 package gps.tracks;
 
-import bt747.util.Vector;
+import bt747.sys.Vector;
 
 public class Track {
 

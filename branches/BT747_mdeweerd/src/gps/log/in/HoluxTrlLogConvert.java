@@ -24,8 +24,8 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
 
-import bt747.io.File;
 import bt747.sys.Convert;
+import bt747.sys.File;
 
 /** This class is used to convert the binary log to a new format.
  * Basically this class interprets the log and creates a {@link GPSRecord}.
