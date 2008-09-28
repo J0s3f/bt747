@@ -16,10 +16,10 @@ package net.sf.bt747.j2me.system;
 public class MyThread implements java.lang.Runnable {
 
     public java.lang.Thread jvThread;
-    public bt747.interfaces.BT747Thread btThread = null;
+    public bt747.sys.interfaces.BT747Thread btThread = null;
     public boolean running = false;
 
-    public MyThread(final bt747.interfaces.BT747Thread t) {
+    public MyThread(final bt747.sys.interfaces.BT747Thread t) {
         btThread = t;
     }
 

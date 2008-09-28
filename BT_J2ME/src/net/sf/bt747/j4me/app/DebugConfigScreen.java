@@ -10,7 +10,7 @@ import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.components.CheckBox;
 
-import bt747.io.File;
+import bt747.sys.File;
 
 public class DebugConfigScreen extends Dialog {
 

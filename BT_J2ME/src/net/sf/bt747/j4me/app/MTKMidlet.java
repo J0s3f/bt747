@@ -10,7 +10,7 @@ import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.UIManager;
 
-import bt747.interfaces.Interface;
+import bt747.sys.Interface;
 
 /**
  * The entry point for the application.
@@ -22,11 +22,11 @@ public class MTKMidlet extends MIDlet {
     private static MTKMidlet instance;
 
     static {
-        Interface.tr = new net.sf.bt747.j2me.system.JavaTranslations();
+        Interface.setJavaTranslationInterface(new net.sf.bt747.j2me.system.JavaTranslations());
     }
 
-    static AppModel m;
-    static AppController c;
+    private static AppModel m;
+    private static AppController c;
 
     /**
      * Constructs the midlet. This is called before

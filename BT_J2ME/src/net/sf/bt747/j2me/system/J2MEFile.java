@@ -15,13 +15,15 @@ import javax.microedition.io.file.FileConnection;
 
 import org.j4me.logging.Log;
 
+import bt747.sys.interfaces.BT747File;
+
 /**
  * @author Mario De Weerd
  * 
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public final class J2MEFile implements bt747.interfaces.BT747File {
+public final class J2MEFile implements BT747File {
     String path = null;
 
     public J2MEFile(String path) {
@@ -39,13 +41,13 @@ public final class J2MEFile implements bt747.interfaces.BT747File {
             int lMode;
             this.path = path;
             switch (mode) {
-            case bt747.io.File.READ_ONLY:
+            case bt747.sys.File.READ_ONLY:
                 lMode = Connector.READ;
                 break;
-            case bt747.io.File.WRITE_ONLY:
+            case bt747.sys.File.WRITE_ONLY:
                 lMode = Connector.READ_WRITE;
                 break;
-            case bt747.io.File.CREATE:
+            case bt747.sys.File.CREATE:
                 lMode = Connector.READ_WRITE;
                 {
                     FileConnection f = tmpFileConnection(path);
@@ -54,29 +56,29 @@ public final class J2MEFile implements bt747.interfaces.BT747File {
                     f = null;
                 }
                 break;
-            case bt747.io.File.READ_WRITE:
+            case bt747.sys.File.READ_WRITE:
                 lMode = Connector.READ_WRITE;
                 break;
             default:
                 lMode = Connector.READ;
             }
-            if (mode != bt747.io.File.DONT_OPEN) {
+            if (mode != bt747.sys.File.DONT_OPEN) {
                 String urlPath = "file://" + path;
                 Log.debug("Try to open " + path);
                 fileConnection = (FileConnection) Connector
                         .open(urlPath, lMode);
                 isopen = true;
                 switch (mode) {
-                case bt747.io.File.READ_ONLY:
+                case bt747.sys.File.READ_ONLY:
                     is = fileConnection.openInputStream();
                     break;
-                case bt747.io.File.WRITE_ONLY:
+                case bt747.sys.File.WRITE_ONLY:
                     os = fileConnection.openOutputStream(this.getSize());
                     break;
-                case bt747.io.File.CREATE:
+                case bt747.sys.File.CREATE:
                     os = fileConnection.openOutputStream(this.getSize());
                     break;
-                case bt747.io.File.READ_WRITE:
+                case bt747.sys.File.READ_WRITE:
                     is = fileConnection.openInputStream();
                     os = fileConnection.openOutputStream(this.getSize());
                     break;

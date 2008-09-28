@@ -16,7 +16,7 @@ package net.sf.bt747.j2me.system;
 
 import java.util.Stack;
 
-import bt747.interfaces.BT747Vector;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * @author Mario De Weerd
