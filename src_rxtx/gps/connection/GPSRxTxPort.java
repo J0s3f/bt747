@@ -12,11 +12,6 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************  
 package gps.connection;
 
 import gnu.io.CommPort;
@@ -38,7 +33,7 @@ import bt747.sys.Convert;
  * 
  * @author Mario De Weerd
  */
-public class GPSRxTxPort extends GPSPort {
+public final class GPSRxTxPort extends GPSPort {
     private SerialPort sp = null;
 
     private OutputStream ds;
@@ -52,7 +47,6 @@ public class GPSRxTxPort extends GPSPort {
      * 
      */
     public GPSRxTxPort() {
-        // TODO Auto-generated constructor stub
         super();
 
         if (os_name.startsWith("Windows")) {
@@ -165,6 +159,10 @@ public class GPSRxTxPort extends GPSPort {
                 portFound = (new File(freeTextPort)).exists();
             }
             for (int i = 0; !portFound && (i < 3); i++) {
+                freeTextPort = "/dev/tty.iBt-GPS-SPPSlave-" + i;
+                portFound = (new File(freeTextPort)).exists();
+            }
+            for (int i = 0; !portFound && (i < 3); i++) {
                 freeTextPort = "/dev/tty.iBt-GPS-SPPslave-" + i;
                 portFound = (new File(freeTextPort)).exists();
             }
@@ -181,9 +179,19 @@ public class GPSRxTxPort extends GPSPort {
      */
     public void setUSB() {
         super.setUSB();
+        // POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/cu.SLAB_USBtoUART"
+        // POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/tty.HOLUX_M-241-SPPSlave-1"
+        // POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/tty.HOLUX_M-241-SPPSlave-0"
+        // POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/tty.iBT-GPS-SPPSlave-1"
+        // POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/cu.serial-0001"
+        // POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/tty.iBT-GPS-SPPslave-1"
         boolean portFound = false;
         if (!portFound) {
             freeTextPort = "/dev/cu.SLAB_USBtoUART";
+            portFound = (new File(freeTextPort)).exists();
+        }
+        if (!portFound) {
+            freeTextPort = "/dev/cu.serial-0001";
             portFound = (new File(freeTextPort)).exists();
         }
         if (!portFound && os_name.toLowerCase().startsWith("lin")) {
