@@ -15,6 +15,7 @@
 package bt747.j2se_view;
 
 import gps.BT747Constants;
+import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 
 import java.io.File;
@@ -28,6 +29,7 @@ import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Interface;
+import bt747.sys.Settings;
 
 /**
  * 
@@ -38,22 +40,22 @@ public class BT747cmd implements bt747.model.ModelListener {
     static {
         Interface
                 .setJavaTranslationInterface(new net.sf.bt747.j2se.system.JavaTranslations());
+        GPSrxtx.setGpsPortInstance(new gps.connection.GPSRxTxPort());
+
     }
 
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
-    Model m;
-    Controller c;
+    private Model m;
+    private Controller c;
 
-    /** Creates new form SimpleExample */
-    public BT747cmd() {
-    }
-
-    public BT747cmd(Model m, Controller c) {
+    public BT747cmd(final Model m, final Controller c, final OptionSet options) {
+        Settings.setAppSettings(new String(new byte[2048]));
         setController(c);
         setModel(m);
+        handleOptions(options);
     }
 
     public void setController(Controller c) {
@@ -65,8 +67,9 @@ public class BT747cmd implements bt747.model.ModelListener {
             this.m.removeListener(this);
         }
         this.m = m;
-        this.m.addListener(this);
-        initAppData();
+
+        //this.m.addListener(this);
+        //initAppData();
     }
 
     private void initAppData() {
@@ -308,16 +311,63 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
     }
 
-    private void origInvocation() {
-        java.awt.EventQueue.invokeLater(new Runnable() {
+    private void handleOptions(final OptionSet options) {
+        // Set up the paths
+        // Common to in/out
+        c.setBaseDirPath(".");
 
-            Model m = new Model();
-            Controller c = new Controller(m);
+        // Next line gets arguments not related to option
+        options.nonOptionArguments();
 
-            public void run() {
-                new BT747cmd(m, c);
+        c.setDebug(true);
+        
+        // Input is "/BT747/BT747_sample.bin"
+        if (options.has("b")) {
+            c.setLogFileRelPath(options.argumentOf("b"));
+        } else {
+            c.setLogFileRelPath("BT7T7_log.bin");
+        }
+
+        if (options.has("s")) {
+            c.setBaudRate((((Integer) options.valueOf("s")).intValue()));
+        }
+
+        if (options.has("p")) {
+            c.setFreeTextPort((String) options.valueOf("p"));
+        }
+        
+        c.connectGPS();
+        
+        if(m.isConnected()) {
+        
+        // Make connection
+
+        if (options.has("l")) {
+            String arg = options.argumentOf("l").toLowerCase();
+            if (arg.equals("on")) {
+                c.startLog();
+            } else if (arg.equals("off")) {
+                c.stopLog();
+            } else {
+                System.err.println("Argument of '-l' must be 'ON' or 'OFF'");
             }
-        });
+        }
+
+        if (options.has("m")) {
+            String arg = options.argumentOf("l").toLowerCase();
+            if (arg.equals("overlap")) {
+                c.setLogOverwrite(true);
+            } else if (arg.equals("stop")) {
+                c.setLogOverwrite(false);
+            } else {
+                System.err.println("Argument of '-p' must be 'STOP' or 'OVERLAP'");
+            }
+        }
+
+        if (options.has("E")) {
+            c.eraseLog();
+        }
+        }
     }
 
     /**
@@ -373,10 +423,19 @@ public class BT747cmd implements bt747.model.ModelListener {
         };
 
         try {
-            OptionSet options = parser.parse(args);
+            final OptionSet options = parser.parse(args);
             if (options.has("h"))
                 parser.printHelpOn(System.out);
             else {
+                java.awt.EventQueue.invokeLater(new Runnable() {
+
+                    Model m = new Model();
+                    Controller c = new Controller(m);
+
+                    public void run() {
+                        new BT747cmd(m, c, options);
+                    }
+                });
                 parser.printHelpOn(System.err);
             }
         } catch (Exception ex) {
