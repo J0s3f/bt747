@@ -1,9 +1,19 @@
+//********************************************************************
+//***                           BT 747                             ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
+//***  for more details.                                           ***
+//***  *********************************************************** ***
 /*
- * SimpleExample.java
- *
- * Created on 23 mars 2008, 10:37
- * 
- * To run:
+* To run:
  *   Path must include RXTX.  
  *   In Eclipse, set in environment, for example (on windows):
  *     PATH  ${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32/;%PATH%
@@ -16,10 +26,6 @@ package bt747.j2se_view;
 
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
-import gps.log.GPSRecord;
-import gps.log.in.CSVLogConvert;
-import gps.log.in.HoluxTrlLogConvert;
-import gps.log.in.NMEALogConvert;
 
 import java.io.File;
 import java.util.Iterator;
@@ -686,14 +692,14 @@ public class BT747cmd implements bt747.model.ModelListener {
                                 + "Recognized file extensions are .csv, .trl,"
                                 + ".nmea, .nme, .nma, .txt, .log, .sr .")
                         .withRequiredArg().describedAs("filename.bin").ofType(
-                                File.class);
+                                String.class);
                 accepts("d", "Debug level: 0..2").withRequiredArg()
                         .describedAs("DEBUG_LEVEL").ofType(Integer.class);
 
                 accepts("E", "Erase data log memory");
                 accepts("f", "Base name for saved files (.bin and other)")
                         .withRequiredArg().describedAs("filename").ofType(
-                                File.class);
+                                String.class);
                 accepts("l", "Turn logging ON/OFF").withRequiredArg()
                         .describedAs("(on|off)").ofType(String.class);
                 accepts("m", "Set STOP/OVERLAP recording method on memory full")
