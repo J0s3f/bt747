@@ -925,9 +925,9 @@ public class GPSstate implements BT747Thread {
                     && sNmea[0].startsWith("G")) {
                 // Commented - not interpreted.
                 if (sNmea[0].startsWith("GPGGA")) {
-                    analyzeGPGGA(sNmea,gpsPos);
+                    analyzeGPGGA(sNmea, gpsPos);
                 } else if (sNmea[0].startsWith("GPRMC")) {
-                    analyzeGPRMC(sNmea,gpsPos);
+                    analyzeGPRMC(sNmea, gpsPos);
                 }
                 // else if(p_nmea[0].startsWith("GPZDA")) {
                 // // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
@@ -1476,7 +1476,7 @@ public class GPSstate implements BT747Thread {
                 usedLogRequestAhead = logRequestAhead;
             }
 
-            if (isIncremental) {
+            if (isIncremental && (new File(fileName)).exists()) {
                 // reOpenLogRead(fileName, card);
                 closeLog();
                 WindowedFile windowedLogFile = new WindowedFile(fileName,
@@ -1520,13 +1520,13 @@ public class GPSstate implements BT747Thread {
                             continueLoop = true;
                             do {
                                 // Find a block
-                                windowedLogFile.fillBuffer(logNextReadAddr);
+                                byte[] rBuffer = windowedLogFile.fillBuffer(logNextReadAddr);
                                 continueLoop = (windowedLogFile.getBufferFill() >= 0x200);
 
                                 if (continueLoop) {
                                     // Check if all FFs in the file.
                                     for (int i = 0; continueLoop && (i < 0x200); i++) {
-                                        continueLoop = ((readDataBuffer[i] & 0xFF) == 0xFF);
+                                        continueLoop = ((rBuffer[i] & 0xFF) == 0xFF);
                                     }
                                     continueLoop = !continueLoop; // Continue
                                     // if
@@ -1627,16 +1627,25 @@ public class GPSstate implements BT747Thread {
     private void getNextLogPart() {
         if (logState != C_LOG_NOLOGGING) {
             int z_Step;
+
             z_Step = logDownloadEndAddr - logNextReqAddr + 1;
 
             switch (logState) {
             case C_LOG_ACTIVE:
+                if (logDownloadEndAddr <= logNextReadAddr) {
+                    // Log is completely downloaded
+                    endGetLog();
+                }
                 if (logNextReqAddr > logNextReadAddr + logRequestStep
                         * usedLogRequestAhead) {
                     z_Step = 0;
                 }
                 break;
             case C_LOG_RECOVER:
+                if (logDownloadEndAddr <= logNextReadAddr) {
+                    // Log is completely downloaded
+                    endGetLog();
+                }
                 if (logNextReqAddr > logNextReadAddr) {
                     z_Step = 0;
                 } else if (z_Step > 0x800) {

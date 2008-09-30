@@ -19,7 +19,7 @@ import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import joptsimple.OptionParser;
@@ -68,133 +68,135 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
         this.m = m;
 
-        //this.m.addListener(this);
-        //initAppData();
+        // this.m.addListener(this);
+        // initAppData();
     }
 
-    private void initAppData() {
-        // This is an example without an user interface.
-        // BT747Main is an example with a user interface.
-
-        // Set up the paths
-        // Common to in/out
-        c.setBaseDirPath("/BT747");
-        // Input is "/BT747/BT747_sample.bin"
-        c.setLogFileRelPath("BT747_sample.bin");
-        // Output is "/BT747/GPSDATA*"
-        c.setOutputFileRelPath("GPSDATA");
-
-        // Activate some debug.
-        c.setDebug(true);
-        // Make the connection
-        c.openFreeTextPort("COM4");
-        // Successfull connection will result in modelEvent.
-        // The next release will have an isConnected method in the model.
-
-        // In this example we wait for the ModelEvent#CONNECTED
-        // in modelEvent
-        // Could also check isConnected.
-        // if(m.isConnected()) {
-        // afterConnection();
-        // }
-    }
-
-    private void afterConnection() {
-        // We are connected, start a download
-        // Disable incremental download (The possible overwrite request is
-        // automatically authorised).
-        c.setIncremental(true);
-        System.out.println("Incremental setting done");
-        System.out.flush();
-        // If the amount of data in the device is unknown, the download will not
-        // start.
-        // Wait until all data is retrieved from device
-        // (Will/should move this to the controller).
-        System.out.println("Outstanding cmds "
-                + m.getOutstandingCommandsCount());
-        System.out.flush();
-        while (m.getOutstandingCommandsCount() > 0) {
-            // Thread t=Thread.currentThread();
-            try {
-                System.out.println("Waiting for cmds "
-                        + m.getOutstandingCommandsCount());
-                System.out.flush();
-                Thread.sleep(50);
-            } catch (Exception e) {
-                e.printStackTrace();
-                // Do nothing
-            }
-        }
-        // Print out the memory in use
-        System.out.println(m.logMemUsed() + " bytes in use ("
-                + m.logMemUsedPercent() + "%)");
-
-        // c.setChunkSize(0x10000); // The number of bytes per request.
-        c.setChunkSize(0x800); // Small to see debug
-        // c.setDownloadTimeOut(3500); // Timeout for response
-        c.startDefaultDownload();
-    }
-
-    private void handleDownloadEnded() {
-        int error;
-        // In the example, we disconnect.
-        c.closeGPS();
-        // If the binary corresponds to a holux log, one might want to force
-        // holux recognition.
-        // c.setForceHolux241(true);
-
-        // After the download we convert to CSV
-        // Uses previously stored settings
-        error = c.doConvertLog(Model.CSV_LOGTYPE);
-        if (error != 0) {
-            reportError(c.getLastError(), c.getLastErrorInfo());
-        }
-
-        // And we can do something more complex
-        // We do not like the previously stored settings or we want to use our
-        // own.
-        //
-        // We select all positions that do not have an invalid fix or estimated
-        // fix.
-        c
-                .setTrkPtValid(
-
-                0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-        c
-                .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-        // Waypoints only when button pressed.
-        c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK);
-        // Trackpoints : anything
-        c.setTrkPtRCR(BT747Constants.RCR_BUTTON_MASK);
-        // To limit the output data, we only select lat,lon and height.
-        c.setIntOpt(Model.FILEFIELDFORMAT,
-                (1 << BT747Constants.FMT_LATITUDE_IDX)
-                        | (1 << BT747Constants.FMT_LONGITUDE_IDX)
-                        | (1 << BT747Constants.FMT_HEIGHT_IDX));
-        error = c.doConvertLog(Model.GPX_LOGTYPE);
-        if (error != 0) {
-            reportError(c.getLastError(), c.getLastErrorInfo());
-        }
-
-        // We can do the same thing to an array for internal treatment
-        GPSRecord[] positions = c.doConvertLogToTrackPoints();
-        if (positions == null) {
-            // Error occured
-            reportError(c.getLastError(), c.getLastErrorInfo());
-        } else {
-            // Print the first ten positions
-            for (int i = 0; i < positions.length && i < 10; i++) {
-                GPSRecord record = positions[i];
-                System.out.println("Position " + i + ":" + record.latitude
-                        + "," + record.longitude);
-            }
-        }
-
-        // Store the used settings
-        c.saveSettings();
-        // Dirty exit from example
-        System.exit(0);
-    }
+    // private void initAppData() {
+    // // This is an example without an user interface.
+    // // BT747Main is an example with a user interface.
+    //
+    // // Set up the paths
+    // // Common to in/out
+    // c.setBaseDirPath("/BT747");
+    // // Input is "/BT747/BT747_sample.bin"
+    // c.setLogFileRelPath("BT747_sample.bin");
+    // // Output is "/BT747/GPSDATA*"
+    // c.setOutputFileRelPath("GPSDATA");
+    //
+    // // Activate some debug.
+    // c.setDebug(true);
+    // // Make the connection
+    // c.openFreeTextPort("COM4");
+    // // Successfull connection will result in modelEvent.
+    // // The next release will have an isConnected method in the model.
+    //
+    // // In this example we wait for the ModelEvent#CONNECTED
+    // // in modelEvent
+    // // Could also check isConnected.
+    // // if(m.isConnected()) {
+    // // afterConnection();
+    // // }
+    // }
+    //
+    // private void afterConnection() {
+    // // We are connected, start a download
+    // // Disable incremental download (The possible overwrite request is
+    // // automatically authorised).
+    // c.setIncremental(true);
+    // System.out.println("Incremental setting done");
+    // System.out.flush();
+    // // If the amount of data in the device is unknown, the download will not
+    // // start.
+    // // Wait until all data is retrieved from device
+    // // (Will/should move this to the controller).
+    // System.out.println("Outstanding cmds "
+    // + m.getOutstandingCommandsCount());
+    // System.out.flush();
+    // while (m.getOutstandingCommandsCount() > 0) {
+    // // Thread t=Thread.currentThread();
+    // try {
+    // System.out.println("Waiting for cmds "
+    // + m.getOutstandingCommandsCount());
+    // System.out.flush();
+    // Thread.sleep(50);
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // // Do nothing
+    // }
+    // }
+    // // Print out the memory in use
+    // System.out.println(m.logMemUsed() + " bytes in use ("
+    // + m.logMemUsedPercent() + "%)");
+    //
+    // // c.setChunkSize(0x10000); // The number of bytes per request.
+    // c.setChunkSize(0x800); // Small to see debug
+    // // c.setDownloadTimeOut(3500); // Timeout for response
+    // c.startDefaultDownload();
+    // }
+    //
+    // private void handleDownloadEnded() {
+    // int error;
+    // // In the example, we disconnect.
+    // c.closeGPS();
+    // // If the binary corresponds to a holux log, one might want to force
+    // // holux recognition.
+    // // c.setForceHolux241(true);
+    //
+    // // After the download we convert to CSV
+    // // Uses previously stored settings
+    // error = c.doConvertLog(Model.CSV_LOGTYPE);
+    // if (error != 0) {
+    // reportError(c.getLastError(), c.getLastErrorInfo());
+    // }
+    //
+    // // And we can do something more complex
+    // // We do not like the previously stored settings or we want to use our
+    // // own.
+    // //
+    // // We select all positions that do not have an invalid fix or estimated
+    // // fix.
+    // c
+    // .setTrkPtValid(
+    //
+    // 0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK |
+    // BT747Constants.VALID_ESTIMATED_MASK));
+    // c
+    // .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK |
+    // BT747Constants.VALID_ESTIMATED_MASK));
+    // // Waypoints only when button pressed.
+    // c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK);
+    // // Trackpoints : anything
+    // c.setTrkPtRCR(BT747Constants.RCR_BUTTON_MASK);
+    // // To limit the output data, we only select lat,lon and height.
+    // c.setIntOpt(Model.FILEFIELDFORMAT,
+    // (1 << BT747Constants.FMT_LATITUDE_IDX)
+    // | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+    // | (1 << BT747Constants.FMT_HEIGHT_IDX));
+    // error = c.doConvertLog(Model.GPX_LOGTYPE);
+    // if (error != 0) {
+    // reportError(c.getLastError(), c.getLastErrorInfo());
+    // }
+    //
+    // // We can do the same thing to an array for internal treatment
+    // GPSRecord[] positions = c.doConvertLogToTrackPoints();
+    // if (positions == null) {
+    // // Error occured
+    // reportError(c.getLastError(), c.getLastErrorInfo());
+    // } else {
+    // // Print the first ten positions
+    // for (int i = 0; i < positions.length && i < 10; i++) {
+    // GPSRecord record = positions[i];
+    // System.out.println("Position " + i + ":" + record.latitude
+    // + "," + record.longitude);
+    // }
+    // }
+    //
+    // // Store the used settings
+    // c.saveSettings();
+    // // Dirty exit from example
+    // System.exit(0);
+    // }
 
     private void reportError(final int error, final String errorInfo) {
         switch (error) {
@@ -212,68 +214,118 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
     }
 
-    public void modelEvent(ModelEvent e) {
-        // TODO Auto-generated method stub
-        int type = e.getType();
-        if (type == ModelEvent.GPRMC) {
-            // updateRMCData((GPSRecord) e.getArg());
-        } else if (type == ModelEvent.DATA_UPDATE) {
-        } else if (type == ModelEvent.GPGGA) {
-            // updateGPSData((GPSRecord) e.getArg());
-        } else if (type == ModelEvent.LOG_FORMAT_UPDATE) {
-            // updateLogFormatData();
-        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
-            // getRawLogFilePath();
-        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
-            // getOutputFilePath();
-        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
-            // getWorkDirPath();
-        } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
-            // getIncremental();
-        } else if (type == ModelEvent.TRK_VALID_CHANGE
-                || type == ModelEvent.TRK_RCR_CHANGE
-                || type == ModelEvent.WAY_VALID_CHANGE
-                || type == ModelEvent.WAY_RCR_CHANGE) {
-            // updateGuiLogFilterSettings();
-        } else if (type == ModelEvent.CONVERSION_STARTED) {
-            // conversionStartTime = System.currentTimeMillis();
-        } else if (type == ModelEvent.CONVERSION_ENDED) {
-            // lbConversionTime
-            // .setText("Time to convert: "
-            // + ((int) (System.currentTimeMillis() - conversionStartTime))
-            // + " ms");
-            // lbConversionTime.setVisible(true);
-        } else if (type == ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY) {
-            // When the data on the device is not the same, overwrite
-            // automatically.
-            System.out
-                    .println("Overwriting previously downloaded data that looks different.");
-            c.replyToOkToOverwrite(true);
-        } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
-                || type == ModelEvent.LOG_DOWNLOAD_STARTED) {
-            progressUpdate();
-        } else if (type == ModelEvent.LOG_DOWNLOAD_DONE) {
-            progressUpdate();
-            handleDownloadEnded();
-        } else if (type == ModelEvent.DEBUG_MSG) {
+    // public void modelEvent(ModelEvent e) {
+    // // TODO Auto-generated method stub
+    // int type = e.getType();
+    // if (type == ModelEvent.GPRMC) {
+    // // updateRMCData((GPSRecord) e.getArg());
+    // } else if (type == ModelEvent.DATA_UPDATE) {
+    // } else if (type == ModelEvent.GPGGA) {
+    // // updateGPSData((GPSRecord) e.getArg());
+    // } else if (type == ModelEvent.LOG_FORMAT_UPDATE) {
+    // // updateLogFormatData();
+    // } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+    // // getRawLogFilePath();
+    // } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+    // // getOutputFilePath();
+    // } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
+    // // getWorkDirPath();
+    // } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
+    // // getIncremental();
+    // } else if (type == ModelEvent.TRK_VALID_CHANGE
+    // || type == ModelEvent.TRK_RCR_CHANGE
+    // || type == ModelEvent.WAY_VALID_CHANGE
+    // || type == ModelEvent.WAY_RCR_CHANGE) {
+    // // updateGuiLogFilterSettings();
+    // } else if (type == ModelEvent.CONVERSION_STARTED) {
+    // // conversionStartTime = System.currentTimeMillis();
+    // } else if (type == ModelEvent.CONVERSION_ENDED) {
+    // // lbConversionTime
+    // // .setText("Time to convert: "
+    // // + ((int) (System.currentTimeMillis() - conversionStartTime))
+    // // + " ms");
+    // // lbConversionTime.setVisible(true);
+    // } else if (type == ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY) {
+    // // When the data on the device is not the same, overwrite
+    // // automatically.
+    // System.out
+    // .println("Overwriting previously downloaded data that looks different.");
+    // c.replyToOkToOverwrite(true);
+    // } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
+    // || type == ModelEvent.LOG_DOWNLOAD_STARTED) {
+    // progressUpdate();
+    // } else if (type == ModelEvent.LOG_DOWNLOAD_DONE) {
+    // progressUpdate();
+    // handleDownloadEnded();
+    // } else if (type == ModelEvent.DEBUG_MSG) {
+    // System.out.flush();
+    // System.err.println((String) e.getArg());
+    // System.err.flush();
+    // progressUpdate();
+    // } else if (type == ModelEvent.CONNECTED) {
+    // // btConnect.setText("Disconnect");
+    // // btConnectFunctionIsConnect = false;
+    //
+    // // Launching in another thread - not really needed.
+    // java.awt.EventQueue.invokeLater(new Runnable() {
+    // public void run() {
+    // afterConnection();
+    // }
+    // });
+    //
+    // } else if (type == ModelEvent.DISCONNECTED) {
+    // // btConnect.setText("Connect");
+    // // btConnectFunctionIsConnect = true;
+    // }
+    // }
+
+    boolean downloadIsSuccessFull = true;
+
+    public void modelEvent(final ModelEvent e) {
+        switch (e.getType()) {
+        case ModelEvent.DEBUG_MSG:
             System.out.flush();
             System.err.println((String) e.getArg());
             System.err.flush();
+            break;
+        case ModelEvent.LOG_DOWNLOAD_STARTED:
+            downloadIsSuccessFull = false;
             progressUpdate();
-        } else if (type == ModelEvent.CONNECTED) {
-            // btConnect.setText("Disconnect");
-            // btConnectFunctionIsConnect = false;
+            break;
+        case ModelEvent.DOWNLOAD_STATE_CHANGE:
+            progressUpdate();
+            break;
+        case ModelEvent.LOG_DOWNLOAD_DONE:
+            progressUpdate();
+            break;
+        case ModelEvent.LOG_DOWNLOAD_SUCCESS:
+            downloadIsSuccessFull = true;
+            break;
+        case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
+            // // When the data on the device is not the same, overwrite
+            // // automatically.
+            System.out.println("Overwriting previously downloaded data"
+                    + " that looks different.");
+            c.replyToOkToOverwrite(true);
+            break;
+        default:
+            break;
+        }
 
-            // Launching in another thread - not really needed.
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    afterConnection();
-                }
-            });
+    }
 
-        } else if (type == ModelEvent.DISCONNECTED) {
-            // btConnect.setText("Connect");
-            // btConnectFunctionIsConnect = true;
+    private void flushOutstandingCmds() {
+        while (m.getOutstandingCommandsCount() > 0) {
+            // Thread t=Thread.currentThread();
+            try {
+                // System.out.println("Waiting for cmds "
+                // + m.getOutstandingCommandsCount());
+                // System.out.flush();
+                Thread.sleep(50);
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Do nothing
+            }
         }
     }
 
@@ -315,17 +367,45 @@ public class BT747cmd implements bt747.model.ModelListener {
         // Set up the paths
         // Common to in/out
         c.setBaseDirPath(".");
+        c.setOutputFileRelPath("GPSDATA");
+        c.setIntOpt(Model.FILEFIELDFORMAT, 0xFFFFFFFF); // All fields
 
         // Next line gets arguments not related to option
         options.nonOptionArguments();
 
         c.setDebug(true);
-        
+        m.addListener(this);
+
+        c.setChunkSize(0x00010000);
+
+        if (options.has("d")) {
+            Integer debugLevel;
+            debugLevel = (Integer) (options.valueOf("d"));
+            switch (debugLevel) {
+            case 1:
+                c.setDebug(true);
+                break;
+            case 2:
+                c.setDebug(true);
+                c.setDebugConn(true);
+                break;
+            default:
+                break;
+            }
+        }
+
+        if (options.has("f")) {
+            // Basename of files.
+            String basename = options.argumentOf("f");
+            c.setLogFileRelPath(basename + ".bin");
+            c.setOutputFileRelPath(basename);
+        }
+
         // Input is "/BT747/BT747_sample.bin"
         if (options.has("b")) {
             c.setLogFileRelPath(options.argumentOf("b"));
         } else {
-            c.setLogFileRelPath("BT7T7_log.bin");
+            c.setLogFileRelPath("BT747_log.bin");
         }
 
         if (options.has("s")) {
@@ -333,41 +413,125 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (options.has("p")) {
-            c.setFreeTextPort((String) options.valueOf("p"));
+            String portStr;
+            portStr = (String) options.valueOf("p");
+            c.setFreeTextPort(portStr);
+        } else {
+            c.setUsb();
         }
-        
+
         c.connectGPS();
-        
-        if(m.isConnected()) {
-        
-        // Make connection
 
-        if (options.has("l")) {
-            String arg = options.argumentOf("l").toLowerCase();
-            if (arg.equals("on")) {
-                c.startLog();
-            } else if (arg.equals("off")) {
-                c.stopLog();
-            } else {
-                System.err.println("Argument of '-l' must be 'ON' or 'OFF'");
+        if (m.isConnected()) {
+
+            // Make connection
+
+            if (options.has("l")) {
+                String arg = options.argumentOf("l").toLowerCase();
+                if (arg.equals("on")) {
+                    c.startLog();
+                } else if (arg.equals("off")) {
+                    c.stopLog();
+                } else {
+                    System.err
+                            .println("Argument of '-l' must be 'ON' or 'OFF'");
+                }
+            }
+
+            if (options.has("m")) {
+                String arg = options.argumentOf("l").toLowerCase();
+                if (arg.equals("overlap")) {
+                    c.setLogOverwrite(true);
+                } else if (arg.equals("stop")) {
+                    c.setLogOverwrite(false);
+                } else {
+                    System.err
+                            .println("Argument of '-p' must be 'STOP' or 'OVERLAP'");
+                }
+            }
+
+            if (options.has("r")) {
+                List list = options.valuesOf("r");
+                if (list.size() == 3) {
+                    int time = (Integer) list.get(0);
+                    int speed = (Integer) list.get(1);
+                    int distance = (Integer) list.get(2);
+                    System.out.println("Setting time interval to " + time);
+                    c.setLogTimeInterval(time * 10);
+                    System.out.println("Setting speed interval to " + speed);
+                    c.setLogSpeedInterval(speed * 10);
+                    System.out.println("Setting distance interval to " + distance);
+                    c.setLogDistanceInterval(distance * 10);
+                } else {
+                    System.err.println("parameter for '-r' option is invalid");
+                }
+            }
+
+            flushOutstandingCmds();
+            if (options.has("a") && !(options.has("b"))) {
+                c.setDownloadMethod(Model.DOWNLOAD_INCREMENTAL);
+                c.startDefaultDownload();
+
+                downloadIsSuccessFull = false;
+                while (m.isDownloadOnGoing()) {
+                    // Thread t=Thread.currentThread();
+                    try {
+                        // System.out.println("Waiting for cmds "
+                        // + m.getOutstandingCommandsCount());
+                        // System.out.flush();
+                        progressUpdate();
+                        Thread.sleep(50);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // Do nothing
+                    }
+                }
+
+            }
+
+            if (options.has("E") && downloadIsSuccessFull) {
+                c.eraseLog();
+            }
+
+            if (options.has("R")) {
+                c.recoveryEraseLog();
+            }
+
+            if (options.has("t")) {
+                c
+                        .setTrkPtValid(
+
+                        0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                c
+                        .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                c.setWayPtRCR(0);
+                c.setTrkPtRCR(0xFFFFFFFF);
+                c.setOutputFileSplitType(0);
+                int error = c.doConvertLog(Model.GPX_LOGTYPE);
+                if (error != 0) {
+                    reportError(c.getLastError(), c.getLastErrorInfo());
+                }
+            }
+
+            if (options.has("w")) {
+                c
+                        .setTrkPtValid(
+
+                        0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                c
+                        .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
+                        | BT747Constants.RCR_ALL_APP_MASK);
+                c.setTrkPtRCR(0);
+                c.setOutputFileSplitType(0);
+                int error = c.doConvertLog(Model.GPX_LOGTYPE);
+                if (error != 0) {
+                    reportError(c.getLastError(), c.getLastErrorInfo());
+                }
+
             }
         }
-
-        if (options.has("m")) {
-            String arg = options.argumentOf("l").toLowerCase();
-            if (arg.equals("overlap")) {
-                c.setLogOverwrite(true);
-            } else if (arg.equals("stop")) {
-                c.setLogOverwrite(false);
-            } else {
-                System.err.println("Argument of '-p' must be 'STOP' or 'OVERLAP'");
-            }
-        }
-
-        if (options.has("E")) {
-            c.eraseLog();
-        }
-        }
+        System.exit(0);
     }
 
     /**
@@ -383,7 +547,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                         "Do not read device, read a previously saved .bin file")
                         .withRequiredArg().describedAs("filename.bin").ofType(
                                 File.class);
-                accepts("d", "Debug level: 0..7").withRequiredArg()
+                accepts("d", "Debug level: 0..2").withRequiredArg()
                         .describedAs("DEBUG_LEVEL").ofType(Integer.class);
 
                 accepts("E", "Erase data log memory");
@@ -424,9 +588,12 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         try {
             final OptionSet options = parser.parse(args);
-            if (options.has("h"))
+            System.out.println("BT747 Cmd V" + bt747.Version.VERSION_NUMBER
+                    + " build " + bt747.Version.BUILD_STR);
+            if (options.has("h") || args.length == 0) {
                 parser.printHelpOn(System.out);
-            else {
+            } else if (options.has("v")) {
+            } else {
                 java.awt.EventQueue.invokeLater(new Runnable() {
 
                     Model m = new Model();
@@ -436,7 +603,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                         new BT747cmd(m, c, options);
                     }
                 });
-                parser.printHelpOn(System.err);
+                // parser.printHelpOn(System.err);
             }
         } catch (Exception ex) {
             try {

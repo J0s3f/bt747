@@ -14,6 +14,7 @@
 //***  *********************************************************** ***
 package bt747.model;
 
+import sun.awt.image.ImageWatched.Link;
 import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GPSstate;
@@ -406,16 +407,18 @@ public class Model extends AppSettings implements GPSListener {
     /**
      * Get the download method.
      * 
-     * @return The set download method.
+     * @return The set download method. Possible values:
+     *         {@link #DOWNLOAD_FILLED} {@link #DOWNLOAD_FULL}
+     *         {@link #DOWNLOAD_INCREMENTAL}
      */
     public final int getDownloadMethod() {
         return this.downloadMethod;
     }
 
     /**
-     * Set the download method.
-     * 
-     * @return The set download method.
+     * Set the download method.<br>
+     * Possible values: {@link #DOWNLOAD_FILLED} {@link #DOWNLOAD_FULL}
+     * {@link #DOWNLOAD_INCREMENTAL}
      */
     public final void setDownloadMethod(final int downloadMethod) {
         this.downloadMethod = downloadMethod;

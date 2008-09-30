@@ -127,8 +127,7 @@ public final class GPSRxTxPort extends GPSPort {
                     sp = null;
                     in = null;
                     ds = null;
-                    System.out
-                            .println("Error: Only serial ports are handled by this example.");
+                    System.out.println("Error: Only serial ports are handled.");
                 }
             }
         } catch (NoSuchPortException e) {
@@ -187,11 +186,11 @@ public final class GPSRxTxPort extends GPSPort {
         // POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/tty.iBT-GPS-SPPslave-1"
         boolean portFound = false;
         if (!portFound) {
-            freeTextPort = "/dev/cu.SLAB_USBtoUART";
+            freeTextPort = "/dev/cu.serial-0001";
             portFound = (new File(freeTextPort)).exists();
         }
         if (!portFound) {
-            freeTextPort = "/dev/cu.serial-0001";
+            freeTextPort = "/dev/cu.SLAB_USBtoUART";
             portFound = (new File(freeTextPort)).exists();
         }
         if (!portFound && os_name.toLowerCase().startsWith("lin")) {

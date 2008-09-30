@@ -32,6 +32,7 @@
 	          value="${lib.dir}/swing-layout-1.0.3.jar"
 	/>
 	<property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
+    <property name="jopt-simple.jar" value="${lib.dir}/jopt-simple-2.4.1.jar" />
 
 	<property name="j2se.main" value="bt747.j2se_view.BT747Main" />
 	<property name="j2se.main2" value="bt747.j2se_view.BT747Main2" />
@@ -280,6 +281,7 @@
 	<path id="j2seclasspath">
 		<pathelement location="${dist}/lib${ant.project.name}.jar" />
 		<pathelement location="${jcalendar.jar}" />
+        <pathelement location="${jopt-simple.jar}" />
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
 	</path>
@@ -307,6 +309,7 @@
 		       encoding="iso-8859-15"
 		>
 			<include name="bt747/j2se_view/BT747Main.java" />
+            <include name="bt747/j2se_view/BT747cmd.java" />
 			<include name="bt747/lang/Txt_en.java" />
 			<exclude name="bt747/waba_view/**" />
 			<exclude name="net/sf/net/bt747/waba/**" />
@@ -341,6 +344,7 @@
 		          ignorewarnings="true"
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
+            <libraryjar file="${jopt-simple.jar}" />
 			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
 			<outjar path="${j2sebuild.dir}/${ant.project.name}_j2se.jar" />
                      -injar ${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar
@@ -428,6 +432,8 @@
 			              !bt747/gps/connection/GPSWabaPort.class)
                         -injar ${swcollections.jar}(!META-INF/**)
                         -optimizationpasses 1
+                        -keep public class bt747.sys.Interface { *; }
+			            -keep public class bt747.sys.Settings { *; }
                         -keep public class gps.BT747Constants { *; }
                         -keep public class gps.GpsEvent { *; }
                         -keep public class gps.GPSListener { *; }
@@ -445,7 +451,7 @@
 			            -keep public class bt747.Version { *; }
             -keep public class bt747.lang.* { public *; }
             -keep public class bt747.Txt
-            -keep public interface bt747.interfaces.* {
+            -keep public interface bt747.sys.interfaces.* {
                 public *;
 			}
         -keep public class bt747.interfaces.* {

@@ -1,3 +1,6 @@
+Version 1.57.5
+* Command line interface well advanced.
+
 Version 1.57.3
 * Refactered NMEA string handling in GPSstate, NMEA file read which also
   fixes bug regarding speed conversion in GPSstate.

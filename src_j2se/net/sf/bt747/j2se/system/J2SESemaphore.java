@@ -1,5 +1,7 @@
 package net.sf.bt747.j2se.system;
 
+import java.util.concurrent.Semaphore;
+
 import bt747.sys.interfaces.BT747Semaphore;
 
 //********************************************************************
@@ -16,33 +18,24 @@ import bt747.sys.interfaces.BT747Semaphore;
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************                              
 /**
  * @author Mario De Weerd
  */
 public class J2SESemaphore implements BT747Semaphore {
-    private int value;
+    private Semaphore available;
 
     public J2SESemaphore(int value) {
-        this.value = value;
+        available = new Semaphore(value,true);
     }
 
-    public synchronized void down() {
-        --value;
-        while (value < 0) {
-            try {
-                wait();
-            } catch (Exception e) {
-            }
+    public void down() {
+        try {
+            available.acquire();
+        } catch (InterruptedException e) {
         }
     }
 
-    public synchronized void up() {
-        ++value;
-        notify();
+    public void up() {
+        available.release();
     }
 }

@@ -13,11 +13,6 @@ package bt747;
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************
 
 /** This class has a partial automatic update in the build script.
  * and is used to reference the version.
