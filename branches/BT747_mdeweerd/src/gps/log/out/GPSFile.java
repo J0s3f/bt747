@@ -23,6 +23,7 @@ import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.Time;
+import bt747.sys.interfaces.BT747FileName;
 
 /**
  * @author Mario De Weerd
@@ -78,6 +79,8 @@ public abstract class GPSFile {
     protected String goodTrackColor = "0000FF";
 
     protected boolean imperial = false; // If true, use English units
+
+    private BT747FileName filenameBuilder = new GPSDefaultFileName();
 
     public void initialiseFile(final String baseName, final String extension,
             final int fileCard, final int fileSeparationFreq) {
@@ -206,7 +209,7 @@ public abstract class GPSFile {
             }
 
             if (createOK) {
-                createFile(extraExt);
+                createFile(s.utc, extraExt);
             }
         }
 
@@ -251,8 +254,10 @@ public abstract class GPSFile {
     protected void writeDataFooter() {
     };
 
-    protected int createFile(final String extra_ext) {
-        String fileName = basename + extra_ext + ext;
+    protected int createFile(final int utc, final String extra_ext) {
+        String fileName;
+        fileName = filenameBuilder.getOutputFileName(basename, utc, ext,
+                extra_ext);
         boolean createNewFile = numberOfPasses - 1 == nbrOfPassesToGo;
         int error = BT747Constants.NO_ERROR;
 
@@ -416,6 +421,10 @@ public abstract class GPSFile {
 
     public final void setIncludeTrkName(boolean isIncludeTrkName) {
         this.isIncludeTrkName = isIncludeTrkName;
+    }
+
+    public final void setFilenameBuilder(final BT747FileName filenameBuilder) {
+        this.filenameBuilder = filenameBuilder;
     }
 
 }

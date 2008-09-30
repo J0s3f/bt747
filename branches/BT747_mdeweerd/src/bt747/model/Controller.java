@@ -36,6 +36,7 @@ import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
 
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747FileName;
 
 /**
  * @author Mario De Weerd
@@ -226,6 +227,12 @@ public class Controller {
         }
     }
 
+    private BT747FileName filenameBuilder = null;
+
+    public final void setFileNameBuilder(final BT747FileName builder) {
+        filenameBuilder = builder;
+    }
+
     /**
      * Convert the log given the provided parameters using other methods.
      * 
@@ -345,6 +352,9 @@ public class Controller {
         }
 
         if (gpsFile != null) {
+            if (filenameBuilder != null) {
+                gpsFile.setFilenameBuilder(filenameBuilder);
+            }
             m.logConversionStarted(logType);
 
             gpsFile.setAddLogConditionInfo(m
@@ -502,8 +512,8 @@ public class Controller {
 
     /**
      * Set the download method. <br>
-     * Possible values:<br> - {@link #DOWNLOAD_FILLED}<br> -{@link #DOWNLOAD_FULL}<br>
-     * - {@link #DOWNLOAD_INCREMENTAL}
+     * Possible values:<br> - {@link #DOWNLOAD_FILLED}<br> -{@link #DOWNLOAD_FULL}<br> -
+     * {@link #DOWNLOAD_INCREMENTAL}
      */
     public final void setDownloadMethod(final int downloadMethod) {
         m.setDownloadMethod(downloadMethod);
