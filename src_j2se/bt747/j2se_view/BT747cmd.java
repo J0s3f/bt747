@@ -17,6 +17,9 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
+import gps.log.in.CSVLogConvert;
+import gps.log.in.HoluxTrlLogConvert;
+import gps.log.in.NMEALogConvert;
 
 import java.io.File;
 import java.util.Iterator;
@@ -30,6 +33,7 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Interface;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747FileName;
 
 /**
  * 
@@ -459,8 +463,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                     System.out.println("Setting time interval to " + time);
                     c.setLogTimeInterval(time * 10);
                     System.out.println("Setting speed interval to " + speed);
-                    c.setLogSpeedInterval(speed * 10);
-                    System.out.println("Setting distance interval to " + distance);
+                    c.setLogSpeedInterval(speed);
+                    System.out.println("Setting distance interval to "
+                            + distance);
                     c.setLogDistanceInterval(distance * 10);
                 } else {
                     System.err.println("parameter for '-r' option is invalid");
@@ -468,6 +473,88 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
 
             flushOutstandingCmds();
+
+            if (options.has("o")) {
+                List list = options.valuesOf("o");
+                Iterator iter = list.iterator();
+
+                int newLogFormat = m.getLogFormat();
+                while (iter.hasNext()) {
+                    String field = (String) iter.next();
+                    field = field.toUpperCase();
+                    boolean enableField = true;
+                    int logField = 0;
+                    if (field.length() > 0) {
+                        if (field.charAt(0) == '-') {
+                            field = field.substring(1);
+                            enableField = false;
+                        }
+                        if (field.equals("UTC")) {
+                            logField = (1 << BT747Constants.FMT_UTC_IDX);
+                        } else if (field.equals("VALID")) {
+                            logField = (1 << BT747Constants.FMT_VALID_IDX);
+                        } else if (field.equals("LATITUDE")) {
+                            logField = (1 << BT747Constants.FMT_LATITUDE_IDX);
+                        } else if (field.equals("LONGITUDE")) {
+                            logField = (1 << BT747Constants.FMT_LONGITUDE_IDX);
+                        } else if (field.equals("HEIGHT")) {
+                            logField = (1 << BT747Constants.FMT_HEIGHT_IDX);
+                        } else if (field.equals("SPEED")) {
+                            logField = (1 << BT747Constants.FMT_SPEED_IDX);
+                        } else if (field.equals("HEADING")) {
+                            logField = (1 << BT747Constants.FMT_HEADING_IDX);
+                        } else if (field.equals("DSTA")) {
+                            logField = (1 << BT747Constants.FMT_DSTA_IDX);
+                        } else if (field.equals("DAGE")) {
+                            logField = (1 << BT747Constants.FMT_DAGE_IDX);
+                        } else if (field.equals("PDOP")) {
+                            logField = (1 << BT747Constants.FMT_PDOP_IDX);
+                        } else if (field.equals("HDOP")) {
+                            logField = (1 << BT747Constants.FMT_HDOP_IDX);
+                        } else if (field.equals("VDOP")) {
+                            logField = (1 << BT747Constants.FMT_VDOP_IDX);
+                        } else if (field.equals("NSAT")) {
+                            logField = (1 << BT747Constants.FMT_NSAT_IDX);
+                        } else if (field.equals("SID")) {
+                            logField = (1 << BT747Constants.FMT_SID_IDX);
+                        } else if (field.equals("ELEVATION")) {
+                            logField = (1 << BT747Constants.FMT_ELEVATION_IDX);
+                        } else if (field.equals("AZIMUTH")) {
+                            logField = (1 << BT747Constants.FMT_AZIMUTH_IDX);
+                        } else if (field.equals("SNR")) {
+                            logField = (1 << BT747Constants.FMT_SNR_IDX);
+                        } else if (field.equals("RCR")) {
+                            logField = (1 << BT747Constants.FMT_RCR_IDX);
+                        } else if (field.equals("MILLISECOND")) {
+                            logField = (1 << BT747Constants.FMT_MILLISECOND_IDX);
+                        } else if (field.equals("DISTANCE")) {
+                            logField = (1 << BT747Constants.FMT_DISTANCE_IDX);
+                        } else if (field.equals("VALID_ONLY")) {
+                            logField = (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX);
+                        } else {
+                            System.err.println("Field type" + field
+                                    + " unknown.");
+                        }
+                        if (logField != 0) {
+                            if (enableField) {
+                                newLogFormat |= logField;
+                            } else {
+                                newLogFormat &= 0xFFFFFFFF ^ logField;
+                            }
+
+                        }
+                    }
+                }
+                c.setLogFormat(newLogFormat);
+            }
+
+            flushOutstandingCmds();
+            
+            if (options.has("UTC")) {
+                Integer offset = (Integer)options.valueOf("UTC");
+                c.setTimeOffsetHours(offset);
+            }
+
             if (options.has("a") && !(options.has("b"))) {
                 c.setDownloadMethod(Model.DOWNLOAD_INCREMENTAL);
                 c.startDefaultDownload();
@@ -506,7 +593,15 @@ public class BT747cmd implements bt747.model.ModelListener {
                         .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
                 c.setWayPtRCR(0);
                 c.setTrkPtRCR(0xFFFFFFFF);
-                c.setOutputFileSplitType(0);
+                c.setOutputFileSplitType(0); // Single file
+                // The output filename does not depend on the time.
+                c.setFileNameBuilder(new BT747FileName() {
+                    public String getOutputFileName(String baseName,
+                            int utcTimeSeconds, String proposedExtension,
+                            String proposedTimeSpec) {
+                        return baseName + "_trk" + proposedExtension;
+                    }
+                });
                 int error = c.doConvertLog(Model.GPX_LOGTYPE);
                 if (error != 0) {
                     reportError(c.getLastError(), c.getLastErrorInfo());
@@ -524,11 +619,52 @@ public class BT747cmd implements bt747.model.ModelListener {
                         | BT747Constants.RCR_ALL_APP_MASK);
                 c.setTrkPtRCR(0);
                 c.setOutputFileSplitType(0);
+                c.setFileNameBuilder(new BT747FileName() {
+                    public String getOutputFileName(String baseName,
+                            int utcTimeSeconds, String proposedExtension,
+                            String proposedTimeSpec) {
+                        return baseName + "_wpt" + proposedExtension;
+                    }
+                });
                 int error = c.doConvertLog(Model.GPX_LOGTYPE);
                 if (error != 0) {
                     reportError(c.getLastError(), c.getLastErrorInfo());
                 }
+            }
 
+            if (options.has("outtype")) {
+                String typeStr = options.argumentOf("outtype").toUpperCase();
+                int type = Model.NO_LOG_LOGTYPE;
+                if (typeStr.equals("GPX")) {
+                    type = Model.GPX_LOGTYPE;
+                } else if (typeStr.equals("GMAP")) {
+                    type = Model.GMAP_LOGTYPE;
+                } else if (typeStr.equals("CSV")) {
+                    type = Model.CSV_LOGTYPE;
+                } else if (typeStr.equals("KML")) {
+                    type = Model.KML_LOGTYPE;
+                } else if (typeStr.equals("PLT")) {
+                    type = Model.PLT_LOGTYPE;
+                } else if (typeStr.equals("TRK")) {
+                    type = Model.TRK_LOGTYPE;
+                } else {
+                    System.err.println("Unknown outtype '" + type + "'");
+                }
+                c
+                        .setTrkPtValid(
+
+                        0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                c
+                        .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
+                        | BT747Constants.RCR_ALL_APP_MASK);
+                c.setTrkPtRCR(0xFFFFFFFF);
+                c.setOutputFileSplitType(0);
+                c.setFileNameBuilder(null);
+                int error = c.doConvertLog(type);
+                if (error != 0) {
+                    reportError(c.getLastError(), c.getLastErrorInfo());
+                }
             }
         }
         System.exit(0);
@@ -543,15 +679,19 @@ public class BT747cmd implements bt747.model.ModelListener {
             {
                 accepts("h", "Displays help");
                 accepts("a", "Read all the log memory (overlapped data)");
-                accepts("b",
-                        "Do not read device, read a previously saved .bin file")
+                accepts(
+                        "b",
+                        "Do not read device, read a previously saved file."
+                                + "The file type is selected according to the filename extension."
+                                + "Recognized file extensions are .csv, .trl,"
+                                + ".nmea, .nme, .nma, .txt, .log, .sr .")
                         .withRequiredArg().describedAs("filename.bin").ofType(
                                 File.class);
                 accepts("d", "Debug level: 0..2").withRequiredArg()
                         .describedAs("DEBUG_LEVEL").ofType(Integer.class);
 
                 accepts("E", "Erase data log memory");
-                accepts("f", "Base name for saved files (.bin and .gpx)")
+                accepts("f", "Base name for saved files (.bin and other)")
                         .withRequiredArg().describedAs("filename").ofType(
                                 File.class);
                 accepts("l", "Turn logging ON/OFF").withRequiredArg()
@@ -566,9 +706,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                                 + "UTC,VALID,LATITUDE,LONGITUDE,HEIGHT,SPEED,HEADING,"
                                 + "DSTA,DAGE,PDOP,HDOP,VDOP,"
                                 + "NSAT,SID,ELEVATION,AZIMUTH,SNR,RCR,MILLISECOND,"
-                                + "DISTANCE").withRequiredArg().describedAs(
-                        "log_format").withValuesSeparatedBy(',').ofType(
-                        String.class);
+                                + "DISTANCE,VALID_ONLY").withRequiredArg()
+                        .describedAs("log_format").withValuesSeparatedBy(',')
+                        .ofType(String.class);
                 accepts("p", "Communication port, default: /dev/ttyUSB0")
                         .withRequiredArg().describedAs("port").ofType(
                                 String.class);
@@ -583,6 +723,11 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts("t", "Create a gpx file with tracks");
                 accepts("v", "Print BT747 version and exit");
                 accepts("w", "Create a gpx file with waypoints");
+                accepts("outtype",
+                        "Create a gpx file of type GPX, GMAP, KML, CSV, PLT, TRK")
+                        .withRequiredArg().describedAs("OUTPUTTYPE");
+                accepts("UTC", "Define UTC offset to apply to output file")
+                .withRequiredArg().describedAs("UTCoffset").ofType(Integer.class);
             }
         };
 

@@ -827,6 +827,7 @@ public class AppSettings {
      * ONE_FILE = 0<br>
      * ONE_FILE_PER_DAY = 1<br>
      * ONE_FILE_PER_TRACK = 2
+     * 
      * @param value
      *            New setting
      */
@@ -1268,26 +1269,28 @@ public class AppSettings {
                 path = path.substring(0, path.lastIndexOf('/'));
             }
             try {
-                File gmap = new File(path + "/" + C_GMAP_KEY_FILENAME,
-                        File.READ_ONLY);
+                String gmapPath = path + "/" + C_GMAP_KEY_FILENAME;
+                if (new File(gmapPath).exists()) {
+                    File gmap = new File(gmapPath, File.READ_ONLY);
 
-                if (gmap.isOpen()) {
-                    byte[] b = new byte[100];
-                    int len;
-                    len = gmap.readBytes(b, 0, 99);
-                    gmap.close();
-                    if (len != 0) {
-                        gkey = new String(b, 0, len);
-                        int min;
-                        min = gkey.indexOf(10);
-                        if (min != 0) {
-                            gkey = gkey.substring(0, min);
+                    if (gmap.isOpen()) {
+                        byte[] b = new byte[100];
+                        int len;
+                        len = gmap.readBytes(b, 0, 99);
+                        gmap.close();
+                        if (len != 0) {
+                            gkey = new String(b, 0, len);
+                            int min;
+                            min = gkey.indexOf(10);
+                            if (min != 0) {
+                                gkey = gkey.substring(0, min);
+                            }
+                            min = gkey.indexOf(13);
+                            if (min != 0) {
+                                gkey = gkey.substring(0, min);
+                            }
+                            notok = false;
                         }
-                        min = gkey.indexOf(13);
-                        if (min != 0) {
-                            gkey = gkey.substring(0, min);
-                        }
-                        notok = false;
                     }
                 }
             } catch (Exception e) {
