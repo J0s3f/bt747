@@ -32,13 +32,13 @@ public class WabaSemaphore implements BT747Semaphore {
     }
 
     public void down() {
-        --value;
-        while (value < 0) {
+        while (value <= 0) {
             try {
                 wait();
             } catch (Exception e) {
             }
         }
+        --value;
     }
 
     public void up() {

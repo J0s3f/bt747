@@ -47,18 +47,19 @@ public class WindowedFile {
     public final String getPath() {
         return file.getPath();
     }
-    
+
     public final int getLastError() {
         return file.getLastError();
     }
-    
+
     public final boolean isOpen() {
         return file.isOpen();
     }
-    
+
     public final int getSize() throws Exception {
         return file.getSize();
     }
+
     public final byte[] getBuffer() throws Exception {
         if (bufferFill == 0) {
             fillBuffer(0);
@@ -96,6 +97,7 @@ public class WindowedFile {
         }
         if (newPosition > currentPosition
                 && newPosition < currentPosition + bufferFill) {
+            // New position is already in buffer - copy bytes that are present.
             int j = 0;
             for (int i = newPosition - currentPosition; i < bufferFill; j++, i++) {
                 buffer[j] = buffer[i];
@@ -116,7 +118,7 @@ public class WindowedFile {
         }
         return buffer;
     }
-    
+
     public final int getBufferFill() {
         return bufferFill;
     }

@@ -501,9 +501,9 @@ public class Controller {
     }
 
     /**
-     * Set the download method.
-     * 
-     * @return The set download method.
+     * Set the download method. <br>
+     * Possible values:<br> - {@link #DOWNLOAD_FILLED}<br> -{@link #DOWNLOAD_FULL}<br>
+     * - {@link #DOWNLOAD_INCREMENTAL}
      */
     public final void setDownloadMethod(final int downloadMethod) {
         m.setDownloadMethod(downloadMethod);
@@ -774,9 +774,13 @@ public class Controller {
      */
     public final void connectGPS() {
         closeGPS();
-        m.gpsRxTx().openPort();
-        if (m.isConnected()) {
-            performOperationsAfterGPSConnect();
+        if (m.getFreeTextPort().length() != 0) {
+            openFreeTextPort(m.getFreeTextPort());
+        } else {
+            m.gpsRxTx().openPort();
+            if (m.isConnected()) {
+                performOperationsAfterGPSConnect();
+            }
         }
     }
 
