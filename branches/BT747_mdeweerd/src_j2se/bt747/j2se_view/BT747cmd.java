@@ -13,7 +13,7 @@
 //***  for more details.                                           ***
 //***  *********************************************************** ***
 /*
-* To run:
+ * To run:
  *   Path must include RXTX.  
  *   In Eclipse, set in environment, for example (on windows):
  *     PATH  ${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32/;%PATH%
@@ -427,10 +427,20 @@ public class BT747cmd implements bt747.model.ModelListener {
             portStr = (String) options.valueOf("p");
             c.setFreeTextPort(portStr);
         } else {
-            c.setUsb();
+            //c.setUsb();
         }
 
-        c.connectGPS();
+        if (options.has("UTC")) {
+            Integer offset = (Integer) options.valueOf("UTC");
+            c.setTimeOffsetHours(offset);
+        }
+
+        // Options for which a connection is needed.
+        if (options.has("p") || (options.has("a") && !(options.has("b")))
+                || options.has("l") || options.has("m") || options.has("r")
+                || options.has("E") || options.has("o") || options.has("R")) {
+            c.connectGPS();
+        }
 
         if (m.isConnected()) {
 
@@ -555,11 +565,6 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
 
             flushOutstandingCmds();
-            
-            if (options.has("UTC")) {
-                Integer offset = (Integer)options.valueOf("UTC");
-                c.setTimeOffsetHours(offset);
-            }
 
             if (options.has("a") && !(options.has("b"))) {
                 c.setDownloadMethod(Model.DOWNLOAD_INCREMENTAL);
@@ -589,88 +594,94 @@ public class BT747cmd implements bt747.model.ModelListener {
             if (options.has("R")) {
                 c.recoveryEraseLog();
             }
+        }
 
-            if (options.has("t")) {
-                c
-                        .setTrkPtValid(
+        if (options.has("t")) {
+            c
+                    .setTrkPtValid(
 
-                        0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-                c
-                        .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-                c.setWayPtRCR(0);
-                c.setTrkPtRCR(0xFFFFFFFF);
-                c.setOutputFileSplitType(0); // Single file
-                // The output filename does not depend on the time.
-                c.setFileNameBuilder(new BT747FileName() {
-                    public String getOutputFileName(String baseName,
-                            int utcTimeSeconds, String proposedExtension,
-                            String proposedTimeSpec) {
-                        return baseName + "_trk" + proposedExtension;
-                    }
-                });
-                int error = c.doConvertLog(Model.GPX_LOGTYPE);
-                if (error != 0) {
-                    reportError(c.getLastError(), c.getLastErrorInfo());
+                    0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+            c
+                    .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+            c.setWayPtRCR(0);
+            c.setTrkPtRCR(0xFFFFFFFF);
+            c.setOutputFileSplitType(0); // Single file
+            // The output filename does not depend on the time.
+            c.setFileNameBuilder(new BT747FileName() {
+                public String getOutputFileName(String baseName,
+                        int utcTimeSeconds, String proposedExtension,
+                        String proposedTimeSpec) {
+                    return baseName + "_trk" + proposedExtension;
                 }
+            });
+            int error = c.doConvertLog(Model.GPX_LOGTYPE);
+            if (error != 0) {
+                reportError(c.getLastError(), c.getLastErrorInfo());
             }
+        }
 
-            if (options.has("w")) {
-                c
-                        .setTrkPtValid(
+        if (options.has("w")) {
+            c
+                    .setTrkPtValid(
 
-                        0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-                c
-                        .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-                c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
-                        | BT747Constants.RCR_ALL_APP_MASK);
-                c.setTrkPtRCR(0);
-                c.setOutputFileSplitType(0);
-                c.setFileNameBuilder(new BT747FileName() {
-                    public String getOutputFileName(String baseName,
-                            int utcTimeSeconds, String proposedExtension,
-                            String proposedTimeSpec) {
-                        return baseName + "_wpt" + proposedExtension;
-                    }
-                });
-                int error = c.doConvertLog(Model.GPX_LOGTYPE);
-                if (error != 0) {
-                    reportError(c.getLastError(), c.getLastErrorInfo());
+                    0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+            c
+                    .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+            c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
+                    | BT747Constants.RCR_ALL_APP_MASK);
+            c.setTrkPtRCR(0);
+            c.setOutputFileSplitType(0);
+            c.setFileNameBuilder(new BT747FileName() {
+                public String getOutputFileName(String baseName,
+                        int utcTimeSeconds, String proposedExtension,
+                        String proposedTimeSpec) {
+                    return baseName + "_wpt" + proposedExtension;
                 }
+            });
+            int error = c.doConvertLog(Model.GPX_LOGTYPE);
+            if (error != 0) {
+                reportError(c.getLastError(), c.getLastErrorInfo());
             }
+        }
 
-            if (options.has("outtype")) {
-                String typeStr = options.argumentOf("outtype").toUpperCase();
-                int type = Model.NO_LOG_LOGTYPE;
-                if (typeStr.equals("GPX")) {
-                    type = Model.GPX_LOGTYPE;
-                } else if (typeStr.equals("GMAP")) {
-                    type = Model.GMAP_LOGTYPE;
-                } else if (typeStr.equals("CSV")) {
-                    type = Model.CSV_LOGTYPE;
-                } else if (typeStr.equals("KML")) {
-                    type = Model.KML_LOGTYPE;
-                } else if (typeStr.equals("PLT")) {
-                    type = Model.PLT_LOGTYPE;
-                } else if (typeStr.equals("TRK")) {
-                    type = Model.TRK_LOGTYPE;
-                } else {
-                    System.err.println("Unknown outtype '" + type + "'");
-                }
-                c
-                        .setTrkPtValid(
+        if (options.has("outtype")) {
+            String typeStr = options.argumentOf("outtype").toUpperCase();
+            int type = Model.NO_LOG_LOGTYPE;
+            if (typeStr.equals("GPX")) {
+                type = Model.GPX_LOGTYPE;
+            } else if (typeStr.equals("GMAP")) {
+                type = Model.GMAP_LOGTYPE;
+            } else if (typeStr.equals("CSV")) {
+                type = Model.CSV_LOGTYPE;
+            } else if (typeStr.equals("KML")) {
+                type = Model.KML_LOGTYPE;
+            } else if (typeStr.equals("PLT")) {
+                type = Model.PLT_LOGTYPE;
+            } else if (typeStr.equals("TRK")) {
+                type = Model.TRK_LOGTYPE;
+            } else {
+                System.err.println("Unknown outtype '" + type + "'");
+            }
+            c
+                    .setTrkPtValid(
 
-                        0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-                c
-                        .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-                c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
-                        | BT747Constants.RCR_ALL_APP_MASK);
-                c.setTrkPtRCR(0xFFFFFFFF);
-                c.setOutputFileSplitType(0);
-                c.setFileNameBuilder(null);
-                int error = c.doConvertLog(type);
-                if (error != 0) {
-                    reportError(c.getLastError(), c.getLastErrorInfo());
+                    0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+            c
+                    .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+            c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
+                    | BT747Constants.RCR_ALL_APP_MASK);
+            c.setTrkPtRCR(0xFFFFFFFF);
+            c.setOutputFileSplitType(0);
+            c.setFileNameBuilder(new BT747FileName() {
+                public String getOutputFileName(String baseName,
+                        int utcTimeSeconds, String proposedExtension,
+                        String proposedTimeSpec) {
+                    return baseName + proposedExtension;
                 }
+            });
+            int error = c.doConvertLog(type);
+            if (error != 0) {
+                reportError(c.getLastError(), c.getLastErrorInfo());
             }
         }
         System.exit(0);
@@ -733,7 +744,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                         "Create a gpx file of type GPX, GMAP, KML, CSV, PLT, TRK")
                         .withRequiredArg().describedAs("OUTPUTTYPE");
                 accepts("UTC", "Define UTC offset to apply to output file")
-                .withRequiredArg().describedAs("UTCoffset").ofType(Integer.class);
+                        .withRequiredArg().describedAs("UTCoffset").ofType(
+                                Integer.class);
             }
         };
 
