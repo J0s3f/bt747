@@ -212,7 +212,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             break;
         case ModelEvent.CONVERSION_ENDED:
             System.out
-                    .println("Time to convert raw data (ms): "
+                    .println("Time to convert data (ms): "
                             + ((int) (System.currentTimeMillis() - conversionStartTime))
                             + " ms");
             break;
@@ -558,9 +558,11 @@ public class BT747cmd implements bt747.model.ModelListener {
                 c.recoveryEraseLog();
                 waitForErase();
             }
+            c.closeGPS();
         }
 
         if (options.has("t")) {
+            System.out.println("Converting to GPX (trackpoints)");
             c
                     .setTrkPtValid(
 
@@ -585,6 +587,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (options.has("w")) {
+            System.out.println("Converting to GPX (waypoints)");
             c
                     .setTrkPtValid(
 
@@ -609,43 +612,51 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (options.has("outtype")) {
-            String typeStr = options.argumentOf("outtype").toUpperCase();
-            int type = Model.NO_LOG_LOGTYPE;
-            if (typeStr.equals("GPX")) {
-                type = Model.GPX_LOGTYPE;
-            } else if (typeStr.equals("GMAP")) {
-                type = Model.GMAP_LOGTYPE;
-            } else if (typeStr.equals("CSV")) {
-                type = Model.CSV_LOGTYPE;
-            } else if (typeStr.equals("KML")) {
-                type = Model.KML_LOGTYPE;
-            } else if (typeStr.equals("PLT")) {
-                type = Model.PLT_LOGTYPE;
-            } else if (typeStr.equals("TRK")) {
-                type = Model.TRK_LOGTYPE;
-            } else {
-                System.err.println("Unknown outtype '" + type + "'");
-            }
-            c
-                    .setTrkPtValid(
+            List list = options.valuesOf("outtype");
+            Iterator iter = list.iterator();
 
-                    0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-            c
-                    .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
-            c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
-                    | BT747Constants.RCR_ALL_APP_MASK);
-            c.setTrkPtRCR(0xFFFFFFFF);
-            c.setOutputFileSplitType(0);
-            c.setFileNameBuilder(new BT747FileName() {
-                public String getOutputFileName(String baseName,
-                        int utcTimeSeconds, String proposedExtension,
-                        String proposedTimeSpec) {
-                    return baseName + proposedExtension;
+            while (iter.hasNext()) {
+                String typeStr = (String) iter.next();
+                int type = Model.NO_LOG_LOGTYPE;
+                if (typeStr.equals("GPX")) {
+                    type = Model.GPX_LOGTYPE;
+                } else if (typeStr.equals("GMAP")) {
+                    type = Model.GMAP_LOGTYPE;
+                } else if (typeStr.equals("CSV")) {
+                    type = Model.CSV_LOGTYPE;
+                } else if (typeStr.equals("KML")) {
+                    type = Model.KML_LOGTYPE;
+                } else if (typeStr.equals("PLT")) {
+                    type = Model.PLT_LOGTYPE;
+                } else if (typeStr.equals("TRK")) {
+                    type = Model.TRK_LOGTYPE;
+                } else {
+                    System.err.println("Unknown outtype '" + type + "'");
                 }
-            });
-            int error = c.doConvertLog(type);
-            if (error != 0) {
-                reportError(c.getLastError(), c.getLastErrorInfo());
+                if (type != Model.NO_LOG_LOGTYPE) {
+                    System.out.println("Converting to " + typeStr);
+                    c
+                            .setTrkPtValid(
+
+                            0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                    c
+                            .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
+                    c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
+                            | BT747Constants.RCR_ALL_APP_MASK);
+                    c.setTrkPtRCR(0xFFFFFFFF);
+                    c.setOutputFileSplitType(0);
+                    c.setFileNameBuilder(new BT747FileName() {
+                        public String getOutputFileName(String baseName,
+                                int utcTimeSeconds, String proposedExtension,
+                                String proposedTimeSpec) {
+                            return baseName + proposedExtension;
+                        }
+                    });
+                    int error = c.doConvertLog(type);
+                    if (error != 0) {
+                        reportError(c.getLastError(), c.getLastErrorInfo());
+                    }
+                }
             }
         }
         System.exit(0);
@@ -704,9 +715,12 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts("t", "Create a gpx file with tracks");
                 accepts("v", "Print BT747 version and exit");
                 accepts("w", "Create a gpx file with waypoints");
-                accepts("outtype",
-                        "Create a gpx file of type GPX, GMAP, KML, CSV, PLT, TRK")
-                        .withRequiredArg().describedAs("OUTPUTTYPE");
+                accepts(
+                        "outtype",
+                        "Create a gpx file of type GPX, GMAP, KML, CSV, PLT, TRK."
+                                + "More than one format can be specified when separated with ','")
+                        .withRequiredArg().describedAs("OUTPUTTYPE")
+                        .withValuesSeparatedBy(',');
                 accepts("UTC", "Define UTC offset to apply to output file")
                         .withRequiredArg().describedAs("UTCoffset").ofType(
                                 Integer.class);
