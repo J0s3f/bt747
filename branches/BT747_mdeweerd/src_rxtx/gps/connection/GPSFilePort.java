@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 
 import bt747.sys.Convert;
+import bt747.sys.Generic;
 
 /**
  * This class implements the serial port by accessing the file as a port.
@@ -101,7 +102,9 @@ public class GPSFilePort extends GPSPort {
         closePort();
 
         try {
-            System.out.println("Info: trying to open " + portStr);
+            if (Generic.isDebug()) {
+                Generic.debug("Info: trying to open " + portStr, null);
+            }
             portfile = new RandomAccessFile(portStr, "rw");
             // if(portfile.canRead()) {
             // spIn = new FileInputStream(portfile);
@@ -164,8 +167,8 @@ public class GPSFilePort extends GPSPort {
             e.printStackTrace();
         }
         try {
-            if (GPS_FILE_LOG && (m_debugFile != null)) {
-                m_debugFile.writeBytes(b, 0, b.length);
+            if (GPS_FILE_LOG && (debugFile != null)) {
+                debugFile.writeBytes(b, 0, b.length);
             }
         } catch (Exception e) {
             // TODO: handle exception

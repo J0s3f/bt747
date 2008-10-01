@@ -28,8 +28,6 @@ import bt747.sys.Vm;
  * @author Mario De Weerd
  */
 public class GPSrxtx {
-    private boolean GPS_DEBUG = false;
-
     private static GPSPort gpsPort;
 
     private Semaphore m_writeOngoing = new Semaphore(1);
@@ -175,10 +173,12 @@ public class GPSrxtx {
                 rec.append(p_Packet);
                 rec.append('*');
                 rec.append(Convert.unsigned2hex(z_Checksum, 2));
-                if (GPS_DEBUG) {
+                if (Generic.getDebugLevel() > 1) {
                     bt747.sys.Vm.debug(">" + rec.toString());
                 }
-                gpsPort.writeDebug(">" + rec.toString());
+                if (Generic.isDebug()) {
+                    gpsPort.writeDebug(">" + rec.toString());
+                }
 
                 rec.append(EOL_BYTES);
                 gpsPort.write(rec.toString());
@@ -209,7 +209,7 @@ public class GPSrxtx {
                 endStringIdx = 0;
                 current_state = C_DPL700_STATE;
                 DPL700_buffer_idx = 0;
-                if (GPS_DEBUG) {
+                if (Generic.isDebug()) {
                     bt747.sys.Vm.debug(">0x" + Convert.unsigned2hex(cmd, 8)
                             + "000000");
                 }
@@ -237,7 +237,7 @@ public class GPSrxtx {
                 endStringIdx = 0;
                 current_state = C_DPL700_STATE;
                 DPL700_buffer_idx = 0;
-                if (GPS_DEBUG) {
+                if (Generic.isDebug()) {
                     bt747.sys.Vm.debug(">" + cmd);
                 }
                 rec.setLength(0);
@@ -257,7 +257,7 @@ public class GPSrxtx {
             try {
                 current_state = C_DPL700_STATE;
                 rxtxMode = DPL700_MODE;
-                if (GPS_DEBUG) {
+                if (Generic.isDebug()) {
                     bt747.sys.Vm.debug(">" + cmd);
                 }
                 rec.setLength(0);
@@ -657,18 +657,6 @@ public class GPSrxtx {
      */
     public void setIgnoreNMEA(boolean ignoreNMEA) {
         this.ignoreNMEA = ignoreNMEA;
-    }
-
-    /**
-     * @param gps_debug
-     *            The gPS_DEBUG to set.
-     */
-    public void setDebug(final boolean gps_debug) {
-        GPS_DEBUG = gps_debug;
-    }
-
-    public final boolean isDebug() {
-        return GPS_DEBUG;
     }
 
     public void setDebugConn(final boolean gps_debug, final String s) {

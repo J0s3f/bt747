@@ -26,7 +26,6 @@ import bt747.sys.Settings;
 
 /**
  * @author Mario De Weerd
- * @author Herbert Geus (initial code for saving settings on WindowsCE)
  */
 public class AppSettings {
     private static final int C_PORTNBR_IDX = 0;
@@ -317,7 +316,6 @@ public class AppSettings {
     public static String defaultBaseDirPath = "";
 
     private void updateSettings(final int versionX100) {
-        Generic.debug("Options version " + versionX100, null);
         switch (versionX100) {
         case 0:
             setPortnbr(-1);

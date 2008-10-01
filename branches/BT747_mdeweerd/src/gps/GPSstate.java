@@ -46,8 +46,6 @@ import bt747.sys.interfaces.BT747Thread;
  * 
  */
 public class GPSstate implements BT747Thread {
-    private boolean GPS_DEBUG = false; // (!Settings.onDevice);
-
     private GPSrxtx gpsRxTx = null;
 
     private boolean getFullLogBlocks = true; // If true, get the entire log
@@ -166,12 +164,8 @@ public class GPSstate implements BT747Thread {
         // TODO: Add myself as listener
     }
 
-    public final void setDebug(final boolean dbg) {
-        GPS_DEBUG = dbg;
-    }
-
     public final boolean isDebug() {
-        return GPS_DEBUG;
+        return Generic.isDebug();
     }
 
     public final void setStats(final boolean stats) {
@@ -397,7 +391,7 @@ public class GPSstate implements BT747Thread {
             }
 
             gpsRxTx.sendPacket(cmd);
-            if (GPS_DEBUG) {
+            if (Generic.isDebug()) {
                 debugMsg(">" + cmd + " " + gpsRxTx.isConnected());
             }
             nextCmdSendTime = Vm.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
@@ -424,8 +418,10 @@ public class GPSstate implements BT747Thread {
                 if ((sentCmds.size() != 0)
                         && (cTime - logTimer) >= downloadTimeOut) {
                     // TimeOut!!
-                    Generic.debug("Timeout: " + cTime + "-" + logTimer + ">"
-                            + downloadTimeOut, null);
+                    if (Generic.isDebug()) {
+                        Generic.debug("Timeout: " + cTime + "-" + logTimer
+                                + ">" + downloadTimeOut, null);
+                    }
                     // sentCmds.removeElementAt(0); // Previous cleaning
                     // Since the last command that was sent is a timeout ago, we
                     // suppose that all the subsequent ones are forfeit too.
@@ -938,7 +934,7 @@ public class GPSstate implements BT747Thread {
                 // // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
                 // }
             } else if (sNmea[0].startsWith("PMTK")) {
-                if (GPS_DEBUG) {
+                if (Generic.isDebug()) {
                     String s;
                     int length = sNmea.length;
                     if (sNmea[1].charAt(0) == '8') {
@@ -1067,7 +1063,7 @@ public class GPSstate implements BT747Thread {
             } else if (sNmea[0].equals("HOLUX001")) {
                 holux = true;
                 result = -1; // Suppose cmd not treated
-                if (GPS_DEBUG) {
+                if (Generic.isDebug()) {
                     String s;
                     int length = sNmea.length;
 
@@ -1520,7 +1516,8 @@ public class GPSstate implements BT747Thread {
                             continueLoop = true;
                             do {
                                 // Find a block
-                                byte[] rBuffer = windowedLogFile.fillBuffer(logNextReadAddr);
+                                byte[] rBuffer = windowedLogFile
+                                        .fillBuffer(logNextReadAddr);
                                 continueLoop = (windowedLogFile.getBufferFill() >= 0x200);
 
                                 if (continueLoop) {
@@ -2237,7 +2234,7 @@ public class GPSstate implements BT747Thread {
     }
 
     private void AnalyseDPL700Data(final String s) {
-        if (GPS_DEBUG) {
+        if (Generic.isDebug()) {
             debugMsg("<DPL700 " + s);
         }
         if (s.startsWith("WP GPS")) {

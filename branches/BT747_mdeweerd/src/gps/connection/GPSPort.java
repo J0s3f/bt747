@@ -34,7 +34,7 @@ public abstract class GPSPort {
                                                         // communication to file
                                                         // for debug
 
-    protected File m_debugFile = null;
+    protected File debugFile = null;
     protected String debugFileName = "/Palm/gpsRAW.txt";
 
     // Hooked reference to java os string h ere to avoid creating extra classes
@@ -114,11 +114,11 @@ public abstract class GPSPort {
     public void writeDebug(final String s) {
         byte[] b;
         int l;
-        if (GPS_FILE_LOG && (m_debugFile != null)) {
+        if (GPS_FILE_LOG && (debugFile != null)) {
             b = s.getBytes();
             l = b.length;
             try {
-                m_debugFile.writeBytes(b, 0, l);
+                debugFile.writeBytes(b, 0, l);
             } catch (Exception e) {
                 // e.printStackTrace();
             }
@@ -128,7 +128,7 @@ public abstract class GPSPort {
     public final void writeDebug(final byte[] b, final int index, final int len) {
         if (debugActive()) {
             try {
-                m_debugFile.writeBytes(b, index, len);
+                debugFile.writeBytes(b, index, len);
             } catch (Exception e) {
                 // e.printStackTrace();
             }
@@ -144,11 +144,11 @@ public abstract class GPSPort {
     }
 
     public final boolean debugActive() {
-        return GPS_FILE_LOG && (m_debugFile != null);
+        return GPS_FILE_LOG && (debugFile != null);
     }
 
     public final void startDebug() {
-        if (GPS_FILE_LOG && (m_debugFile == null)) {
+        if (GPS_FILE_LOG && (debugFile == null)) {
             try {
                 new File(debugFileName).delete();
             } catch (Exception e) {
@@ -162,7 +162,7 @@ public abstract class GPSPort {
                 // TODO: handle exception
             }
             try {
-                m_debugFile = new File(debugFileName, File.READ_WRITE);
+                debugFile = new File(debugFileName, File.READ_WRITE);
             } catch (Exception e) {
                 Generic.debug(debugFileName, e);
             }
@@ -170,13 +170,13 @@ public abstract class GPSPort {
     }
 
     public final void endDebug() {
-        if (m_debugFile != null) {
+        if (debugFile != null) {
             try {
-                m_debugFile.close();
+                debugFile.close();
             } catch (Exception e) {
                 Generic.debug(debugFileName, e);
             }
-            m_debugFile = null;
+            debugFile = null;
         }
     }
 

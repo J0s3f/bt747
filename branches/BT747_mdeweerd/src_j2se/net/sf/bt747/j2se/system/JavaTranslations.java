@@ -68,7 +68,7 @@ public class JavaTranslations implements JavaTranslationsInterface {
     }
 
     public final void debug(final String s, final Throwable e) {
-        Generic.debug(s, e);
+        J2SEGeneric.debug(s, e);
     }
 
     public final double pow(final double x, final double y) {
@@ -80,11 +80,11 @@ public class JavaTranslations implements JavaTranslationsInterface {
     }
 
     public final void addThread(final BT747Thread t, final boolean b) {
-        Generic.addThread(t, b);
+        J2SEGeneric.addThread(t, b);
     }
 
     public final void removeThread(final BT747Thread t) {
-        Generic.removeThread(t);
+        J2SEGeneric.removeThread(t);
     }
 
     /**
