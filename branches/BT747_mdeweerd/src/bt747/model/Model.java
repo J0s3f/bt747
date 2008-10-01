@@ -14,7 +14,6 @@
 //***  *********************************************************** ***
 package bt747.model;
 
-import sun.awt.image.ImageWatched.Link;
 import gps.BT747Constants;
 import gps.GPSListener;
 import gps.GPSstate;
