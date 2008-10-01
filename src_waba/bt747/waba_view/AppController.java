@@ -336,6 +336,8 @@ public class AppController extends Controller {
         // #if RXTX }
     }
 
+    /* @author Herbert Geus (initial code for saving settings on WindowsCE) */
+
     public final void saveSettings() {
         if (isWin32LikeDevice()
         // #if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")

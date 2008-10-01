@@ -9,6 +9,7 @@ package net.sf.bt747.j2se.system;
 import moio.util.HashSet;
 import moio.util.Iterator;
 
+import bt747.sys.Generic;
 import bt747.sys.Vm;
 import bt747.sys.interfaces.BT747Thread;
 
@@ -18,7 +19,7 @@ import bt747.sys.interfaces.BT747Thread;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class Generic {
+public class J2SEGeneric {
 
     private static HashSet h = new HashSet();
     private static HashSet oos = new HashSet();
@@ -29,20 +30,24 @@ public class Generic {
 
     public static void addThread(BT747Thread t, final boolean b) {
         if (!oos.contains(t)) {
-            System.out.println("Adding " + t);
+            if (Generic.isDebug()) {
+                Generic.debug("Adding " + t, null);
+            }
             J2SEThread mt = new J2SEThread(t);
             t.started();
             mt.jvThread = new java.lang.Thread(mt);
             if (mt != null) {
                 // System.out.println("new Thread() succeed");
             } else {
-                System.out.println("new Thread() failed");
+                Generic.debug("new Thread() failed",null);
             }
             mt.jvThread.start();
             h.add(mt);
             oos.add(t);
         } else {
-            System.out.println("Already present thread " + t);
+            if (Generic.isDebug()) {
+                Generic.debug("Already present thread " + t, null);
+            }
         }
     }
 

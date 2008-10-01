@@ -933,7 +933,7 @@ public class Controller {
      * @see #setDebugConn(boolean) for other debug functionality.
      */
     public final void setDebug(final boolean isDebugActive) {
-        m.gpsModel().setDebug(isDebugActive);
+        Generic.setDebugLevel(isDebugActive ? 1 : 0);
     }
 
     /**

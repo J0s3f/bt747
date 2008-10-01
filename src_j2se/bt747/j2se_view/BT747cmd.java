@@ -19,7 +19,6 @@
  *     PATH  ${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32/;%PATH%
  *   classpath must include:
  *      libBT747.jar
- *      waba_forj2se.jar (if the libBT747 is a debug library)
  *      collections-superwaba.jar (if the libBT747 is a debug library).
  */
 package bt747.j2se_view;
@@ -27,7 +26,6 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,9 +45,14 @@ import bt747.sys.interfaces.BT747FileName;
  */
 public class BT747cmd implements bt747.model.ModelListener {
 
+    /**
+     * Set up system specific classes.
+     */
     static {
+        // Set up the low level functions interface.
         Interface
                 .setJavaTranslationInterface(new net.sf.bt747.j2se.system.JavaTranslations());
+        // Set the serial port class instance to use (also system specific).
         GPSrxtx.setGpsPortInstance(new gps.connection.GPSRxTxPort());
 
     }
@@ -77,117 +80,9 @@ public class BT747cmd implements bt747.model.ModelListener {
             this.m.removeListener(this);
         }
         this.m = m;
-
-        // this.m.addListener(this);
-        // initAppData();
     }
 
-    // private void initAppData() {
-    // // This is an example without an user interface.
-    // // BT747Main is an example with a user interface.
-    //
-    // // Set up the paths
-    // // Common to in/out
-    // c.setBaseDirPath("/BT747");
-    // // Input is "/BT747/BT747_sample.bin"
-    // c.setLogFileRelPath("BT747_sample.bin");
-    // // Output is "/BT747/GPSDATA*"
-    // c.setOutputFileRelPath("GPSDATA");
-    //
-    // // Activate some debug.
-    // c.setDebug(true);
-    // // Make the connection
-    // c.openFreeTextPort("COM4");
-    // // Successfull connection will result in modelEvent.
-    // // The next release will have an isConnected method in the model.
-    //
-    // // In this example we wait for the ModelEvent#CONNECTED
-    // // in modelEvent
-    // // Could also check isConnected.
-    // // if(m.isConnected()) {
-    // // afterConnection();
-    // // }
-    // }
-    //
-    // private void afterConnection() {
-    // // We are connected, start a download
-    // // Disable incremental download (The possible overwrite request is
-    // // automatically authorised).
-    // c.setIncremental(true);
-    // System.out.println("Incremental setting done");
-    // System.out.flush();
-    // // If the amount of data in the device is unknown, the download will not
-    // // start.
-    // // Wait until all data is retrieved from device
-    // // (Will/should move this to the controller).
-    // System.out.println("Outstanding cmds "
-    // + m.getOutstandingCommandsCount());
-    // System.out.flush();
-    // while (m.getOutstandingCommandsCount() > 0) {
-    // // Thread t=Thread.currentThread();
-    // try {
-    // System.out.println("Waiting for cmds "
-    // + m.getOutstandingCommandsCount());
-    // System.out.flush();
-    // Thread.sleep(50);
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // // Do nothing
-    // }
-    // }
-    // // Print out the memory in use
-    // System.out.println(m.logMemUsed() + " bytes in use ("
-    // + m.logMemUsedPercent() + "%)");
-    //
-    // // c.setChunkSize(0x10000); // The number of bytes per request.
-    // c.setChunkSize(0x800); // Small to see debug
-    // // c.setDownloadTimeOut(3500); // Timeout for response
-    // c.startDefaultDownload();
-    // }
-    //
-    // private void handleDownloadEnded() {
-    // int error;
-    // // In the example, we disconnect.
-    // c.closeGPS();
-    // // If the binary corresponds to a holux log, one might want to force
-    // // holux recognition.
-    // // c.setForceHolux241(true);
-    //
-    // // After the download we convert to CSV
-    // // Uses previously stored settings
-    // error = c.doConvertLog(Model.CSV_LOGTYPE);
-    // if (error != 0) {
-    // reportError(c.getLastError(), c.getLastErrorInfo());
-    // }
-    //
-    // // And we can do something more complex
-    // // We do not like the previously stored settings or we want to use our
-    // // own.
-    // //
-    // // We select all positions that do not have an invalid fix or estimated
-    // // fix.
-    // c
-    // .setTrkPtValid(
-    //
-    // 0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK |
-    // BT747Constants.VALID_ESTIMATED_MASK));
-    // c
-    // .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK |
-    // BT747Constants.VALID_ESTIMATED_MASK));
-    // // Waypoints only when button pressed.
-    // c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK);
-    // // Trackpoints : anything
-    // c.setTrkPtRCR(BT747Constants.RCR_BUTTON_MASK);
-    // // To limit the output data, we only select lat,lon and height.
-    // c.setIntOpt(Model.FILEFIELDFORMAT,
-    // (1 << BT747Constants.FMT_LATITUDE_IDX)
-    // | (1 << BT747Constants.FMT_LONGITUDE_IDX)
-    // | (1 << BT747Constants.FMT_HEIGHT_IDX));
-    // error = c.doConvertLog(Model.GPX_LOGTYPE);
-    // if (error != 0) {
-    // reportError(c.getLastError(), c.getLastErrorInfo());
-    // }
-    //
+    // Code snippet kept for future reference.
     // // We can do the same thing to an array for internal treatment
     // GPSRecord[] positions = c.doConvertLogToTrackPoints();
     // if (positions == null) {
@@ -199,13 +94,6 @@ public class BT747cmd implements bt747.model.ModelListener {
     // GPSRecord record = positions[i];
     // System.out.println("Position " + i + ":" + record.latitude
     // + "," + record.longitude);
-    // }
-    // }
-    //
-    // // Store the used settings
-    // c.saveSettings();
-    // // Dirty exit from example
-    // System.exit(0);
     // }
 
     private void reportError(final int error, final String errorInfo) {
@@ -224,29 +112,11 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
     }
 
+    // Code snippet kept for reference
+
     // public void modelEvent(ModelEvent e) {
     // // TODO Auto-generated method stub
     // int type = e.getType();
-    // if (type == ModelEvent.GPRMC) {
-    // // updateRMCData((GPSRecord) e.getArg());
-    // } else if (type == ModelEvent.DATA_UPDATE) {
-    // } else if (type == ModelEvent.GPGGA) {
-    // // updateGPSData((GPSRecord) e.getArg());
-    // } else if (type == ModelEvent.LOG_FORMAT_UPDATE) {
-    // // updateLogFormatData();
-    // } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
-    // // getRawLogFilePath();
-    // } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
-    // // getOutputFilePath();
-    // } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
-    // // getWorkDirPath();
-    // } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
-    // // getIncremental();
-    // } else if (type == ModelEvent.TRK_VALID_CHANGE
-    // || type == ModelEvent.TRK_RCR_CHANGE
-    // || type == ModelEvent.WAY_VALID_CHANGE
-    // || type == ModelEvent.WAY_RCR_CHANGE) {
-    // // updateGuiLogFilterSettings();
     // } else if (type == ModelEvent.CONVERSION_STARTED) {
     // // conversionStartTime = System.currentTimeMillis();
     // } else if (type == ModelEvent.CONVERSION_ENDED) {
@@ -289,7 +159,10 @@ public class BT747cmd implements bt747.model.ModelListener {
     // }
     // }
 
-    boolean downloadIsSuccessFull = true;
+    private boolean downloadIsSuccessFull = true;
+    private Boolean eraseOngoing = Boolean.FALSE;
+    private long conversionStartTime;
+    private long downloadStartTime;
 
     public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
@@ -299,6 +172,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             System.err.flush();
             break;
         case ModelEvent.LOG_DOWNLOAD_STARTED:
+            downloadStartTime = System.currentTimeMillis();
             downloadIsSuccessFull = false;
             progressUpdate();
             break;
@@ -307,6 +181,15 @@ public class BT747cmd implements bt747.model.ModelListener {
             break;
         case ModelEvent.LOG_DOWNLOAD_DONE:
             progressUpdate();
+            if (!downloadIsSuccessFull) {
+                System.out.println("\n#### DOWNLOAD FAILED ####");
+            } else {
+                System.out.println("\n#### DOWNLOAD SUCCESS ####");
+            }
+            System.out
+                    .println("Time to download data (ms): "
+                            + ((int) (System.currentTimeMillis() - conversionStartTime))
+                            + " ms");
             break;
         case ModelEvent.LOG_DOWNLOAD_SUCCESS:
             downloadIsSuccessFull = true;
@@ -317,6 +200,21 @@ public class BT747cmd implements bt747.model.ModelListener {
             System.out.println("Overwriting previously downloaded data"
                     + " that looks different.");
             c.replyToOkToOverwrite(true);
+            break;
+        case ModelEvent.ERASE_ONGOING_NEED_POPUP:
+            setEraseOngoing(true);
+            break;
+        case ModelEvent.ERASE_DONE_REMOVE_POPUP:
+            setEraseOngoing(false);
+            break;
+        case ModelEvent.CONVERSION_STARTED:
+            conversionStartTime = System.currentTimeMillis();
+            break;
+        case ModelEvent.CONVERSION_ENDED:
+            System.out
+                    .println("Time to convert raw data (ms): "
+                            + ((int) (System.currentTimeMillis() - conversionStartTime))
+                            + " ms");
             break;
         default:
             break;
@@ -373,6 +271,18 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
     }
 
+    private void waitForErase() {
+        flushOutstandingCmds();
+        while (getEraseOngoing()) {
+            try {
+                Thread.sleep(50);
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Do nothing
+            }
+        }
+    }
+
     private void handleOptions(final OptionSet options) {
         // Set up the paths
         // Common to in/out
@@ -383,7 +293,6 @@ public class BT747cmd implements bt747.model.ModelListener {
         // Next line gets arguments not related to option
         options.nonOptionArguments();
 
-        c.setDebug(true);
         m.addListener(this);
 
         c.setChunkSize(0x00010000);
@@ -427,7 +336,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             portStr = (String) options.valueOf("p");
             c.setFreeTextPort(portStr);
         } else {
-            //c.setUsb();
+            // c.setUsb();
         }
 
         if (options.has("UTC")) {
@@ -443,36 +352,52 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (m.isConnected()) {
+            // Connection is made.
+            c.reqDeviceInfo();
+            // c.req
+            // c.reqMtkLogVersion();
 
-            // Make connection
-
-            if (options.has("l")) {
-                String arg = options.argumentOf("l").toLowerCase();
-                if (arg.equals("on")) {
-                    c.startLog();
-                } else if (arg.equals("off")) {
-                    c.stopLog();
-                } else {
-                    System.err
-                            .println("Argument of '-l' must be 'ON' or 'OFF'");
-                }
-            }
-
-            if (options.has("m")) {
-                String arg = options.argumentOf("l").toLowerCase();
-                if (arg.equals("overlap")) {
-                    c.setLogOverwrite(true);
-                } else if (arg.equals("stop")) {
-                    c.setLogOverwrite(false);
-                } else {
-                    System.err
-                            .println("Argument of '-p' must be 'STOP' or 'OVERLAP'");
-                }
-            }
+            flushOutstandingCmds();
+            System.out
+                    .println("MTK Firmware: Version: "
+                            + m.getFirmwareVersion()
+                            + ", ID(Device): "
+                            + m.getModel()
+                            + ((m.getMainVersion().length() != 0) ? (", MainVersion:" + m
+                                    .getMainVersion())
+                                    : ""));
+            // printf("Log format: (%s) %s\n", $1,
+            // describe_log_format($log_format));
+            // printf("Size in bytes of each log record: %u + (%u *
+            // sats_in_view)\n", $size_wpt + 2, $size_sat);
+            // printf("Logging TIME interval: %6.2f s\n", $1 / 10);
+            // printf("Logging DISTANCE interval: %6.2f m\n", $1 / 10);
+            // printf("Logging SPEED limit: %6.2f km/h\n", $1 / 10);
+            // printf("Recording method on memory full: (%u) %s\n", $rec_method,
+            // describe_recording_method($rec_method));
+            // printf("Log status: (%012b) %s\n", $log_status,
+            // describe_log_status($log_status));
+            // if ($log_status & $LOG_STATUS_NEED_FORMAT) {
+            // printf("WARNING! Log status NEED_FORMAT, log data is not
+            // valid!\n");
+            // }
+            // if ($log_status & $LOG_STATUS_DISABLE) {
+            // printf("WARNING! Log status DISABLE_LOG, may too many failed
+            // sectors!\n");
+            // }
+            // printf("Next write address: %u (0x%08X)\n", $next_write_address,
+            // $next_write_address);
+            // printf("Number of records: %u\n", $expected_records_total);
+            // printf("Memory health status (failed sectors mask): %s\n",
+            // $fail_sectors);
+            // printf(">> Retrieving %u (0x%08X) bytes of log data from
+            // device...\n", $bytes_to_read, $bytes_to_read);
 
             if (options.has("r")) {
                 List list = options.valuesOf("r");
                 if (list.size() == 3) {
+                    System.out
+                            .println(">> Setting recording criteria: time, distance, speed\n");
                     int time = (Integer) list.get(0);
                     int speed = (Integer) list.get(1);
                     int distance = (Integer) list.get(2);
@@ -561,13 +486,47 @@ public class BT747cmd implements bt747.model.ModelListener {
                         }
                     }
                 }
+                System.out.println(">> Setting log format\n");
+
                 c.setLogFormat(newLogFormat);
+            }
+            if (options.has("l")) {
+                String arg = options.argumentOf("l").toLowerCase();
+                if (arg.equals("on")) {
+                    System.out.println(">> Switch recording to ON\n");
+                    c.startLog();
+                } else if (arg.equals("off")) {
+                    System.out.println(">> Switch recording to OFF\n");
+                    c.stopLog();
+                } else {
+                    System.err
+                            .println("Argument of '-l' must be 'ON' or 'OFF'");
+                }
+            }
+
+            if (options.has("m")) {
+                String arg = options.argumentOf("l").toLowerCase();
+                if (arg.equals("overlap")) {
+                    System.out
+                            .println(">> Setting method OVERLAP on memory full\n");
+                    c.setLogOverwrite(true);
+                } else if (arg.equals("stop")) {
+                    System.out
+                            .println(">> Setting method STOP on memory full\n");
+                    c.setLogOverwrite(false);
+                } else {
+                    System.err
+                            .println("Argument of '-p' must be 'STOP' or 'OVERLAP'");
+                }
             }
 
             flushOutstandingCmds();
 
             if (options.has("a") && !(options.has("b"))) {
                 c.setDownloadMethod(Model.DOWNLOAD_INCREMENTAL);
+                // printf(">> Retrieving %u (0x%08X) bytes of log data from
+                // device...\n", $bytes_to_read, $bytes_to_read);
+                System.out.println(">> Getting data from device");
                 c.startDefaultDownload();
 
                 downloadIsSuccessFull = false;
@@ -588,11 +547,16 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
 
             if (options.has("E") && downloadIsSuccessFull) {
+                System.out.println(">> Erasing log memory...\n");
                 c.eraseLog();
+                waitForErase();
             }
 
-            if (options.has("R")) {
+            if (options.has("R") && downloadIsSuccessFull) {
+                System.out.println(">> Recover from disable log:"
+                        + " ENABLE LOG and FORMAT LOG ALL...\n");
                 c.recoveryEraseLog();
+                waitForErase();
             }
         }
 
@@ -752,7 +716,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         try {
             final OptionSet options = parser.parse(args);
             System.out.println("BT747 Cmd V" + bt747.Version.VERSION_NUMBER
-                    + " build " + bt747.Version.BUILD_STR);
+                    + " build " + bt747.Version.BUILD_STR + " GPL V3 LICENSE");
             if (options.has("h") || args.length == 0) {
                 parser.printHelpOn(System.out);
             } else if (options.has("v")) {
@@ -777,6 +741,18 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
             System.err.println("====");
             System.err.println(ex.getMessage());
+        }
+    }
+
+    private final boolean getEraseOngoing() {
+        synchronized (eraseOngoing) {
+            return eraseOngoing.booleanValue();
+        }
+    }
+
+    private final void setEraseOngoing(final Boolean eraseOngoing) {
+        synchronized (eraseOngoing) {
+            this.eraseOngoing = Boolean.valueOf(eraseOngoing);
         }
     }
 }

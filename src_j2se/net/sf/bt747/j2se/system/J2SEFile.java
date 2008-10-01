@@ -16,6 +16,7 @@ package net.sf.bt747.j2se.system;
 
 import java.io.RandomAccessFile;
 
+import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747File;
 
 /**
@@ -102,8 +103,10 @@ public final class J2SEFile implements BT747File {
                 if (mode == WRITE_ONLY) {
                     raf.seek(raf.length()); // To append
                 }
-                System.out.println("Opened file " + path + " in mode " + mode
-                        + " " + modeStr);
+                if(Generic.isDebug()) {
+                    Generic.debug("Opened file " + path + " in mode " + mode
+                        + " " + modeStr,null);
+                }
                 isopen = true;
             }
         } catch (Exception e) {

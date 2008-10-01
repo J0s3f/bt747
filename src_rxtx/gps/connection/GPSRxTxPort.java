@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import bt747.sys.Convert;
+import bt747.sys.Generic;
 
 /**
  * This class implements the serial port for rxtx (on Linux)
@@ -108,11 +109,14 @@ public final class GPSRxTxPort extends GPSPort {
         closePort();
 
         try {
-            System.out.println("Info: trying to open " + portStr);
+            if (Generic.isDebug()) {
+                Generic.debug("Info: trying to open " + portStr,null);
+            }
             CommPortIdentifier portIdentifier;
             portIdentifier = CommPortIdentifier.getPortIdentifier(portStr);
             if (portIdentifier.isCurrentlyOwned()) {
-                System.out.println("Error: Port is currently in use");
+                Generic.debug("Error: Port " + portStr
+                        + "is currently in use",null);
             } else {
                 CommPort commPort = portIdentifier.open(getClass().getName(),
                         2000);
@@ -227,10 +231,10 @@ public final class GPSRxTxPort extends GPSPort {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (GPS_FILE_LOG && (m_debugFile != null)) {
+        if (GPS_FILE_LOG && (debugFile != null)) {
             try {
-                m_debugFile.writeBytes("\nWrite:".getBytes(), 0, 2);
-                m_debugFile.writeBytes(b, 0, b.length);
+                debugFile.writeBytes("\nWrite:".getBytes(), 0, 2);
+                debugFile.writeBytes(b, 0, b.length);
             } catch (Exception e) {
                 e.printStackTrace();
             }
