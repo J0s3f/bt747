@@ -340,18 +340,19 @@ public final class AppController extends Controller {
     /* @author Herbert Geus (initial code for saving settings on WindowsCE) */
 
     public void saveSettings() {
+        if (Generic.isDebug()) {
+            Generic.debug("Platform " + Settings.platform, null);
+            // #if RXTX Generic.debug( "os.name:" +
+            // #if RXTX java.lang.System.getProperty("os.name"), null);
+            // #if RXTX Generic.debug( "bt747_settings:" +
+            // #if RXTX java.lang.System.getProperty("bt747_settings"), null);
+            Generic.debug("Saving config file " + CONFIG_FILE_NAME, null);
+            Generic.debug("If true: " + isWin32LikeDevice(), null);
+        }
         if (isWin32LikeDevice()
         // #if RXTX ||java.lang.System.getProperty("os.name").startsWith("Mac")
         // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
         ) {
-            if (Generic.isDebug()) {
-                Generic.debug("Platform " + Settings.platform, null);
-                // #if RXTX Generic.debug( "os.name:" +
-                // #if RXTX java.lang.System.getProperty("os.name"), null);
-                // #if RXTX Generic.debug( "bt747_settings:" +
-                // #if RXTX java.lang.System.getProperty("bt747_settings"), null);
-                Generic.debug("Saving config file " + CONFIG_FILE_NAME, null);
-            }
             File preferencesFile = new File("");
             try {
                 File dir = new File(CONFIG_FILE_NAME.substring(0,
