@@ -120,6 +120,21 @@ public final class JavaTranslations implements JavaTranslationsInterface {
         return Double.toString(p);
     }
 
+    
+//    private final String formatString = "#0.0000000000000000";
+//    private int previousFormat = 0;
+//    private DecimalFormat df = new DecimalFormat("#0");
+//    public final String toString(final double p, final int i) {
+//        if(i!=previousFormat) {
+//            if(i==0) {
+//                df = new DecimalFormat("#0");
+//            } else {
+//                df = new DecimalFormat(formatString.substring(0,3+i));
+//            }
+//        }
+//        return df.format(p);
+//    }
+
     public String toString(final double p, final int i) {
         StringBuffer s;
         if (p >= 1. || p <= -1.) {

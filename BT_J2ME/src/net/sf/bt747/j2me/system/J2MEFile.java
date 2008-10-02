@@ -24,19 +24,19 @@ import bt747.sys.interfaces.BT747File;
  * Preferences - Java - Code Style - Code Templates
  */
 public final class J2MEFile implements BT747File {
-    String path = null;
+    private String path = null;
 
-    public J2MEFile(String path) {
+    public J2MEFile(final String path) {
         this.path = path;
     }
 
     FileConnection fileConnection;
 
-    public J2MEFile(String path, int mode, int card) {
+    public J2MEFile(final String path, final int mode, final int card) {
         this(path, mode);
     }
 
-    public J2MEFile(String path, int mode) {
+    public J2MEFile(final String path, final int mode) {
         try {
             int lMode;
             this.path = path;
@@ -49,13 +49,11 @@ public final class J2MEFile implements BT747File {
                 break;
             case bt747.sys.File.CREATE:
                 lMode = Connector.READ_WRITE;
-                {
-                    FileConnection f = tmpFileConnection(path);
+                FileConnection f = tmpFileConnection(path);
                     f.create();
                     f.close();
                     f = null;
-                }
-                break;
+                    break;
             case bt747.sys.File.READ_WRITE:
                 lMode = Connector.READ_WRITE;
                 break;
@@ -148,7 +146,7 @@ public final class J2MEFile implements BT747File {
         return true; // File system is available
     }
 
-    public static boolean isCardInserted(int i) {
+    public static boolean isCardInserted(final int i) {
         return false;
     }
 
@@ -194,7 +192,7 @@ public final class J2MEFile implements BT747File {
     private InputStream is;
     private OutputStream os;
 
-    public boolean setPos(int pos) {
+    public boolean setPos(final int pos) {
         try {
             if (fileConnection != null) {
                 if (is != null) {
@@ -225,7 +223,7 @@ public final class J2MEFile implements BT747File {
         }
     }
 
-    public int writeBytes(byte[] b, int off, int len) {
+    public int writeBytes(final byte[] b, final int off, final int len) {
         try {
             if (os != null) {
                 os.write(b, off, len);
@@ -241,7 +239,7 @@ public final class J2MEFile implements BT747File {
         }
     }
 
-    public int readBytes(byte[] b, int off, int len) {
+    public int readBytes(final byte[] b, final int off, final int len) {
         try {
             if (is != null) {
                 return is.read(b, off, len);

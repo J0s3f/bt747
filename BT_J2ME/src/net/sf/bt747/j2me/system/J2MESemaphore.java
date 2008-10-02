@@ -32,13 +32,13 @@ public class J2MESemaphore implements BT747Semaphore {
     }
 
     public synchronized void down() {
-        --value;
-        while (value < 0) {
+        while (value <= 0) {
             try {
                 wait();
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
             }
         }
+        --value;
     }
 
     public synchronized void up() {

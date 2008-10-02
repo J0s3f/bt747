@@ -26,7 +26,7 @@ import bt747.sys.interfaces.BT747Thread;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class Generic {
+public final class Generic {
 
     private static Hashtable h = new Hashtable();
     private static Hashtable oos = new Hashtable();
@@ -51,8 +51,8 @@ public class Generic {
                 Log.debug("new Thread() failed");
             }
             mt.jvThread.start();
-            h.put(mt,h);
-            oos.put(t,oos);
+            h.put(mt, h);
+            oos.put(t, oos);
         } else {
             Log.debug("Already present thread " + t);
         }
@@ -97,8 +97,8 @@ public class Generic {
     public static double acos(final double x) {
         return Float11.acos(x);
     }
-    
+
     public static void debug(final String s, final Throwable e) {
-        Log.debug(s,e);
+        Log.debug(s, e);
     }
 }
