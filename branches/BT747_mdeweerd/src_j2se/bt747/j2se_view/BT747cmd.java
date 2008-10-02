@@ -188,7 +188,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
             System.out
                     .println("Time to download data (ms): "
-                            + ((int) (System.currentTimeMillis() - conversionStartTime))
+                            + ((int) (System.currentTimeMillis() - downloadStartTime))
                             + " ms");
             break;
         case ModelEvent.LOG_DOWNLOAD_SUCCESS:
@@ -289,6 +289,8 @@ public class BT747cmd implements bt747.model.ModelListener {
         c.setBaseDirPath(".");
         c.setOutputFileRelPath("GPSDATA");
         c.setIntOpt(Model.FILEFIELDFORMAT, 0xFFFFFFFF); // All fields
+        c.setTrkSep(60);
+        c.setColorInvalidTrack("0000FF");
 
         // Next line gets arguments not related to option
         options.nonOptionArguments();
