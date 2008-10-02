@@ -62,10 +62,6 @@ public final class CSVLogConvert implements GPSLogConvert {
     private static final int FMT_TIME = -2;
     private static final int FMT_NO_FIELD = -1;
 
-    // private static final int DAYS_BETWEEN_1970_1983 = 4748;
-    private static final int DAYS_JULIAN_1970 = (new Date(1, 1, 1970))
-            .getJulianDay();
-
     private String errorInfo;
 
     public String getErrorInfo() {
@@ -352,10 +348,9 @@ public final class CSVLogConvert implements GPSLogConvert {
                                                 format = Settings.DATE_DMY;
                                             }
 
-                                            long date = (new Date(field, format))
-                                                    .getJulianDay()
-                                                    - DAYS_JULIAN_1970;
-                                            gpsRec.utc += date * (24 * 3600);
+                                            int date = (new Date(field, format))
+                                                    .dateToUTCepoch1970();
+                                            gpsRec.utc += date;
                                         }
                                             break;
                                         case FMT_TIME: {
@@ -378,10 +373,10 @@ public final class CSVLogConvert implements GPSLogConvert {
                                                 gpsRec.utc += Convert
                                                         .toInt(tfields
                                                                 .nextToken())
-                                                        * 3600L
+                                                        * 3600
                                                         + Convert.toInt(tfields
                                                                 .nextToken())
-                                                        * 60L
+                                                        * 60
                                                         + Convert.toInt(tfields
                                                                 .nextToken());
                                             }

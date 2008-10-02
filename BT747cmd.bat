@@ -13,5 +13,4 @@ echo *********** Currently in BETA **************
 java bt747.j2se_view.BT747cmd %*
 echo *********** Currently in BETA **************
 REM java -verbose bt747.j2se_view.BT747Main | more
-pause
 endlocal

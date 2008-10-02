@@ -22,7 +22,9 @@ public interface BT747Date {
 
     // private static final int DAYS_Julian_1970 = (new
     // Date(1,1,1970)).getJulianDay();
-    int getJulianDay();
+
+//    /** Returns the number of days since the January 1 of the epoch year (1970). */
+//    int getJulianDay();
 
     int getYear();
 
