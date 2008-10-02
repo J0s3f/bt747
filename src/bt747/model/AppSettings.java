@@ -1119,7 +1119,7 @@ public class AppSettings {
      * @param solveMacLagProblem
      *            The solveMacLagProblem to set.
      */
-    protected final static void setSolveMacLagProblem(final boolean arg) {
+    public final static void setSolveMacLagProblem(final boolean arg) {
         solveMacLagProblem = arg;
     }
 
