@@ -24,18 +24,18 @@ import bt747.sys.Convert;
  * 
  * @author Mario De Weerd
  */
-public class GPSCSVFile extends GPSFile {
+public final class GPSCSVFile extends GPSFile {
     private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
     private static final char fieldSep = ','; // For future parameterisation
     private static final char satSeperator = ';'; // For future
 
     // parameterisation
 
-    public final boolean needPassToFindFieldsActivatedInLog() {
+    public boolean needPassToFindFieldsActivatedInLog() {
         return true;
     }
 
-    protected final void writeFileHeader(final String Name) {
+    protected void writeFileHeader(final String Name) {
         rec.setLength(0);
         // INDEX,RCR,DATE,TIME,VALID,LATITUDE,N/S,LONGITUDE,E/W,HEIGHT,SPEED,
         rec.append("INDEX");
@@ -48,7 +48,8 @@ public class GPSCSVFile extends GPSFile {
         if ((activeFileFields.valid != 0) && (selectedFileFields.valid != 0)) {
             rec.append(fieldSep + "VALID");
         }
-        if ((activeFileFields.latitude != 0) && (selectedFileFields.latitude != 0)) {
+        if ((activeFileFields.latitude != 0)
+                && (selectedFileFields.latitude != 0)) {
             rec.append(fieldSep + "LATITUDE" + fieldSep + "N/S");
         }
         if ((activeFileFields.longitude != 0)
@@ -69,7 +70,8 @@ public class GPSCSVFile extends GPSFile {
                 rec.append(fieldSep + "SPEED(mph)");
             }
         }
-        if ((activeFileFields.heading != 0) && (selectedFileFields.heading != 0)) {
+        if ((activeFileFields.heading != 0)
+                && (selectedFileFields.heading != 0)) {
             rec.append(fieldSep + "HEADING");
         }
         if ((activeFileFields.dsta != 0) && (selectedFileFields.dsta != 0)) {
@@ -94,7 +96,8 @@ public class GPSCSVFile extends GPSFile {
         // if(activeFileFields.milisecond!=0) {
         // rec.append(fieldSep+"MILISECOND");
         // }
-        if ((activeFileFields.distance != 0) && (selectedFileFields.distance != 0)) {
+        if ((activeFileFields.distance != 0)
+                && (selectedFileFields.distance != 0)) {
             if (!imperial) {
                 rec.append(fieldSep + "DISTANCE(m)");
             } else {
@@ -129,7 +132,7 @@ public class GPSCSVFile extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected final boolean recordIsNeeded(final GPSRecord s) {
+    protected boolean recordIsNeeded(final GPSRecord s) {
         return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 
@@ -139,11 +142,10 @@ public class GPSCSVFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public final void writeRecord(final GPSRecord s) {
+    public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
-        if (activeFields != null
-                && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
+        if (activeFields != null && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
             rec.setLength(0);
             rec.append(Convert.toString(s.recCount));
             if ((activeFileFields.rcr != 0) && (selectedFileFields.rcr != 0)) {
@@ -169,7 +171,8 @@ public class GPSCSVFile extends GPSFile {
                     rec.append(Convert.toString((float) t.getSecond()
                             + s.milisecond / 1000.0, 3));
                 }
-            } else if ((activeFileFields.utc != 0) && (selectedFileFields.utc != 0)) {
+            } else if ((activeFileFields.utc != 0)
+                    && (selectedFileFields.utc != 0)) {
                 rec.append(fieldSep);
                 rec.append(fieldSep);
             }

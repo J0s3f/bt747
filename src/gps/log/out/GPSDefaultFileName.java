@@ -24,8 +24,9 @@ public final class GPSDefaultFileName implements BT747FileName {
      * @see bt747.sys.interfaces.BT747FileName#getOutputFileName(java.lang.String,
      *      int, java.lang.String, java.lang.String)
      */
-    public String getOutputFileName(String baseName, int utcTimeSeconds,
-            String proposedExtension, String proposedTimeSpec) {
+    public String getOutputFileName(final String baseName,
+            final int utcTimeSeconds, final String proposedExtension,
+            final String proposedTimeSpec) {
         return (baseName + proposedTimeSpec + proposedExtension);
     }
 

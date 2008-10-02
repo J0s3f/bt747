@@ -12,11 +12,6 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************
 package gps.log;
 
 /**
@@ -50,14 +45,14 @@ public class GPSFilter {
      * 
      * @return The first date of the period to include (UTC time value).
      */
-    public int getStartTime() {
+    public final int getStartTime() {
         return startTime;
     }
 
     /**
      * Set the first date of the period to include (UTC time value).
      */
-    public void setStartTime(int startTime) {
+    public final void setStartTime(final int startTime) {
         this.startTime = startTime;
     }
 
@@ -66,14 +61,14 @@ public class GPSFilter {
      * 
      * @return The last date of the period to include (UTC time value).
      */
-    public int getEndTime() {
+    public final int getEndTime() {
         return endTime;
     }
 
     /**
      * Set the last date of the period to include (UTC time value).
      */
-    public void setEndTime(int endTime) {
+    public final void setEndTime(final int endTime) {
         this.endTime = endTime;
     }
 
@@ -101,7 +96,7 @@ public class GPSFilter {
      * {@link gps.BT747Constants#RCR_ALL_APP_MASK}
      * 
      */
-    public int getRcrMask() {
+    public final int getRcrMask() {
         return rcrMask;
     }
 
@@ -129,7 +124,7 @@ public class GPSFilter {
      *            {@link gps.BT747Constants#RCR_APPZ_MASK}<br>-
      *            {@link gps.BT747Constants#RCR_ALL_APP_MASK}
      */
-    public void setRcrMask(int rcrMask) {
+    public final void setRcrMask(final int rcrMask) {
         this.rcrMask = rcrMask;
     }
 
@@ -148,7 +143,7 @@ public class GPSFilter {
      * {@link gps.BT747Constants#VALID_SIMULATOR_MASK}
      * 
      */
-    public int getValidMask() {
+    public final int getValidMask() {
         return validMask;
     }
 
@@ -169,7 +164,7 @@ public class GPSFilter {
      *            {@link gps.BT747Constants#VALID_SIMULATOR_MASK}
      * 
      */
-    public void setValidMask(int validMask) {
+    public final void setValidMask(final int validMask) {
         this.validMask = validMask;
     }
 

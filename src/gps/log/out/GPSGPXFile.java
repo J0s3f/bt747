@@ -33,7 +33,7 @@ import bt747.sys.Convert;
  * 
  * @author Mario De Weerd
  */
-public class GPSGPXFile extends GPSFile {
+public final class GPSGPXFile extends GPSFile {
     private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
 
     private boolean isWayType;
@@ -56,7 +56,7 @@ public class GPSGPXFile extends GPSFile {
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
     public void initialiseFile(final String basename, final String ext,
-            final int Card, int oneFilePerDay) {
+            final int Card, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, Card, oneFilePerDay);
         currentFilter = GPSFilter.WAYPT;
         isWayType = true;
@@ -151,7 +151,7 @@ public class GPSGPXFile extends GPSFile {
      */
     private static final char[] zeros = "0000000".toCharArray();
 
-    public void writeRecord(GPSRecord s) {
+    public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
         if (activeFields != null) {
@@ -492,7 +492,7 @@ public class GPSGPXFile extends GPSFile {
      * @param trkSegSplitOnlyWhenSmall
      *            The m_TrkSegSplitOnlyWhenSmall to set.
      */
-    public void setTrkSegSplitOnlyWhenSmall(boolean trkSegSplitOnlyWhenSmall) {
+    public void setTrkSegSplitOnlyWhenSmall(final boolean trkSegSplitOnlyWhenSmall) {
         isTrkSegSplitOnlyWhenSmall = trkSegSplitOnlyWhenSmall;
     }
 }

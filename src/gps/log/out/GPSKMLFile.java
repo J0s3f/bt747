@@ -32,7 +32,7 @@ import bt747.sys.Convert;
  * @author Mario De Weerd
  * @author Herbert Geus (Waypoint code&Track code)
  */
-public class GPSKMLFile extends GPSFile {
+public final class GPSKMLFile extends GPSFile {
     private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
 
     private boolean isWayType;
@@ -56,7 +56,7 @@ public class GPSKMLFile extends GPSFile {
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
     public void initialiseFile(final String basename, final String ext,
-            final int ard, int oneFilePerDay) {
+            final int ard, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, ard, oneFilePerDay);
         currentFilter = GPSFilter.WAYPT;
         isWayType = true;

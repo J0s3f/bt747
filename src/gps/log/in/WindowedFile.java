@@ -13,14 +13,15 @@ import bt747.sys.Generic;
  * @author Mario De Weerd
  * 
  */
-public class WindowedFile {
+public final class WindowedFile {
 
     private File file;
     private String path;
     private int mode;
     private int card;
 
-    public WindowedFile(String path, int mode, int card) throws Exception {
+    public WindowedFile(final String path, final int mode, final int card)
+            throws Exception {
         this.path = path;
         this.mode = mode;
         this.card = card;
@@ -36,45 +37,45 @@ public class WindowedFile {
     private int bufferFill = 0;
     private int currentPosition;
 
-    public void setBufferSize(int bufferSize) {
+    public void setBufferSize(final int bufferSize) {
         this.bufferSize = bufferSize;
     }
 
-    public final int getBufferSize() {
+    public int getBufferSize() {
         return bufferSize;
     }
 
-    public final String getPath() {
+    public String getPath() {
         return file.getPath();
     }
 
-    public final int getLastError() {
+    public int getLastError() {
         return file.getLastError();
     }
 
-    public final boolean isOpen() {
+    public boolean isOpen() {
         return file.isOpen();
     }
 
-    public final int getSize() throws Exception {
+    public int getSize() throws Exception {
         return file.getSize();
     }
 
-    public final byte[] getBuffer() throws Exception {
+    public byte[] getBuffer() throws Exception {
         if (bufferFill == 0) {
             fillBuffer(0);
         }
         return buffer;
     }
 
-    private final void sanitizeBuffer() {
+    private void sanitizeBuffer() {
         if (buffer == null) {
             buffer = new byte[bufferSize];
             bufferFill = 0;
         }
     }
 
-    public final byte[] fillBuffer(final int newPosition) throws Exception {
+    public byte[] fillBuffer(final int newPosition) throws Exception {
         sanitizeBuffer();
         if (newPosition < currentPosition) {
             file.close();
@@ -119,11 +120,11 @@ public class WindowedFile {
         return buffer;
     }
 
-    public final int getBufferFill() {
+    public int getBufferFill() {
         return bufferFill;
     }
 
-    public final boolean close() throws Exception {
+    public boolean close() throws Exception {
         boolean result;
         buffer = null;
 

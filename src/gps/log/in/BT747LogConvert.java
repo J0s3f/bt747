@@ -110,7 +110,7 @@ public final class BT747LogConvert implements GPSLogConvert {
     /**
      * The size of the file read buffer
      */
-    private static int BUF_SIZE = 0x800;
+    private static final int BUF_SIZE = 0x800;
 
     private boolean stop = false;
 
@@ -342,7 +342,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                             }
 
                             recCount++;
-                            //System.out.println(recCount);
+                            // System.out.println(recCount);
 
                             /***************************************************
                              * Get all the information in the record.
@@ -396,7 +396,8 @@ public final class BT747LogConvert implements GPSLogConvert {
                                 }
                                 offsetInBuffer = indexInBuffer;
                                 okInBuffer = indexInBuffer;
-                                foundAnyRecord = true; // Fake to avoid extra byte skip.
+                                foundAnyRecord = true; // Fake to avoid extra
+                                                        // byte skip.
                                 // Generic.debug(indexInBuffer +"skip ff",null);
                             } else {
                                 badrecord_count++;

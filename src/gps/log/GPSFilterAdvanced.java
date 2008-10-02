@@ -41,7 +41,7 @@ public class GPSFilterAdvanced extends GPSFilter {
     protected int minRecCount = -1;
     protected int maxRecCount = -1;
 
-    public boolean doFilter(GPSRecord r) {
+    public boolean doFilter(final GPSRecord r) {
 
         // Filter the record information
         boolean z_Result;
@@ -63,7 +63,7 @@ public class GPSFilterAdvanced extends GPSFilter {
     /**
      * @return Returns the maxDist.
      */
-    public float getMaxDist() {
+    public final float getMaxDist() {
         return (float) maxDist;
     }
 
@@ -71,14 +71,14 @@ public class GPSFilterAdvanced extends GPSFilter {
      * @param maxDist
      *            The maxDist to set.
      */
-    public void setMaxDist(float maxDist) {
+    public final void setMaxDist(final float maxDist) {
         this.maxDist = maxDist;
     }
 
     /**
      * @return Returns the maxHDOP.
      */
-    public float getMaxHDOP() {
+    public final float getMaxHDOP() {
         return maxHDOP;
     }
 
@@ -86,14 +86,14 @@ public class GPSFilterAdvanced extends GPSFilter {
      * @param maxHDOP
      *            The maxHDOP to set.
      */
-    public void setMaxHDOP(int maxHDOP) {
+    public final void setMaxHDOP(final int maxHDOP) {
         this.maxHDOP = maxHDOP;
     }
 
     /**
      * @return Returns the maxPDOP.
      */
-    public float getMaxPDOP() {
+    public final float getMaxPDOP() {
         return maxPDOP;
     }
 
@@ -101,14 +101,14 @@ public class GPSFilterAdvanced extends GPSFilter {
      * @param maxPDOP
      *            The maxPDOP to set.
      */
-    public void setMaxPDOP(int maxPDOP) {
+    public final void setMaxPDOP(final int maxPDOP) {
         this.maxPDOP = maxPDOP;
     }
 
     /**
      * @return Returns the maxRecCnt.
      */
-    public int getMaxRecCount() {
+    public final int getMaxRecCount() {
         return maxRecCount;
     }
 
@@ -116,14 +116,14 @@ public class GPSFilterAdvanced extends GPSFilter {
      * @param maxRecCnt
      *            The maxRecCnt to set.
      */
-    public void setMaxRecCount(int maxRecCnt) {
+    public final void setMaxRecCount(final int maxRecCnt) {
         this.maxRecCount = maxRecCnt;
     }
 
     /**
      * @return Returns the maxSpeed.
      */
-    public float getMaxSpeed() {
+    public final float getMaxSpeed() {
         return maxSpeed;
     }
 
@@ -131,14 +131,14 @@ public class GPSFilterAdvanced extends GPSFilter {
      * @param maxSpeed
      *            The maxSpeed to set.
      */
-    public void setMaxSpeed(float maxSpeed) {
+    public final void setMaxSpeed(final float maxSpeed) {
         this.maxSpeed = maxSpeed;
     }
 
     /**
      * @return Returns the maxVDOP.
      */
-    public float getMaxVDOP() {
+    public final float getMaxVDOP() {
         return maxVDOP;
     }
 
@@ -146,14 +146,14 @@ public class GPSFilterAdvanced extends GPSFilter {
      * @param maxVDOP
      *            The maxVDOP to set.
      */
-    public void setMaxVDOP(int maxVDOP) {
+    public final void setMaxVDOP(final int maxVDOP) {
         this.maxVDOP = maxVDOP;
     }
 
     /**
      * @return Returns the minDist.
      */
-    public float getMinDist() {
+    public final float getMinDist() {
         return (float) minDist;
     }
 
@@ -161,14 +161,14 @@ public class GPSFilterAdvanced extends GPSFilter {
      * @param minDist
      *            The minDist to set.
      */
-    public void setMinDist(float minDist) {
+    public final void setMinDist(final float minDist) {
         this.minDist = minDist;
     }
 
     /**
      * @return Returns the minNSAT.
      */
-    public int getMinNSAT() {
+    public final int getMinNSAT() {
         return minNSAT;
     }
 
@@ -176,14 +176,14 @@ public class GPSFilterAdvanced extends GPSFilter {
      * @param minNSAT
      *            The minNSAT to set.
      */
-    public void setMinNSAT(int minNSAT) {
+    public final void setMinNSAT(final int minNSAT) {
         this.minNSAT = minNSAT;
     }
 
     /**
      * @return Returns the minRecCnt.
      */
-    public int getMinRecCnt() {
+    public final int getMinRecCnt() {
         return minRecCount;
     }
 
@@ -191,14 +191,14 @@ public class GPSFilterAdvanced extends GPSFilter {
      * @param minRecCnt
      *            The minRecCnt to set.
      */
-    public void setMinRecCount(int minRecCnt) {
+    public final void setMinRecCount(final int minRecCnt) {
         this.minRecCount = minRecCnt;
     }
 
     /**
      * @return Returns the minSpeed.
      */
-    public float getMinSpeed() {
+    public final float getMinSpeed() {
         return minSpeed;
     }
 
@@ -206,7 +206,7 @@ public class GPSFilterAdvanced extends GPSFilter {
      * @param minSpeed
      *            The minSpeed to set.
      */
-    public void setMinSpeed(float minSpeed) {
+    public final void setMinSpeed(final float minSpeed) {
         this.minSpeed = minSpeed;
     }
 }

@@ -29,7 +29,7 @@ import bt747.sys.Convert;
  * 
  * @author Mario De Weerd
  */
-public class GPSPLTFile extends GPSFile {
+public final class GPSPLTFile extends GPSFile {
 
     // Track File (.plt)
     // Line 1 : File type and version information
@@ -83,7 +83,7 @@ public class GPSPLTFile extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected boolean recordIsNeeded(GPSRecord s) {
+    protected boolean recordIsNeeded(final GPSRecord s) {
         return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 

@@ -29,7 +29,7 @@ import bt747.sys.Convert;
  * 
  * @author Mario De Weerd
  */
-public class GPSGmapsHTMLFile extends GPSFile {
+public final class GPSGmapsHTMLFile extends GPSFile {
     private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
 
     private boolean m_isWayType;
@@ -50,7 +50,7 @@ public class GPSGmapsHTMLFile extends GPSFile {
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
     public void initialiseFile(final String basename, final String ext,
-            final int Card, int oneFilePerDay) {
+            final int Card, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, Card, oneFilePerDay);
         m_currentFilter = GPSFilter.WAYPT;
         m_isWayType = true;
