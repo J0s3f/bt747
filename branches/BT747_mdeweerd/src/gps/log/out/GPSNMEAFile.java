@@ -26,7 +26,7 @@ import bt747.sys.Convert;
  * 
  * @author Mario De Weerd
  */
-public class GPSNMEAFile extends GPSFile {
+public final class GPSNMEAFile extends GPSFile {
     private static final double KMH_PER_KNOT = 0.53995680345572354211663066954644;
 
     private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
@@ -52,7 +52,7 @@ public class GPSNMEAFile extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected boolean recordIsNeeded(GPSRecord s) {
+    protected boolean recordIsNeeded(final GPSRecord s) {
         return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 

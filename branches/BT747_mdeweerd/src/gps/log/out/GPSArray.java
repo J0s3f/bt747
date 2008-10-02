@@ -12,11 +12,6 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************  
 package gps.log.out;
 
 import gps.BT747Constants;
@@ -28,7 +23,7 @@ import gps.log.GPSRecord;
  * 
  * @author Mario De Weerd
  */
-public class GPSArray extends GPSFile {
+public final class GPSArray extends GPSFile {
     private GPSRecord[] gpsTrackPoints;
     private GPSRecord[] gpsWayPoints;
 
@@ -39,7 +34,7 @@ public class GPSArray extends GPSFile {
         wayPointCount = 0;
     }
 
-    public final boolean needPassToFindFieldsActivatedInLog() {
+    public boolean needPassToFindFieldsActivatedInLog() {
         return false;
     }
 
@@ -48,11 +43,11 @@ public class GPSArray extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected final boolean recordIsNeeded(final GPSRecord s) {
+    protected boolean recordIsNeeded(final GPSRecord s) {
         return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 
-    public final boolean nextPass() {
+    public boolean nextPass() {
         super.nextPass();
         if (nbrOfPassesToGo > 0) {
             nbrOfPassesToGo--;
@@ -79,7 +74,7 @@ public class GPSArray extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public final void writeRecord(final GPSRecord s) {
+    public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         if (ptFilters[GPSFilter.TRKPT].doFilter(s)) {
             if (nbrOfPassesToGo == 0) {
@@ -96,8 +91,8 @@ public class GPSArray extends GPSFile {
         }
     }
 
-    protected final int createFile(final String extra_ext) {
-        filesCreated++;  // Always a success
+    protected int createFile(final String extra_ext) {
+        filesCreated++; // Always a success
         // Override to avoid file creation.
         return BT747Constants.NO_ERROR;
     }
@@ -106,12 +101,12 @@ public class GPSArray extends GPSFile {
         // Override to avoid file related errors
     }
 
-    public final GPSRecord[] getGpsTrackPoints() {
+    public GPSRecord[] getGpsTrackPoints() {
         return gpsTrackPoints;
     }
 
-    public final GPSRecord[] getGpsWayPoints() {
+    public GPSRecord[] getGpsWayPoints() {
         return gpsWayPoints;
     }
-    
+
 }

@@ -30,7 +30,7 @@ import bt747.sys.Convert;
  * 
  * @author Mario De Weerd
  */
-public class GPSCompoGPSTrkFile extends GPSFile {
+public final class GPSCompoGPSTrkFile extends GPSFile {
 
     // The next information is from gpsbabel:
 
@@ -68,13 +68,13 @@ public class GPSCompoGPSTrkFile extends GPSFile {
         numberOfPasses = 2;
     }
 
-    public final void initialiseFile(final String basename, final String ext,
+    public void initialiseFile(final String basename, final String ext,
             final int card, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, card, oneFilePerDay);
         isWayType = false;
     }
 
-    public final void writeFileHeader(final String s) {
+    public void writeFileHeader(final String s) {
         super.writeFileHeader(s);
         writeTxt("G  WGS 84\r\n" // WGS 84
                 + "U  1\r\n" // LAT .LON FORMAT
@@ -89,7 +89,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected final boolean recordIsNeeded(final GPSRecord s) {
+    protected boolean recordIsNeeded(final GPSRecord s) {
         return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 
@@ -117,7 +117,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
     private StringBuffer rec = new StringBuffer(1024);
     private StringBuffer wrec = new StringBuffer(1024);
 
-    public final void writeRecord(final GPSRecord s) {
+    public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         boolean trackpt;
         boolean waypt;
@@ -240,7 +240,7 @@ public class GPSCompoGPSTrkFile extends GPSFile {
         } // activeFields!=null
     }
 
-    public final boolean nextPass() {
+    public boolean nextPass() {
         super.nextPass();
         if (!isWayType) {
             previousDate = 0;

@@ -20,13 +20,13 @@ import gps.log.GPSRecord;
 import bt747.sys.Convert;
 import bt747.sys.Time;
 
-final public class CommonOut {
+public final class CommonOut {
     protected static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
             "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
-    public static final void getHtml(final StringBuffer rec, final GPSRecord s,
+    public static void getHtml(final StringBuffer rec, final GPSRecord s,
             final GPSRecord activeFields, final GPSRecord selectedFields,
-            Time t, final boolean recordNbrInLogs, final boolean imperial) {
+            final Time t, final boolean recordNbrInLogs, final boolean imperial) {
         if (recordNbrInLogs) {
             rec.append("IDX: ");
             rec.append(Convert.toString(s.recCount));
@@ -140,13 +140,13 @@ final public class CommonOut {
         }
     }
 
-    public static final String getTimeStr(final int utcTime) {
+    public static String getTimeStr(final int utcTime) {
         Time t = new Time();
         t.setUTCTime(utcTime);
         return getTimeStr(t);
     }
 
-    public static final String getTimeStr(final GPSRecord activeFields,
+    public static String getTimeStr(final GPSRecord activeFields,
             final Time time) {
         if ((activeFields.utc != 0)) {
             return getTimeStr(time);
@@ -155,7 +155,7 @@ final public class CommonOut {
         }
     }
 
-    public static final String getTimeStr(final Time time) {
+    public static String getTimeStr(final Time time) {
         return // Day
         ((time.getDay() < 10) ? "0" : "")
                 + Convert.toString(time.getDay())
@@ -174,8 +174,8 @@ final public class CommonOut {
         // +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
         ;
     }
-    
-    public static final String getRCRstr(final GPSRecord s) {
+
+    public static String getRCRstr(final GPSRecord s) {
         StringBuffer rcrStr = new StringBuffer(15);
         rcrStr.setLength(0);
         if ((s.rcr & BT747Constants.RCR_TIME_MASK) != 0) {
@@ -210,29 +210,29 @@ final public class CommonOut {
 
         return rcrStr.toString();
     }
-    
-    public static final String getFixText(final int valid) {
+
+    public static String getFixText(final int valid) {
         switch (valid) {
         case 0x0001:
-            return("No fix");
+            return ("No fix");
         case 0x0002:
-            return("SPS");
+            return ("SPS");
         case 0x0004:
-            return("DGPS");
+            return ("DGPS");
         case 0x0008:
-            return("PPS");
+            return ("PPS");
         case 0x0010:
-            return("RTK");
+            return ("RTK");
         case 0x0020:
-            return("FRTK");
+            return ("FRTK");
         case 0x0040:
-            return("Estimated mode");
+            return ("Estimated mode");
         case 0x0080:
-            return("Manual input mode");
+            return ("Manual input mode");
         case 0x0100:
-            return("Simulator mode");
+            return ("Simulator mode");
         default:
-            return("Unknown mode");
+            return ("Unknown mode");
         }
     }
- }
+}
