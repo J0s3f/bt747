@@ -14,11 +14,12 @@ import bt747.model.Controller;
 import bt747.model.Model;
 
 import bt747.sys.File;
+import bt747.sys.Generic;
 import bt747.waba_view.ui.BT747MessageBox;
 
 //import moio.util.Iterator;  Needed later when communicating with views.
 
-public class AppController extends Controller {
+public final class AppController extends Controller {
 
     private static String CONFIG_FILE_NAME =
     // #if RXTX java.lang.System.getProperty("bt747_settings", // bt747_settings
@@ -81,7 +82,7 @@ public class AppController extends Controller {
      * @see Model#NMEA_LOGTYPE
      * @see Model#GMAP_LOGTYPE
      */
-    public final void convertLog(final int logType) {
+    public void convertLog(final int logType) {
         if (doConvertLog(logType) != 0) {
             reportError(c.getLastError(), c.getLastErrorInfo());
         }
@@ -92,7 +93,7 @@ public class AppController extends Controller {
      * 
      * @return Array of selected trackpoints.
      */
-    public final GPSRecord[] convertLogToTrackPoints() {
+    public GPSRecord[] convertLogToTrackPoints() {
         GPSRecord[] result;
         result = c.doConvertLogToTrackPoints();
         if (result == null) {
@@ -113,15 +114,15 @@ public class AppController extends Controller {
      * A 'recovery Erase' attempts to recover memory that was previously
      * identified as 'bad'.
      */
-    public final void recoveryErase() {
+    public void recoveryErase() {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
         mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
                 C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
-                    C_CANCEL_OR_CONFIRM_ERASE);
+            mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
+                    Txt.C_msgEraseWarning2, C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
                 // Erase log
@@ -137,7 +138,7 @@ public class AppController extends Controller {
      * @param logFormat
      *            The logFormat to set upon erase.
      */
-    public final void changeLogFormatAndErase(final int logFormat) {
+    public void changeLogFormatAndErase(final int logFormat) {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
         mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
@@ -162,7 +163,7 @@ public class AppController extends Controller {
      * @param logFormat
      *            The new log format to set.
      */
-    public final void changeLogFormat(final int logFormat) {
+    public void changeLogFormat(final int logFormat) {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
         mb = new BT747MessageBox(true, Txt.TITLE_ATTENTION,
@@ -177,15 +178,15 @@ public class AppController extends Controller {
      * (User) request to change the log format. Warns about requirement to erase
      * the log too.
      */
-    public final void eraseLogFormat() {
+    public void eraseLogFormat() {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
         mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
                 C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
-                    C_CANCEL_OR_CONFIRM_ERASE);
+            mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
+                    Txt.C_msgEraseWarning2, C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
                 // Erase log
@@ -207,7 +208,7 @@ public class AppController extends Controller {
         switch (error) {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
             errorMsg = Txt.COULD_NOT_OPEN + errorInfo;
-            bt747.sys.Vm.debug(errorMsg);
+            Generic.debug(errorMsg, null);
             new BT747MessageBox(Txt.ERROR, errorMsg).popupBlockingModal();
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
@@ -234,7 +235,7 @@ public class AppController extends Controller {
      * @param view
      *            The view that must be attached.
      */
-    public final void addView(final BT747View view) {
+    public void addView(final BT747View view) {
         views.add(view);
         view.setController(this);
         view.setModel(this.m);
@@ -338,19 +339,25 @@ public class AppController extends Controller {
 
     /* @author Herbert Geus (initial code for saving settings on WindowsCE) */
 
-    public final void saveSettings() {
+    public void saveSettings() {
         if (isWin32LikeDevice()
-        // #if RXTX || java.lang.System.getProperty("os.name").startsWith("Mac")
+        // #if RXTX ||java.lang.System.getProperty("os.name").startsWith("Mac")
         // #if RXTX ||java.lang.System.getProperty("bt747_settings")!=null
         ) {
-            // bt747.sys.Vm.debug("on Device "+bt747.sys.Settings.platform);
-            // bt747.sys.Vm.debug("saving config file "+CONFIG_FILE_NAME);
+            if (Generic.isDebug()) {
+                Generic.debug("Platform " + Settings.platform, null);
+                // #if RXTX Generic.debug( "os.name:" +
+                // #if RXTX java.lang.System.getProperty("os.name"), null);
+                // #if RXTX Generic.debug( "bt747_settings:" +
+                // #if RXTX java.lang.System.getProperty("bt747_settings"), null);
+                Generic.debug("Saving config file " + CONFIG_FILE_NAME, null);
+            }
             File preferencesFile = new File("");
             try {
-                File m_Dir = new File(CONFIG_FILE_NAME.substring(0,
+                File dir = new File(CONFIG_FILE_NAME.substring(0,
                         CONFIG_FILE_NAME.lastIndexOf('/')), File.DONT_OPEN);
-                if (!m_Dir.exists()) {
-                    m_Dir.createDir();
+                if (!dir.exists()) {
+                    dir.createDir();
                 }
             } catch (Exception e) {
                 // Vm.debug("Exception new log delete");
@@ -362,7 +369,7 @@ public class AppController extends Controller {
                     preferencesFile.delete();
                 }
             } catch (Exception e) {
-                // Vm.debug("Exception new log delete");
+                Generic.debug("Exception config delete", e);
             }
             try {
                 preferencesFile = new File(CONFIG_FILE_NAME, File.CREATE);
@@ -373,8 +380,7 @@ public class AppController extends Controller {
                         .length());
                 preferencesFile.close();
             } catch (Exception e) {
-                // Vm.debug("Exception new log create");
-                e.printStackTrace();
+                Generic.debug("Exception config create", e);
             }
             // bt747.sys.Vm.debug("saved config file length
             // "+Settings.appSettings.length());

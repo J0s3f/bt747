@@ -44,7 +44,7 @@ import bt747.waba_view.ui.FileSelect;
  * 
  * @author Mario De Weerd
  */
-public class GPSLogFile extends Container implements ModelListener {
+public final class GPSLogFile extends Container implements ModelListener {
 
     private Model m;
     private AppController c;
@@ -70,7 +70,7 @@ public class GPSLogFile extends Container implements ModelListener {
     private Button btChangeSettings;
     private Button btDefaultSettings;
 
-    protected final void onStart() {
+    protected void onStart() {
         Label tmp;
         int idx;
 
@@ -151,7 +151,7 @@ public class GPSLogFile extends Container implements ModelListener {
         }
     }
 
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == btChangeSettings) {
@@ -211,7 +211,7 @@ public class GPSLogFile extends Container implements ModelListener {
         }
     }
 
-    public final void modelEvent(final ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
         if (eventType == ModelEvent.LOGFILEPATH_UPDATE
                 || eventType == ModelEvent.OUTPUTFILEPATH_UPDATE

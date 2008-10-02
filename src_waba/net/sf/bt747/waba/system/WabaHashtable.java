@@ -27,32 +27,29 @@ import bt747.sys.interfaces.BT747Hashtable;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class WabaHashtable extends waba.util.Hashtable implements
+public final class WabaHashtable extends waba.util.Hashtable implements
         BT747Hashtable {
 
     /**
      * @param initialCapacity
      */
-    public WabaHashtable(int initialCapacity) {
+    public WabaHashtable(final int initialCapacity) {
         super(initialCapacity);
-        // TODO Auto-generated constructor stub
     }
 
     /**
      * @param initialCapacity
      * @param loadFactor
      */
-    public WabaHashtable(int initialCapacity, float loadFactor) {
+    public WabaHashtable(final int initialCapacity, final float loadFactor) {
         super(initialCapacity, loadFactor);
-        // TODO Auto-generated constructor stub
     }
 
     /**
      * @param res
      */
-    public WabaHashtable(String res) {
+    public WabaHashtable(final String res) {
         super(res);
-        // TODO Auto-generated constructor stub
     }
 
 }

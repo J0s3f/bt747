@@ -19,13 +19,13 @@
 //********************************************************************
 package net.sf.bt747.waba.system;
 
-public class MyThread implements waba.sys.Thread {
+public final class WabaThread implements waba.sys.Thread {
 
     public java.lang.Thread jvThread;
     public bt747.sys.interfaces.BT747Thread btThread = null;
     public boolean running = false;
 
-    public MyThread(final bt747.sys.interfaces.BT747Thread t) {
+    public WabaThread(final bt747.sys.interfaces.BT747Thread t) {
         btThread = t;
     }
 

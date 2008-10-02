@@ -37,7 +37,7 @@ import bt747.model.ModelListener;
  * 
  * Implements Holux Specific operations
  */
-public class GPSHoluxSpecific extends Container implements ModelListener {
+public final class GPSHoluxSpecific extends Container implements ModelListener {
 
     private Model m;
     private AppController c;
@@ -71,13 +71,13 @@ public class GPSHoluxSpecific extends Container implements ModelListener {
         lbBTMacAddr = new Label(Txt.BT_MAC_ADDR);
         add(lbBTMacAddr, LEFT, AFTER + 5);
         add(edHoluxBT_MacAddr = new Edit(""), AFTER, SAME);
-        add(btMacSet=new Button(Txt.SET),CENTER,AFTER+5);
+        add(btMacSet = new Button(Txt.SET), CENTER, AFTER + 5);
     }
 
     private void doSet() {
         c.setHoluxName(edHoluxName.getText().replace(',', ';'));
     }
-    
+
     /**
      * Sets the MAC address for bluetooth (for devices that support it).
      */
@@ -96,7 +96,7 @@ public class GPSHoluxSpecific extends Container implements ModelListener {
      * @param event
      *            The event to be interpreted.
      */
-    public void onEvent(Event event) {
+    public void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
@@ -113,7 +113,7 @@ public class GPSHoluxSpecific extends Container implements ModelListener {
         }
     }
 
-    public final void modelEvent(final ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         if (event.getType() == ModelEvent.DATA_UPDATE) {
             updateData();
         }

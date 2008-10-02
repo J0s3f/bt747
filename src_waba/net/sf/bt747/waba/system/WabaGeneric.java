@@ -32,7 +32,7 @@ import bt747.sys.interfaces.BT747Thread;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class Generic {
+public final class WabaGeneric {
 
     // public static void addThread(final BT747Thread t, final boolean b) {
     // MainWindow.getMainWindow().addThread(t, b);
@@ -42,8 +42,8 @@ public class Generic {
     // MainWindow.getMainWindow().removeThread(t);
     // }
 
-    private static moio.util.Hashtable h = new moio.util.Hashtable();
-    private static moio.util.Hashtable oos = new moio.util.Hashtable();
+    private final static moio.util.Hashtable h = new moio.util.Hashtable();
+    private final static moio.util.Hashtable oos = new moio.util.Hashtable();
 
     // java.util.HashSet<Object> tt = new java.util.HashSet<Object>();
 
@@ -56,18 +56,20 @@ public class Generic {
         }
         if (!oos.contains(t)) {
             // Log.debug("Adding " + t);
-            MyThread mt = new MyThread(t);
+            WabaThread mt = new WabaThread(t);
             MainWindow.getMainWindow().addThread(mt, b);
             t.started();
             if (mt != null) {
                 // System.out.println("new Thread() succeed");
             } else {
-                Vm.debug("new Thread() failed");
+                bt747.sys.Generic.debug("new Thread() failed", null);
             }
             h.put(mt, h);
             oos.put(t, oos);
         } else {
-            Vm.debug("Already present thread " + t);
+            if (bt747.sys.Generic.isDebug()) {
+                bt747.sys.Generic.debug("Already present thread " + t, null);
+            }
         }
     }
 
@@ -75,7 +77,7 @@ public class Generic {
         // MainWindow.getMainWindow().removeThread(t);
         Enumeration e = h.keys();
         while (e.hasMoreElements()) {
-            MyThread tt = (MyThread) e.nextElement();
+            WabaThread tt = (WabaThread) e.nextElement();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
                 tt.btThread = null; // When this is null, the thread stops.
@@ -90,7 +92,7 @@ public class Generic {
         // MainWindow.getMainWindow().removeThread(t);
         Enumeration e = h.keys();
         while (e.hasMoreElements()) {
-            MyThread tt = (MyThread) e.nextElement();
+            WabaThread tt = (WabaThread) e.nextElement();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
                 if (tt.running) {
@@ -103,7 +105,7 @@ public class Generic {
 
     }
 
-    public static double pow(double x, double y) {
+    public static double pow(final double x, final double y) {
         return Math.pow(x, y);
     }
 
@@ -111,7 +113,7 @@ public class Generic {
         return Math.acos(x);
     }
 
-    public static void debug(String s, Throwable e) {
+    public static void debug(final String s, final Throwable e) {
         Vm.debug(s);
         if (e != null) {
             e.printStackTrace();

@@ -36,7 +36,7 @@ import bt747.model.ModelListener;
  * @author Mario De Weerd
  * 
  */
-public class GpsFilterTabPanel extends Container implements ModelListener {
+public final class GpsFilterTabPanel extends Container implements ModelListener {
 
     private Model m;
     private AppController c;
@@ -53,7 +53,7 @@ public class GpsFilterTabPanel extends Container implements ModelListener {
     /**
      * 
      */
-    public final void onStart() {
+    protected void onStart() {
         add(tabPanel = new TabPanel(tpCaptions), CENTER, CENTER);
         tabPanel.setBorderStyle(Window.NO_BORDER);
         tabPanel.setRect(getClientRect().modifiedBy(0, 0, 0, 0));
@@ -63,7 +63,7 @@ public class GpsFilterTabPanel extends Container implements ModelListener {
         // m_TabPanel.setPanel(2,m_GPSNMEAFile = new GPSFileNMEAOutputSel(m));
     }
 
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         //
         switch (event.type) {
         case ControlEvent.PRESSED:
@@ -77,7 +77,7 @@ public class GpsFilterTabPanel extends Container implements ModelListener {
         }
     }
 
-    public final void modelEvent(final ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
         if (eventType == ModelEvent.DATA_UPDATE) {
             // Todo - avoid event transofrmation.

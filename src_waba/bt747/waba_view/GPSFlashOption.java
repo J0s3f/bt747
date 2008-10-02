@@ -37,7 +37,7 @@ import bt747.waba_view.ui.BT747MessageBox;
 /**
  * @author Mario De Weerd
  */
-public class GPSFlashOption extends Container implements ModelListener {
+public final class GPSFlashOption extends Container implements ModelListener {
     private AppController c;
     private Model m;
 
@@ -60,7 +60,7 @@ public class GPSFlashOption extends Container implements ModelListener {
         this.c = c;
     }
 
-    protected final void onStart() {
+    protected void onStart() {
         super.onStart();
 
         add(new Label(Txt.TIMESLEFT), LEFT, TOP);
@@ -94,7 +94,7 @@ public class GPSFlashOption extends Container implements ModelListener {
 
     }
 
-    public final void updateButtons() {
+    public void updateButtons() {
         userOptionTimesLeft.setText(Convert.toString(m
                 .getDtUserOptionTimesLeft()));
         edUpdateRate.setText(Convert.toString(m.getDtUpdateRate()));
@@ -122,11 +122,11 @@ public class GPSFlashOption extends Container implements ModelListener {
 
     }
 
-    public final void setSettings() {
+    public void setSettings() {
         BT747MessageBox mb;
         String[] mbStr = { Txt.WRITEFLASH, Txt.ABORT };
-        mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.TXT_FLASH_LIMITED_WRITES,
-                mbStr);
+        mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
+                Txt.TXT_FLASH_LIMITED_WRITES, mbStr);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
             c.setFlashUserOption(false, // lock
@@ -144,7 +144,7 @@ public class GPSFlashOption extends Container implements ModelListener {
 
     }
 
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
@@ -161,7 +161,7 @@ public class GPSFlashOption extends Container implements ModelListener {
         }
     }
 
-    public final void modelEvent(final ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         if (event.getType() == ModelEvent.DATA_UPDATE) {
             updateButtons();
         }

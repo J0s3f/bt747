@@ -21,7 +21,7 @@ import bt747.sys.interfaces.BT747Semaphore;
 /**
  * @author Mario De Weerd
  */
-public class J2SESemaphore implements BT747Semaphore {
+public final class J2SESemaphore implements BT747Semaphore {
     private Semaphore available;
 
     public J2SESemaphore(int value) {

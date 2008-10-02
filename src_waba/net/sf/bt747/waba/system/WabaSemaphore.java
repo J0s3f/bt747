@@ -18,16 +18,16 @@ import bt747.sys.interfaces.BT747Semaphore;
 //***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
+//***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
-//********************************************************************                              
+//********************************************************************
 /**
  * @author Mario De Weerd
  */
-public class WabaSemaphore implements BT747Semaphore {
+public final class WabaSemaphore implements BT747Semaphore {
     private int value;
 
-    public WabaSemaphore(int value) {
+    public WabaSemaphore(final int value) {
         this.value = value;
     }
 

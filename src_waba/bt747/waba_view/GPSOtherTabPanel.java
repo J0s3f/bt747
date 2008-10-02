@@ -32,28 +32,21 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 
-/*
- * Created on 3 sept. 2007
- *
- */
-
 /**
- * @author Mario De Weerd
+ * Implements "Other" panel for miscelaneous settings.
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * @author Mario De Weerd
  */
-public class GPSOtherTabPanel extends Container implements ModelListener {
+public final class GPSOtherTabPanel extends Container implements ModelListener {
 
     private TabPanel tabPanel;
     private AppController c;
     private Model m;
 
-    private final String c_tpCaptions[] = { Txt.TAB_FLSH, Txt.TAB_NMEA_OUT,
+    private final String[] c_tpCaptions = { Txt.TAB_FLSH, Txt.TAB_NMEA_OUT,
             Txt.TAB_NMEA_FILE, Txt.TAB_HOLUX };
 
-
-    public GPSOtherTabPanel(final AppController c, Model m) {
+    public GPSOtherTabPanel(final AppController c, final Model m) {
         this.c = c;
         this.m = m;
     }
@@ -72,25 +65,27 @@ public class GPSOtherTabPanel extends Container implements ModelListener {
         tabPanel.setPanel(3, new GPSHoluxSpecific(m, c));
     }
 
-    public void onEvent(Event event) {
+    public void onEvent(final Event event) {
         //
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == tabPanel || event.target == this) {
-                Control c;
-                c = tabPanel.getChildren()[0];
-                c.postEvent(new Event(ControlEvent.PRESSED, c, 0));
+                Control cntrl;
+                cntrl = tabPanel.getChildren()[0];
+                cntrl.postEvent(new Event(ControlEvent.PRESSED, cntrl, 0));
             }
+            break;
+        default:
             break;
         }
     }
-    
-    public final void modelEvent(final ModelEvent event) {
+
+    public void modelEvent(final ModelEvent event) {
         if (event.getType() == ModelEvent.DATA_UPDATE) {
-            if(this.isVisible()) {
-                ModelListener c;
-                c = (ModelListener)tabPanel.getChildren()[0];
-                c.modelEvent(event);
+            if (this.isVisible()) {
+                ModelListener l;
+                l = (ModelListener) tabPanel.getChildren()[0];
+                l.modelEvent(event);
             }
         }
     }

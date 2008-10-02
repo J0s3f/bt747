@@ -26,7 +26,9 @@ public final class Generic {
     private static int debugLevel = 0;
 
     public static final void debug(final String s, final Throwable e) {
-        Interface.tr.debug(s, e);
+        if (s != null) {
+            Interface.tr.debug(s, e);
+        }
     }
 
     /**

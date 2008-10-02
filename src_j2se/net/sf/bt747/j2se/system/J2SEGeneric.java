@@ -19,10 +19,10 @@ import bt747.sys.interfaces.BT747Thread;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class J2SEGeneric {
+public final class J2SEGeneric {
 
-    private static HashSet h = new HashSet();
-    private static HashSet oos = new HashSet();
+    private final static HashSet h = new HashSet();
+    private final static HashSet oos = new HashSet();
 
     // java.util.HashSet<Object> tt = new java.util.HashSet<Object>();
 

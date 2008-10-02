@@ -27,23 +27,19 @@ import bt747.sys.interfaces.BT747File;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class WabaFile extends waba.io.File implements BT747File {
-    public static char separatorChar = '/';
-    public static String separatorStr = "/";
-
+public final class WabaFile extends waba.io.File implements BT747File {
     /**
      * @param path
      */
-    public WabaFile(String path) {
+    public WabaFile(final String path) {
         super(path);
-        // TODO Auto-generated constructor stub
     }
 
     /**
      * @param path
      * @param mode
      */
-    public WabaFile(String path, int mode) {
+    public WabaFile(final String path, final int mode) {
         super(path, mode);
         if (mode == waba.io.File.READ_WRITE || mode == waba.io.File.WRITE_ONLY) {
             setPos(getSize()); // Default is append
@@ -55,7 +51,7 @@ public class WabaFile extends waba.io.File implements BT747File {
      * @param mode
      * @param slot
      */
-    public WabaFile(String path, int mode, int slot) {
+    public WabaFile(final String path, final int mode, final int slot) {
         super(path, mode, slot);
         if (mode == waba.io.File.READ_WRITE || mode == waba.io.File.WRITE_ONLY) {
             setPos(getSize()); // Default is append

@@ -42,7 +42,7 @@ import bt747.sys.Time;
 /**
  * @author Mario De Weerd
  */
-public class GPSLogGet extends Container implements ModelListener {
+public final class GPSLogGet extends Container implements ModelListener {
 
     private Model m;
     private AppController c;
@@ -112,7 +112,7 @@ public class GPSLogGet extends Container implements ModelListener {
      * 
      * @see waba.ui.Container#onStart()
      */
-    protected final void onStart() {
+    protected void onStart() {
         super.onStart();
         add(chkLogOnOff = new MyCheck(Txt.DEV_LOGONOFF), LEFT, TOP); //$NON-NLS-1$
         cbDownload = new ComboBox(downloadStr);
@@ -195,7 +195,7 @@ public class GPSLogGet extends Container implements ModelListener {
         c.reqLogOverwrite();
     }
 
-    public final void updateButtons() {
+    public void updateButtons() {
         chkLogOnOff.setChecked(m.isLoggingActive());
         // m_chkLogOnOff.repaintNow();
         chkLogOverwriteStop.setChecked(m.isLogFullOverwrite());
@@ -220,7 +220,7 @@ public class GPSLogGet extends Container implements ModelListener {
      * 
      * @see waba.ui.Control#onEvent(waba.ui.Event)
      */
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         // Vm.debug("Event:"+event.type+" "+event.consumed);
         super.onEvent(event);
         switch (event.type) {
@@ -309,10 +309,10 @@ public class GPSLogGet extends Container implements ModelListener {
                 if (d != null) {
                     btCal.setText(d.toString());
                     // Can't change the value of the date, changing all
-                    c.setStartDate((new WabaDate(btStartDate.getText(),Settings.dateFormat))
-                            .dateToUTCepoch1970());
-                    c.setEndDate((new WabaDate(btEndDate.getText(),Settings.dateFormat))
-                            .dateToUTCepoch1970()
+                    c.setStartDate((new WabaDate(btStartDate.getText(),
+                            Settings.dateFormat)).dateToUTCepoch1970());
+                    c.setEndDate((new WabaDate(btEndDate.getText(),
+                            Settings.dateFormat)).dateToUTCepoch1970()
                             + SECONDS_PER_DAY - 1);
                 }
             }
@@ -323,10 +323,12 @@ public class GPSLogGet extends Container implements ModelListener {
              * a good idea to save memory when possible
              */
             break;
+            default:
+                break;
         }
     }
 
-    public final void modelEvent(ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
         if (eventType == ModelEvent.DATA_UPDATE) {
             updateButtons();

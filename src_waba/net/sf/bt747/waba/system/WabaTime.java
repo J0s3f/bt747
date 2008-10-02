@@ -23,67 +23,80 @@ import bt747.sys.interfaces.BT747Time;
 
 /**
  * @author Mario De Weerd
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 public final class WabaTime implements BT747Time {
-    private waba.sys.Time m_Time;
-    public WabaTime()
-    {
-       m_Time=new waba.sys.Time();
+    private waba.sys.Time time;
+
+    public WabaTime() {
+        time = new waba.sys.Time();
     }
 
-    public WabaTime(long t) {
-        m_Time=new waba.sys.Time(t);
+    public WabaTime(final long t) {
+        time = new waba.sys.Time(t);
     }
-    
-    public final int getYear() {
-        return m_Time.year;
+
+    public int getYear() {
+        return time.year;
     }
-    public final void setYear(int year) {
-        m_Time.year=year;
+
+    public void setYear(final int year) {
+        time.year = year;
     }
-    public final int getMonth() {
-        return m_Time.month;
+
+    public int getMonth() {
+        return time.month;
     }
-    public final void setMonth(int month) {
-        m_Time.month=month;
+
+    public void setMonth(final int month) {
+        time.month = month;
     }
-    public final int getDay() {
-        return m_Time.day;
+
+    public int getDay() {
+        return time.day;
     }
-    public final void setDay(int day) {
-        m_Time.day=day;
+
+    public void setDay(final int day) {
+        time.day = day;
     }
-    public final int getHour() {
-        return m_Time.hour;
+
+    public int getHour() {
+        return time.hour;
     }
-    public final void setHour(int hour) {
-        m_Time.hour=hour;
+
+    public void setHour(final int hour) {
+        time.hour = hour;
     }
-    public final int getMinute() {
-        return m_Time.minute;
+
+    public int getMinute() {
+        return time.minute;
     }
-    public final void setMinute(int minute) {
-        m_Time.minute=minute;
+
+    public void setMinute(final int minute) {
+        time.minute = minute;
     }
-    public final int getSecond() {
-        return m_Time.second;
+
+    public int getSecond() {
+        return time.second;
     }
-    public final void setSecond(int second) {
-        m_Time.second=second;
+
+    public void setSecond(final int second) {
+        time.second = second;
     }
-    public final int getMillis() {
-        return m_Time.millis;
+
+    public int getMillis() {
+        return time.millis;
     }
-    public final void setMillis(int millis) {
-        m_Time.millis=millis;
+
+    public void setMillis(final int millis) {
+        time.millis = millis;
     }
-    
+
     private static final int DAYS_BETWEEN_1970_1983 = 4748;
 
-    public final void setUTCTime(final int utc_int) {
+    public void setUTCTime(final int utc_int) {
         // long utc=utc_int&0xFFFFFFFFL;
         int utc = utc_int;
         // Time t=new Time();

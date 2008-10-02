@@ -245,8 +245,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
     private int numPanels;
 
-    public final static String requiredVersionStr = "5.82";
-    public final static int requiredVersion = 582;
+    public static final String requiredVersionStr = "5.82";
+    public static final int requiredVersion = 582;
 
     public void onStart() {
         super.onStart();
