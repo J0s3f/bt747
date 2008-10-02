@@ -24,7 +24,7 @@ import bt747.sys.interfaces.BT747Vector;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class J2MEVector extends Stack implements BT747Vector {   
+public final class J2MEVector extends Stack implements BT747Vector {   
     /**
      * 
      */
@@ -34,11 +34,11 @@ public class J2MEVector extends Stack implements BT747Vector {
         return this.elementCount;
     }
     
-    public void del(Object o) {
+    public void del(final Object o) {
         super.removeElement(o);
     }
     
-    public void del(int i) {
+    public void del(final int i) {
         super.removeElementAt(i);
     }
     public Object[] toObjectArray() {
@@ -56,7 +56,7 @@ public class J2MEVector extends Stack implements BT747Vector {
         return s;
     }
     
-    public final void mypush(Object item) {
+    public void mypush(final Object item) {
         super.push(item);
     }
 }

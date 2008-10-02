@@ -205,14 +205,6 @@ public final class J2MEDate implements BT747Date {
     }
 
     /**
-     * @see bt747.util.BT747Date#getJulianDay()
-     * @return number of seconds since epoch.
-     */
-    public final int getJulianDay() {
-        return this.dateToUTCepoch1970();
-    }
-
-    /**
      * @see bt747.util.BT747Date#getYear()
      * @return year for current date.
      */

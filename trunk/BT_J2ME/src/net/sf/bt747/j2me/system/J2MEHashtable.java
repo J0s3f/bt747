@@ -20,7 +20,7 @@ import bt747.sys.interfaces.BT747Hashtable;
  */
 public final class J2MEHashtable extends java.util.Hashtable implements
         BT747Hashtable {
-    public J2MEHashtable(int a) {
+    public J2MEHashtable(final int a) {
         super(a);
     }
 }

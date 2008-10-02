@@ -10,12 +10,12 @@
 
 package net.sf.bt747.j2me.system;
 
-public class StringTokenizer {
+public final class StringTokenizer {
 
     private String left;
     private char delim;
 
-    public StringTokenizer(String s, char delim) {
+    public StringTokenizer(final String s, final char delim) {
         this.left = s;
         if (this.left == null) {
             this.left = "";
@@ -23,7 +23,7 @@ public class StringTokenizer {
         this.delim = delim;
     }
 
-    public boolean hasMoreTokens() {
+    public final boolean hasMoreTokens() {
         int i = left.length();
         if (i > 0) {
             return true;
@@ -32,7 +32,7 @@ public class StringTokenizer {
         }
     }
 
-    public String nextToken() {
+    public final String nextToken() {
         StringBuffer s = new StringBuffer();
         boolean done = false;
         int pos = 0;

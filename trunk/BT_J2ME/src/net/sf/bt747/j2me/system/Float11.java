@@ -1,4 +1,5 @@
 package net.sf.bt747.j2me.system;
+
 /*
  * <p>Title: Class for float-point calculations in J2ME applications CLDC 1.1</p>
  * <p>Description: Useful methods for float-point calculations which absent in native Math class</p>
@@ -14,7 +15,7 @@ package net.sf.bt747.j2me.system;
  * @version 0.5
  */
 
-class Float11 {
+final class Float11 {
     /* Square root from 3 */
     public static final double SQRT3 = 1.732050807568877294;
     /* Log10 constant */
@@ -44,15 +45,18 @@ class Float11 {
         return atan(x / Math.sqrt(1 - x * x));
     }
 
-    public static double atan(double x) {
+    public static double atan(final double arg) {
+        double x;
         boolean signChange = false;
         boolean Invert = false;
         int sp = 0;
         double x2, a;
         // check up the sign change
-        if (x < 0.) {
-            x = -x;
+        if (arg < 0.) {
+            x = -arg;
             signChange = true;
+        } else {
+            x = arg;
         }
         // check up the invertation
         if (x > 1.) {
@@ -117,7 +121,7 @@ class Float11 {
         }
     }
 
-    public static double exp(double x) {
+    public static double exp( double x) {
         if (x == 0.) {
             return 1.;
         }

@@ -25,8 +25,8 @@ import bt747.sys.interfaces.BT747Time;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class J2METime implements BT747Time {
-    final static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+public final class J2METime implements BT747Time {
+    private static final TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
     private Calendar cal = Calendar.getInstance(GMT_ZONE);
 
     public J2METime() {
@@ -41,7 +41,7 @@ public class J2METime implements BT747Time {
         return cal.get(Calendar.HOUR_OF_DAY);
     }
 
-    public void setHour(int hours) {
+    public void setHour(final int hours) {
         cal.set(Calendar.HOUR_OF_DAY, hours);
     }
 
@@ -49,7 +49,7 @@ public class J2METime implements BT747Time {
         return cal.get(Calendar.MINUTE);
     }
 
-    public void setMinute(int hours) {
+    public void setMinute(final int hours) {
         cal.set(Calendar.MINUTE, hours);
     }
 
@@ -57,11 +57,11 @@ public class J2METime implements BT747Time {
         return cal.get(Calendar.SECOND);
     }
 
-    public void setSecond(int hours) {
+    public void setSecond(final int hours) {
         cal.set(Calendar.SECOND, hours);
     }
 
-    public void setDay(int date) {
+    public void setDay(final int date) {
         cal.set(Calendar.DAY_OF_MONTH, date);
     }
 
@@ -69,7 +69,7 @@ public class J2METime implements BT747Time {
         return cal.get(Calendar.YEAR);
     }
 
-    public void setYear(int year) {
+    public void setYear(final int year) {
         cal.set(Calendar.YEAR, year);
     }
 
@@ -77,7 +77,7 @@ public class J2METime implements BT747Time {
         return cal.get(Calendar.MONTH) + 1;
     }
 
-    public void setMonth(int month) {
+    public void setMonth(final int month) {
         cal.set(Calendar.MONTH, month - 1);
     }
 
@@ -87,7 +87,7 @@ public class J2METime implements BT747Time {
 
     // UTC time in java depends on implementation (leap seconds, ...)
     // So we need to implement our own function.
-    public final void setUTCTime(final int utc) {
+    public void setUTCTime(final int utc) {
 //        cal.set(Calendar.YEAR, 1970);
 //        cal.set(Calendar.MONTH, 0);
 //        cal.set(Calendar.DAY_OF_MONTH, 1);
