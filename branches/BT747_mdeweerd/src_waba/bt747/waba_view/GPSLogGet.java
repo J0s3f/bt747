@@ -20,6 +20,7 @@ package bt747.waba_view;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
 import waba.fx.Color;
+import waba.sys.Settings;
 import waba.ui.Button;
 import waba.ui.Calendar;
 import waba.ui.ComboBox;
@@ -308,9 +309,9 @@ public class GPSLogGet extends Container implements ModelListener {
                 if (d != null) {
                     btCal.setText(d.toString());
                     // Can't change the value of the date, changing all
-                    c.setStartDate((new WabaDate(btStartDate.getText()))
+                    c.setStartDate((new WabaDate(btStartDate.getText(),Settings.dateFormat))
                             .dateToUTCepoch1970());
-                    c.setEndDate((new WabaDate(btEndDate.getText()))
+                    c.setEndDate((new WabaDate(btEndDate.getText(),Settings.dateFormat))
                             .dateToUTCepoch1970()
                             + SECONDS_PER_DAY - 1);
                 }

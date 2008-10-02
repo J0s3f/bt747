@@ -29,12 +29,12 @@ import bt747.sys.interfaces.BT747Date;
  * Preferences - Java - Code Style - Code Templates
  */
 public class J2SEDate implements BT747Date {
-    static private SimpleDateFormat FORMAT_YYYYMMDD = new SimpleDateFormat(
+    static private final SimpleDateFormat FORMAT_YYYYMMDD = new SimpleDateFormat(
             "yyyy/MM/dd");
-    static private SimpleDateFormat FORMAT_DDMMYYYY = new SimpleDateFormat(
+    static private final SimpleDateFormat FORMAT_DDMMYYYY = new SimpleDateFormat(
             "dd/MM/yyyy");
-    static private TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
-    private Calendar cal = Calendar.getInstance();
+    static private final TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+    private final Calendar cal = Calendar.getInstance();
 
     /**
      * Calendar cal = Calendar.getInstance();
@@ -96,7 +96,7 @@ public class J2SEDate implements BT747Date {
     }
 
     private void init() {
-        cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+        cal.setTimeZone(GMT_ZONE);
     }
 
     /**

@@ -53,9 +53,9 @@ public final class Date {
         return date.getDay();
     }
 
-    public final int getJulianDay() {
-        return date.getJulianDay();
-    }
+//    public final int getJulianDay() {
+//        return date.getJulianDay();
+//    }
 
     public final int getMonth() {
         // TODO Auto-generated method stub

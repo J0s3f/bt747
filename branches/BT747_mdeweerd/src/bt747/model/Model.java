@@ -126,6 +126,7 @@ public class Model extends AppSettings implements GPSListener {
      * The default constructor of the model.
      */
     public Model() {
+        super();
         for (int i = 0; i < logFilters.length; i++) {
             logFilters[i] = new GPSFilter();
             logFiltersAdv[i] = new GPSFilterAdvanced();

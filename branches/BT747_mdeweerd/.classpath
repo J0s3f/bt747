@@ -10,7 +10,7 @@
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/collections-superwaba.jar"/>
 	<classpathentry kind="lib" path="lib/RXTXcomm.jar"/>
-	<classpathentry kind="lib" path="lib/Waba_only.jar"/>
+	<classpathentry kind="lib" path="lib/Waba_only.jar" sourcepath="c:/SuperWabaSDK/src/java"/>
 	<classpathentry kind="lib" path="lib/jcalendar-1.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/swing-layout-1.0.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>

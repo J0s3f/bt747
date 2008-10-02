@@ -21,7 +21,6 @@ import moio.util.Iterator;
 
 import bt747.sys.Convert;
 import bt747.sys.File;
-import bt747.sys.Generic;
 import bt747.sys.Settings;
 
 /**
@@ -293,6 +292,7 @@ public class AppSettings {
      * actual use of the model.
      */
     public AppSettings() {
+        listeners = new HashSet();
     }
 
     public final void init() {
@@ -1302,7 +1302,7 @@ public class AppSettings {
      * Event posting
      */
 
-    private HashSet listeners = new HashSet();
+    private HashSet listeners;
 
     /** add a listener to event thrown by this class */
     public final void addListener(final ModelListener l) {
