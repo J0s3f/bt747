@@ -14,7 +14,7 @@ import bt747.sys.interfaces.BT747Vector;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class J2SEVector extends java.util.Stack<Object> implements BT747Vector {
+public final class J2SEVector extends java.util.Stack<Object> implements BT747Vector {
 
     /**
      * 

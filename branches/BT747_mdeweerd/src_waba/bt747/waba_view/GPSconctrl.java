@@ -42,7 +42,7 @@ import bt747.sys.Time;
  * @author Mario De Weerd
  */
 
-public class GPSconctrl extends Container implements ModelListener {
+public final class GPSconctrl extends Container implements ModelListener {
     // private PushButtonGroup btnChannelSelect;
 
     private Button btnRestartGps;
@@ -75,7 +75,7 @@ public class GPSconctrl extends Container implements ModelListener {
         this.m = m;
     }
 
-    public final void onStart() {
+    protected void onStart() {
 
         btnBluetooth = new Button(Txt.BT_BLUETOOTH);
         // Functionality only valid on Palm and Mac platform.
@@ -214,7 +214,7 @@ public class GPSconctrl extends Container implements ModelListener {
         // lbGeoid.repaintNow();
     }
 
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == btnBluetooth) {
@@ -238,10 +238,12 @@ public class GPSconctrl extends Container implements ModelListener {
                 c.connectGPS();
             }
             break;
+            default:
+                break;
         }
     }
 
-    public final void modelEvent(final ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
         if (eventType == ModelEvent.GPGGA) {
             updateGPSData((GPSRecord) (event.getArg()));

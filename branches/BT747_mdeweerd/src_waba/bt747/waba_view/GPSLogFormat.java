@@ -35,7 +35,7 @@ import bt747.model.ModelListener;
 /**
  * @author Mario De Weerd
  */
-public class GPSLogFormat extends Container implements ModelListener {
+public final class GPSLogFormat extends Container implements ModelListener {
     private static final int C_LOG_FMT_COUNT = 21;
     /** The object that is used to communicate with the GPS device. */
     private Model m;
@@ -47,7 +47,7 @@ public class GPSLogFormat extends Container implements ModelListener {
     private Button btChangeFormat;
     private Button btErase;
 
-    private Label m_lbEstNbrRecords;
+    private Label lbEstNbrRecords;
 
     /**
      * Initialiser of this Container.<br>
@@ -62,7 +62,7 @@ public class GPSLogFormat extends Container implements ModelListener {
      * Initiliaser once all objects received initial setup
      * 
      */
-    public final void onStart() {
+    public void onStart() {
         // Add all tick buttons.
         for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
             chkLogFmtItems[i] = new MyCheck(Txt.logFmtItems[i]);
@@ -87,9 +87,9 @@ public class GPSLogFormat extends Container implements ModelListener {
                             : AFTER - 1);
             chkLogFmtItems[i].setEnabled(true);
         }
-        m_lbEstNbrRecords = new Label("0000000" + Txt.REC_ESTIMATED);
-        add(m_lbEstNbrRecords, LEFT, AFTER);
-        m_lbEstNbrRecords.setText("");
+        lbEstNbrRecords = new Label("0000000" + Txt.REC_ESTIMATED);
+        add(lbEstNbrRecords, LEFT, AFTER);
+        lbEstNbrRecords.setText("");
 
         // Add button confirming change of log format.
         btChangeFormatErase = new Button(Txt.SET_ERASE);
@@ -146,7 +146,7 @@ public class GPSLogFormat extends Container implements ModelListener {
         chkLogFmtItems[BT747Constants.FMT_AZIMUTH_IDX].setEnabled(sidSet);
         chkLogFmtItems[BT747Constants.FMT_SNR_IDX].setEnabled(sidSet);
 
-        m_lbEstNbrRecords.setText(m
+        lbEstNbrRecords.setText(m
                 .getEstimatedNbrRecords(getSelectedLogFormat())
                 + Txt.REC_ESTIMATED);
     }
@@ -157,7 +157,7 @@ public class GPSLogFormat extends Container implements ModelListener {
      * @param event
      *            The event to be interpreted.
      */
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == btChangeFormatErase) {
@@ -185,11 +185,11 @@ public class GPSLogFormat extends Container implements ModelListener {
         default:
         }
     }
-    
-    public final void modelEvent(ModelEvent event) {
+
+    public void modelEvent(final ModelEvent event) {
         if (event.getType() == ModelEvent.LOG_FORMAT_UPDATE) {
             updateLogFormat(m.getLogFormat());
         }
-        
+
     }
 }

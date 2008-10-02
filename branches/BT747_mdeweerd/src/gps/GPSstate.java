@@ -2251,8 +2251,8 @@ public class GPSstate implements BT747Thread {
                     }
                     openNewLog(DPL700LogFileName, DPL700Card);
                     try {
-                        logFile.writeBytes(gpsRxTx.DPL700_buffer, 0,
-                                gpsRxTx.DPL700_buffer_idx);
+                        logFile.writeBytes(gpsRxTx.getDPL700_buffer(), 0,
+                                gpsRxTx.getDPL700_buffer_idx());
                         logFile.close();
                     } catch (Exception e) {
                         Generic.debug("", e);

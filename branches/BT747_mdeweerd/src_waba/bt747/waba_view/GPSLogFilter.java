@@ -36,12 +36,12 @@ import bt747.model.ModelListener;
 /**
  * The purpose of this container is to set the log filter settings.
  */
-public class GPSLogFilter extends Container implements ModelListener {
+public final class GPSLogFilter extends Container implements ModelListener {
     private int currentLogFilter = 0;
     private Model m;
     private AppController c;
 
-    public GPSLogFilter(AppController c, Model m) {
+    public GPSLogFilter(final AppController c, final Model m) {
         this.m = m;
         this.c = c;
     }
@@ -53,7 +53,7 @@ public class GPSLogFilter extends Container implements ModelListener {
     private MyCheck[] chkValid = new MyCheck[C_VALID_COUNT];
     private PushButtonGroup pbPtType;
 
-    public void onStart() {
+    protected void onStart() {
         C_PB_TYPE_NAMES[GPSFilter.TRKPT] = Txt.TRKPT;
         C_PB_TYPE_NAMES[GPSFilter.WAYPT] = Txt.WAYPT;
         add(pbPtType = new PushButtonGroup(C_PB_TYPE_NAMES, // labes for buttons
@@ -184,7 +184,7 @@ public class GPSLogFilter extends Container implements ModelListener {
      * @param event
      *            The event to be interpreted.
      */
-    public void onEvent(Event event) {
+    public void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
@@ -211,6 +211,8 @@ public class GPSLogFilter extends Container implements ModelListener {
                     case GPSFilter.WAYPT:
                         c.setWayPtValid(getValid());
                         break;
+                        default:
+                            break;
                     }
                 }
                 z_updated = false;
@@ -227,14 +229,18 @@ public class GPSLogFilter extends Container implements ModelListener {
                     case GPSFilter.WAYPT:
                         c.setWayPtRCR(getRCR());
                         break;
+                        default:
+                            break;
                     }
                 }
             }
             break;
+            default:
+                break;
         }
     }
 
-    public final void modelEvent(final ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         // Do nothing.
     }
 }

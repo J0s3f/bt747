@@ -13,7 +13,7 @@ import bt747.sys.Convert;
 import bt747.sys.Hashtable;
 import bt747.sys.Vector;
 
-public class PolylineEncoder {
+public final class PolylineEncoder {
 
     private int numLevels = 18;
 
@@ -40,8 +40,8 @@ public class PolylineEncoder {
 
         for (int i = 0; i < pNumLevels; i++) {
             this.zoomLevelBreaks[i] = pVerySmall
-                    * bt747.sys.Generic.pow(this.zoomFactor, pNumLevels - i
-                            - 1);
+                    * bt747.sys.Generic
+                            .pow(this.zoomFactor, pNumLevels - i - 1);
         }
     }
 
@@ -50,8 +50,7 @@ public class PolylineEncoder {
 
         for (int i = 0; i < numLevels; i++) {
             this.zoomLevelBreaks[i] = verySmall
-                    * bt747.sys.Generic.pow(this.zoomFactor, numLevels - i
-                            - 1);
+                    * bt747.sys.Generic.pow(this.zoomFactor, numLevels - i - 1);
         }
     }
 
@@ -79,7 +78,7 @@ public class PolylineEncoder {
      * @return [EncodedPoints;EncodedLevels]
      * 
      */
-    public final Hashtable dpEncode(final Track track) {
+    public Hashtable dpEncode(final Track track) {
         int i, maxLoc = 0;
         Vector stack = new Vector();
         double[] dists = new double[track.getTrackpoints().size()];
@@ -96,7 +95,7 @@ public class PolylineEncoder {
                 maxDist = 0;
 
                 for (i = current[0] + 1; i < current[1]; i++) {
-                    temp = this.distance((Trackpoint) track.getTrackpoints()
+                    temp = distance((Trackpoint) track.getTrackpoints()
                             .elementAt(i), (Trackpoint) track.getTrackpoints()
                             .elementAt(current[0]), (Trackpoint) track
                             .getTrackpoints().elementAt(current[1]));
@@ -136,7 +135,7 @@ public class PolylineEncoder {
 
     }
 
-    public static final String replace(final String s, final String one,
+    public static String replace(final String s, final String one,
             final String another) {
         // In a string replace one substring with another
         if (s.equals("")) {
@@ -167,7 +166,7 @@ public class PolylineEncoder {
      *            Second point of segment.
      * @return Distance between point p0 and the segment [p1,p2].
      */
-    public final double distance(final Trackpoint p0, final Trackpoint p1,
+    public static double distance(final Trackpoint p0, final Trackpoint p1,
             final Trackpoint p2) {
         double u, out = 0.0;
 
@@ -183,8 +182,9 @@ public class PolylineEncoder {
                     .getLonDouble() - p1.getLonDouble())
                     * (p2.getLonDouble() - p1.getLonDouble()))
                     / (bt747.sys.Generic.pow(p2.getLatDouble()
-                            - p1.getLatDouble(), 2) + bt747.sys.Generic
-                            .pow(p2.getLonDouble() - p1.getLonDouble(), 2));
+                            - p1.getLatDouble(), 2) + bt747.sys.Generic.pow(p2
+                            .getLonDouble()
+                            - p1.getLonDouble(), 2));
 
             if (u <= 0) {
                 out = Math.sqrt(bt747.sys.Generic.pow(p0.getLatDouble()
@@ -276,7 +276,7 @@ public class PolylineEncoder {
         return (encodeNumber(sgnNum));
     }
 
-    private static final String encodeNumber(final int num) {
+    private static String encodeNumber(final int num) {
 
         StringBuffer encodeString = new StringBuffer();
         int value = num;
@@ -403,7 +403,7 @@ public class PolylineEncoder {
         this.bounds = pbounds;
     }
 
-    public final Hashtable createEncodings(final Track track, final int level,
+    public Hashtable createEncodings(final Track track, final int level,
             final int step) {
 
         Hashtable resultMap = new Hashtable(0);
@@ -447,7 +447,7 @@ public class PolylineEncoder {
         return resultMap;
     }
 
-    public final Hashtable getBounds() {
+    public Hashtable getBounds() {
         return bounds;
     }
 }

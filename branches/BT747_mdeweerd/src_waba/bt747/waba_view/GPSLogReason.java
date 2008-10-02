@@ -36,7 +36,7 @@ import bt747.sys.Convert;
 /**
  * @author Mario De Weerd
  */
-public class GPSLogReason extends Container implements ModelListener {
+public final class GPSLogReason extends Container implements ModelListener {
     private static final boolean ENABLE_PWR_SAVE_CONTROL = false;
     private AppController c;
     private Model m;
@@ -67,7 +67,7 @@ public class GPSLogReason extends Container implements ModelListener {
 
     }
 
-    protected final void onStart() {
+    protected void onStart() {
         super.onStart();
         add(chkTimeOnOff = new MyCheck(Txt.RCR_TIME), LEFT, TOP); //$NON-NLS-1$
         add(edTime = new Edit(), AFTER, SAME); //$NON-NLS-1$
@@ -97,7 +97,7 @@ public class GPSLogReason extends Container implements ModelListener {
         add(btSet = new Button(Txt.SET), CENTER, AFTER + 3); //$NON-NLS-1$
     }
 
-    public final void updateButtons() {
+    public void updateButtons() {
         chkTimeOnOff.setChecked(m.getLogTimeInterval() != 0);
         edTime.setEnabled(m.getLogTimeInterval() != 0);
         if (m.getLogTimeInterval() != 0) {
@@ -126,7 +126,7 @@ public class GPSLogReason extends Container implements ModelListener {
 
     }
 
-    public final void setSettings() {
+    public void setSettings() {
         if (chkTimeOnOff.getChecked()) {
             c.setLogTimeInterval((int) (10 * Convert
                     .toFloat(edTime.getText())));
@@ -148,7 +148,7 @@ public class GPSLogReason extends Container implements ModelListener {
         c.reqLogReasonStatus();
     }
 
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
@@ -184,7 +184,7 @@ public class GPSLogReason extends Container implements ModelListener {
         }
     }
     
-    public final void modelEvent(final ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         if (event.getType() == ModelEvent.DATA_UPDATE) {
             updateButtons();
         }

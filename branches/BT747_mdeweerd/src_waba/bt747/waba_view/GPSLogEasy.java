@@ -40,7 +40,7 @@ import bt747.model.ModelListener;
  * 
  * @author Mario De Weerd
  */
-public class GPSLogEasy extends Container implements ModelListener {
+public final class GPSLogEasy extends Container implements ModelListener {
     private Button m_btSet5Hz;
     private Button m_btSet2Hz;
     private Button m_btStore;
@@ -64,7 +64,7 @@ public class GPSLogEasy extends Container implements ModelListener {
         this.c = c;
     }
 
-    protected final void onStart() {
+    protected void onStart() {
         add(m_btSet5Hz = new Button(Txt.BT_5HZ_FIX), LEFT, AFTER + 3); //$NON-NLS-1$
         add(m_btSet2Hz = new Button(Txt.BT_2HZ_FIX), RIGHT, SAME); //$NON-NLS-1$
         add(m_btStore = new Button(Txt.STORE_SETTINGS), LEFT, AFTER + 3); //$NON-NLS-1$
@@ -113,7 +113,7 @@ public class GPSLogEasy extends Container implements ModelListener {
         m_btRestore.setEnabled(m.isStoredSetting1());
     }
 
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
@@ -156,9 +156,12 @@ public class GPSLogEasy extends Container implements ModelListener {
                 event.consumed = false;
             }
             break;
+        default:
+            break;
         }
     }
-    public final void modelEvent(final ModelEvent event) {
+
+    public void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
         if (eventType == ModelEvent.DATA_UPDATE) {
             enableStore();

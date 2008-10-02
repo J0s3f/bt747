@@ -13,6 +13,7 @@
 //********************************************************************
 package net.sf.bt747.j2se.system;
 
+import java.text.NumberFormat;
 import java.util.Locale;
 
 import bt747.sys.interfaces.BT747Date;
@@ -24,7 +25,7 @@ import bt747.sys.interfaces.BT747Time;
 import bt747.sys.interfaces.BT747Vector;
 import bt747.sys.interfaces.JavaTranslationsInterface;
 
-public class JavaTranslations implements JavaTranslationsInterface {
+public final class JavaTranslations implements JavaTranslationsInterface {
     public final BT747Date getDateInstance() {
         return new J2SEDate();
     }
@@ -107,8 +108,19 @@ public class JavaTranslations implements JavaTranslationsInterface {
         return Double.toString(p);
     }
 
-    public final String toString(final double p, final int i) {
-        return String.format((Locale) null, "%." + i + "f", new Double(p));
+    private static final int MAX_FRACTION = 16;
+    private static final NumberFormat[] nf = new NumberFormat[MAX_FRACTION+1];
+    
+    static {
+        for (int i = 0; i < nf.length; i++) {
+            nf[i] = NumberFormat.getNumberInstance(Locale.US);
+            nf[i].setMaximumFractionDigits(i);
+            nf[i].setMinimumFractionDigits(i);
+        }
+    }
+
+    public final synchronized String toString(final double p, final int i) {
+        return nf[i].format(p);
     }
 
     private static final String ZEROSTRING = "0000000000000000";

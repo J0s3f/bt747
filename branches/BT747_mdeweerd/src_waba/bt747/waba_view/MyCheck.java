@@ -14,17 +14,17 @@ public final class MyCheck extends Check {
     /**
      * @param text
      */
-    public MyCheck(String text) {
+    public MyCheck(final String text) {
         super(text);
     }
 
     // @Override
-    final public int getPreferredHeight() {
+    public int getPreferredHeight() {
         return fm.height - 4;
     }
 
     // @Override
-    final public int getPreferredWidth() {
+    public int getPreferredWidth() {
         return super.getPreferredWidth() + getPreferredHeight()
                 - super.getPreferredHeight() - 1;
     }

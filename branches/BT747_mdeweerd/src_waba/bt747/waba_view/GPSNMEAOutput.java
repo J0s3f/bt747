@@ -35,17 +35,16 @@ import bt747.model.Model;
 import bt747.model.ModelListener;
 
 /**
- * @author Mario De Weerd
+ * Implements tab to select Device NMEA output.
  * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * @author Mario De Weerd
  */
-public class GPSNMEAOutput extends Container implements ModelListener {
+public final class GPSNMEAOutput extends Container implements ModelListener {
     /** The object that is used to communicate with the GPS device. */
     private ComboBox[] chkNMEAItems = new ComboBox[BT747Constants.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
 
-    private static final String C_NMEA_PERIODS[] = { "0", "1", "2", "3", "4",
+    private static final String[] C_NMEA_PERIODS = { "0", "1", "2", "3", "4",
             "5" };
 
     private Button btSet;
@@ -67,7 +66,7 @@ public class GPSNMEAOutput extends Container implements ModelListener {
      * 
      * @see waba.ui.Container#onStart()
      */
-    protected final void onStart() {
+    protected void onStart() {
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             chkNMEAItems[i] = new ComboBox(C_NMEA_PERIODS);
             add(chkNMEAItems[i]);
@@ -109,7 +108,7 @@ public class GPSNMEAOutput extends Container implements ModelListener {
      * @param event
      *            The event to be interpreted.
      */
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
@@ -134,10 +133,12 @@ public class GPSNMEAOutput extends Container implements ModelListener {
             }
 
             break;
+            default:
+                break;
         }
     }
 
-    public final void modelEvent(final ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
         if (eventType == ModelEvent.DATA_UPDATE) {
             // updateLogFormat(m_GPSstate.logFormat);

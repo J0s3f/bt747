@@ -34,7 +34,8 @@ import bt747.model.ModelListener;
  * 
  * User interface to select NMEA output strings
  */
-public class GPSFileNMEAOutputSel extends Container implements ModelListener{
+public final class GPSFileNMEAOutputSel extends Container implements
+        ModelListener {
     /** The object that is used to communicate with the GPS device. */
     private MyCheck[] chkNMEAItems = new MyCheck[BT747Constants.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
@@ -57,7 +58,7 @@ public class GPSFileNMEAOutputSel extends Container implements ModelListener{
      * 
      * @see waba.ui.Container#onStart()
      */
-    protected final void onStart() {
+    protected void onStart() {
         int bit = 1;
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             chkNMEAItems[i] = new MyCheck(BT747Constants.NMEA_STRINGS[i]);
@@ -105,7 +106,7 @@ public class GPSFileNMEAOutputSel extends Container implements ModelListener{
      * @param event
      *            The event to be interpreted.
      */
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
@@ -115,12 +116,12 @@ public class GPSFileNMEAOutputSel extends Container implements ModelListener{
                 }
             }
             break;
-            default:
-                break;
+        default:
+            break;
         }
     }
 
-    public final void modelEvent(final ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         // Do nothing
     }
 }

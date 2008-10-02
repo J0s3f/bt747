@@ -28,7 +28,7 @@ import bt747.sys.interfaces.BT747Date;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class J2SEDate implements BT747Date {
+public final class J2SEDate implements BT747Date {
     static private final SimpleDateFormat FORMAT_YYYYMMDD = new SimpleDateFormat(
             "yyyy/MM/dd");
     static private final SimpleDateFormat FORMAT_DDMMYYYY = new SimpleDateFormat(

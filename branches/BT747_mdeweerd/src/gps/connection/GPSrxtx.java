@@ -27,7 +27,7 @@ import bt747.sys.Vm;
  * 
  * @author Mario De Weerd
  */
-public class GPSrxtx {
+public final class GPSrxtx {
     private static GPSPort gpsPort;
 
     private Semaphore m_writeOngoing = new Semaphore(1);
@@ -64,16 +64,16 @@ public class GPSrxtx {
         gpsPort.openPort();
     }
 
-    public final void setUSBAndOpen() {
+    public void setUSBAndOpen() {
         gpsPort.setUSB();
         gpsPort.openPort();
     }
 
-    public final void closePort() {
+    public void closePort() {
         gpsPort.closePort();
     }
 
-    public final void openPort() {
+    public void openPort() {
         closePort();
         gpsPort.openPort();
     }
@@ -85,12 +85,12 @@ public class GPSrxtx {
      *            Port number of the port to open
      * @return result of opening the port, 0 if success.
      */
-    public int setPortAndOpen(int port) {
+    public int setPortAndOpen(final int port) {
         gpsPort.setPort(port);
         return gpsPort.openPort();
     }
 
-    public int setFreeTextPortAndOpen(String s) {
+    public int setFreeTextPortAndOpen(final String s) {
         gpsPort.setFreeTextPort(s);
         return gpsPort.openPort();
     }
@@ -107,7 +107,7 @@ public class GPSrxtx {
         return gpsPort.getSpeed();
     }
 
-    public void setBaudRate(int speed) {
+    public void setBaudRate(final int speed) {
         gpsPort.setSpeed(speed);
     }
 
@@ -151,9 +151,9 @@ public class GPSrxtx {
     private Vector vCmd = new Vector();
     private static final char[] EOL_BYTES = { '\015', '\012' };
 
-    StringBuffer rec = new StringBuffer(256);
+    private StringBuffer rec = new StringBuffer(256);
 
-    public final boolean isConnected() {
+    public boolean isConnected() {
         return (gpsPort != null) && gpsPort.isConnected();
     }
 
@@ -189,17 +189,25 @@ public class GPSrxtx {
         }
     }
 
-    private final static int NORMAL_MODE = 0;
-    private final static int DPL700_MODE = 1;
+    private static final int NORMAL_MODE = 0;
+    private static final int DPL700_MODE = 1;
 
     private int rxtxMode = NORMAL_MODE;
 
-    public byte[] DPL700_buffer;
-    public int DPL700_buffer_idx;
+    private byte[] DPL700_buffer;
+    private int DPL700_buffer_idx;
     private byte[] DPL700_EndString = new byte[200];
     private int endStringIdx;
+    
+    public byte[] getDPL700_buffer() {
+        return DPL700_buffer;
+    }
+    
+    public int getDPL700_buffer_idx() {
+        return DPL700_buffer_idx;
+    }
 
-    public void sendCmdAndGetDPL700Response(int cmd, int buffer_size) {
+    public void sendCmdAndGetDPL700Response(final int cmd, final int buffer_size) {
         if (isConnected()) {
             byte[] sendbuffer = new byte[7];
             m_writeOngoing.down(); // Semaphore - reserve link
@@ -228,7 +236,7 @@ public class GPSrxtx {
         }
     }
 
-    public void sendCmdAndGetDPL700Response(String cmd, int buffer_size) {
+    public void sendCmdAndGetDPL700Response(final String cmd, final int buffer_size) {
         if (isConnected()) {
             m_writeOngoing.down(); // Semaphore - reserve link
             try {
@@ -251,7 +259,7 @@ public class GPSrxtx {
         }
     }
 
-    public void sendDPL700Cmd(String cmd) {
+    public void sendDPL700Cmd(final String cmd) {
         if (isConnected()) {
             m_writeOngoing.down(); // Semaphore - reserve link
             try {
@@ -274,7 +282,7 @@ public class GPSrxtx {
     // Implemention to allow 'virtual debug' of protocol
     private StringBuffer virtualInput = null;
 
-    public void virtualReceive(String rvd) {
+    public void virtualReceive(final String rvd) {
         if (virtualInput == null) {
             virtualInput = new StringBuffer(rvd);
         } else {
@@ -655,7 +663,7 @@ public class GPSrxtx {
      * @param ignoreNMEA
      *            The ignoreNMEA to set.
      */
-    public void setIgnoreNMEA(boolean ignoreNMEA) {
+    public void setIgnoreNMEA(final boolean ignoreNMEA) {
         this.ignoreNMEA = ignoreNMEA;
     }
 
@@ -668,7 +676,7 @@ public class GPSrxtx {
         }
     }
 
-    public final boolean isDebugConn() {
+    public boolean isDebugConn() {
         return gpsPort.debugActive();
     }
 

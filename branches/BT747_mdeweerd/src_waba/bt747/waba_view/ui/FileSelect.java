@@ -21,7 +21,7 @@ import waba.util.Vector;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class FileSelect extends Window {
+public final class FileSelect extends Window {
 
     private String root = "";
     private String relPath = "";
@@ -51,11 +51,11 @@ public class FileSelect extends Window {
         relPath = "/";
     }
 
-    public final void setDirOnly(final boolean b) {
+    public void setDirOnly(final boolean b) {
         dirOnly = b;
     }
 
-    public final void setPath(final String path) {
+    public void setPath(final String path) {
         if (dirOnly && !path.endsWith("/")) {
             relPath = path + "/";
         } else {
@@ -63,7 +63,7 @@ public class FileSelect extends Window {
         }
     }
 
-    public final void setRoot(final String path) {
+    public void setRoot(final String path) {
         if (path.endsWith("/")) {
             root = path;
         } else {
@@ -71,7 +71,7 @@ public class FileSelect extends Window {
         }
     }
 
-    public final String getPath() {
+    public String getPath() {
         if (relPath.endsWith("/")) {
             return root + relPath.substring(0, relPath.length() - 1);
         } else {
@@ -79,7 +79,7 @@ public class FileSelect extends Window {
         }
     }
 
-    public final String getRelPath() {
+    public String getRelPath() {
         if (relPath.endsWith("/")) {
             return relPath.substring(0, relPath.length() - 1);
         } else {
@@ -87,7 +87,7 @@ public class FileSelect extends Window {
         }
     }
 
-    public final void setCardSlot(final int card) {
+    public void setCardSlot(final int card) {
         cardSlot = card;
     }
 
@@ -96,7 +96,7 @@ public class FileSelect extends Window {
      * 
      * @see waba.ui.Window#onPopup()
      */
-    protected final void onPopup() {
+    protected void onPopup() {
         buildWindow();
     }
 
@@ -117,7 +117,7 @@ public class FileSelect extends Window {
         // -8));
     }
 
-    private final int buildFileList(final String root, final String path,
+    private int buildFileList(final String root, final String path,
             final Vector v, final int depth, final int maxitems) {
         int added = 0;
         if (path == null || (depth <= 0)) {
@@ -192,7 +192,7 @@ public class FileSelect extends Window {
      * 
      * @see waba.ui.Control#onEvent(waba.ui.Event)
      */
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         if (event.target != null) {
             switch (event.type) {
             case ControlEvent.PRESSED:

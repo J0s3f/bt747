@@ -35,7 +35,7 @@ import bt747.sys.Convert;
 /**
  * @author Mario De Weerd
  */
-public class GPSLogFilterAdv extends Container {
+public final class GPSLogFilterAdv extends Container {
 
     private Edit minRecCount;
     private Edit maxRecCount;
@@ -62,7 +62,7 @@ public class GPSLogFilterAdv extends Container {
         this.c = c;
     }
 
-    protected final void onStart() {
+    protected void onStart() {
         super.onStart();
 
         add(minRecCount = new Edit(), LEFT, SAME);
@@ -113,7 +113,7 @@ public class GPSLogFilterAdv extends Container {
         add(pbPtType = new PushButtonGroup(C_PB_TYPE_NAMES, // labes for buttons
                 true, // atleastone
                 0, 1, 2, 1, true, // selected, gap, insidegap, rows,
-                                    // allsamewidth
+                // allsamewidth
                 PushButtonGroup.NORMAL // Only one selected at a time
         ), RIGHT, SAME);
 
@@ -122,7 +122,7 @@ public class GPSLogFilterAdv extends Container {
         getSettings();
     }
 
-    public final void setSettings() {
+    public void setSettings() {
 
         c.setFilterMinRecCount(Convert.toInt(minRecCount.getText()));
         c.setFilterMaxRecCount(Convert.toInt(maxRecCount.getText()));
@@ -139,7 +139,7 @@ public class GPSLogFilterAdv extends Container {
         c.setFilters();
     }
 
-    public final void getSettings() {
+    public void getSettings() {
         minRecCount.setText(Convert.toString(m.getFilterMinRecCount()));
         maxRecCount.setText(Convert.toString(m.getFilterMaxRecCount()));
         minSpeed.setText(Convert.toString(m.getFilterMinSpeed(), 2));
@@ -153,7 +153,7 @@ public class GPSLogFilterAdv extends Container {
         c.setFilters();
     }
 
-    public final void clearSettings() {
+    public void clearSettings() {
         minRecCount.setText("0");
         maxRecCount.setText("0");
         minSpeed.setText("0");
@@ -167,7 +167,7 @@ public class GPSLogFilterAdv extends Container {
         setSettings();
     }
 
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
@@ -189,8 +189,8 @@ public class GPSLogFilterAdv extends Container {
             break;
         }
     }
-    
-    public final void modelEvent(final ModelEvent event) {
+
+    public void modelEvent(final ModelEvent event) {
         // Do nothing
     }
 }

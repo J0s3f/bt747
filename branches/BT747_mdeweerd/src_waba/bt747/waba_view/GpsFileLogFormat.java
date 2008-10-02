@@ -34,7 +34,7 @@ import bt747.model.ModelListener;
  * 
  * @author Mario De Weerd
  */
-public class GpsFileLogFormat extends Container implements ModelListener {
+public final class GpsFileLogFormat extends Container implements ModelListener {
     private static final int C_LOG_FMT_COUNT = 21 - 1;
     /** The object that is used to communicate with the GPS device. */
     private Model m;
@@ -59,7 +59,7 @@ public class GpsFileLogFormat extends Container implements ModelListener {
      * Initiliaser once all objects received initial setup
      * 
      */
-    public final void onStart() {
+    protected void onStart() {
         // Add all tick buttons.
         for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
             chkLogFmtItems[i] = new MyCheck(Txt.logFmtItems[i]);
@@ -121,7 +121,7 @@ public class GpsFileLogFormat extends Container implements ModelListener {
      * @param event
      *            The event to be interpreted.
      */
-    public final void onEvent(final Event event) {
+    public void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
@@ -146,10 +146,12 @@ public class GpsFileLogFormat extends Container implements ModelListener {
             }
 
             break;
+        default:
+            break;
         }
     }
 
-    final public void modelEvent(ModelEvent event) {
+    public void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
         if (eventType == ModelEvent.FILE_LOG_FORMAT_UPDATE) {
             updateLogFormat(m.getIntOpt(Model.FILEFIELDFORMAT));

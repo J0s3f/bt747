@@ -28,9 +28,11 @@ import bt747.waba_view.ui.BT747MessageBox;
  * 
  * @author Mario De Weerd
  */
-public class GPSWabaSocketPort extends GPSPort {
+public final class GPSWabaSocketPort extends GPSPort {
     private waba.io.Socket sp = null;
-    private String MacAddr = "btspp://000B0D87E7CA"; //"00:0B:0D:87:E7:CA"; //  "btspp://000B0D87E7CA";
+    private String MacAddr = "btspp://000B0D87E7CA"; // "00:0B:0D:87:E7:CA";
+                                                        // //
+                                                        // "btspp://000B0D87E7CA";
 
     private boolean portIsOK = false;
 
@@ -67,13 +69,13 @@ public class GPSWabaSocketPort extends GPSPort {
         try {
             sp = new waba.io.Socket(MacAddr, 1);
             result = sp.lastError;
-            new BT747MessageBox("waba.io.Socket open",
-            "Result:"+result).popupBlockingModal();
+            new BT747MessageBox("waba.io.Socket open", "Result:" + result)
+                    .popupBlockingModal();
             portIsOK = sp.isOpen();
             if (portIsOK) {
                 // Read time out gives problems on windows: data is skipped!!!O
                 sp.setReadTimeout(20);// small to read data in chunks and have
-                                        // good resp.
+                // good resp.
                 // sp.setReadTimeout(50);//small to read data in chunks and have
                 // good resp.
                 // sp.setFlowControl(true);
@@ -83,8 +85,7 @@ public class GPSWabaSocketPort extends GPSPort {
         } catch (Exception e) {
             new BT747MessageBox("waba.io.Socket open",
                     "Unexpected exception catched").popupBlockingModal();
-            ;// if(GPS_DEBUG) {waba.sys.Vm.debug("Exception when opening
-                // port\n");};
+            // port\n");};
             sp = null;
         }
         return result;
@@ -127,7 +128,7 @@ public class GPSWabaSocketPort extends GPSPort {
             }
         }
     }
-    
+
     public void write(final String s) {
         write(s.getBytes());
     }
@@ -140,7 +141,7 @@ public class GPSWabaSocketPort extends GPSPort {
         }
     }
 
-    public int readBytes(byte[] b, int start, int max) {
+    public int readBytes(final byte[] b, final int start, final int max) {
         return sp.readBytes(b, start, max);
     }
 }

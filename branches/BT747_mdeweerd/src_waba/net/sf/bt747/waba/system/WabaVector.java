@@ -28,7 +28,7 @@ import bt747.sys.interfaces.BT747Vector;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public final class WabaVector extends waba.util.Vector implements BT747Vector {
-    public final Object elementAt(int i) {
+    public final Object elementAt(final int i) {
         return items[i];
     }
     
@@ -36,7 +36,7 @@ public final class WabaVector extends waba.util.Vector implements BT747Vector {
         return (String[]) toObjectArray();
     }
     
-    public final void mypush(Object item) {
+    public final void mypush(final Object item) {
         super.push(item);
     }
 }
