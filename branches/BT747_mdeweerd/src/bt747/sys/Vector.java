@@ -17,7 +17,7 @@ import bt747.sys.interfaces.BT747Vector;
  */
 public final class Vector {
 
-    BT747Vector vector;
+    private BT747Vector vector;
     
     public Vector() {
         vector = Interface.tr.getVectorInstance();
