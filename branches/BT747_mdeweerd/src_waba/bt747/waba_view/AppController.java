@@ -13,6 +13,7 @@ import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
 
+import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.waba_view.ui.BT747MessageBox;
@@ -333,7 +334,7 @@ public final class AppController extends Controller {
         // #if RXTX java.lang.System.getProperty("bt747_Mac_solvelag",
         // #if RXTX java.lang.System.getProperty("os.name")
         // #if RXTX .startsWith("Mac")?"1":"0"))==1) {
-        // #if RXTX AppSettings.solveMacLagProblem=true;
+        // #if RXTX AppSettings.setSolveMacLagProblem(true);
         // #if RXTX }
     }
 

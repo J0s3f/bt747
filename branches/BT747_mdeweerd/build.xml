@@ -269,10 +269,6 @@
 	</macrodef>
 
 
-	<target name="dist.waba">
-		<dist-jar suffix="_rxtx" build.j2se="false" />
-	</target>
-
 	<target name="dist.rxtx">
 		<dist-jar suffix="_rxtx" build.j2se="false" />
 	</target>
@@ -1628,14 +1624,14 @@
 				/>
 			</replace>
 			<!-- <echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" /> -->
-			<echo message="file:${@{dest.dir}rxtxfilter}${src_waba.dir}bt747/waba_view/AppController.java" />
+            <echo message="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java" />
 			<replace dir="@{dest.dir}"
-			         token="//#if RXTX"
+			         token="// #if RXTX"
 			         summary="yes"
 			         value=""
 				
 			>
-				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}bt747/waba_view/AppController.java"
+				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java"
 				/>
 			</replace>
 

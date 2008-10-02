@@ -116,7 +116,6 @@ public class Controller {
      */
     public final void setImperial(final boolean on) {
         setBooleanOpt(AppSettings.IMPERIAL, on);
-        saveSettings();
     }
 
     /**
@@ -128,7 +127,6 @@ public class Controller {
      */
     public final void setOutputLogConditions(final boolean on) {
         setBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS, on);
-        saveSettings();
     }
 
     /**
@@ -137,7 +135,6 @@ public class Controller {
      */
     public final void setBaseDirPath(final String s) {
         m.setBaseDirPath(s);
-        saveSettings();
     }
 
     /**
@@ -148,7 +145,6 @@ public class Controller {
      */
     public final void setLogFileRelPath(final String s) {
         m.setLogFileRelPath(s);
-        saveSettings();
     }
 
     /**
@@ -160,7 +156,6 @@ public class Controller {
      */
     public final void setOutputFileRelPath(final String s) {
         m.setReportFileBase(s);
-        saveSettings();
     }
 
     /**
@@ -171,7 +166,6 @@ public class Controller {
 
     public final void setChunkSize(final int chunkSize) {
         m.setChunkSize(chunkSize);
-        saveSettings();
     }
 
     /**
@@ -183,7 +177,6 @@ public class Controller {
     public final void setDownloadTimeOut(final int timeout) {
         m.setDownloadTimeOut(timeout);
         m.gpsModel().setDownloadTimeOut(timeout);
-        saveSettings();
     }
 
     /**
@@ -196,7 +189,6 @@ public class Controller {
      */
     public final void setCard(final int card) {
         m.setCard(card);
-        saveSettings();
     }
 
     /**
@@ -209,7 +201,6 @@ public class Controller {
     public final void setLogRequestAhead(final int numberOfRequestsAhead) {
         m.setLogRequestAhead(numberOfRequestsAhead);
         m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
-        saveSettings();
     }
 
     /**
