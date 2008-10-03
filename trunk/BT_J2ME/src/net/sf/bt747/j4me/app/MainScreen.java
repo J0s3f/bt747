@@ -19,6 +19,7 @@ import gps.BT747Constants;
 import javax.microedition.lcdui.Display;
 
 import net.sf.bt747.j4me.app.log.LogScreen;
+import net.sf.bt747.j4me.app.screens.DelayedDialog;
 import net.sf.bt747.j4me.app.screens.PathSelectionScreen;
 import net.sf.bt747.j4me.app.screens.ProgressAlert;
 
@@ -49,7 +50,7 @@ public class MainScreen extends Dialog implements ModelListener {
      * Reference to the application Midlet instantiation because we need it.
      */
     private MTKMidlet midlet;
-
+    
     /**
      * The different screens that we can go to from the main screen. J4ME
      * requires that those are all created when the menu is created.
@@ -58,7 +59,6 @@ public class MainScreen extends Dialog implements ModelListener {
     private final ConvertToScreen convertToScreen;
     private final GpsPositionScreen gpsPositionScreen;
     private final LogConditionsConfigScreen logConditionsConfigScreen;
-    private final LogDownloadConfigScreen logDownloadConfigScreen;
     private final LoggerStatusScreen loggerInfoScreen;
     private final LogScreen logScreen;
     private final DebugConfigScreen debugConfigScreen;
@@ -66,7 +66,6 @@ public class MainScreen extends Dialog implements ModelListener {
     private final FindingGPSDevicesAlert findingGPSDevicesAlert;
     private final PathSelectionScreen baseDirScreen;
     private final CreditsScreen creditsScreen;
-    private final FileFieldSelectScreen fileFieldSelectScreen;
     private final LogFieldSelectScreen logFieldSelectScreen;
 
     /**
@@ -80,6 +79,7 @@ public class MainScreen extends Dialog implements ModelListener {
     private int confirmScreenOption = 0;
     private final int NO_CONFIRM = 0;
     private final int ERASE_CONFIRM = 1;
+    private final int DOWNLOAD_OVERWRITE_CONFIRM = 2;
 
     /**
      * A reference to the confirmation screen.
@@ -120,7 +120,6 @@ public class MainScreen extends Dialog implements ModelListener {
         convertToScreen = new ConvertToScreen(c, this);
         gpsPositionScreen = new GpsPositionScreen(c, this);
         logConditionsConfigScreen = new LogConditionsConfigScreen(c, this);
-        logDownloadConfigScreen = new LogDownloadConfigScreen(c, this);
         loggerInfoScreen = new LoggerStatusScreen(c, this);
         logScreen = new LogScreen(this);
         debugConfigScreen = new DebugConfigScreen(c, this);
@@ -134,7 +133,6 @@ public class MainScreen extends Dialog implements ModelListener {
             }
         };
         creditsScreen = new CreditsScreen(this);
-        fileFieldSelectScreen = new FileFieldSelectScreen(c, this);
         logFieldSelectScreen = new LogFieldSelectScreen(c, this);
 
         // Call here for debug
@@ -150,11 +148,13 @@ public class MainScreen extends Dialog implements ModelListener {
         subMenu = new Menu("App Settings", rootMenu);
         subMenu.appendMenuOption("Working dir", baseDirScreen);
         subMenu.appendMenuOption("Debug Conditions", debugConfigScreen);
-        subMenu.appendMenuOption("Download Settings", logDownloadConfigScreen);
+        subMenu.appendMenuOption("Download Settings", new DelayedDialog(
+                LogDownloadConfigScreen.class, c, this, this));
         rootMenu.appendSubmenu(subMenu);
 
         subMenu = new Menu("Convert Menu", rootMenu);
-        subMenu.appendMenuOption("Select File Fields", fileFieldSelectScreen);
+        subMenu.appendMenuOption("Select File Fields", new DelayedDialog(
+                FileFieldSelectScreen.class, c, rootMenu, rootMenu));
         subMenu.appendMenuOption("Convert", convertToScreen);
         rootMenu.appendSubmenu(subMenu);
 
@@ -261,7 +261,6 @@ public class MainScreen extends Dialog implements ModelListener {
     public void show() {
         // When this screen is shown, we are no longer waiting for erasal end
         // whatever happens.
-
         waitErase = false;
         if (isFirstLaunch) {
             isFirstLaunch = false;
@@ -306,12 +305,20 @@ public class MainScreen extends Dialog implements ModelListener {
                         erase.start();
                     }
                     break;
+                case DOWNLOAD_OVERWRITE_CONFIRM:
+                    // The confirm screen confirms erasal or not
+                    c.replyToOkToOverwrite(confirmScreen.getConfirmation());
+                    if(interruptedScreen!=null) {
+                        confirmScreen = null;
+                        interruptedScreen.show();
+                        return;
+                    }
+                    break;
                 }
                 confirmScreen = null;
             }
             super.show();
         }
-
     }
 
     /**
@@ -504,6 +511,9 @@ public class MainScreen extends Dialog implements ModelListener {
         // Do nothing for the moment - should prompt to exit the application.
     }
 
+    
+    DeviceScreen interruptedScreen = null;
+    
     /**
      * Call back from the GPS Model to provide data.
      * 
@@ -535,6 +545,18 @@ public class MainScreen extends Dialog implements ModelListener {
             break;
         case ModelEvent.CONNECTED:
             c.reqLogFormat();
+            break;
+        case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
+            interruptedScreen = UIManager.getScreen();
+            confirmScreenOption = DOWNLOAD_OVERWRITE_CONFIRM;
+            confirmScreen = new ConfirmScreen(
+                    "Overwrite previous data",
+                    "The data previously downloaded is different\n" +
+                    "Do you confirm this data can be replace with" +
+                    " new data from your device ??\n",
+                    "Are you absolutely certain that previously downloaded" +
+                    " data is irrelevant?", myself);
+            confirmScreen.show();
             break;
         default:
             break;

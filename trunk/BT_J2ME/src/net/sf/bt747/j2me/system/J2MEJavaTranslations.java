@@ -24,7 +24,7 @@ import bt747.sys.interfaces.BT747Time;
 import bt747.sys.interfaces.BT747Vector;
 import bt747.sys.interfaces.JavaTranslationsInterface;
 
-public final class JavaTranslations implements JavaTranslationsInterface {
+public final class J2MEJavaTranslations implements JavaTranslationsInterface {
     public BT747Date getDateInstance() {
         return new J2MEDate();
     }
@@ -33,8 +33,7 @@ public final class JavaTranslations implements JavaTranslationsInterface {
         return new J2MEDate(d, m, y);
     }
 
-    public BT747Date getDateInstance(final String strDate,
-            final byte dateFormat) {
+    public BT747Date getDateInstance(final String strDate, final byte dateFormat) {
         return new J2MEDate(strDate, dateFormat);
     }
 
@@ -54,7 +53,8 @@ public final class JavaTranslations implements JavaTranslationsInterface {
         return new J2MEFile(path);
     }
 
-    public BT747File getFileInstance(final String path, final int mode, final int card) {
+    public BT747File getFileInstance(final String path, final int mode,
+            final int card) {
         return new J2MEFile(path, mode, card);
     }
 
@@ -68,7 +68,8 @@ public final class JavaTranslations implements JavaTranslationsInterface {
         return new J2MEFile(path);
     }
 
-    public BT747File getBufFileInstance(final String path, final int mode, final int card) {
+    public BT747File getBufFileInstance(final String path, final int mode,
+            final int card) {
         return new J2MEFile(path, mode, card);
     }
 
@@ -81,7 +82,7 @@ public final class JavaTranslations implements JavaTranslationsInterface {
     }
 
     public void debug(final String s, final Throwable e) {
-        Generic.debug(s, e);
+        J2MEGeneric.debug(s, e);
     }
 
     public double pow(final double x, final double y) {
@@ -93,11 +94,11 @@ public final class JavaTranslations implements JavaTranslationsInterface {
     }
 
     public void addThread(final BT747Thread t, final boolean b) {
-        Generic.addThread(t, b);
+        J2MEGeneric.addThread(t, b);
     }
 
     public void removeThread(final BT747Thread t) {
-        Generic.removeThread(t);
+        J2MEGeneric.removeThread(t);
     }
 
     /**
@@ -120,20 +121,19 @@ public final class JavaTranslations implements JavaTranslationsInterface {
         return Double.toString(p);
     }
 
-    
-//    private final String formatString = "#0.0000000000000000";
-//    private int previousFormat = 0;
-//    private DecimalFormat df = new DecimalFormat("#0");
-//    public final String toString(final double p, final int i) {
-//        if(i!=previousFormat) {
-//            if(i==0) {
-//                df = new DecimalFormat("#0");
-//            } else {
-//                df = new DecimalFormat(formatString.substring(0,3+i));
-//            }
-//        }
-//        return df.format(p);
-//    }
+    // private final String formatString = "#0.0000000000000000";
+    // private int previousFormat = 0;
+    // private DecimalFormat df = new DecimalFormat("#0");
+    // public final String toString(final double p, final int i) {
+    // if(i!=previousFormat) {
+    // if(i==0) {
+    // df = new DecimalFormat("#0");
+    // } else {
+    // df = new DecimalFormat(formatString.substring(0,3+i));
+    // }
+    // }
+    // return df.format(p);
+    // }
 
     public String toString(final double p, final int i) {
         StringBuffer s;

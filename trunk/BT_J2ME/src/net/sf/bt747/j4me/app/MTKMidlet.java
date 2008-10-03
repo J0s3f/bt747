@@ -3,6 +3,7 @@ package net.sf.bt747.j4me.app;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
+import net.sf.bt747.j2me.system.J2MEJavaTranslations;
 import net.sf.bt747.j4me.app.log.LogScreen;
 
 import org.j4me.logging.Level;
@@ -22,7 +23,7 @@ public class MTKMidlet extends MIDlet {
     private static MTKMidlet instance;
 
     static {
-        Interface.setJavaTranslationInterface(new net.sf.bt747.j2me.system.JavaTranslations());
+        Interface.setJavaTranslationInterface(new J2MEJavaTranslations());
     }
 
     private static AppModel m;

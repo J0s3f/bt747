@@ -53,15 +53,16 @@ public class AppController extends Controller {
                 m.init();
                 Log.debug("Recovered settings");
             } else {
-                //Log.debug("Initialising settings");
+                // Log.debug("Initialising settings");
                 m.init();
                 resetSettings();
                 saveSettings();
             }
             bytes = recordStore.getRecord(2);
-            //Log.debug("Size:"+bytes.length);
+            // Log.debug("Size:"+bytes.length);
             DataInputStream is = new DataInputStream(new ByteArrayInputStream(
                     bytes));
+            int settingsVersion = -1;
             try {
                 String BtHost = restoreNull(is.readUTF());
                 String BtURL = restoreNull(is.readUTF());
@@ -69,7 +70,19 @@ public class AppController extends Controller {
                 Log.debug("Recovered BT URL " + BtHost + " " + BtURL);
 
                 m.setSelectedOutputFormat(is.readInt());
+                settingsVersion = is.readInt();
+
             } catch (Exception e) {
+            }
+            switch (settingsVersion) {
+            case 2:
+
+                break;
+            case -1:
+                // No other parameters
+                break;
+            default:
+                break;
             }
             recordStore.closeRecordStore();
             // mUnitType = inputStream.readInt();
@@ -120,7 +133,7 @@ public class AppController extends Controller {
                 dir = dir.substring(0, dir.length() - 1);
             }
             fm.close();
-            //Log.info("Setting basedir set to:" + dir);
+            // Log.info("Setting basedir set to:" + dir);
             setBaseDirPath(dir);
         } catch (Exception e) {
             Log.debug("Problem finding root", e);
@@ -146,13 +159,20 @@ public class AppController extends Controller {
                 | BT747Constants.RCR_SPEED_MASK
                 | BT747Constants.RCR_BUTTON_MASK);
         // To limit the output data, we only select lat,lon and height.
-//        setIntOpt(Model.FILEFIELDFORMAT, (1 << BT747Constants.FMT_LATITUDE_IDX)
-//                | (1 << BT747Constants.FMT_LONGITUDE_IDX)
-//                | (1 << BT747Constants.FMT_HEIGHT_IDX));
+        // setIntOpt(Model.FILEFIELDFORMAT, (1 <<
+        // BT747Constants.FMT_LATITUDE_IDX)
+        // | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+        // | (1 << BT747Constants.FMT_HEIGHT_IDX));
     }
 
-    String RECORDSTORENAME = "BT747";
+    private final String RECORDSTORENAME = "BT747";
+    private final int appSettingsVersion = 1;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see bt747.model.Controller#saveSettings()
+     */
     public final void saveSettings() {
         RecordStore recordStore;
         Log.debug("Store settings");
@@ -175,14 +195,14 @@ public class AppController extends Controller {
                 os.writeUTF(removeNull(m.getBluetoothGPSName()));
                 os.writeUTF(removeNull(m.getBluetoothGPSURL()));
                 os.writeInt(m.getSelectedOutputFormat());
+                os.writeInt(appSettingsVersion);
                 os.flush();
                 bytes = bos.toByteArray();
                 if (recordStore.getNumRecords() == 1) {
                     recordStore.addRecord(bytes, 0, bytes.length);
-                    //Log.debug("1 Size:"+bytes.length);
-                }
-                else {
-                    //Log.debug("2 Size:"+bytes.length);
+                    // Log.debug("1 Size:"+bytes.length);
+                } else {
+                    // Log.debug("2 Size:"+bytes.length);
                     recordStore.setRecord(2, bytes, 0, bytes.length);
                 }
                 os.close();

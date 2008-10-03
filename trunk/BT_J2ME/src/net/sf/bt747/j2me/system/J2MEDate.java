@@ -144,7 +144,7 @@ public final class J2MEDate implements BT747Date {
             }
             date = cal.getTime();
         } catch (Exception e) {
-            Generic.debug("Date", e);
+            J2MEGeneric.debug("Date", e);
         }
     }
 
