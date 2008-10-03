@@ -635,7 +635,7 @@ public final class GPSrxtx {
             // };
             // }
             getResponseOngoing.up();
-            return vCmd.toStringArray();
+            return vCmd.toStringArrayAndEmpty();
         } else if (current_state == C_DPL700_END_STATE) {
             current_state = C_FOUND_STATE;
             String[] resp = new String[1];

@@ -23,6 +23,8 @@ import waba.ui.MessageBox;
 
 import gps.connection.GPSPort;
 
+import bt747.sys.Generic;
+
 /**
  * Implements the serial port for the standard Waba SerialPort
  * 
@@ -63,6 +65,7 @@ public final class GPSWabaPort extends GPSPort {
         int result = -1;
         closePort();
         try {
+            Generic.debug("opening " + spPortNbr + "@" + spSpeed, null);
             sp = new waba.io.SerialPort(spPortNbr, spSpeed);
             result = sp.lastError;
             portIsOK = sp.isOpen();

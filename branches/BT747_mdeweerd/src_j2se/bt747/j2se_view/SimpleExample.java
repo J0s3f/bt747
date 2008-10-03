@@ -30,7 +30,7 @@ public class SimpleExample implements bt747.model.ModelListener {
 
     static {
         Interface
-                .setJavaTranslationInterface(new net.sf.bt747.j2se.system.JavaTranslations());
+                .setJavaTranslationInterface(new net.sf.bt747.j2se.system.J2SEJavaTranslations());
     }
 
     /**

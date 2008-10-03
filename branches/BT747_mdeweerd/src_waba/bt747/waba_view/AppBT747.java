@@ -16,9 +16,9 @@ package bt747.waba_view;
 //***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
+//***  part on the Waba development environment developed by       ***
 //***  WabaSoft, Inc.                                              ***
-//********************************************************************                              
+//********************************************************************
 import waba.fx.Font;
 import waba.sys.Settings;
 import waba.ui.Control;
@@ -32,7 +32,9 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
-import gps.connection.*;
+import gps.connection.GPSPort;
+import gps.connection.GPSrxtx;
+import net.sf.bt747.waba.system.WabaJavaTranslations;
 
 import bt747.Txt;
 import bt747.model.AppSettings;
@@ -44,27 +46,28 @@ import bt747.sys.Vm;
 import bt747.waba_view.ui.BT747MessageBox;
 
 /**
- * Main class (application entry)
+ * Main class (application entry).
  * 
  * @author Mario De Weerd
  */
 public class AppBT747 extends MainWindow implements ModelListener {
 
     static {
-        Interface
-                .setJavaTranslationInterface(new net.sf.bt747.waba.system.JavaTranslations());
+        // Set the low level interface.
+        Interface.setJavaTranslationInterface(new WabaJavaTranslations());
+        // Set up the port.
         GPSPort gpsPort;
 
         gpsPort = new GPSWabaPort();
 
-        // try {
-        // // gpsPort=new GPSRxTxPort();
-        // gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
-        // .newInstance();
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // gpsPort = new GPSWabaPort();
-        // }
+        try {
+            // // gpsPort=new GPSRxTxPort();
+            gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
+                    .newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+            gpsPort = new GPSWabaPort();
+        }
         // }
 
         /**
@@ -141,6 +144,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
     private MenuItem miAboutBT747 = new MenuItem(Txt.S_ABOUT_BT747);
     private MenuItem miAboutSuperWaba = new MenuItem(Txt.S_ABOUT_SUPERWABA);
 
+    /**
+     * The text for the menu.
+     */
     private final MenuItem[][] menu = {
             { miFile, miExitApplication },
             { miSettings, miStopConnection, miStopLogOnConnect, new MenuItem(),
@@ -151,50 +157,50 @@ public class AppBT747 extends MainWindow implements ModelListener {
             { miDevice, miDefaultDevice, miGisteqType1, miGisteqType2,
                     miGisteqType3, miHolux, },
             { miInfo, miAboutBT747, miAboutSuperWaba, miInfo } };
-    /** MenuBar item for File->Exit */
+    /** MenuBar item for File->Exit. */
     private static final int C_MENU_FILE_EXIT = 001;
     // private static final int C_MENU_CONNECTION_SETTINGS = 101;
-    /** MenuBar item for Settings->Stop connection */
+    /** MenuBar item for Settings->Stop connection. */
     private static final int C_MENU_STOP_CONNECTION = 101;
-    /** MenuBar item for Settings->Stop logging on connect */
+    /** MenuBar item for Settings->Stop logging on connect. */
     private static final int C_MENU_STOP_LOG_ON_CONNECT = 102;
-    /** MenuBar item for Settings->GPX UTC 0 */
+    /** MenuBar item for Settings->GPX UTC 0. */
     private static final int C_MENU_GPX_UTC0 = 104;
-    /** MenuBar item for Settings->GPX Trk Sep when big only */
+    /** MenuBar item for Settings->GPX Trk Sep when big only. */
     private static final int C_MENU_GPX_TRKSEG_BIGONLY = 105;
-    /** MenuBar item for Settings->GPS Decode Active */
+    /** MenuBar item for Settings->GPS Decode Active. */
     private static final int C_MENU_GPS_DECODE_ACTIVE = 106;
-    /** MenuBar item for Settings->Record number in logs */
+    /** MenuBar item for Settings->Record number in logs. */
     private static final int C_MENU_RECORDNMBR_IN_LOGS = 107;
-    /** MenuBar item for Settings->Debug */
+    /** MenuBar item for Settings->Debug. */
     private static final int C_MENU_FOCUS_HIGHLIGHT = 109;
-    /** MenuBar item for Settings->Debug */
+    /** MenuBar item for Settings->Debug. */
     private static final int C_MENU_DEBUG_ACTIVE = 111;
     private static final int C_MENU_DEBUG_CONN = 112;
     /** MenuBar item for Settings->Conn. Stats */
     private static final int C_MENU_STATS_ACTIVE = 113;
-    /** MenuBar item for Settings->Imperial units */
+    /** MenuBar item for Settings->Imperial units. */
     private static final int C_MENU_IMPERIAL = 114;
-    /** MenuBar item for Settings->OutputLogConditions */
+    /** MenuBar item for Settings->OutputLogConditions. */
     private static final int C_MENU_OUTPUT_LOGCONDITIONS = 115;
 
     private static final int C_MENU_DEFAULTDEVICE = 201;
     private static final int C_MENU_GISTEQ_TYPE1 = 202;
     private static final int C_MENU_GISTEQ_TYPE2 = 203;
     private static final int C_MENU_GISTEQ_TYPE3 = 204;
-    /** MenuBar item for Settings->Holux M-241 */
+    /** MenuBar item for Settings->Holux M-241. */
     private static final int C_MENU_HOLUX_241 = 205;
 
-    /** MenuBar item for Info->About BT747 */
+    /** MenuBar item for Info->About BT747. */
     private static final int C_MENU_ABOUT = 301;
-    /** MenuBar item for Info->About Superwaba */
+    /** MenuBar item for Info->About Superwaba. */
     private static final int C_MENU_ABOUT_SW = 302;
-    /** MenuBar item for Info->Info */
+    /** MenuBar item for Info->Info. */
     private static final int C_MENU_INFO = 303;
 
-    /** The tab panel */
+    /** The tab panel. */
     private TabPanel tabPanel;
-    /** The captions for the tab panel */
+    /** The captions for the tab panel. */
     private final String[] c_tpCaptions = { Txt.C_FMT, Txt.C_CTRL, Txt.C_LOG,
             Txt.C_FILE, Txt.C_FLTR, Txt.C_EASY, Txt.C_CON, Txt.C_OTHR };
     private static final int TAB_LOG_CTRL_IDX = 0;
@@ -248,6 +254,11 @@ public class AppBT747 extends MainWindow implements ModelListener {
     public static final String requiredVersionStr = "5.82";
     public static final int requiredVersion = 582;
 
+    /**
+     * Called after application start.
+     * 
+     * @see waba.ui.MainWindow#onStart()
+     */
     public void onStart() {
         super.onStart();
 
@@ -343,6 +354,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
         gpsType();
     }
 
+    /**
+     * Sets the GPS Device type from the menu settings.
+     */
     private void gpsType() {
         miDefaultDevice.isChecked = false;
         miGisteqType1.isChecked = false;
@@ -366,6 +380,13 @@ public class AppBT747 extends MainWindow implements ModelListener {
         }
     }
 
+    /**
+     * Process GUI event.
+     * 
+     * @param event
+     *            The event to process.
+     * @see waba.ui.Control#onEvent(waba.ui.Event)
+     */
     public final void onEvent(final Event event) {
         //
         // if(event.type>9999) { Vm.debug("EventB:"+event.type+"
@@ -495,6 +516,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
         }
     }
 
+    /**
+     * Update the progress bar.
+     */
     private void updateProgressBar() {
         if (progressBar != null) {
             if (m.isDownloadOnGoing()) {
@@ -507,6 +531,14 @@ public class AppBT747 extends MainWindow implements ModelListener {
         }
     }
 
+    /**
+     * Handle the event from the model.
+     * 
+     * @param event
+     *            The event to handle.
+     * 
+     * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
+     */
     public final void modelEvent(final ModelEvent event) {
         switch (event.getType()) {
         case ModelEvent.CONNECTED:
@@ -539,14 +571,21 @@ public class AppBT747 extends MainWindow implements ModelListener {
         }
     }
 
+    /**
+     * Called before application exit.
+     * 
+     * @see waba.ui.MainWindow#onExit()
+     */
     public final void onExit() {
         waba.sys.Vm.setDeviceAutoOff(orgAutoOnOff); // Avoid auto-off causing BT
         // trouble
         c.saveSettings();
     }
 
-    public final void requestLogOverwriteConfirmation() {
-        // TODO: Make this non blocking (with multiple interfaces open)
+    /**
+     * Request to the user to know if he agrees with overwrite or not.
+     */
+    private void requestLogOverwriteConfirmation() {
         // Log is not the same - delete the log and reopen.
         BT747MessageBox mb;
         String[] mbStr = { Txt.OVERWRITE, Txt.ABORT_DOWNLOAD };
@@ -555,22 +594,43 @@ public class AppBT747 extends MainWindow implements ModelListener {
         c.replyToOkToOverwrite(mb.getPressedButtonIndex() == 0);
     }
 
+    /**
+     * Menut options for erase pop up.
+     */
     private final String[] eraseWait = { Txt.CANCEL_WAITING };
+    /**
+     * Erase pop up.
+     */
     private BT747MessageBox mbErase = new BT747MessageBox(
             Txt.TITLE_WAITING_ERASE, Txt.TXT_WAITING_ERASE, eraseWait);
 
+    /**
+     * Show the pop up.
+     */
     private void createErasePopup() {
         mbErase.popupModal();
     }
 
+    /**
+     * Relive the pop up.
+     */
     private void removeErasePopup() {
         mbErase.unpop();
     }
 
+    /**
+     * The user requested to stop waiting for erasal.
+     */
     private void stopErase() {
         c.stopErase();
     }
 
+    /**
+     * Show error message that file could not be opened.
+     * 
+     * @param fileName
+     *            The file that could not be opened.
+     */
     private void couldNotOpenFileMessage(final String fileName) {
         (new BT747MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName
                 + Txt.CHK_PATH)).popupBlockingModal();
