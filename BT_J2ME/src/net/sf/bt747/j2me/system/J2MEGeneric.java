@@ -26,7 +26,7 @@ import bt747.sys.interfaces.BT747Thread;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public final class Generic {
+public final class J2MEGeneric {
 
     private static Hashtable h = new Hashtable();
     private static Hashtable oos = new Hashtable();
@@ -42,7 +42,7 @@ public final class Generic {
         }
         if (!oos.contains(t)) {
             Log.debug("Adding " + t);
-            MyThread mt = new MyThread(t);
+            J2METhread mt = new J2METhread(t);
             t.started();
             mt.jvThread = new java.lang.Thread(mt);
             if (mt != null) {
@@ -62,7 +62,7 @@ public final class Generic {
         // MainWindow.getMainWindow().removeThread(t);
         Enumeration e = h.keys();
         while (e.hasMoreElements()) {
-            MyThread tt = (MyThread) e.nextElement();
+            J2METhread tt = (J2METhread) e.nextElement();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
                 tt.btThread = null; // When this is null, the thread stops.
@@ -77,7 +77,7 @@ public final class Generic {
         // MainWindow.getMainWindow().removeThread(t);
         Enumeration e = h.keys();
         while (e.hasMoreElements()) {
-            MyThread tt = (MyThread) e.nextElement();
+            J2METhread tt = (J2METhread) e.nextElement();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
                 if (tt.running) {

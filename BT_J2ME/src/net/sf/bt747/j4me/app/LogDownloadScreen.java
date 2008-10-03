@@ -17,6 +17,7 @@ package net.sf.bt747.j4me.app;
 import javax.microedition.lcdui.Graphics;
 
 import net.sf.bt747.j4me.app.log.LogScreen;
+import net.sf.bt747.j4me.app.screens.DelayedDialog;
 import net.sf.bt747.j4me.app.screens.ErrorAlert;
 
 import org.j4me.logging.Log;
@@ -215,6 +216,9 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
             }
         });
 
+        menu.appendMenuOption("Download Settings", new DelayedDialog(
+                LogDownloadConfigScreen.class, c, this, this));
+
         menu.appendMenuOption(new MenuItem() {
             public String getText() {
                 return "Cancel download";
@@ -382,15 +386,6 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
             status.repaint();
             Log.debug("Download success");
             break;
-        case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
-            // When the data on the device is not the same, overwrite
-            // automatically.
-            Log.info("No confirmation to overwrite different data");
-            c.replyToOkToOverwrite(false);
-            status.setLabel("Not overwriting different data."
-                    + " Set NORMAL DOWNLOAD or erase file.");
-            break;
-
         default:
             break;
         }

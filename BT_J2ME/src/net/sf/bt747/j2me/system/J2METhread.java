@@ -13,13 +13,13 @@
 //********************************************************************
 package net.sf.bt747.j2me.system;
 
-public final class MyThread implements java.lang.Runnable {
+public final class J2METhread implements java.lang.Runnable {
 
     protected java.lang.Thread jvThread;
     protected bt747.sys.interfaces.BT747Thread btThread = null;
     protected boolean running = false;
 
-    public MyThread(final bt747.sys.interfaces.BT747Thread t) {
+    public J2METhread(final bt747.sys.interfaces.BT747Thread t) {
         btThread = t;
     }
 

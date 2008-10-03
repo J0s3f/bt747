@@ -238,7 +238,7 @@ class BluetoothGPS extends gps.connection.GPSPort {
         }
     }
 
-    long nextOpentrial = 0;
+    private long nextOpentrial = 0;
 
     private void reconnectPort() {
         if (internalIsConnected && isReconnectAutomatically

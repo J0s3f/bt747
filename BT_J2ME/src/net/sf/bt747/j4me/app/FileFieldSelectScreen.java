@@ -1,29 +1,20 @@
 package net.sf.bt747.j4me.app;
 
 import gps.Txt;
+import net.sf.bt747.j4me.app.screens.BT747Dialog;
 
-import org.j4me.logging.Log;
-import org.j4me.ui.DeviceScreen;
-import org.j4me.ui.Dialog;
 import org.j4me.ui.components.CheckBox;
 
-import bt747.sys.Convert;
-
-public class FileFieldSelectScreen extends Dialog {
+public class FileFieldSelectScreen extends BT747Dialog {
 
     private static final int C_LOG_FMT_COUNT = 21 - 1;
 
     private CheckBox[] chkLogFmtItems = new CheckBox[C_LOG_FMT_COUNT];
     private CheckBox commentCheck;
     private CheckBox nameCheck;
-    private DeviceScreen previous;
-    private AppController c;
 
-    public FileFieldSelectScreen(final AppController c,
-            final DeviceScreen previous) {
-        this.c = c;
-        this.previous = previous;
-
+    private void setupScreen() {
+        deleteAll();
         for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
             chkLogFmtItems[i] = new CheckBox();
             chkLogFmtItems[i].setLabel(Txt.logFmtItems[i]);
@@ -36,7 +27,7 @@ public class FileFieldSelectScreen extends Dialog {
         append(commentCheck);
         append(nameCheck);
     }
-
+    
     /** Get the format set by the user in the user interface. */
     private int getSelectedLogFormat() {
         int bitMask = 1;
@@ -52,6 +43,7 @@ public class FileFieldSelectScreen extends Dialog {
     }
 
     public void show() {
+        setupScreen();
         updateLogFormat(m().getIntOpt(AppModel.FILEFIELDFORMAT));
         commentCheck.setChecked(m().getBooleanOpt(
                 AppModel.IS_WRITE_TRACKPOINT_COMMENT));
