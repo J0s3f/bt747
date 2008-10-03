@@ -28,7 +28,7 @@ import bt747.sys.interfaces.BT747Time;
 import bt747.sys.interfaces.BT747Vector;
 import bt747.sys.interfaces.JavaTranslationsInterface;
 
-public final class JavaTranslations implements JavaTranslationsInterface {
+public final class WabaJavaTranslations implements JavaTranslationsInterface {
     public BT747Date getDateInstance() {
         return new WabaDate();
     }
