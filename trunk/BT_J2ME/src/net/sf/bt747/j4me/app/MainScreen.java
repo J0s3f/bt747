@@ -529,9 +529,9 @@ public class MainScreen extends Dialog implements ModelListener {
      */
     public final void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
-        case ModelEvent.DEBUG_MSG:
-            Log.debug((String) e.getArg());
-            break;
+//        case ModelEvent.DEBUG_MSG:
+//            Log.debug((String) e.getArg());
+//            break;
         case ModelEvent.DISCONNECTED:
             // Display.getDisplay(this).flashBacklight(500);
             Display.getDisplay(midlet).vibrate(200);

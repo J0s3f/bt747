@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import bt747.sys.Convert;
+import bt747.sys.Generic;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747Date;
 
@@ -144,7 +145,7 @@ public final class J2MEDate implements BT747Date {
             }
             date = cal.getTime();
         } catch (Exception e) {
-            J2MEGeneric.debug("Date", e);
+            Generic.debug("Date", e);
         }
     }
 
@@ -175,7 +176,7 @@ public final class J2MEDate implements BT747Date {
      * @param s
      *            number of seconds to advance the time.
      */
-    public void advance(final int s) {
+    public final void advance(final int s) {
         date.setTime(date.getTime() + s * MILLISECONDS_PER_SECOND);
     }
 

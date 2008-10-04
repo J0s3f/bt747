@@ -82,7 +82,7 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
     }
 
     public void debug(final String s, final Throwable e) {
-        J2MEGeneric.debug(s, e);
+        Log.debug(s, e);
     }
 
     public double pow(final double x, final double y) {
