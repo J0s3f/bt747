@@ -14,6 +14,9 @@
 //***  *********************************************************** ***
 package net.sf.bt747.j4me.app;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import gps.BT747Constants;
 
 import javax.microedition.lcdui.Display;
@@ -50,13 +53,12 @@ public class MainScreen extends Dialog implements ModelListener {
      * Reference to the application Midlet instantiation because we need it.
      */
     private MTKMidlet midlet;
-    
+
     /**
      * The different screens that we can go to from the main screen. J4ME
      * requires that those are all created when the menu is created.
      */
     private final LogDownloadScreen downloadLogScreen;
-    private final ConvertToScreen convertToScreen;
     private final GpsPositionScreen gpsPositionScreen;
     private final LogConditionsConfigScreen logConditionsConfigScreen;
     private final LoggerStatusScreen loggerInfoScreen;
@@ -67,6 +69,9 @@ public class MainScreen extends Dialog implements ModelListener {
     private final PathSelectionScreen baseDirScreen;
     private final CreditsScreen creditsScreen;
     private final LogFieldSelectScreen logFieldSelectScreen;
+
+    java.util.Timer tm = new Timer();
+    TimerTask tt;
 
     /**
      * We use only one instantiation of the confirmation screen (sequence). This
@@ -92,7 +97,7 @@ public class MainScreen extends Dialog implements ModelListener {
     /**
      * A reference to this object to use in local classes.
      */
-    final private DeviceScreen myself = this;
+    final private MainScreen myself = this;
 
     /**
      * Constructs the "Main" screen.
@@ -106,6 +111,12 @@ public class MainScreen extends Dialog implements ModelListener {
         this.c = c;
         this.midlet = midlet;
         UIManager.setTheme(new BlueTheme(getScreenWidth()));
+        
+        tt = new TimerTask() {
+            public void run() {
+                myself.timedRun();
+            }
+        };
 
         // Set the title.
         setTitle("MTK Logger Control V"
@@ -117,7 +128,6 @@ public class MainScreen extends Dialog implements ModelListener {
         setMenuText("Logger Menu", "App Menu");
 
         downloadLogScreen = new LogDownloadScreen(c, this);
-        convertToScreen = new ConvertToScreen(c, this);
         gpsPositionScreen = new GpsPositionScreen(c, this);
         logConditionsConfigScreen = new LogConditionsConfigScreen(c, this);
         loggerInfoScreen = new LoggerStatusScreen(c, this);
@@ -155,7 +165,8 @@ public class MainScreen extends Dialog implements ModelListener {
         subMenu = new Menu("Convert Menu", rootMenu);
         subMenu.appendMenuOption("Select File Fields", new DelayedDialog(
                 FileFieldSelectScreen.class, c, rootMenu, rootMenu));
-        subMenu.appendMenuOption("Convert", convertToScreen);
+        subMenu.appendMenuOption("Convert", new DelayedDialog(
+                ConvertToScreen.class, c, rootMenu, rootMenu));
         rootMenu.appendSubmenu(subMenu);
 
         subMenu = new Menu("Connection", rootMenu);
@@ -308,7 +319,7 @@ public class MainScreen extends Dialog implements ModelListener {
                 case DOWNLOAD_OVERWRITE_CONFIRM:
                     // The confirm screen confirms erasal or not
                     c.replyToOkToOverwrite(confirmScreen.getConfirmation());
-                    if(interruptedScreen!=null) {
+                    if (interruptedScreen != null) {
                         confirmScreen = null;
                         interruptedScreen.show();
                         return;
@@ -398,12 +409,6 @@ public class MainScreen extends Dialog implements ModelListener {
     }
 
     /**
-     * Indicates when the label(s) must be set to the initial color. The color
-     * is changed to notify the user which waypoint he is logging.
-     */
-    private long nextResetLabelTime = 0;
-
-    /**
      * Called to highlight a label (corresponding to a waypoint logged by the
      * user).
      * 
@@ -416,7 +421,7 @@ public class MainScreen extends Dialog implements ModelListener {
         if (labels != null) {
             labels[i].setFontColor(Theme.RED);
             labels[i].repaint();
-            nextResetLabelTime = System.currentTimeMillis() + 500;
+            tm.schedule(tt, 500);
         }
     }
 
@@ -511,21 +516,18 @@ public class MainScreen extends Dialog implements ModelListener {
         // Do nothing for the moment - should prompt to exit the application.
     }
 
-    
+    public void timedRun() {
+        resetLabels();
+    }
+
     DeviceScreen interruptedScreen = null;
-    
+
     /**
      * Call back from the GPS Model to provide data.
      * 
      * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
      */
     public final void modelEvent(final ModelEvent e) {
-        // This gets called often enough to use as a timer
-        if (nextResetLabelTime != 0
-                && nextResetLabelTime < System.currentTimeMillis()) {
-            nextResetLabelTime = 0;
-            resetLabels();
-        }
         switch (e.getType()) {
         case ModelEvent.DEBUG_MSG:
             Log.debug((String) e.getArg());
@@ -549,13 +551,12 @@ public class MainScreen extends Dialog implements ModelListener {
         case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
             interruptedScreen = UIManager.getScreen();
             confirmScreenOption = DOWNLOAD_OVERWRITE_CONFIRM;
-            confirmScreen = new ConfirmScreen(
-                    "Overwrite previous data",
-                    "The data previously downloaded is different\n" +
-                    "Do you confirm this data can be replace with" +
-                    " new data from your device ??\n",
-                    "Are you absolutely certain that previously downloaded" +
-                    " data is irrelevant?", myself);
+            confirmScreen = new ConfirmScreen("Overwrite previous data",
+                    "The data previously downloaded is different\n"
+                            + "Do you confirm this data can be replace with"
+                            + " new data from your device ??\n",
+                    "Are you absolutely certain that previously downloaded"
+                            + " data is irrelevant?", myself);
             confirmScreen.show();
             break;
         default:

@@ -1,7 +1,5 @@
 package net.sf.bt747.j4me.app;
 
-import org.j4me.ui.DeviceScreen;
-import org.j4me.ui.Dialog;
 import org.j4me.ui.components.CheckBox;
 import org.j4me.ui.components.Label;
 import org.j4me.ui.components.RadioButton;
@@ -16,18 +14,7 @@ import bt747.sys.Convert;
  * provider on the device. But if it cannot it will get a GPS provider through a
  * Bluetooth connection.
  */
-public class ConvertToScreen extends Dialog {
-    /**
-     * The location information for this application.
-     */
-    private final AppController c;
-
-    /**
-     * The screen that came before this one. If the user cancels the the process
-     * or if it fails it will be returned to.
-     */
-    private final DeviceScreen previous;
-
+public class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Dialog {
     /**
      * Output format selection.
      */
@@ -58,27 +45,15 @@ public class ConvertToScreen extends Dialog {
     
     private RadioButton rbTimeOffsetHours;
 
-    /**
-     * Constructs the "Initializing GPS..." alert screen.
-     * 
-     * @param model
-     *            is the application's location data.
-     * @param previous
-     *            is the screen that came before this one.
-     */
-    public ConvertToScreen(final AppController c, final DeviceScreen previous) {
-        setTitle("Convert Log");
-        this.c = c;
-        this.previous = previous;
-        setUpScreen();
-    }
-    
+    private boolean screenIsSetup = false;
     
     /**
      * Sets up the screen.
      */
     private void setUpScreen() {
+        if(!screenIsSetup) {
         deleteAll();
+        setTitle("Convert Log");
         Label l;
         l = new Label("Select output format:");
         append(l);
@@ -153,12 +128,13 @@ public class ConvertToScreen extends Dialog {
         }
         rbTimeOffsetHours.setSelectedIndex(offsetIdx);
         append(rbTimeOffsetHours);
-    }
-    
-    public void showNotify() {
-        super.showNotify();
+        }
     }
 
+    public void show() {
+        setUpScreen();
+        super.show();
+    }
     
     protected void acceptNotify() {
         ConvertToProgressScreen progressScreen;
