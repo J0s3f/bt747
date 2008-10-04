@@ -13,28 +13,33 @@ public class LogDownloadConfigScreen extends BT747Dialog {
     private TextBox tbChunkAhead;
     private RadioButton rbDownloadMethod;
 
+    private boolean screenIsSetup = false;
+
     private void setupScreen() {
-        deleteAll();
-        setTitle("Log download configuration");
+        if (!screenIsSetup) {
+            screenIsSetup = true;
+            deleteAll();
+            setTitle("Log download configuration");
 
-        tbChunkSize = new TextBox();
-        tbChunkSize.setForDecimalOnly();
-        tbChunkSize.setLabel("Download chunk size");
-        append(tbChunkSize);
+            tbChunkSize = new TextBox();
+            tbChunkSize.setForDecimalOnly();
+            tbChunkSize.setLabel("Download chunk size");
+            append(tbChunkSize);
 
-        tbChunkAhead = new TextBox();
-        tbChunkAhead.setForNumericOnly();
-        tbChunkAhead.setLabel("Request queue size");
-        append(tbChunkAhead);
+            tbChunkAhead = new TextBox();
+            tbChunkAhead.setForNumericOnly();
+            tbChunkAhead.setLabel("Request queue size");
+            append(tbChunkAhead);
 
-        rbDownloadMethod = new RadioButton();
+            rbDownloadMethod = new RadioButton();
 
-        rbDownloadMethod.append("Normal download");
-        rbDownloadMethod.append("Smart Download");
-        rbDownloadMethod.append("Full download");
-        append(rbDownloadMethod);
-        updateButtons();
-        invalidate();
+            rbDownloadMethod.append("Normal download");
+            rbDownloadMethod.append("Smart Download");
+            rbDownloadMethod.append("Full download");
+            append(rbDownloadMethod);
+            updateButtons();
+            invalidate();
+        }
     }
 
     private final AppModel m() {
@@ -46,7 +51,7 @@ public class LogDownloadConfigScreen extends BT747Dialog {
         setupScreen();
         super.show();
     }
-    
+
     private final void updateButtons() {
         tbChunkSize.setString(Convert.toString(m().getChunkSize()));
         tbChunkAhead.setString(Convert.toString(m().getLogRequestAhead()));
@@ -55,7 +60,7 @@ public class LogDownloadConfigScreen extends BT747Dialog {
     }
 
     private final void setSettings() {
-        c.setChunkSize( Convert.toInt(tbChunkSize.getString()));
+        c.setChunkSize(Convert.toInt(tbChunkSize.getString()));
         c.setLogRequestAhead(Convert.toInt(tbChunkAhead.getString()));
         c.setDownloadMethod(rbDownloadMethod.getSelectedIndex());
         Log.debug("Log download settings updated");
