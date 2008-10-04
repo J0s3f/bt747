@@ -14,9 +14,18 @@ if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
 
 RXTX_PATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
 RXTX_BIN_PATH=${RXTX_PATH}/Mac_OS_X
+WABA_JAR=${ROOT_DIR}/lib/Waba_only.jar
+BT747_JAR=${ROOT_DIR}/dist/BT747_rxtx.jar
 
-CLASSPATH=${RXTX_PATH}:${RXTX_BIN_PATH}:${ROOT_DIR}/lib/Waba_only.jar:${ROOT_DIR}/dist/BT747_rxtx.jar:.:$CLASSPATH
+CLASSPATH="${RXTX_PATH}:${RXTX_BIN_PATH}:${WABA_JAR}:${BT747_JAR}:.:$CLASSPATH"
 export CLASSPATH
+
+for p in ${CLASSPATH//[;:]/ }  ; do
+  if [ ! -r $p ] ; then
+     echo "ISSUE: Can not read '$p'"
+  fi
+done
+
 # More advanced way of looking for ports
 POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/cu.SLAB_USBtoUART"
 POSSIBLE_PORTS="$POSSIBLE_PORTS /dev/tty.HOLUX_M-241-SPPSlave-1"
@@ -38,6 +47,7 @@ done
 
 which java 2>1 >/dev/null && JAVA=java
 which javaw 2>1 >/dev/null && JAVA=javaw
+which java 2>1 >/dev/null && JAVA=java
 
 # you may want to force the path to the settings file in the next call:
 # -Dbt747_settings="${USER}/bt747_settings.pdb"

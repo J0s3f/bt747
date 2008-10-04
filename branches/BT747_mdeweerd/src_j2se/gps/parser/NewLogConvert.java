@@ -20,7 +20,7 @@ import gps.log.GPSRecord;
 import gps.log.in.GPSLogConvert;
 import gps.log.out.GPSFile;
 
-import bt747.sys.Vm;
+import bt747.sys.Generic;
 
 /**
  * This class is used to convert the binary log to a new format. Basically this
@@ -74,8 +74,7 @@ public final class NewLogConvert implements GPSLogConvert {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            Vm.debug("? Problem reading file " + argv[0]);
+            Generic.debug("? Problem reading file " + argv[0],e);
             errorInfo = argv[0];
             error = BT747Constants.ERROR_READING_FILE;
         }
@@ -92,7 +91,7 @@ public final class NewLogConvert implements GPSLogConvert {
     public final int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int Card) {
         int error = BT747Constants.NO_ERROR;
-        Vm.debug("Using new parser");
+        Generic.debug("Using new parser");
         argv[0] = fileName;
         passToFindFieldsActivatedInLog = gpsFile
                 .needPassToFindFieldsActivatedInLog();

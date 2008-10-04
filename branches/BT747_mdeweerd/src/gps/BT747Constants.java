@@ -14,9 +14,8 @@
 //***  *********************************************************** ***
 package gps;
 
-import gps.Txt;
 import bt747.sys.Convert;
-import bt747.sys.Vm;
+import bt747.sys.Generic;
 
 /**
  * Constants for the iBlue 747 (BT747) device
@@ -497,7 +496,7 @@ public final class BT747Constants { // dev as in device
                         total += byteSizes[index];
                     } catch (Exception e) {
                         // TODO: Check when this happens.
-                        Vm.debug(Txt.C_BAD_LOG_FORMAT);
+                        Generic.debug(Txt.C_BAD_LOG_FORMAT);
                     }
                     break;
                 }

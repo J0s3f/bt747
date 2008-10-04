@@ -34,7 +34,7 @@ public final class GPSArray extends GPSFile {
         wayPointCount = 0;
     }
 
-    public boolean needPassToFindFieldsActivatedInLog() {
+    public final boolean needPassToFindFieldsActivatedInLog() {
         return false;
     }
 
@@ -43,11 +43,11 @@ public final class GPSArray extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected boolean recordIsNeeded(final GPSRecord s) {
+    protected final boolean recordIsNeeded(final GPSRecord s) {
         return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 
-    public boolean nextPass() {
+    public final boolean nextPass() {
         super.nextPass();
         if (nbrOfPassesToGo > 0) {
             nbrOfPassesToGo--;
@@ -74,7 +74,7 @@ public final class GPSArray extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         if (ptFilters[GPSFilter.TRKPT].doFilter(s)) {
             if (nbrOfPassesToGo == 0) {
@@ -97,15 +97,15 @@ public final class GPSArray extends GPSFile {
         return BT747Constants.NO_ERROR;
     }
 
-    protected void closeFile() {
+    protected final void closeFile() {
         // Override to avoid file related errors
     }
 
-    public GPSRecord[] getGpsTrackPoints() {
+    public final GPSRecord[] getGpsTrackPoints() {
         return gpsTrackPoints;
     }
 
-    public GPSRecord[] getGpsWayPoints() {
+    public final GPSRecord[] getGpsWayPoints() {
         return gpsWayPoints;
     }
 

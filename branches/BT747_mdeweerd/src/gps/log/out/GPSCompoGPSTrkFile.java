@@ -68,13 +68,13 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
         numberOfPasses = 2;
     }
 
-    public void initialiseFile(final String basename, final String ext,
+    public final void initialiseFile(final String basename, final String ext,
             final int card, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, card, oneFilePerDay);
         isWayType = false;
     }
 
-    public void writeFileHeader(final String s) {
+    public final void writeFileHeader(final String s) {
         super.writeFileHeader(s);
         writeTxt("G  WGS 84\r\n" // WGS 84
                 + "U  1\r\n" // LAT .LON FORMAT
@@ -114,8 +114,8 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    private StringBuffer rec = new StringBuffer(1024);
-    private StringBuffer wrec = new StringBuffer(1024);
+    private final StringBuffer rec = new StringBuffer(1024);
+    private final StringBuffer wrec = new StringBuffer(1024);
 
     public void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
@@ -240,7 +240,7 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
         } // activeFields!=null
     }
 
-    public boolean nextPass() {
+    public final boolean nextPass() {
         super.nextPass();
         if (!isWayType) {
             previousDate = 0;

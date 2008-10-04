@@ -19,6 +19,7 @@ import gps.BT747Constants;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.sys.Generic;
 
 /**
  * 
@@ -77,7 +78,7 @@ public class TestDevice implements bt747.model.ModelListener {
             try {
                 Thread.sleep(50);
             } catch (Exception e) {
-                e.printStackTrace();
+                Generic.debug("",e);
                 // Do nothing
             }
         }

@@ -10,7 +10,6 @@ import moio.util.HashSet;
 import moio.util.Iterator;
 
 import bt747.sys.Generic;
-import bt747.sys.Vm;
 import bt747.sys.interfaces.BT747Thread;
 
 /**
@@ -90,12 +89,4 @@ public final class J2SEGeneric {
     public static double acos(final double x) {
         return Math.acos(x);
     }
-
-    public static void debug(String s, Throwable e) {
-        Vm.debug(s);
-        if (e != null) {
-            e.printStackTrace();
-        }
-    }
-
 }

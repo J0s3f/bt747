@@ -25,17 +25,17 @@ import bt747.sys.Convert;
  * @author Mario De Weerd
  */
 public final class GPSCSVFile extends GPSFile {
-    private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
+    private final StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
     private static final char fieldSep = ','; // For future parameterisation
     private static final char satSeperator = ';'; // For future
 
     // parameterisation
 
-    public boolean needPassToFindFieldsActivatedInLog() {
+    public final boolean needPassToFindFieldsActivatedInLog() {
         return true;
     }
 
-    protected void writeFileHeader(final String Name) {
+    protected final void writeFileHeader(final String Name) {
         rec.setLength(0);
         // INDEX,RCR,DATE,TIME,VALID,LATITUDE,N/S,LONGITUDE,E/W,HEIGHT,SPEED,
         rec.append("INDEX");
@@ -132,7 +132,7 @@ public final class GPSCSVFile extends GPSFile {
      * 
      * Override parent class because only the trackpoint filter is used.
      */
-    protected boolean recordIsNeeded(final GPSRecord s) {
+    protected final boolean recordIsNeeded(final GPSRecord s) {
         return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 
@@ -142,7 +142,7 @@ public final class GPSCSVFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
         if (activeFields != null && ptFilters[GPSFilter.TRKPT].doFilter(s)) {

@@ -29,7 +29,7 @@ import bt747.sys.Convert;
 public final class GPSNMEAFile extends GPSFile {
     private static final double KMH_PER_KNOT = 0.53995680345572354211663066954644;
 
-    private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
+    private final StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
 
     private int m_NMEAout;
 

@@ -22,6 +22,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
+import bt747.sys.Generic;
+
 /**
  * LogBlockChunk objects represent a "chunk" of data in the logfile. <br>
  * A LogBlockChunk knows it's internal structure on the next lower layer and
@@ -145,13 +147,13 @@ public class LogBlockChunk implements Iterable<LogPacket> {
                 // push-back read bytes and continue
                 dis.reset();
             } catch (IOException e) {
-                e.printStackTrace();
+                Generic.debug("",e);
                 throw new IllegalStateException();
             }
             try {
                 result = new LogPacket(parser, this.format);
             } catch (IOException e) {
-                e.printStackTrace();
+                Generic.debug("",e);
                 throw new IllegalStateException();
             }
 

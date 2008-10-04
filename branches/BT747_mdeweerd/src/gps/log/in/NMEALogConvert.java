@@ -26,6 +26,7 @@ import gps.log.out.GPSFile;
 import moio.util.StringTokenizer;
 
 import bt747.sys.File;
+import bt747.sys.Generic;
 
 /**
  * This class is used to convert the binary log to a new format. Basically this
@@ -74,7 +75,7 @@ public final class NMEALogConvert implements GPSLogConvert {
      * @return {@link BT747Constants#NO_ERROR} if no error (0)
      * @see gps.log.in.GPSLogConvert#parseFile(gps.log.out.GPSFile)
      */
-    public int parseFile(final GPSFile gpsFile) {
+    public final int parseFile(final GPSFile gpsFile) {
         GPSRecord gpsRec = new GPSRecord();
         byte[] bytes = new byte[BUF_SIZE];
         int sizeToRead;
@@ -222,7 +223,7 @@ public final class NMEALogConvert implements GPSLogConvert {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("",e);
         }
         return BT747Constants.NO_ERROR;
     }
@@ -258,15 +259,15 @@ public final class NMEALogConvert implements GPSLogConvert {
 
     private long timeOffsetSeconds;
 
-    public void setTimeOffset(final long offset) {
+    public final void setTimeOffset(final long offset) {
         timeOffsetSeconds = offset;
     }
 
-    public void setConvertWGS84ToMSL(final boolean b) {
+    public final void setConvertWGS84ToMSL(final boolean b) {
         isConvertWGS84ToMSL = b;
     }
 
-    public int toGPSFile(final String fileName, final GPSFile gpsFile,
+    public final int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int card) {
         int error = BT747Constants.NO_ERROR;
         stop = false;
@@ -300,7 +301,7 @@ public final class NMEALogConvert implements GPSLogConvert {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("",e);
             // TODO: handle exception
         }
         return error;

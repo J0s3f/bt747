@@ -63,13 +63,15 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
         return new J2SEFile(path, mode);
     }
 
-
     public final boolean isAvailable() {
         return true;
     }
 
     public final void debug(final String s, final Throwable e) {
-        J2SEGeneric.debug(s, e);
+        System.out.println(s);
+        if (e != null) {
+            e.printStackTrace();
+        }
     }
 
     public final double pow(final double x, final double y) {
@@ -109,8 +111,8 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
     }
 
     private static final int MAX_FRACTION = 16;
-    private static final NumberFormat[] nf = new NumberFormat[MAX_FRACTION+1];
-    
+    private static final NumberFormat[] nf = new NumberFormat[MAX_FRACTION + 1];
+
     static {
         for (int i = 0; i < nf.length; i++) {
             nf[i] = NumberFormat.getNumberInstance(Locale.US);
@@ -165,10 +167,10 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
         System.out.println(s);
     }
 
-    private static final long appStartTime=System.currentTimeMillis();
-    
+    private static final long appStartTime = System.currentTimeMillis();
+
     public final int getTimeStamp() {
-        return (int)(System.currentTimeMillis()-appStartTime);
+        return (int) (System.currentTimeMillis() - appStartTime);
     }
 
     private static String appSettings = ""; // TODO: Implement other solution
@@ -192,5 +194,5 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
         // TODO Auto-generated method stub
         return new J2SESemaphore(value);
     }
-    
+
 }

@@ -218,7 +218,7 @@ public final class CommonIn {
                     logFormat |= (1 << BT747Constants.FMT_UTC_IDX);
                 }
             } catch (Exception e) {
-                Generic.debug(sNmea[1], e);
+                Generic.debug("GPRMC1:" + sNmea[1], e);
             }
             // sNmea[2] = valid/invalid
             // latitude
@@ -228,7 +228,7 @@ public final class CommonIn {
                     logFormat |= (1 << BT747Constants.FMT_LATITUDE_IDX);
                 }
             } catch (Exception e) {
-                Generic.debug(sNmea[3], e);
+                Generic.debug("GPRMC3:" + sNmea[3], e);
             }
             // longitude
             try {
@@ -237,7 +237,7 @@ public final class CommonIn {
                     logFormat |= (1 << BT747Constants.FMT_LONGITUDE_IDX);
                 }
             } catch (Exception e) {
-                Generic.debug(sNmea[5], e);
+                Generic.debug("GPRMC5:" + sNmea[5], e);
             }
             try {
                 if (sNmea[7].length() != 0) {
@@ -246,7 +246,7 @@ public final class CommonIn {
                     logFormat |= (1 << BT747Constants.FMT_SPEED_IDX);
                 }
             } catch (Exception e) {
-                Generic.debug(sNmea[7], e);
+                Generic.debug("GPRMC7:" + sNmea[7], e);
             }
             try {
                 if (sNmea[8].length() != 0) {
@@ -254,7 +254,7 @@ public final class CommonIn {
                     logFormat |= (1 << BT747Constants.FMT_HEADING_IDX);
                 }
             } catch (Exception e) {
-                Generic.debug(sNmea[8], e);
+                Generic.debug("GPRMC8:" + sNmea[8], e);
             }
             try {
                 if (sNmea[9].length() != 0) {
@@ -262,7 +262,7 @@ public final class CommonIn {
                     logFormat |= (1 << BT747Constants.FMT_UTC_IDX);
                 }
             } catch (Exception e) {
-                Generic.debug(sNmea[9], e);
+                Generic.debug("GPRMC9:" + sNmea[9], e);
             }
         }
         return logFormat;
@@ -288,7 +288,7 @@ public final class CommonIn {
                     }
                 }
             } catch (Exception e) {
-                Generic.debug("1:" + sNmea[1], e);
+                Generic.debug("GPGGA1:" + sNmea[1], e);
             }
             try {
                 if (sNmea[4].length() != 0) {
@@ -296,7 +296,7 @@ public final class CommonIn {
                     logFormat |= (1 << BT747Constants.FMT_LATITUDE_IDX);
                 }
             } catch (Exception e) {
-                Generic.debug("2:" + sNmea[2], e);
+                Generic.debug("GPGGA2:" + sNmea[2], e);
             }
             try {
                 if (sNmea[4].length() != 0) {
@@ -304,7 +304,7 @@ public final class CommonIn {
                     logFormat |= (1 << BT747Constants.FMT_LONGITUDE_IDX);
                 }
             } catch (Exception e) {
-                Generic.debug("4:" + sNmea[4], e);
+                Generic.debug("GPGGA4:" + sNmea[4], e);
             }
             try {
                 if (sNmea[6].length() != 0) {
@@ -312,7 +312,7 @@ public final class CommonIn {
                     logFormat |= (1 << BT747Constants.FMT_VALID_IDX);
                 }
             } catch (Exception e) {
-                Generic.debug("6:" + sNmea[6], e);
+                Generic.debug("GPGGA6:" + sNmea[6], e);
             }
             try {
                 if (sNmea[7].length() != 0) {
@@ -321,7 +321,7 @@ public final class CommonIn {
                     logFormat |= (1 << BT747Constants.FMT_NSAT_IDX);
                 }
             } catch (Exception e) {
-                Generic.debug("7:" + sNmea[7], e);
+                Generic.debug("GPGGA7:" + sNmea[7], e);
             }
             try {
                 if (sNmea[8].length() != 0) {
@@ -331,7 +331,7 @@ public final class CommonIn {
                     gpsRec.hdop = 999;
                 }
             } catch (Exception e) {
-                Generic.debug("8:" + sNmea[8], e);
+                Generic.debug("GPGGA8:" + sNmea[8], e);
             }
             try {
                 if (sNmea[9].length() != 0) {
@@ -345,7 +345,7 @@ public final class CommonIn {
                     gpsRec.geoid = 0;
                 }
             } catch (Exception e) {
-                Generic.debug("9:" + sNmea[9], e);
+                Generic.debug("GPGGA9:" + sNmea[9], e);
             }
             if (sNmea.length >= 14) {
                 try {
@@ -354,7 +354,7 @@ public final class CommonIn {
                         logFormat |= (1 << BT747Constants.FMT_DAGE_IDX);
                     }
                 } catch (Exception e) {
-                    Generic.debug("13:" + sNmea[13], e);
+                    Generic.debug("GPGGA13:" + sNmea[13], e);
                 }
             }
             if (sNmea.length >= 15) {
@@ -364,7 +364,7 @@ public final class CommonIn {
                         logFormat |= (1 << BT747Constants.FMT_DSTA_IDX);
                     }
                 } catch (Exception e) {
-                    Generic.debug("14:" + sNmea[14], e);
+                    Generic.debug("GPGGA14:" + sNmea[14], e);
                 }
             }
         } // GPGGA

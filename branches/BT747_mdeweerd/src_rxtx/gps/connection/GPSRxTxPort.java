@@ -86,7 +86,7 @@ public final class GPSRxTxPort extends GPSPort {
                 ds = null;
                 sp = null;
             } catch (Exception e) {
-                e.printStackTrace();
+                Generic.debug("",e);
             }
         }
     }
@@ -135,13 +135,13 @@ public final class GPSRxTxPort extends GPSPort {
                 }
             }
         } catch (NoSuchPortException e) {
-            e.printStackTrace();
+            Generic.debug("",e);
         } catch (PortInUseException e) {
-            e.printStackTrace();
+            Generic.debug("",e);
         } catch (UnsupportedCommOperationException e) {
-            e.printStackTrace();
+            Generic.debug("",e);
         } catch (IOException e) {
-            e.printStackTrace();
+            Generic.debug("",e);
         }
 
         return result;
@@ -229,14 +229,14 @@ public final class GPSRxTxPort extends GPSPort {
         try {
             ds.write(b);
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("",e);
         }
         if (GPS_FILE_LOG && (debugFile != null)) {
             try {
                 debugFile.writeBytes("\nWrite:".getBytes(), 0, 2);
                 debugFile.writeBytes(b, 0, b.length);
             } catch (Exception e) {
-                e.printStackTrace();
+                Generic.debug("",e);
             }
         }
     }
@@ -252,7 +252,7 @@ public final class GPSRxTxPort extends GPSPort {
                 // return 100;
                 return in.available();// getInputStream().available();
             } catch (Exception e) {
-                e.printStackTrace();
+                Generic.debug("",e);
                 return 0;
             }
         } else {
@@ -264,7 +264,7 @@ public final class GPSRxTxPort extends GPSPort {
         try {
             return in.read(b, start, max);
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("",e);
             return 0;
         }
     }

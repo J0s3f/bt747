@@ -16,6 +16,7 @@ import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
+import bt747.sys.Generic;
 import bt747.sys.Settings;
 
 public final class J2SEAppController extends Controller {
@@ -207,7 +208,7 @@ public final class J2SEAppController extends Controller {
         switch (error) {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
             errorMsg = Txt.COULD_NOT_OPEN + errorInfo;
-            bt747.sys.Vm.debug(errorMsg);
+            Generic.debug(errorMsg);
             new MessageBox(Txt.ERROR, errorMsg).popupBlockingModal();
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:

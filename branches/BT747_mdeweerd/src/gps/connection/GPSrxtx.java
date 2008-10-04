@@ -18,7 +18,6 @@ import bt747.sys.Convert;
 import bt747.sys.Generic;
 import bt747.sys.Semaphore;
 import bt747.sys.Vector;
-import bt747.sys.Vm;
 
 /**
  * This class implements the low level driver of the GPS device. It extracs NMEA
@@ -174,7 +173,7 @@ public final class GPSrxtx {
                 rec.append('*');
                 rec.append(Convert.unsigned2hex(z_Checksum, 2));
                 if (Generic.getDebugLevel() > 1) {
-                    bt747.sys.Vm.debug(">" + rec.toString());
+                    Generic.debug(">" + rec.toString());
                 }
                 if (Generic.isDebug()) {
                     gpsPort.writeDebug(">" + rec.toString());
@@ -218,7 +217,7 @@ public final class GPSrxtx {
                 current_state = C_DPL700_STATE;
                 DPL700_buffer_idx = 0;
                 if (Generic.isDebug()) {
-                    bt747.sys.Vm.debug(">0x" + Convert.unsigned2hex(cmd, 8)
+                    Generic.debug(">0x" + Convert.unsigned2hex(cmd, 8)
                             + "000000");
                 }
                 sendbuffer[0] = (byte) ((cmd >> 24) & 0xFF);
@@ -246,7 +245,7 @@ public final class GPSrxtx {
                 current_state = C_DPL700_STATE;
                 DPL700_buffer_idx = 0;
                 if (Generic.isDebug()) {
-                    bt747.sys.Vm.debug(">" + cmd);
+                    Generic.debug(">" + cmd);
                 }
                 rec.setLength(0);
                 rec.append(cmd);
@@ -266,7 +265,7 @@ public final class GPSrxtx {
                 current_state = C_DPL700_STATE;
                 rxtxMode = DPL700_MODE;
                 if (Generic.isDebug()) {
-                    bt747.sys.Vm.debug(">" + cmd);
+                    Generic.debug(">" + cmd);
                 }
                 rec.setLength(0);
                 rec.append(cmd);
@@ -303,7 +302,7 @@ public final class GPSrxtx {
         if (gpsPort.debugActive()) {
             // Test to avoid unnecessary lost time
             gpsPort.writeDebug("\r\nR:"
-                    + Convert.toString(bt747.sys.Vm.getTimeStamp()) + ":");
+                    + Convert.toString(Generic.getTimeStamp()) + ":");
         }
 
         if (current_state == C_FOUND_STATE) {
@@ -503,7 +502,7 @@ public final class GPSrxtx {
                         DPL700_buffer_idx -= endStringIdx;
                         rxtxMode = NORMAL_MODE;
                         current_state = C_DPL700_END_STATE;
-                        Vm.debug("End DPL700");
+                        Generic.debug("End DPL700");
                         continueReading = false;
                     } else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
                             || c == ' ' || c == '+' || c == '\'') {
@@ -546,7 +545,7 @@ public final class GPSrxtx {
                         while (--l >= 0) {
                             read_buf[l] = ns[l];
                         }
-                        Vm.debug("Virtual:" + virtualInput.toString());
+                        Generic.debug("Virtual:" + virtualInput.toString());
                         virtualInput = null;
                     } else if (readAgain) {
                         readAgain = false;
@@ -593,7 +592,7 @@ public final class GPSrxtx {
                     } else {
                         if (gpsPort.debugActive()) {
                             String q = "("
-                                    + Convert.toString(Vm.getTimeStamp()) + ")";
+                                    + Convert.toString(Generic.getTimeStamp()) + ")";
                             gpsPort.writeDebug(q.getBytes(), 0, q.length());
                             gpsPort.writeDebug(read_buf, 0, bytesRead);
                         }

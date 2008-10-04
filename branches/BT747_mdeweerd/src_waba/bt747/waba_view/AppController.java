@@ -13,10 +13,10 @@ import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
 
-import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.waba_view.ui.BT747MessageBox;
+// #if RXTX import bt747.sys.Convert;
 
 //import moio.util.Iterator;  Needed later when communicating with views.
 
@@ -94,7 +94,7 @@ public final class AppController extends Controller {
      * 
      * @return Array of selected trackpoints.
      */
-    public GPSRecord[] convertLogToTrackPoints() {
+    public final GPSRecord[] convertLogToTrackPoints() {
         GPSRecord[] result;
         result = c.doConvertLogToTrackPoints();
         if (result == null) {
@@ -115,7 +115,7 @@ public final class AppController extends Controller {
      * A 'recovery Erase' attempts to recover memory that was previously
      * identified as 'bad'.
      */
-    public void recoveryErase() {
+    public final void recoveryErase() {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
         mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
@@ -139,7 +139,7 @@ public final class AppController extends Controller {
      * @param logFormat
      *            The logFormat to set upon erase.
      */
-    public void changeLogFormatAndErase(final int logFormat) {
+    public final void changeLogFormatAndErase(final int logFormat) {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
         mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
@@ -164,7 +164,7 @@ public final class AppController extends Controller {
      * @param logFormat
      *            The new log format to set.
      */
-    public void changeLogFormat(final int logFormat) {
+    public final void changeLogFormat(final int logFormat) {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
         mb = new BT747MessageBox(true, Txt.TITLE_ATTENTION,
@@ -179,7 +179,7 @@ public final class AppController extends Controller {
      * (User) request to change the log format. Warns about requirement to erase
      * the log too.
      */
-    public void eraseLogFormat() {
+    public final void eraseLogFormat() {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
         mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
@@ -236,7 +236,7 @@ public final class AppController extends Controller {
      * @param view
      *            The view that must be attached.
      */
-    public void addView(final BT747View view) {
+    public final void addView(final BT747View view) {
         views.add(view);
         view.setController(this);
         view.setModel(this.m);
@@ -247,7 +247,7 @@ public final class AppController extends Controller {
      * 
      * @see bt747.model.Controller#performOperationsAfterGPSConnect()
      */
-    protected void performOperationsAfterGPSConnect() {
+    protected final void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
             if (m.getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT)) {
                 c.stopLog(); // First command could fail, so repeat.
@@ -340,7 +340,7 @@ public final class AppController extends Controller {
 
     /* @author Herbert Geus (initial code for saving settings on WindowsCE) */
 
-    public void saveSettings() {
+    public final void saveSettings() {
         if (Generic.isDebug()) {
             Generic.debug("Platform " + Settings.platform, null);
             // #if RXTX Generic.debug( "os.name:" +

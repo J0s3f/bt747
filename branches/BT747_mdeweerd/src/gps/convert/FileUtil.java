@@ -4,7 +4,7 @@ package gps.convert;
  * @author Curt Arnold <br>
  *         Original
  * @author Mario De Weerd <br>
- *         Adapted to SuperWaba
+ *         Adapted to BT747
  * 
  */
 public final class FileUtil {
