@@ -31,7 +31,7 @@ public class GpsEvent {
     public static final int ERASE_ONGOING_NEED_POPUP = 9;
     public static final int ERASE_DONE_REMOVE_POPUP = 10;
     public static final int COULD_NOT_OPEN_FILE = 11;
-    public static final int DEBUG_MSG = 12;
+    //public static final int DEBUG_MSG = 12;
     public static final int GPS_FIX_DATA = 13;
     public static final int LOG_DOWNLOAD_SUCCESS = 14;
 

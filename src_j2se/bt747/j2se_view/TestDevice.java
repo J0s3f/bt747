@@ -294,11 +294,11 @@ public class TestDevice implements bt747.model.ModelListener {
         } else if (type == ModelEvent.LOG_DOWNLOAD_DONE) {
             progressUpdate();
             handleDownloadEnded();
-        } else if (type == ModelEvent.DEBUG_MSG) {
-            System.out.flush();
-            System.err.println((String) e.getArg());
-            System.err.flush();
-            progressUpdate();
+//        } else if (type == ModelEvent.DEBUG_MSG) {
+//            System.out.flush();
+//            System.err.println((String) e.getArg());
+//            System.err.flush();
+//            progressUpdate();
         } else if (type == ModelEvent.CONNECTED) {
             // btConnect.setText("Disconnect");
             // btConnectFunctionIsConnect = false;

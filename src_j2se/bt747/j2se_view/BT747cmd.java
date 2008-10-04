@@ -166,11 +166,11 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
-        case ModelEvent.DEBUG_MSG:
-            System.out.flush();
-            System.err.println((String) e.getArg());
-            System.err.flush();
-            break;
+//        case ModelEvent.DEBUG_MSG:
+//            System.out.flush();
+//            System.err.println((String) e.getArg());
+//            System.err.flush();
+//            break;
         case ModelEvent.LOG_DOWNLOAD_STARTED:
             downloadStartTime = System.currentTimeMillis();
             downloadIsSuccessFull = false;
