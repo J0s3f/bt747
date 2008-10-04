@@ -89,16 +89,4 @@ public final class J2MEGeneric {
         }
 
     }
-
-    public static double pow(final double x, final double y) {
-        return Float11.pow(x, y);
-    }
-
-    public static double acos(final double x) {
-        return Float11.acos(x);
-    }
-
-    public static void debug(final String s, final Throwable e) {
-        Log.debug(s, e);
-    }
 }
