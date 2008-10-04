@@ -28,11 +28,11 @@ public final class WindowedFile {
         open();
     }
 
-    private void open() throws Exception {
+    private void open() {
         file = new File(path, mode, card);
     }
 
-    private int bufferSize = 1000;
+    private int bufferSize = 0x400;
     private byte[] buffer;
     private int bufferFill = 0;
     private int currentPosition;
@@ -75,7 +75,7 @@ public final class WindowedFile {
         }
     }
 
-    public byte[] fillBuffer(final int newPosition) throws Exception {
+    public final byte[] fillBuffer(final int newPosition) {
         sanitizeBuffer();
         if (newPosition < currentPosition) {
             file.close();
@@ -120,11 +120,11 @@ public final class WindowedFile {
         return buffer;
     }
 
-    public int getBufferFill() {
+    public final int getBufferFill() {
         return bufferFill;
     }
 
-    public boolean close() throws Exception {
+    public final boolean close() {
         boolean result;
         buffer = null;
 

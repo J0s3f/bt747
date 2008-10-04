@@ -12,11 +12,6 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************  
 package gps.log.in;
 
 import gps.BT747Constants;
@@ -27,6 +22,7 @@ import gps.log.out.GPSFile;
 import bt747.sys.Convert;
 import bt747.sys.Date;
 import bt747.sys.File;
+import bt747.sys.Generic;
 import bt747.sys.Settings;
 
 import moio.util.StringTokenizer;
@@ -43,7 +39,8 @@ public final class CSVLogConvert implements GPSLogConvert {
     private static final int EOL = 0x0D;
     private static final int CR = 0x0A;
     private int logFormat;
-    private File inFile = null;
+    private WindowedFile mFile = null;
+
     private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
@@ -64,7 +61,7 @@ public final class CSVLogConvert implements GPSLogConvert {
 
     private String errorInfo;
 
-    public String getErrorInfo() {
+    public final String getErrorInfo() {
         return errorInfo;
     }
 
@@ -82,7 +79,7 @@ public final class CSVLogConvert implements GPSLogConvert {
     
     private boolean stop = false;
     
-    public void stopConversion() {
+    public final void stopConversion() {
         stop = true;
     }
 
@@ -96,9 +93,9 @@ public final class CSVLogConvert implements GPSLogConvert {
      * @return {@link BT747Constants#NO_ERROR} if no error (0)
      * @see gps.log.in.GPSLogConvert#parseFile(gps.log.out.GPSFile)
      */
-    public int parseFile(final GPSFile gpsFile) {
+    public final int parseFile(final GPSFile gpsFile) {
         GPSRecord gpsRec = new GPSRecord();
-        byte[] bytes = new byte[BUF_SIZE];
+        byte[] bytes;
         int sizeToRead;
         int nextAddrToRead;
         int recCount;
@@ -112,7 +109,13 @@ public final class CSVLogConvert implements GPSLogConvert {
             recCount = 0;
             logFormat = 0;
             nextAddrToRead = 0;
-            fileSize = inFile.getSize();
+            try {
+                fileSize = mFile.getSize();
+            } catch (Exception e) {
+                Generic.debug("getSize", e);
+                // TODO: handle exception
+                fileSize = 0;
+            }
 
             while (!stop && (nextAddrToRead < fileSize)) {
                 /***************************************************************
@@ -125,20 +128,27 @@ public final class CSVLogConvert implements GPSLogConvert {
                 }
 
                 /* Read the bytes from the file */
-                int readResult;
                 boolean continueInBuffer = true;
                 int offsetInBuffer = 0;
 
-                inFile.setPos(nextAddrToRead);
-
                 /***************************************************************
-                 * Not reading header - reading data.
+                 * Reading
                  */
-                readResult = inFile.readBytes(bytes, 0, sizeToRead);
-                if (readResult != sizeToRead) {
-                    errorInfo = inFile.getPath() + "|" + inFile.getLastError();
+                try {
+                    bytes = mFile.fillBuffer(nextAddrToRead);
+                } catch (Exception e) {
+                    // TODO: Should check sizeToRead vs fill in buffer.
+                    Generic.debug("Problem reading file", e);
+                    bytes = null;
+                }
+
+                if (bytes == null) {
+                    Generic.debug("fillBuffer failed", null);
+
+                    errorInfo = mFile.getPath() + "|" + mFile.getLastError();
                     return BT747Constants.ERROR_READING_FILE;
                 }
+
                 nextAddrToRead += sizeToRead;
 
                 // ///////////////////////////////
@@ -647,29 +657,38 @@ public final class CSVLogConvert implements GPSLogConvert {
                 nextAddrToRead -= (sizeToRead - offsetInBuffer);
             } /* nextAddrToRead<fileSize */
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("parseFile",e);
         }
         return BT747Constants.NO_ERROR;
     }
 
-    public void setTimeOffset(final long offset) {
+    public final void setTimeOffset(final long offset) {
         timeOffsetSeconds = offset;
     }
 
-    public void setConvertWGS84ToMSL(final boolean b) {
+    public final void setConvertWGS84ToMSL(final boolean b) {
         isConvertWGS84ToMSL = b;
     }
 
-    public int toGPSFile(final String fileName, final GPSFile gpsFile,
+    public final int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int card) {
         int error = BT747Constants.NO_ERROR;
         try {
             if (File.isAvailable()) {
-                inFile = new File(fileName, File.READ_ONLY, card);
-                if (!inFile.isOpen()) {
-                    errorInfo = fileName + "|" + inFile.getLastError();
+                try {
+                    mFile = new WindowedFile(fileName, File.READ_ONLY, card);
+                    mFile.setBufferSize(BUF_SIZE);
+                    errorInfo = fileName + "|" + mFile.getLastError();
+                } catch (Exception e) {
+                    Generic.debug("Error during initial open", e);
+                }
+                if (mFile == null || !mFile.isOpen()) {
+                    errorInfo = fileName;
+                    if (mFile != null) {
+                        errorInfo += "|" + mFile.getLastError();
+                    }
                     error = BT747Constants.ERROR_COULD_NOT_OPEN;
-                    inFile = null;
+                    mFile = null;
                 } else {
                     passToFindFieldsActivatedInLog = gpsFile
                             .needPassToFindFieldsActivatedInLog();
@@ -688,12 +707,12 @@ public final class CSVLogConvert implements GPSLogConvert {
                     gpsFile.finaliseFile();
                 }
 
-                if (inFile != null) {
-                    inFile.close();
+                if (mFile != null) {
+                    mFile.close();
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("toGPSFile",e);
             // TODO: handle exception
         }
         return error;

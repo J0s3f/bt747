@@ -19,6 +19,8 @@
 //********************************************************************
 package net.sf.bt747.waba.system;
 
+import waba.sys.Vm;
+
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747File;
 import bt747.sys.interfaces.BT747Hashtable;
@@ -37,8 +39,7 @@ public final class WabaJavaTranslations implements JavaTranslationsInterface {
         return new WabaDate(d, m, y);
     }
 
-    public BT747Date getDateInstance(final String strDate,
-            final byte dateFormat) {
+    public BT747Date getDateInstance(final String strDate, final byte dateFormat) {
         return new WabaDate(strDate, dateFormat);
     }
 
@@ -58,10 +59,12 @@ public final class WabaJavaTranslations implements JavaTranslationsInterface {
         return new WabaFile(path);
     }
 
-    public BT747File getFileInstance(final String path, final int mode, final int card) {
+    public BT747File getFileInstance(final String path, final int mode,
+            final int card) {
         int localMode;
         if (mode == bt747.sys.File.WRITE_ONLY) {
-            // On SuperWaba, WRITE_ONLY might erase, so transforming in READ_WRITE.
+            // On SuperWaba, WRITE_ONLY might erase, so transforming in
+            // READ_WRITE.
             // Must be in append mode too.
             localMode = waba.io.File.READ_WRITE;
         } else {
@@ -73,7 +76,8 @@ public final class WabaJavaTranslations implements JavaTranslationsInterface {
     public BT747File getFileInstance(final String path, final int mode) {
         int localMode;
         if (mode == bt747.sys.File.WRITE_ONLY) {
-            // On SuperWaba, WRITE_ONLY might erase, so transforming in READ_WRITE.
+            // On SuperWaba, WRITE_ONLY might erase, so transforming in
+            // READ_WRITE.
             // Must be in append mode too.
             localMode = waba.io.File.READ_WRITE;
         } else {
@@ -82,13 +86,15 @@ public final class WabaJavaTranslations implements JavaTranslationsInterface {
         return new WabaFile(path, localMode);
     }
 
-
     public boolean isAvailable() {
         return waba.io.File.isAvailable();
     }
 
     public void debug(final String s, final Throwable e) {
-        WabaGeneric.debug(s, e);
+        Vm.debug(s);
+        if (e != null) {
+            e.printStackTrace();
+        }
     }
 
     public double pow(final double x, final double y) {

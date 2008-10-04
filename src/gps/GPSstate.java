@@ -28,7 +28,6 @@ import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.Semaphore;
 import bt747.sys.Vector;
-import bt747.sys.Vm;
 import bt747.sys.interfaces.BT747Thread;
 
 /*
@@ -45,7 +44,8 @@ import bt747.sys.interfaces.BT747Thread;
  * @see GPSrxtx
  * 
  */
-public class GPSstate implements BT747Thread {
+/* Final for the moment */
+public final class GPSstate implements BT747Thread {
     private GPSrxtx gpsRxTx = null;
 
     private boolean getFullLogBlocks = true; // If true, get the entire log
@@ -191,7 +191,7 @@ public class GPSstate implements BT747Thread {
     public final void setupTimer() {
         // TODO: set up thread in gpsRxTx directly (through controller)
         if (gpsRxTx.isConnected()) {
-            nextRun = Vm.getTimeStamp() + 300; // Delay before first
+            nextRun = Generic.getTimeStamp() + 300; // Delay before first
             // transaction
             Generic.addThread(this, false);
         }
@@ -367,7 +367,7 @@ public class GPSstate implements BT747Thread {
         cmdsWaiting = sentCmds.size();
         cmdBuffersAccess.up();
         if ((logStatus != C_LOG_ERASE_STATE) && (cmdsWaiting == 0)
-                && (Vm.getTimeStamp() > nextCmdSendTime)) {
+                && (Generic.getTimeStamp() > nextCmdSendTime)) {
             // All sent commands were acknowledged, send cmd immediately
             doSendNMEA(cmd);
         } else if (cmdsWaiting < C_MAX_TOSEND_COMMANDS) {
@@ -392,9 +392,9 @@ public class GPSstate implements BT747Thread {
 
             gpsRxTx.sendPacket(cmd);
             if (Generic.isDebug()) {
-                debugMsg(">" + cmd + " " + gpsRxTx.isConnected());
+                Generic.debug(">" + cmd + " " + gpsRxTx.isConnected());
             }
-            nextCmdSendTime = Vm.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
+            nextCmdSendTime = Generic.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
             if (sentCmds.size() > C_MAX_SENT_COMMANDS) {
                 sentCmds.removeElementAt(0);
             }
@@ -411,7 +411,7 @@ public class GPSstate implements BT747Thread {
     }
 
     private void checkSendCmdFromQueue() {
-        int cTime = Vm.getTimeStamp();
+        int cTime = Generic.getTimeStamp();
         if (logStatus != C_LOG_ERASE_STATE) {
             cmdBuffersAccess.down();
             try {
@@ -430,7 +430,7 @@ public class GPSstate implements BT747Thread {
                 }
                 if ((toSendCmds.size() != 0)
                         && (sentCmds.size() < C_MAX_CMDS_SENT)
-                        && (Vm.getTimeStamp() > nextCmdSendTime)) {
+                        && (Generic.getTimeStamp() > nextCmdSendTime)) {
                     // No more commands waiting for acknowledge
                     cmdBuffersAccess.up();
                     doSendNMEA((String) toSendCmds.elementAt(0));
@@ -910,7 +910,7 @@ public class GPSstate implements BT747Thread {
             // waba.sys.debugMsg("ANA:"+p_nmea[0]+","+p_nmea[1]);}
             if (sNmea.length == 0) {
                 // Should not happen, problem in program
-                debugMsg("Problem - report NMEA is 0 length");
+                Generic.debug("Problem - report NMEA is 0 length");
             } else if (sNmea.length == 1 && sNmea[0].startsWith("WP")) {
                 AnalyseDPL700Data(sNmea[0]);
             } else if (gpsDecode && (logState == C_LOG_NOLOGGING) // Not
@@ -945,7 +945,7 @@ public class GPSstate implements BT747Thread {
                         s += sNmea[i];
                         s += ",";
                     }
-                    debugMsg(s);
+                    Generic.debug(s);
                 }
                 cmd = Convert.toInt(sNmea[0].substring(4));
 
@@ -1072,7 +1072,7 @@ public class GPSstate implements BT747Thread {
                         s += sNmea[i];
                         s += ",";
                     }
-                    debugMsg(s);
+                    Generic.debug(s);
                 }
                 cmd = Convert.toInt(sNmea[1]);
 
@@ -1089,7 +1089,7 @@ public class GPSstate implements BT747Thread {
                 }
             } // End if
         } catch (Exception e) {
-            Generic.debug("", e);
+            Generic.debug("AnalyzeNMEA", e);
         }
         return result;
     } // End method
@@ -1257,8 +1257,8 @@ public class GPSstate implements BT747Thread {
     public final void run() {
         String[] lastResponse;
 
-        if (Vm.getTimeStamp() >= nextRun) {
-            nextRun = Vm.getTimeStamp() + 10;
+        if (Generic.getTimeStamp() >= nextRun) {
+            nextRun = Generic.getTimeStamp() + 10;
             int loopsToGo = 0; // Setting to 0 for more responsiveness
             if (gpsRxTx.isConnected()) {
                 // debugMsg(Convert.toString(m_logState));
@@ -1276,7 +1276,7 @@ public class GPSstate implements BT747Thread {
                 } else if (logState == C_LOG_ACTIVE) {
                     getNextLogPart();
                 } else if (logState == C_LOG_ERASE_STATE) {
-                    if ((Vm.getTimeStamp() - logTimer) > C_LOGERASE_TIMEOUT) {
+                    if ((Generic.getTimeStamp() - logTimer) > C_LOGERASE_TIMEOUT) {
                         reqLogFlashStatus();
                     }
                 }
@@ -1389,7 +1389,7 @@ public class GPSstate implements BT747Thread {
      * Resets the condition to determine if a log request timeout occurs.
      */
     private final void resetLogTimeOut() {
-        logTimer = Vm.getTimeStamp();
+        logTimer = Generic.getTimeStamp();
     }
 
     private void closeLog() {
@@ -1401,7 +1401,7 @@ public class GPSstate implements BT747Thread {
                 }
             }
         } catch (Exception e) {
-            Generic.debug("", e);
+            Generic.debug("CloseLog", e);
         }
     }
 
@@ -1571,7 +1571,7 @@ public class GPSstate implements BT747Thread {
                 postEvent(GpsEvent.LOG_DOWNLOAD_STARTED);
             }
         } catch (Exception e) {
-            Generic.debug("", e);
+            Generic.debug("getLogInit", e);
         }
     }
 
@@ -1601,12 +1601,8 @@ public class GPSstate implements BT747Thread {
                 postGpsEvent(GpsEvent.COULD_NOT_OPEN_FILE, fileName);
             }
         } catch (Exception e) {
-            Generic.debug("", e);
+            Generic.debug("openNewLog", e);
         }
-    }
-
-    private final void debugMsg(final String dbgStr) {
-        postGpsEvent(GpsEvent.DEBUG_MSG, dbgStr);
     }
 
     private void reOpenLogWrite(final String fileName, final int card) {
@@ -1616,7 +1612,7 @@ public class GPSstate implements BT747Thread {
             logFileName = fileName;
             logFileCard = card;
         } catch (Exception e) {
-            Generic.debug("", e);
+            Generic.debug("reOpenLogWrite", e);
         }
     }
 
@@ -1724,7 +1720,7 @@ public class GPSstate implements BT747Thread {
                                 // debugMsg(Convert.toString(q));
                             }
                         } catch (Exception e) {
-                            Generic.debug("", e);
+                            Generic.debug("analyzeLogPart", e);
 
                             cancelGetLog();
                         }
@@ -1975,7 +1971,7 @@ public class GPSstate implements BT747Thread {
                     // AnalyzeLog:"+p_nmea[3].length());
                     analyzeLogPart(Conv.hex2Int(sNmea[2]), sNmea[3]);
                 } catch (Exception e) {
-                    Generic.debug("", e);
+                    Generic.debug("analyzeLogNMEA", e);
 
                     // During debug: array index out of bounds
                     // TODO: handle exception
@@ -2235,7 +2231,7 @@ public class GPSstate implements BT747Thread {
 
     private void AnalyseDPL700Data(final String s) {
         if (Generic.isDebug()) {
-            debugMsg("<DPL700 " + s);
+            Generic.debug("<DPL700 " + s);
         }
         if (s.startsWith("WP GPS")) {
             // WP GPS+BT

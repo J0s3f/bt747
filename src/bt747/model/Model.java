@@ -132,8 +132,8 @@ public class Model extends AppSettings implements GPSListener {
             logFiltersAdv[i] = new GPSFilterAdvanced();
         }
         // Initialise times
-        filterStartTime = Conv.dateToUTCepoch1970(new Date(1, 1, 1983));
-        filterEndTime = Conv.dateToUTCepoch1970(new Date())
+        filterStartTime = (new Date(1, 1, 1983).dateToUTCepoch1970());
+        filterEndTime = (new Date()).dateToUTCepoch1970()
                 + (SECONDS_PER_DAY - 1);
 
         gpsRxTx = new GPSrxtx();

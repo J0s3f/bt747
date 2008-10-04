@@ -20,12 +20,6 @@ public interface BT747Date {
 
     String getDateString();
 
-    // private static final int DAYS_Julian_1970 = (new
-    // Date(1,1,1970)).getJulianDay();
-
-//    /** Returns the number of days since the January 1 of the epoch year (1970). */
-//    int getJulianDay();
-
     int getYear();
 
     int getMonth();

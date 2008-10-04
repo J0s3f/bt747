@@ -30,7 +30,7 @@ import bt747.sys.Convert;
  * @author Mario De Weerd
  */
 public final class GPSGmapsHTMLFile extends GPSFile {
-    private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
+    private final StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
 
     private boolean m_isWayType;
     private boolean m_newTrack = true;

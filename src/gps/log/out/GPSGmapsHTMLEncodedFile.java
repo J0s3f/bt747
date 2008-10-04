@@ -33,7 +33,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     /**
      * Local StringBuffer for output.
      */
-    private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
+    private final StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
 
     /**
      * When true, currently handling waypoints, otherwise trackpoints.
@@ -65,7 +65,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
      * 
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(final String basename, final String ext,
+    public final void initialiseFile(final String basename, final String ext,
             final int card, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, card, oneFilePerDay);
         currentFilter = GPSFilter.WAYPT;
@@ -75,12 +75,12 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         resetTrack();
     }
 
-    private void resetTrack() {
+    private final void resetTrack() {
         track = new Track();
         infoHtmls.setLength(0);
     }
 
-    public boolean nextPass() {
+    public final boolean nextPass() {
         super.nextPass();
         if (nbrOfPassesToGo > 0) {
             // if (m_multipleFiles) {
@@ -102,14 +102,14 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
 
     private String googleKeyCode = ""; // Google key code for web
 
-    private String keyCode() {
+    private final String keyCode() {
         if (googleKeyCode.length() != 0) {
             return ";key=" + googleKeyCode;
         }
         return ""; // default
     }
 
-    protected void writeFileHeader(final String trackName) {
+    protected final void writeFileHeader(final String trackName) {
         StringBuffer l_header = new StringBuffer(1700);
         l_header.setLength(0);
         l_header
@@ -310,7 +310,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     private double minlon;
     private double maxlon;
 
-    protected void writeDataHeader() {
+    protected final void writeDataHeader() {
         if (isWayType) {
         } else {
             isNewTrack = true;
@@ -321,7 +321,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         }
     }
 
-    protected void endTrack(final String hexColor) {
+    protected final void endTrack(final String hexColor) {
         PolylineEncoder a = new PolylineEncoder();
         Hashtable res;
         if (false) {
@@ -370,7 +370,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         resetTrack();
     }
 
-    protected void writeDataFooter() {
+    protected final void writeDataFooter() {
         if (isWayType) {
             if (track.size() != 0) {
                 rec.setLength(0);
@@ -406,7 +406,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         }
     }
 
-    private void splitOrEndTrack() {
+    private final void splitOrEndTrack() {
         StringBuffer lrec = new StringBuffer();
         if (!isWayType && (trackOnClickFuncCalls.length() != 0)) {
             lrec.setLength(0);
@@ -435,7 +435,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
         if (activeFields != null) {
@@ -551,7 +551,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
      * 
      * @see gps.GPSFile#FinaliseFile()
      */
-    public void finaliseFile() {
+    public final void finaliseFile() {
         if (this.isOpen()) {
             String footer;
             writeDataFooter();
@@ -593,7 +593,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     /**
      * @return Returns the googleKeyCode.
      */
-    public String getGoogleKeyCode() {
+    public final String getGoogleKeyCode() {
         return googleKeyCode;
     }
 
@@ -601,7 +601,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
      * @param sGoogleKeyCode
      *            The googleKeyCode to set.
      */
-    public void setGoogleKeyCode(final String sGoogleKeyCode) {
+    public final void setGoogleKeyCode(final String sGoogleKeyCode) {
         this.googleKeyCode = sGoogleKeyCode;
     }
 }

@@ -83,7 +83,7 @@ public class GPSFilePort extends GPSPort {
             try {
                 portfile.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                Generic.debug("",e);
             }
         }
     }
@@ -122,7 +122,7 @@ public class GPSFilePort extends GPSPort {
             // spOut = new FileOutputStream(portStr);
             result = 0;
         } catch (IOException e) {
-            e.printStackTrace();
+            Generic.debug("",e);
             spIn = null;
             spOut = null;
             portfile = null;
@@ -164,7 +164,7 @@ public class GPSFilePort extends GPSPort {
                 spOut.write(b);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("",e);
         }
         try {
             if (GPS_FILE_LOG && (debugFile != null)) {
@@ -186,7 +186,7 @@ public class GPSFilePort extends GPSPort {
                 // return br.ready()?1:0;
                 return (int) 4096;
             } catch (Exception e) {
-                e.printStackTrace();
+                Generic.debug("",e);
                 return 0;
             }
         } else {
@@ -198,7 +198,7 @@ public class GPSFilePort extends GPSPort {
         try {
             return portfile.read(b, start, max);
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("",e);
             return 0;
         }
     }

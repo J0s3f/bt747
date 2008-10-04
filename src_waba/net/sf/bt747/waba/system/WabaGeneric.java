@@ -19,7 +19,6 @@
 //********************************************************************
 package net.sf.bt747.waba.system;
 
-import waba.sys.Vm;
 import waba.ui.MainWindow;
 
 import moio.util.Enumeration;
@@ -49,7 +48,7 @@ public final class WabaGeneric {
 
     // TODO: Improve next code - for the moment it is functional.
 
-    public static void addThread(final BT747Thread t, final boolean b) {
+    public final static void addThread(final BT747Thread t, final boolean b) {
         // MainWindow.getMainWindow().addThread(t, b);
         if (!oos.contains(t)) {
             removeIfStoppedThread(t);
@@ -73,7 +72,7 @@ public final class WabaGeneric {
         }
     }
 
-    public static void removeThread(final BT747Thread t) {
+    public final static void removeThread(final BT747Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
         Enumeration e = h.keys();
         while (e.hasMoreElements()) {
@@ -88,7 +87,7 @@ public final class WabaGeneric {
 
     }
 
-    public static void removeIfStoppedThread(final BT747Thread t) {
+    public final static void removeIfStoppedThread(final BT747Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
         Enumeration e = h.keys();
         while (e.hasMoreElements()) {
@@ -105,18 +104,4 @@ public final class WabaGeneric {
 
     }
 
-    public static double pow(final double x, final double y) {
-        return Math.pow(x, y);
-    }
-
-    public static double acos(final double x) {
-        return Math.acos(x);
-    }
-
-    public static void debug(final String s, final Throwable e) {
-        Vm.debug(s);
-        if (e != null) {
-            e.printStackTrace();
-        }
-    }
 }

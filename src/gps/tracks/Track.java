@@ -16,23 +16,23 @@ public final class Track {
 
     private Vector trackpoints = new Vector();
 
-    public Vector getTrackpoints() {
+    public final Vector getTrackpoints() {
         return this.trackpoints;
     }
 
-    public void setTrackpoints(final Vector trackpoints) {
+    public final void setTrackpoints(final Vector trackpoints) {
         this.trackpoints = trackpoints;
     }
 
-    public void addTrackpoint(final Trackpoint trkpt) {
+    public final void addTrackpoint(final Trackpoint trkpt) {
         this.trackpoints.addElement(trkpt);
     }
     
-    public Trackpoint get(final int i) {
+    public final Trackpoint get(final int i) {
         return (Trackpoint) this.trackpoints.elementAt(i);
     }
     
-    public int size() {
+    public final int size() {
         return this.trackpoints.size();
     }
 

@@ -19,7 +19,6 @@
 //********************************************************************                              
 package gps.convert;
 
-import bt747.sys.Date;
 
 
 /**
@@ -33,7 +32,7 @@ public final class Conv {
      * @param hexStr Hexadecimal representation of bytes
      * @return list of bytes 
      */
-    public static int hexStringToBytes(
+    public static final int hexStringToBytes(
             final String hexStr,
             final byte[] buffer) {
         char[] data = hexStr.toCharArray();
@@ -102,7 +101,7 @@ public final class Conv {
      * @param hexStr Hexadecimal representation of bytes
      * @return list of bytes 
      */
-    public static int hex2Int(final String hexStr) {
+    public static final int hex2Int(final String hexStr) {
         int result = 0;
         for (int i = 0; i < hexStr.length(); i++) {
             int nibble;
@@ -176,7 +175,7 @@ public final class Conv {
 //    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-    private static double bilinear(
+    private static final double bilinear(
             final double x1,
             final double y1,
             final double x2,
@@ -236,7 +235,7 @@ public final class Conv {
 
     /* return geoid separtion (MSL - WGS84) in meters, given a lat/lot in degrees */
     /*@ +charint @*/
-    public static double wgs84Separation(final double lat, final double lon)
+    public static final double wgs84Separation(final double lat, final double lon)
     {
     /*@ -charint @*/
         int ilat, ilon;
@@ -273,11 +272,11 @@ public final class Conv {
     //  on the globe.  Thanks, Faust.
     // const float M_PI = 3.14159;
     
-    public static double rad2deg(final double x) { /*FOLD00*/
+    public static final double rad2deg(final double x) { /*FOLD00*/
           return x * Math.PI / 180.0;
     }
     
-    public static double earthDistance(
+    public static final double earthDistance(
             final double lat1,
             final double lon1,
             final double lat2,
@@ -321,7 +320,7 @@ public final class Conv {
     //   centered on a given lat/lon.
     
     //  This pulls the "real radius" of a lat, instead of a global guesstimate
-    public static double calcR (final double p_lat) /*FOLD00*/
+    public static final double calcR (final double p_lat) /*FOLD00*/
     {
         double a = 6378.137, r, sc, x, y, z;
         double e2 = 0.081082 * 0.081082;
@@ -351,9 +350,4 @@ public final class Conv {
         r = r * 1000.0;
         return r;
     }
-
-    public static int dateToUTCepoch1970(final Date d) {
-        return d.dateToUTCepoch1970();
-    }
-
 }

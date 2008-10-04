@@ -31,10 +31,14 @@ public final class Generic {
         }
     }
 
+    public static final void debug(final String s) {
+        Interface.tr.debug(getTimeStamp() + " - " + s);
+    }
+
     /**
      * Get the debug level.
      * 
-     * @return debug leve.
+     * @return debug level.
      */
     public static int getDebugLevel() {
         return debugLevel;
@@ -105,5 +109,9 @@ public final class Generic {
      */
     public final static void removeThread(final BT747Thread o) {
         Interface.tr.removeThread(o);
+    }
+    
+    public static final int getTimeStamp() {
+        return Interface.tr.getTimeStamp();
     }
 }

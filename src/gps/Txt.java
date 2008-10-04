@@ -5,7 +5,7 @@ package gps;
  *
  ** Class to provide language specific strings.
  */
-public class Txt {
+public final class Txt {
     // GPSFile
     public static final String CLOSE_FAILED =
         "Closing failed (closeFile) - probably a bug.";

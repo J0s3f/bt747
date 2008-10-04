@@ -186,10 +186,9 @@ public class BT747cmd implements bt747.model.ModelListener {
             } else {
                 System.out.println("\n#### DOWNLOAD SUCCESS ####");
             }
-            System.out
-                    .println("Time to download data (ms): "
-                            + ((int) (System.currentTimeMillis() - downloadStartTime))
-                            + " ms");
+            System.out.println("Time to download data (ms): "
+                    + ((int) (System.currentTimeMillis() - downloadStartTime))
+                    + " ms");
             break;
         case ModelEvent.LOG_DOWNLOAD_SUCCESS:
             downloadIsSuccessFull = true;
@@ -351,6 +350,24 @@ public class BT747cmd implements bt747.model.ModelListener {
                 || options.has("l") || options.has("m") || options.has("r")
                 || options.has("E") || options.has("o") || options.has("R")) {
             c.connectGPS();
+        }
+
+        if (options.has("device")) {
+            String arg = options.argumentOf("l").toLowerCase();
+            // AppController.GPS_TYPE_DEFAULT:
+            // AppController.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
+            // AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+            // AppController.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
+
+            int deviceType = Controller.GPS_TYPE_DEFAULT;
+            if (arg.equals("default")) {
+                deviceType = Controller.GPS_TYPE_DEFAULT;
+                c.setForceHolux241(false);
+            } else if (arg.equals("holux")) {
+                deviceType = Controller.GPS_TYPE_DEFAULT;
+                c.setForceHolux241(true);
+            }
+            c.setGPSType(deviceType);
         }
 
         if (m.isConnected()) {
@@ -726,6 +743,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts("UTC", "Define UTC offset to apply to output file")
                         .withRequiredArg().describedAs("UTCoffset").ofType(
                                 Integer.class);
+                accepts("device",
+                        "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX).")
+                        .withRequiredArg().describedAs("DEVICE");
             }
         };
 

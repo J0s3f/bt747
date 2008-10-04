@@ -41,33 +41,33 @@ public final class Trackpoint {
         }
     }
 
-    public void setLatDouble(final double latDouble) {
+    public final void setLatDouble(final double latDouble) {
         this.latDouble = latDouble;
         if (latDouble > 90.0 || latDouble < -90.0) {
             this.latDouble = 0.0;
         }
     }
 
-    public void setLonDouble(final double lonDouble) {
+    public final void setLonDouble(final double lonDouble) {
         this.lonDouble = lonDouble;
         if (lonDouble > 180.0 || latDouble < -180.0) {
             this.lonDouble = 0.0;
         }
     }
 
-    public double getLatDouble() {
+    public final double getLatDouble() {
         return latDouble;
     }
 
-    public double getLonDouble() {
+    public final double getLonDouble() {
         return lonDouble;
     }
 
-    public double getAltitude() {
+    public final double getAltitude() {
         return altitude;
     }
 
-    public void setAltitude(final double altitude) {
+    public final void setAltitude(final double altitude) {
         this.altitude = altitude;
     }
 

@@ -108,7 +108,7 @@ public final class GPSPLTFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
         if (activeFields != null && ptFilters[GPSFilter.TRKPT].doFilter(s)) {

@@ -32,8 +32,7 @@ import waba.ui.ProgressBar;
 import waba.ui.TabPanel;
 import waba.ui.Window;
 
-import gps.connection.GPSPort;
-import gps.connection.GPSrxtx;
+import gps.connection.*;
 import net.sf.bt747.waba.system.WabaJavaTranslations;
 
 import bt747.Txt;
@@ -41,8 +40,8 @@ import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
+import bt747.sys.Generic;
 import bt747.sys.Interface;
-import bt747.sys.Vm;
 import bt747.waba_view.ui.BT747MessageBox;
 
 /**
@@ -58,17 +57,12 @@ public class AppBT747 extends MainWindow implements ModelListener {
         // Set up the port.
         GPSPort gpsPort;
 
-        gpsPort = new GPSWabaPort();
-
         try {
-            // // gpsPort=new GPSRxTxPort();
             gpsPort = (GPSPort) Class.forName("gps.connection.GPSRxTxPort")
                     .newInstance();
         } catch (Exception e) {
-            e.printStackTrace();
             gpsPort = new GPSWabaPort();
         }
-        // }
 
         /**
          * Set the defaults of the device according to preset, guessed values.
@@ -225,7 +219,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         m = new Model();
         c = new AppController(m);
         if (Settings.onDevice) {
-            bt747.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
+            waba.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
         }
         orgAutoOnOff = waba.sys.Vm.setDeviceAutoOff(0); // Avoid auto-off
         // causing BT trouble
@@ -562,7 +556,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
             couldNotOpenFileMessage((String) event.getArg());
             break;
         case ModelEvent.DEBUG_MSG:
-            Vm.debug((String) event.getArg());
+            Generic.debug((String) event.getArg());
             break;
         default:
             ModelListener cntrl;

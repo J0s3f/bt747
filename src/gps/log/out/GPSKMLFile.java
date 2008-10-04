@@ -12,11 +12,6 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************  
 package gps.log.out;
 
 import gps.BT747Constants;
@@ -33,7 +28,7 @@ import bt747.sys.Convert;
  * @author Herbert Geus (Waypoint code&Track code)
  */
 public final class GPSKMLFile extends GPSFile {
-    private StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
+    private final StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
 
     private boolean isWayType;
     private boolean isTrackType;
@@ -55,7 +50,7 @@ public final class GPSKMLFile extends GPSFile {
      * 
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public void initialiseFile(final String basename, final String ext,
+    public final void initialiseFile(final String basename, final String ext,
             final int ard, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, ard, oneFilePerDay);
         currentFilter = GPSFilter.WAYPT;
@@ -64,7 +59,7 @@ public final class GPSKMLFile extends GPSFile {
         isPathType = false;
     }
 
-    public boolean nextPass() {
+    public final boolean nextPass() {
         super.nextPass();
         if (nbrOfPassesToGo > 0) {
             // if(m_multipleFiles) {
@@ -93,7 +88,7 @@ public final class GPSKMLFile extends GPSFile {
         }
     }
 
-    public void writeFileHeader(final String name) {
+    public final void writeFileHeader(final String name) {
         String header;
         trackName = name;
         header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
@@ -263,7 +258,7 @@ public final class GPSKMLFile extends GPSFile {
         writeTxt(header);
     }
 
-    protected void writeDataHeader() {
+    protected final void writeDataHeader() {
         String header;
         if (isWayType) {
             header = "  <Folder>\r\n" + "    <name>My Waypoints</name>\r\n"
@@ -291,7 +286,7 @@ public final class GPSKMLFile extends GPSFile {
         writeTxt(header);
     }
 
-    protected void writeDataFooter() {
+    protected final void writeDataFooter() {
         String footer;
         if (isWayType) {
             footer = "  </Folder>\r\n" + "\r\n";
@@ -309,7 +304,7 @@ public final class GPSKMLFile extends GPSFile {
      * 
      * @see gps.GPSFile#WriteRecord()
      */
-    public void writeRecord(final GPSRecord s) {
+    public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
         if (activeFields != null) {
@@ -451,7 +446,7 @@ public final class GPSKMLFile extends GPSFile {
      * 
      * @see gps.GPSFile#FinaliseFile()
      */
-    public void finaliseFile() {
+    public final void finaliseFile() {
         if (this.isOpen()) {
             String footer;
             writeDataFooter();

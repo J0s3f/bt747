@@ -998,7 +998,7 @@
 		          optimize="${proguard.optimize}"
 		          obfuscate="${proguard.obfuscate}"
 		          allowaccessmodification="${proguard.accessmodification}"
-		          flattenpackagehierarchy="${proguard.flatten}"
+		          flattenpackagehierarchy=""
 		          repackageclasses="${proguard.repackage}"
 		          printusage="false"
 		          overloadaggressively="${proguard.overload}"

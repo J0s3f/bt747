@@ -24,7 +24,7 @@ public final class CommonOut {
     protected static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
             "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
-    public static void getHtml(final StringBuffer rec, final GPSRecord s,
+    public final static void getHtml(final StringBuffer rec, final GPSRecord s,
             final GPSRecord activeFields, final GPSRecord selectedFields,
             final Time t, final boolean recordNbrInLogs, final boolean imperial) {
         if (recordNbrInLogs) {
@@ -140,13 +140,13 @@ public final class CommonOut {
         }
     }
 
-    public static String getTimeStr(final int utcTime) {
+    public final static String getTimeStr(final int utcTime) {
         Time t = new Time();
         t.setUTCTime(utcTime);
         return getTimeStr(t);
     }
 
-    public static String getTimeStr(final GPSRecord activeFields,
+    public final static String getTimeStr(final GPSRecord activeFields,
             final Time time) {
         if ((activeFields.utc != 0)) {
             return getTimeStr(time);
@@ -155,7 +155,7 @@ public final class CommonOut {
         }
     }
 
-    public static String getTimeStr(final Time time) {
+    public final static String getTimeStr(final Time time) {
         return // Day
         ((time.getDay() < 10) ? "0" : "")
                 + Convert.toString(time.getDay())
@@ -175,7 +175,7 @@ public final class CommonOut {
         ;
     }
 
-    public static String getRCRstr(final GPSRecord s) {
+    public final static String getRCRstr(final GPSRecord s) {
         StringBuffer rcrStr = new StringBuffer(15);
         rcrStr.setLength(0);
         if ((s.rcr & BT747Constants.RCR_TIME_MASK) != 0) {
@@ -211,7 +211,7 @@ public final class CommonOut {
         return rcrStr.toString();
     }
 
-    public static String getFixText(final int valid) {
+    public final static String getFixText(final int valid) {
         switch (valid) {
         case 0x0001:
             return ("No fix");

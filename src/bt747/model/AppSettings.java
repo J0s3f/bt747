@@ -21,6 +21,7 @@ import moio.util.Iterator;
 
 import bt747.sys.Convert;
 import bt747.sys.File;
+import bt747.sys.Generic;
 import bt747.sys.Settings;
 
 /**
@@ -301,7 +302,7 @@ public class AppSettings {
         // Sanity check of paramList
         for (int i = 0; i < paramsList.length; i++) {
             if (paramsList[i][PARAM_IDX] != i) {
-                bt747.sys.Vm.debug("ASSERT:Problem with param index " + i);
+                Generic.debug("ASSERT:Problem with param index " + i);
             }
         }
 
@@ -524,7 +525,7 @@ public class AppSettings {
                     paramsList[param][SIZE_IDX]);
         } else {
             // TODO: throw something
-            bt747.sys.Vm.debug("Invalid parameter index " + param);
+            Generic.debug("Invalid parameter index " + param);
             return false;
         }
     }
@@ -536,7 +537,7 @@ public class AppSettings {
                     paramsList[param][SIZE_IDX]);
         } else {
             // TODO: throw something
-            bt747.sys.Vm.debug("Invalid parameter index " + param);
+            Generic.debug("Invalid parameter index " + param);
         }
     }
 
@@ -553,7 +554,7 @@ public class AppSettings {
                     paramsList[param][SIZE_IDX]);
         } else {
             // TODO: throw something
-            bt747.sys.Vm.debug("Invalid parameter index " + param);
+            Generic.debug("Invalid parameter index " + param);
             return 0;
         }
     }
@@ -571,7 +572,7 @@ public class AppSettings {
                     paramsList[param][SIZE_IDX]);
         } else {
             // TODO: throw something
-            bt747.sys.Vm.debug("Invalid parameter index " + param);
+            Generic.debug("Invalid parameter index " + param);
         }
     }
 
