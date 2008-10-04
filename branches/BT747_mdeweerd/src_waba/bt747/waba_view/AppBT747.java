@@ -555,9 +555,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
         case ModelEvent.COULD_NOT_OPEN_FILE:
             couldNotOpenFileMessage((String) event.getArg());
             break;
-        case ModelEvent.DEBUG_MSG:
-            Generic.debug((String) event.getArg());
-            break;
+//        case ModelEvent.DEBUG_MSG:
+//            Generic.debug((String) event.getArg());
+//            break;
         default:
             ModelListener cntrl;
             cntrl = (ModelListener) tabPanel.getPanel(tabPanel.getActiveTab());
