@@ -14,10 +14,10 @@
 //***  *********************************************************** ***
 package net.sf.bt747.j4me.app;
 
+import gps.BT747Constants;
+
 import java.util.Timer;
 import java.util.TimerTask;
-
-import gps.BT747Constants;
 
 import javax.microedition.lcdui.Display;
 
@@ -59,7 +59,6 @@ public class MainScreen extends Dialog implements ModelListener {
      * requires that those are all created when the menu is created.
      */
     private final LogDownloadScreen downloadLogScreen;
-    private final GpsPositionScreen gpsPositionScreen;
     private final LogConditionsConfigScreen logConditionsConfigScreen;
     private final LoggerStatusScreen loggerInfoScreen;
     private final LogScreen logScreen;
@@ -68,7 +67,7 @@ public class MainScreen extends Dialog implements ModelListener {
     private final FindingGPSDevicesAlert findingGPSDevicesAlert;
     private final PathSelectionScreen baseDirScreen;
     private final CreditsScreen creditsScreen;
-    private final LogFieldSelectScreen logFieldSelectScreen;
+    private final DeviceScreen logFieldSelectScreen;
 
     java.util.Timer tm = new Timer();
     TimerTask tt;
@@ -128,7 +127,6 @@ public class MainScreen extends Dialog implements ModelListener {
         setMenuText("Logger Menu", "App Menu");
 
         downloadLogScreen = new LogDownloadScreen(c, this);
-        gpsPositionScreen = new GpsPositionScreen(c, this);
         logConditionsConfigScreen = new LogConditionsConfigScreen(c, this);
         loggerInfoScreen = new LoggerStatusScreen(c, this);
         logScreen = new LogScreen(this);
@@ -143,7 +141,8 @@ public class MainScreen extends Dialog implements ModelListener {
             }
         };
         creditsScreen = new CreditsScreen(this);
-        logFieldSelectScreen = new LogFieldSelectScreen(c, this);
+        logFieldSelectScreen = new DelayedDialog(
+                LogFieldSelectScreen.class, c, this, this);
 
         // Call here for debug
         // c.doConvertLog(Model.GPX_LOGTYPE);
@@ -152,8 +151,10 @@ public class MainScreen extends Dialog implements ModelListener {
 
         rootMenu.appendMenuOption(downloadLogScreen);
         rootMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
-        rootMenu.appendMenuOption("GPS Position", gpsPositionScreen);
-
+        rootMenu.appendMenuOption("GPS Position", new DelayedDialog(
+                GpsPositionScreen.class, c, this, this)
+                );
+        
         Menu subMenu;
         subMenu = new Menu("App Settings", rootMenu);
         subMenu.appendMenuOption("Working dir", baseDirScreen);

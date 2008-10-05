@@ -19,7 +19,6 @@ import gps.log.GPSRecord;
 import java.util.Date;
 
 import org.j4me.ui.DeviceScreen;
-import org.j4me.ui.Dialog;
 import org.j4me.ui.Menu;
 import org.j4me.ui.Theme;
 import org.j4me.ui.UIManager;
@@ -30,7 +29,8 @@ import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
 
-public class GpsPositionScreen extends Dialog implements ModelListener {
+public class GpsPositionScreen extends
+        net.sf.bt747.j4me.app.screens.BT747Dialog implements ModelListener {
     /**
      * The current latitude.
      */
@@ -82,54 +82,51 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
      */
     private FieldValue fvTime = new FieldValue("");
 
-    private DeviceScreen previous;
+    private boolean screenSetup = false;
 
-    private AppController c;
+    public void setupScreen() {
+        if (!screenSetup) {
+            screenSetup = true;
+            deleteAll();
+            // Set the menu bar options.
+            setMenuText("Back", null);
 
-    public GpsPositionScreen(final AppController c, final DeviceScreen previous) {
+            // Show the state of the location provider.
+            // state.setHorizontalAlignment( Graphics.HCENTER );
+            // setStateLabel( model.getLocationProvider().getState() );
+            // append( state );
 
-        this.previous = previous;
-        this.c = c;
+            // Create a UI section for pedometer information.
+            // createNewSection("Pedometer");
+            // append(traveled);
+            // append(avgSpeed);
 
-        // Set the menu bar options.
-        setMenuText("Back", null);
+            // Create a UI section for location information.
+            // createNewSection("Location");
+            append(fvFix);
+            append(latitude);
+            append(longitude);
+            append(new HorizontalRule());
+            // append(horizontalAccuracy);
+            // append(new Label()); // Blank line
+            append(fvAltitude);
+            // append(verticalAccuracy);
 
-        // Show the state of the location provider.
-        // state.setHorizontalAlignment( Graphics.HCENTER );
-        // setStateLabel( model.getLocationProvider().getState() );
-        // append( state );
+            // Create a section for movement information.
+            // createNewSection("Movement");
+            append(fvSpeed);
+            append(fvCourse);
 
-        // Create a UI section for pedometer information.
-        // createNewSection("Pedometer");
-        // append(traveled);
-        // append(avgSpeed);
+            append(new HorizontalRule());
+            // Create a section for the time.
+            // createNewSection("Time");
+            append(fvTime);
 
-        // Create a UI section for location information.
-        // createNewSection("Location");
-        append(fvFix);
-        append(latitude);
-        append(longitude);
-        append(new HorizontalRule());
-        // append(horizontalAccuracy);
-        // append(new Label()); // Blank line
-        append(fvAltitude);
-        // append(verticalAccuracy);
-
-        // Create a section for movement information.
-        // createNewSection("Movement");
-        append(fvSpeed);
-        append(fvCourse);
-
-        append(new HorizontalRule());
-        // Create a section for the time.
-        // createNewSection("Time");
-        append(fvTime);
-
-        append(new HorizontalRule());
-        // createNewSection("Precision");
-        append(fvHdop);
-        append(NSAT);
-
+            append(new HorizontalRule());
+            // createNewSection("Precision");
+            append(fvHdop);
+            append(NSAT);
+        }
         // Register for location updates.
         // LocationProvider provider = model.getLocationProvider();
     }
@@ -150,6 +147,7 @@ public class GpsPositionScreen extends Dialog implements ModelListener {
     }
 
     public void showNotify() {
+        setupScreen();
         c.getAppModel().addListener(this);
         c.setGpsDecode(true);
         super.showNotify();
