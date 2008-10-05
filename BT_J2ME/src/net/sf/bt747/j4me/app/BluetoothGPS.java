@@ -17,6 +17,8 @@ package net.sf.bt747.j4me.app;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.io.Connector;
@@ -355,6 +357,33 @@ class BluetoothGPS extends gps.connection.GPSPort {
             // Connect to the remote GPS device
             this.url = constructBTURL(urlProvided, channelId);
             connect();
+        }
+        if (tt == null) {
+            tt = new TimerTask() {
+                public void run() {
+                    checkPort();
+                }
+            };
+            tm.schedule(tt, 3500, 3500);
+            Log.debug("Added task to schedule");
+        }
+    }
+
+    private java.util.Timer tm = new Timer();
+    private TimerTask tt;
+
+    private void checkPort() {
+        Log.debug("checkPort");
+        boolean ok = true;
+        try {
+            ok = ok &&(inputStream.available()>=0);
+            outputStream.flush();
+            //ok = ok && connection.
+        } catch (Exception e) {
+            ok = false;
+        }
+        if(ok == false) {
+            reconnectPort();
         }
     }
 

@@ -21,6 +21,7 @@ public class DebugConfigScreen extends Dialog {
     private final CheckBox cbConsoleToFile;
     private final CheckBox cbGpsRawDebug;
     private final CheckBox cbGeneralDebug;
+    private final CheckBox cbPersistantDebug;
 
     public DebugConfigScreen(AppController c, DeviceScreen previous) {
         this.previous = previous;
@@ -29,29 +30,34 @@ public class DebugConfigScreen extends Dialog {
         setTitle("Configure log conditions");
 
         cbConsoleToFile = new CheckBox();
-        cbConsoleToFile.setChecked(false);
+        cbConsoleToFile.setChecked(c.isUseConsoleFile());
         cbConsoleToFile.setLabel("Write console to file");
         append(cbConsoleToFile);
 
         cbGpsRawDebug = new CheckBox();
-        cbGpsRawDebug.setChecked(false);
+        cbGpsRawDebug.setChecked(m().isDebugConn());
         cbGpsRawDebug.setLabel("Write all serial communication to file");
         append(cbGpsRawDebug);
 
         cbGeneralDebug = new CheckBox();
-        cbGeneralDebug.setChecked(false);
+        cbGeneralDebug.setChecked(m().isDebug());
         cbGeneralDebug.setLabel("Enable extra debug console info");
         append(cbGeneralDebug);
+
+        cbPersistantDebug = new CheckBox();
+        cbPersistantDebug.setChecked(c.isPersistentDebug());
+        cbPersistantDebug.setLabel("Keep debug options on startup.");
+        append(cbPersistantDebug);
     }
 
     private final AppModel m() {
         return c.getAppModel();
     }
 
-    public void showNotify() {
+    public final void showNotify() {
     }
 
-    public void hideNotify() {
+    public final void hideNotify() {
         super.hideNotify();
     }
 
@@ -59,53 +65,11 @@ public class DebugConfigScreen extends Dialog {
         repaint();
     }
 
-    private boolean consoleIsOpen = false;
-
-    private void setupConsoleFile(boolean doOpen) {
-        Log.info("Setup up console to file");
-        if (!doOpen) {
-            if (consoleIsOpen) {
-                Log.setOutputStream(null);
-            }
-            consoleIsOpen = false;
-        } else {
-            if (!consoleIsOpen) {
-                try {
-                    String fn = "file://" + m().getBaseDirPath()
-                            + File.separatorStr + "BT747Console.log";
-                    FileConnection fc;
-                    try {
-                        fc = (FileConnection) Connector.open(fn);
-                        if (fc.exists()) {
-                            fc.delete();
-                        }
-                        fc.close();
-                    } catch (Throwable e) {
-                        Log.debug("Delete", e);
-                    }
-
-                    try {
-                        fc = (FileConnection) Connector.open(fn);
-                        fc.create();
-                        fc = (FileConnection) Connector.open(fn,
-                                Connector.WRITE);
-                        Log.setOutputStream(fc.openOutputStream());
-                    } catch (IOException e) {
-                        Log.debug("Open " + fn, e);
-                    }
-                    consoleIsOpen = true;
-                } catch (Throwable e) {
-                    Log.debug("Open console", e);
-                }
-            }
-        }
-    }
-
     public final void setSettings() {
         c.setDebug(cbGeneralDebug.isChecked());
         c.setDebugConn(cbGpsRawDebug.isChecked());
-
-        setupConsoleFile(cbConsoleToFile.isChecked());
+        c.setPersistentDebug(cbPersistantDebug.isChecked());
+        c.setUseConsoleFile(cbConsoleToFile.isChecked());
     }
 
     protected void acceptNotify() {

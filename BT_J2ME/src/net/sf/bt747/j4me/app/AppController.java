@@ -7,8 +7,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Enumeration;
 
+import javax.microedition.io.Connector;
+import javax.microedition.io.file.FileConnection;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 
@@ -17,6 +20,7 @@ import net.sf.bt747.j4me.app.screens.FileManager;
 import org.j4me.logging.Log;
 
 import bt747.model.Controller;
+import bt747.sys.File;
 import bt747.sys.Settings;
 
 public class AppController extends Controller {
@@ -71,19 +75,28 @@ public class AppController extends Controller {
 
                 m.setSelectedOutputFormat(is.readInt());
                 settingsVersion = is.readInt();
-
+                switch (settingsVersion) {
+                case 2:
+                    setPersistentDebug(is.readBoolean());
+                    if (isPersistentDebug()) {
+                        setDebug(is.readBoolean());
+                        setDebugConn(is.readBoolean());
+                        setUseConsoleFile(is.readBoolean());
+                    } else {
+                        is.readBoolean();
+                        is.readBoolean();
+                        is.readBoolean();
+                    }
+                    /** fall through */
+                case -1:
+                    // No other parameters
+                    break;
+                default:
+                    break;
+                }
             } catch (Exception e) {
             }
-            switch (settingsVersion) {
-            case 2:
 
-                break;
-            case -1:
-                // No other parameters
-                break;
-            default:
-                break;
-            }
             recordStore.closeRecordStore();
             // mUnitType = inputStream.readInt();
             // mBacklightSeconds = inputStream.readInt();
@@ -166,7 +179,7 @@ public class AppController extends Controller {
     }
 
     private final String RECORDSTORENAME = "BT747";
-    private final int appSettingsVersion = 1;
+    private final int appSettingsVersion = 2;
 
     /*
      * (non-Javadoc)
@@ -196,6 +209,16 @@ public class AppController extends Controller {
                 os.writeUTF(removeNull(m.getBluetoothGPSURL()));
                 os.writeInt(m.getSelectedOutputFormat());
                 os.writeInt(appSettingsVersion);
+                os.writeBoolean(isPersistentDebug());
+                if (isPersistentDebug()) {
+                    os.writeBoolean(m.isDebug());
+                    os.writeBoolean(m.isDebugConn());
+                    os.writeBoolean(isUseConsoleFile());
+                } else {
+                    os.writeBoolean(false);
+                    os.writeBoolean(false);
+                    os.writeBoolean(false);
+                }
                 os.flush();
                 bytes = bos.toByteArray();
                 if (recordStore.getNumRecords() == 1) {
@@ -227,4 +250,74 @@ public class AppController extends Controller {
     private String restoreNull(String text) {
         return text.length() > 0 ? text : null;
     }
+
+    private boolean consoleIsOpen = false;
+
+    /**
+     * If true, write debug information to console file.
+     */
+    private boolean useConsoleFile = false;
+
+    public final void setUseConsoleFile(final boolean useConsoleFile) {
+        this.useConsoleFile = useConsoleFile;
+        setupConsoleFile(useConsoleFile);
+    }
+
+    public final void setupConsoleFile(final boolean doOpen) {
+        Log.info("Setup up console to file");
+        if (!doOpen) {
+            if (consoleIsOpen) {
+                Log.setOutputStream(null);
+            }
+            consoleIsOpen = false;
+        } else {
+            if (!consoleIsOpen) {
+                try {
+                    String fn = "file://" + m.getBaseDirPath()
+                            + File.separatorStr + "BT747Console.log";
+                    FileConnection fc;
+                    try {
+                        fc = (FileConnection) Connector.open(fn);
+                        if (fc.exists()) {
+                            fc.delete();
+                        }
+                        fc.close();
+                    } catch (Throwable e) {
+                        Log.debug("Delete", e);
+                    }
+
+                    try {
+                        fc = (FileConnection) Connector.open(fn);
+                        fc.create();
+                        fc = (FileConnection) Connector.open(fn,
+                                Connector.WRITE);
+                        Log.setOutputStream(fc.openOutputStream());
+                    } catch (IOException e) {
+                        Log.debug("Open " + fn, e);
+                    }
+                    consoleIsOpen = true;
+                } catch (Throwable e) {
+                    Log.debug("Open console", e);
+                }
+            }
+        }
+    }
+
+    /**
+     * When true, the debug settings must be saved.
+     */
+    private boolean persistentDebug = false;
+
+    public final boolean isPersistentDebug() {
+        return persistentDebug;
+    }
+
+    public final void setPersistentDebug(boolean persistentDebug) {
+        this.persistentDebug = persistentDebug;
+    }
+
+    public final boolean isUseConsoleFile() {
+        return useConsoleFile;
+    }
+
 }
