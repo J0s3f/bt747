@@ -349,7 +349,7 @@ public class Model extends AppSettings implements GPSListener {
      *         the download progress bar.
      */
     public final boolean isDownloadOnGoing() {
-        return gpsModel.isDownloadOnGoing();
+        return gpsModel.isLogDownloadOnGoing();
     }
 
     /**
@@ -431,7 +431,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return true if the device is currently logging positions to memory.
      */
     public final boolean isLoggingActive() {
-        return gpsModel.isLoggingActive;
+        return gpsModel.isLoggingActive();
     }
 
     /**
