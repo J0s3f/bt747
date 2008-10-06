@@ -19,11 +19,11 @@ import gps.GPSListener;
 import gps.GPSstate;
 import gps.GpsEvent;
 import gps.connection.GPSrxtx;
-import gps.convert.Conv;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 
 import bt747.sys.Date;
+import bt747.sys.Generic;
 
 /**
  * The model in the Model-Controller-View schematic. Information regarding the
@@ -577,7 +577,7 @@ public class Model extends AppSettings implements GPSListener {
     }
 
     public final int getNMEAPeriod(final int i) {
-        return gpsModel.NMEA_periods[i];
+        return gpsModel.getNMEAPeriod(i);
     }
 
     public final int getLogTimeInterval() {
@@ -678,7 +678,7 @@ public class Model extends AppSettings implements GPSListener {
                 count = logFreeMemUsefullSize() / size;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Generic.debug("EstRecords",e);
         }
         return count;
     }
@@ -688,8 +688,8 @@ public class Model extends AppSettings implements GPSListener {
      * 
      * @return true - Debug is active
      */
-    public final boolean isDebug() {
-        return gpsModel.isDebug();
+    public static final boolean isDebug() {
+        return Generic.isDebug();
     }
 
     /**
@@ -702,7 +702,7 @@ public class Model extends AppSettings implements GPSListener {
         return gpsRxTx.isDebugConn();
     }
 
-    public final void gpsEvent(GpsEvent event) {
+    public final void gpsEvent(final GpsEvent event) {
         postEvent(new ModelEvent(event));
     }
 }

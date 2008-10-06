@@ -19,8 +19,6 @@
 //********************************************************************                              
 package gps.convert;
 
-
-
 /**
  * Implement some conversion functions
  * 
@@ -35,11 +33,10 @@ public final class Conv {
     public static final int hexStringToBytes(
             final String hexStr,
             final byte[] buffer) {
-        char[] data = hexStr.toCharArray();
-        int length = data.length & 0xFFFFFFFE;
+        int length = hexStr.length() & 0xFFFFFFFE;
         byte byteVal;
         for (int i = 0; i < length; i += 2) {
-            switch (data[i]) {
+            switch (hexStr.charAt(i)) {
                 case '0': byteVal = (byte) 0x00; break;
                 case '1': byteVal = (byte) 0x10; break;
                 case '2': byteVal = (byte) 0x20; break;
@@ -50,21 +47,21 @@ public final class Conv {
                 case '7': byteVal = (byte) 0x70; break;
                 case '8': byteVal = (byte) 0x80; break;
                 case '9': byteVal = (byte) 0x90; break;
+                case 'a':
                 case 'A': byteVal = (byte) 0xA0; break;
+                case 'b':
                 case 'B': byteVal = (byte) 0xB0; break;
+                case 'c':
                 case 'C': byteVal = (byte) 0xC0; break;
+                case 'd':
                 case 'D': byteVal = (byte) 0xD0; break;
+                case 'e':
                 case 'E': byteVal = (byte) 0xE0; break;
+                case 'f':
                 case 'F': byteVal = (byte) 0xF0; break;
-                case 'a': byteVal = (byte) 0xA0; break;
-                case 'b': byteVal = (byte) 0xB0; break;
-                case 'c': byteVal = (byte) 0xC0; break;
-                case 'd': byteVal = (byte) 0xD0; break;
-                case 'e': byteVal = (byte) 0xE0; break;
-                case 'f': byteVal = (byte) 0xF0; break;
                 default: byteVal = 0;
             }
-            switch (data[i + 1]) {
+            switch (hexStr.charAt(i + 1)) {
                 case '0': byteVal |= (byte) 0; break;
                 case '1': byteVal |= (byte) 1; break;
                 case '2': byteVal |= (byte) 2; break;
@@ -75,18 +72,18 @@ public final class Conv {
                 case '7': byteVal |= (byte) 7; break;
                 case '8': byteVal |= (byte) 8; break;
                 case '9': byteVal |= (byte) 9; break;
+                case 'a':
                 case 'A': byteVal |= (byte) 0xA; break;
+                case 'b':
                 case 'B': byteVal |= (byte) 0xB; break;
+                case 'c':
                 case 'C': byteVal |= (byte) 0xC; break;
+                case 'd':
                 case 'D': byteVal |= (byte) 0xD; break;
+                case 'e':
                 case 'E': byteVal |= (byte) 0xE; break;
+                case 'f':
                 case 'F': byteVal |= (byte) 0xF; break;
-                case 'a': byteVal |= (byte) 0xA; break;
-                case 'b': byteVal |= (byte) 0xB; break;
-                case 'c': byteVal |= (byte)0xC; break;
-                case 'd': byteVal |= (byte)0xD; break;
-                case 'e': byteVal |= (byte)0xE; break;
-                case 'f': byteVal |= (byte)0xF; break;
                 default:
                     break;
             }
@@ -103,7 +100,8 @@ public final class Conv {
      */
     public static final int hex2Int(final String hexStr) {
         int result = 0;
-        for (int i = 0; i < hexStr.length(); i++) {
+        int length = hexStr.length();
+        for (int i = 0; i < length; i++) {
             int nibble;
             switch (hexStr.charAt(i)) {
                 case '0': nibble = 0; break;
@@ -116,18 +114,18 @@ public final class Conv {
                 case '7': nibble = 7; break;
                 case '8': nibble = 8; break;
                 case '9': nibble = 9; break;
+                case 'a':
                 case 'A': nibble = 0xA; break;
+                case 'b':
                 case 'B': nibble = 0xB; break;
+                case 'c':
                 case 'C': nibble = 0xC; break;
+                case 'd':
                 case 'D': nibble = 0xD; break;
+                case 'e':
                 case 'E': nibble = 0xE; break;
+                case 'f':
                 case 'F': nibble = 0xF; break;
-                case 'a': nibble = 0xA; break;
-                case 'b': nibble = 0xB; break;
-                case 'c': nibble = 0xC; break;
-                case 'd': nibble = 0xD; break;
-                case 'e': nibble = 0xE; break;
-                case 'f': nibble = 0xF; break;
                 default: nibble = 0;
             }
             result <<= 4;

@@ -2,7 +2,7 @@
  * Reimplementation of Mark McClures Javascript PolylineEncoder
  * All the mathematical logic is more or less copied by McClure
  *  
- * @author Mark Rambow
+ * @author Mark Rambow, Mario De Weerd
  * @e-mail markrambow[at]gmail[dot]com
  * @version 0.1
  * 

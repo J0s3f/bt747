@@ -2,7 +2,7 @@
  * Reimplementation of Mark McClures Javascript PolylineEncoder
  * All the mathematical logic is more or less copied by McClure
  *  
- * @author Mark Rambow
+ * @author Mark Rambow, Mario De Weerd
  * @e-mail markrambow[at]gmail[dot]com
  * @version 0.1
  * 
@@ -16,42 +16,32 @@ public final class Trackpoint {
     private double altitude;
 
     public Trackpoint(final double lat, final double lon) {
-        this.latDouble = lat;
-        this.lonDouble = lon;
-        if (latDouble > 90.0 || latDouble < -90.0) {
-            this.latDouble = 0.0;
-        }
-        if (lonDouble > 180.0 || latDouble < -180.0) {
-            this.lonDouble = 0.0;
-        }
+        setLatDouble(lat);
+        setLonDouble(lon);
     }
 
     public Trackpoint(
             final double lat,
             final double lon,
             final double altitude) {
-        this.latDouble = lat;
-        this.lonDouble = lon;
+        setLatDouble(lat);
+        setLonDouble(lon);
         this.altitude = altitude;
-        if (latDouble > 90.0 || latDouble < -90.0) {
-            this.latDouble = 0.0;
-        }
-        if (lonDouble > 180.0 || latDouble < -180.0) {
-            this.lonDouble = 0.0;
-        }
     }
 
     public final void setLatDouble(final double latDouble) {
-        this.latDouble = latDouble;
         if (latDouble > 90.0 || latDouble < -90.0) {
             this.latDouble = 0.0;
+        } else {
+            this.latDouble = latDouble;
         }
     }
 
     public final void setLonDouble(final double lonDouble) {
-        this.lonDouble = lonDouble;
         if (lonDouble > 180.0 || latDouble < -180.0) {
             this.lonDouble = 0.0;
+        } else {
+            this.lonDouble = lonDouble;
         }
     }
 

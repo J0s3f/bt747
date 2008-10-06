@@ -12,11 +12,7 @@
 //***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
 //***  for more details.                                           ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************       
+ 
 package bt747.model;
 
 import gps.GpsEvent;
@@ -52,11 +48,11 @@ public class ModelEvent extends GpsEvent{
      */
     public static final int DOWNLOAD_METHOD_CHANGE = 270;
 
-    public ModelEvent(int type, Object arg) {
+    public ModelEvent(final int type, final Object arg) {
         super(type,arg);
     }
     
-    public ModelEvent(GpsEvent event) {
+    public ModelEvent(final GpsEvent event) {
         super(event.getType(),event.getArg());
     }
 }

@@ -56,8 +56,8 @@ public class BT747Main extends javax.swing.JFrame implements
      * 
      */
     private static final long serialVersionUID = 1L;
-    Model m;
-    J2SEAppController c;
+    private Model m;
+    private J2SEAppController c;
 
     /** Creates new form BT747Main */
     public BT747Main() {
@@ -167,7 +167,7 @@ public class BT747Main extends javax.swing.JFrame implements
         // endDate.getCalendar().setTimeZone(TimeZone.getTimeZone("GMT"));
         // TODO: Deactivate debug by default
         c.setDebug(true);
-        btGPSDebug.setSelected(m.isDebug());
+        btGPSDebug.setSelected(Model.isDebug());
         c.setDebugConn(false);
         btGPSConnectDebug.setSelected(m.isDebugConn());
         // c.setChunkSize(256); // Small for debug

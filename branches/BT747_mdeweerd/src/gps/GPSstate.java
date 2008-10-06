@@ -26,8 +26,6 @@ import moio.util.StringTokenizer;
 import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
-import bt747.sys.Semaphore;
-import bt747.sys.Vector;
 import bt747.sys.interfaces.BT747Thread;
 
 /*
@@ -46,7 +44,7 @@ import bt747.sys.interfaces.BT747Thread;
  */
 /* Final for the moment */
 public final class GPSstate implements BT747Thread {
-    private GPSrxtx gpsRxTx = null;
+    private final GPSLinkHandler handler = new GPSLinkHandler();
 
     private boolean getFullLogBlocks = true; // If true, get the entire log
     // (based
@@ -135,7 +133,7 @@ public final class GPSstate implements BT747Thread {
 
     private String sBtMacAddr = "";
 
-    public int[] NMEA_periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
+    private final int[] NMEA_periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
 
     private boolean GPS_STATS = false; // (!Settings.onDevice);
 
@@ -153,33 +151,70 @@ public final class GPSstate implements BT747Thread {
      * 
      */
     public GPSstate(final GPSrxtx gpsRxTx) {
-        this.setGPSRxtx(gpsRxTx);
+        setGPSRxtx(gpsRxTx);
     }
 
     public final void setGPSRxtx(final GPSrxtx gpsRxTx) {
-        if (this.gpsRxTx != null) {
-            // TODO Remove myself as listener
-        }
-        this.gpsRxTx = gpsRxTx;
-        // TODO: Add myself as listener
-    }
-
-    public final boolean isDebug() {
-        return Generic.isDebug();
+        handler.setGPSRxtx(gpsRxTx);
     }
 
     public final void setStats(final boolean stats) {
         GPS_STATS = stats;
     }
 
+    private final boolean[] dataAvailable = new boolean[50];
+    private final int[] dataRequested = new int[50];
+    public final static int DATA_MEM_USED = 0;
+    public final static int DATA_FLASH_TYPE = 1;
+    public final static int DATA_MEM_SIZE = 2;
+    public final static int DATA_LOG_FORMAT = 3;
+
     /**
-     * @return The usefull bytes int the log.
+     * Check if the data is available and if it is not, requests it.
+     * 
+     * @param dataType
+     * @return
+     */
+    public final boolean checkAvailable(final int dataType) {
+        int ts = Generic.getTimeStamp();
+        if (!dataAvailable[dataType] && ((ts - dataRequested[dataType]) > 3500)) {
+            dataRequested[dataType] = ts;
+            switch (dataType) {
+            case DATA_FLASH_TYPE:
+            case DATA_MEM_SIZE:
+                reqFlashManuID();
+                break;
+            case DATA_MEM_USED:
+                reqLogMemUsed();
+                break;
+            case DATA_LOG_FORMAT:
+                reqLogFormat();
+            default:
+                break;
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void setAvailable(final int dataType) {
+        dataAvailable[dataType] = true;
+    }
+
+    /**
+     * @return The useful bytes in the log.
      */
     public final int logMemUsefullSize() {
+        checkAvailable(DATA_MEM_USED);
         return (int) ((getLogMemSize() >> 16) * (0x10000 - 0x200)); // 16Mb
     }
 
+    /**
+     * @return Usefull free bytes int he log.
+     */
     public final int logFreeMemUsefullSize() {
+        checkAvailable(DATA_FLASH_TYPE);
         return (int) ((getLogMemSize() - getLogMemUsed()) - (((getLogMemSize() - getLogMemUsed()) >> 16) * (0x200))); // 16Mb
     }
 
@@ -190,7 +225,7 @@ public final class GPSstate implements BT747Thread {
      */
     public final void setupTimer() {
         // TODO: set up thread in gpsRxTx directly (through controller)
-        if (gpsRxTx.isConnected()) {
+        if (handler.isConnected()) {
             nextRun = Generic.getTimeStamp() + 300; // Delay before first
             // transaction
             Generic.addThread(this, false);
@@ -221,24 +256,23 @@ public final class GPSstate implements BT747Thread {
                 + Convert.unsigned2hex(logFmt, 8));
     }
 
-    private boolean isEraseOngoing = false;
-
     private void waitEraseDone() {
-        isEraseOngoing = true;
         postEvent(GpsEvent.ERASE_ONGOING_NEED_POPUP);
+        handler.setEraseOngoing(true);
         logState = C_LOG_ERASE_STATE;
-        resetLogTimeOut();
+        handler.resetLogTimeOut();
         // readLogFlashStatus(); - Will be done after timeout
     }
 
     private void signalEraseDone() {
+        logState = C_LOG_NOLOGGING;
+        handler.setEraseOngoing(false);
         postEvent(GpsEvent.ERASE_DONE_REMOVE_POPUP);
     }
 
     public final void stopErase() {
-        if (isEraseOngoing && (logState == C_LOG_ERASE_STATE)) {
-            logState = C_LOG_NOLOGGING;
-            gpsRxTx.setIgnoreNMEA(!gpsDecode);
+        if (handler.isEraseOngoing() && (logState == C_LOG_ERASE_STATE)) {
+            handler.setIgnoreNMEA(!gpsDecode);
             signalEraseDone();
         }
     }
@@ -273,7 +307,7 @@ public final class GPSstate implements BT747Thread {
      */
 
     public final void eraseLog() {
-        if (gpsRxTx.isConnected()) {
+        if (handler.isConnected()) {
             sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                     + BT747Constants.PMTK_LOG_ERASE + ","
                     + BT747Constants.PMTK_LOG_ERASE_YES_STR);
@@ -326,6 +360,9 @@ public final class GPSstate implements BT747Thread {
                 + Convert.unsigned2hex(size, 8));
     }
 
+    /**
+     * Request the initial log mode (the first value logged in memory).
+     */
     public final void reqInitialLogMode() {
         readLog(6, 2); // 6 is the log mode offset in the log, 2 is the size
         // Required to know if log is in overwrite mode.
@@ -337,111 +374,8 @@ public final class GPSstate implements BT747Thread {
                 + BT747Constants.PMTK_LOG_FLASH_STR + "," + "9F");
     }
 
-    private Vector sentCmds = new Vector(); // List of sent commands
-
-    private static final int C_MAX_SENT_COMMANDS = 10; // Max commands to put
-    // in list
-
-    private Vector toSendCmds = new Vector(); // List of sent commands
-
-    private static final int C_MAX_TOSEND_COMMANDS = 20; // Max commands to
-    // put in
-    // list
-
-    private static final int C_MAX_CMDS_SENT = 4;
-
-    private static final int C_MIN_TIME_BETWEEN_CMDS = 30;
-
-    public final int getOutStandingCmdsCount() {
-        int total;
-        cmdBuffersAccess.down();
-        total = sentCmds.size() + toSendCmds.size();
-        cmdBuffersAccess.up();
-
-        return total;
-    }
-
-    public final void sendNMEA(final String cmd) {
-        int cmdsWaiting;
-        cmdBuffersAccess.down();
-        cmdsWaiting = sentCmds.size();
-        cmdBuffersAccess.up();
-        if ((logStatus != C_LOG_ERASE_STATE) && (cmdsWaiting == 0)
-                && (Generic.getTimeStamp() > nextCmdSendTime)) {
-            // All sent commands were acknowledged, send cmd immediately
-            doSendNMEA(cmd);
-        } else if (cmdsWaiting < C_MAX_TOSEND_COMMANDS) {
-            // Ok to buffer more cmds
-            cmdBuffersAccess.down();
-            toSendCmds.addElement(cmd);
-            cmdBuffersAccess.up();
-        }
-    }
-
-    private int nextCmdSendTime = 0;
-
-    private Semaphore cmdBuffersAccess = new Semaphore(1);
-
-    private void doSendNMEA(final String cmd) {
-        resetLogTimeOut();
-        cmdBuffersAccess.down();
-        try {
-            if (cmd.startsWith("PMTK")) {
-                sentCmds.addElement(cmd);
-            }
-
-            gpsRxTx.sendPacket(cmd);
-            if (Generic.isDebug()) {
-                Generic.debug(">" + cmd + " " + gpsRxTx.isConnected());
-            }
-            nextCmdSendTime = Generic.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
-            if (sentCmds.size() > C_MAX_SENT_COMMANDS) {
-                sentCmds.removeElementAt(0);
-            }
-        } catch (Exception e) {
-            Generic.debug("doSendNMEA", e);
-        }
-        cmdBuffersAccess.up();
-    }
-
-    private int downloadTimeOut = 3500;
-
     public final void setDownloadTimeOut(final int downloadTimeOut) {
-        this.downloadTimeOut = downloadTimeOut;
-    }
-
-    private void checkSendCmdFromQueue() {
-        int cTime = Generic.getTimeStamp();
-        if (logStatus != C_LOG_ERASE_STATE) {
-            cmdBuffersAccess.down();
-            try {
-                if ((sentCmds.size() != 0)
-                        && (cTime - logTimer) >= downloadTimeOut) {
-                    // TimeOut!!
-                    if (Generic.isDebug()) {
-                        Generic.debug("Timeout: " + cTime + "-" + logTimer
-                                + ">" + downloadTimeOut, null);
-                    }
-                    // sentCmds.removeElementAt(0); // Previous cleaning
-                    // Since the last command that was sent is a timeout ago, we
-                    // suppose that all the subsequent ones are forfeit too.
-                    sentCmds.removeAllElements();
-                    logTimer = cTime;
-                }
-                if ((toSendCmds.size() != 0)
-                        && (sentCmds.size() < C_MAX_CMDS_SENT)
-                        && (Generic.getTimeStamp() > nextCmdSendTime)) {
-                    // No more commands waiting for acknowledge
-                    cmdBuffersAccess.up();
-                    doSendNMEA((String) toSendCmds.elementAt(0));
-                    cmdBuffersAccess.down();
-                    toSendCmds.removeElementAt(0);
-                }
-            } catch (Exception e) {
-                Generic.debug("checkSendCmdFromQueue", e);
-            }
-            cmdBuffersAccess.up();
-        }
+        handler.setDownloadTimeOut(downloadTimeOut);
     }
 
     /** Request the current log format from the device */
@@ -493,7 +427,7 @@ public final class GPSstate implements BT747Thread {
     public final void reqLogFlashStatus() {
         /* Get flash status - immediate (not in output buffer) */
         /* Needed for erase */
-        doSendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
+        handler.doSendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_QUERY_STR + ","
                 + BT747Constants.PMTK_LOG_FLASH_STAT_STR);
     }
@@ -805,92 +739,24 @@ public final class GPSstate implements BT747Thread {
         sendNMEA("PMTK" + BT747Constants.PMTK_API_GET_USER_OPTION_STR);
     }
 
-    final boolean removeFromSentCmds(final String match) {
-        int cmdIdx = -1;
-        cmdBuffersAccess.down();
-        try {
-            for (int i = 0; i < sentCmds.size(); i++) {
-                if (((String) sentCmds.elementAt(i)).startsWith(match)) {
-                    cmdIdx = i;
-                    break;
-                }
-
-            }
-            // Remove all cmds up to
-            for (int i = cmdIdx; i >= 0; i--) {
-                // if(GPS_DEBUG) {
-                // debugMsg("Remove:"+(String)sentCmds.items[0]);
-                // }
-                sentCmds.removeElementAt(0);
-            }
-        } catch (Exception e) {
-            Generic.debug("removeFromSentCmds", e);
-        }
-        cmdBuffersAccess.up();
-        return cmdIdx != -1;
-    }
-
-    // TODO: When acknowledge is missing for some commands, take appropriate
-    // action.
-    public final int analyseMTK_Ack(final String[] sNmea) {
-        // PMTK001,Cmd,Flag
-        int flag;
-        int result = -1;
-        // if(GPS_DEBUG) { waba.sys.debugMsg(p_nmea[0]+","+p_nmea[1]+"\n");}
-
-        if (sNmea.length >= 3) {
-            String sMatch;
-            flag = Convert.toInt(sNmea[sNmea.length - 1]); // Last
-            // parameter
-            sMatch = "PMTK" + sNmea[1];
-            for (int i = 2; i < sNmea.length - 1; i++) {
-                // ACK is variable length, can have parameters of cmd.
-                sMatch += "," + sNmea[i];
-            }
-            // if(GPS_DEBUG) {
-            // debugMsg("Before:"+sentCmds.size()+" "+z_MatchString);
-            // }
-
-            removeFromSentCmds(sMatch);
-            // if(GPS_DEBUG) {
-            // debugMsg("After:"+sentCmds.size());
-            // }
-            // sentCmds.find(z_MatchString);
-            // if(GPS_DEBUG) {
-            // waba.sys.debugMsg("IDX:"+Convert.toString(z_CmdIdx)+"\n");}
-            // if(GPS_DEBUG) {
-            // waba.sys.debugMsg("FLAG:"+Convert.toString(z_Flag)+"\n");}
-            switch (flag) {
-            case BT747Constants.PMTK_ACK_INVALID:
-                // 0: Invalid cmd or packet
-                result = 0;
-                break;
-            case BT747Constants.PMTK_ACK_UNSUPPORTED:
-                // 1: Unsupported cmd or packet
-                result = 0;
-                break;
-            case BT747Constants.PMTK_ACK_FAILED:
-                // 2: Valid cmd or packet but action failed
-                result = 0;
-                break;
-            case BT747Constants.PMTK_ACK_SUCCEEDED:
-                // 3: Valid cmd or packat but action succeeded
-                result = 0;
-                break;
-            default:
-                result = -1;
-                break;
-            }
-        }
-        return result;
-    }
-
+    /**
+     * Analyze GPRMC data.
+     * 
+     * @param sNmea
+     * @param gps
+     */
     final void analyzeGPRMC(final String[] sNmea, final GPSRecord gps) {
         if (CommonIn.analyzeGPRMC(sNmea, gps) != 0) {
             postGpsEvent(GpsEvent.GPRMC, gps);
         }
     }
 
+    /**
+     * Analyze GPGGA data.
+     * 
+     * @param sNmea
+     * @param gps
+     */
     final void analyzeGPGGA(final String[] sNmea, final GPSRecord gps) {
         if (CommonIn.analyzeGPGGA(sNmea, gps) != 0) {
             gps.height -= gps.geoid; // Default function adds the two
@@ -899,7 +765,7 @@ public final class GPSstate implements BT747Thread {
     }
 
     private boolean gpsDecode = true;
-    private GPSRecord gpsPos = new GPSRecord();
+    private final GPSRecord gpsPos = new GPSRecord();
 
     public final int analyseNMEA(final String[] sNmea) {
         int cmd;
@@ -957,7 +823,7 @@ public final class GPSstate implements BT747Thread {
                 case BT747Constants.PMTK_TEST: // CMD 000
                     break;
                 case BT747Constants.PMTK_ACK: // CMD 001
-                    result = analyseMTK_Ack(sNmea);
+                    result = handler.analyseMTK_Ack(sNmea);
                     break;
                 case BT747Constants.PMTK_SYS_MSG: // CMD 010
                     break;
@@ -1111,13 +977,18 @@ public final class GPSstate implements BT747Thread {
     }
 
     /**
+     * Get the total size of the memory.
+     * 
      * @return the logMemSize
      */
     public final int getLogMemSize() {
+        checkAvailable(DATA_MEM_USED);
         return logMemSize;
     }
 
     /**
+     * Get the amount of memory used.
+     * 
      * @param logMemUsed
      *            the logMemUsed to set
      */
@@ -1132,6 +1003,11 @@ public final class GPSstate implements BT747Thread {
         return logMemUsed;
     }
 
+    /**
+     * Get a representation of the model.
+     * 
+     * @return Textual identification of the device model.
+     */
     private final String modelName() {
         int md = Conv.hex2Int(model);
         String mdStr;
@@ -1260,15 +1136,9 @@ public final class GPSstate implements BT747Thread {
         if (Generic.getTimeStamp() >= nextRun) {
             nextRun = Generic.getTimeStamp() + 10;
             int loopsToGo = 0; // Setting to 0 for more responsiveness
-            if (gpsRxTx.isConnected()) {
-                // debugMsg(Convert.toString(m_logState));
-                boolean cmdsCondition;
-                cmdBuffersAccess.down();
-                cmdsCondition = (sentCmds.size() == 0)
-                        && (toSendCmds.size() == 0);
-                cmdBuffersAccess.up();
-
-                if (cmdsCondition && (logState != C_LOG_NOLOGGING)
+            if (handler.isConnected()) {
+                if ((handler.getOutStandingCmdsCount() == 0)
+                        && (logState != C_LOG_NOLOGGING)
                         && (logState != C_LOG_ERASE_STATE)) {
                     // Sending command on next timer adds some delay after
                     // the end of the previous command (reception)
@@ -1276,16 +1146,16 @@ public final class GPSstate implements BT747Thread {
                 } else if (logState == C_LOG_ACTIVE) {
                     getNextLogPart();
                 } else if (logState == C_LOG_ERASE_STATE) {
-                    if ((Generic.getTimeStamp() - logTimer) > C_LOGERASE_TIMEOUT) {
+                    if (handler.timeSinceLastStamp() > C_LOGERASE_TIMEOUT) {
                         reqLogFlashStatus();
                     }
                 }
                 do {
-                    lastResponse = gpsRxTx.getResponse();
+                    lastResponse = handler.getResponse();
                     if (lastResponse != null) {
                         analyseNMEA(lastResponse);
                     }
-                    checkSendCmdFromQueue();
+                    handler.checkSendCmdFromQueue();
                 } while ((loopsToGo-- > 0) && lastResponse != null);
             } else {
                 Generic.removeThread(this);
@@ -1301,7 +1171,7 @@ public final class GPSstate implements BT747Thread {
      * 
      * @see waba.sys.Thread#started()
      */
-    public void started() {
+    public final void started() {
 
     }
 
@@ -1310,7 +1180,7 @@ public final class GPSstate implements BT747Thread {
      * 
      * @see waba.sys.Thread#stopped()
      */
-    public void stopped() {
+    public final void stopped() {
 
     }
 
@@ -1319,8 +1189,6 @@ public final class GPSstate implements BT747Thread {
      **************************************************************************/
 
     // Fields to keep track of logging status
-    private int logTimer = 0;
-
     private int logDownloadStartAddr;
 
     private int logDownloadEndAddr;
@@ -1373,7 +1241,7 @@ public final class GPSstate implements BT747Thread {
 
     private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
 
-    private byte[] readDataBuffer = new byte[0x800]; // buffer used for
+    private final byte[] readDataBuffer = new byte[0x800]; // buffer used for
 
     // reading data.
 
@@ -1383,13 +1251,6 @@ public final class GPSstate implements BT747Thread {
     private void requestCheckBlock() {
         readLog(C_BLOCKVERIF_START, C_BLOCKVERIF_SIZE); // Read 200 bytes, just
         // past header.
-    }
-
-    /**
-     * Resets the condition to determine if a log request timeout occurs.
-     */
-    private final void resetLogTimeOut() {
-        logTimer = Generic.getTimeStamp();
     }
 
     private void closeLog() {
@@ -1558,7 +1419,7 @@ public final class GPSstate implements BT747Thread {
                         logState = C_LOG_CHECK;
                     }
                 }
-                gpsRxTx.setIgnoreNMEA((!gpsDecode)
+                handler.setIgnoreNMEA((!gpsDecode)
                         || (logState != C_LOG_NOLOGGING));
                 windowedLogFile.close();
             }
@@ -1852,7 +1713,7 @@ public final class GPSstate implements BT747Thread {
 
         // Currently taking care of replies from the device only.
         // The other data we send ourselves
-        resetLogTimeOut(); // Reset timeout
+        handler.resetLogTimeOut(); // Reset timeout
         if (sNmea.length > 2) {
             switch (Convert.toInt(sNmea[1])) {
             case BT747Constants.PMTK_LOG_DT:
@@ -1867,8 +1728,7 @@ public final class GPSstate implements BT747Thread {
                         if (logState == C_LOG_ERASE_STATE) {
                             switch (Convert.toInt(sNmea[3])) {
                             case 1:
-                                logState = C_LOG_NOLOGGING;
-                                if (isEraseOngoing) {
+                                if (handler.isEraseOngoing()) {
                                     signalEraseDone();
                                 }
                                 if (forcedErase) {
@@ -1889,6 +1749,7 @@ public final class GPSstate implements BT747Thread {
                         logRecordMaxSize = BT747Constants.logRecordMinSize(
                                 logFormat, false);
                         dataOK |= C_OK_FORMAT;
+                        setAvailable(DATA_LOG_FORMAT);
                         postEvent(GpsEvent.LOG_FORMAT_UPDATE);
                         break;
                     case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
@@ -1927,11 +1788,14 @@ public final class GPSstate implements BT747Thread {
                         setLogMemUsed(Conv.hex2Int(sNmea[3]));
                         logMemUsedPercent = (100 * (getLogMemUsed() - (0x200 * ((getLogMemUsed() + 0xFFFF) / 0x10000))))
                                 / logMemUsefullSize();
+                        dataAvailable[DATA_MEM_USED] = true;
                         PostStatusUpdateEvent();
                         break;
                     case BT747Constants.PMTK_LOG_FLASH: // 9;
                         flashManuProdID = Conv.hex2Int(sNmea[3]);
                         analyseFlashManuProdID();
+                        dataAvailable[DATA_FLASH_TYPE] = true;
+                        dataAvailable[DATA_MEM_SIZE] = true;
                         break;
                     case BT747Constants.PMTK_LOG_NBR_LOG_PTS: // 10;
                         logNbrLogPts = Conv.hex2Int(sNmea[3]);
@@ -2003,7 +1867,7 @@ public final class GPSstate implements BT747Thread {
      */
     public final void setGpsDecode(final boolean gpsDecode) {
         this.gpsDecode = gpsDecode;
-        gpsRxTx.setIgnoreNMEA((!this.gpsDecode)
+        handler.setIgnoreNMEA((!this.gpsDecode)
                 || (logState != C_LOG_NOLOGGING));
     }
 
@@ -2062,7 +1926,7 @@ public final class GPSstate implements BT747Thread {
         return gpsPos;
     }
 
-    private HashSet listeners = new HashSet();
+    private final HashSet listeners = new HashSet();
 
     /** add a listener to event thrown by this class */
     public final void addListener(final GPSListener l) {
@@ -2198,35 +2062,35 @@ public final class GPSstate implements BT747Thread {
 
     public final void reqDPL700Log() {
         DPL700_State = C_DPL700_GETLOG;
-        gpsRxTx.sendCmdAndGetDPL700Response(0x60B50000, 10 * 1024 * 1024);
+        handler.sendCmdAndGetDPL700Response(0x60B50000, 10 * 1024 * 1024);
         // m_GPSrxtx.virtualReceive("sample dataWP Update Over\0");
     }
 
     public final void enterDPL700Mode() {
         exitDPL700Mode(); // Exit previous session if still open
-        gpsRxTx.sendCmdAndGetDPL700Response("W'P Camera Detect", 255);
+        handler.sendCmdAndGetDPL700Response("W'P Camera Detect", 255);
         // m_GPSrxtx.virtualReceive("WP GPS+BT\0");
     }
 
     public final void exitDPL700Mode() {
-        gpsRxTx.sendDPL700Cmd("WP AP-Exit"); // No reply expected
+        handler.sendDPL700Cmd("WP AP-Exit"); // No reply expected
         DPL700_State = C_DPL700_OFF;
     }
 
     public final void reqDPL700LogSize() {
-        gpsRxTx.sendCmdAndGetDPL700Response(0x60B50000, 255);
+        handler.sendCmdAndGetDPL700Response(0x60B50000, 255);
     }
 
     public final void reqDPL700Erase() {
-        gpsRxTx.sendCmdAndGetDPL700Response(0x60B50000, 255);
+        handler.sendCmdAndGetDPL700Response(0x60B50000, 255);
     }
 
     public final void reqDPL700DeviceInfo() {
-        gpsRxTx.sendCmdAndGetDPL700Response(0x5BB00000, 255);
+        handler.sendCmdAndGetDPL700Response(0x5BB00000, 255);
     }
 
     public final void getDPL700GetSettings() {
-        gpsRxTx.sendCmdAndGetDPL700Response(0x62B60000, 255);
+        handler.sendCmdAndGetDPL700Response(0x62B60000, 255);
     }
 
     private void AnalyseDPL700Data(final String s) {
@@ -2247,8 +2111,8 @@ public final class GPSstate implements BT747Thread {
                     }
                     openNewLog(DPL700LogFileName, DPL700Card);
                     try {
-                        logFile.writeBytes(gpsRxTx.getDPL700_buffer(), 0,
-                                gpsRxTx.getDPL700_buffer_idx());
+                        logFile.writeBytes(handler.getDPL700_buffer(), 0,
+                                handler.getDPL700_buffer_idx());
                         logFile.close();
                     } catch (Exception e) {
                         Generic.debug("", e);
@@ -2265,4 +2129,28 @@ public final class GPSstate implements BT747Thread {
         this.logRequestAhead = logRequestAhead;
     }
 
+    public final int getNMEAPeriod(final int i) {
+        return NMEA_periods[i];
+    }
+
+    /**
+     * Send an NMEA string to the link. The parameter should not include the
+     * checksum - this is added by the method.
+     * 
+     * @param s
+     *            NMEA string to send.
+     */
+    public final void sendNMEA(final String s) {
+        handler.sendNMEA(s);
+    }
+
+    /**
+     * Get the number of Cmds that are still waiting to be sent and/or waiting
+     * for acknowledgement.
+     * 
+     * @return
+     */
+    public final int getOutStandingCmdsCount() {
+        return handler.getOutStandingCmdsCount();
+    }
 }
