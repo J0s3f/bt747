@@ -924,13 +924,12 @@ public final class GPSstate implements BT747Thread {
      * @see waba.sys.Thread#run()
      */
     public final void run() {
-        String[] lastResponse;
-
         if (Generic.getTimeStamp() >= nextRun) {
             nextRun = Generic.getTimeStamp() + 10;
             int loopsToGo = 0; // Setting to 0 for more responsiveness
             if (handler.isConnected()) {
                 mtkLogHandler.notifyRun();
+                String[] lastResponse;
                 do {
                     lastResponse = handler.getResponse();
                     if (lastResponse != null) {

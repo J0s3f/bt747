@@ -68,62 +68,89 @@ final class MTKLogDownloadHandler {
     /** Timeout between log status requests for erase. */
     private static final int C_LOGERASE_TIMEOUT = 2000;
 
-    public MTKLogDownloadHandler(GPSstate gpsState) {
+    public MTKLogDownloadHandler(final GPSstate gpsState) {
         this.gpsState = gpsState;
     }
 
     /**
+     * Initialise the log download.
+     * 
      * @param startAddr
+     *            Start address for the log download.
      * @param endAddr
+     *            End address for the log download.
      * @param requestStep
+     *            Size of data to download with each request (chunk size).
      * @param fileName
+     *            The filename to save to.
+     * @param isIncremental
+     *            When true, perform incremental read.
      */
     public final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
-            final boolean isIncremental // True if incremental read
-    ) {
+            final boolean isIncremental) {
         try {
             if (logState == C_LOG_NOLOGGING) {
-                // Disable device logging while downloading
+                // Disable device logging while downloading to improve
+                // performance.
                 loggingIsActiveBeforeDownload = gpsState.isLoggingActive();
                 gpsState.stopLog();
                 gpsState.reqLogOnOffStatus();
             }
 
+            // Start address
             logDownloadStartAddr = startAddr;
+            // Round end address to end of block
             logDownloadEndAddr = ((endAddr + 0xFFFF) & 0xFFFF0000) - 1;
+            // Next address to request from device is start address.
             logNextReqAddr = logDownloadStartAddr;
+            // Next address expected from device is start address.
             logNextReadAddr = logDownloadStartAddr;
+            // The size of each individual request.
             logRequestStep = requestStep;
+
             if (logRequestStep > 0x800) {
+                // Not requesting anything ahead of time is individual size is
+                // big.
                 usedLogRequestAhead = 0;
             } else {
+                // The request pipeline is as set by the user.
                 usedLogRequestAhead = logRequestAhead;
             }
 
             if (isIncremental && (new File(fileName)).exists()) {
-                // reOpenLogRead(fileName, card);
+                /**
+                 * File already exists and incremental download requested.
+                 * Checking if the content is the same.
+                 */
+                // Make sure the log is closed from any previous download
+                // handling.
                 closeLog();
-                WindowedFile windowedLogFile = new WindowedFile(fileName,
-                        File.READ_ONLY, card);
+
+                // Storing the file specifics - needed in subsequent opens.
                 logFileName = fileName;
                 logFileCard = card;
+                // Opening the existing log file in read only mode.
+                WindowedFile windowedLogFile = new WindowedFile(logFileName,
+                        File.READ_ONLY, logFileCard);
                 windowedLogFile.setBufferSize(0x200);
                 if (windowedLogFile != null && windowedLogFile.isOpen()) {
                     // There is a file with data.
                     if (windowedLogFile.getSize() >= (C_BLOCKVERIF_START + C_BLOCKVERIF_SIZE)) {
                         // There are enough bytes in the saved file.
 
-                        // Find first incomplete block
                         int blockHeadPos = 0;
                         boolean continueLoop;
+                        // Skip blocks that look complete
                         do {
                             byte[] bytes;
                             bytes = windowedLogFile.fillBuffer(blockHeadPos);
+                            // We need at least the first 2 bytes of the header.
                             continueLoop = (windowedLogFile.getBufferFill() >= 2);
                             if (continueLoop) {
-                                // Break the loop if this block was incomplete.
-                                continueLoop = !(((bytes[0] & 0xFF) == 0xFF) && ((bytes[1] & 0xFF) == 0xFF));
+                                // If the first two bytes are FFFF, the block is
+                                // possibly incomplete.
+                                continueLoop = !((bytes[0] == (byte) 0xFF) && (bytes[1] == (byte) 0xFF));
                             }
                             if (continueLoop) {
                                 // This block is fully filled
@@ -134,17 +161,20 @@ final class MTKLogDownloadHandler {
                         } while (continueLoop);
 
                         if (blockHeadPos > windowedLogFile.getSize()) {
-                            // All blocks already had data - continue from end
-                            // of
-                            // file.
+                            // The start of the next block that is potentially
+                            // not complete is past the file end.
+                            // Therefore, start from the end of the existing
+                            // file for the download.
                             logNextReadAddr = windowedLogFile.getSize();
                             logNextReqAddr = logNextReadAddr;
                         } else {
+                            // This block is still in the file.
+                            // Look for the first location with FFFFFF
                             // Start just past block header
                             logNextReadAddr = blockHeadPos + 0x200;
                             continueLoop = true;
+                            // Find a block
                             do {
-                                // Find a block
                                 byte[] rBuffer = windowedLogFile
                                         .fillBuffer(logNextReadAddr);
                                 continueLoop = (windowedLogFile.getBufferFill() >= 0x200);
@@ -152,29 +182,43 @@ final class MTKLogDownloadHandler {
                                 if (continueLoop) {
                                     // Check if all FFs in the file.
                                     for (int i = 0; continueLoop && (i < 0x200); i++) {
-                                        continueLoop = ((rBuffer[i] & 0xFF) == 0xFF);
+                                        continueLoop = (rBuffer[i] == (byte) 0xFF);
                                     }
                                     continueLoop = !continueLoop; // Continue
-                                    // if
-                                    // something else
-                                    // than 0xFF
-                                    // found.
+                                    // 'continueLoop' now true when data was not
+                                    // all FF.
                                     if (continueLoop) {
                                         logNextReadAddr += 0x200;
                                     }
                                 }
                             } while (continueLoop);
+                            // logNextReadAddr points just past FF data.
+                            // Make sure it points to valid data.
                             logNextReadAddr -= 0x200;
                             logNextReqAddr = logNextReadAddr;
 
                             // TODO: should read 2 bytes in header once rest of
-                            // block was loaded
-                            // in order to have precise header information
+                            // block was loaded in order to have precise header
+                            // information
                             // -> We can not load this value from memory know as
-                            // we
-                            // might
-                            // corrupt the data (0xFFFF present if restarting
-                            // download)
+                            // we might corrupt the data (0xFFFF present if
+                            // restarting download)
+                        }
+
+                        // Adjust the end address.
+                        int potentialEndAddress = ((logNextReadAddr + 0xFFFF) & 0xFFFF0000) - 1;
+                        if (potentialEndAddress > logDownloadEndAddr) {
+                            if (Generic.isDebug()) {
+                                Generic.debug("Adjusted end address from "
+                                        + Convert.unsigned2hex(endAddr, 8)
+                                        + " to "
+                                        + Convert.unsigned2hex(
+                                                logDownloadEndAddr, 8)
+                                        + " to "
+                                        + Convert.unsigned2hex(
+                                                potentialEndAddress, 8));
+                            }
+                            logDownloadEndAddr = potentialEndAddress;
                         }
 
                         expectedResult = new byte[C_BLOCKVERIF_SIZE];
@@ -183,8 +227,8 @@ final class MTKLogDownloadHandler {
                         for (int i = 0; i < expectedResult.length; i++) {
                             expectedResult[i] = b[i];
                         }
-                        requestCheckBlock();
                         logState = C_LOG_CHECK;
+                        requestCheckBlock();
                     }
                 }
                 gpsState.updateIgnoreNMEA();
@@ -203,7 +247,7 @@ final class MTKLogDownloadHandler {
         }
     }
 
-    protected void openNewLog(final String fileName, final int card) {
+    protected final void openNewLog(final String fileName, final int card) {
         try {
             if (logFile != null && logFile.isOpen()) {
                 logFile.close();
@@ -300,12 +344,14 @@ final class MTKLogDownloadHandler {
             break;
         case C_LOG_CHECK:
             requestCheckBlock();
+            break;
         default:
             break;
         }
     }
 
     private void recoverFromLogError() {
+        // TODO: Make sure that is not calld in C_LOG_CHECK mode.
         // logNextReqAddr = logNextReadAddr;
         logState = C_LOG_RECOVER; // recover through timeout.
     }
@@ -363,11 +409,8 @@ final class MTKLogDownloadHandler {
                         if (!(((readDataBuffer[blockStart] & 0xFF) == 0xFF) && ((readDataBuffer[blockStart + 1] & 0xFF) == 0xFF))) {
                             // This block is full, next block is still data
                             int minEndAddr;
-                            minEndAddr = (startAddr & 0xFFFF0000) + 0x20000 - 1; // This
-                            // block
-                            // and
-                            // next
-                            // one.
+                            // This block and next one.
+                            minEndAddr = (startAddr & 0xFFFF0000) + 0x20000 - 1;
                             if (minEndAddr > gpsState.getLogMemSize() - 1) {
                                 minEndAddr = gpsState.getLogMemSize() - 1;
                             }
@@ -415,10 +458,19 @@ final class MTKLogDownloadHandler {
                     } catch (Exception e) {
                         Generic.debug("C_LOG_CHECK", e);
                     }
-                    getNextLogPart();
+                    if (Generic.isDebug()) {
+                        Generic.debug("Starting incremental download from "
+                                + Convert.unsigned2hex(logNextReadAddr, 8)
+                                + " to "
+                                + Convert.unsigned2hex(logDownloadEndAddr, 8));
+                    }
                     logState = C_LOG_ACTIVE;
+                    getNextLogPart();
                 } else {
                     logState = C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY;
+                    if (Generic.isDebug()) {
+                        Generic.debug("Different data - requesting overwrite confirmation");
+                    }
                     gpsState
                             .postEvent(GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY);
                 }
@@ -430,6 +482,12 @@ final class MTKLogDownloadHandler {
         gpsState.postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
     }
 
+    /**
+     * Response from the application indicating if overwrite of log is ok nor
+     * not.
+     * 
+     * @param overwrite
+     */
     public final void replyToOkToOverwrite(final boolean overwrite) {
         if (logState == C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
             if (overwrite) {
@@ -461,16 +519,15 @@ final class MTKLogDownloadHandler {
 
     private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
 
-    private final byte[] readDataBuffer = new byte[0x800]; // buffer used for
-
-    // reading data.
+    /** buffer used for reading data. */
+    private final byte[] readDataBuffer = new byte[0x800];
 
     /**
      * Request the block to validate that log in device is log in file.
      */
     private void requestCheckBlock() {
-        readLog(C_BLOCKVERIF_START, C_BLOCKVERIF_SIZE); // Read 200 bytes, just
-        // past header.
+        // Read 200 bytes, just past header.
+        readLog(C_BLOCKVERIF_START, C_BLOCKVERIF_SIZE);
     }
 
     private void closeLog() {
@@ -540,7 +597,7 @@ final class MTKLogDownloadHandler {
         gpsState.stopLog(); // Stop logging for this operation
         gpsState.reqLogStatus(); // Check status
         gpsState.reqLogFlashSectorStatus(); // Get flash sector information from
-                                            // device
+        // device
         // TODO:
         gpsState.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_ENABLE);
@@ -555,13 +612,13 @@ final class MTKLogDownloadHandler {
     private void postRecoveryEraseLog() {
         gpsState.reqLogStatus();
         gpsState.reqLogFlashSectorStatus(); // Get flash sector information from
-                                            // device
+        // device
 
         gpsState.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_INIT);
 
         gpsState.reqLogFlashSectorStatus(); // Get flash sector information from
-                                            // device
+        // device
         gpsState.reqLogStatus();
     }
 
