@@ -82,7 +82,7 @@ public final class BT747Constants { // dev as in device
      * Entries are in order. The entry position corresponds to the bit position
      * in the log format 'byte'.
      */
-    public static int[] logFmtByteSizes = { 4, // "UTC", // = 0x00001
+    public static final int[] logFmtByteSizes = { 4, // "UTC", // = 0x00001
             // // // 0
             2, // "VALID", // = 0x00002 // 1
             8, // "LATITUDE", // = 0x00004 // 2
@@ -117,7 +117,7 @@ public final class BT747Constants { // dev as in device
             0, // 1F // Log points with valid fix only
     };
 
-    public static int[] logFmtByteSizesHolux = { 4, // "UTC", // = //
+    public static final int[] logFmtByteSizesHolux = { 4, // "UTC", // = //
             // 0x00001 // 0
             2, // "VALID", // = 0x00002 // 1
             4, // "LATITUDE", // = 0x00004 // 2
@@ -462,47 +462,48 @@ public final class BT747Constants { // dev as in device
     public static final int HOLUX_API_DT_TZ_OFFSET = 10;
 
     /**
-     * Get the size of the log header in the device.
+     * Get the minimum size for a log record. This does not include the
+     * checksum.
      * 
      * @param p_logFormat
-     *            The log format of the device
+     *            The log format of the device.
      * @param holux
-     *            TODO
+     *            True when this must be calculated for a Holux M241 device.
      * 
      * @return Size of the header
      */
-    public static int logRecordMinSize(final int p_logFormat,
+    public static final int logRecordMinSize(final int p_logFormat,
             final boolean holux) {
-        int bits = p_logFormat;
-        int index = 0;
         int total = 0;
-        int[] byteSizes;
-        if (holux) {
-            byteSizes = logFmtByteSizesHolux;
-        } else {
-            byteSizes = logFmtByteSizes;
-        }
-        do {
-            if ((bits & 1) != 0) {
-                switch (index) {
-                case FMT_ELEVATION_IDX:
-                case FMT_AZIMUTH_IDX:
-                case FMT_SNR_IDX:
-                    // These fields do not contribute to the minimum size
-                    break;
-                default:
-                    // Other fields contribute
-                    try {
-                        total += byteSizes[index];
-                    } catch (Exception e) {
-                        // TODO: Check when this happens.
-                        Generic.debug(Txt.C_BAD_LOG_FORMAT);
-                    }
-                    break;
-                }
+        try {
+            int bits = p_logFormat;
+            int index = 0;
+            int[] byteSizes;
+            if (holux) {
+                byteSizes = logFmtByteSizesHolux;
+            } else {
+                byteSizes = logFmtByteSizes;
             }
-            index++;
-        } while ((bits >>>= 1) != 0);
+            do {
+                if ((bits & 1) != 0) {
+                    switch (index) {
+                    case FMT_ELEVATION_IDX:
+                    case FMT_AZIMUTH_IDX:
+                    case FMT_SNR_IDX:
+                        // These fields do not contribute to the minimum size
+                        break;
+                    default:
+                        // Other fields contribute
+                        total += byteSizes[index];
+                        break;
+                    }
+                }
+                index++;
+            } while ((bits >>>= 1) != 0);
+        } catch (Exception e) {
+            // Should not happen, but catch it anyway.
+            Generic.debug(Txt.C_BAD_LOG_FORMAT, e);
+        }
         return total;
     }
 
@@ -517,8 +518,8 @@ public final class BT747Constants { // dev as in device
      *            Estimated number of satellites per record.
      * @return The estimated record size.
      */
-    public static int logRecordSize(final int logFormat, final boolean holux,
-            final int sats) {
+    public static final int logRecordSize(final int logFormat,
+            final boolean holux, final int sats) {
         int cnt = 0;
         int[] byteSizes;
         if (holux) {
@@ -539,9 +540,56 @@ public final class BT747Constants { // dev as in device
         return cnt + logRecordMinSize(logFormat, holux);
     }
 
-    public static int logRecordMaxSize(final int p_logFormat,
+    public static final int logRecordMaxSize(final int p_logFormat,
             final boolean holux) {
         return logRecordSize(p_logFormat, holux, FMT_MAX_SATS);
+    }
+
+    public static final int[] logRecordSatOffsetAndSize(final int logFormat,
+            final boolean holux) {
+        int bits = logFormat;
+        int index = 0;
+        int total = 0;
+        int satRecSize = 0;
+        int[] byteSizes;
+        if (holux) {
+            byteSizes = BT747Constants.logFmtByteSizesHolux;
+        } else {
+            byteSizes = BT747Constants.logFmtByteSizes;
+        }
+        do {
+            if ((bits & 1) != 0) {
+                switch (index) {
+                case BT747Constants.FMT_LATITUDE_IDX:
+                case BT747Constants.FMT_LONGITUDE_IDX:
+                    total += byteSizes[index];
+                    break;
+                case BT747Constants.FMT_HEIGHT_IDX:
+                    total += byteSizes[index];
+                    break;
+
+                case BT747Constants.FMT_SID_IDX:
+                case BT747Constants.FMT_ELEVATION_IDX:
+                case BT747Constants.FMT_AZIMUTH_IDX:
+                case BT747Constants.FMT_SNR_IDX:
+                    satRecSize += byteSizes[index];
+                    break;
+                case BT747Constants.FMT_RCR_IDX:
+                case BT747Constants.FMT_MILLISECOND_IDX:
+                case BT747Constants.FMT_DISTANCE_IDX:
+
+                    // These fields do not contribute to the sat offset
+                    break;
+                default:
+                    // Other fields contribute
+                    total += byteSizes[index];
+                    break;
+                }
+            }
+            index++;
+        } while ((bits >>>= 1) != 0);
+        int[] result = { total, satRecSize };
+        return result;
     }
 
     /**
@@ -551,7 +599,7 @@ public final class BT747Constants { // dev as in device
      */
 
     /**
-     * Number of NMEA sentence types
+     * Number of NMEA sentence types.
      */
     public static final int C_NMEA_SEN_COUNT = 19;
     public static final String[] NMEA_STRINGS = { "GLL", // 0 // GPGLL

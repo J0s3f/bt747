@@ -51,60 +51,18 @@ public final class BT747LogConvert implements GPSLogConvert {
     private int badrecord_count = 0;
 
     private void updateLogFormat(final GPSFile gpsFile, final int newLogFormat) {
-        int bits = newLogFormat;
-        int index = 0;
-        int total = 0;
-        int[] byteSizes;
-
-        if (holux) {
-            byteSizes = BT747Constants.logFmtByteSizesHolux;
-        } else {
-            byteSizes = BT747Constants.logFmtByteSizes;
-        }
-        satRecSize = 0;
-
+        int[] result;
         logFormat = newLogFormat;
         activeFileFields |= logFormat;
         if (!passToFindFieldsActivatedInLog) {
             gpsFile.writeLogFmtHeader(GPSRecord.getLogFormatRecord(logFormat));
         }
-        // if((logFormat&0x80000000)!=0) {
-        // holux=true;
-        // }
+
         minRecordSize = BT747Constants.logRecordMinSize(logFormat, holux);
         maxRecordSize = BT747Constants.logRecordMaxSize(logFormat, holux);
-        do {
-            if ((bits & 1) != 0) {
-                switch (index) {
-                case BT747Constants.FMT_LATITUDE_IDX:
-                case BT747Constants.FMT_LONGITUDE_IDX:
-                    total += byteSizes[index];
-                    break;
-                case BT747Constants.FMT_HEIGHT_IDX:
-                    total += byteSizes[index];
-                    break;
-
-                case BT747Constants.FMT_SID_IDX:
-                case BT747Constants.FMT_ELEVATION_IDX:
-                case BT747Constants.FMT_AZIMUTH_IDX:
-                case BT747Constants.FMT_SNR_IDX:
-                    satRecSize += byteSizes[index];
-                    break;
-                case BT747Constants.FMT_RCR_IDX:
-                case BT747Constants.FMT_MILLISECOND_IDX:
-                case BT747Constants.FMT_DISTANCE_IDX:
-
-                    // These fields do not contribute to the sat offset
-                    break;
-                default:
-                    // Other fields contribute
-                    total += byteSizes[index];
-                    break;
-                }
-            }
-            index++;
-        } while ((bits >>>= 1) != 0);
-        satIdxOffset = total;
+        result = BT747Constants.logRecordSatOffsetAndSize(logFormat, holux);
+        satIdxOffset = result[0];
+        satRecSize = result[1];
     }
 
     /**
@@ -114,7 +72,7 @@ public final class BT747LogConvert implements GPSLogConvert {
 
     private boolean stop = false;
 
-    public void stopConversion() {
+    public final void stopConversion() {
         stop = true;
     }
 
@@ -127,7 +85,7 @@ public final class BT747LogConvert implements GPSLogConvert {
      *            object doing actual write to files
      * 
      */
-    public int parseFile(final GPSFile gpsFile) {
+    public final int parseFile(final GPSFile gpsFile) {
         GPSRecord gpsRec = new GPSRecord();
         byte[] bytes;
         int sizeToRead;
@@ -397,7 +355,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                                 offsetInBuffer = indexInBuffer;
                                 okInBuffer = indexInBuffer;
                                 foundAnyRecord = true; // Fake to avoid extra
-                                                        // byte skip.
+                                // byte skip.
                                 // Generic.debug(indexInBuffer +"skip ff",null);
                             } else {
                                 badrecord_count++;
@@ -430,21 +388,21 @@ public final class BT747LogConvert implements GPSLogConvert {
         return BT747Constants.NO_ERROR;
     }
 
-    public void setTimeOffset(final long offset) {
+    public final void setTimeOffset(final long offset) {
         timeOffsetSeconds = offset;
     }
 
-    public void setConvertWGS84ToMSL(final boolean b) {
+    public final void setConvertWGS84ToMSL(final boolean b) {
         isConvertWGL84ToMSL = b;
     }
 
     private String errorInfo;
 
-    public String getErrorInfo() {
+    public final String getErrorInfo() {
         return errorInfo;
     }
 
-    public int toGPSFile(final String fileName, final GPSFile gpsFile,
+    public final int toGPSFile(final String fileName, final GPSFile gpsFile,
             final int Card) {
         int error = BT747Constants.NO_ERROR;
         stop = false;
@@ -502,7 +460,7 @@ public final class BT747LogConvert implements GPSLogConvert {
      * @param holux
      *            The holux to set.
      */
-    public void setHolux(final boolean holux) {
+    public final void setHolux(final boolean holux) {
         this.holux = holux;
     }
 
@@ -517,8 +475,8 @@ public final class BT747LogConvert implements GPSLogConvert {
      * 
      * @return int / number of bytes found
      */
-    private int getSpecialRecord(final byte[] bytes, final int offsetInBuffer,
-            final GPSFile gpsFile) {
+    private final int getSpecialRecord(final byte[] bytes,
+            final int offsetInBuffer, final GPSFile gpsFile) {
         int newLogFormat;
         int nbrBytesDone = 0;
         if (((0xFF & bytes[offsetInBuffer + 0]) == 0xAA)

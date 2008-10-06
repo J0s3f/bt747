@@ -2,7 +2,7 @@
  * Reimplementation of Mark McClure's Javascript PolylineEncoder
  * All the mathematical logic is more or less copied by McClure
  *  
- * @author Mark Rambow
+ * @author Mark Rambow, Mario De Weerd
  * @e-mail markrambow[at]gmail[dot]com
  * @version 0.1
  * 
@@ -15,22 +15,21 @@ import bt747.sys.Vector;
 
 public final class PolylineEncoder {
 
-    private int numLevels = 18;
+    private final int numLevels;
 
-    private int zoomFactor = 2;
+    private final int zoomFactor;
 
-    private double verySmall = 0.00001;
+    private final double verySmall;
 
-    private boolean forceEndpoints = true;
+    private final boolean forceEndpoints;
 
-    private double[] zoomLevelBreaks;
+    private final double[] zoomLevelBreaks;
 
     private Hashtable bounds;
 
     // constructor
     public PolylineEncoder(final int pNumLevels, final int pZoomFactor,
             final double pVerySmall, final boolean forceEndpoints) {
-
         this.numLevels = pNumLevels;
         this.zoomFactor = pZoomFactor;
         this.verySmall = pVerySmall;
@@ -46,6 +45,11 @@ public final class PolylineEncoder {
     }
 
     public PolylineEncoder() {
+        numLevels = 18;
+        zoomFactor = 2;
+        verySmall = 0.00001;
+        forceEndpoints = true;
+
         this.zoomLevelBreaks = new double[numLevels];
 
         for (int i = 0; i < numLevels; i++) {
@@ -166,8 +170,8 @@ public final class PolylineEncoder {
      *            Second point of segment.
      * @return Distance between point p0 and the segment [p1,p2].
      */
-    public final static double distance(final Trackpoint p0, final Trackpoint p1,
-            final Trackpoint p2) {
+    public final static double distance(final Trackpoint p0,
+            final Trackpoint p1, final Trackpoint p2) {
         double u, out = 0.0;
 
         if (p1.getLatDouble() == p2.getLatDouble()
