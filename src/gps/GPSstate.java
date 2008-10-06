@@ -18,13 +18,11 @@ import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
-import gps.log.in.WindowedFile;
 import moio.util.HashSet;
 import moio.util.Iterator;
 import moio.util.StringTokenizer;
 
 import bt747.sys.Convert;
-import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Thread;
 
@@ -45,10 +43,8 @@ import bt747.sys.interfaces.BT747Thread;
 /* Final for the moment */
 public final class GPSstate implements BT747Thread {
     private final GPSLinkHandler handler = new GPSLinkHandler();
-
-    private boolean getFullLogBlocks = true; // If true, get the entire log
-    // (based
-    // on block head)
+    private final MTKLogDownloadHandler mtkLogHandler = new MTKLogDownloadHandler(
+            this);
 
     private int logFormat = 0;
 
@@ -67,8 +63,6 @@ public final class GPSstate implements BT747Thread {
 
     public int logNbrLogPts = 0;
 
-    private int logMemSize = 16 * 1024 * 1024 / 8; // 16Mb -> 2MB
-
     private int logMemUsed = 0;
 
     public int logMemUsedPercent = 0;
@@ -79,13 +73,10 @@ public final class GPSstate implements BT747Thread {
 
     private int datum = 0; // Datum WGS84, TOKYO-M, TOKYO-A
 
-    public boolean isLoggingActive = false;
+    private boolean loggingActive = false;
     public boolean loggerIsFull = false;
     public boolean loggerNeedsInit = false;
     public boolean loggerIsDisabled = false;
-    public boolean forcedErase = false;
-
-    public boolean loggingIsActiveBeforeDownload = false;
 
     private boolean logFullOverwrite = false; // When true, overwrite log when
     // device is full
@@ -129,17 +120,11 @@ public final class GPSstate implements BT747Thread {
     // Manufacturer and Product ID
     private int flashManuProdID = 0;
 
-    private String flashDesc = "";
-
     private String sBtMacAddr = "";
 
     private final int[] NMEA_periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
 
     private boolean GPS_STATS = false; // (!Settings.onDevice);
-
-    private static final int C_LOGERASE_TIMEOUT = 2000; // Timeout between log
-    // status requests for
-    // erase.
 
     private boolean holux = false; // True if Holux M-241 device detected
 
@@ -166,8 +151,7 @@ public final class GPSstate implements BT747Thread {
     private final int[] dataRequested = new int[50];
     public final static int DATA_MEM_USED = 0;
     public final static int DATA_FLASH_TYPE = 1;
-    public final static int DATA_MEM_SIZE = 2;
-    public final static int DATA_LOG_FORMAT = 3;
+    public final static int DATA_LOG_FORMAT = 2;
 
     /**
      * Check if the data is available and if it is not, requests it.
@@ -181,7 +165,6 @@ public final class GPSstate implements BT747Thread {
             dataRequested[dataType] = ts;
             switch (dataType) {
             case DATA_FLASH_TYPE:
-            case DATA_MEM_SIZE:
                 reqFlashManuID();
                 break;
             case DATA_MEM_USED:
@@ -206,15 +189,16 @@ public final class GPSstate implements BT747Thread {
      * @return The useful bytes in the log.
      */
     public final int logMemUsefullSize() {
-        checkAvailable(DATA_MEM_USED);
+        checkAvailable(DATA_FLASH_TYPE);
         return (int) ((getLogMemSize() >> 16) * (0x10000 - 0x200)); // 16Mb
     }
 
     /**
-     * @return Usefull free bytes int he log.
+     * @return Useful free bytes in the log.
      */
     public final int logFreeMemUsefullSize() {
         checkAvailable(DATA_FLASH_TYPE);
+        checkAvailable(DATA_MEM_USED);
         return (int) ((getLogMemSize() - getLogMemUsed()) - (((getLogMemSize() - getLogMemUsed()) >> 16) * (0x200))); // 16Mb
     }
 
@@ -256,27 +240,6 @@ public final class GPSstate implements BT747Thread {
                 + Convert.unsigned2hex(logFmt, 8));
     }
 
-    private void waitEraseDone() {
-        postEvent(GpsEvent.ERASE_ONGOING_NEED_POPUP);
-        handler.setEraseOngoing(true);
-        logState = C_LOG_ERASE_STATE;
-        handler.resetLogTimeOut();
-        // readLogFlashStatus(); - Will be done after timeout
-    }
-
-    private void signalEraseDone() {
-        logState = C_LOG_NOLOGGING;
-        handler.setEraseOngoing(false);
-        postEvent(GpsEvent.ERASE_DONE_REMOVE_POPUP);
-    }
-
-    public final void stopErase() {
-        if (handler.isEraseOngoing() && (logState == C_LOG_ERASE_STATE)) {
-            handler.setIgnoreNMEA(!gpsDecode);
-            signalEraseDone();
-        }
-    }
-
     public final void doHotStart() {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_HOT_START_STR);
     }
@@ -301,70 +264,11 @@ public final class GPSstate implements BT747Thread {
     }
 
     /**
-     * erase the log - takes a while.<br>
-     * TODO: Find out a way to follow up on erasal (status) (check response on
-     * cmd)
-     */
-
-    public final void eraseLog() {
-        if (handler.isConnected()) {
-            sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
-                    + BT747Constants.PMTK_LOG_ERASE + ","
-                    + BT747Constants.PMTK_LOG_ERASE_YES_STR);
-            waitEraseDone();
-        }
-    }
-
-    public final void recoveryEraseLog() {
-        // Get some information (when debug mode active)
-        stopLog(); // Stop logging for this operation
-        reqLogStatus(); // Check status
-        reqLogFlashSectorStatus(); // Get flash sector information from device
-        // TODO:
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
-                + BT747Constants.PMTK_LOG_ENABLE);
-
-        reqLogStatus(); // Check status
-
-        forcedErase = true;
-        eraseLog();
-
-    }
-
-    private void postRecoveryEraseLog() {
-        reqLogStatus();
-        reqLogFlashSectorStatus(); // Get flash sector information from device
-
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
-                + BT747Constants.PMTK_LOG_INIT);
-
-        reqLogFlashSectorStatus(); // Get flash sector information from device
-        reqLogStatus();
-    }
-
-    // public static final int PMTK_LOG_ENABLE = 10;
-    // public static final int PMTK_LOG_DISABLE = 11;
-
-    /**
-     * A single request to get information from the device's log.
-     * 
-     * @param startAddr
-     *            start address of the data range requested
-     * @param size
-     *            size of the data range requested
-     */
-    public final void readLog(final int startAddr, final int size) {
-        sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
-                + BT747Constants.PMTK_LOG_REQ_DATA_STR + ","
-                + Convert.unsigned2hex(startAddr, 8) + ","
-                + Convert.unsigned2hex(size, 8));
-    }
-
-    /**
      * Request the initial log mode (the first value logged in memory).
      */
     public final void reqInitialLogMode() {
-        readLog(6, 2); // 6 is the log mode offset in the log, 2 is the size
+        mtkLogHandler.readLog(6, 2); // 6 is the log mode offset in the log,
+        // 2 is the size
         // Required to know if log is in overwrite mode.
     }
 
@@ -441,7 +345,7 @@ public final class GPSstate implements BT747Thread {
     }
 
     public final void logImmediate(final int value) {
-        if (!isLoggingActive) {
+        if (!loggingActive) {
             startLog();
         }
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
@@ -534,21 +438,21 @@ public final class GPSstate implements BT747Thread {
         reqLogOverwrite();
     }
 
-    /** Activate the logging by the device */
+    /** Activate the logging by the device. */
     public final void startLog() {
         // Request log format from device
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_ON);
-        isLoggingActive = true; // This should be the result of the action.
+        loggingActive = true; // This should be the result of the action.
         // The device will eventually tell the new status
     }
 
-    /** Stop the automatic logging of the device */
+    /** Stop the automatic logging of the device. */
     public final void stopLog() {
         // Request log format from device
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_OFF);
-        isLoggingActive = false; // This should be the result of the action.
+        loggingActive = false; // This should be the result of the action.
         // The device will eventually tell the new status
     }
 
@@ -779,7 +683,7 @@ public final class GPSstate implements BT747Thread {
                 Generic.debug("Problem - report NMEA is 0 length");
             } else if (sNmea.length == 1 && sNmea[0].startsWith("WP")) {
                 AnalyseDPL700Data(sNmea[0]);
-            } else if (gpsDecode && (logState == C_LOG_NOLOGGING) // Not
+            } else if (gpsDecode && (mtkLogHandler.isLogDownloadOnGoing()) // Not
                     // during
                     // log
                     // download for
@@ -969,21 +873,13 @@ public final class GPSstate implements BT747Thread {
     }
 
     /**
-     * @param logMemSize
-     *            the logMemSize to set
-     */
-    private void setLogMemSize(final int logMemSize) {
-        this.logMemSize = logMemSize;
-    }
-
-    /**
      * Get the total size of the memory.
      * 
      * @return the logMemSize
      */
     public final int getLogMemSize() {
         checkAvailable(DATA_MEM_USED);
-        return logMemSize;
+        return BT747Constants.getFlashSize(flashManuProdID);
     }
 
     /**
@@ -1009,114 +905,11 @@ public final class GPSstate implements BT747Thread {
      * @return Textual identification of the device model.
      */
     private final String modelName() {
-        int md = Conv.hex2Int(model);
-        String mdStr;
-        holux = false;
-        switch (md) {
-        case 0x0000:
-        case 0x0001:
-        case 0x0013:
-        case 0x0051:
-            // Can also be Polaris iBT-GPS or Holux M1000
-            mdStr = "iBlue 737/Qstarz 810";
-            break;
-        case 0x0002:
-            mdStr = "Qstarz 815/iBlue 747";
-            break;
-        case 0x0005:
-            mdStr = "Holux M-241/QT-1000P";
-            break;
-        case 0x0007:
-            mdStr = "Just Mobile� Blucard";
-            break;
-        case 0x0011: // Seen in FCC OUP940760101
-        case 0x001B:
-            mdStr = "iBlue 747";
-            break;
-        case 0x001D:
-            mdStr = "747/Q1000/BGL-32";
-            break;
-        case 0x0023:
-            mdStr = "Holux M-241";
-            break;
-        case 0x0131:
-            mdStr = "EB-85A";
-            break;
-        case 0x1388:
-            mdStr = "757/ZI v1";
-            // logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
-            break;
-        case 0x5202:
-            mdStr = "757/ZI v2";
-            // logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
-            break;
-        case 0x8300:
-            mdStr = "Qstarz BT-1200";
-            // logMemSize = 32 * 1024 * 1024 / 8; //32Mb -> 4MB
-            break;
-        default:
-            mdStr = "?"; // Unknown model
-        }
-        // Recognition based on 'device'
-        if (device.length() == 0) {
-            // Do nothing
-        } else if (device.startsWith("TSI747")) {
-            mdStr = "iBlue 747";
-        } else if (device.startsWith("TSI757")) {
-            mdStr = "iBlue 757";
-        } else if (device.startsWith("TSI_821")) {
-            mdStr = "iBlue 821";
-        } else if (device.equals("QST1000P")) {
-            mdStr = "Qstarz BT-1000P";
-        }
-        return mdStr;
+        return BT747Constants.modelName(Conv.hex2Int(model), device);
     }
 
     public final String getModel() {
         return model.length() != 0 ? model + " (" + modelName() + ')' : "";
-    }
-
-    private void analyseFlashManuProdID() {
-        int manufacturer;
-        int devType;
-
-        manufacturer = (flashManuProdID >> 24) & 0xFF;
-        devType = (flashManuProdID >> 16) & 0xFF;
-
-        switch (manufacturer) {
-        case BT747Constants.SPI_MAN_ID_MACRONIX:
-            if ((devType == 0x20) || (devType == 0x24)) {
-                // +/* MX25L chips are SPI, first byte of device id is memory
-                // type,
-                // + second byte of device id is log(bitsize)-9 */
-                // +#define MX_25L512 0x2010 /* 2^19 kbit or 2^16 kByte */
-                // +#define MX_25L1005 0x2011
-                // +#define MX_25L2005 0x2012
-                // +#define MX_25L4005 0x2013 /* MX25L4005{,A} */
-                // +#define MX_25L8005 0x2014
-                // +#define MX_25L1605 0x2015 /* MX25L1605{,A,D} */
-                // +#define MX_25L3205 0x2016 /* MX25L3205{,A} */
-                // +#define MX_25L6405 0x2017 /* MX25L3205{,D} */
-                // +#define MX_25L1635D 0x2415
-                // +#define MX_25L3235D 0x2416
-                setLogMemSize(0x1 << ((flashManuProdID >> 8) & 0xFF));
-                flashDesc = "(MX," + getLogMemSize() / (1024 * 1024) + "MB)";
-
-            }
-            break;
-        case BT747Constants.SPI_MAN_ID_EON:
-            if ((devType == 0x20)) { // || (DevType == 0x24)) {
-                // Supposing the same rule as macronix.
-                // Example device: EN25P16
-                setLogMemSize(0x1 << ((flashManuProdID >> 8) & 0xFF));
-                flashDesc = "(EON," + getLogMemSize() / (1024 * 1024) + "MB)";
-
-            }
-            break;
-
-        default:
-            break;
-        }
     }
 
     /***************************************************************************
@@ -1137,19 +930,7 @@ public final class GPSstate implements BT747Thread {
             nextRun = Generic.getTimeStamp() + 10;
             int loopsToGo = 0; // Setting to 0 for more responsiveness
             if (handler.isConnected()) {
-                if ((handler.getOutStandingCmdsCount() == 0)
-                        && (logState != C_LOG_NOLOGGING)
-                        && (logState != C_LOG_ERASE_STATE)) {
-                    // Sending command on next timer adds some delay after
-                    // the end of the previous command (reception)
-                    getLogPartNoOutstandingRequests();
-                } else if (logState == C_LOG_ACTIVE) {
-                    getNextLogPart();
-                } else if (logState == C_LOG_ERASE_STATE) {
-                    if (handler.timeSinceLastStamp() > C_LOGERASE_TIMEOUT) {
-                        reqLogFlashStatus();
-                    }
-                }
+                mtkLogHandler.notifyRun();
                 do {
                     lastResponse = handler.getResponse();
                     if (lastResponse != null) {
@@ -1158,10 +939,8 @@ public final class GPSstate implements BT747Thread {
                     handler.checkSendCmdFromQueue();
                 } while ((loopsToGo-- > 0) && lastResponse != null);
             } else {
+                mtkLogHandler.notifyDisconnected();
                 Generic.removeThread(this);
-                if (logState != C_LOG_NOLOGGING) {
-                    endGetLog();
-                }
             }
         }
     }
@@ -1187,493 +966,6 @@ public final class GPSstate implements BT747Thread {
     /***************************************************************************
      * LOGGING FUNCTIONALITY
      **************************************************************************/
-
-    // Fields to keep track of logging status
-    private int logDownloadStartAddr;
-
-    private int logDownloadEndAddr;
-
-    private int logNextReqAddr;
-
-    private int logNextReadAddr;
-
-    private int logRequestStep;
-
-    /** File handle for binary log being downloaded. */
-    private File logFile = null;
-
-    /**
-     * Currently selected file path for download.
-     */
-    private String logFileName = "";
-    /** Card (for Palm) of binary log file. Defaults to last card in device. */
-    private int logFileCard = -1;
-
-    // States for log reception state machine.
-    private static final int C_LOG_NOLOGGING = 0;
-
-    private static final int C_LOG_CHECK = 1;
-
-    private static final int C_LOG_ACTIVE = 2;
-
-    private static final int C_LOG_RECOVER = 3;
-
-    private static final int C_LOG_ERASE_STATE = 4;
-
-    /**
-     * Waiting for a reply from the application concerning the authorisation to
-     * overwrite data that is not the same.
-     */
-    private static final int C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY = 5;
-
-    private int logState = C_LOG_NOLOGGING;
-
-    private int usedLogRequestAhead = 0;
-
-    /**
-     * Start of block position to verify if log in device corresponds to log in
-     * file.
-     */
-    private static final int C_BLOCKVERIF_START = 0x200;
-
-    /** Size of block to validate that log in device is log in file. */
-    private static final int C_BLOCKVERIF_SIZE = 0x200;
-
-    private static final int C_MAX_FILEBLOCK_WRITE = 0x800;
-
-    private final byte[] readDataBuffer = new byte[0x800]; // buffer used for
-
-    // reading data.
-
-    /**
-     * Request the block to validate that log in device is log in file.
-     */
-    private void requestCheckBlock() {
-        readLog(C_BLOCKVERIF_START, C_BLOCKVERIF_SIZE); // Read 200 bytes, just
-        // past header.
-    }
-
-    private void closeLog() {
-        try {
-            if (logFile != null) {
-                if (logFile.isOpen()) {
-                    logFile.close();
-                    logFile = null;
-                }
-            }
-        } catch (Exception e) {
-            Generic.debug("CloseLog", e);
-        }
-    }
-
-    private void endGetLog() {
-        logState = C_LOG_NOLOGGING;
-        closeLog();
-
-        if (loggingIsActiveBeforeDownload) {
-            startLog();
-            reqLogOnOffStatus();
-        }
-        postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
-    }
-
-    public final boolean isDownloadOnGoing() {
-        return logState != C_LOG_NOLOGGING;
-    }
-
-    public final int getStartAddr() {
-        return logDownloadStartAddr;
-    }
-
-    /**
-     * @return the endAddr
-     */
-    public final int getEndAddr() {
-        return logDownloadEndAddr;
-    }
-
-    public final int getNextReadAddr() {
-        return logNextReadAddr;
-    }
-
-    public final void cancelGetLog() {
-        endGetLog();
-    }
-
-    private int logRequestAhead = 0;
-
-    private byte[] expectedResult;
-
-    /**
-     * @param startAddr
-     * @param endAddr
-     * @param requestStep
-     * @param fileName
-     */
-    public final void getLogInit(final int startAddr, final int endAddr,
-            final int requestStep, final String fileName, final int card,
-            final boolean isIncremental // True if incremental read
-    ) {
-        try {
-            if (logState == C_LOG_NOLOGGING) {
-                // Disable device logging while downloading
-                loggingIsActiveBeforeDownload = isLoggingActive;
-                stopLog();
-                reqLogOnOffStatus();
-            }
-
-            logDownloadStartAddr = startAddr;
-            logDownloadEndAddr = ((endAddr + 0xFFFF) & 0xFFFF0000) - 1;
-            logNextReqAddr = logDownloadStartAddr;
-            logNextReadAddr = logDownloadStartAddr;
-            logRequestStep = requestStep;
-            if (logRequestStep > 0x800) {
-                usedLogRequestAhead = 0;
-            } else {
-                usedLogRequestAhead = logRequestAhead;
-            }
-
-            if (isIncremental && (new File(fileName)).exists()) {
-                // reOpenLogRead(fileName, card);
-                closeLog();
-                WindowedFile windowedLogFile = new WindowedFile(fileName,
-                        File.READ_ONLY, card);
-                logFileName = fileName;
-                logFileCard = card;
-                windowedLogFile.setBufferSize(0x200);
-                if (windowedLogFile != null && windowedLogFile.isOpen()) {
-                    // There is a file with data.
-                    if (windowedLogFile.getSize() >= (C_BLOCKVERIF_START + C_BLOCKVERIF_SIZE)) {
-                        // There are enough bytes in the saved file.
-
-                        // Find first incomplete block
-                        int blockHeadPos = 0;
-                        boolean continueLoop;
-                        do {
-                            byte[] bytes;
-                            bytes = windowedLogFile.fillBuffer(blockHeadPos);
-                            continueLoop = (windowedLogFile.getBufferFill() >= 2);
-                            if (continueLoop) {
-                                // Break the loop if this block was incomplete.
-                                continueLoop = !(((bytes[0] & 0xFF) == 0xFF) && ((bytes[1] & 0xFF) == 0xFF));
-                            }
-                            if (continueLoop) {
-                                // This block is fully filled
-                                blockHeadPos += 0x10000;
-                                continueLoop = (blockHeadPos <= (windowedLogFile
-                                        .getSize() & 0xFFFF0000));
-                            }
-                        } while (continueLoop);
-
-                        if (blockHeadPos > windowedLogFile.getSize()) {
-                            // All blocks already had data - continue from end
-                            // of
-                            // file.
-                            logNextReadAddr = windowedLogFile.getSize();
-                            logNextReqAddr = logNextReadAddr;
-                        } else {
-                            // Start just past block header
-                            logNextReadAddr = blockHeadPos + 0x200;
-                            continueLoop = true;
-                            do {
-                                // Find a block
-                                byte[] rBuffer = windowedLogFile
-                                        .fillBuffer(logNextReadAddr);
-                                continueLoop = (windowedLogFile.getBufferFill() >= 0x200);
-
-                                if (continueLoop) {
-                                    // Check if all FFs in the file.
-                                    for (int i = 0; continueLoop && (i < 0x200); i++) {
-                                        continueLoop = ((rBuffer[i] & 0xFF) == 0xFF);
-                                    }
-                                    continueLoop = !continueLoop; // Continue
-                                    // if
-                                    // something else
-                                    // than 0xFF
-                                    // found.
-                                    if (continueLoop) {
-                                        logNextReadAddr += 0x200;
-                                    }
-                                }
-                            } while (continueLoop);
-                            logNextReadAddr -= 0x200;
-                            logNextReqAddr = logNextReadAddr;
-
-                            // TODO: should read 2 bytes in header once rest of
-                            // block was loaded
-                            // in order to have precise header information
-                            // -> We can not load this value from memory know as
-                            // we
-                            // might
-                            // corrupt the data (0xFFFF present if restarting
-                            // download)
-                        }
-
-                        expectedResult = new byte[C_BLOCKVERIF_SIZE];
-                        byte[] b;
-                        b = windowedLogFile.fillBuffer(C_BLOCKVERIF_START);
-                        for (int i = 0; i < expectedResult.length; i++) {
-                            expectedResult[i] = b[i];
-                        }
-                        requestCheckBlock();
-                        logState = C_LOG_CHECK;
-                    }
-                }
-                handler.setIgnoreNMEA((!gpsDecode)
-                        || (logState != C_LOG_NOLOGGING));
-                windowedLogFile.close();
-            }
-            if (!(logState == C_LOG_CHECK)) {
-                // File could not be opened or is not incremental.
-                openNewLog(fileName, card);
-                logState = C_LOG_ACTIVE;
-            }
-            if (logState != C_LOG_NOLOGGING) {
-                postEvent(GpsEvent.LOG_DOWNLOAD_STARTED);
-            }
-        } catch (Exception e) {
-            Generic.debug("getLogInit", e);
-        }
-    }
-
-    private void openNewLog(final String fileName, final int card) {
-        try {
-            if (logFile != null && logFile.isOpen()) {
-                logFile.close();
-            }
-
-            logFile = new File(fileName, bt747.sys.File.DONT_OPEN, card);
-            logFileName = fileName;
-            logFileCard = card;
-            if (logFile.exists()) {
-                logFile.delete();
-            }
-
-            logFile = new File(fileName, bt747.sys.File.CREATE, card);
-            // lastError 10530 = Read only
-            logFileName = fileName;
-            logFileCard = card;
-            logFile.close();
-            logFile = new File(fileName, bt747.sys.File.WRITE_ONLY, card);
-            logFileName = fileName;
-            logFileCard = card;
-
-            if ((logFile == null) || !(logFile.isOpen())) {
-                postGpsEvent(GpsEvent.COULD_NOT_OPEN_FILE, fileName);
-            }
-        } catch (Exception e) {
-            Generic.debug("openNewLog", e);
-        }
-    }
-
-    private void reOpenLogWrite(final String fileName, final int card) {
-        closeLog();
-        try {
-            logFile = new File(fileName, File.WRITE_ONLY, card);
-            logFileName = fileName;
-            logFileCard = card;
-        } catch (Exception e) {
-            Generic.debug("reOpenLogWrite", e);
-        }
-    }
-
-    // Called regularly
-    private void getNextLogPart() {
-        if (logState != C_LOG_NOLOGGING) {
-            int z_Step;
-
-            z_Step = logDownloadEndAddr - logNextReqAddr + 1;
-
-            switch (logState) {
-            case C_LOG_ACTIVE:
-                if (logDownloadEndAddr <= logNextReadAddr) {
-                    // Log is completely downloaded
-                    endGetLog();
-                }
-                if (logNextReqAddr > logNextReadAddr + logRequestStep
-                        * usedLogRequestAhead) {
-                    z_Step = 0;
-                }
-                break;
-            case C_LOG_RECOVER:
-                if (logDownloadEndAddr <= logNextReadAddr) {
-                    // Log is completely downloaded
-                    endGetLog();
-                }
-                if (logNextReqAddr > logNextReadAddr) {
-                    z_Step = 0;
-                } else if (z_Step > 0x800) {
-                    z_Step = 0x800;
-                }
-                break;
-            default:
-                z_Step = 0;
-            }
-
-            if (z_Step > 0) {
-                if (z_Step > logRequestStep) {
-                    z_Step = logRequestStep;
-                }
-                readLog(logNextReqAddr, z_Step);
-                logNextReqAddr += z_Step;
-                if (logState == C_LOG_ACTIVE) {
-                    getNextLogPart(); // Recursive to get requests 'ahead'
-                }
-            }
-        }
-    }
-
-    // Called when no outstanding requests
-    private void getLogPartNoOutstandingRequests() {
-        switch (logState) {
-        case C_LOG_ACTIVE:
-        case C_LOG_RECOVER:
-            logNextReqAddr = logNextReadAddr; // Recover from timeout.
-            getNextLogPart();
-            break;
-        case C_LOG_CHECK:
-            requestCheckBlock();
-        default:
-            break;
-        }
-    }
-
-    private void recoverFromLogError() {
-        // logNextReqAddr = logNextReadAddr;
-        logState = C_LOG_RECOVER; // recover through timeout.
-    }
-
-    private void analyzeLogPart(final int startAddr, final String sData) {
-        int dataLength;
-        dataLength = Conv.hexStringToBytes(sData, readDataBuffer) / 2; // Fills
-        // m_data
-        // debugMsg("Got "+p_StartAddr+" "+Convert.toString(p_Data.length())+"):
-        // "+Convert.toString(dataLength));
-        switch (logState) {
-        case C_LOG_ACTIVE:
-        case C_LOG_RECOVER:
-            if (logNextReadAddr == startAddr) {
-                logState = C_LOG_ACTIVE;
-                int j = 0;
-
-                // The Palm platform showed problems writing 0x800 blocks.
-                // This splits it in smaller blocks and solves that problem.
-                if (dataLength != 0x800 && dataLength != logRequestStep
-                        && ((logNextReadAddr + dataLength) != logNextReqAddr)) {
-                    // Received data is not the right size - transmission error.
-                    // Can happen on Palm over BT.
-                    logState = C_LOG_RECOVER;
-                } else {
-                    // Data seems ok
-                    for (int i = dataLength; i > 0; i -= C_MAX_FILEBLOCK_WRITE) {
-                        int l = i;
-                        if (l > C_MAX_FILEBLOCK_WRITE) {
-                            l = C_MAX_FILEBLOCK_WRITE;
-                        }
-                        // debugMsg("Writing("+Convert.toString(p_StartAddr)+"):
-                        // "+Convert.toString(j)+" "+Convert.toString(l));
-
-                        try {
-                            if ((logFile.writeBytes(readDataBuffer, j, l)) != l) {
-                                // debugMsg("Problem during anaLog:
-                                // "+Convert.toString(m_logFile.lastError));
-                                cancelGetLog();
-                                // debugMsg(Convert.toString(q));
-                            }
-                        } catch (Exception e) {
-                            Generic.debug("analyzeLogPart", e);
-
-                            cancelGetLog();
-                        }
-                        j += l;
-                    }
-                    logNextReadAddr += dataLength;
-                    // m_ProgressBar.repaintNow();
-                    if (getFullLogBlocks
-                            && (((startAddr - 1 + dataLength) & 0xFFFF0000) >= startAddr)) {
-                        // Block boundery (0xX0000) is inside data.
-                        int blockStart = 0xFFFF & (0x10000 - (startAddr & 0xFFFF));
-                        if (!(((readDataBuffer[blockStart] & 0xFF) == 0xFF) && ((readDataBuffer[blockStart + 1] & 0xFF) == 0xFF))) {
-                            // This block is full, next block is still data
-                            int minEndAddr;
-                            minEndAddr = (startAddr & 0xFFFF0000) + 0x20000 - 1; // This
-                            // block
-                            // and
-                            // next
-                            // one.
-                            if (minEndAddr > getLogMemSize() - 1) {
-                                minEndAddr = getLogMemSize() - 1;
-                            }
-                            if (minEndAddr > logDownloadEndAddr) {
-                                logDownloadEndAddr = minEndAddr;
-                            }
-                        }
-                    }
-                }
-                if (logNextReadAddr > logDownloadEndAddr) {
-                    postEvent(GpsEvent.LOG_DOWNLOAD_SUCCESS);
-                    endGetLog();
-                } else {
-                    getNextLogPart();
-                }
-            } else {
-                Generic.debug("Expected:"
-                        + Convert.unsigned2hex(logNextReadAddr, 8) + " Got:"
-                        + Convert.unsigned2hex(startAddr, 8), null);
-                recoverFromLogError();
-            }
-            break;
-        case C_LOG_CHECK:
-            logState = C_LOG_NOLOGGING; // Default.
-            if ((startAddr == C_BLOCKVERIF_START)
-                    && (dataLength == C_BLOCKVERIF_SIZE)) {
-                // The block we got should be the block to check
-                // byte[] dataBuffer = new byte[dataLength];
-                boolean success;
-                success = true;
-                for (int i = dataLength - 1; i >= 0; i--) {
-                    if (readDataBuffer[i] != expectedResult[i]) {
-                        // The log is not the same, data is different
-                        success = false;
-                        break; // Exit from the loop
-                    }
-                }
-
-                if (success) {
-                    // Downloaded data seems to correspond - start incremental
-                    // download
-                    reOpenLogWrite(logFileName, logFileCard);
-                    try {
-                        logFile.setPos(logNextReadAddr);
-                    } catch (Exception e) {
-                        Generic.debug("C_LOG_CHECK", e);
-                    }
-                    getNextLogPart();
-                    logState = C_LOG_ACTIVE;
-                } else {
-                    logState = C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY;
-                    postEvent(GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY);
-                }
-            }
-            break;
-        default:
-            break;
-        } // Switch m_logState
-        postEvent(GpsEvent.DOWNLOAD_STATE_CHANGE);
-    }
-
-    public final void replyToOkToOverwrite(final boolean overwrite) {
-        if (logState == C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
-            if (overwrite) {
-                openNewLog(logFileName, logFileCard);
-                logNextReadAddr = 0;
-                logNextReadAddr = 0;
-                logState = C_LOG_ACTIVE;
-            } else {
-                endGetLog();
-            }
-        }
-    }
 
     /**
      * <code>dataOK</code> indicates if all volatile data from the device has
@@ -1725,23 +1017,8 @@ public final class GPSstate implements BT747Thread {
                 if (sNmea.length == 4) {
                     switch (z_type) {
                     case BT747Constants.PMTK_LOG_FLASH_STAT:
-                        if (logState == C_LOG_ERASE_STATE) {
-                            switch (Convert.toInt(sNmea[3])) {
-                            case 1:
-                                if (handler.isEraseOngoing()) {
-                                    signalEraseDone();
-                                }
-                                if (forcedErase) {
-                                    forcedErase = false;
-                                    postRecoveryEraseLog();
-                                }
-                                break;
-                            default:
-                                break;
-                            }
-                        }
+                        mtkLogHandler.handleLogFlashStatReply(sNmea[3]);
                         break;
-
                     case BT747Constants.PMTK_LOG_FORMAT: // 2;
                         // if(GPS_DEBUG) {
                         // waba.sys.debugMsg("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
@@ -1778,7 +1055,7 @@ public final class GPSstate implements BT747Thread {
                         // logFullOverwrite = (((logStatus &
                         // BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) !=
                         // 0));
-                        isLoggingActive = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
+                        loggingActive = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
                         loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
                         loggerIsDisabled = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
@@ -1793,9 +1070,7 @@ public final class GPSstate implements BT747Thread {
                         break;
                     case BT747Constants.PMTK_LOG_FLASH: // 9;
                         flashManuProdID = Conv.hex2Int(sNmea[3]);
-                        analyseFlashManuProdID();
                         dataAvailable[DATA_FLASH_TYPE] = true;
-                        dataAvailable[DATA_MEM_SIZE] = true;
                         break;
                     case BT747Constants.PMTK_LOG_NBR_LOG_PTS: // 10;
                         logNbrLogPts = Conv.hex2Int(sNmea[3]);
@@ -1833,7 +1108,8 @@ public final class GPSstate implements BT747Thread {
                 try {
                     // waba.sys.debugMsg("Before
                     // AnalyzeLog:"+p_nmea[3].length());
-                    analyzeLogPart(Conv.hex2Int(sNmea[2]), sNmea[3]);
+                    mtkLogHandler.analyzeLogPart(Conv.hex2Int(sNmea[2]),
+                            sNmea[3]);
                 } catch (Exception e) {
                     Generic.debug("analyzeLogNMEA", e);
 
@@ -1867,8 +1143,12 @@ public final class GPSstate implements BT747Thread {
      */
     public final void setGpsDecode(final boolean gpsDecode) {
         this.gpsDecode = gpsDecode;
+        updateIgnoreNMEA();
+    }
+
+    protected final void updateIgnoreNMEA() {
         handler.setIgnoreNMEA((!this.gpsDecode)
-                || (logState != C_LOG_NOLOGGING));
+                || mtkLogHandler.isLogDownloadOnGoing());
     }
 
     /**
@@ -1882,7 +1162,7 @@ public final class GPSstate implements BT747Thread {
      * @return Returns the flashDesc.
      */
     public final String getFlashDesc() {
-        return flashDesc;
+        return BT747Constants.getFlashDesc(flashManuProdID);
     }
 
     /**
@@ -1918,7 +1198,7 @@ public final class GPSstate implements BT747Thread {
         postEvent(new GpsEvent(GpsEvent.DATA_UPDATE));
     }
 
-    private void postGpsEvent(final int type, final Object o) {
+    protected void postGpsEvent(final int type, final Object o) {
         postEvent(new GpsEvent(type, o));
     }
 
@@ -1937,7 +1217,7 @@ public final class GPSstate implements BT747Thread {
         listeners.remove(l);
     }
 
-    private void postEvent(final int event) {
+    protected void postEvent(final int event) {
         postEvent(new GpsEvent(event));
     }
 
@@ -2109,11 +1389,12 @@ public final class GPSstate implements BT747Thread {
                     if (!DPL700LogFileName.endsWith(".sr")) {
                         DPL700LogFileName += ".sr";
                     }
-                    openNewLog(DPL700LogFileName, DPL700Card);
+                    mtkLogHandler.openNewLog(DPL700LogFileName, DPL700Card);
                     try {
-                        logFile.writeBytes(handler.getDPL700_buffer(), 0,
+                        mtkLogHandler.getLogFile().writeBytes(
+                                handler.getDPL700_buffer(), 0,
                                 handler.getDPL700_buffer_idx());
-                        logFile.close();
+                        mtkLogHandler.getLogFile().close();
                     } catch (Exception e) {
                         Generic.debug("", e);
                         // TODO: handle exception
@@ -2126,7 +1407,7 @@ public final class GPSstate implements BT747Thread {
     }
 
     public final void setLogRequestAhead(final int logRequestAhead) {
-        this.logRequestAhead = logRequestAhead;
+        mtkLogHandler.setLogRequestAhead(logRequestAhead);
     }
 
     public final int getNMEAPeriod(final int i) {
@@ -2152,5 +1433,118 @@ public final class GPSstate implements BT747Thread {
      */
     public final int getOutStandingCmdsCount() {
         return handler.getOutStandingCmdsCount();
+    }
+
+    public final boolean isLoggingActive() {
+        return loggingActive;
+    }
+
+    protected final boolean isEraseOngoing() {
+        return handler.isEraseOngoing();
+    }
+
+    protected final void setEraseOngoing(final boolean eraseOngoing) {
+        handler.setEraseOngoing(eraseOngoing);
+    }
+
+    protected final int timeSinceLastStamp() {
+        return handler.timeSinceLastStamp();
+    }
+
+    protected final void resetLogTimeOut() {
+        handler.resetLogTimeOut();
+    }
+
+    protected final boolean isConnected() {
+        return handler.isConnected();
+    }
+
+    public final void eraseLog() {
+        mtkLogHandler.eraseLog();
+    }
+
+    /**
+     * A 'recovery Erase' attempts to recover memory that was previously
+     * identified as 'bad'.
+     */
+    public final void recoveryEraseLog() {
+        mtkLogHandler.recoveryEraseLog();
+
+    }
+
+    /**
+     * The GpsModel is waiting for a reply to the question if the currently
+     * existing log with different data can be overwritten. This method must be
+     * called to replay to this question which is in principle the result of a
+     * user reply to a message box.
+     * 
+     * @param isOkToOverwrite
+     *            If true, the existing log can be overwritten
+     */
+    public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
+        mtkLogHandler.replyToOkToOverwrite(isOkToOverwrite);
+    }
+
+    /**
+     * The log is being erased - the user request to abandon waiting for the end
+     * of this operation.
+     */
+    public final void stopErase() {
+        mtkLogHandler.stopErase();
+    }
+
+    public final void getLogInit(final int startAddr, final int endAddr,
+            final int requestStep, final String fileName, final int card,
+            final boolean isIncremental // True if incremental read
+    ) {
+        mtkLogHandler.getLogInit(startAddr, endAddr, requestStep, fileName,
+                card, isIncremental);
+    }
+
+    /**
+     * Cancel the log download process.
+     */
+    public final void cancelGetLog() {
+        mtkLogHandler.cancelGetLog();
+    }
+
+    /**
+     * Get the start address for the log download. To be used for the download
+     * progress bar.
+     * 
+     * @return the startAddr
+     */
+    public final int getStartAddr() {
+        return mtkLogHandler.getStartAddr();
+    }
+
+    /**
+     * Get the end address for the log download. To be used for the download
+     * progress bar.
+     * 
+     * @return the endAddr
+     */
+    public final int getEndAddr() {
+        return mtkLogHandler.getEndAddr();
+    }
+
+    /**
+     * Get 'download ongoing' status.
+     * 
+     * @return true if the download is currently ongoing. This is usefull for
+     *         the download progress bar.
+     */
+    public final boolean isLogDownloadOnGoing() {
+        return mtkLogHandler.isLogDownloadOnGoing();
+    }
+
+    /**
+     * Get the log address that we are now expecting to receive data for. This
+     * is usefull for the download progress bar.
+     * 
+     * @return the nextReadAddr
+     */
+    public final int getNextReadAddr() {
+        return mtkLogHandler.getNextReadAddr();
     }
 }
