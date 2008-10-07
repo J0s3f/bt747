@@ -48,18 +48,14 @@ public final class GPSstate implements BT747Thread {
 
     private int logFormat = 0;
 
-    public int logRecordMaxSize = 0;
-
     private int logTimeInterval = 0;
 
     private int logSpeedInterval = 0;
 
     private int logDistanceInterval = 0;
 
-    public int logStatus = 0;
+    private int logStatus = 0;
     public int initialLogMode = 0;
-
-    public int logRecMethod = 0;
 
     public int logNbrLogPts = 0;
 
@@ -1022,8 +1018,6 @@ public final class GPSstate implements BT747Thread {
                         // if(GPS_DEBUG) {
                         // waba.sys.debugMsg("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
                         logFormat = Conv.hex2Int(sNmea[3]);
-                        logRecordMaxSize = BT747Constants.logRecordMinSize(
-                                logFormat, false);
                         dataOK |= C_OK_FORMAT;
                         setAvailable(DATA_LOG_FORMAT);
                         postEvent(GpsEvent.LOG_FORMAT_UPDATE);
