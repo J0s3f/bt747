@@ -126,7 +126,7 @@ public final class MainScreen extends Dialog implements ModelListener {
         setMenuText("Logger Menu", "App Menu");
 
         downloadLogScreen = new LogDownloadScreen(c, this);
-        loggerInfoScreen = new DelayedDialog(LogDownloadConfigScreen.class, c,
+        loggerInfoScreen = new DelayedDialog(LoggerStatusScreen.class, c,
                 this, this);
         logScreen = new LogScreen(this);
         debugConfigScreen = new DebugConfigScreen(c, this);
