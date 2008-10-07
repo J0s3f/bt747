@@ -41,7 +41,7 @@ import bt747.model.ModelListener;
  */
 public final class GPSNMEAOutput extends Container implements ModelListener {
     /** The object that is used to communicate with the GPS device. */
-    private ComboBox[] chkNMEAItems = new ComboBox[BT747Constants.C_NMEA_SEN_COUNT];
+    private final ComboBox[] chkNMEAItems = new ComboBox[BT747Constants.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
 
     private static final String[] C_NMEA_PERIODS = { "0", "1", "2", "3", "4",
@@ -66,7 +66,7 @@ public final class GPSNMEAOutput extends Container implements ModelListener {
      * 
      * @see waba.ui.Container#onStart()
      */
-    protected void onStart() {
+    protected final void onStart() {
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             chkNMEAItems[i] = new ComboBox(C_NMEA_PERIODS);
             add(chkNMEAItems[i]);
@@ -86,7 +86,7 @@ public final class GPSNMEAOutput extends Container implements ModelListener {
         add(btSetDefaults, AFTER, SAME);
     }
 
-    private void updatePeriods() {
+    private final void updatePeriods() {
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             chkNMEAItems[i].select(m.getNMEAPeriod(i));
             // chkNMEAItems[i].repaintNow();
@@ -108,7 +108,7 @@ public final class GPSNMEAOutput extends Container implements ModelListener {
      * @param event
      *            The event to be interpreted.
      */
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
@@ -138,12 +138,11 @@ public final class GPSNMEAOutput extends Container implements ModelListener {
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
+    public final void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
-        if (eventType == ModelEvent.DATA_UPDATE) {
+        if (eventType == ModelEvent.OUTPUT_NMEA_PERIOD_UPDATE) {
             // updateLogFormat(m_GPSstate.logFormat);
             updatePeriods();
         }
     }
-
 }

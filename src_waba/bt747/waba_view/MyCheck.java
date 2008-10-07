@@ -19,12 +19,12 @@ public final class MyCheck extends Check {
     }
 
     // @Override
-    public int getPreferredHeight() {
+    public final int getPreferredHeight() {
         return fm.height - 4;
     }
 
     // @Override
-    public int getPreferredWidth() {
+    public final int getPreferredWidth() {
         return super.getPreferredWidth() + getPreferredHeight()
                 - super.getPreferredHeight() - 1;
     }

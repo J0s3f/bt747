@@ -34,9 +34,12 @@ public class GpsEvent {
     //public static final int DEBUG_MSG = 12;
     public static final int GPS_FIX_DATA = 13;
     public static final int LOG_DOWNLOAD_SUCCESS = 14;
+    public static final int OUTPUT_NMEA_PERIOD_UPDATE = 15;
+    public static final int UPDATE_FLASH_CONFIG = 16;
+    public static final int UPDATE_HOLUX_NAME = 17;
 
-    private int type;
-    private Object arg;
+    private final int type;
+    private final Object arg;
 
     public GpsEvent(final int type) {
         this.type = type;
