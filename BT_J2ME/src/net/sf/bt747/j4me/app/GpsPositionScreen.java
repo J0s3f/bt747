@@ -242,7 +242,7 @@ public final class GpsPositionScreen extends
     }
 
     /**
-     * Handel the event coming from the GPS model. In this screen we retrieve
+     * Handle the event coming from the GPS model. In this screen we retrieve
      * the position information.
      * 
      * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
