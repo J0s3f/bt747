@@ -14,22 +14,22 @@ import bt747.sys.Convert;
  * provider on the device. But if it cannot it will get a GPS provider through a
  * Bluetooth connection.
  */
-public class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Dialog {
+public final class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Dialog {
     /**
      * Output format selection.
      */
     private RadioButton rbFormats;
-    
+
     /**
      * Select how files are split.
      */
     private RadioButton rbFiles;
-    
+
     /**
      * Select whether height must be corrected or not.
      */
     private CheckBox cbHeightCorrection;
-    
+
     /**
      * Select the time in minutes that will separate a track.
      */
@@ -39,95 +39,97 @@ public class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Dialog {
      * List of UTC offsets.
      */
     private static final String[] offsetStr = { "-12", "-11", "-10", "-9",
-        "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "+0", "+1", "+2",
-        "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12",
-        "+13", "+14" };
-    
+            "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "+0", "+1", "+2",
+            "+3", "+4", "+5", "+6", "+7", "+8", "+9", "+10", "+11", "+12",
+            "+13", "+14" };
+
     private RadioButton rbTimeOffsetHours;
 
     private boolean screenIsSetup = false;
-    
+
     /**
      * Sets up the screen.
      */
     private void setUpScreen() {
-        if(!screenIsSetup) {
-        deleteAll();
-        setTitle("Convert Log");
-        Label l;
-        l = new Label("Select output format:");
-        append(l);
-        rbFormats = new RadioButton();
-        rbFormats.append("CSV - Comma sep");
-        rbFormats.append("GMAP - Google Map Html");
-        rbFormats.append("GPX - ");
-        rbFormats.append("KML - Google Earth");
-        rbFormats.append("NMEA - NMEA strings");
-        rbFormats.append("PLT - CompeGPS");
-        rbFormats.append("TRK - ");
-        int index;
-        switch (c.getAppModel().getSelectedOutputFormat()) {
-        case Model.CSV_LOGTYPE:
-            index = 0;
-            break;
-        case Model.GMAP_LOGTYPE:
-            index = 1;
-            break;
-        case Model.GPX_LOGTYPE:
-            index = 2;
-            break;
-        case Model.KML_LOGTYPE:
-            index = 3;
-            break;
-        case Model.NMEA_LOGTYPE:
-            index = 4;
-            break;
-        case Model.PLT_LOGTYPE:
-            index = 5;
-            break;
-        case Model.TRK_LOGTYPE:
-            index = 6;
-            break;
-        default:
-            index = 2;
-        }
-        rbFormats.setSelectedIndex(index);
-        append(rbFormats);
-        setSelected(rbFormats);
-        l = new Label("'"+getRightMenuText()+"' to start conversion.");
-        append(l);
-        l = new Label("WARNING: Conversion is very slow.");
-        append(l);
-        
-        rbFiles = new RadioButton();
-        rbFiles.append("One file");
-        rbFiles.append("One file/day");
-        rbFiles.append("One file/track");
-        rbFiles.setSelectedIndex(c.getModel().getOutputFileSplitType());
-        append(rbFiles);
-        
-        cbHeightCorrection = new CheckBox();
-        cbHeightCorrection.setLabel("Correct Height");
-        cbHeightCorrection.setChecked(c.getModel().isConvertWGS84ToMSL());
-        append(cbHeightCorrection);
-        
-        tbTrackSeparation = new TextBox();
-        tbTrackSeparation.setForNumericOnly();
-        tbTrackSeparation.setLabel("Trk separation time (min)");
-        tbTrackSeparation.setString(Integer.toString(c.getModel().getTrkSep()));
-        append(tbTrackSeparation);
-        
-        rbTimeOffsetHours = new RadioButton();
-        for (int i = 0; i < offsetStr.length; i++) {
-            rbTimeOffsetHours.append(offsetStr[i]);
-        }
-        int offsetIdx = c.getModel().getTimeOffsetHours() + 12;
-        if (offsetIdx > 26) {
-            c.setTimeOffsetHours(0); // TODO: Change in call to control
-            offsetIdx = 12;
-        }
-        rbTimeOffsetHours.setSelectedIndex(offsetIdx);
-        append(rbTimeOffsetHours);
+        if (!screenIsSetup) {
+            screenIsSetup = true;
+            deleteAll();
+            setTitle("Convert Log");
+            Label l;
+            l = new Label("Select output format:");
+            append(l);
+            rbFormats = new RadioButton();
+            rbFormats.append("CSV - Comma sep");
+            rbFormats.append("GMAP - Google Map Html");
+            rbFormats.append("GPX - ");
+            rbFormats.append("KML - Google Earth");
+            rbFormats.append("NMEA - NMEA strings");
+            rbFormats.append("PLT - CompeGPS");
+            rbFormats.append("TRK - ");
+            int index;
+            switch (c.getAppModel().getSelectedOutputFormat()) {
+            case Model.CSV_LOGTYPE:
+                index = 0;
+                break;
+            case Model.GMAP_LOGTYPE:
+                index = 1;
+                break;
+            case Model.GPX_LOGTYPE:
+                index = 2;
+                break;
+            case Model.KML_LOGTYPE:
+                index = 3;
+                break;
+            case Model.NMEA_LOGTYPE:
+                index = 4;
+                break;
+            case Model.PLT_LOGTYPE:
+                index = 5;
+                break;
+            case Model.TRK_LOGTYPE:
+                index = 6;
+                break;
+            default:
+                index = 2;
+            }
+            rbFormats.setSelectedIndex(index);
+            append(rbFormats);
+            setSelected(rbFormats);
+            l = new Label("'" + getRightMenuText() + "' to start conversion.");
+            append(l);
+            l = new Label("WARNING: Conversion is very slow.");
+            append(l);
+
+            rbFiles = new RadioButton();
+            rbFiles.append("One file");
+            rbFiles.append("One file/day");
+            rbFiles.append("One file/track");
+            rbFiles.setSelectedIndex(c.getModel().getOutputFileSplitType());
+            append(rbFiles);
+
+            cbHeightCorrection = new CheckBox();
+            cbHeightCorrection.setLabel("Correct Height");
+            cbHeightCorrection.setChecked(c.getModel().isConvertWGS84ToMSL());
+            append(cbHeightCorrection);
+
+            tbTrackSeparation = new TextBox();
+            tbTrackSeparation.setForNumericOnly();
+            tbTrackSeparation.setLabel("Trk separation time (min)");
+            tbTrackSeparation.setString(Integer.toString(c.getModel()
+                    .getTrkSep()));
+            append(tbTrackSeparation);
+
+            rbTimeOffsetHours = new RadioButton();
+            for (int i = 0; i < offsetStr.length; i++) {
+                rbTimeOffsetHours.append(offsetStr[i]);
+            }
+            int offsetIdx = c.getModel().getTimeOffsetHours() + 12;
+            if (offsetIdx > 26) {
+                c.setTimeOffsetHours(0); // TODO: Change in call to control
+                offsetIdx = 12;
+            }
+            rbTimeOffsetHours.setSelectedIndex(offsetIdx);
+            append(rbTimeOffsetHours);
         }
     }
 
@@ -135,7 +137,7 @@ public class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Dialog {
         setUpScreen();
         super.show();
     }
-    
+
     protected void acceptNotify() {
         ConvertToProgressScreen progressScreen;
         c.getAppModel().setSelectedOutputFormat(getSelectedLogType());
@@ -148,11 +150,11 @@ public class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Dialog {
         if (tmp.charAt(0) == '+') {
             index = 1;
         }
-        c.setTimeOffsetHours(Convert.toInt((String) tmp
-                .substring(index)));
+        c.setTimeOffsetHours(Convert.toInt((String) tmp.substring(index)));
 
-        progressScreen = new ConvertToProgressScreen(c, previous, getSelectedLogType());
-        deleteAll();  // Clean up screen.
+        progressScreen = new ConvertToProgressScreen(c, previous,
+                getSelectedLogType());
+        deleteAll(); // Clean up screen.
         progressScreen.show();
         progressScreen = null;
     }

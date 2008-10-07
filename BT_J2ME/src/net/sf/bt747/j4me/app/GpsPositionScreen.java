@@ -29,7 +29,7 @@ import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
 
-public class GpsPositionScreen extends
+public final class GpsPositionScreen extends
         net.sf.bt747.j4me.app.screens.BT747Dialog implements ModelListener {
     /**
      * The current latitude.

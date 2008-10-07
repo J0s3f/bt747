@@ -21,7 +21,7 @@ import net.sf.bt747.j4me.app.screens.BT747Dialog;
 import org.j4me.logging.Log;
 import org.j4me.ui.components.CheckBox;
 
-public class LogFieldSelectScreen extends BT747Dialog {
+public final class LogFieldSelectScreen extends BT747Dialog {
 
     private static final int C_LOG_FMT_COUNT = 21;
 

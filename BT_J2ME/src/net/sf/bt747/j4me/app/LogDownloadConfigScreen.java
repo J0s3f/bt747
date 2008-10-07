@@ -8,7 +8,7 @@ import org.j4me.ui.components.TextBox;
 
 import bt747.sys.Convert;
 
-public class LogDownloadConfigScreen extends BT747Dialog {
+public final class LogDownloadConfigScreen extends BT747Dialog {
     private TextBox tbChunkSize;
     private TextBox tbChunkAhead;
     private RadioButton rbDownloadMethod;

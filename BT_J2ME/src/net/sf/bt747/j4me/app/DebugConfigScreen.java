@@ -1,53 +1,53 @@
 package net.sf.bt747.j4me.app;
 
-import java.io.IOException;
-
-import javax.microedition.io.Connector;
-import javax.microedition.io.file.FileConnection;
-
-import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.components.CheckBox;
 
-import bt747.sys.File;
-
-public class DebugConfigScreen extends Dialog {
+public final class DebugConfigScreen extends Dialog {
 
     private DeviceScreen previous;
     private AppController c;
 
     // private final RadioButton source; // (elements with source.append);
-    private final CheckBox cbConsoleToFile;
-    private final CheckBox cbGpsRawDebug;
-    private final CheckBox cbGeneralDebug;
-    private final CheckBox cbPersistantDebug;
+    private CheckBox cbConsoleToFile;
+    private CheckBox cbGpsRawDebug;
+    private CheckBox cbGeneralDebug;
+    private CheckBox cbPersistantDebug;
+
+    private boolean screenSetup = false;
 
     public DebugConfigScreen(AppController c, DeviceScreen previous) {
         this.previous = previous;
         this.c = c;
+    }
+    
+    private void setupScreen() {
+        if (!screenSetup) {
+            screenSetup = true;
+            setTitle("Configure log conditions");
 
-        setTitle("Configure log conditions");
+            cbConsoleToFile = new CheckBox();
+            cbConsoleToFile.setChecked(c.isUseConsoleFile());
+            cbConsoleToFile.setLabel("Write console to file");
+            append(cbConsoleToFile);
 
-        cbConsoleToFile = new CheckBox();
-        cbConsoleToFile.setChecked(c.isUseConsoleFile());
-        cbConsoleToFile.setLabel("Write console to file");
-        append(cbConsoleToFile);
+            cbGpsRawDebug = new CheckBox();
+            cbGpsRawDebug.setChecked(m().isDebugConn());
+            cbGpsRawDebug.setLabel("Write all serial communication to file");
+            append(cbGpsRawDebug);
 
-        cbGpsRawDebug = new CheckBox();
-        cbGpsRawDebug.setChecked(m().isDebugConn());
-        cbGpsRawDebug.setLabel("Write all serial communication to file");
-        append(cbGpsRawDebug);
+            cbGeneralDebug = new CheckBox();
+            cbGeneralDebug.setChecked(AppModel.isDebug());
+            cbGeneralDebug.setLabel("Enable extra debug console info");
+            append(cbGeneralDebug);
 
-        cbGeneralDebug = new CheckBox();
-        cbGeneralDebug.setChecked(m().isDebug());
-        cbGeneralDebug.setLabel("Enable extra debug console info");
-        append(cbGeneralDebug);
+            cbPersistantDebug = new CheckBox();
+            cbPersistantDebug.setChecked(c.isPersistentDebug());
+            cbPersistantDebug.setLabel("Keep debug options on startup.");
+            append(cbPersistantDebug);
 
-        cbPersistantDebug = new CheckBox();
-        cbPersistantDebug.setChecked(c.isPersistentDebug());
-        cbPersistantDebug.setLabel("Keep debug options on startup.");
-        append(cbPersistantDebug);
+        }
     }
 
     private final AppModel m() {
@@ -55,6 +55,7 @@ public class DebugConfigScreen extends Dialog {
     }
 
     public final void showNotify() {
+        setupScreen();
     }
 
     public final void hideNotify() {

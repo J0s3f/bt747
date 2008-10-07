@@ -211,7 +211,7 @@ public class AppController extends Controller {
                 os.writeInt(appSettingsVersion);
                 os.writeBoolean(isPersistentDebug());
                 if (isPersistentDebug()) {
-                    os.writeBoolean(m.isDebug());
+                    os.writeBoolean(AppModel.isDebug());
                     os.writeBoolean(m.isDebugConn());
                     os.writeBoolean(isUseConsoleFile());
                 } else {
