@@ -32,7 +32,7 @@ final class MTKLogDownloadHandler {
     private int logNextReadAddr;
     private int logRequestStep;
 
-    public boolean loggingIsActiveBeforeDownload = false;
+    private boolean loggingIsActiveBeforeDownload = false;
 
     // Fields to keep track of logging status
     private int logDownloadStartAddr;
@@ -43,7 +43,7 @@ final class MTKLogDownloadHandler {
 
     private byte[] expectedResult;
 
-    public boolean forcedErase = false;
+    private boolean forcedErase = false;
 
     private boolean getFullLogBlocks = true; // If true, get the entire log
 
@@ -68,7 +68,7 @@ final class MTKLogDownloadHandler {
     /** Timeout between log status requests for erase. */
     private static final int C_LOGERASE_TIMEOUT = 2000;
 
-    public MTKLogDownloadHandler(final GPSstate gpsState) {
+    protected MTKLogDownloadHandler(final GPSstate gpsState) {
         this.gpsState = gpsState;
     }
 
@@ -86,7 +86,7 @@ final class MTKLogDownloadHandler {
      * @param isIncremental
      *            When true, perform incremental read.
      */
-    public final void getLogInit(final int startAddr, final int endAddr,
+    protected final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
             final boolean isIncremental) {
         try {
@@ -224,10 +224,11 @@ final class MTKLogDownloadHandler {
                         expectedResult = new byte[C_BLOCKVERIF_SIZE];
                         byte[] b;
                         b = windowedLogFile.fillBuffer(C_BLOCKVERIF_START);
-                        for (int i = 0; i < expectedResult.length; i++) {
+                        for (int i = expectedResult.length - 1; i > 0; i--) {
                             expectedResult[i] = b[i];
                         }
                         logState = C_LOG_CHECK;
+                        gpsState.resetLogTimeOut();
                         requestCheckBlock();
                     }
                 }
@@ -351,16 +352,16 @@ final class MTKLogDownloadHandler {
     }
 
     private void recoverFromLogError() {
-        // TODO: Make sure that is not calld in C_LOG_CHECK mode.
+        // TODO: Make sure that is not called in C_LOG_CHECK mode.
         // logNextReqAddr = logNextReadAddr;
         logState = C_LOG_RECOVER; // recover through timeout.
     }
 
-    protected void analyzeLogPart(final int startAddr, final String sData) {
+    protected final void analyzeLogPart(final int startAddr, final String sData) {
         int dataLength;
-        dataLength = Conv.hexStringToBytes(sData, readDataBuffer) / 2; // Fills
-        // m_data
-        // debugMsg("Got "+p_StartAddr+" "+Convert.toString(p_Data.length())+"):
+        // Convert hex data to bytes
+        dataLength = Conv.hexStringToBytes(sData, readDataBuffer) / 2;
+        // debugMsg("Got "+startAddr+" "+Convert.toString(sData.length())+"):
         // "+Convert.toString(dataLength));
         switch (logState) {
         case C_LOG_ACTIVE:
@@ -375,8 +376,9 @@ final class MTKLogDownloadHandler {
                         && ((logNextReadAddr + dataLength) != logNextReqAddr)) {
                     // Received data is not the right size - transmission error.
                     // Can happen on Palm over BT.
-                    if(Generic.isDebug()) {
-                        Generic.debug("Unexpected datalength: "+Convert.unsigned2hex(dataLength, 8));
+                    if (Generic.isDebug()) {
+                        Generic.debug("Unexpected datalength: "
+                                + Convert.unsigned2hex(dataLength, 8));
                     }
                     logState = C_LOG_RECOVER;
                 } else {
@@ -398,7 +400,6 @@ final class MTKLogDownloadHandler {
                             }
                         } catch (Exception e) {
                             Generic.debug("analyzeLogPart", e);
-
                             cancelGetLog();
                         }
                         j += l;
@@ -503,7 +504,7 @@ final class MTKLogDownloadHandler {
      * 
      * @param overwrite
      */
-    public final void replyToOkToOverwrite(final boolean overwrite) {
+    protected final void replyToOkToOverwrite(final boolean overwrite) {
         if (logState == C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
             if (overwrite) {
                 openNewLog(logFileName, logFileCard);
@@ -573,22 +574,22 @@ final class MTKLogDownloadHandler {
         return (logState != C_LOG_NOLOGGING) && (logState != C_LOG_ERASE_STATE);
     }
 
-    public final int getStartAddr() {
+    protected final int getStartAddr() {
         return logDownloadStartAddr;
     }
 
     /**
      * @return the endAddr
      */
-    public final int getEndAddr() {
+    protected final int getEndAddr() {
         return logDownloadEndAddr;
     }
 
-    public final int getNextReadAddr() {
+    protected final int getNextReadAddr() {
         return logNextReadAddr;
     }
 
-    public final void cancelGetLog() {
+    protected final void cancelGetLog() {
         endGetLog();
     }
 
@@ -598,7 +599,7 @@ final class MTKLogDownloadHandler {
      * cmd)
      */
 
-    public final void eraseLog() {
+    protected final void eraseLog() {
         if (gpsState.isConnected()) {
             gpsState.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                     + BT747Constants.PMTK_LOG_ERASE + ","
@@ -607,7 +608,7 @@ final class MTKLogDownloadHandler {
         }
     }
 
-    public final void recoveryEraseLog() {
+    protected final void recoveryEraseLog() {
         // Get some information (when debug mode active)
         gpsState.stopLog(); // Stop logging for this operation
         gpsState.reqLogStatus(); // Check status
@@ -651,7 +652,7 @@ final class MTKLogDownloadHandler {
         gpsState.postEvent(GpsEvent.ERASE_DONE_REMOVE_POPUP);
     }
 
-    public final void stopErase() {
+    protected final void stopErase() {
         if (gpsState.isEraseOngoing() && (logState == C_LOG_ERASE_STATE)) {
             gpsState.updateIgnoreNMEA();
             signalEraseDone();
@@ -677,13 +678,13 @@ final class MTKLogDownloadHandler {
         }
     }
 
-    protected void notifyDisconnected() {
+    protected final void notifyDisconnected() {
         if (logState != C_LOG_NOLOGGING) {
             endGetLog();
         }
     }
 
-    protected void handleLogFlashStatReply(final String s) {
+    protected final void handleLogFlashStatReply(final String s) {
         if (logState == C_LOG_ERASE_STATE) {
             switch (Convert.toInt(s)) {
             case 1:
@@ -712,7 +713,7 @@ final class MTKLogDownloadHandler {
      * @param size
      *            size of the data range requested
      */
-    public final void readLog(final int startAddr, final int size) {
+    protected final void readLog(final int startAddr, final int size) {
         gpsState.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_REQ_DATA_STR + ","
                 + Convert.unsigned2hex(startAddr, 8) + ","

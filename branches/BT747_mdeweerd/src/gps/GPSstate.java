@@ -55,15 +55,13 @@ public final class GPSstate implements BT747Thread {
     private int logDistanceInterval = 0;
 
     private int logStatus = 0;
-    public int initialLogMode = 0;
+    private int initialLogMode = 0;
 
     public int logNbrLogPts = 0;
 
     private int logMemUsed = 0;
 
     public int logMemUsedPercent = 0;
-
-    public int logMemFree = 0;
 
     private int logFixPeriod = 0; // Time between fixes
 
@@ -645,7 +643,7 @@ public final class GPSstate implements BT747Thread {
      * @param sNmea
      * @param gps
      */
-    final void analyzeGPRMC(final String[] sNmea, final GPSRecord gps) {
+    private final void analyzeGPRMC(final String[] sNmea, final GPSRecord gps) {
         if (CommonIn.analyzeGPRMC(sNmea, gps) != 0) {
             postGpsEvent(GpsEvent.GPRMC, gps);
         }
@@ -657,7 +655,7 @@ public final class GPSstate implements BT747Thread {
      * @param sNmea
      * @param gps
      */
-    final void analyzeGPGGA(final String[] sNmea, final GPSRecord gps) {
+    private final void analyzeGPGGA(final String[] sNmea, final GPSRecord gps) {
         if (CommonIn.analyzeGPGGA(sNmea, gps) != 0) {
             gps.height -= gps.geoid; // Default function adds the two
             postGpsEvent(GpsEvent.GPGGA, gps);
