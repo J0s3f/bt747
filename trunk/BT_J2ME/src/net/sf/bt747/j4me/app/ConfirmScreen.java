@@ -10,7 +10,7 @@ import org.j4me.ui.components.Label;
  * The "Log" screen. This shows the contents of the application's log. It is an
  * advanced screen intended for us to diagnose the application.
  */
-public class ConfirmScreen extends Dialog {
+public final class ConfirmScreen extends Dialog {
     private Label lbText;
 
     private boolean confirmation = false;
@@ -18,6 +18,11 @@ public class ConfirmScreen extends Dialog {
 
     private String next;
     private DeviceScreen previous;
+
+    private String textYes;
+    private String textNo;
+
+    private boolean screenSetup = false;
 
     /**
      * Constructs the "Log" screen.
@@ -29,29 +34,35 @@ public class ConfirmScreen extends Dialog {
     public ConfirmScreen(final String title, final String textYes,
             final String textNo, DeviceScreen ds) {
         setTitle(title);
-
         previous = ds;
-        append(new HorizontalRule());
+        this.textYes = textYes;
+        this.textNo = textNo;
+    }
 
-        if (textYes != null) {
-            lbText = new Label(textYes);
-            setMenuText("No","Confirm");
-            isAcceptNotifyAConfirmation = true;
-            next = textNo;
-        } else if (textNo != null) {
-            lbText = new Label(textNo);
-            setMenuText("Yes", "No");
-            isAcceptNotifyAConfirmation = false;
-            next = null;
+    private void setupScreen() {
+        if (!screenSetup) {
+            screenSetup = true;
+            append(new HorizontalRule());
+
+            if (textYes != null) {
+                lbText = new Label(textYes);
+                setMenuText("No", "Confirm");
+                isAcceptNotifyAConfirmation = true;
+                next = textNo;
+            } else if (textNo != null) {
+                lbText = new Label(textNo);
+                setMenuText("Yes", "No");
+                isAcceptNotifyAConfirmation = false;
+                next = null;
+            }
+            lbText.setFont(UIManager.getTheme().getMenuFont());
+
+            append(lbText);
+            append(new HorizontalRule());
+
+            // Add the menu buttons.
+            setFullScreenMode(false);
         }
-        lbText.setFont(UIManager.getTheme().getMenuFont());
-
-        append(lbText);
-        append(new HorizontalRule());
-
-        // Add the menu buttons.
-        setFullScreenMode(false);
-
     }
 
     public final boolean getConfirmation() {
@@ -64,13 +75,13 @@ public class ConfirmScreen extends Dialog {
      * @see DeviceScreen#showNotify()
      */
     public final void showNotify() {
+        setupScreen();
     }
 
     public boolean isConfirmation() {
         return confirmation;
     }
-    
-    
+
     /**
      * Called when the user presses the "Log" button.
      * 

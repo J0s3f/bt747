@@ -43,7 +43,7 @@ import bt747.model.ModelListener;
  * Alerts have a "Cancel" button on them if the user wants to stop the
  * operation.
  */
-public class LogDownloadScreen extends Dialog implements ModelListener,
+public final class LogDownloadScreen extends Dialog implements ModelListener,
         Runnable {
     /**
      * The label that displays the alert's text.
@@ -83,43 +83,51 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
     public LogDownloadScreen(final AppController c, final DeviceScreen previous) {
         this.c = c;
         this.previous = previous;
-
-        // Set the title and text.
         setTitle("Download Log");
+    }
 
-        // Add the label to the form.
-        label.setHorizontalAlignment(Graphics.HCENTER);
-        label.setLabel("Log download progress");
-        label.visible(false);
-        append(label);
+    boolean screenSetup = false;
 
-        // Add a progress bar.
-        bar = new ProgressBar();
-        bar.setHorizontalAlignment(Graphics.HCENTER);
-        bar.setMaxValue(1);
-        bar.setValue(0);
-        append(bar);
+    private void setupScreen() {
+        if (!screenSetup) {
+            screenSetup = true;
+            // Set the title and text.
 
-        bytes.setLabel("Bytes downloaded:");
-        append(bytes);
+            // Add the label to the form.
+            label.setHorizontalAlignment(Graphics.HCENTER);
+            label.setLabel("Log download progress");
+            label.visible(false);
+            append(label);
 
-        bytesDownloaded.setLabel("0");
-        append(bytesDownloaded);
-        append(stats);
+            // Add a progress bar.
+            bar = new ProgressBar();
+            bar.setHorizontalAlignment(Graphics.HCENTER);
+            bar.setMaxValue(1);
+            bar.setValue(0);
+            append(bar);
 
-        // createNewSection("Log conditions");
-        file.setLabel("Bin file:");
-        file.setLabel(m().getLogFilePath());
-        append(file);
+            bytes.setLabel("Bytes downloaded:");
+            append(bytes);
 
-        status.setLabel("Download inactive");
-        append(status);
+            bytesDownloaded.setLabel("0");
+            append(bytesDownloaded);
+            append(stats);
 
-        tb.setString(null); // Indicates unused
-        // Add the menu buttons.
-        setMenuText(UIManager.getTheme().getMenuTextForCancel(), "Menu");
+            // createNewSection("Log conditions");
+            file.setLabel("Bin file:");
+            file.setLabel(m().getLogFilePath());
+            append(file);
 
-        logScreen = new LogScreen(this);
+            status.setLabel("Download inactive");
+            append(status);
+
+            tb.setString(null); // Indicates unused
+            // Add the menu buttons.
+            setMenuText(UIManager.getTheme().getMenuTextForCancel(), "Menu");
+
+            logScreen = new LogScreen(this);
+        }
+
     }
 
     /**
@@ -157,6 +165,7 @@ public class LogDownloadScreen extends Dialog implements ModelListener,
      * @see DeviceScreen#showNotify()
      */
     public final void showNotify() {
+        setupScreen();
         if (m().isDownloadOnGoing()) {
             progressUpdate();
             // Log.info("Download ongoing");

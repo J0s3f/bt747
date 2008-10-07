@@ -43,7 +43,7 @@ import bt747.model.ModelListener;
  * available special waypoints when the device is available. It will show a
  * message remembering that the device must be available if it is not available.
  */
-public class MainScreen extends Dialog implements ModelListener {
+public final class MainScreen extends Dialog implements ModelListener {
     /**
      * Reference to the Application Controller.
      */
@@ -59,8 +59,7 @@ public class MainScreen extends Dialog implements ModelListener {
      * requires that those are all created when the menu is created.
      */
     private final LogDownloadScreen downloadLogScreen;
-    private final LogConditionsConfigScreen logConditionsConfigScreen;
-    private final LoggerStatusScreen loggerInfoScreen;
+    private final DeviceScreen loggerInfoScreen;
     private final LogScreen logScreen;
     private final DebugConfigScreen debugConfigScreen;
     private final InitializingGPSAlert initialiseGPSAlert;
@@ -110,7 +109,7 @@ public class MainScreen extends Dialog implements ModelListener {
         this.c = c;
         this.midlet = midlet;
         UIManager.setTheme(new BlueTheme(getScreenWidth()));
-        
+
         tt = new TimerTask() {
             public void run() {
                 myself.timedRun();
@@ -127,8 +126,8 @@ public class MainScreen extends Dialog implements ModelListener {
         setMenuText("Logger Menu", "App Menu");
 
         downloadLogScreen = new LogDownloadScreen(c, this);
-        logConditionsConfigScreen = new LogConditionsConfigScreen(c, this);
-        loggerInfoScreen = new LoggerStatusScreen(c, this);
+        loggerInfoScreen = new DelayedDialog(LogDownloadConfigScreen.class, c,
+                this, this);
         logScreen = new LogScreen(this);
         debugConfigScreen = new DebugConfigScreen(c, this);
         initialiseGPSAlert = new InitializingGPSAlert(c, this);
@@ -141,8 +140,8 @@ public class MainScreen extends Dialog implements ModelListener {
             }
         };
         creditsScreen = new CreditsScreen(this);
-        logFieldSelectScreen = new DelayedDialog(
-                LogFieldSelectScreen.class, c, this, this);
+        logFieldSelectScreen = new DelayedDialog(LogFieldSelectScreen.class, c,
+                this, this);
 
         // Call here for debug
         // c.doConvertLog(Model.GPX_LOGTYPE);
@@ -152,9 +151,8 @@ public class MainScreen extends Dialog implements ModelListener {
         rootMenu.appendMenuOption(downloadLogScreen);
         rootMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
         rootMenu.appendMenuOption("GPS Position", new DelayedDialog(
-                GpsPositionScreen.class, c, this, this)
-                );
-        
+                GpsPositionScreen.class, c, this, this));
+
         Menu subMenu;
         subMenu = new Menu("App Settings", rootMenu);
         subMenu.appendMenuOption("Working dir", baseDirScreen);
@@ -176,7 +174,10 @@ public class MainScreen extends Dialog implements ModelListener {
         rootMenu.appendSubmenu(subMenu);
 
         subMenu = new Menu("Logger", rootMenu);
-        subMenu.appendMenuOption("Log Conditions", logConditionsConfigScreen);
+        // private final LogConditionsConfigScreen logConditionsConfigScreen;
+
+        subMenu.appendMenuOption("Log Conditions", new DelayedDialog(
+                LogConditionsConfigScreen.class, c, this, this));
         subMenu.appendMenuOption("Log Fields", logFieldSelectScreen);
         subMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
         subMenu.appendMenuOption(new MenuItem() {
@@ -530,9 +531,9 @@ public class MainScreen extends Dialog implements ModelListener {
      */
     public final void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
-//        case ModelEvent.DEBUG_MSG:
-//            Log.debug((String) e.getArg());
-//            break;
+        // case ModelEvent.DEBUG_MSG:
+        // Log.debug((String) e.getArg());
+        // break;
         case ModelEvent.DISCONNECTED:
             // Display.getDisplay(this).flashBacklight(500);
             Display.getDisplay(midlet).vibrate(200);

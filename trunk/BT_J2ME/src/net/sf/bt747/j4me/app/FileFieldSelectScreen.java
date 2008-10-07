@@ -5,7 +5,7 @@ import net.sf.bt747.j4me.app.screens.BT747Dialog;
 
 import org.j4me.ui.components.CheckBox;
 
-public class FileFieldSelectScreen extends BT747Dialog {
+public final class FileFieldSelectScreen extends BT747Dialog {
 
     private static final int C_LOG_FMT_COUNT = 21 - 1;
 
@@ -13,21 +13,26 @@ public class FileFieldSelectScreen extends BT747Dialog {
     private CheckBox commentCheck;
     private CheckBox nameCheck;
 
+    private boolean screenSetup = false;
+
     private void setupScreen() {
-        deleteAll();
-        for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
-            chkLogFmtItems[i] = new CheckBox();
-            chkLogFmtItems[i].setLabel(Txt.logFmtItems[i]);
-            append(chkLogFmtItems[i]);
+        if (!screenSetup) {
+            screenSetup = true;
+            deleteAll();
+            for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
+                chkLogFmtItems[i] = new CheckBox();
+                chkLogFmtItems[i].setLabel(Txt.logFmtItems[i]);
+                append(chkLogFmtItems[i]);
+            }
+            commentCheck = new CheckBox();
+            commentCheck.setLabel("Trk point comment");
+            nameCheck = new CheckBox();
+            nameCheck.setLabel("Trk point name");
+            append(commentCheck);
+            append(nameCheck);
         }
-        commentCheck = new CheckBox();
-        commentCheck.setLabel("Trk point comment");
-        nameCheck = new CheckBox();
-        nameCheck.setLabel("Trk point name");
-        append(commentCheck);
-        append(nameCheck);
     }
-    
+
     /** Get the format set by the user in the user interface. */
     private int getSelectedLogFormat() {
         int bitMask = 1;

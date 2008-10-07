@@ -2,9 +2,10 @@ package net.sf.bt747.j4me.app;
 
 import java.util.Date;
 
+import net.sf.bt747.j4me.app.screens.BT747Dialog;
+
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
-import org.j4me.ui.Dialog;
 import org.j4me.ui.UIManager;
 import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
@@ -14,8 +15,8 @@ import bt747.model.ModelListener;
 import bt747.sys.Convert;
 import bt747.sys.Semaphore;
 
-public class LoggerStatusScreen extends Dialog implements ModelListener,
-        Runnable {
+public final class LoggerStatusScreen extends BT747Dialog implements
+        ModelListener, Runnable {
 
     private FieldValue logRCRTime = new FieldValue("Time interval (s)");
     private FieldValue logRCRSpeed = new FieldValue("Speed interval (km/h)");
@@ -27,40 +28,36 @@ public class LoggerStatusScreen extends Dialog implements ModelListener,
     private FieldValue memoryUsedRecords = new FieldValue("Logged pos (#)");
     private FieldValue memoryAvailRecords = new FieldValue("Available pos (#)");
 
-    private DeviceScreen previous;
+    private boolean screenSetup = false;
 
-    private AppController c;
+    public void setupScreen() {
+        if (!screenSetup) {
+            screenSetup = true;
+            deleteAll();
 
-    public LoggerStatusScreen(final AppController c, final DeviceScreen previous) {
+            // Set the menu bar options.
+            setMenuText("Back", null);
 
-        this.c = c;
-        this.previous = previous;
+            // Show the state of the location provider.
+            // state.setHorizontalAlignment( Graphics.HCENTER );
+            // setStateLabel( model.getLocationProvider().getState() );
+            // append( state );
 
-        // Set the menu bar options.
-        setMenuText("Back", null);
+            // Create a UI section for memory information.
+            createNewSection("Memory");
 
-        // Show the state of the location provider.
-        // state.setHorizontalAlignment( Graphics.HCENTER );
-        // setStateLabel( model.getLocationProvider().getState() );
-        // append( state );
+            append(memoryTotal);
+            append(memoryUsed);
+            append(memoryUsedPercent);
+            append(memoryUsedRecords);
+            append(memoryAvailRecords);
 
-        // Create a UI section for memory information.
-        createNewSection("Memory");
-
-        append(memoryTotal);
-        append(memoryUsed);
-        append(memoryUsedPercent);
-        append(memoryUsedRecords);
-        append(memoryAvailRecords);
-
-        // Create a UI section for pedometer information.
-        createNewSection("Log conditions");
-        append(logRCRTime);
-        append(logRCRSpeed);
-        append(logRCRDistance);
-
-        // Register for location updates.
-        // LocationProvider provider = model.getLocationProvider();
+            // Create a UI section for pedometer information.
+            createNewSection("Log conditions");
+            append(logRCRTime);
+            append(logRCRSpeed);
+            append(logRCRDistance);
+        }
     }
 
     /**
@@ -79,12 +76,13 @@ public class LoggerStatusScreen extends Dialog implements ModelListener,
     }
 
     public final void showNotify() {
+        setupScreen();
         c.getAppModel().addListener(this);
         reqLogInfo();
         planUpdateLock.down();
         planUpdate = true;
         planUpdateLock.up();
-        Thread worker = new Thread( this );
+        Thread worker = new Thread(this);
         worker.start();
         // updateData();
         super.showNotify();
@@ -161,7 +159,7 @@ public class LoggerStatusScreen extends Dialog implements ModelListener,
 
     private void updateData() {
         try {
-            //Log.debug(System.currentTimeMillis()+" Update data");
+            // Log.debug(System.currentTimeMillis()+" Update data");
             logRCRTime.setLabel(Convert.toString(
                     m().getLogTimeInterval() / 10., 1));
             logRCRSpeed.setLabel(m().getLogSpeedInterval());

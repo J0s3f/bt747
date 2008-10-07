@@ -12,7 +12,7 @@ import org.j4me.ui.components.RadioButton;
  * provider on the device. But if it cannot it will get a GPS provider through a
  * Bluetooth connection.
  */
-public class ConvertToProgressScreen extends ProgressAlert {
+public final class ConvertToProgressScreen extends ProgressAlert {
     /**
      * The location information for this application.
      */

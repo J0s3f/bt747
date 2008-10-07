@@ -1,51 +1,49 @@
 package net.sf.bt747.j4me.app;
 
+import net.sf.bt747.j4me.app.screens.BT747Dialog;
+
 import org.j4me.logging.Log;
-import org.j4me.ui.DeviceScreen;
-import org.j4me.ui.Dialog;
 import org.j4me.ui.components.TextBox;
 
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
 
-public class LogConditionsConfigScreen extends Dialog implements ModelListener {
-
-    private DeviceScreen previous;
-    private AppController c;
+public final class LogConditionsConfigScreen extends BT747Dialog implements ModelListener {
 
     // private final RadioButton source; // (elements with source.append);
-    private final TextBox tbTime;
-    private final TextBox tbSpeed;
-    private final TextBox tbDistance;
-    private final TextBox tbFix;
+    private TextBox tbTime;
+    private TextBox tbSpeed;
+    private TextBox tbDistance;
+    private TextBox tbFix;
 
-    public LogConditionsConfigScreen(AppController c, DeviceScreen previous) {
-        this.previous = previous;
-        this.c = c;
+    boolean screenSetup = false;
 
-        setTitle("Configure log conditions");
+    private void setupScreen() {
+        if(!screenSetup) {
+            screenSetup = true;
+            setTitle("Configure log conditions");
 
-        tbTime = new TextBox();
-        tbTime.setForDecimalOnly();
-        tbTime.setLabel("Time period (s)");
-        append(tbTime);
+            tbTime = new TextBox();
+            tbTime.setForDecimalOnly();
+            tbTime.setLabel("Time period (s)");
+            append(tbTime);
 
-        tbSpeed = new TextBox();
-        tbSpeed.setForNumericOnly();
-        tbSpeed.setLabel("Speed threshold (s)");
-        append(tbSpeed);
+            tbSpeed = new TextBox();
+            tbSpeed.setForNumericOnly();
+            tbSpeed.setLabel("Speed threshold (km/h)");
+            append(tbSpeed);
 
-        tbDistance = new TextBox();
-        tbDistance.setForDecimalOnly();
-        tbDistance.setLabel("Distance interval (m)");
-        append(tbDistance);
+            tbDistance = new TextBox();
+            tbDistance.setForDecimalOnly();
+            tbDistance.setLabel("Distance interval (m)");
+            append(tbDistance);
 
-        tbFix = new TextBox();
-        tbFix.setForNumericOnly();
-        tbFix.setLabel("GPS Fix period (ms)");
-        append(tbFix);
-
+            tbFix = new TextBox();
+            tbFix.setForNumericOnly();
+            tbFix.setLabel("GPS Fix period (ms)");
+            append(tbFix);
+        }
     }
 
     private final AppModel m() {
@@ -55,6 +53,7 @@ public class LogConditionsConfigScreen extends Dialog implements ModelListener {
     private boolean isDataRequested = false;
 
     public void showNotify() {
+        setupScreen();
         if (!isDataRequested) {
             isDataRequested = true;
             c.reqLogReasonStatus(); // TODO: Should be done on actual initial
@@ -66,7 +65,7 @@ public class LogConditionsConfigScreen extends Dialog implements ModelListener {
     }
 
     public void hideNotify() {
-        m().removeListener(this); // Does not matter if double addition.
+        m().removeListener(this); // Does not matter if double removal
         super.hideNotify();
     }
 

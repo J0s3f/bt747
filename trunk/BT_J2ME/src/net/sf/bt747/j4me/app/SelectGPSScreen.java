@@ -8,7 +8,7 @@ import org.j4me.ui.components.*;
  * and more than one are available within the area of the user, this screen will
  * be shown to let them select which device is theirs.
  */
-public class SelectGPSScreen extends Dialog {
+public final class SelectGPSScreen extends Dialog {
     /**
      * The location information for this application.
      */
