@@ -40,8 +40,8 @@ import bt747.model.ModelListener;
 public final class GPSOtherTabPanel extends Container implements ModelListener {
 
     private TabPanel tabPanel;
-    private AppController c;
-    private Model m;
+    private final AppController c;
+    private final Model m;
 
     private final String[] c_tpCaptions = { Txt.TAB_FLSH, Txt.TAB_NMEA_OUT,
             Txt.TAB_NMEA_FILE, Txt.TAB_HOLUX };
@@ -54,7 +54,7 @@ public final class GPSOtherTabPanel extends Container implements ModelListener {
     /**
      * 
      */
-    public void onStart() {
+    public final void onStart() {
         add(tabPanel = new TabPanel(c_tpCaptions), CENTER, CENTER);
         tabPanel.setBorderStyle(Window.NO_BORDER);
         tabPanel.setRect(getClientRect().modifiedBy(0, 0, 0, 0));
@@ -65,7 +65,7 @@ public final class GPSOtherTabPanel extends Container implements ModelListener {
         tabPanel.setPanel(3, new GPSHoluxSpecific(m, c));
     }
 
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         //
         switch (event.type) {
         case ControlEvent.PRESSED:
@@ -80,13 +80,11 @@ public final class GPSOtherTabPanel extends Container implements ModelListener {
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
-        if (event.getType() == ModelEvent.DATA_UPDATE) {
-            if (this.isVisible()) {
-                ModelListener l;
-                l = (ModelListener) tabPanel.getChildren()[0];
-                l.modelEvent(event);
-            }
+    public final void modelEvent(final ModelEvent event) {
+        if (this.isVisible()) {
+            ModelListener l;
+            l = (ModelListener) tabPanel.getChildren()[0];
+            l.modelEvent(event);
         }
     }
 }

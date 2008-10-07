@@ -40,7 +40,7 @@ public final class GPSWabaPort extends GPSPort {
      * 
      * @return <code>true</code> if the device is connected.
      */
-    public boolean isConnected() {
+    public final boolean isConnected() {
         return (sp != null && sp.isOpen());
     }
 
@@ -49,7 +49,7 @@ public final class GPSWabaPort extends GPSPort {
      * 
      * 
      */
-    public void closePort() {
+    public final void closePort() {
         if (sp != null && sp.isOpen()) {
             portIsOK = false;
             sp.close();
@@ -61,7 +61,7 @@ public final class GPSWabaPort extends GPSPort {
      * 
      * @return status result of the opening of the serial port.
      */
-    public int openPort() {
+    public final int openPort() {
         int result = -1;
         closePort();
         try {
@@ -91,14 +91,14 @@ public final class GPSWabaPort extends GPSPort {
     /**
      * Set a bluetooth connection.
      */
-    public void setBlueTooth() {
+    public final void setBlueTooth() {
         spPortNbr = waba.io.SerialPort.BLUETOOTH;
     }
 
     /**
      * Set an USB connection.
      */
-    public void setUSB() {
+    public final void setUSB() {
         spPortNbr = waba.io.SerialPort.USB;
     }
 
@@ -107,11 +107,11 @@ public final class GPSWabaPort extends GPSPort {
      * 
      * @return last error from the waba.io.SerialPort driver
      */
-    public int error() {
+    public final int error() {
         return sp.lastError;
     }
 
-    public void write(final byte[] b) {
+    public final void write(final byte[] b) {
         sp.writeBytes(b, 0, b.length);
         if (GPS_FILE_LOG && (debugFile != null)) {
             try {
@@ -123,11 +123,11 @@ public final class GPSWabaPort extends GPSPort {
         }
     }
 
-    public void write(final String s) {
+    public final void write(final String s) {
         write(s.getBytes());
     }
 
-    public int readCheck() {
+    public final int readCheck() {
         if (sp != null) {
             // return 0x800;
             return sp.readCheck();
@@ -136,7 +136,7 @@ public final class GPSWabaPort extends GPSPort {
         }
     }
 
-    public int readBytes(final byte[] b, final int start, final int max) {
+    public final int readBytes(final byte[] b, final int start, final int max) {
         return sp.readBytes(b, start, max);
     }
 }

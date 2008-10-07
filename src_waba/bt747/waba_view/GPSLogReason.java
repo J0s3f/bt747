@@ -38,8 +38,8 @@ import bt747.sys.Convert;
  */
 public final class GPSLogReason extends Container implements ModelListener {
     private static final boolean ENABLE_PWR_SAVE_CONTROL = false;
-    private AppController c;
-    private Model m;
+    private final AppController c;
+    private final Model m;
 
     private MyCheck chkTimeOnOff;
     private MyCheck chkDistanceOnOff;
@@ -67,7 +67,7 @@ public final class GPSLogReason extends Container implements ModelListener {
 
     }
 
-    protected void onStart() {
+    protected final void onStart() {
         super.onStart();
         add(chkTimeOnOff = new MyCheck(Txt.RCR_TIME), LEFT, TOP); //$NON-NLS-1$
         add(edTime = new Edit(), AFTER, SAME); //$NON-NLS-1$
@@ -97,7 +97,7 @@ public final class GPSLogReason extends Container implements ModelListener {
         add(btSet = new Button(Txt.SET), CENTER, AFTER + 3); //$NON-NLS-1$
     }
 
-    public void updateButtons() {
+    public final void updateButtons() {
         chkTimeOnOff.setChecked(m.getLogTimeInterval() != 0);
         edTime.setEnabled(m.getLogTimeInterval() != 0);
         if (m.getLogTimeInterval() != 0) {
@@ -126,7 +126,7 @@ public final class GPSLogReason extends Container implements ModelListener {
 
     }
 
-    public void setSettings() {
+    public final void setSettings() {
         if (chkTimeOnOff.getChecked()) {
             c.setLogTimeInterval((int) (10 * Convert
                     .toFloat(edTime.getText())));
@@ -148,7 +148,7 @@ public final class GPSLogReason extends Container implements ModelListener {
         c.reqLogReasonStatus();
     }
 
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
@@ -184,7 +184,7 @@ public final class GPSLogReason extends Container implements ModelListener {
         }
     }
     
-    public void modelEvent(final ModelEvent event) {
+    public final void modelEvent(final ModelEvent event) {
         if (event.getType() == ModelEvent.DATA_UPDATE) {
             updateButtons();
         }

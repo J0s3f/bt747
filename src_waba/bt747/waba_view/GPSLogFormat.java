@@ -38,10 +38,10 @@ import bt747.model.ModelListener;
 public final class GPSLogFormat extends Container implements ModelListener {
     private static final int C_LOG_FMT_COUNT = 21;
     /** The object that is used to communicate with the GPS device. */
-    private Model m;
-    private AppController c;
+    private final Model m;
+    private final AppController c;
     /** The tickboxes for the format items */
-    private MyCheck[] chkLogFmtItems = new MyCheck[C_LOG_FMT_COUNT];
+    private final MyCheck[] chkLogFmtItems = new MyCheck[C_LOG_FMT_COUNT];
     /** The button that requests to change the log format of the device */
     private Button btChangeFormatErase;
     private Button btChangeFormat;
@@ -62,7 +62,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
      * Initiliaser once all objects received initial setup
      * 
      */
-    public void onStart() {
+    public final void onStart() {
         // Add all tick buttons.
         for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
             chkLogFmtItems[i] = new MyCheck(Txt.logFmtItems[i]);
@@ -157,7 +157,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
      * @param event
      *            The event to be interpreted.
      */
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == btChangeFormatErase) {
@@ -186,7 +186,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
+    public final void modelEvent(final ModelEvent event) {
         if (event.getType() == ModelEvent.LOG_FORMAT_UPDATE) {
             updateLogFormat(m.getLogFormat());
         }

@@ -50,8 +50,8 @@ public final class GPSNMEAOutput extends Container implements ModelListener {
     private Button btSet;
     private Button btSetDefaults;
 
-    private Model m;
-    private AppController c;
+    private final Model m;
+    private final AppController c;
 
     /**
      * 

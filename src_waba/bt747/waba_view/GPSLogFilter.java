@@ -38,22 +38,22 @@ import bt747.model.ModelListener;
  */
 public final class GPSLogFilter extends Container implements ModelListener {
     private int currentLogFilter = 0;
-    private Model m;
-    private AppController c;
+    private final Model m;
+    private final AppController c;
 
     public GPSLogFilter(final AppController c, final Model m) {
         this.m = m;
         this.c = c;
     }
 
-    private String[] strValid = Txt.STR_VALID;
-    private String[] C_PB_TYPE_NAMES = new String[2];
+    private final String[] strValid = Txt.STR_VALID;
+    private final String[] C_PB_TYPE_NAMES = new String[2];
 
     private static final int C_VALID_COUNT = 9;
-    private MyCheck[] chkValid = new MyCheck[C_VALID_COUNT];
+    private final MyCheck[] chkValid = new MyCheck[C_VALID_COUNT];
     private PushButtonGroup pbPtType;
 
-    protected void onStart() {
+    protected final void onStart() {
         C_PB_TYPE_NAMES[GPSFilter.TRKPT] = Txt.TRKPT;
         C_PB_TYPE_NAMES[GPSFilter.WAYPT] = Txt.WAYPT;
         add(pbPtType = new PushButtonGroup(C_PB_TYPE_NAMES, // labes for buttons
@@ -184,7 +184,7 @@ public final class GPSLogFilter extends Container implements ModelListener {
      * @param event
      *            The event to be interpreted.
      */
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
@@ -240,7 +240,7 @@ public final class GPSLogFilter extends Container implements ModelListener {
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
+    public final void modelEvent(final ModelEvent event) {
         // Do nothing.
     }
 }

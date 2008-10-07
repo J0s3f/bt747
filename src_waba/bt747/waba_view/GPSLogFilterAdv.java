@@ -52,10 +52,10 @@ public final class GPSLogFilterAdv extends Container {
     private Button btClear;
 
     private PushButtonGroup pbPtType;
-    private String[] C_PB_TYPE_NAMES = { Txt.ACTIVE, Txt.INACTIVE };
+    private final String[] C_PB_TYPE_NAMES = { Txt.ACTIVE, Txt.INACTIVE };
 
-    private Model m;
-    private AppController c;
+    private final Model m;
+    private final AppController c;
 
     public GPSLogFilterAdv(final AppController c, final Model m) {
         this.m = m;
@@ -122,7 +122,7 @@ public final class GPSLogFilterAdv extends Container {
         getSettings();
     }
 
-    public void setSettings() {
+    private void setSettings() {
 
         c.setFilterMinRecCount(Convert.toInt(minRecCount.getText()));
         c.setFilterMaxRecCount(Convert.toInt(maxRecCount.getText()));
@@ -139,7 +139,7 @@ public final class GPSLogFilterAdv extends Container {
         c.setFilters();
     }
 
-    public void getSettings() {
+    private void getSettings() {
         minRecCount.setText(Convert.toString(m.getFilterMinRecCount()));
         maxRecCount.setText(Convert.toString(m.getFilterMaxRecCount()));
         minSpeed.setText(Convert.toString(m.getFilterMinSpeed(), 2));
@@ -153,7 +153,7 @@ public final class GPSLogFilterAdv extends Container {
         c.setFilters();
     }
 
-    public void clearSettings() {
+    private void clearSettings() {
         minRecCount.setText("0");
         maxRecCount.setText("0");
         minSpeed.setText("0");
@@ -167,7 +167,7 @@ public final class GPSLogFilterAdv extends Container {
         setSettings();
     }
 
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
@@ -190,7 +190,7 @@ public final class GPSLogFilterAdv extends Container {
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
+    public final void modelEvent(final ModelEvent event) {
         // Do nothing
     }
 }

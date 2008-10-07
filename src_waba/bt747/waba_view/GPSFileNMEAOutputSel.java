@@ -37,13 +37,13 @@ import bt747.model.ModelListener;
 public final class GPSFileNMEAOutputSel extends Container implements
         ModelListener {
     /** The object that is used to communicate with the GPS device. */
-    private MyCheck[] chkNMEAItems = new MyCheck[BT747Constants.C_NMEA_SEN_COUNT];
+    private final MyCheck[] chkNMEAItems = new MyCheck[BT747Constants.C_NMEA_SEN_COUNT];
     /** The button that requests to change the log format of the device */
 
     private static final int C_NMEAactiveFilters = 0x0002003A;
 
-    private Model m;
-    private AppController c;
+    private final Model m;
+    private final AppController c;
 
     /**
      * 
@@ -58,7 +58,7 @@ public final class GPSFileNMEAOutputSel extends Container implements
      * 
      * @see waba.ui.Container#onStart()
      */
-    protected void onStart() {
+    protected final void onStart() {
         int bit = 1;
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             chkNMEAItems[i] = new MyCheck(BT747Constants.NMEA_STRINGS[i]);
@@ -106,7 +106,7 @@ public final class GPSFileNMEAOutputSel extends Container implements
      * @param event
      *            The event to be interpreted.
      */
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
@@ -121,7 +121,7 @@ public final class GPSFileNMEAOutputSel extends Container implements
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
+    public final void modelEvent(final ModelEvent event) {
         // Do nothing
     }
 }

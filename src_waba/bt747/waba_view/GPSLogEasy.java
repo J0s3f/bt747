@@ -50,14 +50,14 @@ public final class GPSLogEasy extends Container implements ModelListener {
     private Button m_btColdStart;
     private Button m_btFullColdStart;
 
-    private Button[] chkRCR = new Button[BT747Constants.C_RCR_COUNT];
+    private final Button[] chkRCR = new Button[BT747Constants.C_RCR_COUNT];
 
     private Button m_btForceErase;
 
     private Label lbLogUserTxt;
 
-    private Model m;
-    private AppController c;
+    private final Model m;
+    private final AppController c;
 
     public GPSLogEasy(final Model m, final AppController c) {
         this.m = m;
@@ -113,7 +113,7 @@ public final class GPSLogEasy extends Container implements ModelListener {
         m_btRestore.setEnabled(m.isStoredSetting1());
     }
 
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:

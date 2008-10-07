@@ -46,8 +46,8 @@ import bt747.waba_view.ui.FileSelect;
  */
 public final class GPSLogFile extends Container implements ModelListener {
 
-    private Model m;
-    private AppController c;
+    private final Model m;
+    private final AppController c;
 
     public GPSLogFile(final AppController c, final Model m) {
         this.c = c;
@@ -70,7 +70,7 @@ public final class GPSLogFile extends Container implements ModelListener {
     private Button btChangeSettings;
     private Button btDefaultSettings;
 
-    protected void onStart() {
+    protected final void onStart() {
         Label tmp;
         int idx;
 
@@ -141,7 +141,7 @@ public final class GPSLogFile extends Container implements ModelListener {
 
     private boolean setting = false;
 
-    private void updateValues() {
+    private final void updateValues() {
         if (!setting) {
             edBaseDirName.setText(m.getBaseDirPath());
             edReportBaseName.setText(m.getReportFileBase());
@@ -151,7 +151,7 @@ public final class GPSLogFile extends Container implements ModelListener {
         }
     }
 
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == btChangeSettings) {
@@ -211,12 +211,16 @@ public final class GPSLogFile extends Container implements ModelListener {
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
-        int eventType = event.getType();
-        if (eventType == ModelEvent.LOGFILEPATH_UPDATE
-                || eventType == ModelEvent.OUTPUTFILEPATH_UPDATE
-                || eventType == ModelEvent.WORKDIRPATH_UPDATE) {
+    public final void modelEvent(final ModelEvent event) {
+        switch (event.getType()) {
+        case ModelEvent.LOGFILEPATH_UPDATE:
+        case ModelEvent.OUTPUTFILEPATH_UPDATE:
+        case ModelEvent.WORKDIRPATH_UPDATE:
             updateValues();
+            break;
+
+        default:
+            break;
         }
     }
 }
