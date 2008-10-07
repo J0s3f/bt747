@@ -593,8 +593,7 @@ public final class BT747Constants { // dev as in device
         int[] result = { total, satRecSize };
         return result;
     }
-    
-    
+
     /**
      * Get a representation of the model.
      * 
@@ -662,7 +661,6 @@ public final class BT747Constants { // dev as in device
         return mdStr;
     }
 
-
     /**
      * Next entries are elated to <code>PMTK_API_Q_NMEA_OUTPUT</code> and
      * similar.
@@ -701,60 +699,65 @@ public final class BT747Constants { // dev as in device
             "ZDA", // 17 // GPZDA interval - Time & Date
             "MCHN", // 18 // PMTKCHN interval - GPS channel status
     };
-    public static final int NMEA_SEN_GLL_IDX = 0; // GPGLL interval -
-    // Geographic Position -
-    // Latitude longitude
-    public static final int NMEA_SEN_RMC_IDX = 1; // GPRMC interval -
-    // Recommended Min. specic
-    // GNSS sentence
-    public static final int NMEA_SEN_VTG_IDX = 2; // GPVTG interval - Course
-    // Over Ground and Ground
-    // Speed
-    public static final int NMEA_SEN_GGA_IDX = 3; // GPGGA interval - GPS Fix
-    // Data
-    public static final int NMEA_SEN_GSA_IDX = 4; // GPGSA interval - GNSS
-    // DOPS and Active
-    // Satellites
-    public static final int NMEA_SEN_GSV_IDX = 5; // GPGSV interval - GNSS
-    // Satellites in View
-    public static final int NMEA_SEN_GRS_IDX = 6; // GPGRS interval - GNSS
-    // Range Residuals
-    public static final int NMEA_SEN_GST_IDX = 7; // GPGST interval - GNSS
-    // Pseudorange Error
-    // Statistics
-    public static final int NMEA_SEN_MALM_IDX = 13; // PMTKALM interval - GPS
-    // almanac information
-    public static final int NMEA_SEN_MEPH_IDX = 14; // PMTKEPH interval - GPS
-    // ephemeris information
-    /** PMTKDGP interval - GPS differential correction information */
+    /** GPGLL interval - Geographic Position - Latitude longitude. */
+    public static final int NMEA_SEN_GLL_IDX = 0;
+    /** GPRMC interval - Recommended Min. specic - GNSS sentence. */
+    public static final int NMEA_SEN_RMC_IDX = 1;
+    /** GPVTG interval - Course Over Ground and Ground Speed. */
+    public static final int NMEA_SEN_VTG_IDX = 2;
+    /** GPGGA interval - GPS Fix Data. */
+    public static final int NMEA_SEN_GGA_IDX = 3;
+    /** GPGSA interval - GNSS DOPS and Active Satellites. */
+    public static final int NMEA_SEN_GSA_IDX = 4;
+    /** GPGSV interval - GNSS Satellites in View. */
+    public static final int NMEA_SEN_GSV_IDX = 5;
+    /** GPGRS interval - GNSS Range Residuals. */
+    public static final int NMEA_SEN_GRS_IDX = 6;
+    /** GPGST interval - GNSS Pseudorange Error Statistics. */
+    public static final int NMEA_SEN_GST_IDX = 7;
+    /** Unknown - Called it type 8. */
+    public static final int NMEA_SEN_TYPE8_IDX = 8;
+    /** Unknown - Called it type 9. */
+    public static final int NMEA_SEN_TYPE9_IDX = 9;
+    /** Unknown - Called it type 10. */
+    public static final int NMEA_SEN_TYPE10_IDX = 10;
+    /** Unknown - Called it type 11. */
+    public static final int NMEA_SEN_TYPE11_IDX = 11;
+    /** Unknown - Called it type 12. */
+    public static final int NMEA_SEN_TYPE12_IDX = 12;
+    /** PMTKALM interval - GPS almanac information. */
+    public static final int NMEA_SEN_MALM_IDX = 13;
+    /** PMTKEPH interval - GPS ephemeris information */
+    public static final int NMEA_SEN_MEPH_IDX = 14;
+    /** PMTKDGP interval - GPS differential correction information. */
     public static final int NMEA_SEN_MDGP_IDX = 15;
-    /** PMTKDBG interval - MTK debug information */
+    /** PMTKDBG interval - MTK debug information. */
     public static final int NMEA_SEN_MDBG_IDX = 16;
-    /** GPZDA interval - Time & Date */
+    /** GPZDA interval - Time & Date. */
     public static final int NMEA_SEN_ZDA_IDX = 17;
-    /** PMTKCHN interval - GPS channel status */
+    /** PMTKCHN interval - GPS channel status. */
     public static final int NMEA_SEN_MCHN_IDX = 18;
 
-    public static final int SPI_Y2_MAN_ID_MASK = 0xff00;
-    public static final int SPI_Y2_DEV_ID_MASK = 0x00ff;
+//    private static final int SPI_Y2_MAN_ID_MASK = 0xff00;
+//    private static final int SPI_Y2_DEV_ID_MASK = 0x00ff;
 
     /* SPI flash manufacturer ID's */
-    public static final int SPI_MAN_ID_AMD = 0x01;
-    public static final int SPI_MAN_ID_FUJITSU = 0x04;
-    public static final int SPI_MAN_ID_ST_M25P10 = 0x10;
-    public static final int SPI_MAN_ID_ST_M25P20 = 0x11;
-    public static final int SPI_MAN_ID_EON = 0x1C;
-    public static final int SPI_MAN_ID_MITSUBISHI = 0x1C;
-    public static final int SPI_MAN_ID_ATMEL = 0x1F;
-    public static final int SPI_MAN_ID_STMICROELECTRONICS = 0x20;
-    public static final int SPI_MAN_ID_CATALYST = 0x31;
-    public static final int SPI_MAN_ID_SYNCMOS = 0x40;
-    public static final int SPI_MAN_ID_INTEL = 0x89;
-    public static final int SPI_MAN_ID_HYUNDAI = 0xAD;
-    public static final int SPI_MAN_ID_SST = 0xBF; // Silicon Storage
+//    private static final int SPI_MAN_ID_AMD = 0x01;
+//    private static final int SPI_MAN_ID_FUJITSU = 0x04;
+//    private static final int SPI_MAN_ID_ST_M25P10 = 0x10;
+//    private static final int SPI_MAN_ID_ST_M25P20 = 0x11;
+    private static final int SPI_MAN_ID_EON = 0x1C;
+//    private static final int SPI_MAN_ID_MITSUBISHI = 0x1C;
+//    private static final int SPI_MAN_ID_ATMEL = 0x1F;
+//    private static final int SPI_MAN_ID_STMICROELECTRONICS = 0x20;
+//    private static final int SPI_MAN_ID_CATALYST = 0x31;
+//    private static final int SPI_MAN_ID_SYNCMOS = 0x40;
+//    private static final int SPI_MAN_ID_INTEL = 0x89;
+//    private static final int SPI_MAN_ID_HYUNDAI = 0xAD;
+//    private static final int SPI_MAN_ID_SST = 0xBF; // Silicon Storage
     // Technology
-    public static final int SPI_MAN_ID_MACRONIX = 0xC2; // MX
-    public static final int SPI_MAN_ID_WINBOND = 0xDA;
+    private static final int SPI_MAN_ID_MACRONIX = 0xC2; // MX
+//    private static final int SPI_MAN_ID_WINBOND = 0xDA;
 
     // #define MX_29F002 0xB0
     // +/* MX25L chips are SPI, first byte of device id is memory type,
@@ -769,12 +772,12 @@ public final class BT747Constants { // dev as in device
     // +#define MX_25L6405 0x2017 /* MX25L3205{,D} */
     // +#define MX_25L1635D 0x2415
     // +#define MX_25L3235D 0x2416
-    
+
     public static final int getFlashSize(final int flashManuProdID) {
         int manufacturer;
         int devType;
-        int memSize = 1024*1024*2;  // Default value
-        //String flashDesc;
+        int memSize = 1024 * 1024 * 2; // Default value
+        // String flashDesc;
 
         manufacturer = (flashManuProdID >> 24) & 0xFF;
         devType = (flashManuProdID >> 16) & 0xFF;
@@ -796,7 +799,7 @@ public final class BT747Constants { // dev as in device
                 // +#define MX_25L1635D 0x2415
                 // +#define MX_25L3235D 0x2416
                 memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
-                //flashDesc = "(MX," + memSize / (1024 * 1024) + "MB)";
+                // flashDesc = "(MX," + memSize / (1024 * 1024) + "MB)";
 
             }
             break;
@@ -805,7 +808,7 @@ public final class BT747Constants { // dev as in device
                 // Supposing the same rule as macronix.
                 // Example device: EN25P16
                 memSize = 0x1 << ((flashManuProdID >> 8) & 0xFF);
-                //flashDesc = "(EON," + memSize / (1024 * 1024) + "MB)";
+                // flashDesc = "(EON," + memSize / (1024 * 1024) + "MB)";
             }
             break;
 
@@ -814,14 +817,12 @@ public final class BT747Constants { // dev as in device
         }
         return memSize;
     }
-    
-    
 
     public static final String getFlashDesc(final int flashManuProdID) {
         int manufacturer;
         int devType;
-        int memSize = 1024*1024*2;
-        String flashDesc="";
+        int memSize = 1024 * 1024 * 2;
+        String flashDesc = "";
 
         manufacturer = (flashManuProdID >> 24) & 0xFF;
         devType = (flashManuProdID >> 16) & 0xFF;
@@ -861,7 +862,6 @@ public final class BT747Constants { // dev as in device
         }
         return flashDesc;
     }
-
 
     public static final int VALID_NO_FIX_MASK = 0x0001;
     public static final int VALID_SPS_MASK = 0x0002;

@@ -39,8 +39,8 @@ import bt747.model.ModelListener;
  */
 public final class GPSHoluxSpecific extends Container implements ModelListener {
 
-    private Model m;
-    private AppController c;
+    private final Model m;
+    private final AppController c;
 
     private Label lbHoluxName;
     private Edit edHoluxName;
@@ -63,7 +63,7 @@ public final class GPSHoluxSpecific extends Container implements ModelListener {
      * 
      * @see waba.ui.Container#onStart()
      */
-    protected void onStart() {
+    protected  final void onStart() {
         lbHoluxName = new Label(Txt.HOLUX_NAME);
         add(lbHoluxName, LEFT, TOP);
         add(edHoluxName = new Edit(""), AFTER, SAME);
@@ -96,7 +96,7 @@ public final class GPSHoluxSpecific extends Container implements ModelListener {
      * @param event
      *            The event to be interpreted.
      */
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
@@ -113,9 +113,12 @@ public final class GPSHoluxSpecific extends Container implements ModelListener {
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
-        if (event.getType() == ModelEvent.DATA_UPDATE) {
+    public final void modelEvent(final ModelEvent event) {
+        switch (event.getType()) {
+        case ModelEvent.UPDATE_HOLUX_NAME:
+        case ModelEvent.DATA_UPDATE:
             updateData();
+            break;
         }
     }
 }

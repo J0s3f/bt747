@@ -162,7 +162,7 @@ public final class GPSFlashOption extends Container implements ModelListener {
     }
 
     public void modelEvent(final ModelEvent event) {
-        if (event.getType() == ModelEvent.DATA_UPDATE) {
+        if (event.getType() == ModelEvent.UPDATE_FLASH_CONFIG) {
             updateButtons();
         }
     }

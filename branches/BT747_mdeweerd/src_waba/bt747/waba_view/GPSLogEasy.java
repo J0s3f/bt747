@@ -64,7 +64,7 @@ public final class GPSLogEasy extends Container implements ModelListener {
         this.c = c;
     }
 
-    protected void onStart() {
+    protected final void onStart() {
         add(m_btSet5Hz = new Button(Txt.BT_5HZ_FIX), LEFT, AFTER + 3); //$NON-NLS-1$
         add(m_btSet2Hz = new Button(Txt.BT_2HZ_FIX), RIGHT, SAME); //$NON-NLS-1$
         add(m_btStore = new Button(Txt.STORE_SETTINGS), LEFT, AFTER + 3); //$NON-NLS-1$
@@ -161,7 +161,7 @@ public final class GPSLogEasy extends Container implements ModelListener {
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
+    public final void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
         if (eventType == ModelEvent.DATA_UPDATE) {
             enableStore();

@@ -29,10 +29,13 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.sys.Convert;
+import bt747.sys.Generic;
 import bt747.sys.Interface;
 import bt747.sys.Time;
 
@@ -145,10 +148,22 @@ public class BT747Main extends javax.swing.JFrame implements
             break;
         }
         cbOneFilePerDay.setSelectedIndex(index);
+        try {
+            cbUTCOffset.setSelectedIndex(m.getTimeOffsetHours() + 12);
+        } catch (Exception e) {
+            Generic.debug("Problem with UTC offset", e);
+        }
+        cbNotApplyUTCOffset.setSelected(m.getGpxUTC0());
+        cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 0
+                : 1);
+        cbGPXTrkSegWhenSmall.setSelected(m.getGpxTrkSegWhenBig());
+
         cbImperialUnits.setSelected(m.getBooleanOpt(Model.IMPERIAL));
         cbAdvancedActive.setSelected(m.getAdvFilterActive());
         cbGPSType.setSelectedIndex(m.getGPSType() == 0 ? 0 : 1);
         cbDisableLoggingDuringDownload.setSelected(m.isIncremental());
+        cbNotApplyUTCOffset.setSelected(m.getGpxUTC0());
+
         Time d;
         d = new Time();
         d.setUTCTime(m.getFilterStartTime());
@@ -171,7 +186,9 @@ public class BT747Main extends javax.swing.JFrame implements
         c.setDebugConn(false);
         btGPSConnectDebug.setSelected(m.isDebugConn());
         // c.setChunkSize(256); // Small for debug
-
+        txtHoluxName.setText(m.getHoluxName());
+        cbRecordNumberInfoInLog.setSelected(m
+                .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));
         switch (m.getBinDecoder()) {
         case J2SEAppController.DECODER_ORG:
             cbDecoderChoice.setSelectedIndex(0);
@@ -183,6 +200,8 @@ public class BT747Main extends javax.swing.JFrame implements
         lbConversionTime.setVisible(false);
 
         updateEstimatedNbrRecords();
+
+        c.reqHoluxName();
     }
 
     private long conversionStartTime;
@@ -262,6 +281,9 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.INCREMENTAL_CHANGE:
             getIncremental();
             break;
+        case ModelEvent.OUTPUT_NMEA_PERIOD_UPDATE:
+            getNMEAOutPeriods();
+            break;
         case ModelEvent.TRK_VALID_CHANGE:
         case ModelEvent.TRK_RCR_CHANGE:
         case ModelEvent.WAY_VALID_CHANGE:
@@ -302,6 +324,12 @@ public class BT747Main extends javax.swing.JFrame implements
                     yesNo);
             mb.popupBlockingModal();
             c.replyToOkToOverwrite(mb.getAnswer() == 0);
+            break;
+        case ModelEvent.UPDATE_FLASH_CONFIG:
+            getFlashConfig();
+            break;
+        case ModelEvent.UPDATE_HOLUX_NAME:
+            txtHoluxName.setText(m.getHoluxName());
             break;
         }
 
@@ -572,6 +600,202 @@ public class BT747Main extends javax.swing.JFrame implements
         if (cbWayUser12.isSelected()) {
             wayRCR |= BT747Constants.RCR_APPZ_MASK;
         }
+    }
+
+    void setNMEAOutFile() {
+        // c.setNMEAset(maskNMEAset);
+        // Should be checkboxes...
+        int outFormat = 0;
+
+        if (cbNMEAFileGLL.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_GLL_IDX);
+        }
+        if (cbNMEAFileRMC.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_RMC_IDX);
+        }
+        if (cbNMEAFileVTG.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_VTG_IDX);
+        }
+        if (cbNMEAFileGGA.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_GGA_IDX);
+        }
+        if (cbNMEAFileGSA.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_GSA_IDX);
+        }
+        if (cbNMEAFileGSV.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_GSV_IDX);
+        }
+        if (cbNMEAFileGRS.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_GRS_IDX);
+        }
+        if (cbNMEAFileGST.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_GST_IDX);
+        }
+        if (cbNMEAFileType8.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_TYPE8_IDX);
+        }
+        if (cbNMEAFileType9.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_TYPE9_IDX);
+        }
+        if (cbNMEAFileType10.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_TYPE10_IDX);
+        }
+        if (cbNMEAFileType11.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_TYPE11_IDX);
+        }
+        if (cbNMEAFileType12.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_TYPE12_IDX);
+        }
+        if (cbNMEAFileMALM.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_MALM_IDX);
+        }
+        if (cbNMEAFileMEPH.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_MEPH_IDX);
+        }
+        if (cbNMEAFileMDGP.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_MDGP_IDX);
+        }
+        if (cbNMEAFileMDBG.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_MDBG_IDX);
+        }
+        if (cbNMEAFileMZDA.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_ZDA_IDX);
+        }
+        if (cbNMEAFileMCHN.getSelectedIndex() != 0) {
+            outFormat |= (1 << BT747Constants.NMEA_SEN_MCHN_IDX);
+        }
+
+        c.setNMEAset(outFormat);
+    }
+
+    void getNMEAOutPeriods() {
+        cbNMEAOutGLL.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_GLL_IDX));
+        cbNMEAOutRMC.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_RMC_IDX));
+        cbNMEAOutVTG.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_VTG_IDX));
+        cbNMEAOutGGA.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_GGA_IDX));
+        cbNMEAOutGSA.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_GSA_IDX));
+        cbNMEAOutGSV.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_GSV_IDX));
+        cbNMEAOutGRS.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_GRS_IDX));
+        cbNMEAOutGST.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_GST_IDX));
+        cbNMEAOutType8.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_TYPE8_IDX));
+        cbNMEAOutType9.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_TYPE9_IDX));
+        cbNMEAOutType10.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_TYPE10_IDX));
+        cbNMEAOutType11.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_TYPE11_IDX));
+        cbNMEAOutType12.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_TYPE12_IDX));
+        cbNMEAOutMALM.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_MALM_IDX));
+        cbNMEAOutMEPH.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_MEPH_IDX));
+        cbNMEAOutMDGP.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_MDGP_IDX));
+        cbNMEAOutMDBG.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_MDBG_IDX));
+        cbNMEAOutMZDA.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_ZDA_IDX));
+        cbNMEAOutMCHN.setSelectedIndex(m
+                .getNMEAPeriod(BT747Constants.NMEA_SEN_MCHN_IDX));
+    }
+
+    void setNMEAOutPeriods() {
+        int[] Periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
+
+        Periods[BT747Constants.NMEA_SEN_GLL_IDX] = cbNMEAOutGLL
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_RMC_IDX] = cbNMEAOutRMC
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_VTG_IDX] = cbNMEAOutVTG
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_GGA_IDX] = cbNMEAOutGGA
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_GSA_IDX] = cbNMEAOutGSA
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_GSV_IDX] = cbNMEAOutGSV
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_GRS_IDX] = cbNMEAOutGRS
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_GST_IDX] = cbNMEAOutGST
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_TYPE8_IDX] = cbNMEAOutType8
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_TYPE9_IDX] = cbNMEAOutType9
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_TYPE10_IDX] = cbNMEAOutType10
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_TYPE11_IDX] = cbNMEAOutType11
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_TYPE12_IDX] = cbNMEAOutType12
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_MALM_IDX] = cbNMEAOutMALM
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_MEPH_IDX] = cbNMEAOutMEPH
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_MDGP_IDX] = cbNMEAOutMDGP
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_MDBG_IDX] = cbNMEAOutMDBG
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_ZDA_IDX] = cbNMEAOutMZDA
+                .getSelectedIndex();
+        Periods[BT747Constants.NMEA_SEN_MCHN_IDX] = cbNMEAOutMCHN
+                .getSelectedIndex();
+
+        c.setNMEAPeriods(Periods);
+    }
+
+    void getFlashConfig() {
+        txtFlashTimesLeft.setText(Convert
+                .toString(m.getDtUserOptionTimesLeft()));
+        txtFlashUpdateRate.setText(Convert.toString(m.getDtUpdateRate()));
+        txtFlashBaudRate.setText(Convert.toString(m.getDtBaudRate()));
+        cbFlashGLL.setSelectedIndex(m.getDtGLL_Period());
+        cbFlashRMC.setSelectedIndex(m.getDtRMC_Period());
+        cbFlashVTG.setSelectedIndex(m.getDtVTG_Period());
+        cbFlashGSA.setSelectedIndex(m.getDtGSA_Period());
+        jComboBox6.setSelectedIndex(m.getDtGSV_Period());
+        cbFlashGGA.setSelectedIndex(m.getDtGGA_Period());
+        // cbFlashZDA.setText(Convert.toString(m.getDtZDA_Period()));
+        cbFlashMCHN.setSelectedIndex(m.getDtMCHN_Period());
+    }
+
+    void setFlashConfig() {
+        boolean lock;
+        int updateRate;
+        int baudRate;
+        int periodGLL;
+        int periodRMC;
+        int periodVTG;
+        int periodGSA;
+        int periodGSV;
+        int periodGGA;
+        int periodZDA;
+        int periodMCHN;
+        lock = false;
+        updateRate = Convert.toInt(txtFlashUpdateRate.getText());
+        baudRate = Convert.toInt(txtFlashBaudRate.getText());
+        periodGLL = cbFlashGLL.getSelectedIndex();
+        periodRMC = cbFlashRMC.getSelectedIndex();
+        periodVTG = cbFlashVTG.getSelectedIndex();
+        periodGSA = cbFlashGSA.getSelectedIndex();
+        periodGSV = jComboBox6.getSelectedIndex();
+        periodGGA = cbFlashGGA.getSelectedIndex();
+        periodZDA = 0;
+        // TODO periodZDA = cbFlashZDA.getSelectedIndex();
+        periodMCHN = cbFlashMCHN.getSelectedIndex();
+        c.setFlashConfig(lock, updateRate, baudRate, periodGLL, periodRMC,
+                periodVTG, periodGSA, periodGSV, periodGGA, periodZDA,
+                periodMCHN);
     }
 
     /**
@@ -6221,21 +6445,21 @@ public class BT747Main extends javax.swing.JFrame implements
 
     private void cbNotApplyUTCOffsetStateChanged(
             javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_cbNotApplyUTCOffsetStateChanged
-        // TODO add your handling code here:
+        c.setGpxUTC0(cbNotApplyUTCOffset.isSelected());
     }// GEN-LAST:event_cbNotApplyUTCOffsetStateChanged
 
     private void cbStopOrOverwriteWhenFullFocusLost(
             java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbStopOrOverwriteWhenFullFocusLost
-        // TODO add your handling code here:
+        c.setLogOverwrite(cbStopOrOverwriteWhenFull.getSelectedIndex() == 1);
     }// GEN-LAST:event_cbStopOrOverwriteWhenFullFocusLost
 
     private void cbGPXTrkSegWhenSmallStateChanged(
             javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_cbGPXTrkSegWhenSmallStateChanged
-        // TODO add your handling code here:
+        c.setGpxTrkSegWhenBig(cbGPXTrkSegWhenSmall.isSelected());
     }// GEN-LAST:event_cbGPXTrkSegWhenSmallStateChanged
 
     private void cbNMEAOutGLLActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbNMEAOutGLLActionPerformed
-        // TODO add your handling code here:
+        // TODO Remove
     }// GEN-LAST:event_cbNMEAOutGLLActionPerformed
 
     private void cbOneFilePerDayFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbOneFilePerDayFocusLost
@@ -6256,6 +6480,7 @@ public class BT747Main extends javax.swing.JFrame implements
     }// GEN-LAST:event_cbOneFilePerDayFocusLost
 
     private void cbRecordNumberInfoInLogFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbRecordNumberInfoInLogFocusLost
+        c.setRecordNbrInLogs(cbRecordNumberInfoInLog.isSelected());
         // TODO add your handling code here:
     }// GEN-LAST:event_cbRecordNumberInfoInLogFocusLost
 
@@ -6319,11 +6544,11 @@ public class BT747Main extends javax.swing.JFrame implements
     }// GEN-LAST:event_TrkRCRAction
 
     private void btSetFlashActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
+        setFlashConfig();
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btSetHoluxNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
+        c.setHoluxName(txtHoluxName.getText());
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btApplySBASActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
@@ -6331,16 +6556,17 @@ public class BT747Main extends javax.swing.JFrame implements
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btSetNMEAOutputActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
+        setNMEAOutPeriods();
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btSetNMEAOutputDefaultsActionPerformed(
             java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
+        c.setNMEADefaultPeriods();
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btSetNMEAOutput1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
         // TODO add your handling code here:
+        setNMEAOutFile();
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btSetNMEAOutputDefaults1ActionPerformed(
@@ -6349,20 +6575,20 @@ public class BT747Main extends javax.swing.JFrame implements
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btHotStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
+        c.doHotStart();
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btWarmStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
+        c.doWarmStart();
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btColdStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
+        c.doColdStart();
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btFactoryResetDeviceActionPerformed(
             java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
+        c.doFactoryReset();
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btLogByApplyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed

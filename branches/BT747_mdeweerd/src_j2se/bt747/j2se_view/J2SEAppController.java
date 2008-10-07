@@ -195,6 +195,34 @@ public final class J2SEAppController extends Controller {
         }
     }
 
+    void doFactoryReset() {
+        MessageBox mb;
+        String[] szExitButtonArray = { Txt.YES, Txt.NO };
+        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.CONFIRM_FACT_RESET,
+                szExitButtonArray);
+        mb.popupBlockingModal();
+        if (mb.getPressedButtonIndex() == 0) {
+            // Exit application
+            c.doFullColdStart();
+        }
+
+    }
+
+    void setFlashConfig(final boolean lock,
+            final int updateRate, final int baudRate, final int periodGLL,
+            final int periodRMC, final int periodVTG, final int periodGSA,
+            final int periodGSV, final int periodGGA, final int periodZDA,
+            final int periodMCHN) {
+        MessageBox mb;
+      String[] mbStr = { Txt.WRITEFLASH, Txt.ABORT };
+      mb = new MessageBox(Txt.TITLE_ATTENTION,
+              Txt.TXT_FLASH_LIMITED_WRITES, mbStr);
+      mb.popupBlockingModal();
+      if (mb.getPressedButtonIndex() == 0) {
+          c.setFlashUserOption(lock, updateRate, baudRate, periodGLL, periodRMC, periodVTG, periodGSA, periodGSV, periodGGA, periodZDA, periodMCHN);
+      }
+  }
+
     /**
      * Report an error.
      * 

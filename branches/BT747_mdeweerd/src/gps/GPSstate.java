@@ -754,7 +754,7 @@ public final class GPSstate implements BT747Thread {
                         }
                     }
                     dataOK |= C_OK_NMEA;
-                    PostStatusUpdateEvent();
+                    postEvent(GpsEvent.OUTPUT_NMEA_PERIOD_UPDATE);
                     break;
                 case BT747Constants.PMTK_DT_SBAS_TEST: // CMD 513
                     if (sNmea.length == 2) {
@@ -777,7 +777,6 @@ public final class GPSstate implements BT747Thread {
                     PostStatusUpdateEvent();
                     break;
                 case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
-
                     dtUserOptionTimesLeft = Convert.toInt(sNmea[1]);
                     dtUpdateRate = Convert.toInt(sNmea[2]);
                     dtBaudRate = Convert.toInt(sNmea[3]);
@@ -789,8 +788,7 @@ public final class GPSstate implements BT747Thread {
                     dtGGA_Period = Convert.toInt(sNmea[9]);
                     dtZDA_Period = Convert.toInt(sNmea[10]);
                     dtMCHN_Period = Convert.toInt(sNmea[11]);
-
-                    PostStatusUpdateEvent();
+                    postEvent(GpsEvent.UPDATE_FLASH_CONFIG);
                     break;
                 case BT747Constants.PMTK_DT_BT_MAC_ADDR: // CMD 592
                     if (sNmea[1].length() == 12) {
@@ -846,7 +844,7 @@ public final class GPSstate implements BT747Thread {
                 case BT747Constants.HOLUX_API_DT_NAME:
                     if (sNmea.length == 3) {
                         this.holuxName = sNmea[2];
-                        PostStatusUpdateEvent();
+                        postEvent(GpsEvent.UPDATE_HOLUX_NAME);
                     }
                     break;
                 default:
