@@ -375,6 +375,9 @@ final class MTKLogDownloadHandler {
                         && ((logNextReadAddr + dataLength) != logNextReqAddr)) {
                     // Received data is not the right size - transmission error.
                     // Can happen on Palm over BT.
+                    if(Generic.isDebug()) {
+                        Generic.debug("Unexpected datalength: "+Convert.unsigned2hex(dataLength, 8));
+                    }
                     logState = C_LOG_RECOVER;
                 } else {
                     // Data seems ok
@@ -429,7 +432,8 @@ final class MTKLogDownloadHandler {
             } else {
                 Generic.debug("Expected:"
                         + Convert.unsigned2hex(logNextReadAddr, 8) + " Got:"
-                        + Convert.unsigned2hex(startAddr, 8), null);
+                        + Convert.unsigned2hex(startAddr, 8) + " ("
+                        + Convert.unsigned2hex(dataLength, 8) + ")", null);
                 recoverFromLogError();
             }
             break;
@@ -469,11 +473,22 @@ final class MTKLogDownloadHandler {
                 } else {
                     logState = C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY;
                     if (Generic.isDebug()) {
-                        Generic.debug("Different data - requesting overwrite confirmation");
+                        Generic
+                                .debug("Different data - requesting overwrite confirmation");
                     }
                     gpsState
                             .postEvent(GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY);
                 }
+            } else {
+                if (Generic.isDebug()) {
+                    Generic.debug("Expected:"
+                            + Convert.unsigned2hex(C_BLOCKVERIF_START, 8)
+                            + " Got:" + Convert.unsigned2hex(startAddr, 8)
+                            + " (" + Convert.unsigned2hex(dataLength, 8) + ")",
+                            null);
+                }
+                logState = C_LOG_CHECK;
+                // recoverFromLogError();
             }
             break;
         default:
