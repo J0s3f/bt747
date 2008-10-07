@@ -200,8 +200,13 @@ public class BT747Main extends javax.swing.JFrame implements
         lbConversionTime.setVisible(false);
 
         updateEstimatedNbrRecords();
+        
+        getNMEAOutFile();
 
         c.reqHoluxName();
+        c.reqFlashUserOption();
+        c.reqNMEAPeriods();
+
     }
 
     private long conversionStartTime;
@@ -602,6 +607,89 @@ public class BT747Main extends javax.swing.JFrame implements
         }
     }
 
+    void getNMEAOutFile() {
+        // c.setNMEAset(maskNMEAset);
+        // Should be checkboxes...
+        int outFormat = m.getNMEAset();
+        ;
+
+        cbNMEAFileGLL
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_GLL_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileRMC
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_RMC_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileVTG
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_VTG_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileGGA
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_GGA_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileGSA
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_GSA_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileGSV
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_GSV_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileGRS
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_GRS_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileGST
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_GST_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileType8
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_TYPE8_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileType9
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_TYPE9_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileType10
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_TYPE10_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileType11
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_TYPE11_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileType12
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_TYPE12_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileMALM
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_MALM_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileMEPH
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_MEPH_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileMDGP
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_MDGP_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileMDBG
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_MDBG_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileMZDA
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_ZDA_IDX)) != 0 ? 1
+                        : 0);
+
+        cbNMEAFileMCHN
+                .setSelectedIndex((outFormat & (1 << BT747Constants.NMEA_SEN_MCHN_IDX)) != 0 ? 1
+                        : 0);
+    }
+
     void setNMEAOutFile() {
         // c.setNMEAset(maskNMEAset);
         // Should be checkboxes...
@@ -667,6 +755,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         c.setNMEAset(outFormat);
     }
+
 
     void getNMEAOutPeriods() {
         cbNMEAOutGLL.setSelectedIndex(m
