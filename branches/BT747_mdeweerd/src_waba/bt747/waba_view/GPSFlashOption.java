@@ -38,8 +38,8 @@ import bt747.waba_view.ui.BT747MessageBox;
  * @author Mario De Weerd
  */
 public final class GPSFlashOption extends Container implements ModelListener {
-    private AppController c;
-    private Model m;
+    private final AppController c;
+    private final Model m;
 
     private Edit userOptionTimesLeft;
     private Edit edUpdateRate;
@@ -60,7 +60,7 @@ public final class GPSFlashOption extends Container implements ModelListener {
         this.c = c;
     }
 
-    protected void onStart() {
+    protected final void onStart() {
         super.onStart();
 
         add(new Label(Txt.TIMESLEFT), LEFT, TOP);
@@ -94,7 +94,7 @@ public final class GPSFlashOption extends Container implements ModelListener {
 
     }
 
-    public void updateButtons() {
+    private final void updateButtons() {
         userOptionTimesLeft.setText(Convert.toString(m
                 .getDtUserOptionTimesLeft()));
         edUpdateRate.setText(Convert.toString(m.getDtUpdateRate()));
@@ -122,7 +122,7 @@ public final class GPSFlashOption extends Container implements ModelListener {
 
     }
 
-    public void setSettings() {
+    private void setSettings() {
         BT747MessageBox mb;
         String[] mbStr = { Txt.WRITEFLASH, Txt.ABORT };
         mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
@@ -144,7 +144,7 @@ public final class GPSFlashOption extends Container implements ModelListener {
 
     }
 
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         super.onEvent(event);
         switch (event.type) {
         case ControlEvent.PRESSED:
@@ -161,7 +161,7 @@ public final class GPSFlashOption extends Container implements ModelListener {
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
+    public final void modelEvent(final ModelEvent event) {
         if (event.getType() == ModelEvent.UPDATE_FLASH_CONFIG) {
             updateButtons();
         }

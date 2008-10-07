@@ -44,8 +44,8 @@ import bt747.sys.Time;
  */
 public final class GPSLogGet extends Container implements ModelListener {
 
-    private Model m;
-    private AppController c;
+    private final Model m;
+    private final AppController c;
 
     private MyCheck chkLogOnOff;
     private MyCheck chkLogOverwriteStop;
@@ -94,7 +94,7 @@ public final class GPSLogGet extends Container implements ModelListener {
         this.c = c;
     }
 
-    private String convertUTCtoDateString(final int utcTime) {
+    private static final String convertUTCtoDateString(final int utcTime) {
         Time t = new Time();
         String dateString;
         t.setUTCTime(utcTime);
@@ -112,7 +112,7 @@ public final class GPSLogGet extends Container implements ModelListener {
      * 
      * @see waba.ui.Container#onStart()
      */
-    protected void onStart() {
+    protected final void onStart() {
         super.onStart();
         add(chkLogOnOff = new MyCheck(Txt.DEV_LOGONOFF), LEFT, TOP); //$NON-NLS-1$
         cbDownload = new ComboBox(downloadStr);
@@ -195,7 +195,7 @@ public final class GPSLogGet extends Container implements ModelListener {
         c.reqLogOverwrite();
     }
 
-    public void updateButtons() {
+    private final void updateButtons() {
         chkLogOnOff.setChecked(m.isLoggingActive());
         // m_chkLogOnOff.repaintNow();
         chkLogOverwriteStop.setChecked(m.isLogFullOverwrite());
@@ -220,7 +220,7 @@ public final class GPSLogGet extends Container implements ModelListener {
      * 
      * @see waba.ui.Control#onEvent(waba.ui.Event)
      */
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         // Vm.debug("Event:"+event.type+" "+event.consumed);
         super.onEvent(event);
         switch (event.type) {
@@ -323,19 +323,21 @@ public final class GPSLogGet extends Container implements ModelListener {
              * a good idea to save memory when possible
              */
             break;
-            default:
-                break;
+        default:
+            break;
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
-        int eventType = event.getType();
-        if (eventType == ModelEvent.DATA_UPDATE) {
+    public final void modelEvent(final ModelEvent event) {
+        switch (event.getType()) {
+        case ModelEvent.DATA_UPDATE:
             updateButtons();
-        } else if (eventType == ModelEvent.DOWNLOAD_METHOD_CHANGE) {
+            break;
+        case ModelEvent.DOWNLOAD_METHOD_CHANGE:
             cbDownload.select(m.getDownloadMethod());
-        } else if (eventType == ModelEvent.CONVERSION_ENDED
-                || eventType == ModelEvent.CONVERSION_STARTED) {
+            break;
+        case ModelEvent.CONVERSION_ENDED:
+        case ModelEvent.CONVERSION_STARTED: {
             Button b = null;
             switch (m.getLastConversionOngoing()) {
             case Model.CSV_LOGTYPE:
@@ -370,6 +372,10 @@ public final class GPSLogGet extends Container implements ModelListener {
                 }
                 b.repaintNow();
             }
+        }
+            break;
+        default:
+            break;
         }
     }
 }

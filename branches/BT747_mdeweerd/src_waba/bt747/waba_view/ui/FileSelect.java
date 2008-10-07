@@ -51,11 +51,11 @@ public final class FileSelect extends Window {
         relPath = "/";
     }
 
-    public void setDirOnly(final boolean b) {
+    public final void setDirOnly(final boolean b) {
         dirOnly = b;
     }
 
-    public void setPath(final String path) {
+    public final void setPath(final String path) {
         if (dirOnly && !path.endsWith("/")) {
             relPath = path + "/";
         } else {
@@ -79,7 +79,7 @@ public final class FileSelect extends Window {
         }
     }
 
-    public String getRelPath() {
+    public final String getRelPath() {
         if (relPath.endsWith("/")) {
             return relPath.substring(0, relPath.length() - 1);
         } else {
@@ -87,7 +87,7 @@ public final class FileSelect extends Window {
         }
     }
 
-    public void setCardSlot(final int card) {
+    public final void setCardSlot(final int card) {
         cardSlot = card;
     }
 
@@ -96,7 +96,7 @@ public final class FileSelect extends Window {
      * 
      * @see waba.ui.Window#onPopup()
      */
-    protected void onPopup() {
+    protected final void onPopup() {
         buildWindow();
     }
 
@@ -192,7 +192,7 @@ public final class FileSelect extends Window {
      * 
      * @see waba.ui.Control#onEvent(waba.ui.Event)
      */
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         if (event.target != null) {
             switch (event.type) {
             case ControlEvent.PRESSED:

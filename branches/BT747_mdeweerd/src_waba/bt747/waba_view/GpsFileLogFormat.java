@@ -37,10 +37,10 @@ import bt747.model.ModelListener;
 public final class GpsFileLogFormat extends Container implements ModelListener {
     private static final int C_LOG_FMT_COUNT = 21 - 1;
     /** The object that is used to communicate with the GPS device. */
-    private Model m;
-    private AppController c;
+    private final Model m;
+    private final AppController c;
     /** The tickboxes for the format items */
-    private MyCheck[] chkLogFmtItems = new MyCheck[C_LOG_FMT_COUNT];
+    private final MyCheck[] chkLogFmtItems = new MyCheck[C_LOG_FMT_COUNT];
     /** When selected output 'comments' in certain formats */
     private MyCheck commentCheck;
     /** When selected give a name to individual trackpoints */
@@ -59,7 +59,7 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
      * Initiliaser once all objects received initial setup
      * 
      */
-    protected void onStart() {
+    protected final void onStart() {
         // Add all tick buttons.
         for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
             chkLogFmtItems[i] = new MyCheck(Txt.logFmtItems[i]);
@@ -121,7 +121,7 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
      * @param event
      *            The event to be interpreted.
      */
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
@@ -151,14 +151,18 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
-        int eventType = event.getType();
-        if (eventType == ModelEvent.FILE_LOG_FORMAT_UPDATE) {
+    public final void modelEvent(final ModelEvent event) {
+        switch (event.getType()) {
+        case ModelEvent.FILE_LOG_FORMAT_UPDATE:
             updateLogFormat(m.getIntOpt(Model.FILEFIELDFORMAT));
-        } else if (eventType == ModelEvent.SETTING_CHANGE) {
+            break;
+        case ModelEvent.SETTING_CHANGE:
             // switch (event.getArg()) {
             //            
             // }
+        break;
+        default:
+            break;
         }
     }
 }

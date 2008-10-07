@@ -53,7 +53,7 @@ public final class BT747MessageBox extends waba.ui.MessageBox {
     /**
      * @return Returns the popped.
      */
-    public boolean isPopped() {
+    public final boolean isPopped() {
         return popped;
     }
 
@@ -62,7 +62,7 @@ public final class BT747MessageBox extends waba.ui.MessageBox {
      * 
      * @see waba.ui.Window#onPopup()
      */
-    protected void onPopup() {
+    protected final void onPopup() {
         // TODO Auto-generated method stub
         super.onPopup();
         popped = true;
@@ -74,7 +74,7 @@ public final class BT747MessageBox extends waba.ui.MessageBox {
      * 
      * @see waba.ui.Window#onUnpop()
      */
-    protected void onUnpop() {
+    protected final void onUnpop() {
         // TODO Auto-generated method stub
         super.onUnpop();
 

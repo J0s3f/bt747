@@ -51,7 +51,7 @@ public final class GPSconctrl extends Container implements ModelListener {
     // private Button btnUSB;
     private Button btnConnectPort;
 
-    private AppController c;
+    private final AppController c;
 
     private Label lbLat; // GPS information
     private Label lbLon; // GPS information
@@ -68,20 +68,19 @@ public final class GPSconctrl extends Container implements ModelListener {
     private static final String[] BaudRates = { "115200", "38400" };
 
     private static final int C_MAX_PORTNBR = 32;
-    private Model m;
+    private final Model m;
 
     public GPSconctrl(final AppController c, final Model m) {
         this.c = c;
         this.m = m;
     }
 
-    protected void onStart() {
-
+    protected final void onStart() {
         btnBluetooth = new Button(Txt.BT_BLUETOOTH);
         // Functionality only valid on Palm and Mac platform.
-//        if (!bt747.sys.Settings.platform.startsWith("Palm")) {
-//            btnBluetooth.setVisible(false);
-//        }
+        // if (!bt747.sys.Settings.platform.startsWith("Palm")) {
+        // btnBluetooth.setVisible(false);
+        // }
 
         // btnUSB=new Button("USB");
         btnConnectPort = new Button(Txt.BT_CONNECT_PRT);
@@ -214,7 +213,7 @@ public final class GPSconctrl extends Container implements ModelListener {
         // lbGeoid.repaintNow();
     }
 
-    public void onEvent(final Event event) {
+    public final void onEvent(final Event event) {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == btnBluetooth) {
@@ -238,22 +237,24 @@ public final class GPSconctrl extends Container implements ModelListener {
                 c.connectGPS();
             }
             break;
-            default:
-                break;
+        default:
+            break;
         }
     }
 
-    public void modelEvent(final ModelEvent event) {
-        int eventType = event.getType();
-        if (eventType == ModelEvent.GPGGA) {
+    public final void modelEvent(final ModelEvent event) {
+        switch (event.getType()) {
+        case ModelEvent.GPGGA:
             updateGPSData((GPSRecord) (event.getArg()));
-        } else if (eventType == ModelEvent.GPRMC) {
+            break;
+        case ModelEvent.GPRMC:
             updateRMCData((GPSRecord) (event.getArg()));
             updateGPSData((GPSRecord) (event.getArg()));
-        } if (eventType == ModelEvent.DATA_UPDATE) {
-            if(this.isVisible()) {
+            break;
+        case ModelEvent.DATA_UPDATE:
+            if (this.isVisible()) {
                 updateButtons();
             }
-        } 
+        }
     }
 }
