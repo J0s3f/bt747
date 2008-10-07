@@ -679,12 +679,13 @@ public final class GPSstate implements BT747Thread {
                 Generic.debug("Problem - report NMEA is 0 length");
             } else if (sNmea.length == 1 && sNmea[0].startsWith("WP")) {
                 AnalyseDPL700Data(sNmea[0]);
-            } else if (gpsDecode && (mtkLogHandler.isLogDownloadOnGoing()) // Not
+            } else if (gpsDecode && !mtkLogHandler.isLogDownloadOnGoing() // Not
                     // during
                     // log
                     // download for
                     // performance.
-                    && sNmea[0].startsWith("G")) {
+                    && sNmea[0].length() != 0
+                    && sNmea[0].charAt(0)=='G') {
                 // Commented - not interpreted.
                 if (sNmea[0].startsWith("GPGGA")) {
                     analyzeGPGGA(sNmea, gpsPos);
