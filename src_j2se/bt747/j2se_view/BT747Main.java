@@ -29,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bt747.Txt;
+import bt747.Version;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
@@ -75,13 +76,13 @@ public class BT747Main extends javax.swing.JFrame implements
         initAppData();
     }
 
-    public void createMessageBoxModal(String title, String msg,
-            String[] buttonCaptions) {
-        MessageBox mb;
-        mb = new MessageBox(title, msg, buttonCaptions);
-        // TODO: finish message box handling and send back events
-        // to controller.
-    }
+//    public void createMessageBoxModal(String title, String msg,
+//            String[] buttonCaptions) {
+//        MessageBox mb;
+//        mb = new MessageBox(title, msg, buttonCaptions);
+//        // TODO: finish message box handling and send back events
+//        // to controller.
+//    }
 
     public void setController(final Controller c) {
         if (this.m != null) {
@@ -189,6 +190,9 @@ public class BT747Main extends javax.swing.JFrame implements
         txtHoluxName.setText(m.getHoluxName());
         cbRecordNumberInfoInLog.setSelected(m
                 .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));
+        lbThisSWVersion.setText("V" + Version.VERSION_NUMBER + "(" + Version.DATE
+                + ")");
+
         switch (m.getBinDecoder()) {
         case J2SEAppController.DECODER_ORG:
             cbDecoderChoice.setSelectedIndex(0);
@@ -202,11 +206,6 @@ public class BT747Main extends javax.swing.JFrame implements
         updateEstimatedNbrRecords();
         
         getNMEAOutFile();
-
-        c.reqHoluxName();
-        c.reqFlashUserOption();
-        c.reqNMEAPeriods();
-
     }
 
     private long conversionStartTime;
@@ -245,13 +244,13 @@ public class BT747Main extends javax.swing.JFrame implements
 
     private void updateGPSData(final GPSRecord gps) {
 
-        lbLatitude.setText(String.valueOf(gps.latitude));
+        lbLatitude.setText(String.format((Locale) null, "%.8f",gps.latitude));
         // lbHeight.setText(String.valueOf(gps.height,3)+Txt.METERS_ABBR);
-        lbLongitude.setText(String.valueOf(gps.longitude));
-        lbGeoid.setText(String.valueOf(gps.geoid)
+        lbLongitude.setText(String.format((Locale) null, "%.8f",gps.longitude));
+        lbGeoid.setText(String.format((Locale) null, "%.1f",gps.geoid)
                 + Txt.METERS_ABBR
                 + Txt.CALC
-                + String.valueOf(Conv.wgs84Separation(gps.latitude,
+                + String.format((Locale) null, "%.1f",Conv.wgs84Separation(gps.latitude,
                         gps.longitude)) + Txt.METERS_ABBR + ")");
 
     }
@@ -265,13 +264,68 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.GPRMC:
             updateRMCData((GPSRecord) e.getArg());
             break;
-        case ModelEvent.DATA_UPDATE:
-
+        case ModelEvent.UPDATE_LOG_FLASH:
+            lbFlashInfo.setText(((m.getFlashManuProdID() != 0) ? 
+                    Convert.unsigned2hex(m.getFlashManuProdID(), 8) + " "
+                    + m.getFlashDesc() : ""));
+            break;
+        case ModelEvent.UPDATE_MTK_VERSION:
+        case ModelEvent.UPDATE_MTK_RELEASE:
+            lbModel.setText(m.getModel());
+            lbFirmWare.setText(((m.getMainVersion().length() != 0) ? Txt.MAIN : "")
+                    + m.getMainVersion()+" "+m.getFirmwareVersion());
+            break;
+        case ModelEvent.UPDATE_LOG_VERSION:
+            lbLoggerSWVersion.setText(m.getMtkLogVersion());
+            break;
+        case ModelEvent.UPDATE_SBAS:
+            jCheckBox26.setSelected(m.isSBASEnabled());
+            break;
+        case ModelEvent.UPDATE_SBAS_TEST:
+            jCheckBox27.setSelected(m.isSBASTestEnabled());
+            break;
+            // TODO
+        case ModelEvent.UPDATE_DGPS_MODE:
+            try {
+                jComboBox23.setSelectedIndex(m.getDgpsMode());
+            } catch (Exception ee) {
+                // TODO: handle exception
+                Generic.debug("Unknown DGPS Mode" + m.getDgpsMode(), ee);
+            }
+                
+                //TODO
+//            cbDGPSMode.select(m.getDgpsMode());
+//            if (ENABLE_PWR_SAVE_CONTROL) {
+//                chkPowerSaveOnOff.setChecked(m.isPowerSaveEnabled());
+//            }
+        case ModelEvent.UPDATE_DATUM:
+            try {
+            //jComboBox23.setSelectedIndex(m.getDatum());
+            } catch (Exception ee) {
+                // TODO: handle exception
+                Generic.debug("Unknown DATUM" + m.getDatum(), ee);
+            }
+            // TODO
+//            cbDatumMode.select(m.getDatum());
+        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
+            ckLogTimeActive.setSelected(m.getLogTimeInterval() != 0);
+            txtLogTimeInterval.setText(Convert.toString(m.getLogTimeInterval()/10.,1));
+            break;
+        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
+            ckLogSpeedActive.setSelected(m.getLogSpeedInterval() != 0);
+            txtLogSpeedInterval.setText(Convert.toString(m.getLogSpeedInterval()/10.,1));
+            break;
+        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
+            ckLogDistanceActive.setSelected(m.getLogDistanceInterval() != 0);
+            txtLogDistanceInterval.setText(Convert.toString(m.getLogDistanceInterval()/10.,1));
+            break;
+        case ModelEvent.UPDATE_FIX_PERIOD:
+            jTextField7.setText(Convert.toString(m.getLogFixPeriod()));
             break;
         case ModelEvent.GPGGA:
             updateGPSData((GPSRecord) e.getArg());
             break;
-        case ModelEvent.LOG_FORMAT_UPDATE:
+        case ModelEvent.UPDATE_LOG_FORMAT:
             updateLogFormatData();
             break;
         case ModelEvent.LOGFILEPATH_UPDATE:
@@ -286,7 +340,7 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.INCREMENTAL_CHANGE:
             getIncremental();
             break;
-        case ModelEvent.OUTPUT_NMEA_PERIOD_UPDATE:
+        case ModelEvent.UPDATE_OUTPUT_NMEA_PERIOD:
             getNMEAOutPeriods();
             break;
         case ModelEvent.TRK_VALID_CHANGE:
@@ -308,6 +362,22 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.CONNECTED:
             btConnect.setText("Disconnect");
             btConnectFunctionIsConnect = false;
+            
+            // TODO: Find the way to do this on tab entry.
+            c.reqHoluxName();
+            c.reqFlashUserOption();
+            c.reqNMEAPeriods();
+
+            c.reqLogOverwrite();
+            c.reqLogReasonStatus();
+            c.reqSBASEnabled();
+            c.reqSBASTestEnabled();
+            c.reqFixInterval();
+            c.reqBTAddr();
+            c.reqMtkLogVersion();
+            c.reqDeviceInfo();
+            c.reqDatumMode();
+
             break;
         case ModelEvent.DISCONNECTED:
             btConnect.setText("Connect");
@@ -4242,13 +4312,9 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
     c.reqSBASTestEnabled();
     c.reqFixInterval();
     c.reqBTAddr();
-    
-
+    c.reqMtkLogVersion();
+    c.reqDatumMode();
 }//GEN-LAST:event_DeviceSettingsPanelFocusGained
-
-private void AdvancedfileSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AdvancedfileSettingsPanelFocusGained
-// TODO add your handling code here:
-}//GEN-LAST:event_AdvancedfileSettingsPanelFocusGained
 
     private void txtPDOPMaxInputMethodTextChanged(
             java.awt.event.InputMethodEvent evt) {// GEN-FIRST:event_txtPDOPMaxInputMethodTextChanged
@@ -4279,10 +4345,6 @@ private void AdvancedfileSettingsPanelFocusGained(java.awt.event.FocusEvent evt)
             javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_cbGPXTrkSegWhenSmallStateChanged
         c.setGpxTrkSegWhenBig(cbGPXTrkSegWhenSmall.isSelected());
     }// GEN-LAST:event_cbGPXTrkSegWhenSmallStateChanged
-
-    private void cbNMEAOutGLLActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbNMEAOutGLLActionPerformed
-        // TODO Remove
-    }// GEN-LAST:event_cbNMEAOutGLLActionPerformed
 
     private void cbOneFilePerDayFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbOneFilePerDayFocusLost
         int type = 0;
@@ -4371,7 +4433,8 @@ private void AdvancedfileSettingsPanelFocusGained(java.awt.event.FocusEvent evt)
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btApplySBASActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
+        c.setSBASEnabled(jCheckBox26.isSelected());
+        c.setSBASTestEnabled(jCheckBox27.isSelected());
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btSetNMEAOutputActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
@@ -4404,13 +4467,35 @@ private void AdvancedfileSettingsPanelFocusGained(java.awt.event.FocusEvent evt)
         c.doColdStart();
     }// GEN-LAST:event_btHotStartActionPerformed
 
-    private void btFactoryResetDeviceActionPerformed(
-            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+    private void btFactoryResetDeviceActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
         c.doFactoryReset();
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btLogByApplyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
+        try {
+            int value;
+            if(ckLogTimeActive.isSelected()) {
+                value = (int)(Convert.toDouble(txtLogTimeInterval.getText())*10);
+            } else {
+                value = 0;
+            }
+            c.setLogTimeInterval(value);
+            if(ckLogSpeedActive.isSelected()) {
+                value = (int)(Convert.toDouble(txtLogSpeedInterval.getText()));
+            } else {
+                value = 0;
+            }
+            c.setLogSpeedInterval(value);
+            if(ckLogDistanceActive.isSelected()) {
+                value = (int)(Convert.toDouble(txtLogDistanceInterval.getText())*10);
+            } else {
+                value = 0;
+            }
+            c.setLogDistanceInterval(value);
+            c.setFixInterval(Convert.toInt(jTextField7.getText()));
+        } catch (Exception e) {
+            Generic.debug("Problem in Apply Log conditions - probably non-numeric value",e);
+        }
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btDownloadFromNumerixActionPerformed(
@@ -4427,8 +4512,7 @@ private void AdvancedfileSettingsPanelFocusGained(java.awt.event.FocusEvent evt)
         updateEstimatedNbrRecords();
     }// GEN-LAST:event_updateLogRecordEstCount
 
-    private void cbDisableLoggingDuringDownloadFocusLost(
-            java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbDisableLoggingDuringDownloadFocusLost
+    private void cbDisableLoggingDuringDownloadFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbDisableLoggingDuringDownloadFocusLost
         c.setIncremental(cbDisableLoggingDuringDownload.isSelected());
     }// GEN-LAST:event_cbDisableLoggingDuringDownloadFocusLost
 
@@ -4739,11 +4823,13 @@ private void AdvancedfileSettingsPanelFocusGained(java.awt.event.FocusEvent evt)
     }
 
     private void progressBarUpdate() {
-        DownloadProgressBar.setMinimum(m.getStartAddr());
-        DownloadProgressBar.setMaximum(m.getEndAddr());
-        DownloadProgressBar.setValue(m.getNextReadAddr());
         DownloadProgressBar.setVisible(m.isDownloadOnGoing());
         DownloadProgressLabel.setVisible(m.isDownloadOnGoing());
+        if(m.isDownloadOnGoing()) {
+            DownloadProgressBar.setMinimum(m.getStartAddr());
+            DownloadProgressBar.setMaximum(m.getEndAddr());
+            DownloadProgressBar.setValue(m.getNextReadAddr());
+        }
         // this.invalidate();
         // this.paintAll(this.getGraphics());
     }
@@ -4895,6 +4981,14 @@ private void AdvancedfileSettingsPanelFocusGained(java.awt.event.FocusEvent evt)
             }
         });
     }
+
+    private void cbNMEAOutGLLActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbNMEAOutGLLActionPerformed
+        // TODO Remove
+    }// GEN-LAST:event_cbNMEAOutGLLActionPerformed
+
+    private void AdvancedfileSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AdvancedfileSettingsPanelFocusGained
+     // Remove
+     }//GEN-LAST:event_AdvancedfileSettingsPanelFocusGained
 
     // public static void main(String args) {
     // main((String[])null);
