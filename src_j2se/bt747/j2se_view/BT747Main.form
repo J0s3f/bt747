@@ -114,7 +114,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="tabbedPanelAll" alignment="0" pref="855" max="32767" attributes="0"/>
+                  <Component id="tabbedPanelAll" alignment="0" pref="841" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="btConnect" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -122,19 +122,19 @@
                       <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
                       <Component id="DownloadProgressLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="DownloadProgressBar" pref="434" max="32767" attributes="0"/>
+                      <Component id="DownloadProgressBar" pref="420" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="tabbedPanelAll" max="32767" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="tabbedPanelAll" pref="387" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                       <Component id="btConnect" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -217,8 +217,8 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="tfOutputFileBaseName" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
-                              <Component id="tfWorkDirectory" alignment="0" pref="675" max="32767" attributes="1"/>
-                              <Component id="tfRawLogFilePath" alignment="0" pref="675" max="32767" attributes="1"/>
+                              <Component id="tfWorkDirectory" alignment="0" pref="661" max="32767" attributes="1"/>
+                              <Component id="tfRawLogFilePath" alignment="0" pref="661" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -243,7 +243,7 @@
                                   <Component id="btOutputFile" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="22" max="32767" attributes="0"/>
+                          <EmptySpace pref="24" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -251,7 +251,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTextField" name="tfWorkDirectory">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField1"/>
+                    <Property name="text" type="java.lang.String" value="WorkDir"/>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="tfWorkDirectory.setText(m.getBaseDirPath());"/>
@@ -259,7 +259,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="tfRawLogFilePath">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField2"/>
+                    <Property name="text" type="java.lang.String" value="RawFile"/>
                   </Properties>
                   <Events>
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfRawLogFilePathFocusLost"/>
@@ -267,7 +267,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="tfOutputFileBaseName">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField3"/>
+                    <Property name="text" type="java.lang.String" value="OutputBase"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btWorkingDirectory">
@@ -338,7 +338,7 @@
                               <Component id="btDownloadFromNumerix" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbDisableLoggingDuringDownload" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="12" max="32767" attributes="0"/>
+                          <EmptySpace pref="17" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -414,14 +414,14 @@
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace pref="24" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="jPanel18" pref="52" max="32767" attributes="0"/>
+                          <Component id="jPanel18" pref="54" max="32767" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="btConvert" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -438,7 +438,7 @@
                               <Component id="cbDecoderChoice" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbConversionTime" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="25" max="32767" attributes="0"/>
+                          <EmptySpace pref="27" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -593,7 +593,7 @@
                           <Component id="pnVarious" min="-2" max="-2" attributes="1"/>
                           <Component id="pnSeparation" alignment="0" min="-2" max="-2" attributes="2"/>
                       </Group>
-                      <EmptySpace pref="499" max="32767" attributes="0"/>
+                      <EmptySpace pref="485" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -604,7 +604,7 @@
                       <Component id="pnVarious" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnSeparation" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="145" max="32767" attributes="0"/>
+                      <EmptySpace pref="154" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -834,7 +834,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="tfTrackSeparationTime">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField7"/>
+                    <Property name="text" type="java.lang.String" value="000"/>
                   </Properties>
                   <Events>
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfTrackSeparationTimeFocusLost"/>
@@ -868,7 +868,7 @@
                       <Component id="pnCommonFilter" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnWaypoint" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="18" max="32767" attributes="0"/>
+                      <EmptySpace pref="29" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -881,7 +881,7 @@
                           <Component id="pnTrackpoint" alignment="0" max="32767" attributes="1"/>
                           <Component id="pnCommonFilter" alignment="0" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace pref="32" max="32767" attributes="0"/>
+                      <EmptySpace pref="41" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1282,7 +1282,6 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jPanel14" alignment="0" max="32767" attributes="1"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
@@ -1292,6 +1291,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
+                      <Component id="jPanel14" alignment="0" max="32767" attributes="1"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -1322,35 +1322,28 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="txtRecCntMin" alignment="0" max="32767" attributes="1"/>
-                                          <Component id="txtDistanceMin" alignment="0" max="32767" attributes="1"/>
-                                          <Component id="txtSpeedMin" alignment="0" max="32767" attributes="1"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="2" attributes="0">
-                                          <Component id="lbDistanceFltr" alignment="2" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lbSpeedFltr" alignment="2" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lbNSATFltr" alignment="2" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lbRecNbrFltr" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="2" attributes="0">
-                                          <Component id="txtRecCntMax" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txtDistanceMax" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txtSpeedMax" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="txtNSATMin" max="32767" attributes="1"/>
-                                      <EmptySpace min="-2" pref="155" max="-2" attributes="0"/>
-                                  </Group>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="txtNSATMin" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="txtDistanceMin" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="txtSpeedMin" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="txtRecCntMin" alignment="0" pref="51" max="32767" attributes="1"/>
                               </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="2" attributes="0">
+                                  <Component id="lbDistanceFltr" alignment="2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbSpeedFltr" alignment="2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbNSATFltr" alignment="2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbRecNbrFltr" alignment="2" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="2" attributes="0">
+                                  <Component id="txtDistanceMax" alignment="0" pref="52" max="32767" attributes="0"/>
+                                  <Component id="txtSpeedMax" alignment="0" pref="52" max="32767" attributes="0"/>
+                                  <Component id="txtRecCntMax" alignment="0" pref="52" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1373,8 +1366,8 @@
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="txtRecCntMax" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="lbRecNbrFltr" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="txtRecCntMax" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="txtDistanceMax" min="-2" max="-2" attributes="0"/>
@@ -1384,8 +1377,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="txtNSATMin" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbNSATFltr" alignment="3" min="-2" pref="14" max="-2" attributes="0"/>
+                                  <Component id="txtNSATMin" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -1394,7 +1387,8 @@
                   <SubComponents>
                     <Component class="javax.swing.JTextField" name="txtRecCntMin">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jTextField2"/>
+                        <Property name="horizontalAlignment" type="int" value="4"/>
+                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="IntVerifier" type="code"/>
                         </Property>
@@ -1405,7 +1399,8 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtDistanceMin">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jTextField3"/>
+                        <Property name="horizontalAlignment" type="int" value="4"/>
+                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
@@ -1416,7 +1411,8 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtSpeedMin">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jTextField4"/>
+                        <Property name="horizontalAlignment" type="int" value="4"/>
+                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
@@ -1437,7 +1433,8 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtRecCntMax">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jTextField2"/>
+                        <Property name="horizontalAlignment" type="int" value="4"/>
+                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="IntVerifier" type="code"/>
                         </Property>
@@ -1448,7 +1445,8 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtDistanceMax">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jTextField3"/>
+                        <Property name="horizontalAlignment" type="int" value="4"/>
+                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
@@ -1459,7 +1457,8 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtSpeedMax">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jTextField4"/>
+                        <Property name="horizontalAlignment" type="int" value="4"/>
+                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
@@ -1475,7 +1474,8 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtNSATMin">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jTextField4"/>
+                        <Property name="horizontalAlignment" type="int" value="4"/>
+                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="IntVerifier" type="code"/>
                         </Property>
@@ -1504,24 +1504,25 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtPDOPMax" min="-2" max="-2" attributes="0"/>
+                                      <Component id="txtPDOPMax" min="-2" pref="57" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="1" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtHDOPMax" min="-2" max="-2" attributes="0"/>
+                                      <Component id="txtHDOPMax" pref="56" max="32767" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="1" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtVDOPMax" min="-2" max="-2" attributes="0"/>
+                                      <Component id="txtVDOPMax" pref="57" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1529,13 +1530,13 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="txtPDOPMax" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtPDOPMax" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="txtHDOPMax" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtHDOPMax" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -1550,7 +1551,7 @@
                   <SubComponents>
                     <Component class="javax.swing.JTextField" name="txtPDOPMax">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jTextField1"/>
+                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
@@ -1569,7 +1570,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtHDOPMax">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jTextField1"/>
+                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
@@ -1588,7 +1589,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtVDOPMax">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jTextField1"/>
+                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="FloatVerifier" type="code"/>
                         </Property>
@@ -2021,40 +2022,18 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="pnLogFormat" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="pnLogFormat" min="-2" pref="301" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="btColdStart" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btFactoryResetDevice" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="pnHoluxSettings" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbStopOrOverwriteWhenFull" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="pnHoluxSettings" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                               <Component id="pnSBAS" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btFormatAndErase" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btFormat" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btErase" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btRecoverMemory" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="btHotStart" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btWarmStart" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                              <Component id="pnLogBy" min="-2" max="-2" attributes="1"/>
-                          </Group>
+                          <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="49" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -2063,44 +2042,22 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="pnLogFormat" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="187" max="-2" attributes="0"/>
+                              <Component id="pnHoluxSettings" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="btFormatAndErase" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btFormat" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btErase" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btRecoverMemory" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="btHotStart" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="btWarmStart" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="btColdStart" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                                          <Component id="btFactoryResetDevice" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="pnHoluxSettings" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="cbStopOrOverwriteWhenFull" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="pnLogBy" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="pnSBAS" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                                  <Component id="pnLogFormat" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="51" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -2120,47 +2077,83 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="pnTime" min="-2" max="-2" attributes="0"/>
-                              <Component id="pnPosition" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="pnTime" min="-2" max="-2" attributes="0"/>
+                                      <Component id="pnPosition" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="pnReason" min="-2" max="-2" attributes="1"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="txtEstimatedRecords" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cbStopOrOverwriteWhenFull" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="pnPrecision" min="-2" max="-2" attributes="1"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="pnSatInfo" min="-2" max="-2" attributes="1"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
+                                          <Component id="cbOtherFormat" max="32767" attributes="1"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="btFormatAndErase" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btFormat" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="btErase" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="btRecoverMemory" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="txtEstimatedRecords" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="pnPrecision" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="pnSatInfo" min="-2" max="-2" attributes="1"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="1">
-                                  <Component id="pnReason" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cbOtherFormat" min="0" pref="108" max="32767" attributes="1"/>
-                              </Group>
-                          </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="pnPrecision" min="-2" pref="166" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txtEstimatedRecords" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Component id="pnPrecision" min="-2" pref="166" max="-2" attributes="1"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="3" attributes="0">
+                                              <Component id="txtEstimatedRecords" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="cbStopOrOverwriteWhenFull" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Component id="pnSatInfo" min="-2" max="-2" attributes="1"/>
+                                  </Group>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="pnReason" min="-2" max="-2" attributes="1"/>
+                                      <Component id="cbOtherFormat" min="-2" max="-2" attributes="1"/>
+                                  </Group>
                               </Group>
-                              <Component id="pnSatInfo" min="-2" max="-2" attributes="1"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="pnTime" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="pnPosition" min="-2" max="-2" attributes="1"/>
+                              </Group>
                           </Group>
-                          <EmptySpace pref="7" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="pnReason" min="-2" max="-2" attributes="1"/>
-                              <Component id="cbOtherFormat" min="-2" max="-2" attributes="1"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="pnTime" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="pnPosition" min="-2" max="-2" attributes="1"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="btFormatAndErase" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btFormat" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="btErase" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btRecoverMemory" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -2528,9 +2521,8 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace pref="7" max="32767" attributes="0"/>
                               <Component id="cbValidFixOnly" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -2560,40 +2552,53 @@
                     <Property name="text" type="java.lang.String" value="Estimated records"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JButton" name="btFormatAndErase">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Set Format &amp; Erase"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFormatAndEraseActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btFormat">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Set Format Only"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFormatActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btErase">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Erase only"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEraseActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btRecoverMemory">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Try to recover faulty memory"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRecoverMemoryActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="cbStopOrOverwriteWhenFull">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="2">
+                        <StringItem index="0" value="Stop when full"/>
+                        <StringItem index="1" value="Stop when full"/>
+                      </StringArray>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbStopOrOverwriteWhenFullFocusLost"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="btFormatAndErase">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Set Format &amp; Erase"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFormatAndEraseActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btFormat">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Set Format Only"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFormatActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btErase">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Erase only"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEraseActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btRecoverMemory">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Try to recover faulty memory"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRecoverMemoryActionPerformed"/>
-              </Events>
-            </Component>
             <Container class="javax.swing.JPanel" name="pnHoluxSettings">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -2638,7 +2643,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtHoluxName">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField1"/>
+                    <Property name="text" type="java.lang.String" value="Unknown"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btSetHoluxName">
@@ -2648,229 +2653,6 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetHoluxNameActionPerformed"/>
                   </Events>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Component class="javax.swing.JButton" name="btHotStart">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Hot Start"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btHotStartActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btWarmStart">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Warm Start"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btWarmStartActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btColdStart">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Cold Start"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btColdStartActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btFactoryResetDevice">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Factory Reset"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFactoryResetDeviceActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JComboBox" name="cbStopOrOverwriteWhenFull">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="Stop when full"/>
-                    <StringItem index="1" value="Stop when full"/>
-                  </StringArray>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbStopOrOverwriteWhenFullFocusLost"/>
-              </Events>
-            </Component>
-            <Container class="javax.swing.JPanel" name="pnLogBy">
-              <Properties>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Log by . . ."/>
-                  </Border>
-                </Property>
-              </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
-                                  <Component id="jLabel41" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jTextField7" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel42" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="ckLogSpeedActive" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="ckLogDistanceActive" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="ckLogTimeActive" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="jLabel39" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel37" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel40" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="txtLogSpeedInterval" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtLogTimeInterval" min="-2" max="-2" attributes="0"/>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="txtLogDistanceInterval" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabel35" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel38" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel36" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
-                          <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="btLogByApply" min="-2" pref="118" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel41" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextField7" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel42" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btLogByApply" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtLogTimeInterval" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel35" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel40" alignment="3" max="32767" attributes="1"/>
-                              <Component id="ckLogTimeActive" alignment="3" min="-2" max="-2" attributes="1"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel37" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel36" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ckLogSpeedActive" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtLogSpeedInterval" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel39" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel38" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ckLogDistanceActive" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtLogDistanceInterval" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel35">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="seconds"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="ckLogSpeedActive">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Speed"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtLogDistanceInterval">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField3"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtLogTimeInterval">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField1"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel36">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="km/h"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="ckLogTimeActive">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Time"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel37">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="above"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel38">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="m"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel39">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="every"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="ckLogDistanceActive">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Distance"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtLogSpeedInterval">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField2"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel40">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="every"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="btLogByApply">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Apply"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLogByApplyActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel41">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Fix every"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="jTextField7">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField4"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel42">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="ms"/>
-                  </Properties>
                 </Component>
               </SubComponents>
             </Container>
@@ -2888,20 +2670,20 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jCheckBox26" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbUseSBAS" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jComboBox23" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbDGPSType" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jCheckBox27" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="47" max="32767" attributes="0"/>
+                          <Component id="cbIncludeTestSBAS" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="58" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btApplySBAS" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="79" max="32767" attributes="0"/>
+                          <EmptySpace pref="90" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -2910,11 +2692,11 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jComboBox23" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jCheckBox26" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbDGPSType" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbUseSBAS" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jCheckBox27" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbIncludeTestSBAS" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btApplySBAS" min="-2" max="-2" attributes="0"/>
                           <EmptySpace pref="18" max="32767" attributes="0"/>
@@ -2923,24 +2705,24 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JComboBox" name="jComboBox23">
+                <Component class="javax.swing.JComboBox" name="cbDGPSType">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="4">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
+                        <StringItem index="0" value="No DGPS"/>
+                        <StringItem index="1" value="RTCM"/>
+                        <StringItem index="2" value="WAAS"/>
+                        <StringItem index="3" value=""/>
                       </StringArray>
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JCheckBox" name="jCheckBox26">
+                <Component class="javax.swing.JCheckBox" name="cbUseSBAS">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Use SBAS"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JCheckBox" name="jCheckBox27">
+                <Component class="javax.swing.JCheckBox" name="cbIncludeTestSBAS">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="incl. Test SBAS"/>
                   </Properties>
@@ -2953,6 +2735,259 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btApplySBASActionPerformed"/>
                   </Events>
                 </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="jPanel2">
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="btHotStart" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="btWarmStart" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="btColdStart" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="btFactoryResetDevice" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="pnLogBy" min="-2" max="-2" attributes="1"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btHotStart" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btWarmStart" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btColdStart" min="-2" pref="23" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="btFactoryResetDevice" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="pnLogBy" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JButton" name="btHotStart">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Hot Start"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btHotStartActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btWarmStart">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Warm Start"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btWarmStartActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btColdStart">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Cold Start"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btColdStartActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btFactoryResetDevice">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Factory Reset"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFactoryResetDeviceActionPerformed"/>
+                  </Events>
+                </Component>
+                <Container class="javax.swing.JPanel" name="pnLogBy">
+                  <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="Log by . . ."/>
+                      </Border>
+                    </Property>
+                  </Properties>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
+                                      <Component id="jLabel41" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jTextField7" min="-2" pref="59" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel42" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="ckLogSpeedActive" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="ckLogDistanceActive" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="ckLogTimeActive" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="jLabel39" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel37" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel40" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="txtLogDistanceInterval" pref="59" max="32767" attributes="1"/>
+                                          </Group>
+                                          <Component id="txtLogTimeInterval" alignment="0" max="32767" attributes="1"/>
+                                          <Component id="txtLogSpeedInterval" alignment="0" max="32767" attributes="1"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel35" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel38" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel36" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                              <Component id="btLogByApply" min="-2" pref="118" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel41" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel42" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btLogByApply" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jTextField7" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel35" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel40" alignment="3" max="32767" attributes="1"/>
+                                  <Component id="ckLogTimeActive" alignment="3" min="-2" max="-2" attributes="1"/>
+                                  <Component id="txtLogTimeInterval" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel37" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel36" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ckLogSpeedActive" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtLogSpeedInterval" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel39" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel38" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ckLogDistanceActive" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtLogDistanceInterval" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="jLabel35">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="seconds"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="ckLogSpeedActive">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Speed"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="txtLogDistanceInterval">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="txtLogTimeInterval">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel36">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="km/h"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="ckLogTimeActive">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Time"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel37">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="above"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel38">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="m"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel39">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="every"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="ckLogDistanceActive">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Distance"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="txtLogSpeedInterval">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel40">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="every"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="btLogByApply">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Apply"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLogByApplyActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel41">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Fix every"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="jTextField7">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel42">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="ms"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
           </SubComponents>
@@ -2994,7 +3029,7 @@
                           <Component id="lbLongitude" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lbLatitude" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="700" max="32767" attributes="0"/>
+                      <EmptySpace pref="682" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -3049,7 +3084,7 @@
                           <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lbThisSWVersion" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="168" max="32767" attributes="0"/>
+                      <EmptySpace pref="177" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -3072,17 +3107,17 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lbLatitude">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel4"/>
+                <Property name="text" type="java.lang.String" value="Unknown"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbLongitude">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel4"/>
+                <Property name="text" type="java.lang.String" value="Unknown"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbTime">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel5"/>
+                <Property name="text" type="java.lang.String" value="Unknown"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
@@ -3092,7 +3127,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lbGeoid">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel5"/>
+                <Property name="text" type="java.lang.String" value="Unknown"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
@@ -3102,7 +3137,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lbFlashInfo">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel8"/>
+                <Property name="text" type="java.lang.String" value="Unknown"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel10">
@@ -3112,7 +3147,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lbModel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel11"/>
+                <Property name="text" type="java.lang.String" value="Unknown"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel14">
@@ -3122,7 +3157,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lbFirmWare">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel15"/>
+                <Property name="text" type="java.lang.String" value="Unknown"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel16">
@@ -3137,12 +3172,12 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lbLoggerSWVersion">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel18"/>
+                <Property name="text" type="java.lang.String" value="Unknown"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbThisSWVersion">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel19"/>
+                <Property name="text" type="java.lang.String" value="Unknown"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -3164,7 +3199,7 @@
                       <Component id="pnFlashSettings" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnNMEAOutput" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="397" max="32767" attributes="0"/>
+                      <EmptySpace pref="373" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -3174,7 +3209,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="pnNMEAOutput" alignment="0" min="-2" max="-2" attributes="1"/>
-                          <Component id="pnFlashSettings" alignment="0" min="0" max="32767" attributes="1"/>
+                          <Component id="pnFlashSettings" alignment="0" min="0" pref="340" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -3221,12 +3256,15 @@
                               <Component id="cbFlashVTG" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="cbFlashGGA" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="cbFlashGSA" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtFlashTimesLeft" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtFlashUpdateRate" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtFlashBaudRate" min="-2" max="-2" attributes="0"/>
                               <Component id="cbFlashZDA" min="-2" max="-2" attributes="0"/>
                               <Component id="cbFlashGLL" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="txtFlashTimesLeft" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="txtFlashBaudRate" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="txtFlashUpdateRate" alignment="0" pref="79" max="32767" attributes="1"/>
+                              </Group>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -3432,18 +3470,18 @@
                 <Component class="javax.swing.JTextField" name="txtFlashTimesLeft">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
-                    <Property name="text" type="java.lang.String" value="jTextField1"/>
+                    <Property name="text" type="java.lang.String" value="Unknown"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtFlashUpdateRate">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField2"/>
+                    <Property name="text" type="java.lang.String" value="Unknown"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtFlashBaudRate">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
-                    <Property name="text" type="java.lang.String" value="jTextField3"/>
+                    <Property name="text" type="java.lang.String" value="Unknown"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbFlashZDA">
@@ -4107,7 +4145,7 @@
                       <Component id="pnNMEAOutput1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnGPXFileSettings" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="320" max="32767" attributes="0"/>
+                      <EmptySpace pref="265" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4119,7 +4157,7 @@
                           <Component id="pnNMEAOutput1" alignment="0" min="-2" max="-2" attributes="1"/>
                           <Component id="pnGPXFileSettings" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4141,22 +4179,17 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="lbNMEAFileType10" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cbNMEAFileType10" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="lbNMEAFileGLL" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGSV" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGSA" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGGA" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileVTG" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileRMC" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGRS" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileType9" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileType8" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGST" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lbNMEAFileGLL" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileRMC" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileVTG" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGGA" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGSA" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGSV" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGRS" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileGST" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType8" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType9" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -4174,53 +4207,36 @@
                                       </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="lbNMEAFileType11" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileType11" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="lbNMEAFileType12" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileType12" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="lbNMEAFileMALM" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileMALM" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="lbNMEAFileMEPH" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileMEPH" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="lbNMEAFileMDGP" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileMDGP" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="lbNMEAFileMDBG" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileMDBG" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="lbNMEAFileMZDA" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileMZDA" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="lbNMEAFileMCHN" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileMCHN" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="btSetNMEAOutput1" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lbNMEAFileType10" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType11" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType12" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMALM" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMEPH" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMDGP" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMDBG" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileZDA" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMCHN" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cbNMEAFileType10" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileType11" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileType12" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMALM" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMEPH" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMDGP" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMDBG" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMZDA" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbNMEAFileMCHN" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
                               </Group>
-                              <Component id="btSetNMEAOutputDefaults1" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="btSetNMEAOutput1" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="10" pref="10" max="10" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -4313,7 +4329,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cbNMEAFileMZDA" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMZDA" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileZDA" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="cbNMEAFileMCHN" min="-2" max="-2" attributes="0"/>
@@ -4327,8 +4343,6 @@
                               </Group>
                               <Component id="btSetNMEAOutput1" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btSetNMEAOutputDefaults1" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -4348,7 +4362,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileType10">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileType10">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 10 (?)"/>
                   </Properties>
@@ -4451,39 +4465,39 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileType11">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileType11">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 11 (?)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileType12">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileType12">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 12 (?)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileMALM">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileMALM">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MALM Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileMEPH">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileMEPH">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MEPH Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileMDGP">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileMDGP">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MDGP Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileMDBG">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileMDBG">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MDBG Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileMZDA">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileZDA">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="MZDA Period"/>
+                    <Property name="text" type="java.lang.String" value="ZDA Period"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btSetNMEAOutput1">
@@ -4494,15 +4508,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetNMEAOutput1ActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btSetNMEAOutputDefaults1">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Defaults"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetNMEAOutputDefaults1ActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileGLL">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGLL">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GLL Period"/>
                   </Properties>
@@ -4535,12 +4541,12 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileRMC">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileRMC">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="RMC Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileVTG">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileVTG">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="VTG Period"/>
                   </Properties>
@@ -4573,12 +4579,12 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileGGA">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGGA">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GGA Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileGSA">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGSA">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GSA Period"/>
                   </Properties>
@@ -4611,27 +4617,27 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileGSV">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGSV">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GSV Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileGRS">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGRS">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GRS Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileGST">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGST">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GST Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileType9">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileType9">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 9 (?)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileType8">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileType8">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 8 (?)"/>
                   </Properties>
@@ -4706,7 +4712,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbNMEAFileMCHN">
+                <Component class="javax.swing.JCheckBox" name="lbNMEAFileMCHN">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="MCHN Period"/>
                   </Properties>
@@ -4780,7 +4786,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="840" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="826" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4789,7 +4795,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="316" max="-2" attributes="0"/>
-                      <EmptySpace pref="26" max="32767" attributes="0"/>
+                      <EmptySpace pref="35" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
