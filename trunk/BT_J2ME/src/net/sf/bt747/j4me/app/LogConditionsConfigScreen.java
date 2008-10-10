@@ -106,8 +106,10 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements Mode
 
     public void modelEvent(ModelEvent e) {
         switch (e.getType()) {
-        case ModelEvent.DATA_UPDATE:
-        case ModelEvent.GPS_FIX_DATA:
+        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
+        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
+        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
+        case ModelEvent.UPDATE_FIX_PERIOD:
             updateButtons();
             repaint();
             break;

@@ -183,7 +183,12 @@ public final class LoggerStatusScreen extends BT747Dialog implements
 
     public final void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
-        case ModelEvent.DATA_UPDATE:
+        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
+        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
+        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
+        case ModelEvent.UPDATE_LOG_MEM_USED:
+        case ModelEvent.UPDATE_LOG_FLASH:
+        case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
             planUpdateLock.down();
             planUpdate = true;
             planUpdateLock.up();
