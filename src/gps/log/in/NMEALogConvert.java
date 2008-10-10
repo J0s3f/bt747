@@ -41,7 +41,7 @@ public final class NMEALogConvert implements GPSLogConvert {
     private static final int CR = 0x0A;
 
     private int logFormat;
-    private File inFile = null;
+    private WindowedFile mFile = null;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
     /**
@@ -90,7 +90,14 @@ public final class NMEALogConvert implements GPSLogConvert {
             logFormat = 0;
             curLogFormat = 0;
             nextAddrToRead = 0;
-            fileSize = inFile.getSize();
+            fileSize = mFile.getSize();
+            try {
+                fileSize = mFile.getSize();
+            } catch (Exception e) {
+                Generic.debug("getSize", e);
+                // TODO: handle exception
+                fileSize = 0;
+            }
 
             while (!stop && nextAddrToRead < fileSize) {
                 /***************************************************************
@@ -103,18 +110,21 @@ public final class NMEALogConvert implements GPSLogConvert {
                 }
 
                 /* Read the bytes from the file */
-                int readResult;
                 boolean continueInBuffer = true;
                 int offsetInBuffer = 0;
-
-                inFile.setPos(nextAddrToRead);
 
                 /***************************************************************
                  * Not reading header - reading data.
                  */
-                readResult = inFile.readBytes(bytes, 0, sizeToRead);
-                if (readResult != sizeToRead) {
-                    errorInfo = inFile.getPath() + "|" + inFile.getLastError();
+                try {
+                    bytes = mFile.fillBuffer(nextAddrToRead);
+                } catch (Exception e) {
+                    // TODO: Should check sizeToRead vs fill in buffer.
+                    Generic.debug("Problem reading file", e);
+                    bytes = null;
+                }
+                if (bytes == null) {
+                    errorInfo = mFile.getPath() + "|" + mFile.getLastError();
                     return BT747Constants.ERROR_READING_FILE;
                 }
                 nextAddrToRead += sizeToRead;
@@ -130,10 +140,16 @@ public final class NMEALogConvert implements GPSLogConvert {
                 // A block of bytes has been read, read the records
                 do {
                     int eolPos;
-                    // Find end of line
-                    for (eolPos = offsetInBuffer; (eolPos < sizeToRead)
-                            && (bytes[eolPos] != CR) && (bytes[eolPos] != EOL); eolPos++) {
-                        ; // Empty on purpose
+                    eolPos = offsetInBuffer;
+                    // Skip initial white space.
+                    while ((eolPos < sizeToRead)
+                            && ((bytes[eolPos] == CR) || (bytes[eolPos] == EOL))) {
+                        eolPos++;
+                    }
+                    // Find first EOL.
+                    while ((eolPos < sizeToRead) && (bytes[eolPos] != CR)
+                            && (bytes[eolPos] != EOL)) {
+                        eolPos++;
                     }
                     continueInBuffer = (eolPos < sizeToRead); // True when
                     // \r\n
@@ -149,8 +165,12 @@ public final class NMEALogConvert implements GPSLogConvert {
                             s.append((char) bytes[i]);
                             checkSum ^= bytes[i];
                         }
-                        checkStr += (char) bytes[eolPos - 2];
-                        checkStr += (char) bytes[eolPos - 1];
+                        try {
+                            checkStr += (char) bytes[eolPos - 2];
+                            checkStr += (char) bytes[eolPos - 1];
+                        } catch (Exception e) {
+                            Generic.debug("eolPos " + eolPos, e);
+                        }
 
                         checkSum ^= Conv.hex2Int(checkStr);
 
@@ -186,7 +206,8 @@ public final class NMEALogConvert implements GPSLogConvert {
                             // Determine if this record belongs to the record
                             // that is ongoing or if it is new.
 
-                            if ((newLogFormat != 0) && (curLogFormat != 0)) {
+                            if ((newLogFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0
+                                    && (curLogFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
                                 // We have a previous and a new log format
                                 int oldClockTime = gpsRec.utc % (24 * 3600);
                                 int oldDateTime = (gpsRec.utc - oldClockTime)
@@ -223,7 +244,7 @@ public final class NMEALogConvert implements GPSLogConvert {
             }
 
         } catch (Exception e) {
-            Generic.debug("",e);
+            Generic.debug("", e);
         }
         return BT747Constants.NO_ERROR;
     }
@@ -273,11 +294,17 @@ public final class NMEALogConvert implements GPSLogConvert {
         stop = false;
         try {
             if (File.isAvailable()) {
-                inFile = new File(fileName, File.READ_ONLY, card);
-                if (!inFile.isOpen()) {
-                    errorInfo = fileName + "|" + inFile.getLastError();
+                try {
+                    mFile = new WindowedFile(fileName, File.READ_ONLY, card);
+                    mFile.setBufferSize(BUF_SIZE);
+                    errorInfo = fileName + "|" + mFile.getLastError();
+                } catch (Exception e) {
+                    Generic.debug("Error during initial open", e);
+                }
+                if (mFile == null || !mFile.isOpen()) {
+                    errorInfo = fileName + "|" + mFile.getLastError();
                     error = BT747Constants.ERROR_COULD_NOT_OPEN;
-                    inFile = null;
+                    mFile = null;
                 } else {
                     passToFindFieldsActivatedInLog = gpsFile
                             .needPassToFindFieldsActivatedInLog();
@@ -296,12 +323,12 @@ public final class NMEALogConvert implements GPSLogConvert {
                     gpsFile.finaliseFile();
                 }
 
-                if (inFile != null) {
-                    inFile.close();
+                if (mFile != null) {
+                    mFile.close();
                 }
             }
         } catch (Exception e) {
-            Generic.debug("",e);
+            Generic.debug("", e);
             // TODO: handle exception
         }
         return error;
