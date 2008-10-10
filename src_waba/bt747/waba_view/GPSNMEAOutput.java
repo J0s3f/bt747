@@ -140,7 +140,7 @@ public final class GPSNMEAOutput extends Container implements ModelListener {
 
     public final void modelEvent(final ModelEvent event) {
         int eventType = event.getType();
-        if (eventType == ModelEvent.OUTPUT_NMEA_PERIOD_UPDATE) {
+        if (eventType == ModelEvent.UPDATE_OUTPUT_NMEA_PERIOD) {
             // updateLogFormat(m_GPSstate.logFormat);
             updatePeriods();
         }

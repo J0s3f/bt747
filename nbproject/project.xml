@@ -121,7 +121,7 @@
                 <package-root>src_j2se</package-root>
                 <package-root>src_rxtx</package-root>
                 <package-root>src_waba</package-root>
-                <classpath mode="compile">lib/win32comm.jar;lib/RXTXcomm.jar;lib/collections-superwaba.jar;lib/jcalendar-1.3.2.jar;lib/Waba_only.jar;lib/swing-layout-1.0.3.jar</classpath>
+                <classpath mode="compile">lib/win32comm.jar;lib/RXTXcomm.jar;lib/collections-superwaba.jar;lib/jcalendar-1.3.2.jar;lib/Waba_only.jar;lib/swing-layout-1.0.3.jar;lib/jopt-simple-2.4.1.jar</classpath>
                 <built-to>build</built-to>
                 <source-level>1.5</source-level>
             </compilation-unit>

@@ -330,7 +330,10 @@ public final class GPSLogGet extends Container implements ModelListener {
 
     public final void modelEvent(final ModelEvent event) {
         switch (event.getType()) {
-        case ModelEvent.DATA_UPDATE:
+        case ModelEvent.UPDATE_LOG_LOG_STATUS:
+        case ModelEvent.UPDATE_LOG_REC_METHOD:
+        case ModelEvent.UPDATE_LOG_MEM_USED:
+        case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
             updateButtons();
             break;
         case ModelEvent.DOWNLOAD_METHOD_CHANGE:

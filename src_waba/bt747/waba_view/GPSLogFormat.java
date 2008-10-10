@@ -40,7 +40,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
     /** The object that is used to communicate with the GPS device. */
     private final Model m;
     private final AppController c;
-    /** The tickboxes for the format items */
+    /** The tick boxes for the format items */
     private final MyCheck[] chkLogFmtItems = new MyCheck[C_LOG_FMT_COUNT];
     /** The button that requests to change the log format of the device */
     private Button btChangeFormatErase;
@@ -50,7 +50,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
     private Label lbEstNbrRecords;
 
     /**
-     * Initialiser of this Container.<br>
+     * Initializer of this Container.
      */
     public GPSLogFormat(final Model m, final AppController c) {
         // super("Log ON/OFF", Container.);
@@ -59,7 +59,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
     };
 
     /**
-     * Initiliaser once all objects received initial setup
+     * Initiliazer once all objects received initial setup.
      * 
      */
     public final void onStart() {
@@ -187,7 +187,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
     }
 
     public final void modelEvent(final ModelEvent event) {
-        if (event.getType() == ModelEvent.LOG_FORMAT_UPDATE) {
+        if (event.getType() == ModelEvent.UPDATE_LOG_FORMAT) {
             updateLogFormat(m.getLogFormat());
         }
 

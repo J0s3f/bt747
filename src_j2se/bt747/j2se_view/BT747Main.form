@@ -4142,10 +4142,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pnNMEAOutput1" min="-2" max="-2" attributes="0"/>
+                      <Component id="pnNMEAOutput1" min="-2" pref="231" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnGPXFileSettings" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="265" max="32767" attributes="0"/>
+                      <EmptySpace pref="300" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4154,10 +4154,10 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="pnNMEAOutput1" alignment="0" min="-2" max="-2" attributes="1"/>
                           <Component id="pnGPXFileSettings" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="pnNMEAOutput1" alignment="0" min="-2" max="-2" attributes="1"/>
                       </Group>
-                      <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="93" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4178,65 +4178,34 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lbNMEAFileGLL" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileRMC" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileVTG" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGGA" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGSA" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGSV" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGRS" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGST" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileType8" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileType9" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cbNMEAFileGLL" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileRMC" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileVTG" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileGGA" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileGSA" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileGSV" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                                          <Component id="cbNMEAFileGRS" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileGST" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileType8" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbNMEAFileType9" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lbNMEAFileType10" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileType11" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileType12" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMALM" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMEPH" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMDGP" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMDBG" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileZDA" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMCHN" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cbNMEAFileType10" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileType11" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileType12" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileMALM" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileMEPH" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileMDGP" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileMDBG" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileMZDA" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbNMEAFileMCHN" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="btSetNMEAOutput1" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="10" pref="10" max="10" attributes="0"/>
+                              <Component id="lbNMEAFileGLL" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileRMC" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileVTG" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileGGA" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileGSA" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileGSV" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileGRS" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileGST" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileType8" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileType9" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lbNMEAFileType10" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileType11" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileType12" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileMALM" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileMEPH" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileMDGP" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileMDBG" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileZDA" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileMCHN" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="21" pref="21" max="21" attributes="0"/>
+                                  <Component id="btSetNMEAFileOutput" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
+                          <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -4245,224 +4214,59 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileGLL" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGLL" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="lbNMEAFileGLL" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbNMEAFileRMC" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbNMEAFileVTG" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbNMEAFileGGA" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbNMEAFileGSA" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbNMEAFileGSV" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbNMEAFileGRS" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbNMEAFileGST" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileRMC" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileRMC" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileVTG" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileVTG" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileGGA" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGGA" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileGSA" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGSA" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileGSV" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGSV" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileGRS" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGRS" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileGST" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileGST" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileType8" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="lbNMEAFileType8" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="lbNMEAFileMCHN" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileType10" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileType10" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="lbNMEAFileType10" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileType11" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileType11" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="lbNMEAFileType11" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileType12" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileType12" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="lbNMEAFileType12" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileMALM" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMALM" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="lbNMEAFileMALM" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileMEPH" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMEPH" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="lbNMEAFileMEPH" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileMDGP" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMDGP" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="lbNMEAFileMDGP" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileMDBG" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMDBG" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="lbNMEAFileMDBG" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbNMEAFileMZDA" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileZDA" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cbNMEAFileMCHN" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbNMEAFileZDA" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="cbNMEAFileType9" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileType9" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="btSetNMEAOutput1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileType9" min="-2" max="-2" attributes="0"/>
+                              <Component id="btSetNMEAFileOutput" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileType10">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JCheckBox" name="lbNMEAFileType10">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 10 (?)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileType11">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileType12">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileMALM">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileMDGP">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileMEPH">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileMDBG">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileMZDA">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="lbNMEAFileType11">
@@ -4500,45 +4304,17 @@
                     <Property name="text" type="java.lang.String" value="ZDA Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="btSetNMEAOutput1">
+                <Component class="javax.swing.JButton" name="btSetNMEAFileOutput">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Set"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetNMEAOutput1ActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetNMEAFileOutputActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="lbNMEAFileGLL">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GLL Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileGLL">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileRMC">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="lbNMEAFileRMC">
@@ -4551,34 +4327,6 @@
                     <Property name="text" type="java.lang.String" value="VTG Period"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileVTG">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileGGA">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JCheckBox" name="lbNMEAFileGGA">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GGA Period"/>
@@ -4587,34 +4335,6 @@
                 <Component class="javax.swing.JCheckBox" name="lbNMEAFileGSA">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="GSA Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileGSA">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileGSV">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="lbNMEAFileGSV">
@@ -4640,76 +4360,6 @@
                 <Component class="javax.swing.JCheckBox" name="lbNMEAFileType8">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Type 8 (?)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileType9">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileType8">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileGST">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileGRS">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbNMEAFileMCHN">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="6">
-                        <StringItem index="0" value="0"/>
-                        <StringItem index="1" value="1"/>
-                        <StringItem index="2" value="2"/>
-                        <StringItem index="3" value="3"/>
-                        <StringItem index="4" value="4"/>
-                        <StringItem index="5" value="5"/>
-                      </StringArray>
-                    </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="lbNMEAFileMCHN">

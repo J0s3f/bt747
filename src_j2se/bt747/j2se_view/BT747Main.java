@@ -1252,15 +1252,7 @@ public class BT747Main extends javax.swing.JFrame implements
         jLabel34 = new javax.swing.JLabel();
         AdvancedfileSettingsPanel = new javax.swing.JPanel();
         pnNMEAOutput1 = new javax.swing.JPanel();
-        cbNMEAFileType10 = new javax.swing.JComboBox();
         lbNMEAFileType10 = new javax.swing.JCheckBox();
-        cbNMEAFileType11 = new javax.swing.JComboBox();
-        cbNMEAFileType12 = new javax.swing.JComboBox();
-        cbNMEAFileMALM = new javax.swing.JComboBox();
-        cbNMEAFileMDGP = new javax.swing.JComboBox();
-        cbNMEAFileMEPH = new javax.swing.JComboBox();
-        cbNMEAFileMDBG = new javax.swing.JComboBox();
-        cbNMEAFileMZDA = new javax.swing.JComboBox();
         lbNMEAFileType11 = new javax.swing.JCheckBox();
         lbNMEAFileType12 = new javax.swing.JCheckBox();
         lbNMEAFileMALM = new javax.swing.JCheckBox();
@@ -1268,28 +1260,17 @@ public class BT747Main extends javax.swing.JFrame implements
         lbNMEAFileMDGP = new javax.swing.JCheckBox();
         lbNMEAFileMDBG = new javax.swing.JCheckBox();
         lbNMEAFileZDA = new javax.swing.JCheckBox();
-        btSetNMEAOutput1 = new javax.swing.JButton();
+        btSetNMEAFileOutput = new javax.swing.JButton();
         lbNMEAFileGLL = new javax.swing.JCheckBox();
-        cbNMEAFileGLL = new javax.swing.JComboBox();
-        cbNMEAFileRMC = new javax.swing.JComboBox();
         lbNMEAFileRMC = new javax.swing.JCheckBox();
         lbNMEAFileVTG = new javax.swing.JCheckBox();
-        cbNMEAFileVTG = new javax.swing.JComboBox();
-        cbNMEAFileGGA = new javax.swing.JComboBox();
         lbNMEAFileGGA = new javax.swing.JCheckBox();
         lbNMEAFileGSA = new javax.swing.JCheckBox();
-        cbNMEAFileGSA = new javax.swing.JComboBox();
-        cbNMEAFileGSV = new javax.swing.JComboBox();
         lbNMEAFileGSV = new javax.swing.JCheckBox();
         lbNMEAFileGRS = new javax.swing.JCheckBox();
         lbNMEAFileGST = new javax.swing.JCheckBox();
         lbNMEAFileType9 = new javax.swing.JCheckBox();
         lbNMEAFileType8 = new javax.swing.JCheckBox();
-        cbNMEAFileType9 = new javax.swing.JComboBox();
-        cbNMEAFileType8 = new javax.swing.JComboBox();
-        cbNMEAFileGST = new javax.swing.JComboBox();
-        cbNMEAFileGRS = new javax.swing.JComboBox();
-        cbNMEAFileMCHN = new javax.swing.JComboBox();
         lbNMEAFileMCHN = new javax.swing.JCheckBox();
         pnGPXFileSettings = new javax.swing.JPanel();
         cbNotApplyUTCOffset = new javax.swing.JCheckBox();
@@ -3898,23 +3879,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         pnNMEAOutput1.setBorder(javax.swing.BorderFactory.createTitledBorder("NMEA File Settings"));
 
-        cbNMEAFileType10.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
         lbNMEAFileType10.setText("Type 10 (?)");
-
-        cbNMEAFileType11.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileType12.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileMALM.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileMDGP.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileMEPH.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileMDBG.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileMZDA.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
         lbNMEAFileType11.setText("Type 11 (?)");
 
@@ -3930,34 +3895,22 @@ public class BT747Main extends javax.swing.JFrame implements
 
         lbNMEAFileZDA.setText("ZDA Period");
 
-        btSetNMEAOutput1.setText("Set");
-        btSetNMEAOutput1.addActionListener(new java.awt.event.ActionListener() {
+        btSetNMEAFileOutput.setText("Set");
+        btSetNMEAFileOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSetNMEAOutput1ActionPerformed(evt);
+                btSetNMEAFileOutputActionPerformed(evt);
             }
         });
 
         lbNMEAFileGLL.setText("GLL Period");
 
-        cbNMEAFileGLL.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileRMC.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
         lbNMEAFileRMC.setText("RMC Period");
 
         lbNMEAFileVTG.setText("VTG Period");
 
-        cbNMEAFileVTG.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileGGA.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
         lbNMEAFileGGA.setText("GGA Period");
 
         lbNMEAFileGSA.setText("GSA Period");
-
-        cbNMEAFileGSA.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileGSV.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
         lbNMEAFileGSV.setText("GSV Period");
 
@@ -3969,16 +3922,6 @@ public class BT747Main extends javax.swing.JFrame implements
 
         lbNMEAFileType8.setText("Type 8 (?)");
 
-        cbNMEAFileType9.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileType8.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileGST.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileGRS.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
-        cbNMEAFileMCHN.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-
         lbNMEAFileMCHN.setText("MCHN Period");
 
         org.jdesktop.layout.GroupLayout pnNMEAOutput1Layout = new org.jdesktop.layout.GroupLayout(pnNMEAOutput1);
@@ -3988,139 +3931,77 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(pnNMEAOutput1Layout.createSequentialGroup()
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, pnNMEAOutput1Layout.createSequentialGroup()
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(lbNMEAFileGLL)
-                            .add(lbNMEAFileRMC)
-                            .add(lbNMEAFileVTG)
-                            .add(lbNMEAFileGGA)
-                            .add(lbNMEAFileGSA)
-                            .add(lbNMEAFileGSV)
-                            .add(lbNMEAFileGRS)
-                            .add(lbNMEAFileGST)
-                            .add(lbNMEAFileType8)
-                            .add(lbNMEAFileType9))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(cbNMEAFileGLL, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(cbNMEAFileRMC, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(cbNMEAFileVTG, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(cbNMEAFileGGA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(cbNMEAFileGSA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(cbNMEAFileGSV, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileGRS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileGST, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileType8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileType9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(lbNMEAFileType10)
-                            .add(lbNMEAFileType11)
-                            .add(lbNMEAFileType12)
-                            .add(lbNMEAFileMALM)
-                            .add(lbNMEAFileMEPH)
-                            .add(lbNMEAFileMDGP)
-                            .add(lbNMEAFileMDBG)
-                            .add(lbNMEAFileZDA)
-                            .add(lbNMEAFileMCHN))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileType10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileType11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileType12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileMALM, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileMEPH, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileMDGP, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileMDBG, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileMZDA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNMEAFileMCHN, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, pnNMEAOutput1Layout.createSequentialGroup()
-                        .add(btSetNMEAOutput1)
-                        .add(10, 10, 10))))
+                    .add(lbNMEAFileGLL)
+                    .add(lbNMEAFileRMC)
+                    .add(lbNMEAFileVTG)
+                    .add(lbNMEAFileGGA)
+                    .add(lbNMEAFileGSA)
+                    .add(lbNMEAFileGSV)
+                    .add(lbNMEAFileGRS)
+                    .add(lbNMEAFileGST)
+                    .add(lbNMEAFileType8)
+                    .add(lbNMEAFileType9))
+                .add(36, 36, 36)
+                .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(lbNMEAFileType10)
+                    .add(lbNMEAFileType11)
+                    .add(lbNMEAFileType12)
+                    .add(lbNMEAFileMALM)
+                    .add(lbNMEAFileMEPH)
+                    .add(lbNMEAFileMDGP)
+                    .add(lbNMEAFileMDBG)
+                    .add(lbNMEAFileZDA)
+                    .add(lbNMEAFileMCHN)
+                    .add(pnNMEAOutput1Layout.createSequentialGroup()
+                        .add(21, 21, 21)
+                        .add(btSetNMEAFileOutput)))
+                .add(40, 40, 40))
         );
         pnNMEAOutput1Layout.setVerticalGroup(
             pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnNMEAOutput1Layout.createSequentialGroup()
                 .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnNMEAOutput1Layout.createSequentialGroup()
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileGLL, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileGLL))
+                        .add(lbNMEAFileGLL)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lbNMEAFileRMC)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lbNMEAFileVTG)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lbNMEAFileGGA)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lbNMEAFileGSA)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lbNMEAFileGSV)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lbNMEAFileGRS)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(lbNMEAFileGST)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileRMC, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileRMC))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileVTG, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileVTG))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileGGA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileGGA))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileGSA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileGSA))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileGSV, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileGSV))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileGRS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileGRS))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileGST, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileGST))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileType8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(lbNMEAFileType8)
                             .add(lbNMEAFileMCHN)))
                     .add(pnNMEAOutput1Layout.createSequentialGroup()
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileType10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileType10))
+                        .add(lbNMEAFileType10)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileType11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileType11))
+                        .add(lbNMEAFileType11)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileType12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileType12))
+                        .add(lbNMEAFileType12)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileMALM, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileMALM))
+                        .add(lbNMEAFileMALM)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileMEPH, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileMEPH))
+                        .add(lbNMEAFileMEPH)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileMDGP, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileMDGP))
+                        .add(lbNMEAFileMDGP)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileMDBG, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileMDBG))
+                        .add(lbNMEAFileMDBG)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(cbNMEAFileMZDA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lbNMEAFileZDA))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbNMEAFileMCHN, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .add(lbNMEAFileZDA)))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnNMEAOutput1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                        .add(cbNMEAFileType9, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(lbNMEAFileType9))
-                    .add(btSetNMEAOutput1)))
+                    .add(lbNMEAFileType9)
+                    .add(btSetNMEAFileOutput))
+                .addContainerGap())
         );
 
         pnGPXFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("GPX File Settings"));
@@ -4164,19 +4045,19 @@ public class BT747Main extends javax.swing.JFrame implements
             AdvancedfileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(AdvancedfileSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(pnNMEAOutput1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(pnNMEAOutput1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 231, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnGPXFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(265, Short.MAX_VALUE))
+                .addContainerGap(300, Short.MAX_VALUE))
         );
         AdvancedfileSettingsPanelLayout.setVerticalGroup(
             AdvancedfileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(AdvancedfileSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(AdvancedfileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnNMEAOutput1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pnGPXFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(50, 50, 50))
+                    .add(pnGPXFileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnNMEAOutput1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(93, 93, 93))
         );
 
         tabbedPanelAll.addTab("Advanced File Settings", AdvancedfileSettingsPanel);
@@ -5036,8 +4917,8 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
     private javax.swing.JButton btRecoverMemory;
     private javax.swing.JButton btSetFlash;
     private javax.swing.JButton btSetHoluxName;
+    private javax.swing.JButton btSetNMEAFileOutput;
     private javax.swing.JButton btSetNMEAOutput;
-    private javax.swing.JButton btSetNMEAOutput1;
     private javax.swing.JButton btSetNMEAOutputDefaults;
     private javax.swing.JButton btWarmStart;
     private javax.swing.JButton btWorkingDirectory;
@@ -5081,25 +4962,6 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
     private javax.swing.JCheckBox cbLat;
     private javax.swing.JCheckBox cbLong;
     private javax.swing.JCheckBox cbMilliSeconds;
-    private javax.swing.JComboBox cbNMEAFileGGA;
-    private javax.swing.JComboBox cbNMEAFileGLL;
-    private javax.swing.JComboBox cbNMEAFileGRS;
-    private javax.swing.JComboBox cbNMEAFileGSA;
-    private javax.swing.JComboBox cbNMEAFileGST;
-    private javax.swing.JComboBox cbNMEAFileGSV;
-    private javax.swing.JComboBox cbNMEAFileMALM;
-    private javax.swing.JComboBox cbNMEAFileMCHN;
-    private javax.swing.JComboBox cbNMEAFileMDBG;
-    private javax.swing.JComboBox cbNMEAFileMDGP;
-    private javax.swing.JComboBox cbNMEAFileMEPH;
-    private javax.swing.JComboBox cbNMEAFileMZDA;
-    private javax.swing.JComboBox cbNMEAFileRMC;
-    private javax.swing.JComboBox cbNMEAFileType10;
-    private javax.swing.JComboBox cbNMEAFileType11;
-    private javax.swing.JComboBox cbNMEAFileType12;
-    private javax.swing.JComboBox cbNMEAFileType8;
-    private javax.swing.JComboBox cbNMEAFileType9;
-    private javax.swing.JComboBox cbNMEAFileVTG;
     private javax.swing.JComboBox cbNMEAOutGGA;
     private javax.swing.JComboBox cbNMEAOutGLL;
     private javax.swing.JComboBox cbNMEAOutGRS;

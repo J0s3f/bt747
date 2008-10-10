@@ -185,8 +185,21 @@ public final class GPSLogReason extends Container implements ModelListener {
     }
     
     public final void modelEvent(final ModelEvent event) {
-        if (event.getType() == ModelEvent.DATA_UPDATE) {
+        switch (event.getType()) {
+        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
+        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
+        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
+        case ModelEvent.UPDATE_FIX_PERIOD:
+        case ModelEvent.UPDATE_DGPS_MODE:
+        case ModelEvent.UPDATE_PWR_SAV_MODE:
+        case ModelEvent.UPDATE_SBAS:
+        case ModelEvent.UPDATE_SBAS_TEST:
+        case ModelEvent.UPDATE_DATUM:
             updateButtons();
+            break;
+
+        default:
+            break;
         }
     }
 

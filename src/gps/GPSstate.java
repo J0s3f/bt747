@@ -26,10 +26,6 @@ import bt747.sys.Convert;
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Thread;
 
-/*
- * Created on 12 may 2007
- */
-
 /**
  * GPSstate maintains a higher level state of communication with the GPS device.
  * It currently contains very specific commands MTK loggers but that could
@@ -177,6 +173,22 @@ public final class GPSstate implements BT747Thread {
 
     private void setAvailable(final int dataType) {
         dataAvailable[dataType] = true;
+        switch (dataType) {
+        case DATA_FLASH_TYPE:
+            
+            break;
+        case DATA_LOG_FORMAT:
+            dataOK |= C_OK_FORMAT;
+            default:
+        case DATA_MEM_USED:
+            break;
+        }
+    }
+    
+    private void setChanged(final int dataType) {
+        dataAvailable[dataType] = false;
+        dataRequested[dataType] = 0; // Just changed it - oblige 'timeout'.
+        checkAvailable(dataType);
     }
 
     /**
@@ -212,7 +224,7 @@ public final class GPSstate implements BT747Thread {
 
     /**
      * Set the logging format of the device. <br>
-     * Must be followed by eraseLog.
+     * Best followed by eraseLog.
      * 
      * @param newLogFormat
      *            The format to set.
@@ -232,6 +244,7 @@ public final class GPSstate implements BT747Thread {
                 + BT747Constants.PMTK_LOG_SET_STR + ","
                 + BT747Constants.PMTK_LOG_FORMAT_STR + ","
                 + Convert.unsigned2hex(logFmt, 8));
+        setChanged(DATA_LOG_FORMAT);
     }
 
     public final void doHotStart() {
@@ -729,7 +742,7 @@ public final class GPSstate implements BT747Thread {
                 case BT747Constants.PMTK_DT_FIX_CTL: // CMD 500
                     if (sNmea.length >= 2) {
                         logFixPeriod = Convert.toInt(sNmea[1]);
-                        postGpsEvent(GpsEvent.GPS_FIX_DATA, null);
+                        postGpsEvent(GpsEvent.UPDATE_FIX_PERIOD, null);
                     }
                     dataOK |= C_OK_FIX;
                     break;
@@ -738,14 +751,14 @@ public final class GPSstate implements BT747Thread {
                         dgpsMode = Convert.toInt(sNmea[1]);
                     }
                     dataOK |= C_OK_DGPS;
-                    PostStatusUpdateEvent();
+                    postEvent(GpsEvent.UPDATE_DGPS_MODE);
                     break;
                 case BT747Constants.PMTK_DT_SBAS: // CMD 513
                     if (sNmea.length == 2) {
                         SBASEnabled = (sNmea[1].equals("1"));
                     }
                     dataOK |= C_OK_SBAS;
-                    PostStatusUpdateEvent();
+                    postEvent(GpsEvent.UPDATE_SBAS);
                     break;
                 case BT747Constants.PMTK_DT_NMEA_OUTPUT: // CMD 514
                     if (sNmea.length - 1 == BT747Constants.C_NMEA_SEN_COUNT) {
@@ -754,27 +767,27 @@ public final class GPSstate implements BT747Thread {
                         }
                     }
                     dataOK |= C_OK_NMEA;
-                    postEvent(GpsEvent.OUTPUT_NMEA_PERIOD_UPDATE);
+                    postEvent(GpsEvent.UPDATE_OUTPUT_NMEA_PERIOD);
                     break;
                 case BT747Constants.PMTK_DT_SBAS_TEST: // CMD 513
                     if (sNmea.length == 2) {
                         SBASTestEnabled = (sNmea[1].equals("0"));
                     }
                     dataOK |= C_OK_SBAS_TEST;
-                    PostStatusUpdateEvent();
+                    postEvent(GpsEvent.UPDATE_SBAS_TEST);
                     break;
                 case BT747Constants.PMTK_DT_PWR_SAV_MODE: // CMD 520
                     if (sNmea.length == 2) {
                         powerSaveEnabled = (sNmea[1].equals("1"));
                     }
-                    PostStatusUpdateEvent();
+                    postEvent(GpsEvent.UPDATE_PWR_SAV_MODE);
                     break;
                 case BT747Constants.PMTK_DT_DATUM: // CMD 530
                     if (sNmea.length == 2) {
                         datum = Convert.toInt(sNmea[1]);
                     }
                     dataOK |= C_OK_DATUM;
-                    PostStatusUpdateEvent();
+                    postEvent(GpsEvent.UPDATE_DATUM);
                     break;
                 case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
                     dtUserOptionTimesLeft = Convert.toInt(sNmea[1]);
@@ -799,14 +812,14 @@ public final class GPSstate implements BT747Thread {
                                 + sNmea[1].substring(2, 4) + ":"
                                 + sNmea[1].substring(0, 2);
                     }
-                    PostStatusUpdateEvent();
+                    postEvent(GpsEvent.UPDATE_BT_MAC_ADDR);
                     break;
                 case BT747Constants.PMTK_DT_DGPS_INFO: // CMD 702
                     /* Not handled */
                     break;
                 case BT747Constants.PMTK_DT_VERSION: // CMD 704
                     mainVersion = sNmea[1] + "." + sNmea[2] + "." + sNmea[3];
-                    PostStatusUpdateEvent();
+                    postEvent(GpsEvent.UPDATE_MTK_VERSION);
                     break;
                 case BT747Constants.PMTK_DT_RELEASE: // CMD 705
                     firmwareVersion = sNmea[1];
@@ -817,7 +830,7 @@ public final class GPSstate implements BT747Thread {
                     } else {
                         device = "";
                     }
-                    PostStatusUpdateEvent();
+                    postEvent(GpsEvent.UPDATE_MTK_RELEASE);
                     break;
 
                 default:
@@ -990,6 +1003,14 @@ public final class GPSstate implements BT747Thread {
      *            nmea[2] 4
      * @return
      */
+    /**
+     * @param sNmea
+     * @return
+     */
+    /**
+     * @param sNmea
+     * @return
+     */
     private int analyseLogNmea(final String[] sNmea) {
         // if(GPS_DEBUG) {
         // waba.sys.debugMsg("LOG:"+p_nmea.length+':'+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+"\n");}
@@ -1015,28 +1036,27 @@ public final class GPSstate implements BT747Thread {
                         // if(GPS_DEBUG) {
                         // waba.sys.debugMsg("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
                         logFormat = Conv.hex2Int(sNmea[3]);
-                        dataOK |= C_OK_FORMAT;
                         setAvailable(DATA_LOG_FORMAT);
-                        postEvent(GpsEvent.LOG_FORMAT_UPDATE);
+                        postEvent(GpsEvent.UPDATE_LOG_FORMAT);
                         break;
                     case BT747Constants.PMTK_LOG_TIME_INTERVAL: // 3;
                         logTimeInterval = Convert.toInt(sNmea[3]);
                         dataOK |= C_OK_TIME;
-                        PostStatusUpdateEvent();
+                        postEvent(GpsEvent.UPDATE_LOG_TIME_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_DISTANCE_INTERVAL: // 4;
                         logDistanceInterval = Convert.toInt(sNmea[3]);
                         dataOK |= C_OK_DIST;
-                        PostStatusUpdateEvent();
+                        postEvent(GpsEvent.UPDATE_LOG_DISTANCE_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_SPEED_INTERVAL: // 5;
                         logSpeedInterval = Convert.toInt(sNmea[3]) / 10;
                         dataOK |= C_OK_SPEED;
-                        PostStatusUpdateEvent();
+                        postEvent(GpsEvent.UPDATE_LOG_SPEED_INTERVAL);
                         break;
                     case BT747Constants.PMTK_LOG_REC_METHOD: // 6;
                         logFullOverwrite = (Convert.toInt(sNmea[3]) == 1);
-                        PostStatusUpdateEvent();
+                        postEvent(GpsEvent.UPDATE_LOG_REC_METHOD);
                         break;
                     case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2 =
                         // logging
@@ -1049,29 +1069,32 @@ public final class GPSstate implements BT747Thread {
                         loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
                         loggerIsDisabled = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
-                        PostStatusUpdateEvent();
+                        postEvent(GpsEvent.UPDATE_LOG_LOG_STATUS);
                         break;
                     case BT747Constants.PMTK_LOG_MEM_USED: // 8;
                         setLogMemUsed(Conv.hex2Int(sNmea[3]));
                         logMemUsedPercent = (100 * (getLogMemUsed() - (0x200 * ((getLogMemUsed() + 0xFFFF) / 0x10000))))
                                 / logMemUsefullSize();
                         dataAvailable[DATA_MEM_USED] = true;
-                        PostStatusUpdateEvent();
+                        postEvent(GpsEvent.UPDATE_LOG_MEM_USED);
                         break;
                     case BT747Constants.PMTK_LOG_FLASH: // 9;
                         flashManuProdID = Conv.hex2Int(sNmea[3]);
                         dataAvailable[DATA_FLASH_TYPE] = true;
+                        postEvent(GpsEvent.UPDATE_LOG_FLASH);
                         break;
                     case BT747Constants.PMTK_LOG_NBR_LOG_PTS: // 10;
                         logNbrLogPts = Conv.hex2Int(sNmea[3]);
-                        PostStatusUpdateEvent();
+                        postEvent(GpsEvent.UPDATE_LOG_NBR_LOG_PTS);
                         break;
                     case BT747Constants.PMTK_LOG_FLASH_SECTORS: // 11;
+                        postEvent(GpsEvent.UPDATE_LOG_FLASH_SECTORS);
                         break;
                     case BT747Constants.PMTK_LOG_VERSION: // 12:
                         MtkLogVersion = "V"
                                 + Convert.toString(
                                         Convert.toInt(sNmea[3]) / 100f, 2);
+                        postEvent(GpsEvent.UPDATE_LOG_VERSION);
                         break;
                     default:
                     }
@@ -1182,10 +1205,6 @@ public final class GPSstate implements BT747Thread {
      */
     public final String getHoluxName() {
         return holuxName;
-    }
-
-    private void PostStatusUpdateEvent() {
-        postEvent(new GpsEvent(GpsEvent.DATA_UPDATE));
     }
 
     protected void postGpsEvent(final int type, final Object o) {

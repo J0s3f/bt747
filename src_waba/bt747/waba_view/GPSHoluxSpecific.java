@@ -116,7 +116,6 @@ public final class GPSHoluxSpecific extends Container implements ModelListener {
     public final void modelEvent(final ModelEvent event) {
         switch (event.getType()) {
         case ModelEvent.UPDATE_HOLUX_NAME:
-        case ModelEvent.DATA_UPDATE:
             updateData();
             break;
         }

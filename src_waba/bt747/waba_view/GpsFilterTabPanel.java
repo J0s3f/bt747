@@ -78,13 +78,9 @@ public final class GpsFilterTabPanel extends Container implements ModelListener 
     }
 
     public final void modelEvent(final ModelEvent event) {
-        int eventType = event.getType();
-        if (eventType == ModelEvent.DATA_UPDATE) {
-            // Todo - avoid event transofrmation.
-            Control ctrnl;
-            ctrnl = tabPanel.getChildren()[0];
-            ctrnl.postEvent(new Event(ModelEvent.DATA_UPDATE, ctrnl, 0));
-        }
+        ModelListener ctrnl;
+        ctrnl = (ModelListener) tabPanel.getChildren()[0];
+        ctrnl.modelEvent(event);
     }
 
 }
