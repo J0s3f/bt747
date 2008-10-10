@@ -47,12 +47,12 @@ public final class MainScreen extends Dialog implements ModelListener {
     /**
      * Reference to the Application Controller.
      */
-    private AppController c;
+    private final AppController c;
 
     /**
      * Reference to the application Midlet instantiation because we need it.
      */
-    private MTKMidlet midlet;
+    private final MTKMidlet midlet;
 
     /**
      * The different screens that we can go to from the main screen. J4ME
@@ -544,7 +544,7 @@ public final class MainScreen extends Dialog implements ModelListener {
                 this.show();
             }
             break;
-        case ModelEvent.LOG_FORMAT_UPDATE:
+        case ModelEvent.UPDATE_LOG_FORMAT:
             setupScreen();
             break;
         case ModelEvent.CONNECTED:
