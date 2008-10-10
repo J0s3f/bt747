@@ -22,9 +22,6 @@ import gps.log.GPSRecord;
  * @author Mario De Weerd
  */
 public class GpsEvent {
-    /**
-     * @deprecated Use other events instead.
-     */
     // public static final int DATA_UPDATE = 1;
     /** logFormat update notification. */
     public static final int UPDATE_LOG_FORMAT = 2;
