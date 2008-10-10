@@ -2978,7 +2978,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        cbStopOrOverwriteWhenFull.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Stop when full", "Stop when full" }));
+        cbStopOrOverwriteWhenFull.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Stop when full", "Overwrite when full" }));
         cbStopOrOverwriteWhenFull.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbStopOrOverwriteWhenFullFocusLost(evt);
