@@ -16,6 +16,7 @@ package bt747.model;
 
 import gps.BT747Constants;
 import gps.GPSstate;
+import gps.GpsEvent;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
@@ -503,8 +504,10 @@ public class Controller {
 
     /**
      * Set the download method. <br>
-     * Possible values:<br> - {@link #DOWNLOAD_FILLED}<br> -{@link #DOWNLOAD_FULL}<br> -
-     * {@link #DOWNLOAD_INCREMENTAL}
+     * Possible values:<br>
+     * - {@link #DOWNLOAD_FILLED}<br>
+     * -{@link #DOWNLOAD_FULL}<br>
+     * - {@link #DOWNLOAD_INCREMENTAL}
      */
     public final void setDownloadMethod(final int downloadMethod) {
         m.setDownloadMethod(downloadMethod);
@@ -593,10 +596,10 @@ public class Controller {
      * in cases where the type can not be automatically detected).
      * 
      * @param gpsType
-     *            A value out of: - {@link #GPS_TYPE_DEFAULT}<br> -
-     *            {@link #GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}<br> -
-     *            {@link #GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}<br> -
-     *            {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
+     *            A value out of: - {@link #GPS_TYPE_DEFAULT}<br>
+     *            - {@link #GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}<br>
+     *            - {@link #GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}<br>
+     *            - {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
      */
     public final void setGPSType(final int gpsType) {
         m.setGPSType(gpsType);
@@ -653,7 +656,7 @@ public class Controller {
 
     /**
      * Request the Logger Version data from the device.<br>
-     * Once retrieved an event {@link gps.GpsEvent#DATA_UPDATE} will be
+     * Once retrieved an event {@link gps.GpsEvent#UPDATE_LOG_VERSION} will be
      * generated so that {@link Model#getMtkLogVersion()} can be used to
      * retrieve the actual value.
      * 
@@ -679,7 +682,7 @@ public class Controller {
     /**
      * Request the log overwrite status from the device.<br>
      * {@link Model#isLogFullOverwrite()} must be used on a {link
-     * {@link gps.GpsEvent#DATA_UPDATE} event to get the data.
+     * {@link gps.GpsEvent#UPDATE_LOG_REC_METHOD} event to get the data.
      */
     public final void reqLogOverwrite() {
         m.gpsModel().reqLogOverwrite();
@@ -687,7 +690,7 @@ public class Controller {
 
     /**
      * Request a set of device information from the GPS device that can be after
-     * {@link gps.GpsEvent#DATA_UPDATE} events.
+     * specific {@link GpsEvent} events.
      */
     public final void reqDeviceInfo() {
         m.gpsModel().reqDeviceInfo();
@@ -695,11 +698,12 @@ public class Controller {
 
     /**
      * Request the status register from the device.<br>
-     * After the associated {@link gps.GpsEvent#DATA_UPDATE} event one can
-     * retrieve the data using:<br> - {@link Model#isLoggingActive()} <br> -
-     * {@link GPSstate#loggerIsFull} (not currently public)<br> -
-     * {@link GPSstate#loggerNeedsInit} (not currently public)<br> -
-     * {@link GPSstate#loggerIsDisabled} (not currently public)<br>
+     * After the associated {@link gps.GpsEvent#UPDATE_LOG_LOG_STATUS} event one
+     * can retrieve the data using:<br>
+     * - {@link Model#isLoggingActive()} <br>
+     * - {@link GPSstate#loggerIsFull} (not currently public)<br>
+     * - {@link GPSstate#loggerNeedsInit} (not currently public)<br>
+     * - {@link GPSstate#loggerIsDisabled} (not currently public)<br>
      */
     public final void reqLogStatus() {
         m.gpsModel().reqLogStatus();
@@ -707,8 +711,9 @@ public class Controller {
 
     /**
      * Request the current log format from the device.<br>
-     * After the associated {@link gps.GpsEvent#DATA_UPDATE} event one can
-     * retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
+     * After the associated {@link gps.GpsEvent#UPDATE_LOG_FORMAT} event one can
+     * retrieve the data using:<br>
+     * - {@link Model#getLogFormat()} <br>
      */
     public final void reqLogFormat() {
         m.gpsModel().reqLogFormat();
@@ -718,36 +723,36 @@ public class Controller {
      * Sets a new log format on the device.<br>
      * 
      * @param newLogFormat
-     *            <br>
+     * <br>
      *            The bits in the newLogFormat can be defined using a bitwise OR
      *            of expressions like<br>
      *            (1<< IDX) <br>
-     *            where IDX is one of the following:<br> -
-     *            {@link BT747Constants#FMT_UTC_IDX} <br> -
-     *            {@link BT747Constants#FMT_VALID_IDX} <br> -
-     *            {@link BT747Constants#FMT_LATITUDE_IDX} <br> -
-     *            {@link BT747Constants#FMT_LONGITUDE_IDX} <br> -
-     *            {@link BT747Constants#FMT_HEIGHT_IDX} <br> -
-     *            {@link BT747Constants#FMT_SPEED_IDX} <br> -
-     *            {@link BT747Constants#FMT_HEADING_IDX} <br> -
-     *            {@link BT747Constants#FMT_DSTA_IDX} <br> -
-     *            {@link BT747Constants#FMT_DAGE_IDX} <br> -
-     *            {@link BT747Constants#FMT_PDOP_IDX} <br> -
-     *            {@link BT747Constants#FMT_HDOP_IDX} <br> -
-     *            {@link BT747Constants#FMT_VDOP_IDX} <br> -
-     *            {@link BT747Constants#FMT_NSAT_IDX} <br> -
-     *            {@link BT747Constants#FMT_SID_IDX} <br> -
-     *            {@link BT747Constants#FMT_ELEVATION_IDX} <br> -
-     *            {@link BT747Constants#FMT_AZIMUTH_IDX} <br> -
-     *            {@link BT747Constants#FMT_SNR_IDX} <br> -
-     *            {@link BT747Constants#FMT_RCR_IDX} <br> -
-     *            {@link BT747Constants#FMT_MILLISECOND_IDX} <br> -
-     *            {@link BT747Constants#FMT_DISTANCE_IDX} <br> -
-     *            {@link BT747Constants#FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX}
-     *            <br>
+     *            where IDX is one of the following:<br>
+     *            - {@link BT747Constants#FMT_UTC_IDX} <br>
+     *            - {@link BT747Constants#FMT_VALID_IDX} <br>
+     *            - {@link BT747Constants#FMT_LATITUDE_IDX} <br>
+     *            - {@link BT747Constants#FMT_LONGITUDE_IDX} <br>
+     *            - {@link BT747Constants#FMT_HEIGHT_IDX} <br>
+     *            - {@link BT747Constants#FMT_SPEED_IDX} <br>
+     *            - {@link BT747Constants#FMT_HEADING_IDX} <br>
+     *            - {@link BT747Constants#FMT_DSTA_IDX} <br>
+     *            - {@link BT747Constants#FMT_DAGE_IDX} <br>
+     *            - {@link BT747Constants#FMT_PDOP_IDX} <br>
+     *            - {@link BT747Constants#FMT_HDOP_IDX} <br>
+     *            - {@link BT747Constants#FMT_VDOP_IDX} <br>
+     *            - {@link BT747Constants#FMT_NSAT_IDX} <br>
+     *            - {@link BT747Constants#FMT_SID_IDX} <br>
+     *            - {@link BT747Constants#FMT_ELEVATION_IDX} <br>
+     *            - {@link BT747Constants#FMT_AZIMUTH_IDX} <br>
+     *            - {@link BT747Constants#FMT_SNR_IDX} <br>
+     *            - {@link BT747Constants#FMT_RCR_IDX} <br>
+     *            - {@link BT747Constants#FMT_MILLISECOND_IDX} <br>
+     *            - {@link BT747Constants#FMT_DISTANCE_IDX} <br>
+     *            - {@link BT747Constants#FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX} <br>
      */
     public final void setLogFormat(final int newLogFormat) {
         m.gpsModel().setLogFormat(newLogFormat);
+        reqLogFormat();
     }
 
     /**
@@ -940,8 +945,9 @@ public class Controller {
      * Sets the MTK binary log decoder to use.
      * 
      * @param logDecoderType
-     *            One of the following values:<br> - {@link #DECODER_ORG}<br> -
-     *            {@link #DECODER_THOMAS}
+     *            One of the following values:<br>
+     *            - {@link #DECODER_ORG}<br>
+     *            - {@link #DECODER_THOMAS}
      */
     public final void setBinDecoder(final int logDecoderType) {
         m.setBinDecoder(logDecoderType);
@@ -970,24 +976,24 @@ public class Controller {
     /**
      * Sets the trackpoint RCR mask for the active filter.
      * 
-     * @param rcrMask -
-     *            {@link BT747Constants#RCR_TIME_MASK}<br>-
-     *            {@link BT747Constants#RCR_SPEED_MASK}<br>-
-     *            {@link BT747Constants#RCR_DISTANCE_MASK}<br>-
-     *            {@link BT747Constants#RCR_BUTTON_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP0_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP1_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP2_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP3_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP4_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP5_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP6_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP7_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP8_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP9_MASK}<br>-
-     *            {@link BT747Constants#RCR_APPY_MASK}<br>-
-     *            {@link BT747Constants#RCR_APPZ_MASK}<br>-
-     *            {@link BT747Constants#RCR_ALL_APP_MASK}
+     * @param rcrMask
+     *            - {@link BT747Constants#RCR_TIME_MASK}<br>
+     *            - {@link BT747Constants#RCR_SPEED_MASK}<br>
+     *            - {@link BT747Constants#RCR_DISTANCE_MASK}<br>
+     *            - {@link BT747Constants#RCR_BUTTON_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP0_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP1_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP2_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP3_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP4_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP5_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP6_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP7_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP8_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP9_MASK}<br>
+     *            - {@link BT747Constants#RCR_APPY_MASK}<br>
+     *            - {@link BT747Constants#RCR_APPZ_MASK}<br>
+     *            - {@link BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void setTrkPtRCR(final int rcrMask) {
         m.setTrkPtRCR(rcrMask);
@@ -997,24 +1003,24 @@ public class Controller {
     /**
      * Sets the waypoint RCR mask for the active filter.
      * 
-     * @param rcrMask -
-     *            {@link BT747Constants#RCR_TIME_MASK}<br>-
-     *            {@link BT747Constants#RCR_SPEED_MASK}<br>-
-     *            {@link BT747Constants#RCR_DISTANCE_MASK}<br>-
-     *            {@link BT747Constants#RCR_BUTTON_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP0_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP1_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP2_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP3_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP4_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP5_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP6_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP7_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP8_MASK}<br>-
-     *            {@link BT747Constants#RCR_APP9_MASK}<br>-
-     *            {@link BT747Constants#RCR_APPY_MASK}<br>-
-     *            {@link BT747Constants#RCR_APPZ_MASK}<br>-
-     *            {@link BT747Constants#RCR_ALL_APP_MASK}
+     * @param rcrMask
+     *            - {@link BT747Constants#RCR_TIME_MASK}<br>
+     *            - {@link BT747Constants#RCR_SPEED_MASK}<br>
+     *            - {@link BT747Constants#RCR_DISTANCE_MASK}<br>
+     *            - {@link BT747Constants#RCR_BUTTON_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP0_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP1_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP2_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP3_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP4_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP5_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP6_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP7_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP8_MASK}<br>
+     *            - {@link BT747Constants#RCR_APP9_MASK}<br>
+     *            - {@link BT747Constants#RCR_APPY_MASK}<br>
+     *            - {@link BT747Constants#RCR_APPZ_MASK}<br>
+     *            - {@link BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void setWayPtRCR(final int rcrMask) {
         m.setWayPtRCR(rcrMask);
@@ -1026,16 +1032,17 @@ public class Controller {
      * 
      * @param validMask
      *            The filter mask to set for the validity filter. Use the
-     *            following constants:<br>-
-     *            {@link BT747Constants#VALID_NO_FIX_MASK} <br>-
-     *            {@link BT747Constants#VALID_SPS_MASK} <br>-
-     *            {@link BT747Constants#VALID_DGPS_MASK} <br>-
-     *            {@link BT747Constants#VALID_PPS_MASK} <br>-
-     *            {@link BT747Constants#VALID_RTK_MASK} <br>-
-     *            {@link BT747Constants#VALID_FRTK_MASK} <br>-
-     *            {@link BT747Constants#VALID_ESTIMATED_MASK} <br>-
-     *            {@link BT747Constants#VALID_MANUAL_MASK} <br>-
-     *            {@link BT747Constants#VALID_SIMULATOR_MASK} <br>-
+     *            following constants:<br>
+     *            - {@link BT747Constants#VALID_NO_FIX_MASK} <br>
+     *            - {@link BT747Constants#VALID_SPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_DGPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_PPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_RTK_MASK} <br>
+     *            - {@link BT747Constants#VALID_FRTK_MASK} <br>
+     *            - {@link BT747Constants#VALID_ESTIMATED_MASK} <br>
+     *            - {@link BT747Constants#VALID_MANUAL_MASK} <br>
+     *            - {@link BT747Constants#VALID_SIMULATOR_MASK} <br>
+     *            -
      * 
      */
     public final void setTrkPtValid(final int validMask) {
@@ -1048,16 +1055,17 @@ public class Controller {
      * 
      * @param validMask
      *            The filter mask to set for the validity filter. Use the
-     *            following constants:<br>-
-     *            {@link BT747Constants#VALID_NO_FIX_MASK} <br>-
-     *            {@link BT747Constants#VALID_SPS_MASK} <br>-
-     *            {@link BT747Constants#VALID_DGPS_MASK} <br>-
-     *            {@link BT747Constants#VALID_PPS_MASK} <br>-
-     *            {@link BT747Constants#VALID_RTK_MASK} <br>-
-     *            {@link BT747Constants#VALID_FRTK_MASK} <br>-
-     *            {@link BT747Constants#VALID_ESTIMATED_MASK} <br>-
-     *            {@link BT747Constants#VALID_MANUAL_MASK} <br>-
-     *            {@link BT747Constants#VALID_SIMULATOR_MASK} <br>-
+     *            following constants:<br>
+     *            - {@link BT747Constants#VALID_NO_FIX_MASK} <br>
+     *            - {@link BT747Constants#VALID_SPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_DGPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_PPS_MASK} <br>
+     *            - {@link BT747Constants#VALID_RTK_MASK} <br>
+     *            - {@link BT747Constants#VALID_FRTK_MASK} <br>
+     *            - {@link BT747Constants#VALID_ESTIMATED_MASK} <br>
+     *            - {@link BT747Constants#VALID_MANUAL_MASK} <br>
+     *            - {@link BT747Constants#VALID_SIMULATOR_MASK} <br>
+     *            -
      * 
      */
     public final void setWayPtValid(final int validMask) {
@@ -1145,12 +1153,18 @@ public class Controller {
     /**
      * Request the flash user settings from the device. Following the relevant
      * event, the settings must be retrieved using
-     * {@link Model#getDtUpdateRate()}<br>- {@link Model#getDtGLL_Period()}<br>-
-     * {@link Model#getDtRMC_Period()}<br>- {@link Model#getDtVTG_Period()}<br>-
-     * {@link Model#getDtGSA_Period()}<br>- {@link Model#getDtGSV_Period()}<br>-
-     * {@link Model#getDtGGA_Period()}<br>- {@link Model#getDtZDA_Period()}<br>-
-     * {@link Model#getDtMCHN_Period()}<br>- {@link Model#getDtBaudRate()}<br>-
-     * {@link Model#getDtUserOptionTimesLeft()}<br>-
+     * {@link Model#getDtUpdateRate()}<br>
+     * - {@link Model#getDtGLL_Period()}<br>
+     * - {@link Model#getDtRMC_Period()}<br>
+     * - {@link Model#getDtVTG_Period()}<br>
+     * - {@link Model#getDtGSA_Period()}<br>
+     * - {@link Model#getDtGSV_Period()}<br>
+     * - {@link Model#getDtGGA_Period()}<br>
+     * - {@link Model#getDtZDA_Period()}<br>
+     * - {@link Model#getDtMCHN_Period()}<br>
+     * - {@link Model#getDtBaudRate()}<br>
+     * - {@link Model#getDtUserOptionTimesLeft()}<br>
+     * -
      * 
      */
     public final void reqFlashUserOption() {
@@ -1205,21 +1219,22 @@ public class Controller {
      * Set the NMEA period settings of the device.
      * 
      * @param periods
-     *            The array indexes are given by:<br>-
-     *            {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>-
+     *            The array indexes are given by:<br>
+     *            - {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GST_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     *            -
      */
     public final void setNMEAPeriods(final int[] periods) {
         m.gpsModel().setNMEAPeriods(periods);
@@ -1329,12 +1344,12 @@ public class Controller {
         m.gpsModel().reqPowerSaveEnabled();
     }
 
-    /**
+/**
      * Request the log condition (reason) settings of the device. Need to get
-     * actual values through:<br>
-     * {@link Model#getLogTimeInterval()<br>
-     * {@link Model#getLogDistanceInterval()} <br>
-     * {@link Model#getLogSpeedInterval()}
+     * actual values through:<br> {@link Model#getLogTimeInterval()
+     * 
+     * @link Model#getLogDistanceInterval()} <br>
+     *       {@link Model#getLogSpeedInterval()}
      */
     public final void reqLogReasonStatus() {
         m.gpsModel().reqLogReasonStatus();
@@ -1604,21 +1619,21 @@ public class Controller {
      * Sets the NMEA string types to write to the NMEA output file format.
      * 
      * @param formatNMEA
-     *            Bit format using following bit indexes:<br>-
-     *            {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     *            Bit format using following bit indexes:<br>
+     *            - {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_GST_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>
+     *            - {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
      */
     public final void setNMEAset(final int formatNMEA) {
         m.setNMEAset(formatNMEA);

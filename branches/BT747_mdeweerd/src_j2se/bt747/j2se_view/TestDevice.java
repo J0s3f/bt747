@@ -256,10 +256,9 @@ public class TestDevice implements bt747.model.ModelListener {
         int type = e.getType();
         if (type == ModelEvent.GPRMC) {
             // updateRMCData((GPSRecord) e.getArg());
-        } else if (type == ModelEvent.DATA_UPDATE) {
         } else if (type == ModelEvent.GPGGA) {
             // updateGPSData((GPSRecord) e.getArg());
-        } else if (type == ModelEvent.LOG_FORMAT_UPDATE) {
+        } else if (type == ModelEvent.UPDATE_LOG_FORMAT) {
             // updateLogFormatData();
         } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
             // getRawLogFilePath();

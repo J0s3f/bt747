@@ -28,6 +28,7 @@ import waba.ui.Label;
 import waba.ui.MessageBox;
 
 import gps.BT747Constants;
+
 import bt747.model.ModelEvent;
 
 import bt747.Txt;
@@ -41,18 +42,18 @@ import bt747.model.ModelListener;
  * @author Mario De Weerd
  */
 public final class GPSLogEasy extends Container implements ModelListener {
-    private Button m_btSet5Hz;
-    private Button m_btSet2Hz;
-    private Button m_btStore;
-    private Button m_btRestore;
-    private Button m_btHotStart;
-    private Button m_btWarmStart;
-    private Button m_btColdStart;
-    private Button m_btFullColdStart;
+    private Button btSet5Hz;
+    private Button btSet2Hz;
+    private Button btStore;
+    private Button btRestore;
+    private Button btHotStart;
+    private Button btWarmStart;
+    private Button btColdStart;
+    private Button btFullColdStart;
 
     private final Button[] chkRCR = new Button[BT747Constants.C_RCR_COUNT];
 
-    private Button m_btForceErase;
+    private Button btForceErase;
 
     private Label lbLogUserTxt;
 
@@ -65,17 +66,17 @@ public final class GPSLogEasy extends Container implements ModelListener {
     }
 
     protected final void onStart() {
-        add(m_btSet5Hz = new Button(Txt.BT_5HZ_FIX), LEFT, AFTER + 3); //$NON-NLS-1$
-        add(m_btSet2Hz = new Button(Txt.BT_2HZ_FIX), RIGHT, SAME); //$NON-NLS-1$
-        add(m_btStore = new Button(Txt.STORE_SETTINGS), LEFT, AFTER + 3); //$NON-NLS-1$
-        add(m_btRestore = new Button(Txt.RESTORE_SETTINGS), RIGHT, SAME); //$NON-NLS-1$
+        add(btSet5Hz = new Button(Txt.BT_5HZ_FIX), LEFT, AFTER + 3); //$NON-NLS-1$
+        add(btSet2Hz = new Button(Txt.BT_2HZ_FIX), RIGHT, SAME); //$NON-NLS-1$
+        add(btStore = new Button(Txt.STORE_SETTINGS), LEFT, AFTER + 3); //$NON-NLS-1$
+        add(btRestore = new Button(Txt.RESTORE_SETTINGS), RIGHT, SAME); //$NON-NLS-1$
         enableStore();
-        add(m_btHotStart = new Button(Txt.BT_HOT), LEFT, AFTER + 10); //$NON-NLS-1$
-        add(m_btWarmStart = new Button(Txt.BT_WARM), CENTER, SAME); //$NON-NLS-1$
-        add(m_btColdStart = new Button(Txt.BT_COLD), RIGHT, SAME); //$NON-NLS-1$
-        add(m_btFullColdStart = new Button(Txt.BT_FACT_RESET), LEFT, AFTER + 2); //$NON-NLS-1$
+        add(btHotStart = new Button(Txt.BT_HOT), LEFT, AFTER + 10); //$NON-NLS-1$
+        add(btWarmStart = new Button(Txt.BT_WARM), CENTER, SAME); //$NON-NLS-1$
+        add(btColdStart = new Button(Txt.BT_COLD), RIGHT, SAME); //$NON-NLS-1$
+        add(btFullColdStart = new Button(Txt.BT_FACT_RESET), LEFT, AFTER + 2); //$NON-NLS-1$
 
-        add(m_btForceErase = new Button(Txt.BT_FORCED_ERASE), RIGHT, SAME); //$NON-NLS-1$
+        add(btForceErase = new Button(Txt.BT_FORCED_ERASE), RIGHT, SAME); //$NON-NLS-1$
 
         add(lbLogUserTxt = new Label(Txt.BT_PT_WITH_REASON), LEFT, AFTER + 2);
         // Add all tick buttons.
@@ -109,8 +110,8 @@ public final class GPSLogEasy extends Container implements ModelListener {
 
     private void enableStore() {
         // TODO : should enable this from controller.
-        m_btStore.setEnabled(c.isEnableStoreOK());
-        m_btRestore.setEnabled(m.isStoredSetting1());
+        btStore.setEnabled(c.isEnableStoreOK());
+        btRestore.setEnabled(m.isStoredSetting1());
     }
 
     public final void onEvent(final Event event) {
@@ -120,22 +121,22 @@ public final class GPSLogEasy extends Container implements ModelListener {
             event.consumed = true;
             if (event.target == this) {
                 c.reqSettingsForStorage();
-            } else if (event.target == m_btSet2Hz) {
+            } else if (event.target == btSet2Hz) {
                 c.setFixInterval(500);
-            } else if (event.target == m_btSet5Hz) {
+            } else if (event.target == btSet5Hz) {
                 c.setLogTimeInterval(2);
                 c.setFixInterval(200);
-            } else if (event.target == m_btStore) {
+            } else if (event.target == btStore) {
                 c.storeSetting1();
-            } else if (event.target == m_btRestore) {
+            } else if (event.target == btRestore) {
                 c.restoreSetting1();
-            } else if (event.target == m_btHotStart) {
+            } else if (event.target == btHotStart) {
                 c.doHotStart();
-            } else if (event.target == m_btColdStart) {
+            } else if (event.target == btColdStart) {
                 c.doColdStart();
-            } else if (event.target == m_btWarmStart) {
+            } else if (event.target == btWarmStart) {
                 c.doWarmStart();
-            } else if (event.target == m_btFullColdStart) {
+            } else if (event.target == btFullColdStart) {
                 MessageBox mb;
                 String[] szExitButtonArray = { Txt.YES, Txt.NO };
                 mb = new MessageBox(Txt.TITLE_ATTENTION,
@@ -145,7 +146,7 @@ public final class GPSLogEasy extends Container implements ModelListener {
                     // Exit application
                     c.doFullColdStart();
                 }
-            } else if (event.target == m_btForceErase) {
+            } else if (event.target == btForceErase) {
                 c.recoveryErase();
             } else {
                 for (int i = 0; i < BT747Constants.C_RCR_COUNT; i++) {
@@ -162,9 +163,19 @@ public final class GPSLogEasy extends Container implements ModelListener {
     }
 
     public final void modelEvent(final ModelEvent event) {
-        int eventType = event.getType();
-        if (eventType == ModelEvent.DATA_UPDATE) {
+        switch(event.getType()) {
+        case ModelEvent.UPDATE_FIX_PERIOD:
+        case ModelEvent.UPDATE_DGPS_MODE:
+        case ModelEvent.UPDATE_SBAS:
+        case ModelEvent.UPDATE_SBAS_TEST:
+        case ModelEvent.UPDATE_DATUM:
+        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
+        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
+        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
+        case ModelEvent.UPDATE_LOG_FORMAT:
+        case ModelEvent.UPDATE_OUTPUT_NMEA_PERIOD:
             enableStore();
+            break;
         }
     }
 }

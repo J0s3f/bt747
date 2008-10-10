@@ -69,7 +69,6 @@ public class BT747Main2 extends javax.swing.JFrame implements
         int type = e.getType();
         if (type == ModelEvent.GPRMC) {
             updateRMCData((GPSRecord) e.getArg());
-        } else if (type == ModelEvent.DATA_UPDATE) {
         } else if (type == ModelEvent.GPGGA) {
             updateGPSData((GPSRecord) e.getArg());
         } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE

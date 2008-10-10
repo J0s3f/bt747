@@ -251,10 +251,14 @@ public final class GPSconctrl extends Container implements ModelListener {
             updateRMCData((GPSRecord) (event.getArg()));
             updateGPSData((GPSRecord) (event.getArg()));
             break;
-        case ModelEvent.DATA_UPDATE:
+        case ModelEvent.UPDATE_MTK_RELEASE:
+        case ModelEvent.UPDATE_MTK_VERSION:
+        case ModelEvent.UPDATE_LOG_VERSION:
+        case ModelEvent.UPDATE_LOG_FLASH:
             if (this.isVisible()) {
                 updateButtons();
             }
+            break;
         }
     }
 }

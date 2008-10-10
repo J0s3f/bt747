@@ -125,6 +125,7 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
         switch (event.type) {
         case ControlEvent.PRESSED:
             if (event.target == this) {
+                // Tabs changes - the Tab panel notifies the new container.
                 updateLogFormat(m.getIntOpt(Model.FILEFIELDFORMAT));
                 event.consumed = true;
             } else if (event.target == commentCheck) {
