@@ -4330,13 +4330,8 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
         c.setNMEADefaultPeriods();
     }// GEN-LAST:event_btHotStartActionPerformed
 
-    private void btSetNMEAOutput1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
+    private void btSetNMEAFileOutputActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
         setNMEAOutFile();
-    }// GEN-LAST:event_btHotStartActionPerformed
-
-    private void btSetNMEAOutputDefaults1ActionPerformed(
-            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        // TODO add your handling code here:
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btHotStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
