@@ -20,6 +20,7 @@ import bt747.sys.Generic;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;
+import gps.parser.SatelliteData;
 
 public final class CommonIn {
     /**
@@ -370,4 +371,73 @@ public final class CommonIn {
         } // GPGGA
         return logFormat;
     }
+
+    
+    /**
+     * Analyze a GPGSV sentence.
+     * 
+     * @param sNmea
+     *            elements of the sentence.
+     * @param gpsRec
+     *            The record that will hold the updated information.
+     * @return logFormat indicating the fields that were filled.
+     */
+    public static final int analyzeGPGSV(final String[] sNmea,
+            final GPSRecord gpsRec) {
+    
+    // $GPGSV
+    // GPS Satellites in view
+    //
+    // eg.
+    // $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
+    // $GPGSV,3,2,11,14,25,170,00,16,57,208,39,18,67,296,40,19,40,246,00*74
+    // $GPGSV,3,3,11,22,42,067,42,24,14,311,43,27,05,244,00,,,,*4D
+    //
+    // $GPGSV,1,1,13,02,02,213,,03,-3,000,,11,00,121,,14,13,172,05*62
+    //
+    // 1 = Total number of messages of this type in this cycle
+    // 2 = Message number
+    // 3 = Total number of SVs in view
+    // 4 = SV PRN number
+    // 5 = Elevation in degrees, 90 maximum
+    // 6 = Azimuth, degrees from true north, 000 to 359
+    // 7 = SNR, 00-99 dB (null when not tracking)
+    // 8-11 = Information about second SV, same as field 4-7
+    // 12-15= Information about third SV, same as field 4-7
+    // 16-19= Information about fourth SV, same as field 4-7
+    //
+        
+        // TODO: Not finished.
+        int logFormat = 0;
+        if (sNmea[0].equals("GPGSV") && (sNmea.length >= 19)) {
+            int GSVindex = 0;
+            int GSVtotal = 0;
+            try {
+                if (sNmea[1].length() != 0) {
+                    GSVtotal = Convert.toInt(sNmea[1]);
+                }
+            } catch (Exception e) {
+                Generic.debug("GPGSV1:" + sNmea[1], e);
+            }
+            try {
+                if (sNmea[2].length() != 0) {
+                    GSVindex = Convert.toInt(sNmea[2]);
+                }
+            } catch (Exception e) {
+                Generic.debug("GPGSV2:" + sNmea[2], e);
+            }
+            try {
+                if (sNmea[3].length() != 0) {
+                    gpsRec.nsat = (gpsRec.nsat & 0xFF00) | Convert.toInt(sNmea[3]);
+                }
+            } catch (Exception e) {
+                Generic.debug("GPGSV3:" + sNmea[3], e);
+            }
+            if(gpsRec.nsat!=0) {
+                
+            }
+        }
+        return logFormat; 
+    }
+    
 }

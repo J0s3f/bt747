@@ -197,13 +197,6 @@ public class Model extends AppSettings implements GPSListener {
     }
 
     /**
-     * @return the logFilters
-     */
-    public final GPSFilter[] getLogFilters() {
-        return logFilters;
-    }
-
-    /**
      * Get the log point validity mask.
      * 
      * @param logFilterType
@@ -214,7 +207,14 @@ public class Model extends AppSettings implements GPSListener {
      *         '2d fix', '3d fix', 'Estimated', ... filtering.
      */
     public final int getValidMask(final int logFilterType) {
-        return logFilters[logFilterType].getValidMask();
+        switch (logFilterType) {
+        case GPSFilter.WAYPT:
+            return getWayPtValid();
+        case GPSFilter.TRKPT:
+            return getTrkPtValid();
+        default:
+            return 0;
+        }
     }
 
     /**
@@ -228,18 +228,16 @@ public class Model extends AppSettings implements GPSListener {
      *         distance, button, ... record reasons filtering.
      */
     public final int getRcrMask(final int logFilterType) {
-        return logFilters[logFilterType].getRcrMask();
+        switch (logFilterType) {
+        case GPSFilter.WAYPT:
+            return getWayPtRCR();
+        case GPSFilter.TRKPT:
+            return getTrkPtRCR();
+        default:
+            return 0;
+        }
     }
 
-    /**
-     * Set the standard log filters.
-     * 
-     * @param logFilterArray
-     *            the logFilters to set
-     */
-    protected final void setLogFilters(final GPSFilter[] logFilterArray) {
-        this.logFilters = logFilterArray;
-    }
 
     /**
      * Get the standard log filters.
@@ -247,18 +245,53 @@ public class Model extends AppSettings implements GPSListener {
      * @return the logFiltersAdv
      */
     protected final GPSFilterAdvanced[] getLogFiltersAdv() {
+        setupAdvancedFilters();
         return logFiltersAdv;
+    }
+    
+    /**
+     * Multiplier to convert floating *DOP value to int value for device.
+     */
+    private static final int XDOP_FLOAT_TO_INT_100 = 100;
+
+
+    private void setupBasicSettingsFilter(final GPSFilter[] logFilters) {
+        logFilters[GPSFilter.TRKPT].setRcrMask(getTrkPtRCR());
+        logFilters[GPSFilter.TRKPT].setValidMask(getTrkPtValid());
+        logFilters[GPSFilter.WAYPT].setRcrMask(getWayPtRCR());
+        logFilters[GPSFilter.WAYPT].setValidMask(getWayPtValid());
+    };   
+
+    /**
+     * @return the logFilters
+     */
+    public final GPSFilter[] getLogFilters() {
+        setupBasicSettingsFilter(logFilters);
+        return logFilters;
     }
 
     /**
-     * Set the advanced log filters.
-     * 
-     * @param advancedLogFiltersArray
-     *            the logFiltersAdv to set
+     * Sets up the filters based on settings.
      */
-    protected final void setLogFiltersAdv(
-            final GPSFilterAdvanced[] advancedLogFiltersArray) {
-        this.logFiltersAdv = advancedLogFiltersArray;
+    private void setupAdvancedFilters() {
+        GPSFilterAdvanced[] filters = logFiltersAdv;
+        setupBasicSettingsFilter(filters);
+        for (int i = logFiltersAdv.length - 1; i >= 0; i--) {
+            GPSFilterAdvanced filter = filters[i];
+            filter.setMinRecCount(getFilterMinRecCount());
+            filter.setMaxRecCount(getFilterMaxRecCount());
+            filter.setMinSpeed(getFilterMinSpeed());
+            filter.setMaxSpeed(getFilterMaxSpeed());
+            filter.setMinDist(getFilterMinDist());
+            filter.setMaxDist(getFilterMaxDist());
+            filter
+                    .setMaxPDOP((int) (getFilterMaxPDOP() * XDOP_FLOAT_TO_INT_100));
+            filter
+                    .setMaxHDOP((int) (getFilterMaxHDOP() * XDOP_FLOAT_TO_INT_100));
+            filter
+                    .setMaxVDOP((int) (getFilterMaxVDOP() * XDOP_FLOAT_TO_INT_100));
+            filter.setMinNSAT(getFilterMinNSAT());
+        }
     }
 
     /**

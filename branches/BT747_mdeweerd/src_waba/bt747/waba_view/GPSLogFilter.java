@@ -46,16 +46,21 @@ public final class GPSLogFilter extends Container implements ModelListener {
         this.c = c;
     }
 
-    private final String[] strValid = Txt.STR_VALID;
-    private final String[] C_PB_TYPE_NAMES = new String[2];
+    private static final String[] strValid = Txt.STR_VALID;
+    private static final String[] C_PB_TYPE_NAMES = new String[2];
+    private final MyCheck[] chkRCR = new MyCheck[BT747Constants.C_RCR_COUNT];
 
+
+    static {
+        C_PB_TYPE_NAMES[GPSFilter.TRKPT] = Txt.TRKPT;
+        C_PB_TYPE_NAMES[GPSFilter.WAYPT] = Txt.WAYPT;
+    }
+    
     private static final int C_VALID_COUNT = 9;
     private final MyCheck[] chkValid = new MyCheck[C_VALID_COUNT];
     private PushButtonGroup pbPtType;
 
     protected final void onStart() {
-        C_PB_TYPE_NAMES[GPSFilter.TRKPT] = Txt.TRKPT;
-        C_PB_TYPE_NAMES[GPSFilter.WAYPT] = Txt.WAYPT;
         add(pbPtType = new PushButtonGroup(C_PB_TYPE_NAMES, // labes for buttons
                 true, // atleastone
                 0, 1, 2, 1, true, // selected, gap, insidegap, rows,
@@ -137,8 +142,6 @@ public final class GPSLogFilter extends Container implements ModelListener {
             bitMask <<= 1;
         }
     }
-
-    private MyCheck[] chkRCR = new MyCheck[BT747Constants.C_RCR_COUNT];
 
     /** Get the format set by the user in the user interface. */
     private int getRCR() {

@@ -83,7 +83,7 @@ public final class AppController extends Controller {
      * @see Model#NMEA_LOGTYPE
      * @see Model#GMAP_LOGTYPE
      */
-    public void convertLog(final int logType) {
+    public final void convertLog(final int logType) {
         if (doConvertLog(logType) != 0) {
             reportError(c.getLastError(), c.getLastErrorInfo());
         }
