@@ -221,7 +221,7 @@ public class Server implements SerialPortEventListener, Runnable {
         while (c) {
             try {
                 // logMessage("Loop");
-                if (is.available() > 0) {
+                if (is != null && is.available() > 0) {
                     int numChars = is.read(buffer);
                     String s = new String(buffer);
                     logMessage("received from mobile phone: "
@@ -260,15 +260,18 @@ public class Server implements SerialPortEventListener, Runnable {
                 while (spIs != null && spIs.available() > 0) {
                     int numChars = spIs.read(buffer);
                     if (numChars > 0) {
-                        /* String s = new String(buffer);
-                         * logMessage("sent to mobile phone: " + s.substring(0,
-                         * numChars));
+                        /*
+                         * String s = new String(buffer); logMessage("sent to
+                         * mobile phone: " + s.substring(0, numChars));
                          */
-                        os.write(buffer, 0, numChars);
-                        os.flush();
+                        if (os != null) {
+                            os.write(buffer, 0, numChars);
+                            os.flush();
+                        }
                     }
                 }
             } catch (IOException e) {
+                e.printStackTrace();
                 try {
                     disconnect();
                 } catch (Throwable n) {
