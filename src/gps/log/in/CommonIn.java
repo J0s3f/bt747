@@ -20,7 +20,6 @@ import bt747.sys.Generic;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;
-import gps.parser.SatelliteData;
 
 public final class CommonIn {
     /**
