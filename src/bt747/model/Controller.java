@@ -96,7 +96,6 @@ public class Controller {
      * Called when the Controller starts. Used for initialization.
      */
     public void init() {
-        getLogFilterSettings();
         m.setGpsDecode(m.getGpsDecode());
         m.gpsModel().setDownloadTimeOut(m.getDownloadTimeOut());
         m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
@@ -289,8 +288,6 @@ public class Controller {
             }
         }
         GPSFilter[] usedFilters;
-        getLogFilterSettings(); // TODO : Do this another way (in the model for
-        // example)
         if (m.getAdvFilterActive()) {
             usedFilters = m.getLogFiltersAdv();
         } else {
@@ -442,8 +439,6 @@ public class Controller {
             }
         }
         GPSFilter[] usedFilters;
-        getLogFilterSettings(); // TODO : Do this another way (in the model for
-        // example)
         if (m.getAdvFilterActive()) {
             usedFilters = m.getLogFiltersAdv();
         } else {
@@ -997,7 +992,6 @@ public class Controller {
      */
     public final void setTrkPtRCR(final int rcrMask) {
         m.setTrkPtRCR(rcrMask);
-        getLogFilterSettings();
     }
 
     /**
@@ -1024,7 +1018,6 @@ public class Controller {
      */
     public final void setWayPtRCR(final int rcrMask) {
         m.setWayPtRCR(rcrMask);
-        getLogFilterSettings();
     }
 
     /**
@@ -1047,7 +1040,6 @@ public class Controller {
      */
     public final void setTrkPtValid(final int validMask) {
         m.setTrkPtValid(validMask);
-        getLogFilterSettings();
     }
 
     /**
@@ -1070,32 +1062,9 @@ public class Controller {
      */
     public final void setWayPtValid(final int validMask) {
         m.setWayPtValid(validMask);
-        getLogFilterSettings();
     }
 
     // The way logfilters are handled should be reviewed.
-
-    /**
-     * Get the settings for the filters (from the settings).
-     * 
-     * @param logFilters
-     *            logFilters to replicate the settings to.
-     */
-    private void getSettings(final GPSFilter[] logFilters) {
-        logFilters[GPSFilter.TRKPT].setRcrMask(m.getTrkPtRCR());
-        logFilters[GPSFilter.TRKPT].setValidMask(m.getTrkPtValid());
-        logFilters[GPSFilter.WAYPT].setRcrMask(m.getWayPtRCR());
-        logFilters[GPSFilter.WAYPT].setValidMask(m.getWayPtValid());
-    };
-
-    /**
-     * Get the settings for the filters and restore the common settings to the
-     * normal and advanced log filters.
-     */
-    private void getLogFilterSettings() {
-        getSettings(m.getLogFilters());
-        getSettings(m.getLogFiltersAdv());
-    }
 
     /**
      * This sets MTK specific settings into its flash.<br>
