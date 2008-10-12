@@ -56,7 +56,7 @@ public final class J2MEDate implements BT747Date {
     /**
      * OS specific construct holding the actual data.
      */
-    private java.util.Date date;
+    private final java.util.Date date;
 
     /**
      * Constructor - default date.
@@ -121,9 +121,10 @@ public final class J2MEDate implements BT747Date {
      */
     public J2MEDate(final String strDate, final byte dateFormat) {
         Calendar cal = Calendar.getInstance(GMT_ZONE);
+        java.util.Date tmp = null;
 
         try {
-            StringTokenizer fields = new StringTokenizer(strDate,
+            J2MEStringTokenizer fields = new J2MEStringTokenizer(strDate,
                     '/');
             int arg0;
             int arg1;
@@ -143,10 +144,11 @@ public final class J2MEDate implements BT747Date {
                 cal.set(Calendar.MONTH, arg1 - (1 + Calendar.JANUARY));
                 cal.set(Calendar.YEAR, arg2);
             }
-            date = cal.getTime();
+            tmp = cal.getTime();
         } catch (Exception e) {
             Generic.debug("Date", e);
         }
+        date = tmp;
     }
 
     /**
@@ -160,16 +162,16 @@ public final class J2MEDate implements BT747Date {
         date = new java.util.Date(d.getTime());
     }
 
-    /**
-     * Date constructor. Application specific to be able to use the native type
-     * to construct.
-     * 
-     * @param d
-     *            The date to initialise with.
-     */
-    public J2MEDate(final J2MEDate d) {
-        date.setTime(d.getTime().getTime());
-    }
+//    /**
+//     * Date constructor. Application specific to be able to use the native type
+//     * to construct.
+//     * 
+//     * @param d
+//     *            The date to initialise with.
+//     */
+//    public J2MEDate(final J2MEDate d) {
+//        date.setTime(d.getTime().getTime());
+//    }
 
     /**
      * @see bt747.util.BT747Date#advance(int)
