@@ -4384,8 +4384,7 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
     private void cbFixColorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbFixColorActionPerformed
         // TODO add your handling code here:
         Color myColor = new Color(Conv.hex2Int(m.getColorInvalidTrack()));
-        JColorChooser ColorChooser = new JColorChooser(myColor);
-        myColor = ColorChooser.showDialog(this, "Choose the color for a 'bad track' (pure blue to ignore", myColor);
+        myColor = JColorChooser.showDialog(this, "Choose the color for a 'bad track' (pure blue to ignore", myColor);
         if(myColor != null) {
             c.setColorInvalidTrack(Convert.unsigned2hex(myColor.getRGB()&0xFFFFFF,6));
         }
