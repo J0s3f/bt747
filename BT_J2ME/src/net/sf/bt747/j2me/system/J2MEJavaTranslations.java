@@ -17,58 +17,60 @@ import org.j4me.logging.Log;
 
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747File;
+import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747Semaphore;
+import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
 import bt747.sys.interfaces.BT747Time;
 import bt747.sys.interfaces.BT747Vector;
 import bt747.sys.interfaces.JavaTranslationsInterface;
 
 public final class J2MEJavaTranslations implements JavaTranslationsInterface {
-    public BT747Date getDateInstance() {
+    public final BT747Date getDateInstance() {
         return new J2MEDate();
     }
 
-    public BT747Date getDateInstance(final int d, final int m, final int y) {
+    public final BT747Date getDateInstance(final int d, final int m, final int y) {
         return new J2MEDate(d, m, y);
     }
 
-    public BT747Date getDateInstance(final String strDate, final byte dateFormat) {
+    public final BT747Date getDateInstance(final String strDate, final byte dateFormat) {
         return new J2MEDate(strDate, dateFormat);
     }
 
-    public BT747Hashtable getHashtableInstance(final int initialCapacity) {
+    public final BT747Hashtable getHashtableInstance(final int initialCapacity) {
         return new J2MEHashtable(initialCapacity);
     }
 
-    public BT747Vector getVectorInstance() {
+    public final BT747Vector getVectorInstance() {
         return new J2MEVector();
     }
 
-    public BT747Time getTimeInstance() {
+    public final BT747Time getTimeInstance() {
         return new J2METime();
     }
 
-    public BT747File getFileInstance(final String path) {
+    public final BT747File getFileInstance(final String path) {
         return new J2MEFile(path);
     }
 
-    public BT747File getFileInstance(final String path, final int mode,
+    public final BT747File getFileInstance(final String path, final int mode,
             final int card) {
         return new J2MEFile(path, mode, card);
     }
 
-    public BT747File getFileInstance(final String path, final int mode) {
+    public final BT747File getFileInstance(final String path, final int mode) {
         return new J2MEFile(path, mode);
     }
 
     // Currently buffered files are the same as normal files.
 
-    public BT747File getBufFileInstance(final String path) {
+    public final BT747File getBufFileInstance(final String path) {
         return new J2MEFile(path);
     }
 
-    public BT747File getBufFileInstance(final String path, final int mode,
+    public final BT747File getBufFileInstance(final String path, final int mode,
             final int card) {
         return new J2MEFile(path, mode, card);
     }
@@ -77,27 +79,27 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
         return new J2MEFile(path, mode);
     }
 
-    public boolean isAvailable() {
+    public final boolean isAvailable() {
         return true;
     }
 
-    public void debug(final String s, final Throwable e) {
+    public final void debug(final String s, final Throwable e) {
         Log.debug(s, e);
     }
 
-    public double pow(final double x, final double y) {
+    public final double pow(final double x, final double y) {
         return Float11.pow(x, y);
     }
 
-    public double acos(final double x) {
+    public final double acos(final double x) {
         return Float11.acos(x);
     }
 
-    public void addThread(final BT747Thread t, final boolean b) {
+    public final void addThread(final BT747Thread t, final boolean b) {
         J2MEGeneric.addThread(t, b);
     }
 
-    public void removeThread(final BT747Thread t) {
+    public final void removeThread(final BT747Thread t) {
         J2MEGeneric.removeThread(t);
     }
 
@@ -105,19 +107,19 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
      * Math
      * 
      */
-    public String toString(final boolean p) {
+    public final String toString(final boolean p) {
         return String.valueOf(p);
     }
 
-    public String toString(final int p) {
+    public final String toString(final int p) {
         return String.valueOf(p);
     }
 
-    public String toString(final float p) {
+    public final String toString(final float p) {
         return Float.toString(p);
     }
 
-    public String toString(final double p) {
+    public final String toString(final double p) {
         return Double.toString(p);
     }
 
@@ -135,7 +137,7 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
     // return df.format(p);
     // }
 
-    public String toString(final double p, final int i) {
+    public final String toString(final double p, final int i) {
         StringBuffer s;
         if (p >= 1. || p <= -1.) {
             s = new StringBuffer(Double.toString(p));
@@ -181,7 +183,7 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
     private static final char[] ZEROCHARS = { '.', '0', '0', '0', '0', '0',
             '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', };
 
-    public String unsigned2hex(final int p, final int i) {
+    public final String unsigned2hex(final int p, final int i) {
         String s = Integer.toHexString(p).toUpperCase();
         if (s.length() == i) {
             return s;
@@ -193,31 +195,31 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
         }
     }
 
-    public int toInt(final String s) {
+    public final int toInt(final String s) {
         return Integer.valueOf(s).intValue();
     }
 
-    public float toFloat(final String s) {
+    public final float toFloat(final String s) {
         return Float.parseFloat(s);
     }
 
-    public double toDouble(final String s) {
+    public final double toDouble(final String s) {
         return Double.parseDouble(s);
     }
 
-    public double longBitsToDouble(final long l) {
+    public final double longBitsToDouble(final long l) {
         return Double.longBitsToDouble(l);
     }
 
-    public float toFloatBitwise(final int l) {
+    public final float toFloatBitwise(final int l) {
         return Float.intBitsToFloat(l);
     }
 
-    public int toIntBitwise(final float f) {
+    public final int toIntBitwise(final float f) {
         return Float.floatToIntBits(f);
     }
 
-    public void debug(final String s) {
+    public final void debug(final String s) {
         if (Log.isDebugEnabled()) {
             Log.debug(s);
         }
@@ -225,7 +227,7 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
 
     private static final long appStartTime = System.currentTimeMillis();
 
-    public int getTimeStamp() {
+    public final int getTimeStamp() {
         // Returns the time in ms since the program started.
         return (int) (System.currentTimeMillis() - appStartTime);
     }
@@ -235,7 +237,7 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
     /**
      * @return the appSettings
      */
-    public String getAppSettings() {
+    public final String getAppSettings() {
         return appSettings;
     }
 
@@ -243,12 +245,24 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
      * @param settings
      *            the appSettings to set
      */
-    public void setAppSettings(final String settings) {
+    public final void setAppSettings(final String settings) {
         appSettings = settings;
     }
 
-    public BT747Semaphore getSemaphoreInstance(final int value) {
+    public final BT747Semaphore getSemaphoreInstance(final int value) {
         return new J2MESemaphore(value);
     }
+
+    public final BT747StringTokenizer getStringTokenizer(final String a, final char b) {
+        // TODO Auto-generated method stub
+        return new J2MEStringTokenizer(a,b);
+    }
+
+    public final BT747HashSet getHashSetInstance() {
+        // TODO Auto-generated method stub
+        return new J2MEHashSet();
+    }
+    
+    
 
 }
