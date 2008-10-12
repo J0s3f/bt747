@@ -118,11 +118,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="btConnect" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cbPortName" min="-2" pref="156" max="-2" attributes="0"/>
+                      <Component id="cbPortName" min="-2" pref="200" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
                       <Component id="DownloadProgressLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="DownloadProgressBar" pref="418" max="32767" attributes="0"/>
+                      <Component id="DownloadProgressBar" pref="374" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -133,7 +133,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tabbedPanelAll" max="32767" attributes="0"/>
+              <Component id="tabbedPanelAll" pref="403" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="103" alignment="1" groupAlignment="3" attributes="0">
@@ -245,7 +245,7 @@
                                   <Component id="btOutputFile" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="22" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -340,7 +340,7 @@
                               <Component id="btDownloadFromNumerix" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbDisableLoggingDuringDownload" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="23" max="32767" attributes="0"/>
+                          <EmptySpace pref="30" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -440,7 +440,7 @@
                               <Component id="cbDecoderChoice" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbConversionTime" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="34" max="32767" attributes="0"/>
+                          <EmptySpace pref="43" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -531,7 +531,7 @@
                                   <Component id="jLabel43" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="startDate" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="15" max="32767" attributes="0"/>
+                              <EmptySpace pref="24" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -613,7 +613,7 @@
                               <Component id="pnSeparation" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="140" max="32767" attributes="0"/>
+                      <EmptySpace pref="145" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1085,7 +1085,7 @@
                           <Component id="pnTrackpoint" alignment="0" max="32767" attributes="1"/>
                           <Component id="pnCommonFilter" alignment="0" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace pref="52" max="32767" attributes="0"/>
+                      <EmptySpace pref="46" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1117,7 +1117,7 @@
                               <Component id="jPanel11" alignment="0" pref="263" max="32767" attributes="1"/>
                               <Component id="jPanel12" alignment="0" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace pref="21" max="32767" attributes="0"/>
+                          <EmptySpace pref="32" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1490,12 +1490,15 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jPanel13" alignment="0" min="-2" max="-2" attributes="1"/>
                               <Component id="cbAdvancedActive" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Component id="jPanel14" alignment="0" max="32767" attributes="1"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="jPanel13" min="-2" max="-2" attributes="1"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -1503,7 +1506,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="cbAdvancedActive" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPanel13" min="-2" pref="98" max="-2" attributes="0"/>
+                          <Component id="jPanel13" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel14" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -1754,12 +1757,12 @@
                                   <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="txtHDOPMax" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="txtVDOPMax" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1866,7 +1869,7 @@
                               <Component id="pnWayPointFix" alignment="0" pref="256" max="32767" attributes="1"/>
                               <Component id="pnWayPointRCR" alignment="0" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace pref="28" max="32767" attributes="0"/>
+                          <EmptySpace pref="39" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -2237,9 +2240,9 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pnLogFormat" min="-2" pref="301" max="-2" attributes="0"/>
+                      <Component id="pnLogFormat" min="-2" pref="313" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
@@ -2250,27 +2253,27 @@
                           <Component id="pnHoluxSettings" min="-2" max="-2" attributes="0"/>
                           <Component id="pnLogBy" min="-2" max="-2" attributes="1"/>
                       </Group>
-                      <EmptySpace pref="171" max="32767" attributes="0"/>
+                      <EmptySpace pref="159" max="32767" attributes="1"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" max="-2" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" attributes="1">
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="pnReason1" min="-2" pref="148" max="-2" attributes="1"/>
                                   <Component id="pnSBAS" min="-2" max="-2" attributes="0"/>
-                                  <Component id="pnReason1" min="-2" pref="136" max="-2" attributes="1"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="pnHoluxSettings" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="pnLogBy" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="pnLogFormat" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="25" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -2288,12 +2291,13 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="pnTime" min="-2" max="-2" attributes="0"/>
-                                      <Component id="pnPosition" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="jPanel2" alignment="1" max="32767" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="pnTime" max="32767" attributes="1"/>
+                                      <Component id="pnPosition" alignment="0" max="32767" attributes="1"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -2310,16 +2314,6 @@
                                       </Group>
                                   </Group>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="btFormatAndErase" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btFormat" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="btErase" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btRecoverMemory" min="-2" max="-2" attributes="0"/>
-                              </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -2330,6 +2324,7 @@
                       <Group type="102" attributes="0">
                           <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
                                           <Component id="pnPrecision" min="-2" pref="166" max="-2" attributes="1"/>
@@ -2338,10 +2333,10 @@
                                       </Group>
                                       <Component id="pnSatInfo" min="-2" max="-2" attributes="1"/>
                                   </Group>
-                                  <EmptySpace pref="7" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="cbOtherFormat" min="-2" max="-2" attributes="1"/>
                                       <Component id="pnReason" min="-2" max="-2" attributes="1"/>
+                                      <Component id="cbOtherFormat" min="-2" max="-2" attributes="1"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -2350,16 +2345,8 @@
                                   <Component id="pnPosition" min="-2" max="-2" attributes="1"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btFormatAndErase" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btFormat" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btErase" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btRecoverMemory" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                          <Component id="jPanel2" min="-2" pref="51" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -2388,7 +2375,7 @@
                                   <Component id="cbHeading" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="cbDistance" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="8" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -2552,8 +2539,13 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cbUTCTime" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbMilliSeconds" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="cbUTCTime" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbMilliSeconds" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
@@ -2759,38 +2751,81 @@
                     <Property name="text" type="java.lang.String" value="Estimated records"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="btFormatAndErase">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Set Format &amp; Erase"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFormatAndEraseActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="btFormat">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Set Format Only"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFormatActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="btErase">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Erase only"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEraseActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="btRecoverMemory">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Try to recover faulty memory"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRecoverMemoryActionPerformed"/>
-                  </Events>
-                </Component>
+                <Container class="javax.swing.JPanel" name="jPanel2">
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="btFormatAndErase" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btFormat" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="btErase" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btRecoverMemory" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace pref="17" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="btFormatAndErase" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btFormat" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="btErase" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btRecoverMemory" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JButton" name="btFormatAndErase">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Set Format &amp; Erase"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFormatAndEraseActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="btErase">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Erase only"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEraseActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="btRecoverMemory">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Try to recover faulty memory"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRecoverMemoryActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="btFormat">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Set Format Only"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFormatActionPerformed"/>
+                      </Events>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="pnHoluxSettings">
@@ -2862,38 +2897,33 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="cbUseSBAS" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="cbDGPSType" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="cbIncludeTestSBAS" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="btApplySBAS" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="cbUseSBAS" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="cbDGPSType" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="cbIncludeTestSBAS" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="58" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btApplySBAS" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="90" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cbDGPSType" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbUseSBAS" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbDGPSType" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cbIncludeTestSBAS" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btApplySBAS" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="18" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -2934,7 +2964,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Reason"/>
+                    <TitledBorder title="GPS Start"/>
                   </Border>
                 </Property>
               </Properties>
@@ -2943,17 +2973,13 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btHotStart" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="btWarmStart" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="btColdStart" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="btFactoryResetDevice" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="btColdStart" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="btWarmStart" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="btHotStart" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btFactoryResetDevice" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -2965,10 +2991,10 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btWarmStart" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btColdStart" min="-2" pref="23" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                          <Component id="btFactoryResetDevice" min="-2" max="-2" attributes="0"/>
+                          <Component id="btColdStart" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btFactoryResetDevice" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -3240,7 +3266,7 @@
                           <Component id="pnFlashSettings" alignment="0" min="0" pref="330" max="32767" attributes="1"/>
                           <Component id="pnNMEAOutput" alignment="0" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace pref="32" max="32767" attributes="0"/>
+                      <EmptySpace pref="37" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4171,10 +4197,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pnNMEAOutput1" min="-2" pref="231" max="-2" attributes="0"/>
+                      <Component id="pnNMEAOutput1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnGPXFileSettings" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="298" max="32767" attributes="0"/>
+                      <EmptySpace pref="333" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4186,7 +4212,7 @@
                           <Component id="pnGPXFileSettings" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="pnNMEAOutput1" alignment="0" min="-2" max="-2" attributes="1"/>
                       </Group>
-                      <EmptySpace min="-2" pref="93" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="98" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4204,37 +4230,11 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lbNMEAFileGLL" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileRMC" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileVTG" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileGGA" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileGSA" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileGSV" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileGRS" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileGST" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileType8" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileType9" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lbNMEAFileType10" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileType11" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileType12" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileMALM" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileMEPH" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileMDGP" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileMDBG" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileZDA" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbNMEAFileMCHN" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="21" pref="21" max="21" attributes="0"/>
-                                  <Component id="btSetNMEAFileOutput" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -4242,160 +4242,219 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="lbNMEAFileGLL" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileRMC" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileVTG" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileGGA" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileGSA" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileGSV" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileGRS" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileGST" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="lbNMEAFileType8" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbNMEAFileMCHN" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="lbNMEAFileType10" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileType11" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileType12" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileMALM" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileMEPH" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileMDGP" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileMDBG" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbNMEAFileZDA" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jPanel4" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lbNMEAFileType9" min="-2" max="-2" attributes="0"/>
-                              <Component id="btSetNMEAFileOutput" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileType10">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Type 10 (?)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileType11">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Type 11 (?)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileType12">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Type 12 (?)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileMALM">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="MALM Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileMEPH">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="MEPH Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileMDGP">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="MDGP Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileMDBG">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="MDBG Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileZDA">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="ZDA Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="btSetNMEAFileOutput">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Set"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetNMEAFileOutputActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGLL">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="GLL Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileRMC">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="RMC Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileVTG">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="VTG Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGGA">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="GGA Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGSA">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="GSA Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGSV">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="GSV Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGRS">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="GRS Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileGST">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="GST Period"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileType9">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Type 9 (?)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileType8">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Type 8 (?)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="lbNMEAFileMCHN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="MCHN Period"/>
-                  </Properties>
-                </Component>
+                <Container class="javax.swing.JPanel" name="jPanel3">
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lbNMEAFileGLL" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileRMC" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileVTG" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileGGA" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileGSA" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileGSV" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileGRS" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileGST" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileType8" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileType9" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="lbNMEAFileGLL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileRMC" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileVTG" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileGGA" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileGSA" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileGSV" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileGRS" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileGST" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileType8" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbNMEAFileType9" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileType9">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Type 9 (?)"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileGST">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="GST Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileVTG">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="VTG Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileGRS">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="GRS Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileGSV">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="GSV Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileGGA">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="GGA Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileRMC">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="RMC Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileGLL">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="GLL Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileType8">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Type 8 (?)"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileGSA">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="GSA Period"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JPanel" name="jPanel4">
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lbNMEAFileType10" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileType11" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileType12" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileMALM" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileMEPH" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileMDGP" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileMDBG" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileZDA" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbNMEAFileMCHN" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="21" pref="21" max="21" attributes="0"/>
+                              <Component id="btSetNMEAFileOutput" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="184" max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMCHN" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lbNMEAFileType10" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType11" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileType12" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMALM" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMEPH" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMDGP" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileMDBG" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="lbNMEAFileZDA" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btSetNMEAFileOutput" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileMDGP">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="MDGP Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileType11">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Type 11 (?)"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileMEPH">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="MEPH Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileMALM">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="MALM Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileType10">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Type 10 (?)"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileZDA">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="ZDA Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileType12">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Type 12 (?)"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="btSetNMEAFileOutput">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Set"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetNMEAFileOutputActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileMDBG">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="MDBG Period"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="lbNMEAFileMCHN">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="MCHN Period"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="pnGPXFileSettings">
@@ -4464,9 +4523,9 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" pref="662" max="-2" attributes="0"/>
-                      <EmptySpace pref="162" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" pref="814" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4474,8 +4533,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" pref="316" max="-2" attributes="0"/>
-                      <EmptySpace pref="46" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="356" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -4541,6 +4600,9 @@
             <StringItem index="16" value="COM15:"/>
             <StringItem index="17" value="COM16:"/>
           </StringArray>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[200, 22]"/>
         </Property>
       </Properties>
       <Events>

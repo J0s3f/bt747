@@ -18,11 +18,11 @@ import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
-import bt747.sys.HashSet;
-import bt747.sys.StringTokenizer;
 
 import bt747.sys.Convert;
 import bt747.sys.Generic;
+import bt747.sys.HashSet;
+import bt747.sys.StringTokenizer;
 import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Thread;
 

@@ -22,7 +22,7 @@ public final class FileUtil {
      *         commonalities between the base and the target
      * 
      */
-    public static String getRelativePath(final String base,
+    public final static String getRelativePath(final String base,
             final String target, final char separator) {
         try {
             //

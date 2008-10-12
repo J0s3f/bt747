@@ -1,6 +1,5 @@
 package bt747.sys.interfaces;
 
-import bt747.sys.HashSet;
 
 public interface BT747HashSet {
 
@@ -11,9 +10,9 @@ public interface BT747HashSet {
      */
     public BT747HashSet iterator();
 
-    public void add(Object o);
+    public void add(final Object o);
 
-    public void remove(Object o);
+    public void remove(final Object o);
 
     public boolean hasNext();
 

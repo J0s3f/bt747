@@ -26,7 +26,7 @@ package bt747.j2se_view;
  */
 public class BT747 extends bt747.waba_view.AppBT747 {
     
-    private BT747Main j2se_view;
+    //private BT747Main j2se_view;
     
     public void onStart() {
         super.onStart();
