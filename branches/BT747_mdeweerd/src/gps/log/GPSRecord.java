@@ -69,7 +69,7 @@ public class GPSRecord {
     /**
      * 
      */
-    public GPSRecord(GPSRecord r) {
+    public GPSRecord(final GPSRecord r) {
         this.utc = r.utc;
         this.valid = r.valid;
         this.latitude = r.latitude;
@@ -118,13 +118,16 @@ public class GPSRecord {
         this.distance = r.distance;
         this.geoid = r.geoid;
         this.recCount = r.recCount;
+        this.logDistance = r.logDistance;
+        this.logPeriod = r.logPeriod;
+        this.logSpeed = r.logSpeed;
     }
 
     public final GPSRecord cloneRecord() {
         return new GPSRecord(this);
     }
 
-    public static GPSRecord getLogFormatRecord(final int logFormat) {
+    public final static GPSRecord getLogFormatRecord(final int logFormat) {
         GPSRecord gpsRec = new GPSRecord();
         if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
             gpsRec.utc = -1;
@@ -191,46 +194,4 @@ public class GPSRecord {
         /* End handling record */
         return gpsRec;
     }
-
-    public final void setTime(final int time) {
-        int newTime;
-        newTime = utc;
-        newTime -= utc % (24 * 3600);
-        newTime += time;
-        utc = newTime;
-    }
-
-    public final boolean setTime(final String nmeaTimeStr) {
-        int timePart = Convert.toInt(nmeaTimeStr.substring(0, 2)) * 3600
-                + Convert.toInt(nmeaTimeStr.substring(2, 4)) * 60
-                + Convert.toInt(nmeaTimeStr.substring(4, 6));
-        setTime(timePart);
-        try {
-            if (nmeaTimeStr.charAt(6) == '.') {
-                milisecond = (int) (Convert.toFloat(nmeaTimeStr.substring(6)) * 1000);
-                return true;
-            }
-        } catch (Exception e) {
-            // Conversion did not work, so millisecond input format no good.
-            return false;
-        }
-        return false;
-    }
-
-    public final void setDate(final int date) {
-        int newTime;
-        newTime = utc;
-        newTime = utc % (24 * 3600);
-        newTime += (date / (24 * 3600)) * (24 * 3600);
-        utc = newTime;
-    }
-
-    public final void setDate(final String date) {
-        int dateInt = Convert.toInt(date);
-        int day = dateInt / 10000;
-        int month = (dateInt / 100) % 100;
-        int year = dateInt % 100 + 2000;
-        setDate((new Date(day, month, year)).dateToUTCepoch1970());
-    }
-
 }

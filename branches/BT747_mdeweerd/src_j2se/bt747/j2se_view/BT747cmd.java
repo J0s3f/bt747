@@ -71,11 +71,11 @@ public class BT747cmd implements bt747.model.ModelListener {
         handleOptions(options);
     }
 
-    public void setController(Controller c) {
+    public void setController(final Controller c) {
         this.c = c; // Should check that c is an AppController or do it
     }
 
-    public void setModel(Model m) {
+    public void setModel(final Model m) {
         if (this.m != null) {
             this.m.removeListener(this);
         }
