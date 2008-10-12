@@ -4656,12 +4656,11 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
         javax.swing.JFileChooser OutputFileChooser;
         OutputFileChooser = new javax.swing.JFileChooser(getOutputFilePath().getParent());
 
-        OutputFileChooser.setApproveButtonText("Set");
         OutputFileChooser.setToolTipText("Select the basename of the output file.");
         // if (curDir.exists()) {
         //OutputFileChooser.setCurrentDirectory(getOutputFilePath());
         // }
-        if (OutputFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        if (OutputFileChooser.showDialog(this,"Set basename") == JFileChooser.APPROVE_OPTION) {
             c.setOutputFileRelPath(gps.convert.FileUtil.getRelativePath(m
                     .getBaseDirPath(), OutputFileChooser.getSelectedFile()
                     .getAbsolutePath(), File.separatorChar));
@@ -4694,9 +4693,8 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
 //        }
 
         WorkingDirectoryChooser.setDialogTitle("Choose Working Directory");
-        WorkingDirectoryChooser.setDialogType(javax.swing.JFileChooser.CUSTOM_DIALOG);
         WorkingDirectoryChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        if (WorkingDirectoryChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        if (WorkingDirectoryChooser.showDialog(this,"Set") == JFileChooser.APPROVE_OPTION) {
             c.setBaseDirPath(WorkingDirectoryChooser.getSelectedFile()
                     .getAbsolutePath());
         }
