@@ -134,16 +134,13 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="pnDownload" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="282" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="pnConvert" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                              <Component id="pnConvert" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="jPanel1" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="pnDownload" alignment="0" max="32767" attributes="1"/>
                               </Group>
                           </Group>
+                          <EmptySpace pref="282" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -181,8 +178,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="tfWorkDirectory" pref="701" max="32767" attributes="1"/>
-                                  <Component id="tfRawLogFilePath" pref="701" max="32767" attributes="1"/>
+                                  <Component id="tfWorkDirectory" pref="419" max="32767" attributes="1"/>
+                                  <Component id="tfRawLogFilePath" pref="419" max="32767" attributes="1"/>
                                   <Component id="tfOutputFileBaseName" min="-2" pref="150" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -215,6 +212,9 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="WorkDir"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfWorkDirectoryFocusLost"/>
+                      </Events>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="tfWorkDirectory.setText(m.getBaseDirPath());"/>
                       </AuxValues>
@@ -1085,7 +1085,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jPanel11" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="jPanel11" alignment="0" pref="263" max="32767" attributes="1"/>
                                   <Component id="jPanel12" alignment="0" max="32767" attributes="1"/>
                               </Group>
                               <EmptySpace pref="32" max="32767" attributes="0"/>
@@ -1837,7 +1837,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="pnWayPointFix" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="pnWayPointFix" alignment="0" pref="256" max="32767" attributes="1"/>
                                   <Component id="pnWayPointRCR" alignment="0" max="32767" attributes="1"/>
                               </Group>
                               <EmptySpace pref="39" max="32767" attributes="0"/>
@@ -3292,10 +3292,10 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="pnNMEAOutput" alignment="0" min="-2" max="-2" attributes="1"/>
+                              <Component id="pnNMEAOutput" min="-2" max="-2" attributes="1"/>
                               <Component id="pnFlashSettings" alignment="0" min="-2" max="-2" attributes="1"/>
                           </Group>
-                          <EmptySpace pref="40" max="32767" attributes="0"/>
+                          <EmptySpace pref="29" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -3313,7 +3313,7 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="jLabel30" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -3348,7 +3348,7 @@
                                       <Component id="txtFlashUpdateRate" alignment="0" pref="60" max="32767" attributes="1"/>
                                   </Group>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -3410,7 +3410,7 @@
                                   <Component id="jLabel29" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btSetFlash" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -3601,11 +3601,6 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel29">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="MCHN Period"/>
-                      </Properties>
-                    </Component>
                     <Component class="javax.swing.JButton" name="btSetFlash">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Set"/>
@@ -3613,6 +3608,11 @@
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSetFlashActionPerformed"/>
                       </Events>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel29">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="MCHN Period"/>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -3820,6 +3820,7 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btSetNMEAOutputDefaults" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
