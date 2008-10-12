@@ -22,19 +22,20 @@ import bt747.sys.Settings;
 public final class J2SEAppController extends Controller {
 
     private final static String platform = java.lang.System.getProperty("os.name");
+    private final static String SETTINGS_NAME = "BT747SettingsJ2SE.pdb";
     private final static String CONFIG_FILE_NAME = java.lang.System
             .getProperty(
                     "bt747_settings", // bt747_settings or default value
                     ((java.lang.System.getProperty("user.home").length() != 0) ? java.lang.System
                             .getProperty("user.home")
                             + java.lang.System.getProperty("file.separator")
-                            + "SettingsBT747.pdb"
+                            + SETTINGS_NAME
                             : (
 
                             (platform.startsWith("Win32")
                                     || platform.startsWith("Windows") || platform
-                                    .startsWith("Mac")) ? "SettingsBT747.pdb"
-                                    : "/My Documents/BT747/SettingsBT747.pdb")));
+                                    .startsWith("Mac")) ? SETTINGS_NAME
+                                    : "/My Documents/BT747/" + SETTINGS_NAME)));
 
     /**
      * The lower level controller. This should become a separate instance in the
