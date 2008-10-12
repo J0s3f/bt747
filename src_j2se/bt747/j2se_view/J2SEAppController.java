@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import moio.util.HashSet;
+import java.util.HashSet;
 
 import bt747.Txt;
 import bt747.model.AppSettings;
@@ -21,8 +21,8 @@ import bt747.sys.Settings;
 
 public final class J2SEAppController extends Controller {
 
-    private static String platform = java.lang.System.getProperty("os.name");
-    private static String CONFIG_FILE_NAME = java.lang.System
+    private final static String platform = java.lang.System.getProperty("os.name");
+    private final static String CONFIG_FILE_NAME = java.lang.System
             .getProperty(
                     "bt747_settings", // bt747_settings or default value
                     ((java.lang.System.getProperty("user.home").length() != 0) ? java.lang.System
@@ -195,7 +195,7 @@ public final class J2SEAppController extends Controller {
         }
     }
 
-    void doFactoryReset() {
+    public final void doFactoryReset() {
         MessageBox mb;
         String[] szExitButtonArray = { Txt.YES, Txt.NO };
         mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.CONFIRM_FACT_RESET,
@@ -208,7 +208,7 @@ public final class J2SEAppController extends Controller {
 
     }
 
-    void setFlashConfig(final boolean lock,
+    public final void setFlashConfig(final boolean lock,
             final int updateRate, final int baudRate, final int periodGLL,
             final int periodRMC, final int periodVTG, final int periodGSA,
             final int periodGSV, final int periodGGA, final int periodZDA,
@@ -255,7 +255,7 @@ public final class J2SEAppController extends Controller {
     /**
      * The list of views attached to this controller.
      */
-    private HashSet views = new HashSet();
+    private HashSet<Object> views = new HashSet<Object>();
 
     /**
      * Attach a view to the controller.
@@ -274,7 +274,7 @@ public final class J2SEAppController extends Controller {
      * 
      * @see bt747.model.Controller#performOperationsAfterGPSConnect()
      */
-    protected void performOperationsAfterGPSConnect() {
+    protected final void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
             if (m.getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT)) {
                 c.stopLog(); // First command could fail, so repeat.

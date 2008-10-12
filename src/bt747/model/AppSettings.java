@@ -16,13 +16,13 @@ package bt747.model;
 
 import gps.BT747Constants;
 import gps.convert.Conv;
-import moio.util.HashSet;
-import moio.util.Iterator;
+import bt747.sys.HashSet;
 
 import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747HashSet;
 
 /**
  * @author Mario De Weerd
@@ -1315,7 +1315,7 @@ public class AppSettings {
     }
 
     protected final void postEvent(final int type, final Object o) {
-        Iterator it = listeners.iterator();
+        BT747HashSet it = listeners.iterator();
         while (it.hasNext()) {
             ModelListener l = (ModelListener) it.next();
             ModelEvent e = new ModelEvent(type, o);
@@ -1324,7 +1324,7 @@ public class AppSettings {
     }
 
     protected final void postEvent(final int type) {
-        Iterator it = listeners.iterator();
+        BT747HashSet it = listeners.iterator();
         while (it.hasNext()) {
             ModelListener l = (ModelListener) it.next();
             ModelEvent e = new ModelEvent(type, l);
@@ -1333,7 +1333,7 @@ public class AppSettings {
     }
 
     protected final void postEvent(final ModelEvent e) {
-        Iterator it = listeners.iterator();
+        BT747HashSet it = listeners.iterator();
         while (it.hasNext()) {
             ModelListener l = (ModelListener) it.next();
             l.modelEvent(new ModelEvent(e));

@@ -25,7 +25,7 @@ import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.Settings;
 
-import moio.util.StringTokenizer;
+import bt747.sys.StringTokenizer;
 
 /**
  * This class is used to convert the binary log to a new format. Basically this
@@ -179,7 +179,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                         }
 
                         StringTokenizer fields = new StringTokenizer(s
-                                .toString(), ",");
+                                .toString(), ',');
                         offsetInBuffer = eolPos;
                         for (; offsetInBuffer < sizeToRead
                                 && (bytes[offsetInBuffer] == CR || bytes[offsetInBuffer] == EOL); offsetInBuffer++) {
@@ -306,7 +306,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                 gpsRec.rcr = 1; // In case RCR is not logged -
                                 // default = time
 
-                                while (fields.hasMoreElements()
+                                while (fields.hasMoreTokens()
                                         && (fieldNbr < MAX_RECORDS)
                                         && (records[fieldNbr] != FMT_NO_FIELD)) {
                                     String field = fields.nextToken();
@@ -378,7 +378,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                                         dotidx);
                                             }
                                             StringTokenizer tfields = new StringTokenizer(
-                                                    field, ":");
+                                                    field, ':');
                                             if (tfields.countTokens() == 3) {
                                                 gpsRec.utc += Convert
                                                         .toInt(tfields
@@ -433,7 +433,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case BT747Constants.FMT_HEIGHT_IDX: {
                                             StringTokenizer n = new StringTokenizer(
-                                                    field.trim(), " ");
+                                                    field.trim(), ' ');
                                             gpsRec.height = Convert.toFloat(n
                                                     .nextToken());
                                         }
@@ -441,7 +441,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case FMT_HEIGHT_FT_IDX: {
                                             StringTokenizer n = new StringTokenizer(
-                                                    field.trim(), " ");
+                                                    field.trim(), ' ');
                                             gpsRec.height = Convert.toFloat(n
                                                     .nextToken()) / 3.28083989501312F;
                                         }
@@ -450,7 +450,7 @@ public final class CSVLogConvert implements GPSLogConvert {
 
                                         case BT747Constants.FMT_SPEED_IDX: {
                                             StringTokenizer n = new StringTokenizer(
-                                                    field.trim(), " ");
+                                                    field.trim(), ' ');
                                             gpsRec.speed = Convert.toFloat(n
                                                     .nextToken());
                                         }
@@ -458,7 +458,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case FMT_SPEED_MPH_IDX: {
                                             StringTokenizer n = new StringTokenizer(
-                                                    field.trim(), " ");
+                                                    field.trim(), ' ');
                                             gpsRec.speed = Convert.toFloat(n
                                                     .nextToken()) / 0.621371192237334F;
                                         }
@@ -496,14 +496,15 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case BT747Constants.FMT_NSAT_IDX: {
                                             StringTokenizer nfields = new StringTokenizer(
-                                                    field, "()");
+                                                    field, '(');
                                             if (nfields.countTokens() >= 2) {
                                                 gpsRec.nsat = Convert
                                                         .toInt(nfields
                                                                 .nextToken())
-                                                        * 256
-                                                        + Convert.toInt(nfields
-                                                                .nextToken());
+                                                        * 256;
+                                                String t = nfields.nextToken();
+                                                t=t.substring(0, t.indexOf(')'));
+                                                gpsRec.nsat+= Convert.toInt(t);
                                                 curLogFormat |= (1 << BT747Constants.FMT_NSAT_IDX);
                                             }
                                         }
@@ -513,7 +514,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case BT747Constants.FMT_SID_IDX: {
                                             StringTokenizer SatFields = new StringTokenizer(
-                                                    field, ";");
+                                                    field, ';');
                                             int cnt = SatFields.countTokens();
                                             gpsRec.sid = new int[cnt];
                                             gpsRec.sidinuse = new boolean[cnt];
@@ -530,10 +531,10 @@ public final class CSVLogConvert implements GPSLogConvert {
                                                             satf
                                                                     .substring(gpsRec.sidinuse[i] ? 1
                                                                             : 0),
-                                                            "-");
+                                                            '-');
                                                     // Vm.debug(sinfos[0]);
                                                     if (sinfos
-                                                            .hasMoreElements()) {
+                                                            .hasMoreTokens()) {
                                                         gpsRec.sid[i] = Convert
                                                                 .toInt(sinfos
                                                                         .nextToken());
@@ -541,7 +542,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                                     }
                                                     if (((activeFileFields & BT747Constants.FMT_ELEVATION_IDX) != 0)
                                                             && sinfos
-                                                                    .hasMoreElements()) {
+                                                                    .hasMoreTokens()) {
                                                         curLogFormat |= (1 << BT747Constants.FMT_ELEVATION_IDX);
                                                         gpsRec.ele[i] = Convert
                                                                 .toInt(sinfos
@@ -549,7 +550,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                                     }
                                                     if (((activeFileFields & BT747Constants.FMT_AZIMUTH_IDX) != 0)
                                                             && sinfos
-                                                                    .hasMoreElements()) {
+                                                                    .hasMoreTokens()) {
                                                         curLogFormat |= (1 << BT747Constants.FMT_AZIMUTH_IDX);
                                                         gpsRec.azi[i] = Convert
                                                                 .toInt(sinfos
@@ -557,7 +558,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                                     }
                                                     if (((activeFileFields & BT747Constants.FMT_SNR_IDX) != 0)
                                                             && sinfos
-                                                                    .hasMoreElements()) {
+                                                                    .hasMoreTokens()) {
                                                         curLogFormat |= (1 << BT747Constants.FMT_SNR_IDX);
                                                         gpsRec.snr[i] = Convert
                                                                 .toInt(sinfos
@@ -607,7 +608,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case BT747Constants.FMT_DISTANCE_IDX: {
                                             StringTokenizer n = new StringTokenizer(
-                                                    field.trim(), " ");
+                                                    field.trim(), ' ');
                                             gpsRec.distance = Convert
                                                     .toDouble(n.nextToken());
                                         }
@@ -615,7 +616,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case FMT_DISTANCE_FT_IDX: {
                                             StringTokenizer n = new StringTokenizer(
-                                                    field.trim(), " ");
+                                                    field.trim(), ' ');
                                             gpsRec.distance = Convert
                                                     .toDouble(n.nextToken()) / 3.28083989501312;
                                         }

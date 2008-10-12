@@ -18,8 +18,10 @@ import java.util.Locale;
 
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747File;
+import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747Semaphore;
+import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
 import bt747.sys.interfaces.BT747Time;
 import bt747.sys.interfaces.BT747Vector;
@@ -191,8 +193,16 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
     }
 
     public final BT747Semaphore getSemaphoreInstance(final int value) {
-        // TODO Auto-generated method stub
         return new J2SESemaphore(value);
     }
+
+    public final BT747StringTokenizer getStringTokenizer(final String a, final char b) {
+        return new J2SEStringTokenizer(a,b);
+    }
+    
+    public final BT747HashSet getHashSetInstance() {
+        return new J2SEHashSet();
+    }
+
 
 }

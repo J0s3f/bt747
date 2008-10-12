@@ -175,4 +175,8 @@ public interface JavaTranslationsInterface {
     void setAppSettings(final String appSettings);
 
     BT747Semaphore getSemaphoreInstance(final int value);
+
+    BT747StringTokenizer getStringTokenizer(final String a, final char b);
+
+    BT747HashSet getHashSetInstance();
 }
