@@ -1237,8 +1237,8 @@ public class BT747Main extends javax.swing.JFrame implements
         lbFlashZDA = new javax.swing.JLabel();
         cbFlashZDA = new javax.swing.JComboBox();
         cbFlashMCHN = new javax.swing.JComboBox();
-        jLabel29 = new javax.swing.JLabel();
         btSetFlash = new javax.swing.JButton();
+        jLabel29 = new javax.swing.JLabel();
         pnNMEAOutput = new javax.swing.JPanel();
         cbNMEAOutType10 = new javax.swing.JComboBox();
         lbNMEAOutType10 = new javax.swing.JLabel();
@@ -1330,6 +1330,11 @@ public class BT747Main extends javax.swing.JFrame implements
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Files"));
 
         tfWorkDirectory.setText("WorkDir");
+        tfWorkDirectory.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfWorkDirectoryFocusLost(evt);
+            }
+        });
 
         tfRawLogFilePath.setText("RawFile");
         tfRawLogFilePath.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1375,8 +1380,8 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(btWorkingDirectory))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(tfWorkDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
-                    .add(tfRawLogFilePath, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+                    .add(tfWorkDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+                    .add(tfRawLogFilePath, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
                     .add(tfOutputFileBaseName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 150, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -1582,13 +1587,11 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(LogOperationsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(LogOperationsPanelLayout.createSequentialGroup()
-                        .add(pnDownload, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(282, Short.MAX_VALUE))
-                    .add(LogOperationsPanelLayout.createSequentialGroup()
-                        .add(pnConvert, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                    .add(pnConvert, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, pnDownload, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(282, Short.MAX_VALUE))
         );
         LogOperationsPanelLayout.setVerticalGroup(
             LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2185,7 +2188,7 @@ public class BT747Main extends javax.swing.JFrame implements
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnTrackpointLayout.createSequentialGroup()
                 .add(pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel12, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
@@ -2755,7 +2758,7 @@ public class BT747Main extends javax.swing.JFrame implements
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWaypointLayout.createSequentialGroup()
                 .add(pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointFix, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointFix, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
@@ -3574,8 +3577,6 @@ public class BT747Main extends javax.swing.JFrame implements
 
         cbFlashMCHN.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jLabel29.setText("MCHN Period");
-
         btSetFlash.setText("Set");
         btSetFlash.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3583,11 +3584,13 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
+        jLabel29.setText("MCHN Period");
+
         org.jdesktop.layout.GroupLayout pnFlashSettingsLayout = new org.jdesktop.layout.GroupLayout(pnFlashSettings);
         pnFlashSettings.setLayout(pnFlashSettingsLayout);
         pnFlashSettingsLayout.setHorizontalGroup(
             pnFlashSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnFlashSettingsLayout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, pnFlashSettingsLayout.createSequentialGroup()
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(pnFlashSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(jLabel30)
@@ -3667,7 +3670,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(cbFlashMCHN, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jLabel29)
                     .add(btSetFlash))
-                .add(8, 8, 8))
+                .add(19, 19, 19))
         );
 
         pnNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder("NMEA Output Settings"));
@@ -3923,7 +3926,8 @@ public class BT747Main extends javax.swing.JFrame implements
                         .add(cbType9Out))
                     .add(btSetNMEAOutput))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btSetNMEAOutputDefaults))
+                .add(btSetNMEAOutputDefaults)
+                .addContainerGap())
         );
 
         org.jdesktop.layout.GroupLayout AdvancedSettingsPanelLayout = new org.jdesktop.layout.GroupLayout(AdvancedSettingsPanel);
@@ -3942,7 +3946,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(AdvancedSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(pnFlashSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         tabbedPanelAll.addTab("Advanced Device Settings", AdvancedSettingsPanel);
@@ -4384,7 +4388,7 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
     private void cbFixColorActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbFixColorActionPerformed
         // TODO add your handling code here:
         Color myColor = new Color(Conv.hex2Int(m.getColorInvalidTrack()));
-        myColor = JColorChooser.showDialog(this, "Choose the color for a 'bad track' (pure blue to ignore", myColor);
+        myColor = JColorChooser.showDialog(this, "Choose the color for a 'bad track' (pure blue to ignore)", myColor);
         if(myColor != null) {
             c.setColorInvalidTrack(Convert.unsigned2hex(myColor.getRGB()&0xFFFFFF,6));
         }
@@ -4650,12 +4654,14 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
 
     private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btOutputFileActionPerformed
         javax.swing.JFileChooser OutputFileChooser;
-        OutputFileChooser = new javax.swing.JFileChooser(getOutputFilePath());
+        OutputFileChooser = new javax.swing.JFileChooser(getOutputFilePath().getParent());
 
+        OutputFileChooser.setApproveButtonText("Set");
+        OutputFileChooser.setToolTipText("Select the basename of the output file.");
         // if (curDir.exists()) {
         //OutputFileChooser.setCurrentDirectory(getOutputFilePath());
         // }
-        if (OutputFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        if (OutputFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             c.setOutputFileRelPath(gps.convert.FileUtil.getRelativePath(m
                     .getBaseDirPath(), OutputFileChooser.getSelectedFile()
                     .getAbsolutePath(), File.separatorChar));
@@ -4664,13 +4670,13 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
 
     private void btRawLogFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btRawLogFileActionPerformed
         javax.swing.JFileChooser RawLogFileChooser;
-        RawLogFileChooser = new javax.swing.JFileChooser(getRawLogFilePath());
+        RawLogFileChooser = new javax.swing.JFileChooser(getRawLogFilePath().getParent());
 
         //getRawLogFilePath();
         // if (curDir.exists()) {
         //RawLogFileChooser.setCurrentDirectory(getRawLogFilePath());
         // }
-        if (RawLogFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        if (RawLogFileChooser.showDialog(this,"Set") == JFileChooser.APPROVE_OPTION) {
             c.setLogFileRelPath(gps.convert.FileUtil.getRelativePath(m
                     .getBaseDirPath(), RawLogFileChooser.getSelectedFile()
                     .getAbsolutePath(), File.separatorChar));
@@ -4681,17 +4687,16 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
             java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btWorkingDirectoryActionPerformed
         javax.swing.JFileChooser WorkingDirectoryChooser;
         File curDir = getWorkDirPath();
-        if (curDir.exists()) {
+        //if (curDir.exists()) {
             WorkingDirectoryChooser = new javax.swing.JFileChooser(curDir);
-        } else {
-            WorkingDirectoryChooser = new javax.swing.JFileChooser();
-        }
+//        } else {
+//            WorkingDirectoryChooser = new javax.swing.JFileChooser();
+//        }
 
-        WorkingDirectoryChooser = new javax.swing.JFileChooser();
         WorkingDirectoryChooser.setDialogTitle("Choose Working Directory");
         WorkingDirectoryChooser.setDialogType(javax.swing.JFileChooser.CUSTOM_DIALOG);
         WorkingDirectoryChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        if (WorkingDirectoryChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        if (WorkingDirectoryChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             c.setBaseDirPath(WorkingDirectoryChooser.getSelectedFile()
                     .getAbsolutePath());
         }
@@ -5009,6 +5014,10 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
     private void AdvancedfileSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_AdvancedfileSettingsPanelFocusGained
      // Remove
      }//GEN-LAST:event_AdvancedfileSettingsPanelFocusGained
+
+private void tfWorkDirectoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfWorkDirectoryFocusLost
+   c.setBaseDirPath(tfWorkDirectory.getText());
+}//GEN-LAST:event_tfWorkDirectoryFocusLost
 
     // public static void main(String args) {
     // main((String[])null);
