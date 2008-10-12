@@ -23,43 +23,45 @@ import waba.sys.Vm;
 
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747File;
+import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Hashtable;
 import bt747.sys.interfaces.BT747Semaphore;
+import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
 import bt747.sys.interfaces.BT747Time;
 import bt747.sys.interfaces.BT747Vector;
 import bt747.sys.interfaces.JavaTranslationsInterface;
 
 public final class WabaJavaTranslations implements JavaTranslationsInterface {
-    public BT747Date getDateInstance() {
+    public final BT747Date getDateInstance() {
         return new WabaDate();
     }
 
-    public BT747Date getDateInstance(final int d, final int m, final int y) {
+    public final BT747Date getDateInstance(final int d, final int m, final int y) {
         return new WabaDate(d, m, y);
     }
 
-    public BT747Date getDateInstance(final String strDate, final byte dateFormat) {
+    public final BT747Date getDateInstance(final String strDate, final byte dateFormat) {
         return new WabaDate(strDate, dateFormat);
     }
 
-    public BT747Hashtable getHashtableInstance(final int initialCapacity) {
+    public final BT747Hashtable getHashtableInstance(final int initialCapacity) {
         return new WabaHashtable(initialCapacity);
     }
 
-    public BT747Vector getVectorInstance() {
+    public final BT747Vector getVectorInstance() {
         return new WabaVector();
     }
 
-    public BT747Time getTimeInstance() {
+    public final BT747Time getTimeInstance() {
         return new WabaTime();
     }
 
-    public BT747File getFileInstance(final String path) {
+    public final BT747File getFileInstance(final String path) {
         return new WabaFile(path);
     }
 
-    public BT747File getFileInstance(final String path, final int mode,
+    public final BT747File getFileInstance(final String path, final int mode,
             final int card) {
         int localMode;
         if (mode == bt747.sys.File.WRITE_ONLY) {
@@ -73,7 +75,7 @@ public final class WabaJavaTranslations implements JavaTranslationsInterface {
         return new WabaFile(path, localMode, card);
     }
 
-    public BT747File getFileInstance(final String path, final int mode) {
+    public final BT747File getFileInstance(final String path, final int mode) {
         int localMode;
         if (mode == bt747.sys.File.WRITE_ONLY) {
             // On SuperWaba, WRITE_ONLY might erase, so transforming in
@@ -86,30 +88,30 @@ public final class WabaJavaTranslations implements JavaTranslationsInterface {
         return new WabaFile(path, localMode);
     }
 
-    public boolean isAvailable() {
+    public final boolean isAvailable() {
         return waba.io.File.isAvailable();
     }
 
-    public void debug(final String s, final Throwable e) {
+    public final void debug(final String s, final Throwable e) {
         Vm.debug(s);
         if (e != null) {
             e.printStackTrace();
         }
     }
 
-    public double pow(final double x, final double y) {
+    public final double pow(final double x, final double y) {
         return Math.pow(x, y);
     }
 
-    public double acos(final double x) {
+    public final double acos(final double x) {
         return Math.acos(x);
     }
 
-    public void addThread(final BT747Thread t, final boolean b) {
+    public final void addThread(final BT747Thread t, final boolean b) {
         WabaGeneric.addThread(t, b);
     }
 
-    public void removeThread(final BT747Thread t) {
+    public final void removeThread(final BT747Thread t) {
         WabaGeneric.removeThread(t);
     }
 
@@ -117,7 +119,7 @@ public final class WabaJavaTranslations implements JavaTranslationsInterface {
      * Math
      * 
      */
-    public String toString(final boolean p) {
+    public final String toString(final boolean p) {
         return waba.sys.Convert.toString(p);
     }
 
@@ -129,55 +131,55 @@ public final class WabaJavaTranslations implements JavaTranslationsInterface {
         return waba.sys.Convert.toString(p);
     }
 
-    public String toString(final double p) {
+    public final String toString(final double p) {
         return waba.sys.Convert.toString(p);
     }
 
-    public String toString(final double p, final int i) {
+    public final String toString(final double p, final int i) {
         return waba.sys.Convert.toString(p, i);
     }
 
-    public String unsigned2hex(final int p, final int i) {
+    public final String unsigned2hex(final int p, final int i) {
         return waba.sys.Convert.unsigned2hex(p, i);
     }
 
-    public int toInt(final String s) {
+    public final int toInt(final String s) {
         return waba.sys.Convert.toInt(s);
     }
 
-    public float toFloat(final String s) {
+    public final float toFloat(final String s) {
         return waba.sys.Convert.toFloat(s);
     }
 
-    public double toDouble(final String s) {
+    public final double toDouble(final String s) {
         return waba.sys.Convert.toDouble(s);
     }
 
-    public double longBitsToDouble(final long l) {
+    public final double longBitsToDouble(final long l) {
         return waba.sys.Convert.longBitsToDouble(l);
     }
 
-    public float toFloatBitwise(final int l) {
+    public final float toFloatBitwise(final int l) {
         return waba.sys.Convert.toFloatBitwise(l);
     }
 
-    public int toIntBitwise(final float f) {
+    public final int toIntBitwise(final float f) {
         return waba.sys.Convert.toIntBitwise(f);
     }
 
-    public void debug(final String s) {
+    public final void debug(final String s) {
         // TODO if (Log.isDebugEnabled()) {
         waba.sys.Vm.debug(s);
     }
 
-    public int getTimeStamp() {
+    public final int getTimeStamp() {
         return waba.sys.Vm.getTimeStamp();
     }
 
     /**
      * @return the appSettings
      */
-    public String getAppSettings() {
+    public final String getAppSettings() {
         return waba.sys.Settings.appSettings;
     }
 
@@ -185,14 +187,19 @@ public final class WabaJavaTranslations implements JavaTranslationsInterface {
      * @param appSettings
      *            the appSettings to set
      */
-    public void setAppSettings(final String appSettings) {
+    public final void setAppSettings(final String appSettings) {
         waba.sys.Settings.appSettings = appSettings;
     }
 
-    public BT747Semaphore getSemaphoreInstance(final int value) {
+    public final BT747Semaphore getSemaphoreInstance(final int value) {
         return new WabaSemaphore(value);
     }
 
-    // Open resource
-    // Vm.getFile
+    public final BT747StringTokenizer getStringTokenizer(final String a, final char b) {
+        return new WabaStringTokenizer(a, b);
+    }
+
+    public final BT747HashSet getHashSetInstance() {
+        return new WabaHashSet();
+    }
 }

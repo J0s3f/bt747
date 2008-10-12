@@ -49,11 +49,9 @@
 	</path>
 
 	<path id="rxtxclasspath">
-		<pathelement location="${jcalendar.jar}" />
 		<pathelement location="${waba.jar}" />
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar" />
 		<pathelement location="${swcollections.jar}" />
-		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
 	</path>
 
@@ -281,6 +279,8 @@
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
 	</path>
+	
+	
 
 	<uptodate property="libj2se.uptodate"
 	          targetfile="${dist}/lib${ant.project.name}.jar"
@@ -407,6 +407,9 @@
 		         classpath="${proguardLib}"
 		         classname="proguard.ant.ProGuardTask"
 		/>
+		<!--
+		                        -injar ${swcollections.jar}(!META-INF/**)
+		-->
 		<proguard forceprocessing="true"
 		          shrink="${proguard.shrink}"
 		          defaultpackage=""
@@ -426,7 +429,6 @@
                           !net/sf/bt747/waba/**,
 			              !bt747/*_view/**,
 			              !bt747/gps/connection/GPSWabaPort.class)
-                        -injar ${swcollections.jar}(!META-INF/**)
                         -optimizationpasses 1
                         -keep public class bt747.sys.Interface { *; }
 			            -keep public class bt747.sys.Settings { *; }
@@ -725,29 +727,35 @@
 		</condition>
 		<condition property="is.j2se">
 			<istrue value="${build.j2se}" />
-		</condition>
+        </condition>
+        <condition property="build.classpath" value="j2seclasspath">
+            <istrue value="${build.j2se}" />
+        </condition>
+        <condition property="build.classpath" value="rxtxclasspath">
+            <isfalse value="${build.j2se}" />
+        </condition>
 
 
 		<echoproperties prefix="exclude.waba">
 		</echoproperties>
-		<echoproperties prefix="is.j2se">
+        <echoproperties prefix="is.">
 		</echoproperties>
 		<!-- No longer deleting these for the libary until
 			     Txt is really local.
           <include name="*/bt747/lang/**" if="is.lib" />
           <include name="*/bt747/Txt.java" if="is.lib" />
+                <include name="${src_j2se.dir}/bt747/j2se_view/BT747.java"
+                         if="exclude.waba"
+                />
+                <include name="*/bt747/*view/**" if="is.lib" />
+                <include name="*/bt747/waba_view/AppController.java"
+                         if="is.lib"
 		-->
 		<delete verbose="no">
 			<fileset dir="${rxtxsrc.dir}">
 				<include name="${src_j2se.dir}/**" unless="is.j2se" />
 				<include name="${src_waba.dir}/**" if="exclude.waba" />
-				<include name="${src_j2se.dir}/bt747/j2se_view/BT747.java"
-				         if="exclude.waba"
-				/>
-				<include name="*/bt747/*view/**" if="is.lib" />
-				<include name="*/bt747/waba_view/AppController.java"
-				         if="is.lib"
-				/>
+                <include name="*/bt747/*view/**" if="is.lib" />
 			</fileset>
 		</delete>
 		<javac verbose="no"
@@ -755,7 +763,7 @@
 		       destdir="${rxtxbuild.dir}"
 		       optimize="${java.optimize}"
 		       debug="${java.debug}"
-		       classpathref="rxtxclasspath"
+		       classpathref="${build.classpath}"
 		       encoding="iso-8859-15"
 		>
 			<include name="**/*.java" />

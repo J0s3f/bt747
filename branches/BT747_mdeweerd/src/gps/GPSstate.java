@@ -18,12 +18,12 @@ import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.in.CommonIn;
-import moio.util.HashSet;
-import moio.util.Iterator;
-import moio.util.StringTokenizer;
+import bt747.sys.HashSet;
+import bt747.sys.StringTokenizer;
 
 import bt747.sys.Convert;
 import bt747.sys.Generic;
+import bt747.sys.interfaces.BT747HashSet;
 import bt747.sys.interfaces.BT747Thread;
 
 /**
@@ -587,7 +587,7 @@ public final class GPSstate implements BT747Thread {
      */
     public final void setBtMacAddr(final String btMacAddr) {
         String myMacAddr = "";
-        StringTokenizer fields = new StringTokenizer(btMacAddr, ":");
+        StringTokenizer fields = new StringTokenizer(btMacAddr, ':');
         while (fields.hasMoreTokens()) {
             myMacAddr = fields.nextToken() + myMacAddr;
         }
@@ -1231,7 +1231,7 @@ public final class GPSstate implements BT747Thread {
     }
 
     protected final void postEvent(final GpsEvent e) {
-        Iterator it = listeners.iterator();
+        BT747HashSet it = listeners.iterator();
         while (it.hasNext()) {
             GPSListener l = (GPSListener) it.next();
             l.gpsEvent(e);

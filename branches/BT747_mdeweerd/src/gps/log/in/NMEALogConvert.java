@@ -23,7 +23,7 @@ import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
-import moio.util.StringTokenizer;
+import bt747.sys.StringTokenizer;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
@@ -175,7 +175,7 @@ public final class NMEALogConvert implements GPSLogConvert {
                         checkSum ^= Conv.hex2Int(checkStr);
 
                         StringTokenizer fields = new StringTokenizer(s
-                                .toString(), ",");
+                                .toString(), ',');
                         offsetInBuffer = eolPos;
                         for (; offsetInBuffer < sizeToRead
                                 && (bytes[offsetInBuffer] == CR || bytes[offsetInBuffer] == EOL); offsetInBuffer++) {
