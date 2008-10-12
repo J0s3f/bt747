@@ -4654,31 +4654,43 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
 
     private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btOutputFileActionPerformed
         javax.swing.JFileChooser OutputFileChooser;
-        OutputFileChooser = new javax.swing.JFileChooser(getOutputFilePath().getParent());
-
+        File f= getOutputFilePath();
+        OutputFileChooser = new javax.swing.JFileChooser(f.getParent());
+        OutputFileChooser.setSelectedFile(f);
         OutputFileChooser.setToolTipText("Select the basename of the output file.");
         // if (curDir.exists()) {
         //OutputFileChooser.setCurrentDirectory(getOutputFilePath());
         // }
         if (OutputFileChooser.showDialog(this,"Set basename") == JFileChooser.APPROVE_OPTION) {
-            c.setOutputFileRelPath(gps.convert.FileUtil.getRelativePath(m
-                    .getBaseDirPath(), OutputFileChooser.getSelectedFile()
-                    .getAbsolutePath(), File.separatorChar));
+            try {
+            c.setOutputFileRelPath(gps.convert.FileUtil.getRelativePath((new File(m
+                    .getBaseDirPath())).getCanonicalPath(), OutputFileChooser.getSelectedFile()
+                    .getCanonicalPath(), File.separatorChar));
+        } catch (Exception e) {
+            Generic.debug("OutputFileChooser",e);
+        }
         }
     }// GEN-LAST:event_btOutputFileActionPerformed
 
     private void btRawLogFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btRawLogFileActionPerformed
         javax.swing.JFileChooser RawLogFileChooser;
-        RawLogFileChooser = new javax.swing.JFileChooser(getRawLogFilePath().getParent());
+        File f= getRawLogFilePath();
+        RawLogFileChooser = new javax.swing.JFileChooser(f.getParent());
 
+        RawLogFileChooser.setSelectedFile(f);
+        f=null;
         //getRawLogFilePath();
         // if (curDir.exists()) {
         //RawLogFileChooser.setCurrentDirectory(getRawLogFilePath());
         // }
         if (RawLogFileChooser.showDialog(this,"Set") == JFileChooser.APPROVE_OPTION) {
-            c.setLogFileRelPath(gps.convert.FileUtil.getRelativePath(m
-                    .getBaseDirPath(), RawLogFileChooser.getSelectedFile()
-                    .getAbsolutePath(), File.separatorChar));
+            try {
+            c.setLogFileRelPath(gps.convert.FileUtil.getRelativePath((new File(m
+                    .getBaseDirPath())).getCanonicalPath(), RawLogFileChooser.getSelectedFile()
+                    .getCanonicalPath(), File.separatorChar));
+            } catch (Exception e) {
+                Generic.debug("RawFileChooser",e);
+            }
         }
     }// GEN-LAST:event_btRawLogFileActionPerformed
 
@@ -4695,8 +4707,12 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
         WorkingDirectoryChooser.setDialogTitle("Choose Working Directory");
         WorkingDirectoryChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         if (WorkingDirectoryChooser.showDialog(this,"Set") == JFileChooser.APPROVE_OPTION) {
+            try {
             c.setBaseDirPath(WorkingDirectoryChooser.getSelectedFile()
-                    .getAbsolutePath());
+                    .getCanonicalPath());
+            } catch (Exception e) {
+                Generic.debug("WorkingDirChooser",e);
+            }            
         }
     }// GEN-LAST:event_btWorkingDirectoryActionPerformed
 
@@ -5014,7 +5030,7 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
      }//GEN-LAST:event_AdvancedfileSettingsPanelFocusGained
 
 private void tfWorkDirectoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfWorkDirectoryFocusLost
-   c.setBaseDirPath(tfWorkDirectory.getText());
+   c.setBaseDirPath(new File(tfWorkDirectory.getText()).getPath());
 }//GEN-LAST:event_tfWorkDirectoryFocusLost
 
     // public static void main(String args) {
