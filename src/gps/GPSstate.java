@@ -698,11 +698,14 @@ public final class GPSstate implements BT747Thread {
                     && sNmea[0].length() != 0
                     && sNmea[0].charAt(0)=='G') {
                 // Commented - not interpreted.
+                //Generic.debug("Before"+sNmea[0]+(new java.util.Date(gpsPos.utc*1000L)).toString()+"("+gpsPos.utc+")");
                 if (sNmea[0].startsWith("GPGGA")) {
                     analyzeGPGGA(sNmea, gpsPos);
                 } else if (sNmea[0].startsWith("GPRMC")) {
+
                     analyzeGPRMC(sNmea, gpsPos);
                 }
+                //Generic.debug("After"+sNmea[0]+(new java.util.Date(gpsPos.utc*1000L)+"("+gpsPos.utc+")").toString());
                 // else if(p_nmea[0].startsWith("GPZDA")) {
                 // // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
                 // } else if(p_nmea[0].startsWith("GPRMC")) {

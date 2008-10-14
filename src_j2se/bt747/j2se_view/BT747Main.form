@@ -134,25 +134,34 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="pnConvert" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jPanel1" alignment="0" max="32767" attributes="1"/>
-                                  <Component id="pnDownload" alignment="0" max="32767" attributes="1"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jPanel1" max="32767" attributes="1"/>
+                                      <Component id="pnDownload" alignment="0" max="32767" attributes="1"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="GPSDecodePanel" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <Component id="pnConvert" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="282" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="pnDownload" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="pnDownload" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="GPSDecodePanel" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnConvert" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="49" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -178,8 +187,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="tfWorkDirectory" pref="419" max="32767" attributes="1"/>
-                                  <Component id="tfRawLogFilePath" pref="419" max="32767" attributes="1"/>
+                                  <Component id="tfWorkDirectory" pref="359" max="32767" attributes="1"/>
+                                  <Component id="tfRawLogFilePath" pref="359" max="32767" attributes="1"/>
                                   <Component id="tfOutputFileBaseName" min="-2" pref="150" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -274,69 +283,119 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
+                              <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="cbDisableLoggingDuringDownload" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbIncremental" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btDownloadFromNumerix" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btDownloadIBlue" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jPanel16" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="btDownloadIBlue" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbIncremental" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="btDownloadFromNumerix" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbDisableLoggingDuringDownload" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
+                          <Component id="jPanel16" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JButton" name="btDownloadIBlue">
+                    <Container class="javax.swing.JPanel" name="jPanel16">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Download Log from iBlue / Qstarz / Holux / Konet"/>
+                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                            <TitledBorder title="Download Log From ..."/>
+                          </Border>
+                        </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btDownloadIBlueActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JCheckBox" name="cbIncremental">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Incremental Download"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbIncrementalActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="btDownloadFromNumerix">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Download log from PhotoTrackr / DPL700 / iTrackU-Nemerix/SIRFIII"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btDownloadFromNumerixActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JCheckBox" name="cbDisableLoggingDuringDownload">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Disable logging while downloading"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbDisableLoggingDuringDownloadFocusLost"/>
-                      </Events>
-                    </Component>
+
+                      <Layout>
+                        <DimensionLayout dim="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="btDownloadFromNumerix" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btDownloadIBlue" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                        <DimensionLayout dim="1">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btDownloadIBlue" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                                  <Component id="btDownloadFromNumerix" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                      </Layout>
+                      <SubComponents>
+                        <Component class="javax.swing.JButton" name="btDownloadIBlue">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="iBlue / Qstarz / Holux / Konet"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btDownloadIBlueActionPerformed"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JButton" name="btDownloadFromNumerix">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="PhotoTrackr / DPL700 / iTrackU-Nemerix/SIRFIII"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btDownloadFromNumerixActionPerformed"/>
+                          </Events>
+                        </Component>
+                      </SubComponents>
+                    </Container>
+                    <Container class="javax.swing.JPanel" name="jPanel17">
+
+                      <Layout>
+                        <DimensionLayout dim="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cbIncremental" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbDisableLoggingDuringDownload" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                        <DimensionLayout dim="1">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cbIncremental" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cbDisableLoggingDuringDownload" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                      </Layout>
+                      <SubComponents>
+                        <Component class="javax.swing.JCheckBox" name="cbIncremental">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Incremental Download"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbIncrementalActionPerformed"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JCheckBox" name="cbDisableLoggingDuringDownload">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Disable logging while downloading"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbDisableLoggingDuringDownloadFocusLost"/>
+                          </Events>
+                        </Component>
+                      </SubComponents>
+                    </Container>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="pnConvert">
@@ -546,50 +605,6 @@
                     </Container>
                   </SubComponents>
                 </Container>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="FileSettingsPanel">
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Output Settings">
-                    <Property name="tabTitle" type="java.lang.String" value="Output Settings"/>
-                  </JTabbedPaneConstraints>
-                </Constraint>
-              </Constraints>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="pnSeparation" min="-2" max="-2" attributes="2"/>
-                              <Component id="pnVarious" alignment="0" min="-2" max="-2" attributes="1"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                          <Component id="GPSDecodePanel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="381" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="GPSDecodePanel" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="1" attributes="1">
-                                  <Component id="pnVarious" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="pnSeparation" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace pref="138" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
                 <Container class="javax.swing.JPanel" name="GPSDecodePanel">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -780,6 +795,48 @@
                     </Component>
                   </SubComponents>
                 </Container>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="FileSettingsPanel">
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                  <JTabbedPaneConstraints tabName="Output Settings">
+                    <Property name="tabTitle" type="java.lang.String" value="Output Settings"/>
+                  </JTabbedPaneConstraints>
+                </Constraint>
+              </Constraints>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="pnSeparation" min="-2" max="-2" attributes="2"/>
+                              <Component id="pnVarious" alignment="1" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="pnFileOutputFields" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="pnVarious" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="pnSeparation" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="pnFileOutputFields" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
                 <Container class="javax.swing.JPanel" name="pnVarious">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -794,7 +851,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="lbTimeZone" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
@@ -807,18 +864,18 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="cbOneFilePerDay" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="1">
+                                  <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="cbRecordNumberInfoInLog" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="cbImperialUnits" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="lbNoFixColor" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace pref="12" max="32767" attributes="0"/>
+                                      <Component id="cbNoFixColor" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="cbFixColor" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbGoodFixColor" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -841,12 +898,10 @@
                                   <Group type="102" attributes="0">
                                       <Component id="cbRecordNumberInfoInLog" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="cbImperialUnits" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lbNoFixColor" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="cbImperialUnits" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="cbFixColor" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbGoodFixColor" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbNoFixColor" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -950,18 +1005,21 @@
                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbImperialUnitsFocusLost"/>
                       </Events>
                     </Component>
-                    <Component class="java.awt.Button" name="cbFixColor">
+                    <Component class="java.awt.Button" name="cbNoFixColor">
                       <Properties>
                         <Property name="label" type="java.lang.String" value="Color"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbFixColorActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbNoFixColorActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lbNoFixColor">
+                    <Component class="java.awt.Button" name="cbGoodFixColor">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="No Fix Color"/>
+                        <Property name="label" type="java.lang.String" value="Color"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbGoodFixColorActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -1022,6 +1080,469 @@
                     </Component>
                   </SubComponents>
                 </Container>
+                <Container class="javax.swing.JPanel" name="pnFileOutputFields">
+                  <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                        <TitledBorder title="File Output Fields"/>
+                      </Border>
+                    </Property>
+                  </Properties>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jPanel19" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jPanel19" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Container class="javax.swing.JPanel" name="jPanel19">
+
+                      <Layout>
+                        <DimensionLayout dim="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="pnTime1" alignment="0" max="32767" attributes="1"/>
+                                      <Component id="pnFilePosition" alignment="0" min="-2" max="-2" attributes="1"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jPanel21" alignment="0" min="-2" pref="178" max="-2" attributes="0"/>
+                                      <Component id="jPanel20" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                        <DimensionLayout dim="1">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="pnTime1" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="pnFilePosition" min="-2" max="-2" attributes="1"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jPanel20" min="-2" pref="190" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jPanel21" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                      </Layout>
+                      <SubComponents>
+                        <Container class="javax.swing.JPanel" name="pnTime1">
+                          <Properties>
+                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                                <TitledBorder title="Time"/>
+                              </Border>
+                            </Property>
+                          </Properties>
+
+                          <Layout>
+                            <DimensionLayout dim="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="cbFileUTCTime" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbFileMilliSeconds" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                            </DimensionLayout>
+                            <DimensionLayout dim="1">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="cbFileUTCTime" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="cbFileMilliSeconds" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                            </DimensionLayout>
+                          </Layout>
+                          <SubComponents>
+                            <Component class="javax.swing.JCheckBox" name="cbFileUTCTime">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" value="UTC Time"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbFileUTCTimeupdateLogRecordEstCount"/>
+                              </Events>
+                            </Component>
+                            <Component class="javax.swing.JCheckBox" name="cbFileMilliSeconds">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" value="Milliseconds"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbFileMilliSecondsupdateLogRecordEstCount"/>
+                              </Events>
+                            </Component>
+                          </SubComponents>
+                        </Container>
+                        <Container class="javax.swing.JPanel" name="pnFilePosition">
+                          <Properties>
+                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                                <TitledBorder title="Position"/>
+                              </Border>
+                            </Property>
+                          </Properties>
+
+                          <Layout>
+                            <DimensionLayout dim="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="cbFileLat" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbFileHeight" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbFileLong" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbFileSpeed" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbFileHeading" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbFileDistance" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace pref="8" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                            </DimensionLayout>
+                            <DimensionLayout dim="1">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="cbFileLat" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="cbFileLong" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="cbFileHeight" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="cbFileSpeed" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="cbFileHeading" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="cbFileDistance" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                            </DimensionLayout>
+                          </Layout>
+                          <SubComponents>
+                            <Component class="javax.swing.JCheckBox" name="cbFileLat">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" value="Latitude"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbFileLatupdateLogRecordEstCount"/>
+                              </Events>
+                            </Component>
+                            <Component class="javax.swing.JCheckBox" name="cbFileLong">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" value="Longitude"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbFileLongupdateLogRecordEstCount"/>
+                              </Events>
+                            </Component>
+                            <Component class="javax.swing.JCheckBox" name="cbFileHeight">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" value="Height"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbFileHeightupdateLogRecordEstCount"/>
+                              </Events>
+                            </Component>
+                            <Component class="javax.swing.JCheckBox" name="cbFileSpeed">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" value="Speed"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbFileSpeedupdateLogRecordEstCount"/>
+                              </Events>
+                            </Component>
+                            <Component class="javax.swing.JCheckBox" name="cbFileHeading">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" value="Heading"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbFileHeadingupdateLogRecordEstCount"/>
+                              </Events>
+                            </Component>
+                            <Component class="javax.swing.JCheckBox" name="cbFileDistance">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" value="Distance"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbFileDistanceupdateLogRecordEstCount"/>
+                              </Events>
+                            </Component>
+                          </SubComponents>
+                        </Container>
+                        <Container class="javax.swing.JPanel" name="jPanel20">
+
+                          <Layout>
+                            <DimensionLayout dim="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="pnPrecision1" min="-2" max="-2" attributes="1"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="pnSatInfo1" min="-2" max="-2" attributes="1"/>
+                                  </Group>
+                              </Group>
+                            </DimensionLayout>
+                            <DimensionLayout dim="1">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="pnPrecision1" alignment="0" min="-2" max="-2" attributes="1"/>
+                                          <Component id="pnSatInfo1" alignment="0" min="-2" max="-2" attributes="1"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                            </DimensionLayout>
+                          </Layout>
+                          <SubComponents>
+                            <Container class="javax.swing.JPanel" name="pnPrecision1">
+                              <Properties>
+                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                                    <TitledBorder title="Precision"/>
+                                  </Border>
+                                </Property>
+                              </Properties>
+
+                              <Layout>
+                                <DimensionLayout dim="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cbFixType1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbFileDSTA" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cFileDAGE" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbPDOP1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbHDOP1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbVDOP1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                </DimensionLayout>
+                                <DimensionLayout dim="1">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="cbFixType1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cbFileDSTA" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cFileDAGE" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cbPDOP1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cbHDOP1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cbVDOP1" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                </DimensionLayout>
+                              </Layout>
+                              <SubComponents>
+                                <Component class="javax.swing.JCheckBox" name="cbFileDSTA">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="DSTA"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbFileDSTAupdateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                                <Component class="javax.swing.JCheckBox" name="cFileDAGE">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="DAGE"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cFileDAGEupdateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                                <Component class="javax.swing.JCheckBox" name="cbPDOP1">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="PDOP"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbPDOP1updateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                                <Component class="javax.swing.JCheckBox" name="cbHDOP1">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="HDOP"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbHDOP1updateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                                <Component class="javax.swing.JCheckBox" name="cbVDOP1">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="VDOP"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbVDOP1updateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                                <Component class="javax.swing.JCheckBox" name="cbFixType1">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="GPS Fix Type"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbFixType1updateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                              </SubComponents>
+                            </Container>
+                            <Container class="javax.swing.JPanel" name="pnSatInfo1">
+                              <Properties>
+                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                                    <TitledBorder title="Sat Info"/>
+                                  </Border>
+                                </Property>
+                              </Properties>
+
+                              <Layout>
+                                <DimensionLayout dim="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cbNSAT1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbSID1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbElevation1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbAzimuth1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbSNR1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                </DimensionLayout>
+                                <DimensionLayout dim="1">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="cbNSAT1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cbSID1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cbElevation1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cbAzimuth1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cbSNR1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                </DimensionLayout>
+                              </Layout>
+                              <SubComponents>
+                                <Component class="javax.swing.JCheckBox" name="cbNSAT1">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="NSAT"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbNSAT1updateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                                <Component class="javax.swing.JCheckBox" name="cbSID1">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="SID"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbSID1ItemStateChanged"/>
+                                  </Events>
+                                </Component>
+                                <Component class="javax.swing.JCheckBox" name="cbElevation1">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="Elevation"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbElevation1updateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                                <Component class="javax.swing.JCheckBox" name="cbAzimuth1">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="Azimuth"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbAzimuth1updateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                                <Component class="javax.swing.JCheckBox" name="cbSNR1">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="SNR"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbSNR1updateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                              </SubComponents>
+                            </Container>
+                          </SubComponents>
+                        </Container>
+                        <Container class="javax.swing.JPanel" name="jPanel21">
+
+                          <Layout>
+                            <DimensionLayout dim="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="pnReason1" min="-2" max="-2" attributes="1"/>
+                                      <EmptySpace min="-2" pref="113" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                            </DimensionLayout>
+                            <DimensionLayout dim="1">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="pnReason1" alignment="0" max="32767" attributes="1"/>
+                              </Group>
+                            </DimensionLayout>
+                          </Layout>
+                          <SubComponents>
+                            <Container class="javax.swing.JPanel" name="pnReason1">
+                              <Properties>
+                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                                    <TitledBorder title="Reason"/>
+                                  </Border>
+                                </Property>
+                              </Properties>
+
+                              <Layout>
+                                <DimensionLayout dim="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="cbRCR1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                </DimensionLayout>
+                                <DimensionLayout dim="1">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cbRCR1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                </DimensionLayout>
+                              </Layout>
+                              <SubComponents>
+                                <Component class="javax.swing.JCheckBox" name="cbRCR1">
+                                  <Properties>
+                                    <Property name="text" type="java.lang.String" value="RCR"/>
+                                    <Property name="toolTipText" type="java.lang.String" value="Log reason (such as: time, speed, distance, button press"/>
+                                  </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbRCR1updateLogRecordEstCount"/>
+                                  </Events>
+                                </Component>
+                              </SubComponents>
+                            </Container>
+                          </SubComponents>
+                        </Container>
+                      </SubComponents>
+                    </Container>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="LogFiltersPanel">
@@ -1043,7 +1564,7 @@
                           <Component id="pnCommonFilter" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnWaypoint" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="42" max="32767" attributes="0"/>
+                          <EmptySpace pref="78" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1056,7 +1577,7 @@
                               <Component id="pnTrackpoint" alignment="0" max="32767" attributes="1"/>
                               <Component id="pnCommonFilter" alignment="0" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace pref="39" max="32767" attributes="0"/>
+                          <EmptySpace pref="98" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -2214,7 +2735,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel8" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="181" max="32767" attributes="0"/>
+                          <EmptySpace pref="217" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -2250,7 +2771,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="pnGPSStart" min="-2" max="-2" attributes="1"/>
                                           <Component id="pnSBAS" min="-2" max="-2" attributes="0"/>
@@ -3284,7 +3805,7 @@
                           <Component id="pnFlashSettings" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnNMEAOutput" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="426" max="32767" attributes="0"/>
+                          <EmptySpace pref="462" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -3295,7 +3816,7 @@
                               <Component id="pnNMEAOutput" min="-2" max="-2" attributes="1"/>
                               <Component id="pnFlashSettings" alignment="0" min="-2" max="-2" attributes="1"/>
                           </Group>
-                          <EmptySpace pref="29" max="32767" attributes="0"/>
+                          <EmptySpace pref="88" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -4230,7 +4751,7 @@
                           <Component id="pnNMEAOutput1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnGPXFileSettings" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="359" max="32767" attributes="0"/>
+                          <EmptySpace pref="395" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -4554,7 +5075,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="846" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="882" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -4563,7 +5084,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="349" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="408" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -4610,7 +5131,7 @@
                       <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
                       <Component id="DownloadProgressLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="DownloadProgressBar" pref="378" max="32767" attributes="0"/>
+                      <Component id="DownloadProgressBar" pref="414" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

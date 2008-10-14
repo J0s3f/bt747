@@ -107,8 +107,16 @@ public final class CommonIn {
     private static final void setTime(final GPSRecord gpsRec, final int time) {
         int newTime;
         newTime = gpsRec.utc;
-        newTime -= gpsRec.utc % (24 * 3600);
+        newTime -= (gpsRec.utc % (24 * 3600));
         newTime += time;
+        gpsRec.utc = newTime;
+    }
+    
+
+    private static final void setDate(final GPSRecord gpsRec, final int date) {
+        int newTime;
+        newTime = (gpsRec.utc % (24 * 3600));
+        newTime += date;
         gpsRec.utc = newTime;
     }
 
@@ -123,11 +131,11 @@ public final class CommonIn {
      */
     private static final boolean setTime(final GPSRecord gpsRec,
             final String nmeaTimeStr) {
-        int timePart = Convert.toInt(nmeaTimeStr.substring(0, 2)) * 3600
-                + Convert.toInt(nmeaTimeStr.substring(2, 4)) * 60
-                + Convert.toInt(nmeaTimeStr.substring(4, 6));
-        setTime(gpsRec, timePart);
         try {
+            int timePart = Convert.toInt(nmeaTimeStr.substring(0, 2)) * 3600
+            + Convert.toInt(nmeaTimeStr.substring(2, 4)) * 60
+            + Convert.toInt(nmeaTimeStr.substring(4, 6));
+            setTime(gpsRec, timePart);
             if (nmeaTimeStr.charAt(6) == '.') {
                 gpsRec.milisecond = (int) (Convert.toFloat(nmeaTimeStr
                         .substring(6)) * 1000);
@@ -138,14 +146,6 @@ public final class CommonIn {
             return false;
         }
         return false;
-    }
-
-    private static final void setDate(final GPSRecord gpsRec, final int date) {
-        int newTime;
-        newTime = gpsRec.utc;
-        newTime = gpsRec.utc % (24 * 3600);
-        newTime += date;
-        gpsRec.utc = newTime;
     }
 
     private static final void setDate(final GPSRecord gpsRec, final String date) {
