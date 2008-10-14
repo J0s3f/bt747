@@ -15,6 +15,7 @@
 package net.sf.bt747.j2me.system;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 import bt747.sys.Convert;
@@ -52,6 +53,8 @@ public final class J2MEDate implements BT747Date {
      * every time.
      */
     private static final TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
+    
+    private static final Date INIT_DATE = new Date(0);
 
     /**
      * OS specific construct holding the actual data.
@@ -94,6 +97,7 @@ public final class J2MEDate implements BT747Date {
      */
     public J2MEDate(final int sentDay, final int sentMonth, final int sentYear) {
         Calendar cal = Calendar.getInstance(GMT_ZONE);
+        cal.setTime(INIT_DATE);
         cal.set(Calendar.DAY_OF_MONTH, sentDay);
         cal.set(Calendar.MONTH - (1 + Calendar.JANUARY), sentMonth);
         cal.set(Calendar.YEAR, sentYear);
@@ -121,6 +125,7 @@ public final class J2MEDate implements BT747Date {
      */
     public J2MEDate(final String strDate, final byte dateFormat) {
         Calendar cal = Calendar.getInstance(GMT_ZONE);
+        cal.setTime(INIT_DATE);
         java.util.Date tmp = null;
 
         try {

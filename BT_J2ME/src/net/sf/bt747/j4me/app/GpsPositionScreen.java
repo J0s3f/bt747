@@ -194,7 +194,7 @@ public final class GpsPositionScreen extends
             this.name = name;
         }
 
-        public void setLabel(final String label) {
+        public final void setLabel(final String label) {
             if (name.length() != 0) {
                 super.setLabel(name + ":  " + label);
             } else {
@@ -202,19 +202,18 @@ public final class GpsPositionScreen extends
             }
         }
 
-        public void setLabel(final double d, final int i) {
+        public final void setLabel(final double d, final int i) {
             String s = Convert.toString(d, i);
             setLabel(s);
         }
 
-        public void setLabel(final float f, final int i) {
+        public final void setLabel(final float f, final int i) {
             String s = Convert.toString(f, i);
             setLabel(s);
         }
 
-        public void setLabel(final long l) {
-            Date d = new Date(l);
-            String s = d.toString();
+        public final void setLabel(final long l) {
+            String s = (new Date(l)).toString();
             setLabel(s);
         }
     }
@@ -267,7 +266,8 @@ public final class GpsPositionScreen extends
             g = (GPSRecord) e.getArg();
             latitude.setLabel(g.latitude, 6);
             longitude.setLabel(g.longitude, 6);
-            NSAT.setLabel((g.nsat / 256) + "(" + (g.nsat & 0xFF) + ")");
+            NSAT.setLabel((g.nsat / 256)
+                    + (g.nsat == 0 ? "" : "(" + (g.nsat & 0xFF) + ")"));
             fvAltitude.setLabel(g.height, 1);
             fvHdop.setLabel(g.hdop / 10., 1);
             fvFix.setLabel(gps.log.out.CommonOut.getFixText(g.valid));
