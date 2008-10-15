@@ -183,8 +183,11 @@ public class AppSettings {
     private static final int C_STOP_LOG_ON_CONNECT_IDX = C_FILEFIELDFORMAT_IDX
             + C_FILEFIELDFORMAT_SIZE;
     private static final int C_STOP_LOG_ON_CONNECT_SIZE = 1;
-    private static final int C_NEXT_IDX = C_STOP_LOG_ON_CONNECT_IDX
+    private static final int C_COLOR_VALIDTRACK_IDX = C_STOP_LOG_ON_CONNECT_IDX
             + C_STOP_LOG_ON_CONNECT_SIZE;
+    private static final int C_COLOR_VALIDTRACK_SIZE = 8;
+    private static final int C_NEXT_IDX = C_COLOR_VALIDTRACK_IDX + C_COLOR_VALIDTRACK_SIZE;
+
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
     private static final int C_NEW_NEXT_IDX = C_NEXT_IDX + C_NEXT_SIZE;
@@ -412,7 +415,12 @@ public class AppSettings {
             /* fall through */
 
             /* Must be last line in case (not 'default'), sets settings version */
-            setStringOpt(0, "0.24", C_VERSION_IDX, C_VERSION_SIZE);
+        case 24:
+            setColorValidTrack("0000FF");
+            /* fall through */
+
+            setStringOpt(0, "0.25", C_VERSION_IDX, C_VERSION_SIZE);
+            /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart for
             // basic users.
@@ -1107,6 +1115,15 @@ public class AppSettings {
     protected final void setColorInvalidTrack(final String colorInvalidTrack) {
         setStringOpt(0, colorInvalidTrack, C_COLOR_INVALIDTRACK_IDX,
                 C_COLOR_INVALIDTRACK_SIZE);
+    }
+
+    public final String getColorValidTrack() {
+        return getStringOpt(C_COLOR_VALIDTRACK_IDX, C_COLOR_VALIDTRACK_SIZE);
+    }
+
+    protected final void setColorValidTrack(final String colorValidTrack) {
+        setStringOpt(0, colorValidTrack, C_COLOR_VALIDTRACK_IDX,
+                C_COLOR_VALIDTRACK_SIZE);
     }
 
     /**
