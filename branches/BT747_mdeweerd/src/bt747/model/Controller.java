@@ -352,6 +352,7 @@ public class Controller {
             gpsFile.setRecordNbrInLogs(m
                     .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));
             gpsFile.setBadTrackColor(m.getColorInvalidTrack());
+            gpsFile.setGoodTrackColor(m.getColorValidTrack());
             gpsFile.setIncludeTrkComment(m
                     .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
             gpsFile.setIncludeTrkName(m
@@ -1457,6 +1458,10 @@ public class Controller {
      */
     public final void setTrkSep(final int value) {
         m.setTrkSep(value);
+    }
+
+    public final void setColorValidTrack(final String s) {
+        m.setColorValidTrack(s);
     }
 
     public final void setColorInvalidTrack(final String s) {
