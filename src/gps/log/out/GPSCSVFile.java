@@ -25,7 +25,8 @@ import bt747.sys.Convert;
  * @author Mario De Weerd
  */
 public final class GPSCSVFile extends GPSFile {
-    private final StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
+    private final StringBuffer rec = new StringBuffer(1024); // reused
+                                                                // stringbuffer
     private static final char fieldSep = ','; // For future parameterisation
     private static final char satSeperator = ';'; // For future
 
@@ -104,15 +105,18 @@ public final class GPSCSVFile extends GPSFile {
                 rec.append(fieldSep + "DISTANCE(ft)");
             }
         }
-        if (activeFileFields.sid != null) {
+        if (activeFileFields.sid != null && (selectedFileFields.sid != null)) {
             rec.append(fieldSep + "SAT INFO (SID");
-            if (activeFileFields.ele != null) {
+            if ((activeFileFields.ele != null)
+                    && (selectedFileFields.ele != null)) {
                 rec.append("-ELE");
             }
-            if (activeFileFields.azi != null) {
+            if ((activeFileFields.azi != null)
+                    && (selectedFileFields.azi != null)) {
                 rec.append("-AZI");
             }
-            if (activeFileFields.snr != null) {
+            if ((activeFileFields.snr != null)
+                    && (selectedFileFields.snr != null)) {
                 rec.append("-SNR");
             }
             rec.append(")");
