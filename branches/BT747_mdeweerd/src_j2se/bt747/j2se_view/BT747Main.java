@@ -44,13 +44,16 @@ import bt747.sys.Time;
 import java.awt.Color;
 import javax.swing.JColorChooser;
 
+import net.sf.bt747.j2se.system.J2SEGeneric;
+import net.sf.bt747.j2se.system.J2SEMessageListener;
+
 /**
  * J2SE Implementation (GUI) of BT747.
  * 
  * @author Mario De Weerd
  */
 public class BT747Main extends javax.swing.JFrame implements
-        bt747.model.ModelListener, BT747View, WindowListener {
+        bt747.model.ModelListener, BT747View, WindowListener, J2SEMessageListener {
 
     /**
      * Initialise the lower level interface class. Needed for BT747 to work.
@@ -215,7 +218,18 @@ public class BT747Main extends javax.swing.JFrame implements
         
         getNMEAOutFile();
         addWindowListener(this);
+        
+        J2SEGeneric.addListener(this);
     }
+
+    
+    /* (non-Javadoc)
+     * @see net.sf.bt747.j2se.system.J2SEMessageListener#postMessage(java.lang.String)
+     */
+    public void postMessage(String message) {
+        jTextArea1.append(message);
+    }
+
 
     public void windowActivated(WindowEvent e) {
     }
@@ -590,6 +604,7 @@ public class BT747Main extends javax.swing.JFrame implements
         if (cbTrkRTK.isSelected()) {
             trkValid |= BT747Constants.VALID_RTK_MASK;
         }
+        c.setTrkPtValid(trkValid);
     }
 
     void setWayValidFilterSettings() {
@@ -622,6 +637,7 @@ public class BT747Main extends javax.swing.JFrame implements
         if (cbWayRTK.isSelected()) {
             wayValid |= BT747Constants.VALID_RTK_MASK;
         }
+        c.setWayPtValid(wayValid);
     }
 
     void setTrkRCRFilterSettings() {
@@ -674,6 +690,7 @@ public class BT747Main extends javax.swing.JFrame implements
         if (cbTrkUser12.isSelected()) {
             trkRCR |= BT747Constants.RCR_APPZ_MASK;
         }
+        c.setTrkPtRCR(trkRCR);
     }
 
     void setWayRCRFilterSettings() {
@@ -726,6 +743,7 @@ public class BT747Main extends javax.swing.JFrame implements
         if (cbWayUser12.isSelected()) {
             wayRCR |= BT747Constants.RCR_APPZ_MASK;
         }
+        c.setWayPtRCR(wayRCR);
     }
 
     void getNMEAOutFile() {

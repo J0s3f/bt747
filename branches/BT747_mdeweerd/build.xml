@@ -231,6 +231,7 @@
           -printmapping ${dist}/${ant.project.name}${suffix}.map
           -keep public class BT747
           -keep public class bt747.j2se_view.BT747
+	      -keep public class sun.audio.AudioStream
           -keep public class * implements gps.log.in.GPSLogConvert
           -keep public class * extends waba.ui.MainWindow
           -keep public class * extends gps.connection.GPSPort
@@ -590,6 +591,7 @@
                 public *;
             }
     			-keep public class BT747
+ 		        -keep public class sun.audio.AudioStream
 		        -keep public class bt747.j2se_view.BT747
                 -keepclasseswithmembers public class * {
                     public static void main(java.lang.String[]); }

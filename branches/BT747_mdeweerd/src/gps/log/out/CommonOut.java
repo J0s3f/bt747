@@ -178,35 +178,40 @@ public final class CommonOut {
     public final static String getRCRstr(final GPSRecord s) {
         StringBuffer rcrStr = new StringBuffer(15);
         rcrStr.setLength(0);
-        if ((s.rcr & BT747Constants.RCR_TIME_MASK) != 0) {
-            rcrStr.append("T");
-        }
-        if ((s.rcr & BT747Constants.RCR_SPEED_MASK) != 0) {
-            rcrStr.append("S");
-        }
-        if ((s.rcr & BT747Constants.RCR_DISTANCE_MASK) != 0) {
-            rcrStr.append("D");
-        }
-        if ((s.rcr & BT747Constants.RCR_BUTTON_MASK) != 0) {
-            rcrStr.append("B");
+        if ((s.rcr & BT747Constants.RCR_ALL_APP_MASK) == 0) {
+            if ((s.rcr & BT747Constants.RCR_TIME_MASK) != 0) {
+                rcrStr.append("T");
+            }
+            if ((s.rcr & BT747Constants.RCR_SPEED_MASK) != 0) {
+                rcrStr.append("S");
+            }
+            if ((s.rcr & BT747Constants.RCR_DISTANCE_MASK) != 0) {
+                rcrStr.append("D");
+            }
+            if ((s.rcr & BT747Constants.RCR_BUTTON_MASK) != 0) {
+                rcrStr.append("B");
+            }
+        } else {
+            rcrStr.append("X");
+            rcrStr.append(Convert.unsigned2hex(s.rcr, 4));
         }
 
-        // Still 16-4 = 12 possibilities.
-        // Taking numbers from 0 to 9
-        // Then letters X, Y and Z
-        char c = '0';
-        int i;
-        for (i = 0x10; c <= '9'; i <<= 1, c++) {
-            if ((s.rcr & i) != 0) {
-                rcrStr.append(c);
-            }
-        }
-        c = 'X';
-        for (; i < 0x10000; i <<= 1, c++) {
-            if ((s.rcr & i) != 0) {
-                rcrStr.append(c);
-            }
-        }
+        // // Still 16-4 = 12 possibilities.
+        // // Taking numbers from 0 to 9
+        // // Then letters X, Y and Z
+        // char c = '0';
+        // int i;
+        // for (i = 0x10; c <= '9'; i <<= 1, c++) {
+        // if ((s.rcr & i) != 0) {
+        // rcrStr.append(c);
+        // }
+        // }
+        // c = 'X';
+        // for (; i < 0x10000; i <<= 1, c++) {
+        // if ((s.rcr & i) != 0) {
+        // rcrStr.append(c);
+        // }
+        // }
 
         return rcrStr.toString();
     }

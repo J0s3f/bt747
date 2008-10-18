@@ -33,12 +33,26 @@ import bt747.sys.interfaces.BT747FileName;
  * implement.
  */
 public abstract class GPSFile {
+    /**
+     * The track filters used.
+     */
     protected GPSFilter[] ptFilters = null;
 
+    /**
+     * When true, split file in one file per day.
+     */
     protected boolean oneFilePerDay;
 
+    /**
+     * Indicates the fields active in the current record (for
+     * {@link #writeRecord(GPSRecord)}).
+     */
     protected GPSRecord activeFields;
 
+    /**
+     * Indicates the fields active in the files (useful for
+     * {@link #writeFileHeader(String)} for example).
+     */
     protected GPSRecord activeFileFields;
 
     /**
@@ -46,42 +60,124 @@ public abstract class GPSFile {
      */
     protected GPSRecord selectedFileFields;
 
+    /**
+     * True if the current record is the first record - needed for initial file
+     * creation and track handling in extending classes.
+     */
     protected boolean firstRecord;
 
+    /**
+     * The basename for the output file.
+     */
     protected String basename;
 
+    /**
+     * The extension for the output file.
+     */
     protected String ext;
 
+    /**
+     * On certain systems, the card index.
+     */
     protected int card;
 
+    /**
+     * The number of passes that must still be done on the source.
+     */
     protected int nbrOfPassesToGo;
 
+    /**
+     * Total number of passes to do. This value can be changed in the
+     * constructor of the extending class. The default value is 1.
+     */
     protected int numberOfPasses = 1;
 
+    /**
+     * The handle to the output file.
+     */
     private File outFile = null;
 
-    protected Time t = new Time(); // Time from log, already transformed
+    /**
+     * The time of the current record as a Time object. This will avoid creating
+     * multiple time objects.
+     */
+    protected final Time t = new Time();
 
     protected int previousDate = 0;
     protected int previousTime = 0;
     protected boolean separateTrack = false;
-    protected int trackSepTime = 60 * 60; // Time needed between points to
-    // separate segments.
+    /**
+     * When two points are more than this time apart, a new track segment is
+     * created. The default value is Time needed between points to separate
+     * segments.<br>
+     * The value is in seconds.
+     */
+    protected int trackSepTime = 60 * 60;
+    /**
+     * The number of files that were created. This value is also used to detect
+     * if any record has been written.
+     */
     protected int filesCreated = 0;
 
+    /**
+     * When true, one file is created for each detected track. Default value is
+     * false.
+     * 
+     * @see #trackSepTime
+     */
     protected boolean oneFilePerTrack = false;
     protected boolean isMultipleFiles = false;
 
+    /**
+     * When true, the record number (record index) has to be written to the
+     * output file (if the output format allows it).
+     */
     protected boolean recordNbrInLogs = false;
 
-    // By default we ignore bad points (no red interconnect)
+    /**
+     * The color to use if the track segment has unselected trackpoints.
+     */
     protected String badTrackColor = "0000FF";
+    /**
+     * The color to use for valid tracks.
+     */
     protected String goodTrackColor = "0000FF";
 
-    protected boolean imperial = false; // If true, use English units
+    /**
+     * When true, use Imperial (English) units like yards, inches, mph, ... .
+     */
+    protected boolean imperial = false;
 
+    /**
+     * The filename builder allows a big flexibility in defining the output file
+     * name.
+     */
     private BT747FileName filenameBuilder = new GPSDefaultFileName();
 
+    public final static int FILE_SPLIT_NONE = 0;
+    public final static int FILE_SPLIT_ONE_FILE_PER_DAY = 1;
+    public final static int FILE_SPLIT_ONE_FILE_PER_TRACK = 2;
+
+    /**
+     * This function has to be called at some time to initialize the file
+     * conversion. Other parameters can be set through other methods.
+     * 
+     * @param baseName
+     *            Base name of the output file. This value will be provided to
+     *            the filename builder.
+     * @param extension
+     *            Extension of the output file. This value will be provided to
+     *            the filename builder.
+     * @param fileCard
+     *            Card number used on certain devices like a Palm.
+     * @param fileSeparationFreq
+     *            Indicates how the file must be separated.
+     * 
+     * @see #FILE_SPLIT_NONE
+     * @see #FILE_SPLIT_ONE_FILE_PER_DAY
+     * @see #FILE_SPLIT_ONE_FILE_PER_TRACK_
+     * 
+     */
     public void initialiseFile(final String baseName, final String extension,
             final int fileCard, final int fileSeparationFreq) {
         firstRecord = true;
@@ -89,54 +185,95 @@ public abstract class GPSFile {
         ext = extension;
         basename = baseName;
         card = fileCard;
-        oneFilePerDay = false;
-        oneFilePerTrack = false;
         switch (fileSeparationFreq) {
-        case 1:
+        case FILE_SPLIT_ONE_FILE_PER_DAY:
             oneFilePerDay = true;
             isMultipleFiles = true;
             break;
-        case 2:
+        case FILE_SPLIT_ONE_FILE_PER_TRACK:
             oneFilePerTrack = true;
             isMultipleFiles = true;
             break;
+        case FILE_SPLIT_NONE:
         default:
+            oneFilePerDay = false;
+            oneFilePerTrack = false;
             break;
         }
     };
 
-    public final void setOneFilePerTrack(final boolean isOneFilePerTrack) {
-        oneFilePerTrack = isOneFilePerTrack;
-    }
-
+    /**
+     * Set the track separation time.
+     * 
+     * @param time
+     *            Seconds of unavailable positions require before deciding to
+     *            hava a new track.
+     */
     public final void setTrackSepTime(final int time) {
         trackSepTime = time;
     }
 
-    public final void setActiveFileFields(final GPSRecord full) {
-        activeFileFields = full;
+    /**
+     * Called to set the fields that are active in the current input. This is
+     * set by the internal algorithm that analyses the input file.
+     * 
+     * @param activeFileFieldsFormat
+     */
+    public final void setActiveFileFields(final GPSRecord activeFileFieldsFormat) {
+        activeFileFields = activeFileFieldsFormat;
     }
 
-    public final void setOutputFields(final GPSRecord fields) {
-        selectedFileFields = fields;
+    /**
+     * Set the fields that should be written to the output. This can be a
+     * superset of the active file fields, but only the fields that are both
+     * active and selected for output will be available in the output files.
+     * This is to be configured from the application.
+     * 
+     * @param selectedOutputFields
+     */
+    public final void setOutputFields(final GPSRecord selectedOutputFields) {
+        selectedFileFields = selectedOutputFields;
     }
 
+    /**
+     * Called every time the log format changes so that the appropriate header
+     * information can be written to the output files. Updates the
+     * {@link #activeFields} so 'super()' should be called by the extending
+     * class that must add a hook to this method to write the intermediate
+     * header (if needed for the output format).
+     * 
+     * @param f
+     */
     public final void writeLogFmtHeader(final GPSRecord f) {
         activeFields = new GPSRecord(f);
     };
 
+    /**
+     * Set the track point and way point filters. To be called from the
+     * application.
+     * 
+     * @param ourFilters
+     *            Track point and way point filters.
+     */
     public final void setFilters(final GPSFilter[] ourFilters) {
         ptFilters = ourFilters;
     };
 
+    /**
+     * Indicate whether Imperial units (miles, knots, mph) should be used.
+     * 
+     * @param useImperial
+     *            when true, use imperial units.
+     */
     public final void setImperial(final boolean useImperial) {
         this.imperial = useImperial;
     }
 
     /**
-     * Returns true when the record is used by the format. Checks all the
-     * filters by default.
+     * Check whether there is any need at all for the current record for any of
+     * the position filters.
      * 
+     * @return true if the record is needed.
      */
     protected boolean recordIsNeeded(final GPSRecord s) {
         boolean result = false;
@@ -149,6 +286,15 @@ public abstract class GPSFile {
         return result;
     }
 
+    /**
+     * Called for any new position. This method is called by the input analysis
+     * class and should be extended for the output format. The extension must
+     * call super(). That will make sure that the appropriate files are opened,
+     * and the {@link #t} property set.
+     * 
+     * @param s
+     *            information regarding the position.
+     */
     public void writeRecord(final GPSRecord s) {
         String extraExt; // Extra extension for log file
         boolean newDate = false;
@@ -218,6 +364,12 @@ public abstract class GPSFile {
         }
     };
 
+    /**
+     * Method called when all parsing is finished and the last file has to be
+     * closed.<br>
+     * This method can be extended. It closes the output file by default, so
+     * super() should be called once other handling is finished.
+     */
     public void finaliseFile() {
         if (outFile != null) {
             try {
@@ -230,6 +382,15 @@ public abstract class GPSFile {
         }
     }
 
+    /**
+     * Called when the input file has been parsed. This method checks if other
+     * passes are needed and performs some closing operations if that is not the
+     * case.<br>
+     * This method must be extended, call super.nextPass() and then update
+     * nbrOfPassesToGo.
+     * 
+     * @return true if analysis must go on.
+     */
     public boolean nextPass() {
         previousDate = 0;
         firstRecord = true;
@@ -245,12 +406,26 @@ public abstract class GPSFile {
         return false;
     };
 
+    /**
+     * This method is to be extended as needed and is called when the file
+     * header must be written. This method is called only once for each output
+     * file.
+     * 
+     * @param Name
+     *            Identifier for the output file that can be used in the header.
+     */
     protected void writeFileHeader(final String Name) {
     };
 
+    /**
+     * Called at the start of a new data section.
+     */
     protected void writeDataHeader() {
     };
 
+    /**
+     * Called at the end of a data section.
+     */
     protected void writeDataFooter() {
     };
 
@@ -413,13 +588,13 @@ public abstract class GPSFile {
 
     protected boolean isTrkComment = true;
 
-    public final void setIncludeTrkComment(boolean isTrkComment) {
+    public final void setIncludeTrkComment(final boolean isTrkComment) {
         this.isTrkComment = isTrkComment;
     }
 
     protected boolean isIncludeTrkName = true;
 
-    public final void setIncludeTrkName(boolean isIncludeTrkName) {
+    public final void setIncludeTrkName(final boolean isIncludeTrkName) {
         this.isIncludeTrkName = isIncludeTrkName;
     }
 
