@@ -34,9 +34,7 @@ public final class J2MEStringTokenizer implements BT747StringTokenizer{
                 char c = left.charAt(pos);
                 if (c != delim) {
                     s.append(c);
-                } else if (!done && s.length() > 0) {
-                    done = true;
-                } else if ((pos + 1) == left.length()) {
+                } else{
                     done = true;
                 }
             } else {
@@ -64,9 +62,9 @@ public final class J2MEStringTokenizer implements BT747StringTokenizer{
                 if(left.charAt(index)==delim) {
                     count++;
                 }
+                index--;
             }
             return count;
         }
     }
-
 }
