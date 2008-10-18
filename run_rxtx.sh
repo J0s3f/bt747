@@ -13,7 +13,7 @@ else
 fi
 
 export CLASSPATH
-CLASSPATH=${RXTXJAR}:lib/Waba_only.jar:dist/BT747_rxtx.jar:.:$CLASSPATH
+CLASSPATH=lib/wabalang.jar:dist/BT747_rxtx.jar:${RXTXJAR}:.:$CLASSPATH
 
 # Change the port prefix by adding the following option to the java invocation:
 #     (the example is for ports like /dev/ttyUSB0)

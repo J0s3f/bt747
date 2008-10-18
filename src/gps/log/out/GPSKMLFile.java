@@ -42,7 +42,7 @@ public final class GPSKMLFile extends GPSFile {
      */
     public GPSKMLFile() {
         super();
-        numberOfPasses = 3;
+        numberOfPasses = 3; // Three passes are needed.
     }
 
     /*
@@ -59,6 +59,9 @@ public final class GPSKMLFile extends GPSFile {
         isPathType = false;
     }
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFile#nextPass()
+     */
     public final boolean nextPass() {
         super.nextPass();
         if (nbrOfPassesToGo > 0) {
@@ -88,176 +91,106 @@ public final class GPSKMLFile extends GPSFile {
         }
     }
 
+    /**
+     * Table of records related to icons for waypoints:<br>
+     * id Label URL x y w h
+     * 
+     * The table must at least contain the ids T,D,S,B and M. The other IDs are
+     * related to application/user specific way points and must be the hex
+     * representation: 0102 for instance.
+     */
+    
+    private final String[][] IconStyles = {
+            { "T", "TimeStamp", "http://maps.google.com/mapfiles/kml/paddle/T.png" },
+            { "D", "DistanceStamp", "http://maps.google.com/mapfiles/kml/paddle/D.png", "" },
+            { "S", "SpeedStamp", "http://maps.google.com/mapfiles/kml/paddle/S.png" },
+            { "B", "ButtonStamp", "http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png" },
+            { "M", "MixStamp", "http://maps.google.com/mapfiles/kml/paddle/M.png" },
+            // { "0001", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
+            // { "0002", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
+            // { "0004", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
+            // { "0008", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
+            { "0010", "Picture", "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
+            { "0020", "Gaz Station", "http://maps.google.com/mapfiles/kml/shapes/gas_stations.png" },
+            { "0040", "Phone Booth", "http://maps.google.com/mapfiles/kml/shapes/phone.png" },
+            { "0080", "ATM", "http://maps.google.com/mapfiles/kml/shapes/euro.png" },
+            { "0100", "Bus Stop", "http://maps.google.com/mapfiles/kml/shapes/bus.png" },
+            { "0200", "Parking", "http://maps.google.com/mapfiles/kml/shapes/parking_lot.png" },
+            { "0400", "Post Box", "http://maps.google.com/mapfiles/kml/shapes/post_office.png" },
+            { "0800", "Railway", "http://maps.google.com/mapfiles/kml/shapes/rail.png" },
+            { "1000", "Restaurant", "http://maps.google.com/mapfiles/kml/shapes/dining.png", },
+            { "2000", "Bridge", "http://maps.google.com/mapfiles/kml/shapes/water.png" },
+            { "4000", "View", "http://maps.google.com/mapfiles/kml/shapes/flag.png" },
+            { "8000", "Other", "http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png" },
+    };
+    
+
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFile#writeFileHeader(java.lang.String)
+     */
     public final void writeFileHeader(final String name) {
-        String header;
+        StringBuffer header = new StringBuffer(2048);
         trackName = name;
-        header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
-                + "<kml xmlns=\"http://schemas.opengis.net/kml/2.2.0\""
-                + " xmlns:atom=\"http://www.w3.org/2005/Atom\">\r\n"
-                + "<Document>\r\n"
-                + "<atom:generator uri=\"http://sf.net/projects/bt747\" "
-                + "version=\""
-                + Version.VERSION_NUMBER
-                + "\""
-                + ">"
-                + "BT747"
-                + "</atom:generator>\r\n"
-                + "<name>"
-                + name
-                + "</name>\r\n"
-                + "  <open>1</open>\r\n"
-                + "  <Style id=\"TimeStamp0\">\r\n"
-                + "    <IconStyle>\r\n"
-                + "      <Icon>\r\n"
-                + "        <href>root://icons/palette-3.png</href>\r\n"
-                + "      </Icon>\r\n"
-                + "    </IconStyle>\r\n"
-                + "    <LabelStyle>\r\n"
-                + "      <scale>0</scale>\r\n"
-                + "    </LabelStyle>\r\n"
-                + "  </Style>\r\n"
-                + "  <Style id=\"TimeStamp1\">\r\n"
-                + "    <IconStyle>\r\n"
-                + "      <Icon>\r\n"
-                + "        <href>root://icons/palette-3.png</href>\r\n"
-                + "      </Icon>\r\n"
-                + "    </IconStyle>\r\n"
-                + "    <LabelStyle>\r\n"
-                + "      <scale>1</scale>\r\n"
-                + "    </LabelStyle>\r\n"
-                + "  </Style>\r\n"
-                + "  <StyleMap id=\"StyleT\">\r\n"
-                + "    <Pair>\r\n"
-                + "      <key>normal</key>\r\n"
-                + "      <styleUrl>#TimeStamp0</styleUrl>\r\n"
-                + "    </Pair>\r\n"
-                + "    <Pair>\r\n"
-                + "      <key>highlight</key>\r\n"
-                + "      <styleUrl>#TimeStamp1</styleUrl>\r\n"
-                + "    </Pair>\r\n"
-                + "  </StyleMap>\r\n"
-                + "    <Style id=\"DistanceStamp0\">\r\n"
-                + "      <IconStyle>\r\n"
-                + "        <Icon>\r\n"
-                + "          <href>root://icons/palette-2.png</href>\r\n"
-                + "        </Icon>\r\n"
-                + "      </IconStyle>\r\n"
-                + "      <LabelStyle>\r\n"
-                + "        <scale>0</scale>\r\n"
-                + "      </LabelStyle>\r\n"
-                + "    </Style>\r\n"
-                + "    <Style id=\"DistanceStamp1\">\r\n"
-                + "      <IconStyle>\r\n"
-                + "        <Icon>\r\n"
-                + "          <href>root://icons/palette-2.png</href>\r\n"
-                + "        </Icon>\r\n"
-                + "      </IconStyle>\r\n"
-                + "      <LabelStyle>\r\n"
-                + "        <scale>1</scale>\r\n"
-                + "      </LabelStyle>\r\n"
-                + "    </Style>\r\n"
-                + "    <StyleMap id=\"StyleD\">\r\n"
-                + "      <Pair>\r\n"
-                + "        <key>normal</key>\r\n"
-                + "        <styleUrl>#DistanceStamp0</styleUrl>\r\n"
-                + "      </Pair>\r\n"
-                + "      <Pair>\r\n"
-                + "        <key>highlight</key>\r\n"
-                + "        <styleUrl>#DistanceStamp1</styleUrl>\r\n"
-                + "      </Pair>\r\n"
-                + "    </StyleMap>\r\n"
-                + "    <Style id=\"SpeedStamp0\">\r\n"
-                + "      <IconStyle>\r\n"
-                + "        <Icon>\r\n"
-                + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "        </Icon>\r\n"
-                + "      </IconStyle>\r\n"
-                + "      <LabelStyle>\r\n"
-                + "        <scale>0</scale>\r\n"
-                + "      </LabelStyle>\r\n"
-                + "    </Style>\r\n"
-                + "    <Style id=\"SpeedStamp1\">\r\n"
-                + "      <IconStyle>\r\n"
-                + "        <Icon>\r\n"
-                + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "        </Icon>\r\n"
-                + "      </IconStyle>\r\n"
-                + "      <LabelStyle>\r\n"
-                + "        <scale>1</scale>\r\n"
-                + "      </LabelStyle>\r\n"
-                + "    </Style>\r\n"
-                + "    <StyleMap id=\"StyleS\">\r\n"
-                + "      <Pair>\r\n"
-                + "        <key>normal</key>\r\n"
-                + "        <styleUrl>#SpeedStamp0</styleUrl>\r\n"
-                + "      </Pair>\r\n"
-                + "      <Pair>\r\n"
-                + "        <key>highlight</key>\r\n"
-                + "        <styleUrl>#SpeedStamp1</styleUrl>\r\n"
-                + "      </Pair>\r\n"
-                + "    </StyleMap>\r\n"
-                + "    <Style id=\"Unknown0\">\r\n"
-                + "      <IconStyle>\r\n"
-                + "        <Icon>\r\n"
-                + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "        </Icon>\r\n"
-                + "      </IconStyle>\r\n"
-                + "      <LabelStyle>\r\n"
-                + "        <scale>0</scale>\r\n"
-                + "      </LabelStyle>\r\n"
-                + "    </Style>\r\n"
-                + "    <Style id=\"Unknown1\">\r\n"
-                + "      <IconStyle>\r\n"
-                + "        <Icon>\r\n"
-                + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "        </Icon>\r\n"
-                + "      </IconStyle>\r\n"
-                + "      <LabelStyle>\r\n"
-                + "        <scale>1</scale>\r\n"
-                + "      </LabelStyle>\r\n"
-                + "    </Style>\r\n"
-                + "    <StyleMap id=\"StyleB\">\r\n"
-                + "      <Pair>\r\n"
-                + "        <key>normal</key>\r\n"
-                + "        <styleUrl>#Unknown0</styleUrl>\r\n"
-                + "      </Pair>\r\n"
-                + "      <Pair>\r\n"
-                + "        <key>highlight</key>\r\n"
-                + "        <styleUrl>#Unknown1</styleUrl>\r\n"
-                + "      </Pair>\r\n"
-                + "    </StyleMap>\r\n"
-                + "    <Style id=\"MixStamp0\">\r\n"
-                + "      <IconStyle>\r\n"
-                + "        <Icon>\r\n"
-                + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "        </Icon>\r\n"
-                + "      </IconStyle>\r\n"
-                + "      <LabelStyle>\r\n"
-                + "        <scale>0</scale>\r\n"
-                + "      </LabelStyle>\r\n"
-                + "    </Style>\r\n"
-                + "    <Style id=\"MixStamp1\">\r\n"
-                + "      <IconStyle>\r\n"
-                + "        <Icon>\r\n"
-                + "          <href>root://icons/palette-4.png</href>\r\n"
-                + "        </Icon>\r\n"
-                + "      </IconStyle>\r\n"
-                + "      <LabelStyle>\r\n"
-                + "        <scale>1</scale>\r\n"
-                + "      </LabelStyle>\r\n"
-                + "    </Style>\r\n"
-                + "    <StyleMap id=\"StyleM\">\r\n"
-                + "      <Pair>\r\n"
-                + "        <key>normal</key>\r\n"
-                + "        <styleUrl>#MixStamp0</styleUrl>\r\n"
-                + "      </Pair>\r\n"
-                + "      <Pair>\r\n"
-                + "        <key>highlight</key>\r\n"
-                + "        <styleUrl>#MixStamp1</styleUrl>\r\n"
-                + "      </Pair>\r\n" + "    </StyleMap>\r\n";
-        writeTxt(header);
+        header.append(
+              "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+            + "<kml xmlns=\"http://schemas.opengis.net/kml/2.2.0\""
+            + " xmlns:atom=\"http://www.w3.org/2005/Atom\">\r\n"
+            + "<Document>\r\n"
+            + "<atom:generator uri=\"http://sf.net/projects/bt747\" "
+            + "version=\""
+            + Version.VERSION_NUMBER
+            + "\""
+            + ">"
+            + "BT747"
+            + "</atom:generator>\r\n"
+            + "<name>"
+            + name
+            + "</name>\r\n"
+            + "  <open>1</open>\r\n"
+            );
+        
+        for(int i=0;i<IconStyles.length;i++) {
+            for(int j=0;j<2;j++ ) {
+            header.append(
+              "  <Style id=\"Style" + IconStyles[i][0] + j + "\">\r\n"
+            + "    <IconStyle>\r\n"
+            + "      <Icon>\r\n"
+            + "        <href>" + IconStyles[i][2] + "</href>\r\n"
+            +  "      </Icon>\r\n"
+            + "    </IconStyle>\r\n"
+            + "    <LabelStyle>\r\n"
+            + "      <scale>" + j + "</scale>\r\n"
+            + "    </LabelStyle>\r\n"
+            + "  </Style>\r\n");
+            }
+        }
+
+        for(int i=0;i<IconStyles.length;i++) {
+            String x = "";
+            if (IconStyles[i][0].length() > 1) {
+                x = "X";
+            }
+            header.append(
+                       "  <StyleMap id=\"Style" + x
+                    +  IconStyles[i][0]+"\">\r\n"
+                    + "    <Pair>\r\n"
+                    + "      <key>normal</key>\r\n"
+                    + "      <styleUrl>#Style" + IconStyles[i][0] + "0</styleUrl>\r\n"
+                    + "    </Pair>\r\n"
+                    + "    <Pair>\r\n"
+                    + "      <key>highlight</key>\r\n"
+                    + "      <styleUrl>#Style" + IconStyles[i][0] + "1</styleUrl>\r\n"
+                    + "    </Pair>\r\n"
+                    + "  </StyleMap>\r\n"
+                    );
+        }
+        
+        writeTxt(header.toString());
     }
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFile#writeDataHeader()
+     */
     protected final void writeDataHeader() {
         String header;
         if (isWayType) {
@@ -286,6 +219,9 @@ public final class GPSKMLFile extends GPSFile {
         writeTxt(header);
     }
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFile#writeDataFooter()
+     */
     protected final void writeDataFooter() {
         String footer;
         if (isWayType) {
@@ -374,7 +310,7 @@ public final class GPSKMLFile extends GPSFile {
                         String style = CommonOut.getRCRstr(s);
 
                         if (style.length() > 1
-                                || ((s.rcr & BT747Constants.RCR_ALL_APP_MASK) != 0)) {
+                                && ((s.rcr & BT747Constants.RCR_ALL_APP_MASK) == 0)) {
                             style = "M";
                         }
                         rec.append("#Style");

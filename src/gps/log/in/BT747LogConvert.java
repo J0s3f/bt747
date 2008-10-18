@@ -329,7 +329,12 @@ public final class BT747LogConvert implements GPSLogConvert {
                                     foundRecord = true;
                                 } else {
                                     Generic.debug("Bad record @"
-                                            + gpsRec.recCount, null);
+                                            + gpsRec.recCount
+                                            + "("
+                                            + Convert.unsigned2hex(
+                                                    nextAddrToRead - sizeToRead
+                                                            + recIdx, 8) + ")",
+                                            null);
                                     // Recover ...
                                     recCount--;
                                     foundRecord = false;
@@ -601,6 +606,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
             if ((gpsRec.utc & 0x80000000) != 0) {
+                Generic.debug("Invalid time:" + gpsRec.utc);
                 valid = false;
             }
             gpsRec.utc += timeOffsetSeconds;
@@ -632,6 +638,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                 gpsRec.latitude = Convert.toFloatBitwise(latitude);
             }
             if (gpsRec.latitude > 90.00 || gpsRec.latitude < -90.00) {
+                Generic.debug("Invalid latitude:" + gpsRec.latitude);
                 valid = false;
             }
         }
@@ -654,6 +661,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                 gpsRec.longitude = Convert.toFloatBitwise(longitude);// *1.0;
             }
             if (gpsRec.longitude > 180.00 || gpsRec.latitude < -180.00) {
+                Generic.debug("Invalid longitude:" + gpsRec.height);
                 valid = false;
             }
         }
@@ -678,7 +686,9 @@ public final class BT747LogConvert implements GPSLogConvert {
                 gpsRec.height -= Conv.wgs84Separation(gpsRec.latitude,
                         gpsRec.longitude);
             }
-            if (gpsRec.height < -10000. || gpsRec.height > 10000.) {
+            if (((gpsRec.valid & 0x0001) != 1) // record has a fix
+                    && (gpsRec.height < -10000. || gpsRec.height > 10000.)) {
+                Generic.debug("Invalid height:" + gpsRec.height);
                 valid = false;
             }
         }
@@ -689,6 +699,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                     | (0xFF & bytes[recIdx++]) << 24;
             gpsRec.speed = Convert.toFloatBitwise(speed);
             if (gpsRec.speed < -10.) {
+                Generic.debug("Invalid speed:" + gpsRec.speed);
                 valid = false;
             }
         }

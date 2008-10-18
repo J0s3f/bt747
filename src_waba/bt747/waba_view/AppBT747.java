@@ -20,6 +20,7 @@ package bt747.waba_view;
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************
 import waba.fx.Font;
+import waba.fx.Sound;
 import waba.sys.Settings;
 import waba.ui.Control;
 import waba.ui.ControlEvent;
@@ -54,6 +55,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
     static {
         // Set the low level interface.
         Interface.setJavaTranslationInterface(new WabaJavaTranslations());
+        
+        Sound.setEnabled(false);
         // Set up the port.
         GPSPort gpsPort;
 

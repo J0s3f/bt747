@@ -70,10 +70,7 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
     }
 
     public final void debug(final String s, final Throwable e) {
-        System.out.println(s);
-        if (e != null) {
-            e.printStackTrace();
-        }
+        J2SEGeneric.debug(s, e);
     }
 
     public final double pow(final double x, final double y) {

@@ -6,8 +6,16 @@
  */
 package net.sf.bt747.j2se.system;
 
+import gps.GPSListener;
+import gps.GpsEvent;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import javax.swing.event.EventListenerList;
 
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Thread;
@@ -20,14 +28,14 @@ import bt747.sys.interfaces.BT747Thread;
  */
 public final class J2SEGeneric {
 
-    private final static HashSet<Object> h = new HashSet<Object>();
-    private final static HashSet<Object> oos = new HashSet<Object>();
+    private static final HashSet<Object> h = new HashSet<Object>();
+    private static final HashSet<Object> oos = new HashSet<Object>();
 
     // java.util.HashSet<Object> tt = new java.util.HashSet<Object>();
 
     // TODO: Improve next code - for the moment it is functional.
 
-    public final static void addThread(final BT747Thread t, final boolean b) {
+    public static void addThread(final BT747Thread t, final boolean b) {
         if (!oos.contains(t)) {
             if (Generic.isDebug()) {
                 Generic.debug("Adding " + t, null);
@@ -38,7 +46,7 @@ public final class J2SEGeneric {
             if (mt != null) {
                 // System.out.println("new Thread() succeed");
             } else {
-                Generic.debug("new Thread() failed",null);
+                Generic.debug("new Thread() failed", null);
             }
             mt.jvThread.start();
             h.add(mt);
@@ -50,7 +58,7 @@ public final class J2SEGeneric {
         }
     }
 
-    public final static void removeThread(final BT747Thread t) {
+    public static void removeThread(final BT747Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
         final Iterator<Object> it = h.iterator();
         while (it.hasNext()) {
@@ -65,7 +73,7 @@ public final class J2SEGeneric {
 
     }
 
-    public final static void removeIfStoppedThread(final Thread t) {
+    public static void removeIfStoppedThread(final Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
         final Iterator<Object> it = h.iterator();
         while (it.hasNext()) {
@@ -82,11 +90,51 @@ public final class J2SEGeneric {
 
     }
 
-    public final static double pow(final double x, final double y) {
+    public static double pow(final double x, final double y) {
         return Math.pow(x, y);
     }
 
-    public final static double acos(final double x) {
+    public static double acos(final double x) {
         return Math.acos(x);
     }
+
+    public static void debug(final String s, final Throwable e) {
+        if (listeners.size() == 0) {
+            System.out.println(s);
+            if (e != null) {
+                e.printStackTrace();
+            }
+        } else {
+            Writer result = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(result);
+            printWriter.println(s);
+            if (e != null) {
+                e.printStackTrace(printWriter);
+            }
+            String message = result.toString();
+
+            System.out.print(message);
+
+            Iterator<J2SEMessageListener> it = listeners.iterator();
+            while (it.hasNext()) {
+                try {
+                    it.next().postMessage(message);
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static final HashSet<J2SEMessageListener> listeners = new HashSet<J2SEMessageListener>();
+
+    /** add a listener to event thrown by this class */
+    public static void addListener(final J2SEMessageListener l) {
+        listeners.add(l);
+    }
+
+    public static void removeListener(final J2SEMessageListener l) {
+        listeners.remove(l);
+    }
+
 }

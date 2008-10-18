@@ -571,36 +571,46 @@ public final class CSVLogConvert implements GPSLogConvert {
 
                                         case BT747Constants.FMT_RCR_IDX: {
                                             gpsRec.rcr = 0;
-                                            curLogFormat |= (1 << BT747Constants.FMT_RCR_IDX);
-                                            if (field.indexOf('B', 0) != -1) {
-                                                gpsRec.rcr |= BT747Constants.RCR_BUTTON_MASK;
-                                            }
-                                            if (field.indexOf('T', 0) != -1) {
-                                                gpsRec.rcr |= BT747Constants.RCR_TIME_MASK;
-                                            }
-                                            if (field.indexOf('S', 0) != -1) {
-                                                gpsRec.rcr |= BT747Constants.RCR_SPEED_MASK;
-                                            }
-                                            if (field.indexOf('D', 0) != -1) {
-                                                gpsRec.rcr |= BT747Constants.RCR_DISTANCE_MASK;
-                                            }
+                                            if (field.charAt(0) != 'X') {
+                                                curLogFormat |= (1 << BT747Constants.FMT_RCR_IDX);
+                                                if (field.indexOf('B', 0) != -1) {
+                                                    gpsRec.rcr |= BT747Constants.RCR_BUTTON_MASK;
+                                                }
+                                                if (field.indexOf('T', 0) != -1) {
+                                                    gpsRec.rcr |= BT747Constants.RCR_TIME_MASK;
+                                                }
+                                                if (field.indexOf('S', 0) != -1) {
+                                                    gpsRec.rcr |= BT747Constants.RCR_SPEED_MASK;
+                                                }
+                                                if (field.indexOf('D', 0) != -1) {
+                                                    gpsRec.rcr |= BT747Constants.RCR_DISTANCE_MASK;
+                                                }
+                                                curLogFormat |= (1 << BT747Constants.FMT_RCR_IDX);
+                                            } else {
 
-                                            // Still 16-4 = 12 possibilities.
-                                            // Taking numbers from 1 to 9
-                                            // Then letters X, Y and Z
-                                            char c = '1';
-                                            int i;
-                                            for (i = 0x10; c <= '9'; i <<= 1, c++) {
-                                                if ((field.indexOf(c, 0) != -1)) {
-                                                    gpsRec.rcr |= i;
+                                                if (field.length() == 5) {
+                                                    gpsRec.rcr = Conv
+                                                            .hex2Int(field
+                                                                    .substring(1));
+                                                    curLogFormat |= (1 << BT747Constants.FMT_RCR_IDX);
                                                 }
                                             }
-                                            c = 'X';
-                                            for (i = 0x10; c <= '9'; i <<= 1, c++) {
-                                                if ((field.indexOf(c, 0) != -1)) {
-                                                    gpsRec.rcr |= i;
-                                                }
-                                            }
+//                                            // Still 16-4 = 12 possibilities.
+//                                            // Taking numbers from 1 to 9
+//                                            // Then letters X, Y and Z
+//                                            char c = '1';
+//                                            int i;
+//                                            for (i = 0x10; c <= '9'; i <<= 1, c++) {
+//                                                if ((field.indexOf(c, 0) != -1)) {
+//                                                    gpsRec.rcr |= i;
+//                                                }
+//                                            }
+//                                            c = 'X';
+//                                            for (i = 0x10; c <= '9'; i <<= 1, c++) {
+//                                                if ((field.indexOf(c, 0) != -1)) {
+//                                                    gpsRec.rcr |= i;
+//                                                }
+//                                            }
                                         }
                                             break;
                                         case BT747Constants.FMT_MILLISECOND_IDX:
@@ -628,7 +638,6 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             // Error message to show.
                                         }
                                     }
-
                                     // Next condition should be handled by
                                     // stopping
                                     // interpretation after the first line.
