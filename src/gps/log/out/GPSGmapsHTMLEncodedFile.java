@@ -22,7 +22,7 @@ import gps.tracks.Trackpoint;
 
 import bt747.Version;
 import bt747.sys.Convert;
-import bt747.sys.Hashtable;
+import bt747.sys.interfaces.BT747Hashtable;
 
 /**
  * Class to write a Google Maps HTML file.
@@ -323,7 +323,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
 
     protected final void endTrack(final String hexColor) {
         PolylineEncoder a = new PolylineEncoder();
-        Hashtable res;
+        BT747Hashtable res;
         if (false) {
             res = a.createEncodings(track, 17, 4);
         } else {

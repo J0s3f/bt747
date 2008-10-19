@@ -18,7 +18,8 @@ import gps.BT747Constants;
 import gps.log.GPSRecord;
 
 import bt747.sys.Convert;
-import bt747.sys.Time;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Time;
 
 public final class CommonOut {
     protected static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
@@ -26,7 +27,7 @@ public final class CommonOut {
 
     public final static void getHtml(final StringBuffer rec, final GPSRecord s,
             final GPSRecord activeFields, final GPSRecord selectedFields,
-            final Time t, final boolean recordNbrInLogs, final boolean imperial) {
+            final BT747Time t, final boolean recordNbrInLogs, final boolean imperial) {
         if (recordNbrInLogs) {
             rec.append("IDX: ");
             rec.append(Convert.toString(s.recCount));
@@ -141,13 +142,13 @@ public final class CommonOut {
     }
 
     public final static String getTimeStr(final int utcTime) {
-        Time t = new Time();
+        BT747Time t = Interface.getTimeInstance();
         t.setUTCTime(utcTime);
         return getTimeStr(t);
     }
 
     public final static String getTimeStr(final GPSRecord activeFields,
-            final Time time) {
+            final BT747Time time) {
         if ((activeFields.utc != 0)) {
             return getTimeStr(time);
         } else {
@@ -155,7 +156,7 @@ public final class CommonOut {
         }
     }
 
-    public final static String getTimeStr(final Time time) {
+    public final static String getTimeStr(final BT747Time time) {
         return // Day
         ((time.getDay() < 10) ? "0" : "")
                 + Convert.toString(time.getDay())

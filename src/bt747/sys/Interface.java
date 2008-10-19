@@ -14,6 +14,13 @@
 //***  *********************************************************** ***
 package bt747.sys;
 
+import bt747.sys.interfaces.BT747Date;
+import bt747.sys.interfaces.BT747HashSet;
+import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747Semaphore;
+import bt747.sys.interfaces.BT747StringTokenizer;
+import bt747.sys.interfaces.BT747Time;
+import bt747.sys.interfaces.BT747Vector;
 import bt747.sys.interfaces.JavaTranslationsInterface;
 
 
@@ -35,4 +42,50 @@ public final class Interface {
             final JavaTranslationsInterface t) {
         tr = t;
     }
+
+    public static final BT747Hashtable getHashtableInstance(int initialCapacity) {
+        return tr.getHashtableInstance(initialCapacity);
+    }
+
+    public static final BT747Semaphore getSemaphoreInstance(final int value) {
+        return tr.getSemaphoreInstance(value);
+    }
+
+    public static final BT747Time getTimeInstance() {
+        return tr.getTimeInstance();
+    }
+
+    public static final BT747StringTokenizer getStringTokenizerInstance(final String a, final char b) {
+        return tr.getStringTokenizer(a, b);
+    }
+
+    public static final String[] toStringArrayAndEmpty(BT747Vector vector) {
+        String[] result = new String[vector.size()];
+        for (int i = vector.size() - 1; i >= 0; i--) {
+            result[i] = (String) vector.elementAt(i);
+        }
+        vector.removeAllElements();
+        return result;
+    }
+
+    public static final BT747Vector getVectorInstance() {
+        return tr.getVectorInstance();
+    }
+
+    public static final BT747HashSet getHashSetInstance() {
+        return tr.getHashSetInstance();
+    }
+    
+    public static final BT747Date getDateInstance() {
+        return tr.getDateInstance();
+    }
+
+    public static final BT747Date getDateInstance(final int d, final int m, final int y) {
+        return tr.getDateInstance(d, m, y);
+    }
+
+    public static final BT747Date getDateInstance(final String date, final byte format) {
+        return tr.getDateInstance(date, format);
+    }
+
 }

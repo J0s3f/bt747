@@ -23,10 +23,11 @@ import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
-import bt747.sys.StringTokenizer;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747StringTokenizer;
 
 /**
  * This class is used to convert the binary log to a new format. Basically this
@@ -174,7 +175,7 @@ public final class NMEALogConvert implements GPSLogConvert {
 
                         checkSum ^= Conv.hex2Int(checkStr);
 
-                        StringTokenizer fields = new StringTokenizer(s
+                        BT747StringTokenizer fields = Interface.getStringTokenizerInstance(s
                                 .toString(), ',');
                         offsetInBuffer = eolPos;
                         for (; offsetInBuffer < sizeToRead

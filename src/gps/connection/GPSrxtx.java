@@ -16,8 +16,9 @@ package gps.connection;
 
 import bt747.sys.Convert;
 import bt747.sys.Generic;
-import bt747.sys.Semaphore;
-import bt747.sys.Vector;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Semaphore;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * This class implements the low level driver of the GPS device. It extracs NMEA
@@ -29,7 +30,7 @@ import bt747.sys.Vector;
 public final class GPSrxtx {
     private static GPSPort gpsPort;
 
-    private Semaphore m_writeOngoing = new Semaphore(1);
+    private final BT747Semaphore writeOngoing =  Interface.getSemaphoreInstance(1);
 
     private boolean ignoreNMEA = false;
 
@@ -133,8 +134,8 @@ public final class GPSrxtx {
 
     private int current_state = C_INITIAL_STATE;
 
-    private byte[] read_buf = new byte[C_BUF_SIZE];
-    private char[] cmd_buf = new char[C_CMDBUF_SIZE];
+    private final byte[] read_buf = new byte[C_BUF_SIZE];
+    private final char[] cmd_buf = new char[C_CMDBUF_SIZE];
 
     private int read_buf_p = 0;
     private int cmd_buf_p = 0;
@@ -147,10 +148,10 @@ public final class GPSrxtx {
     static final int ERR_INCOMPLETE = 2;
     static final int ERR_TOO_LONG = 3;
 
-    private Vector vCmd = new Vector();
+    private final BT747Vector vCmd = Interface.getVectorInstance();
     private static final char[] EOL_BYTES = { '\015', '\012' };
 
-    private StringBuffer rec = new StringBuffer(256);
+    private final StringBuffer rec = new StringBuffer(256);
 
     public boolean isConnected() {
         return (gpsPort != null) && gpsPort.isConnected();
@@ -164,7 +165,7 @@ public final class GPSrxtx {
             while (--z_Index >= 0) {
                 z_Checksum ^= (byte) p_Packet.charAt(z_Index);
             }
-            m_writeOngoing.down(); // Semaphore - reserve link
+            writeOngoing.down(); // Semaphore - reserve link
 
             try {
                 rec.setLength(0);
@@ -184,7 +185,7 @@ public final class GPSrxtx {
             } catch (Exception e) {
                 Generic.debug("sendPacket", e);
             }
-            m_writeOngoing.up(); // Semaphore - release link
+            writeOngoing.up(); // Semaphore - release link
         }
     }
 
@@ -195,7 +196,7 @@ public final class GPSrxtx {
 
     private byte[] DPL700_buffer;
     private int DPL700_buffer_idx;
-    private byte[] DPL700_EndString = new byte[200];
+    private final byte[] DPL700_EndString = new byte[200];
     private int endStringIdx;
     
     public byte[] getDPL700_buffer() {
@@ -209,7 +210,7 @@ public final class GPSrxtx {
     public void sendCmdAndGetDPL700Response(final int cmd, final int buffer_size) {
         if (isConnected()) {
             byte[] sendbuffer = new byte[7];
-            m_writeOngoing.down(); // Semaphore - reserve link
+            writeOngoing.down(); // Semaphore - reserve link
             try {
                 DPL700_buffer = new byte[buffer_size];
                 rxtxMode = DPL700_MODE;
@@ -231,13 +232,13 @@ public final class GPSrxtx {
             } catch (Exception e) {
                 Generic.debug("sendAndGetDPL700", e);
             }
-            m_writeOngoing.up(); // Semaphore - release link
+            writeOngoing.up(); // Semaphore - release link
         }
     }
 
     public void sendCmdAndGetDPL700Response(final String cmd, final int buffer_size) {
         if (isConnected()) {
-            m_writeOngoing.down(); // Semaphore - reserve link
+            writeOngoing.down(); // Semaphore - reserve link
             try {
                 DPL700_buffer = new byte[buffer_size];
                 rxtxMode = DPL700_MODE;
@@ -254,13 +255,13 @@ public final class GPSrxtx {
             } catch (Exception e) {
                 Generic.debug("send and get resp", e);
             }
-            m_writeOngoing.up(); // Semaphore - release link
+            writeOngoing.up(); // Semaphore - release link
         }
     }
 
     public void sendDPL700Cmd(final String cmd) {
         if (isConnected()) {
-            m_writeOngoing.down(); // Semaphore - reserve link
+            writeOngoing.down(); // Semaphore - reserve link
             try {
                 current_state = C_DPL700_STATE;
                 rxtxMode = DPL700_MODE;
@@ -274,7 +275,7 @@ public final class GPSrxtx {
             } catch (Exception e) {
                 Generic.debug("sendDPL700Cmd", e);
             }
-            m_writeOngoing.up(); // Semaphore - release link
+            writeOngoing.up(); // Semaphore - release link
         }
     }
 
@@ -289,7 +290,7 @@ public final class GPSrxtx {
         }
     }
 
-    private Semaphore getResponseOngoing = new Semaphore(1);
+    private final BT747Semaphore getResponseOngoing = Interface.getSemaphoreInstance(1);
 
     public String[] getResponse() {
         boolean continueReading;
@@ -634,7 +635,7 @@ public final class GPSrxtx {
             // };
             // }
             getResponseOngoing.up();
-            return vCmd.toStringArrayAndEmpty();
+            return Interface.toStringArrayAndEmpty(vCmd);
         } else if (current_state == C_DPL700_END_STATE) {
             current_state = C_FOUND_STATE;
             String[] resp = new String[1];

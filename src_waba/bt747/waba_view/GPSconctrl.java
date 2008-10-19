@@ -36,7 +36,8 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
-import bt747.sys.Time;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * @author Mario De Weerd
@@ -176,7 +177,7 @@ public final class GPSconctrl extends Container implements ModelListener {
 
     private void updateRMCData(final GPSRecord gps) {
         if (gps.utc > 0) {
-            Time t = new Time();
+            BT747Time t = Interface.getTimeInstance();
             t.setUTCTime(gps.utc);
             TimeStr = Txt.TIME_SEP
                     +

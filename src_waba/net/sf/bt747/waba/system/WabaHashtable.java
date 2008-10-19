@@ -19,6 +19,9 @@
 //********************************************************************
 package net.sf.bt747.waba.system;
 
+import waba.util.Hashtable;
+import waba.util.Vector;
+
 import bt747.sys.interfaces.BT747Hashtable;
 
 /**
@@ -27,14 +30,78 @@ import bt747.sys.interfaces.BT747Hashtable;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public final class WabaHashtable extends waba.util.Hashtable implements
-        BT747Hashtable {
+public final class WabaHashtable implements BT747Hashtable {
+
+    private final Hashtable hs;
+    private Vector iterator = null;
+    private int iteratorIdx;
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sf.bt747.waba.system.BT747Hashtable#iterator()
+     */
+    public final BT747Hashtable iterator() {
+        iterator = hs.getKeys();
+        iteratorIdx = 0;
+        return this;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sf.bt747.waba.system.BT747Hashtable#put(java.lang.Object,
+     *      java.lang.Object)
+     */
+    public final Object put(final Object key, final Object value) {
+        return hs.put(key, value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sf.bt747.waba.system.BT747Hashtable#get(java.lang.Object)
+     */
+    public final Object get(final Object key) {
+        return hs.get(key);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sf.bt747.waba.system.BT747Hashtable#remove(java.lang.Object)
+     */
+    public final void remove(final Object o) {
+        hs.remove(o);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sf.bt747.waba.system.BT747Hashtable#hasNext()
+     */
+    public final boolean hasNext() {
+        return (iteratorIdx < iterator.size());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sf.bt747.waba.system.BT747Hashtable#next()
+     */
+    public final Object next() {
+        if (hasNext()) {
+            return iterator.items[iteratorIdx++];
+        } else {
+            return null;
+        }
+    }
 
     /**
      * @param initialCapacity
      */
     public WabaHashtable(final int initialCapacity) {
-        super(initialCapacity);
+        hs = new Hashtable(initialCapacity);
     }
 
     /**
@@ -42,14 +109,6 @@ public final class WabaHashtable extends waba.util.Hashtable implements
      * @param loadFactor
      */
     public WabaHashtable(final int initialCapacity, final float loadFactor) {
-        super(initialCapacity, loadFactor);
+        hs = new Hashtable(initialCapacity, loadFactor);
     }
-
-    /**
-     * @param res
-     */
-    public WabaHashtable(final String res) {
-        super(res);
-    }
-
 }

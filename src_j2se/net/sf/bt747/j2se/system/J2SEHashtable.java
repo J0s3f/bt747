@@ -6,18 +6,19 @@
  */
 package net.sf.bt747.j2se.system;
 
+import java.util.Enumeration;
+
 import bt747.sys.interfaces.BT747Hashtable;
 
 /**
  * @author Mario De Weerd
- * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
  */
 public final class J2SEHashtable  implements
         BT747Hashtable {
 
-    java.util.Hashtable<Object, Object> hash;
+    private final java.util.Hashtable<Object, Object> hash;
+    private Enumeration<Object> iterator = null;
+    
     static final long serialVersionUID = 1L;
 
     /**
@@ -35,4 +36,34 @@ public final class J2SEHashtable  implements
         return hash.put(arg1, arg2);
     }
 
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747Hashtable#hasNext()
+     */
+    public boolean hasNext() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747Hashtable#iterator()
+     */
+    public BT747Hashtable iterator() {
+        iterator = hash.keys();
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747Hashtable#next()
+     */
+    public Object next() {
+        // TODO Auto-generated method stub
+        return iterator.nextElement();
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747Hashtable#remove(java.lang.Object)
+     */
+    public void remove(Object o) {
+        hash.remove(o);
+    }
 }

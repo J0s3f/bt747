@@ -18,6 +18,7 @@ import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 
+import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -25,10 +26,14 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import javax.swing.InputVerifier;
+import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+
+import net.sf.bt747.j2se.system.J2SEGeneric;
+import net.sf.bt747.j2se.system.J2SEMessageListener;
 
 import bt747.Txt;
 import bt747.Version;
@@ -40,12 +45,7 @@ import bt747.model.ModelEvent;
 import bt747.sys.Convert;
 import bt747.sys.Generic;
 import bt747.sys.Interface;
-import bt747.sys.Time;
-import java.awt.Color;
-import javax.swing.JColorChooser;
-
-import net.sf.bt747.j2se.system.J2SEGeneric;
-import net.sf.bt747.j2se.system.J2SEMessageListener;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * J2SE Implementation (GUI) of BT747.
@@ -171,11 +171,13 @@ public class BT747Main extends javax.swing.JFrame implements
         cbImperialUnits.setSelected(m.getBooleanOpt(Model.IMPERIAL));
         cbAdvancedActive.setSelected(m.getAdvFilterActive());
         cbGPSType.setSelectedIndex(m.getGPSType() == 0 ? 0 : 1);
+        
+        // TODO: Correct next line
         cbDisableLoggingDuringDownload.setSelected(m.isIncremental());
         cbNotApplyUTCOffset.setSelected(m.getGpxUTC0());
 
-        Time d;
-        d = new Time();
+        BT747Time d;
+        d = Interface.getTimeInstance();
         d.setUTCTime(m.getFilterStartTime());
         Calendar cal = Calendar.getInstance();
         // cal.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -271,7 +273,7 @@ public class BT747Main extends javax.swing.JFrame implements
             // System.out.println(TimeStr);
             // TODO: Look for some ideas here:
             // http://java.sun.com/j2se/1.5.0/docs/api/java/util/Formatter.html#syntax
-            bt747.sys.Time t = new bt747.sys.Time();
+            BT747Time t = Interface.getTimeInstance();
             t.setUTCTime(gps.utc);
             TimeStr =
             // String.valueOf(t.getYear())+"/"
@@ -1097,15 +1099,17 @@ public class BT747Main extends javax.swing.JFrame implements
         lbThisSWVersion = new javax.swing.JLabel();
         FileSettingsPanel = new javax.swing.JPanel();
         pnVarious = new javax.swing.JPanel();
-        cbOneFilePerDay = new javax.swing.JComboBox();
-        lbTimeZone = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         cbUTCOffset = new javax.swing.JComboBox();
-        cbStandardOrDaylightSaving = new javax.swing.JComboBox();
         cbHeightOverMeanSeaLevel = new javax.swing.JComboBox();
         cbRecordNumberInfoInLog = new javax.swing.JCheckBox();
+        cbImperialUnits = new javax.swing.JCheckBox();
+        lbTimeZone = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        cbStandardOrDaylightSaving = new javax.swing.JComboBox();
+        cbOneFilePerDay = new javax.swing.JComboBox();
         cbGoodFixColor = new javax.swing.JButton();
         cbNoFixColor = new javax.swing.JButton();
-        cbImperialUnits = new javax.swing.JCheckBox();
         pnSeparation = new javax.swing.JPanel();
         lbNewTrackAfter = new javax.swing.JLabel();
         tfTrackSeparationTime = new javax.swing.JTextField();
@@ -1852,7 +1856,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(GPSDecodePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(pnConvert, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
         LogOperationsPanelLayout.setVerticalGroup(
             LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1872,26 +1876,10 @@ public class BT747Main extends javax.swing.JFrame implements
 
         pnVarious.setBorder(javax.swing.BorderFactory.createTitledBorder("Various"));
 
-        cbOneFilePerDay.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "One file per day", "One file per track", "Everything in one file" }));
-        cbOneFilePerDay.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                cbOneFilePerDayFocusLost(evt);
-            }
-        });
-
-        lbTimeZone.setText("TimeZone");
-
         cbUTCOffset.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "UTC -12", "UTC -11", "UTC -10", "UTC -9", "UTC -8", "UTC -7", "UTC -6", "UTC -5", "UTC -4", "UTC -3", "UTC -2", "UTC -1", "UTC +0", "UTC +1", "UTC +2", "UTC +3", "UTC +4", "UTC +5", "UTC +6", "UTC +7", "UTC +8", "UTC +9", "UTC +10", "UTC +11", "UTC +12" }));
         cbUTCOffset.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbUTCOffsetFocusLost(evt);
-            }
-        });
-
-        cbStandardOrDaylightSaving.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Standard Time", "Daylight Savings Time" }));
-        cbStandardOrDaylightSaving.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                cbStandardOrDaylightSavingFocusLost(evt);
             }
         });
 
@@ -1909,6 +1897,58 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
+        cbImperialUnits.setText("ImperialUnits");
+        cbImperialUnits.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbImperialUnitsFocusLost(evt);
+            }
+        });
+
+        lbTimeZone.setText("TimeZone");
+
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(lbTimeZone)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(cbUTCOffset, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, cbHeightOverMeanSeaLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(org.jdesktop.layout.GroupLayout.TRAILING, cbRecordNumberInfoInLog))
+            .add(cbImperialUnits)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(cbUTCOffset, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbTimeZone))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbHeightOverMeanSeaLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbRecordNumberInfoInLog)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbImperialUnits))
+        );
+
+        cbStandardOrDaylightSaving.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Standard Time", "Daylight Savings Time" }));
+        cbStandardOrDaylightSaving.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbStandardOrDaylightSavingFocusLost(evt);
+            }
+        });
+
+        cbOneFilePerDay.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "One file per day", "One file per track", "Everything in one file" }));
+        cbOneFilePerDay.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbOneFilePerDayFocusLost(evt);
+            }
+        });
+
         cbGoodFixColor.setText("Good Color");
         cbGoodFixColor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1923,61 +1963,41 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        cbImperialUnits.setText("ImperialUnits");
-        cbImperialUnits.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                cbImperialUnitsFocusLost(evt);
-            }
-        });
+        org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(org.jdesktop.layout.GroupLayout.TRAILING, cbNoFixColor)
+                .add(org.jdesktop.layout.GroupLayout.TRAILING, cbStandardOrDaylightSaving, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(org.jdesktop.layout.GroupLayout.TRAILING, cbGoodFixColor)
+                .add(org.jdesktop.layout.GroupLayout.TRAILING, cbOneFilePerDay, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .add(cbStandardOrDaylightSaving, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbOneFilePerDay, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbGoodFixColor)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbNoFixColor))
+        );
 
         org.jdesktop.layout.GroupLayout pnVariousLayout = new org.jdesktop.layout.GroupLayout(pnVarious);
         pnVarious.setLayout(pnVariousLayout);
         pnVariousLayout.setHorizontalGroup(
             pnVariousLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnVariousLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnVariousLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(pnVariousLayout.createSequentialGroup()
-                        .add(cbImperialUnits)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 87, Short.MAX_VALUE)
-                        .add(cbNoFixColor))
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnVariousLayout.createSequentialGroup()
-                        .add(lbTimeZone)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbUTCOffset, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbStandardOrDaylightSaving, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(pnVariousLayout.createSequentialGroup()
-                        .add(cbRecordNumberInfoInLog)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 25, Short.MAX_VALUE)
-                        .add(cbGoodFixColor))
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnVariousLayout.createSequentialGroup()
-                        .add(cbHeightOverMeanSeaLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbOneFilePerDay, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
         pnVariousLayout.setVerticalGroup(
             pnVariousLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnVariousLayout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(pnVariousLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbTimeZone)
-                    .add(cbUTCOffset, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(cbStandardOrDaylightSaving, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnVariousLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(cbHeightOverMeanSeaLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(cbOneFilePerDay, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(pnVariousLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(cbRecordNumberInfoInLog)
-                    .add(cbGoodFixColor))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnVariousLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(cbNoFixColor)
-                    .add(cbImperialUnits))
-                .add(9, 9, 9))
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         pnSeparation.setBorder(javax.swing.BorderFactory.createTitledBorder("Separation"));
@@ -2290,15 +2310,13 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(jPanel20Layout.createSequentialGroup()
                 .add(pnFilePrecision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnFileSatInfo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnFileSatInfo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel20Layout.setVerticalGroup(
             jPanel20Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel20Layout.createSequentialGroup()
-                .add(jPanel20Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnFilePrecision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pnFileSatInfo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(26, 26, 26))
+            .add(pnFilePrecision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(pnFileSatInfo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         org.jdesktop.layout.GroupLayout pnFileOutputFieldInnerLayout = new org.jdesktop.layout.GroupLayout(pnFileOutputFieldInner);
@@ -2321,9 +2339,9 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFilePosition, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
             .add(pnFileOutputFieldInnerLayout.createSequentialGroup()
-                .add(jPanel20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 190, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(jPanel20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(10, 10, 10)
-                .add(pnFileReason, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(pnFileReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
         org.jdesktop.layout.GroupLayout pnFileOutputFieldsLayout = new org.jdesktop.layout.GroupLayout(pnFileOutputFields);
@@ -2348,7 +2366,7 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(FileSettingsPanelLayout.createSequentialGroup()
                 .add(FileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 280, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(227, Short.MAX_VALUE))
@@ -3235,7 +3253,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnCommonFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnWaypoint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         LogFiltersPanelLayout.setVerticalGroup(
             LogFiltersPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -3974,7 +3992,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnLogFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addContainerGap(182, Short.MAX_VALUE))
         );
         DeviceSettingsPanelLayout.setVerticalGroup(
             DeviceSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -4396,7 +4414,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnFlashSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(388, Short.MAX_VALUE))
+                .addContainerGap(409, Short.MAX_VALUE))
         );
         AdvancedSettingsPanelLayout.setVerticalGroup(
             AdvancedSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -4626,7 +4644,7 @@ public class BT747Main extends javax.swing.JFrame implements
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
-        jTextArea1.setText("This interface is experimental (under development & discussion).\nIt is mostly functional and does provide some features not available in the usual (PDA-like) interface.\nFor example, it may be able to download and convert logs from PhotoTrackr / DPL700 / ITrackU devices (the raw log file should have '.sr' extension)");
+        jTextArea1.setText("This interface is experimental (under development & discussion).\nIt is mostly functional and does provide some features not available in the usual (PDA-like) interface.\nFor example, it may be able to download and convert logs from PhotoTrackr / DPL700 / ITrackU devices (the raw log file should have '.sr' extension)\n------------------------------------------------\n");
         jTextArea1.setAutoscrolls(false);
         jTextArea1.setFocusable(false);
         jTextArea1.setOpaque(false);
@@ -4638,7 +4656,7 @@ public class BT747Main extends javax.swing.JFrame implements
             InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE)
                 .addContainerGap())
         );
         InfoPanelLayout.setVerticalGroup(
@@ -4699,7 +4717,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(116, 116, 116)
                 .add(DownloadProgressLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnBottomInformationLayout.setVerticalGroup(
@@ -5510,7 +5528,7 @@ private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {//GE
         if (foundPort) {
             c.setPort(port);
         } else {
-            if (s.toUpperCase().equals("BLUETOOTH")) {
+            if (s.toUpperCase().startsWith("BLUETOOTH")) {
                 c.setBluetooth();
             } else if (s.toUpperCase().startsWith("USB")) {
                 c.setUsb();
@@ -5936,6 +5954,7 @@ private void spTimeSplitMinutesFocusLost(java.awt.event.FocusEvent evt) {//GEN-F
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel16;
@@ -5943,6 +5962,7 @@ private void spTimeSplitMinutesFocusLost(java.awt.event.FocusEvent evt) {//GEN-F
     private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;

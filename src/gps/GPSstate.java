@@ -21,9 +21,9 @@ import gps.log.in.CommonIn;
 
 import bt747.sys.Convert;
 import bt747.sys.Generic;
-import bt747.sys.HashSet;
-import bt747.sys.StringTokenizer;
+import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747HashSet;
+import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
 
 /**
@@ -587,7 +587,7 @@ public final class GPSstate implements BT747Thread {
      */
     public final void setBtMacAddr(final String btMacAddr) {
         String myMacAddr = "";
-        StringTokenizer fields = new StringTokenizer(btMacAddr, ':');
+        BT747StringTokenizer fields = Interface.getStringTokenizerInstance(btMacAddr, ':');
         while (fields.hasMoreTokens()) {
             myMacAddr = fields.nextToken() + myMacAddr;
         }
@@ -1218,7 +1218,7 @@ public final class GPSstate implements BT747Thread {
         return gpsPos;
     }
 
-    private final HashSet listeners = new HashSet();
+    private final BT747HashSet listeners = Interface.getHashSetInstance();
 
     /** add a listener to event thrown by this class */
     public final void addListener(final GPSListener l) {

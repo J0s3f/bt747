@@ -10,17 +10,18 @@
 
 package gps.tracks;
 
-import bt747.sys.Vector;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Vector;
 
 public final class Track {
 
-    private Vector trackpoints = new Vector();
+    private BT747Vector trackpoints = Interface.getVectorInstance();
 
-    public final Vector getTrackpoints() {
+    public final BT747Vector getTrackpoints() {
         return this.trackpoints;
     }
 
-    public final void setTrackpoints(final Vector trackpoints) {
+    public final void setTrackpoints(final BT747Vector trackpoints) {
         this.trackpoints = trackpoints;
     }
 
