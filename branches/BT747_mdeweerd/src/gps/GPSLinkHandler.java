@@ -18,8 +18,9 @@ import gps.connection.GPSrxtx;
 
 import bt747.sys.Convert;
 import bt747.sys.Generic;
-import bt747.sys.Semaphore;
-import bt747.sys.Vector;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Semaphore;
+import bt747.sys.interfaces.BT747Vector;
 
 final class GPSLinkHandler {
     private GPSrxtx gpsRxTx = null;
@@ -30,12 +31,12 @@ final class GPSLinkHandler {
     private boolean eraseOngoing = false;
 
 
-    private final Vector sentCmds = new Vector(); // List of sent commands
+    private final BT747Vector sentCmds = Interface.getVectorInstance(); // List of sent commands
 
     private static final int C_MAX_SENT_COMMANDS = 10; // Max commands to put
     // in list
 
-    private final Vector toSendCmds = new Vector(); // List of sent commands
+    private final BT747Vector toSendCmds = Interface.getVectorInstance(); // List of sent commands
 
     private static final int C_MAX_TOSEND_COMMANDS = 20; // Max commands to
     // put in
@@ -81,7 +82,7 @@ final class GPSLinkHandler {
 
     private int nextCmdSendTime = 0;
 
-    private final Semaphore cmdBuffersAccess = new Semaphore(1);
+    private final BT747Semaphore cmdBuffersAccess = Interface.getSemaphoreInstance(1);
 
     protected final void doSendNMEA(final String cmd) {
         resetLogTimeOut();

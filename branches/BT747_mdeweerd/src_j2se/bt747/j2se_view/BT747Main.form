@@ -145,7 +145,7 @@
                               </Group>
                               <Component id="pnConvert" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="65" max="32767" attributes="0"/>
+                          <EmptySpace pref="86" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -867,7 +867,7 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="pnSeparation" min="-2" max="-2" attributes="2"/>
-                              <Component id="pnVarious" alignment="1" min="-2" pref="280" max="-2" attributes="1"/>
+                              <Component id="pnVarious" alignment="1" min="-2" max="-2" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnFileOutputFields" min="-2" max="-2" attributes="0"/>
@@ -905,178 +905,203 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
+                              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="cbImperialUnits" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="87" max="32767" attributes="0"/>
-                                      <Component id="cbNoFixColor" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="lbTimeZone" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="cbUTCOffset" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="cbStandardOrDaylightSaving" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="cbRecordNumberInfoInLog" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="25" max="32767" attributes="0"/>
-                                      <Component id="cbGoodFixColor" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="cbHeightOverMeanSeaLevel" min="-2" max="-2" attributes="1"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="cbOneFilePerDay" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="lbTimeZone" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbUTCOffset" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbStandardOrDaylightSaving" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="cbHeightOverMeanSeaLevel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbOneFilePerDay" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="cbRecordNumberInfoInLog" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbGoodFixColor" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="cbNoFixColor" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbImperialUnits" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jPanel3" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JComboBox" name="cbOneFilePerDay">
-                      <Properties>
-                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="3">
-                            <StringItem index="0" value="One file per day"/>
-                            <StringItem index="1" value="One file per track"/>
-                            <StringItem index="2" value="Everything in one file"/>
-                          </StringArray>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbOneFilePerDayFocusLost"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="lbTimeZone">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="TimeZone"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JComboBox" name="cbUTCOffset">
-                      <Properties>
-                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="25">
-                            <StringItem index="0" value="UTC -12"/>
-                            <StringItem index="1" value="UTC -11"/>
-                            <StringItem index="2" value="UTC -10"/>
-                            <StringItem index="3" value="UTC -9"/>
-                            <StringItem index="4" value="UTC -8"/>
-                            <StringItem index="5" value="UTC -7"/>
-                            <StringItem index="6" value="UTC -6"/>
-                            <StringItem index="7" value="UTC -5"/>
-                            <StringItem index="8" value="UTC -4"/>
-                            <StringItem index="9" value="UTC -3"/>
-                            <StringItem index="10" value="UTC -2"/>
-                            <StringItem index="11" value="UTC -1"/>
-                            <StringItem index="12" value="UTC +0"/>
-                            <StringItem index="13" value="UTC +1"/>
-                            <StringItem index="14" value="UTC +2"/>
-                            <StringItem index="15" value="UTC +3"/>
-                            <StringItem index="16" value="UTC +4"/>
-                            <StringItem index="17" value="UTC +5"/>
-                            <StringItem index="18" value="UTC +6"/>
-                            <StringItem index="19" value="UTC +7"/>
-                            <StringItem index="20" value="UTC +8"/>
-                            <StringItem index="21" value="UTC +9"/>
-                            <StringItem index="22" value="UTC +10"/>
-                            <StringItem index="23" value="UTC +11"/>
-                            <StringItem index="24" value="UTC +12"/>
-                          </StringArray>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbUTCOffsetFocusLost"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JComboBox" name="cbStandardOrDaylightSaving">
-                      <Properties>
-                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="2">
-                            <StringItem index="0" value="Standard Time"/>
-                            <StringItem index="1" value="Daylight Savings Time"/>
-                          </StringArray>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbStandardOrDaylightSavingFocusLost"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JComboBox" name="cbHeightOverMeanSeaLevel">
-                      <Properties>
-                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="2">
-                            <StringItem index="0" value="Keep WGS84 height"/>
-                            <StringItem index="1" value="MSL height"/>
-                          </StringArray>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbHeightOverMeanSeaLevelFocusLost"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JCheckBox" name="cbRecordNumberInfoInLog">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="RecordNumberInfoInLog"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbRecordNumberInfoInLogFocusLost"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="cbGoodFixColor">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Good Color"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbGoodFixColorActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="cbNoFixColor">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Bad Color"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbNoFixColorActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JCheckBox" name="cbImperialUnits">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="ImperialUnits"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbImperialUnitsFocusLost"/>
-                      </Events>
-                    </Component>
+                    <Container class="javax.swing.JPanel" name="jPanel1">
+
+                      <Layout>
+                        <DimensionLayout dim="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                                  <Group type="103" alignment="1" groupAlignment="1" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="lbTimeZone" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="cbUTCOffset" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="cbHeightOverMeanSeaLevel" alignment="0" min="-2" max="-2" attributes="1"/>
+                                  </Group>
+                                  <Component id="cbRecordNumberInfoInLog" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="cbImperialUnits" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                        </DimensionLayout>
+                        <DimensionLayout dim="1">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="cbUTCOffset" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbTimeZone" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cbHeightOverMeanSeaLevel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cbRecordNumberInfoInLog" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cbImperialUnits" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                      </Layout>
+                      <SubComponents>
+                        <Component class="javax.swing.JComboBox" name="cbUTCOffset">
+                          <Properties>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                              <StringArray count="25">
+                                <StringItem index="0" value="UTC -12"/>
+                                <StringItem index="1" value="UTC -11"/>
+                                <StringItem index="2" value="UTC -10"/>
+                                <StringItem index="3" value="UTC -9"/>
+                                <StringItem index="4" value="UTC -8"/>
+                                <StringItem index="5" value="UTC -7"/>
+                                <StringItem index="6" value="UTC -6"/>
+                                <StringItem index="7" value="UTC -5"/>
+                                <StringItem index="8" value="UTC -4"/>
+                                <StringItem index="9" value="UTC -3"/>
+                                <StringItem index="10" value="UTC -2"/>
+                                <StringItem index="11" value="UTC -1"/>
+                                <StringItem index="12" value="UTC +0"/>
+                                <StringItem index="13" value="UTC +1"/>
+                                <StringItem index="14" value="UTC +2"/>
+                                <StringItem index="15" value="UTC +3"/>
+                                <StringItem index="16" value="UTC +4"/>
+                                <StringItem index="17" value="UTC +5"/>
+                                <StringItem index="18" value="UTC +6"/>
+                                <StringItem index="19" value="UTC +7"/>
+                                <StringItem index="20" value="UTC +8"/>
+                                <StringItem index="21" value="UTC +9"/>
+                                <StringItem index="22" value="UTC +10"/>
+                                <StringItem index="23" value="UTC +11"/>
+                                <StringItem index="24" value="UTC +12"/>
+                              </StringArray>
+                            </Property>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbUTCOffsetFocusLost"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JComboBox" name="cbHeightOverMeanSeaLevel">
+                          <Properties>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                              <StringArray count="2">
+                                <StringItem index="0" value="Keep WGS84 height"/>
+                                <StringItem index="1" value="MSL height"/>
+                              </StringArray>
+                            </Property>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbHeightOverMeanSeaLevelFocusLost"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JCheckBox" name="cbRecordNumberInfoInLog">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="RecordNumberInfoInLog"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbRecordNumberInfoInLogFocusLost"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JCheckBox" name="cbImperialUnits">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="ImperialUnits"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbImperialUnitsFocusLost"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="lbTimeZone">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="TimeZone"/>
+                          </Properties>
+                        </Component>
+                      </SubComponents>
+                    </Container>
+                    <Container class="javax.swing.JPanel" name="jPanel3">
+
+                      <Layout>
+                        <DimensionLayout dim="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="cbNoFixColor" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbStandardOrDaylightSaving" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbGoodFixColor" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbOneFilePerDay" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                        <DimensionLayout dim="1">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="cbStandardOrDaylightSaving" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cbOneFilePerDay" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cbGoodFixColor" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cbNoFixColor" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                      </Layout>
+                      <SubComponents>
+                        <Component class="javax.swing.JComboBox" name="cbStandardOrDaylightSaving">
+                          <Properties>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                              <StringArray count="2">
+                                <StringItem index="0" value="Standard Time"/>
+                                <StringItem index="1" value="Daylight Savings Time"/>
+                              </StringArray>
+                            </Property>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbStandardOrDaylightSavingFocusLost"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JComboBox" name="cbOneFilePerDay">
+                          <Properties>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                              <StringArray count="3">
+                                <StringItem index="0" value="One file per day"/>
+                                <StringItem index="1" value="One file per track"/>
+                                <StringItem index="2" value="Everything in one file"/>
+                              </StringArray>
+                            </Property>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbOneFilePerDayFocusLost"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JButton" name="cbGoodFixColor">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Good Color"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbGoodFixColorActionPerformed"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JButton" name="cbNoFixColor">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Bad Color"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbNoFixColorActionPerformed"/>
+                          </Events>
+                        </Component>
+                      </SubComponents>
+                    </Container>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="pnSeparation">
@@ -1190,9 +1215,9 @@
                                   <Component id="pnFilePosition" min="-2" max="-2" attributes="1"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jPanel20" min="-2" pref="190" max="-2" attributes="0"/>
+                                  <Component id="jPanel20" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                  <Component id="pnFileReason" max="32767" attributes="1"/>
+                                  <Component id="pnFileReason" min="-2" max="-2" attributes="1"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1389,18 +1414,14 @@
                                       <Component id="pnFilePrecision" min="-2" max="-2" attributes="1"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="pnFileSatInfo" min="-2" max="-2" attributes="1"/>
+                                      <EmptySpace max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                             </DimensionLayout>
                             <DimensionLayout dim="1">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="pnFilePrecision" alignment="0" min="-2" max="-2" attributes="1"/>
-                                          <Component id="pnFileSatInfo" alignment="0" min="-2" max="-2" attributes="1"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="pnFilePrecision" min="-2" max="-2" attributes="1"/>
+                                  <Component id="pnFileSatInfo" alignment="0" min="-2" max="-2" attributes="1"/>
                               </Group>
                             </DimensionLayout>
                           </Layout>
@@ -1600,7 +1621,7 @@
                           <Component id="pnCommonFilter" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnWaypoint" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="31" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -2771,7 +2792,7 @@
                           <Component id="pnLogFormat" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel8" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="161" max="32767" attributes="0"/>
+                          <EmptySpace pref="182" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -3835,7 +3856,7 @@
                           <Component id="pnFlashSettings" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnNMEAOutput" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="388" max="32767" attributes="0"/>
+                          <EmptySpace pref="409" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -5102,7 +5123,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="808" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="829" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -5134,7 +5155,7 @@
                         <Property name="columns" type="int" value="20"/>
                         <Property name="lineWrap" type="boolean" value="true"/>
                         <Property name="rows" type="int" value="5"/>
-                        <Property name="text" type="java.lang.String" value="This interface is experimental (under development &amp; discussion).&#xa;It is mostly functional and does provide some features not available in the usual (PDA-like) interface.&#xa;For example, it may be able to download and convert logs from PhotoTrackr / DPL700 / ITrackU devices (the raw log file should have &apos;.sr&apos; extension)"/>
+                        <Property name="text" type="java.lang.String" value="This interface is experimental (under development &amp; discussion).&#xa;It is mostly functional and does provide some features not available in the usual (PDA-like) interface.&#xa;For example, it may be able to download and convert logs from PhotoTrackr / DPL700 / ITrackU devices (the raw log file should have &apos;.sr&apos; extension)&#xa;------------------------------------------------&#xa;"/>
                         <Property name="autoscrolls" type="boolean" value="false"/>
                         <Property name="focusable" type="boolean" value="false"/>
                         <Property name="opaque" type="boolean" value="false"/>
@@ -5160,7 +5181,7 @@
                   <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
                   <Component id="DownloadProgressLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="DownloadProgressBar" pref="340" max="32767" attributes="0"/>
+                  <Component id="DownloadProgressBar" pref="361" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>

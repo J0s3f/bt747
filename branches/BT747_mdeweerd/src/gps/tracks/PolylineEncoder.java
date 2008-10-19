@@ -10,8 +10,9 @@
 package gps.tracks;
 
 import bt747.sys.Convert;
-import bt747.sys.Hashtable;
-import bt747.sys.Vector;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747Vector;
 
 public final class PolylineEncoder {
 
@@ -25,7 +26,7 @@ public final class PolylineEncoder {
 
     private final double[] zoomLevelBreaks;
 
-    private Hashtable bounds;
+    private BT747Hashtable bounds;
 
     // constructor
     public PolylineEncoder(final int pNumLevels, final int pZoomFactor,
@@ -82,9 +83,9 @@ public final class PolylineEncoder {
      * @return [EncodedPoints;EncodedLevels]
      * 
      */
-    public final Hashtable dpEncode(final Track track) {
+    public final BT747Hashtable dpEncode(final Track track) {
         int i, maxLoc = 0;
-        Vector stack = new Vector();
+        BT747Vector stack = Interface.getVectorInstance();
         double[] dists = new double[track.getTrackpoints().size()];
         double maxDist, absMaxDist = 0.0, temp = 0.0;
         int[] current;
@@ -132,7 +133,7 @@ public final class PolylineEncoder {
         encodedLevels = encodeLevels(track, dists, absMaxDist);
         // System.out.println("encodedLevels: " + encodedLevels);
 
-        Hashtable hm = new Hashtable(0);
+        BT747Hashtable hm = Interface.getHashtableInstance(0);
         hm.put("encodedPoints", encodedPoints);
         hm.put("encodedLevels", encodedLevels);
         return hm;
@@ -392,7 +393,7 @@ public final class PolylineEncoder {
             }
         }
 
-        Hashtable lbounds = new Hashtable(0);
+        BT747Hashtable lbounds = Interface.getHashtableInstance(0);
         lbounds.put("maxlat", Convert.toString(maxlat));
         lbounds.put("minlat", Convert.toString(minlat));
         lbounds.put("maxlon", Convert.toString(maxlon));
@@ -402,14 +403,14 @@ public final class PolylineEncoder {
         return encodedPoints.toString();
     }
 
-    private final void setBounds(final Hashtable pbounds) {
+    private final void setBounds(final BT747Hashtable pbounds) {
         this.bounds = pbounds;
     }
 
-    public final Hashtable createEncodings(final Track track, final int level,
+    public final BT747Hashtable createEncodings(final Track track, final int level,
             final int step) {
 
-        Hashtable resultMap = new Hashtable(0);
+        BT747Hashtable resultMap = Interface.getHashtableInstance(0);
         StringBuffer encodedPoints = new StringBuffer();
         StringBuffer encodedLevels = new StringBuffer();
 
@@ -450,7 +451,7 @@ public final class PolylineEncoder {
         return resultMap;
     }
 
-    public final Hashtable getBounds() {
+    public final BT747Hashtable getBounds() {
         return bounds;
     }
 }

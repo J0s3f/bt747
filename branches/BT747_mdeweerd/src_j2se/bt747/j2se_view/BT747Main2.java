@@ -31,6 +31,7 @@ import bt747.Txt;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * 
@@ -116,7 +117,7 @@ public class BT747Main2 extends javax.swing.JFrame implements
             // TimeStr=x.toString();
             // x.setTime(gps.utc*1000L);
             // System.out.println(TimeStr);
-            bt747.sys.Time t = new bt747.sys.Time();
+            BT747Time t = Interface.getTimeInstance();
             t.setUTCTime(gps.utc);
             TimeStr =
             // String.valueOf(t.getYear())+"/"

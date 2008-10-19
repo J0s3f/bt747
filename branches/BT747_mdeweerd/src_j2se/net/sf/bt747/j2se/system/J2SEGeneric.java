@@ -6,16 +6,11 @@
  */
 package net.sf.bt747.j2se.system;
 
-import gps.GPSListener;
-import gps.GpsEvent;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Iterator;
-
-import javax.swing.event.EventListenerList;
 
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Thread;
@@ -129,11 +124,11 @@ public final class J2SEGeneric {
     private static final HashSet<J2SEMessageListener> listeners = new HashSet<J2SEMessageListener>();
 
     /** add a listener to event thrown by this class */
-    public static void addListener(final J2SEMessageListener l) {
+    public static final void addListener(final J2SEMessageListener l) {
         listeners.add(l);
     }
 
-    public static void removeListener(final J2SEMessageListener l) {
+    public static final void removeListener(final J2SEMessageListener l) {
         listeners.remove(l);
     }
 

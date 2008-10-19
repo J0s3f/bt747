@@ -17,6 +17,7 @@ package net.sf.bt747.j2se.system;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 import bt747.sys.Settings;
@@ -29,12 +30,14 @@ import bt747.sys.interfaces.BT747Date;
  * Preferences - Java - Code Style - Code Templates
  */
 public final class J2SEDate implements BT747Date {
+    private final Calendar cal = Calendar.getInstance(GMT_ZONE);
+
     static private final SimpleDateFormat FORMAT_YYYYMMDD = new SimpleDateFormat(
             "yyyy/MM/dd");
     static private final SimpleDateFormat FORMAT_DDMMYYYY = new SimpleDateFormat(
             "dd/MM/yyyy");
     static private final TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
-    private final Calendar cal = Calendar.getInstance();
+    static private final Date INIT_DATE = new Date(0);
 
     /**
      * Calendar cal = Calendar.getInstance();
@@ -45,14 +48,16 @@ public final class J2SEDate implements BT747Date {
      * 
      */
     public J2SEDate() {
-        init();
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);
     }
 
     /**
      * @param sentDate
      */
     public J2SEDate(int sentDate) {
-        init();
         cal.set(sentDate / 10000, sentDate / 100 % 100 - 1, sentDate % 100,
                 0, 0, 0);
     }
@@ -63,7 +68,6 @@ public final class J2SEDate implements BT747Date {
      * @param sentYear
      */
     public J2SEDate(int sentDay, int sentMonth, int sentYear) {
-        init();
         cal.set(sentYear, sentMonth - 1, sentDay, 0, 0, 0);
     }
 
@@ -79,7 +83,6 @@ public final class J2SEDate implements BT747Date {
      * @param dateFormat
      */
     public J2SEDate(String strDate, byte dateFormat) {
-        init();
         DateFormat df;
         if (dateFormat == Settings.DATE_YMD) {
             df = FORMAT_YYYYMMDD;
@@ -93,10 +96,6 @@ public final class J2SEDate implements BT747Date {
             // TODO: handle exception
             e.printStackTrace();
         }
-    }
-
-    private void init() {
-        cal.setTimeZone(GMT_ZONE);
     }
 
     /**

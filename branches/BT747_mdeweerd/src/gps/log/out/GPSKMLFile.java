@@ -133,9 +133,12 @@ public final class GPSKMLFile extends GPSFile {
         trackName = name;
         header.append(
               "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
-            + "<kml xmlns=\"http://schemas.opengis.net/kml/2.2.0\""
-            + " xmlns:atom=\"http://www.w3.org/2005/Atom\">\r\n"
-            + "<Document>\r\n"
+            //+ "<kml xmlns=\"http://schemas.opengis.net/kml/2.2.0\""
+            // opengis was not understood by google maps
+            + "<kml xmlns=\"http://earth.google.com/kml/2.2\""
+            + " >\r\n"
+            + "<Document"
+            + " xmlns:atom=\"http://www.w3.org/2005/Atom\" >\r\n"
             + "<atom:generator uri=\"http://sf.net/projects/bt747\" "
             + "version=\""
             + Version.VERSION_NUMBER
@@ -204,11 +207,18 @@ public final class GPSKMLFile extends GPSFile {
                     + "</name>\r\n"
                     + "      <open>0</open>\r\n" + "\r\n";
         } else {
+            String color;
+            if(goodTrackColor.length()==6) {
+                color = goodTrackColor.substring(4) + goodTrackColor.substring(2,4)
+                + goodTrackColor.substring(0,2);
+            } else {
+                color = "FFFFFF";
+            }
             header = "  <Folder>\r\n" + "  <name>My Tracks</name>\r\n"
                     + "  <open>0</open>\r\n" + "  <Placemark>\r\n"
                     + "    <name>Track-" + trackName + "</name>\r\n"
                     + "    <Style>\r\n" + "      <LineStyle>\r\n"
-                    + "        <color>ffff0000</color>\r\n"
+                    + "        <color>ff" + color + "</color>\r\n"
                     + "        <width>3.0</width>\r\n"
                     + "      </LineStyle>\r\n" + "    </Style>\r\n"
                     + "    <LineString>\r\n" + "    <extrude>1</extrude>\r\n"

@@ -14,12 +14,12 @@
 //***  *********************************************************** ***
 package gps.log.in;
 
-import bt747.sys.Convert;
-import bt747.sys.Date;
-import bt747.sys.Generic;
-
 import gps.BT747Constants;
 import gps.log.GPSRecord;
+
+import bt747.sys.Convert;
+import bt747.sys.Generic;
+import bt747.sys.Interface;
 
 public final class CommonIn {
     /**
@@ -153,7 +153,7 @@ public final class CommonIn {
         int day = dateInt / 10000;
         int month = (dateInt / 100) % 100;
         int year = dateInt % 100 + 2000;
-        setDate(gpsRec, (new Date(day, month, year)).dateToUTCepoch1970());
+        setDate(gpsRec, (Interface.getDateInstance(day, month, year)).dateToUTCepoch1970());
     }
 
     private static final void setLatitude(final GPSRecord gpsRec,

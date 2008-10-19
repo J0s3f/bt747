@@ -22,7 +22,8 @@ import gps.log.GPSRecord;
 import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
-import bt747.sys.Time;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Time;
 import bt747.sys.interfaces.BT747FileName;
 
 /**
@@ -101,7 +102,7 @@ public abstract class GPSFile {
      * The time of the current record as a Time object. This will avoid creating
      * multiple time objects.
      */
-    protected final Time t = new Time();
+    protected final BT747Time t = Interface.getTimeInstance();
 
     protected int previousDate = 0;
     protected int previousTime = 0;

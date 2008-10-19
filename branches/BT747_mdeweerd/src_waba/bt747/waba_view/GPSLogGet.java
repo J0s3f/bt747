@@ -37,7 +37,8 @@ import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
-import bt747.sys.Time;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * @author Mario De Weerd
@@ -95,7 +96,7 @@ public final class GPSLogGet extends Container implements ModelListener {
     }
 
     private static final String convertUTCtoDateString(final int utcTime) {
-        Time t = new Time();
+        BT747Time t = Interface.getTimeInstance();
         String dateString;
         t.setUTCTime(utcTime);
         int day = t.getDay();
