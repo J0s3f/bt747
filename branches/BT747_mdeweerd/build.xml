@@ -452,6 +452,7 @@
                         -keep public class * extends gps.connection.GPSPort { *; }
 			            -keep public class bt747.Version { *; }
             -keep public class net.sf.bt747.j2se.system.J2SEGeneric { public *; }
+			-keep public interface net.sf.bt747.j2se.system.J2SEMessageListener { *; }
             -keep public class bt747.lang.* { public *; }
             -keep public class bt747.Txt
             -keep public interface bt747.sys.interfaces.* {

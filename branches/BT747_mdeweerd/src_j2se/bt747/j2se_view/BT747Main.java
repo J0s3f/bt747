@@ -251,7 +251,6 @@ public class BT747Main extends javax.swing.JFrame implements
      * @see net.sf.bt747.j2se.system.J2SEMessageListener#postMessage(java.lang.String)
      */
     public final void postMessage(final String message) {
-        System.out.println("Got message:"+message);
         synchronized (jTextArea1) {
             jTextArea1.append(message);
         }
