@@ -25,6 +25,17 @@ public final class CommonOut {
     protected static final String[] MONTHS_AS_TEXT = { "JAN", "FEB", "MAR",
             "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
+    
+    public final static String getRCRKey(final String r) {
+        if(r.length()>0 &&r.charAt(0)=='X') {
+            return(r.substring(1));
+        } else if (r.length()>1) {
+            return "M";
+        } else {
+            return r;
+        }
+    }
+    
     public final static void getHtml(final StringBuffer rec, final GPSRecord s,
             final GPSRecord activeFields, final GPSRecord selectedFields,
             final BT747Time t, final boolean recordNbrInLogs, final boolean imperial) {
@@ -39,7 +50,15 @@ public final class CommonOut {
         }
         if ((activeFields.rcr != 0) && (selectedFields.rcr != 0)) {
             rec.append("<br/>RCR: ");
-            rec.append(getRCRstr(s));
+            String rcr = getRCRstr(s);
+            rec.append(rcr);
+            WayPointStyle style;
+            style = wayPointStyles.get(getRCRKey(rcr));
+            if(style!=null) {
+                rec.append(" <b>(");
+                rec.append(style.getDescription());
+                rec.append(")</b>");
+            }
         }
         // if(activeFields.utc!=0) {
         // Time t=utcTime(s.utc);
@@ -241,4 +260,40 @@ public final class CommonOut {
             return ("Unknown mode");
         }
     }
+    
+    /**
+     * Table of records related to icons for waypoints:<br>
+     * id Label URL x y w h
+     * 
+     * The table must at least contain the ids T,D,S,B and M. The other IDs are
+     * related to application/user specific way points and must be the hex
+     * representation: 0102 for instance.
+     */
+    
+    private static final String[][] IconStyles = {
+            { "T", "TimeStamp", "http://maps.google.com/mapfiles/kml/paddle/T.png" },
+            { "D", "DistanceStamp", "http://maps.google.com/mapfiles/kml/paddle/D.png" },
+            { "S", "SpeedStamp", "http://maps.google.com/mapfiles/kml/paddle/S.png" },
+            { "B", "ButtonStamp", "http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png" },
+            { "M", "MixStamp", "http://maps.google.com/mapfiles/kml/paddle/M.png" },
+            // { "0001", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
+            // { "0002", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
+            // { "0004", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
+            // { "0008", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
+            { "0010", "Picture", "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
+            { "0020", "Gaz Station", "http://maps.google.com/mapfiles/kml/shapes/gas_stations.png" },
+            { "0040", "Phone Booth", "http://maps.google.com/mapfiles/kml/shapes/phone.png" },
+            { "0080", "ATM", "http://maps.google.com/mapfiles/kml/shapes/euro.png" },
+            { "0100", "Bus Stop", "http://maps.google.com/mapfiles/kml/shapes/bus.png" },
+            { "0200", "Parking", "http://maps.google.com/mapfiles/kml/shapes/parking_lot.png" },
+            { "0400", "Post Box", "http://maps.google.com/mapfiles/kml/shapes/post_office.png" },
+            { "0800", "Railway", "http://maps.google.com/mapfiles/kml/shapes/rail.png" },
+            { "1000", "Restaurant", "http://maps.google.com/mapfiles/kml/shapes/dining.png" },
+            { "2000", "Bridge", "http://maps.google.com/mapfiles/kml/shapes/water.png" },
+            { "4000", "View", "http://maps.google.com/mapfiles/kml/shapes/flag.png" },
+            { "8000", "Other", "http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png" },
+    };
+    
+    public final static WayPointStyleSet wayPointStyles = new WayPointStyleSet(IconStyles); 
+
 }

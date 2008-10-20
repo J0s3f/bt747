@@ -90,39 +90,6 @@ public final class GPSKMLFile extends GPSFile {
             return false;
         }
     }
-
-    /**
-     * Table of records related to icons for waypoints:<br>
-     * id Label URL x y w h
-     * 
-     * The table must at least contain the ids T,D,S,B and M. The other IDs are
-     * related to application/user specific way points and must be the hex
-     * representation: 0102 for instance.
-     */
-    
-    private final String[][] IconStyles = {
-            { "T", "TimeStamp", "http://maps.google.com/mapfiles/kml/paddle/T.png" },
-            { "D", "DistanceStamp", "http://maps.google.com/mapfiles/kml/paddle/D.png", "" },
-            { "S", "SpeedStamp", "http://maps.google.com/mapfiles/kml/paddle/S.png" },
-            { "B", "ButtonStamp", "http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png" },
-            { "M", "MixStamp", "http://maps.google.com/mapfiles/kml/paddle/M.png" },
-            // { "0001", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
-            // { "0002", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
-            // { "0004", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
-            // { "0008", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
-            { "0010", "Picture", "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
-            { "0020", "Gaz Station", "http://maps.google.com/mapfiles/kml/shapes/gas_stations.png" },
-            { "0040", "Phone Booth", "http://maps.google.com/mapfiles/kml/shapes/phone.png" },
-            { "0080", "ATM", "http://maps.google.com/mapfiles/kml/shapes/euro.png" },
-            { "0100", "Bus Stop", "http://maps.google.com/mapfiles/kml/shapes/bus.png" },
-            { "0200", "Parking", "http://maps.google.com/mapfiles/kml/shapes/parking_lot.png" },
-            { "0400", "Post Box", "http://maps.google.com/mapfiles/kml/shapes/post_office.png" },
-            { "0800", "Railway", "http://maps.google.com/mapfiles/kml/shapes/rail.png" },
-            { "1000", "Restaurant", "http://maps.google.com/mapfiles/kml/shapes/dining.png", },
-            { "2000", "Bridge", "http://maps.google.com/mapfiles/kml/shapes/water.png" },
-            { "4000", "View", "http://maps.google.com/mapfiles/kml/shapes/flag.png" },
-            { "8000", "Other", "http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png" },
-    };
     
 
     /* (non-Javadoc)
@@ -152,37 +119,40 @@ public final class GPSKMLFile extends GPSFile {
             + "  <open>1</open>\r\n"
             );
         
-        for(int i=0;i<IconStyles.length;i++) {
-            for(int j=0;j<2;j++ ) {
-            header.append(
-              "  <Style id=\"Style" + IconStyles[i][0] + j + "\">\r\n"
-            + "    <IconStyle>\r\n"
-            + "      <Icon>\r\n"
-            + "        <href>" + IconStyles[i][2] + "</href>\r\n"
-            +  "      </Icon>\r\n"
-            + "    </IconStyle>\r\n"
-            + "    <LabelStyle>\r\n"
-            + "      <scale>" + j + "</scale>\r\n"
-            + "    </LabelStyle>\r\n"
-            + "  </Style>\r\n");
+        WayPointStyleSet iter;
+        iter = CommonOut.wayPointStyles.iterator();
+        while (iter.hasNext()) {
+            WayPointStyle style = iter.next();
+            for (int j = 0; j < 2; j++) {
+                header.append("  <Style id=\"Style" + style.getKey() + j
+                        + "\">\r\n" + "    <IconStyle>\r\n"
+                        + "      <Icon>\r\n" + "        <href>"
+                        + style.getIconUrl() + "</href>\r\n"
+                        + "      </Icon>\r\n" + "    </IconStyle>\r\n"
+                        + "    <LabelStyle>\r\n" + "      <scale>" + j
+                        + "</scale>\r\n" + "    </LabelStyle>\r\n"
+                        + "  </Style>\r\n");
             }
         }
 
-        for(int i=0;i<IconStyles.length;i++) {
+
+        iter = CommonOut.wayPointStyles.iterator();
+        while (iter.hasNext()) {
+            WayPointStyle style = iter.next();
             String x = "";
-            if (IconStyles[i][0].length() > 1) {
+            if (style.getKey().length() > 1) {
                 x = "X";
             }
             header.append(
-                       "  <StyleMap id=\"Style" + x
-                    +  IconStyles[i][0]+"\">\r\n"
+                       "  <StyleMap id=\"Style" + x + style.getKey()
+                    + "\">\r\n"
                     + "    <Pair>\r\n"
                     + "      <key>normal</key>\r\n"
-                    + "      <styleUrl>#Style" + IconStyles[i][0] + "0</styleUrl>\r\n"
+                    + "      <styleUrl>#Style" + style.getKey() + "0</styleUrl>\r\n"
                     + "    </Pair>\r\n"
                     + "    <Pair>\r\n"
                     + "      <key>highlight</key>\r\n"
-                    + "      <styleUrl>#Style" + IconStyles[i][0] + "1</styleUrl>\r\n"
+                    + "      <styleUrl>#Style" + style.getKey() + "1</styleUrl>\r\n"
                     + "    </Pair>\r\n"
                     + "  </StyleMap>\r\n"
                     );
