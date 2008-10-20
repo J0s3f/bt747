@@ -94,9 +94,6 @@ public final class J2SEGeneric {
     }
 
     public static void debug(final String s, final Throwable e) {
-        System.out.println("Listeners.size"+listeners.size());
-        System.out.println("Listeners empty "+listeners.isEmpty());
-        System.out.println("Listeners  " + listeners);
         if (listeners.isEmpty()) {
             System.out.println(s);
             if (e != null) {
@@ -111,16 +108,14 @@ public final class J2SEGeneric {
             }
             String message = result.toString();
 
-            System.out.print(message);
+            System.out.println(message);
 
-            System.out.println("Listeners.size"+listeners.size());
-            System.out.println("Listeners empty "+listeners.isEmpty());
-            System.out.println("Listeners  " + listeners);
             Iterator<J2SEMessageListener> it = listeners.iterator();
-            System.out.println("hasNext  " + it.hasNext());
             while (it.hasNext()) {
                 try {
-                    it.next().postMessage(message);
+                    J2SEMessageListener l;
+                    l = it.next();
+                    l.postMessage(message);
                 } catch (Exception ee) {
                     ee.printStackTrace();
                 }
@@ -129,16 +124,10 @@ public final class J2SEGeneric {
     }
 
     private static final HashSet<J2SEMessageListener> listeners = new HashSet<J2SEMessageListener>();
-    private static final Object n = new Object();
 
     /** add a listener to event thrown by this class */
     public static final void addListener(final J2SEMessageListener l) {
-        System.out.print("add listener to ");
-        System.out.println(n);
         listeners.add(l);
-        System.out.println("Listeners.size"+listeners.size());
-        System.out.println("Listeners empty "+listeners.isEmpty());
-        System.out.println("Listeners  " + listeners);
     }
 
     public static final void removeListener(final J2SEMessageListener l) {
