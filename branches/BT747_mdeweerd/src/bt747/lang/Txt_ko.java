@@ -123,9 +123,9 @@ public class Txt_ko {
     // BT747_dev class
     public static final String[]C_STR_RCR = {
             "\uC2DC\uAC04", "\uC18D\uB3C4", "\uAC70\uB9AC", "\uBC84\uD2BC",
-            "App1","App2","App3","App4",
-            "App5","App6","App7","App8",
-            "App9","AppX","AppY","AppZ"
+            "Picture", "Gas Stat", "Phone", "ATM",
+            "Bus stop", "Parking", "Post Box", "Railway",
+            "Rstaurnt", "Bridge", "View", "Other"
             };
     public static final String [] logFmtItems = {
         "UTC",      // = 0x00001    // 0

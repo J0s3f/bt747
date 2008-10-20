@@ -148,9 +148,9 @@ public class Txt_fr {
     // BT747_dev class
     public static final String[]C_STR_RCR = {
             "Temps", "Vitesse", "Distance", "Bouton",
-            "App1","App2","App3","App4",
-            "App5","App6","App7","App8",
-            "App9","AppX","AppY","AppZ"
+            "Photo", "Essence", "Téléph", "CB",
+            "ArrêtBus", "Parking", "Poste", "Train",
+            "Resto", "Pont", "Vue", "Autre"
             };
     public static final String [] logFmtItems = {
         "UTC",      // = 0x00001    // 0

@@ -133,9 +133,9 @@ public class Txt_jp {
     // BT747_dev class
     public static final String[]C_STR_RCR = {
             "\u6642\u9593", "\u901F\u5EA6", "\u8DDD\u96E2", "\u30DC\u30BF\u30F3",
-            "App1","App2","App3","App4",
-            "App5","App6","App7","App8",
-            "App9","AppX","AppY","AppZ"
+            "Picture", "Gas Stat", "Phone", "ATM",
+            "Bus stop", "Parking", "Post Box", "Railway",
+            "Rstaurnt", "Bridge", "View", "Other"
             };
     public static final String [] logFmtItems = {
         "\u6642\u9593",      // = 0x00001    // 0

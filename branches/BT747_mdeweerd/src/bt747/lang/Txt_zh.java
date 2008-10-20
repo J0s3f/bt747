@@ -133,9 +133,9 @@ public class Txt_zh {
 //     BT747_dev\u7C7B
     public static final String[]C_STR_RCR = {
     "\u65F6\u95F4", "\u901F\u5EA6", "\u8DDD\u79BB", "\u6309\u94AE",
-    "App1", "App2", "App3", "App4",
-    "App5", "App6", "App7", "App8",
-    "App9", "AppX", "AppY", "AppZ"
+    "Picture", "Gas Stat", "Phone", "ATM",
+    "Bus stop", "Parking", "Post Box", "Railway",
+    "Rstaurnt", "Bridge", "View", "Other"
     };
     public static final String  [] logFmtItems = {
     "UTC", // = 0x00001 // 0

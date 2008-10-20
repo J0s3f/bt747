@@ -139,13 +139,12 @@ public class Txt_en {
     public static final String STANDARD = "Standard";
     public static final String ADVANCED = "Advanced";
 
-    
     // BT747_dev class
     public static final String[]C_STR_RCR = {
             "Time", "Speed", "Distance", "Button",
-            "App0","App1","App2","App3",
-            "App4","App5","App6","App7",
-            "App8","App9","AppY","AppZ"
+            "Picture", "Gas Stat", "Phone", "ATM",
+            "Bus stop", "Parking", "Post Box", "Railway",
+            "Rstaurnt", "Bridge", "View", "Other"
             };
     public static final String [] logFmtItems = {
         "UTC",      // = 0x00001    // 0

@@ -109,8 +109,12 @@ public class Txt_nl {
 
     // BT747_dev class
     public static final String[] C_STR_RCR = { "Tijd", "Snelheid", "Afstand",
-            "Knop", "App1", "App2", "App3", "App4", "App5", "App6", "App7",
-            "App8", "App9", "AppX", "AppY", "AppZ" };
+            "Knop",
+            "Foto", "Benzine", "Telefoon", "Geld",
+            "Bushalte", "Parking", "Postbus", "Trein",
+            "Rstaurnt", "Brug", "Zicht", "Andere"
+ 
+            };
     public static final String[] logFmtItems = { "TIJD (UTC)", // = 0x00001 //
             // 0
             "GELDIG", // = 0x00002 // 1
