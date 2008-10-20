@@ -65,7 +65,7 @@ public final class J2MEDate implements BT747Date {
      * Constructor - default date.
      */
     public J2MEDate() {
-        date = new java.util.Date();
+        date = new java.util.Date(System.currentTimeMillis()/(1000*24*60*60));
     }
 
     /**
