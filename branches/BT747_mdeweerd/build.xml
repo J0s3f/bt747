@@ -304,12 +304,14 @@
 		       debug="${java.debug}"
 		       classpathref="j2seclasspath"
 		       encoding="iso-8859-15"
+			
 		>
 			<include name="bt747/j2se_view/BT747Main.java" />
             <include name="bt747/j2se_view/BT747cmd.java" />
 			<include name="bt747/lang/Txt_en.java" />
 			<exclude name="bt747/waba_view/**" />
 			<exclude name="net/sf/net/bt747/waba/**" />
+			<compilerarg line="-Xlint:unchecked"/>
 		</javac>
 
 		<!--
@@ -425,6 +427,7 @@
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
 			/>
+             	        -printmapping ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.map
                         -injar ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}_unopt.jar
 			             (!BT747.class,
                           !net/sf/bt747/waba/**,
@@ -588,16 +591,13 @@
                 -keep public interface bt747.interfaces.* {
 			        public *;
 			    }
-            -keep public class bt747.interfaces.* {
-                public *;
-            }
+		        -keep public class net.sf.bt747.j2se.system.J2SEGeneric { public *; }
     			-keep public class BT747
  		        -keep public class sun.audio.AudioStream
 		        -keep public class bt747.j2se_view.BT747
                 -keepclasseswithmembers public class * {
                     public static void main(java.lang.String[]); }
-	            -keepclasseswithmembers public class * {
-	                public static void main(java.lang.String[]); }
+
             -keep public class bt747.lang.* { public *; }
             -keep public class bt747.Txt
 	        </proguard>

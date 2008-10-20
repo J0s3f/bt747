@@ -107,7 +107,7 @@ public final class GPSRxTxPort extends GPSPort {
         }
 
         closePort();
-
+        
         try {
             if (Generic.isDebug()) {
                 Generic.debug("Info: trying to open " + portStr,null);
@@ -162,11 +162,11 @@ public final class GPSRxTxPort extends GPSPort {
                 portFound = (new File(freeTextPort)).exists();
             }
             for (int i = 0; !portFound && (i < 3); i++) {
-                freeTextPort = "/dev/tty.iBt-GPS-SPPSlave-" + i;
+                freeTextPort = "/dev/tty.iBT-GPS-SPPSlave-" + i;
                 portFound = (new File(freeTextPort)).exists();
             }
             for (int i = 0; !portFound && (i < 3); i++) {
-                freeTextPort = "/dev/tty.iBt-GPS-SPPslave-" + i;
+                freeTextPort = "/dev/tty.iBT-GPS-SPPslave-" + i;
                 portFound = (new File(freeTextPort)).exists();
             }
         }

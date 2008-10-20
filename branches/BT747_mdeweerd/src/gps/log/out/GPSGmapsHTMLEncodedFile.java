@@ -22,7 +22,9 @@ import gps.tracks.Trackpoint;
 
 import bt747.Version;
 import bt747.sys.Convert;
+import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Hashtable;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * Class to write a Google Maps HTML file.
@@ -49,6 +51,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     private String trackOnClickFuncCalls = ""; // Javascript function calls if
     // click.
     private StringBuffer infoHtmls = new StringBuffer(1024);
+    private BT747Vector iconList = Interface.getVectorInstance();
     private String trackStartInfo = "";
     private String trackDescription = "";
 
@@ -78,6 +81,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     private final void resetTrack() {
         track = new Track();
         infoHtmls.setLength(0);
+        iconList.removeAllElements();
     }
 
     public final boolean nextPass() {
@@ -369,11 +373,31 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         trackIndex++;
         resetTrack();
     }
+    
+    private final BT747Hashtable icons = Interface.getHashtableInstance(10); 
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFile#writeDataFooter()
+     */
     protected final void writeDataFooter() {
         if (isWayType) {
             if (track.size() != 0) {
                 rec.setLength(0);
+                rec.append("var baseIcon = new GIcon(G_DEFAULT_ICON);\n" +
+                		"baseIcon.iconSize = new GSize(32, 32);\n");
+                BT747Hashtable iter = icons.iterator();
+                while(iter.hasNext()) {
+                    Object key = iter.next();
+                    rec.append("var ICON");
+                    rec.append((String)key);
+                    rec.append("=new GIcon(baseIcon);");
+                    rec.append("ICON");
+                    rec.append((String)key);
+                    rec.append(".image='");
+                    rec.append((String)iter.get(key));
+                    rec.append("';\n");
+                }
+                
                 rec.append("var markers;markers=[");
                 for (int i = 0; i < track.size(); i++) {
                     rec.append("new GMarker(new GLatLng(");
@@ -384,7 +408,13 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                     rec
                             .append(Convert.toString(track.get(i)
                                     .getLonDouble(), 5));
-                    rec.append(")),");
+                    rec.append(')');
+                    if (((String) iconList.elementAt(i)).length() != 0) {
+                        rec.append(',');
+                        rec.append(iconList.elementAt(i));
+                    }
+            		rec.append("),");
+            		
                 }
                 rec.setCharAt(rec.length() - 1, ']'); // Delete last ','
                 rec.append(";infoHtmls=[");
@@ -453,6 +483,21 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                     }
                     // "points.push(new GPoint(3.11492833333333,45.75697))";
                     // map.addOverlay(new GPolyline(points,"#960000",2,.75));
+                }
+                if(!isWayType && recordIsNeeded(s)) {
+                    // Update map boundaries
+                    if (s.latitude < minlat) {
+                        minlat = s.latitude;
+                    }
+                    if (s.latitude > maxlat) {
+                        maxlat = s.latitude;
+                    }
+                    if (s.longitude < minlon) {
+                        minlon = s.longitude;
+                    }
+                    if (s.longitude > maxlon) {
+                        maxlon = s.longitude;
+                    }
                 }
             } else {
                 // This log item is to be transcribed in the output file.
@@ -535,6 +580,26 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
 
                 if (isWayType) {
                     infoHtmls.append("\"");
+                    String r = CommonOut.getRCRstr(s);
+                    String icon = "";
+                    if(icons.get(r)==null) {
+                        WayPointStyle style;
+                        if(r.length()>0 && r.charAt(0)=='X') {
+                          style = CommonOut.wayPointStyles.get(r.substring(1));
+                        } else if (r.length()>1) {
+                            style = CommonOut.wayPointStyles.get("M");
+                        } else {
+                            style = CommonOut.wayPointStyles.get(r);
+                        }
+                        if(style!=null) {
+                            String url = style.getIconUrl();
+                            icons.put(r, url);
+                            icon = "ICON" + r;
+                        } 
+                    } else {
+                        icon = "ICON" + r;
+                    }
+                    iconList.addElement(icon);
                     CommonOut.getHtml(infoHtmls, s, activeFields,
                             selectedFileFields, t, recordNbrInLogs, imperial);
                     infoHtmls.append("\",\n");

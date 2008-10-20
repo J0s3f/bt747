@@ -163,7 +163,7 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
     }
 
     public final void debug(final String s) {
-        System.out.println(s);
+        debug(s, null);
     }
 
     private static final long appStartTime = System.currentTimeMillis();

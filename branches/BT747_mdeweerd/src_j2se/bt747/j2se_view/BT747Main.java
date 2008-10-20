@@ -14,6 +14,7 @@
 //***  *********************************************************** ***
 package bt747.j2se_view;
 
+import gnu.io.CommPortIdentifier;
 import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
@@ -22,8 +23,10 @@ import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.util.Date;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.swing.InputVerifier;
 import javax.swing.JColorChooser;
@@ -32,6 +35,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import java.util.Enumeration;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
 
@@ -45,6 +49,7 @@ import bt747.model.ModelEvent;
 import bt747.sys.Convert;
 import bt747.sys.Generic;
 import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Time;
 
 /**
@@ -179,9 +184,10 @@ public class BT747Main extends javax.swing.JFrame implements
         BT747Time d;
         d = Interface.getTimeInstance();
         d.setUTCTime(m.getFilterStartTime());
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         // cal.setTimeZone(TimeZone.getTimeZone("GMT"));
         cal.set(d.getYear(), d.getMonth() - 1, d.getDay(),0,0,0);
+//        startDate.getDateEditor().
         startDate.setDate(cal.getTime());
         // startDate.setCalendar(cal);
         d.setUTCTime(m.getFilterEndTime());
@@ -190,8 +196,6 @@ public class BT747Main extends javax.swing.JFrame implements
         cal.set(d.getYear(), d.getMonth() - 1, d.getDay(),0,0,0);
         endDate.setDate(cal.getTime());
         // endDate.setCalendar(cal);
-        // startDate.getCalendar().setTimeZone(TimeZone.getTimeZone("GMT"));
-        // endDate.getCalendar().setTimeZone(TimeZone.getTimeZone("GMT"));
         // TODO: Deactivate debug by default
         c.setDebug(true);
         btGPSDebug.setSelected(Model.isDebug());
@@ -219,17 +223,38 @@ public class BT747Main extends javax.swing.JFrame implements
         updateEstimatedNbrRecords();
         
         getNMEAOutFile();
+        
+        addPortsToGui();
+        
         addWindowListener(this);
         
         J2SEGeneric.addListener(this);
     }
 
     
+    @SuppressWarnings("unchecked")
+    private void addPortsToGui() {
+        try {
+            Enumeration<CommPortIdentifier> list = CommPortIdentifier.getPortIdentifiers();
+            while(list.hasMoreElements()) {
+                CommPortIdentifier iden = list.nextElement();
+                if(iden.getPortType()==CommPortIdentifier.PORT_SERIAL) {
+                    ((javax.swing.DefaultComboBoxModel)cbPortName.getModel()).addElement(iden.getName());
+                }
+            }
+        } catch (Exception e) {
+            Generic.debug("While adding ports", e);
+        }
+    }
+    
     /* (non-Javadoc)
      * @see net.sf.bt747.j2se.system.J2SEMessageListener#postMessage(java.lang.String)
      */
-    public void postMessage(String message) {
-        jTextArea1.append(message);
+    public final void postMessage(final String message) {
+        System.out.println("Got message:"+message);
+        synchronized (jTextArea1) {
+            jTextArea1.append(message);
+        }
     }
 
 
@@ -308,18 +333,27 @@ public class BT747Main extends javax.swing.JFrame implements
      * 
      */
     private void doLogConversion() {
-        long startTime = startDate.getDate().getTime() / 1000;
-        long endTime = endDate.getDate().getTime() / 1000;
-        startTime -= startTime %(24*3600);  // Round to midnight
-        endTime -= (endTime %(24*3600)) - (24*3600-1);      // Round to midnight / End of day
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate.getDate());
+        BT747Date nd = Interface.getDateInstance(
+                cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1
+                        - Calendar.JANUARY, cal.get(Calendar.YEAR));
+        int startTime = nd.dateToUTCepoch1970();
+        cal.setTime(endDate.getDate());
+        nd = Interface.getDateInstance(
+                cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1
+                        - Calendar.JANUARY, cal.get(Calendar.YEAR));
+        int endTime = nd.dateToUTCepoch1970();
+        endTime += (24 * 3600 - 1); // Round to midnight / End of day
         // Offset requested split time
         long offset;
-        offset = (sfTimeSplitHours.getValue()*60 +spTimeSplitMinutes.getValue()-m.getTimeOffsetHours()*60);
+        offset = 60 * (sfTimeSplitHours.getValue() * 60
+                + spTimeSplitMinutes.getValue());
         startTime += offset;
         endTime += offset;
         // Now actually set time filter.
-        c.setStartDate((int) (startTime));
-        c.setEndDate((int) (endTime));
+        c.setFilterStartTime((int) (startTime));
+        c.setFilterEndTime((int) (endTime));
         c.convertLog(selectedFormat);
     }
 

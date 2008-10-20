@@ -359,8 +359,7 @@ public class Controller {
                     .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME));
             for (int i = 0; i < usedFilters.length; i++) {
                 usedFilters[i].setStartTime(m.getFilterStartTime());
-                usedFilters[i].setEndTime(m.getFilterEndTime()
-                        + (SECONDS_PER_DAY - 1));
+                usedFilters[i].setEndTime(m.getFilterEndTime());
             }
             gpsFile.setFilters(usedFilters);
             gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m
@@ -1437,11 +1436,11 @@ public class Controller {
         setBooleanOpt(AppSettings.IS_TRAVERSABLE, b);
     }
 
-    public final void setEndDate(final int d) {
+    public final void setFilterEndTime(final int d) {
         m.setFilterEndTime(d);
     }
 
-    public final void setStartDate(final int d) {
+    public final void setFilterStartTime(final int d) {
         m.setFilterStartTime(d);
     }
 
