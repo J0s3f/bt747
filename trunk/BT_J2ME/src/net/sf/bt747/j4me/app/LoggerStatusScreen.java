@@ -13,7 +13,8 @@ import org.j4me.ui.components.Label;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
-import bt747.sys.Semaphore;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Semaphore;
 
 public final class LoggerStatusScreen extends BT747Dialog implements
         ModelListener, Runnable {
@@ -178,7 +179,7 @@ public final class LoggerStatusScreen extends BT747Dialog implements
         repaint();
     }
 
-    private Semaphore planUpdateLock = new Semaphore(1);
+    private BT747Semaphore planUpdateLock = Interface.getSemaphoreInstance(1);
     private boolean planUpdate = true;
 
     public final void modelEvent(final ModelEvent e) {
