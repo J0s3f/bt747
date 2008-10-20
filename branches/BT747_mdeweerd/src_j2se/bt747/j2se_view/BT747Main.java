@@ -120,6 +120,8 @@ public class BT747Main extends javax.swing.JFrame implements
      * in the GUI.
      */
     private void initAppData() {
+        jTextArea1.setEnabled(true);
+        jTextArea1.setFocusable(true);
         progressBarUpdate();
         getWorkDirPath();
         getRawLogFilePath();
