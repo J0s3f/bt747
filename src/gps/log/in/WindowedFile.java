@@ -78,6 +78,7 @@ public final class WindowedFile {
     public final byte[] fillBuffer(final int newPosition) {
         sanitizeBuffer();
         if (newPosition < currentPosition) {
+            // Initialise pointer, position, ...
             file.close();
             file = null;
             open();
@@ -86,14 +87,13 @@ public final class WindowedFile {
         }
         if (newPosition > currentPosition + bufferFill) {
             // Need to skip bytes
-            int bytesToSkip = newPosition - currentPosition + bufferFill;
+            int bytesToSkip = newPosition - currentPosition - bufferFill;
             do {
                 int bytesToRead = bytesToSkip;
                 if (bytesToRead > bufferSize) {
                     bytesToRead = bufferSize;
                 }
-                file.readBytes(buffer, 0, bytesToRead);
-                bytesToSkip -= bytesToRead;
+                bytesToSkip -= file.readBytes(buffer, 0, bytesToRead);
             } while (bytesToSkip > 0);
         }
         if (newPosition > currentPosition

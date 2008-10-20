@@ -108,7 +108,7 @@ public final class J2SEGeneric {
             }
             String message = result.toString();
 
-            System.out.println(message);
+            System.out.print(message);
 
             Iterator<J2SEMessageListener> it = listeners.iterator();
             while (it.hasNext()) {

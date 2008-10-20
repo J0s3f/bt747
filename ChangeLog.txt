@@ -1,8 +1,15 @@
+Version 1.59.7 (since 1.57.5)
+* Many internal changes to make the code structure better overall.
+* Special way points added in KML and HTML output.
+* Download will not start until output command buffer is handled.
+* J2SE interface pretty much implemented.
+* Fix for incremental (smart) download.
+
 Version 1.57.5
 * Command line interface well advanced.
 
 Version 1.57.3
-* Refactered NMEA string handling in GPSstate, NMEA file read which also
+* Refactored NMEA string handling in GPSstate, NMEA file read which also
   fixes bug regarding speed conversion in GPSstate.
 * Added J2SE actionlisteners so that the appropriate code can be added to
   finish this GUI.

@@ -65,12 +65,20 @@ final class MTKLogDownloadHandler {
 
     private static final int C_LOG_ERASE_STATE = 4;
 
+    /**
+     * The log download must start, but we are waiting until all commands are
+     * sent.
+     */
+    private static final int C_LOG_START = 5;
+
     /** Timeout between log status requests for erase. */
     private static final int C_LOGERASE_TIMEOUT = 2000;
 
-    protected MTKLogDownloadHandler(final GPSstate gpsState) {
-        this.gpsState = gpsState;
+    protected MTKLogDownloadHandler(final GPSstate state) {
+        this.gpsState = state;
     }
+
+    private boolean incremental = true;
 
     /**
      * Initialise the log download.
@@ -89,36 +97,45 @@ final class MTKLogDownloadHandler {
     protected final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
             final boolean isIncremental) {
+        if (logState == C_LOG_NOLOGGING) {
+            // Disable device logging while downloading to improve
+            // performance.
+            loggingIsActiveBeforeDownload = gpsState.isLoggingActive();
+            gpsState.stopLog();
+            gpsState.reqLogOnOffStatus();
+        }
+
+        // Start address
+        logDownloadStartAddr = startAddr;
+        // Round end address to end of block
+        logDownloadEndAddr = ((endAddr + 0xFFFF) & 0xFFFF0000) - 1;
+        // Next address to request from device is start address.
+        logNextReqAddr = logDownloadStartAddr;
+        // Next address expected from device is start address.
+        logNextReadAddr = logDownloadStartAddr;
+        // The size of each individual request.
+        logRequestStep = requestStep;
+
+        if (logRequestStep > 0x800) {
+            // Not requesting anything ahead of time is individual size is
+            // big.
+            usedLogRequestAhead = 0;
+        } else {
+            // The request pipeline is as set by the user.
+            usedLogRequestAhead = logRequestAhead;
+        }
+
+        logFileName = fileName;
+        logFileCard = card;
+        
+        incremental = isIncremental;
+        
+        logState = C_LOG_START;
+    }
+
+    private final void realDownloadStart() {
         try {
-            if (logState == C_LOG_NOLOGGING) {
-                // Disable device logging while downloading to improve
-                // performance.
-                loggingIsActiveBeforeDownload = gpsState.isLoggingActive();
-                gpsState.stopLog();
-                gpsState.reqLogOnOffStatus();
-            }
-
-            // Start address
-            logDownloadStartAddr = startAddr;
-            // Round end address to end of block
-            logDownloadEndAddr = ((endAddr + 0xFFFF) & 0xFFFF0000) - 1;
-            // Next address to request from device is start address.
-            logNextReqAddr = logDownloadStartAddr;
-            // Next address expected from device is start address.
-            logNextReadAddr = logDownloadStartAddr;
-            // The size of each individual request.
-            logRequestStep = requestStep;
-
-            if (logRequestStep > 0x800) {
-                // Not requesting anything ahead of time is individual size is
-                // big.
-                usedLogRequestAhead = 0;
-            } else {
-                // The request pipeline is as set by the user.
-                usedLogRequestAhead = logRequestAhead;
-            }
-
-            if (isIncremental && (new File(fileName)).exists()) {
+            if (incremental && (new File(logFileName)).exists()) {
                 /**
                  * File already exists and incremental download requested.
                  * Checking if the content is the same.
@@ -128,8 +145,6 @@ final class MTKLogDownloadHandler {
                 closeLog();
 
                 // Storing the file specifics - needed in subsequent opens.
-                logFileName = fileName;
-                logFileCard = card;
                 // Opening the existing log file in read only mode.
                 WindowedFile windowedLogFile = new WindowedFile(logFileName,
                         File.READ_ONLY, logFileCard);
@@ -210,8 +225,6 @@ final class MTKLogDownloadHandler {
                         if (potentialEndAddress > logDownloadEndAddr) {
                             if (Generic.isDebug()) {
                                 Generic.debug("Adjusted end address from "
-                                        + Convert.unsigned2hex(endAddr, 8)
-                                        + " to "
                                         + Convert.unsigned2hex(
                                                 logDownloadEndAddr, 8)
                                         + " to "
@@ -224,7 +237,7 @@ final class MTKLogDownloadHandler {
                         expectedResult = new byte[C_BLOCKVERIF_SIZE];
                         byte[] b;
                         b = windowedLogFile.fillBuffer(C_BLOCKVERIF_START);
-                        for (int i = expectedResult.length - 1; i > 0; i--) {
+                        for (int i = expectedResult.length - 1; i >= 0; i--) {
                             expectedResult[i] = b[i];
                         }
                         logState = C_LOG_CHECK;
@@ -237,7 +250,7 @@ final class MTKLogDownloadHandler {
             }
             if (!(logState == C_LOG_CHECK)) {
                 // File could not be opened or is not incremental.
-                openNewLog(fileName, card);
+                openNewLog(logFileName, logFileCard);
                 logState = C_LOG_ACTIVE;
             }
             if (logState != C_LOG_NOLOGGING) {
@@ -345,6 +358,9 @@ final class MTKLogDownloadHandler {
             break;
         case C_LOG_CHECK:
             requestCheckBlock();
+            break;
+        case C_LOG_START:
+            realDownloadStart();
             break;
         default:
             break;
