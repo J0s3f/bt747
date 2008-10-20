@@ -1458,6 +1458,11 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         tfOutputFileBaseName.setText("OutputBase");
+        tfOutputFileBaseName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfOutputFileBaseNameFocusLost(evt);
+            }
+        });
 
         btWorkingDirectory.setText("Working Directory :");
         btWorkingDirectory.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -2723,7 +2728,7 @@ public class BT747Main extends javax.swing.JFrame implements
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnTrackpointLayout.createSequentialGroup()
                 .add(pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel12, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
@@ -3273,7 +3278,7 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(pnWaypointLayout.createSequentialGroup()
                 .add(pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
@@ -5746,6 +5751,10 @@ private void sfTimeSplitHoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIR
 private void spTimeSplitMinutesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTimeSplitMinutesFocusLost
 // TODO add your handling code here:
 }//GEN-LAST:event_spTimeSplitMinutesFocusLost
+
+private void tfOutputFileBaseNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfOutputFileBaseNameFocusLost
+  c.setOutputFileRelPath(tfOutputFileBaseName.getText());
+}//GEN-LAST:event_tfOutputFileBaseNameFocusLost
 
 
 

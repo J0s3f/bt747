@@ -111,7 +111,6 @@ public final class CommonIn {
         newTime += time;
         gpsRec.utc = newTime;
     }
-    
 
     private static final void setDate(final GPSRecord gpsRec, final int date) {
         int newTime;
@@ -128,13 +127,14 @@ public final class CommonIn {
      *            record to update.
      * @param nmeaTimeStr
      *            time to set.
+     * @return true if milliseconds were also set.
      */
     private static final boolean setTime(final GPSRecord gpsRec,
             final String nmeaTimeStr) {
         try {
             int timePart = Convert.toInt(nmeaTimeStr.substring(0, 2)) * 3600
-            + Convert.toInt(nmeaTimeStr.substring(2, 4)) * 60
-            + Convert.toInt(nmeaTimeStr.substring(4, 6));
+                    + Convert.toInt(nmeaTimeStr.substring(2, 4)) * 60
+                    + Convert.toInt(nmeaTimeStr.substring(4, 6));
             setTime(gpsRec, timePart);
             if (nmeaTimeStr.charAt(6) == '.') {
                 gpsRec.milisecond = (int) (Convert.toFloat(nmeaTimeStr
@@ -153,7 +153,8 @@ public final class CommonIn {
         int day = dateInt / 10000;
         int month = (dateInt / 100) % 100;
         int year = dateInt % 100 + 2000;
-        setDate(gpsRec, (Interface.getDateInstance(day, month, year)).dateToUTCepoch1970());
+        setDate(gpsRec, (Interface.getDateInstance(day, month, year))
+                .dateToUTCepoch1970());
     }
 
     private static final void setLatitude(final GPSRecord gpsRec,
@@ -286,6 +287,7 @@ public final class CommonIn {
                     if (setTime(gpsRec, sNmea[1])) {
                         logFormat |= (1 << BT747Constants.FMT_MILLISECOND_IDX);
                     }
+                    logFormat |= (1 << BT747Constants.FMT_UTC_IDX);
                 }
             } catch (Exception e) {
                 Generic.debug("GPGGA1:" + sNmea[1], e);
@@ -371,7 +373,6 @@ public final class CommonIn {
         return logFormat;
     }
 
-    
     /**
      * Analyze a GPGSV sentence.
      * 
@@ -383,29 +384,29 @@ public final class CommonIn {
      */
     public static final int analyzeGPGSV(final String[] sNmea,
             final GPSRecord gpsRec) {
-    
-    // $GPGSV
-    // GPS Satellites in view
-    //
-    // eg.
-    // $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
-    // $GPGSV,3,2,11,14,25,170,00,16,57,208,39,18,67,296,40,19,40,246,00*74
-    // $GPGSV,3,3,11,22,42,067,42,24,14,311,43,27,05,244,00,,,,*4D
-    //
-    // $GPGSV,1,1,13,02,02,213,,03,-3,000,,11,00,121,,14,13,172,05*62
-    //
-    // 1 = Total number of messages of this type in this cycle
-    // 2 = Message number
-    // 3 = Total number of SVs in view
-    // 4 = SV PRN number
-    // 5 = Elevation in degrees, 90 maximum
-    // 6 = Azimuth, degrees from true north, 000 to 359
-    // 7 = SNR, 00-99 dB (null when not tracking)
-    // 8-11 = Information about second SV, same as field 4-7
-    // 12-15= Information about third SV, same as field 4-7
-    // 16-19= Information about fourth SV, same as field 4-7
-    //
-        
+
+        // $GPGSV
+        // GPS Satellites in view
+        //
+        // eg.
+        // $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
+        // $GPGSV,3,2,11,14,25,170,00,16,57,208,39,18,67,296,40,19,40,246,00*74
+        // $GPGSV,3,3,11,22,42,067,42,24,14,311,43,27,05,244,00,,,,*4D
+        //
+        // $GPGSV,1,1,13,02,02,213,,03,-3,000,,11,00,121,,14,13,172,05*62
+        //
+        // 1 = Total number of messages of this type in this cycle
+        // 2 = Message number
+        // 3 = Total number of SVs in view
+        // 4 = SV PRN number
+        // 5 = Elevation in degrees, 90 maximum
+        // 6 = Azimuth, degrees from true north, 000 to 359
+        // 7 = SNR, 00-99 dB (null when not tracking)
+        // 8-11 = Information about second SV, same as field 4-7
+        // 12-15= Information about third SV, same as field 4-7
+        // 16-19= Information about fourth SV, same as field 4-7
+        //
+
         // TODO: Not finished.
         int logFormat = 0;
         if (sNmea[0].equals("GPGSV") && (sNmea.length >= 19)) {
@@ -427,16 +428,17 @@ public final class CommonIn {
             }
             try {
                 if (sNmea[3].length() != 0) {
-                    gpsRec.nsat = (gpsRec.nsat & 0xFF00) | Convert.toInt(sNmea[3]);
+                    gpsRec.nsat = (gpsRec.nsat & 0xFF00)
+                            | Convert.toInt(sNmea[3]);
                 }
             } catch (Exception e) {
                 Generic.debug("GPGSV3:" + sNmea[3], e);
             }
-            if(gpsRec.nsat!=0) {
-                
+            if (gpsRec.nsat != 0) {
+
             }
         }
-        return logFormat; 
+        return logFormat;
     }
-    
+
 }
