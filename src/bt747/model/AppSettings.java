@@ -521,7 +521,7 @@ public class AppSettings {
                         .getAppSettings().substring(idx + size,
                                 Settings.getAppSettings().length()) : ""));
         if (eventType != 0) {
-            postEvent(ModelEvent.SETTING_CHANGE, eventType);
+            postEvent(ModelEvent.SETTING_CHANGE);  // TODO: Argument is for later.
         }
     }
 
