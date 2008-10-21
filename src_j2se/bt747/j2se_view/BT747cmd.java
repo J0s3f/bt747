@@ -32,9 +32,11 @@ import java.util.List;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
+import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.sys.File;
 import bt747.sys.Interface;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747FileName;
@@ -285,7 +287,7 @@ public class BT747cmd implements bt747.model.ModelListener {
     private void handleOptions(final OptionSet options) {
         // Set up the paths
         // Common to in/out
-        c.setBaseDirPath(".");
+        c.setStringOpt(AppSettings.OUTPUTDIRPATH, ".");
         c.setOutputFileRelPath("GPSDATA");
         c.setIntOpt(Model.FILEFIELDFORMAT, 0xFFFFFFFF); // All fields
         c.setTrkSep(60);
@@ -317,15 +319,23 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (options.has("f")) {
             // Basename of files.
             String basename = options.argumentOf("f");
-            c.setLogFileRelPath(basename + ".bin");
+            c.setStringOpt(AppSettings.LOGFILEPATH, basename + ".bin");
+            //        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile, C_LOGFILE_IDX,
+            //                C_LOGFILE_SIZE);
             c.setOutputFileRelPath(basename);
         }
 
         // Input is "/BT747/BT747_sample.bin"
         if (options.has("b")) {
-            c.setLogFileRelPath(options.argumentOf("b"));
+            c.setStringOpt(AppSettings.LOGFILERELPATH, options.argumentOf("b"));
+                    c.setStringOpt(AppSettings.LOGFILEPATH,m.getStringOpt(AppSettings.OUTPUTDIRPATH) + File.separatorStr + m.getStringOpt(AppSettings.LOGFILERELPATH));
+            //        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile, C_LOGFILE_IDX,
+            //                C_LOGFILE_SIZE);
         } else {
-            c.setLogFileRelPath("BT747_log.bin");
+            c.setStringOpt(AppSettings.LOGFILERELPATH, "BT747_log.bin");
+                    c.setStringOpt(AppSettings.LOGFILEPATH,m.getStringOpt(AppSettings.OUTPUTDIRPATH) + File.separatorStr + m.getStringOpt(AppSettings.LOGFILERELPATH));
+            //        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile, C_LOGFILE_IDX,
+            //                C_LOGFILE_SIZE);
         }
 
         if (options.has("s")) {

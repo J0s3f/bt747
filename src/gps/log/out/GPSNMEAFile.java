@@ -336,7 +336,7 @@ public final class GPSNMEAFile extends GPSFile {
         // - 133.4,M is the altitude, in meters, above mean sea level
         if ((activeFields.height != 0)) {
             rec.append(Convert.toString(s.height, 3));
-            if ((activeFields.latitude != 0) && (activeFields.latitude != 0)) {
+            if ((activeFields.latitude != 0) && (activeFields.longitude != 0)) {
                 rec.append(",M,");
                 rec.append(Convert.toString(Conv.wgs84Separation(s.latitude,
                         s.longitude), 1));

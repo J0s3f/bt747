@@ -25,9 +25,9 @@ import gps.GpsEvent;
 public class ModelEvent extends GpsEvent{
     public static final int CONVERSION_STARTED = 256;
     public static final int CONVERSION_ENDED = 257;
-    public static final int WORKDIRPATH_UPDATE = 258;
-    public static final int OUTPUTFILEPATH_UPDATE = 259;
-    public static final int LOGFILEPATH_UPDATE = 260;
+    //public static final int WORKDIRPATH_UPDATE = 258;
+    //public static final int OUTPUTFILEPATH_UPDATE = 259;
+    //public static final int LOGFILEPATH_UPDATE = 260;
     /**
      * @deprecated Use {@link #DOWNLOAD_METHOD_CHANGE} instead.
      */

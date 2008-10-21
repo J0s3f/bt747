@@ -260,12 +260,12 @@ public class TestDevice implements bt747.model.ModelListener {
             // updateGPSData((GPSRecord) e.getArg());
         } else if (type == ModelEvent.UPDATE_LOG_FORMAT) {
             // updateLogFormatData();
-        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
-            // getRawLogFilePath();
-        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
-            // getOutputFilePath();
-        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
-            // getWorkDirPath();
+//        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+//            // getRawLogFilePath();
+//        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+//            // getOutputFilePath();
+//        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
+//            // getWorkDirPath();
         } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
             // getIncremental();
         } else if (type == ModelEvent.TRK_VALID_CHANGE

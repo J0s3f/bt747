@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Interface;
@@ -76,12 +77,12 @@ public class BT747Main2 extends javax.swing.JFrame implements
                 || type == ModelEvent.LOG_DOWNLOAD_DONE
                 || type == ModelEvent.LOG_DOWNLOAD_STARTED) {
             progressBarUpdate();
-        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
-            getRawLogFilePath();
-        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
-            getOutputFilePath();
-        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
-            getWorkDirPath();
+//        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+//            getRawLogFilePath();
+//        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+//            getOutputFilePath();
+//        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
+//            getWorkDirPath();
         } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
             getIncremental();
         } else if (type == ModelEvent.CONNECTED) {
@@ -1815,7 +1816,7 @@ public class BT747Main2 extends javax.swing.JFrame implements
                                                 org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                                                 Short.MAX_VALUE)));
 
-        tfWorkDirectory.setText(m.getBaseDirPath());
+        tfWorkDirectory.setText(m.getStringOpt(AppSettings.OUTPUTDIRPATH));
         setSelectedFormat(cbFormat.getSelectedItem().toString());
 
         org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(
@@ -3559,7 +3560,7 @@ public class BT747Main2 extends javax.swing.JFrame implements
     private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btOutputFileActionPerformed
         getOutputFilePath();
         if (OutputFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            c.setOutputFileRelPath(FileUtil.getRelativePath(m.getBaseDirPath(),
+            c.setOutputFileRelPath(FileUtil.getRelativePath(m.getStringOpt(AppSettings.OUTPUTDIRPATH),
                     OutputFileChooser.getSelectedFile().getAbsolutePath(),
                     File.separatorChar));
         }
@@ -3568,9 +3569,12 @@ public class BT747Main2 extends javax.swing.JFrame implements
     private void btRawLogFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btRawLogFileActionPerformed
         getRawLogFilePath();
         if (RawLogFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            c.setLogFileRelPath(FileUtil.getRelativePath(m.getBaseDirPath(),
-                    RawLogFileChooser.getSelectedFile().getAbsolutePath(),
-                    File.separatorChar));
+            c.setStringOpt(AppSettings.LOGFILERELPATH, FileUtil.getRelativePath(m.getStringOpt(AppSettings.OUTPUTDIRPATH),
+                                RawLogFileChooser.getSelectedFile().getAbsolutePath(),
+                                File.separatorChar));
+                    c.setStringOpt(AppSettings.LOGFILEPATH,m.getStringOpt(AppSettings.OUTPUTDIRPATH) + bt747.sys.File.separatorStr + m.getStringOpt(AppSettings.LOGFILERELPATH));
+            //        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile, C_LOGFILE_IDX,
+            //                C_LOGFILE_SIZE);
         }
     }// GEN-LAST:event_btRawLogFileActionPerformed
 
@@ -3578,8 +3582,9 @@ public class BT747Main2 extends javax.swing.JFrame implements
             java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btWorkingDirectoryActionPerformed1
         getWorkDirPath();
         if (WorkingDirectoryChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            c.setBaseDirPath(WorkingDirectoryChooser.getSelectedFile()
-                    .getAbsolutePath());
+            c.setStringOpt(AppSettings.OUTPUTDIRPATH, WorkingDirectoryChooser.getSelectedFile()
+                                .getAbsolutePath());
+            c.setStringOpt(AppSettings.LOGFILEPATH,m.getStringOpt(AppSettings.OUTPUTDIRPATH) + bt747.sys.File.separatorStr + m.getStringOpt(AppSettings.LOGFILERELPATH));
         }
     }// GEN-LAST:event_btWorkingDirectoryActionPerformed1
 
@@ -3589,7 +3594,8 @@ public class BT747Main2 extends javax.swing.JFrame implements
     }// GEN-LAST:event_btWorkingDirectoryActionPerformed
 
     private void tfWorkDirectoryFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_tfWorkDirectoryFocusLost
-        c.setBaseDirPath(tfWorkDirectory.getText());
+        c.setStringOpt(AppSettings.OUTPUTDIRPATH, tfWorkDirectory.getText());
+        c.setStringOpt(AppSettings.LOGFILEPATH,m.getStringOpt(AppSettings.OUTPUTDIRPATH) + bt747.sys.File.separatorStr + m.getStringOpt(AppSettings.LOGFILERELPATH));
     }// GEN-LAST:event_tfWorkDirectoryFocusLost
 
     private void tfWorkDirectoryActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_tfWorkDirectoryActionPerformed
@@ -3730,21 +3736,21 @@ public class BT747Main2 extends javax.swing.JFrame implements
         // if (curDir.exists()) {
         OutputFileChooser.setCurrentDirectory(curDir);
         // }
-        tfOutputFileBaseName.setText(m.getReportFileBase());
+        tfOutputFileBaseName.setText(m.getStringOpt(AppSettings.REPORTFILEBASE));
     }
 
     private void getRawLogFilePath() {
         File curDir;
-        curDir = new File(m.getLogFilePath());
+        curDir = new File(m.getStringOpt(AppSettings.LOGFILEPATH));
         // if (curDir.exists()) {
         RawLogFileChooser.setCurrentDirectory(curDir);
         // }
-        tfRawLogFilePath.setText(m.getLogFile());
+        tfRawLogFilePath.setText(m.getStringOpt(AppSettings.LOGFILEPATH));
     }
 
     private void getWorkDirPath() {
         File curDir;
-        curDir = new File(m.getBaseDirPath());
+        curDir = new File(m.getStringOpt(AppSettings.OUTPUTDIRPATH));
         if (curDir.exists()) {
             WorkingDirectoryChooser.setCurrentDirectory(curDir);
         }
