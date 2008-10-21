@@ -36,6 +36,7 @@ import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
 
+import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747FileName;
 
@@ -130,24 +131,6 @@ public class Controller {
     }
 
     /**
-     * @param s
-     *            The base path for the files referenced.
-     */
-    public final void setBaseDirPath(final String s) {
-        m.setBaseDirPath(s);
-    }
-
-    /**
-     * Set the log file path (including basename) relative to the BaseDirPath.
-     * 
-     * @param s
-     *            The relative log file path (including basename)
-     */
-    public final void setLogFileRelPath(final String s) {
-        m.setLogFileRelPath(s);
-    }
-
-    /**
      * Set the output file path (including basename, no extension) relative to
      * the BaseDirPath.
      * 
@@ -155,7 +138,7 @@ public class Controller {
      *            The relative log file path (including basename)
      */
     public final void setOutputFileRelPath(final String s) {
-        m.setReportFileBase(s);
+        m.setStringOpt(AppSettings.REPORTFILEBASE,s);
     }
 
     /**
@@ -251,17 +234,18 @@ public class Controller {
         /*
          * Check the input file
          */
-        if (m.getLogFilePath().toLowerCase().endsWith(".trl")) {
+        String logFileLC = m.getStringOpt(AppSettings.LOGFILEPATH).toLowerCase();
+        if (logFileLC.endsWith(".trl")) {
             lc = new HoluxTrlLogConvert();
-        } else if (m.getLogFilePath().toLowerCase().endsWith(".csv")) {
+        } else if (logFileLC.endsWith(".csv")) {
             lc = new CSVLogConvert();
-        } else if (m.getLogFilePath().toLowerCase().endsWith(".nmea")
-                || m.getLogFilePath().toLowerCase().endsWith(".nme")
-                || m.getLogFilePath().toLowerCase().endsWith(".nma")
-                || m.getLogFilePath().toLowerCase().endsWith(".txt")
-                || m.getLogFilePath().toLowerCase().endsWith(".log")) {
+        } else if (logFileLC.endsWith(".nmea")
+                || logFileLC.endsWith(".nme")
+                || logFileLC.endsWith(".nma")
+                || logFileLC.endsWith(".txt")
+                || logFileLC.endsWith(".log")) {
             lc = new NMEALogConvert();
-        } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
+        } else if (logFileLC.endsWith(".sr")) {
             lc = new DPL700LogConvert();
             // / TODO: set SR Log type correctly.
             ((DPL700LogConvert) lc)
@@ -369,7 +353,7 @@ public class Controller {
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
             currentGPSLogConvert = lc;
             try {
-                lastError = lc.toGPSFile(m.getLogFilePath(), gpsFile, m
+                lastError = lc.toGPSFile(m.getStringOpt(AppSettings.LOGFILEPATH), gpsFile, m
                         .getCard());
             } catch (Throwable e) {
                 Generic.debug("During conversion", e);
@@ -402,17 +386,18 @@ public class Controller {
         /*
          * Check the input file
          */
-        if (m.getLogFilePath().toLowerCase().endsWith(".trl")) {
+        String logFileLC = m.getStringOpt(AppSettings.LOGFILEPATH).toLowerCase();
+        if (logFileLC.endsWith(".trl")) {
             lc = new HoluxTrlLogConvert();
-        } else if (m.getLogFilePath().toLowerCase().endsWith(".csv")) {
+        } else if (logFileLC.endsWith(".csv")) {
             lc = new CSVLogConvert();
-        } else if (m.getLogFilePath().toLowerCase().endsWith(".nmea")
-                || m.getLogFilePath().toLowerCase().endsWith(".nme")
-                || m.getLogFilePath().toLowerCase().endsWith(".nma")
-                || m.getLogFilePath().toLowerCase().endsWith(".log")
-                || m.getLogFilePath().toLowerCase().endsWith(".txt")) {
+        } else if (logFileLC.endsWith(".nmea")
+                || logFileLC.endsWith(".nme")
+                || logFileLC.endsWith(".nma")
+                || logFileLC.endsWith(".log")
+                || logFileLC.endsWith(".txt")) {
             lc = new NMEALogConvert();
-        } else if (m.getLogFilePath().toLowerCase().endsWith(".sr")) {
+        } else if (logFileLC.endsWith(".sr")) {
             lc = new DPL700LogConvert();
             // / TODO: set SR Log type correctly.
             ((DPL700LogConvert) lc)
@@ -470,7 +455,7 @@ public class Controller {
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         currentGPSLogConvert = lc;
         try {
-            error = lc.toGPSFile(m.getLogFilePath(), gpsFile, m.getCard());
+            error = lc.toGPSFile(m.getStringOpt(AppSettings.LOGFILEPATH), gpsFile, m.getCard());
         } catch (Throwable e) {
             Generic.debug("During conversion", e);
         }
@@ -548,7 +533,7 @@ public class Controller {
             m.gpsModel().getLogInit(0, /* StartPosition */
             endAddress, /* EndPosition */
             m.getChunkSize(), /* Size per request */
-            m.getLogFilePath(), /* Log file name */
+            m.getStringOpt(AppSettings.LOGFILEPATH), /* Log file name */
             m.getCard(), /* Card for file operations */
             /** Incremental download */
             m.getDownloadMethod() == Model.DOWNLOAD_INCREMENTAL);
@@ -583,7 +568,7 @@ public class Controller {
      * Initiate the download of a 'DPL700' log.
      */
     public final void startDPL700Download() {
-        m.gpsModel().getDPL700Log(m.getLogFilePath(), m.getCard());
+        m.gpsModel().getDPL700Log(m.getStringOpt(AppSettings.LOGFILEPATH), m.getCard());
     }
 
     /**
@@ -901,7 +886,7 @@ public class Controller {
      *            When true, the connection debug information is active.
      */
     public final void setDebugConn(final boolean isConnDebugActive) {
-        m.gpsRxTx().setDebugConn(isConnDebugActive, m.getBaseDirPath());
+        m.gpsRxTx().setDebugConn(isConnDebugActive, m.getStringOpt(AppSettings.OUTPUTDIRPATH));
     }
 
     /***************************************************************************
@@ -1660,12 +1645,17 @@ public class Controller {
         return lastErrorInfo;
     }
 
-    public final void setBooleanOpt(int param, final boolean value) {
+    public final void setBooleanOpt(final int param, final boolean value) {
         m.setBooleanOpt(param, value);
     }
 
-    public final void setIntOpt(int param, final int value) {
+    public final void setIntOpt(final int param, final int value) {
         m.setIntOpt(param, value);
     }
+
+    public final void setStringOpt(final int param, final String value) {
+        m.setStringOpt(param, value);
+    }
+
 
 }

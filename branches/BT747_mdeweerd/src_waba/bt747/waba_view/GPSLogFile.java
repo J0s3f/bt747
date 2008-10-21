@@ -33,10 +33,12 @@ import waba.util.Vector;
 import net.sf.bt747.waba.system.WabaFile;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
+import bt747.sys.File;
 import bt747.waba_view.ui.FileSelect;
 
 /**
@@ -143,12 +145,20 @@ public final class GPSLogFile extends Container implements ModelListener {
 
     private final void updateValues() {
         if (!setting) {
-            edBaseDirName.setText(m.getBaseDirPath());
-            edReportBaseName.setText(m.getReportFileBase());
-            edLogFileName.setText(m.getLogFile());
+            edBaseDirName.setText(m.getStringOpt(AppSettings.OUTPUTDIRPATH));
+            edReportBaseName
+                    .setText(m.getStringOpt(AppSettings.REPORTFILEBASE));
+            edLogFileName.setText(m.getStringOpt(AppSettings.LOGFILERELPATH));
             edChunkSize.setText(Convert.toString(m.getChunkSize()));
             edTimeout.setText(Convert.toString(m.getDownloadTimeOut()));
         }
+    }
+
+    private final void updateFullPath() {
+        c.setStringOpt(AppSettings.LOGFILEPATH, m
+                .getStringOpt(AppSettings.OUTPUTDIRPATH)
+                + File.separatorStr
+                + m.getStringOpt(AppSettings.LOGFILERELPATH));
     }
 
     public final void onEvent(final Event event) {
@@ -156,9 +166,12 @@ public final class GPSLogFile extends Container implements ModelListener {
         case ControlEvent.PRESSED:
             if (event.target == btChangeSettings) {
                 setting = true;
-                c.setBaseDirPath(edBaseDirName.getText());
-                c.setLogFileRelPath(edLogFileName.getText());
+                c.setStringOpt(AppSettings.OUTPUTDIRPATH, edBaseDirName
+                        .getText());
+                c.setStringOpt(AppSettings.LOGFILERELPATH, edLogFileName
+                        .getText());
                 c.setOutputFileRelPath(edReportBaseName.getText());
+                updateFullPath();
                 c.setChunkSize(Convert.toInt(edChunkSize.getText()));
                 c.setDownloadTimeOut(Convert.toInt(edTimeout.getText()));
                 if (Settings.platform.startsWith("Palm")) {
@@ -180,7 +193,8 @@ public final class GPSLogFile extends Container implements ModelListener {
                 }
                 fs.popupBlockingModal();
                 // m_edBaseDirName.setText(fs.getPath());
-                c.setBaseDirPath(fs.getPath());
+                c.setStringOpt(AppSettings.OUTPUTDIRPATH, fs.getPath());
+                updateFullPath();
             } else if (event.target == btSelectLogFileName) {
                 FileSelect fs = new FileSelect();
                 fs.setRoot(edBaseDirName.getText());
@@ -192,7 +206,8 @@ public final class GPSLogFile extends Container implements ModelListener {
                 }
                 fs.popupBlockingModal();
                 // m_edLogFileName.setText(fs.getRelPath());
-                c.setLogFileRelPath(fs.getRelPath());
+                c.setStringOpt(AppSettings.LOGFILERELPATH, fs.getRelPath());
+                updateFullPath();
             } else if (event.target == btDefaultSettings) {
                 m.defaultSettings();
                 updateValues();
@@ -200,9 +215,13 @@ public final class GPSLogFile extends Container implements ModelListener {
             break;
         case ControlEvent.FOCUS_OUT:
             if (event.target == edLogFileName) {
-                c.setLogFileRelPath(edLogFileName.getText());
+                c.setStringOpt(AppSettings.LOGFILERELPATH, edLogFileName
+                        .getText());
+                updateFullPath();
             } else if (event.target == edBaseDirName) {
-                c.setBaseDirPath(edBaseDirName.getText());
+                c.setStringOpt(AppSettings.OUTPUTDIRPATH, edBaseDirName
+                        .getText());
+                updateFullPath();
             } else if (event.target == edReportBaseName) {
                 c.setOutputFileRelPath(edReportBaseName.getText());
             }
@@ -212,15 +231,12 @@ public final class GPSLogFile extends Container implements ModelListener {
     }
 
     public final void modelEvent(final ModelEvent event) {
-        switch (event.getType()) {
-        case ModelEvent.LOGFILEPATH_UPDATE:
-        case ModelEvent.OUTPUTFILEPATH_UPDATE:
-        case ModelEvent.WORKDIRPATH_UPDATE:
-            updateValues();
-            break;
-
-        default:
-            break;
-        }
+        // switch (event.getType()) {
+        // case ModelEvent.LOGFILEPATH_UPDATE:
+        // case ModelEvent.OUTPUTFILEPATH_UPDATE:
+        // case ModelEvent.WORKDIRPATH_UPDATE:
+        // updateValues();
+        // break;
+        // }
     }
 }

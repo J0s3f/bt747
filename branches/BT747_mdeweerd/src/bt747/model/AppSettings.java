@@ -39,10 +39,10 @@ public class AppSettings {
     private static final int C_REPORTFILEBASE_IDX = C_BASEDIRPATH_IDX
             + C_BASEDIRPATH_SIZE;
     private static final int C_REPORTFILEBASE_SIZE = 40;
-    private static final int C_LOGFILE_IDX = C_REPORTFILEBASE_IDX
+    private static final int C_LOGFILERELPATH_IDX = C_REPORTFILEBASE_IDX
             + C_REPORTFILEBASE_SIZE;
-    private static final int C_LOGFILE_SIZE = 40;
-    private static final int C_OPENSTARTUP_IDX = C_LOGFILE_IDX + C_LOGFILE_SIZE;
+    private static final int C_LOGFILERELPATH_SIZE = 40;
+    private static final int C_OPENSTARTUP_IDX = C_LOGFILERELPATH_IDX + C_LOGFILERELPATH_SIZE;
     private static final int C_OPENSTARTUP_SIZE = 40;
     private static final int C_CHUNKSIZE_IDX = C_OPENSTARTUP_IDX
             + C_OPENSTARTUP_SIZE;
@@ -186,7 +186,9 @@ public class AppSettings {
     private static final int C_COLOR_VALIDTRACK_IDX = C_STOP_LOG_ON_CONNECT_IDX
             + C_STOP_LOG_ON_CONNECT_SIZE;
     private static final int C_COLOR_VALIDTRACK_SIZE = 8;
-    private static final int C_NEXT_IDX = C_COLOR_VALIDTRACK_IDX + C_COLOR_VALIDTRACK_SIZE;
+    private static final int C_LOGFILEPATH_IDX = C_COLOR_VALIDTRACK_IDX + C_COLOR_VALIDTRACK_SIZE;
+    private static final int C_LOGFILEPATH_SIZE = 300;
+    private static final int C_NEXT_IDX = C_LOGFILEPATH_IDX + C_LOGFILEPATH_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -260,6 +262,13 @@ public class AppSettings {
      */
     public static final int IS_STOP_LOGGING_ON_CONNECT = 8;
 
+    public static final int OUTPUTDIRPATH = 9;
+    public static final int REPORTFILEBASE = 10;
+    /** @deprecated */
+    public static final int LOGFILERELPATH = 11;
+    public static final int LOGFILEPATH = 12;
+    
+
     private static final int[][] paramsList =
     // Type, idx, start, size
     {
@@ -279,7 +288,13 @@ public class AppSettings {
                     C_FILEFIELDFORMAT_SIZE },
             // Application parameter
             { BOOL, IS_STOP_LOGGING_ON_CONNECT, C_STOP_LOG_ON_CONNECT_IDX,
-                    C_STOP_LOG_ON_CONNECT_SIZE }, };
+                    C_STOP_LOG_ON_CONNECT_SIZE },
+            { STRING, OUTPUTDIRPATH, C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE },
+            { STRING, REPORTFILEBASE, C_REPORTFILEBASE_IDX,
+                    C_REPORTFILEBASE_SIZE },
+            { STRING, LOGFILERELPATH, C_LOGFILERELPATH_IDX,
+                    C_LOGFILERELPATH_SIZE },
+            { STRING, LOGFILEPATH, C_LOGFILEPATH_IDX, C_LOGFILEPATH_SIZE }, };
 
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
@@ -324,9 +339,9 @@ public class AppSettings {
             setPortnbr(-1);
             setBaudRate(115200);
             setCard(-1);
-            setBaseDirPath(defaultBaseDirPath);
-            setLogFileRelPath("BT747log.bin");
-            setReportFileBase("GPSDATA");
+            setStringOpt(OUTPUTDIRPATH, defaultBaseDirPath);
+            setStringOpt(LOGFILERELPATH, "BT747log.bin");
+            setStringOpt(REPORTFILEBASE,"GPSDATA");
             setStartupOpenPort(false);
             setChunkSize(defaultChunkSize);
             setDownloadTimeOut(C_DEFAULT_DEVICE_TIMEOUT);
@@ -418,7 +433,12 @@ public class AppSettings {
             setColorValidTrack("0000FF");
             /* fall through */
 
-            setStringOpt(0, "0.25", C_VERSION_IDX, C_VERSION_SIZE);
+        case 25:
+            setStringOpt(LOGFILEPATH, getStringOpt(AppSettings.OUTPUTDIRPATH)
+                    + bt747.sys.File.separatorStr
+                    + getStringOpt(AppSettings.LOGFILERELPATH));
+
+            setStringOpt(0, "0.26", C_VERSION_IDX, C_VERSION_SIZE);
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart for
@@ -472,7 +492,7 @@ public class AppSettings {
 
     private final void setLocalBooleanOpt(final int param, final boolean value,
             final int idx, final int size) {
-        setStringOpt(ModelEvent.SETTING_CHANGE, (value ? "1" : "0"), idx, size);
+        setStringOpt(param, (value ? "1" : "0"), idx, size);
     }
 
     private final boolean getLocalBooleanOpt(final int idx, final int size) {
@@ -501,7 +521,7 @@ public class AppSettings {
                         .getAppSettings().substring(idx + size,
                                 Settings.getAppSettings().length()) : ""));
         if (eventType != 0) {
-            postEvent(eventType);
+            postEvent(ModelEvent.SETTING_CHANGE, eventType);
         }
     }
 
@@ -583,6 +603,42 @@ public class AppSettings {
         }
     }
 
+    public final String getStringOpt(final int param) {
+        // if (param == FILEFIELDFORMAT) {
+        // Generic.debug("File field selection is "
+        // + bt747.sys.Convert.unsigned2hex(
+        // getLocalIntOpt(paramsList[param][START_IDX],
+        // paramsList[param][SIZE_IDX]),8), null);
+        //
+        // }
+        if ((param < paramsList.length) && (paramsList[param][TYPE_IDX] == STRING)) {
+            return getStringOpt(paramsList[param][START_IDX],
+                    paramsList[param][SIZE_IDX]);
+        } else {
+            // TODO: throw something
+            Generic.debug("Invalid parameter index " + param);
+            return null;
+        }
+    }
+
+    protected final void setStringOpt(final int param, final String value) {
+        // if (param == FILEFIELDFORMAT) {
+        // Generic.debug("File field selection is "
+        // + bt747.sys.Convert.unsigned2hex(
+        // getIntOpt(FILEFIELDFORMAT), 8) + " to "
+        // + bt747.sys.Convert.unsigned2hex(value, 8), null);
+        //
+        // }
+        if ((param < paramsList.length) && (paramsList[param][TYPE_IDX] == STRING)) {
+            setStringOpt(param, value, paramsList[param][START_IDX],
+                    paramsList[param][SIZE_IDX]);
+        } else {
+            // TODO: throw something
+            Generic.debug("Invalid parameter index " + param);
+        }
+    }
+
+    
     /**
      * @return Returns the portnbr.
      */
@@ -718,50 +774,8 @@ public class AppSettings {
         setLocalBooleanOpt(0, value, C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
     }
 
-    /**
-     * The location of the logFile
-     * 
-     */
-    /**
-     * @return Returns the logFile full path.
-     */
-    public final String getLogFilePath() {
-        return getBaseDirPath() + File.separatorStr + getLogFile();
-    }
-
-    public final String getLogFile() {
-        return getStringOpt(C_LOGFILE_IDX, C_LOGFILE_SIZE);
-    }
-
-    /**
-     * @param logFile
-     *            The logFile to set.
-     */
-    public final void setLogFileRelPath(final String logFile) {
-        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile, C_LOGFILE_IDX,
-                C_LOGFILE_SIZE);
-    }
-
-    public final String getBaseDirPath() {
-        return getStringOpt(C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE);
-    }
-
-    protected final void setBaseDirPath(final String baseDirPath) {
-        setStringOpt(ModelEvent.WORKDIRPATH_UPDATE, baseDirPath,
-                C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE);
-    }
-
-    public final String getReportFileBase() {
-        return getStringOpt(C_REPORTFILEBASE_IDX, C_REPORTFILEBASE_SIZE);
-    }
-
-    public final void setReportFileBase(final String reportFileBase) {
-        setStringOpt(ModelEvent.OUTPUTFILEPATH_UPDATE, reportFileBase,
-                C_REPORTFILEBASE_IDX, C_REPORTFILEBASE_SIZE);
-    }
-
     public final String getReportFileBasePath() {
-        return getBaseDirPath() + "/" + getReportFileBase();
+        return getStringOpt(OUTPUTDIRPATH) + "/" + getStringOpt(REPORTFILEBASE);
     }
 
     public final int getWayPtRCR() {
@@ -1268,10 +1282,10 @@ public class AppSettings {
                 // path = CONFIG_FILE_NAME;
                 // break;
             case 1:
-                path = getBaseDirPath() + "/";
+                path = getStringOpt(OUTPUTDIRPATH) + "/";
                 break;
             case 2:
-                path = getLogFilePath();
+                path = getStringOpt(LOGFILEPATH);
                 break;
             case 3:
                 path = getReportFileBasePath();

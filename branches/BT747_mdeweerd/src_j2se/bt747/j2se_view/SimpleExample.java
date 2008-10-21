@@ -17,9 +17,11 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.log.GPSRecord;
 
+import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
+import bt747.sys.File;
 import bt747.sys.Interface;
 
 /**
@@ -68,9 +70,12 @@ public class SimpleExample implements bt747.model.ModelListener {
 
         // Set up the paths
         // Common to in/out
-        c.setBaseDirPath("/BT747");
+        c.setStringOpt(AppSettings.OUTPUTDIRPATH, "/BT747");
+
         // Input is "/BT747/BT747_sample.bin"
-        c.setLogFileRelPath("BT747_sample.bin");
+        c.setStringOpt(AppSettings.LOGFILEPATH, "/BT747/BT747_sample.bin");
+        //        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile, C_LOGFILE_IDX,
+        //                C_LOGFILE_SIZE);
         // Output is "/BT747/GPSDATA*"
         c.setOutputFileRelPath("GPSDATA");
 
@@ -211,12 +216,12 @@ public class SimpleExample implements bt747.model.ModelListener {
             // updateGPSData((GPSRecord) e.getArg());
         } else if (type == ModelEvent.UPDATE_LOG_FORMAT) {
             // updateLogFormatData();
-        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
-            // getRawLogFilePath();
-        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
-            // getOutputFilePath();
-        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
-            // getWorkDirPath();
+//        } else if (type == ModelEvent.LOGFILEPATH_UPDATE) {
+//            // getRawLogFilePath();
+//        } else if (type == ModelEvent.OUTPUTFILEPATH_UPDATE) {
+//            // getOutputFilePath();
+//        } else if (type == ModelEvent.WORKDIRPATH_UPDATE) {
+//            // getWorkDirPath();
         } else if (type == ModelEvent.INCREMENTAL_CHANGE) {
             // getIncremental();
         } else if (type == ModelEvent.TRK_VALID_CHANGE
