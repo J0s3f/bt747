@@ -78,9 +78,12 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="pnEnclosingTabbedPanel" alignment="0" max="32767" attributes="1"/>
-              <Component id="pnBottomInformation" alignment="0" max="32767" attributes="1"/>
+          <Group type="102" alignment="1" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="pnBottomInformation" alignment="0" max="32767" attributes="1"/>
+                  <Component id="pnEnclosingTabbedPanel" alignment="1" max="32767" attributes="2"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -90,7 +93,7 @@
               <Component id="pnEnclosingTabbedPanel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnBottomInformation" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -102,14 +105,14 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="tabbedPanelAll" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Component id="tabbedPanelAll" pref="833" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="tabbedPanelAll" pref="406" max="32767" attributes="0"/>
+              <Component id="tabbedPanelAll" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -145,7 +148,7 @@
                               </Group>
                               <Component id="pnConvert" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="86" max="32767" attributes="0"/>
+                          <EmptySpace pref="65" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -189,13 +192,13 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="tfRawLogFilePath" alignment="0" pref="349" max="32767" attributes="1"/>
+                                  <Component id="tfRawLogFilePath" alignment="0" pref="353" max="32767" attributes="1"/>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <Component id="tfOutputFileBaseName" pref="223" max="32767" attributes="0"/>
+                                      <Component id="tfOutputFileBaseName" pref="227" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="tfWorkDirectory" alignment="1" pref="349" max="32767" attributes="1"/>
+                                  <Component id="tfWorkDirectory" alignment="1" pref="353" max="32767" attributes="1"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -232,9 +235,6 @@
                       <Events>
                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfWorkDirectoryFocusLost"/>
                       </Events>
-                      <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="tfWorkDirectory.setText(m.getBaseDirPath());"/>
-                      </AuxValues>
                     </Component>
                     <Component class="javax.swing.JTextField" name="tfRawLogFilePath">
                       <Properties>
@@ -254,7 +254,7 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="btWorkingDirectory">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Working Directory :"/>
+                        <Property name="text" type="java.lang.String" value="Output Directory :"/>
                         <Property name="horizontalAlignment" type="int" value="4"/>
                       </Properties>
                       <Events>
@@ -690,18 +690,18 @@
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel10" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel14" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel16" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="lbThisSWVersion" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbLoggerSWVersion" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbFirmWare" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -710,34 +710,35 @@
                                   <Component id="lbGeoid" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbTime" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbLongitude" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbLatitude" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbLatitude" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbLatitude" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbLongitude" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
-                                      <Component id="lbTime" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="lbTime" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="lbGeoid" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -850,7 +851,7 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel17">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="This SW Version"/>
+                        <Property name="text" type="java.lang.String" value="This SW Version:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="lbLoggerSWVersion">
@@ -886,7 +887,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnFileOutputFields" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="227" max="32767" attributes="0"/>
+                          <EmptySpace pref="206" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -901,7 +902,7 @@
                               </Group>
                               <Component id="pnFileOutputFields" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="95" max="32767" attributes="0"/>
+                          <EmptySpace pref="104" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1636,7 +1637,7 @@
                           <Component id="pnCommonFilter" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnWaypoint" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="31" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1649,7 +1650,7 @@
                               <Component id="pnTrackpoint" alignment="0" max="32767" attributes="1"/>
                               <Component id="pnCommonFilter" alignment="0" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace pref="49" max="32767" attributes="0"/>
+                          <EmptySpace pref="58" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1678,7 +1679,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jPanel11" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="jPanel11" alignment="0" pref="263" max="32767" attributes="1"/>
                                   <Component id="jPanel12" alignment="0" max="32767" attributes="1"/>
                               </Group>
                               <EmptySpace pref="32" max="32767" attributes="0"/>
@@ -2431,7 +2432,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="pnWayPointRCR" alignment="0" max="32767" attributes="1"/>
-                                  <Component id="pnWayPointFix" alignment="0" min="-2" max="-2" attributes="1"/>
+                                  <Component id="pnWayPointFix" alignment="0" min="-2" pref="256" max="-2" attributes="1"/>
                               </Group>
                               <EmptySpace pref="39" max="32767" attributes="0"/>
                           </Group>
@@ -2807,7 +2808,7 @@
                           <Component id="pnLogFormat" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel8" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="182" max="32767" attributes="0"/>
+                          <EmptySpace pref="161" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -3871,7 +3872,7 @@
                           <Component id="pnFlashSettings" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnNMEAOutput" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="409" max="32767" attributes="0"/>
+                          <EmptySpace pref="388" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -3882,7 +3883,7 @@
                               <Component id="pnNMEAOutput" min="-2" max="-2" attributes="1"/>
                               <Component id="pnFlashSettings" alignment="0" min="-2" max="-2" attributes="1"/>
                           </Group>
-                          <EmptySpace pref="39" max="32767" attributes="0"/>
+                          <EmptySpace pref="48" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -4826,7 +4827,7 @@
                               <Component id="pnGPXFileSettings" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="pnFileNMEAOutput" alignment="0" min="-2" max="-2" attributes="1"/>
                           </Group>
-                          <EmptySpace pref="112" max="32767" attributes="0"/>
+                          <EmptySpace pref="121" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -5138,7 +5139,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="829" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="808" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -5147,7 +5148,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="359" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="368" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -5196,7 +5197,7 @@
                   <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                   <Component id="DownloadProgressLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="DownloadProgressBar" pref="380" max="32767" attributes="0"/>
+                  <Component id="DownloadProgressBar" pref="359" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
