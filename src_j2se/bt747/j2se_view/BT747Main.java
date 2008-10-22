@@ -123,7 +123,15 @@ public class BT747Main extends javax.swing.JFrame implements
     private void initAppData() {
         jTextArea1.setEnabled(true);
         jTextArea1.setFocusable(true);
-        jTextArea1.append("LAF = "+ lookAndFeel + "\n");
+        jTextArea1.append(java.lang.System.getProperty("os.name"));
+        jTextArea1.append("\n");
+        jTextArea1.append(java.lang.System.getProperty("os.arch"));
+        jTextArea1.append("\n");
+        jTextArea1.append(java.lang.System.getProperty("os.version"));
+        jTextArea1.append("\n");
+        jTextArea1.append(java.lang.System.getProperty("java.version"));
+        jTextArea1.append("\n");
+        jTextArea1.append(lookAndFeelMsg);
         progressBarUpdate();
         getWorkDirPath();
         getRawLogFilePath();
@@ -5599,11 +5607,15 @@ public class BT747Main extends javax.swing.JFrame implements
             "com.sun.java.swing.plaf.gtk.GTKLookAndFeel",
             "com.sun.java.swing.plaf.motif.MotifLookAndFeel",
             "javax.swing.plaf.metal.MetalLookAndFeel",
-            "javax.swing.plaf.mac.MacLookAndFeel" };
+            "javax.swing.plaf.mac.MacLookAndFeel",
+            "com.apple.mrj.swing.MacLookAndFeel",
+            };
     /* Index for Mac look and feel */
     private static final int C_MAC_LOOKANDFEEL_IDX = lookAndFeels.length - 1;
+    private static final int C_MAC_LOOKANDFEEL2_IDX = lookAndFeels.length - 2;
 
     private static String lookAndFeel="";
+    private static String lookAndFeelMsg="";
 
     /**
      * Try setting a look and feel for the system - catch the Exception when not
@@ -5615,9 +5627,11 @@ public class BT747Main extends javax.swing.JFrame implements
         try {
             UIManager.setLookAndFeel(s);
             lookAndFeel = s;
+            lookAndFeelMsg += "Success " + s + "\n";
             return true;
         } catch (Exception e) {
         }
+        lookAndFeelMsg += "Fail " + s + "\n";
         return false;
     }
 
@@ -5629,6 +5643,9 @@ public class BT747Main extends javax.swing.JFrame implements
         if (java.lang.System.getProperty("os.name").toLowerCase().startsWith(
                 "mac")) {
             lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[C_MAC_LOOKANDFEEL_IDX]);
+            if(!lookAndFeelIsSet) {
+                tryLookAndFeel(lookAndFeels[C_MAC_LOOKANDFEEL2_IDX]);
+            }
         }
         for (int i = 0; !lookAndFeelIsSet && (i < lookAndFeels.length); i++) {
             lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[i]);
