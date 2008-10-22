@@ -1,5 +1,6 @@
 Version 1.59.10 (since 1.57.9)
 * Added extra debug information to INFO screen.
+* CSV file also outputs way points now.
 
 Version 1.59.7 (since 1.57.5)
 * Many internal changes to make the code structure better overall.
