@@ -327,15 +327,9 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         // Input is "/BT747/BT747_sample.bin"
         if (options.has("b")) {
-            c.setStringOpt(AppSettings.LOGFILERELPATH, options.argumentOf("b"));
-                    c.setStringOpt(AppSettings.LOGFILEPATH,m.getStringOpt(AppSettings.OUTPUTDIRPATH) + File.separatorStr + m.getStringOpt(AppSettings.LOGFILERELPATH));
-            //        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile, C_LOGFILE_IDX,
-            //                C_LOGFILE_SIZE);
+            c.setStringOpt(AppSettings.LOGFILEPATH, options.argumentOf("b"));
         } else {
-            c.setStringOpt(AppSettings.LOGFILERELPATH, "BT747_log.bin");
-                    c.setStringOpt(AppSettings.LOGFILEPATH,m.getStringOpt(AppSettings.OUTPUTDIRPATH) + File.separatorStr + m.getStringOpt(AppSettings.LOGFILERELPATH));
-            //        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile, C_LOGFILE_IDX,
-            //                C_LOGFILE_SIZE);
+            c.setStringOpt(AppSettings.LOGFILEPATH, "BT747_log.bin");
         }
 
         if (options.has("s")) {

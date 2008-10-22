@@ -264,7 +264,7 @@ public class AppSettings {
 
     public static final int OUTPUTDIRPATH = 9;
     public static final int REPORTFILEBASE = 10;
-    /** @deprecated */
+    /** Available for the application - must also set {@link #LOGFILEPATH} parameter. */
     public static final int LOGFILERELPATH = 11;
     public static final int LOGFILEPATH = 12;
     
