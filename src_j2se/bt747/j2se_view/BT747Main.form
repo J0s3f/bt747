@@ -700,7 +700,7 @@
                                   <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="lbThisSWVersion" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbLoggerSWVersion" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -712,7 +712,7 @@
                                   <Component id="lbLongitude" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbLatitude" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1081,6 +1081,7 @@
                                 <StringItem index="1" value="Daylight Savings Time"/>
                               </StringArray>
                             </Property>
+                            <Property name="enabled" type="boolean" value="false"/>
                           </Properties>
                           <Events>
                             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbStandardOrDaylightSavingFocusLost"/>
@@ -1646,11 +1647,11 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="pnWaypoint" alignment="0" max="32767" attributes="1"/>
                               <Component id="pnTrackpoint" alignment="0" max="32767" attributes="1"/>
                               <Component id="pnCommonFilter" alignment="0" max="32767" attributes="1"/>
+                              <Component id="pnWaypoint" alignment="1" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace pref="58" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -2059,7 +2060,7 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
-                          <Component id="pnFilterOther" alignment="0" max="32767" attributes="1"/>
+                          <Component id="pnFilterOther" alignment="0" pref="221" max="32767" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="pnFilterPrecision" min="-2" max="-2" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -2100,7 +2101,7 @@
                                       <Component id="txtNSATMin" alignment="0" max="32767" attributes="1"/>
                                       <Component id="txtDistanceMin" alignment="0" max="32767" attributes="1"/>
                                       <Component id="txtSpeedMin" alignment="0" max="32767" attributes="1"/>
-                                      <Component id="txtRecCntMin" alignment="0" min="-2" pref="60" max="-2" attributes="1"/>
+                                      <Component id="txtRecCntMin" alignment="0" min="-2" pref="50" max="-2" attributes="1"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="2" attributes="0">
@@ -2111,9 +2112,9 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="txtSpeedMax" pref="60" max="32767" attributes="1"/>
-                                      <Component id="txtDistanceMax" alignment="0" pref="60" max="32767" attributes="1"/>
-                                      <Component id="txtRecCntMax" alignment="0" pref="60" max="32767" attributes="1"/>
+                                      <Component id="txtSpeedMax" pref="50" max="32767" attributes="1"/>
+                                      <Component id="txtDistanceMax" alignment="0" pref="50" max="32767" attributes="1"/>
+                                      <Component id="txtRecCntMax" alignment="0" pref="50" max="32767" attributes="1"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -2394,7 +2395,7 @@
                     </Container>
                     <Component class="javax.swing.JLabel" name="jLabel7">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Values that are 0 are ignored for the filter"/>
+                        <Property name="text" type="java.lang.String" value="Values that are 0 are ignored"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="cbAdvancedActive">
@@ -2983,16 +2984,19 @@
                                 <StringItem index="2" value="WAAS"/>
                               </StringArray>
                             </Property>
+                            <Property name="toolTipText" type="java.lang.String" value="Type of position correction to use - RTCM is probably not usefull, WAAS also activates EGNOSS"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JCheckBox" name="cbUseSBAS">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Use SBAS"/>
+                            <Property name="toolTipText" type="java.lang.String" value="Enables WAAS/EGNOS use."/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JCheckBox" name="cbIncludeTestSBAS">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="incl. Test SBAS"/>
+                            <Property name="toolTipText" type="java.lang.String" value="Includes WAAS/EGNOS satellites that are in test mode."/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JButton" name="btApplySBAS">
@@ -5171,7 +5175,7 @@
                         <Property name="columns" type="int" value="20"/>
                         <Property name="lineWrap" type="boolean" value="true"/>
                         <Property name="rows" type="int" value="5"/>
-                        <Property name="text" type="java.lang.String" value="This interface is experimental (under development &amp; discussion).&#xa;It is mostly functional and does provide some features not available in the usual (PDA-like) interface.&#xa;For example, it may be able to download and convert logs from PhotoTrackr / DPL700 / ITrackU devices (the raw log file should have &apos;.sr&apos; extension)&#xa;------------------------------------------------&#xa;"/>
+                        <Property name="text" type="java.lang.String" value="This is one of the first releases of the Desktop interface for BT747.&#xa;&#xa;It is mostly functional and does provide some features not available in the usual (PDA-like) interface.&#xa;For example, it may be able to download and convert logs from PhotoTrackr / DPL700 / ITrackU devices (the raw log file should have &apos;.sr&apos; extension)&#xa;------------------------------------------------&#xa;"/>
                         <Property name="autoscrolls" type="boolean" value="false"/>
                         <Property name="focusable" type="boolean" value="false"/>
                         <Property name="opaque" type="boolean" value="false"/>
