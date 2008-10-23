@@ -13,7 +13,7 @@ echo PATH = %PATH%
 echo CLASSPATH = %CLASSPATH%
 
 REM Change javaw to java in next line to see startup and debug messages
-java bt747.j2se_view.BT747Main
+javaw bt747.j2se_view.BT747Main
 REM java -verbose bt747.j2se_view.BT747Main | more
 pause
 endlocal
