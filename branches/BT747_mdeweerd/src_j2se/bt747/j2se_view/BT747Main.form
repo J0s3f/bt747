@@ -710,7 +710,7 @@
                                   <Component id="lbGeoid" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbTime" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbLongitude" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbLatitude" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbLatitude" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>

@@ -1847,7 +1847,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(org.jdesktop.layout.GroupLayout.LEADING, lbGeoid)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, lbTime)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, lbLongitude)
-                    .add(lbLatitude))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, lbLatitude))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         GPSDecodePanelLayout.setVerticalGroup(
