@@ -34,6 +34,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.util.Enumeration;
 import net.sf.bt747.j2se.system.J2SEGeneric;
@@ -132,6 +133,10 @@ public class BT747Main extends javax.swing.JFrame implements
         jTextArea1.append(java.lang.System.getProperty("java.version"));
         jTextArea1.append("\n");
         jTextArea1.append(lookAndFeelMsg);
+        LookAndFeelInfo[] a =UIManager.getInstalledLookAndFeels();
+        for(int i=0;i<a.length;i++) {
+            jTextArea1.append(a[i].getClassName()+"\n");
+        }
         progressBarUpdate();
         getWorkDirPath();
         getRawLogFilePath();
@@ -1528,7 +1533,6 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap())
         );
 
-
         pnDownload.setBorder(javax.swing.BorderFactory.createTitledBorder("Download"));
 
         jPanel16.setBorder(javax.swing.BorderFactory.createTitledBorder("Download Log From ..."));
@@ -1833,7 +1837,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(jLabel1)
                     .add(jLabel2)
                     .add(jLabel3))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, lbThisSWVersion)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, lbLoggerSWVersion)
@@ -1844,7 +1848,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(org.jdesktop.layout.GroupLayout.LEADING, lbTime)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, lbLongitude)
                     .add(lbLatitude))
-                .addContainerGap())
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         GPSDecodePanelLayout.setVerticalGroup(
             GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1983,6 +1987,7 @@ public class BT747Main extends javax.swing.JFrame implements
         );
 
         cbStandardOrDaylightSaving.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Standard Time", "Daylight Savings Time" }));
+        cbStandardOrDaylightSaving.setEnabled(false);
         cbStandardOrDaylightSaving.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbStandardOrDaylightSavingFocusLost(evt);
@@ -2829,7 +2834,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(org.jdesktop.layout.GroupLayout.LEADING, txtNSATMin)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, txtDistanceMin)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, txtSpeedMin)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, txtRecCntMin, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, txtRecCntMin, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 50, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFilterOtherLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
                     .add(lbDistanceFltr)
@@ -2838,9 +2843,9 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(lbRecNbrFltr))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFilterOtherLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(txtSpeedMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                    .add(txtDistanceMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                    .add(txtRecCntMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
+                    .add(txtSpeedMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .add(txtDistanceMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .add(txtRecCntMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnFilterOtherLayout.setVerticalGroup(
@@ -2944,7 +2949,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel7.setText("Values that are 0 are ignored for the filter");
+        jLabel7.setText("Values that are 0 are ignored");
 
         cbAdvancedActive.setText("Activate Common Filter");
         cbAdvancedActive.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -2964,7 +2969,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         .add(jLabel7))
                     .add(cbAdvancedActive))
                 .addContainerGap())
-            .add(pnFilterOther, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(pnFilterOther, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
             .add(pnCommonFilterLayout.createSequentialGroup()
                 .add(pnFilterPrecision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -3307,10 +3312,10 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(LogFiltersPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(LogFiltersPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWaypoint, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, pnTrackpoint, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnCommonFilter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(58, Short.MAX_VALUE))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnCommonFilter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(pnWaypoint, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabbedPanelAll.addTab("Filters", LogFiltersPanel);
@@ -3380,10 +3385,13 @@ public class BT747Main extends javax.swing.JFrame implements
         pnSBAS.setBorder(javax.swing.BorderFactory.createTitledBorder("SBAS"));
 
         cbDGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No DGPS", "RTCM", "WAAS" }));
+        cbDGPSType.setToolTipText("Type of position correction to use - RTCM is probably not usefull, WAAS also activates EGNOSS");
 
         cbUseSBAS.setText("Use SBAS");
+        cbUseSBAS.setToolTipText("Enables WAAS/EGNOS use.");
 
         cbIncludeTestSBAS.setText("incl. Test SBAS");
+        cbIncludeTestSBAS.setToolTipText("Includes WAAS/EGNOS satellites that are in test mode.");
 
         btApplySBAS.setText("Apply");
         btApplySBAS.addActionListener(new java.awt.event.ActionListener() {
@@ -4691,7 +4699,7 @@ public class BT747Main extends javax.swing.JFrame implements
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
-        jTextArea1.setText("This interface is experimental (under development & discussion).\nIt is mostly functional and does provide some features not available in the usual (PDA-like) interface.\nFor example, it may be able to download and convert logs from PhotoTrackr / DPL700 / ITrackU devices (the raw log file should have '.sr' extension)\n------------------------------------------------\n");
+        jTextArea1.setText("This is one of the first releases of the Desktop interface for BT747.\n\nIt is mostly functional and does provide some features not available in the usual (PDA-like) interface.\nFor example, it may be able to download and convert logs from PhotoTrackr / DPL700 / ITrackU devices (the raw log file should have '.sr' extension)\n------------------------------------------------\n");
         jTextArea1.setAutoscrolls(false);
         jTextArea1.setFocusable(false);
         jTextArea1.setOpaque(false);
@@ -5609,11 +5617,10 @@ public class BT747Main extends javax.swing.JFrame implements
             "javax.swing.plaf.metal.MetalLookAndFeel",
             "javax.swing.plaf.mac.MacLookAndFeel",
             "com.apple.mrj.swing.MacLookAndFeel",
+            "apple.laf.AquaLookAndFeel"
             };
     /* Index for Mac look and feel */
-    private static final int C_MAC_LOOKANDFEEL_IDX = lookAndFeels.length - 1;
-    private static final int C_MAC_LOOKANDFEEL2_IDX = lookAndFeels.length - 2;
-
+    private static final int C_MAC_LOOKANDFEEL_IDX = lookAndFeels.length - 3;
     private static String lookAndFeel="";
     private static String lookAndFeelMsg="";
 
@@ -5642,9 +5649,8 @@ public class BT747Main extends javax.swing.JFrame implements
         boolean lookAndFeelIsSet = false;
         if (java.lang.System.getProperty("os.name").toLowerCase().startsWith(
                 "mac")) {
-            lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[C_MAC_LOOKANDFEEL_IDX]);
-            if(!lookAndFeelIsSet) {
-                tryLookAndFeel(lookAndFeels[C_MAC_LOOKANDFEEL2_IDX]);
+            for (int i = C_MAC_LOOKANDFEEL_IDX; !lookAndFeelIsSet && (i < lookAndFeels.length); i++) {
+                lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[i]);
             }
         }
         for (int i = 0; !lookAndFeelIsSet && (i < lookAndFeels.length); i++) {

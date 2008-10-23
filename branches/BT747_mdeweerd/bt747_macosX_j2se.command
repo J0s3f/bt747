@@ -18,8 +18,8 @@ RXTX_BIN_PATH=${RXTX_PATH}/Mac_OS_X
 CLASSPATH=${RXTX_PATH}:${RXTX_BIN_PATH}:${ROOT_DIR}/dist/BT747_j2se.jar:${ROOT_DIR}/lib/swing-layout-1.0.3.jar:${ROOT_DIR}/lib/jcalendar-1.3.2.jar:.:$CLASSPATH
 export CLASSPATH
 
-which javaw 2>1 >/dev/null && JAVA=javaw
 which java 2>1 >/dev/null && JAVA=java
+which javaw 2>1 >/dev/null && JAVA=javaw
 
 # you may want to force the path to the settings file in the next call:
 # -Dbt747_settings="${USER}/bt747_settings.pdb"
