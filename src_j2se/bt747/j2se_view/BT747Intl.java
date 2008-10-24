@@ -79,12 +79,12 @@ public class BT747Intl extends javax.swing.JFrame implements
     private J2SEAppController c;
 
     /** Creates new form BT747Main */
-    public BT747Main() {
+    public BT747Intl() {
         initComponents();
         initAppData();
     }
 
-    public BT747Main(Model m, J2SEAppController c) {
+    public BT747Intl(Model m, J2SEAppController c) {
         setModel(m);
         setController(c);
         initComponents();
