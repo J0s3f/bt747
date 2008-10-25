@@ -41,7 +41,6 @@ import java.util.Enumeration;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
 
-import bt747.Txt;
 import bt747.Version;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
@@ -133,12 +132,12 @@ public class BT747Main extends javax.swing.JFrame implements
         jTextArea1.append("\n"); // NOI18N
         jTextArea1.append(java.lang.System.getProperty("os.version")); // NOI18N
         jTextArea1.append("\n"); // NOI18N
-        jTextArea1.append(java.lang.System.getProperty("java.version"));
+        jTextArea1.append(java.lang.System.getProperty("java.version")); // NOI18N
         jTextArea1.append("\n"); // NOI18N
         jTextArea1.append(lookAndFeelMsg);
         LookAndFeelInfo[] a =UIManager.getInstalledLookAndFeels();
         for(int i=0;i<a.length;i++) {
-            jTextArea1.append(a[i].getClassName()+"\n");
+            jTextArea1.append(a[i].getClassName()+"\n"); // NOI18N
         }
         progressBarUpdate();
         getWorkDirPath();
@@ -186,7 +185,7 @@ public class BT747Main extends javax.swing.JFrame implements
         try {
             cbUTCOffset.setSelectedIndex(m.getTimeOffsetHours() + 12);
         } catch (Exception e) {
-            Generic.debug("Problem with UTC offset", e);
+            Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Problem_with_UTC_offset"), e);
         }
         cbNotApplyUTCOffset.setSelected(m.getGpxUTC0());
         cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 0
@@ -265,7 +264,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 }
             }
         } catch (Exception e) {
-            Generic.debug("While adding ports", e);
+            Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("While_adding_ports"), e);
         }
     }
 
@@ -339,14 +338,16 @@ public class BT747Main extends javax.swing.JFrame implements
     private void updateGPSData(final GPSRecord gps) {
 
         lbLatitude.setText(String.format((Locale) null, "%.8f", gps.latitude)); // NOI18N
-        // lbHeight.setText(String.valueOf(gps.height,3)+Txt.METERS_ABBR);
+        // lbHeight.setText(String.valueOf(gps.height,3)+"m");
         lbLongitude
                 .setText(String.format((Locale) null, "%.8f", gps.longitude)); // NOI18N
         lbGeoid.setText(String.format((Locale) null, "%.1f", gps.geoid) // NOI18N
-                + Txt.METERS_ABBR
-                + Txt.CALC
+                + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("m")
+                + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("(calc:")
                 + String.format((Locale) null, "%.1f", Conv.wgs84Separation(
-                        gps.latitude, gps.longitude)) + Txt.METERS_ABBR + ")"); // NOI18N
+                        gps.latitude, gps.longitude))
+                        + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("m") 
+                        + ")"); // NOI18N
 
     }
 
@@ -388,13 +389,13 @@ public class BT747Main extends javax.swing.JFrame implements
      */
     private void couldNotOpenFileMessage(final String fileName) {
         MessageBox mb;
-        final String[] ok = { "OK" };
+        final String[] ok = { java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OK") };
         mb = new MessageBox(
-                "Problem opening file",
-                "The application could not open '"
+                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Problem_opening_file"),
+                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("The_application_could_not_open_")
                         + fileName
-                        + "'.<br>Check if the location exists and is writeable "
-                        + "in case it is an output file.",
+                        + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("_check_if_loc_exists")
+                        + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("in_case_it_is_an_output_file."),
                 ok);
         mb.popupBlockingModal();
     }
@@ -450,7 +451,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 cbDGPSType.setSelectedIndex(m.getDgpsMode());
             } catch (Exception ee) {
                 // TODO: handle exception
-                Generic.debug("Unknown DGPS Mode" + m.getDgpsMode(), ee);
+                Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Unknown_DGPS_Mode") + m.getDgpsMode(), ee);
             }
 
             // TODO
@@ -463,7 +464,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 // jComboBox23.setSelectedIndex(m.getDatum());
             } catch (Exception ee) {
                 // TODO: handle exception
-                Generic.debug("Unknown DATUM" + m.getDatum(), ee);
+                Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Unknown_DATUM") + m.getDatum(), ee);
             }
             // TODO
             // cbDatumMode.select(m.getDatum());
@@ -517,13 +518,13 @@ public class BT747Main extends javax.swing.JFrame implements
             break;
         case ModelEvent.CONVERSION_ENDED:
             lbConversionTime
-                    .setText("Time to convert: "
+                    .setText(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Time_to_convert:_")
                             + ((int) (System.currentTimeMillis() - conversionStartTime))
-                            + " ms");
+                            + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("_ms"));
             lbConversionTime.setVisible(true);
             break;
         case ModelEvent.CONNECTED:
-            btConnect.setText("Disconnect");
+            btConnect.setText(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Disconnect"));
             btConnectFunctionIsConnect = false;
 
             // TODO: Find the way to do this on tab entry.
@@ -543,7 +544,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
             break;
         case ModelEvent.DISCONNECTED:
-            btConnect.setText("Connect");
+            btConnect.setText(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Connect"));
             btConnectFunctionIsConnect = true;
             break;
         case ModelEvent.DOWNLOAD_STATE_CHANGE:
@@ -553,12 +554,12 @@ public class BT747Main extends javax.swing.JFrame implements
             break;
         case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
             MessageBox mb;
-            final String[] yesNo = { "Yes", "No" };
+            final String[] yesNo = { java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Yes"), java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("No") };
             mb = new MessageBox(
-                    "OVERWRITING DATA",
-                    "The current raw data file is not empty,<br>"
-                            + "and, the data in the GPS Logger is different!!!<br>"
-                            + "DO YOU CONFIRM OVERWRITING THE CURRENT DIFFERENT DATA?",
+                    java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OVERWRITING_DATA"),
+                    java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("The_current_raw_data_file_is_not_empty,<br>")
+                            + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("and,_the_data_in_the_GPS_Logger_is_different!!!<br>")
+                            + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("DO_YOU_CONFIRM_OVERWRITING_THE_CURRENT_DIFFERENT_DATA?"),
                     yesNo);
             mb.popupBlockingModal();
             c.replyToOkToOverwrite(mb.getAnswer() == 0);
@@ -1498,7 +1499,7 @@ public class BT747Main extends javax.swing.JFrame implements
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         setTitle(bundle.getString("BT747Main.title")); // NOI18N
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setIconImage(Toolkit.getDefaultToolkit().getImage("icons/bt747_16x16.gif"));
+        setIconImage(Toolkit.getDefaultToolkit().getImage("icons/BT747.ico"));
         setName("BT747Frame"); // NOI18N
 
         DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
@@ -1548,7 +1549,7 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
-        DownloadProgressBar.getAccessibleContext().setAccessibleName("DownloadProgessBar");
+        DownloadProgressBar.getAccessibleContext().setAccessibleName(bundle.getString("DownloadProgessBar")); // NOI18N
         progressBarUpdate();
 
         pnFiles.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFiles.border.title"))); // NOI18N
@@ -4858,7 +4859,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap())
         );
 
-        tabbedPanelAll.getAccessibleContext().setAccessibleName("Log download & Convert");
+        tabbedPanelAll.getAccessibleContext().setAccessibleName(bundle.getString("Log_download_&_Convert")); // NOI18N
 
         getAccessibleContext().setAccessibleName("MTK Datalogger Control (BT747)");
 
@@ -4920,7 +4921,7 @@ public class BT747Main extends javax.swing.JFrame implements
         // TODO add your handling code here:
         Color myColor = new Color(Conv.hex2Int(m.getColorInvalidTrack()));
         myColor = JColorChooser.showDialog(this,
-                "Choose the color for a 'bad track' (pure blue to ignore)",
+                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Choose_the_color_for_a_'bad_track'_(pure_blue_to_ignore)"),
                 myColor);
         if (myColor != null) {
             c.setColorInvalidTrack(Convert.unsigned2hex(
@@ -4932,7 +4933,7 @@ public class BT747Main extends javax.swing.JFrame implements
         // TODO add your handling code here:
         Color myColor = new Color(Conv.hex2Int(m.getColorValidTrack()));
         myColor = JColorChooser.showDialog(this,
-                "Choose the color for a 'good track' (pure blue to ignore)",
+                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Choose_the_color_for_a_'good_track'_(pure_blue_to_ignore)"),
                 myColor);
         if (myColor != null) {
             c.setColorValidTrack(Convert.unsigned2hex(
@@ -5066,7 +5067,7 @@ public class BT747Main extends javax.swing.JFrame implements
         } catch (Exception e) {
             Generic
                     .debug(
-                            "Problem in Apply Log conditions - probably non-numeric value",
+                            java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Problem_in_Apply_Log_conditions_-_probably_non-numeric_value"),
                             e);
         }
     }// GEN-LAST:event_btHotStartActionPerformed
@@ -5207,11 +5208,11 @@ public class BT747Main extends javax.swing.JFrame implements
         OutputFileChooser = new javax.swing.JFileChooser(f.getParent());
         OutputFileChooser.setSelectedFile(f);
         OutputFileChooser
-                .setToolTipText("Select the basename of the output file.");
+                .setToolTipText(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Select_the_basename_of_the_output_file."));
         // if (curDir.exists()) {
         // OutputFileChooser.setCurrentDirectory(getOutputFilePath());
         // }
-        if (OutputFileChooser.showDialog(this, "Set basename") == JFileChooser.APPROVE_OPTION) {
+        if (OutputFileChooser.showDialog(this, java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Set_basename")) == JFileChooser.APPROVE_OPTION) {
             try {
                 c.setOutputFileRelPath(gps.convert.FileUtil.getRelativePath(
                         (new File(m.getStringOpt(AppSettings.OUTPUTDIRPATH)))
@@ -5219,7 +5220,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                 .getSelectedFile().getCanonicalPath(),
                         File.separatorChar));
             } catch (Exception e) {
-                Generic.debug("OutputFileChooser", e);
+                Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OutputFileChooser"), e);
             }
         }
     }// GEN-LAST:event_btOutputFileActionPerformed
@@ -5235,12 +5236,12 @@ public class BT747Main extends javax.swing.JFrame implements
         // if (curDir.exists()) {
         // RawLogFileChooser.setCurrentDirectory(getRawLogFilePath());
         // }
-        if (RawLogFileChooser.showDialog(this,"Set") == JFileChooser.APPROVE_OPTION) {
+        if (RawLogFileChooser.showDialog(this,java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Set")) == JFileChooser.APPROVE_OPTION) {
             try {
             c.setStringOpt(AppSettings.LOGFILEPATH, RawLogFileChooser.getSelectedFile()
                     .getCanonicalPath());
             } catch (Exception e) {
-                Generic.debug("RawFileChooser",e);
+                Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("RawFileChooser"),e);
             }
         }
     }// GEN-LAST:event_btRawLogFileActionPerformed
@@ -5254,15 +5255,15 @@ public class BT747Main extends javax.swing.JFrame implements
         // WorkingDirectoryChooser = new javax.swing.JFileChooser();
         // }
 
-        WorkingDirectoryChooser.setDialogTitle("Choose Working Directory");
+        WorkingDirectoryChooser.setDialogTitle(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Choose_Working_Directory"));
         WorkingDirectoryChooser
                 .setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        if (WorkingDirectoryChooser.showDialog(this, "Set") == JFileChooser.APPROVE_OPTION) {
+        if (WorkingDirectoryChooser.showDialog(this, java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Set")) == JFileChooser.APPROVE_OPTION) {
             try {
                 c.setStringOpt(AppSettings.OUTPUTDIRPATH, WorkingDirectoryChooser.getSelectedFile()
                                         .getCanonicalPath());
             } catch (Exception e) {
-                Generic.debug("WorkingDirChooser", e);
+                Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("WorkingDirChooser"), e);
             }
         }
     }// GEN-LAST:event_btWorkingDirectoryActionPerformed
@@ -5270,19 +5271,19 @@ public class BT747Main extends javax.swing.JFrame implements
     private int selectedFormat = Model.NO_LOG_LOGTYPE;
 
     private final void setSelectedFormat(final String selected) {
-        if (selected.startsWith("CSV")) {
+        if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("CSV"))) {
             selectedFormat = Model.CSV_LOGTYPE;
-        } else if (selected.startsWith("Google Map")) {
+        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Google_Map"))) {
             selectedFormat = Model.GMAP_LOGTYPE;
-        } else if (selected.startsWith("GPX")) {
+        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("GPX"))) {
             selectedFormat = Model.GPX_LOGTYPE;
-        } else if (selected.startsWith("KML")) {
+        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("KML"))) {
             selectedFormat = Model.KML_LOGTYPE;
-        } else if (selected.startsWith("NMEA")) {
+        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("NMEA"))) {
             selectedFormat = Model.NMEA_LOGTYPE;
-        } else if (selected.startsWith("Ozi")) {
+        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Ozi"))) {
             selectedFormat = Model.PLT_LOGTYPE;
-        } else if (selected.startsWith("Compe")) {
+        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Compe"))) {
             selectedFormat = Model.TRK_LOGTYPE;
         } else {
             selectedFormat = Model.NO_LOG_LOGTYPE;
@@ -5346,7 +5347,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private void updateEstimatedNbrRecords() {
         txtEstimatedRecords.setText(m
                 .getEstimatedNbrRecords(getUserLogFormat())
-                + Txt.REC_ESTIMATED);
+                + " records estimated");
     }
 
     private int getUserLogFormat() {
@@ -5604,9 +5605,9 @@ public class BT747Main extends javax.swing.JFrame implements
         if (foundPort) {
             c.setPort(port);
         } else {
-            if (s.toUpperCase().startsWith("BLUETOOTH")) {
+            if (s.toUpperCase().startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("BLUETOOTH"))) {
                 c.setBluetooth();
-            } else if (s.toUpperCase().startsWith("USB")) {
+            } else if (s.toUpperCase().startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("USB"))) {
                 c.setUsb();
             } else {
                 c.openFreeTextPort(s);
@@ -5653,11 +5654,11 @@ public class BT747Main extends javax.swing.JFrame implements
         try {
             UIManager.setLookAndFeel(s);
             lookAndFeel = s;
-            lookAndFeelMsg += "Success " + s + "\n";
+            lookAndFeelMsg += java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Success_") + s + "\n";
             return true;
         } catch (Exception e) {
         }
-        lookAndFeelMsg += "Fail " + s + "\n";
+        lookAndFeelMsg += java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Fail_") + s + "\n";
         return false;
     }
 
