@@ -83,7 +83,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private static final String iconPath = "icons/bt747_16x16.gif";
     
     private static final void setAppIcon() {
-        URL u = BT747Main.class.getResource("/"+appIcon);
+        URL u = BT747Main.class.getResource("/"+iconPath);
 
         if(u!=null) {
             appIcon = Toolkit.getDefaultToolkit().getImage(u);
