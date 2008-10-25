@@ -867,7 +867,7 @@ public class AppSettings {
         setLocalBooleanOpt(0, value, C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
     }
 
-    public final boolean getAdvFilterActive() {
+    public final boolean isAdvFilterActive() {
         return getLocalBooleanOpt(C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
     }
 
