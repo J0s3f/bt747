@@ -435,7 +435,8 @@ public class BT747Main extends javax.swing.JFrame implements
             String fwString;
             fwString = "";
             lbModel.setToolTipText("");
-            if (m.getMainVersion().length() != 0) {
+            if (m.getMainVersion().length()
+                    + m.getFirmwareVersion().length() != 0) {
                 if (m.getMainVersion().length()
                         + m.getFirmwareVersion().length() > 20) {
                     fwString = "<html>";
