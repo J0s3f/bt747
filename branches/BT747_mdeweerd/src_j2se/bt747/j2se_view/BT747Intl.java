@@ -5696,7 +5696,7 @@ public class BT747Intl extends javax.swing.JFrame implements
             final J2SEAppController c = new J2SEAppController(m);
 
             public final void run() {
-                final BT747Main app = new BT747Main(m, c);
+                final BT747Intl app = new BT747Intl(m, c);
                 app.setVisible(true);
             }
         });
