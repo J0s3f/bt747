@@ -461,10 +461,11 @@ public class AppSettings {
     }
 
     private void setFilterDefaults() {
-        setTrkPtValid(0xFFFFFFFE);
+        setTrkPtValid(0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
         setTrkPtRCR(0xFFFFFFFF);
-        setWayPtValid(0xFFFFFFFE);
-        setWayPtRCR(0x00000008);
+        setWayPtValid(0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
+        setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
+                | BT747Constants.RCR_ALL_APP_MASK);
     }
 
     private final void setOpt(final int eventType, final String src,
