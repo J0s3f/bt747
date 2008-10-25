@@ -1499,7 +1499,7 @@ public class BT747Main extends javax.swing.JFrame implements
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         setTitle(bundle.getString("BT747Main.title")); // NOI18N
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setIconImage(Toolkit.getDefaultToolkit().getImage("icons/bt747_16x16.gif"));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(BT747Main.class.getResource("icons/bt747_16x16.gif")));
         setName("BT747Frame"); // NOI18N
 
         DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));

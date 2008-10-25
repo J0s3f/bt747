@@ -382,9 +382,9 @@
 		     jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
 		     compress="true"
 		>
-            <fileset dir="${icon.dir}" includes="icons/bt747_16x16.gif" />
-            <fileset dir="${icon.dir}" includes="icons/bt747_24x24.gif" />
-            <fileset dir="${icon.dir}" includes="icons/bt747_32x32.gif" />
+            <fileset dir="${icon.dir}/.." includes="icons/bt747_16x16.gif" />
+            <fileset dir="${icon.dir}/.." includes="icons/bt747_24x24.gif" />
+            <fileset dir="${icon.dir}/.." includes="icons/bt747_32x32.gif" />
             <fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
 			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
 		</jar>
