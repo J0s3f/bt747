@@ -22,6 +22,7 @@ import gps.log.GPSRecord;
 import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.Toolkit;
 import java.io.File;
 import java.util.Date;
 import java.util.Calendar;
@@ -76,6 +77,8 @@ public class BT747Main extends javax.swing.JFrame implements
     private static final long serialVersionUID = 1L;
     private Model m;
     private J2SEAppController c;
+    
+    java.util.ResourceBundle r;
 
     /** Creates new form BT747Main */
     public BT747Main() {
@@ -201,7 +204,7 @@ public class BT747Main extends javax.swing.JFrame implements
         BT747Time d;
         d = Interface.getTimeInstance();
         d.setUTCTime(m.getFilterStartTime());
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT")); // NO18N
         // cal.setTimeZone(TimeZone.getTimeZone("GMT"));
         cal.set(d.getYear(), d.getMonth() - 1, d.getDay(), 0, 0, 0);
         // startDate.getDateEditor().
@@ -328,7 +331,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     + String.valueOf(t.getMinute()) + ":"
                     + (t.getSecond() < 10 ? "0" : "")
                     + String.valueOf(t.getSecond());
-            lbTime.setText(TimeStr);
+            lbTime.setText(TimeStr); // NO18N
         }
         updateGPSData(gps);
     }
@@ -411,9 +414,26 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.UPDATE_MTK_VERSION:
         case ModelEvent.UPDATE_MTK_RELEASE:
             lbModel.setText(m.getModel());
-            lbFirmWare.setText(((m.getMainVersion().length() != 0) ? Txt.MAIN
-                    : "")
-                    + m.getMainVersion() + " " + m.getFirmwareVersion()); // NOI18N
+            String fwString;
+            fwString = "";
+            lbModel.setToolTipText("");
+            if (m.getMainVersion().length() != 0) {
+                if (m.getMainVersion().length()
+                        + m.getFirmwareVersion().length() > 20) {
+                    fwString = "<html>";
+                    if (m.getMainVersion().length() > 20) {
+                        fwString = m.getMainVersion().substring(0, 17) + "...";
+                        lbModel.setToolTipText(m.getMainVersion());
+                    } else {
+                        fwString += m.getMainVersion();
+                    }
+                    fwString += "<br>" + m.getFirmwareVersion(); // NOI18N
+                } else {
+                    fwString = m.getMainVersion() + " "
+                            + m.getFirmwareVersion(); // NOI18N
+                }
+            }
+            lbFirmWare.setText(fwString); // NOI18N
             break;
         case ModelEvent.UPDATE_LOG_VERSION:
             lbLoggerSWVersion.setText(m.getMtkLogVersion());
@@ -1475,19 +1495,22 @@ public class BT747Main extends javax.swing.JFrame implements
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("BT747 Application");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        setTitle(bundle.getString("BT747Main.title")); // NOI18N
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setIconImage(Toolkit.getDefaultToolkit().getImage("icons/bt747_16x16.gif"));
         setName("BT747Frame"); // NOI18N
 
         DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
         DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
-        DownloadProgressBar.setToolTipText("<html>Inidcates how the download progresses.<br>The progress might reduce if this software deducted there is more data in the device than it reported.");
+        DownloadProgressBar.setToolTipText(bundle.getString("BT747Main.DownloadProgressBar.toolTipText")); // NOI18N
         DownloadProgressBar.setFocusable(false);
 
-        DownloadProgressLabel.setText("Download progress");
+        DownloadProgressLabel.setText(bundle.getString("BT747Main.DownloadProgressLabel.text")); // NOI18N
 
         cbPortName.setEditable(true);
         cbPortName.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "USB (for Linux, Mac)", "BLUETOOTH (for Mac)", "COM1:", "COM2:", "COM3:", "COM4:", "COM5:", "COM6:", "COM7:", "COM8:", "COM9:", "COM10:", "COM11:", "COM12:", "COM13:", "COM14:", "COM15:", "COM16:" }));
-        cbPortName.setToolTipText("<html>The system identifier or path of the port.<br>Select a port from the list or type the port directly.");
+        cbPortName.setToolTipText(bundle.getString("BT747Main.cbPortName.toolTipText")); // NOI18N
         cbPortName.setPreferredSize(new java.awt.Dimension(200, 22));
         cbPortName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1495,7 +1518,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        btConnect.setText("Connect");
+        btConnect.setText(bundle.getString("BT747Main.btConnect.text")); // NOI18N
         btConnect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btConnectActionPerformed(evt);
@@ -1528,31 +1551,31 @@ public class BT747Main extends javax.swing.JFrame implements
         DownloadProgressBar.getAccessibleContext().setAccessibleName("DownloadProgessBar");
         progressBarUpdate();
 
-        pnFiles.setBorder(javax.swing.BorderFactory.createTitledBorder("Files"));
+        pnFiles.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFiles.border.title"))); // NOI18N
 
-        tfWorkDirectory.setText("WorkDir");
+        tfWorkDirectory.setText(bundle.getString("BT747Main.tfWorkDirectory.text")); // NOI18N
         tfWorkDirectory.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfWorkDirectoryFocusLost(evt);
             }
         });
 
-        tfRawLogFilePath.setText("RawFile");
+        tfRawLogFilePath.setText(bundle.getString("BT747Main.tfRawLogFilePath.text")); // NOI18N
         tfRawLogFilePath.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfRawLogFilePathFocusLost(evt);
             }
         });
 
-        tfOutputFileBaseName.setText("OutputBase");
+        tfOutputFileBaseName.setText(bundle.getString("BT747Main.tfOutputFileBaseName.text")); // NOI18N
         tfOutputFileBaseName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfOutputFileBaseNameFocusLost(evt);
             }
         });
 
-        btWorkingDirectory.setText("Output Directory :");
-        btWorkingDirectory.setToolTipText("<html>The directory where the reports will be written.");
+        btWorkingDirectory.setText(bundle.getString("BT747Main.btWorkingDirectory.text")); // NOI18N
+        btWorkingDirectory.setToolTipText(bundle.getString("BT747Main.btWorkingDirectory.toolTipText")); // NOI18N
         btWorkingDirectory.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btWorkingDirectory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1560,8 +1583,8 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        btRawLogFile.setText("Raw Log File :");
-        btRawLogFile.setToolTipText("<html>The source file, also used to write to when downloading.<br>\nFor download, define a .bin (most cases) or .sr (phototracker) file.<br>\nThe input format be .bin, .nmea, .csv or .trl.");
+        btRawLogFile.setText(bundle.getString("BT747Main.btRawLogFile.text")); // NOI18N
+        btRawLogFile.setToolTipText(bundle.getString("BT747Main.btRawLogFile.toolTipText")); // NOI18N
         btRawLogFile.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btRawLogFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1569,8 +1592,8 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        btOutputFile.setText("Output filename :");
-        btOutputFile.setToolTipText("<html>The basename of the output file.<br>The date/time identifier will be added,<br>and the extension depends on the selected output format.");
+        btOutputFile.setText(bundle.getString("BT747Main.btOutputFile.text")); // NOI18N
+        btOutputFile.setToolTipText(bundle.getString("BT747Main.btOutputFile.toolTipText")); // NOI18N
         btOutputFile.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btOutputFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1578,7 +1601,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel15.setText("without the file extension");
+        jLabel15.setText(bundle.getString("BT747Main.jLabel15.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnFilesLayout = new org.jdesktop.layout.GroupLayout(pnFiles);
         pnFiles.setLayout(pnFilesLayout);
@@ -1618,18 +1641,18 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap())
         );
 
-        pnDownload.setBorder(javax.swing.BorderFactory.createTitledBorder("Download"));
+        pnDownload.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnDownload.border.title"))); // NOI18N
 
-        jPanel17.setBorder(javax.swing.BorderFactory.createTitledBorder("Download method"));
+        jPanel17.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.jPanel17.border.title"))); // NOI18N
 
-        cbIncremental.setText("Incremental Download");
+        cbIncremental.setText(bundle.getString("BT747Main.cbIncremental.text")); // NOI18N
         cbIncremental.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbIncrementalActionPerformed(evt);
             }
         });
 
-        cbDisableLoggingDuringDownload.setText("Disable logging while downloading");
+        cbDisableLoggingDuringDownload.setText(bundle.getString("BT747Main.cbDisableLoggingDuringDownload.text")); // NOI18N
         cbDisableLoggingDuringDownload.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbDisableLoggingDuringDownloadFocusLost(evt);
@@ -1654,16 +1677,16 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(cbDisableLoggingDuringDownload))
         );
 
-        btDownloadIBlue.setText("iBlue / Qstarz / Holux / Konet");
-        btDownloadIBlue.setToolTipText("<html>Download from the indicated devices.");
+        btDownloadIBlue.setText(bundle.getString("BT747Main.btDownloadIBlue.text")); // NOI18N
+        btDownloadIBlue.setToolTipText(bundle.getString("BT747Main.btDownloadIBlue.toolTipText")); // NOI18N
         btDownloadIBlue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btDownloadIBlueActionPerformed(evt);
             }
         });
 
-        btDownloadFromNumerix.setText("PhotoTrackr / DPL700 / iTrackU-Nemerix/SIRFIII");
-        btDownloadFromNumerix.setToolTipText("<html>Download from the indicated devices.");
+        btDownloadFromNumerix.setText(bundle.getString("BT747Main.btDownloadFromNumerix.text")); // NOI18N
+        btDownloadFromNumerix.setToolTipText(bundle.getString("BT747Main.btDownloadFromNumerix.toolTipText")); // NOI18N
         btDownloadFromNumerix.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btDownloadFromNumerixActionPerformed(evt);
@@ -1691,9 +1714,9 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(btDownloadFromNumerix))
         );
 
-        pnConvert.setBorder(javax.swing.BorderFactory.createTitledBorder("Convert"));
+        pnConvert.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnConvert.border.title"))); // NOI18N
 
-        btConvert.setText("Convert To");
+        btConvert.setText(bundle.getString("BT747Main.btConvert.text")); // NOI18N
         btConvert.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btConvertActionPerformed(evt);
@@ -1707,11 +1730,11 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jPanel18.setBorder(javax.swing.BorderFactory.createTitledBorder("Date filter"));
+        jPanel18.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.jPanel18.border.title"))); // NOI18N
 
-        jLabel44.setText(" to ");
+        jLabel44.setText(bundle.getString("BT747Main.jLabel44.text")); // NOI18N
 
-        jLabel43.setText("From ");
+        jLabel43.setText(bundle.getString("BT747Main.jLabel43.text")); // NOI18N
 
         sfTimeSplitHours.setMaximum(23);
         sfTimeSplitHours.setMinimum(0);
@@ -1721,7 +1744,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel5.setText("h");
+        jLabel5.setText(bundle.getString("BT747Main.jLabel5.text")); // NOI18N
 
         spTimeSplitMinutes.setMaximum(59);
         spTimeSplitMinutes.setMinimum(0);
@@ -1731,10 +1754,10 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel8.setText("Time split:");
-        jLabel8.setToolTipText("Time (hours:minutes) corresponding to the start time on the first day and the end time on the day following the 'to date'.");
+        jLabel8.setText(bundle.getString("BT747Main.jLabel8.text")); // NOI18N
+        jLabel8.setToolTipText(bundle.getString("BT747Main.jLabel8.toolTipText")); // NOI18N
 
-        jLabel11.setText("min");
+        jLabel11.setText(bundle.getString("BT747Main.jLabel11.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel18Layout = new org.jdesktop.layout.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
@@ -1784,20 +1807,20 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel57.setText("Device type");
+        jLabel57.setText(bundle.getString("BT747Main.jLabel57.text")); // NOI18N
 
-        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder("Decoder for '.bin' file"));
+        jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.jPanel9.border.title"))); // NOI18N
 
         cbDecoderChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Original", "Thomas's version" }));
-        cbDecoderChoice.setToolTipText("<html>Choose the decoder for the raw log file<br>Original corresponds to the main decoder, the other decoder is experimental and has some bugs.");
+        cbDecoderChoice.setToolTipText(bundle.getString("BT747Main.cbDecoderChoice.toolTipText")); // NOI18N
         cbDecoderChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbDecoderChoiceActionPerformed(evt);
             }
         });
 
-        lbConversionTime.setText("conversion Time");
-        lbConversionTime.setToolTipText("The time spent for the last conversion.");
+        lbConversionTime.setText(bundle.getString("BT747Main.lbConversionTime.text")); // NOI18N
+        lbConversionTime.setToolTipText(bundle.getString("BT747Main.lbConversionTime.toolTipText")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel9Layout = new org.jdesktop.layout.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -1855,45 +1878,45 @@ public class BT747Main extends javax.swing.JFrame implements
 
         setSelectedFormat(cbFormat.getSelectedItem().toString());
 
-        GPSDecodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("GPS Device Data"));
+        GPSDecodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.GPSDecodePanel.border.title"))); // NOI18N
 
-        jLabel1.setText("Latitude :");
+        jLabel1.setText(bundle.getString("BT747Main.jLabel1.text")); // NOI18N
 
-        jLabel2.setText("Longitude :");
+        jLabel2.setText(bundle.getString("BT747Main.jLabel2.text")); // NOI18N
 
-        jLabel3.setText("GPS Time :");
+        jLabel3.setText(bundle.getString("BT747Main.jLabel3.text")); // NOI18N
 
-        lbLatitude.setText("Unknown");
+        lbLatitude.setText(bundle.getString("BT747Main.lbLatitude.text")); // NOI18N
 
-        lbLongitude.setText("Unknown");
+        lbLongitude.setText(bundle.getString("BT747Main.lbLongitude.text")); // NOI18N
 
-        lbTime.setText("Unknown");
+        lbTime.setText(bundle.getString("BT747Main.lbTime.text")); // NOI18N
 
-        jLabel4.setText("Geoid :");
+        jLabel4.setText(bundle.getString("BT747Main.jLabel4.text")); // NOI18N
 
-        lbGeoid.setText("Unknown");
+        lbGeoid.setText(bundle.getString("BT747Main.lbGeoid.text")); // NOI18N
 
-        jLabel6.setText("FlashInfo:");
+        jLabel6.setText(bundle.getString("BT747Main.jLabel6.text")); // NOI18N
 
-        lbFlashInfo.setText("Unknown");
-        lbFlashInfo.setToolTipText("Flash identification code.");
+        lbFlashInfo.setText(bundle.getString("BT747Main.lbFlashInfo.text")); // NOI18N
+        lbFlashInfo.setToolTipText(bundle.getString("BT747Main.lbFlashInfo.toolTipText")); // NOI18N
 
-        jLabel10.setText("Model:");
+        jLabel10.setText(bundle.getString("BT747Main.jLabel10.text")); // NOI18N
 
-        lbModel.setText("Unknown");
+        lbModel.setText(bundle.getString("BT747Main.lbModel.text")); // NOI18N
 
-        jLabel14.setText("FirmWare:");
+        jLabel14.setText(bundle.getString("BT747Main.jLabel14.text")); // NOI18N
 
-        lbFirmWare.setText("<html>Unknown");
+        lbFirmWare.setText(bundle.getString("BT747Main.lbFirmWare.text")); // NOI18N
 
-        jLabel16.setText("Logger SW Version:");
+        jLabel16.setText(bundle.getString("BT747Main.jLabel16.text")); // NOI18N
 
-        jLabel17.setText("This SW Version:");
+        jLabel17.setText(bundle.getString("BT747Main.jLabel17.text")); // NOI18N
 
-        lbLoggerSWVersion.setText("Unknown");
-        lbLoggerSWVersion.setToolTipText("<html>The SW version of the device.<br>");
+        lbLoggerSWVersion.setText(bundle.getString("BT747Main.lbLoggerSWVersion.text")); // NOI18N
+        lbLoggerSWVersion.setToolTipText(bundle.getString("BT747Main.lbLoggerSWVersion.toolTipText")); // NOI18N
 
-        lbThisSWVersion.setText("Unknown");
+        lbThisSWVersion.setText(bundle.getString("BT747Main.lbThisSWVersion.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout GPSDecodePanelLayout = new org.jdesktop.layout.GroupLayout(GPSDecodePanel);
         GPSDecodePanel.setLayout(GPSDecodePanelLayout);
@@ -1993,9 +2016,9 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnConvert, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
-        tabbedPanelAll.addTab("Log operations", LogOperationsPanel);
+        tabbedPanelAll.addTab(bundle.getString("BT747Main.LogOperationsPanel.TabConstraints.tabTitle"), LogOperationsPanel); // NOI18N
 
-        pnVarious.setBorder(javax.swing.BorderFactory.createTitledBorder("Various"));
+        pnVarious.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnVarious.border.title"))); // NOI18N
 
         cbUTCOffset.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "UTC -12", "UTC -11", "UTC -10", "UTC -9", "UTC -8", "UTC -7", "UTC -6", "UTC -5", "UTC -4", "UTC -3", "UTC -2", "UTC -1", "UTC +0", "UTC +1", "UTC +2", "UTC +3", "UTC +4", "UTC +5", "UTC +6", "UTC +7", "UTC +8", "UTC +9", "UTC +10", "UTC +11", "UTC +12" }));
         cbUTCOffset.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -2005,30 +2028,30 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         cbHeightOverMeanSeaLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Keep WGS84 height", "MSL height" }));
-        cbHeightOverMeanSeaLevel.setToolTipText("<html>Correct the logged height (altitude).<br>MTK loggers store the height as the altitude relative to the WGS84.<br>When activated, write height relative to the mean sea level.");
+        cbHeightOverMeanSeaLevel.setToolTipText(bundle.getString("BT747Main.cbHeightOverMeanSeaLevel.toolTipText")); // NOI18N
         cbHeightOverMeanSeaLevel.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbHeightOverMeanSeaLevelFocusLost(evt);
             }
         });
 
-        cbRecordNumberInfoInLog.setText("RecordNumberInfoInLog");
-        cbRecordNumberInfoInLog.setToolTipText("<html>Write the record number of each position to the log file.");
+        cbRecordNumberInfoInLog.setText(bundle.getString("BT747Main.cbRecordNumberInfoInLog.text")); // NOI18N
+        cbRecordNumberInfoInLog.setToolTipText(bundle.getString("BT747Main.cbRecordNumberInfoInLog.toolTipText")); // NOI18N
         cbRecordNumberInfoInLog.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbRecordNumberInfoInLogFocusLost(evt);
             }
         });
 
-        cbImperialUnits.setText("ImperialUnits");
-        cbImperialUnits.setToolTipText("<html>convert values to inches, feet, mph, ... .");
+        cbImperialUnits.setText(bundle.getString("BT747Main.cbImperialUnits.text")); // NOI18N
+        cbImperialUnits.setToolTipText(bundle.getString("BT747Main.cbImperialUnits.toolTipText")); // NOI18N
         cbImperialUnits.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbImperialUnitsFocusLost(evt);
             }
         });
 
-        lbTimeZone.setText("TimeZone");
+        lbTimeZone.setText(bundle.getString("BT747Main.lbTimeZone.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -2074,15 +2097,15 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        cbGoodFixColor.setText("Good Color");
+        cbGoodFixColor.setText(bundle.getString("BT747Main.cbGoodFixColor.text")); // NOI18N
         cbGoodFixColor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbGoodFixColorActionPerformed(evt);
             }
         });
 
-        cbNoFixColor.setText("Bad Color");
-        cbNoFixColor.setToolTipText("<html>Make sure the bad color is the same as the good color<br>if you want to limit the HTML file size.<br>The 'bad color' is used to indicate track sections with unselected positions.");
+        cbNoFixColor.setText(bundle.getString("BT747Main.cbNoFixColor.text")); // NOI18N
+        cbNoFixColor.setToolTipText(bundle.getString("BT747Main.cbNoFixColor.toolTipText")); // NOI18N
         cbNoFixColor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbNoFixColorActionPerformed(evt);
@@ -2126,21 +2149,21 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
-        pnSeparation.setBorder(javax.swing.BorderFactory.createTitledBorder("Separation"));
+        pnSeparation.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnSeparation.border.title"))); // NOI18N
         pnSeparation.setMaximumSize(new java.awt.Dimension(300, 32767));
         pnSeparation.setOpaque(false);
 
-        lbNewTrackAfter.setText("New Track after");
+        lbNewTrackAfter.setText(bundle.getString("BT747Main.lbNewTrackAfter.text")); // NOI18N
 
-        tfTrackSeparationTime.setText("0");
-        tfTrackSeparationTime.setToolTipText("<html>The time needed between two successively logged positions<br>to determine a new track must be started.");
+        tfTrackSeparationTime.setText(bundle.getString("BT747Main.tfTrackSeparationTime.text")); // NOI18N
+        tfTrackSeparationTime.setToolTipText(bundle.getString("BT747Main.tfTrackSeparationTime.toolTipText")); // NOI18N
         tfTrackSeparationTime.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfTrackSeparationTimeFocusLost(evt);
             }
         });
 
-        jLabel48.setText("min. pause");
+        jLabel48.setText(bundle.getString("BT747Main.jLabel48.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnSeparationLayout = new org.jdesktop.layout.GroupLayout(pnSeparation);
         pnSeparation.setLayout(pnSeparationLayout);
@@ -2162,13 +2185,13 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(jLabel48))
         );
 
-        pnFileOutputFields.setBorder(javax.swing.BorderFactory.createTitledBorder("File Output Fields"));
-        pnFileOutputFields.setToolTipText("<html>Select the fields that must be written to the output files.");
+        pnFileOutputFields.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileOutputFields.border.title"))); // NOI18N
+        pnFileOutputFields.setToolTipText(bundle.getString("BT747Main.pnFileOutputFields.toolTipText")); // NOI18N
 
-        pnFileReason.setBorder(javax.swing.BorderFactory.createTitledBorder("Reason"));
+        pnFileReason.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileReason.border.title"))); // NOI18N
 
-        cbFileRCR.setText("RCR");
-        cbFileRCR.setToolTipText("Log reason (such as: time, speed, distance, button press");
+        cbFileRCR.setText(bundle.getString("BT747Main.cbFileRCR.text")); // NOI18N
+        cbFileRCR.setToolTipText(bundle.getString("BT747Main.cbFileRCR.toolTipText")); // NOI18N
         cbFileRCR.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileRCRupdateLogRecordEstCount(evt);
@@ -2188,16 +2211,16 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(cbFileRCR)
         );
 
-        pnFileTime.setBorder(javax.swing.BorderFactory.createTitledBorder("Time"));
+        pnFileTime.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileTime.border.title"))); // NOI18N
 
-        cbFileUTCTime.setText("UTC Time");
+        cbFileUTCTime.setText(bundle.getString("BT747Main.cbFileUTCTime.text")); // NOI18N
         cbFileUTCTime.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileUTCTimeupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileMilliSeconds.setText("Milliseconds");
+        cbFileMilliSeconds.setText(bundle.getString("BT747Main.cbFileMilliSeconds.text")); // NOI18N
         cbFileMilliSeconds.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileMilliSecondsupdateLogRecordEstCount(evt);
@@ -2223,44 +2246,44 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnFilePosition.setBorder(javax.swing.BorderFactory.createTitledBorder("Position"));
+        pnFilePosition.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFilePosition.border.title"))); // NOI18N
 
-        cbFileLat.setText("Latitude");
+        cbFileLat.setText(bundle.getString("BT747Main.cbFileLat.text")); // NOI18N
         cbFileLat.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileLatupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileLong.setText("Longitude");
+        cbFileLong.setText(bundle.getString("BT747Main.cbFileLong.text")); // NOI18N
         cbFileLong.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileLongupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileHeight.setText("Height");
+        cbFileHeight.setText(bundle.getString("BT747Main.cbFileHeight.text")); // NOI18N
         cbFileHeight.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileHeightupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileSpeed.setText("Speed");
+        cbFileSpeed.setText(bundle.getString("BT747Main.cbFileSpeed.text")); // NOI18N
         cbFileSpeed.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileSpeedupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileHeading.setText("Heading");
+        cbFileHeading.setText(bundle.getString("BT747Main.cbFileHeading.text")); // NOI18N
         cbFileHeading.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileHeadingupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileDistance.setText("Distance");
+        cbFileDistance.setText(bundle.getString("BT747Main.cbFileDistance.text")); // NOI18N
         cbFileDistance.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileDistanceupdateLogRecordEstCount(evt);
@@ -2298,44 +2321,44 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(cbFileDistance))
         );
 
-        pnFilePrecision.setBorder(javax.swing.BorderFactory.createTitledBorder("Precision"));
+        pnFilePrecision.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFilePrecision.border.title"))); // NOI18N
 
-        cbFileDSTA.setText("DSTA");
+        cbFileDSTA.setText(bundle.getString("BT747Main.cbFileDSTA.text")); // NOI18N
         cbFileDSTA.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileDSTAupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileDAGE.setText("DAGE");
+        cbFileDAGE.setText(bundle.getString("BT747Main.cbFileDAGE.text")); // NOI18N
         cbFileDAGE.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileDAGEupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFilePDOP.setText("PDOP");
+        cbFilePDOP.setText(bundle.getString("BT747Main.cbFilePDOP.text")); // NOI18N
         cbFilePDOP.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFilePDOPupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileHDOP.setText("HDOP");
+        cbFileHDOP.setText(bundle.getString("BT747Main.cbFileHDOP.text")); // NOI18N
         cbFileHDOP.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileHDOPupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileVDOP.setText("VDOP");
+        cbFileVDOP.setText(bundle.getString("BT747Main.cbFileVDOP.text")); // NOI18N
         cbFileVDOP.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileVDOPupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileFixType.setText("GPS Fix Type");
+        cbFileFixType.setText(bundle.getString("BT747Main.cbFileFixType.text")); // NOI18N
         cbFileFixType.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileFixTypeupdateLogRecordEstCount(evt);
@@ -2369,37 +2392,37 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(cbFileVDOP))
         );
 
-        pnFileSatInfo.setBorder(javax.swing.BorderFactory.createTitledBorder("Sat Info"));
+        pnFileSatInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileSatInfo.border.title"))); // NOI18N
 
-        cbFileNSAT.setText("NSAT");
+        cbFileNSAT.setText(bundle.getString("BT747Main.cbFileNSAT.text")); // NOI18N
         cbFileNSAT.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileNSATupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileSID.setText("SID");
+        cbFileSID.setText(bundle.getString("BT747Main.cbFileSID.text")); // NOI18N
         cbFileSID.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileSIDItemStateChanged(evt);
             }
         });
 
-        cbFileElevation.setText("Elevation");
+        cbFileElevation.setText(bundle.getString("BT747Main.cbFileElevation.text")); // NOI18N
         cbFileElevation.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileElevationupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileAzimuth.setText("Azimuth");
+        cbFileAzimuth.setText(bundle.getString("BT747Main.cbFileAzimuth.text")); // NOI18N
         cbFileAzimuth.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileAzimuthupdateLogRecordEstCount(evt);
             }
         });
 
-        cbFileSNR.setText("SNR");
+        cbFileSNR.setText(bundle.getString("BT747Main.cbFileSNR.text")); // NOI18N
         cbFileSNR.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFileSNRupdateLogRecordEstCount(evt);
@@ -2505,70 +2528,70 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
-        tabbedPanelAll.addTab("Output Settings", FileSettingsPanel);
+        tabbedPanelAll.addTab(bundle.getString("BT747Main.FileSettingsPanel.TabConstraints.tabTitle"), FileSettingsPanel); // NOI18N
 
-        pnTrackpoint.setBorder(javax.swing.BorderFactory.createTitledBorder("Trackpoint Filter"));
-        pnTrackpoint.setToolTipText("<html>Defines which positions are considered as trackpoints.");
+        pnTrackpoint.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnTrackpoint.border.title"))); // NOI18N
+        pnTrackpoint.setToolTipText(bundle.getString("BT747Main.pnTrackpoint.toolTipText")); // NOI18N
 
-        jPanel11.setBorder(javax.swing.BorderFactory.createTitledBorder("Fix Type (Valid)"));
+        jPanel11.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.jPanel11.border.title"))); // NOI18N
 
-        cbTrkNoFix.setText("No fix");
+        cbTrkNoFix.setText(bundle.getString("BT747Main.cbTrkNoFix.text")); // NOI18N
         cbTrkNoFix.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkFixTypeAction(evt);
             }
         });
 
-        cbTrkPPS.setText("PPS");
+        cbTrkPPS.setText(bundle.getString("BT747Main.cbTrkPPS.text")); // NOI18N
         cbTrkPPS.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkFixTypeAction(evt);
             }
         });
 
-        cbTrkEstimate.setText("Estimate");
+        cbTrkEstimate.setText(bundle.getString("BT747Main.cbTrkEstimate.text")); // NOI18N
         cbTrkEstimate.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkFixTypeAction(evt);
             }
         });
 
-        cbTrkManual.setText("Manual");
+        cbTrkManual.setText(bundle.getString("BT747Main.cbTrkManual.text")); // NOI18N
         cbTrkManual.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkFixTypeAction(evt);
             }
         });
 
-        cbTrkSPS.setText("SPS");
+        cbTrkSPS.setText(bundle.getString("BT747Main.cbTrkSPS.text")); // NOI18N
         cbTrkSPS.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkFixTypeAction(evt);
             }
         });
 
-        cbTrkFRTK.setText("FRTK");
+        cbTrkFRTK.setText(bundle.getString("BT747Main.cbTrkFRTK.text")); // NOI18N
         cbTrkFRTK.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkFixTypeAction(evt);
             }
         });
 
-        cbTrkDGPS.setText("DGPS");
+        cbTrkDGPS.setText(bundle.getString("BT747Main.cbTrkDGPS.text")); // NOI18N
         cbTrkDGPS.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkFixTypeAction(evt);
             }
         });
 
-        cbTrkSimulate.setText("Sim");
+        cbTrkSimulate.setText(bundle.getString("BT747Main.cbTrkSimulate.text")); // NOI18N
         cbTrkSimulate.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkFixTypeAction(evt);
             }
         });
 
-        cbTrkRTK.setText("RTK");
+        cbTrkRTK.setText(bundle.getString("BT747Main.cbTrkRTK.text")); // NOI18N
         cbTrkRTK.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkFixTypeAction(evt);
@@ -2616,114 +2639,114 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(30, 30, 30))
         );
 
-        jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder("Log Reason (RCR)"));
+        jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.jPanel12.border.title"))); // NOI18N
 
-        cbTrkTime.setText("Time");
+        cbTrkTime.setText(bundle.getString("BT747Main.cbTrkTime.text")); // NOI18N
         cbTrkTime.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkSpeed.setText("Speed");
+        cbTrkSpeed.setText(bundle.getString("BT747Main.cbTrkSpeed.text")); // NOI18N
         cbTrkSpeed.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkDistance.setText("Distance");
+        cbTrkDistance.setText(bundle.getString("BT747Main.cbTrkDistance.text")); // NOI18N
         cbTrkDistance.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkButton.setText("Button");
+        cbTrkButton.setText(bundle.getString("BT747Main.cbTrkButton.text")); // NOI18N
         cbTrkButton.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser1.setText("User 1");
+        cbTrkUser1.setText(bundle.getString("BT747Main.cbTrkUser1.text")); // NOI18N
         cbTrkUser1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser2.setText("User 2");
+        cbTrkUser2.setText(bundle.getString("BT747Main.cbTrkUser2.text")); // NOI18N
         cbTrkUser2.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser3.setText("User 3");
+        cbTrkUser3.setText(bundle.getString("BT747Main.cbTrkUser3.text")); // NOI18N
         cbTrkUser3.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser4.setText("User 4");
+        cbTrkUser4.setText(bundle.getString("BT747Main.cbTrkUser4.text")); // NOI18N
         cbTrkUser4.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser5.setText("User 5");
+        cbTrkUser5.setText(bundle.getString("BT747Main.cbTrkUser5.text")); // NOI18N
         cbTrkUser5.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser6.setText("User 6");
+        cbTrkUser6.setText(bundle.getString("BT747Main.cbTrkUser6.text")); // NOI18N
         cbTrkUser6.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser7.setText("User 7");
+        cbTrkUser7.setText(bundle.getString("BT747Main.cbTrkUser7.text")); // NOI18N
         cbTrkUser7.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser8.setText("User 8");
+        cbTrkUser8.setText(bundle.getString("BT747Main.cbTrkUser8.text")); // NOI18N
         cbTrkUser8.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser9.setText("User 9");
+        cbTrkUser9.setText(bundle.getString("BT747Main.cbTrkUser9.text")); // NOI18N
         cbTrkUser9.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser10.setText("User 10");
+        cbTrkUser10.setText(bundle.getString("BT747Main.cbTrkUser10.text")); // NOI18N
         cbTrkUser10.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser11.setText("User 11");
+        cbTrkUser11.setText(bundle.getString("BT747Main.cbTrkUser11.text")); // NOI18N
         cbTrkUser11.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
             }
         });
 
-        cbTrkUser12.setText("User 12");
+        cbTrkUser12.setText(bundle.getString("BT747Main.cbTrkUser12.text")); // NOI18N
         cbTrkUser12.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 TrkRCRAction(evt);
@@ -2813,13 +2836,13 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(jPanel12, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        pnCommonFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Common Filter"));
-        pnCommonFilter.setToolTipText("<html>Filter conditions applied to trackpoints and to waypoints.");
+        pnCommonFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnCommonFilter.border.title"))); // NOI18N
+        pnCommonFilter.setToolTipText(bundle.getString("BT747Main.pnCommonFilter.toolTipText")); // NOI18N
 
-        pnFilterOther.setBorder(javax.swing.BorderFactory.createTitledBorder("Other"));
+        pnFilterOther.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFilterOther.border.title"))); // NOI18N
 
         txtRecCntMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtRecCntMin.setText("0");
+        txtRecCntMin.setText(bundle.getString("BT747Main.txtRecCntMin.text")); // NOI18N
         txtRecCntMin.setInputVerifier(IntVerifier);
         txtRecCntMin.setMinimumSize(new java.awt.Dimension(50, 40));
         txtRecCntMin.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -2829,7 +2852,7 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         txtDistanceMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtDistanceMin.setText("0");
+        txtDistanceMin.setText(bundle.getString("BT747Main.txtDistanceMin.text")); // NOI18N
         txtDistanceMin.setInputVerifier(FloatVerifier);
         txtDistanceMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2838,7 +2861,7 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         txtSpeedMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtSpeedMin.setText("0");
+        txtSpeedMin.setText(bundle.getString("BT747Main.txtSpeedMin.text")); // NOI18N
         txtSpeedMin.setInputVerifier(FloatVerifier);
         txtSpeedMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2846,12 +2869,12 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        lbDistanceFltr.setText("<= distance <=");
+        lbDistanceFltr.setText(bundle.getString("BT747Main.lbDistanceFltr.text")); // NOI18N
 
-        lbSpeedFltr.setText("<= speed <=");
+        lbSpeedFltr.setText(bundle.getString("BT747Main.lbSpeedFltr.text")); // NOI18N
 
         txtRecCntMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtRecCntMax.setText("0");
+        txtRecCntMax.setText(bundle.getString("BT747Main.txtRecCntMax.text")); // NOI18N
         txtRecCntMax.setInputVerifier(IntVerifier);
         txtRecCntMax.setMinimumSize(new java.awt.Dimension(50, 40));
         txtRecCntMax.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -2861,7 +2884,7 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         txtDistanceMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtDistanceMax.setText("0");
+        txtDistanceMax.setText(bundle.getString("BT747Main.txtDistanceMax.text")); // NOI18N
         txtDistanceMax.setInputVerifier(FloatVerifier);
         txtDistanceMax.setMinimumSize(new java.awt.Dimension(6, 40));
         txtDistanceMax.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -2871,7 +2894,7 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         txtSpeedMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtSpeedMax.setText("0");
+        txtSpeedMax.setText(bundle.getString("BT747Main.txtSpeedMax.text")); // NOI18N
         txtSpeedMax.setInputVerifier(FloatVerifier);
         txtSpeedMax.setMinimumSize(new java.awt.Dimension(6, 40));
         txtSpeedMax.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -2880,10 +2903,10 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        lbNSATFltr.setText("<= NSAT    ");
+        lbNSATFltr.setText(bundle.getString("BT747Main.lbNSATFltr.text")); // NOI18N
 
         txtNSATMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtNSATMin.setText("0");
+        txtNSATMin.setText(bundle.getString("BT747Main.txtNSATMin.text")); // NOI18N
         txtNSATMin.setInputVerifier(IntVerifier);
         txtNSATMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2891,7 +2914,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        lbRecNbrFltr.setText("<= rec nbr <=");
+        lbRecNbrFltr.setText(bundle.getString("BT747Main.lbRecNbrFltr.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnFilterOtherLayout = new org.jdesktop.layout.GroupLayout(pnFilterOther);
         pnFilterOther.setLayout(pnFilterOtherLayout);
@@ -2945,9 +2968,9 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(txtNSATMin, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
-        pnFilterPrecision.setBorder(javax.swing.BorderFactory.createTitledBorder("Precision"));
+        pnFilterPrecision.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFilterPrecision.border.title"))); // NOI18N
 
-        txtPDOPMax.setText("0");
+        txtPDOPMax.setText(bundle.getString("BT747Main.txtPDOPMax.text")); // NOI18N
         txtPDOPMax.setInputVerifier(FloatVerifier);
         txtPDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2956,9 +2979,9 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         jLabel9.setLabelFor(txtPDOPMax);
-        jLabel9.setText("PDOP <=");
+        jLabel9.setText(bundle.getString("BT747Main.jLabel9.text")); // NOI18N
 
-        txtHDOPMax.setText("0");
+        txtHDOPMax.setText(bundle.getString("BT747Main.txtHDOPMax.text")); // NOI18N
         txtHDOPMax.setInputVerifier(FloatVerifier);
         txtHDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2967,9 +2990,9 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         jLabel12.setLabelFor(txtHDOPMax);
-        jLabel12.setText("HDOP <=");
+        jLabel12.setText(bundle.getString("BT747Main.jLabel12.text")); // NOI18N
 
-        txtVDOPMax.setText("0");
+        txtVDOPMax.setText(bundle.getString("BT747Main.txtVDOPMax.text")); // NOI18N
         txtVDOPMax.setInputVerifier(FloatVerifier);
         txtVDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2978,7 +3001,7 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         jLabel13.setLabelFor(txtVDOPMax);
-        jLabel13.setText("VDOP <=");
+        jLabel13.setText(bundle.getString("BT747Main.jLabel13.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnFilterPrecisionLayout = new org.jdesktop.layout.GroupLayout(pnFilterPrecision);
         pnFilterPrecision.setLayout(pnFilterPrecisionLayout);
@@ -3018,10 +3041,10 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel7.setText("Values that are 0 are ignored");
+        jLabel7.setText(bundle.getString("BT747Main.jLabel7.text")); // NOI18N
 
-        cbAdvancedActive.setText("Activate Common Filter");
-        cbAdvancedActive.setToolTipText("Must be ticked for these conditions to be used.");
+        cbAdvancedActive.setText(bundle.getString("BT747Main.cbAdvancedActive.text")); // NOI18N
+        cbAdvancedActive.setToolTipText(bundle.getString("BT747Main.cbAdvancedActive.toolTipText")); // NOI18N
         cbAdvancedActive.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 cbAdvancedActiveStateChanged(evt);
@@ -3056,68 +3079,68 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(jLabel7))
         );
 
-        pnWaypoint.setBorder(javax.swing.BorderFactory.createTitledBorder("Waypoint Filter"));
-        pnWaypoint.setToolTipText("<html>Defines which positions are considered as waypoints.");
+        pnWaypoint.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnWaypoint.border.title"))); // NOI18N
+        pnWaypoint.setToolTipText(bundle.getString("BT747Main.pnWaypoint.toolTipText")); // NOI18N
 
-        pnWayPointFix.setBorder(javax.swing.BorderFactory.createTitledBorder("Fix Type (Valid)"));
+        pnWayPointFix.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnWayPointFix.border.title"))); // NOI18N
 
-        cbWayNoFix.setText("No fix");
+        cbWayNoFix.setText(bundle.getString("BT747Main.cbWayNoFix.text")); // NOI18N
         cbWayNoFix.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayTypeFixAction(evt);
             }
         });
 
-        cbWayPPS.setText("PPS");
+        cbWayPPS.setText(bundle.getString("BT747Main.cbWayPPS.text")); // NOI18N
         cbWayPPS.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayTypeFixAction(evt);
             }
         });
 
-        cbWayEstimate.setText("Estimate");
+        cbWayEstimate.setText(bundle.getString("BT747Main.cbWayEstimate.text")); // NOI18N
         cbWayEstimate.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayTypeFixAction(evt);
             }
         });
 
-        cbWayManual.setText("Manual");
+        cbWayManual.setText(bundle.getString("BT747Main.cbWayManual.text")); // NOI18N
         cbWayManual.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayTypeFixAction(evt);
             }
         });
 
-        cbWaySPS.setText("SPS");
+        cbWaySPS.setText(bundle.getString("BT747Main.cbWaySPS.text")); // NOI18N
         cbWaySPS.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayTypeFixAction(evt);
             }
         });
 
-        cbWayFRTK.setText("FRTK");
+        cbWayFRTK.setText(bundle.getString("BT747Main.cbWayFRTK.text")); // NOI18N
         cbWayFRTK.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayTypeFixAction(evt);
             }
         });
 
-        cbWayDGPS.setText("DGPS");
+        cbWayDGPS.setText(bundle.getString("BT747Main.cbWayDGPS.text")); // NOI18N
         cbWayDGPS.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayTypeFixAction(evt);
             }
         });
 
-        cbWaySimulate.setText("Sim");
+        cbWaySimulate.setText(bundle.getString("BT747Main.cbWaySimulate.text")); // NOI18N
         cbWaySimulate.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayTypeFixAction(evt);
             }
         });
 
-        cbWayRTK.setText("RTK");
+        cbWayRTK.setText(bundle.getString("BT747Main.cbWayRTK.text")); // NOI18N
         cbWayRTK.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayTypeFixAction(evt);
@@ -3165,114 +3188,114 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(23, 23, 23))
         );
 
-        pnWayPointRCR.setBorder(javax.swing.BorderFactory.createTitledBorder("Log Reason (RCR)"));
+        pnWayPointRCR.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnWayPointRCR.border.title"))); // NOI18N
 
-        cbWayTime.setText("Time");
+        cbWayTime.setText(bundle.getString("BT747Main.cbWayTime.text")); // NOI18N
         cbWayTime.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWaySpeed.setText("Speed");
+        cbWaySpeed.setText(bundle.getString("BT747Main.cbWaySpeed.text")); // NOI18N
         cbWaySpeed.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayDistance.setText("Distance");
+        cbWayDistance.setText(bundle.getString("BT747Main.cbWayDistance.text")); // NOI18N
         cbWayDistance.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayButton.setText("Button");
+        cbWayButton.setText(bundle.getString("BT747Main.cbWayButton.text")); // NOI18N
         cbWayButton.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser1.setText("User 1");
+        cbWayUser1.setText(bundle.getString("BT747Main.cbWayUser1.text")); // NOI18N
         cbWayUser1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser2.setText("User 2");
+        cbWayUser2.setText(bundle.getString("BT747Main.cbWayUser2.text")); // NOI18N
         cbWayUser2.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser3.setText("User 3");
+        cbWayUser3.setText(bundle.getString("BT747Main.cbWayUser3.text")); // NOI18N
         cbWayUser3.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser4.setText("User 4");
+        cbWayUser4.setText(bundle.getString("BT747Main.cbWayUser4.text")); // NOI18N
         cbWayUser4.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser5.setText("User 5");
+        cbWayUser5.setText(bundle.getString("BT747Main.cbWayUser5.text")); // NOI18N
         cbWayUser5.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser6.setText("User 6");
+        cbWayUser6.setText(bundle.getString("BT747Main.cbWayUser6.text")); // NOI18N
         cbWayUser6.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser7.setText("User 7");
+        cbWayUser7.setText(bundle.getString("BT747Main.cbWayUser7.text")); // NOI18N
         cbWayUser7.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser8.setText("User 8");
+        cbWayUser8.setText(bundle.getString("BT747Main.cbWayUser8.text")); // NOI18N
         cbWayUser8.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser9.setText("User 9");
+        cbWayUser9.setText(bundle.getString("BT747Main.cbWayUser9.text")); // NOI18N
         cbWayUser9.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser10.setText("User 10");
+        cbWayUser10.setText(bundle.getString("BT747Main.cbWayUser10.text")); // NOI18N
         cbWayUser10.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser11.setText("User 11");
+        cbWayUser11.setText(bundle.getString("BT747Main.cbWayUser11.text")); // NOI18N
         cbWayUser11.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
             }
         });
 
-        cbWayUser12.setText("User 12");
+        cbWayUser12.setText(bundle.getString("BT747Main.cbWayUser12.text")); // NOI18N
         cbWayUser12.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 WayRCRAction(evt);
@@ -3378,7 +3401,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap())
         );
 
-        tabbedPanelAll.addTab("Filters", LogFiltersPanel);
+        tabbedPanelAll.addTab(bundle.getString("BT747Main.LogFiltersPanel.TabConstraints.tabTitle"), LogFiltersPanel); // NOI18N
 
         DeviceSettingsPanel.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -3386,30 +3409,30 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        pnGPSStart.setBorder(javax.swing.BorderFactory.createTitledBorder("GPS Start"));
+        pnGPSStart.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnGPSStart.border.title"))); // NOI18N
 
-        btHotStart.setText("Hot Start");
+        btHotStart.setText(bundle.getString("BT747Main.btHotStart.text")); // NOI18N
         btHotStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btHotStartActionPerformed(evt);
             }
         });
 
-        btWarmStart.setText("Warm Start");
+        btWarmStart.setText(bundle.getString("BT747Main.btWarmStart.text")); // NOI18N
         btWarmStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btWarmStartActionPerformed(evt);
             }
         });
 
-        btColdStart.setText("Cold Start");
+        btColdStart.setText(bundle.getString("BT747Main.btColdStart.text")); // NOI18N
         btColdStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btColdStartActionPerformed(evt);
             }
         });
 
-        btFactoryResetDevice.setText("Factory Reset");
+        btFactoryResetDevice.setText(bundle.getString("BT747Main.btFactoryResetDevice.text")); // NOI18N
         btFactoryResetDevice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btFactoryResetDeviceActionPerformed(evt);
@@ -3442,18 +3465,18 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap())
         );
 
-        pnSBAS.setBorder(javax.swing.BorderFactory.createTitledBorder("SBAS"));
+        pnSBAS.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnSBAS.border.title"))); // NOI18N
 
         cbDGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No DGPS", "RTCM", "WAAS" }));
-        cbDGPSType.setToolTipText("Type of position correction to use - RTCM is probably not usefull, WAAS also activates EGNOSS");
+        cbDGPSType.setToolTipText(bundle.getString("BT747Main.cbDGPSType.toolTipText")); // NOI18N
 
-        cbUseSBAS.setText("Use SBAS");
-        cbUseSBAS.setToolTipText("Enables WAAS/EGNOS use.");
+        cbUseSBAS.setText(bundle.getString("BT747Main.cbUseSBAS.text")); // NOI18N
+        cbUseSBAS.setToolTipText(bundle.getString("BT747Main.cbUseSBAS.toolTipText")); // NOI18N
 
-        cbIncludeTestSBAS.setText("incl. Test SBAS");
-        cbIncludeTestSBAS.setToolTipText("Includes WAAS/EGNOS satellites that are in test mode.");
+        cbIncludeTestSBAS.setText(bundle.getString("BT747Main.cbIncludeTestSBAS.text")); // NOI18N
+        cbIncludeTestSBAS.setToolTipText(bundle.getString("BT747Main.cbIncludeTestSBAS.toolTipText")); // NOI18N
 
-        btApplySBAS.setText("Apply");
+        btApplySBAS.setText(bundle.getString("BT747Main.btApplySBAS.text")); // NOI18N
         btApplySBAS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btApplySBASActionPerformed(evt);
@@ -3488,14 +3511,14 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnHoluxSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("Holux M241 specific"));
+        pnHoluxSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnHoluxSettings.border.title"))); // NOI18N
 
-        jLabel20.setText("Holux Name:");
+        jLabel20.setText(bundle.getString("BT747Main.jLabel20.text")); // NOI18N
 
-        txtHoluxName.setText("Unknown");
-        txtHoluxName.setToolTipText("<html>Only for certain Holux devices such as the Holux M-241.<br>Give a name to the device.");
+        txtHoluxName.setText(bundle.getString("BT747Main.txtHoluxName.text")); // NOI18N
+        txtHoluxName.setToolTipText(bundle.getString("BT747Main.txtHoluxName.toolTipText")); // NOI18N
 
-        btSetHoluxName.setText("SET");
+        btSetHoluxName.setText(bundle.getString("BT747Main.btSetHoluxName.text")); // NOI18N
         btSetHoluxName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSetHoluxNameActionPerformed(evt);
@@ -3523,45 +3546,45 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(txtHoluxName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
-        pnLogBy.setBorder(javax.swing.BorderFactory.createTitledBorder("Log by . . ."));
-        pnLogBy.setToolTipText("The conditions used by the logger to store a position.");
+        pnLogBy.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLogBy.border.title"))); // NOI18N
+        pnLogBy.setToolTipText(bundle.getString("BT747Main.pnLogBy.toolTipText")); // NOI18N
 
-        jLabel35.setText("seconds");
+        jLabel35.setText(bundle.getString("BT747Main.jLabel35.text")); // NOI18N
 
-        ckLogSpeedActive.setText("Speed");
+        ckLogSpeedActive.setText(bundle.getString("BT747Main.ckLogSpeedActive.text")); // NOI18N
 
-        txtLogDistanceInterval.setText("0");
+        txtLogDistanceInterval.setText(bundle.getString("BT747Main.txtLogDistanceInterval.text")); // NOI18N
 
-        txtLogTimeInterval.setText("0");
+        txtLogTimeInterval.setText(bundle.getString("BT747Main.txtLogTimeInterval.text")); // NOI18N
 
-        jLabel36.setText("km/h");
+        jLabel36.setText(bundle.getString("BT747Main.jLabel36.text")); // NOI18N
 
-        ckLogTimeActive.setText("Time");
+        ckLogTimeActive.setText(bundle.getString("BT747Main.ckLogTimeActive.text")); // NOI18N
 
-        jLabel37.setText("above");
+        jLabel37.setText(bundle.getString("BT747Main.jLabel37.text")); // NOI18N
 
-        jLabel38.setText("m");
+        jLabel38.setText(bundle.getString("BT747Main.jLabel38.text")); // NOI18N
 
-        jLabel39.setText("every");
+        jLabel39.setText(bundle.getString("BT747Main.jLabel39.text")); // NOI18N
 
-        ckLogDistanceActive.setText("Distance");
+        ckLogDistanceActive.setText(bundle.getString("BT747Main.ckLogDistanceActive.text")); // NOI18N
 
-        txtLogSpeedInterval.setText("0");
+        txtLogSpeedInterval.setText(bundle.getString("BT747Main.txtLogSpeedInterval.text")); // NOI18N
 
-        jLabel40.setText("every");
+        jLabel40.setText(bundle.getString("BT747Main.jLabel40.text")); // NOI18N
 
-        btLogByApply.setText("Apply");
+        btLogByApply.setText(bundle.getString("BT747Main.btLogByApply.text")); // NOI18N
         btLogByApply.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btLogByApplyActionPerformed(evt);
             }
         });
 
-        jLabel41.setText("Fix every");
+        jLabel41.setText(bundle.getString("BT747Main.jLabel41.text")); // NOI18N
 
-        jTextField7.setText("0");
+        jTextField7.setText(bundle.getString("BT747Main.jTextField7.text")); // NOI18N
 
-        jLabel42.setText("ms");
+        jLabel42.setText(bundle.getString("BT747Main.jLabel42.text")); // NOI18N
 
         cbStopOrOverwriteWhenFull.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Stop when full", "Overwrite when full" }));
         cbStopOrOverwriteWhenFull.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -3667,34 +3690,34 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnLogBy, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
-        pnLogFormat.setBorder(javax.swing.BorderFactory.createTitledBorder("Log Format"));
-        pnLogFormat.setToolTipText("<html>Select the data that the GPS logger should store for each position.");
+        pnLogFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLogFormat.border.title"))); // NOI18N
+        pnLogFormat.setToolTipText(bundle.getString("BT747Main.pnLogFormat.toolTipText")); // NOI18N
 
-        btFormatAndErase.setText("Set Format & Erase");
-        btFormatAndErase.setToolTipText("Set the selected format and erase the memory of the GPS Logger");
+        btFormatAndErase.setText(bundle.getString("BT747Main.btFormatAndErase.text")); // NOI18N
+        btFormatAndErase.setToolTipText(bundle.getString("BT747Main.btFormatAndErase.toolTipText")); // NOI18N
         btFormatAndErase.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btFormatAndEraseActionPerformed(evt);
             }
         });
 
-        btErase.setText("Erase only");
-        btErase.setToolTipText("Only erase the logger's memory, keep the current log format (not the one shown).");
+        btErase.setText(bundle.getString("BT747Main.btErase.text")); // NOI18N
+        btErase.setToolTipText(bundle.getString("BT747Main.btErase.toolTipText")); // NOI18N
         btErase.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btEraseActionPerformed(evt);
             }
         });
 
-        btRecoverMemory.setText("Try to recover faulty memory");
+        btRecoverMemory.setText(bundle.getString("BT747Main.btRecoverMemory.text")); // NOI18N
         btRecoverMemory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRecoverMemoryActionPerformed(evt);
             }
         });
 
-        btFormat.setText("Set Format Only");
-        btFormat.setToolTipText("<html>Change the logged fields in the GPS Logger,<br>do not erase the logger memory.");
+        btFormat.setText(bundle.getString("BT747Main.btFormat.text")); // NOI18N
+        btFormat.setToolTipText(bundle.getString("BT747Main.btFormat.toolTipText")); // NOI18N
         btFormat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btFormatActionPerformed(evt);
@@ -3731,16 +3754,16 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap())
         );
 
-        pnTime.setBorder(javax.swing.BorderFactory.createTitledBorder("Time"));
+        pnTime.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnTime.border.title"))); // NOI18N
 
-        cbUTCTime.setText("UTC Time");
+        cbUTCTime.setText(bundle.getString("BT747Main.cbUTCTime.text")); // NOI18N
         cbUTCTime.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbMilliSeconds.setText("Milliseconds");
+        cbMilliSeconds.setText(bundle.getString("BT747Main.cbMilliSeconds.text")); // NOI18N
         cbMilliSeconds.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
@@ -3766,44 +3789,44 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnPosition.setBorder(javax.swing.BorderFactory.createTitledBorder("Position"));
+        pnPosition.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnPosition.border.title"))); // NOI18N
 
-        cbLat.setText("Latitude");
+        cbLat.setText(bundle.getString("BT747Main.cbLat.text")); // NOI18N
         cbLat.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbLong.setText("Longitude");
+        cbLong.setText(bundle.getString("BT747Main.cbLong.text")); // NOI18N
         cbLong.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbHeight.setText("Height");
+        cbHeight.setText(bundle.getString("BT747Main.cbHeight.text")); // NOI18N
         cbHeight.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbSpeed.setText("Speed");
+        cbSpeed.setText(bundle.getString("BT747Main.cbSpeed.text")); // NOI18N
         cbSpeed.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbHeading.setText("Heading");
+        cbHeading.setText(bundle.getString("BT747Main.cbHeading.text")); // NOI18N
         cbHeading.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbDistance.setText("Distance");
+        cbDistance.setText(bundle.getString("BT747Main.cbDistance.text")); // NOI18N
         cbDistance.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
@@ -3841,44 +3864,44 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(cbDistance))
         );
 
-        pnPrecision.setBorder(javax.swing.BorderFactory.createTitledBorder("Precision"));
+        pnPrecision.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnPrecision.border.title"))); // NOI18N
 
-        cbDSTA.setText("DSTA");
+        cbDSTA.setText(bundle.getString("BT747Main.cbDSTA.text")); // NOI18N
         cbDSTA.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbDAGE.setText("DAGE");
+        cbDAGE.setText(bundle.getString("BT747Main.cbDAGE.text")); // NOI18N
         cbDAGE.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbPDOP.setText("PDOP");
+        cbPDOP.setText(bundle.getString("BT747Main.cbPDOP.text")); // NOI18N
         cbPDOP.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbHDOP.setText("HDOP");
+        cbHDOP.setText(bundle.getString("BT747Main.cbHDOP.text")); // NOI18N
         cbHDOP.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbVDOP.setText("VDOP");
+        cbVDOP.setText(bundle.getString("BT747Main.cbVDOP.text")); // NOI18N
         cbVDOP.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbFixType.setText("GPS Fix Type");
+        cbFixType.setText(bundle.getString("BT747Main.cbFixType.text")); // NOI18N
         cbFixType.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
@@ -3912,37 +3935,37 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(cbVDOP))
         );
 
-        pnSatInfo.setBorder(javax.swing.BorderFactory.createTitledBorder("Sat Info"));
+        pnSatInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnSatInfo.border.title"))); // NOI18N
 
-        cbNSAT.setText("NSAT");
+        cbNSAT.setText(bundle.getString("BT747Main.cbNSAT.text")); // NOI18N
         cbNSAT.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbSID.setText("SID");
+        cbSID.setText(bundle.getString("BT747Main.cbSID.text")); // NOI18N
         cbSID.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbSIDItemStateChanged(evt);
             }
         });
 
-        cbElevation.setText("Elevation");
+        cbElevation.setText(bundle.getString("BT747Main.cbElevation.text")); // NOI18N
         cbElevation.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbAzimuth.setText("Azimuth");
+        cbAzimuth.setText(bundle.getString("BT747Main.cbAzimuth.text")); // NOI18N
         cbAzimuth.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
             }
         });
 
-        cbSNR.setText("SNR");
+        cbSNR.setText(bundle.getString("BT747Main.cbSNR.text")); // NOI18N
         cbSNR.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
@@ -3974,7 +3997,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        txtEstimatedRecords.setText("Estimated records");
+        txtEstimatedRecords.setText(bundle.getString("BT747Main.txtEstimatedRecords.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel5Layout = new org.jdesktop.layout.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -3997,10 +4020,10 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap())
         );
 
-        cbOtherFormat.setBorder(javax.swing.BorderFactory.createTitledBorder("Other"));
+        cbOtherFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.cbOtherFormat.border.title"))); // NOI18N
 
-        cbValidFixOnly.setText("Valid Fix Only");
-        cbValidFixOnly.setToolTipText("This works only on the more recent models.  Only positions with a fix will be logged to the device if activated.");
+        cbValidFixOnly.setText(bundle.getString("BT747Main.cbValidFixOnly.text")); // NOI18N
+        cbValidFixOnly.setToolTipText(bundle.getString("BT747Main.cbValidFixOnly.toolTipText")); // NOI18N
         cbValidFixOnly.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
@@ -4020,10 +4043,10 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(cbValidFixOnly, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
-        pnReason.setBorder(javax.swing.BorderFactory.createTitledBorder("Reason"));
+        pnReason.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnReason.border.title"))); // NOI18N
 
-        cbRCR.setText("RCR");
-        cbRCR.setToolTipText("Log reason (such as: time, speed, distance, button press");
+        cbRCR.setText(bundle.getString("BT747Main.cbRCR.text")); // NOI18N
+        cbRCR.setToolTipText(bundle.getString("BT747Main.cbRCR.toolTipText")); // NOI18N
         cbRCR.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 updateLogRecordEstCount(evt);
@@ -4117,30 +4140,30 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(jPanel8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
-        tabbedPanelAll.addTab("Device settings", DeviceSettingsPanel);
+        tabbedPanelAll.addTab(bundle.getString("BT747Main.DeviceSettingsPanel.TabConstraints.tabTitle"), DeviceSettingsPanel); // NOI18N
 
-        pnFlashSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("Flash settings"));
-        pnFlashSettings.setToolTipText("<html>Settings used by the logger when it lost power.<br>Can only be changed when 'Times Left' is not 0.");
+        pnFlashSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFlashSettings.border.title"))); // NOI18N
+        pnFlashSettings.setToolTipText(bundle.getString("BT747Main.pnFlashSettings.toolTipText")); // NOI18N
 
         jLabel30.setLabelFor(tfOutputFileBaseName);
-        jLabel30.setText("Times Left");
+        jLabel30.setText(bundle.getString("BT747Main.jLabel30.text")); // NOI18N
 
-        jLabel31.setText("Update Rate (Hz)");
+        jLabel31.setText(bundle.getString("BT747Main.jLabel31.text")); // NOI18N
 
-        jLabel32.setText("Baud Rate");
+        jLabel32.setText(bundle.getString("BT747Main.jLabel32.text")); // NOI18N
 
-        lbGLLOut.setText("GLL Period");
+        lbGLLOut.setText(bundle.getString("BT747Main.lbGLLOut.text")); // NOI18N
 
-        lbRMCOut.setText("RMC Period");
+        lbRMCOut.setText(bundle.getString("BT747Main.lbRMCOut.text")); // NOI18N
 
-        lbVTGOut.setText("VTG Period");
+        lbVTGOut.setText(bundle.getString("BT747Main.lbVTGOut.text")); // NOI18N
 
-        cbGSVOut.setText("GSV Period");
+        cbGSVOut.setText(bundle.getString("BT747Main.cbGSVOut.text")); // NOI18N
 
-        cbGSAOut.setText("GSA Period");
+        cbGSAOut.setText(bundle.getString("BT747Main.cbGSAOut.text")); // NOI18N
 
         cbGGAOut.setLabelFor(cbFlashGGA);
-        cbGGAOut.setText("GGA Period");
+        cbGGAOut.setText(bundle.getString("BT747Main.cbGGAOut.text")); // NOI18N
 
         cbFlashGLL.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
@@ -4155,27 +4178,27 @@ public class BT747Main extends javax.swing.JFrame implements
         cbFlashGSV.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
         txtFlashTimesLeft.setEditable(false);
-        txtFlashTimesLeft.setText("Unknown");
+        txtFlashTimesLeft.setText(bundle.getString("BT747Main.txtFlashTimesLeft.text")); // NOI18N
 
-        txtFlashUpdateRate.setText("Unknown");
+        txtFlashUpdateRate.setText(bundle.getString("BT747Main.txtFlashUpdateRate.text")); // NOI18N
 
         txtFlashBaudRate.setEditable(false);
-        txtFlashBaudRate.setText("Unknown");
+        txtFlashBaudRate.setText(bundle.getString("BT747Main.txtFlashBaudRate.text")); // NOI18N
 
-        lbFlashZDA.setText("ZDA Period");
+        lbFlashZDA.setText(bundle.getString("BT747Main.lbFlashZDA.text")); // NOI18N
 
         cbFlashZDA.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
         cbFlashMCHN.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        btSetFlash.setText("Set");
+        btSetFlash.setText(bundle.getString("BT747Main.btSetFlash.text")); // NOI18N
         btSetFlash.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSetFlashActionPerformed(evt);
             }
         });
 
-        jLabel29.setText("MCHN Period");
+        jLabel29.setText(bundle.getString("BT747Main.jLabel29.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnFlashSettingsLayout = new org.jdesktop.layout.GroupLayout(pnFlashSettings);
         pnFlashSettings.setLayout(pnFlashSettingsLayout);
@@ -4264,12 +4287,12 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(19, 19, 19))
         );
 
-        pnNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder("NMEA Output Settings"));
-        pnNMEAOutput.setToolTipText("<html>The NMEA packets sent by the device.<br>At least one sentence is needed to maintain bluetooth communication.<br>RMC and GGA are the most common ones,<br>GSA is needed if you wish to have real time satellite information.");
+        pnNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnNMEAOutput.border.title"))); // NOI18N
+        pnNMEAOutput.setToolTipText(bundle.getString("BT747Main.pnNMEAOutput.toolTipText")); // NOI18N
 
         cbNMEAOutType10.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        lbNMEAOutType10.setText("Type 10 (?)");
+        lbNMEAOutType10.setText(bundle.getString("BT747Main.lbNMEAOutType10.text")); // NOI18N
 
         cbNMEAOutType11.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
@@ -4285,35 +4308,35 @@ public class BT747Main extends javax.swing.JFrame implements
 
         cbNMEAOutZDA.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jLabel22.setText("Type 11 (?)");
+        jLabel22.setText(bundle.getString("BT747Main.jLabel22.text")); // NOI18N
 
-        jLabel23.setText("Type 12 (?)");
+        jLabel23.setText(bundle.getString("BT747Main.jLabel23.text")); // NOI18N
 
-        jLabel24.setText("MALM Period");
+        jLabel24.setText(bundle.getString("BT747Main.jLabel24.text")); // NOI18N
 
-        jLabel25.setText("MEPH Period");
+        jLabel25.setText(bundle.getString("BT747Main.jLabel25.text")); // NOI18N
 
-        jLabel26.setText("MDGP Period");
+        jLabel26.setText(bundle.getString("BT747Main.jLabel26.text")); // NOI18N
 
-        jLabel27.setText("MDBG Period");
+        jLabel27.setText(bundle.getString("BT747Main.jLabel27.text")); // NOI18N
 
-        lbNMEAOutZDA.setText("ZDA Period");
+        lbNMEAOutZDA.setText(bundle.getString("BT747Main.lbNMEAOutZDA.text")); // NOI18N
 
-        btSetNMEAOutput.setText("Set");
+        btSetNMEAOutput.setText(bundle.getString("BT747Main.btSetNMEAOutput.text")); // NOI18N
         btSetNMEAOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSetNMEAOutputActionPerformed(evt);
             }
         });
 
-        btSetNMEAOutputDefaults.setText("Defaults");
+        btSetNMEAOutputDefaults.setText(bundle.getString("BT747Main.btSetNMEAOutputDefaults.text")); // NOI18N
         btSetNMEAOutputDefaults.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSetNMEAOutputDefaultsActionPerformed(evt);
             }
         });
 
-        lbGLLOut1.setText("GLL Period");
+        lbGLLOut1.setText(bundle.getString("BT747Main.lbGLLOut1.text")); // NOI18N
 
         cbNMEAOutGLL.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
         cbNMEAOutGLL.addActionListener(new java.awt.event.ActionListener() {
@@ -4324,31 +4347,31 @@ public class BT747Main extends javax.swing.JFrame implements
 
         cbNMEAOutRMC.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        lbRMCOut1.setText("RMC Period");
+        lbRMCOut1.setText(bundle.getString("BT747Main.lbRMCOut1.text")); // NOI18N
 
-        cbVTGOut1.setText("VTG Period");
+        cbVTGOut1.setText(bundle.getString("BT747Main.cbVTGOut1.text")); // NOI18N
 
         cbNMEAOutVTG.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
         cbNMEAOutGGA.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        cbGGAOut1.setText("GGA Period");
+        cbGGAOut1.setText(bundle.getString("BT747Main.cbGGAOut1.text")); // NOI18N
 
-        cbGSAOut1.setText("GSA Period");
+        cbGSAOut1.setText(bundle.getString("BT747Main.cbGSAOut1.text")); // NOI18N
 
         cbNMEAOutGSA.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
         cbNMEAOutGSV.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        cbGSVOut1.setText("GSV Period");
+        cbGSVOut1.setText(bundle.getString("BT747Main.cbGSVOut1.text")); // NOI18N
 
-        cbGRSOut.setText("GRS Period");
+        cbGRSOut.setText(bundle.getString("BT747Main.cbGRSOut.text")); // NOI18N
 
-        cbGSTOut.setText("GST Period");
+        cbGSTOut.setText(bundle.getString("BT747Main.cbGSTOut.text")); // NOI18N
 
-        cbType9Out.setText("Type 9 (?)");
+        cbType9Out.setText(bundle.getString("BT747Main.cbType9Out.text")); // NOI18N
 
-        cbType8Out.setText("Type 8 (?)");
+        cbType8Out.setText(bundle.getString("BT747Main.cbType8Out.text")); // NOI18N
 
         cbNMEAOutType9.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
@@ -4360,7 +4383,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         cbNMEAOutMCHN.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jLabel34.setText("MCHN Period");
+        jLabel34.setText(bundle.getString("BT747Main.jLabel34.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnNMEAOutputLayout = new org.jdesktop.layout.GroupLayout(pnNMEAOutput);
         pnNMEAOutput.setLayout(pnNMEAOutputLayout);
@@ -4537,7 +4560,7 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(pnFlashSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
-        tabbedPanelAll.addTab("Advanced Device Settings", AdvancedSettingsPanel);
+        tabbedPanelAll.addTab(bundle.getString("BT747Main.AdvancedSettingsPanel.TabConstraints.tabTitle"), AdvancedSettingsPanel); // NOI18N
 
         AdvancedfileSettingsPanel.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -4545,28 +4568,28 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        pnFileNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder("NMEA File Settings"));
-        pnFileNMEAOutput.setToolTipText("<html>NMEA output file specific.<br>Selects packet types to write to NMEA files.<br>Not all packet types are available.");
+        pnFileNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileNMEAOutput.border.title"))); // NOI18N
+        pnFileNMEAOutput.setToolTipText(bundle.getString("BT747Main.pnFileNMEAOutput.toolTipText")); // NOI18N
 
-        lbNMEAFileType9.setText("Type 9 (?)");
+        lbNMEAFileType9.setText(bundle.getString("BT747Main.lbNMEAFileType9.text")); // NOI18N
 
-        lbNMEAFileGST.setText("GST Period");
+        lbNMEAFileGST.setText(bundle.getString("BT747Main.lbNMEAFileGST.text")); // NOI18N
 
-        lbNMEAFileVTG.setText("VTG Period");
+        lbNMEAFileVTG.setText(bundle.getString("BT747Main.lbNMEAFileVTG.text")); // NOI18N
 
-        lbNMEAFileGRS.setText("GRS Period");
+        lbNMEAFileGRS.setText(bundle.getString("BT747Main.lbNMEAFileGRS.text")); // NOI18N
 
-        lbNMEAFileGSV.setText("GSV Period");
+        lbNMEAFileGSV.setText(bundle.getString("BT747Main.lbNMEAFileGSV.text")); // NOI18N
 
-        lbNMEAFileGGA.setText("GGA Period");
+        lbNMEAFileGGA.setText(bundle.getString("BT747Main.lbNMEAFileGGA.text")); // NOI18N
 
-        lbNMEAFileRMC.setText("RMC Period");
+        lbNMEAFileRMC.setText(bundle.getString("BT747Main.lbNMEAFileRMC.text")); // NOI18N
 
-        lbNMEAFileGLL.setText("GLL Period");
+        lbNMEAFileGLL.setText(bundle.getString("BT747Main.lbNMEAFileGLL.text")); // NOI18N
 
-        lbNMEAFileType8.setText("Type 8 (?)");
+        lbNMEAFileType8.setText(bundle.getString("BT747Main.lbNMEAFileType8.text")); // NOI18N
 
-        lbNMEAFileGSA.setText("GSA Period");
+        lbNMEAFileGSA.setText(bundle.getString("BT747Main.lbNMEAFileGSA.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnFileNMEAOutLeftLayout = new org.jdesktop.layout.GroupLayout(pnFileNMEAOutLeft);
         pnFileNMEAOutLeft.setLayout(pnFileNMEAOutLeftLayout);
@@ -4607,30 +4630,30 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(lbNMEAFileType9))
         );
 
-        lbNMEAFileMDGP.setText("MDGP Period");
+        lbNMEAFileMDGP.setText(bundle.getString("BT747Main.lbNMEAFileMDGP.text")); // NOI18N
 
-        lbNMEAFileType11.setText("Type 11 (?)");
+        lbNMEAFileType11.setText(bundle.getString("BT747Main.lbNMEAFileType11.text")); // NOI18N
 
-        lbNMEAFileMEPH.setText("MEPH Period");
+        lbNMEAFileMEPH.setText(bundle.getString("BT747Main.lbNMEAFileMEPH.text")); // NOI18N
 
-        lbNMEAFileMALM.setText("MALM Period");
+        lbNMEAFileMALM.setText(bundle.getString("BT747Main.lbNMEAFileMALM.text")); // NOI18N
 
-        lbNMEAFileType10.setText("Type 10 (?)");
+        lbNMEAFileType10.setText(bundle.getString("BT747Main.lbNMEAFileType10.text")); // NOI18N
 
-        lbNMEAFileZDA.setText("ZDA Period");
+        lbNMEAFileZDA.setText(bundle.getString("BT747Main.lbNMEAFileZDA.text")); // NOI18N
 
-        lbNMEAFileType12.setText("Type 12 (?)");
+        lbNMEAFileType12.setText(bundle.getString("BT747Main.lbNMEAFileType12.text")); // NOI18N
 
-        btSetNMEAFileOutput.setText("Set");
+        btSetNMEAFileOutput.setText(bundle.getString("BT747Main.btSetNMEAFileOutput.text")); // NOI18N
         btSetNMEAFileOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSetNMEAFileOutputActionPerformed(evt);
             }
         });
 
-        lbNMEAFileMDBG.setText("MDBG Period");
+        lbNMEAFileMDBG.setText(bundle.getString("BT747Main.lbNMEAFileMDBG.text")); // NOI18N
 
-        lbNMEAFileMCHN.setText("MCHN Period");
+        lbNMEAFileMCHN.setText(bundle.getString("BT747Main.lbNMEAFileMCHN.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnFileNMEAOutRightLayout = new org.jdesktop.layout.GroupLayout(pnFileNMEAOutRight);
         pnFileNMEAOutRight.setLayout(pnFileNMEAOutRightLayout);
@@ -4696,18 +4719,18 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnGPXFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("GPX File Settings"));
-        pnGPXFileSettings.setToolTipText("<html>GPX File output specific settings.");
+        pnGPXFileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnGPXFileSettings.border.title"))); // NOI18N
+        pnGPXFileSettings.setToolTipText(bundle.getString("BT747Main.pnGPXFileSettings.toolTipText")); // NOI18N
 
-        cbNotApplyUTCOffset.setText("Do not apply UTC offset");
+        cbNotApplyUTCOffset.setText(bundle.getString("BT747Main.cbNotApplyUTCOffset.text")); // NOI18N
         cbNotApplyUTCOffset.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 cbNotApplyUTCOffsetStateChanged(evt);
             }
         });
 
-        cbGPXTrkSegWhenSmall.setText("Make a new track segment even if time split is small");
-        cbGPXTrkSegWhenSmall.setToolTipText("<html>When selected, creates track segments whenever a logged position is not selected as a trackpoint.");
+        cbGPXTrkSegWhenSmall.setText(bundle.getString("BT747Main.cbGPXTrkSegWhenSmall.text")); // NOI18N
+        cbGPXTrkSegWhenSmall.setToolTipText(bundle.getString("BT747Main.cbGPXTrkSegWhenSmall.toolTipText")); // NOI18N
         cbGPXTrkSegWhenSmall.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 cbGPXTrkSegWhenSmallStateChanged(evt);
@@ -4748,7 +4771,7 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(pnFileNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
-        tabbedPanelAll.addTab("Advanced File Settings", AdvancedfileSettingsPanel);
+        tabbedPanelAll.addTab(bundle.getString("BT747Main.AdvancedfileSettingsPanel.TabConstraints.tabTitle"), AdvancedfileSettingsPanel); // NOI18N
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setOpaque(false);
@@ -4756,7 +4779,7 @@ public class BT747Main extends javax.swing.JFrame implements
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
-        jTextArea1.setText("This is one of the first releases of the Desktop interface for BT747.\n\nIt is mostly functional and does provide some features not available in the usual (PDA-like) interface.\nFor example, it may be able to download and convert logs from PhotoTrackr / DPL700 / ITrackU devices (the raw log file should have '.sr' extension)\n------------------------------------------------\n");
+        jTextArea1.setText(bundle.getString("BT747Main.jTextArea1.text")); // NOI18N
         jTextArea1.setAutoscrolls(false);
         jTextArea1.setFocusable(false);
         jTextArea1.setOpaque(false);
@@ -4779,14 +4802,14 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap())
         );
 
-        tabbedPanelAll.addTab("INFO", InfoPanel);
+        tabbedPanelAll.addTab(bundle.getString("BT747Main.InfoPanel.TabConstraints.tabTitle"), InfoPanel); // NOI18N
 
-        FileMenu.setText("File");
+        FileMenu.setText(bundle.getString("BT747Main.FileMenu.text")); // NOI18N
         jMenuBar.add(FileMenu);
 
-        SettingsMenu.setText("Settings");
+        SettingsMenu.setText(bundle.getString("BT747Main.SettingsMenu.text")); // NOI18N
 
-        btGPSDebug.setText("GPS Debug");
+        btGPSDebug.setText(bundle.getString("BT747Main.btGPSDebug.text")); // NOI18N
         btGPSDebug.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 btGPSDebugStateChanged(evt);
@@ -4794,7 +4817,7 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         SettingsMenu.add(btGPSDebug);
 
-        btGPSConnectDebug.setText("GPS Connection Debug");
+        btGPSConnectDebug.setText(bundle.getString("BT747Main.btGPSConnectDebug.text")); // NOI18N
         btGPSConnectDebug.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 btGPSConnectDebugStateChanged(evt);
@@ -4804,12 +4827,12 @@ public class BT747Main extends javax.swing.JFrame implements
 
         jMenuBar.add(SettingsMenu);
 
-        InfoMenu.setText("Info");
+        InfoMenu.setText(bundle.getString("BT747Main.InfoMenu.text")); // NOI18N
 
-        AboutBT747.setText("About BT747");
+        AboutBT747.setText(bundle.getString("BT747Main.AboutBT747.text")); // NOI18N
         InfoMenu.add(AboutBT747);
 
-        Info.setText("Info (License)");
+        Info.setText(bundle.getString("BT747Main.Info.text")); // NOI18N
         InfoMenu.add(Info);
 
         jMenuBar.add(InfoMenu);
