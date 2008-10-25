@@ -20,10 +20,12 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.Toolkit;
 import java.io.File;
+import java.net.URL;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.Locale;
@@ -77,10 +79,25 @@ public class BT747Main extends javax.swing.JFrame implements
     private Model m;
     private J2SEAppController c;
     
-    java.util.ResourceBundle r;
+    private static Image appIcon;
+    private static final String iconPath = "icons/bt747_16x16.gif";
+    
+    private static final void setAppIcon() {
+        URL u = BT747Main.class.getResource("/"+appIcon);
 
+        if(u!=null) {
+            appIcon = Toolkit.getDefaultToolkit().getImage(u);
+        } else {
+            appIcon = Toolkit.getDefaultToolkit().getImage(iconPath);
+        }
+    }
+    
+    static {
+        setAppIcon();
+    }
+    
     /** Creates new form BT747Main */
-    public BT747Main() {
+    public BT747Main() {        
         initComponents();
         initAppData();
     }
@@ -1499,7 +1516,7 @@ public class BT747Main extends javax.swing.JFrame implements
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         setTitle(bundle.getString("BT747Main.title")); // NOI18N
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setIconImage(Toolkit.getDefaultToolkit().getImage(BT747Main.class.getResource("icons/bt747_16x16.gif")));
+        setIconImage(appIcon);
         setName("BT747Frame"); // NOI18N
 
         DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
