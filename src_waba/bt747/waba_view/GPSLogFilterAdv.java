@@ -118,7 +118,7 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
                 PushButtonGroup.NORMAL // Only one selected at a time
         ), RIGHT, SAME);
 
-        pbPtType.setSelected(m.getAdvFilterActive() ? 0 : 1);
+        pbPtType.setSelected(m.isAdvFilterActive() ? 0 : 1);
 
         getSettings();
     }

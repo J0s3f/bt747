@@ -20,6 +20,7 @@ import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
@@ -225,7 +226,8 @@ public class BT747Main extends javax.swing.JFrame implements
         cbGPXTrkSegWhenSmall.setSelected(m.getGpxTrkSegWhenBig());
 
         cbImperialUnits.setSelected(m.getBooleanOpt(Model.IMPERIAL));
-        cbAdvancedActive.setSelected(m.getAdvFilterActive());
+        cbAdvancedActive.setSelected(m.isAdvFilterActive());
+        updateAdvancedFilter();
         cbGPSType.setSelectedIndex(m.getGPSType() == 0 ? 0 : 1);
 
         // TODO: Correct next line
@@ -256,7 +258,7 @@ public class BT747Main extends javax.swing.JFrame implements
         txtHoluxName.setText(m.getHoluxName());
         cbRecordNumberInfoInLog.setSelected(m
                 .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));
-        lbThisSWVersion.setText("V" + Version.VERSION_NUMBER + "("
+        lbThisSWVersion.setText("V" + Version.VERSION_NUMBER + " ("
                 + Version.DATE + ")"); // NOI18N
         cbHeightOverMeanSeaLevel.setSelectedIndex(m.isConvertWGS84ToMSL() ? 1
                 : 0);
@@ -301,6 +303,10 @@ public class BT747Main extends javax.swing.JFrame implements
         
     }
 
+    private final void updateSerialSpeed() {
+        int speed = m.getBaudRate();
+        cbSerialSpeed.setSelectedItem(new Integer(speed));
+    }
     @SuppressWarnings("unchecked")
     private void addPortsToGui() {
         try {
@@ -1211,6 +1217,8 @@ public class BT747Main extends javax.swing.JFrame implements
         DownloadProgressLabel = new javax.swing.JLabel();
         cbPortName = new javax.swing.JComboBox();
         btConnect = new javax.swing.JButton();
+        cbSerialSpeed = new javax.swing.JComboBox();
+        lbSerialSpeed = new javax.swing.JLabel();
         tabbedPanelAll = new javax.swing.JTabbedPane();
         LogOperationsPanel = new javax.swing.JPanel();
         pnFiles = new javax.swing.JPanel();
@@ -1606,6 +1614,11 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
+        cbSerialSpeed.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "38400", "115200" }));
+        cbSerialSpeed.setToolTipText(bundle.getString("BT747Main.cbSerialSpeed.toolTipText")); // NOI18N
+
+        lbSerialSpeed.setText(bundle.getString("BT747Main.lbSerialSpeed.text")); // NOI18N
+
         org.jdesktop.layout.GroupLayout pnBottomInformationLayout = new org.jdesktop.layout.GroupLayout(pnBottomInformation);
         pnBottomInformation.setLayout(pnBottomInformationLayout);
         pnBottomInformationLayout.setHorizontalGroup(
@@ -1614,10 +1627,14 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(btConnect)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cbPortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 250, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(47, 47, 47)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(lbSerialSpeed)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbSerialSpeed, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(DownloadProgressLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnBottomInformationLayout.setVerticalGroup(
@@ -1625,6 +1642,8 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                 .add(btConnect)
                 .add(cbPortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(cbSerialSpeed, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(lbSerialSpeed)
                 .add(DownloadProgressLabel))
             .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
@@ -2913,7 +2932,7 @@ public class BT747Main extends javax.swing.JFrame implements
         );
         pnTrackpointLayout.setVerticalGroup(
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+            .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .add(jPanel12, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -3458,7 +3477,7 @@ public class BT747Main extends javax.swing.JFrame implements
         pnWaypointLayout.setVerticalGroup(
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         org.jdesktop.layout.GroupLayout LogFiltersPanelLayout = new org.jdesktop.layout.GroupLayout(LogFiltersPanel);
@@ -5201,7 +5220,21 @@ public class BT747Main extends javax.swing.JFrame implements
 
     private void cbAdvancedActiveStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_cbAdvancedActiveStateChanged
         c.setAdvFilterActive(cbAdvancedActive.isSelected());
+        updateAdvancedFilter();
     }// GEN-LAST:event_cbAdvancedActiveStateChanged
+    
+    private void updateAdvancedFilter() {
+        boolean en = m.isAdvFilterActive();
+        Component[] l;
+        l = pnFilterPrecision.getComponents();
+        for (Component component : l) {
+            component.setEnabled(en);
+        }
+        l = pnFilterOther.getComponents();
+        for (Component component : l) {
+            component.setEnabled(en);
+        }
+    }
 
     private void tfRawLogFilePathFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_tfRawLogFilePathFocusLost
 
@@ -6019,6 +6052,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JCheckBox cbRecordNumberInfoInLog;
     private javax.swing.JCheckBox cbSID;
     private javax.swing.JCheckBox cbSNR;
+    private javax.swing.JComboBox cbSerialSpeed;
     private javax.swing.JCheckBox cbSpeed;
     private javax.swing.JComboBox cbStandardOrDaylightSaving;
     private javax.swing.JComboBox cbStopOrOverwriteWhenFull;
@@ -6181,6 +6215,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JLabel lbRMCOut;
     private javax.swing.JLabel lbRMCOut1;
     private javax.swing.JLabel lbRecNbrFltr;
+    private javax.swing.JLabel lbSerialSpeed;
     private javax.swing.JLabel lbSpeedFltr;
     private javax.swing.JLabel lbThisSWVersion;
     private javax.swing.JLabel lbTime;

@@ -272,7 +272,7 @@ public class Controller {
             }
         }
         GPSFilter[] usedFilters;
-        if (m.getAdvFilterActive()) {
+        if (m.isAdvFilterActive()) {
             usedFilters = m.getLogFiltersAdv();
         } else {
             usedFilters = m.getLogFilters();
@@ -424,7 +424,7 @@ public class Controller {
             }
         }
         GPSFilter[] usedFilters;
-        if (m.getAdvFilterActive()) {
+        if (m.isAdvFilterActive()) {
             usedFilters = m.getLogFiltersAdv();
         } else {
             usedFilters = m.getLogFilters();

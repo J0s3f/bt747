@@ -193,7 +193,7 @@ public final class J2SEAppController extends Controller {
         /** Object to open multiple message boxes */
         MessageBox mb;
         mb = new MessageBox(getString("ERASE_WARNING_TITLE"),
-                getString("ERASE_WARNING_TEXT"), C_ERASE_OR_CANCEL);
+                getString("ERASE_WARNING_1_TEXT"), C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
             mb = new MessageBox(getString("ATTENTION"), getString("ERASE_WARNING_2_TEXT"),
