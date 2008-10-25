@@ -1513,7 +1513,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(47, 47, 47)
                 .add(DownloadProgressLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
+                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnBottomInformationLayout.setVerticalGroup(
@@ -1709,9 +1709,9 @@ public class BT747Main extends javax.swing.JFrame implements
 
         jPanel18.setBorder(javax.swing.BorderFactory.createTitledBorder("Date filter"));
 
-        jLabel44.setText("to date");
+        jLabel44.setText(" to ");
 
-        jLabel43.setText("From date");
+        jLabel43.setText("From ");
 
         sfTimeSplitHours.setMaximum(23);
         sfTimeSplitHours.setMinimum(0);
@@ -1744,11 +1744,11 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(10, 10, 10)
                 .add(jLabel43)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(startDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 109, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(startDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 120, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jLabel44)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(endDate, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                .add(endDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 120, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jLabel8)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -1836,7 +1836,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         .add(jLabel57)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(cbGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .add(0, 0, 0))
         );
         pnConvertLayout.setVerticalGroup(
             pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1884,7 +1884,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         jLabel14.setText("FirmWare:");
 
-        lbFirmWare.setText("Unknown");
+        lbFirmWare.setText("<html>Unknown");
 
         jLabel16.setText("Logger SW Version:");
 
@@ -1976,7 +1976,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(LogOperationsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(pnFiles, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(pnDownload, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(0, 0, 0)
                 .add(GPSDecodePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
             .add(pnConvert, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
@@ -2438,8 +2438,7 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(jPanel20Layout.createSequentialGroup()
                 .add(pnFilePrecision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnFileSatInfo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .add(pnFileSatInfo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
         jPanel20Layout.setVerticalGroup(
             jPanel20Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2468,7 +2467,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnFilePosition, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
             .add(pnFileOutputFieldInnerLayout.createSequentialGroup()
                 .add(jPanel20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(10, 10, 10)
+                .add(1, 1, 1)
                 .add(pnFileReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -2476,15 +2475,13 @@ public class BT747Main extends javax.swing.JFrame implements
         pnFileOutputFields.setLayout(pnFileOutputFieldsLayout);
         pnFileOutputFieldsLayout.setHorizontalGroup(
             pnFileOutputFieldsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnFileOutputFieldsLayout.createSequentialGroup()
-                .add(pnFileOutputFieldInner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(pnFileOutputFieldInner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
         pnFileOutputFieldsLayout.setVerticalGroup(
             pnFileOutputFieldsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnFileOutputFieldsLayout.createSequentialGroup()
                 .add(pnFileOutputFieldInner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .add(0, 0, 0))
         );
 
         org.jdesktop.layout.GroupLayout FileSettingsPanelLayout = new org.jdesktop.layout.GroupLayout(FileSettingsPanel);
@@ -2497,7 +2494,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(159, Short.MAX_VALUE))
+                .addContainerGap(180, Short.MAX_VALUE))
         );
         FileSettingsPanelLayout.setVerticalGroup(
             FileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2812,11 +2809,8 @@ public class BT747Main extends javax.swing.JFrame implements
         );
         pnTrackpointLayout.setVerticalGroup(
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnTrackpointLayout.createSequentialGroup()
-                .add(pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel12, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(21, Short.MAX_VALUE))
+            .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+            .add(jPanel12, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pnCommonFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Common Filter"));
@@ -2827,7 +2821,7 @@ public class BT747Main extends javax.swing.JFrame implements
         txtRecCntMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtRecCntMin.setText("0");
         txtRecCntMin.setInputVerifier(IntVerifier);
-        txtRecCntMin.setMinimumSize(new java.awt.Dimension(6, 40));
+        txtRecCntMin.setMinimumSize(new java.awt.Dimension(50, 40));
         txtRecCntMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtRecCntMinFocusLost(evt);
@@ -2859,7 +2853,7 @@ public class BT747Main extends javax.swing.JFrame implements
         txtRecCntMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtRecCntMax.setText("0");
         txtRecCntMax.setInputVerifier(IntVerifier);
-        txtRecCntMax.setMinimumSize(new java.awt.Dimension(6, 40));
+        txtRecCntMax.setMinimumSize(new java.awt.Dimension(50, 40));
         txtRecCntMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtRecCntMaxFocusLost(evt);
@@ -2920,8 +2914,8 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnFilterOtherLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(txtSpeedMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(txtDistanceMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(txtRecCntMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
-                .addContainerGap())
+                    .add(txtRecCntMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnFilterOtherLayout.setVerticalGroup(
             pnFilterOtherLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -3045,7 +3039,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         .add(jLabel7))
                     .add(cbAdvancedActive))
                 .addContainerGap())
-            .add(pnFilterOther, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+            .add(pnFilterOther, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .add(pnCommonFilterLayout.createSequentialGroup()
                 .add(pnFilterPrecision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -3289,29 +3283,26 @@ public class BT747Main extends javax.swing.JFrame implements
         pnWayPointRCR.setLayout(pnWayPointRCRLayout);
         pnWayPointRCRLayout.setHorizontalGroup(
             pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(cbWayTime)
+            .add(cbWaySpeed)
+            .add(cbWayDistance)
+            .add(cbWayButton)
             .add(pnWayPointRCRLayout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(cbWayTime)
-                    .add(cbWaySpeed)
-                    .add(cbWayDistance)
-                    .add(cbWayButton)
-                    .add(pnWayPointRCRLayout.createSequentialGroup()
-                        .add(pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(cbWayUser1)
-                            .add(cbWayUser2)
-                            .add(cbWayUser3)
-                            .add(cbWayUser4)
-                            .add(cbWayUser5)
-                            .add(cbWayUser6))
-                        .add(18, 18, 18)
-                        .add(pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(cbWayUser7)
-                            .add(cbWayUser8)
-                            .add(cbWayUser9)
-                            .add(cbWayUser10)
-                            .add(cbWayUser11)
-                            .add(cbWayUser12)))))
+                    .add(cbWayUser1)
+                    .add(cbWayUser2)
+                    .add(cbWayUser3)
+                    .add(cbWayUser4)
+                    .add(cbWayUser5)
+                    .add(cbWayUser6))
+                .add(18, 18, 18)
+                .add(pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(cbWayUser7)
+                    .add(cbWayUser8)
+                    .add(cbWayUser9)
+                    .add(cbWayUser10)
+                    .add(cbWayUser11)
+                    .add(cbWayUser12)))
         );
         pnWayPointRCRLayout.setVerticalGroup(
             pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -3362,11 +3353,8 @@ public class BT747Main extends javax.swing.JFrame implements
         );
         pnWaypointLayout.setVerticalGroup(
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnWaypointLayout.createSequentialGroup()
-                .add(pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(62, Short.MAX_VALUE))
+            .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         org.jdesktop.layout.GroupLayout LogFiltersPanelLayout = new org.jdesktop.layout.GroupLayout(LogFiltersPanel);
@@ -3384,10 +3372,9 @@ public class BT747Main extends javax.swing.JFrame implements
             LogFiltersPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(LogFiltersPanelLayout.createSequentialGroup()
                 .add(LogFiltersPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWaypoint, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, LogFiltersPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, pnTrackpoint, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, pnCommonFilter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnCommonFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnTrackpoint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnWaypoint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -4781,7 +4768,7 @@ public class BT747Main extends javax.swing.JFrame implements
             InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 762, Short.MAX_VALUE)
                 .addContainerGap())
         );
         InfoPanelLayout.setVerticalGroup(
@@ -4835,8 +4822,8 @@ public class BT747Main extends javax.swing.JFrame implements
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE))
+                    .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(tabbedPanelAll))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

@@ -95,8 +95,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="pnBottomInformation" alignment="1" max="32767" attributes="1"/>
-                  <Component id="tabbedPanelAll" alignment="0" pref="786" max="32767" attributes="0"/>
+                  <Component id="pnBottomInformation" max="32767" attributes="1"/>
+                  <Component id="tabbedPanelAll" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -126,7 +126,7 @@
                   <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                   <Component id="DownloadProgressLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="DownloadProgressBar" pref="302" max="32767" attributes="0"/>
+                  <Component id="DownloadProgressBar" pref="303" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -234,7 +234,7 @@
                           <Component id="pnFiles" max="32767" attributes="1"/>
                           <Component id="pnDownload" alignment="0" min="-2" max="-2" attributes="1"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                       <Component id="GPSDecodePanel" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="pnConvert" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -497,7 +497,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="jPanel18" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="jPanel9" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -510,7 +510,7 @@
                                   <Component id="cbGPSType" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -521,7 +521,7 @@
                               <Component id="jPanel9" alignment="0" min="0" pref="57" max="32767" attributes="1"/>
                               <Component id="jPanel18" alignment="0" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="btConvert" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbFormat" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -579,11 +579,11 @@
                               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                               <Component id="jLabel43" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="startDate" min="-2" pref="109" max="-2" attributes="0"/>
+                              <Component id="startDate" min="-2" pref="120" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel44" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="endDate" pref="111" max="32767" attributes="0"/>
+                              <Component id="endDate" min="-2" pref="120" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -620,12 +620,12 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="jLabel44">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="to date"/>
+                        <Property name="text" type="java.lang.String" value=" to "/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel43">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="From date"/>
+                        <Property name="text" type="java.lang.String" value="From "/>
                       </Properties>
                     </Component>
                     <Component class="com.toedter.calendar.JDateChooser" name="startDate">
@@ -912,7 +912,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbFirmWare">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Unknown"/>
+                    <Property name="text" type="java.lang.String" value="&lt;html&gt;Unknown"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel16">
@@ -959,7 +959,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnFileOutputFields" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="159" max="32767" attributes="0"/>
+                      <EmptySpace pref="180" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1263,17 +1263,14 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="pnFileOutputFieldInner" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="pnFileOutputFieldInner" min="-2" max="-2" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="pnFileOutputFieldInner" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1306,7 +1303,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jPanel20" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                               <Component id="pnFileReason" min="-2" max="-2" attributes="1"/>
                           </Group>
                       </Group>
@@ -1502,9 +1499,8 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="pnFilePrecision" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="pnFileSatInfo" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -1708,7 +1704,7 @@
                       <Component id="pnTrackpoint" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnCommonFilter" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="pnWaypoint" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -1717,11 +1713,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="pnWaypoint" alignment="0" max="32767" attributes="1"/>
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="pnTrackpoint" alignment="0" max="32767" attributes="1"/>
-                              <Component id="pnCommonFilter" alignment="0" max="32767" attributes="1"/>
-                          </Group>
+                          <Component id="pnCommonFilter" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="pnTrackpoint" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="pnWaypoint" alignment="0" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -1751,13 +1745,8 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jPanel11" alignment="0" pref="263" max="32767" attributes="1"/>
-                              <Component id="jPanel12" alignment="0" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace pref="21" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="jPanel11" alignment="0" pref="263" max="32767" attributes="1"/>
+                      <Component id="jPanel12" alignment="0" max="32767" attributes="1"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -2134,7 +2123,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                      <Component id="pnFilterOther" alignment="0" pref="221" max="32767" attributes="1"/>
+                      <Component id="pnFilterOther" alignment="0" max="32767" attributes="1"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="pnFilterPrecision" min="-2" max="-2" attributes="1"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -2183,13 +2172,13 @@
                                   <Component id="lbNSATFltr" alignment="2" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbRecNbrFltr" alignment="2" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="txtSpeedMax" max="32767" attributes="1"/>
                                   <Component id="txtDistanceMax" alignment="0" max="32767" attributes="1"/>
-                                  <Component id="txtRecCntMax" alignment="0" pref="50" max="32767" attributes="1"/>
+                                  <Component id="txtRecCntMax" alignment="0" max="32767" attributes="1"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -2215,7 +2204,7 @@
                                           <Component id="lbRecNbrFltr" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="txtRecCntMax" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="txtDistanceMax" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="txtSpeedMax" min="-2" max="-2" attributes="0"/>
@@ -2239,7 +2228,7 @@
                           <Connection code="IntVerifier" type="code"/>
                         </Property>
                         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[6, 40]"/>
+                          <Dimension value="[50, 40]"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -2288,7 +2277,7 @@
                           <Connection code="IntVerifier" type="code"/>
                         </Property>
                         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[6, 40]"/>
+                          <Dimension value="[50, 40]"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -2504,13 +2493,8 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="pnWayPointRCR" alignment="0" max="32767" attributes="1"/>
-                              <Component id="pnWayPointFix" alignment="0" min="-2" pref="256" max="-2" attributes="1"/>
-                          </Group>
-                          <EmptySpace pref="62" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="pnWayPointRCR" alignment="0" max="32767" attributes="1"/>
+                      <Component id="pnWayPointFix" alignment="0" min="-2" pref="256" max="-2" attributes="1"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -2656,32 +2640,27 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="cbWayTime" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWaySpeed" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayDistance" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="cbWayTime" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbWaySpeed" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbWayDistance" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbWayButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="cbWayUser1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbWayUser2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbWayUser3" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbWayUser4" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbWayUser5" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbWayUser6" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="cbWayUser7" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbWayUser8" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbWayUser9" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbWayUser10" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbWayUser11" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbWayUser12" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
+                                  <Component id="cbWayUser1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbWayUser2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbWayUser3" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbWayUser4" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbWayUser5" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbWayUser6" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="cbWayUser7" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbWayUser8" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbWayUser9" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbWayUser10" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbWayUser11" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbWayUser12" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -5207,7 +5186,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="761" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="762" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
