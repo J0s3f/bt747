@@ -9,11 +9,11 @@ set CLASSPATH=dist\BT747_j2se.jar;%RXTXPATH%\RXTXcomm.jar;dist\libBT747.jar;lib\
 
 REM java -Dbt747_prefix="COM" -Dbt747_settings="bt747settings.pdb" waba.applet.Applet BT747
 
-echo PATH = %PATH%
-echo CLASSPATH = %CLASSPATH%
+rem echo PATH = %PATH%
+rem echo CLASSPATH = %CLASSPATH%
 
 REM Change javaw to java in next line to see startup and debug messages
-javaw bt747.j2se_view.BT747Main
+START javaw bt747.j2se_view.BT747Main
 REM java -verbose bt747.j2se_view.BT747Main | more
-pause
+REM pause
 endlocal
