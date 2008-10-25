@@ -485,15 +485,15 @@ public class BT747Main extends javax.swing.JFrame implements
             lbModel.setText(m.getModel());
             String fwString;
             fwString = "";
-            lbModel.setToolTipText("");
+            lbFirmWare.setToolTipText("");
             if (m.getMainVersion().length()
                     + m.getFirmwareVersion().length() != 0) {
                 if (m.getMainVersion().length()
                         + m.getFirmwareVersion().length() > 20) {
                     fwString = "<html>";
                     if (m.getMainVersion().length() > 20) {
-                        fwString = m.getMainVersion().substring(0, 17) + "...";
-                        lbModel.setToolTipText(m.getMainVersion());
+                        fwString += m.getMainVersion().substring(0, 17) + "...";
+                        lbFirmWare.setToolTipText(m.getMainVersion());
                     } else {
                         fwString += m.getMainVersion();
                     }
