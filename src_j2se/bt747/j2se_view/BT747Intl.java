@@ -52,7 +52,6 @@ import bt747.sys.Generic;
 import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Time;
-import bt747.waba_view.ui.BT747MessageBox;
 
 /**
  * J2SE Implementation (GUI) of BT747.

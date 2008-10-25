@@ -35,7 +35,7 @@
     <property name="jopt-simple.jar" value="${lib.dir}/jopt-simple-2.4.1.jar" />
 
 	<property name="j2se.main" value="bt747.j2se_view.BT747Main" />
-	<property name="j2se.main2" value="bt747.j2se_view.BT747Main2" />
+	<property name="j2se.main2" value="bt747.j2se_view.BT747Intl" />
 
 	<!-- Application classpath -->
 	<path id="classpath">
@@ -308,6 +308,7 @@
 		>
 			<include name="bt747/j2se_view/BT747Main.java" />
             <include name="bt747/j2se_view/BT747cmd.java" />
+            <include name="bt747/j2se_view/BT747Intl.java" />
 			<include name="bt747/lang/Txt_en.java" />
 			<exclude name="bt747/waba_view/**" />
 			<exclude name="net/sf/net/bt747/waba/**" />
@@ -381,6 +382,7 @@
 		     jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
 		     compress="true"
 		>
+            <fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
 			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
 		</jar>
 
