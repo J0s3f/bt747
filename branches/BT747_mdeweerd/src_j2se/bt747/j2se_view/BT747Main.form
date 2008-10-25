@@ -151,6 +151,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="cc" green="ff" red="cc" type="rgb"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Inidcates how the download progresses.&lt;br&gt;The progress might reduce if this software deducted there is more data in the device than it reported."/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
           <AccessibilityProperties>
@@ -190,6 +191,7 @@
                 <StringItem index="17" value="COM16:"/>
               </StringArray>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;The system identifier or path of the port.&lt;br&gt;Select a port from the list or type the port directly."/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[200, 22]"/>
             </Property>
@@ -340,6 +342,7 @@
                 <Component class="javax.swing.JButton" name="btWorkingDirectory">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Output Directory :"/>
+                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;The directory where the reports will be written."/>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                   </Properties>
                   <Events>
@@ -349,6 +352,7 @@
                 <Component class="javax.swing.JButton" name="btRawLogFile">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Raw Log File :"/>
+                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;The source file, also used to write to when downloading.&lt;br&gt;&#xa;For download, define a .bin (most cases) or .sr (phototracker) file.&lt;br&gt;&#xa;The input format be .bin, .nmea, .csv or .trl."/>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                   </Properties>
                   <Events>
@@ -358,6 +362,7 @@
                 <Component class="javax.swing.JButton" name="btOutputFile">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Output filename :"/>
+                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;The basename of the output file.&lt;br&gt;The date/time identifier will be added,&lt;br&gt;and the extension depends on the selected output format."/>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                   </Properties>
                   <Events>
@@ -459,6 +464,7 @@
                 <Component class="javax.swing.JButton" name="btDownloadIBlue">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="iBlue / Qstarz / Holux / Konet"/>
+                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Download from the indicated devices."/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btDownloadIBlueActionPerformed"/>
@@ -467,6 +473,7 @@
                 <Component class="javax.swing.JButton" name="btDownloadFromNumerix">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="PhotoTrackr / DPL700 / iTrackU-Nemerix/SIRFIII"/>
+                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Download from the indicated devices."/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btDownloadFromNumerixActionPerformed"/>
@@ -651,6 +658,7 @@
                     <Component class="javax.swing.JLabel" name="jLabel8">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Time split:"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Time (hours:minutes) corresponding to the start time on the first day and the end time on the day following the &apos;to date&apos;."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel11">
@@ -721,6 +729,7 @@
                             <StringItem index="1" value="Thomas&apos;s version"/>
                           </StringArray>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Choose the decoder for the raw log file&lt;br&gt;Original corresponds to the main decoder, the other decoder is experimental and has some bugs."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbDecoderChoiceActionPerformed"/>
@@ -729,6 +738,7 @@
                     <Component class="javax.swing.JLabel" name="lbConversionTime">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="conversion Time"/>
+                        <Property name="toolTipText" type="java.lang.String" value="The time spent for the last conversion."/>
                       </Properties>
                     </Component>
                   </SubComponents>
@@ -882,6 +892,7 @@
                 <Component class="javax.swing.JLabel" name="lbFlashInfo">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Unknown"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Flash identification code."/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel10">
@@ -917,6 +928,7 @@
                 <Component class="javax.swing.JLabel" name="lbLoggerSWVersion">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Unknown"/>
+                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;The SW version of the device.&lt;br&gt;"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbThisSWVersion">
@@ -1072,6 +1084,7 @@
                             <StringItem index="1" value="MSL height"/>
                           </StringArray>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Correct the logged height (altitude).&lt;br&gt;MTK loggers store the height as the altitude relative to the WGS84.&lt;br&gt;When activated, write height relative to the mean sea level."/>
                       </Properties>
                       <Events>
                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbHeightOverMeanSeaLevelFocusLost"/>
@@ -1080,6 +1093,7 @@
                     <Component class="javax.swing.JCheckBox" name="cbRecordNumberInfoInLog">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="RecordNumberInfoInLog"/>
+                        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Write the record number of each position to the log file."/>
                       </Properties>
                       <Events>
                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbRecordNumberInfoInLogFocusLost"/>
@@ -1088,6 +1102,7 @@
                     <Component class="javax.swing.JCheckBox" name="cbImperialUnits">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="ImperialUnits"/>
+                        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;convert values to inches, feet, mph, ... ."/>
                       </Properties>
                       <Events>
                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbImperialUnitsFocusLost"/>
@@ -1167,6 +1182,7 @@
                     <Component class="javax.swing.JButton" name="cbNoFixColor">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Bad Color"/>
+                        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Make sure the bad color is the same as the good color&lt;br&gt;if you want to limit the HTML file size.&lt;br&gt;The &apos;bad color&apos; is used to indicate track sections with unselected positions."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbNoFixColorActionPerformed"/>
@@ -1221,6 +1237,7 @@
                 <Component class="javax.swing.JTextField" name="tfTrackSeparationTime">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="0"/>
+                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;The time needed between two successively logged positions&lt;br&gt;to determine a new track must be started."/>
                   </Properties>
                   <Events>
                     <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfTrackSeparationTimeFocusLost"/>
@@ -1240,6 +1257,7 @@
                     <TitledBorder title="File Output Fields"/>
                   </Border>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Select the fields that must be written to the output files."/>
               </Properties>
 
               <Layout>
@@ -1718,6 +1736,7 @@
                     <TitledBorder title="Trackpoint Filter"/>
                   </Border>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Defines which positions are considered as trackpoints."/>
               </Properties>
 
               <Layout>
@@ -2099,6 +2118,7 @@
                     <TitledBorder title="Common Filter"/>
                   </Border>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Filter conditions applied to trackpoints and to waypoints."/>
               </Properties>
 
               <Layout>
@@ -2454,6 +2474,7 @@
                 <Component class="javax.swing.JCheckBox" name="cbAdvancedActive">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Activate Common Filter"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Must be ticked for these conditions to be used."/>
                   </Properties>
                   <Events>
                     <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbAdvancedActiveStateChanged"/>
@@ -2468,6 +2489,7 @@
                     <TitledBorder title="Waypoint Filter"/>
                   </Border>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Defines which positions are considered as waypoints."/>
               </Properties>
 
               <Layout>
@@ -3096,6 +3118,7 @@
                     <Component class="javax.swing.JTextField" name="txtHoluxName">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Unknown"/>
+                        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Only for certain Holux devices such as the Holux M-241.&lt;br&gt;Give a name to the device."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JButton" name="btSetHoluxName">
@@ -3115,6 +3138,7 @@
                         <TitledBorder title="Log by . . ."/>
                       </Border>
                     </Property>
+                    <Property name="toolTipText" type="java.lang.String" value="The conditions used by the logger to store a position."/>
                   </Properties>
 
                   <Layout>
@@ -3318,6 +3342,7 @@
                     <TitledBorder title="Log Format"/>
                   </Border>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Select the data that the GPS logger should store for each position."/>
               </Properties>
 
               <Layout>
@@ -3388,6 +3413,7 @@
                     <Component class="javax.swing.JButton" name="btFormatAndErase">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Set Format &amp; Erase"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Set the selected format and erase the memory of the GPS Logger"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFormatAndEraseActionPerformed"/>
@@ -3396,6 +3422,7 @@
                     <Component class="javax.swing.JButton" name="btErase">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Erase only"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Only erase the logger&apos;s memory, keep the current log format (not the one shown)."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEraseActionPerformed"/>
@@ -3412,6 +3439,7 @@
                     <Component class="javax.swing.JButton" name="btFormat">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Set Format Only"/>
+                        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Change the logged fields in the GPS Logger,&lt;br&gt;do not erase the logger memory."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFormatActionPerformed"/>
@@ -3936,6 +3964,7 @@
                     <TitledBorder title="Flash settings"/>
                   </Border>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Settings used by the logger when it lost power.&lt;br&gt;Can only be changed when &apos;Times Left&apos; is not 0."/>
               </Properties>
 
               <Layout>
@@ -4251,6 +4280,7 @@
                     <TitledBorder title="NMEA Output Settings"/>
                   </Border>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;The NMEA packets sent by the device.&lt;br&gt;At least one sentence is needed to maintain bluetooth communication.&lt;br&gt;RMC and GGA are the most common ones,&lt;br&gt;GSA is needed if you wish to have real time satellite information."/>
               </Properties>
 
               <Layout>
@@ -4875,6 +4905,7 @@
                     <TitledBorder title="NMEA File Settings"/>
                   </Border>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;NMEA output file specific.&lt;br&gt;Selects packet types to write to NMEA files.&lt;br&gt;Not all packet types are available."/>
               </Properties>
 
               <Layout>
@@ -5114,6 +5145,7 @@
                     <TitledBorder title="GPX File Settings"/>
                   </Border>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;GPX File output specific settings."/>
               </Properties>
 
               <Layout>
@@ -5151,6 +5183,7 @@
                 <Component class="javax.swing.JCheckBox" name="cbGPXTrkSegWhenSmall">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Make a new track segment even if time split is small"/>
+                    <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;When selected, creates track segments whenever a logged position is not selected as a trackpoint."/>
                   </Properties>
                   <Events>
                     <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbGPXTrkSegWhenSmallStateChanged"/>
