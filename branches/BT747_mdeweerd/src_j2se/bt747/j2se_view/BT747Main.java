@@ -21,6 +21,7 @@ import gps.log.GPSRecord;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.Toolkit;
@@ -31,10 +32,12 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import javax.swing.ImageIcon;
 import javax.swing.InputVerifier;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -81,6 +84,9 @@ public class BT747Main extends javax.swing.JFrame implements
     
     private static Image appIcon;
     private static final String iconPath = "icons/bt747_16x16.gif";
+
+    private static Image app128Icon;
+    private static final String icon128Path = "icons/bt747_128x128.gif";
     
     private static final void setAppIcon() {
         URL u = BT747Main.class.getResource("/"+iconPath);
@@ -90,6 +96,15 @@ public class BT747Main extends javax.swing.JFrame implements
         } else {
             appIcon = Toolkit.getDefaultToolkit().getImage(iconPath);
         }
+
+        u = BT747Main.class.getResource("/"+icon128Path);
+
+        if(u!=null) {
+            app128Icon = Toolkit.getDefaultToolkit().getImage(u);
+        } else {
+            app128Icon = Toolkit.getDefaultToolkit().getImage(icon128Path);
+        }
+
     }
     
     static {
@@ -266,6 +281,24 @@ public class BT747Main extends javax.swing.JFrame implements
         addWindowListener(this);
 
         J2SEGeneric.addListener(this);
+        
+        AboutBT747.addActionListener(new java.awt.event.ActionListener() {
+            /* (non-Javadoc)
+             * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+             */
+            public void actionPerformed(ActionEvent e) {
+                showAbout();
+            }
+        });
+        Info.addActionListener(new java.awt.event.ActionListener() {
+            /* (non-Javadoc)
+             * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+             */
+            public void actionPerformed(ActionEvent e) {
+                showLicense();
+            }
+        });
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -351,6 +384,25 @@ public class BT747Main extends javax.swing.JFrame implements
         }
         updateGPSData(gps);
     }
+    
+    private final void showAbout() {
+        JOptionPane.showMessageDialog(this,
+                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("ABOUT_TEXT"),
+                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("ABOUT_TITLE"),
+                JOptionPane.INFORMATION_MESSAGE,
+                new ImageIcon(app128Icon)
+                );
+    }
+
+    
+    private final void showLicense() {
+        JOptionPane.showMessageDialog(this,
+                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("LICENSE_TEXT"),
+                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("LICENSE_TITLE"),
+                JOptionPane.INFORMATION_MESSAGE,
+                new ImageIcon(app128Icon)
+                );
+    }
 
     private void updateGPSData(final GPSRecord gps) {
 
@@ -405,16 +457,15 @@ public class BT747Main extends javax.swing.JFrame implements
      *            The file that could not be opened.
      */
     private void couldNotOpenFileMessage(final String fileName) {
-        MessageBox mb;
-        final String[] ok = { java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OK") };
-        mb = new MessageBox(
+        JOptionPane.showMessageDialog(this, 
                 java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Problem_opening_file"),
                 java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("The_application_could_not_open_")
                         + fileName
                         + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("_check_if_loc_exists")
                         + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("in_case_it_is_an_output_file."),
-                ok);
-        mb.popupBlockingModal();
+                        JOptionPane.WARNING_MESSAGE,
+                        null
+                        );
     }
 
     public void modelEvent(ModelEvent e) {
@@ -571,16 +622,27 @@ public class BT747Main extends javax.swing.JFrame implements
             progressBarUpdate();
             break;
         case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
-            MessageBox mb;
-            final String[] yesNo = { java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Yes"), java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("No") };
-            mb = new MessageBox(
+            int overwriteResp;
+            overwriteResp =
+            JOptionPane.showOptionDialog(this,
+                    java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("The_current_raw_data_file_is_not_empty,<br>"),
                     java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OVERWRITING_DATA"),
-                    java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("The_current_raw_data_file_is_not_empty,<br>")
-                            + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("and,_the_data_in_the_GPS_Logger_is_different!!!<br>")
-                            + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("DO_YOU_CONFIRM_OVERWRITING_THE_CURRENT_DIFFERENT_DATA?"),
-                    yesNo);
-            mb.popupBlockingModal();
-            c.replyToOkToOverwrite(mb.getAnswer() == 0);
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE,
+                    null /* icon */,
+                    null /* options */,
+                    null /* initialValue */);
+            c.replyToOkToOverwrite(overwriteResp==JOptionPane.OK_OPTION);
+//            MessageBox mb;
+//            final String[] yesNo = { java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Yes"), java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("No") };
+//            mb = new MessageBox(
+//                    java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OVERWRITING_DATA"),
+//                    java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("The_current_raw_data_file_is_not_empty,<br>")
+//                            + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("and,_the_data_in_the_GPS_Logger_is_different!!!<br>")
+//                            + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("DO_YOU_CONFIRM_OVERWRITING_THE_CURRENT_DIFFERENT_DATA?"),
+//                    yesNo);
+//            mb.popupBlockingModal();
+//            c.replyToOkToOverwrite(mb.getAnswer() == 0);
             break;
         case ModelEvent.COULD_NOT_OPEN_FILE:
             couldNotOpenFileMessage((String) e.getArg());

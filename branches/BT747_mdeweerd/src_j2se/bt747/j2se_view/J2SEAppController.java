@@ -11,7 +11,8 @@ import java.io.FileOutputStream;
 
 import java.util.HashSet;
 
-import bt747.Txt;
+import javax.swing.JOptionPane;
+
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
@@ -21,7 +22,8 @@ import bt747.sys.Settings;
 
 public final class J2SEAppController extends Controller {
 
-    private final static String platform = java.lang.System.getProperty("os.name");
+    private final static String platform = java.lang.System
+            .getProperty("os.name");
     private final static String SETTINGS_NAME = "BT747SettingsJ2SE.pdb";
     private final static String CONFIG_FILE_NAME = java.lang.System
             .getProperty(
@@ -103,13 +105,20 @@ public final class J2SEAppController extends Controller {
         return result;
     }
 
+    private static final String getString(final String s) {
+        return java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle")
+                .getString(s);
+    }
+
     /** Options for the first warning message. */
-    private static final String[] C_ERASE_OR_CANCEL = { Txt.ERASE, Txt.CANCEL };
+    private static final String[] C_ERASE_OR_CANCEL = {
+            getString("ERASE_BUTTON"), getString("CANCEL_BUTTON") };
     /** Options for the first warning message. */
-    private static final String[] C_YES_OR_CANCEL = { Txt.YES, Txt.CANCEL };
+    private static final String[] C_YES_OR_CANCEL = { getString("YES_BUTTON"),
+            getString("CANCEL_BUTTON") };
     /** Options for the second warning message - reverse order on purpose. */
-    private static final String[] C_CANCEL_OR_CONFIRM_ERASE = { Txt.CANCEL,
-            Txt.CONFIRM_ERASE };
+    private static final String[] C_CANCEL_OR_CONFIRM_ERASE = { getString("CANCEL_BUTTON"),
+            getString("CONFIRM_ERASE_BUTTON") };
 
     /**
      * A 'recovery Erase' attempts to recover memory that was previously
@@ -118,11 +127,11 @@ public final class J2SEAppController extends Controller {
     public final void recoveryErase() {
         /** Object to open multiple message boxes */
         MessageBox mb;
-        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
+        mb = new MessageBox(getString("ERASE_WARNING_TITLE"), getString("ERASE_WARNING_1_TEXT"),
                 C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
+            mb = new MessageBox(getString("ERASE_WARNING_TITLE"), getString("ERASE_WARNING_2_TEXT"),
                     C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
@@ -142,12 +151,12 @@ public final class J2SEAppController extends Controller {
     public final void changeLogFormatAndErase(final int logFormat) {
         /** Object to open multiple message boxes */
         MessageBox mb;
-        mb = new MessageBox(Txt.TITLE_ATTENTION,
-                Txt.C_msgWarningFormatAndErase, C_ERASE_OR_CANCEL);
+        mb = new MessageBox(getString("ATTENTION"),
+                getString("FORMAT_ERASE_WARNING_TEXT"), C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(Txt.TITLE_ATTENTION,
-                    Txt.C_msgWarningFormatAndErase2, C_CANCEL_OR_CONFIRM_ERASE);
+            mb = new MessageBox(getString("ATTENTION"),
+                    getString("FORMAT_ERASE_WARNING2_TEXT"), C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
                 // Set format and reset log
@@ -167,8 +176,8 @@ public final class J2SEAppController extends Controller {
     public final void changeLogFormat(final int logFormat) {
         /** Object to open multiple message boxes */
         MessageBox mb;
-        mb = new MessageBox(true, Txt.TITLE_ATTENTION,
-                Txt.C_msgWarningFormatIncompatibilityRisk, C_YES_OR_CANCEL);
+        mb = new MessageBox(true, getString("ATTENTION"),
+                getString("CHANGE_LOG_FORMAT_TEXT"), C_YES_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
             c.setLogFormat(logFormat);
@@ -180,13 +189,14 @@ public final class J2SEAppController extends Controller {
      * the log too.
      */
     public final void eraseLogFormat() {
+        // TODO: Use JOptionPane.showMessageDialog
         /** Object to open multiple message boxes */
         MessageBox mb;
-        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
-                C_ERASE_OR_CANCEL);
+        mb = new MessageBox(getString("ERASE_WARNING_TITLE"),
+                getString("ERASE_WARNING_TEXT"), C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning2,
+            mb = new MessageBox(getString("ATTENTION"), getString("ERASE_WARNING_2_TEXT"),
                     C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
@@ -198,8 +208,10 @@ public final class J2SEAppController extends Controller {
 
     public final void doFactoryReset() {
         MessageBox mb;
-        String[] szExitButtonArray = { Txt.YES, Txt.NO };
-        mb = new MessageBox(Txt.TITLE_ATTENTION, Txt.CONFIRM_FACT_RESET,
+        String[] szExitButtonArray = {
+                getString("YES_BUTTON"),
+                getString("NO_BUTTON"), };
+        mb = new MessageBox(getString("ATTENTION"), getString("FACT_RESET_TEXT"),
                 szExitButtonArray);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
@@ -209,20 +221,21 @@ public final class J2SEAppController extends Controller {
 
     }
 
-    public final void setFlashConfig(final boolean lock,
-            final int updateRate, final int baudRate, final int periodGLL,
-            final int periodRMC, final int periodVTG, final int periodGSA,
-            final int periodGSV, final int periodGGA, final int periodZDA,
-            final int periodMCHN) {
+    public final void setFlashConfig(final boolean lock, final int updateRate,
+            final int baudRate, final int periodGLL, final int periodRMC,
+            final int periodVTG, final int periodGSA, final int periodGSV,
+            final int periodGGA, final int periodZDA, final int periodMCHN) {
         MessageBox mb;
-      String[] mbStr = { Txt.WRITEFLASH, Txt.ABORT };
-      mb = new MessageBox(Txt.TITLE_ATTENTION,
-              Txt.TXT_FLASH_LIMITED_WRITES, mbStr);
-      mb.popupBlockingModal();
-      if (mb.getPressedButtonIndex() == 0) {
-          c.setFlashUserOption(lock, updateRate, baudRate, periodGLL, periodRMC, periodVTG, periodGSA, periodGSV, periodGGA, periodZDA, periodMCHN);
-      }
-  }
+        String[] mbStr = { getString("WRITE_FLASH_BUTTON"), getString("CANCEL_BUTTON") };
+        mb = new MessageBox(getString("ATTENTION"), getString("FLASH_LIMITED_TEXT"),
+                mbStr);
+        mb.popupBlockingModal();
+        if (mb.getPressedButtonIndex() == 0) {
+            c.setFlashUserOption(lock, updateRate, baudRate, periodGLL,
+                    periodRMC, periodVTG, periodGSA, periodGSV, periodGGA,
+                    periodZDA, periodMCHN);
+        }
+    }
 
     /**
      * Report an error.
@@ -236,16 +249,16 @@ public final class J2SEAppController extends Controller {
         String errorMsg;
         switch (error) {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
-            errorMsg = Txt.COULD_NOT_OPEN + errorInfo;
+            errorMsg = getString("COULD_NOT_OPEN_FILE") + errorInfo;
             Generic.debug(errorMsg);
-            new MessageBox(Txt.ERROR, errorMsg).popupBlockingModal();
+            new MessageBox(getString("ERROR_TITLE"), errorMsg).popupBlockingModal();
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
-            (new MessageBox(Txt.WARNING, Txt.NO_FILES_WERE_CREATED))
+            (new MessageBox(getString("WARNING_TITLE"), getString("NO_FILES_CREATED") ))
                     .popupBlockingModal();
             break;
         case BT747Constants.ERROR_READING_FILE:
-            new MessageBox(Txt.ERROR, Txt.PROBLEM_READING + errorInfo)
+            new MessageBox(getString("ERROR_TITLE"), getString("PROBLEM_READING")+ errorInfo)
                     .popupBlockingModal();
             break;
         default:
