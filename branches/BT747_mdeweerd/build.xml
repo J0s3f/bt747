@@ -309,7 +309,6 @@
 			<include name="bt747/j2se_view/BT747Main.java" />
             <include name="bt747/j2se_view/BT747cmd.java" />
             <include name="bt747/j2se_view/BT747Intl.java" />
-			<include name="bt747/lang/Txt_en.java" />
 			<exclude name="bt747/waba_view/**" />
 			<exclude name="net/sf/net/bt747/waba/**" />
 			<compilerarg line="-Xlint:unchecked"/>
@@ -460,7 +459,6 @@
             -keep public class net.sf.bt747.j2se.system.J2SEGeneric { public *; }
 			-keep public interface net.sf.bt747.j2se.system.J2SEMessageListener { *; }
             -keep public class bt747.lang.* { public *; }
-            -keep public class bt747.Txt
             -keep public interface bt747.sys.interfaces.* {
                 public *;
 			}
@@ -606,7 +604,6 @@
                     public static void main(java.lang.String[]); }
 
             -keep public class bt747.lang.* { public *; }
-            -keep public class bt747.Txt
 	        </proguard>
 		<delete file="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar">
 		</delete>
@@ -1652,17 +1649,21 @@
 				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java"
 				/>
 			</replace>
-
 			<condition property="lang" value="${default.lang}">
 				<not>
 					<isset property="lang" />
 				</not>
 			</condition>
 			<echo message="Preparing for language ${lang}" />
-			<replaceregexp file="@{dest.dir}/${src.dir}/bt747/Txt.java"
-			               match="extends Txt_.."
-			               replace="extends Txt_${lang}"
-			/>
+            <replace dir="@{dest.dir}"
+                     token="Txt_en"
+                     summary="yes"
+                     value="Txt_${lang}"
+            >
+                <include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/Txt.java"
+                />
+            </replace>
+
 
 			<copy file="dev/package.bat" tofile="package.bat" />
 			<copy file="dev/upload.bat" tofile="upload.bat" />
