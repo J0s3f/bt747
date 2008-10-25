@@ -178,6 +178,7 @@ public class BT747Main extends javax.swing.JFrame implements
         getOutputFilePath();
         getIncremental();
         getDefaultPort();
+        updateSerialSpeed();
         updateSatGuiItems();
         updateGuiLogFilterSettings();
 
@@ -307,6 +308,7 @@ public class BT747Main extends javax.swing.JFrame implements
         int speed = m.getBaudRate();
         cbSerialSpeed.setSelectedItem(new Integer(speed));
     }
+    
     @SuppressWarnings("unchecked")
     private void addPortsToGui() {
         try {
@@ -631,7 +633,7 @@ public class BT747Main extends javax.swing.JFrame implements
             int overwriteResp;
             overwriteResp =
             JOptionPane.showOptionDialog(this,
-                    java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("The_current_raw_data_file_is_not_empty,<br>"),
+                    java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OVERWRITE_DATA_QUESTION"),
                     java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OVERWRITING_DATA"),
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE,
@@ -1614,8 +1616,14 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
+        cbSerialSpeed.setEditable(true);
         cbSerialSpeed.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "38400", "115200" }));
         cbSerialSpeed.setToolTipText(bundle.getString("BT747Main.cbSerialSpeed.toolTipText")); // NOI18N
+        cbSerialSpeed.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbSerialSpeedFocusLost(evt);
+            }
+        });
 
         lbSerialSpeed.setText(bundle.getString("BT747Main.lbSerialSpeed.text")); // NOI18N
 
@@ -2932,7 +2940,7 @@ public class BT747Main extends javax.swing.JFrame implements
         );
         pnTrackpointLayout.setVerticalGroup(
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
             .add(jPanel12, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -3477,7 +3485,7 @@ public class BT747Main extends javax.swing.JFrame implements
         pnWaypointLayout.setVerticalGroup(
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         org.jdesktop.layout.GroupLayout LogFiltersPanelLayout = new org.jdesktop.layout.GroupLayout(LogFiltersPanel);
@@ -4439,11 +4447,6 @@ public class BT747Main extends javax.swing.JFrame implements
         lbGLLOut1.setText(bundle.getString("BT747Main.lbGLLOut1.text")); // NOI18N
 
         cbNMEAOutGLL.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
-        cbNMEAOutGLL.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbNMEAOutGLLActionPerformed(evt);
-            }
-        });
 
         cbNMEAOutRMC.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
@@ -4661,12 +4664,6 @@ public class BT747Main extends javax.swing.JFrame implements
         );
 
         tabbedPanelAll.addTab(bundle.getString("BT747Main.AdvancedSettingsPanel.TabConstraints.tabTitle"), AdvancedSettingsPanel); // NOI18N
-
-        AdvancedfileSettingsPanel.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                AdvancedfileSettingsPanelFocusGained(evt);
-            }
-        });
 
         pnFileNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileNMEAOutput.border.title"))); // NOI18N
         pnFileNMEAOutput.setToolTipText(bundle.getString("BT747Main.pnFileNMEAOutput.toolTipText")); // NOI18N
@@ -4964,6 +4961,10 @@ public class BT747Main extends javax.swing.JFrame implements
 
         pack();
     }//GEN-END:initComponents
+
+private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbSerialSpeedFocusLost
+// TODO add your handling code here:
+}//GEN-LAST:event_cbSerialSpeedFocusLost
 
     private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_DeviceSettingsPanelFocusGained
         c.reqLogOverwrite();
@@ -5714,6 +5715,11 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         } catch (Exception e) {
             // Ignore exception
+        }
+        try {
+            c.setBaudRate(Integer.parseInt((String)cbSerialSpeed.getSelectedItem()));
+        } catch (Exception e) {
+            
         }
         if (foundPort) {
             c.setPort(port);
