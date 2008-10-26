@@ -479,7 +479,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
+                          <Component id="pnDownloadMethod" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="btDownloadIBlue" min="-2" max="-2" attributes="0"/>
@@ -490,7 +490,7 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
+                      <Component id="pnDownloadMethod" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btDownloadIBlue" min="-2" max="-2" attributes="0"/>
@@ -501,12 +501,12 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Container class="javax.swing.JPanel" name="jPanel17">
+                <Container class="javax.swing.JPanel" name="pnDownloadMethod">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="Download method">
-                          <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.jPanel17.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                        <TitledBorder title="&lt;BT747Main.pnDownloadMethod.border.title&gt;">
+                          <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.pnDownloadMethod.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </TitledBorder>
                       </Border>
                     </Property>
@@ -602,9 +602,9 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="jPanel18" min="-2" max="-2" attributes="0"/>
+                                  <Component id="pnDateFilter" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="jPanel9" min="-2" max="-2" attributes="0"/>
+                                  <Component id="pnDecoderBin" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="btConvert" min="-2" max="-2" attributes="0"/>
@@ -624,8 +624,8 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jPanel9" alignment="0" min="0" max="32767" attributes="1"/>
-                              <Component id="jPanel18" alignment="0" pref="48" max="32767" attributes="1"/>
+                              <Component id="pnDecoderBin" alignment="0" min="0" max="32767" attributes="1"/>
+                              <Component id="pnDateFilter" alignment="0" pref="48" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -670,12 +670,12 @@
                     <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="setSelectedFormat(cbFormat.getSelectedItem().toString());"/>
                   </AuxValues>
                 </Component>
-                <Container class="javax.swing.JPanel" name="jPanel18">
+                <Container class="javax.swing.JPanel" name="pnDateFilter">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="Date filter">
-                          <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.jPanel18.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                        <TitledBorder title="&lt;BT747Main.pnDateFilter.border.title&gt;">
+                          <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.pnDateFilter.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </TitledBorder>
                       </Border>
                     </Property>
@@ -694,7 +694,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="endDate" min="-2" pref="120" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="lbTimeSplit" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtTimeSplit" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="sfTimeSplitHours" min="-2" pref="40" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -713,7 +713,7 @@
                           <Component id="lbFromDate" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="startDate" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="sfTimeSplitHours" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbTimeSplit" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtTimeSplit" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lbHour" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="spTimeSplitMinutes" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lbMinutes" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -764,13 +764,13 @@
                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="spTimeSplitMinutesFocusLost"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lbTimeSplit">
+                    <Component class="javax.swing.JLabel" name="txtTimeSplit">
                       <Properties>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbTimeSplit.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.txtTimeSplit.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbTimeSplit.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.txtTimeSplit.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                     </Component>
@@ -800,12 +800,12 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Container class="javax.swing.JPanel" name="jPanel9">
+                <Container class="javax.swing.JPanel" name="pnDecoderBin">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="Decoder for &apos;.bin&apos; file">
-                          <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.jPanel9.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                        <TitledBorder title="&lt;BT747Main.pnDecoderBin.border.title&gt;">
+                          <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.pnDecoderBin.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </TitledBorder>
                       </Border>
                     </Property>
@@ -886,22 +886,22 @@
                               <Component id="lbLoggerSWversion" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lbLatitude" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lbLongitude" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbTime" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lbGeoid" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="txtMemoryUsed" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbLoggerSWVersion" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtLoggerSWVersion" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="txtFirmWare" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="txtModel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbFlashInfo" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtFlashInfo" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="txtGeoid" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbTime" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtTime" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="txtLongitude" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="txtLatitude" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="15" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -914,28 +914,28 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtLongitude" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbLongitude" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtLongitude" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lbTime" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtTime" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtGeoid" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbGeoid" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtGeoid" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lbFlashInfo" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbFlashInfo" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtFlashInfo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtModel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbModel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtModel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -945,7 +945,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lbLoggerSWversion" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbLoggerSWVersion" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtLoggerSWVersion" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -972,10 +972,10 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel3">
+                <Component class="javax.swing.JLabel" name="lbTime">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.jLabel3.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbTime.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -993,10 +993,10 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbTime">
+                <Component class="javax.swing.JLabel" name="txtTime">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbTime.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.txtTime.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -1021,13 +1021,13 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbFlashInfo1">
+                <Component class="javax.swing.JLabel" name="txtFlashInfo">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbFlashInfo.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.txtFlashInfo.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbFlashInfo.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.txtFlashInfo.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -1073,10 +1073,10 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbLoggerSWVersion">
+                <Component class="javax.swing.JLabel" name="txtLoggerSWVersion">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbLoggerSWVersion.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.txtLoggerSWVersion.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbLoggerSWVersion.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
@@ -1169,7 +1169,7 @@
                               <Group type="103" alignment="1" groupAlignment="1" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="lbTimeZone" min="-2" max="-2" attributes="0"/>
+                                      <Component id="txtTimeZone" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="cbUTCOffset" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -1185,7 +1185,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="cbUTCOffset" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbTimeZone" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtTimeZone" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="cbHeightOverMeanSeaLevel" min="-2" max="-2" attributes="0"/>
@@ -1276,10 +1276,10 @@
                         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbImperialUnitsFocusLost"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lbTimeZone">
+                    <Component class="javax.swing.JLabel" name="txtTimeZone">
                       <Properties>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbTimeZone.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.txtTimeZone.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                     </Component>
@@ -1988,26 +1988,26 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="jPanel11" min="-2" max="-2" attributes="0"/>
+                          <Component id="pnTrkFixType" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
+                          <Component id="pnTrkLogReason" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jPanel11" alignment="0" max="32767" attributes="1"/>
-                      <Component id="jPanel12" alignment="0" max="32767" attributes="1"/>
+                      <Component id="pnTrkFixType" alignment="0" max="32767" attributes="1"/>
+                      <Component id="pnTrkLogReason" alignment="0" max="32767" attributes="1"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Container class="javax.swing.JPanel" name="jPanel11">
+                <Container class="javax.swing.JPanel" name="pnTrkFixType">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="Fix Type (Valid)">
-                          <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.jPanel11.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                        <TitledBorder title="&lt;BT747Main.pnTrkFixType.border.title&gt;">
+                          <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.pnTrkFixType.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </TitledBorder>
                       </Border>
                     </Property>
@@ -2151,12 +2151,12 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="jPanel12">
+                <Container class="javax.swing.JPanel" name="pnTrkLogReason">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="Log Reason (RCR)">
-                          <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.jPanel12.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                        <TitledBorder title="&lt;BT747Main.pnTrkLogReason.border.title&gt;">
+                          <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.pnTrkLogReason.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </TitledBorder>
                       </Border>
                     </Property>
@@ -3593,7 +3593,7 @@
                                       <Group type="103" groupAlignment="1" attributes="0">
                                           <Component id="lbDistanceEvery" alignment="1" min="-2" max="-2" attributes="0"/>
                                           <Component id="lbAbove" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lbTimeEvery" min="-2" max="-2" attributes="0"/>
+                                          <Component id="txtTimeEvery" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -3614,7 +3614,7 @@
                                   <Group type="102" alignment="1" attributes="0">
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="lbTimeSeconds" min="-2" max="-2" attributes="0"/>
+                                          <Component id="txtTimeSeconds" min="-2" max="-2" attributes="0"/>
                                           <Component id="lbDistancePeriodM" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="lbKMH" min="-2" max="-2" attributes="0"/>
                                       </Group>
@@ -3639,8 +3639,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="lbTimeSeconds" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbTimeEvery" alignment="3" max="32767" attributes="1"/>
+                                  <Component id="txtTimeSeconds" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtTimeEvery" alignment="3" max="32767" attributes="1"/>
                                   <Component id="ckLogTimeActive" alignment="3" min="-2" max="-2" attributes="1"/>
                                   <Component id="txtLogTimeInterval" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -3665,10 +3665,10 @@
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JLabel" name="lbTimeSeconds">
+                    <Component class="javax.swing.JLabel" name="txtTimeSeconds">
                       <Properties>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbTimeSeconds.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.txtTimeSeconds.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                     </Component>
@@ -3751,10 +3751,10 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lbTimeEvery">
+                    <Component class="javax.swing.JLabel" name="txtTimeEvery">
                       <Properties>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbTimeEvery.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.txtTimeEvery.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                     </Component>
@@ -4528,7 +4528,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="lbTimesLeft" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtTimesLeft" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="lbBaudRate" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="lbRMCOut" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="lbVTGOut" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -4568,7 +4568,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lbTimesLeft" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtTimesLeft" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="txtFlashTimesLeft" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -4628,13 +4628,13 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="lbTimesLeft">
+                <Component class="javax.swing.JLabel" name="txtTimesLeft">
                   <Properties>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
                       <ComponentRef name="tfOutputFileBaseName"/>
                     </Property>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.lbTimesLeft.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.txtTimesLeft.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
