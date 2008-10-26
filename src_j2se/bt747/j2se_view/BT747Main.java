@@ -269,7 +269,7 @@ public class BT747Main extends javax.swing.JFrame implements
         txtHoluxName.setText(m.getHoluxName());
         cbRecordNumberInfoInLog.setSelected(m
                 .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));
-        setTitle(getTitle()+ "V" + Version.VERSION_NUMBER);
+        setTitle(getTitle()+ " V" + Version.VERSION_NUMBER);
         cbHeightOverMeanSeaLevel.setSelectedIndex(m.isConvertWGS84ToMSL() ? 1
                 : 0);
         updateFileFormatData();
