@@ -586,7 +586,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .getLogDistanceInterval() / 10., 1));
             break;
         case ModelEvent.UPDATE_FIX_PERIOD:
-            jTextField7.setText(Convert.toString(m.getLogFixPeriod()));
+            txtFixPeriod.setText(Convert.toString(m.getLogFixPeriod()));
             break;
         case ModelEvent.GPGGA:
             updateGPSData((GPSRecord) e.getArg());
@@ -1255,7 +1255,7 @@ public class BT747Main extends javax.swing.JFrame implements
         btWorkingDirectory = new javax.swing.JButton();
         btRawLogFile = new javax.swing.JButton();
         btOutputFile = new javax.swing.JButton();
-        jLabel15 = new javax.swing.JLabel();
+        lbNoFileExt = new javax.swing.JLabel();
         pnDownload = new javax.swing.JPanel();
         jPanel17 = new javax.swing.JPanel();
         cbIncremental = new javax.swing.JCheckBox();
@@ -1266,36 +1266,36 @@ public class BT747Main extends javax.swing.JFrame implements
         btConvert = new javax.swing.JButton();
         cbFormat = new javax.swing.JComboBox();
         jPanel18 = new javax.swing.JPanel();
-        jLabel44 = new javax.swing.JLabel();
-        jLabel43 = new javax.swing.JLabel();
+        lbToDate = new javax.swing.JLabel();
+        lbFromDate = new javax.swing.JLabel();
         startDate = new com.toedter.calendar.JDateChooser();
         endDate = new com.toedter.calendar.JDateChooser();
         sfTimeSplitHours = new com.toedter.components.JSpinField();
-        jLabel5 = new javax.swing.JLabel();
+        lbHour = new javax.swing.JLabel();
         spTimeSplitMinutes = new com.toedter.components.JSpinField();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        lbTimeSplit = new javax.swing.JLabel();
+        lbMinutes = new javax.swing.JLabel();
         cbGPSType = new javax.swing.JComboBox();
-        jLabel57 = new javax.swing.JLabel();
+        lbDeviceType = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         cbDecoderChoice = new javax.swing.JComboBox();
         lbConversionTime = new javax.swing.JLabel();
         GPSDecodePanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         lbLatitude = new javax.swing.JLabel();
         lbLongitude = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        txtLatitude = new javax.swing.JLabel();
+        txtLongitude = new javax.swing.JLabel();
         lbTime = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         lbGeoid = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        txtGeoid = new javax.swing.JLabel();
         lbFlashInfo = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        lbFlashInfo1 = new javax.swing.JLabel();
         lbModel = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        txtModel = new javax.swing.JLabel();
         lbFirmWare = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
+        txtFirmWare = new javax.swing.JLabel();
+        lbLoggerSWversion = new javax.swing.JLabel();
         lbMemoryUsed = new javax.swing.JLabel();
         lbLoggerSWVersion = new javax.swing.JLabel();
         txtMemoryUsed = new javax.swing.JLabel();
@@ -1315,7 +1315,7 @@ public class BT747Main extends javax.swing.JFrame implements
         pnSeparation = new javax.swing.JPanel();
         lbNewTrackAfter = new javax.swing.JLabel();
         tfTrackSeparationTime = new javax.swing.JTextField();
-        jLabel48 = new javax.swing.JLabel();
+        lbMinPause = new javax.swing.JLabel();
         pnFileOutputFields = new javax.swing.JPanel();
         pnFileOutputFieldInner = new javax.swing.JPanel();
         pnFileReason = new javax.swing.JPanel();
@@ -1388,12 +1388,12 @@ public class BT747Main extends javax.swing.JFrame implements
         lbRecNbrFltr = new javax.swing.JLabel();
         pnFilterPrecision = new javax.swing.JPanel();
         txtPDOPMax = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
+        lbPDOPMax = new javax.swing.JLabel();
         txtHDOPMax = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
+        lbHDOPLimit = new javax.swing.JLabel();
         txtVDOPMax = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        lbVDOPLimit = new javax.swing.JLabel();
+        lbIgnore0Values = new javax.swing.JLabel();
         cbAdvancedActive = new javax.swing.JCheckBox();
         pnWaypoint = new javax.swing.JPanel();
         pnWayPointFix = new javax.swing.JPanel();
@@ -1436,26 +1436,26 @@ public class BT747Main extends javax.swing.JFrame implements
         cbIncludeTestSBAS = new javax.swing.JCheckBox();
         btApplySBAS = new javax.swing.JButton();
         pnHoluxSettings = new javax.swing.JPanel();
-        jLabel20 = new javax.swing.JLabel();
+        lbHoluxName = new javax.swing.JLabel();
         txtHoluxName = new javax.swing.JTextField();
         btSetHoluxName = new javax.swing.JButton();
         pnLogBy = new javax.swing.JPanel();
-        jLabel35 = new javax.swing.JLabel();
+        lbTimeSeconds = new javax.swing.JLabel();
         ckLogSpeedActive = new javax.swing.JCheckBox();
         txtLogDistanceInterval = new javax.swing.JTextField();
         txtLogTimeInterval = new javax.swing.JTextField();
-        jLabel36 = new javax.swing.JLabel();
+        lbKMH = new javax.swing.JLabel();
         ckLogTimeActive = new javax.swing.JCheckBox();
-        jLabel37 = new javax.swing.JLabel();
-        jLabel38 = new javax.swing.JLabel();
-        jLabel39 = new javax.swing.JLabel();
+        lbAbove = new javax.swing.JLabel();
+        lbDistancePeriodM = new javax.swing.JLabel();
+        lbDistanceEvery = new javax.swing.JLabel();
         ckLogDistanceActive = new javax.swing.JCheckBox();
         txtLogSpeedInterval = new javax.swing.JTextField();
-        jLabel40 = new javax.swing.JLabel();
+        lbTimeEvery = new javax.swing.JLabel();
         btLogByApply = new javax.swing.JButton();
-        jLabel41 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
-        jLabel42 = new javax.swing.JLabel();
+        lbFixEvery = new javax.swing.JLabel();
+        txtFixPeriod = new javax.swing.JTextField();
+        lbFixMs = new javax.swing.JLabel();
         cbStopOrOverwriteWhenFull = new javax.swing.JComboBox();
         pnLogFormat = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -1496,9 +1496,9 @@ public class BT747Main extends javax.swing.JFrame implements
         cbRCR = new javax.swing.JCheckBox();
         AdvancedSettingsPanel = new javax.swing.JPanel();
         pnFlashSettings = new javax.swing.JPanel();
-        jLabel30 = new javax.swing.JLabel();
-        jLabel31 = new javax.swing.JLabel();
-        jLabel32 = new javax.swing.JLabel();
+        lbTimesLeft = new javax.swing.JLabel();
+        lbUpdateRate = new javax.swing.JLabel();
+        lbBaudRate = new javax.swing.JLabel();
         lbGLLOut = new javax.swing.JLabel();
         lbRMCOut = new javax.swing.JLabel();
         lbVTGOut = new javax.swing.JLabel();
@@ -1518,7 +1518,7 @@ public class BT747Main extends javax.swing.JFrame implements
         cbFlashZDA = new javax.swing.JComboBox();
         cbFlashMCHN = new javax.swing.JComboBox();
         btSetFlash = new javax.swing.JButton();
-        jLabel29 = new javax.swing.JLabel();
+        lbPeriodMCHN = new javax.swing.JLabel();
         pnNMEAOutput = new javax.swing.JPanel();
         cbNMEAOutType10 = new javax.swing.JComboBox();
         lbNMEAOutType10 = new javax.swing.JLabel();
@@ -1529,12 +1529,12 @@ public class BT747Main extends javax.swing.JFrame implements
         cbNMEAOutMEPH = new javax.swing.JComboBox();
         cbNMEAOutMDBG = new javax.swing.JComboBox();
         cbNMEAOutZDA = new javax.swing.JComboBox();
-        jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel25 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        jLabel27 = new javax.swing.JLabel();
+        lbPeriodType11 = new javax.swing.JLabel();
+        lbPeriodType12 = new javax.swing.JLabel();
+        lbPeriodMALM = new javax.swing.JLabel();
+        lbPeriodMEPH = new javax.swing.JLabel();
+        lbPeriodMDGP = new javax.swing.JLabel();
+        lbPeriodMDBG = new javax.swing.JLabel();
         lbNMEAOutZDA = new javax.swing.JLabel();
         btSetNMEAOutput = new javax.swing.JButton();
         btSetNMEAOutputDefaults = new javax.swing.JButton();
@@ -1559,7 +1559,7 @@ public class BT747Main extends javax.swing.JFrame implements
         cbNMEAOutGST = new javax.swing.JComboBox();
         cbNMEAOutGRS = new javax.swing.JComboBox();
         cbNMEAOutMCHN = new javax.swing.JComboBox();
-        jLabel34 = new javax.swing.JLabel();
+        lbPeriodMCHN1 = new javax.swing.JLabel();
         AdvancedfileSettingsPanel = new javax.swing.JPanel();
         pnFileNMEAOutput = new javax.swing.JPanel();
         pnFileNMEAOutLeft = new javax.swing.JPanel();
@@ -1589,7 +1589,7 @@ public class BT747Main extends javax.swing.JFrame implements
         cbGPXTrkSegWhenSmall = new javax.swing.JCheckBox();
         InfoPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        infoTextArea = new javax.swing.JTextArea();
         jMenuBar = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
         SettingsMenu = new javax.swing.JMenu();
@@ -1734,7 +1734,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel15.setText(bundle.getString("BT747Main.jLabel15.text")); // NOI18N
+        lbNoFileExt.setText(bundle.getString("BT747Main.lbNoFileExt.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnFilesLayout = new org.jdesktop.layout.GroupLayout(pnFiles);
         pnFiles.setLayout(pnFilesLayout);
@@ -1752,7 +1752,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(pnFilesLayout.createSequentialGroup()
                         .add(tfOutputFileBaseName, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jLabel15))
+                        .add(lbNoFileExt))
                     .add(tfWorkDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1768,7 +1768,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(tfWorkDirectory, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFilesLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel15)
+                    .add(lbNoFileExt)
                     .add(btOutputFile)
                     .add(tfOutputFileBaseName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
@@ -1865,9 +1865,9 @@ public class BT747Main extends javax.swing.JFrame implements
 
         jPanel18.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.jPanel18.border.title"))); // NOI18N
 
-        jLabel44.setText(bundle.getString("BT747Main.jLabel44.text")); // NOI18N
+        lbToDate.setText(bundle.getString("BT747Main.lbToDate.text")); // NOI18N
 
-        jLabel43.setText(bundle.getString("BT747Main.jLabel43.text")); // NOI18N
+        lbFromDate.setText(bundle.getString("BT747Main.lbFromDate.text")); // NOI18N
 
         sfTimeSplitHours.setMaximum(23);
         sfTimeSplitHours.setMinimum(0);
@@ -1877,7 +1877,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel5.setText(bundle.getString("BT747Main.jLabel5.text")); // NOI18N
+        lbHour.setText(bundle.getString("BT747Main.lbHour.text")); // NOI18N
 
         spTimeSplitMinutes.setMaximum(59);
         spTimeSplitMinutes.setMinimum(0);
@@ -1887,10 +1887,10 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel8.setText(bundle.getString("BT747Main.jLabel8.text")); // NOI18N
-        jLabel8.setToolTipText(bundle.getString("BT747Main.jLabel8.toolTipText")); // NOI18N
+        lbTimeSplit.setText(bundle.getString("BT747Main.lbTimeSplit.text")); // NOI18N
+        lbTimeSplit.setToolTipText(bundle.getString("BT747Main.lbTimeSplit.toolTipText")); // NOI18N
 
-        jLabel11.setText(bundle.getString("BT747Main.jLabel11.text")); // NOI18N
+        lbMinutes.setText(bundle.getString("BT747Main.lbMinutes.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel18Layout = new org.jdesktop.layout.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
@@ -1898,35 +1898,35 @@ public class BT747Main extends javax.swing.JFrame implements
             jPanel18Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel18Layout.createSequentialGroup()
                 .add(10, 10, 10)
-                .add(jLabel43)
+                .add(lbFromDate)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(startDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 120, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jLabel44)
+                .add(lbToDate)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(endDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 120, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jLabel8)
+                .add(lbTimeSplit)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(sfTimeSplitHours, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jLabel5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(lbHour, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(spTimeSplitMinutes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jLabel11))
+                .add(lbMinutes))
         );
         jPanel18Layout.setVerticalGroup(
             jPanel18Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(endDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(jLabel44)
-            .add(jLabel43)
+            .add(lbToDate)
+            .add(lbFromDate)
             .add(startDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .add(sfTimeSplitHours, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(jLabel8)
-            .add(jLabel5)
+            .add(lbTimeSplit)
+            .add(lbHour)
             .add(spTimeSplitMinutes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(jLabel11)
+            .add(lbMinutes)
         );
 
         cbGPSType.setModel(modelGpsType);
@@ -1936,7 +1936,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel57.setText(bundle.getString("BT747Main.jLabel57.text")); // NOI18N
+        lbDeviceType.setText(bundle.getString("BT747Main.lbDeviceType.text")); // NOI18N
 
         jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.jPanel9.border.title"))); // NOI18N
 
@@ -1983,7 +1983,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jLabel57)
+                        .add(lbDeviceType)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(cbGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .add(0, 0, 0))
@@ -1998,7 +1998,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(btConvert)
                     .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel57)
+                    .add(lbDeviceType)
                     .add(cbGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
@@ -2006,36 +2006,36 @@ public class BT747Main extends javax.swing.JFrame implements
 
         GPSDecodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.GPSDecodePanel.border.title"))); // NOI18N
 
-        jLabel1.setText(bundle.getString("BT747Main.jLabel1.text")); // NOI18N
-
-        jLabel2.setText(bundle.getString("BT747Main.jLabel2.text")); // NOI18N
-
-        jLabel3.setText(bundle.getString("BT747Main.jLabel3.text")); // NOI18N
-
         lbLatitude.setText(bundle.getString("BT747Main.lbLatitude.text")); // NOI18N
 
         lbLongitude.setText(bundle.getString("BT747Main.lbLongitude.text")); // NOI18N
 
-        lbTime.setText(bundle.getString("BT747Main.lbTime.text")); // NOI18N
+        jLabel3.setText(bundle.getString("BT747Main.jLabel3.text")); // NOI18N
 
-        jLabel4.setText(bundle.getString("BT747Main.jLabel4.text")); // NOI18N
+        txtLatitude.setText(bundle.getString("BT747Main.txtLatitude.text")); // NOI18N
+
+        txtLongitude.setText(bundle.getString("BT747Main.txtLongitude.text")); // NOI18N
+
+        lbTime.setText(bundle.getString("BT747Main.lbTime.text")); // NOI18N
 
         lbGeoid.setText(bundle.getString("BT747Main.lbGeoid.text")); // NOI18N
 
-        jLabel6.setText(bundle.getString("BT747Main.jLabel6.text")); // NOI18N
+        txtGeoid.setText(bundle.getString("BT747Main.txtGeoid.text")); // NOI18N
 
         lbFlashInfo.setText(bundle.getString("BT747Main.lbFlashInfo.text")); // NOI18N
-        lbFlashInfo.setToolTipText(bundle.getString("BT747Main.lbFlashInfo.toolTipText")); // NOI18N
 
-        jLabel10.setText(bundle.getString("BT747Main.jLabel10.text")); // NOI18N
+        lbFlashInfo1.setText(bundle.getString("BT747Main.lbFlashInfo.text")); // NOI18N
+        lbFlashInfo1.setToolTipText(bundle.getString("BT747Main.lbFlashInfo.toolTipText")); // NOI18N
 
         lbModel.setText(bundle.getString("BT747Main.lbModel.text")); // NOI18N
 
-        jLabel14.setText(bundle.getString("BT747Main.jLabel14.text")); // NOI18N
+        txtModel.setText(bundle.getString("BT747Main.txtModel.text")); // NOI18N
 
         lbFirmWare.setText(bundle.getString("BT747Main.lbFirmWare.text")); // NOI18N
 
-        jLabel16.setText(bundle.getString("BT747Main.jLabel16.text")); // NOI18N
+        txtFirmWare.setText(bundle.getString("BT747Main.txtFirmWare.text")); // NOI18N
+
+        lbLoggerSWversion.setText(bundle.getString("BT747Main.lbLoggerSWversion.text")); // NOI18N
 
         lbMemoryUsed.setText(bundle.getString("BT747Main.lbMemoryUsed.text")); // NOI18N
 
@@ -2051,61 +2051,61 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(GPSDecodePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabel6)
-                    .add(jLabel10)
-                    .add(jLabel14)
+                    .add(lbFlashInfo)
+                    .add(lbModel)
+                    .add(lbFirmWare)
                     .add(lbMemoryUsed)
-                    .add(jLabel16)
-                    .add(jLabel1)
-                    .add(jLabel2)
+                    .add(lbLoggerSWversion)
+                    .add(lbLatitude)
+                    .add(lbLongitude)
                     .add(jLabel3)
-                    .add(jLabel4))
+                    .add(lbGeoid))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, txtMemoryUsed)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, lbLoggerSWVersion)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, lbFirmWare)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, lbModel)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, txtFirmWare)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, txtModel)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, lbFlashInfo)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, lbGeoid)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, txtGeoid)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, lbTime)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, lbLongitude)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, lbLatitude))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, txtLongitude)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, txtLatitude))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         GPSDecodePanelLayout.setVerticalGroup(
             GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(GPSDecodePanelLayout.createSequentialGroup()
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel1)
-                    .add(lbLatitude))
+                    .add(lbLatitude)
+                    .add(txtLatitude))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbLongitude)
-                    .add(jLabel2))
+                    .add(txtLongitude)
+                    .add(lbLongitude))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(lbTime)
                     .add(jLabel3))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbGeoid)
-                    .add(jLabel4))
+                    .add(txtGeoid)
+                    .add(lbGeoid))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel6)
+                    .add(lbFlashInfo)
                     .add(lbFlashInfo))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbModel)
-                    .add(jLabel10))
+                    .add(txtModel)
+                    .add(lbModel))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel14)
-                    .add(lbFirmWare))
+                    .add(lbFirmWare)
+                    .add(txtFirmWare))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel16)
+                    .add(lbLoggerSWversion)
                     .add(lbLoggerSWVersion))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GPSDecodePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -2287,7 +2287,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel48.setText(bundle.getString("BT747Main.jLabel48.text")); // NOI18N
+        lbMinPause.setText(bundle.getString("BT747Main.lbMinPause.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnSeparationLayout = new org.jdesktop.layout.GroupLayout(pnSeparation);
         pnSeparation.setLayout(pnSeparationLayout);
@@ -2298,7 +2298,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(tfTrackSeparationTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jLabel48)
+                .add(lbMinPause)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnSeparationLayout.setVerticalGroup(
@@ -2306,7 +2306,7 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(pnSeparationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                 .add(lbNewTrackAfter)
                 .add(tfTrackSeparationTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(jLabel48))
+                .add(lbMinPause))
         );
 
         pnFileOutputFields.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileOutputFields.border.title"))); // NOI18N
@@ -2956,7 +2956,7 @@ public class BT747Main extends javax.swing.JFrame implements
         );
         pnTrackpointLayout.setVerticalGroup(
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+            .add(jPanel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .add(jPanel12, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -3102,8 +3102,8 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel9.setLabelFor(txtPDOPMax);
-        jLabel9.setText(bundle.getString("BT747Main.jLabel9.text")); // NOI18N
+        lbPDOPMax.setLabelFor(txtPDOPMax);
+        lbPDOPMax.setText(bundle.getString("BT747Main.lbPDOPMax.text")); // NOI18N
 
         txtHDOPMax.setText(bundle.getString("BT747Main.txtHDOPMax.text")); // NOI18N
         txtHDOPMax.setInputVerifier(FloatVerifier);
@@ -3113,8 +3113,8 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel12.setLabelFor(txtHDOPMax);
-        jLabel12.setText(bundle.getString("BT747Main.jLabel12.text")); // NOI18N
+        lbHDOPLimit.setLabelFor(txtHDOPMax);
+        lbHDOPLimit.setText(bundle.getString("BT747Main.lbHDOPLimit.text")); // NOI18N
 
         txtVDOPMax.setText(bundle.getString("BT747Main.txtVDOPMax.text")); // NOI18N
         txtVDOPMax.setInputVerifier(FloatVerifier);
@@ -3124,8 +3124,8 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel13.setLabelFor(txtVDOPMax);
-        jLabel13.setText(bundle.getString("BT747Main.jLabel13.text")); // NOI18N
+        lbVDOPLimit.setLabelFor(txtVDOPMax);
+        lbVDOPLimit.setText(bundle.getString("BT747Main.lbVDOPLimit.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnFilterPrecisionLayout = new org.jdesktop.layout.GroupLayout(pnFilterPrecision);
         pnFilterPrecision.setLayout(pnFilterPrecisionLayout);
@@ -3135,15 +3135,15 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addContainerGap()
                 .add(pnFilterPrecisionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, pnFilterPrecisionLayout.createSequentialGroup()
-                        .add(jLabel9)
+                        .add(lbPDOPMax)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(txtPDOPMax, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(pnFilterPrecisionLayout.createSequentialGroup()
-                        .add(jLabel12)
+                        .add(lbHDOPLimit)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(txtHDOPMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
                     .add(pnFilterPrecisionLayout.createSequentialGroup()
-                        .add(jLabel13)
+                        .add(lbVDOPLimit)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(txtVDOPMax, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -3152,20 +3152,20 @@ public class BT747Main extends javax.swing.JFrame implements
             pnFilterPrecisionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnFilterPrecisionLayout.createSequentialGroup()
                 .add(pnFilterPrecisionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel9)
+                    .add(lbPDOPMax)
                     .add(txtPDOPMax, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFilterPrecisionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel12)
+                    .add(lbHDOPLimit)
                     .add(txtHDOPMax, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFilterPrecisionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(txtVDOPMax, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel13))
+                    .add(lbVDOPLimit))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel7.setText(bundle.getString("BT747Main.jLabel7.text")); // NOI18N
+        lbIgnore0Values.setText(bundle.getString("BT747Main.lbIgnore0Values.text")); // NOI18N
 
         cbAdvancedActive.setText(bundle.getString("BT747Main.cbAdvancedActive.text")); // NOI18N
         cbAdvancedActive.setToolTipText(bundle.getString("BT747Main.cbAdvancedActive.toolTipText")); // NOI18N
@@ -3183,7 +3183,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnCommonFilterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnCommonFilterLayout.createSequentialGroup()
                         .addContainerGap()
-                        .add(jLabel7))
+                        .add(lbIgnore0Values))
                     .add(cbAdvancedActive))
                 .addContainerGap())
             .add(pnFilterOther, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -3200,7 +3200,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFilterOther, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jLabel7))
+                .add(lbIgnore0Values))
         );
 
         pnWaypoint.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnWaypoint.border.title"))); // NOI18N
@@ -3501,7 +3501,7 @@ public class BT747Main extends javax.swing.JFrame implements
         pnWaypointLayout.setVerticalGroup(
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         org.jdesktop.layout.GroupLayout LogFiltersPanelLayout = new org.jdesktop.layout.GroupLayout(LogFiltersPanel);
@@ -3637,7 +3637,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         pnHoluxSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnHoluxSettings.border.title"))); // NOI18N
 
-        jLabel20.setText(bundle.getString("BT747Main.jLabel20.text")); // NOI18N
+        lbHoluxName.setText(bundle.getString("BT747Main.lbHoluxName.text")); // NOI18N
 
         txtHoluxName.setText(bundle.getString("BT747Main.txtHoluxName.text")); // NOI18N
         txtHoluxName.setToolTipText(bundle.getString("BT747Main.txtHoluxName.toolTipText")); // NOI18N
@@ -3655,7 +3655,7 @@ public class BT747Main extends javax.swing.JFrame implements
             pnHoluxSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnHoluxSettingsLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jLabel20)
+                .add(lbHoluxName)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(txtHoluxName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 148, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -3665,7 +3665,7 @@ public class BT747Main extends javax.swing.JFrame implements
         pnHoluxSettingsLayout.setVerticalGroup(
             pnHoluxSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnHoluxSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                .add(jLabel20)
+                .add(lbHoluxName)
                 .add(btSetHoluxName)
                 .add(txtHoluxName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
@@ -3673,29 +3673,32 @@ public class BT747Main extends javax.swing.JFrame implements
         pnLogBy.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLogBy.border.title"))); // NOI18N
         pnLogBy.setToolTipText(bundle.getString("BT747Main.pnLogBy.toolTipText")); // NOI18N
 
-        jLabel35.setText(bundle.getString("BT747Main.jLabel35.text")); // NOI18N
+        lbTimeSeconds.setText(bundle.getString("BT747Main.lbTimeSeconds.text")); // NOI18N
 
         ckLogSpeedActive.setText(bundle.getString("BT747Main.ckLogSpeedActive.text")); // NOI18N
 
         txtLogDistanceInterval.setText(bundle.getString("BT747Main.txtLogDistanceInterval.text")); // NOI18N
+        txtLogDistanceInterval.setInputVerifier(FloatVerifier);
 
         txtLogTimeInterval.setText(bundle.getString("BT747Main.txtLogTimeInterval.text")); // NOI18N
+        txtLogTimeInterval.setInputVerifier(FloatVerifier);
 
-        jLabel36.setText(bundle.getString("BT747Main.jLabel36.text")); // NOI18N
+        lbKMH.setText(bundle.getString("BT747Main.lbKMH.text")); // NOI18N
 
         ckLogTimeActive.setText(bundle.getString("BT747Main.ckLogTimeActive.text")); // NOI18N
 
-        jLabel37.setText(bundle.getString("BT747Main.jLabel37.text")); // NOI18N
+        lbAbove.setText(bundle.getString("BT747Main.lbAbove.text")); // NOI18N
 
-        jLabel38.setText(bundle.getString("BT747Main.jLabel38.text")); // NOI18N
+        lbDistancePeriodM.setText(bundle.getString("BT747Main.lbDistancePeriodM.text")); // NOI18N
 
-        jLabel39.setText(bundle.getString("BT747Main.jLabel39.text")); // NOI18N
+        lbDistanceEvery.setText(bundle.getString("BT747Main.lbDistanceEvery.text")); // NOI18N
 
         ckLogDistanceActive.setText(bundle.getString("BT747Main.ckLogDistanceActive.text")); // NOI18N
 
         txtLogSpeedInterval.setText(bundle.getString("BT747Main.txtLogSpeedInterval.text")); // NOI18N
+        txtLogSpeedInterval.setInputVerifier(IntVerifier);
 
-        jLabel40.setText(bundle.getString("BT747Main.jLabel40.text")); // NOI18N
+        lbTimeEvery.setText(bundle.getString("BT747Main.lbTimeEvery.text")); // NOI18N
 
         btLogByApply.setText(bundle.getString("BT747Main.btLogByApply.text")); // NOI18N
         btLogByApply.addActionListener(new java.awt.event.ActionListener() {
@@ -3704,11 +3707,11 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel41.setText(bundle.getString("BT747Main.jLabel41.text")); // NOI18N
+        lbFixEvery.setText(bundle.getString("BT747Main.lbFixEvery.text")); // NOI18N
 
-        jTextField7.setText(bundle.getString("BT747Main.jTextField7.text")); // NOI18N
+        txtFixPeriod.setText(bundle.getString("BT747Main.txtFixPeriod.text")); // NOI18N
 
-        jLabel42.setText(bundle.getString("BT747Main.jLabel42.text")); // NOI18N
+        lbFixMs.setText(bundle.getString("BT747Main.lbFixMs.text")); // NOI18N
 
         cbStopOrOverwriteWhenFull.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Stop when full", "Overwrite when full" }));
         cbStopOrOverwriteWhenFull.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -3725,9 +3728,9 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnLogByLayout.createSequentialGroup()
                         .add(58, 58, 58)
-                        .add(jLabel41)
+                        .add(lbFixEvery)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jTextField7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(txtFixPeriod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(pnLogByLayout.createSequentialGroup()
                         .addContainerGap()
                         .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -3736,9 +3739,9 @@ public class BT747Main extends javax.swing.JFrame implements
                             .add(ckLogTimeActive))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(jLabel39)
-                            .add(jLabel37)
-                            .add(jLabel40))
+                            .add(lbDistanceEvery)
+                            .add(lbAbove)
+                            .add(lbTimeEvery))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(pnLogByLayout.createSequentialGroup()
@@ -3749,13 +3752,13 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnLogByLayout.createSequentialGroup()
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jLabel42))
+                        .add(lbFixMs))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, pnLogByLayout.createSequentialGroup()
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel35)
-                            .add(jLabel38)
-                            .add(jLabel36))))
+                            .add(lbTimeSeconds)
+                            .add(lbDistancePeriodM)
+                            .add(lbKMH))))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(btLogByApply, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 118, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -3765,26 +3768,26 @@ public class BT747Main extends javax.swing.JFrame implements
             pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnLogByLayout.createSequentialGroup()
                 .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel41)
-                    .add(jLabel42)
+                    .add(lbFixEvery)
+                    .add(lbFixMs)
                     .add(btLogByApply)
-                    .add(jTextField7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(txtFixPeriod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel35)
-                    .add(jLabel40, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(lbTimeSeconds)
+                    .add(lbTimeEvery, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(ckLogTimeActive)
                     .add(txtLogTimeInterval, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel37)
-                    .add(jLabel36)
+                    .add(lbAbove)
+                    .add(lbKMH)
                     .add(ckLogSpeedActive)
                     .add(txtLogSpeedInterval, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel39)
-                    .add(jLabel38)
+                    .add(lbDistanceEvery)
+                    .add(lbDistancePeriodM)
                     .add(ckLogDistanceActive)
                     .add(txtLogDistanceInterval, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(cbStopOrOverwriteWhenFull, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -4269,12 +4272,12 @@ public class BT747Main extends javax.swing.JFrame implements
         pnFlashSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFlashSettings.border.title"))); // NOI18N
         pnFlashSettings.setToolTipText(bundle.getString("BT747Main.pnFlashSettings.toolTipText")); // NOI18N
 
-        jLabel30.setLabelFor(tfOutputFileBaseName);
-        jLabel30.setText(bundle.getString("BT747Main.jLabel30.text")); // NOI18N
+        lbTimesLeft.setLabelFor(tfOutputFileBaseName);
+        lbTimesLeft.setText(bundle.getString("BT747Main.lbTimesLeft.text")); // NOI18N
 
-        jLabel31.setText(bundle.getString("BT747Main.jLabel31.text")); // NOI18N
+        lbUpdateRate.setText(bundle.getString("BT747Main.lbUpdateRate.text")); // NOI18N
 
-        jLabel32.setText(bundle.getString("BT747Main.jLabel32.text")); // NOI18N
+        lbBaudRate.setText(bundle.getString("BT747Main.lbBaudRate.text")); // NOI18N
 
         lbGLLOut.setText(bundle.getString("BT747Main.lbGLLOut.text")); // NOI18N
 
@@ -4322,7 +4325,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        jLabel29.setText(bundle.getString("BT747Main.jLabel29.text")); // NOI18N
+        lbPeriodMCHN.setText(bundle.getString("BT747Main.lbPeriodMCHN.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnFlashSettingsLayout = new org.jdesktop.layout.GroupLayout(pnFlashSettings);
         pnFlashSettings.setLayout(pnFlashSettingsLayout);
@@ -4331,17 +4334,17 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(org.jdesktop.layout.GroupLayout.TRAILING, pnFlashSettingsLayout.createSequentialGroup()
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(pnFlashSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jLabel30)
-                    .add(jLabel32)
+                    .add(lbTimesLeft)
+                    .add(lbBaudRate)
                     .add(lbRMCOut)
                     .add(lbVTGOut)
                     .add(cbGGAOut)
                     .add(cbGSAOut)
                     .add(lbFlashZDA)
-                    .add(jLabel31)
+                    .add(lbUpdateRate)
                     .add(cbGSVOut)
                     .add(lbGLLOut)
-                    .add(jLabel29))
+                    .add(lbPeriodMCHN))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFlashSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnFlashSettingsLayout.createSequentialGroup()
@@ -4365,15 +4368,15 @@ public class BT747Main extends javax.swing.JFrame implements
             pnFlashSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, pnFlashSettingsLayout.createSequentialGroup()
                 .add(pnFlashSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel30)
+                    .add(lbTimesLeft)
                     .add(txtFlashTimesLeft, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFlashSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel31)
+                    .add(lbUpdateRate)
                     .add(txtFlashUpdateRate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFlashSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel32)
+                    .add(lbBaudRate)
                     .add(txtFlashBaudRate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFlashSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -4406,7 +4409,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFlashSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(cbFlashMCHN, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel29)
+                    .add(lbPeriodMCHN)
                     .add(btSetFlash))
                 .add(19, 19, 19))
         );
@@ -4432,17 +4435,17 @@ public class BT747Main extends javax.swing.JFrame implements
 
         cbNMEAOutZDA.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jLabel22.setText(bundle.getString("BT747Main.jLabel22.text")); // NOI18N
+        lbPeriodType11.setText(bundle.getString("BT747Main.lbPeriodType11.text")); // NOI18N
 
-        jLabel23.setText(bundle.getString("BT747Main.jLabel23.text")); // NOI18N
+        lbPeriodType12.setText(bundle.getString("BT747Main.lbPeriodType12.text")); // NOI18N
 
-        jLabel24.setText(bundle.getString("BT747Main.jLabel24.text")); // NOI18N
+        lbPeriodMALM.setText(bundle.getString("BT747Main.lbPeriodMALM.text")); // NOI18N
 
-        jLabel25.setText(bundle.getString("BT747Main.jLabel25.text")); // NOI18N
+        lbPeriodMEPH.setText(bundle.getString("BT747Main.lbPeriodMEPH.text")); // NOI18N
 
-        jLabel26.setText(bundle.getString("BT747Main.jLabel26.text")); // NOI18N
+        lbPeriodMDGP.setText(bundle.getString("BT747Main.lbPeriodMDGP.text")); // NOI18N
 
-        jLabel27.setText(bundle.getString("BT747Main.jLabel27.text")); // NOI18N
+        lbPeriodMDBG.setText(bundle.getString("BT747Main.lbPeriodMDBG.text")); // NOI18N
 
         lbNMEAOutZDA.setText(bundle.getString("BT747Main.lbNMEAOutZDA.text")); // NOI18N
 
@@ -4502,7 +4505,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         cbNMEAOutMCHN.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5" }));
 
-        jLabel34.setText(bundle.getString("BT747Main.jLabel34.text")); // NOI18N
+        lbPeriodMCHN1.setText(bundle.getString("BT747Main.lbPeriodMCHN.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnNMEAOutputLayout = new org.jdesktop.layout.GroupLayout(pnNMEAOutput);
         pnNMEAOutput.setLayout(pnNMEAOutputLayout);
@@ -4543,27 +4546,27 @@ public class BT747Main extends javax.swing.JFrame implements
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                             .add(pnNMEAOutputLayout.createSequentialGroup()
-                                .add(jLabel22)
+                                .add(lbPeriodType11)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(cbNMEAOutType11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutputLayout.createSequentialGroup()
-                                .add(jLabel23)
+                                .add(lbPeriodType12)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(cbNMEAOutType12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutputLayout.createSequentialGroup()
-                                .add(jLabel24)
+                                .add(lbPeriodMALM)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(cbNMEAOutMALM, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutputLayout.createSequentialGroup()
-                                .add(jLabel25)
+                                .add(lbPeriodMEPH)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(cbNMEAOutMEPH, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutputLayout.createSequentialGroup()
-                                .add(jLabel26)
+                                .add(lbPeriodMDGP)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(cbNMEAOutMDGP, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutputLayout.createSequentialGroup()
-                                .add(jLabel27)
+                                .add(lbPeriodMDBG)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(cbNMEAOutMDBG, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutputLayout.createSequentialGroup()
@@ -4571,7 +4574,7 @@ public class BT747Main extends javax.swing.JFrame implements
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(cbNMEAOutZDA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(pnNMEAOutputLayout.createSequentialGroup()
-                                .add(jLabel34)
+                                .add(lbPeriodMCHN1)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(cbNMEAOutMCHN, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .add(btSetNMEAOutput)))
@@ -4618,7 +4621,7 @@ public class BT747Main extends javax.swing.JFrame implements
                         .add(pnNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(cbNMEAOutType8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(cbType8Out)
-                            .add(jLabel34)))
+                            .add(lbPeriodMCHN1)))
                     .add(pnNMEAOutputLayout.createSequentialGroup()
                         .add(pnNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(cbNMEAOutType10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -4626,27 +4629,27 @@ public class BT747Main extends javax.swing.JFrame implements
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(cbNMEAOutType11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel22))
+                            .add(lbPeriodType11))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(cbNMEAOutType12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel23))
+                            .add(lbPeriodType12))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(cbNMEAOutMALM, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel24))
+                            .add(lbPeriodMALM))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(cbNMEAOutMEPH, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel25))
+                            .add(lbPeriodMEPH))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(cbNMEAOutMDGP, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel26))
+                            .add(lbPeriodMDGP))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(cbNMEAOutMDBG, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(jLabel27))
+                            .add(lbPeriodMDBG))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(pnNMEAOutputLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                             .add(cbNMEAOutZDA, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -4889,14 +4892,14 @@ public class BT747Main extends javax.swing.JFrame implements
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setOpaque(false);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jTextArea1.setText(bundle.getString("BT747Main.jTextArea1.text")); // NOI18N
-        jTextArea1.setAutoscrolls(false);
-        jTextArea1.setFocusable(false);
-        jTextArea1.setOpaque(false);
-        jScrollPane1.setViewportView(jTextArea1);
+        infoTextArea.setColumns(20);
+        infoTextArea.setLineWrap(true);
+        infoTextArea.setRows(5);
+        infoTextArea.setText(bundle.getString("BT747Main.infoTextArea.text")); // NOI18N
+        infoTextArea.setAutoscrolls(false);
+        infoTextArea.setFocusable(false);
+        infoTextArea.setOpaque(false);
+        jScrollPane1.setViewportView(infoTextArea);
 
         org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(InfoPanel);
         InfoPanel.setLayout(InfoPanelLayout);
@@ -5190,7 +5193,7 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 value = 0;
             }
             c.setLogDistanceInterval(value);
-            c.setFixInterval(Convert.toInt(jTextField7.getText()));
+            c.setFixInterval(Convert.toInt(txtFixPeriod.getText()));
         } catch (Exception e) {
             Generic
                     .debug(
@@ -6195,47 +6198,9 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JCheckBox ckLogSpeedActive;
     private javax.swing.JCheckBox ckLogTimeActive;
     private com.toedter.calendar.JDateChooser endDate;
+    private javax.swing.JTextArea infoTextArea;
     private javax.swing.JDialog jDialog1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel35;
-    private javax.swing.JLabel jLabel36;
-    private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel39;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel40;
-    private javax.swing.JLabel jLabel41;
-    private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel43;
-    private javax.swing.JLabel jLabel44;
-    private javax.swing.JLabel jLabel48;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel57;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel11;
@@ -6251,20 +6216,35 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JLabel lbAbove;
+    private javax.swing.JLabel lbBaudRate;
     private javax.swing.JLabel lbConversionTime;
+    private javax.swing.JLabel lbDeviceType;
+    private javax.swing.JLabel lbDistanceEvery;
     private javax.swing.JLabel lbDistanceFltr;
+    private javax.swing.JLabel lbDistancePeriodM;
     private javax.swing.JLabel lbFirmWare;
+    private javax.swing.JLabel lbFixEvery;
+    private javax.swing.JLabel lbFixMs;
     private javax.swing.JLabel lbFlashInfo;
+    private javax.swing.JLabel lbFlashInfo1;
     private javax.swing.JLabel lbFlashZDA;
+    private javax.swing.JLabel lbFromDate;
     private javax.swing.JLabel lbGLLOut;
     private javax.swing.JLabel lbGLLOut1;
     private javax.swing.JLabel lbGeoid;
+    private javax.swing.JLabel lbHDOPLimit;
+    private javax.swing.JLabel lbHoluxName;
+    private javax.swing.JLabel lbHour;
+    private javax.swing.JLabel lbIgnore0Values;
+    private javax.swing.JLabel lbKMH;
     private javax.swing.JLabel lbLatitude;
     private javax.swing.JLabel lbLoggerSWVersion;
+    private javax.swing.JLabel lbLoggerSWversion;
     private javax.swing.JLabel lbLongitude;
     private javax.swing.JLabel lbMemoryUsed;
+    private javax.swing.JLabel lbMinPause;
+    private javax.swing.JLabel lbMinutes;
     private javax.swing.JLabel lbModel;
     private javax.swing.JCheckBox lbNMEAFileGGA;
     private javax.swing.JCheckBox lbNMEAFileGLL;
@@ -6289,13 +6269,30 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JLabel lbNMEAOutZDA;
     private javax.swing.JLabel lbNSATFltr;
     private javax.swing.JLabel lbNewTrackAfter;
+    private javax.swing.JLabel lbNoFileExt;
+    private javax.swing.JLabel lbPDOPMax;
+    private javax.swing.JLabel lbPeriodMALM;
+    private javax.swing.JLabel lbPeriodMCHN;
+    private javax.swing.JLabel lbPeriodMCHN1;
+    private javax.swing.JLabel lbPeriodMDBG;
+    private javax.swing.JLabel lbPeriodMDGP;
+    private javax.swing.JLabel lbPeriodMEPH;
+    private javax.swing.JLabel lbPeriodType11;
+    private javax.swing.JLabel lbPeriodType12;
     private javax.swing.JLabel lbRMCOut;
     private javax.swing.JLabel lbRMCOut1;
     private javax.swing.JLabel lbRecNbrFltr;
     private javax.swing.JLabel lbSerialSpeed;
     private javax.swing.JLabel lbSpeedFltr;
     private javax.swing.JLabel lbTime;
+    private javax.swing.JLabel lbTimeEvery;
+    private javax.swing.JLabel lbTimeSeconds;
+    private javax.swing.JLabel lbTimeSplit;
     private javax.swing.JLabel lbTimeZone;
+    private javax.swing.JLabel lbTimesLeft;
+    private javax.swing.JLabel lbToDate;
+    private javax.swing.JLabel lbUpdateRate;
+    private javax.swing.JLabel lbVDOPLimit;
     private javax.swing.JLabel lbVTGOut;
     private javax.swing.JPanel pnBottomInformation;
     private javax.swing.JPanel pnCommonFilter;
@@ -6344,15 +6341,21 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JTextField txtDistanceMax;
     private javax.swing.JTextField txtDistanceMin;
     private javax.swing.JLabel txtEstimatedRecords;
+    private javax.swing.JLabel txtFirmWare;
+    private javax.swing.JTextField txtFixPeriod;
     private javax.swing.JTextField txtFlashBaudRate;
     private javax.swing.JTextField txtFlashTimesLeft;
     private javax.swing.JTextField txtFlashUpdateRate;
+    private javax.swing.JLabel txtGeoid;
     private javax.swing.JTextField txtHDOPMax;
     private javax.swing.JTextField txtHoluxName;
+    private javax.swing.JLabel txtLatitude;
     private javax.swing.JTextField txtLogDistanceInterval;
     private javax.swing.JTextField txtLogSpeedInterval;
     private javax.swing.JTextField txtLogTimeInterval;
+    private javax.swing.JLabel txtLongitude;
     private javax.swing.JLabel txtMemoryUsed;
+    private javax.swing.JLabel txtModel;
     private javax.swing.JTextField txtNSATMin;
     private javax.swing.JTextField txtPDOPMax;
     private javax.swing.JTextField txtRecCntMax;
