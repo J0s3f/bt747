@@ -276,10 +276,10 @@ public abstract class GPSFile {
      * 
      * @return true if the record is needed.
      */
-    protected boolean recordIsNeeded(final GPSRecord s) {
+    protected boolean recordIsNeeded(final GPSRecord r) {
         boolean result = false;
         for (int i = ptFilters.length - 1; i >= 0; i--) {
-            if (ptFilters[i].doFilter(s)) {
+            if (ptFilters[i].doFilter(r)) {
                 result = true;
                 break;
             }
@@ -293,16 +293,16 @@ public abstract class GPSFile {
      * call super(). That will make sure that the appropriate files are opened,
      * and the {@link #t} property set.
      * 
-     * @param s
+     * @param r
      *            information regarding the position.
      */
-    public void writeRecord(final GPSRecord s) {
+    public void writeRecord(final GPSRecord r) {
         String extraExt; // Extra extension for log file
         boolean newDate = false;
         int dateref = 0;
 
         if (activeFields.utc != 0) {
-            t.setUTCTime(s.utc); // Initialisation needed later too!
+            t.setUTCTime(r.utc); // Initialisation needed later too!
             if (oneFilePerDay || oneFilePerTrack) {
                 dateref = (t.getYear() << 14) + (t.getMonth() << 7)
                         + t.getDay(); // year *
@@ -315,14 +315,14 @@ public abstract class GPSFile {
         }
 
         if (((((oneFilePerDay && newDate) && activeFields.utc != 0) || firstRecord) || (oneFilePerTrack
-                && activeFields.utc != 0 && (s.utc > previousTime
+                && activeFields.utc != 0 && (r.utc > previousTime
                 + trackSepTime)))
-                && recordIsNeeded(s)) {
+                && recordIsNeeded(r)) {
             boolean createOK = true;
             previousDate = dateref;
 
             if (activeFields.utc != 0) {
-                if ((s.utc < 24 * 3600) // No date provided by log.
+                if ((r.utc < 24 * 3600) // No date provided by log.
                         || (t.getYear() > 2000)) {
                     extraExt = "-" + Convert.toString(t.getYear())
                             + (t.getMonth() < 10 ? "0" : "")
@@ -356,12 +356,12 @@ public abstract class GPSFile {
             }
 
             if (createOK) {
-                createFile(s.utc, extraExt);
+                createFile(r.utc, extraExt);
             }
         }
 
-        if (activeFields.utc != 0 && recordIsNeeded(s)) {
-            previousTime = s.utc;
+        if (activeFields.utc != 0 && recordIsNeeded(r)) {
+            previousTime = r.utc;
         }
     };
 
