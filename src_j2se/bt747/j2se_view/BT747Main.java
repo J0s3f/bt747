@@ -1667,7 +1667,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(DownloadProgressLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnBottomInformationLayout.setVerticalGroup(
@@ -2641,7 +2641,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(222, Short.MAX_VALUE))
+                .addContainerGap(170, Short.MAX_VALUE))
         );
         FileSettingsPanelLayout.setVerticalGroup(
             FileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2956,7 +2956,7 @@ public class BT747Main extends javax.swing.JFrame implements
         );
         pnTrackpointLayout.setVerticalGroup(
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnTrkFixType, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(pnTrkFixType, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
             .add(pnTrkLogReason, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -3501,7 +3501,7 @@ public class BT747Main extends javax.swing.JFrame implements
         pnWaypointLayout.setVerticalGroup(
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         org.jdesktop.layout.GroupLayout LogFiltersPanelLayout = new org.jdesktop.layout.GroupLayout(LogFiltersPanel);
@@ -4907,7 +4907,7 @@ public class BT747Main extends javax.swing.JFrame implements
             InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 804, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 752, Short.MAX_VALUE)
                 .addContainerGap())
         );
         InfoPanelLayout.setVerticalGroup(
@@ -4962,7 +4962,7 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(layout.createSequentialGroup()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE))
+                    .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 777, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -6202,10 +6202,6 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JDialog jDialog1;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel pnTrkFixType;
-    private javax.swing.JPanel pnTrkLogReason;
-    private javax.swing.JPanel pnDownloadMethod;
-    private javax.swing.JPanel pnDateFilter;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
@@ -6213,7 +6209,6 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel pnDecoderBin;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbAbove;
     private javax.swing.JLabel lbBaudRate;
@@ -6237,7 +6232,6 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JLabel lbIgnore0Values;
     private javax.swing.JLabel lbKMH;
     private javax.swing.JLabel lbLatitude;
-    private javax.swing.JLabel txtLoggerSWVersion;
     private javax.swing.JLabel lbLoggerSWversion;
     private javax.swing.JLabel lbLongitude;
     private javax.swing.JLabel lbMemoryUsed;
@@ -6290,7 +6284,10 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JPanel pnBottomInformation;
     private javax.swing.JPanel pnCommonFilter;
     private javax.swing.JPanel pnConvert;
+    private javax.swing.JPanel pnDateFilter;
+    private javax.swing.JPanel pnDecoderBin;
     private javax.swing.JPanel pnDownload;
+    private javax.swing.JPanel pnDownloadMethod;
     private javax.swing.JPanel pnFileNMEAOutLeft;
     private javax.swing.JPanel pnFileNMEAOutRight;
     private javax.swing.JPanel pnFileNMEAOutput;
@@ -6319,6 +6316,8 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JPanel pnSeparation;
     private javax.swing.JPanel pnTime;
     private javax.swing.JPanel pnTrackpoint;
+    private javax.swing.JPanel pnTrkFixType;
+    private javax.swing.JPanel pnTrkLogReason;
     private javax.swing.JPanel pnVarious;
     private javax.swing.JPanel pnWayPointFix;
     private javax.swing.JPanel pnWayPointRCR;
@@ -6347,6 +6346,7 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JTextField txtLogDistanceInterval;
     private javax.swing.JTextField txtLogSpeedInterval;
     private javax.swing.JTextField txtLogTimeInterval;
+    private javax.swing.JLabel txtLoggerSWVersion;
     private javax.swing.JLabel txtLongitude;
     private javax.swing.JLabel txtMemoryUsed;
     private javax.swing.JLabel txtModel;
