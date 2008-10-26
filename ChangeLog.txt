@@ -1,3 +1,9 @@
+Version 1.60.8
+* Correction to BT747Cmd - "-f" option not correctly taken into account.
+
+Version 1.60.7 (since 1.59.10)
+* A lot of work on the J2SE interface.
+
 Version 1.59.10 (since 1.57.9)
 * Added extra debug information to INFO screen.
 * CSV file also outputs way points now.

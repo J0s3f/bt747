@@ -316,6 +316,9 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
         }
 
+        // Default value
+        c.setStringOpt(AppSettings.LOGFILEPATH, "BT747_log.bin");
+
         if (options.has("f")) {
             // Basename of files.
             String basename = options.argumentOf("f");
@@ -328,9 +331,8 @@ public class BT747cmd implements bt747.model.ModelListener {
         // Input is "/BT747/BT747_sample.bin"
         if (options.has("b")) {
             c.setStringOpt(AppSettings.LOGFILEPATH, options.argumentOf("b"));
-        } else {
-            c.setStringOpt(AppSettings.LOGFILEPATH, "BT747_log.bin");
         }
+
 
         if (options.has("s")) {
             c.setBaudRate((((Integer) options.valueOf("s")).intValue()));
