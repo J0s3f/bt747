@@ -86,7 +86,7 @@ public final class BT747LogConvert implements GPSLogConvert {
      * 
      */
     public final int parseFile(final GPSFile gpsFile) {
-        GPSRecord gpsRec = new GPSRecord();
+        GPSRecord r = new GPSRecord();
         byte[] bytes;
         int sizeToRead;
         int nextAddrToRead;
@@ -163,6 +163,7 @@ public final class BT747LogConvert implements GPSLogConvert {
 
                 logSpeed = (0xFF & bytes[16]) << 0 | (0xFF & bytes[17]) << 8
                         | (0xFF & bytes[18]) << 16 | (0xFF & bytes[19]) << 24;
+                rcr_mask = 0;  // Header always defines all conditions.
                 if (logPeriod != 0) {
                     rcr_mask |= BT747Constants.RCR_TIME_MASK;
                 } else {
@@ -305,7 +306,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                             /***************************************************
                              * Get all the information in the record.
                              */
-                            gpsRec.recCount = recCount;
+                            r.recCount = recCount;
                             if (passToFindFieldsActivatedInLog) {
                                 okInBuffer = indexInBuffer;
                                 foundRecord = true;
@@ -321,15 +322,15 @@ public final class BT747LogConvert implements GPSLogConvert {
 
                                 // Retrieve the record from the file (in
                                 // buffer).
-                                valid = getRecord(bytes, gpsRec, recIdx,
+                                valid = getRecord(bytes, r, recIdx,
                                         rcrIdx, satcnt);
                                 if (valid) {
-                                    gpsFile.writeRecord(gpsRec);
+                                    gpsFile.writeRecord(r);
                                     okInBuffer = offsetInBuffer;
                                     foundRecord = true;
                                 } else {
                                     Generic.debug("Bad record @"
-                                            + gpsRec.recCount
+                                            + r.recCount
                                             + "("
                                             + Convert.unsigned2hex(
                                                     nextAddrToRead - sizeToRead
@@ -588,7 +589,7 @@ public final class BT747LogConvert implements GPSLogConvert {
      */
     private boolean getRecord(
             final byte[] bytes, // The data string
-            final GPSRecord gpsRec, final int startIdx, final int rcrIdx,
+            final GPSRecord r, final int startIdx, final int rcrIdx,
             final int satcnt) {
         int recIdx;
         boolean valid;
@@ -598,26 +599,26 @@ public final class BT747LogConvert implements GPSLogConvert {
         valid = true;
 
         if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
-            gpsRec.logPeriod = logPeriod;
-            gpsRec.logDistance = logDistance;
-            gpsRec.logSpeed = logSpeed;
-            gpsRec.utc = (0xFF & bytes[recIdx++]) << 0
+            r.logPeriod = logPeriod;
+            r.logDistance = logDistance;
+            r.logSpeed = logSpeed;
+            r.utc = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
-            if ((gpsRec.utc & 0x80000000) != 0) {
-                Generic.debug("Invalid time:" + gpsRec.utc);
+            if ((r.utc & 0x80000000) != 0) {
+                Generic.debug("Invalid time:" + r.utc);
                 valid = false;
             }
-            gpsRec.utc += timeOffsetSeconds;
+            r.utc += timeOffsetSeconds;
         } else {
-            gpsRec.utc = 1000; // Value after earliest date
+            r.utc = 1000; // Value after earliest date
         }
         if ((logFormat & (1 << BT747Constants.FMT_VALID_IDX)) != 0) {
-            gpsRec.valid = (0xFF & bytes[recIdx++]) << 0
+            r.valid = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         } else {
-            gpsRec.valid = 0xFFFF;
+            r.valid = 0xFFFF;
         }
         if ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0) {
             if (!holux) {
@@ -629,16 +630,16 @@ public final class BT747LogConvert implements GPSLogConvert {
                         | (0xFFL & bytes[recIdx++]) << 40
                         | (0xFFL & bytes[recIdx++]) << 48
                         | (0xFFL & bytes[recIdx++]) << 56;
-                gpsRec.latitude = Convert.longBitsToDouble(latitude);
+                r.latitude = Convert.longBitsToDouble(latitude);
             } else {
                 int latitude = (0xFF & bytes[recIdx++]) << 0
                         | (0xFF & bytes[recIdx++]) << 8
                         | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                gpsRec.latitude = Convert.toFloatBitwise(latitude);
+                r.latitude = Convert.toFloatBitwise(latitude);
             }
-            if (gpsRec.latitude > 90.00 || gpsRec.latitude < -90.00) {
-                Generic.debug("Invalid latitude:" + gpsRec.latitude);
+            if (r.latitude > 90.00 || r.latitude < -90.00) {
+                Generic.debug("Invalid latitude:" + r.latitude);
                 valid = false;
             }
         }
@@ -652,16 +653,16 @@ public final class BT747LogConvert implements GPSLogConvert {
                         | (0xFFL & bytes[recIdx++]) << 40
                         | (0xFFL & bytes[recIdx++]) << 48
                         | (0xFFL & bytes[recIdx++]) << 56;
-                gpsRec.longitude = Convert.longBitsToDouble(longitude);
+                r.longitude = Convert.longBitsToDouble(longitude);
             } else {
                 int longitude = (0xFF & bytes[recIdx++]) << 0
                         | (0xFF & bytes[recIdx++]) << 8
                         | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                gpsRec.longitude = Convert.toFloatBitwise(longitude);// *1.0;
+                r.longitude = Convert.toFloatBitwise(longitude);// *1.0;
             }
-            if (gpsRec.longitude > 180.00 || gpsRec.latitude < -180.00) {
-                Generic.debug("Invalid longitude:" + gpsRec.height);
+            if (r.longitude > 180.00 || r.latitude < -180.00) {
+                Generic.debug("Invalid longitude:" + r.height);
                 valid = false;
             }
         }
@@ -671,24 +672,24 @@ public final class BT747LogConvert implements GPSLogConvert {
                         | (0xFF & bytes[recIdx++]) << 8
                         | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                gpsRec.height = Convert.toFloatBitwise(height);
+                r.height = Convert.toFloatBitwise(height);
             } else {
                 int height =
 
                 (0xFF & bytes[recIdx++]) << 8 | (0xFF & bytes[recIdx++]) << 16
                         | (0xFF & bytes[recIdx++]) << 24;
-                gpsRec.height = Convert.toFloatBitwise(height);
+                r.height = Convert.toFloatBitwise(height);
             }
             if (isConvertWGL84ToMSL
                     && ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
                     && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)
                     && valid) {
-                gpsRec.height -= Conv.wgs84Separation(gpsRec.latitude,
-                        gpsRec.longitude);
+                r.height -= Conv.wgs84Separation(r.latitude,
+                        r.longitude);
             }
-            if (((gpsRec.valid & 0x0001) != 1) // record has a fix
-                    && (gpsRec.height < -10000. || gpsRec.height > 10000.)) {
-                Generic.debug("Invalid height:" + gpsRec.height);
+            if (((r.valid & 0x0001) != 1) // record has a fix
+                    && (r.height < -10000. || r.height > 10000.)) {
+                Generic.debug("Invalid height:" + r.height);
                 valid = false;
             }
         }
@@ -697,9 +698,9 @@ public final class BT747LogConvert implements GPSLogConvert {
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
-            gpsRec.speed = Convert.toFloatBitwise(speed);
-            if (gpsRec.speed < -10.) {
-                Generic.debug("Invalid speed:" + gpsRec.speed);
+            r.speed = Convert.toFloatBitwise(speed);
+            if (r.speed < -10.) {
+                Generic.debug("Invalid speed:" + r.speed);
                 valid = false;
             }
         }
@@ -708,32 +709,32 @@ public final class BT747LogConvert implements GPSLogConvert {
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
-            gpsRec.heading = Convert.toFloatBitwise(heading);
+            r.heading = Convert.toFloatBitwise(heading);
         }
         if ((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0) {
-            gpsRec.dsta = (0xFF & bytes[recIdx++]) << 0
+            r.dsta = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         }
         if ((logFormat & (1 << BT747Constants.FMT_DAGE_IDX)) != 0) {
-            gpsRec.dage = (0xFF & bytes[recIdx++]) << 0
+            r.dage = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8
                     | (0xFF & bytes[recIdx++]) << 16
                     | (0xFF & bytes[recIdx++]) << 24;
         }
         if ((logFormat & (1 << BT747Constants.FMT_PDOP_IDX)) != 0) {
-            gpsRec.pdop = (0xFF & bytes[recIdx++]) << 0
+            r.pdop = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         }
         if ((logFormat & (1 << BT747Constants.FMT_HDOP_IDX)) != 0) {
-            gpsRec.hdop = (0xFF & bytes[recIdx++]) << 0
+            r.hdop = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         }
         if ((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) != 0) {
-            gpsRec.vdop = (0xFF & bytes[recIdx++]) << 0
+            r.vdop = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         }
         if ((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) != 0) {
-            gpsRec.nsat = (0xFF & bytes[recIdx++]) << 0
+            r.nsat = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         }
         idx = 0;
@@ -741,11 +742,11 @@ public final class BT747LogConvert implements GPSLogConvert {
         if (rcrIdx - recIdx > 0) {
             idx = (0xFF & bytes[recIdx + 2]) << 0
                     | (0xFF & bytes[recIdx + 3]) << 8;
-            gpsRec.sid = new int[idx];
-            gpsRec.sidinuse = new boolean[idx];
-            gpsRec.ele = new int[idx];
-            gpsRec.azi = new int[idx];
-            gpsRec.snr = new int[idx];
+            r.sid = new int[idx];
+            r.sidinuse = new boolean[idx];
+            r.ele = new int[idx];
+            r.azi = new int[idx];
+            r.snr = new int[idx];
             if (idx == 0) {
                 recIdx += 4;
             }
@@ -753,8 +754,8 @@ public final class BT747LogConvert implements GPSLogConvert {
         if (satcnt == idx) {
             while (idx-- > 0) {
                 if ((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0) {
-                    gpsRec.sid[satidx] = (0xFF & bytes[recIdx++]) << 0;
-                    gpsRec.sidinuse[satidx] = ((0xFF & bytes[recIdx++]) << 0) != 0;
+                    r.sid[satidx] = (0xFF & bytes[recIdx++]) << 0;
+                    r.sidinuse[satidx] = ((0xFF & bytes[recIdx++]) << 0) != 0;
                     // if(false) {
                     // // satcnt is not used - skipping with iffalse)
                     // satcnt=
@@ -765,15 +766,15 @@ public final class BT747LogConvert implements GPSLogConvert {
                     // }
                 }
                 if ((logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) != 0) {
-                    gpsRec.ele[satidx] = (0xFF & bytes[recIdx++]) << 0
+                    r.ele[satidx] = (0xFF & bytes[recIdx++]) << 0
                             | (0xFF & bytes[recIdx++]) << 8;
                 }
                 if ((logFormat & (1 << BT747Constants.FMT_AZIMUTH_IDX)) != 0) {
-                    gpsRec.azi[satidx] = (0xFF & bytes[recIdx++]) << 0
+                    r.azi[satidx] = (0xFF & bytes[recIdx++]) << 0
                             | (0xFF & bytes[recIdx++]) << 8;
                 }
                 if ((logFormat & (1 << BT747Constants.FMT_SNR_IDX)) != 0) {
-                    gpsRec.snr[satidx] = (0xFF & bytes[recIdx++]) << 0
+                    r.snr[satidx] = (0xFF & bytes[recIdx++]) << 0
                             | (0xFF & bytes[recIdx++]) << 8;
                 }
                 satidx++;
@@ -787,20 +788,20 @@ public final class BT747LogConvert implements GPSLogConvert {
         }
         recIdx = rcrIdx; // Sat information limit is rcrIdx
         if ((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
-            gpsRec.rcr = (0xFF & bytes[recIdx++]) << 0
+            r.rcr = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         } else {
-            gpsRec.rcr = rcr_mask; // For filter
+            r.rcr = rcr_mask; // For filter
         }
         if (nextPointIsWayPt) {
-            gpsRec.rcr |= BT747Constants.RCR_BUTTON_MASK;
+            r.rcr |= BT747Constants.RCR_BUTTON_MASK;
             nextPointIsWayPt = false;
         }
         if ((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) {
-            gpsRec.milisecond = (0xFF & bytes[recIdx++]) << 0
+            r.milisecond = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         } else {
-            gpsRec.milisecond = 0;
+            r.milisecond = 0;
         }
         if ((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) {
             long distance = (0xFFL & bytes[recIdx++]) << 0
@@ -811,7 +812,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                     | (0xFFL & bytes[recIdx++]) << 40
                     | (0xFFL & bytes[recIdx++]) << 48
                     | (0xFFL & bytes[recIdx++]) << 56;
-            gpsRec.distance = Convert.longBitsToDouble(distance);
+            r.distance = Convert.longBitsToDouble(distance);
         }
 
         return valid;

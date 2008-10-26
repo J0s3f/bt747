@@ -590,7 +590,7 @@ public class Controller {
      */
     public static final int GPS_TYPE_DEFAULT = 0;
     /**
-     * ITrackU-Nemerix type.
+     * Holux type.
      */
     public static final int GPS_TYPE_GISTEQ_ITRACKU_NEMERIX = 1;
     /**
@@ -602,6 +602,7 @@ public class Controller {
      */
     public static final int GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII = 3;
 
+    
     /***************************************************************************
      * Device state
      **************************************************************************/

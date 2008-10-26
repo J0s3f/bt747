@@ -5,12 +5,16 @@ import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 
+import java.awt.Frame;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import java.util.HashSet;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import bt747.model.AppSettings;
@@ -49,6 +53,7 @@ public final class J2SEAppController extends Controller {
      * Reference to the model.
      */
     private Model m;
+    
 
     /**
      * @param model
@@ -375,4 +380,82 @@ public final class J2SEAppController extends Controller {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Erase pop up.
+     */
+    private JOptionPane mbErase;
+
+    private Frame rootFrame=null;
+    
+    public void setRootFrame(Frame f) {
+        rootFrame = f;
+    }
+    
+    private JDialog mbEraseDialog;
+
+    /**
+     * Show the pop up.
+     */
+    public void createErasePopup() {
+        mbErase = new JOptionPane(
+                getString("WAITING_ERASE_TEXT"),
+                JOptionPane.WARNING_MESSAGE
+                );
+        //mbErase.add
+        mbErase.setVisible(true);
+
+        mbEraseDialog = mbErase.createDialog(rootFrame,
+                getString("WAITING_ERASE_TITLE"));
+        mbEraseDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+//        mbEraseDialog.addWindowListener(new WindowAdapter() {
+//            public void windowClosing(WindowEvent we) {
+//                setLabel("Thwarted user attempt to close window.");
+//            }
+//        });
+        mbErase.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent e) {
+                String prop = e.getPropertyName();
+
+                if (mbEraseDialog.isVisible() && (e.getSource() == mbErase)
+                        && (prop.equals(JOptionPane.VALUE_PROPERTY))) {
+                    // Stop waiting for erase
+                    stopErase();
+                    removeErasePopup();
+                }
+            }
+        });
+        mbEraseDialog.pack();
+        mbEraseDialog.setModal(false);
+        mbEraseDialog.setVisible(true);
+    }
+
+    
+//    private checkEraseOption() {
+//        int value = ((Integer) mbErase.getValue()).intValue();
+//        if (value == JOptionPane.YES_OPTION) {
+//            setLabel("Good.");
+//        } else if (value == JOptionPane.NO_OPTION) {
+//            setLabel("Try using the window decorations "
+//                    + "to close the non-auto-closing dialog. " + "You can't!");
+//        }
+//    }
+    
+    /**
+     * Remove the pop up.
+     */
+    public final void removeErasePopup() {
+        if (mbEraseDialog != null) {
+            mbEraseDialog.setVisible(false);
+            mbEraseDialog = null;
+            mbErase = null;
+        }
+    }
+    
+//    if (event.target == mbErase) {
+//        if (!mbErase.isPopped()) {
+//            stopErase();
+//        }
+
+
 }
