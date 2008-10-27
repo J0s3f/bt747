@@ -40,6 +40,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -313,6 +314,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
         
+        updateConnected(m.isConnected());
     }
 
     private final void updateSerialSpeed() {
@@ -628,6 +630,7 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.CONNECTED:
             btConnect.setText(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Disconnect"));
             btConnectFunctionIsConnect = false;
+            updateConnected(true);
 
             // TODO: Find the way to do this on tab entry.
             c.reqHoluxName();
@@ -648,6 +651,7 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.DISCONNECTED:
             btConnect.setText(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Connect"));
             btConnectFunctionIsConnect = true;
+            updateConnected(false);
             break;
         case ModelEvent.DOWNLOAD_STATE_CHANGE:
         case ModelEvent.LOG_DOWNLOAD_DONE:
@@ -5066,9 +5070,11 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         Color myColor = new Color(Conv.hex2Int(m.getColorValidTrack()));
         cbGoodFixColor.setBackground(myColor);
         cbGoodFixColor.setForeground(new Color(255-myColor.getRed(),255-myColor.getGreen(),255-myColor.getBlue()));
+        cbGoodFixColor.setOpaque(true);
         myColor = new Color(Conv.hex2Int(m.getColorInvalidTrack()));
         cbNoFixColor.setBackground(myColor);
         cbNoFixColor.setForeground(new Color(255-myColor.getRed(),255-myColor.getGreen(),255-myColor.getBlue()));
+        cbNoFixColor.setOpaque(true);
     }
 
     private void txtPDOPMaxFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtPDOPMaxFocusLost
@@ -5310,7 +5316,34 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             component.setEnabled(en);
         }
     }
+    
+    
+    private final void disablePanel(final JPanel panel, final boolean en) {
+        Component[] l;
+        l = panel.getComponents();
+        for (Component component : l) {
+            component.setEnabled(en);
+            if(component.getClass()==JPanel.class) {
+                disablePanel((JPanel)component,en);
+            }
+        }
+        
+    }
+    private final void updateConnected(final boolean connected) {
+        JPanel[] panels = { 
+                GPSDecodePanel, pnLogFormat, pnGPSStart, pnLogBy, pnSBAS,
+                pnHoluxSettings, pnFlashSettings, pnNMEAOutput };
 
+        btDownloadFromNumerix.setEnabled(connected);
+        btDownloadIBlue.setEnabled(connected);
+        for (JPanel panel : panels) {
+            disablePanel(panel,connected);
+        }
+        if(connected) {
+            updateSatGuiItems();
+        }
+    }
+    
     private void tfRawLogFilePathFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_tfRawLogFilePathFocusLost
 
         c.setStringOpt(AppSettings.LOGFILEPATH, tfRawLogFilePath.getText());

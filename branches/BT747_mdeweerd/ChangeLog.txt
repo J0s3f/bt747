@@ -1,3 +1,8 @@
+Version 1.60.10
+* Gray out the interface items that are invalid when not connected.
+* Changed erase popup window button to 'Cancel'
+* Changed default directory to user home directory.
+
 Version 1.60.8
 * Correction to BT747Cmd - "-f" option not correctly taken into account.
 
