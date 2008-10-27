@@ -305,7 +305,9 @@ public final class J2SEAppController extends Controller {
     }
 
     private void initAppSettings() {
-        AppSettings.defaultBaseDirPath = "/BT747";
+        AppSettings.defaultBaseDirPath = 
+            java.lang.System
+            .getProperty("user.home");
 
         if ((Settings.getAppSettings() == null)
                 || (Settings.getAppSettings().length() < 100)
@@ -398,12 +400,14 @@ public final class J2SEAppController extends Controller {
      * Show the pop up.
      */
     public void createErasePopup() {
+        String[] eraseOption = {getString("CANCEL")};
         mbErase = new JOptionPane(
                 getString("WAITING_ERASE_TEXT"),
                 JOptionPane.WARNING_MESSAGE
                 );
         //mbErase.add
         mbErase.setVisible(true);
+        mbErase.setOptions(eraseOption);
 
         mbEraseDialog = mbErase.createDialog(rootFrame,
                 getString("WAITING_ERASE_TITLE"));
@@ -417,7 +421,7 @@ public final class J2SEAppController extends Controller {
             public void propertyChange(PropertyChangeEvent e) {
                 String prop = e.getPropertyName();
 
-                if (mbEraseDialog.isVisible() && (e.getSource() == mbErase)
+                if ((mbEraseDialog!=null) && mbEraseDialog.isVisible() && (e.getSource() == mbErase)
                         && (prop.equals(JOptionPane.VALUE_PROPERTY))) {
                     // Stop waiting for erase
                     stopErase();
