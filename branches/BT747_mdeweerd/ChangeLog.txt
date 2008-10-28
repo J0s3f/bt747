@@ -1,3 +1,6 @@
+Version 1.60.11
+* All the popup messages are in nice boxes now.
+
 Version 1.60.10
 * Gray out the interface items that are invalid when not connected.
 * Changed erase popup window button to 'Cancel'

@@ -1,3 +1,17 @@
+//********************************************************************
+//***                           BT 747                             ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
+//***  *********************************************************** ***
 package bt747.j2se_view;
 
 import gps.BT747Constants;
@@ -6,17 +20,23 @@ import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 
 import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.URL;
 
 import java.util.HashSet;
+import java.util.ResourceBundle;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
+import bt747.Version;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
@@ -43,6 +63,42 @@ public final class J2SEAppController extends Controller {
                                     .startsWith("Mac")) ? SETTINGS_NAME
                                     : "/My Documents/BT747/" + SETTINGS_NAME)));
 
+    private static Image appIcon;
+    private static final String iconPath = "icons/bt747_16x16.gif";
+
+    private static Image app128Icon;
+    private static final String icon128Path = "icons/bt747_128x128.gif";
+
+    private static final void setAppIcon() {
+        URL u = BT747Main.class.getResource("/" + iconPath);
+
+        if (u != null) {
+            appIcon = Toolkit.getDefaultToolkit().getImage(u);
+        } else {
+            appIcon = Toolkit.getDefaultToolkit().getImage(iconPath);
+        }
+
+        u = BT747Main.class.getResource("/" + icon128Path);
+
+        if (u != null) {
+            app128Icon = Toolkit.getDefaultToolkit().getImage(u);
+        } else {
+            app128Icon = Toolkit.getDefaultToolkit().getImage(icon128Path);
+        }
+    }
+
+    static {
+        setAppIcon();
+    }
+
+    public final Image getIcon16() {
+        return appIcon;
+    }
+
+    public final Image getIcon128() {
+        return app128Icon;
+    }
+
     /**
      * The lower level controller. This should become a separate instance in the
      * future.
@@ -53,7 +109,6 @@ public final class J2SEAppController extends Controller {
      * Reference to the model.
      */
     private Model m;
-    
 
     /**
      * @param model
@@ -110,9 +165,11 @@ public final class J2SEAppController extends Controller {
         return result;
     }
 
+    private static ResourceBundle bundle = java.util.ResourceBundle
+            .getBundle("bt747/j2se_view/Bundle");
+
     private static final String getString(final String s) {
-        return java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle")
-                .getString(s);
+        return bundle.getString(s);
     }
 
     /** Options for the first warning message. */
@@ -122,27 +179,33 @@ public final class J2SEAppController extends Controller {
     private static final String[] C_YES_OR_CANCEL = { getString("YES_BUTTON"),
             getString("CANCEL_BUTTON") };
     /** Options for the second warning message - reverse order on purpose. */
-    private static final String[] C_CANCEL_OR_CONFIRM_ERASE = { getString("CANCEL_BUTTON"),
-            getString("CONFIRM_ERASE_BUTTON") };
+    private static final String[] C_CANCEL_OR_CONFIRM_ERASE = {
+            getString("CANCEL_BUTTON"), getString("CONFIRM_ERASE_BUTTON") };
 
     /**
      * A 'recovery Erase' attempts to recover memory that was previously
      * identified as 'bad'.
      */
     public final void recoveryErase() {
-        /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(getString("ERASE_WARNING_TITLE"), getString("ERASE_WARNING_1_TEXT"),
-                C_ERASE_OR_CANCEL);
-        mb.popupBlockingModal();
-        if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(getString("ERASE_WARNING_TITLE"), getString("ERASE_WARNING_2_TEXT"),
-                    C_CANCEL_OR_CONFIRM_ERASE);
-            mb.popupBlockingModal();
-            if (mb.getPressedButtonIndex() == 1) {
+        int choice;
+        choice = JOptionPane.showOptionDialog(rootFrame,
+                getString("ERASE_WARNING_1_TEXT"),
+                getString("ERASE_WARNING_TITLE"), JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.WARNING_MESSAGE, null, C_ERASE_OR_CANCEL,
+                C_ERASE_OR_CANCEL[1]);
+
+        if (choice == 0) {
+            choice = JOptionPane.showOptionDialog(rootFrame,
+                    getString("ERASE_WARNING_2_TEXT"),
+                    getString("ERASE_WARNING_TITLE"),
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                    null, C_CANCEL_OR_CONFIRM_ERASE,
+                    C_CANCEL_OR_CONFIRM_ERASE[0]);
+            if (choice == 1) {
                 // Erase log
                 c.recoveryEraseLog();
             }
+
         }
     }
 
@@ -154,16 +217,19 @@ public final class J2SEAppController extends Controller {
      *            The logFormat to set upon erase.
      */
     public final void changeLogFormatAndErase(final int logFormat) {
-        /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(getString("ATTENTION"),
-                getString("FORMAT_ERASE_WARNING_TEXT"), C_ERASE_OR_CANCEL);
-        mb.popupBlockingModal();
-        if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(getString("ATTENTION"),
-                    getString("FORMAT_ERASE_WARNING2_TEXT"), C_CANCEL_OR_CONFIRM_ERASE);
-            mb.popupBlockingModal();
-            if (mb.getPressedButtonIndex() == 1) {
+        int choice;
+        choice = JOptionPane.showOptionDialog(rootFrame,
+                getString("FORMAT_ERASE_WARNING_TEXT"), getString("ATTENTION"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, C_ERASE_OR_CANCEL, C_ERASE_OR_CANCEL[1]);
+
+        if (choice == 0) {
+            choice = JOptionPane.showOptionDialog(rootFrame,
+                    getString("FORMAT_ERASE_WARNING2_TEXT"),
+                    getString("ATTENTION"), JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE, null,
+                    C_CANCEL_OR_CONFIRM_ERASE, C_CANCEL_OR_CONFIRM_ERASE[0]);
+            if (choice == 1) {
                 // Set format and reset log
                 c.setLogFormat(logFormat);
                 c.eraseLog();
@@ -179,12 +245,13 @@ public final class J2SEAppController extends Controller {
      *            The new log format to set.
      */
     public final void changeLogFormat(final int logFormat) {
-        /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(true, getString("ATTENTION"),
-                getString("CHANGE_LOG_FORMAT_TEXT"), C_YES_OR_CANCEL);
-        mb.popupBlockingModal();
-        if (mb.getPressedButtonIndex() == 0) {
+        int choice;
+        choice = JOptionPane.showOptionDialog(rootFrame,
+                getString("CHANGE_LOG_FORMAT_TEXT"), getString("ATTENTION"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, C_YES_OR_CANCEL, C_YES_OR_CANCEL[1]);
+
+        if (choice == 0) {
             c.setLogFormat(logFormat);
         }
     }
@@ -193,18 +260,22 @@ public final class J2SEAppController extends Controller {
      * (User) request to change the log format. Warns about requirement to erase
      * the log too.
      */
-    public final void eraseLogFormat() {
-        // TODO: Use JOptionPane.showMessageDialog
-        /** Object to open multiple message boxes */
-        MessageBox mb;
-        mb = new MessageBox(getString("ERASE_WARNING_TITLE"),
-                getString("ERASE_WARNING_1_TEXT"), C_ERASE_OR_CANCEL);
-        mb.popupBlockingModal();
-        if (mb.getPressedButtonIndex() == 0) {
-            mb = new MessageBox(getString("ATTENTION"), getString("ERASE_WARNING_2_TEXT"),
-                    C_CANCEL_OR_CONFIRM_ERASE);
-            mb.popupBlockingModal();
-            if (mb.getPressedButtonIndex() == 1) {
+    public final void eraseLogWithDialogs() {
+        int choice;
+        choice = JOptionPane.showOptionDialog(rootFrame,
+                getString("ERASE_WARNING_1_TEXT"),
+                getString("ERASE_WARNING_TITLE"), JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.WARNING_MESSAGE, null, C_ERASE_OR_CANCEL,
+                C_ERASE_OR_CANCEL[1]);
+
+        if (choice == 0) {
+            choice = JOptionPane.showOptionDialog(rootFrame,
+                    getString("ERASE_WARNING_2_TEXT"),
+                    getString("ERASE_WARNING_TITLE"),
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                    null, C_CANCEL_OR_CONFIRM_ERASE,
+                    C_CANCEL_OR_CONFIRM_ERASE[0]);
+            if (choice == 1) {
                 // Erase log
                 c.eraseLog();
             }
@@ -212,15 +283,13 @@ public final class J2SEAppController extends Controller {
     }
 
     public final void doFactoryReset() {
-        MessageBox mb;
-        String[] szExitButtonArray = {
-                getString("YES_BUTTON"),
-                getString("NO_BUTTON"), };
-        mb = new MessageBox(getString("ATTENTION"), getString("FACT_RESET_TEXT"),
-                szExitButtonArray);
-        mb.popupBlockingModal();
-        if (mb.getPressedButtonIndex() == 0) {
-            // Exit application
+        int choice;
+        choice = JOptionPane.showOptionDialog(rootFrame,
+                getString("FACT_RESET_TEXT"), getString("ATTENTION"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, null, 0);
+
+        if (choice == JOptionPane.OK_OPTION) {
             c.doFullColdStart();
         }
 
@@ -230,12 +299,15 @@ public final class J2SEAppController extends Controller {
             final int baudRate, final int periodGLL, final int periodRMC,
             final int periodVTG, final int periodGSA, final int periodGSV,
             final int periodGGA, final int periodZDA, final int periodMCHN) {
-        MessageBox mb;
-        String[] mbStr = { getString("WRITE_FLASH_BUTTON"), getString("CANCEL_BUTTON") };
-        mb = new MessageBox(getString("ATTENTION"), getString("FLASH_LIMITED_TEXT"),
-                mbStr);
-        mb.popupBlockingModal();
-        if (mb.getPressedButtonIndex() == 0) {
+        String[] mbStr = { getString("WRITE_FLASH_BUTTON"),
+                getString("CANCEL_BUTTON") };
+        int choice;
+        choice = JOptionPane.showOptionDialog(rootFrame,
+                getString("FLASH_LIMITED_TEXT"), getString("ATTENTION"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, mbStr, mbStr[1]);
+
+        if (choice == JOptionPane.OK_OPTION) {
             c.setFlashUserOption(lock, updateRate, baudRate, periodGLL,
                     periodRMC, periodVTG, periodGSA, periodGSV, periodGGA,
                     periodZDA, periodMCHN);
@@ -256,15 +328,18 @@ public final class J2SEAppController extends Controller {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
             errorMsg = getString("COULD_NOT_OPEN_FILE") + errorInfo;
             Generic.debug(errorMsg);
-            new MessageBox(getString("ERROR_TITLE"), errorMsg).popupBlockingModal();
+            JOptionPane.showMessageDialog(rootFrame, errorMsg,
+                    getString("ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
-            (new MessageBox(getString("WARNING_TITLE"), getString("NO_FILES_CREATED") ))
-                    .popupBlockingModal();
+            JOptionPane.showMessageDialog(rootFrame,
+                    getString("NO_FILES_CREATED"), getString("WARNING_TITLE"),
+                    JOptionPane.WARNING_MESSAGE);
             break;
         case BT747Constants.ERROR_READING_FILE:
-            new MessageBox(getString("ERROR_TITLE"), getString("PROBLEM_READING")+ errorInfo)
-                    .popupBlockingModal();
+            JOptionPane.showMessageDialog(rootFrame,
+                    getString("PROBLEM_READING") + errorInfo,
+                    getString("ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
             break;
         default:
             break;
@@ -274,7 +349,7 @@ public final class J2SEAppController extends Controller {
     /**
      * The list of views attached to this controller.
      */
-    private HashSet<Object> views = new HashSet<Object>();
+    private final HashSet<Object> views = new HashSet<Object>();
 
     /**
      * Attach a view to the controller.
@@ -305,9 +380,8 @@ public final class J2SEAppController extends Controller {
     }
 
     private void initAppSettings() {
-        AppSettings.defaultBaseDirPath = 
-            java.lang.System
-            .getProperty("user.home");
+        AppSettings.defaultBaseDirPath = java.lang.System
+                .getProperty("user.home");
 
         if ((Settings.getAppSettings() == null)
                 || (Settings.getAppSettings().length() < 100)
@@ -339,7 +413,7 @@ public final class J2SEAppController extends Controller {
     }
 
     public final void saveSettings() {
-        File preferencesFile = new File("");
+        File preferencesFile;
         try {
             File m_Dir = new File(CONFIG_FILE_NAME.substring(0,
                     CONFIG_FILE_NAME.lastIndexOf('/')));
@@ -382,46 +456,45 @@ public final class J2SEAppController extends Controller {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Erase pop up.
      */
     private JOptionPane mbErase;
 
-    private Frame rootFrame=null;
-    
-    public void setRootFrame(Frame f) {
+    private Frame rootFrame = null;
+
+    public void setRootFrame(final Frame f) {
         rootFrame = f;
     }
-    
+
     private JDialog mbEraseDialog;
 
     /**
      * Show the pop up.
      */
     public void createErasePopup() {
-        String[] eraseOption = {getString("CANCEL")};
-        mbErase = new JOptionPane(
-                getString("WAITING_ERASE_TEXT"),
-                JOptionPane.WARNING_MESSAGE
-                );
-        //mbErase.add
+        String[] eraseOption = { getString("CANCEL") };
+        mbErase = new JOptionPane(getString("WAITING_ERASE_TEXT"),
+                JOptionPane.WARNING_MESSAGE);
+        // mbErase.add
         mbErase.setVisible(true);
         mbErase.setOptions(eraseOption);
 
         mbEraseDialog = mbErase.createDialog(rootFrame,
                 getString("WAITING_ERASE_TITLE"));
         mbEraseDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-//        mbEraseDialog.addWindowListener(new WindowAdapter() {
-//            public void windowClosing(WindowEvent we) {
-//                setLabel("Thwarted user attempt to close window.");
-//            }
-//        });
+        // mbEraseDialog.addWindowListener(new WindowAdapter() {
+        // public void windowClosing(WindowEvent we) {
+        // setLabel("Thwarted user attempt to close window.");
+        // }
+        // });
         mbErase.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent e) {
                 String prop = e.getPropertyName();
 
-                if ((mbEraseDialog!=null) && mbEraseDialog.isVisible() && (e.getSource() == mbErase)
+                if ((mbEraseDialog != null) && mbEraseDialog.isVisible()
+                        && (e.getSource() == mbErase)
                         && (prop.equals(JOptionPane.VALUE_PROPERTY))) {
                     // Stop waiting for erase
                     stopErase();
@@ -434,17 +507,6 @@ public final class J2SEAppController extends Controller {
         mbEraseDialog.setVisible(true);
     }
 
-    
-//    private checkEraseOption() {
-//        int value = ((Integer) mbErase.getValue()).intValue();
-//        if (value == JOptionPane.YES_OPTION) {
-//            setLabel("Good.");
-//        } else if (value == JOptionPane.NO_OPTION) {
-//            setLabel("Try using the window decorations "
-//                    + "to close the non-auto-closing dialog. " + "You can't!");
-//        }
-//    }
-    
     /**
      * Remove the pop up.
      */
@@ -455,11 +517,55 @@ public final class J2SEAppController extends Controller {
             mbErase = null;
         }
     }
-    
-//    if (event.target == mbErase) {
-//        if (!mbErase.isPopped()) {
-//            stopErase();
-//        }
 
+    /**
+     * Show the about dialog box for the application.
+     */
+    public final void showAbout() {
+        JOptionPane.showMessageDialog(rootFrame, "<html>BT747 V"
+                + Version.VERSION_NUMBER + " (" + Version.DATE
+                + ")<br>" // NOI18N
+                + "Build: " + Version.BUILD_STR + "<br><br>"
+                + getString("ABOUT_TEXT"), getString("ABOUT_TITLE"),
+                JOptionPane.INFORMATION_MESSAGE, new ImageIcon(app128Icon));
+    }
 
+    /**
+     * Show the information dialog box for the application.
+     */
+    public final void showLicense() {
+        JOptionPane.showMessageDialog(rootFrame, getString("LICENSE_TEXT"),
+                getString("LICENSE_TITLE"), JOptionPane.INFORMATION_MESSAGE,
+                new ImageIcon(app128Icon));
+    }
+
+    /**
+     * Show error message that file could not be opened.
+     * 
+     * @param fileName
+     *            The file that could not be opened.
+     */
+    public void couldNotOpenFileMessage(final String fileName) {
+        JOptionPane.showMessageDialog(rootFrame,
+                getString("Problem_opening_file"),
+                getString("The_application_could_not_open_") + fileName
+                        + getString("_check_if_loc_exists")
+                        + getString("in_case_it_is_an_output_file."),
+                JOptionPane.WARNING_MESSAGE, null);
+    }
+
+    /**
+     * Request the user if it is ok to overwrite the existing data or not.
+     * 
+     * @return true if data can be overwritten.
+     */
+    public final boolean getRequestToOverwriteFromDialog() {
+        int overwriteResp;
+        overwriteResp = JOptionPane.showOptionDialog(rootFrame,
+                getString("OVERWRITE_DATA_QUESTION"),
+                getString("OVERWRITING_DATA"), JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE, null /* icon */,
+                null /* options */, null /* initialValue */);
+        return overwriteResp == JOptionPane.OK_OPTION;
+    }
 }
