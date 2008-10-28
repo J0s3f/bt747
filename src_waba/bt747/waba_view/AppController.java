@@ -176,10 +176,10 @@ public final class AppController extends Controller {
     }
 
     /**
-     * (User) request to change the log format. Warns about requirement to erase
+     * User request to format the device. Warns about requirement to erase
      * the log too.
      */
-    public final void eraseLogFormat() {
+    public final void eraseLogWithDialogs() {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
         mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
