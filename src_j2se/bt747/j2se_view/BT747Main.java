@@ -49,7 +49,6 @@ import java.util.Enumeration;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
 
-import bt747.Txt;
 import bt747.Version;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
