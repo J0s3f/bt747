@@ -49,6 +49,7 @@ import java.util.Enumeration;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
 
+import bt747.Txt;
 import bt747.Version;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
@@ -557,6 +558,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 // TODO: handle exception
                 Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Unknown_DGPS_Mode") + m.getDgpsMode(), ee);
             }
+            break;
 
             // TODO
             // cbDGPSMode.select(m.getDgpsMode());
@@ -570,6 +572,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 // TODO: handle exception
                 Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Unknown_DATUM") + m.getDatum(), ee);
             }
+            break;
             // TODO
             // cbDatumMode.select(m.getDatum());
         case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
@@ -596,6 +599,23 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.UPDATE_LOG_FORMAT:
             updateLogFormatData();
             break;
+        case ModelEvent.UPDATE_LOG_LOG_STATUS:
+            // TODO: hkLogOnOff.setChecked(m.isLoggingActive());
+            break;
+        case ModelEvent.UPDATE_LOG_REC_METHOD:
+            cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 0
+                    : 1);
+            break;
+        case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
+            //TODO
+            //lbUsedMem.setText(Txt.MEM_USED + Convert.toString(m.logMemUsed()) + "("
+            //        + Convert.toString(m.logMemUsedPercent()) + "%)");
+            // m_UsedLabel.repaintNow();
+            // lbUsedRecords.setText(Txt.NBR_RECORDS
+//                    + Convert.toString(m.logNbrLogPts()) + " ("
+//                    + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
+//                    + Txt.MEM_FREE + ")");
+                    break;
         // case ModelEvent.LOGFILEPATH_UPDATE:
         // getRawLogFilePath();
         // break;
@@ -641,6 +661,7 @@ public class BT747Main extends javax.swing.JFrame implements
             c.reqLogReasonStatus();
             c.reqSBASEnabled();
             c.reqSBASTestEnabled();
+            c.reqDGPSMode();
             c.reqFixInterval();
             c.reqBTAddr();
             c.reqMtkLogVersion();
