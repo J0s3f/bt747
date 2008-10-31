@@ -9,17 +9,15 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************       
 package gps.log;
 
+import bt747.sys.Convert;
+
 import gps.BT747Constants;
+import gps.convert.Conv;
 
 /**
  * Structure to hold GPS data for one point
@@ -190,5 +188,20 @@ public class GPSRecord {
 
         /* End handling record */
         return gpsRec;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        StringBuffer rec = new StringBuffer(100);
+        rec.setLength(0);
+        rec.append("UTC:"+utc);
+        rec.append("\nVALID:"+Convert.unsigned2hex(valid, 8));
+        rec.append("\nLAT;"+latitude);
+        rec.append("\nLON:"+longitude);
+        rec.append("\nRCR:"+Convert.unsigned2hex(rcr, 8));
+        rec.append('\n');
+        return rec.toString();
     }
 }

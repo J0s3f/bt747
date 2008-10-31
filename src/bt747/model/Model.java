@@ -135,7 +135,6 @@ public class Model extends AppSettings implements GPSListener {
         filterStartTime = (Interface.getDateInstance(1, 1, 1983).dateToUTCepoch1970());
         filterEndTime = (Interface.getDateInstance()).dateToUTCepoch1970()
                 + (SECONDS_PER_DAY - 1);
-
         gpsRxTx = new GPSrxtx();
         gpsModel = new GPSstate(gpsRxTx);
         gpsModel.addListener(this);

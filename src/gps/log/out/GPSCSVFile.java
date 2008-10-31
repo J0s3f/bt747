@@ -18,6 +18,7 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 
 import bt747.sys.Convert;
+import bt747.sys.Generic;
 
 /**
  * Class to write a CSV file.
@@ -25,12 +26,19 @@ import bt747.sys.Convert;
  * @author Mario De Weerd
  */
 public final class GPSCSVFile extends GPSFile {
-    private final StringBuffer rec = new StringBuffer(1024); // reused
-                                                                // stringbuffer
-    private static final char fieldSep = ','; // For future parameterisation
-    private static final char satSeperator = ';'; // For future
+    /**
+     * Reused StringBuffer for output construction.
+     */
+    private final StringBuffer rec = new StringBuffer(1024);
+    /**
+     * CSV field separator - fixed now, but may become a parameter in the future.
+     */
+    private static final char fieldSep = ',';
+    /**
+     * Separator in the satellite field - for future parameterization.
+     */
+    private static final char satSeperator = ';';
 
-    // parameterisation
 
     public final boolean needPassToFindFieldsActivatedInLog() {
         return true;
