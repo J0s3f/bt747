@@ -14,6 +14,8 @@
 //***  *********************************************************** ***
 package gps.log;
 
+import bt747.sys.Convert;
+
 /**
  * This class implements a filter for a {@link GPSRecord}.
  * 
@@ -182,5 +184,17 @@ public class GPSFilter {
                 && ((r.valid & validMask) != 0) && ((r.rcr & rcrMask) != 0);
 
         return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return startTime + "<UTC<" + endTime + "\n" + "VALIDMASK="
+                + Convert.unsigned2hex(validMask, 8) + "\n" + "RCRMASK="
+                + Convert.unsigned2hex(rcrMask, 8) + "\n";
+        //return super.toString();
     }
 }
