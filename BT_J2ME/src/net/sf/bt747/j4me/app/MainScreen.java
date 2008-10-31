@@ -68,8 +68,8 @@ public final class MainScreen extends Dialog implements ModelListener {
     private final CreditsScreen creditsScreen;
     private final DeviceScreen logFieldSelectScreen;
 
-    java.util.Timer tm = new Timer();
-    TimerTask tt;
+    private final java.util.Timer tm = new Timer();
+    private TimerTask tt;
 
     /**
      * We use only one instantiation of the confirmation screen (sequence). This
@@ -134,9 +134,10 @@ public final class MainScreen extends Dialog implements ModelListener {
         findingGPSDevicesAlert = new FindingGPSDevicesAlert(c,
                 initialiseGPSAlert);
         baseDirScreen = new PathSelectionScreen("Base directory", this, m()
-                .getBaseDirPath(), true) {
+                .getStringOpt(AppModel.OUTPUTDIRPATH), true) {
             protected void notifyPathSelected(final String path) {
-                c.setBaseDirPath(path);
+                c.setStringOpt(AppModel.OUTPUTDIRPATH, path);
+                c.setPaths();
             }
         };
         creditsScreen = new CreditsScreen(this);
@@ -357,9 +358,6 @@ public final class MainScreen extends Dialog implements ModelListener {
          * public void onSelection () { show(); } } );
          */
         rootMenu.show();
-
-        // Continue processing the event.
-        super.declineNotify();
     }
 
     /**
@@ -405,9 +403,6 @@ public final class MainScreen extends Dialog implements ModelListener {
         });
 
         menu.show();
-
-        // Continue processing the event.
-        super.acceptNotify();
     }
 
     /**

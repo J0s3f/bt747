@@ -30,6 +30,7 @@ import org.j4me.ui.components.Label;
 import org.j4me.ui.components.ProgressBar;
 import org.j4me.ui.components.TextBox;
 
+import bt747.model.AppSettings;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 
@@ -115,7 +116,8 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
 
             // createNewSection("Log conditions");
             file.setLabel("Bin file:");
-            file.setLabel(m().getLogFilePath());
+            AppModel r = m();
+            file.setLabel(r.getStringOpt(AppSettings.LOGFILEPATH));
             append(file);
 
             status.setLabel("Download inactive");
@@ -170,7 +172,8 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
             progressUpdate();
             // Log.info("Download ongoing");
         } else {
-            file.setLabel(m().getLogFilePath());
+            AppModel r = m();
+            file.setLabel(r.getStringOpt(AppSettings.LOGFILEPATH));
             file.repaint();
         }
 
@@ -193,7 +196,8 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
         Menu menu = new Menu("Log menu", this) {
             public void showNotify() {
                 if (tb.getString().length() != 0) {
-                    c.setLogFileRelPath(tb.getString());
+                    c.setStringOpt(AppModel.LOGFILERELPATH, tb.getString());
+                    c.setPaths();
                     tb.setString(null);
                     logDownload.show();
                 }
@@ -214,12 +218,12 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
 
         menu.appendMenuOption(new MenuItem() {
             public String getText() {
-                return "Basename";
+                return "Binary filename";
             }
 
             public void onSelection() {
                 tb.setForAnyText();
-                tb.setString(m().getLogFile());
+                tb.setString(m().getStringOpt(AppModel.LOGFILERELPATH));
                 // Simulate selection for entry
                 tb.keyPressed(DeviceScreen.FIRE);
             }

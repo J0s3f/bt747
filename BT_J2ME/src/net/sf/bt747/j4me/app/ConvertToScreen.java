@@ -1,9 +1,15 @@
 package net.sf.bt747.j4me.app;
 
+import net.sf.bt747.j4me.app.screens.PathSelectionScreen;
+
+import org.j4me.ui.DeviceScreen;
+import org.j4me.ui.MenuItem;
 import org.j4me.ui.components.CheckBox;
 import org.j4me.ui.components.Label;
 import org.j4me.ui.components.RadioButton;
 import org.j4me.ui.components.TextBox;
+
+import com.sun.midp.io.j2me.storage.File;
 
 import bt747.model.Model;
 import bt747.sys.Convert;
@@ -14,7 +20,8 @@ import bt747.sys.Convert;
  * provider on the device. But if it cannot it will get a GPS provider through a
  * Bluetooth connection.
  */
-public final class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Dialog {
+public final class ConvertToScreen extends
+        net.sf.bt747.j4me.app.screens.BT747Dialog {
     /**
      * Output format selection.
      */
@@ -45,7 +52,14 @@ public final class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Di
 
     private RadioButton rbTimeOffsetHours;
 
+    private TextBox tbBinFile;
+
     private boolean screenIsSetup = false;
+
+    /**
+     * Output format selection.
+     */
+    private RadioButton rbDevice;
 
     /**
      * Sets up the screen.
@@ -55,7 +69,20 @@ public final class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Di
             screenIsSetup = true;
             deleteAll();
             setTitle("Convert Log");
+
             Label l;
+            l = new Label("'" + getRightMenuText() + "' to start conversion of:");
+            append(l);
+            tbBinFile = new TextBox() {
+                public void keyPressed(int keyCode) {
+                    if ((keyCode > 0) || (keyCode == DeviceScreen.FIRE)) {
+                        selectBaseFile();
+                    }
+                }
+            };
+            tbBinFile.setString(c.getAppModel().getStringOpt(
+                    AppModel.LOGFILERELPATH));
+            append(tbBinFile);
             l = new Label("Select output format:");
             append(l);
             rbFormats = new RadioButton();
@@ -95,10 +122,18 @@ public final class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Di
             rbFormats.setSelectedIndex(index);
             append(rbFormats);
             setSelected(rbFormats);
-            l = new Label("'" + getRightMenuText() + "' to start conversion.");
+            l = new Label("WARNING: Conversion is slow!");
             append(l);
-            l = new Label("WARNING: Conversion is very slow.");
-            append(l);
+
+            rbDevice = new RadioButton();
+            rbDevice.append("Default device");
+            rbDevice.append("Holux M-241");
+            if (!c.getAppModel().getBooleanOpt(Model.IS_HOLUXM241)) {
+                rbDevice.setSelectedIndex(0);
+            } else {
+                rbDevice.setSelectedIndex(1);
+            }
+            append(rbDevice);
 
             rbFiles = new RadioButton();
             rbFiles.append("One file");
@@ -144,6 +179,7 @@ public final class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Di
         c.setOutputFileSplitType(rbFiles.getSelectedIndex());
         c.setConvertWGS84ToMSL(cbHeightCorrection.isChecked());
         c.setTrkSep(Integer.parseInt(tbTrackSeparation.getString()));
+        c.setBooleanOpt(Model.IS_HOLUXM241, rbDevice.getSelectedIndex() == 1);
         int index = 0;
         // Work around superwaba bug
         String tmp = (String) rbTimeOffsetHours.getSelectedValue();
@@ -163,6 +199,23 @@ public final class ConvertToScreen extends net.sf.bt747.j4me.app.screens.BT747Di
         deleteAll();
         previous.show();
         super.declineNotify();
+    }
+
+    // TODO: to generalise
+    private void selectBaseFile() {
+        DeviceScreen d;
+        d = new PathSelectionScreen("Input file", this, c.getModel()
+                .getStringOpt(AppModel.LOGFILEPATH), false) {
+            protected void notifyPathSelected(final String path) {
+                c.setStringOpt(AppModel.LOGFILERELPATH, gps.convert.FileUtil
+                        .getRelativePath(c.getModel().getStringOpt(
+                                AppModel.OUTPUTDIRPATH), path, '/'));
+                c.setPaths();
+                tbBinFile.setString(c.getModel().getStringOpt(
+                        AppModel.LOGFILERELPATH));
+            }
+        };
+        d.show();
     }
 
     private int getSelectedLogType() {
