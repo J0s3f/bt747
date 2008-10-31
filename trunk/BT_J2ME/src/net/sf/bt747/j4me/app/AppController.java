@@ -19,6 +19,7 @@ import net.sf.bt747.j4me.app.screens.FileManager;
 
 import org.j4me.logging.Log;
 
+import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.sys.File;
 import bt747.sys.Settings;
@@ -32,7 +33,7 @@ public class AppController extends Controller {
         super.setModel(m);
         appInit();
         super.init();
-        Log.info("Basedir set to:" + m.getBaseDirPath());
+        Log.info("Basedir set to:" + m.getStringOpt(AppModel.OUTPUTDIRPATH));
 
     }
 
@@ -134,6 +135,12 @@ public class AppController extends Controller {
         }
     }
 
+    public final void setPaths() {
+        setStringOpt(AppModel.LOGFILEPATH,
+                m.getStringOpt(AppModel.OUTPUTDIRPATH)+
+                File.separatorStr+ m.getStringOpt(AppModel.LOGFILERELPATH));
+    }
+    
     private void resetSettings() {
         try {
             FileManager fm = new FileManager();
@@ -147,16 +154,18 @@ public class AppController extends Controller {
             }
             fm.close();
             // Log.info("Setting basedir set to:" + dir);
-            setBaseDirPath(dir);
+            setStringOpt(AppModel.OUTPUTDIRPATH, dir);
         } catch (Exception e) {
             Log.debug("Problem finding root", e);
             // TODO: handle exception
         }
         setChunkSize(500);
         setLogRequestAhead(4); // For trial, small size for data.
-        Log.info("Reset basedir set to:" + m.getBaseDirPath());
+        Log.info("Reset basedir set to:" + m.getStringOpt(AppModel.OUTPUTDIRPATH));
         // Input is "/BT747/BT747_sample.bin"
-        setLogFileRelPath("BT747_sample.bin");
+        setStringOpt(AppModel.LOGFILERELPATH, "BT747_sample.bin");
+        setPaths();
+
         // Output is "/BT747/GPSDATA*"
         setOutputFileRelPath("GPSDATA");
         setDebug(true);
@@ -273,7 +282,7 @@ public class AppController extends Controller {
         } else {
             if (!consoleIsOpen) {
                 try {
-                    String fn = "file://" + m.getBaseDirPath()
+                    String fn = "file://" + m.getStringOpt(AppModel.OUTPUTDIRPATH)
                             + File.separatorStr + "BT747Console.log";
                     FileConnection fc;
                     try {

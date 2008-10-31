@@ -17,6 +17,7 @@ package net.sf.bt747.j4me.app.screens;
 import java.util.Enumeration;
 
 
+import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Menu;
 import org.j4me.ui.MenuItem;
@@ -40,6 +41,14 @@ public class PathSelectionScreen extends Menu {
         fileUsage = new FileManager();
         currentPath = path;
         isGetDir = dir;
+        if(!isGetDir) {
+            if (currentPath.endsWith("/")) {
+                // Selection done
+                currentPath = currentPath.substring(0,currentPath.length()-1);
+            } else {
+                currentPath = currentPath.substring(0,currentPath.lastIndexOf('/'));
+            }
+        }
     }
 
     private String currentPath;
@@ -185,13 +194,15 @@ public class PathSelectionScreen extends Menu {
     private void pathSelected() {
         MenuOption s = (MenuOption) get(getSelected());
         String p = s.getLabel();
+        Log.debug("pathSelected0");
         if (isGetDir && p.endsWith("/")) {
             // Selection done
             currentPath += "/" + p.substring(1, p.length() - 1);
-            super.acceptNotify();
+            //super.acceptNotify();
         } else if (!isGetDir && !p.startsWith("[") && !p.endsWith("/")) {
             // Valid path
-            super.acceptNotify();
+            currentPath += "/" + p;
+            //super.acceptNotify();
         }
         notifyPathSelected(currentPath);
         previous.show();
