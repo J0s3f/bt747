@@ -466,6 +466,7 @@ public final class J2SEAppController extends Controller {
 
     public void setRootFrame(final Frame f) {
         rootFrame = f;
+        rootFrame.setIconImage(appIcon);
     }
 
     private JDialog mbEraseDialog;
