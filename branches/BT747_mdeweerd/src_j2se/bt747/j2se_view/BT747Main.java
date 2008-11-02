@@ -278,6 +278,10 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         updateConnected(m.isConnected());
+        
+        cbAddTrackPointComment.setSelected(m
+                .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
+        cbAddTrackPointName.setSelected(m.getBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME));
     }
 
     private final void updateSerialSpeed() {
@@ -1270,6 +1274,9 @@ public class BT747Main extends javax.swing.JFrame implements
         cbFileElevation = new javax.swing.JCheckBox();
         cbFileAzimuth = new javax.swing.JCheckBox();
         cbFileSNR = new javax.swing.JCheckBox();
+        pnTrackPoints = new javax.swing.JPanel();
+        cbAddTrackPointComment = new javax.swing.JCheckBox();
+        cbAddTrackPointName = new javax.swing.JCheckBox();
         LogFiltersPanel = new javax.swing.JPanel();
         pnTrackpoint = new javax.swing.JPanel();
         pnTrkFixType = new javax.swing.JPanel();
@@ -1540,7 +1547,6 @@ public class BT747Main extends javax.swing.JFrame implements
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         setTitle(bundle.getString("BT747Main.title")); // NOI18N
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setIconImage(c.getIcon16());
         setName("BT747Frame"); // NOI18N
 
         DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
@@ -2519,6 +2525,38 @@ public class BT747Main extends javax.swing.JFrame implements
             .add(pnFileSatInfo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
+        pnTrackPoints.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnTrackPoints.border.title"))); // NOI18N
+
+        cbAddTrackPointComment.setText(bundle.getString("BT747Main.cbAddTrackPointComment.text")); // NOI18N
+        cbAddTrackPointComment.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbAddTrackPointCommentItemStateChanged(evt);
+            }
+        });
+
+        cbAddTrackPointName.setText(bundle.getString("BT747Main.cbAddTrackPointName.text")); // NOI18N
+        cbAddTrackPointName.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbAddTrackPointNameItemStateChanged(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnTrackPointsLayout = new org.jdesktop.layout.GroupLayout(pnTrackPoints);
+        pnTrackPoints.setLayout(pnTrackPointsLayout);
+        pnTrackPointsLayout.setHorizontalGroup(
+            pnTrackPointsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnTrackPointsLayout.createSequentialGroup()
+                .add(cbAddTrackPointComment)
+                .add(18, 18, 18)
+                .add(cbAddTrackPointName))
+        );
+        pnTrackPointsLayout.setVerticalGroup(
+            pnTrackPointsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnTrackPointsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(cbAddTrackPointComment)
+                .add(cbAddTrackPointName))
+        );
+
         org.jdesktop.layout.GroupLayout pnFileOutputFieldInnerLayout = new org.jdesktop.layout.GroupLayout(pnFileOutputFieldInner);
         pnFileOutputFieldInner.setLayout(pnFileOutputFieldInnerLayout);
         pnFileOutputFieldInnerLayout.setHorizontalGroup(
@@ -2531,17 +2569,22 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(pnFileOutputFieldInnerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(pnFileReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jPanel20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+            .add(pnTrackPoints, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
         pnFileOutputFieldInnerLayout.setVerticalGroup(
             pnFileOutputFieldInnerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnFileOutputFieldInnerLayout.createSequentialGroup()
-                .add(pnFileTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(pnFileOutputFieldInnerLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnFileOutputFieldInnerLayout.createSequentialGroup()
+                        .add(pnFileTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(pnFilePosition, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(pnFileOutputFieldInnerLayout.createSequentialGroup()
+                        .add(jPanel20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(1, 1, 1)
+                        .add(pnFileReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnFilePosition, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(pnFileOutputFieldInnerLayout.createSequentialGroup()
-                .add(jPanel20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(1, 1, 1)
-                .add(pnFileReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnTrackPoints, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
         org.jdesktop.layout.GroupLayout pnFileOutputFieldsLayout = new org.jdesktop.layout.GroupLayout(pnFileOutputFields);
@@ -2566,8 +2609,7 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(pnSeparation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(pnVarious, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(170, Short.MAX_VALUE))
+                .add(pnFileOutputFields, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
         FileSettingsPanelLayout.setVerticalGroup(
             FileSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -2882,7 +2924,7 @@ public class BT747Main extends javax.swing.JFrame implements
         );
         pnTrackpointLayout.setVerticalGroup(
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnTrkFixType, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+            .add(pnTrkFixType, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .add(pnTrkLogReason, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -3427,7 +3469,7 @@ public class BT747Main extends javax.swing.JFrame implements
         pnWaypointLayout.setVerticalGroup(
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         org.jdesktop.layout.GroupLayout LogFiltersPanelLayout = new org.jdesktop.layout.GroupLayout(LogFiltersPanel);
@@ -4911,6 +4953,15 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
 // TODO add your handling code here:
 }//GEN-LAST:event_cbSerialSpeedFocusLost
 
+private void cbAddTrackPointCommentItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAddTrackPointCommentItemStateChanged
+    c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT,cbAddTrackPointComment.isSelected());
+
+}//GEN-LAST:event_cbAddTrackPointCommentItemStateChanged
+
+private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbAddTrackPointNameItemStateChanged
+    c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME,cbAddTrackPointName.isSelected());
+}//GEN-LAST:event_cbAddTrackPointNameItemStateChanged
+
     private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_DeviceSettingsPanelFocusGained
         c.reqLogOverwrite();
         c.reqLogReasonStatus();
@@ -5997,6 +6048,8 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JButton btSetNMEAOutputDefaults;
     private javax.swing.JButton btWarmStart;
     private javax.swing.JButton btWorkingDirectory;
+    private javax.swing.JCheckBox cbAddTrackPointName;
+    private javax.swing.JCheckBox cbAddTrackPointComment;
     private javax.swing.JCheckBox cbAdvancedActive;
     private javax.swing.JCheckBox cbAzimuth;
     private javax.swing.JCheckBox cbDAGE;
@@ -6270,6 +6323,7 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     private javax.swing.JPanel pnSatInfo;
     private javax.swing.JPanel pnSeparation;
     private javax.swing.JPanel pnTime;
+    private javax.swing.JPanel pnTrackPoints;
     private javax.swing.JPanel pnTrackpoint;
     private javax.swing.JPanel pnTrkFixType;
     private javax.swing.JPanel pnTrkLogReason;
