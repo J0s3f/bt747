@@ -1,3 +1,9 @@
+Version 1.60.12
+* Changed KML Format so that Google Maps can read it (despite its bugs...).
+* Added Track Point Comment and Track Point Name options.  When both disabled,
+  Track Points will not be shown individually in the KML output format.
+  That makes the file much smaller.
+
 Version 1.60.11
 * All the popup messages are in nice boxes now.
 

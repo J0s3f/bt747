@@ -9,8 +9,8 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package gps.log.out;
 
@@ -28,7 +28,8 @@ import bt747.sys.Convert;
  * @author Herbert Geus (Waypoint code&Track code)
  */
 public final class GPSKMLFile extends GPSFile {
-    private final StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
+    private final StringBuffer rec = new StringBuffer(1024); // reused
+                                                                // stringbuffer
 
     private boolean isWayType;
     private boolean isTrackType;
@@ -59,7 +60,9 @@ public final class GPSKMLFile extends GPSFile {
         isPathType = false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.out.GPSFile#nextPass()
      */
     public final boolean nextPass() {
@@ -76,10 +79,12 @@ public final class GPSKMLFile extends GPSFile {
             // }
             if (isWayType) {
                 isWayType = false;
+                isPathType = true;
+            } else if (isPathType) {
                 isTrackType = true;
+                isPathType = false;
             } else if (isTrackType) {
                 isTrackType = false;
-                isPathType = true;
             }
             currentFilter = GPSFilter.TRKPT;
             // if(!m_multipleFiles) {
@@ -90,35 +95,26 @@ public final class GPSKMLFile extends GPSFile {
             return false;
         }
     }
-    
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.out.GPSFile#writeFileHeader(java.lang.String)
      */
     public final void writeFileHeader(final String name) {
         StringBuffer header = new StringBuffer(2048);
         trackName = name;
-        header.append(
-              "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
-            //+ "<kml xmlns=\"http://schemas.opengis.net/kml/2.2.0\""
-            // opengis was not understood by google maps
-            + "<kml xmlns=\"http://earth.google.com/kml/2.2\""
-            + " >\r\n"
-            + "<Document"
-            + " xmlns:atom=\"http://www.w3.org/2005/Atom\" >\r\n"
-            + "<atom:generator uri=\"http://sf.net/projects/bt747\" "
-            + "version=\""
-            + Version.VERSION_NUMBER
-            + "\""
-            + ">"
-            + "BT747"
-            + "</atom:generator>\r\n"
-            + "<name>"
-            + name
-            + "</name>\r\n"
-            + "  <open>1</open>\r\n"
-            );
-        
+        header.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+                // + "<kml xmlns=\"http://schemas.opengis.net/kml/2.2.0\""
+                // opengis was not understood by google maps
+                + "<kml xmlns=\"http://earth.google.com/kml/2.2\"" + " >\r\n"
+                + "<Document"
+                + " xmlns:atom=\"http://www.w3.org/2005/Atom\" >\r\n"
+                + "<atom:generator uri=\"http://sf.net/projects/bt747\" "
+                + "version=\"" + Version.VERSION_NUMBER + "\"" + ">" + "BT747"
+                + "</atom:generator>\r\n" + "<name>" + name + "</name>\r\n"
+                + "  <open>1</open>\r\n");
+
         WayPointStyleSet iter;
         iter = CommonOut.wayPointStyles.iterator();
         while (iter.hasNext()) {
@@ -135,7 +131,6 @@ public final class GPSKMLFile extends GPSFile {
             }
         }
 
-
         iter = CommonOut.wayPointStyles.iterator();
         while (iter.hasNext()) {
             WayPointStyle style = iter.next();
@@ -143,25 +138,22 @@ public final class GPSKMLFile extends GPSFile {
             if (style.getKey().length() > 1) {
                 x = "X";
             }
-            header.append(
-                       "  <StyleMap id=\"Style" + x + style.getKey()
-                    + "\">\r\n"
-                    + "    <Pair>\r\n"
-                    + "      <key>normal</key>\r\n"
-                    + "      <styleUrl>#Style" + style.getKey() + "0</styleUrl>\r\n"
-                    + "    </Pair>\r\n"
-                    + "    <Pair>\r\n"
-                    + "      <key>highlight</key>\r\n"
-                    + "      <styleUrl>#Style" + style.getKey() + "1</styleUrl>\r\n"
-                    + "    </Pair>\r\n"
-                    + "  </StyleMap>\r\n"
-                    );
+            header.append("  <StyleMap id=\"Style" + x + style.getKey()
+                    + "\">\r\n" + "    <Pair>\r\n"
+                    + "      <key>normal</key>\r\n" + "      <styleUrl>#Style"
+                    + style.getKey() + "0</styleUrl>\r\n" + "    </Pair>\r\n"
+                    + "    <Pair>\r\n" + "      <key>highlight</key>\r\n"
+                    + "      <styleUrl>#Style" + style.getKey()
+                    + "1</styleUrl>\r\n" + "    </Pair>\r\n"
+                    + "  </StyleMap>\r\n");
         }
-        
+
         writeTxt(header.toString());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.out.GPSFile#writeDataHeader()
      */
     protected final void writeDataHeader() {
@@ -178,18 +170,19 @@ public final class GPSKMLFile extends GPSFile {
                     + "      <open>0</open>\r\n" + "\r\n";
         } else {
             String color;
-            if(goodTrackColor.length()==6) {
-                color = goodTrackColor.substring(4) + goodTrackColor.substring(2,4)
-                + goodTrackColor.substring(0,2);
+            if (goodTrackColor.length() == 6) {
+                color = goodTrackColor.substring(4)
+                        + goodTrackColor.substring(2, 4)
+                        + goodTrackColor.substring(0, 2);
             } else {
                 color = "FFFFFF";
             }
             header = "  <Folder>\r\n" + "  <name>My Tracks</name>\r\n"
-                    + "  <open>0</open>\r\n" + "  <Placemark>\r\n"
+                    + "  <open>0</open>\r\n"
                     + "    <name>Track-" + trackName + "</name>\r\n"
-                    + "    <Style>\r\n" + "      <LineStyle>\r\n"
-                    + "        <color>ff" + color + "</color>\r\n"
-                    + "        <width>3.0</width>\r\n"
+                    + "<Placemark>\r\n" + "    <Style>\r\n"
+                    + "      <LineStyle>\r\n" + "        <color>ff" + color
+                    + "</color>\r\n" + "        <width>3.0</width>\r\n"
                     + "      </LineStyle>\r\n" + "    </Style>\r\n"
                     + "    <LineString>\r\n" + "    <extrude>1</extrude>\r\n"
                     + "    <tessellate>1</tessellate>\r\n"
@@ -199,7 +192,9 @@ public final class GPSKMLFile extends GPSFile {
         writeTxt(header);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.out.GPSFile#writeDataFooter()
      */
     protected final void writeDataFooter() {
@@ -210,7 +205,8 @@ public final class GPSKMLFile extends GPSFile {
             footer = "    </Folder>\r\n" + "  </Folder>\r\n" + "\r\n";
         } else {
             footer = "      </coordinates>\r\n" + "     </LineString>\r\n"
-                    + "    </Placemark>\r\n" + "  </Folder>\r\n";
+                    + "    </Placemark>\r\n"
+                    + "  </Folder>\r\n";
         }
         writeTxt(footer);
     }
@@ -226,7 +222,8 @@ public final class GPSKMLFile extends GPSFile {
         if (activeFields != null) {
             rec.setLength(0);
             if (ptFilters[currentFilter].doFilter(s)) {
-                if (isWayType || isTrackType) {
+                if (isWayType
+                        || (isTrackType && (isIncludeTrkName || isTrkComment))) {
                     rec.append("<Placemark>\r\n");
                     if (!isTrackType || isIncludeTrkName) {
                         rec.append("<name>");
@@ -248,7 +245,7 @@ public final class GPSKMLFile extends GPSFile {
                         rec.append("<visibility>0</visibility>\r\n");
                     }
 
-                    if (isWayType || !isTrkComment) {
+                    if (isWayType || isTrkComment) {
                         rec.append("<description>");
                         rec.append("<![CDATA[");
                         CommonOut.getHtml(rec, s, activeFields,
