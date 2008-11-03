@@ -292,6 +292,9 @@ public final class CommonOut {
             { "2000", "Bridge", "http://maps.google.com/mapfiles/kml/shapes/water.png" },
             { "4000", "View", "http://maps.google.com/mapfiles/kml/shapes/flag.png" },
             { "8000", "Other", "http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png" },
+            // TODO: change next values.
+            { "0300", "Voice", "http://maps.google.com/mapfiles/kml/paddle/V.png" },
+            { "0500", "Way Point", "http://maps.google.com/mapfiles/kml/pal4/icon29.png" },
     };
     
     public final static WayPointStyleSet wayPointStyles = new WayPointStyleSet(IconStyles); 

@@ -48,6 +48,9 @@ public final class CSVLogConvert implements GPSLogConvert {
      */
     private boolean isConvertWGS84ToMSL = false;
 
+    private static final int FMT_VOX = -12;
+    private static final int FMT_LONEW = -11;
+    private static final int FMT_LATNS = -10;
     private static final int C_LOGTIME = -9;
     private static final int C_LOGDIST = -8;
     private static final int C_LOGSPD = -7;
@@ -195,7 +198,8 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     if (string.equals("INDEX")) {
                                         records[i] = FMT_REC_NBR;
 
-                                    } else if (string.equals("RCR")) {
+                                    } else if (string.equals("RCR")
+                                            ||string.equals("TAG")) {
                                         records[i] = BT747Constants.FMT_RCR_IDX;
                                         activeFileFields |= (1 << BT747Constants.FMT_RCR_IDX);
                                     } else if (string.equals("TIME")) {
@@ -271,12 +275,20 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         if (string.indexOf("-SNR", 12) != -1) {
                                             activeFileFields |= (1 << BT747Constants.FMT_SNR_IDX);
                                         }
+                                    } else if (string.equals("LATITUDE N/S")) {
+                                        records[i] = FMT_LATNS;
+                                        activeFileFields |= (1 << BT747Constants.FMT_LATITUDE_IDX);
+                                    } else if (string.equals("LONGITUDE E/W")) {
+                                        records[i] = FMT_LONEW;
+                                        activeFileFields |= (1 << BT747Constants.FMT_LONGITUDE_IDX);
                                     } else if (string.startsWith("LOGTIME")) {
                                         records[i] = C_LOGTIME;
                                     } else if (string.startsWith("LOGDIST")) {
                                         records[i] = C_LOGDIST;
                                     } else if (string.startsWith("LOGSPD")) {
                                         records[i] = C_LOGSPD;
+                                    } else if (string.equals("VOX")) {
+                                        records[i] = FMT_VOX;
                                     } else {
                                         records[i] = -100;// FMT_UNKNOWN_FIELD;
                                     }
@@ -308,7 +320,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                 while (fields.hasMoreTokens()
                                         && (fieldNbr < MAX_RECORDS)
                                         && (records[fieldNbr] != FMT_NO_FIELD)) {
-                                    String field = fields.nextToken();
+                                    String field = fields.nextToken().trim();
                                     if (field.length() != 0) {
                                         switch (records[fieldNbr]) {
                                         case C_LOGTIME:
@@ -349,47 +361,86 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             recCount = gpsRec.recCount;
                                             break;
                                         case FMT_DATE: {
-                                            byte format;
-                                            curLogFormat |= (1 << BT747Constants.FMT_UTC_IDX);
-                                            if (field.indexOf('/') == 4) {
-                                                format = Settings.DATE_YMD;
-                                            } else {
-                                                format = Settings.DATE_DMY;
-                                            }
+                                            if (field.length() == 8) {
+                                                byte format;
+                                                curLogFormat |= (1 << BT747Constants.FMT_UTC_IDX);
+                                                if (field.indexOf('/') == 4) {
+                                                    format = Settings.DATE_YMD;
+                                                } else {
+                                                    format = Settings.DATE_DMY;
+                                                }
 
-                                            int date = (Interface.getDateInstance(field, format))
-                                                    .dateToUTCepoch1970();
-                                            gpsRec.utc += date;
+                                                int date = (Interface
+                                                        .getDateInstance(field,
+                                                                format))
+                                                        .dateToUTCepoch1970();
+                                                gpsRec.utc += date;
+                                            } else if (field.length() == 6) {
+                                                int day;
+                                                int month;
+                                                int year;
+                                                year = Convert.toInt(field
+                                                        .substring(0, 2)) + 2000;
+                                                month = Convert.toInt(field
+                                                        .substring(2, 4));
+                                                day = Convert.toInt(field
+                                                        .substring(4, 6));
+                                                gpsRec.utc += Interface
+                                                        .getDateInstance(day,
+                                                                month, year)
+                                                        .dateToUTCepoch1970();
+                                                curLogFormat |= (1 << BT747Constants.FMT_UTC_IDX);
+                                            }
                                         }
                                             break;
                                         case FMT_TIME: {
-                                            // gpsRec.utc=;
-                                            int dotidx;
-                                            curLogFormat |= (1 << BT747Constants.FMT_UTC_IDX);
-                                            if ((dotidx = field.indexOf('.')) != -1) {
-                                                curLogFormat |= (1 << BT747Constants.FMT_MILLISECOND_IDX);
-                                                // TODO: check if idx out of
-                                                // range.
-                                                gpsRec.milisecond = Convert
-                                                        .toInt(field
-                                                                .substring(dotidx + 1));
-                                                field = field.substring(0,
-                                                        dotidx);
+                                            if (field.length() == 6) {
+                                                int secondes;
+                                                int minutes;
+                                                int hours;
+                                                hours = Convert.toInt(field
+                                                        .substring(0, 2));
+                                                minutes = Convert.toInt(field
+                                                        .substring(2, 4));
+                                                secondes = Convert.toInt(field
+                                                        .substring(4, 6));
+                                                gpsRec.utc += secondes
+                                                        + minutes * 60 + 3600
+                                                        * hours;
+                                                curLogFormat |= (1 << BT747Constants.FMT_UTC_IDX);
+                                            } else {
+                                                // gpsRec.utc=;
+                                                int dotidx;
+                                                curLogFormat |= (1 << BT747Constants.FMT_UTC_IDX);
+                                                if ((dotidx = field
+                                                        .indexOf('.')) != -1) {
+                                                    curLogFormat |= (1 << BT747Constants.FMT_MILLISECOND_IDX);
+                                                    // TODO: check if idx out of
+                                                    // range.
+                                                    gpsRec.milisecond = Convert
+                                                            .toInt(field
+                                                                    .substring(dotidx + 1));
+                                                    field = field.substring(0,
+                                                            dotidx);
+                                                }
+                                                BT747StringTokenizer tfields = Interface
+                                                        .getStringTokenizerInstance(
+                                                                field, ':');
+                                                if (tfields.countTokens() == 3) {
+                                                    gpsRec.utc += Convert
+                                                            .toInt(tfields
+                                                                    .nextToken())
+                                                            * 3600
+                                                            + Convert
+                                                                    .toInt(tfields
+                                                                            .nextToken())
+                                                            * 60
+                                                            + Convert
+                                                                    .toInt(tfields
+                                                                            .nextToken());
+                                                }
+                                                gpsRec.utc += timeOffsetSeconds;
                                             }
-                                            BT747StringTokenizer tfields = Interface.getStringTokenizerInstance(
-                                                    field, ':');
-                                            if (tfields.countTokens() == 3) {
-                                                gpsRec.utc += Convert
-                                                        .toInt(tfields
-                                                                .nextToken())
-                                                        * 3600
-                                                        + Convert.toInt(tfields
-                                                                .nextToken())
-                                                        * 60
-                                                        + Convert.toInt(tfields
-                                                                .nextToken());
-                                            }
-                                            gpsRec.utc += timeOffsetSeconds;
                                         }
                                             break;
                                         case BT747Constants.FMT_VALID_IDX:
@@ -420,6 +471,34 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             }
                                             curLogFormat |= (1 << BT747Constants.FMT_VALID_IDX);
                                             break;
+                                        case FMT_LATNS: {
+                                            String latns = field.substring(0,
+                                                    field.length() - 1);
+                                            char or = field.charAt(latns
+                                                    .length());
+                                            gpsRec.latitude = Convert
+                                                    .toDouble(latns);
+                                            if (((or == 'N') && (gpsRec.latitude < 0))
+                                                    || (or == 'S' && (gpsRec.latitude > 0))) {
+                                                gpsRec.latitude = -gpsRec.latitude;
+                                            }
+                                            curLogFormat |= (1 << BT747Constants.FMT_LATITUDE_IDX);
+                                        }
+                                            break;
+                                        case FMT_LONEW: {
+                                            String lonns = field.substring(0,
+                                                    field.length() - 1);
+                                            char or = field.charAt(lonns
+                                                    .length());
+                                            gpsRec.longitude = Convert
+                                                    .toDouble(lonns);
+                                            if (((or == 'E') && (gpsRec.longitude < 0))
+                                                    || (or == 'W' && (gpsRec.longitude > 0))) {
+                                                gpsRec.longitude = -gpsRec.longitude;
+                                            }
+                                            curLogFormat |= (1 << BT747Constants.FMT_LONGITUDE_IDX);
+                                        }
+                                            break;
                                         case BT747Constants.FMT_LATITUDE_IDX:
                                             gpsRec.latitude = Convert
                                                     .toDouble(field);
@@ -432,7 +511,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case BT747Constants.FMT_HEIGHT_IDX: {
                                             BT747StringTokenizer n = Interface.getStringTokenizerInstance(
-                                                    field.trim(), ' ');
+                                                    field, ' ');
                                             gpsRec.height = Convert.toFloat(n
                                                     .nextToken());
                                         }
@@ -440,7 +519,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case FMT_HEIGHT_FT_IDX: {
                                             BT747StringTokenizer n = Interface.getStringTokenizerInstance(
-                                                    field.trim(), ' ');
+                                                    field, ' ');
                                             gpsRec.height = Convert.toFloat(n
                                                     .nextToken()) / 3.28083989501312F;
                                         }
@@ -449,7 +528,7 @@ public final class CSVLogConvert implements GPSLogConvert {
 
                                         case BT747Constants.FMT_SPEED_IDX: {
                                             BT747StringTokenizer n = Interface.getStringTokenizerInstance(
-                                                    field.trim(), ' ');
+                                                    field, ' ');
                                             gpsRec.speed = Convert.toFloat(n
                                                     .nextToken());
                                         }
@@ -457,7 +536,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case FMT_SPEED_MPH_IDX: {
                                             BT747StringTokenizer n = Interface.getStringTokenizerInstance(
-                                                    field.trim(), ' ');
+                                                    field, ' ');
                                             gpsRec.speed = Convert.toFloat(n
                                                     .nextToken()) / 0.621371192237334F;
                                         }
@@ -567,7 +646,13 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             } // for
                                         }
                                             break;
-
+                                        case FMT_VOX: {
+                                            if(field.length()!=0) {
+                                                gpsRec.voxStr = field;
+                                                // TODO: identify as VOX field ??
+                                            }
+                                        }
+                                        break;
                                         case BT747Constants.FMT_RCR_IDX: {
                                             gpsRec.rcr = 0;
                                             if (field.charAt(0) != 'X') {
@@ -583,6 +668,14 @@ public final class CSVLogConvert implements GPSLogConvert {
                                                 }
                                                 if (field.indexOf('D', 0) != -1) {
                                                     gpsRec.rcr |= BT747Constants.RCR_DISTANCE_MASK;
+                                                }
+                                                if (field.indexOf('V', 0) != -1) {
+                                                    // Voice record on VGPS-900
+                                                    gpsRec.rcr = 0x0300; // TODO: change in better value
+                                                }
+                                                if (field.indexOf('C', 0) != -1) {
+                                                    // Way Point on VGPS-900
+                                                    gpsRec.rcr = 0x0500; // TODO: change in better value
                                                 }
                                                 curLogFormat |= (1 << BT747Constants.FMT_RCR_IDX);
                                             } else {
@@ -617,7 +710,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case BT747Constants.FMT_DISTANCE_IDX: {
                                             BT747StringTokenizer n = Interface.getStringTokenizerInstance(
-                                                    field.trim(), ' ');
+                                                    field, ' ');
                                             gpsRec.distance = Convert
                                                     .toDouble(n.nextToken());
                                         }
@@ -625,7 +718,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             break;
                                         case FMT_DISTANCE_FT_IDX: {
                                             BT747StringTokenizer n = Interface.getStringTokenizerInstance(
-                                                    field.trim(), ' ');
+                                                    field, ' ');
                                             gpsRec.distance = Convert
                                                     .toDouble(n.nextToken()) / 3.28083989501312;
                                         }
