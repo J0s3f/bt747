@@ -48,6 +48,7 @@ public final class CSVLogConvert implements GPSLogConvert {
      */
     private boolean isConvertWGS84ToMSL = false;
 
+    private static final int FMT_FIXMODE = -13; // TODO: currently ignored
     private static final int FMT_VOX = -12;
     private static final int FMT_LONEW = -11;
     private static final int FMT_LATNS = -10;
@@ -208,6 +209,9 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     } else if (string.equals("DATE")) {
                                         records[i] = FMT_DATE;
                                         activeFileFields |= (1 << BT747Constants.FMT_UTC_IDX);
+                                    } else if (string.equals("FIX MODE")) {
+                                        records[i] = FMT_FIXMODE;
+                                        activeFileFields |= (1 << BT747Constants.FMT_VALID_IDX);
                                     } else if (string.equals("VALID")) {
                                         records[i] = BT747Constants.FMT_VALID_IDX;
                                         activeFileFields |= (1 << BT747Constants.FMT_VALID_IDX);
@@ -587,6 +591,9 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             }
                                         }
                                             // Need to handle ()
+                                            break;
+                                        case FMT_FIXMODE:
+                                            // TODO: handle '3D' and '2D' values ?
                                             break;
                                         case BT747Constants.FMT_MAX_SATS:
                                             break;
