@@ -377,6 +377,14 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.setGPSType(deviceType);
         }
 
+        if (options.has("trkptinfo")) {
+            c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, true);
+        }
+
+        if (options.has("trkptname")) {
+            c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, true);
+        }
+
         if (m.isConnected()) {
             // Connection is made.
             c.reqDeviceInfo();
