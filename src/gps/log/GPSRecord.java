@@ -17,7 +17,6 @@ package gps.log;
 import bt747.sys.Convert;
 
 import gps.BT747Constants;
-import gps.convert.Conv;
 
 /**
  * Structure to hold GPS data for one point
@@ -56,6 +55,8 @@ public class GPSRecord {
     public int logPeriod; // Programmed period between logged points
     public int logSpeed; // Programmed minimum speed
     public int logDistance; // Programmed distance between logged points
+    
+    public String voxStr;  // Voice recording reference.
 
     public GPSRecord() {
         utc = 0;
@@ -116,6 +117,9 @@ public class GPSRecord {
         this.logDistance = r.logDistance;
         this.logPeriod = r.logPeriod;
         this.logSpeed = r.logSpeed;
+        if(r.voxStr!=null) {
+            this.voxStr = r.voxStr;
+        }
     }
 
     public final GPSRecord cloneRecord() {
