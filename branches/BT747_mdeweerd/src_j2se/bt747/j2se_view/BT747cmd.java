@@ -9,8 +9,8 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 /*
  * To run:
@@ -36,7 +36,6 @@ import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
-import bt747.sys.File;
 import bt747.sys.Interface;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747FileName;
@@ -292,6 +291,8 @@ public class BT747cmd implements bt747.model.ModelListener {
         c.setIntOpt(Model.FILEFIELDFORMAT, 0xFFFFFFFF); // All fields
         c.setTrkSep(60);
         c.setColorInvalidTrack("0000FF");
+        c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, false);
+        c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, false);
 
         // Next line gets arguments not related to option
         options.nonOptionArguments();
@@ -752,6 +753,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts("device",
                         "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX).")
                         .withRequiredArg().describedAs("DEVICE");
+                accepts("trkptinfo", "Add record information for each trackpoint.");
+                accepts("trkptname", "Give each trackpoint a name (based on time)");
+
             }
         };
 

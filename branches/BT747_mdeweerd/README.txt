@@ -1,18 +1,74 @@
-This project is now stable..
+**************************************************************************
 
-Due to similarity this SW written with a iBlue 747 device should work with the following
-devices:
+ ######  #######  #####      #    #####
+  #    # #  #  #  #   #     ##    #   #
+  #    #    #         #     ##        #
+  #    #    #        #     # #       #
+  #####     #        #     # #       #
+  #    #    #       #     #  #      #
+  #    #    #       #     #####     #
+  #    #    #      #         #     #
+ ######    ###     #        ###    #
+                                        
+**************************************************************************
+BT747 is a Java program to have control over most MTK Based GPS devices.
+It should also be able to download and convert logs if the GPS device is a
+logger.
+**************************************************************************
+BT747 is open source, free SW.  I coded about 40000 lines for the PDA and
+Desktop version and an extra 7000 for the Mobile Phone version.
+With the accessory files, that is around 50000 lines.
+It runs on many systems which might seem logical because it is 'Java', but
+it is not!  The Java Platforms are: J2SE, J2ME and SuperWaba.
+The Systems are: Palm, WinCE (PocketPC), Java Phones, Windows, MacOSX, Linux.
+**************************************************************************
+You can also have a look at http://bt747.free.fr
+**************************************************************************
+
+**************************************************************************
+INSTALLATION
+**************************************************************************
+To run BT747 on your desktop system, the following generic steps are required.
+
+1. Install the Serial Port driver or setup the Bluetooth port.
+2. On MacOSX, Linux: change some access rights in the /var/lock directory.
+3. Launch the appropriate script for your system and for the program version:
+
+   Desktop Like Version:
+    - Windows: run_j2se.bat
+    - MacOSX : bt747_macosX_j2se.command
+    - Linux  : run_j2se.sh
+    
+   PDA Like Version:
+    - Windows: run_rxtx.bat
+    - MacOSX : bt747_maxosX.command
+    - Linux  : run_rxtx.sh
+
+ Step 3 can also be done directly from the web: http://bt747.free.fr
+
+If step 1 and step 2 are done, this should run out of the box.  If it does not,
+please contact the author.  The author has Windows XP, Palm and a Java
+Mobile Phone - so to debug the other systems, your help is really needed in
+case of trouble.
+    
+**************************************************************************
+To install BT747 on your PDA, please see further below.
+**************************************************************************
+To install BT747 on your Java Phone, download the BT_J2ME version.
+**************************************************************************
+If you have suggestions to improve this README, leave a message on the forum or
+a tracker at sourceforge: http://sf.net/projects/bt747,
+or http://bt747.free.fr .
+
+
+Here is a small list of devices BT747 is known to work with:
 - i-Blue 747
 - i-Blue 757
 - Qstarz BT-Q1000
 - i.Trek Z1
-
-It also works for the following devices that have a slightly different log format:
 - Holux GR-241;
 - Holux M-241.
 
-It can also be used to configure a other devices with the MTK chipset.
-The log capabilities of the SW will then be useless for you.
 
 Further in this readme are instructions for installing on:
 - Windows (reported working)
@@ -22,77 +78,15 @@ Further in this readme are instructions for installing on:
 - Mac OS  (reported working)
 - Debian  (over bluetooth, reported working)
 
-Instructions are a bit of a 'mess'.  Most of the time, the application will work
-with one of the startup scripts without any need for modification.
-Instructions were built during the early versions of this tool.
 
-If you have suggestions to improve this README, leave a message on the forum or
-a tracker at sourceforge: http://sf.net/projects/bt747.
+========= PDA INSTRUCTIONS =================
+========= PDA INSTRUCTIONS =================
+========= PDA INSTRUCTIONS =================
+========= PDA INSTRUCTIONS =================
 
-========= General (for pure rxtx/all systems) ===========
- Change the port prefix by adding the following option to the java invocation:
-     (the example is for ports like /dev/ttyUSB0)
-
-  -Dbt747_prefix="/dev/ttyUSB" 
-
-java -Dbt747_prefix="/dev/ttyUSB" waba.applet.Applet BT747
-  The port can be overridden entirely with the next option:
-
- -Dbt747_port="/dev/ttyUSB0"
-
-  Another (or extra way) of forcing the port is the next option,
-  one use apparently needed to do so to force the bluetooth port:
-  -Dgnu.io.rxtx.SerialPorts=/dev/rfcomm0
-
-
-It is also possible to set the path to the saved settings file (for the RXTX version):
-  -Dbt747_settings="/another/yourpath"
-=========================================
-
-========= WINDOWS INSTRUCTIONS =================
-There are two different methods to make it work on windows:
-a. Using RXTX directly
-b. Using WIN32COMM
-
-===============================================================
-============== Windows: Using RXTX directly ===================
-===============================================================
-== PROBABLY THE BEST FIRST TRY ON WINDOWS =====================
-===============================================================
-You need the full package or install rxtx yourself.
-
-Once unziped, click on the 'RUN_rxtx.bat' file.  That should
-work in most cases.
-===============================================================
-
-===============================================================
-============== Windows: Using WIN32COMM ===================
-===============================================================
-You can also use WIN32COMM for java on windows.
-In that case, you may need to install Java 1.4.X too.
-
-Find some instructions (for another java version) here:
-http://www.cs.uml.edu/~fredm/courses/91.305-fall04/javasetup.shtml
-
-Basically, download this zip:
-http://www.cs.uml.edu/~fredm/courses/91.305/software/JDK118-javaxcomm.zip
-
-And install the files under java1.4.X insteady of the proposed java version.
-
-Sun still has the files here:
-http://javashoplm.sun.com/ECom/docs/Welcome.jsp?StoreId=22&PartDetailId=7235-javacomm-2.0-spec-oth-JSpec&SiteId=JSC&TransactionId=noreg 
-=========================================================
-
-
-
-It is hosted in http://sourceforge.net/projects/bt747.  That is where you can contact the author, ... .
-
-You can find binaries in the 'dist' directory:
-  - Palm  (BT747.prc, BT747.pdb)
-  - WinCE (Untested: BT747_Install.BAT)
-  - BT747.jar       (version using win32comm)
-  - BT747_rxtx.jar  (version using rxtx)
-  
+Binaries are inside the 'dist' directory'
+  - Palm  - Install BT747.prc, BT747.pdb  as usual.
+  - WinCE - select the appropriate CAB file and install on your PDA.
 
 You can find sources in the 'src' directory.
 
@@ -102,59 +96,34 @@ You will need to install/unzip SuperWaba on the platform you want to run BT747 o
 
 You can find SuperWaba installation files at http://www.superwaba.org/install
 
-===============================================================
-=============== WINDOWS (again) =====================
-===============================================================
-=> these instruction are left here in case the simpler ones do not work.
-=> If you do need these, the best thing is to go to the project site and leave a note in a tracker or the help forum.
-
-To run the BT747.jar, you need to install the "win32comm" driver or "rxtx" and use java 1.4.X.
-
-On windows, I launch the BT747.jar like this:
-
--------------- start of example ----------------
-set PATH=c:\j2sdk1.4.2_14\bin;%PATH%
-set JAVA_HOME=c:\j2sdk1.4.2_14
-set CLASSPATH=c:\pathtowin32comm\win32comm.jar;c:\pathtowin32comm\build\BT747.jar;.;%CLASSPATH%;;c:\superwabasdk\lib\superwaba.jar
-java waba.applet.Applet BT747
----------------- end of example ----------------
-
-You can also try to run the 'run_ex.bat' command script.
-
-=========== Palm installation ================
-1. Install superwaba (http://www.superwaba.org/install
-2. Install the BT747.prc and BT747.pdb file on your device.
-
-
 =========== Mac installation ==================
-A user mentionned his successful experience in the project forum:
-https://sourceforge.net/forum/message.php?msg_id=4571837
+1.
+You can get the drivers from SiLabs:
+  http://www.silabs.com
+Here is a direct link to the 'CP210x USB to UART Bridge Virtual COM Port (VCP)'
+drivers :
+  https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx
 
-Basically, you need a '/var/lock' directory, install the driver and a good script.
-All is in the forum.
+2.
+Then, you need to create a lock-file directory, and make it world-writable.
 
-A sample script for MacOS is in the distribution (bt747_macosX.command),
-and there is also the above link to the forum.
-By default, the program should connect to the USB port, but you can have it connect
+Open a shell, and type: 
+  sudo mkdir /var/lock 
+  sudo chmod 777 /var/lock 
+ 
+Taken from: https://sourceforge.net/forum/message.php?msg_id=4571837
+
+3.
+Launch
+   bt747_macosX_j2se.command
+or
+   bt747_maxosX.command
+     
+Ay default, the program should connect to the USB port, but you can have it connect
 to the bluetooth port if you set the port to '/dev/tty.iBT-GPS-SPPslave-1' if you
 specify the following parameter to Java:
 
 -Dbt747_port="/dev/tty.iBT-GPS-SPPslave-1"
-
-To connect to a Holux M-241 device using bluetooth, you can do this (information from Richard Akerman):
-On MacOS, the known port for a Holux M-241 device is to be set like this (case sensitive): 
-	-Dbt747_port="/dev/tty.HOLUX_M-241-SPPSlave-1" .
-
-You can also set it like this:
-	-Dbt747_prefix="/dev/tty.HOLUX_M-241-SPPSlave-" .
-and select port one in the program interface.
-
-
-As you can see, the device name depends on the device type, so it should
-not be to difficult to find the sorrect path for your device.
-
-To connect over usb, you can get the driver from
-http://www.silabs.com/tgwWebApp/public/web_content/products/Microcontrollers/USB/en/mcu_vcp.htm
 
 =========== PocketPC / PPC installation ================
 
@@ -180,16 +149,20 @@ I open the kml on windows -> opens google earth with expected points.
 
 
 ============= Linux ============================
-A specific JAR file has been created that should work specifically with RXTX (BT747_rxtx.jar).
-Use 'run_rxtx.sh'.  It has not been validated on Linux, but it might work and at least provides the template.
+1.
+You can get the drivers from SiLabs - they are usually already 'installed':
+  http://www.silabs.com
+Here is a direct link to the 'CP210x USB to UART Bridge Virtual COM Port (VCP)'
+drivers :
+  https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx
 
-On some systems (Ubuntu), you may need to install (or you could install) 'librxtx-java'.
+Use 'run_rxtx.sh' or 'run_j2se.sh'.
 
-In that case you should (can) change run_rxtx.sh:
+On 64 bit systems (i.e., java is 64 bit), you need to point to another driver.
+Currently the script must be updated:
+   RXTXLIBPATH=${RXTXPATH}/Linux/x86_64-unknown-linux-gnu
 
-RXTXPATH=/usr/lib
-RXTXLIBPATH=/usr/lib
-CLASSPATH=/usr/share/java/RXTXcomm.jar:lib/Waba_only.jar:dist/BT747_rxtx.jar:.:$CLASSPATH
+I hope to automate this in some future by checking `arch`
 
 ============= Debian over bluetooth ============
 I struggled a while with gnu.io.NoSuchPortException when opening the port, but finally got it to run. 
@@ -213,11 +186,51 @@ java -Dgnu.io.rxtx.SerialPorts=${SERPORT} -Dbt747_port=${SERPORT} -Djava.library
  
 I had to add the '-Dgnu.io.rxtx.SerialPorts=${SERPORT}' to get rid of the NoSuchPortException, but now it works. 
 
+=========================================================
+ADVANCED INSTRUCTIONS
+
+========= General (for pure rxtx/all systems) ===========
+ Change the port prefix by adding the following option to the java invocation:
+     (the example is for ports like /dev/ttyUSB0)
+
+  -Dbt747_prefix="/dev/ttyUSB" 
+
+java -Dbt747_prefix="/dev/ttyUSB" waba.applet.Applet BT747
+  The port can be overridden entirely with the next option:
+
+ -Dbt747_port="/dev/ttyUSB0"
+
+  Another (or extra way) of forcing the port is the next option,
+  one use apparently needed to do so to force the bluetooth port:
+  -Dgnu.io.rxtx.SerialPorts=/dev/rfcomm0
+
+
+It is also possible to set the path to the saved settings file (for the RXTX version):
+  -Dbt747_settings="/another/yourpath"
+=========================================
+
+
+============ Contributors ======================
+============ Contributors ======================
+============ Contributors ======================
+============ Contributors ======================
+============ Contributors ======================
+============ Contributors ======================
 ============ Contributors ======================
 Mario De Weerd (main coder)
+Dirk Haase (provided lots of feedback regarding the application and
+            documentation for the German community.
+            http://www.haased.de/gps_ge/bt747_start.html )
 Herbert Geus (save settings on WinCE, KML waypoints addition, feedback on application)
-Richard Akerman (information regarding connection on MacOS to a Holux M-241 device)
+Richard Akerman (information regarding connection on MacOSX to a Holux M-241 device)
 
+============ Other Information =================
+============ Other Information =================
+============ Other Information =================
+============ Other Information =================
+============ Other Information =================
+============ Other Information =================
+============ Other Information =================
 
 ============ GMAPS PolylineEncoder =============
 Taken from http://facstaff.unca.edu/mcmcclur/GoogleMaps/EncodePolyline/ and
@@ -264,3 +277,5 @@ java -cp './xerces/xerces.jar;./xerces/xercesSamples.jar;./CUP;./gnugetopt/java-
 
 But needed to do the conversion manually in order to specify 'Ascend.' to 14 instead of the default '10' (graphical interface of Fontizer, UFF Font).
 Loded the 'sazanami-gothic.ttf' font and the created 'myJap.profile' and moved the generated 'pdb' file to 'UFFJap_H.pdb'.
+
+=========================================================
