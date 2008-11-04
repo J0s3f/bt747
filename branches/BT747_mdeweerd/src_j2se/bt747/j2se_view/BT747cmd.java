@@ -290,6 +290,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         c.setOutputFileRelPath("GPSDATA");
         c.setIntOpt(Model.FILEFIELDFORMAT, 0xFFFFFFFF); // All fields
         c.setTrkSep(60);
+        c.setColorValidTrack("0000FF");
         c.setColorInvalidTrack("0000FF");
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, false);
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, false);
@@ -350,6 +351,17 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (options.has("UTC")) {
             Integer offset = (Integer) options.valueOf("UTC");
             c.setTimeOffsetHours(offset);
+        }
+        
+        if (options.has("color")) {
+            c.setColorValidTrack((String) options.valueOf("color"));
+            // Default: bad color is the same
+            c.setColorInvalidTrack((String) options.valueOf("color"));
+        }
+
+        if (options.has("badcolor")) {
+            // Overrides previous default setting in "color"
+            c.setColorInvalidTrack((String) options.valueOf("badcolor"));
         }
 
         // Options for which a connection is needed.
@@ -765,6 +777,13 @@ public class BT747cmd implements bt747.model.ModelListener {
                         .withRequiredArg().describedAs("DEVICE");
                 accepts("trkptinfo", "Add record information for each trackpoint.");
                 accepts("trkptname", "Give each trackpoint a name (based on time)");
+                accepts("color",
+                        "Color to use for tracks (HEX RGB value, ex 00FF00)")
+                        .withRequiredArg().describedAs("HEXCOLOR");
+                accepts("badcolor",
+                        "Color to use for 'bad part' in tracks  (HEX RGB value), ex 00FFFF")
+                        .withRequiredArg().describedAs("HEXCOLOR");
+                ;
 
             }
         };

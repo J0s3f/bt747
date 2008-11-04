@@ -1,6 +1,6 @@
 Version 1.60.17
 * Fixed formatting of Double numbers (Locale trouble, visible in KML output).
-* Added NMEA output to BT747cmd
+* Added NMEA output and color options to BT747cmd
 
 Version 1.60.16
 * Added support for VGPS-900.
