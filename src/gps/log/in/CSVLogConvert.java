@@ -9,8 +9,8 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package gps.log.in;
 
@@ -293,6 +293,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                         records[i] = C_LOGSPD;
                                     } else if (string.equals("VOX")) {
                                         records[i] = FMT_VOX;
+                                        activeFileFieldVox = true;
                                     } else {
                                         records[i] = -100;// FMT_UNKNOWN_FIELD;
                                     }
@@ -751,7 +752,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             gpsRec.latitude, gpsRec.longitude);
                                 }
                                 if (curLogFormat != logFormat) {
-                                    updateLogFormat(gpsFile, curLogFormat);
+                                    updateLogFormat(gpsFile, curLogFormat, gpsRec.voxStr!=null);
                                 }
                                 if (gpsRec.rcr == 0) {
                                     gpsRec.rcr = 1; // Suppose time (for filter)
@@ -803,9 +804,14 @@ public final class CSVLogConvert implements GPSLogConvert {
                             .needPassToFindFieldsActivatedInLog();
                     if (passToFindFieldsActivatedInLog) {
                         activeFileFields = 0;
+                        activeFileFieldVox = false;
                         error = parseFile(gpsFile);
-                        gpsFile.setActiveFileFields(CommonIn
-                                .getLogFormatRecord(activeFileFields));
+                        GPSRecord r = CommonIn
+                        .getLogFormatRecord(activeFileFields);
+                        if(activeFileFieldVox) {
+                            r.voxStr = "VOX";
+                        }
+                        gpsFile.setActiveFileFields(r);
                     }
                     passToFindFieldsActivatedInLog = false;
                     if (error == BT747Constants.NO_ERROR) {
@@ -827,10 +833,18 @@ public final class CSVLogConvert implements GPSLogConvert {
         return error;
     }
 
-    private void updateLogFormat(final GPSFile gpsFile, final int newLogFormat) {
+    private boolean activeFileFieldVox = false;
+    private void updateLogFormat(final GPSFile gpsFile, final int newLogFormat,
+            final boolean hasVox) {
         logFormat = newLogFormat;
         activeFileFields |= logFormat;
+        if (hasVox) {
+            activeFileFieldVox = true;
+        }
         if (!passToFindFieldsActivatedInLog) {
+            GPSRecord r;
+            r = CommonIn.getLogFormatRecord(logFormat);
+            r.voxStr = hasVox ? "" : null;
             gpsFile.writeLogFmtHeader(CommonIn.getLogFormatRecord(logFormat));
         }
     }

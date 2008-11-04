@@ -9,8 +9,8 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package gps.log.out;
 
@@ -54,10 +54,24 @@ public final class CommonOut {
             rec.append(rcr);
             WayPointStyle style;
             style = wayPointStyles.get(getRCRKey(rcr));
-            if(style!=null) {
-                rec.append(" <b>(");
-                rec.append(style.getDescription());
-                rec.append(")</b>");
+            if (s.voxStr != null) {
+                rec.append("<br />");
+                if (style != null) {
+                    rec.append(style.getDescription());
+                    rec.append(':');
+                    rec.append("<a href='");
+                    rec.append(s.voxStr);
+                    if(s.voxStr.startsWith("VOX")) {
+                        rec.append(".wav");
+                    }
+                    rec.append("'>Click here</a>");
+                }
+            } else {
+                if (style != null) {
+                    rec.append(" <b>(");
+                    rec.append(style.getDescription());
+                    rec.append(")</b>");
+                }
             }
         }
         // if(activeFields.utc!=0) {
