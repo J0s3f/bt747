@@ -13,6 +13,9 @@
 //********************************************************************
 package net.sf.bt747.j2se.system;
 
+import sun.security.action.GetLongAction;
+
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -110,14 +113,16 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
     }
 
     private static final int MAX_FRACTION = 16;
-    private static final NumberFormat[] nf = new NumberFormat[MAX_FRACTION + 1];
+    private static final DecimalFormat[] nf = new DecimalFormat[MAX_FRACTION + 1];
+    private static final String DECIMALSTRING = "########.0000000000000000";
 
     static {
+        Locale l = Locale.getDefault();
+        Locale.setDefault(Locale.US);
         for (int i = 0; i < nf.length; i++) {
-            nf[i] = NumberFormat.getNumberInstance(Locale.US);
-            nf[i].setMaximumFractionDigits(i);
-            nf[i].setMinimumFractionDigits(i);
+            nf[i] = new DecimalFormat(DECIMALSTRING.substring(0,9+i));
         }
+        Locale.setDefault(l);
     }
 
     public final synchronized String toString(final double p, final int i) {
