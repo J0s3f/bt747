@@ -654,6 +654,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                 int type = Model.NO_LOG_LOGTYPE;
                 if (typeStr.equals("GPX")) {
                     type = Model.GPX_LOGTYPE;
+                } else if (typeStr.equals("NMEA")) {
+                    type = Model.NMEA_LOGTYPE;
                 } else if (typeStr.equals("GMAP")) {
                     type = Model.GMAP_LOGTYPE;
                 } else if (typeStr.equals("CSV")) {
@@ -751,7 +753,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts("w", "Create a gpx file with waypoints");
                 accepts(
                         "outtype",
-                        "Create a gpx file of type GPX, GMAP, KML, CSV, PLT, TRK."
+                        "Create a gpx file of type NMEA, GPX, GMAP, KML, CSV, PLT, TRK."
                                 + "More than one format can be specified when separated with ','")
                         .withRequiredArg().describedAs("OUTPUTTYPE")
                         .withValuesSeparatedBy(',');
