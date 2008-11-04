@@ -1,3 +1,6 @@
+Version 1.60.16
+* Added support for VGPS-900.
+
 Version 1.60.13
 * Repaired icon functionality.
 
