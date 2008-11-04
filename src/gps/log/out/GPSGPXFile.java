@@ -359,11 +359,9 @@ public final class GPSGPXFile extends GPSFile {
                                 || hdopStr.length() != 0 || nsatStr.length() != 0)) {
                     rec.append("<cmt>");
                     rec.append("<![CDATA[");
-                    if (recordNbrInLogs) {
-                        rec.append("#" + s.recCount + ",");
-                    }
-                    rec.append(fixStr + "," + rcrStr + "," + hdopStr + ","
-                            + nsatStr);
+                    CommonOut.getHtml(rec, s, activeFields,
+                            selectedFileFields, t, recordNbrInLogs,
+                            imperial);
                     rec.append("]]>");
                     rec.append("</cmt>\r\n");
                 }
