@@ -114,7 +114,7 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
 
     private static final int MAX_FRACTION = 16;
     private static final DecimalFormat[] nf = new DecimalFormat[MAX_FRACTION + 1];
-    private static final String DECIMALSTRING = "########.0000000000000000";
+    private static final String DECIMALSTRING = "#######0.0000000000000000";
 
     static {
         Locale l = Locale.getDefault();
