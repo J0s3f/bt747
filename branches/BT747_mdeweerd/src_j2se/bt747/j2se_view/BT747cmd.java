@@ -342,7 +342,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             
             if(splitIdx>0) {
                 path = fullname.substring(0,splitIdx-1);
-                basename = fullname.substring(splitIdx+1);
+                basename = fullname.substring(splitIdx);
             } else {
                 path = "";
                 basename = fullname;
