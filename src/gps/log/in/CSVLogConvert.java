@@ -366,7 +366,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                             recCount = gpsRec.recCount;
                                             break;
                                         case FMT_DATE: {
-                                            if (field.length() == 8) {
+                                            if (field.length() == 10) {
                                                 byte format;
                                                 curLogFormat |= (1 << BT747Constants.FMT_UTC_IDX);
                                                 if (field.indexOf('/') == 4) {

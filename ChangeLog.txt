@@ -1,3 +1,7 @@
+Version 1.60.21
+* Fixed error in date interpretation in CSV input due introduced during
+  addition of VGPS-900 support.
+
 Version 1.60.20
 * Fixed raw log file text input field in J2SE.
 * KMZ output now buffered.
