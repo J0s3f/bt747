@@ -27,7 +27,7 @@ import bt747.sys.Convert;
  * @author Mario De Weerd
  * @author Herbert Geus (Waypoint code&Track code)
  */
-public final class GPSKMLFile extends GPSFile {
+public class GPSKMLFile extends GPSFile {
     private final StringBuffer rec = new StringBuffer(1024); // reused
                                                                 // stringbuffer
 
@@ -51,7 +51,7 @@ public final class GPSKMLFile extends GPSFile {
      * 
      * @see gps.GPSFile#InitialiseFile(java.lang.String, java.lang.String)
      */
-    public final void initialiseFile(final String basename, final String ext,
+    public void initialiseFile(final String basename, final String ext,
             final int ard, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, ard, oneFilePerDay);
         currentFilter = GPSFilter.WAYPT;
@@ -359,7 +359,7 @@ public final class GPSKMLFile extends GPSFile {
      * 
      * @see gps.GPSFile#FinaliseFile()
      */
-    public final void finaliseFile() {
+    public void finaliseFile() {
         if (this.isOpen()) {
             String footer;
             writeDataFooter();

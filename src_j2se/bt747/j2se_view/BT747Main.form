@@ -654,9 +654,10 @@
                         <StringItem index="1" value="CSV"/>
                         <StringItem index="2" value="CompeGPS (.TRK,.WPT)"/>
                         <StringItem index="3" value="KML"/>
-                        <StringItem index="4" value="OziExplorer (.PLT)"/>
-                        <StringItem index="5" value="NMEA"/>
-                        <StringItem index="6" value="Google Map (.html)"/>
+                        <StringItem index="4" value="KMZ"/>
+                        <StringItem index="5" value="OziExplorer (.PLT)"/>
+                        <StringItem index="6" value="NMEA"/>
+                        <StringItem index="7" value="Google Map (.html)"/>
                       </StringArray>
                     </Property>
                   </Properties>

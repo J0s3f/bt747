@@ -207,6 +207,75 @@ public class Controller {
         filenameBuilder = builder;
     }
 
+
+    private GPSFile getOutFileHandler(final int logType) {
+        String parameters = ""; // For debug
+        GPSFile gpsFile = null;
+        switch (logType) {
+        case Model.CSV_LOGTYPE:
+            gpsFile = new GPSCSVFile();
+            break;
+        case Model.TRK_LOGTYPE:
+            gpsFile = new GPSCompoGPSTrkFile();
+            break;
+        case Model.KML_LOGTYPE:
+            gpsFile = new GPSKMLFile();
+            break;
+        case Model.PLT_LOGTYPE:
+            gpsFile = new GPSPLTFile();
+            break;
+        case Model.GPX_LOGTYPE:
+            gpsFile = new GPSGPXFile();
+            ((GPSGPXFile) gpsFile).setTrkSegSplitOnlyWhenSmall(m
+                    .getGpxTrkSegWhenBig());
+            break;
+        case Model.NMEA_LOGTYPE:
+            gpsFile = new GPSNMEAFile();
+            ((GPSNMEAFile) gpsFile).setNMEAoutput(m.getNMEAset());
+            break;
+        case Model.GMAP_LOGTYPE:
+            gpsFile = new GPSGmapsHTMLEncodedFile();
+            ((GPSGmapsHTMLEncodedFile) gpsFile).setGoogleKeyCode(m
+                    .getGoogleMapKey());
+            break;
+        default:
+            lastError = BT747Constants.ERROR_UNKNOWN_OUTPUT_FORMAT;
+            lastErrorInfo = "" + logType;
+        }
+        return gpsFile;
+    }
+
+    
+    private String getOutFileExt(final int logType) {
+        String ext; // For debug
+        switch (logType) {
+        case Model.CSV_LOGTYPE:
+            ext = ".csv";
+            break;
+        case Model.TRK_LOGTYPE:
+            ext = ".TRK";
+            break;
+        case Model.KML_LOGTYPE:
+            ext = ".kml";
+            break;
+        case Model.PLT_LOGTYPE:
+            ext = ".plt";
+            break;
+        case Model.GPX_LOGTYPE:
+            ext = ".gpx";
+            break;
+        case Model.NMEA_LOGTYPE:
+            ext = ".nmea";
+            break;
+        case Model.GMAP_LOGTYPE:
+            ext = ".html";
+            break;
+        default:
+            ext = "";
+        }
+        return ext;
+    }
+
     /**
      * Convert the log given the provided parameters using other methods.
      * 
@@ -225,10 +294,13 @@ public class Controller {
      * @see Model#GMAP_LOGTYPE
      */
     public final int doConvertLog(final int logType) {
+        return doConvertLog(logType, getOutFileHandler(logType),
+                getOutFileExt(logType));
+    }
+    
+    public final int doConvertLog(final int logType, final GPSFile gpsFile, final String ext) {
         int result;
         String parameters = "Converting with parameters:\n"; // For debug
-        String ext = "";
-        GPSFile gpsFile = null;
         GPSLogConvert lc;
         result = 0;
 
@@ -293,48 +365,8 @@ public class Controller {
         lc.setTimeOffset(m.getTimeOffsetHours() * SECONDS_PER_HOUR);
         lc.setConvertWGS84ToMSL(m.isConvertWGS84ToMSL());
 
-        switch (logType) {
-        case Model.CSV_LOGTYPE:
-            gpsFile = new GPSCSVFile();
-            ext = ".csv";
-            break;
-        case Model.TRK_LOGTYPE:
-            gpsFile = new GPSCompoGPSTrkFile();
-            ext = ".TRK";
-            break;
-        case Model.KML_LOGTYPE:
-            gpsFile = new GPSKMLFile();
-            ext = ".kml";
-            break;
-        case Model.PLT_LOGTYPE:
-            gpsFile = new GPSPLTFile();
-            ext = ".plt";
-            break;
-        case Model.GPX_LOGTYPE:
-            gpsFile = new GPSGPXFile();
-            ext = ".gpx";
-            // Force offset to 0 if selected in menu.
-            if (m.getGpxUTC0()) {
-                lc.setTimeOffset(0);
-            }
-            ((GPSGPXFile) gpsFile).setTrkSegSplitOnlyWhenSmall(m
-                    .getGpxTrkSegWhenBig());
-            break;
-        case Model.NMEA_LOGTYPE:
-            gpsFile = new GPSNMEAFile();
-            ((GPSNMEAFile) gpsFile).setNMEAoutput(m.getNMEAset());
-            ext = ".nmea";
-            break;
-        case Model.GMAP_LOGTYPE:
-            gpsFile = new GPSGmapsHTMLEncodedFile();
-            ((GPSGmapsHTMLEncodedFile) gpsFile).setGoogleKeyCode(m
-                    .getGoogleMapKey());
-            ext = ".html";
-            break;
-        default:
-            lastError = BT747Constants.ERROR_UNKNOWN_OUTPUT_FORMAT;
-            lastErrorInfo = ext;
-            result = lastError;
+        if ((logType == Model.GPX_LOGTYPE) && m.getGpxUTC0()) {
+            lc.setTimeOffset(0);
         }
 
         if (gpsFile != null) {
