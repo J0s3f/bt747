@@ -100,15 +100,15 @@ public final class GPSKMZFile extends GPSKMLFile {
         int l;
         l = zipEntryFileName.lastIndexOf('/');
         if (l > 0) {
-            zipEntryFileName = zipEntryFileName.substring(l);
+            zipEntryFileName = zipEntryFileName.substring(l+1);
         }
         l = zipEntryFileName.lastIndexOf('\\');
         if (l > 0) {
-            zipEntryFileName = zipEntryFileName.substring(l);
+            zipEntryFileName = zipEntryFileName.substring(l+1);
         }
         l = zipEntryFileName.lastIndexOf(':');
         if (l > 0) {
-            zipEntryFileName = zipEntryFileName.substring(l);
+            zipEntryFileName = zipEntryFileName.substring(l+1);
         }
 
         int error = BT747Constants.NO_ERROR;
