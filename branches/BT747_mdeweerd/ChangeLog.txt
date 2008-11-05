@@ -1,3 +1,10 @@
+Version 1.60.20
+* Fixed raw log file text input field in J2SE.
+* KMZ output now buffered.
+
+Version 1.60.19
+* KMZ Fixed in BT747cmd.
+
 Version 1.60.18
 * Added KMZ output format in Desktop interface.
 
