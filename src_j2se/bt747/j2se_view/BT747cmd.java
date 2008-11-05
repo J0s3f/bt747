@@ -167,11 +167,11 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
-//        case ModelEvent.DEBUG_MSG:
-//            System.out.flush();
-//            System.err.println((String) e.getArg());
-//            System.err.flush();
-//            break;
+        // case ModelEvent.DEBUG_MSG:
+        // System.out.flush();
+        // System.err.println((String) e.getArg());
+        // System.err.flush();
+        // break;
         case ModelEvent.LOG_DOWNLOAD_STARTED:
             downloadStartTime = System.currentTimeMillis();
             downloadIsSuccessFull = false;
@@ -283,6 +283,16 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
     }
 
+    public static final int KMZ_LOGTYPE = -1;
+
+    public final int convertLog(final int logType) {
+        if (logType == KMZ_LOGTYPE) {
+            return c.doConvertLog(logType, new GPSKMZFile(), ".kmz");
+        } else {
+            return c.doConvertLog(logType);
+        }
+    }
+
     private void handleOptions(final OptionSet options) {
         // Set up the paths
         // Common to in/out
@@ -325,8 +335,9 @@ public class BT747cmd implements bt747.model.ModelListener {
             // Basename of files.
             String basename = options.argumentOf("f");
             c.setStringOpt(AppSettings.LOGFILEPATH, basename + ".bin");
-            //        setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile, C_LOGFILE_IDX,
-            //                C_LOGFILE_SIZE);
+            // setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile,
+            // C_LOGFILE_IDX,
+            // C_LOGFILE_SIZE);
             c.setOutputFileRelPath(basename);
         }
 
@@ -334,7 +345,6 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (options.has("b")) {
             c.setStringOpt(AppSettings.LOGFILEPATH, options.argumentOf("b"));
         }
-
 
         if (options.has("s")) {
             c.setBaudRate((((Integer) options.valueOf("s")).intValue()));
@@ -352,7 +362,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             Integer offset = (Integer) options.valueOf("UTC");
             c.setTimeOffsetHours(offset);
         }
-        
+
         if (options.has("color")) {
             c.setColorValidTrack((String) options.valueOf("color"));
             // Default: bad color is the same
@@ -626,7 +636,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                     return baseName + "_trk" + proposedExtension;
                 }
             });
-            int error = c.doConvertLog(Model.GPX_LOGTYPE);
+            int error = convertLog(Model.GPX_LOGTYPE);
             if (error != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
@@ -651,7 +661,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                     return baseName + "_wpt" + proposedExtension;
                 }
             });
-            int error = c.doConvertLog(Model.GPX_LOGTYPE);
+            int error = convertLog(Model.GPX_LOGTYPE);
             if (error != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
@@ -662,7 +672,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             Iterator iter = list.iterator();
 
             while (iter.hasNext()) {
-                String typeStr = (String) iter.next();
+                String typeStr = ((String) iter.next()).toUpperCase();
                 int type = Model.NO_LOG_LOGTYPE;
                 if (typeStr.equals("GPX")) {
                     type = Model.GPX_LOGTYPE;
@@ -675,7 +685,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 } else if (typeStr.equals("KML")) {
                     type = Model.KML_LOGTYPE;
                 } else if (typeStr.equals("KMZ")) {
-                    type = J2SEAppController.KMZ_LOGTYPE;
+                    type = KMZ_LOGTYPE;
                 } else if (typeStr.equals("PLT")) {
                     type = Model.PLT_LOGTYPE;
                 } else if (typeStr.equals("TRK")) {
@@ -702,7 +712,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                             return baseName + proposedExtension;
                         }
                     });
-                    int error = c.doConvertLog(type);
+                    int error = convertLog(type);
                     if (error != 0) {
                         reportError(c.getLastError(), c.getLastErrorInfo());
                     }
@@ -777,8 +787,10 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts("device",
                         "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX).")
                         .withRequiredArg().describedAs("DEVICE");
-                accepts("trkptinfo", "Add record information for each trackpoint.");
-                accepts("trkptname", "Give each trackpoint a name (based on time)");
+                accepts("trkptinfo",
+                        "Add record information for each trackpoint.");
+                accepts("trkptname",
+                        "Give each trackpoint a name (based on time)");
                 accepts("color",
                         "Color to use for tracks (HEX RGB value, ex 00FF00)")
                         .withRequiredArg().describedAs("HEXCOLOR");

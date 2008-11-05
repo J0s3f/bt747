@@ -5416,6 +5416,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
             } catch (Exception e) {
                 Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OutputFileChooser"), e);
             }
+            tfOutputFileBaseName.setText(m.getStringOpt(AppSettings.REPORTFILEBASE));
         }
     }// GEN-LAST:event_btOutputFileActionPerformed
 
@@ -5437,6 +5438,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
             } catch (Exception e) {
                 Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("RawFileChooser"),e);
             }
+            tfRawLogFilePath.setText(m.getStringOpt(AppSettings.LOGFILERELPATH));
         }
     }// GEN-LAST:event_btRawLogFileActionPerformed
 
@@ -5459,6 +5461,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
             } catch (Exception e) {
                 Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("WorkingDirChooser"), e);
             }
+            tfWorkDirectory.setText(m.getStringOpt(AppSettings.OUTPUTDIRPATH));
         }
     }// GEN-LAST:event_btWorkingDirectoryActionPerformed
 
