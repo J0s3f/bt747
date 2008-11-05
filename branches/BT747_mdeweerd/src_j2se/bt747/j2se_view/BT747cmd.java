@@ -296,7 +296,7 @@ public class BT747cmd implements bt747.model.ModelListener {
     private void handleOptions(final OptionSet options) {
         // Set up the paths
         // Common to in/out
-        c.setStringOpt(AppSettings.OUTPUTDIRPATH, ".");
+        c.setStringOpt(AppSettings.OUTPUTDIRPATH, "");
         c.setOutputFileRelPath("GPSDATA");
         c.setIntOpt(Model.FILEFIELDFORMAT, 0xFFFFFFFF); // All fields
         c.setTrkSep(60);
@@ -333,11 +333,22 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (options.has("f")) {
             // Basename of files.
-            String basename = options.argumentOf("f");
+            String fullname = options.argumentOf("f");
+            String basename;
+            int splitIdx;
+            String path = "";
+            splitIdx = fullname.lastIndexOf('/');
+            splitIdx = Math.max(splitIdx,fullname.lastIndexOf('\\'));
+            
+            if(splitIdx>0) {
+                path = fullname.substring(0,splitIdx-1);
+                basename = fullname.substring(splitIdx+1);
+            } else {
+                path = "";
+                basename = fullname;
+            }
+            c.setStringOpt(AppSettings.OUTPUTDIRPATH, path);
             c.setStringOpt(AppSettings.LOGFILEPATH, basename + ".bin");
-            // setStringOpt(ModelEvent.LOGFILEPATH_UPDATE, logFile,
-            // C_LOGFILE_IDX,
-            // C_LOGFILE_SIZE);
             c.setOutputFileRelPath(basename);
         }
 
