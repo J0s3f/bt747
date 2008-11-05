@@ -103,7 +103,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             System.err.println("Could not open " + errorInfo);
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
-            System.err.println("No files were created ");
+            System.err.println("WARNING - No files were created - Check the input type.");
             break;
         case BT747Constants.ERROR_READING_FILE:
             System.err.println("Problem reading" + errorInfo);
@@ -341,8 +341,8 @@ public class BT747cmd implements bt747.model.ModelListener {
             splitIdx = Math.max(splitIdx,fullname.lastIndexOf('\\'));
             
             if(splitIdx>0) {
-                path = fullname.substring(0,splitIdx-1);
-                basename = fullname.substring(splitIdx);
+                path = fullname.substring(0,splitIdx);
+                basename = fullname.substring(splitIdx+1);
             } else {
                 path = "";
                 basename = fullname;
@@ -702,7 +702,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 } else if (typeStr.equals("TRK")) {
                     type = Model.TRK_LOGTYPE;
                 } else {
-                    System.err.println("Unknown outtype '" + type + "'");
+                    System.err.println("Unknown outtype '" + typeStr + "'");
                 }
                 if (type != Model.NO_LOG_LOGTYPE) {
                     System.out.println("Converting to " + typeStr);
