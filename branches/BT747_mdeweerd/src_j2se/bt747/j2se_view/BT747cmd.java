@@ -262,10 +262,10 @@ public class BT747cmd implements bt747.model.ModelListener {
                 while (prevPercent < percent) {
                     prevPercent++;
                     System.out.print('*');
-                }
-                if ((percent % 10) == 0) {
-                    System.out.print("#" + percent + "#");
-                    System.out.flush();
+                    if ((percent % 10) == 0) {
+                        System.out.print("#" + percent + "#");
+                        System.out.flush();
+                    }
                 }
             }
         }
