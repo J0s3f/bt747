@@ -1,3 +1,6 @@
+Version 1.60.18
+* Added KMZ output format in Desktop interface.
+
 Version 1.60.17
 * Fixed formatting of Double numbers (Locale trouble, visible in KML output).
 * Added NMEA output and color options to BT747cmd

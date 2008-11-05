@@ -145,9 +145,17 @@ public final class J2SEAppController extends Controller {
      * @see Model#NMEA_LOGTYPE
      * @see Model#GMAP_LOGTYPE
      */
+    public static final int KMZ_LOGTYPE = -1;
+
     public final void convertLog(final int logType) {
-        if (doConvertLog(logType) != 0) {
-            reportError(c.getLastError(), c.getLastErrorInfo());
+        if (logType == KMZ_LOGTYPE) {
+            if (doConvertLog(logType, new GPSKMZFile(), ".kmz") != 0) {
+                reportError(c.getLastError(), c.getLastErrorInfo());
+            }
+        } else {
+            if (doConvertLog(logType) != 0) {
+                reportError(c.getLastError(), c.getLastErrorInfo());
+            }
         }
     }
 

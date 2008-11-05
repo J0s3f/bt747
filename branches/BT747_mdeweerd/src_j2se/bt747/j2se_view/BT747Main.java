@@ -1788,7 +1788,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML", "OziExplorer (.PLT)", "NMEA", "Google Map (.html)" }));
+        cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML", "OziExplorer (.PLT)", "NMEA", "Google Map (.html)", "KMZ" }));
         cbFormat.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFormatItemStateChanged(evt);
@@ -5479,6 +5479,8 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
             selectedFormat = Model.PLT_LOGTYPE;
         } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Compe"))) {
             selectedFormat = Model.TRK_LOGTYPE;
+        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("KMZ"))) {
+            selectedFormat = J2SEAppController.KMZ_LOGTYPE;
         } else {
             selectedFormat = Model.NO_LOG_LOGTYPE;
         }

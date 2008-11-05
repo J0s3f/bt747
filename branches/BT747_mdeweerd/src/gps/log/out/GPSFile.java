@@ -153,7 +153,7 @@ public abstract class GPSFile {
      * The filename builder allows a big flexibility in defining the output file
      * name.
      */
-    private BT747FileName filenameBuilder = new GPSDefaultFileName();
+    protected BT747FileName filenameBuilder = new GPSDefaultFileName();
 
     public final static int FILE_SPLIT_NONE = 0;
     public final static int FILE_SPLIT_ONE_FILE_PER_DAY = 1;
@@ -356,7 +356,32 @@ public abstract class GPSFile {
             }
 
             if (createOK) {
-                createFile(r.utc, extraExt);
+                boolean createNewFile = numberOfPasses - 1 == nbrOfPassesToGo;
+
+                int error = createFile(r.utc, extraExt, createNewFile);
+
+                if (error == BT747Constants.NO_ERROR) {
+                    filesCreated += 1;
+                    try {
+                        if (createNewFile) {
+                            // New file
+                            writeFileHeader("GPS" + extraExt); // First time
+                                                                // this file
+                            // is
+                            // opened.
+                        } else {
+                            // Append to existing file (file open must be
+                            // append)
+                            // outFile.setPos(outFile.getSize());
+                        }
+                        writeLogFmtHeader(activeFields);
+                        writeDataHeader();
+                    } catch (Exception e) {
+                        Generic.debug("Initial header or append", e);
+                        // TODO: handle exception
+                    }
+                }
+
             }
         }
 
@@ -430,11 +455,11 @@ public abstract class GPSFile {
     protected void writeDataFooter() {
     };
 
-    protected int createFile(final int utc, final String extra_ext) {
+    protected int createFile(final int utc, final String extra_ext,
+            final boolean createNewFile) {
         String fileName;
         fileName = filenameBuilder.getOutputFileName(basename, utc, ext,
                 extra_ext);
-        boolean createNewFile = numberOfPasses - 1 == nbrOfPassesToGo;
         int error = BT747Constants.NO_ERROR;
 
         try {
@@ -459,24 +484,6 @@ public abstract class GPSFile {
             errorInfo = fileName + "|" + outFile.getLastError();
             error = BT747Constants.ERROR_COULD_NOT_OPEN;
             outFile = null;
-        } else {
-            filesCreated += 1;
-            try {
-                if (createNewFile) {
-                    // New file
-                    writeFileHeader("GPS" + extra_ext); // First time this file
-                    // is
-                    // opened.
-                } else {
-                    // Append to existing file (file open must be append)
-                    // outFile.setPos(outFile.getSize());
-                }
-                writeLogFmtHeader(activeFields);
-                writeDataHeader();
-            } catch (Exception e) {
-                Generic.debug("Initial header or append", e);
-                // TODO: handle exception
-            }
         }
         return error;
     }
@@ -484,18 +491,20 @@ public abstract class GPSFile {
     protected void closeFile() {
         writeDataFooter();
         try {
-            outFile.close();
+            if (outFile != null) {
+                outFile.close();
+            }
         } catch (Exception e) {
             Generic.debug("closeFile", e);
             // TODO: handle exception
         }
     }
 
-    protected final boolean isOpen() {
+    protected boolean isOpen() {
         return outFile != null;
     }
 
-    protected final void writeTxt(final String s) {
+    protected void writeTxt(final String s) {
         try {
             if (outFile != null) {
                 outFile.writeBytes(s.getBytes(), 0, s.length());
