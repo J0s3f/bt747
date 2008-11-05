@@ -16,7 +16,6 @@ package bt747.j2se_view;
 
 import gps.BT747Constants;
 import gps.Txt;
-import gps.log.GPSRecord;
 import gps.log.out.GPSKMLFile;
 
 import java.io.FileOutputStream;
@@ -25,7 +24,7 @@ import java.util.zip.ZipOutputStream;
 
 import net.sf.bt747.j2se.system.J2SEHashtable;
 
-import bt747.sys.File;
+import java.io.File;
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747Hashtable;
 
@@ -116,7 +115,7 @@ public final class GPSKMZFile extends GPSKMLFile {
         // Check if file exists and delete - not needed in KMZ
         try {
             if (createNewFile) {
-                File tmpFile = new File(zipFileName, File.DONT_OPEN, card);
+                File tmpFile = new File(zipFileName);
                 if (tmpFile.exists()) {
                     tmpFile.delete();
                 }
@@ -153,7 +152,7 @@ public final class GPSKMZFile extends GPSKMLFile {
             if (currentZipStream != null) {
                 currentZipStream.write(s.getBytes(), 0, s.length());
             } else {
-                Generic.debug(Txt.WRITING_CLOSED, null);
+                Generic.debug("Write to closed file", null);
             }
         } catch (Exception e) {
             Generic.debug("writeTxt", e);
