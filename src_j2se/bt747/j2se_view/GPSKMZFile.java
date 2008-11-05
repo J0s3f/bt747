@@ -15,9 +15,9 @@
 package bt747.j2se_view;
 
 import gps.BT747Constants;
-import gps.Txt;
 import gps.log.out.GPSKMLFile;
 
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -129,7 +129,8 @@ public final class GPSKMZFile extends GPSKMLFile {
             currentZipStream = null;
             if (createNewFile) {
                 FileOutputStream fos = new FileOutputStream(zipFileName, false);
-                currentZipStream = new ZipOutputStream(fos);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                currentZipStream = new ZipOutputStream(bos);
                 ZipEntry e = new ZipEntry(zipEntryFileName);
                 currentZipStream.putNextEntry(e);
                 zips.put(zipFileName, currentZipStream);
