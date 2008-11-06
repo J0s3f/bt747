@@ -9,14 +9,9 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************  
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
+//***  *********************************************************** ***  
 package gps.log.in;
 
 import gps.BT747Constants;
@@ -213,10 +208,11 @@ public final class NMEALogConvert implements GPSLogConvert {
                                 int oldClockTime = gpsRec.utc % (24 * 3600);
                                 int oldDateTime = (gpsRec.utc - oldClockTime)
                                         / (24 * 3600);
+                                int newDateTime = gpsNewRec.utc / (24 * 3600);
                                 if (((oldClockTime != 0) && (oldClockTime != gpsNewRec.utc
                                         % (24 * 3600)))
-                                        || ((oldDateTime != 0) && (oldDateTime != gpsNewRec.utc
-                                                / (24 * 3600)))
+                                        || ((oldDateTime != 0)
+                                                && (newDateTime != 0) && (oldDateTime != newDateTime))
                                         || gpsRec.milisecond != gpsNewRec.milisecond) {
                                     // New data is for different time/date -
                                     // write it.
