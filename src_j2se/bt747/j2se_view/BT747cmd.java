@@ -26,6 +26,7 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -103,7 +104,8 @@ public class BT747cmd implements bt747.model.ModelListener {
             System.err.println("Could not open " + errorInfo);
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
-            System.err.println("WARNING - No files were created - Check the input type.");
+            System.err
+                    .println("WARNING - No files were created - Check the input type.");
             break;
         case BT747Constants.ERROR_READING_FILE:
             System.err.println("Problem reading" + errorInfo);
@@ -286,6 +288,12 @@ public class BT747cmd implements bt747.model.ModelListener {
     public static final int KMZ_LOGTYPE = -1;
 
     public final int convertLog(final int logType) {
+        System.out.println("Input file: " + m.getStringOpt(Model.LOGFILEPATH));
+        System.out.println("Output directory: "
+                + m.getStringOpt(Model.OUTPUTDIRPATH));
+        System.out.println("Output basename: "
+                + m.getStringOpt(Model.REPORTFILEBASE));
+
         if (logType == KMZ_LOGTYPE) {
             return c.doConvertLog(logType, new GPSKMZFile(), ".kmz");
         } else {
@@ -294,9 +302,10 @@ public class BT747cmd implements bt747.model.ModelListener {
     }
 
     private void handleOptions(final OptionSet options) {
+        m.init();
         // Set up the paths
         // Common to in/out
-        c.setStringOpt(AppSettings.OUTPUTDIRPATH, "");
+        c.setStringOpt(AppSettings.OUTPUTDIRPATH, ".");
         c.setOutputFileRelPath("GPSDATA");
         c.setIntOpt(Model.FILEFIELDFORMAT, 0xFFFFFFFF); // All fields
         c.setTrkSep(60);
@@ -338,18 +347,21 @@ public class BT747cmd implements bt747.model.ModelListener {
             int splitIdx;
             String path = "";
             splitIdx = fullname.lastIndexOf('/');
-            splitIdx = Math.max(splitIdx,fullname.lastIndexOf('\\'));
-            
-            if(splitIdx>0) {
-                path = fullname.substring(0,splitIdx);
-                basename = fullname.substring(splitIdx+1);
+            splitIdx = Math.max(splitIdx, fullname.lastIndexOf('\\'));
+
+            if (splitIdx > 0) {
+                path = fullname.substring(0, splitIdx);
+                basename = fullname.substring(splitIdx + 1);
             } else {
                 path = "";
                 basename = fullname;
             }
-            c.setStringOpt(AppSettings.OUTPUTDIRPATH, path);
+            if (path.length() != 0) {
+                c.setStringOpt(AppSettings.OUTPUTDIRPATH, path);
+            }
             c.setStringOpt(AppSettings.LOGFILEPATH, basename + ".bin");
             c.setOutputFileRelPath(basename);
+
         }
 
         // Input is "/BT747/BT747_sample.bin"
@@ -488,8 +500,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 
                 int newLogFormat = m.getLogFormat();
                 while (iter.hasNext()) {
-                    String field = (String) iter.next();
-                    field = field.toUpperCase();
+                    String field = ((String) iter.next()).toUpperCase();
                     boolean enableField = true;
                     int logField = 0;
                     if (field.length() > 0) {
@@ -855,4 +866,19 @@ public class BT747cmd implements bt747.model.ModelListener {
             this.eraseOngoing = Boolean.valueOf(eraseOngoing);
         }
     }
+
+    private void initAppSettings() {
+        // AppSettings.defaultBaseDirPath = java.lang.System
+        // .getProperty("user.home");
+
+        try {
+            AppSettings.defaultBaseDirPath = (new File(".")).getCanonicalPath();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+        Settings.setAppSettings(new String(new byte[2048]));
+        m.init();
+    }
+
 }
