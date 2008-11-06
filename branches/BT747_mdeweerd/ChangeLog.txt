@@ -1,3 +1,7 @@
+Version 1.60.22
+* Initialization of values in BT747cmd done by default initialisation and
+  hence complete.
+
 Version 1.60.21
 * Fixed error in date interpretation in CSV input due introduced during
   addition of VGPS-900 support.
