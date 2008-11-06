@@ -1,3 +1,6 @@
+Version 1.60.23
+* NMEA record split condition improved.
+
 Version 1.60.22
 * Initialization of values in BT747cmd done by default initialisation and
   hence complete.
