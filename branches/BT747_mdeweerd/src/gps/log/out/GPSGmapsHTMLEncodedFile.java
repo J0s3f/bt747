@@ -9,8 +9,8 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package gps.log.out;
 
@@ -44,7 +44,8 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     private boolean isNewTrack = true;
     private int currentFilter;
 
-    private Track track;
+    private final Track track = new Track();
+    private final Track waypoints = new Track();
 
     private int trackIndex = 0; // Index for tracks
 
@@ -79,9 +80,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     }
 
     private final void resetTrack() {
-        track = new Track();
-        infoHtmls.setLength(0);
-        iconList.removeAllElements();
+        track.removeAll();
     }
 
     public final boolean nextPass() {
@@ -381,7 +380,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
      */
     protected final void writeDataFooter() {
         if (isWayType) {
-            if (track.size() != 0) {
+            if (waypoints.size() != 0) {
                 rec.setLength(0);
                 rec.append("var baseIcon = new GIcon(G_DEFAULT_ICON);\n" +
                 		"baseIcon.iconSize = new GSize(32, 32);\n");
@@ -399,27 +398,27 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 }
                 
                 rec.append("var markers;markers=[");
-                for (int i = 0; i < track.size(); i++) {
-                    rec.append("new GMarker(new GLatLng(");
+                for (int i = 0; i < waypoints.size(); i++) {
+                    rec.append("\n new GMarker(new GLatLng(");
                     rec
-                            .append(Convert.toString(track.get(i)
+                            .append(Convert.toString(waypoints.get(i)
                                     .getLatDouble(), 5));
                     rec.append(',');
                     rec
-                            .append(Convert.toString(track.get(i)
+                            .append(Convert.toString(waypoints.get(i)
                                     .getLonDouble(), 5));
                     rec.append(')');
                     if (((String) iconList.elementAt(i)).length() != 0) {
                         rec.append(',');
                         rec.append(iconList.elementAt(i));
                     }
-            		rec.append("),");
+            		rec.append("),");  // Last char must be ',' to erase it below
             		
                 }
                 rec.setCharAt(rec.length() - 1, ']'); // Delete last ','
-                rec.append(";infoHtmls=[");
+                rec.append(";\n infoHtmls=[\n");
                 rec.append(infoHtmls.toString());
-                rec.append("];");
+                rec.append("];\n");
                 rec.append("for (var i=0; i<markers.length; ++i) {\n");
                 rec
                         .append("GEvent.addListener(markers[i],\'click\',makeOpenerCaller(i));\n");
@@ -428,6 +427,9 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 rec.append("\n");
                 // Small popup:
                 writeTxt(rec.toString());
+                waypoints.removeAll();
+                infoHtmls.setLength(0);
+                iconList.removeAllElements();
             }
             resetTrack();
         } else {
@@ -578,11 +580,14 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                     }
                 }
 
-                if (isWayType) {
+                if (isWayType && (activeFields.latitude != 0)
+                        && (activeFields.longitude != 0)) {
+                    waypoints.addTrackpoint(new Trackpoint(s.latitude,
+                            s.longitude));
                     infoHtmls.append("\"");
                     String r = CommonOut.getRCRstr(s);
                     String icon = "";
-                    if(icons.get(r)==null) {
+                    if (icons.get(r) == null) {
                         WayPointStyle style;
                         if(r.length()>0 && r.charAt(0)=='X') {
                           style = CommonOut.wayPointStyles.get(r.substring(1));
