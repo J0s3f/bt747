@@ -1,3 +1,8 @@
+Version 1.61.1
+* Corrected html waypoint output when multiple dates in one file.
+* Added --height-to-msl in BT747cmd
+
+
 Version 1.61
 * Changed text of some buttons.
 * Output File Prefix cleaned up when using path selection popup.

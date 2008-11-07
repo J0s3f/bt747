@@ -314,6 +314,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, false);
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, false);
         c.setOutputFileSplitType(0);
+        c.setConvertWGS84ToMSL(false);
 
         // Next line gets arguments not related to option
         options.nonOptionArguments();
@@ -382,6 +383,9 @@ public class BT747cmd implements bt747.model.ModelListener {
             // c.setUsb();
         }
 
+        if (options.has("heigh-to-msl")) {
+            c.setConvertWGS84ToMSL(true);
+        }
         if (options.has("UTC")) {
             Integer offset = (Integer) options.valueOf("UTC");
             c.setTimeOffsetHours(offset);
@@ -862,6 +866,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts("timesplit", "Time separation in minutes needed for track segment or track separation.")
                 .withRequiredArg().describedAs("MINUTES").ofType(
                         Integer.class);
+                accepts("height-to-msl", "Correct WGS84 height (elevation) to MSL (Mean Sea Level)");
             }
         };
 

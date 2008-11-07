@@ -36,5 +36,9 @@ public final class Track {
     public final int size() {
         return this.trackpoints.size();
     }
+    
+    public final void removeAll() {
+        trackpoints.removeAllElements();
+    }
 
 }
