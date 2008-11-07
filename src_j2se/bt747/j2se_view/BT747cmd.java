@@ -313,6 +313,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         c.setColorInvalidTrack("0000FF");
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, false);
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, false);
+        c.setOutputFileSplitType(0);
 
         // Next line gets arguments not related to option
         options.nonOptionArguments();
@@ -395,6 +396,30 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (options.has("badcolor")) {
             // Overrides previous default setting in "color"
             c.setColorInvalidTrack((String) options.valueOf("badcolor"));
+        }
+
+        if (options.has("splittype")) {
+            String option = ((String) options.valueOf("split")).toUpperCase();
+            /**
+             * The way we split the input track:<br>
+             * ONE_FILE = 0<br>
+             * ONE_FILE_PER_DAY = 1<br>
+             * ONE_FILE_PER_TRACK = 2
+             * 
+             * @return Current setting.
+             */
+            if (option.equals("DAY")) {
+                c.setOutputFileSplitType(1);
+            } else if (option.equals("TRACK")) {
+                c.setOutputFileSplitType(2);
+            } else {
+                c.setOutputFileSplitType(0);
+            }
+        }
+
+        if (options.has("timesplit")) {
+            Integer split = (Integer) options.valueOf("timesplit");
+            c.setTrkSep(split);
         }
 
         // Options for which a connection is needed.
@@ -649,13 +674,17 @@ public class BT747cmd implements bt747.model.ModelListener {
                     .setWayPtValid(0xFFFFFFFF ^ (BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK));
             c.setWayPtRCR(0);
             c.setTrkPtRCR(0xFFFFFFFF);
-            c.setOutputFileSplitType(0); // Single file
             // The output filename does not depend on the time.
             c.setFileNameBuilder(new BT747FileName() {
                 public String getOutputFileName(String baseName,
                         int utcTimeSeconds, String proposedExtension,
                         String proposedTimeSpec) {
-                    return baseName + "_trk" + proposedExtension;
+                    switch (m.getOutputFileSplitType()) {
+                    case 0:
+                        return baseName + "_trk" + proposedExtension;
+                    default:
+                        return baseName + proposedTimeSpec + "_trk" + proposedExtension;
+                    }
                 }
             });
             int error = convertLog(Model.GPX_LOGTYPE);
@@ -675,12 +704,16 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
                     | BT747Constants.RCR_ALL_APP_MASK);
             c.setTrkPtRCR(0);
-            c.setOutputFileSplitType(0);
             c.setFileNameBuilder(new BT747FileName() {
                 public String getOutputFileName(String baseName,
                         int utcTimeSeconds, String proposedExtension,
                         String proposedTimeSpec) {
-                    return baseName + "_wpt" + proposedExtension;
+                    switch (m.getOutputFileSplitType()) {
+                    case 0:
+                        return baseName + "_wpt" + proposedExtension;
+                    default:
+                        return baseName + proposedTimeSpec + "_wpt" + proposedExtension;
+                    }
                 }
             });
             int error = convertLog(Model.GPX_LOGTYPE);
@@ -726,12 +759,16 @@ public class BT747cmd implements bt747.model.ModelListener {
                     c.setWayPtRCR(BT747Constants.RCR_BUTTON_MASK
                             | BT747Constants.RCR_ALL_APP_MASK);
                     c.setTrkPtRCR(0xFFFFFFFF);
-                    c.setOutputFileSplitType(0);
                     c.setFileNameBuilder(new BT747FileName() {
                         public String getOutputFileName(String baseName,
                                 int utcTimeSeconds, String proposedExtension,
                                 String proposedTimeSpec) {
-                            return baseName + proposedExtension;
+                            switch (m.getOutputFileSplitType()) {
+                            case 0:
+                                return baseName + proposedExtension;
+                            default:
+                                return baseName + proposedTimeSpec + proposedExtension;
+                            }
                         }
                     });
                     int error = convertLog(type);
@@ -820,7 +857,11 @@ public class BT747cmd implements bt747.model.ModelListener {
                         "Color to use for 'bad part' in tracks  (HEX RGB value), ex 00FFFF")
                         .withRequiredArg().describedAs("HEXCOLOR");
                 ;
-
+                accepts("splittype", "The way to split the input data: NOSPLIT, DAY or TRACK")
+                .withRequiredArg().describedAs("SPLITTYPE");
+                accepts("timesplit", "Time separation in minutes needed for track segment or track separation.")
+                .withRequiredArg().describedAs("MINUTES").ofType(
+                        Integer.class);
             }
         };
 

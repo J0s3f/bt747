@@ -1,4 +1,7 @@
 Version 1.60.23
+* Added track split options.
+
+Version 1.60.23
 * NMEA record split condition improved.
 
 Version 1.60.22
