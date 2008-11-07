@@ -5408,11 +5408,16 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         // }
         if (OutputFileChooser.showDialog(this, java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Set_basename")) == JFileChooser.APPROVE_OPTION) {
             try {
-                c.setOutputFileRelPath(gps.convert.FileUtil.getRelativePath(
+                String relPath = gps.convert.FileUtil.getRelativePath(
                         (new File(m.getStringOpt(AppSettings.OUTPUTDIRPATH)))
                                 .getCanonicalPath(), OutputFileChooser
                                 .getSelectedFile().getCanonicalPath(),
-                        File.separatorChar));
+                        File.separatorChar);
+                if(relPath.lastIndexOf('.')==relPath.length()-4) {
+                    relPath = relPath.substring(0, relPath.length()-4);
+                }
+                c.setOutputFileRelPath(relPath);
+                getOutputFilePath();
             } catch (Exception e) {
                 Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OutputFileChooser"), e);
             }
@@ -5430,7 +5435,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         // if (curDir.exists()) {
         // RawLogFileChooser.setCurrentDirectory(getRawLogFilePath());
         // }
-        if (RawLogFileChooser.showDialog(this,java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Set")) == JFileChooser.APPROVE_OPTION) {
+        if (RawLogFileChooser.showDialog(this,java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("SetRawLogFile")) == JFileChooser.APPROVE_OPTION) {
             try {
             c.setStringOpt(AppSettings.LOGFILEPATH, RawLogFileChooser.getSelectedFile()
                     .getCanonicalPath());
@@ -5453,7 +5458,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         WorkingDirectoryChooser.setDialogTitle(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Choose_Working_Directory"));
         WorkingDirectoryChooser
                 .setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        if (WorkingDirectoryChooser.showDialog(this, java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Set")) == JFileChooser.APPROVE_OPTION) {
+        if (WorkingDirectoryChooser.showDialog(this, java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("SetWorkDir")) == JFileChooser.APPROVE_OPTION) {
             try {
                 c.setStringOpt(AppSettings.OUTPUTDIRPATH, WorkingDirectoryChooser.getSelectedFile()
                                         .getCanonicalPath());

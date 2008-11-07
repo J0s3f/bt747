@@ -399,7 +399,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (options.has("splittype")) {
-            String option = ((String) options.valueOf("split")).toUpperCase();
+            String option = ((String) options.valueOf("splittype")).toUpperCase();
             /**
              * The way we split the input track:<br>
              * ONE_FILE = 0<br>

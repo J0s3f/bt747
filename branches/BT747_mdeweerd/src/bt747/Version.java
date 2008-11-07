@@ -10,8 +10,8 @@ package bt747;
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 
 /** This class has a partial automatic update in the build script.
@@ -24,10 +24,10 @@ package bt747;
 public final class Version {
 
    /** Build number (timestamp with format yyyyMMddHHmmssSSS). */
-   public static final long BUILD = 20080331171813196L; //automatically set during Ant compilation!
-   public static final String BUILD_STR = ".376M.20080331171813196"; //automatically set during Ant compilation!
+   public static final long BUILD = 00000000000000000L; //automatically set during Ant compilation!
+   public static final String BUILD_STR = ".DEVELOPMENTVERSION"; //automatically set during Ant compilation!
    /** Release date of this version (date format dd.MM.yyyy). */
-   public static final String DATE = "31.03.2008"; //automatically set during Ant compilation!
+   public static final String DATE = "00.00.0000"; //automatically set during Ant compilation!
    /**
     * Version number of format x.y.z, with
     * <ul>
@@ -36,9 +36,5 @@ public final class Version {
     * <li>z = bug fix version
     * </ul>
     */
-   public static final String VERSION_NUMBER = "1.47b6";
-   /** Minimum Java JRE version required. */
-   public static final String NUMBER_JAVAMIN = "1.4";
-   /** Title of this project. */
-   public static final String TITLE = "BT747";
+   public static final String VERSION_NUMBER = "d.evel";
 }
