@@ -383,7 +383,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             // c.setUsb();
         }
 
-        if (options.has("heigh-to-msl")) {
+        if (options.has("height-to-msl")) {
             c.setConvertWGS84ToMSL(true);
         }
         if (options.has("UTC")) {
