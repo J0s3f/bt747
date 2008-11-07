@@ -1,8 +1,9 @@
-Version 1.60.23
-* Added track split options.
 Version 1.61
 * Changed text of some buttons.
 * Output File Prefix cleaned up when using path selection popup.
+
+Version 1.60.24
+* Added track split options.
 
 Version 1.60.23
 * NMEA record split condition improved.
