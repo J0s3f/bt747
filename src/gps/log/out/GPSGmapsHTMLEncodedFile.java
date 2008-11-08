@@ -195,14 +195,12 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + " var ad=document.getElementById(\"adr\").value;\n"
                         + " new GClientGeocoder().getLatLng(ad,gotoPt);\n"
                         + "}\n"
-                        + ""
-                        + " function makeOpenerCaller(i) {"
-                        + "  return function() { showMarkerInfo(i); };"
-                        + " }\n" // open an info window
-                        + "\n"
-                        + "  function showMarkerInfo(i) {\n"
-                        + "   markers[i].openInfoWindowHtml(infoHtmls[i]);\n"
-                        + "  }\n" // create the map
+                        + "function makeOpenerCaller(i) {"
+                        + " return function() { showMarkerInfo(i); };"
+                        + "}\n" // open an info window
+                        + "function showMarkerInfo(i) {\n"
+                        + " markers[i].openInfoWindowHtml(infoHtmls[i]);\n"
+                        + "}\n" // create the map
                         // Code from http://www.pompage.net/pompe/pieds/
                         + "function getWindowHeight() {\n"
                         + " var windowHeight=0;\n"
@@ -220,19 +218,19 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "  }\n"
                         + " }\n"
                         + " return windowHeight;\n"
-                        + "}"
+                        + "}\n"
                         + "function setFooter() {\n"
                         + " if (document.getElementById) {\n"
                         + "  var windowHeight=getWindowHeight();\n"
                         + "  var footerElement=document.getElementById(\'footer\');\n"
                         + "  var footerHeight=footerElement.offsetHeight;\n"
-                        + "  if (windowHeight-footerHeight>400) {\n"
-                        + "   document.getElementById(\'map\').style.height=\n"
+//                        + "  if (windowHeight-footerHeight>400) {\n"
+//                        + "   document.getElementById(\'map\').style.height=\n"
                         + "    (windowHeight-footerHeight)+\'px\';\n"
-                        + "  } else {\n"
-                        + "   document.getElementById(\'map\').style.height=400;\n"
+//                        + "  } else {\n"
+//                        + "   document.getElementById(\'map\').style.height=400;\n"
                         // + " footerElement.style.position=\'static\';\n"
-                        + "  }\n" // else
+//                        + "  }\n" // else
                         + " }\n"
                         + "}\n" // Function
                         + "function trackClick(trk,val) {\n"

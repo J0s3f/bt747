@@ -1,3 +1,8 @@
+Version 1.61.2
+* Linux startup scripts corrected & improved.
+* Change in html output (window height does not need to be 400).
+
+
 Version 1.61.1
 * Corrected html waypoint output when multiple dates in one file.
 * Added --height-to-msl in BT747cmd
