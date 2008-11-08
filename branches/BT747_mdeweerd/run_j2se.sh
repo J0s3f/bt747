@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# You may need to change the next line to an absolute path.
 ROOT_DIR=`dirname $0`
 if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
 
@@ -9,7 +9,6 @@ if [ -e /usr/share/java/RXTXcomm.jar ] ; then
  RXTXLIBPATH=/usr/lib
  RXTXJAR=/usr/share/java/RXTXcomm.jar
 else
- # You may need to change the next line to an absolute path.
  RXTXPATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
  RXTXLIBPATH=${RXTXPATH}/Linux/i686-unknown-linux-gnu
  ARCH=`arch`
