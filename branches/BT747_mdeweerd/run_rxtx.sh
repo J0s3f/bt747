@@ -1,4 +1,7 @@
 #!/bin/sh
+ROOT_DIR=`dirname $0`
+if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
+
 if [ -e /usr/share/java/RXTXcomm.jar ] ; then
  # if librxtx-java seems to be installed locally (e.g., on Ubuntu)
  RXTXPATH=/usr/lib
@@ -6,8 +9,7 @@ if [ -e /usr/share/java/RXTXcomm.jar ] ; then
  RXTXJAR=/usr/share/java/RXTXcomm.jar
 else
  # You may need to change the next line to an absolute path.
- MYROOTPATH=.
- RXTXPATH=${MYROOTPATH}/lib/rxtx-2.1-7-bins-r2
+ RXTXPATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
  RXTXLIBPATH=${RXTXPATH}/Linux/i686-unknown-linux-gnu
  ARCH=`arch`
  TMPRXTXPATH=${RXTXPATH}/Linux/${ARCH}-unknown-linux-gnu
@@ -18,7 +20,7 @@ else
 fi
 
 export CLASSPATH
-CLASSPATH=${RXTXJAR}:lib/Waba_only.jar:dist/BT747_rxtx.jar:.:$CLASSPATH
+CLASSPATH=${RXTXJAR}:${ROOT_DIR}/lib/Waba_only.jar:${ROOT_DIR}/dist/BT747_rxtx.jar:$CLASSPATH
 
 # Change the port prefix by adding the following option to the java invocation:
 #     (the example is for ports like /dev/ttyUSB0)
