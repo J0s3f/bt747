@@ -1,4 +1,4 @@
-#!/bin/sh -v
+#!/bin/sh
 
 ROOT_DIR=`dirname $0`
 if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi
@@ -12,6 +12,11 @@ else
  # You may need to change the next line to an absolute path.
  RXTXPATH=${ROOT_DIR}/lib/rxtx-2.1-7-bins-r2
  RXTXLIBPATH=${RXTXPATH}/Linux/i686-unknown-linux-gnu
+ ARCH=`arch`
+ TMPRXTXPATH=${RXTXPATH}/Linux/${ARCH}-unknown-linux-gnu
+ if [ -r ${TMPRXTXPATH} ] ; then
+   RXTXLIBPATH=${TMPRXTXPATH}
+ fi
  RXTXJAR=${RXTXPATH}/RXTXcomm.jar
 fi
 
@@ -27,8 +32,8 @@ CLASSPATH=${RXTXJAR}:${ROOT_DIR}/dist/libBT747.jar:$CLASSPATH
 # It is possible to define the path to the configuration file
 #       -Dbt747_settings="bt747settings.pdb"
 
-which javaw 2>1 >/dev/null && JAVA=javaw
-which java 2>1 >/dev/null && JAVA=java
+which java 2>&1 >/dev/null && JAVA=java
+which javaw 2>&1 >/dev/null && JAVA=javaw
 
 #strace -e trace=file -f -o trace.log
-$JAVA -Djava.library.path=${RXTX_BIN_PATH} -jar ${ROOT_DIR}/dist/BT747_j2se.jar
+$JAVA -Djava.library.path=${RXTXLIBPATH} -jar ${ROOT_DIR}/dist/BT747_j2se.jar &
