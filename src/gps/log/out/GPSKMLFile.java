@@ -281,9 +281,9 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("</when></TimeStamp>\r\n");
                     }
 
-                    rec.append("<styleUrl>");
                     if ((activeFields.rcr != 0)
                             && (selectedFileFields.rcr != 0)) {
+                        rec.append("<styleUrl>");
                         String style = CommonOut.getRCRstr(s);
 
                         if (style.length() > 1
@@ -292,8 +292,8 @@ public class GPSKMLFile extends GPSFile {
                         }
                         rec.append("#Style");
                         rec.append(style);
+                        rec.append("</styleUrl>\r\n");
                     }
-                    rec.append("</styleUrl>\r\n");
 
                     if (((activeFields.longitude != 0) && (selectedFileFields.longitude != 0))
                             && ((activeFields.latitude != 0) && (selectedFileFields.latitude != 0))) {
