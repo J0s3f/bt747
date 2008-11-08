@@ -168,6 +168,7 @@ public class BT747Main extends javax.swing.JFrame implements
         txtSpeedMax.setText(String.format((Locale) null, "%.2f", m
                 .getFilterMaxSpeed())); // NOI18N
 
+
         tfTrackSeparationTime.setText(Integer.toString(m.getTrkSep()));
 
         int index = 0;
@@ -5418,6 +5419,8 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
                 }
                 c.setOutputFileRelPath(relPath);
                 getOutputFilePath();
+                tfOutputFileBaseName.setCaretPosition(tfOutputFileBaseName.getText().length());
+
             } catch (Exception e) {
                 Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OutputFileChooser"), e);
             }
@@ -5443,6 +5446,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
                 Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("RawFileChooser"),e);
             }
             tfRawLogFilePath.setText(m.getStringOpt(AppSettings.LOGFILEPATH));
+            tfRawLogFilePath.setCaretPosition(tfRawLogFilePath.getText().length());
         }
     }// GEN-LAST:event_btRawLogFileActionPerformed
 
@@ -5466,6 +5470,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
                 Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("WorkingDirChooser"), e);
             }
             tfWorkDirectory.setText(m.getStringOpt(AppSettings.OUTPUTDIRPATH));
+            tfWorkDirectory.setCaretPosition(tfWorkDirectory.getText().length());
         }
     }// GEN-LAST:event_btWorkingDirectoryActionPerformed
 
