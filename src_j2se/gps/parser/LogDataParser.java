@@ -70,15 +70,8 @@ public class LogDataParser {
     }
 
     public Date getUTC() throws IOException {
-        return new Date((long) Integer.reverseBytes(this.dis.readInt()) * 1000); // Important:
-                                                                                    // Force
-                                                                                    // a
-                                                                                    // "long"
-                                                                                    // result
-                                                                                    // to
-                                                                                    // avoid
-                                                                                    // int
-                                                                                    // truncation!
+        // Important: Force a "long" result to avoid int truncation!
+        return new Date((long) Integer.reverseBytes(this.dis.readInt()) * 1000);
     }
 
     public int getUTCSize() {
