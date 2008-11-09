@@ -257,7 +257,6 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         // our GMarkerOptions object
 
                         + " var map = new GMap2(document.getElementById(\"map\"));\n"
-                        + " setFooter();\n"
                         + " map.setCenter(new GLatLng(0,0));\n"
                         // + "var mgrOptions = { borderPadding: 50, maxZoom: 15,
                         // trackMarkers: true };\n"
@@ -641,6 +640,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                     + "))));"
                     + "\n"
                     + "};\n"
+                    + " setFooter();\n"
                     + " initial();\n"
                     + "map.enableContinuousZoom();\n"
                     + "map.enableDoubleClickZoom();\n"
