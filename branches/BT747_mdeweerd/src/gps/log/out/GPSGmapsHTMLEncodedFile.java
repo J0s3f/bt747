@@ -225,7 +225,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "  var footerElement=document.getElementById(\'footer\');\n"
                         + "  var footerHeight=footerElement.offsetHeight;\n"
 //                        + "  if (windowHeight-footerHeight>400) {\n"
-//                        + "   document.getElementById(\'map\').style.height=\n"
+                        + "   document.getElementById(\'map\').style.height=\n"
                         + "    (windowHeight-footerHeight)+\'px\';\n"
 //                        + "  } else {\n"
 //                        + "   document.getElementById(\'map\').style.height=400;\n"
