@@ -176,7 +176,7 @@ public final class J2SEAppController extends Controller {
     private static ResourceBundle bundle = java.util.ResourceBundle
             .getBundle("bt747/j2se_view/Bundle");
 
-    private static final String getString(final String s) {
+    public static final String getString(final String s) {
         return bundle.getString(s);
     }
 

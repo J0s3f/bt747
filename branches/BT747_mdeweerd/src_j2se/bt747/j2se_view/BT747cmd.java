@@ -798,7 +798,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                         "b",
                         "Do not read device, read a previously saved file."
                                 + "The file type is selected according to the filename extension."
-                                + "Recognized file extensions are .csv, .trl,"
+                                + "Recognized file extensions are .bin, .csv, .trl,"
                                 + ".nmea, .nme, .nma, .txt, .log, .sr .")
                         .withRequiredArg().describedAs("filename.bin").ofType(
                                 String.class);

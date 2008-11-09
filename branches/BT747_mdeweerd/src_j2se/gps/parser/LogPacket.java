@@ -50,7 +50,7 @@ public class LogPacket {
 
     /**
      * Construction of LogPacket, using LogFormat's knowledge, which values to
-     * except, and LogDataParser's knowledge of the technical representation of
+     * accept, and LogDataParser's knowledge of the technical representation of
      * the individual values and his ability to access these values.
      * 
      * @param parser
@@ -63,7 +63,7 @@ public class LogPacket {
         // System.out.print("constructing LogPacket from: "); //$NON-NLS-1$
         // parser.peek(100);
 
-        // Important: The sequence is meaningful!
+        // Important: The sequence of getting the fields is important!
         if (lf.hasUTC()) {
             this.utc = parser.getUTC();
         }
@@ -123,8 +123,8 @@ public class LogPacket {
         }
 
         if (lf.hasNSat()) {
-            this.nSatInUse = parser.getNSatInUse();
             this.nSatInView = parser.getNSatInView();
+            this.nSatInUse = parser.getNSatInUse();
         }
 
         if (lf.hasSID()) {

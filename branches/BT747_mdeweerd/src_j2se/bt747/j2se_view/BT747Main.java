@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import javax.swing.filechooser.FileFilter;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -5438,7 +5439,17 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         // if (curDir.exists()) {
         // RawLogFileChooser.setCurrentDirectory(getRawLogFilePath());
         // }
-        if (RawLogFileChooser.showDialog(this,java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("SetRawLogFile")) == JFileChooser.APPROVE_OPTION) {
+        RawLogFileChooser.setAcceptAllFileFilterUsed(true);
+        RawLogFileChooser.addChoosableFileFilter(new BinFileFilter());
+        RawLogFileChooser.addChoosableFileFilter(new CSVFileFilter());
+        RawLogFileChooser.addChoosableFileFilter(new HoluxTRLFileFilter());
+        RawLogFileChooser.addChoosableFileFilter(new NMEAFileFilter());
+        RawLogFileChooser.addChoosableFileFilter(new DPL700FileFilter());
+        KnownFileFilter ff = new KnownFileFilter();
+        RawLogFileChooser.addChoosableFileFilter(ff);
+        RawLogFileChooser.setFileFilter(ff);
+        if (RawLogFileChooser.showDialog(this,java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("SetRawLogFile")
+                ) == JFileChooser.APPROVE_OPTION) {
             try {
             c.setStringOpt(AppSettings.LOGFILEPATH, RawLogFileChooser.getSelectedFile()
                     .getCanonicalPath());
