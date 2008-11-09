@@ -32,7 +32,7 @@
 	          value="${lib.dir}/swing-layout-1.0.3.jar"
 	/>
 	<property name="jcalendar.jar" value="${lib.dir}/jcalendar-1.3.2.jar" />
-    <property name="jopt-simple.jar" value="${lib.dir}/jopt-simple-2.4.1.jar" />
+	<property name="jopt-simple.jar" value="${lib.dir}/jopt-simple-2.4.1.jar" />
 
 	<property name="j2se.main" value="bt747.j2se_view.BT747Main" />
 	<property name="j2se.main2" value="bt747.j2se_view.BT747Intl" />
@@ -54,6 +54,16 @@
 		<pathelement location="${swcollections.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
 	</path>
+
+	<!-- New classpath to use library -->
+	<path id="wabaclasspath">
+		<pathelement location="${waba.jar}" />
+		<pathelement location="${superwaba_root}/lib/SuperWaba.jar" />
+		<pathelement location="${swcollections.jar}" />
+		<pathelement location="${rxtxcomm.jar}" />
+		<pathelement location="${dist}/lib${ant.project.name}.jar" />
+	</path>
+
 
 	<path id="symbianclasspath">
 		<pathelement location="${superwaba_root}/lib/SuperWaba.jar" />
@@ -140,11 +150,11 @@
 			<param name="lang" value="de" />
 		</antcall>
 	</target>
-    <target name="all.lang.nl">
-        <antcall target="all.package">
-            <param name="lang" value="nl" />
-        </antcall>
-    </target>
+	<target name="all.lang.nl">
+		<antcall target="all.package">
+			<param name="lang" value="nl" />
+		</antcall>
+	</target>
 	<target name="all.lang.fr">
 		<antcall target="all.package">
 			<param name="lang" value="fr" />
@@ -276,12 +286,12 @@
 	<path id="j2seclasspath">
 		<pathelement location="${dist}/lib${ant.project.name}.jar" />
 		<pathelement location="${jcalendar.jar}" />
-        <pathelement location="${jopt-simple.jar}" />
+		<pathelement location="${jopt-simple.jar}" />
 		<pathelement location="${swinglayout.jar}" />
 		<pathelement location="${rxtxcomm.jar}" />
 	</path>
-	
-	
+
+
 
 	<uptodate property="libj2se.uptodate"
 	          targetfile="${dist}/lib${ant.project.name}.jar"
@@ -291,6 +301,11 @@
 	</uptodate>
 
 
+	<!-- BUILD THE DESKTOP APPLICATION
+	- 1. Build/distribute the library
+	- 2. Compile the J2SE specific files.
+	- [No optimisation here]
+	-->
 	<target name="build.j2seapp">
 		<!--Need this in stead of dependency because when files are erase 'up-to-date' is not correct. -->
 		<ant inheritall="false" target="dist.libj2se" />
@@ -307,8 +322,8 @@
 			
 		>
 			<include name="bt747/j2se_view/BT747Main.java" />
-            <include name="bt747/j2se_view/BT747cmd.java" />
-            <include name="bt747/j2se_view/BT747Intl.java" />
+			<include name="bt747/j2se_view/BT747cmd.java" />
+			<include name="bt747/j2se_view/BT747Intl.java" />
 			<exclude name="bt747/waba_view/**" />
 			<exclude name="net/sf/net/bt747/waba/**" />
 			<compilerarg line="-Xlint:unchecked"/>
@@ -322,6 +337,83 @@
         </copy>
         -->
 	</target>
+
+	<!-- BUILD THE WABA APPLICATION FOR THE DESKTOP
+	    [NOT DEBUGGED YET - BUILD METHOD UNDER DEVELOPMENT]
+	    - 1. Build/distribute the library
+	    - 2. Compile the J2SE specific files.
+	    - [No optimisation here]
+	    -->
+	<target name="build.wabaapp">
+		<!--Need this in stead of dependency because when files are erase 'up-to-date' is not correct. -->
+		<ant inheritall="false" target="dist.libj2se" />
+		<delete dir="${wababuild.dir}" />
+		<mkdir dir="${wababuild.dir}" />
+
+		<javac verbose="no"
+		       srcdir="${src_waba.dir}"
+		       destdir="${wababuild.dir}"
+		       optimize="${java.optimize}"
+		       debug="${java.debug}"
+		       classpathref="wabaclasspath"
+		       encoding="iso-8859-15"
+		>
+			<include name="BT747.java" />
+			<compilerarg line="-Xlint:unchecked" />
+		</javac>
+
+	</target>
+
+    <target name="dist.j2se" depends="build.j2seapp">
+        <buildnumber file="build.num" />
+        <delete file="MANIFEST.MF" />
+        <manifest file="MANIFEST.MF">
+            <attribute name="Built-By" value="${user.name}" />
+            <attribute name="Main-Class" value="${j2se.main}" />
+            <attribute name="Implementation-Version"
+                       value="${full.build.version}"
+            />
+            <attribute name="Class-Path"
+                       value="libBT747.jar dist/libBT747.jar lib/libBT747.jar RXTXcomm.jar collections-superwaba.jar swing-layout-1.0.3.jar ../lib/RXTXcomm.jar ../${swinglayout.jar} ../lib/jcalendar-1.3.2.jar lib/RXTXcomm.jar lib/swing-layout-1.0.3.jar lib/jcalendar-1.3.2.jar"
+            />
+        </manifest>
+        <!-- It might be possible to read the version in the application:
+                 TheMainClass.class.getPackage().getImplementationVersion() ); -->
+
+        <!-- 
+        <jar manifest="MANIFEST.MF" jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar" compress="true">
+            <fileset dir="${j2sebuild.dir}" includes="**/*.class" />
+        </jar>
+        -->
+
+        <jar manifest="MANIFEST.MF"
+             jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
+             compress="true"
+        >
+            <fileset dir="${icon.dir}/.." includes="icons/bt747_16x16.gif" />
+            <fileset dir="${icon.dir}/.." includes="icons/bt747_24x24.gif" />
+            <fileset dir="${icon.dir}/.." includes="icons/bt747_32x32.gif" />
+            <fileset dir="${icon.dir}/.." includes="icons/bt747_128x128.gif" />
+            <fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
+            <fileset dir="${j2sebuild.dir}" includes="**/*.class" />
+        </jar>
+
+        <antcall target="proguard.j2seapp" />
+
+        <copy file="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
+              tofile="${dist}/${ant.project.name}_j2se.jar"
+        />
+
+        <antcall target="sign">
+            <param name="jar.tosign"
+                   value="${dist}/${ant.project.name}_j2se.jar"
+            />
+        </antcall>
+
+    </target>
+
+	
+	
 
 	<target name="proguard.j2seapp_task" unless="skip.proguard">
 		<taskdef name="proguard"
@@ -343,7 +435,7 @@
 		          ignorewarnings="true"
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
-            <libraryjar file="${jopt-simple.jar}" />
+			<libraryjar file="${jopt-simple.jar}" />
 			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
 			<outjar path="${j2sebuild.dir}/${ant.project.name}_j2se.jar" />
                      -injar ${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar
@@ -355,12 +447,63 @@
 
 	<target name="proguard.j2seapp" depends="proguard.j2seapp_task" />
 
-	<target name="dist.j2se" depends="build.j2seapp">
+
+	<!-- OPTIMIZE THE WABA APPLICATION
+	  -->
+   <target name="proguard.wabaapp_task" unless="skip.proguard">
+        <taskdef name="proguard"
+                 classpath="${proguardLib}"
+                 classname="proguard.ant.ProGuardTask"
+        />
+        <move file="${wababuild.dir}/${ant.project.name}_waba.jar"
+              tofile="${wababuild.dir}/${ant.project.name}_waba_unopt.jar"
+        />
+        <proguard forceprocessing="true"
+                  shrink="${proguard.shrink}"
+                  defaultpackage=""
+                  optimize="${proguard.optimize}"
+                  obfuscate="false"
+                  repackageclasses="false"
+                  printusage="false"
+                  overloadaggressively="false"
+                  verbose="true"
+                  ignorewarnings="true"
+        >
+            <libraryjar file="${proguard.java.rt.lib}" />
+            <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+            <libraryjar file="${dist}/lib${ant.project.name}.jar" />
+            <outjar path="${wababuild.dir}/${ant.project.name}_waba.jar" />
+              -injar ${wababuild.dir}/${ant.project.name}_waba_unopt.jar
+              -injar ${swcollections.jar}(!META-INF/**)
+              -optimizationpasses 3
+              -printmapping ${dist}/${ant.project.name}_waba.map
+              -keep public class BT747
+              -keep public class sun.audio.AudioStream
+              -keep public class * implements gps.log.in.GPSLogConvert
+              -keep public class * extends waba.ui.MainWindow
+              -keep public class * extends gps.connection.GPSPort
+              -keep public class * {
+                public static void setGpsPortInstance(gps.connection.GPSPort);
+              }
+              -keep public class bt747.Version { *; }
+            </proguard>
+    </target>
+
+    <target name="proguard.wabaapp" depends="proguard.wabaapp_task" />
+
+	
+	<!-- BUILD WABA DISTRIBUTION
+	[Currently under debug]
+	1. BUILD THE WABA APP.
+	2. POTENTIALLY OPTIMIZE THE APP
+	3. SIGN THE APP
+	-->
+	<target name="dist.waba" depends="build.wabaapp">
 		<buildnumber file="build.num" />
 		<delete file="MANIFEST.MF" />
 		<manifest file="MANIFEST.MF">
 			<attribute name="Built-By" value="${user.name}" />
-			<attribute name="Main-Class" value="${j2se.main}" />
+			<attribute name="Main-Class" value="waba.applet.Applet" />
 			<attribute name="Implementation-Version"
 			           value="${full.build.version}"
 			/>
@@ -372,35 +515,29 @@
 	             TheMainClass.class.getPackage().getImplementationVersion() ); -->
 
 		<!-- 
-		<jar manifest="MANIFEST.MF" jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar" compress="true">
-			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
+		<jar manifest="MANIFEST.MF" jarfile="${wababuild.dir}/${ant.project.name}_waba.jar" compress="true">
+			<fileset dir="${wababuild.dir}" includes="**/*.class" />
 		</jar>
 		-->
 
 		<jar manifest="MANIFEST.MF"
-		     jarfile="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
+		     jarfile="${wababuild.dir}/${ant.project.name}_waba.jar"
 		     compress="true"
 		>
-            <fileset dir="${icon.dir}/.." includes="icons/bt747_16x16.gif" />
-            <fileset dir="${icon.dir}/.." includes="icons/bt747_24x24.gif" />
-            <fileset dir="${icon.dir}/.." includes="icons/bt747_32x32.gif" />
-            <fileset dir="${icon.dir}/.." includes="icons/bt747_128x128.gif" />
-            <fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
-			<fileset dir="${j2sebuild.dir}" includes="**/*.class" />
+			<fileset dir="${wababuild.dir}" includes="**/*.class" />
 		</jar>
 
-		<antcall target="proguard.j2seapp" />
+		<antcall target="proguard.wabaapp" />
 
-		<copy file="${j2sebuild.dir}/${ant.project.name}_j2se.jar"
-		      tofile="${dist}/${ant.project.name}_j2se.jar"
+		<copy file="${wababuild.dir}/${ant.project.name}_waba.jar"
+		      tofile="${dist}/${ant.project.name}_waba.jar"
 		/>
 
 		<antcall target="sign">
 			<param name="jar.tosign"
-			       value="${dist}/${ant.project.name}_j2se.jar"
+			       value="${dist}/${ant.project.name}_waba.jar"
 			/>
 		</antcall>
-
 	</target>
 
 	<target name="proguard.lib" depends="proguard.lib_task" />
@@ -441,6 +578,7 @@
                         -optimizationpasses 1
                         -keep public class bt747.sys.Interface { *; }
 			            -keep public class bt747.sys.Settings { *; }
+			            -keep public class bt747.sys.File { *; }
                         -keep public class gps.BT747Constants { *; }
                         -keep public class gps.GpsEvent { *; }
                         -keep public class gps.GPSListener { *; }
@@ -734,18 +872,18 @@
 		</condition>
 		<condition property="is.j2se">
 			<istrue value="${build.j2se}" />
-        </condition>
-        <condition property="build.classpath" value="j2seclasspath">
-            <istrue value="${build.j2se}" />
-        </condition>
-        <condition property="build.classpath" value="rxtxclasspath">
-            <isfalse value="${build.j2se}" />
-        </condition>
+		</condition>
+		<condition property="build.classpath" value="j2seclasspath">
+			<istrue value="${build.j2se}" />
+		</condition>
+		<condition property="build.classpath" value="rxtxclasspath">
+			<isfalse value="${build.j2se}" />
+		</condition>
 
 
 		<echoproperties prefix="exclude.waba">
 		</echoproperties>
-        <echoproperties prefix="is.">
+		<echoproperties prefix="is.">
 		</echoproperties>
 		<!-- No longer deleting these for the libary until
 			     Txt is really local.
@@ -762,7 +900,7 @@
 			<fileset dir="${rxtxsrc.dir}">
 				<include name="${src_j2se.dir}/**" unless="is.j2se" />
 				<include name="${src_waba.dir}/**" if="exclude.waba" />
-                <include name="*/bt747/*view/**" if="is.lib" />
+				<include name="*/bt747/*view/**" if="is.lib" />
 			</fileset>
 		</delete>
 		<javac verbose="no"
@@ -1128,8 +1266,8 @@
 			<arg value="/INST" />
 			<!-- <arg value="/SIS"/> -->
 			<!-- <arg value="/SH"/> -->
-            <arg value="/I" />
-            <arg value="BT747_" />
+			<arg value="/I" />
+			<arg value="BT747_" />
 			<arg value="/V" />
 			<arg value="${build_version}" />
 			<arg value="/c" />
@@ -1151,8 +1289,8 @@
 		>
 			<!-- <arg value="/INST"/> -->
 			<arg value="/SIS" />
-            <arg value="/I" />
-            <arg value="BT747_" />
+			<arg value="/I" />
+			<arg value="BT747_" />
 			<arg value="/c" />
 			<arg value="BT74" />
 			<arg value="${ant.project.name}" />
@@ -1171,8 +1309,8 @@
 		      fork="true"
 		      classpathref="utils"
 		>
-            <arg value="/I" />
-            <arg value="BT747_" />
+			<arg value="/I" />
+			<arg value="BT747_" />
 			<arg value="/c" />
 			<arg value="BT74" />
 			<arg value="/e" />
@@ -1191,8 +1329,8 @@
 		      fork="true"
 		      classpathref="utils"
 		>
-            <arg value="/I" />
-            <arg value="BT747_" />
+			<arg value="/I" />
+			<arg value="BT747_" />
 			<arg value="/c" />
 			<arg value="BT74" />
 			<arg value="/z" />
@@ -1639,7 +1777,7 @@
 				/>
 			</replace>
 			<!-- <echo message="FILTER:${@{dest.dir}rxtxfilter}  @{dest.dir} @{rxtx}" /> -->
-            <echo message="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java" />
+			<echo message="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/waba_view/AppController.java" />
 			<replace dir="@{dest.dir}"
 			         token="// #if RXTX"
 			         summary="yes"
@@ -1655,14 +1793,14 @@
 				</not>
 			</condition>
 			<echo message="Preparing for language ${lang}" />
-            <replace dir="@{dest.dir}"
+			<replace dir="@{dest.dir}"
                      token="Txt_en"
                      summary="yes"
                      value="Txt_${lang}"
             >
-                <include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/Txt.java"
+				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/Txt.java"
                 />
-            </replace>
+			</replace>
 
 
 			<copy file="dev/package.bat" tofile="package.bat" />
