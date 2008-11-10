@@ -314,7 +314,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, false);
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, false);
         c.setOutputFileSplitType(0);
-        c.setConvertWGS84ToMSL(false);
+        c.setHeightConversionMode(Model.HEIGHT_AUTOMATIC);
 
         // Next line gets arguments not related to option
         options.nonOptionArguments();
@@ -383,9 +383,23 @@ public class BT747cmd implements bt747.model.ModelListener {
             // c.setUsb();
         }
 
-        if (options.has("height-to-msl")) {
-            c.setConvertWGS84ToMSL(true);
+        if (options.has("height")) {
+            String heightOpt;
+            heightOpt = ((String) options.valueOf("height")).toUpperCase();
+            if (heightOpt.equals("AUTOMATIC")) {
+                c.setHeightConversionMode(Model.HEIGHT_AUTOMATIC);
+            } else if (heightOpt.equals("MSL_TO_WGS84")) {
+                c.setHeightConversionMode(Model.HEIGHT_MSL_TO_WGS84);
+            } else if (heightOpt.equals("WGS84_TO_MSL")) {
+                c.setHeightConversionMode(Model.HEIGHT_WGS84_TO_MSL);
+            } else if (heightOpt.equals("KEEP")) {
+                c.setHeightConversionMode(Model.HEIGHT_NOCHANGE);
+            } else {
+                System.err
+                        .println("Height parameter (" + heightOpt + "unknown");
+            }
         }
+
         if (options.has("UTC")) {
             Integer offset = (Integer) options.valueOf("UTC");
             c.setTimeOffsetHours(offset);
@@ -866,7 +880,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                 accepts("timesplit", "Time separation in minutes needed for track segment or track separation.")
                 .withRequiredArg().describedAs("MINUTES").ofType(
                         Integer.class);
-                accepts("height-to-msl", "Correct WGS84 height (elevation) to MSL (Mean Sea Level)");
+                accepts("height", "Adjust height.  According to formats when 'AUTOMATIC'," +
+                		"WGS84 height (elevation) to MSL (Mean Sea Level) when 'MSL'," +
+                		"MSL to WGS84 when 'WGS84'").withRequiredArg().describedAs("AUTOMATIC|KEEP|WGS84_TO_MSL|MSL_TO_WGS84");
             }
         };
 

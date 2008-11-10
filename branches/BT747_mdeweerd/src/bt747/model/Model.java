@@ -9,9 +9,9 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
+//***  *********************************************************** ***  
 package bt747.model;
 
 import gps.BT747Constants;
@@ -81,6 +81,18 @@ public class Model extends AppSettings implements GPSListener {
      * log type (Writes TRK and WPT files).
      */
     public static final int TRK_LOGTYPE = 7;
+    /**
+     * log type (BIN log type).
+     */
+    public static final int BIN_LOGTYPE = 8;
+    /**
+     * log type (TRL holux log type).
+     */
+    public static final int TRL_LOGTYPE = 9;
+    /**
+     * log type (TRL holux log type).
+     */
+    public static final int SR_LOGTYPE = 10;
 
     /**
      * The number of seconds in a day.

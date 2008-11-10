@@ -158,8 +158,8 @@ public final class GPSLogGet extends Container implements ModelListener {
         cbFileSplitType.select(m.getOutputFileSplitType());
         add(chkConvertWGSToMSL = new MyCheck(Txt.HGHT_GEOID_DIFF), AFTER + 5,
                 SAME); //$NON-NLS-1$
-        chkConvertWGSToMSL.setChecked(m.isConvertWGS84ToMSL());
-
+        chkConvertWGSToMSL.setChecked(m.getHeightConversionMode() != 0);
+        updateHeightConversionModeFromControl();
         add(btToCSV = new Button(Txt.TO_CSV), LEFT, AFTER + 5); //$NON-NLS-1$
         add(btToGPX = new Button(Txt.TO_GPX), AFTER + 5, SAME); //$NON-NLS-1$
         add(btToKML = new Button(Txt.TO_KML), RIGHT, SAME); //$NON-NLS-1$
@@ -182,6 +182,12 @@ public final class GPSLogGet extends Container implements ModelListener {
                 break;
             }
         }
+    }
+
+    private final void updateHeightConversionModeFromControl() {
+        c
+                .setHeightConversionMode(chkConvertWGSToMSL.getChecked() ? Model.HEIGHT_WGS84_TO_MSL
+                        : Model.HEIGHT_NOCHANGE);
     }
 
     private void reqLogInfo() {
@@ -256,7 +262,7 @@ public final class GPSLogGet extends Container implements ModelListener {
             } else if (event.target == cbFileSplitType) {
                 c.setOutputFileSplitType(cbFileSplitType.getSelectedIndex());
             } else if (event.target == chkConvertWGSToMSL) {
-                c.setConvertWGS84ToMSL(chkConvertWGSToMSL.getChecked());
+                updateHeightConversionModeFromControl();
             } else if (event.target == btEndDate) {
                 if (cal == null) {
                     cal = new Calendar();

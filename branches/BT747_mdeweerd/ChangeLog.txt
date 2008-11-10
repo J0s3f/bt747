@@ -1,3 +1,7 @@
+Version 1.61.4
+* Height conversion option extended: automatic, nochange, msl_to_wgs84, wgs84_to_msl.
+* Height limitation in binary input check increased: limit now 15000 in stead of 10000.
+
 Version 1.61.3
 * DOS Startup scripts improved.
 

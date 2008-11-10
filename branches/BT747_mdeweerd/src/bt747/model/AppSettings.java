@@ -9,9 +9,9 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
+//***  *********************************************************** ***  
 package bt747.model;
 
 import gps.BT747Constants;
@@ -42,7 +42,8 @@ public class AppSettings {
     private static final int C_LOGFILERELPATH_IDX = C_REPORTFILEBASE_IDX
             + C_REPORTFILEBASE_SIZE;
     private static final int C_LOGFILERELPATH_SIZE = 40;
-    private static final int C_OPENSTARTUP_IDX = C_LOGFILERELPATH_IDX + C_LOGFILERELPATH_SIZE;
+    private static final int C_OPENSTARTUP_IDX = C_LOGFILERELPATH_IDX
+            + C_LOGFILERELPATH_SIZE;
     private static final int C_OPENSTARTUP_SIZE = 40;
     private static final int C_CHUNKSIZE_IDX = C_OPENSTARTUP_IDX
             + C_OPENSTARTUP_SIZE;
@@ -186,9 +187,11 @@ public class AppSettings {
     private static final int C_COLOR_VALIDTRACK_IDX = C_STOP_LOG_ON_CONNECT_IDX
             + C_STOP_LOG_ON_CONNECT_SIZE;
     private static final int C_COLOR_VALIDTRACK_SIZE = 8;
-    private static final int C_LOGFILEPATH_IDX = C_COLOR_VALIDTRACK_IDX + C_COLOR_VALIDTRACK_SIZE;
+    private static final int C_LOGFILEPATH_IDX = C_COLOR_VALIDTRACK_IDX
+            + C_COLOR_VALIDTRACK_SIZE;
     private static final int C_LOGFILEPATH_SIZE = 300;
-    private static final int C_NEXT_IDX = C_LOGFILEPATH_IDX + C_LOGFILEPATH_SIZE;
+    private static final int C_NEXT_IDX = C_LOGFILEPATH_IDX
+            + C_LOGFILEPATH_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -264,10 +267,12 @@ public class AppSettings {
 
     public static final int OUTPUTDIRPATH = 9;
     public static final int REPORTFILEBASE = 10;
-    /** Available for the application - must also set {@link #LOGFILEPATH} parameter. */
+    /**
+     * Available for the application - must also set {@link #LOGFILEPATH}
+     * parameter.
+     */
     public static final int LOGFILERELPATH = 11;
     public static final int LOGFILEPATH = 12;
-    
 
     private static final int[][] paramsList =
     // Type, idx, start, size
@@ -341,7 +346,7 @@ public class AppSettings {
             setCard(-1);
             setStringOpt(OUTPUTDIRPATH, defaultBaseDirPath);
             setStringOpt(LOGFILERELPATH, "BT747log.bin");
-            setStringOpt(REPORTFILEBASE,"GPSDATA");
+            setStringOpt(REPORTFILEBASE, "GPSDATA");
             setStartupOpenPort(false);
             setChunkSize(defaultChunkSize);
             setDownloadTimeOut(C_DEFAULT_DEVICE_TIMEOUT);
@@ -354,7 +359,7 @@ public class AppSettings {
             setOutputFileSplitType(0);
             /* fall through */
         case 3:
-            setConvertWGS84ToMSL(false);
+            setHeightConversionMode(HEIGHT_AUTOMATIC);
             /* fall through */
         case 4:
             setLogRequestAhead(C_DEFAULT_LOG_REQUEST_AHEAD);
@@ -440,6 +445,7 @@ public class AppSettings {
 
             setStringOpt(0, "0.26", C_VERSION_IDX, C_VERSION_SIZE);
             /* fall through */
+
         default:
             // Always force lat and lon and utc and height active on restart for
             // basic users.
@@ -522,7 +528,8 @@ public class AppSettings {
                         .getAppSettings().substring(idx + size,
                                 Settings.getAppSettings().length()) : ""));
         if (eventType != 0) {
-            postEvent(ModelEvent.SETTING_CHANGE);  // TODO: Argument is for later.
+            postEvent(ModelEvent.SETTING_CHANGE); // TODO: Argument is for
+                                                    // later.
         }
     }
 
@@ -612,7 +619,8 @@ public class AppSettings {
         // paramsList[param][SIZE_IDX]),8), null);
         //
         // }
-        if ((param < paramsList.length) && (paramsList[param][TYPE_IDX] == STRING)) {
+        if ((param < paramsList.length)
+                && (paramsList[param][TYPE_IDX] == STRING)) {
             return getStringOpt(paramsList[param][START_IDX],
                     paramsList[param][SIZE_IDX]);
         } else {
@@ -630,7 +638,8 @@ public class AppSettings {
         // + bt747.sys.Convert.unsigned2hex(value, 8), null);
         //
         // }
-        if ((param < paramsList.length) && (paramsList[param][TYPE_IDX] == STRING)) {
+        if ((param < paramsList.length)
+                && (paramsList[param][TYPE_IDX] == STRING)) {
             setStringOpt(param, value, paramsList[param][START_IDX],
                     paramsList[param][SIZE_IDX]);
         } else {
@@ -639,7 +648,6 @@ public class AppSettings {
         }
     }
 
-    
     /**
      * @return Returns the portnbr.
      */
@@ -856,16 +864,29 @@ public class AppSettings {
         setLocalIntOpt(0, value, C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
     }
 
-    public final boolean isConvertWGS84ToMSL() {
-        return getLocalBooleanOpt(C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
+    public final static int HEIGHT_NOCHANGE = 0;
+    public final static int HEIGHT_WGS84_TO_MSL = 1;
+    public final static int HEIGHT_AUTOMATIC = 2;
+    public final static int HEIGHT_MSL_TO_WGS84 = 3;
+
+    /**
+     * 
+     * @return height conversion mode.
+     * @see #HEIGHT_AUTOMATIC<br>
+     * @see #HEIGHT_MSL<br>
+     * @see #HEIGHT_NOCHANGE
+     */
+    public final int getHeightConversionMode() {
+        return getLocalIntOpt(C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
     }
 
     /**
      * @param value
-     *            true - Setting is to convert the WGS84 height to MSL height.
+     *            {@link #HEIGHT_WGS84_TO_MSL} - Setting is to convert the WGS84 height
+     *            to MSL height.
      */
-    public final void setConvertWGS84ToMSL(final boolean value) {
-        setLocalBooleanOpt(0, value, C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
+    public final void setHeightConversionMode(final int value) {
+        setLocalIntOpt(0, value, C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
     }
 
     public final boolean isAdvFilterActive() {

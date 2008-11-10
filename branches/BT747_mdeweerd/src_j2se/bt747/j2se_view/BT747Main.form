@@ -1234,9 +1234,11 @@
                     <Component class="javax.swing.JComboBox" name="cbHeightOverMeanSeaLevel">
                       <Properties>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="2">
-                            <StringItem index="0" value="Keep WGS84 height"/>
-                            <StringItem index="1" value="MSL height"/>
+                          <StringArray count="4">
+                            <StringItem index="0" value="Keep Height"/>
+                            <StringItem index="1" value="WGS84 -> MSL"/>
+                            <StringItem index="2" value="Automatic"/>
+                            <StringItem index="3" value="MSL -> WGS84"/>
                           </StringArray>
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">

@@ -40,11 +40,12 @@ public interface GPSLogConvert {
     /**
      * Height conversion active if true.
      * 
-     * @param b
-     *            true - treat height information as MSL inclusive and correct
-     *            in output.
+     * @param mode
+     *            When '-1' : Substract MSL over WGS84<br>
+     *            When '1' : Add MSL over WGS84 in output.<br>
+     *            When '0': Do nothing<br>
      */
-    void setConvertWGS84ToMSL(final boolean b);
+    void setConvertWGS84ToMSL(final int mode);
 
     int toGPSFile(final String fileName, final GPSFile gpsFile, final int card);
 

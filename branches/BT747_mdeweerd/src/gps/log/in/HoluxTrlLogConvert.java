@@ -9,13 +9,12 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package gps.log.in;
 
 import gps.BT747Constants;
-import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
 
@@ -42,8 +41,10 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = logFormat;
 
-    private boolean isConvertWGL84ToMSL = false; // If true,remove geoid
-                                                    // difference from height
+    /**
+     * When -1, if old height was WGS84, new height will be MSL.
+     */
+    private int factorConversionWGS84ToMSL = 0; 
 
     private String errorInfo;
 
@@ -59,7 +60,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
 
     public final int parseFile(final GPSFile gpsFile) {
         try {
-            GPSRecord gpsRec = new GPSRecord();
+            GPSRecord r = new GPSRecord();
             final int C_BUF_SIZE = 0x800;
             byte[] bytes = new byte[C_BUF_SIZE];
             int sizeToRead;
@@ -124,29 +125,29 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
                         /*******************************************************
                          * Get all the information in the record.
                          */
-                        gpsRec.recCount = recCount;
+                        r.recCount = recCount;
                         if (!passToFindFieldsActivatedInLog) {
-                            gpsRec.valid = 0xFFFF;
-                            gpsRec.rcr = 0x0001; // For filter
+                            r.valid = 0xFFFF;
+                            r.rcr = 0x0001; // For filter
                             // Only interpret fiels if not looking for logFormat
                             // changes only
-                            gpsRec.utc = (0xFF & bytes[recIdx++]) << 0
+                            r.utc = (0xFF & bytes[recIdx++]) << 0
                                     | (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
-                            gpsRec.utc += timeOffsetSeconds;
+                            r.utc += timeOffsetSeconds;
 
                             int latitude = (0xFF & bytes[recIdx++]) << 0
                                     | (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
-                            gpsRec.latitude = Convert.toFloatBitwise(latitude);
+                            r.latitude = Convert.toFloatBitwise(latitude);
 
                             int longitude = (0xFF & bytes[recIdx++]) << 0
                                     | (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
-                            gpsRec.longitude = Convert
+                            r.longitude = Convert
                                     .toFloatBitwise(longitude);// *1.0;
 
                             int height =
@@ -154,12 +155,9 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
                             (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
-                            gpsRec.height = Convert.toFloatBitwise(height);
-                            if (isConvertWGL84ToMSL) {
-                                gpsRec.height -= Conv.wgs84Separation(
-                                        gpsRec.latitude, gpsRec.longitude);
-                            }
-                            gpsFile.writeRecord(gpsRec);
+                            r.height = Convert.toFloatBitwise(height);
+                            CommonIn.convertHeight(r, factorConversionWGS84ToMSL, logFormat);
+                            gpsFile.writeRecord(r);
                         }
                     }
                 } /* ContinueInBuffer */
@@ -175,8 +173,8 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         timeOffsetSeconds = offset;
     }
 
-    public final void setConvertWGS84ToMSL(final boolean b) {
-        isConvertWGL84ToMSL = b;
+    public final void setConvertWGS84ToMSL(final int mode) {
+        factorConversionWGS84ToMSL = mode;
     }
 
     public final int toGPSFile(final String fileName, final GPSFile gpsFile,
