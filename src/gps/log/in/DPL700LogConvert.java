@@ -9,18 +9,13 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************  
+  
 package gps.log.in;
 
 import gps.BT747Constants;
-import gps.convert.Conv;
 import gps.log.GPSRecord;
 import gps.log.out.GPSFile;
 
@@ -48,8 +43,10 @@ public final class DPL700LogConvert implements GPSLogConvert {
             | (1 << BT747Constants.FMT_LONGITUDE_IDX)
             | (1 << BT747Constants.FMT_HEIGHT_IDX);
 
-    private boolean isConvertWGL84ToMSL = false; // If true,remove geoid difference from
-    // height
+    /**
+     * When -1, if old height was WGS84, new height will be MSL.
+     */
+    private int factorConversionWGS84ToMSL = 0; 
 
     static final int ITRACKU_NUMERIX = 0;
     static final int PHOTOTRACKR = 1;
@@ -103,7 +100,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
 
     public int parseFile(final GPSFile gpsFile) {
         try {
-            GPSRecord gpsRec = new GPSRecord();
+            GPSRecord r = new GPSRecord();
             final int C_BUF_SIZE = 0x800;
             byte[] bytes = new byte[C_BUF_SIZE];
             int sizeToRead;
@@ -171,7 +168,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
                         /*******************************************************
                          * Get all the information in the record.
                          */
-                        gpsRec.recCount = recCount;
+                        r.recCount = recCount;
                         if (!passToFindFieldsActivatedInLog) {
 
                             // if (( lc( $o{'i'} ) eq lc( 'iTrackU-Nemerix' ) )
@@ -221,17 +218,14 @@ public final class DPL700LogConvert implements GPSLogConvert {
                                         | (X_FF & bytes[recIdx++]) << 8
                                         | (X_FF & bytes[recIdx++]) << 16
                                         | (X_FF & bytes[recIdx++]) << 24;
-                                gpsRec.utc = (X_FF & bytes[recIdx++]) << 0
+                                r.utc = (X_FF & bytes[recIdx++]) << 0
                                         | (X_FF & bytes[recIdx++]) << 8
                                         | (X_FF & bytes[recIdx++]) << 16
                                         | (X_FF & bytes[recIdx++]) << 24;
                                 altitude = (X_FF & bytes[recIdx++]) << 0
                                         | (X_FF & bytes[recIdx++]) << 8;
-                                gpsRec.height = altitude;
-                                if (isConvertWGL84ToMSL) {
-                                    gpsRec.height -= Conv.wgs84Separation(
-                                            gpsRec.latitude, gpsRec.longitude);
-                                }
+                                r.height = altitude;
+                                CommonIn.convertHeight(r, factorConversionWGS84ToMSL, logFormat);
                                 speed = (X_FF & bytes[recIdx++]) << 0;
                                 tag = (X_FF & bytes[recIdx++]) << 0;
                                 break;
@@ -254,11 +248,11 @@ public final class DPL700LogConvert implements GPSLogConvert {
                                 seconds = (X_FF & bytes[recIdx++]) << 0;
                                 speed = (X_FF & bytes[recIdx++]) << 0;
                                 tag = (X_FF & bytes[recIdx++]) << 0;
-                                gpsRec.utc = (Interface.getDateInstance( day, month, year
+                                r.utc = (Interface.getDateInstance( day, month, year
                                                 + 2000)).dateToUTCepoch1970();
-                                gpsRec.utc += 3600 * hour + 60 * minutes
+                                r.utc += 3600 * hour + 60 * minutes
                                         + seconds;
-                                gpsRec.utc += timeOffsetSeconds;
+                                r.utc += timeOffsetSeconds;
                                 break;
                             }
 
@@ -278,15 +272,15 @@ public final class DPL700LogConvert implements GPSLogConvert {
                             // on longitude to get an integer result!
                             // The objective is to get the first digits
                             // of the number.
-                            gpsRec.longitude = ((double) ((int) (longitude / 1000000)))
+                            r.longitude = ((double) ((int) (longitude / 1000000)))
                                     + ((longitude % 1000000) / 600000.0);
-                            gpsRec.latitude = ((double) ((int) (latitude / 1000000)))
+                            r.latitude = ((double) ((int) (latitude / 1000000)))
                                     + ((latitude % 1000000) / 600000.0);
-                            gpsRec.speed = speed * 1.852f;
+                            r.speed = speed * 1.852f;
 
-                            gpsRec.valid = 0xFFFF;
-                            gpsRec.rcr = 0x0001; // For filter
-                            gpsFile.writeRecord(gpsRec);
+                            r.valid = 0xFFFF;
+                            r.rcr = 0x0001; // For filter
+                            gpsFile.writeRecord(r);
                         }
                     }
                 } /* ContinueInBuffer */
@@ -302,8 +296,8 @@ public final class DPL700LogConvert implements GPSLogConvert {
         timeOffsetSeconds = offset;
     }
 
-    public void setConvertWGS84ToMSL(final boolean b) {
-        isConvertWGL84ToMSL = b;
+    public final void setConvertWGS84ToMSL(final int mode) {
+        factorConversionWGS84ToMSL = mode;
     }
 
     public int toGPSFile(
@@ -347,16 +341,16 @@ public final class DPL700LogConvert implements GPSLogConvert {
     }
 
     public GPSRecord getLogFormatRecord(final int logFormat) {
-        GPSRecord gpsRec = new GPSRecord();
-        gpsRec.utc = -1;
-        gpsRec.latitude = -1;
-        gpsRec.longitude = -1;
-        gpsRec.speed = -1;
+        GPSRecord r = new GPSRecord();
+        r.utc = -1;
+        r.latitude = -1;
+        r.longitude = -1;
+        r.speed = -1;
 
         switch (logType) {
         case PHOTOTRACKR:
         case ITRACKU_SIRFIII:
-            gpsRec.height = -1;
+            r.height = -1;
             break;
         case ITRACKU_NUMERIX:
         default:
@@ -364,7 +358,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
         }
 
         /* End handling record */
-        return gpsRec;
+        return r;
     }
 
 }

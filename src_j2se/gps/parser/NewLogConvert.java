@@ -9,8 +9,8 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 
 package gps.parser;
@@ -83,9 +83,6 @@ public final class NewLogConvert implements GPSLogConvert {
     }
 
     public final void setTimeOffset(final long offset) {
-    }
-
-    public final void setConvertWGS84ToMSL(final boolean b) {
     }
 
     public final int toGPSFile(final String fileName, final GPSFile gpsFile,
@@ -267,6 +264,14 @@ public final class NewLogConvert implements GPSLogConvert {
     private boolean stop = false;
     public final void stopConversion() {
         stop = true;
+    }
+
+    /* (non-Javadoc)
+     * @see gps.log.in.GPSLogConvert#setConvertWGS84ToMSL(int)
+     */
+    public void setConvertWGS84ToMSL(int mode) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

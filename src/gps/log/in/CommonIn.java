@@ -15,6 +15,7 @@
 package gps.log.in;
 
 import gps.BT747Constants;
+import gps.convert.Conv;
 import gps.log.GPSRecord;
 
 import bt747.sys.Convert;
@@ -441,4 +442,18 @@ public final class CommonIn {
         return logFormat;
     }
 
+    public final static void convertHeight(final GPSRecord r, final int factorConversionWGS84ToMSL, final int logFormat) {
+        if (factorConversionWGS84ToMSL != 0
+                && ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
+                && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)
+                //&& valid
+                ) {
+            if(factorConversionWGS84ToMSL<0) {
+                r.height -= Conv.wgs84Separation(r.latitude, r.longitude);
+            } else { // > 0
+                r.height += Conv.wgs84Separation(r.latitude, r.longitude);
+            }
+        }
+
+    }
 }

@@ -6,6 +6,7 @@ set JAVA_HOME=c:\j2sdk1.4.2_14
 set JAVA_HOME="C:\Program Files\Java\jdk1.5.0_11"
 set PATH=%JAVA_HOME%\bin;%PATH%
 set CLASSPATH=..\lib\rxtx-2.1-7-bins-r2\RXTXcomm.jar;..\dist\libBT747.jar;..\lib\jopt-simple-2.4.1.jar;%CLASSPATH%
+set CLASSPATH=..\lib\rxtx-2.1-7-bins-r2\RXTXcomm.jar;..\dist\BT747_j2SE.jar;..\dist\libBT747.jar;..\lib\jopt-simple-2.4.1.jar;%CLASSPATH%
 
 cd build
 REM gcj --boot waba.applet.Applet BT747.jar

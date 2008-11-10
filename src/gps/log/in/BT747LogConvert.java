@@ -39,9 +39,11 @@ public final class BT747LogConvert implements GPSLogConvert {
     private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
-    private boolean isConvertWGL84ToMSL = false; // If true,remove geoid
-    // difference from
-    // height
+    
+    /**
+     * When -1, if old height was WGS84, new height will be MSL.
+     */
+    private int factorConversionWGS84ToMSL = 0; 
 
     private int satIdxOffset;
     private int satRecSize;
@@ -398,8 +400,8 @@ public final class BT747LogConvert implements GPSLogConvert {
         timeOffsetSeconds = offset;
     }
 
-    public final void setConvertWGS84ToMSL(final boolean b) {
-        isConvertWGL84ToMSL = b;
+    public final void setConvertWGS84ToMSL(final int mode) {
+        factorConversionWGS84ToMSL = mode;
     }
 
     private String errorInfo;
@@ -680,15 +682,11 @@ public final class BT747LogConvert implements GPSLogConvert {
                         | (0xFF & bytes[recIdx++]) << 24;
                 r.height = Convert.toFloatBitwise(height);
             }
-            if (isConvertWGL84ToMSL
-                    && ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
-                    && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)
-                    && valid) {
-                r.height -= Conv.wgs84Separation(r.latitude,
-                        r.longitude);
+            if (valid) {
+                CommonIn.convertHeight(r, factorConversionWGS84ToMSL, logFormat);
             }
             if (((r.valid & 0x0001) != 1) // record has a fix
-                    && (r.height < -10000. || r.height > 10000.)) {
+                    && (r.height < -3000. || r.height > 15000.)) {
                 Generic.debug("Invalid height:" + r.height);
                 valid = false;
             }

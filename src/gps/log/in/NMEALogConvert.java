@@ -41,9 +41,9 @@ public final class NMEALogConvert implements GPSLogConvert {
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
     /**
-     * When true, corrects height by removing MSL to WGS84 offset.
+     * When -1, if old height was WGS84, new height will be MSL.
      */
-    private boolean isConvertWGS84ToMSL = false;
+    private int factorConversionWGS84ToMSL = 0; 
 
     private String errorInfo;
 
@@ -246,24 +246,19 @@ public final class NMEALogConvert implements GPSLogConvert {
         return BT747Constants.NO_ERROR;
     }
 
-    private void finalizeRecord(GPSFile gpsFile, GPSRecord gpsRec,
+    private void finalizeRecord(GPSFile gpsFile, GPSRecord r,
             int curLogFormat) {
-        if (isConvertWGS84ToMSL
-                && ((curLogFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0)
-                && ((curLogFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
-                && ((curLogFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)) {
-            gpsRec.height -= Conv.wgs84Separation(gpsRec.latitude,
-                    gpsRec.longitude);
-        }
+        CommonIn.convertHeight(r, factorConversionWGS84ToMSL, curLogFormat);
+
         if (curLogFormat != logFormat) {
             updateLogFormat(gpsFile, curLogFormat);
         }
-        if (gpsRec.rcr == 0) {
-            gpsRec.rcr = 1; // Suppose time (for filter)
+        if (r.rcr == 0) {
+            r.rcr = 1; // Suppose time (for filter)
         }
         // if (valid) {
-        if (gpsRec.valid == 0) {
-            gpsRec.valid = BT747Constants.VALID_SPS_MASK;
+        if (r.valid == 0) {
+            r.valid = BT747Constants.VALID_SPS_MASK;
         }
 
         if (curLogFormat != 0 && !passToFindFieldsActivatedInLog) { // Should
@@ -271,7 +266,7 @@ public final class NMEALogConvert implements GPSLogConvert {
             // or
             // position change
             // condition.
-            gpsFile.writeRecord(gpsRec);
+            gpsFile.writeRecord(r);
         }
     }
 
@@ -281,8 +276,8 @@ public final class NMEALogConvert implements GPSLogConvert {
         timeOffsetSeconds = offset;
     }
 
-    public final void setConvertWGS84ToMSL(final boolean b) {
-        isConvertWGS84ToMSL = b;
+    public final void setConvertWGS84ToMSL(final int mode) {
+        factorConversionWGS84ToMSL = mode;
     }
 
     public final int toGPSFile(final String fileName, final GPSFile gpsFile,

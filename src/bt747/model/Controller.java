@@ -36,7 +36,6 @@ import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
 
-import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747FileName;
 
@@ -71,11 +70,47 @@ public class Controller {
      */
     private Model m;
 
+
+    /**
+     * The reference for the height in the given format
+     */
+    private final int[] heightReferenceList = new int[20];
+    
+    public final static int HEIGHT_MSL = 0;
+    public final static int HEIGHT_WGS84 = 1;
+    
+    /**
+     * Initialization of references for the height.
+     */
+    private static final int[][] INIT_REFERENCE_LIST = {
+            { Model.CSV_LOGTYPE, HEIGHT_WGS84 }, { Model.TRK_LOGTYPE, HEIGHT_MSL },
+            { Model.KML_LOGTYPE, HEIGHT_MSL }, { Model.PLT_LOGTYPE, HEIGHT_MSL },
+            { Model.GPX_LOGTYPE, HEIGHT_WGS84 }, { Model.NMEA_LOGTYPE, HEIGHT_MSL },
+            { Model.GMAP_LOGTYPE, HEIGHT_MSL }, { Model.TRL_LOGTYPE, HEIGHT_WGS84 },
+            { Model.BIN_LOGTYPE, HEIGHT_WGS84 }, { Model.SR_LOGTYPE, HEIGHT_MSL },
+    };
+    
+    private final void initValues() {
+        for (int i = 0; i < INIT_REFERENCE_LIST.length; i++) {
+            if(INIT_REFERENCE_LIST[i][0]<heightReferenceList.length) {
+                heightReferenceList[INIT_REFERENCE_LIST[i][0]]=INIT_REFERENCE_LIST[i][1];
+            }
+        }
+    }
+    
+    private final int getHeightReference(final int type) {
+        if(type<heightReferenceList.length) {
+            return heightReferenceList[type];
+        }
+        return HEIGHT_WGS84;
+    }
+    
     /**
      * @param model
      *            The model to associate with this controller.
      */
     public Controller(final Model model) {
+        initValues();
         setModel(model);
     }
 
@@ -83,6 +118,7 @@ public class Controller {
      * Currently needed because class is extended.
      */
     public Controller() {
+        initValues();
     }
 
     public final void setModel(final Model model) {
@@ -276,6 +312,7 @@ public class Controller {
         return ext;
     }
 
+    
     /**
      * Convert the log given the provided parameters using other methods.
      * 
@@ -303,6 +340,8 @@ public class Controller {
         String parameters = "Converting with parameters:\n"; // For debug
         GPSLogConvert lc;
         result = 0;
+        int sourceHeightReference;
+        int destinationHeightReference;
 
         /*
          * Check the input file
@@ -312,14 +351,17 @@ public class Controller {
         if (logFileLC.endsWith(".trl")) {
             lc = new HoluxTrlLogConvert();
             parameters += "HoluxTRL\n";
+            sourceHeightReference = heightReferenceList[Model.TRL_LOGTYPE];
         } else if (logFileLC.endsWith(".csv")) {
             lc = new CSVLogConvert();
             parameters += "CSV\n";
+            sourceHeightReference = heightReferenceList[Model.CSV_LOGTYPE];
         } else if (logFileLC.endsWith(".nmea") || logFileLC.endsWith(".nme")
                 || logFileLC.endsWith(".nma") || logFileLC.endsWith(".txt")
                 || logFileLC.endsWith(".log")) {
             lc = new NMEALogConvert();
             parameters += "NMEA\n";
+            sourceHeightReference = heightReferenceList[Model.NMEA_LOGTYPE];
         } else if (logFileLC.endsWith(".sr")) {
             lc = new DPL700LogConvert();
             // / TODO: set SR Log type correctly.
@@ -327,6 +369,7 @@ public class Controller {
                     .setLogType(m.getGPSType() == GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR ? 0
                             : 1);
             parameters += "DPL700\n";
+            sourceHeightReference = heightReferenceList[Model.SR_LOGTYPE];
         } else {
             switch (m.getBinDecoder()) {
             case DECODER_THOMAS:
@@ -350,6 +393,7 @@ public class Controller {
                         + m.getBooleanOpt(AppSettings.IS_HOLUXM241) + "\n";
                 break;
             }
+            sourceHeightReference = heightReferenceList[Model.BIN_LOGTYPE];
         }
         GPSFilter[] usedFilters;
         if (m.isAdvFilterActive()) {
@@ -363,7 +407,32 @@ public class Controller {
             usedFilters = m.getLogFilters();
         }
         lc.setTimeOffset(m.getTimeOffsetHours() * SECONDS_PER_HOUR);
-        lc.setConvertWGS84ToMSL(m.isConvertWGS84ToMSL());
+        destinationHeightReference = getHeightReference(logType);
+        switch (m.getHeightConversionMode()) {
+        case Model.HEIGHT_AUTOMATIC:
+            if (sourceHeightReference == HEIGHT_MSL
+                    && destinationHeightReference == HEIGHT_WGS84) {
+                /* Need to add the height in automatic mode */
+                lc.setConvertWGS84ToMSL(+1);
+            } else if (sourceHeightReference == HEIGHT_WGS84
+                    && destinationHeightReference == HEIGHT_MSL) {
+                /* Need to substract the height in automatic mode */
+                lc.setConvertWGS84ToMSL(-1);
+            } else {
+                /* Do nothing */
+                lc.setConvertWGS84ToMSL(0);
+            }
+            break;
+        case Model.HEIGHT_WGS84_TO_MSL:
+            lc.setConvertWGS84ToMSL(-1);
+            break;
+        case Model.HEIGHT_NOCHANGE:
+            lc.setConvertWGS84ToMSL(0);
+            break;
+        case Model.HEIGHT_MSL_TO_WGS84:
+            lc.setConvertWGS84ToMSL(1);
+            break;
+        }
 
         if ((logType == Model.GPX_LOGTYPE) && m.getGpxUTC0()) {
             lc.setTimeOffset(0);
@@ -478,7 +547,17 @@ public class Controller {
             usedFilters = m.getLogFilters();
         }
         lc.setTimeOffset(m.getTimeOffsetHours() * SECONDS_PER_HOUR);
-        lc.setConvertWGS84ToMSL(m.isConvertWGS84ToMSL());
+        //TODO: think about height, no conversion
+        switch(m.getHeightConversionMode()) {
+        case Model.HEIGHT_AUTOMATIC:
+            lc.setConvertWGS84ToMSL(0);
+            break;
+        case Model.HEIGHT_NOCHANGE:
+            lc.setConvertWGS84ToMSL(0);
+            break;
+        case Model.HEIGHT_WGS84_TO_MSL:
+            lc.setConvertWGS84ToMSL(-1);
+        }
 
         gpsFile = new GPSArray();
 
@@ -1663,12 +1742,16 @@ public class Controller {
     }
 
     /**
-     * @param isConvertHeightToMSL
+     * @param heightConversionMode
+     *
      *            When true the height (WGS84) will be converted to Mean Sea
      *            Level.
+     *            {@link Model#HEIGHT_AUTOMATIC}
+     *            {@link Model#HEIGHT_NOCHANGE}
+     *            {@link Model#HEIGHT_WGS84_TO_MSL}
      */
-    public final void setConvertWGS84ToMSL(final boolean isConvertHeightToMSL) {
-        m.setConvertWGS84ToMSL(isConvertHeightToMSL);
+    public final void setHeightConversionMode(final int heightConversionMode) {
+        m.setHeightConversionMode(heightConversionMode);
     }
 
     /**

@@ -25,7 +25,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
-import javax.swing.filechooser.FileFilter;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -229,8 +228,20 @@ public class BT747Main extends javax.swing.JFrame implements
         cbRecordNumberInfoInLog.setSelected(m
                 .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));
         setTitle(getTitle()+ " V" + Version.VERSION_NUMBER);
-        cbHeightOverMeanSeaLevel.setSelectedIndex(m.isConvertWGS84ToMSL() ? 1
-                : 0);
+        switch(m.getHeightConversionMode()) {
+        case Model.HEIGHT_AUTOMATIC:
+            cbHeightOverMeanSeaLevel.setSelectedIndex(2);
+            break;
+        case Model.HEIGHT_WGS84_TO_MSL:
+            cbHeightOverMeanSeaLevel.setSelectedIndex(1);
+            break;
+        case Model.HEIGHT_NOCHANGE:
+            cbHeightOverMeanSeaLevel.setSelectedIndex(0);
+            break;
+        case Model.HEIGHT_MSL_TO_WGS84:
+            cbHeightOverMeanSeaLevel.setSelectedIndex(3);
+            break;
+        }
         updateFileFormatData();
 
         switch (m.getBinDecoder()) {
@@ -2084,7 +2095,7 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        cbHeightOverMeanSeaLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Keep WGS84 height", "MSL height" }));
+        cbHeightOverMeanSeaLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Keep Height", "WGS84 to MSL", "Automatic", "MSL to WGS84" }));
         cbHeightOverMeanSeaLevel.setToolTipText(bundle.getString("BT747Main.cbHeightOverMeanSeaLevel.toolTipText")); // NOI18N
         cbHeightOverMeanSeaLevel.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -5261,9 +5272,20 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
     }// GEN-LAST:event_cbStandardOrDaylightSavingFocusLost
 
     private void cbHeightOverMeanSeaLevelFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbHeightOverMeanSeaLevelFocusLost
-        c
-                .setConvertWGS84ToMSL(cbHeightOverMeanSeaLevel
-                        .getSelectedIndex() == 1);
+        switch (cbHeightOverMeanSeaLevel.getSelectedIndex()) {
+        case 0:
+            c.setHeightConversionMode(Model.HEIGHT_NOCHANGE);
+            break;
+        case 1:
+            c.setHeightConversionMode(Model.HEIGHT_WGS84_TO_MSL);
+            break;
+        case 2:
+            c.setHeightConversionMode(Model.HEIGHT_AUTOMATIC);
+            break;
+        case 3:
+            c.setHeightConversionMode(Model.HEIGHT_MSL_TO_WGS84);
+            break;
+        }
     }// GEN-LAST:event_cbHeightOverMeanSeaLevelFocusLost
 
     private void btGPSDebugStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_btGPSDebugStateChanged
