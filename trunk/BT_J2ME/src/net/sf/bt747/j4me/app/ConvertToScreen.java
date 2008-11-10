@@ -35,7 +35,7 @@ public final class ConvertToScreen extends
     /**
      * Select whether height must be corrected or not.
      */
-    private CheckBox cbHeightCorrection;
+    private RadioButton rbHeightCorrection;
 
     /**
      * Select the time in minutes that will separate a track.
@@ -142,10 +142,26 @@ public final class ConvertToScreen extends
             rbFiles.setSelectedIndex(c.getModel().getOutputFileSplitType());
             append(rbFiles);
 
-            cbHeightCorrection = new CheckBox();
-            cbHeightCorrection.setLabel("Correct Height");
-            cbHeightCorrection.setChecked(c.getModel().isConvertWGS84ToMSL());
-            append(cbHeightCorrection);
+            rbHeightCorrection = new RadioButton();
+            rbHeightCorrection.append("Automatic height");
+            rbHeightCorrection.append("Keep height");
+            rbHeightCorrection.append("WGS84 to MSL");
+            rbHeightCorrection.append("MSL to WGS84");
+            switch(c.getModel().getHeightConversionMode()) {
+            case Model.HEIGHT_AUTOMATIC:
+                rbFiles.setSelectedIndex(0);
+                break;
+            case Model.HEIGHT_NOCHANGE:
+                rbFiles.setSelectedIndex(1);
+                break;
+            case Model.HEIGHT_WGS84_TO_MSL:
+                rbFiles.setSelectedIndex(2);
+                break;
+            case Model.HEIGHT_MSL_TO_WGS84:
+                rbFiles.setSelectedIndex(3);
+                break;
+            }
+            append(rbHeightCorrection);
 
             tbTrackSeparation = new TextBox();
             tbTrackSeparation.setForNumericOnly();
@@ -177,7 +193,20 @@ public final class ConvertToScreen extends
         ConvertToProgressScreen progressScreen;
         c.getAppModel().setSelectedOutputFormat(getSelectedLogType());
         c.setOutputFileSplitType(rbFiles.getSelectedIndex());
-        c.setConvertWGS84ToMSL(cbHeightCorrection.isChecked());
+        switch (rbHeightCorrection.getSelectedIndex()) {
+        case 0:
+            c.setHeightConversionMode(Model.HEIGHT_AUTOMATIC);
+            break;
+        case 1:
+            c.setHeightConversionMode(Model.HEIGHT_NOCHANGE);
+            break;
+        case 2:
+            c.setHeightConversionMode(Model.HEIGHT_WGS84_TO_MSL);
+            break;
+        case 3:
+            c.setHeightConversionMode(Model.HEIGHT_MSL_TO_WGS84);
+            break;
+        }
         c.setTrkSep(Integer.parseInt(tbTrackSeparation.getString()));
         c.setBooleanOpt(Model.IS_HOLUXM241, rbDevice.getSelectedIndex() == 1);
         int index = 0;
