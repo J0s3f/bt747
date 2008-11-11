@@ -85,7 +85,7 @@ public class Controller {
     private static final int[][] INIT_REFERENCE_LIST = {
             { Model.CSV_LOGTYPE, HEIGHT_WGS84 }, { Model.TRK_LOGTYPE, HEIGHT_MSL },
             { Model.KML_LOGTYPE, HEIGHT_MSL }, { Model.PLT_LOGTYPE, HEIGHT_MSL },
-            { Model.GPX_LOGTYPE, HEIGHT_WGS84 }, { Model.NMEA_LOGTYPE, HEIGHT_MSL },
+            { Model.GPX_LOGTYPE, HEIGHT_WGS84 }, { Model.NMEA_LOGTYPE, HEIGHT_WGS84 },
             { Model.GMAP_LOGTYPE, HEIGHT_MSL }, { Model.TRL_LOGTYPE, HEIGHT_WGS84 },
             { Model.BIN_LOGTYPE, HEIGHT_WGS84 }, { Model.SR_LOGTYPE, HEIGHT_MSL },
     };

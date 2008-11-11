@@ -345,7 +345,12 @@ public final class CommonIn {
                     gpsRec.geoid = Convert.toFloat(sNmea[11]);
                     gpsRec.height += gpsRec.geoid;
                 } else {
-                    gpsRec.geoid = 0;
+                    if (((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
+                            && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)) {
+                        gpsRec.geoid = (float)Conv.wgs84Separation(gpsRec.latitude, gpsRec.longitude);
+                    } else {
+                        gpsRec.geoid = 0;
+                    }
                 }
             } catch (Exception e) {
                 Generic.debug("GPGGA9:" + sNmea[9], e);
