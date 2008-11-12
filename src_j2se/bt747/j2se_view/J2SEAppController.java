@@ -35,6 +35,7 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 import bt747.Version;
 import bt747.model.AppSettings;
@@ -115,6 +116,8 @@ public final class J2SEAppController extends Controller {
      *            The model to associate with this controller.
      */
     public J2SEAppController(final Model model) {
+        myLookAndFeel();
+
         initGpsPort();
 
         this.m = model;
@@ -577,4 +580,64 @@ public final class J2SEAppController extends Controller {
                 null /* options */, null /* initialValue */);
         return overwriteResp == JOptionPane.OK_OPTION;
     }
+    
+
+    
+    /***************************************************************************
+     * Find the appropriate look and feel for the system
+     **************************************************************************/
+    private static final String[] lookAndFeels = {
+            "com.sun.java.swing.plaf.windows.WindowsLookAndFeel", // NOI18N
+            "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel", // NOI18N
+            "com.sun.java.swing.plaf.gtk.GTKLookAndFeel", // NOI18N
+            "com.sun.java.swing.plaf.motif.MotifLookAndFeel", // NOI18N
+            "javax.swing.plaf.metal.MetalLookAndFeel", // NOI18N
+            "javax.swing.plaf.mac.MacLookAndFeel", // NOI18N
+            "com.apple.mrj.swing.MacLookAndFeel", // NOI18N
+            "apple.laf.AquaLookAndFeel" // NOI18N
+            }; // NOI18N
+    /* Index for Mac look and feel */
+    private static final int C_MAC_LOOKANDFEEL_IDX = lookAndFeels.length - 3;
+    private static String lookAndFeel=""; // NOI18N
+    public static String lookAndFeelMsg=""; // NOI18N
+
+
+    /**
+     * Try setting a look and feel for the system - catch the Exception when not
+     * found.
+     * 
+     * @return true if successfull
+     */
+    private final static boolean tryLookAndFeel(String s) {
+        try {
+            UIManager.setLookAndFeel(s);
+            lookAndFeel = s;
+            lookAndFeelMsg += getString("Success_") + s + "\n";
+            return true;
+        } catch (Exception e) {
+        }
+        lookAndFeelMsg += getString("Fail_") + s + "\n";
+        return false;
+    }
+
+    /**
+     * Set a good look and feel for the system.
+     */
+    public static void myLookAndFeel() {
+        boolean lookAndFeelIsSet = false;
+        if (java.lang.System.getProperty("os.name").toLowerCase().startsWith(
+                "mac")) { // NOI18N
+            for (int i = C_MAC_LOOKANDFEEL_IDX; !lookAndFeelIsSet && (i < lookAndFeels.length); i++) {
+                lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[i]);
+            }
+        }
+        for (int i = 0; !lookAndFeelIsSet && (i < lookAndFeels.length); i++) {
+            lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[i]);
+        }
+        if (!lookAndFeelIsSet) {
+            tryLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+    }
+
+
 }
