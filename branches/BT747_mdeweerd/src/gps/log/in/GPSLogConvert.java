@@ -9,14 +9,9 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************
 package gps.log.in;
 
 import gps.log.out.GPSFile;
@@ -27,6 +22,13 @@ import gps.log.out.GPSFile;
  * @author Mario De Weerd
  */
 public interface GPSLogConvert {
+    /**
+     * Parses the file once and will use {@link GPSFile} to generate the output.
+     * 
+     * @param gpsFile
+     *            Represents the structure to generate the output.
+     * @return error indication.
+     */
     int parseFile(final GPSFile gpsFile);
 
     /**
@@ -53,9 +55,9 @@ public interface GPSLogConvert {
      * Returns some information regarding the reported error. To be thrown in a
      * future version.
      * 
-     * @return
+     * @return Textual description of the error.
      */
     String getErrorInfo();
-    
+
     void stopConversion();
 }

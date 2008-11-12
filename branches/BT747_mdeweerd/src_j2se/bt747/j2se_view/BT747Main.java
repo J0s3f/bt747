@@ -80,7 +80,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private J2SEAppController c;
         
     private static final ComboBoxModel modelGpsType = new javax.swing.DefaultComboBoxModel(new String[] {
-                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("DEFAULT_DEVICE"), 
+                J2SEAppController.getString("DEFAULT_DEVICE"), 
                 "Holux M-241",
                 "iTrackU-Nemerix",
                 "PhotoTrackr",
@@ -118,12 +118,40 @@ public class BT747Main extends javax.swing.JFrame implements
         this.m.addListener(this);
     }
 
+    
+    private void updateGuiData() {
+        cbPortName.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+                "USB (for Linux, Mac)",
+                "BLUETOOTH (for Mac)",
+                "COM1:",  // NOI18N
+                "COM2:", "COM3:", "COM4:", "COM5:", "COM6:", "COM7:", "COM8:",  // NOI18N
+                "COM9:", "COM10:", "COM11:", "COM12:", "COM13:", "COM14:",  // NOI18N
+                "COM15:", "COM16:" }));
+        cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+                "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML",
+                "OziExplorer (.PLT)", "NMEA", "Google Map (.html)", "KMZ" }));
+        cbHeightOverMeanSeaLevel.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "Keep Height", "WGS84 to MSL", "Automatic",
+                        "MSL to WGS84" }));
+        cbStandardOrDaylightSaving
+                .setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+                        "Standard Time", "Daylight Savings Time" }));
+        cbOneFilePerDay.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "One file per day", "One file per track",
+                        "Everything in one file" }));
+        cbDGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+                "No DGPS", "RTCM", "WAAS" }));
+        cbStopOrOverwriteWhenFull
+                .setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+                        "Stop when full", "Overwrite when full" }));
+    }
     /**
      * Initialize application data. Gets the values from the model to set them
      * in the GUI.
      */
     private void initAppData() {
         c.setRootFrame(this);
+        updateGuiData(); // For internationalisation - not so easy in netbeans
         infoTextArea.setEnabled(true);
         infoTextArea.setFocusable(true);
         infoTextArea.append(java.lang.System.getProperty("os.name")); // NOI18N
@@ -134,7 +162,7 @@ public class BT747Main extends javax.swing.JFrame implements
         infoTextArea.append("\n"); // NOI18N
         infoTextArea.append(java.lang.System.getProperty("java.version")); // NOI18N
         infoTextArea.append("\n"); // NOI18N
-        infoTextArea.append(lookAndFeelMsg);
+        infoTextArea.append(J2SEAppController.lookAndFeelMsg);
         LookAndFeelInfo[] a =UIManager.getInstalledLookAndFeels();
         for(int i=0;i<a.length;i++) {
             infoTextArea.append(a[i].getClassName()+"\n"); // NOI18N
@@ -187,7 +215,7 @@ public class BT747Main extends javax.swing.JFrame implements
         try {
             cbUTCOffset.setSelectedIndex(m.getTimeOffsetHours() + 12);
         } catch (Exception e) {
-            Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Problem_with_UTC_offset"), e);
+            Generic.debug(c.getString("Problem_with_UTC_offset"), e);
         }
         cbNotApplyUTCOffset.setSelected(m.getGpxUTC0());
         cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 0
@@ -315,7 +343,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 }
             }
         } catch (Exception e) {
-            Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("While_adding_ports"), e);
+            Generic.debug(c.getString("While_adding_ports"), e);
         }
     }
 
@@ -393,11 +421,11 @@ public class BT747Main extends javax.swing.JFrame implements
         txtLongitude
                 .setText(String.format((Locale) null, "%.8f", gps.longitude)); // NOI18N
         txtGeoid.setText(String.format((Locale) null, "%.1f", gps.geoid) // NOI18N
-                + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("m")
-                + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("(calc:")
+                + c.getString("m")
+                + c.getString("(calc:")
                 + String.format((Locale) null, "%.1f", Conv.wgs84Separation(
                         gps.latitude, gps.longitude))
-                        + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("m") 
+                        + c.getString("m") 
                         + ")"); // NOI18N
 
     }
@@ -495,7 +523,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 cbDGPSType.setSelectedIndex(m.getDgpsMode());
             } catch (Exception ee) {
                 // TODO: handle exception
-                Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Unknown_DGPS_Mode") + m.getDgpsMode(), ee);
+                Generic.debug(c.getString("Unknown_DGPS_Mode") + m.getDgpsMode(), ee);
             }
             break;
 
@@ -509,7 +537,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 // jComboBox23.setSelectedIndex(m.getDatum());
             } catch (Exception ee) {
                 // TODO: handle exception
-                Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Unknown_DATUM") + m.getDatum(), ee);
+                Generic.debug(c.getString("Unknown_DATUM") + m.getDatum(), ee);
             }
             break;
             // TODO
@@ -581,13 +609,13 @@ public class BT747Main extends javax.swing.JFrame implements
             break;
         case ModelEvent.CONVERSION_ENDED:
             lbConversionTime
-                    .setText(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Time_to_convert:_")
+                    .setText(c.getString("Time_to_convert:_")
                             + ((int) (System.currentTimeMillis() - conversionStartTime))
-                            + java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("_ms"));
+                            + c.getString("_ms"));
             lbConversionTime.setVisible(true);
             break;
         case ModelEvent.CONNECTED:
-            btConnect.setText(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Disconnect"));
+            btConnect.setText(c.getString("Disconnect"));
             btConnectFunctionIsConnect = false;
             updateConnected(true);
 
@@ -609,7 +637,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
             break;
         case ModelEvent.DISCONNECTED:
-            btConnect.setText(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Connect"));
+            btConnect.setText(c.getString("Connect"));
             btConnectFunctionIsConnect = true;
             updateConnected(false);
             break;
@@ -3694,7 +3722,6 @@ public class BT747Main extends javax.swing.JFrame implements
 
         lbFixMs.setText(bundle.getString("BT747Main.lbFixMs.text")); // NOI18N
 
-        cbStopOrOverwriteWhenFull.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Stop when full", "Overwrite when full" }));
         cbStopOrOverwriteWhenFull.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbStopOrOverwriteWhenFullFocusLost(evt);
@@ -5030,7 +5057,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         // TODO add your handling code here:
         Color myColor = new Color(Conv.hex2Int(m.getColorInvalidTrack()));
         myColor = JColorChooser.showDialog(this,
-                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Choose_the_color_for_a_'bad_track'_(pure_blue_to_ignore)"),
+                c.getString("Choose_the_color_for_a_'bad_track'_(pure_blue_to_ignore)"),
                 myColor);
         if (myColor != null) {
             c.setColorInvalidTrack(Convert.unsigned2hex(
@@ -5043,7 +5070,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         // TODO add your handling code here:
         Color myColor = new Color(Conv.hex2Int(m.getColorValidTrack()));
         myColor = JColorChooser.showDialog(this,
-                java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Choose_the_color_for_a_'good_track'_(pure_blue_to_ignore)"),
+                c.getString("Choose_the_color_for_a_'good_track'_(pure_blue_to_ignore)"),
                 myColor);
         if (myColor != null) {
             c.setColorValidTrack(Convert.unsigned2hex(
@@ -5189,7 +5216,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         } catch (Exception e) {
             Generic
                     .debug(
-                            java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Problem_in_Apply_Log_conditions_-_probably_non-numeric_value"),
+                            c.getString("Problem_in_Apply_Log_conditions_-_probably_non-numeric_value"),
                             e);
         }
     }// GEN-LAST:event_btHotStartActionPerformed
@@ -5426,11 +5453,11 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         OutputFileChooser = new javax.swing.JFileChooser(f.getParent());
         OutputFileChooser.setSelectedFile(f);
         OutputFileChooser
-                .setToolTipText(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Select_the_basename_of_the_output_file."));
+                .setToolTipText(c.getString("Select_the_basename_of_the_output_file."));
         // if (curDir.exists()) {
         // OutputFileChooser.setCurrentDirectory(getOutputFilePath());
         // }
-        if (OutputFileChooser.showDialog(this, java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Set_basename")) == JFileChooser.APPROVE_OPTION) {
+        if (OutputFileChooser.showDialog(this, c.getString("Set_basename")) == JFileChooser.APPROVE_OPTION) {
             try {
                 String relPath = gps.convert.FileUtil.getRelativePath(
                         (new File(m.getStringOpt(AppSettings.OUTPUTDIRPATH)))
@@ -5445,7 +5472,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
                 tfOutputFileBaseName.setCaretPosition(tfOutputFileBaseName.getText().length());
 
             } catch (Exception e) {
-                Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("OutputFileChooser"), e);
+                Generic.debug(c.getString("OutputFileChooser"), e);
             }
         }
     }// GEN-LAST:event_btOutputFileActionPerformed
@@ -5470,13 +5497,13 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         KnownFileFilter ff = new KnownFileFilter();
         RawLogFileChooser.addChoosableFileFilter(ff);
         RawLogFileChooser.setFileFilter(ff);
-        if (RawLogFileChooser.showDialog(this,java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("SetRawLogFile")
+        if (RawLogFileChooser.showDialog(this,c.getString("SetRawLogFile")
                 ) == JFileChooser.APPROVE_OPTION) {
             try {
             c.setStringOpt(AppSettings.LOGFILEPATH, RawLogFileChooser.getSelectedFile()
                     .getCanonicalPath());
             } catch (Exception e) {
-                Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("RawFileChooser"),e);
+                Generic.debug(c.getString("RawFileChooser"),e);
             }
             tfRawLogFilePath.setText(m.getStringOpt(AppSettings.LOGFILEPATH));
             tfRawLogFilePath.setCaretPosition(tfRawLogFilePath.getText().length());
@@ -5492,15 +5519,15 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         // WorkingDirectoryChooser = new javax.swing.JFileChooser();
         // }
 
-        WorkingDirectoryChooser.setDialogTitle(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Choose_Working_Directory"));
+        WorkingDirectoryChooser.setDialogTitle(c.getString("Choose_Working_Directory"));
         WorkingDirectoryChooser
                 .setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        if (WorkingDirectoryChooser.showDialog(this, java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("SetWorkDir")) == JFileChooser.APPROVE_OPTION) {
+        if (WorkingDirectoryChooser.showDialog(this, c.getString("SetWorkDir")) == JFileChooser.APPROVE_OPTION) {
             try {
                 c.setStringOpt(AppSettings.OUTPUTDIRPATH, WorkingDirectoryChooser.getSelectedFile()
                                         .getCanonicalPath());
             } catch (Exception e) {
-                Generic.debug(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("WorkingDirChooser"), e);
+                Generic.debug(c.getString("WorkingDirChooser"), e);
             }
             tfWorkDirectory.setText(m.getStringOpt(AppSettings.OUTPUTDIRPATH));
             tfWorkDirectory.setCaretPosition(tfWorkDirectory.getText().length());
@@ -5510,21 +5537,21 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
     private int selectedFormat = Model.NO_LOG_LOGTYPE;
 
     private final void setSelectedFormat(final String selected) {
-        if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("CSV"))) {
+        if (selected.startsWith(c.getString("CSV"))) {
             selectedFormat = Model.CSV_LOGTYPE;
-        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Google_Map"))) {
+        } else if (selected.startsWith(c.getString("Google_Map"))) {
             selectedFormat = Model.GMAP_LOGTYPE;
-        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("GPX"))) {
+        } else if (selected.startsWith(c.getString("GPX"))) {
             selectedFormat = Model.GPX_LOGTYPE;
-        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("KML"))) {
+        } else if (selected.startsWith(c.getString("KML"))) {
             selectedFormat = Model.KML_LOGTYPE;
-        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("NMEA"))) {
+        } else if (selected.startsWith(c.getString("NMEA"))) {
             selectedFormat = Model.NMEA_LOGTYPE;
-        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Ozi"))) {
+        } else if (selected.startsWith(c.getString("Ozi"))) {
             selectedFormat = Model.PLT_LOGTYPE;
-        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Compe"))) {
+        } else if (selected.startsWith(c.getString("Compe"))) {
             selectedFormat = Model.TRK_LOGTYPE;
-        } else if (selected.startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("KMZ"))) {
+        } else if (selected.startsWith(c.getString("KMZ"))) {
             selectedFormat = J2SEAppController.KMZ_LOGTYPE;
         } else {
             selectedFormat = Model.NO_LOG_LOGTYPE;
@@ -5851,9 +5878,9 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         if (foundPort) {
             c.setPort(port);
         } else {
-            if (s.toUpperCase().startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("BLUETOOTH"))) {
+            if (s.toUpperCase().startsWith(c.getString("BLUETOOTH"))) {
                 c.setBluetooth();
-            } else if (s.toUpperCase().startsWith(java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("USB"))) {
+            } else if (s.toUpperCase().startsWith(c.getString("USB"))) {
                 c.setUsb();
             } else {
                 c.openFreeTextPort(s);
@@ -5872,67 +5899,11 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
         }
     }
 
-    /***************************************************************************
-     * Find the appropriate look and feel for the system
-     **************************************************************************/
-    private static final String[] lookAndFeels = {
-            "com.sun.java.swing.plaf.windows.WindowsLookAndFeel", // NOI18N
-            "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel", // NOI18N
-            "com.sun.java.swing.plaf.gtk.GTKLookAndFeel", // NOI18N
-            "com.sun.java.swing.plaf.motif.MotifLookAndFeel", // NOI18N
-            "javax.swing.plaf.metal.MetalLookAndFeel", // NOI18N
-            "javax.swing.plaf.mac.MacLookAndFeel", // NOI18N
-            "com.apple.mrj.swing.MacLookAndFeel", // NOI18N
-            "apple.laf.AquaLookAndFeel" // NOI18N
-            }; // NOI18N
-    /* Index for Mac look and feel */
-    private static final int C_MAC_LOOKANDFEEL_IDX = lookAndFeels.length - 3;
-    private static String lookAndFeel=""; // NOI18N
-    private static String lookAndFeelMsg=""; // NOI18N
-
-    /**
-     * Try setting a look and feel for the system - catch the Exception when not
-     * found.
-     * 
-     * @return true if successfull
-     */
-    private final static boolean tryLookAndFeel(String s) {
-        try {
-            UIManager.setLookAndFeel(s);
-            lookAndFeel = s;
-            lookAndFeelMsg += java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Success_") + s + "\n";
-            return true;
-        } catch (Exception e) {
-        }
-        lookAndFeelMsg += java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle").getString("Fail_") + s + "\n";
-        return false;
-    }
-
-    /**
-     * Set a good look and feel for the system.
-     */
-    public static void myLookAndFeel() {
-        boolean lookAndFeelIsSet = false;
-        if (java.lang.System.getProperty("os.name").toLowerCase().startsWith(
-                "mac")) { // NOI18N
-            for (int i = C_MAC_LOOKANDFEEL_IDX; !lookAndFeelIsSet && (i < lookAndFeels.length); i++) {
-                lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[i]);
-            }
-        }
-        for (int i = 0; !lookAndFeelIsSet && (i < lookAndFeels.length); i++) {
-            lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[i]);
-        }
-        if (!lookAndFeelIsSet) {
-            tryLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        }
-    }
-
     /**
      * @param args
      *            the command line arguments
      */
     public static void main(final String args[]) {
-        myLookAndFeel();
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             final Model m = new Model();
