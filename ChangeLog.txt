@@ -1,3 +1,6 @@
+Version 1.61.6
+* Added language configurability to GUI.
+
 Version 1.61.5
 * NMEA input ant ouptut functionality adjusted to be coherent with height correction.
   NMEA now considered as WGS84.
