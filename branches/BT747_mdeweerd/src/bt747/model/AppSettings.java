@@ -190,8 +190,10 @@ public class AppSettings {
     private static final int C_LOGFILEPATH_IDX = C_COLOR_VALIDTRACK_IDX
             + C_COLOR_VALIDTRACK_SIZE;
     private static final int C_LOGFILEPATH_SIZE = 300;
-    private static final int C_NEXT_IDX = C_LOGFILEPATH_IDX
+    private static final int C_LANGUAGE_IDX = C_LOGFILEPATH_IDX
             + C_LOGFILEPATH_SIZE;
+    private static final int C_LANGUAGE_SIZE = 8;
+    private static final int C_NEXT_IDX = C_LANGUAGE_IDX + C_LANGUAGE_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -273,6 +275,10 @@ public class AppSettings {
      */
     public static final int LOGFILERELPATH = 11;
     public static final int LOGFILEPATH = 12;
+    /**
+     * The application's language.  Empty if not set by the user.
+     */
+    public static final int LANGUAGE = 13;
 
     private static final int[][] paramsList =
     // Type, idx, start, size
@@ -299,7 +305,9 @@ public class AppSettings {
                     C_REPORTFILEBASE_SIZE },
             { STRING, LOGFILERELPATH, C_LOGFILERELPATH_IDX,
                     C_LOGFILERELPATH_SIZE },
-            { STRING, LOGFILEPATH, C_LOGFILEPATH_IDX, C_LOGFILEPATH_SIZE }, };
+            { STRING, LOGFILEPATH, C_LOGFILEPATH_IDX, C_LOGFILEPATH_SIZE },
+            { STRING, LANGUAGE, C_LANGUAGE_IDX, C_LANGUAGE_SIZE },
+            };
 
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
@@ -442,8 +450,11 @@ public class AppSettings {
             setStringOpt(LOGFILEPATH, getStringOpt(AppSettings.OUTPUTDIRPATH)
                     + bt747.sys.File.separatorStr
                     + getStringOpt(AppSettings.LOGFILERELPATH));
+            /* fall through */
 
-            setStringOpt(0, "0.26", C_VERSION_IDX, C_VERSION_SIZE);
+        case 26:
+            setStringOpt(LANGUAGE,"");
+            setStringOpt(0, "0.27", C_VERSION_IDX, C_VERSION_SIZE);
             /* fall through */
 
         default:

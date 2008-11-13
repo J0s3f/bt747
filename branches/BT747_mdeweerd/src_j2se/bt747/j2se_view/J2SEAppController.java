@@ -30,6 +30,7 @@ import java.io.FileOutputStream;
 import java.net.URL;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -129,7 +130,25 @@ public final class J2SEAppController extends Controller {
         super.setModel(m);
         super.init();
         // c = new Controller(model);
+        String localeStr = m.getStringOpt(Model.LANGUAGE); 
+        if (localeStr.length() != 0) {
+            String arg1 = "";
+            String arg2 = "";
+            String arg3 = "";
+            if (localeStr.length() >= 2) {
+                arg1 = localeStr.substring(0, 2);
 
+            }
+            if (localeStr.length() >= 5) {
+                arg2 = localeStr.substring(3, 5);
+
+            }
+            if (localeStr.length() >= 8) {
+                arg3 = localeStr.substring(6, 8);
+
+            }
+            Locale.setDefault(new Locale(arg1, arg2, arg3));
+        }
         // Set up the (default) port handler
     }
 
