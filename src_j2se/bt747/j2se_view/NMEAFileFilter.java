@@ -41,7 +41,7 @@ public final class NMEAFileFilter extends FileFilter {
      */
     @Override
     public String getDescription() {
-        return J2SEAppController.getString("NMEA_Description");
+        return J2SEAppController.getString("NMEA_FilterDescription");
     }
 
 }
