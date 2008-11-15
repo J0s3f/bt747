@@ -111,14 +111,42 @@ public final class J2SEAppController extends Controller {
      * Reference to the model.
      */
     private Model m;
+    
+    /** Options for the first warning message. */
+    private static String[] C_ERASE_OR_CANCEL;
+    /** Options for the first warning message. */
+    private static String[] C_YES_OR_CANCEL;
+    /** Options for the second warning message - reverse order on purpose. */
+    private static String[] C_CANCEL_OR_CONFIRM_ERASE;
+
+
+    private void initStaticsFirstTime() {
+        if (bundle == null) {
+            bundle = java.util.ResourceBundle
+                    .getBundle("bt747/j2se_view/Bundle");
+            String[] my_ERASE_OR_CANCEL = { getString("ERASE_BUTTON"),
+                    getString("CANCEL_BUTTON") };
+            /** Options for the first warning message. */
+            String[] my_YES_OR_CANCEL = { getString("YES_BUTTON"),
+                    getString("CANCEL_BUTTON") };
+            /**
+             * Options for the second warning message - reverse order on
+             * purpose.
+             */
+            String[] my_CANCEL_OR_CONFIRM_ERASE = { getString("CANCEL_BUTTON"),
+                    getString("CONFIRM_ERASE_BUTTON") };
+            C_ERASE_OR_CANCEL = my_ERASE_OR_CANCEL;
+            C_YES_OR_CANCEL = my_YES_OR_CANCEL;
+            C_CANCEL_OR_CONFIRM_ERASE = my_CANCEL_OR_CONFIRM_ERASE;
+        }
+        /** Options for the first warning message. */
+    }
 
     /**
      * @param model
      *            The model to associate with this controller.
      */
     public J2SEAppController(final Model model) {
-        myLookAndFeel();
-
         initGpsPort();
 
         this.m = model;
@@ -149,7 +177,10 @@ public final class J2SEAppController extends Controller {
             }
             Locale.setDefault(new Locale(arg1, arg2, arg3));
         }
-        // Set up the (default) port handler
+        // Initialised here to be sure that the app language can be changed after
+        // static evaluation.
+        initStaticsFirstTime();
+        myLookAndFeel();
     }
 
     // The next methods are to be moved to the application controller.
@@ -195,22 +226,11 @@ public final class J2SEAppController extends Controller {
         return result;
     }
 
-    private static ResourceBundle bundle = java.util.ResourceBundle
-            .getBundle("bt747/j2se_view/Bundle");
+    private static ResourceBundle bundle = null;
 
     public static final String getString(final String s) {
         return bundle.getString(s);
     }
-
-    /** Options for the first warning message. */
-    private static final String[] C_ERASE_OR_CANCEL = {
-            getString("ERASE_BUTTON"), getString("CANCEL_BUTTON") };
-    /** Options for the first warning message. */
-    private static final String[] C_YES_OR_CANCEL = { getString("YES_BUTTON"),
-            getString("CANCEL_BUTTON") };
-    /** Options for the second warning message - reverse order on purpose. */
-    private static final String[] C_CANCEL_OR_CONFIRM_ERASE = {
-            getString("CANCEL_BUTTON"), getString("CONFIRM_ERASE_BUTTON") };
 
     /**
      * A 'recovery Erase' attempts to recover memory that was previously

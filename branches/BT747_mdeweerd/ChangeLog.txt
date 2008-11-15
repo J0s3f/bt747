@@ -1,8 +1,11 @@
+Version 1.61.7
+* Dutch added, some corrections to language selection handling.
+
 Version 1.61.6
 * Added language configurability to GUI.
 
 Version 1.61.5
-* NMEA input ant ouptut functionality adjusted to be coherent with height correction.
+* NMEA input ant output functionality adjusted to be coherent with height correction.
   NMEA now considered as WGS84.
 
 Version 1.61.4
