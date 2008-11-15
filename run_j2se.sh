@@ -31,8 +31,8 @@ CLASSPATH=${RXTXJAR}:${ROOT_DIR}/dist/libBT747.jar:$CLASSPATH
 # It is possible to define the path to the configuration file
 #       -Dbt747_settings="bt747settings.pdb"
 
-which java 2>&1 >/dev/null && JAVA=java
-which javaw 2>&1 >/dev/null && JAVA=javaw
+which java >/dev/null 2>&1 && JAVA=java
+which javaw >/dev/null 2>&1 && JAVA=javaw
 
 #strace -e trace=file -f -o trace.log
 $JAVA -Djava.library.path=${RXTXLIBPATH} -jar ${ROOT_DIR}/dist/BT747_j2se.jar &

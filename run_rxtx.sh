@@ -29,8 +29,8 @@ CLASSPATH=${RXTXJAR}:${ROOT_DIR}/lib/Waba_only.jar:${ROOT_DIR}/dist/BT747_rxtx.j
 # It is possible to define the path to the configuration file
 #       -Dbt747_settings="bt747settings.pdb"
 
-which java 2>&1 >/dev/null && JAVA=java
-which javaw 2>&1 >/dev/null && JAVA=javaw
+which java >/dev/null 2>&1 && JAVA=java
+which javaw >/dev/null 2>&1 && JAVA=javaw
 
 #strace -e trace=file -f -o trace.log
 $JAVA -Djava.library.path=${RXTXLIBPATH}  waba.applet.Applet /w 320 /h 320 /scale 1 /bpp 8 BT747 &

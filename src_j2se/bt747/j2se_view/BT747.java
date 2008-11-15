@@ -1,5 +1,7 @@
 package bt747.j2se_view;
 
+import bt747.model.Model;
+
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -25,18 +27,40 @@ package bt747.j2se_view;
  * @author Mario De Weerd
  */
 public class BT747 extends bt747.waba_view.AppBT747 {
-    
-    //private BT747Main j2se_view;
-    
+
+    // private BT747Main j2se_view;
+
     public void onStart() {
         super.onStart();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //BT747Main.myLookAndFeel();
-                //j2se_view= new BT747Main(m,c);
-                //j2se_view.setVisible(true);
+                // BT747Main.myLookAndFeel();
+                // j2se_view= new BT747Main(m,c);
+                // j2se_view.setVisible(true);
             }
         });
+    }
+
+    final static String[] MY_ARGS = { "/w", "320", "/h", "320", "/scale", "1",
+            "/bpp", "8", BT747.class.getName() };
+
+    /**
+     * Allow this to be "self executable" in J2SE
+     * 
+     * @param args
+     *            the command line arguments
+     */
+    public static void main(final String args[]) {
+        int i;
+        int j;
+        String[] newArgs = new String[args.length + MY_ARGS.length];
+        for (i = 0; i < args.length; i++) {
+            newArgs[i] = args[i];
+        }
+        for (j = 0; j < MY_ARGS.length; i++, j++) {
+            newArgs[i] = MY_ARGS[j];
+        }
+        waba.applet.Applet.main(newArgs);
     }
 
 }

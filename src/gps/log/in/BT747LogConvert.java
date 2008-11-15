@@ -21,6 +21,8 @@ import gps.log.out.GPSFile;
 import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * This class is used to convert the binary log to a new format. Basically this
@@ -38,6 +40,7 @@ public final class BT747LogConvert implements GPSLogConvert {
     private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
+    private boolean firstBlockDone = false;
     
     /**
      * When -1, if old height was WGS84, new height will be MSL.
@@ -48,6 +51,8 @@ public final class BT747LogConvert implements GPSLogConvert {
     private int satRecSize;
     private boolean holux = false;
     private boolean nextPointIsWayPt = false;
+    
+    private int initialBlock = 0;
 
     private int badrecord_count = 0;
 
@@ -95,10 +100,20 @@ public final class BT747LogConvert implements GPSLogConvert {
         int fileSize;
         int satCntIdx;
         int satcnt;
+        boolean isBlockStartOverwrite = false;
+        boolean passToFindFirstBlockInLog = false;
+        boolean wrapOK = false;
+
+        int smallestUTC = 0x7FFFFFFF;
+        int smallestBlock = 0;
+        int currentBlock = 0;
 
         recCount = 0;
         logFormat = 0;
-        nextAddrToRead = 0;
+        nextAddrToRead = initialBlock;
+        if(nextAddrToRead!=0) {
+            wrapOK = true;
+        }
         nextPointIsWayPt = false;
         badrecord_count = 0;
         try {
@@ -148,6 +163,7 @@ public final class BT747LogConvert implements GPSLogConvert {
             }
 
             if ((nextAddrToRead & 0xFFFF) == 0) {
+                currentBlock = nextAddrToRead;
                 /***************************************************************
                  * This is the header. Only 20 bytes are read - just enough to
                  * get the log format.
@@ -155,6 +171,13 @@ public final class BT747LogConvert implements GPSLogConvert {
                 newLogFormat = (0xFF & bytes[2]) << 0 | (0xFF & bytes[3]) << 8
                         | (0xFF & bytes[4]) << 16 | (0xFF & bytes[5]) << 24;
                 logMode = (0xFF & bytes[6]) << 0 | (0xFF & bytes[7]) << 8;
+
+                isBlockStartOverwrite = (logMode & BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) == 0;
+
+                if(isBlockStartOverwrite && !firstBlockDone ) {
+                    passToFindFirstBlockInLog = true;
+                    firstBlockDone = true;
+                }
 
                 logPeriod = (0xFF & bytes[8]) << 0 | (0xFF & bytes[9]) << 8
                         | (0xFF & bytes[10]) << 16 | (0xFF & bytes[11]) << 24;
@@ -308,7 +331,8 @@ public final class BT747LogConvert implements GPSLogConvert {
                              * Get all the information in the record.
                              */
                             r.recCount = recCount;
-                            if (passToFindFieldsActivatedInLog) {
+                            if (passToFindFieldsActivatedInLog
+                                    && !passToFindFirstBlockInLog) {
                                 okInBuffer = indexInBuffer;
                                 foundRecord = true;
                             } else {
@@ -326,7 +350,19 @@ public final class BT747LogConvert implements GPSLogConvert {
                                 valid = getRecord(bytes, r, recIdx,
                                         rcrIdx, satcnt);
                                 if (valid) {
-                                    gpsFile.writeRecord(r);
+                                    if(!passToFindFirstBlockInLog) {
+                                        gpsFile.writeRecord(r);
+                                    } else {
+                                        final BT747Time t = Interface.getTimeInstance();
+                                        t.setUTCTime(r.utc); // Initialisation needed later too!
+                                        if(t.getYear()>1995) {
+                                            if(r.utc<smallestUTC) {
+                                                smallestUTC = r.utc;
+                                                smallestBlock = currentBlock;
+                                            }
+                                            // Valid date
+                                        }
+                                    }
                                     okInBuffer = offsetInBuffer;
                                     foundRecord = true;
                                 } else {
@@ -391,8 +427,24 @@ public final class BT747LogConvert implements GPSLogConvert {
             if (okInBuffer > 0) {
                 nextAddrToRead -= (sizeToRead - okInBuffer);
             }
+            if(nextAddrToRead >= fileSize) {
+                // Start reading from the start of the file.
+                // New virtual filesize is up to first block.
+                if(wrapOK) {
+                    wrapOK = false;
+                    nextAddrToRead = 0;
+                    fileSize = initialBlock;
+                }
+            }
         } /* nextAddrToRead<fileSize */
-        return BT747Constants.NO_ERROR;
+        if (passToFindFirstBlockInLog) {
+            initialBlock = smallestBlock;
+        }
+        if (passToFindFirstBlockInLog && !passToFindFieldsActivatedInLog) {
+            return parseFile(gpsFile);
+        } else {
+            return BT747Constants.NO_ERROR;
+        }
     }
 
     public final void setTimeOffset(final long offset) {
