@@ -503,7 +503,7 @@
 		<delete file="MANIFEST.MF" />
 		<manifest file="MANIFEST.MF">
 			<attribute name="Built-By" value="${user.name}" />
-			<attribute name="Main-Class" value="waba.applet.Applet" />
+			<attribute name="Main-Class" value="BT747" />
 			<attribute name="Implementation-Version"
 			           value="${full.build.version}"
 			/>

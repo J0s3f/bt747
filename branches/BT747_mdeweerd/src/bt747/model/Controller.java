@@ -371,28 +371,11 @@ public class Controller {
             parameters += "DPL700\n";
             sourceHeightReference = heightReferenceList[Model.SR_LOGTYPE];
         } else {
-            switch (m.getBinDecoder()) {
-            case DECODER_THOMAS:
-                try {
-                    // TODO: Reference directly once integrated for PDA too.
-                    lc = (GPSLogConvert) Class.forName(
-                            "gps.parser.NewLogConvert").newInstance();
-                    parameters += "THOMAS\n";
-                } catch (Exception e) {
-                    Generic.debug("DECODER_THOMAS", e);
-                    parameters += "Default bin converter\n";
-                    lc = new BT747LogConvert();
-                }
-                break;
-            default:
-            case DECODER_ORG:
-                lc = new BT747LogConvert();
-                ((BT747LogConvert) lc).setHolux(m
-                        .getBooleanOpt(AppSettings.IS_HOLUXM241));
-                parameters += "Force Holux:"
-                        + m.getBooleanOpt(AppSettings.IS_HOLUXM241) + "\n";
-                break;
-            }
+            lc = new BT747LogConvert();
+            ((BT747LogConvert) lc).setHolux(m
+                    .getBooleanOpt(AppSettings.IS_HOLUXM241));
+            parameters += "Force Holux:"
+                    + m.getBooleanOpt(AppSettings.IS_HOLUXM241) + "\n";
             sourceHeightReference = heightReferenceList[Model.BIN_LOGTYPE];
         }
         GPSFilter[] usedFilters;
@@ -521,24 +504,9 @@ public class Controller {
                     .setLogType(m.getGPSType() == GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR ? 0
                             : 1);
         } else {
-            switch (m.getBinDecoder()) {
-            case DECODER_THOMAS:
-                try {
-                    // TODO: Reference directly once integrated for PDA too.
-                    lc = (GPSLogConvert) Class.forName(
-                            "gps.parser.NewLogConvert").newInstance();
-                } catch (Exception e) {
-                    Generic.debug("DECODER_THOMAS", e);
-                    lc = new BT747LogConvert();
-                }
-                break;
-            default:
-            case DECODER_ORG:
                 lc = new BT747LogConvert();
                 ((BT747LogConvert) lc).setHolux(m
                         .getBooleanOpt(AppSettings.IS_HOLUXM241));
-                break;
-            }
         }
         GPSFilter[] usedFilters;
         if (m.isAdvFilterActive()) {
@@ -1037,26 +1005,6 @@ public class Controller {
      */
     public final void setDebug(final boolean isDebugActive) {
         Generic.setDebugLevel(isDebugActive ? 1 : 0);
-    }
-
-    /**
-     * Selects the original decoder.
-     */
-    public static final int DECODER_ORG = 1;
-    /**
-     * Selects an experimental decoder - not fully debugged yet.
-     */
-    public static final int DECODER_THOMAS = 2;
-
-    /**
-     * Sets the MTK binary log decoder to use.
-     * 
-     * @param logDecoderType
-     *            One of the following values:<br> - {@link #DECODER_ORG}<br> -
-     *            {@link #DECODER_THOMAS}
-     */
-    public final void setBinDecoder(final int logDecoderType) {
-        m.setBinDecoder(logDecoderType);
     }
 
     public final void resetFilters() {

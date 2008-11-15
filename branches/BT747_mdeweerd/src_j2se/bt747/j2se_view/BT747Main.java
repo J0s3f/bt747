@@ -291,14 +291,6 @@ public class BT747Main extends javax.swing.JFrame implements
         }
         updateFileFormatData();
 
-        switch (m.getBinDecoder()) {
-        case J2SEAppController.DECODER_ORG:
-            cbDecoderChoice.setSelectedIndex(0);
-            break;
-        case J2SEAppController.DECODER_THOMAS:
-            cbDecoderChoice.setSelectedIndex(1);
-            break;
-        }
         lbConversionTime.setVisible(false);
 
         updateEstimatedNbrRecords();
@@ -5487,14 +5479,7 @@ private void cbLanguageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIR
     }// GEN-LAST:event_jButton1ActionPerformed
 
     private void cbDecoderChoiceActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbDecoderChoiceActionPerformed
-        switch (cbDecoderChoice.getSelectedIndex()) {
-        case 0:
-            c.setBinDecoder(J2SEAppController.DECODER_ORG);
-            break;
-        case 1:
-            c.setBinDecoder(J2SEAppController.DECODER_THOMAS);
-            break;
-        }
+
     }// GEN-LAST:event_cbDecoderChoiceActionPerformed
 
     private void cbFormatItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbFormatItemStateChanged

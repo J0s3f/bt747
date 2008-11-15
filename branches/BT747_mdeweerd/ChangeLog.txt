@@ -1,3 +1,7 @@
+Version 1.61.8
+* Handling of binary files that are in 'overwrite mode' improved.
+  Looking for 'start' in file.
+
 Version 1.61.7
 * Dutch added, some corrections to language selection handling.
 

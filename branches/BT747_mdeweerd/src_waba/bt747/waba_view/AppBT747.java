@@ -242,8 +242,6 @@ public class AppBT747 extends MainWindow implements ModelListener {
         setBorderStyle(TAB_ONLY_BORDER);
         setTitle(Txt.S_TITLE);
         waba.sys.Settings.setUIStyle(waba.sys.Settings.Flat);
-        // Using the original decoder only in this interface:
-        c.setBinDecoder(0);
     }
 
     private int numPanels;

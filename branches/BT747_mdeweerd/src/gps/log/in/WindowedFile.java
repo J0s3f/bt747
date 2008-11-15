@@ -75,10 +75,15 @@ public final class WindowedFile {
         }
     }
 
+    private final void readBytes(final int bytesToRead) {
+        currentPosition += bufferFill;
+        bufferFill = file.readBytes(buffer, 0, bytesToRead);
+    }
+
     public final byte[] fillBuffer(final int newPosition) {
         sanitizeBuffer();
         if (newPosition < currentPosition) {
-            // Initialise pointer, position, ...
+            // Initialize pointer, position, ...
             file.close();
             file = null;
             open();
@@ -93,29 +98,39 @@ public final class WindowedFile {
                 if (bytesToRead > bufferSize) {
                     bytesToRead = bufferSize;
                 }
-                bytesToSkip -= file.readBytes(buffer, 0, bytesToRead);
+                readBytes(bytesToRead);
+                bytesToSkip -= bufferFill;
             } while (bytesToSkip > 0);
         }
         if (newPosition > currentPosition
                 && newPosition < currentPosition + bufferFill) {
-            // New position is already in buffer - copy bytes that are present.
+            // New position is already in buffer - copy bytes that are
+            // present.
             int j = 0;
-            for (int i = newPosition - currentPosition; i < bufferFill; j++, i++) {
+            int bytesToSkip = newPosition - currentPosition;
+            for (int i = bytesToSkip; i < bufferFill; j++, i++) {
                 buffer[j] = buffer[i];
             }
-            bufferFill -= newPosition - currentPosition;
-        } else if (newPosition == currentPosition) {
-            // No operation
-        } else {
+            bufferFill -= bytesToSkip;
+            currentPosition += bytesToSkip;
+
+        } else if (newPosition >= currentPosition + bufferFill) {
+            currentPosition += bufferFill;
             bufferFill = 0;
         }
-        try {
-            currentPosition = newPosition;
-            bufferFill += file.readBytes(buffer, bufferFill, bufferSize
-                    - bufferFill);
-        } catch (Exception e) {
-            Generic.debug("Read problem during fillBuffer", e);
-            return null;
+        if (bufferSize != bufferFill) {
+            try {
+                if (currentPosition != newPosition) {
+                    System.err.println(path + ": Problem in position " + currentPosition
+                            + " request:" + newPosition);
+                }
+//                currentPosition = newPosition;
+                bufferFill += file.readBytes(buffer, bufferFill, bufferSize
+                        - bufferFill);
+            } catch (Exception e) {
+                Generic.debug("Read problem during fillBuffer", e);
+                return null;
+            }
         }
         return buffer;
     }

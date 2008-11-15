@@ -45,8 +45,8 @@ for port in  $POSSIBLE_PORTS ; do
   fi 
 done
 
-which java 2>1 >/dev/null && JAVA=java
-which javaw 2>1 >/dev/null && JAVA=javaw
+which java >/dev/null 2>&1 && JAVA=java
+which javaw >/dev/null 2>&1 && JAVA=javaw
 
 # you may want to force the path to the settings file in the next call:
 # -Dbt747_settings="${USER}/bt747_settings.pdb"

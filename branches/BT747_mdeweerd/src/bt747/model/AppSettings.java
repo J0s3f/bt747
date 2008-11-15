@@ -163,11 +163,11 @@ public class AppSettings {
     private static final int C_FREETEXT_PORT_IDX = C_IMPERIAL_IDX
             + C_IMPERIAL_SIZE;
     private static final int C_FREETEXT_PORT_SIZE = 50;
-    private static final int C_BIN_DECODER_IDX = C_FREETEXT_PORT_IDX
+    private static final int C_NOT_USED1_IDX = C_FREETEXT_PORT_IDX
             + C_FREETEXT_PORT_SIZE;
-    private static final int C_BIN_DECODER_SIZE = 4;
-    private static final int C_GPSType_IDX = C_BIN_DECODER_IDX
-            + C_BIN_DECODER_SIZE;
+    private static final int C_NOT_USED1_SIZE = 4;
+    private static final int C_GPSType_IDX = C_NOT_USED1_IDX
+            + C_NOT_USED1_SIZE;
     private static final int C_GPSType_SIZE = 1;
     private static final int C_OUTPUTLOGCONDITIONS_IDX = C_GPSType_IDX
             + C_GPSType_SIZE;
@@ -423,7 +423,7 @@ public class AppSettings {
             setFreeTextPort("");
             /* fall through */
         case 19:
-            setBinDecoder(0);
+            // setBinDecoder(0); // No longer used
             setGPSType(0);
         case 20:
             setBooleanOpt(OUTPUTLOGCONDITIONS, false);
@@ -1273,14 +1273,6 @@ public class AppSettings {
 
     public final boolean isStoredSetting1() {
         return getNMEASetting1().length() > 15;
-    }
-
-    protected final void setBinDecoder(final int value) {
-        setLocalIntOpt(0, value, C_BIN_DECODER_IDX, C_BIN_DECODER_SIZE);
-    }
-
-    public final int getBinDecoder() {
-        return getLocalIntOpt(C_BIN_DECODER_IDX, C_BIN_DECODER_SIZE);
     }
 
     public final int getGPSType() {

@@ -272,6 +272,7 @@ public final class GPSstate implements BT747Thread {
 
     /**
      * Request the initial log mode (the first value logged in memory).
+     * Will be analysed in {@link #analyseLogNmea(String[])}.
      */
     public final void reqInitialLogMode() {
         mtkLogHandler.readLog(6, 2); // 6 is the log mode offset in the log,
@@ -1005,14 +1006,7 @@ public final class GPSstate implements BT747Thread {
      *            nmea[1] 3 <br>
      *            nmea[2] 4
      * @return
-     */
-    /**
-     * @param sNmea
-     * @return
-     */
-    /**
-     * @param sNmea
-     * @return
+     * @see #reqInitialLogMode()
      */
     private int analyseLogNmea(final String[] sNmea) {
         // if(GPS_DEBUG) {
@@ -1109,6 +1103,8 @@ public final class GPSstate implements BT747Thread {
 
                 try {
                     // Get the initial mode.
+                    /** @see #reqInitialLogMode() */
+
                     if (Conv.hex2Int(sNmea[2]) == 6) {
                         initialLogMode = Conv.hex2Int(sNmea[3].substring(0, 4));
                         // correct endian.
