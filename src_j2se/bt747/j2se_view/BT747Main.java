@@ -79,12 +79,10 @@ public class BT747Main extends javax.swing.JFrame implements
     private Model m;
     private J2SEAppController c;
         
+    // TODO: remove this part after updating GUI.  Handled in updateGui.
     private static final ComboBoxModel modelGpsType = new javax.swing.DefaultComboBoxModel(new String[] {
-                J2SEAppController.getString("DEFAULT_DEVICE"), 
-                "Holux M-241",
-                "iTrackU-Nemerix",
-                "PhotoTrackr",
-                "iTrackU-SIRFIII" });
+                ""
+                 });
     
     /** Creates new form BT747Main */
     public BT747Main() {        
@@ -124,6 +122,12 @@ public class BT747Main extends javax.swing.JFrame implements
     }
     
     private void updateGuiData() {
+        cbGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+                getString("DEFAULT_DEVICE"), 
+                "Holux M-241",
+                "iTrackU-Nemerix",
+                "PhotoTrackr",
+                "iTrackU-SIRFIII" }));
         cbPortName.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
                 getString("USB_ForLinuxMac"),
                 getString("BLUETOOTH_ForMac"),
@@ -5597,7 +5601,7 @@ private void cbLanguageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIR
     private int selectedFormat = Model.NO_LOG_LOGTYPE;
 
     private final void setSelectedFormat(final String selected) {
-        if (selected.equals(getString("CSV"))) {
+        if (selected.equals(getString("CSV_Description"))) {
             selectedFormat = Model.CSV_LOGTYPE;
         } else if (selected.equals(getString("GMAP_Description"))) {
             selectedFormat = Model.GMAP_LOGTYPE;
