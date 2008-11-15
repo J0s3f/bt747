@@ -195,6 +195,10 @@ public final class CommonIn {
         if (logFormat != 0) {
             return logFormat;
         }
+        logFormat = analyzeGPGSV(sNmea, gpsRec);
+        if (logFormat != 0) {
+            return logFormat;
+        }
         return logFormat;
     }
 
