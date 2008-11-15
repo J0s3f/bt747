@@ -5679,7 +5679,7 @@ private void cbLanguageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIR
     private void updateEstimatedNbrRecords() {
         txtEstimatedRecords.setText(m
                 .getEstimatedNbrRecords(getUserLogFormat())
-                + " records estimated");
+                + getString("RECORDS_ESTIMATED"));
     }
 
     private int getUserLogFormat() {
