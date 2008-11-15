@@ -121,7 +121,7 @@ public final class WindowedFile {
         if (bufferSize != bufferFill) {
             try {
                 if (currentPosition != newPosition) {
-                    System.err.println(path + ": Problem in position " + currentPosition
+                    Generic.debug(path + ": Problem in position " + currentPosition
                             + " request:" + newPosition);
                 }
 //                currentPosition = newPosition;
