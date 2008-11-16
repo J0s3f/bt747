@@ -1,3 +1,6 @@
+Version 1.61.9
+* Change in startup scripts to copy with 64/32 bit on linux.
+
 Version 1.61.8
 * Handling of binary files that are in 'overwrite mode' improved.
   Looking for 'start' in file.

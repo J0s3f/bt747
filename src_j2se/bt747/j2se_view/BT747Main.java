@@ -39,6 +39,8 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import org.apache.tools.ant.types.CommandlineJava.SysProperties;
+
 import java.util.Enumeration;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
@@ -1259,8 +1261,6 @@ public class BT747Main extends javax.swing.JFrame implements
         lbMinutes = new javax.swing.JLabel();
         cbGPSType = new javax.swing.JComboBox();
         lbDeviceType = new javax.swing.JLabel();
-        pnDecoderBin = new javax.swing.JPanel();
-        cbDecoderChoice = new javax.swing.JComboBox();
         lbConversionTime = new javax.swing.JLabel();
         GPSDecodePanel = new javax.swing.JPanel();
         lbLatitude = new javax.swing.JLabel();
@@ -1925,68 +1925,36 @@ public class BT747Main extends javax.swing.JFrame implements
 
         lbDeviceType.setText(bundle.getString("BT747Main.lbDeviceType.text")); // NOI18N
 
-        pnDecoderBin.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnDecoderBin.border.title"))); // NOI18N
-
-        cbDecoderChoice.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Original", "Thomas's version" }));
-        cbDecoderChoice.setToolTipText(bundle.getString("BT747Main.cbDecoderChoice.toolTipText")); // NOI18N
-        cbDecoderChoice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbDecoderChoiceActionPerformed(evt);
-            }
-        });
-
         lbConversionTime.setText(bundle.getString("BT747Main.lbConversionTime.text")); // NOI18N
         lbConversionTime.setToolTipText(bundle.getString("BT747Main.lbConversionTime.toolTipText")); // NOI18N
-
-        org.jdesktop.layout.GroupLayout pnDecoderBinLayout = new org.jdesktop.layout.GroupLayout(pnDecoderBin);
-        pnDecoderBin.setLayout(pnDecoderBinLayout);
-        pnDecoderBinLayout.setHorizontalGroup(
-            pnDecoderBinLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnDecoderBinLayout.createSequentialGroup()
-                .add(cbDecoderChoice, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(lbConversionTime)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnDecoderBinLayout.setVerticalGroup(
-            pnDecoderBinLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnDecoderBinLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                .add(cbDecoderChoice, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(lbConversionTime))
-        );
 
         org.jdesktop.layout.GroupLayout pnConvertLayout = new org.jdesktop.layout.GroupLayout(pnConvert);
         pnConvert.setLayout(pnConvertLayout);
         pnConvertLayout.setHorizontalGroup(
             pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnDateFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .add(pnConvertLayout.createSequentialGroup()
-                .add(pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnConvertLayout.createSequentialGroup()
-                        .add(pnDateFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnDecoderBin, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(pnConvertLayout.createSequentialGroup()
-                        .add(btConvert)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(lbDeviceType)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .add(0, 0, 0))
+                .add(btConvert)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbDeviceType)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbConversionTime))
         );
         pnConvertLayout.setVerticalGroup(
             pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnConvertLayout.createSequentialGroup()
-                .add(pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnDecoderBin, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, pnDateFilter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE))
+                .add(pnDateFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 48, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(btConvert)
                     .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(lbDeviceType)
-                    .add(cbGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(cbGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbConversionTime)))
         );
 
         setSelectedFormat(cbFormat.getSelectedItem().toString());
@@ -2665,7 +2633,7 @@ public class BT747Main extends javax.swing.JFrame implements
         cbLanguage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "en_US" }));
         cbLanguage.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbLanguageItemStateChanged(evt);
+                cbLanguageItemChanged(evt);
             }
         });
 
@@ -3016,7 +2984,7 @@ public class BT747Main extends javax.swing.JFrame implements
         );
         pnTrackpointLayout.setVerticalGroup(
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnTrkFixType, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+            .add(pnTrkFixType, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .add(pnTrkLogReason, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -3561,7 +3529,7 @@ public class BT747Main extends javax.swing.JFrame implements
         pnWaypointLayout.setVerticalGroup(
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         org.jdesktop.layout.GroupLayout LogFiltersPanelLayout = new org.jdesktop.layout.GroupLayout(LogFiltersPanel);
@@ -5054,7 +5022,7 @@ private void cbAddTrackPointNameItemStateChanged(java.awt.event.ItemEvent evt) {
     c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME,cbAddTrackPointName.isSelected());
 }//GEN-LAST:event_cbAddTrackPointNameItemStateChanged
 
-private void cbLanguageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbLanguageFocusLost
+private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbLanguageFocusLost
     c.setStringOpt(Model.LANGUAGE, (String) cbLanguage.getSelectedItem());
 }//GEN-LAST:event_cbLanguageFocusLost
 
@@ -5953,6 +5921,12 @@ private void cbLanguageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIR
      *            the command line arguments
      */
     public static void main(final String args[]) {
+        if(args.length>=1) {
+            if(args[0].equals("arch")) {
+                System.out.print(java.lang.System.getProperty("os.arch"));
+            }
+            return;
+        }
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             final Model m = new Model();
@@ -6114,7 +6088,6 @@ private void cbLanguageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIR
     private javax.swing.JCheckBox cbDAGE;
     private javax.swing.JComboBox cbDGPSType;
     private javax.swing.JCheckBox cbDSTA;
-    private javax.swing.JComboBox cbDecoderChoice;
     private javax.swing.JCheckBox cbDisableLoggingDuringDownload;
     private javax.swing.JCheckBox cbDistance;
     private javax.swing.JCheckBox cbElevation;
@@ -6354,7 +6327,6 @@ private void cbLanguageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIR
     private javax.swing.JPanel pnCommonFilter;
     private javax.swing.JPanel pnConvert;
     private javax.swing.JPanel pnDateFilter;
-    private javax.swing.JPanel pnDecoderBin;
     private javax.swing.JPanel pnDownload;
     private javax.swing.JPanel pnDownloadMethod;
     private javax.swing.JPanel pnFileNMEAOutLeft;
