@@ -796,7 +796,7 @@ public abstract class DeviceScreen {
      *            is the <code>Graphics</code> object to paint with.
      * @param left
      *            is the text to write on the left side of the menu bar. The
-     *            left side is associated with dimissing input such as a
+     *            left side is associated with dismissing input such as a
      *            "Cancel" button.
      * @param highlightLeft
      *            is <code>true</code> if the menu text <code>left</code>

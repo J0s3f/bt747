@@ -9,8 +9,8 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package net.sf.bt747.j4me.app;
 
@@ -126,8 +126,8 @@ public final class MainScreen extends Dialog implements ModelListener {
         setMenuText("Logger Menu", "App Menu");
 
         downloadLogScreen = new LogDownloadScreen(c, this);
-        loggerInfoScreen = new DelayedDialog(LoggerStatusScreen.class, c,
-                this, this);
+        loggerInfoScreen = new DelayedDialog(LoggerStatusScreen.class, c, this,
+                this);
         logScreen = new LogScreen(this);
         debugConfigScreen = new DebugConfigScreen(c, this);
         initialiseGPSAlert = new InitializingGPSAlert(c, this);
@@ -255,14 +255,14 @@ public final class MainScreen extends Dialog implements ModelListener {
     /**
      * Get the application model
      * 
-     * @return Reference to applicaiton model object.
+     * @return Reference to application model object.
      */
     private final AppModel m() {
         return c.getAppModel();
     }
 
     /**
-     * When true, the apllication waits until the erase is done (when erase is
+     * When true, the application waits until the erase is done (when erase is
      * ongoing).
      */
     private boolean waitErase;
@@ -447,59 +447,59 @@ public final class MainScreen extends Dialog implements ModelListener {
         if (keyCode == DeviceScreen.RIGHT) {
             rootMenu.show();
         } else {
-            super.keyPressed(keyCode);
-        }
-        switch (keyCode) {
-        case DeviceScreen.KEY_NUM0:
-            c.logImmediate(BT747Constants.RCR_APP0_MASK);
-            hightlightLabel(0);
-            break;
-        case DeviceScreen.KEY_NUM1:
-            c.logImmediate(BT747Constants.RCR_APP1_MASK);
-            hightlightLabel(1);
-            break;
-        case DeviceScreen.KEY_NUM2:
-            c.logImmediate(BT747Constants.RCR_APP2_MASK);
-            hightlightLabel(2);
-            break;
-        case DeviceScreen.KEY_NUM3:
-            c.logImmediate(BT747Constants.RCR_APP3_MASK);
-            hightlightLabel(3);
-            break;
-        case DeviceScreen.KEY_NUM4:
-            c.logImmediate(BT747Constants.RCR_APP4_MASK);
-            hightlightLabel(4);
-            break;
-        case DeviceScreen.KEY_NUM5:
-            c.logImmediate(BT747Constants.RCR_APP5_MASK);
-            hightlightLabel(5);
-            break;
-        case DeviceScreen.KEY_NUM6:
-            c.logImmediate(BT747Constants.RCR_APP6_MASK);
-            hightlightLabel(6);
-            break;
-        case DeviceScreen.KEY_NUM7:
-            c.logImmediate(BT747Constants.RCR_APP7_MASK);
-            hightlightLabel(7);
-            break;
-        case DeviceScreen.KEY_NUM8:
-            c.logImmediate(BT747Constants.RCR_APP8_MASK);
-            hightlightLabel(8);
-            break;
-        case DeviceScreen.KEY_NUM9:
-            c.logImmediate(BT747Constants.RCR_APP9_MASK);
-            hightlightLabel(9);
-            break;
-        case DeviceScreen.KEY_STAR:
-            c.logImmediate(BT747Constants.RCR_APPY_MASK);
-            hightlightLabel(10);
-            break;
-        case DeviceScreen.KEY_POUND:
-            c.logImmediate(BT747Constants.RCR_APPZ_MASK);
-            hightlightLabel(11);
-            break;
-        default:
-            break;
+            switch (keyCode) {
+            case DeviceScreen.KEY_NUM0:
+                c.logImmediate(BT747Constants.RCR_APP0_MASK);
+                hightlightLabel(0);
+                break;
+            case DeviceScreen.KEY_NUM1:
+                c.logImmediate(BT747Constants.RCR_APP1_MASK);
+                hightlightLabel(1);
+                break;
+            case DeviceScreen.KEY_NUM2:
+                c.logImmediate(BT747Constants.RCR_APP2_MASK);
+                hightlightLabel(2);
+                break;
+            case DeviceScreen.KEY_NUM3:
+                c.logImmediate(BT747Constants.RCR_APP3_MASK);
+                hightlightLabel(3);
+                break;
+            case DeviceScreen.KEY_NUM4:
+                c.logImmediate(BT747Constants.RCR_APP4_MASK);
+                hightlightLabel(4);
+                break;
+            case DeviceScreen.KEY_NUM5:
+                c.logImmediate(BT747Constants.RCR_APP5_MASK);
+                hightlightLabel(5);
+                break;
+            case DeviceScreen.KEY_NUM6:
+                c.logImmediate(BT747Constants.RCR_APP6_MASK);
+                hightlightLabel(6);
+                break;
+            case DeviceScreen.KEY_NUM7:
+                c.logImmediate(BT747Constants.RCR_APP7_MASK);
+                hightlightLabel(7);
+                break;
+            case DeviceScreen.KEY_NUM8:
+                c.logImmediate(BT747Constants.RCR_APP8_MASK);
+                hightlightLabel(8);
+                break;
+            case DeviceScreen.KEY_NUM9:
+                c.logImmediate(BT747Constants.RCR_APP9_MASK);
+                hightlightLabel(9);
+                break;
+            case DeviceScreen.KEY_STAR:
+                c.logImmediate(BT747Constants.RCR_APPY_MASK);
+                hightlightLabel(10);
+                break;
+            case DeviceScreen.KEY_POUND:
+                c.logImmediate(BT747Constants.RCR_APPZ_MASK);
+                hightlightLabel(11);
+                break;
+            default:
+                super.keyPressed(keyCode);
+                break;
+            }
         }
     }
 
@@ -517,7 +517,7 @@ public final class MainScreen extends Dialog implements ModelListener {
         resetLabels();
     }
 
-    DeviceScreen interruptedScreen = null;
+    private DeviceScreen interruptedScreen = null;
 
     /**
      * Call back from the GPS Model to provide data.
