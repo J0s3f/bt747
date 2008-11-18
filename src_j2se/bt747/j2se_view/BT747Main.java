@@ -5924,6 +5924,8 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
         if(args.length>=1) {
             if(args[0].equals("arch")) {
                 System.out.print(java.lang.System.getProperty("os.arch"));
+            } else {
+                BT747cmd.main(args);
             }
             return;
         }

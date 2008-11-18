@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 # You may need to change the next line to an absolute path.
 ROOT_DIR=`dirname $0`
 if [ -z "$ROOT_DIR" ] ; then ROOT_DIR="." ; fi

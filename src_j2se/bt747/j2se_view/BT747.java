@@ -1,5 +1,7 @@
 package bt747.j2se_view;
 
+import org.apache.tools.ant.types.CommandlineJava.SysProperties;
+
 import bt747.model.Model;
 
 //********************************************************************
@@ -51,6 +53,9 @@ public class BT747 extends bt747.waba_view.AppBT747 {
      *            the command line arguments
      */
     public static void main(final String args[]) {
+        if((args.length!=0) && args[0].equals("arch")) {
+            System.out.print(java.lang.System.getProperty("os.arch"));
+        }
         int i;
         int j;
         String[] newArgs = new String[args.length + MY_ARGS.length];
