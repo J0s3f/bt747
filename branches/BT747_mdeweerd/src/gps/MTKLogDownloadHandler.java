@@ -71,6 +71,12 @@ final class MTKLogDownloadHandler {
      */
     private static final int C_LOG_START = 5;
 
+    /**
+     * Waiting for a reply from the application concerning the authorisation to
+     * overwrite data that is not the same.
+     */
+    private static final int C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY = 6;
+
     /** Timeout between log status requests for erase. */
     private static final int C_LOGERASE_TIMEOUT = 2000;
 
@@ -533,11 +539,6 @@ final class MTKLogDownloadHandler {
         }
     }
 
-    /**
-     * Waiting for a reply from the application concerning the authorisation to
-     * overwrite data that is not the same.
-     */
-    private static final int C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY = 5;
     private int usedLogRequestAhead = 0;
 
     /**
