@@ -615,10 +615,10 @@ public class BT747cmd implements bt747.model.ModelListener {
                 String arg = options.argumentOf("l").toLowerCase();
                 if (arg.equals("on")) {
                     System.out.println(">> Switch recording to ON\n");
-                    c.startLog();
+                    c.setLoggingActive(true);
                 } else if (arg.equals("off")) {
                     System.out.println(">> Switch recording to OFF\n");
-                    c.stopLog();
+                    c.setLoggingActive(false);
                 } else {
                     System.err
                             .println("Argument of '-l' must be 'ON' or 'OFF'");

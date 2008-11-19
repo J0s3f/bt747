@@ -421,8 +421,8 @@ public final class J2SEAppController extends Controller {
     protected final void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
             if (m.getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT)) {
-                c.stopLog(); // First command could fail, so repeat.
-                c.stopLog();
+                c.setLoggingActive(false); // First command could fail, so repeat.
+                c.setLoggingActive(false);
             }
             super.performOperationsAfterGPSConnect();
             saveSettings();

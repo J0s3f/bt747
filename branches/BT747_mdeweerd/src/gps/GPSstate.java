@@ -364,8 +364,8 @@ public final class GPSstate implements BT747Thread {
 
     public final void setLogTimeInterval(final int value) {
         int z_value = value;
-        if (z_value != 0 && z_value > 999) {
-            z_value = 999;
+        if (z_value != 0 && z_value > 36000) {
+            z_value = 36000;
         }
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_SET_STR + ","
@@ -375,8 +375,8 @@ public final class GPSstate implements BT747Thread {
 
     public final void setLogDistanceInterval(final int value) {
         int z_value = value;
-        if (z_value != 0 && z_value > 9999) {
-            z_value = 9999;
+        if (z_value != 0 && z_value > 36000) {
+            z_value = 36000;
         } else if (z_value != 0 && z_value < 1) {
             z_value = 1;
         }
@@ -390,8 +390,8 @@ public final class GPSstate implements BT747Thread {
 
     public final void setLogSpeedInterval(final int value) {
         int z_value = value;
-        if (z_value != 0 && z_value > 999) {
-            z_value = 999;
+        if (z_value != 0 && z_value > 36000) {
+            z_value = 36000;
         } else if (z_value != 0 && z_value < 1) {
             z_value = 1;
         }
