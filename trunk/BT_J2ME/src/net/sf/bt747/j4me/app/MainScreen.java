@@ -171,6 +171,7 @@ public final class MainScreen extends Dialog implements ModelListener {
             public void onSelection() {
                 c.setLoggingActive(!logStatusShown);
                 c.reqLogStatus();
+                rootMenu.show();
             }
         });
 
