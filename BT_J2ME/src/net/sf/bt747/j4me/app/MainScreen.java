@@ -150,6 +150,30 @@ public final class MainScreen extends Dialog implements ModelListener {
         // Reset the current location provider.
 
         rootMenu.appendMenuOption(downloadLogScreen);
+        rootMenu.appendMenuOption(new MenuItem() {
+            private boolean logStatusShown = false;
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.j4me.ui.MenuItem#getText()
+             */
+            public String getText() {
+                logStatusShown = m().isLoggingActive();
+                return logStatusShown ? "Logging is ON" : "Logging is OFF";
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.j4me.ui.MenuItem#onSelection()
+             */
+            public void onSelection() {
+                c.setLoggingActive(!logStatusShown);
+                c.reqLogStatus();
+            }
+        });
+
         rootMenu.appendMenuOption("MTK Logger status", loggerInfoScreen);
         rootMenu.appendMenuOption("GPS Position", new DelayedDialog(
                 GpsPositionScreen.class, c, this, this));
