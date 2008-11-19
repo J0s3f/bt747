@@ -19,6 +19,7 @@ import bt747.sys.interfaces.BT747Semaphore;
 public final class LoggerStatusScreen extends BT747Dialog implements
         ModelListener, Runnable {
 
+    private FieldValue logActive = new FieldValue("Logging is:");
     private FieldValue logRCRTime = new FieldValue("Time interval (s)");
     private FieldValue logRCRSpeed = new FieldValue("Speed interval (km/h)");
     private FieldValue logRCRDistance = new FieldValue("Distance interval (m)");
@@ -55,6 +56,7 @@ public final class LoggerStatusScreen extends BT747Dialog implements
 
             // Create a UI section for pedometer information.
             createNewSection("Log conditions");
+            append(logActive);
             append(logRCRTime);
             append(logRCRSpeed);
             append(logRCRDistance);
@@ -160,6 +162,7 @@ public final class LoggerStatusScreen extends BT747Dialog implements
 
     private void updateData() {
         try {
+            logActive.setLabel(m().isLoggingActive()?"ON":"OFF");
             // Log.debug(System.currentTimeMillis()+" Update data");
             logRCRTime.setLabel(Convert.toString(
                     m().getLogTimeInterval() / 10., 1));
