@@ -170,7 +170,6 @@ public final class MainScreen extends Dialog implements ModelListener {
              */
             public void onSelection() {
                 c.setLoggingActive(!logStatusShown);
-                c.reqLogStatus();
                 rootMenu.show();
             }
         });
@@ -569,6 +568,7 @@ public final class MainScreen extends Dialog implements ModelListener {
             break;
         case ModelEvent.CONNECTED:
             c.reqLogFormat();
+            c.reqLogStatus();
             break;
         case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
             interruptedScreen = UIManager.getScreen();
