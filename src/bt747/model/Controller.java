@@ -9,8 +9,8 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package bt747.model;
 
@@ -702,20 +702,19 @@ public class Controller {
      **************************************************************************/
 
     /**
-     * Activate logging on the device.
+     * Set logging status of device.
+     * 
+     * @param on
+     *            When true, logging will be turned on.
      */
-    public final void startLog() {
-        m.gpsModel().startLog();
+    public final void setLoggingActive(final boolean on) {
+        if (on) {
+            m.gpsModel().startLog();
+        } else {
+            m.gpsModel().stopLog();
+        }
         m.gpsModel().reqLogOnOffStatus();
     }
-
-    /**
-     * Stop logging on the device.
-     */
-    public final void stopLog() {
-        m.gpsModel().stopLog();
-        m.gpsModel().reqLogOnOffStatus();
-    };
 
     /**
      * Set log overwrite mode on the device.

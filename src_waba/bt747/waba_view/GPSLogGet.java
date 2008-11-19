@@ -241,11 +241,7 @@ public final class GPSLogGet extends Container implements ModelListener {
             } else if (event.target == cbDownload) {
                 c.setDownloadMethod(cbDownload.getSelectedIndex());
             } else if (event.target == chkLogOnOff) {
-                if (chkLogOnOff.getChecked()) {
-                    c.startLog();
-                } else {
-                    c.stopLog();
-                }
+                c.setLoggingActive(chkLogOnOff.getChecked());
             } else if (event.target == cbColors) {
                 c.setColorInvalidTrack((String) cbColors.getSelectedItem());
             } else if (event.target == cbTimeOffsetHours) {
