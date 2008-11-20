@@ -1,7 +1,5 @@
 package bt747.j2se_view;
 
-import org.apache.tools.ant.types.CommandlineJava.SysProperties;
-
 import bt747.model.Model;
 
 //********************************************************************

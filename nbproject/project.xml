@@ -61,6 +61,19 @@
                 <action name="run">
                     <target>run.j2se</target>
                 </action>
+                <action name="compile.single">
+                    <script>nbproject/ide-file-targets.xml</script>
+                    <target>compile-selected-files-in-src_j2se</target>
+                    <context>
+                        <property>files</property>
+                        <folder>src_j2se</folder>
+                        <pattern>\.java$</pattern>
+                        <format>relative-path</format>
+                        <arity>
+                            <separated-files>,</separated-files>
+                        </arity>
+                    </context>
+                </action>
             </ide-actions>
             <export>
                 <type>folder</type>
