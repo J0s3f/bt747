@@ -1,6 +1,7 @@
 //********************************************************************
 //***                           BT 747                             ***
-//***                  (c)2008 Mario De Weerd                      ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
 //***                     m.deweerd@ieee.org                       ***
 //***  **********************************************************  ***
 //***  Software is provided "AS IS," without a warranty of any     ***
@@ -8,10 +9,9 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//********************************************************************
-
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
+//***  *********************************************************** ***
 package net.sf.bt747.j2me.system;
 
 import java.util.Calendar;
@@ -101,7 +101,7 @@ public final class J2MEDate implements BT747Date {
         Calendar cal = Calendar.getInstance(GMT_ZONE);
         cal.setTime(INIT_DATE);
         cal.set(Calendar.DAY_OF_MONTH, sentDay);
-        cal.set(Calendar.MONTH - (1 + Calendar.JANUARY), sentMonth);
+        cal.set(Calendar.MONTH, sentMonth - (1 + Calendar.JANUARY));
         cal.set(Calendar.YEAR, sentYear);
         date = cal.getTime();
     }

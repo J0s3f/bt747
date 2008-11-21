@@ -226,6 +226,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
                 tb.setString(m().getStringOpt(AppModel.LOGFILERELPATH));
                 // Simulate selection for entry
                 tb.keyPressed(DeviceScreen.FIRE);
+                tb.keyReleased(DeviceScreen.FIRE);
             }
         });
 

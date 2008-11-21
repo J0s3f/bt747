@@ -74,7 +74,7 @@ public final class ConvertToScreen extends
             l = new Label("'" + getRightMenuText() + "' to start conversion of:");
             append(l);
             tbBinFile = new TextBox() {
-                public void keyPressed(int keyCode) {
+                public void keyReleased(int keyCode) {
                     if ((keyCode > 0) || (keyCode == DeviceScreen.FIRE)) {
                         selectBaseFile();
                     }

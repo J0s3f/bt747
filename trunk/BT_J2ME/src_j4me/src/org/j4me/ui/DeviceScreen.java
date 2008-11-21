@@ -1078,20 +1078,12 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
                 highlightLeftMenu = true;
                 repaintMenuBar(true);
             }
-
-            // Raise a menu event.
-            master.declineNotify();
         } else if (translatedKey == DeviceScreen.MENU_RIGHT) {
             // Highlight the menu option immediately.
             if (master.hasMenuBar()) {
                 highlightRightMenu = true;
                 repaintMenuBar(true);
             }
-
-            // Raise a menu event.
-            master.acceptNotify();
-        } else if (translatedKey == DeviceScreen.KEY_RETURN) {
-            master.returnNotify();
         }
 
         // Do not forward the key event!
@@ -1128,9 +1120,17 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
             if (translatedKey == DeviceScreen.MENU_LEFT) {
                 highlightLeftMenu = false;
                 repaintMenuBar(false);
+
+                // Raise a menu event.
+                master.declineNotify();
             } else if (translatedKey == DeviceScreen.MENU_RIGHT) {
                 highlightRightMenu = false;
                 repaintMenuBar(false);
+
+                // Raise a menu event.
+                master.acceptNotify();
+            } else if (translatedKey == DeviceScreen.KEY_RETURN) {
+                master.returnNotify();
             }
         }
 
