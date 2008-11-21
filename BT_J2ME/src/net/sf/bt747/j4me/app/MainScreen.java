@@ -427,6 +427,7 @@ public final class MainScreen extends Dialog implements ModelListener {
         });
 
         menu.show();
+        menu = null;
     }
 
     /**
@@ -462,15 +463,22 @@ public final class MainScreen extends Dialog implements ModelListener {
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.j4me.ui.Dialog#keyReleased(int)
+     */
+    protected void keyReleased(int keyCode) {
+        if (keyCode == DeviceScreen.RIGHT) {
+            rootMenu.show();
+        } else {
+            super.keyReleased(keyCode);
+        }
+    }
     /**
      * Called when key is pressed by user. Handles key.
      * 
      * @see org.j4me.ui.Dialog#keyPressed(int)
      */
     protected void keyPressed(int keyCode) {
-        if (keyCode == DeviceScreen.RIGHT) {
-            rootMenu.show();
-        } else {
             switch (keyCode) {
             case DeviceScreen.KEY_NUM0:
                 c.logImmediate(BT747Constants.RCR_APP0_MASK);
@@ -524,7 +532,6 @@ public final class MainScreen extends Dialog implements ModelListener {
                 super.keyPressed(keyCode);
                 break;
             }
-        }
     }
 
     /**
