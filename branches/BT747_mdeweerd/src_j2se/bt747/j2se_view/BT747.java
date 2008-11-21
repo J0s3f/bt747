@@ -1,7 +1,3 @@
-package bt747.j2se_view;
-
-import bt747.model.Model;
-
 //********************************************************************
 //***                           BT 747                             ***
 //***                      April 14, 2007                          ***
@@ -13,13 +9,17 @@ import bt747.model.Model;
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
+//***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
 //***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
 //********************************************************************                              
+package bt747.j2se_view;
+
+import bt747.model.Model;
 /**
  * Main class (application entry) An empty wrapper to maintain compatibility
  * after moving classes into specific package.
