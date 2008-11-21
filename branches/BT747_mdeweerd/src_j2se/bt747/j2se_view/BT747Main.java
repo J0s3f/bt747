@@ -178,7 +178,7 @@ public class BT747Main extends javax.swing.JFrame implements
         //tabbedPanelAll.addTab(getString("BT747Main.AdvancedSettingsPanel.TabConstraints.tabTitle"), pnAdvancedSettingsPanel); // NOI18N
         tabbedPanelAll.insertTab(getString("BT747Main.AdvancedSettingsPanel.TabConstraints.tabTitle"),
                 null, pnAdvancedSettingsPanel, null, 4);
-        
+        miExit.setVisible(false);
         this.pack();
         
         updateGuiData(); // For internationalisation - not so easy in netbeans
