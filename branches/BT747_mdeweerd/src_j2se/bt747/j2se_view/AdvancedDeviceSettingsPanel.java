@@ -24,7 +24,7 @@ import bt747.sys.Convert;
  *
  * @author  Mario
  */
-public class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implements
+public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implements
     ModelListener
 {
 
@@ -44,6 +44,7 @@ public class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implements
     public void init(J2SEAppController pC) {
         c = pC;
         m = c.getModel();
+        m.addListener(this);
     }
 
    

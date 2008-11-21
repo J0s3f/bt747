@@ -19,6 +19,7 @@ import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -34,8 +35,12 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bt747.Version;
@@ -677,6 +682,49 @@ public final class J2SEAppController extends Controller {
             tryLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         }
     }
+
+    public static final InputVerifier IntVerifier = new InputVerifier() {
+        public boolean verify(JComponent comp) {
+            boolean returnValue;
+            JTextField textField = (JTextField) comp;
+            try {
+                Integer.parseInt(textField.getText());
+                returnValue = true;
+            } catch (NumberFormatException e) {
+                returnValue = false;
+            }
+            return returnValue;
+        }
+    };
+
+    public static final InputVerifier FloatVerifier = new InputVerifier() {
+
+        public boolean verify(JComponent comp) {
+            boolean returnValue;
+            JTextField textField = (JTextField) comp;
+            try {
+                Float.parseFloat(textField.getText());
+                returnValue = true;
+            } catch (NumberFormatException e) {
+                returnValue = false;
+            }
+            return returnValue;
+        }
+    };
+
+    public static final void disablePanel(final JPanel panel, final boolean en) {
+        Component[] l;
+        l = panel.getComponents();
+        for (Component component : l) {
+            component.setEnabled(en);
+            if(component.getClass()==JPanel.class) {
+                disablePanel((JPanel)component,en);
+            }
+        }
+        
+    }
+
+
 
 
 }

@@ -30,12 +30,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.swing.ComboBoxModel;
-import javax.swing.InputVerifier;
 import javax.swing.JColorChooser;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import java.util.Enumeration;
@@ -152,20 +149,22 @@ public class BT747Main extends javax.swing.JFrame implements
         cbOneFilePerDay.setModel(new javax.swing.DefaultComboBoxModel(
                 new String[] { getString("One_file_per_day"), getString("One_file_per_track"),
                         getString("Everything_in_one_file") }));
-        cbDGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                getString("No_DGPS"), getString("RTCM"), getString("WAAS") }));
-        cbStopOrOverwriteWhenFull
-                .setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                        getString("Stop_when_full"), getString("Overwrite_when_full") }));
     }
     
     private AdvancedDeviceSettingsPanel pnAdvancedSettingsPanel;
+    private DeviceSettingsPanel pnDeviceSettingsPanel;
     /**
      * Initialize application data. Gets the values from the model to set them
      * in the GUI.
      */
     private void initAppData() {
         c.setRootFrame(this);
+
+        pnDeviceSettingsPanel = new DeviceSettingsPanel();
+        pnDeviceSettingsPanel.init(c);
+        //tabbedPanelAll.addTab(getString("BT747Main.AdvancedSettingsPanel.TabConstraints.tabTitle"), pnDeviceSettingsPanel); // NOI18N
+        tabbedPanelAll.insertTab(getString("BT747Main.DeviceSettingsPanel.TabConstraints.tabTitle"),
+                null, pnDeviceSettingsPanel, null, 3);
 
         pnAdvancedSettingsPanel = new AdvancedDeviceSettingsPanel();
         pnAdvancedSettingsPanel.init(c);
@@ -196,7 +195,6 @@ public class BT747Main extends javax.swing.JFrame implements
         getIncremental();
         getDefaultPort();
         updateSerialSpeed();
-        updateSatGuiItems();
         updateGuiLogFilterSettings();
         
         cbLanguage.setEditable(true);
@@ -244,8 +242,6 @@ public class BT747Main extends javax.swing.JFrame implements
             Generic.debug(getString("Problem_with_UTC_offset"), e);
         }
         cbNotApplyUTCOffset.setSelected(m.getGpxUTC0());
-        cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 0
-                : 1);
         cbGPXTrkSegWhenSmall.setSelected(m.getGpxTrkSegWhenBig());
 
         cbImperialUnits.setSelected(m.getBooleanOpt(Model.IMPERIAL));
@@ -278,7 +274,6 @@ public class BT747Main extends javax.swing.JFrame implements
         c.setDebugConn(false);
         btGPSConnectDebug.setSelected(m.isDebugConn());
         // c.setChunkSize(256); // Small for debug
-        txtHoluxName.setText(m.getHoluxName());
         cbRecordNumberInfoInLog.setSelected(m
                 .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));
         setTitle(getTitle()+ " V" + Version.VERSION_NUMBER);
@@ -299,8 +294,6 @@ public class BT747Main extends javax.swing.JFrame implements
         updateFileFormatData();
 
         lbConversionTime.setVisible(false);
-
-        updateEstimatedNbrRecords();
 
         getNMEAOutFile();
 
@@ -342,6 +335,20 @@ public class BT747Main extends javax.swing.JFrame implements
                 .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
         cbAddTrackPointName.setSelected(m.getBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME));
     }
+
+    
+    private final void updateConnected(final boolean connected) {
+        JPanel[] panels = { 
+                GPSDecodePanel, 
+                pnAdvancedSettingsPanel };
+
+        btDownloadFromNumerix.setEnabled(connected);
+        btDownloadIBlue.setEnabled(connected);
+        for (JPanel panel : panels) {
+            J2SEAppController.disablePanel(panel,connected);
+        }
+    }
+    
 
     private final void updateSerialSpeed() {
         int speed = m.getBaudRate();
@@ -529,67 +536,11 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.UPDATE_LOG_VERSION:
             txtLoggerSWVersion.setText(m.getMtkLogVersion());
             break;
-        case ModelEvent.UPDATE_SBAS:
-            cbUseSBAS.setSelected(m.isSBASEnabled());
-            break;
-        case ModelEvent.UPDATE_SBAS_TEST:
-            cbIncludeTestSBAS.setSelected(m.isSBASTestEnabled());
-            break;
-        // TODO
-        case ModelEvent.UPDATE_DGPS_MODE:
-            try {
-                cbDGPSType.setSelectedIndex(m.getDgpsMode());
-            } catch (Exception ee) {
-                // TODO: handle exception
-                Generic.debug(getString("Unknown_DGPS_Mode") + m.getDgpsMode(), ee);
-            }
-            break;
-
-            // TODO
-            // cbDGPSMode.select(m.getDgpsMode());
-            // if (ENABLE_PWR_SAVE_CONTROL) {
-            // chkPowerSaveOnOff.setChecked(m.isPowerSaveEnabled());
-            // }
-        case ModelEvent.UPDATE_DATUM:
-            try {
-                // jComboBox23.setSelectedIndex(m.getDatum());
-            } catch (Exception ee) {
-                // TODO: handle exception
-                Generic.debug(getString("Unknown_DATUM") + m.getDatum(), ee);
-            }
-            break;
-            // TODO
-            // cbDatumMode.select(m.getDatum());
-        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
-            ckLogTimeActive.setSelected(m.getLogTimeInterval() != 0);
-            txtLogTimeInterval.setText(Convert.toString(
-                    m.getLogTimeInterval() / 10., 1));
-            break;
-        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
-            ckLogSpeedActive.setSelected(m.getLogSpeedInterval() != 0);
-            txtLogSpeedInterval.setText(Convert.toString(m
-                    .getLogSpeedInterval()));
-            break;
-        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
-            ckLogDistanceActive.setSelected(m.getLogDistanceInterval() != 0);
-            txtLogDistanceInterval.setText(Convert.toString(m
-                    .getLogDistanceInterval() / 10., 1));
-            break;
-        case ModelEvent.UPDATE_FIX_PERIOD:
-            txtFixPeriod.setText(Convert.toString(m.getLogFixPeriod()));
-            break;
         case ModelEvent.GPGGA:
             updateGPSData((GPSRecord) e.getArg());
             break;
-        case ModelEvent.UPDATE_LOG_FORMAT:
-            updateLogFormatData();
-            break;
         case ModelEvent.UPDATE_LOG_LOG_STATUS:
             // TODO: hkLogOnOff.setChecked(m.isLoggingActive());
-            break;
-        case ModelEvent.UPDATE_LOG_REC_METHOD:
-            cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 0
-                    : 1);
             break;
         case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
             //TODO
@@ -667,40 +618,8 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.COULD_NOT_OPEN_FILE:
             c.couldNotOpenFileMessage((String) e.getArg());
             break;
-        case ModelEvent.UPDATE_HOLUX_NAME:
-            txtHoluxName.setText(m.getHoluxName());
-            break;
         }
     }
-
-    InputVerifier IntVerifier = new InputVerifier() {
-
-        public boolean verify(JComponent comp) {
-            boolean returnValue;
-            JTextField textField = (JTextField) comp;
-            try {
-                Integer.parseInt(textField.getText());
-                returnValue = true;
-            } catch (NumberFormatException e) {
-                returnValue = false;
-            }
-            return returnValue;
-        }
-    };
-    InputVerifier FloatVerifier = new InputVerifier() {
-
-        public boolean verify(JComponent comp) {
-            boolean returnValue;
-            JTextField textField = (JTextField) comp;
-            try {
-                Float.parseFloat(textField.getText());
-                returnValue = true;
-            } catch (NumberFormatException e) {
-                returnValue = false;
-            }
-            return returnValue;
-        }
-    };
 
     void updateGuiLogFilterSettings() {
         int trkRCR = m.getTrkPtRCR();
@@ -1280,77 +1199,6 @@ public class BT747Main extends javax.swing.JFrame implements
         cbWayUser10 = new javax.swing.JCheckBox();
         cbWayUser11 = new javax.swing.JCheckBox();
         cbWayUser12 = new javax.swing.JCheckBox();
-        DeviceSettingsPanel = new javax.swing.JPanel();
-        jPanel8 = new javax.swing.JPanel();
-        pnGPSStart = new javax.swing.JPanel();
-        btHotStart = new javax.swing.JButton();
-        btWarmStart = new javax.swing.JButton();
-        btColdStart = new javax.swing.JButton();
-        btFactoryResetDevice = new javax.swing.JButton();
-        pnSBAS = new javax.swing.JPanel();
-        cbDGPSType = new javax.swing.JComboBox();
-        cbUseSBAS = new javax.swing.JCheckBox();
-        cbIncludeTestSBAS = new javax.swing.JCheckBox();
-        btApplySBAS = new javax.swing.JButton();
-        pnHoluxSettings = new javax.swing.JPanel();
-        lbHoluxName = new javax.swing.JLabel();
-        txtHoluxName = new javax.swing.JTextField();
-        btSetHoluxName = new javax.swing.JButton();
-        pnLogBy = new javax.swing.JPanel();
-        txtTimeSeconds = new javax.swing.JLabel();
-        ckLogSpeedActive = new javax.swing.JCheckBox();
-        txtLogDistanceInterval = new javax.swing.JTextField();
-        txtLogTimeInterval = new javax.swing.JTextField();
-        lbKMH = new javax.swing.JLabel();
-        ckLogTimeActive = new javax.swing.JCheckBox();
-        lbAbove = new javax.swing.JLabel();
-        lbDistancePeriodM = new javax.swing.JLabel();
-        lbDistanceEvery = new javax.swing.JLabel();
-        ckLogDistanceActive = new javax.swing.JCheckBox();
-        txtLogSpeedInterval = new javax.swing.JTextField();
-        txtTimeEvery = new javax.swing.JLabel();
-        btLogByApply = new javax.swing.JButton();
-        lbFixEvery = new javax.swing.JLabel();
-        txtFixPeriod = new javax.swing.JTextField();
-        lbFixMs = new javax.swing.JLabel();
-        cbStopOrOverwriteWhenFull = new javax.swing.JComboBox();
-        pnLogFormat = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        btFormatAndErase = new javax.swing.JButton();
-        btErase = new javax.swing.JButton();
-        btRecoverMemory = new javax.swing.JButton();
-        btFormat = new javax.swing.JButton();
-        jPanel7 = new javax.swing.JPanel();
-        pnTime = new javax.swing.JPanel();
-        cbUTCTime = new javax.swing.JCheckBox();
-        cbMilliSeconds = new javax.swing.JCheckBox();
-        pnPosition = new javax.swing.JPanel();
-        cbLat = new javax.swing.JCheckBox();
-        cbLong = new javax.swing.JCheckBox();
-        cbHeight = new javax.swing.JCheckBox();
-        cbSpeed = new javax.swing.JCheckBox();
-        cbHeading = new javax.swing.JCheckBox();
-        cbDistance = new javax.swing.JCheckBox();
-        jPanel5 = new javax.swing.JPanel();
-        pnPrecision = new javax.swing.JPanel();
-        cbDSTA = new javax.swing.JCheckBox();
-        cbDAGE = new javax.swing.JCheckBox();
-        cbPDOP = new javax.swing.JCheckBox();
-        cbHDOP = new javax.swing.JCheckBox();
-        cbVDOP = new javax.swing.JCheckBox();
-        cbFixType = new javax.swing.JCheckBox();
-        pnSatInfo = new javax.swing.JPanel();
-        cbNSAT = new javax.swing.JCheckBox();
-        cbSID = new javax.swing.JCheckBox();
-        cbElevation = new javax.swing.JCheckBox();
-        cbAzimuth = new javax.swing.JCheckBox();
-        cbSNR = new javax.swing.JCheckBox();
-        txtEstimatedRecords = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
-        cbOtherFormat = new javax.swing.JPanel();
-        cbValidFixOnly = new javax.swing.JCheckBox();
-        pnReason = new javax.swing.JPanel();
-        cbRCR = new javax.swing.JCheckBox();
         AdvancedfileSettingsPanel = new javax.swing.JPanel();
         pnFileNMEAOutput = new javax.swing.JPanel();
         pnFileNMEAOutLeft = new javax.swing.JPanel();
@@ -2798,7 +2646,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         txtRecCntMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtRecCntMin.setText(bundle.getString("BT747Main.txtRecCntMin.text")); // NOI18N
-        txtRecCntMin.setInputVerifier(IntVerifier);
+        txtRecCntMin.setInputVerifier(c.IntVerifier);
         txtRecCntMin.setMinimumSize(new java.awt.Dimension(50, 40));
         txtRecCntMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2808,7 +2656,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         txtDistanceMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtDistanceMin.setText(bundle.getString("BT747Main.txtDistanceMin.text")); // NOI18N
-        txtDistanceMin.setInputVerifier(FloatVerifier);
+        txtDistanceMin.setInputVerifier(c.FloatVerifier);
         txtDistanceMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtDistanceMinFocusLost(evt);
@@ -2817,7 +2665,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         txtSpeedMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtSpeedMin.setText(bundle.getString("BT747Main.txtSpeedMin.text")); // NOI18N
-        txtSpeedMin.setInputVerifier(FloatVerifier);
+        txtSpeedMin.setInputVerifier(c.FloatVerifier);
         txtSpeedMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtSpeedMinFocusLost(evt);
@@ -2830,7 +2678,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         txtRecCntMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtRecCntMax.setText(bundle.getString("BT747Main.txtRecCntMax.text")); // NOI18N
-        txtRecCntMax.setInputVerifier(IntVerifier);
+        txtRecCntMax.setInputVerifier(c.IntVerifier);
         txtRecCntMax.setMinimumSize(new java.awt.Dimension(50, 40));
         txtRecCntMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2840,7 +2688,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         txtDistanceMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtDistanceMax.setText(bundle.getString("BT747Main.txtDistanceMax.text")); // NOI18N
-        txtDistanceMax.setInputVerifier(FloatVerifier);
+        txtDistanceMax.setInputVerifier(c.FloatVerifier);
         txtDistanceMax.setMinimumSize(new java.awt.Dimension(6, 40));
         txtDistanceMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2850,7 +2698,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         txtSpeedMax.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtSpeedMax.setText(bundle.getString("BT747Main.txtSpeedMax.text")); // NOI18N
-        txtSpeedMax.setInputVerifier(FloatVerifier);
+        txtSpeedMax.setInputVerifier(c.FloatVerifier);
         txtSpeedMax.setMinimumSize(new java.awt.Dimension(6, 40));
         txtSpeedMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2862,7 +2710,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         txtNSATMin.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtNSATMin.setText(bundle.getString("BT747Main.txtNSATMin.text")); // NOI18N
-        txtNSATMin.setInputVerifier(IntVerifier);
+        txtNSATMin.setInputVerifier(c.IntVerifier);
         txtNSATMin.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtNSATMinFocusLost(evt);
@@ -2926,7 +2774,7 @@ public class BT747Main extends javax.swing.JFrame implements
         pnFilterPrecision.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFilterPrecision.border.title"))); // NOI18N
 
         txtPDOPMax.setText(bundle.getString("BT747Main.txtPDOPMax.text")); // NOI18N
-        txtPDOPMax.setInputVerifier(FloatVerifier);
+        txtPDOPMax.setInputVerifier(c.FloatVerifier);
         txtPDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtPDOPMaxFocusLost(evt);
@@ -2937,7 +2785,7 @@ public class BT747Main extends javax.swing.JFrame implements
         lbPDOPMax.setText(bundle.getString("BT747Main.lbPDOPMax.text")); // NOI18N
 
         txtHDOPMax.setText(bundle.getString("BT747Main.txtHDOPMax.text")); // NOI18N
-        txtHDOPMax.setInputVerifier(FloatVerifier);
+        txtHDOPMax.setInputVerifier(c.FloatVerifier);
         txtHDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtHDOPMaxFocusLost(evt);
@@ -2948,7 +2796,7 @@ public class BT747Main extends javax.swing.JFrame implements
         lbHDOPLimit.setText(bundle.getString("BT747Main.lbHDOPLimit.text")); // NOI18N
 
         txtVDOPMax.setText(bundle.getString("BT747Main.txtVDOPMax.text")); // NOI18N
-        txtVDOPMax.setInputVerifier(FloatVerifier);
+        txtVDOPMax.setInputVerifier(c.FloatVerifier);
         txtVDOPMax.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtVDOPMaxFocusLost(evt);
@@ -3358,748 +3206,6 @@ public class BT747Main extends javax.swing.JFrame implements
 
         tabbedPanelAll.addTab(bundle.getString("BT747Main.LogFiltersPanel.TabConstraints.tabTitle"), LogFiltersPanel); // NOI18N
 
-        DeviceSettingsPanel.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                DeviceSettingsPanelFocusGained(evt);
-            }
-        });
-
-        pnGPSStart.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnGPSStart.border.title"))); // NOI18N
-
-        btHotStart.setText(bundle.getString("BT747Main.btHotStart.text")); // NOI18N
-        btHotStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btHotStartActionPerformed(evt);
-            }
-        });
-
-        btWarmStart.setText(bundle.getString("BT747Main.btWarmStart.text")); // NOI18N
-        btWarmStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btWarmStartActionPerformed(evt);
-            }
-        });
-
-        btColdStart.setText(bundle.getString("BT747Main.btColdStart.text")); // NOI18N
-        btColdStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btColdStartActionPerformed(evt);
-            }
-        });
-
-        btFactoryResetDevice.setText(bundle.getString("BT747Main.btFactoryResetDevice.text")); // NOI18N
-        btFactoryResetDevice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btFactoryResetDeviceActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnGPSStartLayout = new org.jdesktop.layout.GroupLayout(pnGPSStart);
-        pnGPSStart.setLayout(pnGPSStartLayout);
-        pnGPSStartLayout.setHorizontalGroup(
-            pnGPSStartLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnGPSStartLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnGPSStartLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
-                    .add(btColdStart)
-                    .add(btWarmStart)
-                    .add(btHotStart)
-                    .add(btFactoryResetDevice))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnGPSStartLayout.setVerticalGroup(
-            pnGPSStartLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnGPSStartLayout.createSequentialGroup()
-                .add(btHotStart)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btWarmStart)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btColdStart)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btFactoryResetDevice)
-                .addContainerGap())
-        );
-
-        pnSBAS.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnSBAS.border.title"))); // NOI18N
-
-        cbDGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No DGPS", "RTCM", "WAAS" }));
-        cbDGPSType.setToolTipText(bundle.getString("BT747Main.cbDGPSType.toolTipText")); // NOI18N
-
-        cbUseSBAS.setText(bundle.getString("BT747Main.cbUseSBAS.text")); // NOI18N
-        cbUseSBAS.setToolTipText(bundle.getString("BT747Main.cbUseSBAS.toolTipText")); // NOI18N
-
-        cbIncludeTestSBAS.setText(bundle.getString("BT747Main.cbIncludeTestSBAS.text")); // NOI18N
-        cbIncludeTestSBAS.setToolTipText(bundle.getString("BT747Main.cbIncludeTestSBAS.toolTipText")); // NOI18N
-
-        btApplySBAS.setText(bundle.getString("BT747Main.btApplySBAS.text")); // NOI18N
-        btApplySBAS.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btApplySBASActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnSBASLayout = new org.jdesktop.layout.GroupLayout(pnSBAS);
-        pnSBAS.setLayout(pnSBASLayout);
-        pnSBASLayout.setHorizontalGroup(
-            pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnSBASLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnSBASLayout.createSequentialGroup()
-                        .add(cbUseSBAS)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(cbDGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(cbIncludeTestSBAS)
-                    .add(btApplySBAS))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnSBASLayout.setVerticalGroup(
-            pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnSBASLayout.createSequentialGroup()
-                .add(pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(cbUseSBAS)
-                    .add(cbDGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbIncludeTestSBAS)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btApplySBAS)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnHoluxSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnHoluxSettings.border.title"))); // NOI18N
-
-        lbHoluxName.setText(bundle.getString("BT747Main.lbHoluxName.text")); // NOI18N
-
-        txtHoluxName.setText(bundle.getString("BT747Main.txtHoluxName.text")); // NOI18N
-        txtHoluxName.setToolTipText(bundle.getString("BT747Main.txtHoluxName.toolTipText")); // NOI18N
-
-        btSetHoluxName.setText(bundle.getString("BT747Main.btSetHoluxName.text")); // NOI18N
-        btSetHoluxName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSetHoluxNameActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnHoluxSettingsLayout = new org.jdesktop.layout.GroupLayout(pnHoluxSettings);
-        pnHoluxSettings.setLayout(pnHoluxSettingsLayout);
-        pnHoluxSettingsLayout.setHorizontalGroup(
-            pnHoluxSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnHoluxSettingsLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(lbHoluxName)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(txtHoluxName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 148, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btSetHoluxName)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnHoluxSettingsLayout.setVerticalGroup(
-            pnHoluxSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnHoluxSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                .add(lbHoluxName)
-                .add(btSetHoluxName)
-                .add(txtHoluxName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-
-        pnLogBy.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLogBy.border.title"))); // NOI18N
-        pnLogBy.setToolTipText(bundle.getString("BT747Main.pnLogBy.toolTipText")); // NOI18N
-
-        txtTimeSeconds.setText(bundle.getString("BT747Main.txtTimeSeconds.text")); // NOI18N
-
-        ckLogSpeedActive.setText(bundle.getString("BT747Main.ckLogSpeedActive.text")); // NOI18N
-
-        txtLogDistanceInterval.setText(bundle.getString("BT747Main.txtLogDistanceInterval.text")); // NOI18N
-        txtLogDistanceInterval.setInputVerifier(FloatVerifier);
-
-        txtLogTimeInterval.setText(bundle.getString("BT747Main.txtLogTimeInterval.text")); // NOI18N
-        txtLogTimeInterval.setInputVerifier(FloatVerifier);
-
-        lbKMH.setText(bundle.getString("BT747Main.lbKMH.text")); // NOI18N
-
-        ckLogTimeActive.setText(bundle.getString("BT747Main.ckLogTimeActive.text")); // NOI18N
-
-        lbAbove.setText(bundle.getString("BT747Main.lbAbove.text")); // NOI18N
-
-        lbDistancePeriodM.setText(bundle.getString("BT747Main.lbDistancePeriodM.text")); // NOI18N
-
-        lbDistanceEvery.setText(bundle.getString("BT747Main.lbDistanceEvery.text")); // NOI18N
-
-        ckLogDistanceActive.setText(bundle.getString("BT747Main.ckLogDistanceActive.text")); // NOI18N
-
-        txtLogSpeedInterval.setText(bundle.getString("BT747Main.txtLogSpeedInterval.text")); // NOI18N
-        txtLogSpeedInterval.setInputVerifier(IntVerifier);
-
-        txtTimeEvery.setText(bundle.getString("BT747Main.txtTimeEvery.text")); // NOI18N
-
-        btLogByApply.setText(bundle.getString("BT747Main.btLogByApply.text")); // NOI18N
-        btLogByApply.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btLogByApplyActionPerformed(evt);
-            }
-        });
-
-        lbFixEvery.setText(bundle.getString("BT747Main.lbFixEvery.text")); // NOI18N
-
-        txtFixPeriod.setText(bundle.getString("BT747Main.txtFixPeriod.text")); // NOI18N
-
-        lbFixMs.setText(bundle.getString("BT747Main.lbFixMs.text")); // NOI18N
-
-        cbStopOrOverwriteWhenFull.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Stop when full", "Overwrite when full" }));
-        cbStopOrOverwriteWhenFull.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                cbStopOrOverwriteWhenFullFocusLost(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnLogByLayout = new org.jdesktop.layout.GroupLayout(pnLogBy);
-        pnLogBy.setLayout(pnLogByLayout);
-        pnLogByLayout.setHorizontalGroup(
-            pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnLogByLayout.createSequentialGroup()
-                .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnLogByLayout.createSequentialGroup()
-                        .add(58, 58, 58)
-                        .add(lbFixEvery)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(txtFixPeriod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(pnLogByLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(ckLogSpeedActive)
-                            .add(ckLogDistanceActive)
-                            .add(ckLogTimeActive))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(lbDistanceEvery)
-                            .add(lbAbove)
-                            .add(txtTimeEvery))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(pnLogByLayout.createSequentialGroup()
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(txtLogDistanceInterval, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
-                            .add(txtLogSpeedInterval, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                            .add(txtLogTimeInterval, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))))
-                .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnLogByLayout.createSequentialGroup()
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(lbFixMs))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, pnLogByLayout.createSequentialGroup()
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(txtTimeSeconds)
-                            .add(lbDistancePeriodM)
-                            .add(lbKMH))))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(btLogByApply, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 118, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(cbStopOrOverwriteWhenFull, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-        );
-        pnLogByLayout.setVerticalGroup(
-            pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnLogByLayout.createSequentialGroup()
-                .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbFixEvery)
-                    .add(lbFixMs)
-                    .add(btLogByApply)
-                    .add(txtFixPeriod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(txtTimeSeconds)
-                    .add(txtTimeEvery, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(ckLogTimeActive)
-                    .add(txtLogTimeInterval, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbAbove)
-                    .add(lbKMH)
-                    .add(ckLogSpeedActive)
-                    .add(txtLogSpeedInterval, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnLogByLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(lbDistanceEvery)
-                    .add(lbDistancePeriodM)
-                    .add(ckLogDistanceActive)
-                    .add(txtLogDistanceInterval, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(cbStopOrOverwriteWhenFull, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        org.jdesktop.layout.GroupLayout jPanel8Layout = new org.jdesktop.layout.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel8Layout.createSequentialGroup()
-                .add(pnGPSStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnSBAS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(pnHoluxSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(pnLogBy, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel8Layout.createSequentialGroup()
-                .add(jPanel8Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnGPSStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pnSBAS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnHoluxSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnLogBy, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-
-        pnLogFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLogFormat.border.title"))); // NOI18N
-        pnLogFormat.setToolTipText(bundle.getString("BT747Main.pnLogFormat.toolTipText")); // NOI18N
-
-        btFormatAndErase.setText(bundle.getString("BT747Main.btFormatAndErase.text")); // NOI18N
-        btFormatAndErase.setToolTipText(bundle.getString("BT747Main.btFormatAndErase.toolTipText")); // NOI18N
-        btFormatAndErase.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btFormatAndEraseActionPerformed(evt);
-            }
-        });
-
-        btErase.setText(bundle.getString("BT747Main.btErase.text")); // NOI18N
-        btErase.setToolTipText(bundle.getString("BT747Main.btErase.toolTipText")); // NOI18N
-        btErase.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btEraseActionPerformed(evt);
-            }
-        });
-
-        btRecoverMemory.setText(bundle.getString("BT747Main.btRecoverMemory.text")); // NOI18N
-        btRecoverMemory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btRecoverMemoryActionPerformed(evt);
-            }
-        });
-
-        btFormat.setText(bundle.getString("BT747Main.btFormat.text")); // NOI18N
-        btFormat.setToolTipText(bundle.getString("BT747Main.btFormat.toolTipText")); // NOI18N
-        btFormat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btFormatActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel2Layout.createSequentialGroup()
-                        .add(btFormatAndErase)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(btFormat))
-                    .add(jPanel2Layout.createSequentialGroup()
-                        .add(btErase)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(btRecoverMemory)))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel2Layout.createSequentialGroup()
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(btFormatAndErase)
-                    .add(btFormat))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(btErase)
-                    .add(btRecoverMemory))
-                .addContainerGap())
-        );
-
-        pnTime.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnTime.border.title"))); // NOI18N
-
-        cbUTCTime.setText(bundle.getString("BT747Main.cbUTCTime.text")); // NOI18N
-        cbUTCTime.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbMilliSeconds.setText(bundle.getString("BT747Main.cbMilliSeconds.text")); // NOI18N
-        cbMilliSeconds.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnTimeLayout = new org.jdesktop.layout.GroupLayout(pnTime);
-        pnTime.setLayout(pnTimeLayout);
-        pnTimeLayout.setHorizontalGroup(
-            pnTimeLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnTimeLayout.createSequentialGroup()
-                .add(pnTimeLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(cbUTCTime)
-                    .add(cbMilliSeconds))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnTimeLayout.setVerticalGroup(
-            pnTimeLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnTimeLayout.createSequentialGroup()
-                .add(cbUTCTime)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbMilliSeconds)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnPosition.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnPosition.border.title"))); // NOI18N
-
-        cbLat.setText(bundle.getString("BT747Main.cbLat.text")); // NOI18N
-        cbLat.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbLong.setText(bundle.getString("BT747Main.cbLong.text")); // NOI18N
-        cbLong.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbHeight.setText(bundle.getString("BT747Main.cbHeight.text")); // NOI18N
-        cbHeight.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbSpeed.setText(bundle.getString("BT747Main.cbSpeed.text")); // NOI18N
-        cbSpeed.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbHeading.setText(bundle.getString("BT747Main.cbHeading.text")); // NOI18N
-        cbHeading.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbDistance.setText(bundle.getString("BT747Main.cbDistance.text")); // NOI18N
-        cbDistance.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnPositionLayout = new org.jdesktop.layout.GroupLayout(pnPosition);
-        pnPosition.setLayout(pnPositionLayout);
-        pnPositionLayout.setHorizontalGroup(
-            pnPositionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnPositionLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnPositionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(cbLat)
-                    .add(cbHeight)
-                    .add(cbLong)
-                    .add(cbSpeed)
-                    .add(cbHeading)
-                    .add(cbDistance))
-                .addContainerGap(8, Short.MAX_VALUE))
-        );
-        pnPositionLayout.setVerticalGroup(
-            pnPositionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnPositionLayout.createSequentialGroup()
-                .add(cbLat)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbLong)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbHeight)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbSpeed)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbHeading)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbDistance))
-        );
-
-        pnPrecision.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnPrecision.border.title"))); // NOI18N
-
-        cbDSTA.setText(bundle.getString("BT747Main.cbDSTA.text")); // NOI18N
-        cbDSTA.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbDAGE.setText(bundle.getString("BT747Main.cbDAGE.text")); // NOI18N
-        cbDAGE.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbPDOP.setText(bundle.getString("BT747Main.cbPDOP.text")); // NOI18N
-        cbPDOP.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbHDOP.setText(bundle.getString("BT747Main.cbHDOP.text")); // NOI18N
-        cbHDOP.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbVDOP.setText(bundle.getString("BT747Main.cbVDOP.text")); // NOI18N
-        cbVDOP.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbFixType.setText(bundle.getString("BT747Main.cbFixType.text")); // NOI18N
-        cbFixType.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnPrecisionLayout = new org.jdesktop.layout.GroupLayout(pnPrecision);
-        pnPrecision.setLayout(pnPrecisionLayout);
-        pnPrecisionLayout.setHorizontalGroup(
-            pnPrecisionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(cbFixType)
-            .add(cbDSTA)
-            .add(cbDAGE)
-            .add(cbPDOP)
-            .add(cbHDOP)
-            .add(cbVDOP)
-        );
-        pnPrecisionLayout.setVerticalGroup(
-            pnPrecisionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnPrecisionLayout.createSequentialGroup()
-                .add(cbFixType)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbDSTA)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbDAGE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbPDOP)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbHDOP)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbVDOP))
-        );
-
-        pnSatInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnSatInfo.border.title"))); // NOI18N
-
-        cbNSAT.setText(bundle.getString("BT747Main.cbNSAT.text")); // NOI18N
-        cbNSAT.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbSID.setText(bundle.getString("BT747Main.cbSID.text")); // NOI18N
-        cbSID.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbSIDItemStateChanged(evt);
-            }
-        });
-
-        cbElevation.setText(bundle.getString("BT747Main.cbElevation.text")); // NOI18N
-        cbElevation.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbAzimuth.setText(bundle.getString("BT747Main.cbAzimuth.text")); // NOI18N
-        cbAzimuth.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        cbSNR.setText(bundle.getString("BT747Main.cbSNR.text")); // NOI18N
-        cbSNR.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnSatInfoLayout = new org.jdesktop.layout.GroupLayout(pnSatInfo);
-        pnSatInfo.setLayout(pnSatInfoLayout);
-        pnSatInfoLayout.setHorizontalGroup(
-            pnSatInfoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(cbNSAT)
-            .add(cbSID)
-            .add(cbElevation)
-            .add(cbAzimuth)
-            .add(cbSNR)
-        );
-        pnSatInfoLayout.setVerticalGroup(
-            pnSatInfoLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnSatInfoLayout.createSequentialGroup()
-                .add(cbNSAT)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbSID)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbElevation)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbAzimuth)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbSNR)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        txtEstimatedRecords.setText(bundle.getString("BT747Main.txtEstimatedRecords.text")); // NOI18N
-
-        org.jdesktop.layout.GroupLayout jPanel5Layout = new org.jdesktop.layout.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel5Layout.createSequentialGroup()
-                .add(pnPrecision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnSatInfo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(txtEstimatedRecords)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel5Layout.createSequentialGroup()
-                .add(jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnPrecision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pnSatInfo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(1, 1, 1)
-                .add(txtEstimatedRecords)
-                .addContainerGap())
-        );
-
-        cbOtherFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.cbOtherFormat.border.title"))); // NOI18N
-
-        cbValidFixOnly.setText(bundle.getString("BT747Main.cbValidFixOnly.text")); // NOI18N
-        cbValidFixOnly.setToolTipText(bundle.getString("BT747Main.cbValidFixOnly.toolTipText")); // NOI18N
-        cbValidFixOnly.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout cbOtherFormatLayout = new org.jdesktop.layout.GroupLayout(cbOtherFormat);
-        cbOtherFormat.setLayout(cbOtherFormatLayout);
-        cbOtherFormatLayout.setHorizontalGroup(
-            cbOtherFormatLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(cbOtherFormatLayout.createSequentialGroup()
-                .add(cbValidFixOnly)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        cbOtherFormatLayout.setVerticalGroup(
-            cbOtherFormatLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(cbValidFixOnly, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        );
-
-        pnReason.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnReason.border.title"))); // NOI18N
-
-        cbRCR.setText(bundle.getString("BT747Main.cbRCR.text")); // NOI18N
-        cbRCR.setToolTipText(bundle.getString("BT747Main.cbRCR.toolTipText")); // NOI18N
-        cbRCR.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                updateLogRecordEstCount(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnReasonLayout = new org.jdesktop.layout.GroupLayout(pnReason);
-        pnReason.setLayout(pnReasonLayout);
-        pnReasonLayout.setHorizontalGroup(
-            pnReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnReasonLayout.createSequentialGroup()
-                .add(cbRCR)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnReasonLayout.setVerticalGroup(
-            pnReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(cbRCR)
-        );
-
-        org.jdesktop.layout.GroupLayout jPanel6Layout = new org.jdesktop.layout.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel6Layout.createSequentialGroup()
-                .add(pnReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbOtherFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(cbOtherFormat, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(pnReason, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        org.jdesktop.layout.GroupLayout jPanel7Layout = new org.jdesktop.layout.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel7Layout.createSequentialGroup()
-                .add(jPanel7Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(pnTime, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(pnPosition, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel7Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jPanel5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel7Layout.createSequentialGroup()
-                .add(pnTime, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnPosition, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(jPanel7Layout.createSequentialGroup()
-                .add(jPanel5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-
-        org.jdesktop.layout.GroupLayout pnLogFormatLayout = new org.jdesktop.layout.GroupLayout(pnLogFormat);
-        pnLogFormat.setLayout(pnLogFormatLayout);
-        pnLogFormatLayout.setHorizontalGroup(
-            pnLogFormatLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnLogFormatLayout.createSequentialGroup()
-                .add(pnLogFormatLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnLogFormatLayout.setVerticalGroup(
-            pnLogFormatLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnLogFormatLayout.createSequentialGroup()
-                .add(jPanel7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        org.jdesktop.layout.GroupLayout DeviceSettingsPanelLayout = new org.jdesktop.layout.GroupLayout(DeviceSettingsPanel);
-        DeviceSettingsPanel.setLayout(DeviceSettingsPanelLayout);
-        DeviceSettingsPanelLayout.setHorizontalGroup(
-            DeviceSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(DeviceSettingsPanelLayout.createSequentialGroup()
-                .add(pnLogFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-        DeviceSettingsPanelLayout.setVerticalGroup(
-            DeviceSettingsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnLogFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(jPanel8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        );
-
-        tabbedPanelAll.addTab(bundle.getString("BT747Main.DeviceSettingsPanel.TabConstraints.tabTitle"), DeviceSettingsPanel); // NOI18N
-
         pnFileNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFileNMEAOutput.border.title"))); // NOI18N
         pnFileNMEAOutput.setToolTipText(bundle.getString("BT747Main.pnFileNMEAOutput.toolTipText")); // NOI18N
 
@@ -4414,24 +3520,10 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
     c.setStringOpt(Model.LANGUAGE, (String) cbLanguage.getSelectedItem());
 }//GEN-LAST:event_cbLanguageFocusLost
 
-    private void DeviceSettingsPanelFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_DeviceSettingsPanelFocusGained
-        c.reqLogOverwrite();
-        c.reqLogReasonStatus();
-        c.reqSBASEnabled();
-        c.reqSBASTestEnabled();
-        c.reqFixInterval();
-        c.reqBTAddr();
-        c.reqMtkLogVersion();
-        c.reqDatumMode();
-    }// GEN-LAST:event_DeviceSettingsPanelFocusGained
-
     private void cbNotApplyUTCOffsetStateChanged( javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_cbNotApplyUTCOffsetStateChanged
         c.setGpxUTC0(cbNotApplyUTCOffset.isSelected());
     }// GEN-LAST:event_cbNotApplyUTCOffsetStateChanged
 
-    private void cbStopOrOverwriteWhenFullFocusLost( java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbStopOrOverwriteWhenFullFocusLost
-        c.setLogOverwrite(cbStopOrOverwriteWhenFull.getSelectedIndex() == 1);
-    }// GEN-LAST:event_cbStopOrOverwriteWhenFullFocusLost
 
     private void cbGPXTrkSegWhenSmallStateChanged( javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_cbGPXTrkSegWhenSmallStateChanged
         c.setGpxTrkSegWhenBig(cbGPXTrkSegWhenSmall.isSelected());
@@ -4501,6 +3593,12 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
         cbNoFixColor.setForeground(new Color(255-myColor.getRed(),255-myColor.getGreen(),255-myColor.getBlue()));
         cbNoFixColor.setOpaque(true);
     }
+    
+    private void cbDisableLoggingDuringDownloadFocusLost(
+            java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbDisableLoggingDuringDownloadFocusLost
+        c.setIncremental(cbDisableLoggingDuringDownload.isSelected());
+    }// GEN-LAST:event_cbDisableLoggingDuringDownloadFocusLost
+
 
     private void txtPDOPMaxFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtPDOPMaxFocusLost
         c.setFilterMaxPDOP(Float.parseFloat(txtPDOPMax.getText()));
@@ -4558,66 +3656,10 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
         setTrkRCRFilterSettings();
     }// GEN-LAST:event_TrkRCRAction
 
-    private void btSetHoluxNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.setHoluxName(txtHoluxName.getText());
-    }// GEN-LAST:event_btHotStartActionPerformed
-
-    private void btApplySBASActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.setSBASEnabled(cbUseSBAS.isSelected());
-        c.setSBASTestEnabled(cbIncludeTestSBAS.isSelected());
-    }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btSetNMEAFileOutputActionPerformed(
             java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
         setNMEAOutFile();
-    }// GEN-LAST:event_btHotStartActionPerformed
-
-    private void btHotStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.doHotStart();
-    }// GEN-LAST:event_btHotStartActionPerformed
-
-    private void btWarmStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.doWarmStart();
-    }// GEN-LAST:event_btHotStartActionPerformed
-
-    private void btColdStartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.doColdStart();
-    }// GEN-LAST:event_btHotStartActionPerformed
-
-    private void btFactoryResetDeviceActionPerformed(
-            java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        c.doFactoryReset();
-    }// GEN-LAST:event_btHotStartActionPerformed
-
-    private void btLogByApplyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
-        try {
-            int value;
-            if (ckLogTimeActive.isSelected()) {
-                value = (int) (Convert.toDouble(txtLogTimeInterval.getText()) * 10);
-            } else {
-                value = 0;
-            }
-            c.setLogTimeInterval(value);
-            if (ckLogSpeedActive.isSelected()) {
-                value = (int) (Convert.toDouble(txtLogSpeedInterval.getText()));
-            } else {
-                value = 0;
-            }
-            c.setLogSpeedInterval(value);
-            if (ckLogDistanceActive.isSelected()) {
-                value = (int) (Convert.toDouble(txtLogDistanceInterval
-                        .getText()) * 10);
-            } else {
-                value = 0;
-            }
-            c.setLogDistanceInterval(value);
-            c.setFixInterval(Convert.toInt(txtFixPeriod.getText()));
-        } catch (Exception e) {
-            Generic
-                    .debug(
-                            getString("Problem_in_Apply_Log_conditions_-_probably_non-numeric_value"),
-                            e);
-        }
     }// GEN-LAST:event_btHotStartActionPerformed
 
     private void btDownloadFromNumerixActionPerformed( java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btDownloadFromNumerixActionPerformed
@@ -4672,15 +3714,6 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
         }
         
     }
-
-    private void updateLogRecordEstCount(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_updateLogRecordEstCount
-        updateEstimatedNbrRecords();
-    }// GEN-LAST:event_updateLogRecordEstCount
-
-    private void cbDisableLoggingDuringDownloadFocusLost(
-            java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbDisableLoggingDuringDownloadFocusLost
-        c.setIncremental(cbDisableLoggingDuringDownload.isSelected());
-    }// GEN-LAST:event_cbDisableLoggingDuringDownloadFocusLost
 
     private void cbUTCOffsetFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbUTCOffsetFocusLost
         // TODO: Initialise offset
@@ -4741,62 +3774,11 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
     }
     
     
-    private final void disablePanel(final JPanel panel, final boolean en) {
-        Component[] l;
-        l = panel.getComponents();
-        for (Component component : l) {
-            component.setEnabled(en);
-            if(component.getClass()==JPanel.class) {
-                disablePanel((JPanel)component,en);
-            }
-        }
-        
-    }
-    private final void updateConnected(final boolean connected) {
-        JPanel[] panels = { 
-                GPSDecodePanel, pnLogFormat, pnGPSStart, pnLogBy, pnSBAS,
-                pnHoluxSettings,
-                pnAdvancedSettingsPanel };
-
-        btDownloadFromNumerix.setEnabled(connected);
-        btDownloadIBlue.setEnabled(connected);
-        for (JPanel panel : panels) {
-            disablePanel(panel,connected);
-        }
-        if(connected) {
-            updateSatGuiItems();
-        }
-    }
-    
     private void tfRawLogFilePathFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_tfRawLogFilePathFocusLost
 
         c.setStringOpt(AppSettings.LOGFILEPATH, tfRawLogFilePath.getText());
     }// GEN-LAST:event_tfRawLogFilePathFocusLost
 
-    private void btFormatAndEraseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btFormatAndEraseActionPerformed
-
-        c.changeLogFormatAndErase(getUserLogFormat());
-    }// GEN-LAST:event_btFormatAndEraseActionPerformed
-
-    private void btFormatActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btFormatActionPerformed
-
-        c.changeLogFormat(getUserLogFormat());
-    }// GEN-LAST:event_btFormatActionPerformed
-
-    private void btEraseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btEraseActionPerformed
-
-        c.eraseLogWithDialogs();
-    }// GEN-LAST:event_btEraseActionPerformed
-
-    private void btRecoverMemoryActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btRecoverMemoryActionPerformed
-
-        c.recoveryErase();
-    }// GEN-LAST:event_btRecoverMemoryActionPerformed
-
-    private void cbSIDItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbSIDItemStateChanged
-
-        updateSatGuiItems();
-    }// GEN-LAST:event_cbSIDItemStateChanged
 
     private void cbPortNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbPortNameActionPerformed
         // selectPort(jComboBox1.getSelectedItem().toString());
@@ -4821,10 +3803,6 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
 
         c.startDefaultDownload();
     }// GEN-LAST:event_jButton1ActionPerformed
-
-    private void cbDecoderChoiceActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbDecoderChoiceActionPerformed
-
-    }// GEN-LAST:event_cbDecoderChoiceActionPerformed
 
     private void cbFormatItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbFormatItemStateChanged
         switch (evt.getStateChange()) {
@@ -4951,134 +3929,6 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
         }
     }
 
-    private void updateSatGuiItems() {
-        boolean enable;
-        enable = cbSID.isSelected();
-        cbSNR.setEnabled(enable);
-        cbAzimuth.setEnabled(enable);
-        cbElevation.setEnabled(enable);
-
-    }
-
-    private void updateLogFormatData() {
-        int logFormat = m.getLogFormat();
-
-        cbUTCTime
-                .setSelected((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0);
-        cbFixType
-                .setSelected((logFormat & (1 << BT747Constants.FMT_VALID_IDX)) != 0);
-        cbLat
-                .setSelected((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0);
-        cbLong
-                .setSelected((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0);
-        cbHeight
-                .setSelected((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0);
-        cbSpeed
-                .setSelected((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0);
-        cbHeading
-                .setSelected((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) != 0);
-        cbDSTA
-                .setSelected((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0);
-        cbDAGE
-                .setSelected((logFormat & (1 << BT747Constants.FMT_DAGE_IDX)) != 0);
-        cbPDOP
-                .setSelected((logFormat & (1 << BT747Constants.FMT_PDOP_IDX)) != 0);
-        cbHDOP
-                .setSelected((logFormat & (1 << BT747Constants.FMT_HDOP_IDX)) != 0);
-        cbVDOP
-                .setSelected((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) != 0);
-        cbNSAT
-                .setSelected((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) != 0);
-        cbSID.setSelected((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0);
-        cbElevation
-                .setSelected((logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) != 0);
-        cbAzimuth
-                .setSelected((logFormat & (1 << BT747Constants.FMT_AZIMUTH_IDX)) != 0);
-        cbSNR.setSelected((logFormat & (1 << BT747Constants.FMT_SNR_IDX)) != 0);
-        cbRCR.setSelected((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0);
-        cbMilliSeconds
-                .setSelected((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0);
-        cbDistance
-                .setSelected((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0);
-        cbValidFixOnly
-                .setSelected((logFormat & (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX)) != 0);
-
-    }
-
-    private void updateEstimatedNbrRecords() {
-        txtEstimatedRecords.setText(m
-                .getEstimatedNbrRecords(getUserLogFormat())
-                + getString("RECORDS_ESTIMATED"));
-    }
-
-    private int getUserLogFormat() {
-        int logFormat = 0;
-
-        if (cbUTCTime.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_UTC_IDX);
-        }
-        if (cbFixType.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_VALID_IDX);
-        }
-        if (cbLat.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_LATITUDE_IDX);
-        }
-        if (cbLong.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_LONGITUDE_IDX);
-        }
-        if (cbHeight.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_HEIGHT_IDX);
-        }
-        if (cbSpeed.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_SPEED_IDX);
-        }
-        if (cbHeading.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_HEADING_IDX);
-        }
-        if (cbDSTA.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_DSTA_IDX);
-        }
-        if (cbDAGE.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_DAGE_IDX);
-        }
-        if (cbPDOP.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_PDOP_IDX);
-        }
-        if (cbHDOP.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_HDOP_IDX);
-        }
-        if (cbVDOP.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_VDOP_IDX);
-        }
-        if (cbNSAT.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_NSAT_IDX);
-        }
-        if (cbSID.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_SID_IDX);
-        }
-        if (cbElevation.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_ELEVATION_IDX);
-        }
-        if (cbAzimuth.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_AZIMUTH_IDX);
-        }
-        if (cbSNR.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_SNR_IDX);
-        }
-        if (cbRCR.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_RCR_IDX);
-        }
-        if (cbMilliSeconds.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_MILLISECOND_IDX);
-        }
-        if (cbDistance.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_DISTANCE_IDX);
-        }
-        if (cbValidFixOnly.isSelected()) {
-            logFormat |= (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX);
-        }
-        return logFormat;
-    }
 
     private void updateFileFormatData() {
         int logFormat = m.getIntOpt(Model.FILEFIELDFORMAT);
@@ -5422,7 +4272,6 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AboutBT747;
     private javax.swing.JPanel AdvancedfileSettingsPanel;
-    private javax.swing.JPanel DeviceSettingsPanel;
     private javax.swing.JProgressBar DownloadProgressBar;
     private javax.swing.JLabel DownloadProgressLabel;
     private javax.swing.JMenu FileMenu;
@@ -5434,37 +4283,20 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
     private javax.swing.JPanel LogFiltersPanel;
     private javax.swing.JPanel LogOperationsPanel;
     private javax.swing.JMenu SettingsMenu;
-    private javax.swing.JButton btApplySBAS;
-    private javax.swing.JButton btColdStart;
     private javax.swing.JButton btConnect;
     private javax.swing.JButton btConvert;
     private javax.swing.JButton btDownloadFromNumerix;
     private javax.swing.JButton btDownloadIBlue;
-    private javax.swing.JButton btErase;
-    private javax.swing.JButton btFactoryResetDevice;
-    private javax.swing.JButton btFormat;
-    private javax.swing.JButton btFormatAndErase;
     private javax.swing.JRadioButtonMenuItem btGPSConnectDebug;
     private javax.swing.JRadioButtonMenuItem btGPSDebug;
-    private javax.swing.JButton btHotStart;
-    private javax.swing.JButton btLogByApply;
     private javax.swing.JButton btOutputFile;
     private javax.swing.JButton btRawLogFile;
-    private javax.swing.JButton btRecoverMemory;
-    private javax.swing.JButton btSetHoluxName;
     private javax.swing.JButton btSetNMEAFileOutput;
-    private javax.swing.JButton btWarmStart;
     private javax.swing.JButton btWorkingDirectory;
     private javax.swing.JCheckBox cbAddTrackPointComment;
     private javax.swing.JCheckBox cbAddTrackPointName;
     private javax.swing.JCheckBox cbAdvancedActive;
-    private javax.swing.JCheckBox cbAzimuth;
-    private javax.swing.JCheckBox cbDAGE;
-    private javax.swing.JComboBox cbDGPSType;
-    private javax.swing.JCheckBox cbDSTA;
     private javax.swing.JCheckBox cbDisableLoggingDuringDownload;
-    private javax.swing.JCheckBox cbDistance;
-    private javax.swing.JCheckBox cbElevation;
     private javax.swing.JCheckBox cbFileAzimuth;
     private javax.swing.JCheckBox cbFileDAGE;
     private javax.swing.JCheckBox cbFileDSTA;
@@ -5485,37 +4317,21 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
     private javax.swing.JCheckBox cbFileSpeed;
     private javax.swing.JCheckBox cbFileUTCTime;
     private javax.swing.JCheckBox cbFileVDOP;
-    private javax.swing.JCheckBox cbFixType;
     private javax.swing.JComboBox cbFormat;
     private javax.swing.JComboBox cbGPSType;
     private javax.swing.JCheckBox cbGPXTrkSegWhenSmall;
     private javax.swing.JButton cbGoodFixColor;
-    private javax.swing.JCheckBox cbHDOP;
-    private javax.swing.JCheckBox cbHeading;
-    private javax.swing.JCheckBox cbHeight;
     private javax.swing.JComboBox cbHeightOverMeanSeaLevel;
     private javax.swing.JCheckBox cbImperialUnits;
-    private javax.swing.JCheckBox cbIncludeTestSBAS;
     private javax.swing.JCheckBox cbIncremental;
     private javax.swing.JComboBox cbLanguage;
-    private javax.swing.JCheckBox cbLat;
-    private javax.swing.JCheckBox cbLong;
-    private javax.swing.JCheckBox cbMilliSeconds;
-    private javax.swing.JCheckBox cbNSAT;
     private javax.swing.JButton cbNoFixColor;
     private javax.swing.JCheckBox cbNotApplyUTCOffset;
     private javax.swing.JComboBox cbOneFilePerDay;
-    private javax.swing.JPanel cbOtherFormat;
-    private javax.swing.JCheckBox cbPDOP;
     private javax.swing.JComboBox cbPortName;
-    private javax.swing.JCheckBox cbRCR;
     private javax.swing.JCheckBox cbRecordNumberInfoInLog;
-    private javax.swing.JCheckBox cbSID;
-    private javax.swing.JCheckBox cbSNR;
     private javax.swing.JComboBox cbSerialSpeed;
-    private javax.swing.JCheckBox cbSpeed;
     private javax.swing.JComboBox cbStandardOrDaylightSaving;
-    private javax.swing.JComboBox cbStopOrOverwriteWhenFull;
     private javax.swing.JCheckBox cbTrkButton;
     private javax.swing.JCheckBox cbTrkDGPS;
     private javax.swing.JCheckBox cbTrkDistance;
@@ -5542,10 +4358,6 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
     private javax.swing.JCheckBox cbTrkUser8;
     private javax.swing.JCheckBox cbTrkUser9;
     private javax.swing.JComboBox cbUTCOffset;
-    private javax.swing.JCheckBox cbUTCTime;
-    private javax.swing.JCheckBox cbUseSBAS;
-    private javax.swing.JCheckBox cbVDOP;
-    private javax.swing.JCheckBox cbValidFixOnly;
     private javax.swing.JCheckBox cbWayButton;
     private javax.swing.JCheckBox cbWayDGPS;
     private javax.swing.JCheckBox cbWayDistance;
@@ -5571,39 +4383,24 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
     private javax.swing.JCheckBox cbWayUser7;
     private javax.swing.JCheckBox cbWayUser8;
     private javax.swing.JCheckBox cbWayUser9;
-    private javax.swing.JCheckBox ckLogDistanceActive;
-    private javax.swing.JCheckBox ckLogSpeedActive;
-    private javax.swing.JCheckBox ckLogTimeActive;
     private com.toedter.calendar.JDateChooser endDate;
     private javax.swing.JTextArea infoTextArea;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lbAbove;
     private javax.swing.JLabel lbConversionTime;
     private javax.swing.JLabel lbDeviceType;
-    private javax.swing.JLabel lbDistanceEvery;
     private javax.swing.JLabel lbDistanceFltr;
-    private javax.swing.JLabel lbDistancePeriodM;
     private javax.swing.JLabel lbFirmWare;
-    private javax.swing.JLabel lbFixEvery;
-    private javax.swing.JLabel lbFixMs;
     private javax.swing.JLabel lbFlashInfo;
     private javax.swing.JLabel lbFromDate;
     private javax.swing.JLabel lbGeoid;
     private javax.swing.JLabel lbHDOPLimit;
-    private javax.swing.JLabel lbHoluxName;
     private javax.swing.JLabel lbHour;
     private javax.swing.JLabel lbIgnore0Values;
-    private javax.swing.JLabel lbKMH;
     private javax.swing.JLabel lbLanguage;
     private javax.swing.JLabel lbLatitude;
     private javax.swing.JLabel lbLoggerSWversion;
@@ -5660,19 +4457,9 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
     private javax.swing.JPanel pnFiles;
     private javax.swing.JPanel pnFilterOther;
     private javax.swing.JPanel pnFilterPrecision;
-    private javax.swing.JPanel pnGPSStart;
     private javax.swing.JPanel pnGPXFileSettings;
-    private javax.swing.JPanel pnHoluxSettings;
     private javax.swing.JPanel pnLanguage;
-    private javax.swing.JPanel pnLogBy;
-    private javax.swing.JPanel pnLogFormat;
-    private javax.swing.JPanel pnPosition;
-    private javax.swing.JPanel pnPrecision;
-    private javax.swing.JPanel pnReason;
-    private javax.swing.JPanel pnSBAS;
-    private javax.swing.JPanel pnSatInfo;
     private javax.swing.JPanel pnSeparation;
-    private javax.swing.JPanel pnTime;
     private javax.swing.JPanel pnTrackPoints;
     private javax.swing.JPanel pnTrackpoint;
     private javax.swing.JPanel pnTrkFixType;
@@ -5691,17 +4478,11 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
     private javax.swing.JTextField tfWorkDirectory;
     private javax.swing.JTextField txtDistanceMax;
     private javax.swing.JTextField txtDistanceMin;
-    private javax.swing.JLabel txtEstimatedRecords;
     private javax.swing.JLabel txtFirmWare;
-    private javax.swing.JTextField txtFixPeriod;
     private javax.swing.JLabel txtFlashInfo;
     private javax.swing.JLabel txtGeoid;
     private javax.swing.JTextField txtHDOPMax;
-    private javax.swing.JTextField txtHoluxName;
     private javax.swing.JLabel txtLatitude;
-    private javax.swing.JTextField txtLogDistanceInterval;
-    private javax.swing.JTextField txtLogSpeedInterval;
-    private javax.swing.JTextField txtLogTimeInterval;
     private javax.swing.JLabel txtLoggerSWVersion;
     private javax.swing.JLabel txtLongitude;
     private javax.swing.JLabel txtMemoryUsed;
@@ -5713,8 +4494,6 @@ private void cbLanguageItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:ev
     private javax.swing.JTextField txtSpeedMax;
     private javax.swing.JTextField txtSpeedMin;
     private javax.swing.JLabel txtTime;
-    private javax.swing.JLabel txtTimeEvery;
-    private javax.swing.JLabel txtTimeSeconds;
     private javax.swing.JLabel txtTimeSplit;
     private javax.swing.JLabel txtTimeZone;
     private javax.swing.JTextField txtVDOPMax;
