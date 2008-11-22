@@ -8,7 +8,7 @@ import bt747.Version;
  *
  ** Class to provide language specific strings.
  */
-public final class Txt_es {
+public final class Txt_es implements TxtInterface {
     private static String fontFile=null;
     private static String encoding=null;
         
@@ -16,7 +16,7 @@ public final class Txt_es {
     private static final String S_FILE = "Archivo";
     private static final String S_EXIT_APPLICATION = "Salir";
     
-    private static final String S_SETTINGS = "Configuración";
+    private static final String S_SETTINGS = "Conf.";
     private static final String S_STOP_LOGGING_ON_CONNECT = "Stop log on connect";
     private static final String S_STOP_CONNECTION = "Detener conexión";
     private static final String S_GPX_UTC_OFFSET_0= "Fijar UTC a 0 en GPX";
@@ -406,7 +406,7 @@ public final class Txt_es {
          ".|Esta es la versión V"; 
     private static final String BAD_SUPERWABAVERSION_CONT2 = 
        "|Cerrando aplicación"; 
-    private static final String S_DEVICE = "Dispositivo"; 
+    private static final String S_DEVICE = "Disp."; 
     private static final String S_DEFAULTDEVICE = "Disp. por defecto"; //"Dispositivo por defecto";                        (you can also use "") 
     private static final String S_GISTEQTYPE1 = "iTrackU-Nemerix"; 
     private static final String S_GISTEQTYPE2 = "iTrackU-PhotoTrackr"; 

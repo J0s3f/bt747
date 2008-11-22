@@ -150,15 +150,15 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
     private MenuItem miLanguage = new MenuItem(Txt.getString(Txt.MI_LANGUAGE));
     
-    private MenuItem miLangDE = new MenuItem(Txt.getString(Txt.LANG_DE));
-    private MenuItem miLangEN = new MenuItem(Txt.getString(Txt.LANG_EN));
-    private MenuItem miLangES = new MenuItem(Txt.getString(Txt.LANG_ES));
-    private MenuItem miLangFR = new MenuItem(Txt.getString(Txt.LANG_FR));
-    private MenuItem miLangIT = new MenuItem(Txt.getString(Txt.LANG_IT));
-    private MenuItem miLangJP = new MenuItem(Txt.getString(Txt.LANG_JP));
-    private MenuItem miLangKO = new MenuItem(Txt.getString(Txt.LANG_KO));
-    private MenuItem miLangNL = new MenuItem(Txt.getString(Txt.LANG_NL));
-    private MenuItem miLangZH = new MenuItem(Txt.getString(Txt.LANG_ZH));
+    private MenuItem miLangDE = new MenuItem(Txt.getString(Txt.LANG_DE), false);
+    private MenuItem miLangEN = new MenuItem(Txt.getString(Txt.LANG_EN), false);
+    private MenuItem miLangES = new MenuItem(Txt.getString(Txt.LANG_ES), false);
+    private MenuItem miLangFR = new MenuItem(Txt.getString(Txt.LANG_FR), false);
+    private MenuItem miLangIT = new MenuItem(Txt.getString(Txt.LANG_IT), false);
+    private MenuItem miLangJP = new MenuItem(Txt.getString(Txt.LANG_JP), false);
+    private MenuItem miLangKO = new MenuItem(Txt.getString(Txt.LANG_KO), false);
+    private MenuItem miLangNL = new MenuItem(Txt.getString(Txt.LANG_NL), false);
+    private MenuItem miLangZH = new MenuItem(Txt.getString(Txt.LANG_ZH), false);
 
 
     /**
@@ -287,6 +287,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
     public void onStart() {
         super.onStart();
 
+        setLang(m.getStringOpt(Model.LANGUAGE));
         if (Settings.version < requiredVersion) {
             new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION), Txt.getString(Txt.BAD_SUPERWABAVERSION)
                     + requiredVersionStr + Txt.getString(Txt.BAD_SUPERWABAVERSION_CONT)
@@ -390,7 +391,6 @@ public class AppBT747 extends MainWindow implements ModelListener {
         miLangKO.isChecked = lang.equals("ko");
         miLangNL.isChecked = lang.equals("nl");
         miLangZH.isChecked = lang.equals("zh");
-        Txt.setLang(lang);
         c.setStringOpt(Model.LANGUAGE, lang);
     }
     /**
@@ -532,15 +532,33 @@ public class AppBT747 extends MainWindow implements ModelListener {
                             .setGPSType(AppController.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
                     gpsType();
                     break;
-                case C_MENU_LANG_DE: setLang("de");break;
-                case C_MENU_LANG_EN: setLang("en");break;
-                case C_MENU_LANG_ES: setLang("es");break;
-                case C_MENU_LANG_FR: setLang("fr");break;
-                case C_MENU_LANG_IT: setLang("it");break;
-                case C_MENU_LANG_JP: setLang("jp");break;
-                case C_MENU_LANG_KO: setLang("ko");break;
-                case C_MENU_LANG_NL: setLang("nl");break;
-                case C_MENU_LANG_ZH: setLang("zl");break;
+                case C_MENU_LANG_DE:
+                    setLang("de");
+                    break;
+                case C_MENU_LANG_EN:
+                    setLang("en");
+                    break;
+                case C_MENU_LANG_ES:
+                    setLang("es");
+                    break;
+                case C_MENU_LANG_FR:
+                    setLang("fr");
+                    break;
+                case C_MENU_LANG_IT:
+                    setLang("it");
+                    break;
+                case C_MENU_LANG_JP:
+                    setLang("jp");
+                    break;
+                case C_MENU_LANG_KO:
+                    setLang("ko");
+                    break;
+                case C_MENU_LANG_NL:
+                    setLang("nl");
+                    break;
+                case C_MENU_LANG_ZH:
+                    setLang("zh");
+                    break;
 
                 default:
                     break;

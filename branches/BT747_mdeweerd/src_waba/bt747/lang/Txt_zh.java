@@ -7,7 +7,7 @@ import bt747.Version;
  *
  ** Class to provide language specific strings.
  */
-public class Txt_zh {
+public class Txt_zh implements TxtInterface {
     public static final String fontFile="UFFChi";
     public static final String encoding="UTF8";
     
