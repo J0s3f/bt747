@@ -54,8 +54,8 @@ public final class GPSLogReason extends Container implements ModelListener {
     private MyCheck chkPowerSaveOnOff;
     private MyCheck chkSBASOnOff;
     private MyCheck chkSBASTestOnOff;
-    private static final String[] strDGPSMode = { Txt.NO_DGPS, Txt.RTCM,
-            Txt.WAAS };
+    private static final String[] strDGPSMode = { Txt.getString(Txt.NO_DGPS), Txt.getString(Txt.RTCM),
+            Txt.getString(Txt.WAAS) };
     private ComboBox cbDGPSMode;
     private static final String[] strDatumMode = { "WGS84", "TOKYO-M",
             "TOKYO-A" };
@@ -69,14 +69,14 @@ public final class GPSLogReason extends Container implements ModelListener {
 
     protected final void onStart() {
         super.onStart();
-        add(chkTimeOnOff = new MyCheck(Txt.RCR_TIME), LEFT, TOP); //$NON-NLS-1$
+        add(chkTimeOnOff = new MyCheck(Txt.getString(Txt.RCR_TIME)), LEFT, TOP); //$NON-NLS-1$
         add(edTime = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(chkSpeedOnOff = new MyCheck(Txt.RCR_SPD), LEFT, AFTER); //$NON-NLS-1$
+        add(chkSpeedOnOff = new MyCheck(Txt.getString(Txt.RCR_SPD)), LEFT, AFTER); //$NON-NLS-1$
         add(edSpeed = new Edit(), AFTER, SAME); //$NON-NLS-1$
-        add(chkDistanceOnOff = new MyCheck(Txt.RCR_DIST), LEFT, AFTER); //$NON-NLS-1$
+        add(chkDistanceOnOff = new MyCheck(Txt.getString(Txt.RCR_DIST)), LEFT, AFTER); //$NON-NLS-1$
         add(edDistance = new Edit(), AFTER, SAME); //$NON-NLS-1$
         add(edFix = new Edit(), SAME, AFTER); //$NON-NLS-1$
-        add(new Label(Txt.FIX_PER),BEFORE, SAME);
+        add(new Label(Txt.getString(Txt.FIX_PER)),BEFORE, SAME);
         edSpeed.setValidChars(Edit.numbersSet);
         edDistance.setValidChars(Edit.numbersSet);
         edTime.setValidChars(Edit.numbersSet + ".");
@@ -84,17 +84,17 @@ public final class GPSLogReason extends Container implements ModelListener {
         cbDGPSMode = new ComboBox();
         cbDGPSMode.add(strDGPSMode);
         add(cbDGPSMode, AFTER, SAME);
-        add(chkSBASTestOnOff = new MyCheck(Txt.INCL_TST_SBAS), RIGHT, SAME); //$NON-NLS-1$
+        add(chkSBASTestOnOff = new MyCheck(Txt.getString(Txt.INCL_TST_SBAS)), RIGHT, SAME); //$NON-NLS-1$
         cbDatumMode = new ComboBox();
         cbDatumMode.setEnabled(false);
         cbDatumMode.add(strDatumMode);
         add(cbDatumMode, LEFT, AFTER + 3);
         if (ENABLE_PWR_SAVE_CONTROL) {
-            add(chkPowerSaveOnOff = new MyCheck(Txt.PWR_SAVE_INTRNL), LEFT,
+            add(chkPowerSaveOnOff = new MyCheck(Txt.getString(Txt.PWR_SAVE_INTRNL)), LEFT,
                     AFTER + 3); //$NON-NLS-1$
         }
 
-        add(btSet = new Button(Txt.SET), CENTER, AFTER + 3); //$NON-NLS-1$
+        add(btSet = new Button(Txt.getString(Txt.SET)), CENTER, AFTER + 3); //$NON-NLS-1$
     }
 
     public final void updateButtons() {

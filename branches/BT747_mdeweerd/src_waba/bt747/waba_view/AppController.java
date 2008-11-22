@@ -104,12 +104,12 @@ public final class AppController extends Controller {
     }
 
     /** Options for the first warning message. */
-    private static final String[] C_ERASE_OR_CANCEL = { Txt.ERASE, Txt.CANCEL };
+    private static final String[] C_ERASE_OR_CANCEL = { Txt.getString(Txt.ERASE), Txt.getString(Txt.CANCEL) };
     /** Options for the first warning message. */
-    private static final String[] C_YES_OR_CANCEL = { Txt.YES, Txt.CANCEL };
+    private static final String[] C_YES_OR_CANCEL = { Txt.getString(Txt.YES), Txt.getString(Txt.CANCEL) };
     /** Options for the second warning message - reverse order on purpose. */
-    private static final String[] C_CANCEL_OR_CONFIRM_ERASE = { Txt.CANCEL,
-            Txt.CONFIRM_ERASE };
+    private static final String[] C_CANCEL_OR_CONFIRM_ERASE = { Txt.getString(Txt.CANCEL),
+            Txt.getString(Txt.CONFIRM_ERASE) };
 
     /**
      * A 'recovery Erase' attempts to recover memory that was previously
@@ -118,12 +118,12 @@ public final class AppController extends Controller {
     public final void recoveryErase() {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
-        mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
+        mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION), Txt.getString(Txt.C_msgEraseWarning),
                 C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
-                    Txt.C_msgEraseWarning2, C_CANCEL_OR_CONFIRM_ERASE);
+            mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION),
+                    Txt.getString(Txt.C_msgEraseWarning2), C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
                 // Erase log
@@ -142,12 +142,12 @@ public final class AppController extends Controller {
     public final void changeLogFormatAndErase(final int logFormat) {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
-        mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
-                Txt.C_msgWarningFormatAndErase, C_ERASE_OR_CANCEL);
+        mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION),
+                Txt.getString(Txt.C_msgWarningFormatAndErase), C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
-                    Txt.C_msgWarningFormatAndErase2, C_CANCEL_OR_CONFIRM_ERASE);
+            mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION),
+                    Txt.getString(Txt.C_msgWarningFormatAndErase2), C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
                 // Set format and reset log
@@ -167,8 +167,8 @@ public final class AppController extends Controller {
     public final void changeLogFormat(final int logFormat) {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
-        mb = new BT747MessageBox(true, Txt.TITLE_ATTENTION,
-                Txt.C_msgWarningFormatIncompatibilityRisk, C_YES_OR_CANCEL);
+        mb = new BT747MessageBox(true, Txt.getString(Txt.TITLE_ATTENTION),
+                Txt.getString(Txt.C_msgWarningFormatIncompatibilityRisk), C_YES_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
             c.setLogFormat(logFormat);
@@ -182,12 +182,12 @@ public final class AppController extends Controller {
     public final void eraseLogWithDialogs() {
         /** Object to open multiple message boxes */
         BT747MessageBox mb;
-        mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.C_msgEraseWarning,
+        mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION), Txt.getString(Txt.C_msgEraseWarning),
                 C_ERASE_OR_CANCEL);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
-            mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
-                    Txt.C_msgEraseWarning2, C_CANCEL_OR_CONFIRM_ERASE);
+            mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION),
+                    Txt.getString(Txt.C_msgEraseWarning2), C_CANCEL_OR_CONFIRM_ERASE);
             mb.popupBlockingModal();
             if (mb.getPressedButtonIndex() == 1) {
                 // Erase log
@@ -208,16 +208,16 @@ public final class AppController extends Controller {
         String errorMsg;
         switch (error) {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
-            errorMsg = Txt.COULD_NOT_OPEN + errorInfo;
+            errorMsg = Txt.getString(Txt.COULD_NOT_OPEN) + errorInfo;
             Generic.debug(errorMsg, null);
-            new BT747MessageBox(Txt.ERROR, errorMsg).popupBlockingModal();
+            new BT747MessageBox(Txt.getString(Txt.ERROR), errorMsg).popupBlockingModal();
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
-            (new BT747MessageBox(Txt.WARNING, Txt.NO_FILES_WERE_CREATED))
+            (new BT747MessageBox(Txt.getString(Txt.WARNING), Txt.getString(Txt.NO_FILES_WERE_CREATED)))
                     .popupBlockingModal();
             break;
         case BT747Constants.ERROR_READING_FILE:
-            new BT747MessageBox(Txt.ERROR, Txt.PROBLEM_READING + errorInfo)
+            new BT747MessageBox(Txt.getString(Txt.ERROR), Txt.getString(Txt.PROBLEM_READING) + errorInfo)
                     .popupBlockingModal();
             break;
         default:

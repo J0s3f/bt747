@@ -53,7 +53,7 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
     private Button btClear;
 
     private PushButtonGroup pbPtType;
-    private final String[] C_PB_TYPE_NAMES = { Txt.ACTIVE, Txt.INACTIVE };
+    private final String[] C_PB_TYPE_NAMES = { Txt.getString(Txt.ACTIVE), Txt.getString(Txt.INACTIVE) };
 
     private final Model m;
     private final AppController c;
@@ -67,28 +67,28 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
         super.onStart();
 
         add(minRecCount = new Edit(), LEFT, SAME);
-        add(new Label(Txt.FLTR_REC), CENTER, SAME);
+        add(new Label(Txt.getString(Txt.FLTR_REC)), CENTER, SAME);
         add(maxRecCount = new Edit(), RIGHT, SAME);
 
         add(minSpeed = new Edit(), LEFT, AFTER);
-        add(new Label(Txt.FLTR_SPD), CENTER, SAME);
+        add(new Label(Txt.getString(Txt.FLTR_SPD)), CENTER, SAME);
         add(maxSpeed = new Edit(), RIGHT, SAME);
 
         add(minDist = new Edit(), LEFT, AFTER);
-        add(new Label(Txt.FLTR_DST), CENTER, SAME);
+        add(new Label(Txt.getString(Txt.FLTR_DST)), CENTER, SAME);
         add(maxDist = new Edit(), RIGHT, SAME);
 
-        add(new Label(Txt.FLTR_PDOP), CENTER, AFTER);
+        add(new Label(Txt.getString(Txt.FLTR_PDOP)), CENTER, AFTER);
         add(maxPDOP = new Edit(), RIGHT, SAME);
 
-        add(new Label(Txt.FLTR_HDOP), CENTER, AFTER);
+        add(new Label(Txt.getString(Txt.FLTR_HDOP)), CENTER, AFTER);
         add(maxHDOP = new Edit(), RIGHT, SAME);
 
-        add(new Label(Txt.FLTR_VDOP), CENTER, AFTER);
+        add(new Label(Txt.getString(Txt.FLTR_VDOP)), CENTER, AFTER);
         add(maxVDOP = new Edit(), RIGHT, SAME);
 
         add(minNSAT = new Edit(), LEFT, AFTER);
-        add(new Label(Txt.FLTR_NSAT), CENTER, SAME);
+        add(new Label(Txt.getString(Txt.FLTR_NSAT)), CENTER, SAME);
 
         String allowedKeys;
         allowedKeys = Edit.numbersSet + "-";
@@ -104,11 +104,11 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
         maxHDOP.setValidChars(allowedKeys);
         maxVDOP.setValidChars(allowedKeys);
 
-        add(new Label(Txt.IGNORE_0VALUES), CENTER, AFTER);
+        add(new Label(Txt.getString(Txt.IGNORE_0VALUES)), CENTER, AFTER);
 
-        btSet = new Button(Txt.SET);
+        btSet = new Button(Txt.getString(Txt.SET));
         add(btSet, LEFT, AFTER + 3); //$NON-NLS-1$
-        btClear = new Button(Txt.CLEAR);
+        btClear = new Button(Txt.getString(Txt.CLEAR));
         add(btClear, AFTER, SAME); //$NON-NLS-1$
 
         add(pbPtType = new PushButtonGroup(C_PB_TYPE_NAMES, // labes for buttons

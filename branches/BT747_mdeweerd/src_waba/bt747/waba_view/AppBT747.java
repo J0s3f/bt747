@@ -11,14 +11,14 @@ package bt747.waba_view;
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 //***  The application was written using the SuperWaba toolset.    ***
 //***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***
+//***  part on the Waba development environment developed by       ***                                   
 //***  WabaSoft, Inc.                                              ***
-//********************************************************************
+//********************************************************************                              
 import waba.fx.Font;
 import waba.fx.Sound;
 import waba.sys.Settings;
@@ -51,12 +51,18 @@ import bt747.waba_view.ui.BT747MessageBox;
  * @author Mario De Weerd
  */
 public class AppBT747 extends MainWindow implements ModelListener {
-
+    /*
+     * Using Model, AppController, View.
+     */
+    protected static Model m;
+    protected static AppController c;
+    
     static {
         // Set the low level interface.
         Interface.setJavaTranslationInterface(new WabaJavaTranslations());
         
         Sound.setEnabled(false);
+
         // Set up the port.
         GPSPort gpsPort;
 
@@ -86,13 +92,13 @@ public class AppBT747 extends MainWindow implements ModelListener {
         }
 
         GPSrxtx.setGpsPortInstance(gpsPort);
+
+        m = new Model();
+        c = new AppController(m);
+        Txt.setLang(m.getStringOpt(Model.LANGUAGE));
     }
 
-    /*
-     * Using Model, AppController, View.
-     */
-    protected Model m;
-    protected AppController c;
+
     /**
      * The 'GPS state'. Used to get current GPS information and get access to
      * it.
@@ -108,38 +114,52 @@ public class AppBT747 extends MainWindow implements ModelListener {
     private MenuBar menuBar;
     /** The content of the menu bar. */
 
-    private MenuItem miFile = new MenuItem(Txt.S_FILE);
-    private MenuItem miExitApplication = new MenuItem(Txt.S_EXIT_APPLICATION);
-    private MenuItem miSettings = new MenuItem(Txt.S_SETTINGS);
+    private MenuItem miFile = new MenuItem(Txt.getString(Txt.S_FILE));
+    private MenuItem miExitApplication = new MenuItem(Txt.getString(Txt.S_EXIT_APPLICATION));
+    private MenuItem miSettings = new MenuItem(Txt.getString(Txt.S_SETTINGS));
     private MenuItem miStopLogOnConnect = new MenuItem(
-            Txt.S_STOP_LOGGING_ON_CONNECT, false);
-    private MenuItem miStopConnection = new MenuItem(Txt.S_STOP_CONNECTION);
-    private MenuItem miGpxUTC0 = new MenuItem(Txt.S_GPX_UTC_OFFSET_0, false);
+            Txt.getString(Txt.S_STOP_LOGGING_ON_CONNECT), false);
+    private MenuItem miStopConnection = new MenuItem(Txt.getString(Txt.S_STOP_CONNECTION));
+    private MenuItem miGpxUTC0 = new MenuItem(Txt.getString(Txt.S_GPX_UTC_OFFSET_0), false);
     private MenuItem miGpxTrkSegWhenBig = new MenuItem(
-            Txt.S_GPX_TRKSEG_WHEN_SMALL, false);
-    private MenuItem miGpsDecode = new MenuItem(Txt.S_GPS_DECODE_ACTIVE, false);
-    private MenuItem miRecordNumberInLogs = new MenuItem(Txt.ADD_RECORD_NUMBER,
+            Txt.getString(Txt.S_GPX_TRKSEG_WHEN_SMALL), false);
+    private MenuItem miGpsDecode = new MenuItem(Txt.getString(Txt.S_GPS_DECODE_ACTIVE), false);
+    private MenuItem miRecordNumberInLogs = new MenuItem(Txt.getString(Txt.ADD_RECORD_NUMBER),
             false);
-    private MenuItem miTraversableFocus = new MenuItem(Txt.S_FOCUS_HIGHLIGHT,
+    private MenuItem miTraversableFocus = new MenuItem(Txt.getString(Txt.S_FOCUS_HIGHLIGHT),
             false);
 
-    private MenuItem miDebug = new MenuItem(Txt.S_DEBUG, false);
-    private MenuItem miDebugConn = new MenuItem(Txt.S_DEBUG_CONN, false);
-    private MenuItem miStats = new MenuItem(Txt.S_STATS, false);
-    private MenuItem miImperial = new MenuItem(Txt.S_IMPERIAL, false);
+    private MenuItem miDebug = new MenuItem(Txt.getString(Txt.S_DEBUG), false);
+    private MenuItem miDebugConn = new MenuItem(Txt.getString(Txt.S_DEBUG_CONN), false);
+    private MenuItem miStats = new MenuItem(Txt.getString(Txt.S_STATS), false);
+    private MenuItem miImperial = new MenuItem(Txt.getString(Txt.S_IMPERIAL), false);
     private MenuItem miOutputLogConditions = new MenuItem(
-            Txt.S_OUTPUT_LOGCONDITIONS, false);
+            Txt.getString(Txt.S_OUTPUT_LOGCONDITIONS), false);
 
-    private MenuItem miDevice = new MenuItem(Txt.S_DEVICE);
-    private MenuItem miDefaultDevice = new MenuItem(Txt.S_DEFAULTDEVICE, true);
-    private MenuItem miGisteqType1 = new MenuItem(Txt.S_GISTEQTYPE1, false);
-    private MenuItem miGisteqType2 = new MenuItem(Txt.S_GISTEQTYPE2, false);
-    private MenuItem miGisteqType3 = new MenuItem(Txt.S_GISTEQTYPE3, false);
+    private MenuItem miDevice = new MenuItem(Txt.getString(Txt.S_DEVICE));
+    private MenuItem miDefaultDevice = new MenuItem(Txt.getString(Txt.S_DEFAULTDEVICE), true);
+    private MenuItem miGisteqType1 = new MenuItem(Txt.getString(Txt.S_GISTEQTYPE1), false);
+    private MenuItem miGisteqType2 = new MenuItem(Txt.getString(Txt.S_GISTEQTYPE2), false);
+    private MenuItem miGisteqType3 = new MenuItem(Txt.getString(Txt.S_GISTEQTYPE3), false);
     private MenuItem miHolux = new MenuItem("Holux M241", false);
 
-    private MenuItem miInfo = new MenuItem(Txt.S_INFO);
-    private MenuItem miAboutBT747 = new MenuItem(Txt.S_ABOUT_BT747);
-    private MenuItem miAboutSuperWaba = new MenuItem(Txt.S_ABOUT_SUPERWABA);
+    private MenuItem miInfo = new MenuItem(Txt.getString(Txt.S_INFO));
+    private MenuItem miAboutBT747 = new MenuItem(Txt.getString(Txt.S_ABOUT_BT747));
+    private MenuItem miAboutSuperWaba = new MenuItem(Txt.getString(Txt.S_ABOUT_SUPERWABA));
+
+
+    private MenuItem miLanguage = new MenuItem(Txt.getString(Txt.MI_LANGUAGE));
+    
+    private MenuItem miLangDE = new MenuItem(Txt.getString(Txt.LANG_DE));
+    private MenuItem miLangEN = new MenuItem(Txt.getString(Txt.LANG_EN));
+    private MenuItem miLangES = new MenuItem(Txt.getString(Txt.LANG_ES));
+    private MenuItem miLangFR = new MenuItem(Txt.getString(Txt.LANG_FR));
+    private MenuItem miLangIT = new MenuItem(Txt.getString(Txt.LANG_IT));
+    private MenuItem miLangJP = new MenuItem(Txt.getString(Txt.LANG_JP));
+    private MenuItem miLangKO = new MenuItem(Txt.getString(Txt.LANG_KO));
+    private MenuItem miLangNL = new MenuItem(Txt.getString(Txt.LANG_NL));
+    private MenuItem miLangZH = new MenuItem(Txt.getString(Txt.LANG_ZH));
+
 
     /**
      * The text for the menu.
@@ -153,7 +173,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     miOutputLogConditions, },
             { miDevice, miDefaultDevice, miGisteqType1, miGisteqType2,
                     miGisteqType3, miHolux, },
-            { miInfo, miAboutBT747, miAboutSuperWaba, miInfo } };
+            { miInfo, miAboutBT747, miAboutSuperWaba, miInfo },
+            { miLanguage, miLangDE, miLangEN, miLangES, miLangFR, miLangIT, miLangJP, miLangKO, miLangNL, miLangZH }
+         };
     /** MenuBar item for File->Exit. */
     private static final int C_MENU_FILE_EXIT = 001;
     // private static final int C_MENU_CONNECTION_SETTINGS = 101;
@@ -195,11 +217,21 @@ public class AppBT747 extends MainWindow implements ModelListener {
     /** MenuBar item for Info->Info. */
     private static final int C_MENU_INFO = 303;
 
+    private final static int C_MENU_LANG_DE= 401;
+    private final static int C_MENU_LANG_EN= 402;
+    private final static int C_MENU_LANG_ES= 403;
+    private final static int C_MENU_LANG_FR= 404;
+    private final static int C_MENU_LANG_IT= 405;
+    private final static int C_MENU_LANG_JP= 406;
+    private final static int C_MENU_LANG_KO= 407;
+    private final static int C_MENU_LANG_NL= 408;
+    private final static int C_MENU_LANG_ZH= 409;
+
     /** The tab panel. */
     private TabPanel tabPanel;
     /** The captions for the tab panel. */
-    private final String[] c_tpCaptions = { Txt.C_FMT, Txt.C_CTRL, Txt.C_LOG,
-            Txt.C_FILE, Txt.C_FLTR, Txt.C_EASY, Txt.C_CON, Txt.C_OTHR };
+    private final String[] c_tpCaptions = { Txt.getString(Txt.C_FMT), Txt.getString(Txt.C_CTRL), Txt.getString(Txt.C_LOG),
+            Txt.getString(Txt.C_FILE), Txt.getString(Txt.C_FLTR), Txt.getString(Txt.C_EASY), Txt.getString(Txt.C_CON), Txt.getString(Txt.C_OTHR) };
     private static final int TAB_LOG_CTRL_IDX = 0;
     private static final int TAB_LOGINFO_IDX = 1;
     private static final int TAB_LOG_GET_IDX = 2;
@@ -219,8 +251,6 @@ public class AppBT747 extends MainWindow implements ModelListener {
      * Initialiser of the application.
      */
     public AppBT747() {
-        m = new Model();
-        c = new AppController(m);
         if (Settings.onDevice) {
             waba.sys.Vm.debug(waba.sys.Vm.ERASE_DEBUG);
         }
@@ -230,17 +260,17 @@ public class AppBT747 extends MainWindow implements ModelListener {
         /**
          * 
          */
-        if (Txt.fontFile != null) {
-            MainWindow.defaultFont = Font.getFont(Txt.fontFile, false, 12);
+        if (Txt.getString(Txt.fontFile) != null) {
+            MainWindow.defaultFont = Font.getFont(Txt.getString(Txt.fontFile), false, 12);
             MainWindow.getMainWindow().setTitleFont(MainWindow.defaultFont);
         }
-        if (Txt.encoding != null) {
-            waba.sys.Convert.setDefaultConverter(Txt.encoding);
+        if (Txt.getString(Txt.encoding) != null) {
+            waba.sys.Convert.setDefaultConverter(Txt.getString(Txt.encoding));
         }
 
         setDoubleBuffer(true);
         setBorderStyle(TAB_ONLY_BORDER);
-        setTitle(Txt.S_TITLE);
+        setTitle(Txt.getString(Txt.S_TITLE));
         waba.sys.Settings.setUIStyle(waba.sys.Settings.Flat);
     }
 
@@ -258,9 +288,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
         super.onStart();
 
         if (Settings.version < requiredVersion) {
-            new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.BAD_SUPERWABAVERSION
-                    + requiredVersionStr + Txt.BAD_SUPERWABAVERSION_CONT
-                    + Settings.versionStr + Txt.BAD_SUPERWABAVERSION_CONT2
+            new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION), Txt.getString(Txt.BAD_SUPERWABAVERSION)
+                    + requiredVersionStr + Txt.getString(Txt.BAD_SUPERWABAVERSION_CONT)
+                    + Settings.versionStr + Txt.getString(Txt.BAD_SUPERWABAVERSION_CONT2)
 
             ).popupBlockingModal();
             MainWindow.getMainWindow().exit(0);
@@ -289,7 +319,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
         tabPanel = new TabPanel(c_tpCaptions);
         add(tabPanel, CENTER, CENTER);
         // Progress bar to show download progress (separate thread)
-        progressLabel = new Label(Txt.LB_DOWNLOAD);
+        progressLabel = new Label(Txt.getString(Txt.LB_DOWNLOAD));
         progressBar = new ProgressBar();
         add(progressLabel, LEFT, BOTTOM);
         progressLabel.setRect(LEFT, BOTTOM, PREFERRED, PREFERRED);
@@ -349,6 +379,20 @@ public class AppBT747 extends MainWindow implements ModelListener {
         gpsType();
     }
 
+    
+    private void setLang(final String lang) {
+        miLangDE.isChecked = lang.equals("de");
+        miLangEN.isChecked = lang.equals("en");
+        miLangES.isChecked = lang.equals("es");
+        miLangFR.isChecked = lang.equals("fr");
+        miLangIT.isChecked = lang.equals("it");
+        miLangJP.isChecked = lang.equals("jp");
+        miLangKO.isChecked = lang.equals("ko");
+        miLangNL.isChecked = lang.equals("nl");
+        miLangZH.isChecked = lang.equals("zh");
+        Txt.setLang(lang);
+        c.setStringOpt(Model.LANGUAGE, lang);
+    }
     /**
      * Sets the GPS Device type from the menu settings.
      */
@@ -404,9 +448,9 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     break; // No item selected
                 case C_MENU_FILE_EXIT:
                     BT747MessageBox mb;
-                    String[] szExitButtonArray = { Txt.YES, Txt.NO };
-                    mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
-                            Txt.CONFIRM_APP_EXIT, szExitButtonArray);
+                    String[] szExitButtonArray = { Txt.getString(Txt.YES), Txt.getString(Txt.NO) };
+                    mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION),
+                            Txt.getString(Txt.CONFIRM_APP_EXIT), szExitButtonArray);
                     mb.popupBlockingModal();
                     if (mb.getPressedButtonIndex() == 0) {
                         // Exit application
@@ -458,17 +502,17 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     c.setRecordNbrInLogs(miRecordNumberInLogs.isChecked);
                     break;
                 case C_MENU_ABOUT:
-                    new BT747MessageBox(Txt.ABOUT_TITLE, Txt.ABOUT_TXT)
+                    new BT747MessageBox(Txt.getString(Txt.ABOUT_TITLE), Txt.getString(Txt.ABOUT_TXT))
                             .popupModal();
                     break;
                 case C_MENU_ABOUT_SW:
-                    new BT747MessageBox(Txt.ABOUT_SUPERWABA_TITLE,
-                            Txt.ABOUT_SUPERWABA_TXT + Settings.versionStr
-                                    + Txt.ABOUT_SUPERWABA_TXT).popupModal();
+                    new BT747MessageBox(Txt.getString(Txt.ABOUT_SUPERWABA_TITLE),
+                            Txt.getString(Txt.ABOUT_SUPERWABA_TXT) + Settings.versionStr
+                                    + Txt.getString(Txt.ABOUT_SUPERWABA_TXT)).popupModal();
                     break;
                 case C_MENU_INFO:
-                    new BT747MessageBox(Txt.DISCLAIMER_TITLE,
-                            Txt.DISCLAIMER_TXT).popupModal();
+                    new BT747MessageBox(Txt.getString(Txt.DISCLAIMER_TITLE),
+                            Txt.getString(Txt.DISCLAIMER_TXT)).popupModal();
                     break;
                 case C_MENU_DEFAULTDEVICE:
                     c.setGPSType(AppController.GPS_TYPE_DEFAULT);
@@ -488,6 +532,16 @@ public class AppBT747 extends MainWindow implements ModelListener {
                             .setGPSType(AppController.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
                     gpsType();
                     break;
+                case C_MENU_LANG_DE: setLang("de");break;
+                case C_MENU_LANG_EN: setLang("en");break;
+                case C_MENU_LANG_ES: setLang("es");break;
+                case C_MENU_LANG_FR: setLang("fr");break;
+                case C_MENU_LANG_IT: setLang("it");break;
+                case C_MENU_LANG_JP: setLang("jp");break;
+                case C_MENU_LANG_KO: setLang("ko");break;
+                case C_MENU_LANG_NL: setLang("nl");break;
+                case C_MENU_LANG_ZH: setLang("zl");break;
+
                 default:
                     break;
 
@@ -583,8 +637,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
     private void requestLogOverwriteConfirmation() {
         // Log is not the same - delete the log and reopen.
         BT747MessageBox mb;
-        String[] mbStr = { Txt.OVERWRITE, Txt.ABORT_DOWNLOAD };
-        mb = new BT747MessageBox(Txt.TITLE_ATTENTION, Txt.DATA_NOT_SAME, mbStr);
+        String[] mbStr = { Txt.getString(Txt.OVERWRITE), Txt.getString(Txt.ABORT_DOWNLOAD) };
+        mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION), Txt.getString(Txt.DATA_NOT_SAME), mbStr);
         mb.popupBlockingModal();
         c.replyToOkToOverwrite(mb.getPressedButtonIndex() == 0);
     }
@@ -592,12 +646,12 @@ public class AppBT747 extends MainWindow implements ModelListener {
     /**
      * Menut options for erase pop up.
      */
-    private final String[] eraseWait = { Txt.CANCEL_WAITING };
+    private final String[] eraseWait = { Txt.getString(Txt.CANCEL_WAITING) };
     /**
      * Erase pop up.
      */
     private BT747MessageBox mbErase = new BT747MessageBox(
-            Txt.TITLE_WAITING_ERASE, Txt.TXT_WAITING_ERASE, eraseWait);
+            Txt.getString(Txt.TITLE_WAITING_ERASE), Txt.getString(Txt.TXT_WAITING_ERASE), eraseWait);
 
     /**
      * Show the pop up.
@@ -627,7 +681,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
      *            The file that could not be opened.
      */
     private void couldNotOpenFileMessage(final String fileName) {
-        (new BT747MessageBox(Txt.ERROR, Txt.COULD_NOT_OPEN + fileName
-                + Txt.CHK_PATH)).popupBlockingModal();
+        (new BT747MessageBox(Txt.getString(Txt.ERROR), Txt.getString(Txt.COULD_NOT_OPEN) + fileName
+                + Txt.getString(Txt.CHK_PATH))).popupBlockingModal();
     }
 }

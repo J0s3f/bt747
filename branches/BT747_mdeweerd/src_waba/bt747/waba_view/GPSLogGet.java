@@ -76,11 +76,11 @@ public final class GPSLogGet extends Container implements ModelListener {
     private static final String[] colors = { "FF0000", "0000FF", "800000",
             "000080", "00FF00", "008000" };
     private ComboBox cbDownload;
-    private static final String[] downloadStr = { Txt.DOWNLOAD_NORMAL,
-            Txt.DOWNLOAD_INCREMENTAL, Txt.DOWNLOAD_FULL };
+    private static final String[] downloadStr = { Txt.getString(Txt.DOWNLOAD_NORMAL),
+            Txt.getString(Txt.DOWNLOAD_INCREMENTAL), Txt.getString(Txt.DOWNLOAD_FULL) };
     private ComboBox cbFileSplitType;
-    private static final String[] fileStr = { Txt.ONE_FILE, Txt.ONE_FILE_DAY,
-            Txt.ONE_FILE_TRK };
+    private static final String[] fileStr = { Txt.getString(Txt.ONE_FILE), Txt.getString(Txt.ONE_FILE_DAY),
+            Txt.getString(Txt.ONE_FILE_TRK) };
     private Color savedBackColor;
     private Label lbUsedMem;
     private Label lbUsedRecords;
@@ -115,12 +115,12 @@ public final class GPSLogGet extends Container implements ModelListener {
      */
     protected final void onStart() {
         super.onStart();
-        add(chkLogOnOff = new MyCheck(Txt.DEV_LOGONOFF), LEFT, TOP); //$NON-NLS-1$
+        add(chkLogOnOff = new MyCheck(Txt.getString(Txt.DEV_LOGONOFF)), LEFT, TOP); //$NON-NLS-1$
         cbDownload = new ComboBox(downloadStr);
         add(cbDownload, RIGHT, SAME);
         cbDownload.select(m.getDownloadMethod());
-        add(chkLogOverwriteStop = new MyCheck(Txt.LOG_OVRWR_FULL), LEFT, AFTER); //$NON-NLS-1$
-        add(new Label(Txt.DATE_RANGE), LEFT, AFTER); //$NON-NLS-1$
+        add(chkLogOverwriteStop = new MyCheck(Txt.getString(Txt.LOG_OVRWR_FULL)), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label(Txt.getString(Txt.DATE_RANGE)), LEFT, AFTER); //$NON-NLS-1$
 
         add(btStartDate = new Button(convertUTCtoDateString(m
                 .getFilterStartTime())), AFTER, SAME); //$NON-NLS-1$
@@ -129,17 +129,17 @@ public final class GPSLogGet extends Container implements ModelListener {
                 btEndDate = new Button(convertUTCtoDateString(m
                         .getFilterEndTime())), RIGHT, SAME); //$NON-NLS-1$
         // m_btEndDate.setMode(Edit.DATE);
-        add(btGetLog = new Button(Txt.GET_LOG), LEFT, AFTER + 2); //$NON-NLS-1$
-        add(btCancelGetLog = new Button(Txt.CANCEL_GET), AFTER + 5, SAME); //$NON-NLS-1$
+        add(btGetLog = new Button(Txt.getString(Txt.GET_LOG)), LEFT, AFTER + 2); //$NON-NLS-1$
+        add(btCancelGetLog = new Button(Txt.getString(Txt.CANCEL_GET)), AFTER + 5, SAME); //$NON-NLS-1$
 
         cbColors = new ComboBox(colors);
         add(cbColors, RIGHT, SAME);
-        add(new Label(Txt.NOFIX_COL), BEFORE, SAME);
+        add(new Label(Txt.getString(Txt.NOFIX_COL)), BEFORE, SAME);
 
-        add(new Label(Txt.TRK_SEP), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label(Txt.getString(Txt.TRK_SEP)), LEFT, AFTER); //$NON-NLS-1$
         add(edTrkSep = new Edit("00000"), AFTER, SAME); //$NON-NLS-1$
         edTrkSep.setValidChars(Edit.numbersSet);
-        add(new Label(Txt.MIN), AFTER, SAME); //$NON-NLS-1$
+        add(new Label(Txt.getString(Txt.MIN)), AFTER, SAME); //$NON-NLS-1$
         edTrkSep.setText(Convert.toString(m.getTrkSep()));
         edTrkSep.alignment = RIGHT;
 
@@ -151,23 +151,23 @@ public final class GPSLogGet extends Container implements ModelListener {
         cbTimeOffsetHours = new ComboBox(offsetStr);
         add(cbTimeOffsetHours, RIGHT, SAME);
         cbTimeOffsetHours.select(offsetIdx);
-        add(new Label(Txt.UTC), BEFORE, SAME);
+        add(new Label(Txt.getString(Txt.UTC)), BEFORE, SAME);
 
         // add(new Label("End"),BEFORE,SAME);
         add(cbFileSplitType = new ComboBox(fileStr), LEFT, AFTER + 2);
         cbFileSplitType.select(m.getOutputFileSplitType());
-        add(chkConvertWGSToMSL = new MyCheck(Txt.HGHT_GEOID_DIFF), AFTER + 5,
+        add(chkConvertWGSToMSL = new MyCheck(Txt.getString(Txt.HGHT_GEOID_DIFF)), AFTER + 5,
                 SAME); //$NON-NLS-1$
         chkConvertWGSToMSL.setChecked(m.getHeightConversionMode() != 0);
         updateHeightConversionModeFromControl();
-        add(btToCSV = new Button(Txt.TO_CSV), LEFT, AFTER + 5); //$NON-NLS-1$
-        add(btToGPX = new Button(Txt.TO_GPX), AFTER + 5, SAME); //$NON-NLS-1$
-        add(btToKML = new Button(Txt.TO_KML), RIGHT, SAME); //$NON-NLS-1$
-        add(btToTRK = new Button(Txt.TO_TRK), BEFORE - 5, SAME); //$NON-NLS-1$
+        add(btToCSV = new Button(Txt.getString(Txt.TO_CSV)), LEFT, AFTER + 5); //$NON-NLS-1$
+        add(btToGPX = new Button(Txt.getString(Txt.TO_GPX)), AFTER + 5, SAME); //$NON-NLS-1$
+        add(btToKML = new Button(Txt.getString(Txt.TO_KML)), RIGHT, SAME); //$NON-NLS-1$
+        add(btToTRK = new Button(Txt.getString(Txt.TO_TRK)), BEFORE - 5, SAME); //$NON-NLS-1$
 
-        add(btToPLT = new Button(Txt.TO_PLT), LEFT, AFTER + 2); //$NON-NLS-1$
-        add(btToGMAP = new Button(Txt.TO_GMAP), CENTER, SAME); //$NON-NLS-1$
-        add(btToNMEA = new Button(Txt.TO_NMEA), RIGHT, SAME); //$NON-NLS-1$
+        add(btToPLT = new Button(Txt.getString(Txt.TO_PLT)), LEFT, AFTER + 2); //$NON-NLS-1$
+        add(btToGMAP = new Button(Txt.getString(Txt.TO_GMAP)), CENTER, SAME); //$NON-NLS-1$
+        add(btToNMEA = new Button(Txt.getString(Txt.TO_NMEA)), RIGHT, SAME); //$NON-NLS-1$
 
         savedBackColor = btToCSV.getBackColor();
 
@@ -207,13 +207,13 @@ public final class GPSLogGet extends Container implements ModelListener {
         // m_chkLogOnOff.repaintNow();
         chkLogOverwriteStop.setChecked(m.isLogFullOverwrite());
         // m_chkLogOverwriteStop.repaintNow();
-        lbUsedMem.setText(Txt.MEM_USED + Convert.toString(m.logMemUsed()) + "("
+        lbUsedMem.setText(Txt.getString(Txt.MEM_USED) + Convert.toString(m.logMemUsed()) + "("
                 + Convert.toString(m.logMemUsedPercent()) + "%)");
         // m_UsedLabel.repaintNow();
-        lbUsedRecords.setText(Txt.NBR_RECORDS
+        lbUsedRecords.setText(Txt.getString(Txt.NBR_RECORDS)
                 + Convert.toString(m.logNbrLogPts()) + " ("
                 + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
-                + Txt.MEM_FREE + ")");
+                + Txt.getString(Txt.MEM_FREE) + ")");
         // m_RecordsLabel.repaintNow();
     }
 

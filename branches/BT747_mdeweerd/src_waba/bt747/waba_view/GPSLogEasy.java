@@ -66,26 +66,26 @@ public final class GPSLogEasy extends Container implements ModelListener {
     }
 
     protected final void onStart() {
-        add(btSet5Hz = new Button(Txt.BT_5HZ_FIX), LEFT, AFTER + 3); //$NON-NLS-1$
-        add(btSet2Hz = new Button(Txt.BT_2HZ_FIX), RIGHT, SAME); //$NON-NLS-1$
-        add(btStore = new Button(Txt.STORE_SETTINGS), LEFT, AFTER + 3); //$NON-NLS-1$
-        add(btRestore = new Button(Txt.RESTORE_SETTINGS), RIGHT, SAME); //$NON-NLS-1$
+        add(btSet5Hz = new Button(Txt.getString(Txt.BT_5HZ_FIX)), LEFT, AFTER + 3); //$NON-NLS-1$
+        add(btSet2Hz = new Button(Txt.getString(Txt.BT_2HZ_FIX)), RIGHT, SAME); //$NON-NLS-1$
+        add(btStore = new Button(Txt.getString(Txt.STORE_SETTINGS)), LEFT, AFTER + 3); //$NON-NLS-1$
+        add(btRestore = new Button(Txt.getString(Txt.RESTORE_SETTINGS)), RIGHT, SAME); //$NON-NLS-1$
         enableStore();
-        add(btHotStart = new Button(Txt.BT_HOT), LEFT, AFTER + 10); //$NON-NLS-1$
-        add(btWarmStart = new Button(Txt.BT_WARM), CENTER, SAME); //$NON-NLS-1$
-        add(btColdStart = new Button(Txt.BT_COLD), RIGHT, SAME); //$NON-NLS-1$
-        add(btFullColdStart = new Button(Txt.BT_FACT_RESET), LEFT, AFTER + 2); //$NON-NLS-1$
+        add(btHotStart = new Button(Txt.getString(Txt.BT_HOT)), LEFT, AFTER + 10); //$NON-NLS-1$
+        add(btWarmStart = new Button(Txt.getString(Txt.BT_WARM)), CENTER, SAME); //$NON-NLS-1$
+        add(btColdStart = new Button(Txt.getString(Txt.BT_COLD)), RIGHT, SAME); //$NON-NLS-1$
+        add(btFullColdStart = new Button(Txt.getString(Txt.BT_FACT_RESET)), LEFT, AFTER + 2); //$NON-NLS-1$
 
-        add(btForceErase = new Button(Txt.BT_FORCED_ERASE), RIGHT, SAME); //$NON-NLS-1$
+        add(btForceErase = new Button(Txt.getString(Txt.BT_FORCED_ERASE)), RIGHT, SAME); //$NON-NLS-1$
 
-        add(lbLogUserTxt = new Label(Txt.BT_PT_WITH_REASON), LEFT, AFTER + 2);
+        add(lbLogUserTxt = new Label(Txt.getString(Txt.BT_PT_WITH_REASON)), LEFT, AFTER + 2);
         // Add all tick buttons.
         int x = LEFT;
         int y = SAME;
         Control rel = null;
         final int RCR_COL = 4;
         for (int i = 0; i < BT747Constants.C_RCR_COUNT; i++) {
-            chkRCR[i] = new Button(Txt.C_STR_RCR[i]);
+            chkRCR[i] = new Button(Txt.getRcrString(i));
             // add( chkRCR[i], LEFT, AFTER);
             if (i == 0) {
                 x = LEFT;
@@ -138,9 +138,9 @@ public final class GPSLogEasy extends Container implements ModelListener {
                 c.doWarmStart();
             } else if (event.target == btFullColdStart) {
                 MessageBox mb;
-                String[] szExitButtonArray = { Txt.YES, Txt.NO };
-                mb = new MessageBox(Txt.TITLE_ATTENTION,
-                        Txt.CONFIRM_FACT_RESET, szExitButtonArray);
+                String[] szExitButtonArray = { Txt.getString(Txt.YES), Txt.getString(Txt.NO) };
+                mb = new MessageBox(Txt.getString(Txt.TITLE_ATTENTION),
+                        Txt.getString(Txt.CONFIRM_FACT_RESET), szExitButtonArray);
                 mb.popupBlockingModal();
                 if (mb.getPressedButtonIndex() == 0) {
                     // Exit application

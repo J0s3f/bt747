@@ -8,47 +8,47 @@ import bt747.Version;
  *
  ** Class to provide language specific strings.
  */
-public class Txt_es {
-    public static String fontFile=null;
-    public static String encoding=null;
+public final class Txt_es {
+    private static String fontFile=null;
+    private static String encoding=null;
         
     // BT747 class
-    public static final String S_FILE = "Archivo";
-    public static final String S_EXIT_APPLICATION = "Salir";
+    private static final String S_FILE = "Archivo";
+    private static final String S_EXIT_APPLICATION = "Salir";
     
-    public static final String S_SETTINGS = "Configuración";
-    public static final String S_STOP_LOGGING_ON_CONNECT = "Stop log on connect";
-    public static final String S_STOP_CONNECTION = "Detener conexión";
-    public static final String S_GPX_UTC_OFFSET_0= "Fijar UTC a 0 en GPX";
-    public static final String S_GPX_TRKSEG_WHEN_SMALL = "No dividir tracks GPX";
-    public static final String S_GPS_DECODE_ACTIVE= "Decodificar datos GPS";
-    public static final String S_FOCUS_HIGHLIGHT= "Autoposición en selección";
-    public static final String S_DEBUG= "Mensajes adicionales";
-    public static final String S_STATS= "Estadísticas";
-    public static final String S_INFO= "Info";
-    public static final String S_ABOUT_BT747= "Acerca de BT747";
-    public static final String S_ABOUT_SUPERWABA= "Acerca de SuperWaba VM";
+    private static final String S_SETTINGS = "Configuración";
+    private static final String S_STOP_LOGGING_ON_CONNECT = "Stop log on connect";
+    private static final String S_STOP_CONNECTION = "Detener conexión";
+    private static final String S_GPX_UTC_OFFSET_0= "Fijar UTC a 0 en GPX";
+    private static final String S_GPX_TRKSEG_WHEN_SMALL = "No dividir tracks GPX";
+    private static final String S_GPS_DECODE_ACTIVE= "Decodificar datos GPS";
+    private static final String S_FOCUS_HIGHLIGHT= "Autoposición en selección";
+    private static final String S_DEBUG= "Mensajes adicionales";
+    private static final String S_STATS= "Estadísticas";
+    private static final String S_INFO= "Info";
+    private static final String S_ABOUT_BT747= "Acerca de BT747";
+    private static final String S_ABOUT_SUPERWABA= "Acerca de SuperWaba VM";
     
-    public static final String S_TITLE= "BT747 - Control Logger MTK";
+    private static final String S_TITLE= "BT747 - Control Logger MTK";
 
     
-    public static final String LB_DOWNLOAD= "Descargar";
+    private static final String LB_DOWNLOAD= "Descargar";
     
-    public static final String TITLE_ATTENTION = "Atención";
-    public static final String CONFIRM_APP_EXIT = "Vas a cerrar la aplicación|"
+    private static final String TITLE_ATTENTION = "Atención";
+    private static final String CONFIRM_APP_EXIT = "Vas a cerrar la aplicación|"
                                                   + "¿Salir del programa?";
     
-    public static final String YES=
+    private static final String YES=
         "Si";
-    public static final String NO=
+    private static final String NO=
         "No";
-    public static final String CANCEL=
+    private static final String CANCEL=
         "Cancelar";
 
 
-    public static final String ABOUT_TITLE=
+    private static final String ABOUT_TITLE=
         "Acerca de BT747 V"+Version.VERSION_NUMBER;
-    public static final String ABOUT_TXT=
+    private static final String ABOUT_TXT=
         "Creado con SuperWaba"
         + "|http://www.superwaba.org"
         + "|" +Version.BUILD_STR
@@ -63,11 +63,11 @@ public class Txt_es {
         + "|allststr@terra.es"; 
 
     
-    public static final String ABOUT_SUPERWABA_TITLE =
+    private static final String ABOUT_SUPERWABA_TITLE =
         "Acerca de SuperWaba";
-    public static final String ABOUT_SUPERWABA_TXT =
+    private static final String ABOUT_SUPERWABA_TXT =
         "SuperWaba Virtual Machine ";
-    public static final String ABOUT_SUPERWABA_TXT_CONTINUE =
+    private static final String ABOUT_SUPERWABA_TXT_CONTINUE =
           "|Copyright (c)2000-2007"
         + "|Guilherme Campos Hazan"
         + "|www.superwaba.com|"
@@ -77,9 +77,9 @@ public class Txt_es {
         + "|Copyright (c) 1998,1999 WabaSoft"
         + "|www.wabasoft.com";
     
-    public static final String DISCLAIMER_TITLE=
+    private static final String DISCLAIMER_TITLE=
         "Renuncia";
-    public static final String DISCLAIMER_TXT=
+    private static final String DISCLAIMER_TXT=
         "El programa se proporciona 'COMO"
         + "|ESTA',sin garantía de ningún tipo."
         + "|Todas las representaciones expresas"
@@ -109,44 +109,44 @@ public class Txt_es {
 
 
     // TAB identification
-    public static final String C_FMT  = "Fmt";
-    public static final String C_CTRL = "Ctrl";
-    public static final String C_LOG  = "Log";
-    public static final String C_FILE = "Arch";
-    public static final String C_FLTR = "Fltr";
-    public static final String C_EASY = "Fácil";
-    public static final String C_CON  = "Con";
-    public static final String C_OTHR = "Otros";
+    private static final String C_FMT  = "Fmt";
+    private static final String C_CTRL = "Ctrl";
+    private static final String C_LOG  = "Log";
+    private static final String C_FILE = "Arch";
+    private static final String C_FLTR = "Fltr";
+    private static final String C_EASY = "Fácil";
+    private static final String C_CON  = "Con";
+    private static final String C_OTHR = "Otros";
 
     // Conctrl strings
-    public static final String BT_BLUETOOTH = "Bluetooth";
-    public static final String BT_CONNECT_PRT = "Puerto COM";
-    public static final String BT_CLOSE_PRT = "Cerrar puerto";
-    public static final String BT_REOPEN_PRT  = "(Re)abrir puerto";
-    public static final String MAIN = "Principal:";
-    public static final String FIRMWARE = "Firmware: ";
-    public static final String MODEL = "Modelo: ";
-    public static final String FLASHINFO = "InfoFlash: ";
-    public static final String TIME_SEP = "  - Hora: ";
-    public static final String LAT = "Lat: ";
-    public static final String LON = "Lon: ";
-    public static final String GEOID = "Geoide: ";
-    public static final String CALC = " (calc: ";
-    public static final String HGHT_SEP = " - Alt: ";
+    private static final String BT_BLUETOOTH = "Bluetooth";
+    private static final String BT_CONNECT_PRT = "Puerto COM";
+    private static final String BT_CLOSE_PRT = "Cerrar puerto";
+    private static final String BT_REOPEN_PRT  = "(Re)abrir puerto";
+    private static final String MAIN = "Principal:";
+    private static final String FIRMWARE = "Firmware: ";
+    private static final String MODEL = "Modelo: ";
+    private static final String FLASHINFO = "InfoFlash: ";
+    private static final String TIME_SEP = "  - Hora: ";
+    private static final String LAT = "Lat: ";
+    private static final String LON = "Lon: ";
+    private static final String GEOID = "Geoide: ";
+    private static final String CALC = " (calc: ";
+    private static final String HGHT_SEP = " - Alt: ";
     
     // Filters tab panel
-    public static final String STANDARD = "Standard";
-    public static final String ADVANCED = "Avanzado";
+    private static final String STANDARD = "Standard";
+    private static final String ADVANCED = "Avanzado";
 
     
     // BT747_dev class
-    public static final String[]C_STR_RCR = {
+    private static final String[]C_STR_RCR = {
             "Tiempo", "Velocid", "Distanc", "Botón",
             "Picture", "Gas Stat", "Phone", "ATM",
             "Bus stop", "Parking", "Post Box", "Railway",
             "Rstaurnt", "Bridge", "View", "Other"
             };
-    public static final String [] logFmtItems = {
+    private static final String [] logFmtItems = {
         "UTC",      // = 0x00001    // 0
         "FIJADO",   // = 0x00002    // 1
         "LATITUD",  // = 0x00004    // 2
@@ -169,43 +169,43 @@ public class Txt_es {
         "DISTANCIA",  // = 0x80000    // 13
         "SOLO LOG FIJADOS" // =0x80000000
     };
-    public static final String C_BAD_LOG_FORMAT = "Formato log incorrecto";
+    private static final String C_BAD_LOG_FORMAT = "Formato log incorrecto";
     
 
     // Holux specific
-    public static final String HOLUX_NAME = "Nombre Holux";
+    private static final String HOLUX_NAME = "Nombre Holux";
 
-    public static final String SET = "Guardar";
+    private static final String SET = "Guardar";
 
     // EASY TAB
-    public static final String BT_5HZ_FIX = "Fijar y grabar a 5Hz";
-    public static final String BT_2HZ_FIX = "Fijar a 2Hz";
-    public static final String BT_HOT = "Rein Cali";
-    public static final String BT_WARM = "Rein Temp";
-    public static final String BT_COLD = "Rein Frío";
-    public static final String BT_FACT_RESET = "Valores de fábrica";
-    public static final String BT_FORCED_ERASE = "Forzar borrado";
-    public static final String BT_PT_WITH_REASON = "Click para grabar un punto por...";
+    private static final String BT_5HZ_FIX = "Fijar y grabar a 5Hz";
+    private static final String BT_2HZ_FIX = "Fijar a 2Hz";
+    private static final String BT_HOT = "Rein Cali";
+    private static final String BT_WARM = "Rein Temp";
+    private static final String BT_COLD = "Rein Frío";
+    private static final String BT_FACT_RESET = "Valores de fábrica";
+    private static final String BT_FORCED_ERASE = "Forzar borrado";
+    private static final String BT_PT_WITH_REASON = "Click para grabar un punto por...";
 
-    public static final String CONFIRM_FACT_RESET =
+    private static final String CONFIRM_FACT_RESET =
             "Vas a volver a los valores de|"
             + "fábrica de tu GPS DataLogger.|"
             + "|¿Confirmas este cambio bajo|"
             + "tu responsabilidad ?";    
     
     // File tab
-    public static final String OUTPUT_DIR = "Guardar en:";
-    public static final String LOGFILE = "Archivo Log:";
-    public static final String REPORT = "Exportados :";
-    public static final String CHUNK = "Paquetes :";
-    public static final String CHUNK_AHEAD = "Segmentar paquetes:";
-    public static final String READ_TIMEOUT = "Tiempo max. lectura (ms) :";
-    public static final String CARD_VOL = "Tarjeta/Volumen:";
-    public static final String APPLY_SET = "Guardar y Aplicar los ajustes";
-    public static final String DEFAULT_SET = "Configuración por defecto";
+    private static final String OUTPUT_DIR = "Guardar en:";
+    private static final String LOGFILE = "Archivo Log:";
+    private static final String REPORT = "Exportados :";
+    private static final String CHUNK = "Paquetes :";
+    private static final String CHUNK_AHEAD = "Segmentar paquetes:";
+    private static final String READ_TIMEOUT = "Tiempo max. lectura (ms) :";
+    private static final String CARD_VOL = "Tarjeta/Volumen:";
+    private static final String APPLY_SET = "Guardar y Aplicar los ajustes";
+    private static final String DEFAULT_SET = "Configuración por defecto";
 
     // Log filter
-    public static final String[] STR_VALID= {
+    private static final String[] STR_VALID= {
             "Sin Fijar",
             "SPS",
             "DGPS",
@@ -216,30 +216,30 @@ public class Txt_es {
             "Manual",
             "Simulación"};
 
-    public static final String TRKPT = "TrkPt";
-    public static final String WAYPT = "WayPt";
+    private static final String TRKPT = "TrkPt";
+    private static final String WAYPT = "WayPt";
     
     // Advanced log filter
-    public static final String ACTIVE = "ACTIVO";
-    public static final String INACTIVE = "INACTIVO";
-    public static final String FLTR_REC = "<= Punto núm <= ";
-    public static final String FLTR_SPD = "<= Velocidad <= ";
-    public static final String FLTR_DST = "<= Distancia <= ";
-    public static final String FLTR_PDOP = "PDOP <= ";
-    public static final String FLTR_HDOP = "HDOP <= ";
-    public static final String FLTR_VDOP = "VDOP <= ";
-    public static final String FLTR_NSAT = "<= NSAT";
+    private static final String ACTIVE = "ACTIVO";
+    private static final String INACTIVE = "INACTIVO";
+    private static final String FLTR_REC = "<= Punto núm <= ";
+    private static final String FLTR_SPD = "<= Velocidad <= ";
+    private static final String FLTR_DST = "<= Distancia <= ";
+    private static final String FLTR_PDOP = "PDOP <= ";
+    private static final String FLTR_HDOP = "HDOP <= ";
+    private static final String FLTR_VDOP = "VDOP <= ";
+    private static final String FLTR_NSAT = "<= NSAT";
     
-    public static final String CLEAR = "Borrar";
+    private static final String CLEAR = "Borrar";
     
     // Log format
-    public static final String REC_ESTIMATED = " puntos estimados";
-    public static final String SET_ERASE = "Guardar y borrar";
-    public static final String SET_NOERASE = "Guardar";
-    public static final String ERASE = "Borrar";
-    public static final String CONFIRM_ERASE = "Confirmar borrado";
+    private static final String REC_ESTIMATED = " puntos estimados";
+    private static final String SET_ERASE = "Guardar y borrar";
+    private static final String SET_NOERASE = "Guardar";
+    private static final String ERASE = "Borrar";
+    private static final String CONFIRM_ERASE = "Confirmar borrado";
     
-    public static final String C_msgWarningFormatIncompatibilityRisk =
+    private static final String C_msgWarningFormatIncompatibilityRisk =
         "Vas a cambiar el formato de tu dispositivo "
         + "sin borrar el log.|"
         + "Otros programas|"
@@ -248,7 +248,7 @@ public class Txt_es {
         + "¿Aceptas esta incompativilidad?";
     
     /** Message warning user about impact of changing log format */
-    public static final String C_msgWarningFormatAndErase = 
+    private static final String C_msgWarningFormatAndErase = 
         "Vas a cambiar el formato de"
         + "|grabación de tu dispositivo."
         + "|y"
@@ -256,134 +256,134 @@ public class Txt_es {
         + "|"
         + "|¿CAMBIAR Y BORRAR EL LOG?";
     /** Message warning the user again about the impact of a log format change */           
-    public static final String C_msgWarningFormatAndErase2 =
+    private static final String C_msgWarningFormatAndErase2 =
         "Esta es tu última oportunidad para"
         + "|evitar borrar el log."
         + "|"
         + "|¿CAMBIAR Y BORRAR EL LOG?";
     /** Message warning user about impact of changing log format */
-    public static final String C_msgEraseWarning = 
+    private static final String C_msgEraseWarning = 
         "Vas a borrar el log"
         + "|del dispositivo."
         + "|"
         + "|¿BORRAR el log?";
-    public static final String C_msgEraseWarning2 =
+    private static final String C_msgEraseWarning2 =
         "Esta es tu última oportunidad para"
         + "|evitar borrar el log."
         + "|"
         + "|¿BORRAR el Log?";
 
-    public static final String ONE_FILE = "Un archivo";
-    public static final String ONE_FILE_DAY = "Un archivo/ día";
-    public static final String ONE_FILE_TRK = "Un archivo/ trk";
-    public static final String DEV_LOGONOFF = "Grabar log (/no)";
-    public static final String INCREMENTAL = "Incrementar";
+    private static final String ONE_FILE = "Un archivo";
+    private static final String ONE_FILE_DAY = "Un archivo/ día";
+    private static final String ONE_FILE_TRK = "Un archivo/ trk";
+    private static final String DEV_LOGONOFF = "Grabar log (/no)";
+    private static final String INCREMENTAL = "Incrementar";
     
-    public static final String LOG_OVRWR_FULL = "Sobreescribir log(/stop) al llenarse";
-    public static final String DATE_RANGE = "Rango Fecha";
-    public static final String GET_LOG = "Bajar Log";
-    public static final String CANCEL_GET = "Cancel";
-    public static final String NOFIX_COL = "Color no fij";
-    public static final String TRK_SEP = "Separar Track:";
-    public static final String MIN = "min";
-    public static final String UTC = "UTC";
-    public static final String HGHT_GEOID_DIFF = "Ref Alt Geoide";
-    public static final String TO_CSV = "A CSV";
-    public static final String TO_GPX = "A GPX";
-    public static final String TO_KML = "A KML";
-    public static final String TO_TRK = "A TRK";
-    public static final String TO_PLT = "A PLT";
-    public static final String TO_GMAP= "A GMAP";
-    public static final String TO_NMEA= "A NMEA";
-    public static final String MEM_USED = "Memoria Usada: ";
-    public static final String NBR_RECORDS = "Puntos Grabados: ";
+    private static final String LOG_OVRWR_FULL = "Sobreescribir log(/stop) al llenarse";
+    private static final String DATE_RANGE = "Rango Fecha";
+    private static final String GET_LOG = "Bajar Log";
+    private static final String CANCEL_GET = "Cancel";
+    private static final String NOFIX_COL = "Color no fij";
+    private static final String TRK_SEP = "Separar Track:";
+    private static final String MIN = "min";
+    private static final String UTC = "UTC";
+    private static final String HGHT_GEOID_DIFF = "Ref Alt Geoide";
+    private static final String TO_CSV = "A CSV";
+    private static final String TO_GPX = "A GPX";
+    private static final String TO_KML = "A KML";
+    private static final String TO_TRK = "A TRK";
+    private static final String TO_PLT = "A PLT";
+    private static final String TO_GMAP= "A GMAP";
+    private static final String TO_NMEA= "A NMEA";
+    private static final String MEM_USED = "Memoria Usada: ";
+    private static final String NBR_RECORDS = "Puntos Grabados: ";
     
     
     //Log reason
-    public static final String NO_DGPS = "Sin DGPS";
-    public static final String RTCM = "RTCM";
-    public static final String WAAS = "WAAS";
-    public static final String RCR_TIME = "Tiempo (s)    ";
-    public static final String RCR_SPD  = "Velocidad (km/h)";
-    public static final String RCR_DIST = "Distancia (m)";
-    public static final String FIX_PER = "Fijar cada (ms)";
-    public static final String INCL_TST_SBAS = "Incl. Sat. Prueba";
-    public static final String PWR_SAVE_INTRNL = "Guardar energía (Interno)";
+    private static final String NO_DGPS = "Sin DGPS";
+    private static final String RTCM = "RTCM";
+    private static final String WAAS = "WAAS";
+    private static final String RCR_TIME = "Tiempo (s)    ";
+    private static final String RCR_SPD  = "Velocidad (km/h)";
+    private static final String RCR_DIST = "Distancia (m)";
+    private static final String FIX_PER = "Fijar cada (ms)";
+    private static final String INCL_TST_SBAS = "Incl. Sat. Prueba";
+    private static final String PWR_SAVE_INTRNL = "Guardar energía (Interno)";
 
     // NMEA OUTPUT
-    public static final String DEFAULTS = "Por defec";
+    private static final String DEFAULTS = "Por defec";
     
     
     // Other tabs
-    public static final String TAB_FLSH = "Flsh";
-    public static final String TAB_NMEA_OUT = "Datos NMEA";
-    public static final String TAB_NMEA_FILE = "Arch NMEA";
-    public static final String TAB_HOLUX = "Holux";
+    private static final String TAB_FLSH = "Flsh";
+    private static final String TAB_NMEA_OUT = "Datos NMEA";
+    private static final String TAB_NMEA_FILE = "Arch NMEA";
+    private static final String TAB_HOLUX = "Holux";
     
     
     // Log convert
-    public static final String ERROR = "Error";
-    public static final String PROBLEM_READING = "Error de lectura|";
-    public static final String COULD_NOT_OPEN = "No puede abrirse|";
+    private static final String ERROR = "Error";
+    private static final String PROBLEM_READING = "Error de lectura|";
+    private static final String COULD_NOT_OPEN = "No puede abrirse|";
     
     
     // GPS State
-    public static final String CANCEL_WAITING = "Cancelar espera";
-    public static final String TITLE_WAITING_ERASE =
+    private static final String CANCEL_WAITING = "Cancelar espera";
+    private static final String TITLE_WAITING_ERASE =
         "Espere a que el borrado finalice";
-    public static final String TXT_WAITING_ERASE =
+    private static final String TXT_WAITING_ERASE =
         "Espere a que el borrado finalice.|"
         + "Cancelar (Bajo tu responsabilidad)";
     
-    public static final String UNKNOWN = "Desconocido";
-    public static final String CHK_PATH =
+    private static final String UNKNOWN = "Desconocido";
+    private static final String CHK_PATH =
         "|Revisa el destino y si la|"
 	+ "tarjeta permite la escritura";
     
-    public static final String OVERWRITE = "Sobreescribir";
-    public static final String ABORT_DOWNLOAD = "Abortar descarga";
-    public static final String DATA_NOT_SAME = 
+    private static final String OVERWRITE = "Sobreescribir";
+    private static final String ABORT_DOWNLOAD = "Abortar descarga";
+    private static final String DATA_NOT_SAME = 
     "Los DATOS en este dispositivo NO|"
     + "corresponden a los DATOS|"
     + "previamente descargados.|"
     + "¿Sobreescribir los DATOS?";
-    public static final String LOGGER = "Grabador: ";  // For logger SW version
+    private static final String LOGGER = "Grabador: ";  // For logger SW version
     
     
     // GPSFile
-    public static final String CLOSE_FAILED =
+    private static final String CLOSE_FAILED =
         "Error al cerrar (cerrar Archivo).";
-    public static final String WRITING_CLOSED =
+    private static final String WRITING_CLOSED =
         "Escribiendo en archivo cerrado";
 
 
     // Flash option
-    public static final String TIMESLEFT = "Cambios Restantes";
-    public static final String UPDATERATE = "Frecuencia (Hz)";
-    public static final String BAUDRATE = "Baud Rate";
-    public static final String WRITEFLASH = "Grabar Flash";
-    public static final String ABORT = "Abortar";
-    public static final String TXT_FLASH_LIMITED_WRITES=
+    private static final String TIMESLEFT = "Cambios Restantes";
+    private static final String UPDATERATE = "Frecuencia (Hz)";
+    private static final String BAUDRATE = "Baud Rate";
+    private static final String WRITEFLASH = "Grabar Flash";
+    private static final String ABORT = "Abortar";
+    private static final String TXT_FLASH_LIMITED_WRITES=
         "El número de cambios restantes es|"
         + "limitada y cambiar la configuración|"
         + "puede inutilizar el dispositivo|"
         + "(p.e., un cambio de baud rate)|"
         + "ABORTAR clicando abortar!!";
-    public static final String PERIOD_ABBREV = "Per";
+    private static final String PERIOD_ABBREV = "Per";
 
     // Forgotton in Advanced track filter
-    public static final String IGNORE_0VALUES
+    private static final String IGNORE_0VALUES
         = "Los valores 0 son ignorados";
-    public static final String STORE_SETTINGS =
+    private static final String STORE_SETTINGS =
         "Guardar conf";
-    public static final String RESTORE_SETTINGS =
+    private static final String RESTORE_SETTINGS =
         "Restaurar conf";
 
-    public static final String METERS_ABBR = "m";
+    private static final String METERS_ABBR = "m";
 
-    public static final String WARNING =
+    private static final String WARNING =
         "Alerta";
-    public static final String NO_FILES_WERE_CREATED =
+    private static final String NO_FILES_WERE_CREATED =
         "No se crearon archivos de salida!"
         + "||"
         + "Esto puede significar que:"
@@ -394,32 +394,102 @@ public class Txt_es {
         + "|Si no funciona,"
         + "|puede ser un error del programa.";
     
-    public static final String ADD_RECORD_NUMBER =
+    private static final String ADD_RECORD_NUMBER =
         "Info núm en el log";
 
-    public static final String S_DEBUG_CONN= "Depurar conn.";
-    public static final String S_IMPERIAL= "Unid Imperiales"; 
-    public static final String BAD_SUPERWABAVERSION = 
+    private static final String S_DEBUG_CONN= "Depurar conn.";
+    private static final String S_IMPERIAL= "Unid Imperiales"; 
+    private static final String BAD_SUPERWABAVERSION = 
       "Esta aplicación se creó para|SuperWaba V";
     
-    public static final String BAD_SUPERWABAVERSION_CONT = 
+    private static final String BAD_SUPERWABAVERSION_CONT = 
          ".|Esta es la versión V"; 
-    public static final String BAD_SUPERWABAVERSION_CONT2 = 
+    private static final String BAD_SUPERWABAVERSION_CONT2 = 
        "|Cerrando aplicación"; 
-    public static final String S_DEVICE = "Dispositivo"; 
-    public static final String S_DEFAULTDEVICE = "Disp. por defecto"; //"Dispositivo por defecto";                        (you can also use "") 
-    public static final String S_GISTEQTYPE1 = "iTrackU-Nemerix"; 
-    public static final String S_GISTEQTYPE2 = "iTrackU-PhotoTrackr"; 
-    public static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII"; 
-    public static final String BT_MAC_ADDR = "Dirección Mac BT:"; //     (you can also use "Direc. Mac BT") 
-    public static final String S_OUTPUT_LOGCONDITIONS = "Cond. del log de salida"; // //"Condiciones del log de salida";                         (you can also use )
-    public static final String MEM_FREE = "disp.";
+    private static final String S_DEVICE = "Dispositivo"; 
+    private static final String S_DEFAULTDEVICE = "Disp. por defecto"; //"Dispositivo por defecto";                        (you can also use "") 
+    private static final String S_GISTEQTYPE1 = "iTrackU-Nemerix"; 
+    private static final String S_GISTEQTYPE2 = "iTrackU-PhotoTrackr"; 
+    private static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII"; 
+    private static final String BT_MAC_ADDR = "Dirección Mac BT:"; //     (you can also use "Direc. Mac BT") 
+    private static final String S_OUTPUT_LOGCONDITIONS = "Cond. del log de salida"; // //"Condiciones del log de salida";                         (you can also use )
+    private static final String MEM_FREE = "disp.";
 
-    public static final String TRKPTCOMMENT = "TRK PT INFO";
-    public static final String TRKPTNAME = "TRK PT NAME";
+    private static final String TRKPTCOMMENT = "TRK PT INFO";
+    private static final String TRKPTNAME = "TRK PT NAME";
 
-    public static final String DOWNLOAD_INCREMENTAL = "Smart dwnld";
-    public static final String DOWNLOAD_FULL = "Full dwnld";
-    public static final String DOWNLOAD_NORMAL = "Normal dwnld";
+    private static final String DOWNLOAD_INCREMENTAL = "Smart dwnld";
+    private static final String DOWNLOAD_FULL = "Full dwnld";
+    private static final String DOWNLOAD_NORMAL = "Normal dwnld";
 
+    /* (non-Javadoc)
+     * @see bt747.lang.NexTxtInterface#getRcrString(int)
+     */
+    public final String getRcrString(final int i) {
+        return C_STR_RCR[i];
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.lang.NexTxtInterface#getValidString(int)
+     */
+    public final String getValidString(final int i) {
+        return STR_VALID[i];
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.lang.NexTxtInterface#getLogFmtItem(int)
+     */
+    public final String getLogFmtItem(final int i) {
+        return logFmtItems[i];
+    }
+    
+    /* (non-Javadoc)
+     * @see bt747.lang.NexTxtInterface#getTranslation(int)
+     */
+    public final String getTranslation(final int i) {
+        if(i<translation.length) {
+            return translation[i];
+        } else {
+            return null;
+        }
+    }
+    
+    private static final String[] translation = { fontFile, encoding, S_FILE,
+            S_EXIT_APPLICATION, S_SETTINGS, S_STOP_LOGGING_ON_CONNECT,
+            S_STOP_CONNECTION, S_GPX_UTC_OFFSET_0, S_GPX_TRKSEG_WHEN_SMALL,
+            S_GPS_DECODE_ACTIVE, S_FOCUS_HIGHLIGHT, S_DEBUG, S_DEBUG_CONN,
+            S_STATS, S_INFO, S_IMPERIAL, S_ABOUT_BT747, S_ABOUT_SUPERWABA,
+            S_TITLE, LB_DOWNLOAD, TITLE_ATTENTION, CONFIRM_APP_EXIT, YES, NO,
+            CANCEL, ABOUT_TITLE, ABOUT_TXT, ABOUT_SUPERWABA_TITLE,
+            ABOUT_SUPERWABA_TXT, DISCLAIMER_TITLE,
+            DISCLAIMER_TXT, C_FMT, C_CTRL, C_LOG, C_FILE, C_FLTR, C_EASY,
+            C_CON, C_OTHR, BT_BLUETOOTH, BT_CONNECT_PRT, BT_CLOSE_PRT,
+            BT_REOPEN_PRT, MAIN, FIRMWARE, MODEL, FLASHINFO, TIME_SEP, LAT,
+            LON, GEOID, CALC, HGHT_SEP, METERS_ABBR, STANDARD, ADVANCED,
+            C_BAD_LOG_FORMAT, HOLUX_NAME, SET, BT_5HZ_FIX, BT_2HZ_FIX, BT_HOT,
+            BT_WARM, BT_COLD, BT_FACT_RESET, BT_FORCED_ERASE,
+            BT_PT_WITH_REASON, CONFIRM_FACT_RESET, OUTPUT_DIR, LOGFILE, REPORT,
+            CHUNK, CHUNK_AHEAD, READ_TIMEOUT, CARD_VOL, APPLY_SET, DEFAULT_SET,
+            TRKPT, WAYPT, ACTIVE, INACTIVE, FLTR_REC, FLTR_SPD, FLTR_DST,
+            FLTR_PDOP, FLTR_HDOP, FLTR_VDOP, FLTR_NSAT, CLEAR, REC_ESTIMATED,
+            SET_ERASE, SET_NOERASE, ERASE, CONFIRM_ERASE,
+            C_msgWarningFormatIncompatibilityRisk, C_msgWarningFormatAndErase,
+            C_msgWarningFormatAndErase2, C_msgEraseWarning, C_msgEraseWarning2,
+            ONE_FILE, ONE_FILE_DAY, ONE_FILE_TRK, DEV_LOGONOFF, INCREMENTAL,
+            LOG_OVRWR_FULL, DATE_RANGE, GET_LOG, CANCEL_GET, NOFIX_COL,
+            TRK_SEP, MIN, UTC, HGHT_GEOID_DIFF, TO_CSV, TO_GPX, TO_KML, TO_TRK,
+            TO_PLT, TO_GMAP, TO_NMEA, MEM_USED, NBR_RECORDS, NO_DGPS, RTCM,
+            WAAS, RCR_TIME, RCR_SPD, RCR_DIST, FIX_PER, INCL_TST_SBAS,
+            PWR_SAVE_INTRNL, DEFAULTS, TAB_FLSH, TAB_NMEA_OUT, TAB_NMEA_FILE,
+            TAB_HOLUX, ERROR, PROBLEM_READING, COULD_NOT_OPEN, CANCEL_WAITING,
+            TITLE_WAITING_ERASE, TXT_WAITING_ERASE, UNKNOWN, CHK_PATH,
+            OVERWRITE, ABORT_DOWNLOAD, DATA_NOT_SAME, LOGGER, CLOSE_FAILED,
+            WRITING_CLOSED, TIMESLEFT, UPDATERATE, BAUDRATE, WRITEFLASH, ABORT,
+            TXT_FLASH_LIMITED_WRITES, PERIOD_ABBREV, IGNORE_0VALUES,
+            STORE_SETTINGS, RESTORE_SETTINGS, WARNING, NO_FILES_WERE_CREATED,
+            ADD_RECORD_NUMBER, BAD_SUPERWABAVERSION, BAD_SUPERWABAVERSION_CONT,
+            BAD_SUPERWABAVERSION_CONT2, S_DEVICE, S_DEFAULTDEVICE,
+            S_GISTEQTYPE1, S_GISTEQTYPE2, S_GISTEQTYPE3, BT_MAC_ADDR,
+            S_OUTPUT_LOGCONDITIONS, MEM_FREE, TRKPTCOMMENT, TRKPTNAME,
+            DOWNLOAD_INCREMENTAL, DOWNLOAD_FULL, DOWNLOAD_NORMAL, };
 }

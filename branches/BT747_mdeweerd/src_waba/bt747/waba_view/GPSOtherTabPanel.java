@@ -43,8 +43,8 @@ public final class GPSOtherTabPanel extends Container implements ModelListener {
     private final AppController c;
     private final Model m;
 
-    private final String[] c_tpCaptions = { Txt.TAB_FLSH, Txt.TAB_NMEA_OUT,
-            Txt.TAB_NMEA_FILE, Txt.TAB_HOLUX };
+    private final String[] c_tpCaptions = { Txt.getString(Txt.TAB_FLSH), Txt.getString(Txt.TAB_NMEA_OUT),
+            Txt.getString(Txt.TAB_NMEA_FILE), Txt.getString(Txt.TAB_HOLUX) };
 
     public GPSOtherTabPanel(final AppController c, final Model m) {
         this.c = c;

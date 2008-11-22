@@ -10,7 +10,6 @@
 	<!-- Default properties (in version control) -->
 	<property file="default.properties" />
 
-	<property name="default.lang" value="en" />
 	<property name="dist" value="dist" />
 
 	<property name="application" value="BT747" />
@@ -132,48 +131,8 @@
 	<!-- ======================================== -->
 	<!-- all.lang.* - language package building   -->
 	<!-- ======================================== -->
-	<target name="all.lang"
-	        depends="all.lang.en, all.lang.de, all.lang.es, all.lang.fr, all.lang.nl, all.lang.zh, all.lang.jp"
-	/>
-	<target name="all.lang.en">
-		<antcall target="all.package">
-			<param name="lang" value="en" />
-		</antcall>
-	</target>
-	<target name="all.lang.es">
-		<antcall target="all.package">
-			<param name="lang" value="es" />
-		</antcall>
-	</target>
-	<target name="all.lang.de">
-		<antcall target="all.package">
-			<param name="lang" value="de" />
-		</antcall>
-	</target>
-	<target name="all.lang.nl">
-		<antcall target="all.package">
-			<param name="lang" value="nl" />
-		</antcall>
-	</target>
-	<target name="all.lang.fr">
-		<antcall target="all.package">
-			<param name="lang" value="fr" />
-		</antcall>
-	</target>
-	<target name="all.lang.zh">
-		<antcall target="all.package">
-			<param name="lang" value="zh" />
-		</antcall>
-	</target>
-	<target name="all.lang.ko">
-		<antcall target="all.package">
-			<param name="lang" value="ko" />
-		</antcall>
-	</target>
-	<target name="all.lang.jp">
-		<antcall target="all.package">
-			<param name="lang" value="jp" />
-		</antcall>
+	<target name="all.lang">
+		<antcall target="all.package"/>
 	</target>
 
 	<!-- ======================================== -->
@@ -1792,30 +1751,12 @@
 					<isset property="lang" />
 				</not>
 			</condition>
-			<echo message="Preparing for language ${lang}" />
-			<replace dir="@{dest.dir}"
-                     token="Txt_en"
-                     summary="yes"
-                     value="Txt_${lang}"
-            >
-				<include name="${@{dest.dir}rxtxfilter}${src_waba.dir}/bt747/Txt.java"
-                />
-			</replace>
-
 
 			<copy file="dev/package.bat" tofile="package.bat" />
 			<copy file="dev/upload.bat" tofile="upload.bat" />
 			<replaceregexp file="package.bat"
 			               match="SET DT=[^\s]*"
 			               replace='SET DT=${build_version}'
-			/>
-			<replaceregexp file="package.bat"
-			               match="SET APP_LANG=[^\s]*"
-			               replace='SET APP_LANG=${lang}'
-			/>
-			<replaceregexp file="upload.bat"
-			               match="SET APP_LANG=[^\s]*"
-			               replace='SET APP_LANG=${lang}'
 			/>
 		</sequential>
 	</macrodef>

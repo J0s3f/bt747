@@ -46,14 +46,13 @@ public final class GPSLogFilter extends Container implements ModelListener {
         this.c = c;
     }
 
-    private static final String[] strValid = Txt.STR_VALID;
     private static final String[] C_PB_TYPE_NAMES = new String[2];
     private final MyCheck[] chkRCR = new MyCheck[BT747Constants.C_RCR_COUNT];
 
 
     static {
-        C_PB_TYPE_NAMES[GPSFilter.TRKPT] = Txt.TRKPT;
-        C_PB_TYPE_NAMES[GPSFilter.WAYPT] = Txt.WAYPT;
+        C_PB_TYPE_NAMES[GPSFilter.TRKPT] = Txt.getString(Txt.TRKPT);
+        C_PB_TYPE_NAMES[GPSFilter.WAYPT] = Txt.getString(Txt.WAYPT);
     }
     
     private static final int C_VALID_COUNT = 9;
@@ -70,7 +69,7 @@ public final class GPSLogFilter extends Container implements ModelListener {
 
         // Add all tick buttons.
         for (int i = 0; i < C_VALID_COUNT; i++) {
-            chkValid[i] = new MyCheck(strValid[i]);
+            chkValid[i] = new MyCheck(Txt.getValidString(i));
             add(
                     chkValid[i],
                     ((i == 0) ? LEFT
@@ -88,7 +87,7 @@ public final class GPSLogFilter extends Container implements ModelListener {
         Control rel = null;
         final int RCR_COL = 4;
         for (int i = 0; i < BT747Constants.C_RCR_COUNT; i++) {
-            chkRCR[i] = new MyCheck(Txt.C_STR_RCR[i]);
+            chkRCR[i] = new MyCheck(Txt.getRcrString(i));
             // add( chkRCR[i], LEFT, AFTER);
             if (i == 0) {
                 x = LEFT;

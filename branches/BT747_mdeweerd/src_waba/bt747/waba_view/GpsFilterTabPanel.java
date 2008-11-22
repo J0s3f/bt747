@@ -43,7 +43,7 @@ public final class GpsFilterTabPanel extends Container implements ModelListener 
 
     private TabPanel tabPanel;
 
-    private final String[] tpCaptions = { Txt.STANDARD, Txt.ADVANCED, Txt.C_FMT };
+    private final String[] tpCaptions = { Txt.getString(Txt.STANDARD), Txt.getString(Txt.ADVANCED), Txt.getString(Txt.C_FMT) };
 
     public GpsFilterTabPanel(final Model m, final AppController c) {
         this.m = m;

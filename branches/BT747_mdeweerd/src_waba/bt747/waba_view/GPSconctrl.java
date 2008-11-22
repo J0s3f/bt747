@@ -77,16 +77,16 @@ public final class GPSconctrl extends Container implements ModelListener {
     }
 
     protected final void onStart() {
-        btnBluetooth = new Button(Txt.BT_BLUETOOTH);
+        btnBluetooth = new Button(Txt.getString(Txt.BT_BLUETOOTH));
         // Functionality only valid on Palm and Mac platform.
         // if (!bt747.sys.Settings.platform.startsWith("Palm")) {
         // btnBluetooth.setVisible(false);
         // }
 
         // btnUSB=new Button("USB");
-        btnConnectPort = new Button(Txt.BT_CONNECT_PRT);
-        btnStopGps = new Button(Txt.BT_CLOSE_PRT);
-        btnRestartGps = new Button(Txt.BT_REOPEN_PRT);
+        btnConnectPort = new Button(Txt.getString(Txt.BT_CONNECT_PRT));
+        btnStopGps = new Button(Txt.getString(Txt.BT_CLOSE_PRT));
+        btnRestartGps = new Button(Txt.getString(Txt.BT_REOPEN_PRT));
         // btnRestartGps.setGap(5);
 
         String[] portNbrs = new String[C_MAX_PORTNBR + 1];
@@ -154,18 +154,18 @@ public final class GPSconctrl extends Container implements ModelListener {
 
     private void updateButtons() {
         lbVersion.setText("V" + Version.VERSION_NUMBER + "(" + Version.DATE
-                + ")   " + Txt.LOGGER + m.getMtkLogVersion());
+                + ")   " + Txt.getString(Txt.LOGGER) + m.getMtkLogVersion());
         lbFirmwareMainVersion
-                .setText(((m.getMainVersion().length() != 0) ? Txt.MAIN : "")
+                .setText(((m.getMainVersion().length() != 0) ? Txt.getString(Txt.MAIN) : "")
                         + m.getMainVersion());
         lbFirmwareName
-                .setText(((m.getFirmwareVersion().length() != 0) ? Txt.FIRMWARE
+                .setText(((m.getFirmwareVersion().length() != 0) ? Txt.getString(Txt.FIRMWARE)
                         : "")
                         + m.getFirmwareVersion());
         String model = m.getModel();
-        // model.replaceFirst("\?",Txt.UNKNOWN);
-        lbModel.setText(((model.length() != 0) ? Txt.MODEL : "") + model);
-        lbFlashInfo.setText(((m.getFlashManuProdID() != 0) ? Txt.FLASHINFO
+        // model.replaceFirst("\?",Txt.getString(Txt.UNKNOWN));
+        lbModel.setText(((model.length() != 0) ? Txt.getString(Txt.MODEL) : "") + model);
+        lbFlashInfo.setText(((m.getFlashManuProdID() != 0) ? Txt.getString(Txt.FLASHINFO)
                 + Convert.unsigned2hex(m.getFlashManuProdID(), 8) + " "
                 + m.getFlashDesc() : ""));
         // lbFirmwareMainVersion.repaintNow();
@@ -179,7 +179,7 @@ public final class GPSconctrl extends Container implements ModelListener {
         if (gps.utc > 0) {
             BT747Time t = Interface.getTimeInstance();
             t.setUTCTime(gps.utc);
-            TimeStr = Txt.TIME_SEP
+            TimeStr = Txt.getString(Txt.TIME_SEP)
                     +
                     // Convert.toString(
                     // t.getYear())+"/"
@@ -198,16 +198,16 @@ public final class GPSconctrl extends Container implements ModelListener {
 
     private void updateGPSData(final GPSRecord gps) {
 
-        lbLat.setText(Txt.LAT + Convert.toString(gps.latitude, 5)
-                + Txt.HGHT_SEP + Convert.toString(gps.height, 3)
-                + Txt.METERS_ABBR);
-        lbLon.setText(Txt.LON + Convert.toString(gps.longitude, 5) + TimeStr);
-        lbGeoid.setText(Txt.GEOID
+        lbLat.setText(Txt.getString(Txt.LAT) + Convert.toString(gps.latitude, 5)
+                + Txt.getString(Txt.HGHT_SEP) + Convert.toString(gps.height, 3)
+                + Txt.getString(Txt.METERS_ABBR));
+        lbLon.setText(Txt.getString(Txt.LON) + Convert.toString(gps.longitude, 5) + TimeStr);
+        lbGeoid.setText(Txt.getString(Txt.GEOID)
                 + Convert.toString(gps.geoid, 3)
-                + Txt.METERS_ABBR
-                + Txt.CALC
+                + Txt.getString(Txt.METERS_ABBR)
+                + Txt.getString(Txt.CALC)
                 + Convert.toString(Conv.wgs84Separation(gps.latitude,
-                        gps.longitude), 3) + Txt.METERS_ABBR + ")");
+                        gps.longitude), 3) + Txt.getString(Txt.METERS_ABBR) + ")");
 
         // lbLat.repaintNow();
         // lbLon.repaintNow();
