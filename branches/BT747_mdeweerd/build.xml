@@ -203,6 +203,7 @@
 	      -keep public class sun.audio.AudioStream
           -keep public class * implements gps.log.in.GPSLogConvert
           -keep public class * extends waba.ui.MainWindow
+ 	      -keep public class * implements bt747.lang.TxtInterface
           -keep public class * extends gps.connection.GPSPort
 	      -keep public class * {
 			public static void setGpsPortInstance(gps.connection.GPSPort);
@@ -440,6 +441,7 @@
               -keep public class sun.audio.AudioStream
               -keep public class * implements gps.log.in.GPSLogConvert
               -keep public class * extends waba.ui.MainWindow
+              -keep public class * implements bt747.lang.TxtInterface
               -keep public class * extends gps.connection.GPSPort
               -keep public class * {
                 public static void setGpsPortInstance(gps.connection.GPSPort);
@@ -685,6 +687,7 @@
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
                 -keep public class * implements gps.log.in.GPSLogConvert
                 -keep public class * extends waba.ui.MainWindow
+ 		        -keep public class * implements bt747.lang.TxtInterface
                 -keep public class * extends gps.connection.GPSPort
     	        -keep public class * {
     	          public static void setGpsPortInstance(gps.connection.GPSPort);
