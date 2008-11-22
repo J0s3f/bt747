@@ -1135,6 +1135,7 @@
 			<injar path="${build.dir}/${ant.project.name}_unopt.jar" />
 			<outjar path="${build.dir}/${ant.project.name}.jar" />
             -injar ${swcollections.jar}(!META-INF/**)
+		    -keep public class * implements bt747.lang.TxtInterface
 		</proguard>
 	</target>
 

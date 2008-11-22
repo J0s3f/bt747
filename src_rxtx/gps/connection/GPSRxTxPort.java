@@ -202,6 +202,10 @@ public final class GPSRxTxPort extends GPSPort {
                 freeTextPort = "/dev/ttyUSB" + i;
                 portFound = (new File(freeTextPort)).canRead();
             }
+            for (int i = 0; !portFound && (i < 6); i++) {
+                freeTextPort = "/dev/ttyACM" + i;
+                portFound = (new File(freeTextPort)).canRead();
+            }
         }
         if (!portFound) {
             freeTextPort = "";
