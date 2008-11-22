@@ -1051,19 +1051,23 @@ public abstract class Dialog
 		{
 			c.keyPressed( keyCode );
 		}
-		
-		// Scrolling vertically?
-		if ( keyCode == UP )
-		{
-			scroll( false );
-		}
-		else if ( keyCode == DOWN )
-		{
-			scroll( true );
-		}
+
+		keyPressedOrRepeated(keyCode);
 
 		// Continue processing the event.
 		super.keyPressed( keyCode );
+	}
+
+	private void keyPressedOrRepeated(int keyCode) {
+        // Scrolling vertically?
+        if ( keyCode == UP )
+        {
+            scroll( false );
+        }
+        else if ( keyCode == DOWN )
+        {
+            scroll( true );
+        }
 	}
 
 	/**
@@ -1081,6 +1085,8 @@ public abstract class Dialog
 		{
 			c.keyRepeated( keyCode );
 		}
+		
+		keyPressedOrRepeated(keyCode);
 				
 		// Continue processing the event.
 		super.keyRepeated( keyCode );

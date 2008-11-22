@@ -9,13 +9,12 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package net.sf.bt747.j4me.app.screens;
 
 import java.util.Enumeration;
-
 
 import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
@@ -41,12 +40,14 @@ public class PathSelectionScreen extends Menu {
         fileUsage = new FileManager();
         currentPath = path;
         isGetDir = dir;
-        if(!isGetDir) {
+        if (!isGetDir) {
             if (currentPath.endsWith("/")) {
                 // Selection done
-                currentPath = currentPath.substring(0,currentPath.length()-1);
+                currentPath = currentPath
+                        .substring(0, currentPath.length() - 1);
             } else {
-                currentPath = currentPath.substring(0,currentPath.lastIndexOf('/'));
+                currentPath = currentPath.substring(0, currentPath
+                        .lastIndexOf('/'));
             }
         }
     }
@@ -198,11 +199,11 @@ public class PathSelectionScreen extends Menu {
         if (isGetDir && p.endsWith("/")) {
             // Selection done
             currentPath += "/" + p.substring(1, p.length() - 1);
-            //super.acceptNotify();
+            // super.acceptNotify();
         } else if (!isGetDir && !p.startsWith("[") && !p.endsWith("/")) {
             // Valid path
             currentPath += "/" + p;
-            //super.acceptNotify();
+            // super.acceptNotify();
         }
         notifyPathSelected(currentPath);
         previous.show();
