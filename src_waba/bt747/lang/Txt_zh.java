@@ -11,7 +11,6 @@ public class Txt_zh {
     public static final String fontFile="UFFChi";
     public static final String encoding="UTF8";
     
-    
     // BT747 class
     
     // It is possible to write the language tokens directly and then convert
@@ -406,6 +405,77 @@ public class Txt_zh {
     public static final String DOWNLOAD_INCREMENTAL = "Smart dwnld";
     public static final String DOWNLOAD_FULL = "Full dwnld";
     public static final String DOWNLOAD_NORMAL = "Normal dwnld";
+
+    /* (non-Javadoc)
+     * @see bt747.lang.NexTxtInterface#getRcrString(int)
+     */
+    public final String getRcrString(final int i) {
+        return C_STR_RCR[i];
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.lang.NexTxtInterface#getValidString(int)
+     */
+    public final String getValidString(final int i) {
+        return STR_VALID[i];
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.lang.NexTxtInterface#getLogFmtItem(int)
+     */
+    public final String getLogFmtItem(final int i) {
+        return logFmtItems[i];
+    }
+    
+    /* (non-Javadoc)
+     * @see bt747.lang.NexTxtInterface#getTranslation(int)
+     */
+    public final String getTranslation(final int i) {
+        if(i<translation.length) {
+            return translation[i];
+        } else {
+            return null;
+        }
+    }
+    
+    private static final String[] translation = { fontFile, encoding, S_FILE,
+            S_EXIT_APPLICATION, S_SETTINGS, S_STOP_LOGGING_ON_CONNECT,
+            S_STOP_CONNECTION, S_GPX_UTC_OFFSET_0, S_GPX_TRKSEG_WHEN_SMALL,
+            S_GPS_DECODE_ACTIVE, S_FOCUS_HIGHLIGHT, S_DEBUG, S_DEBUG_CONN,
+            S_STATS, S_INFO, S_IMPERIAL, S_ABOUT_BT747, S_ABOUT_SUPERWABA,
+            S_TITLE, LB_DOWNLOAD, TITLE_ATTENTION, CONFIRM_APP_EXIT, YES, NO,
+            CANCEL, ABOUT_TITLE, ABOUT_TXT, ABOUT_SUPERWABA_TITLE,
+            ABOUT_SUPERWABA_TXT, DISCLAIMER_TITLE,
+            DISCLAIMER_TXT, C_FMT, C_CTRL, C_LOG, C_FILE, C_FLTR, C_EASY,
+            C_CON, C_OTHR, BT_BLUETOOTH, BT_CONNECT_PRT, BT_CLOSE_PRT,
+            BT_REOPEN_PRT, MAIN, FIRMWARE, MODEL, FLASHINFO, TIME_SEP, LAT,
+            LON, GEOID, CALC, HGHT_SEP, METERS_ABBR, STANDARD, ADVANCED,
+            C_BAD_LOG_FORMAT, HOLUX_NAME, SET, BT_5HZ_FIX, BT_2HZ_FIX, BT_HOT,
+            BT_WARM, BT_COLD, BT_FACT_RESET, BT_FORCED_ERASE,
+            BT_PT_WITH_REASON, CONFIRM_FACT_RESET, OUTPUT_DIR, LOGFILE, REPORT,
+            CHUNK, CHUNK_AHEAD, READ_TIMEOUT, CARD_VOL, APPLY_SET, DEFAULT_SET,
+            TRKPT, WAYPT, ACTIVE, INACTIVE, FLTR_REC, FLTR_SPD, FLTR_DST,
+            FLTR_PDOP, FLTR_HDOP, FLTR_VDOP, FLTR_NSAT, CLEAR, REC_ESTIMATED,
+            SET_ERASE, SET_NOERASE, ERASE, CONFIRM_ERASE,
+            C_msgWarningFormatIncompatibilityRisk, C_msgWarningFormatAndErase,
+            C_msgWarningFormatAndErase2, C_msgEraseWarning, C_msgEraseWarning2,
+            ONE_FILE, ONE_FILE_DAY, ONE_FILE_TRK, DEV_LOGONOFF, INCREMENTAL,
+            LOG_OVRWR_FULL, DATE_RANGE, GET_LOG, CANCEL_GET, NOFIX_COL,
+            TRK_SEP, MIN, UTC, HGHT_GEOID_DIFF, TO_CSV, TO_GPX, TO_KML, TO_TRK,
+            TO_PLT, TO_GMAP, TO_NMEA, MEM_USED, NBR_RECORDS, NO_DGPS, RTCM,
+            WAAS, RCR_TIME, RCR_SPD, RCR_DIST, FIX_PER, INCL_TST_SBAS,
+            PWR_SAVE_INTRNL, DEFAULTS, TAB_FLSH, TAB_NMEA_OUT, TAB_NMEA_FILE,
+            TAB_HOLUX, ERROR, PROBLEM_READING, COULD_NOT_OPEN, CANCEL_WAITING,
+            TITLE_WAITING_ERASE, TXT_WAITING_ERASE, UNKNOWN, CHK_PATH,
+            OVERWRITE, ABORT_DOWNLOAD, DATA_NOT_SAME, LOGGER, CLOSE_FAILED,
+            WRITING_CLOSED, TIMESLEFT, UPDATERATE, BAUDRATE, WRITEFLASH, ABORT,
+            TXT_FLASH_LIMITED_WRITES, PERIOD_ABBREV, IGNORE_0VALUES,
+            STORE_SETTINGS, RESTORE_SETTINGS, WARNING, NO_FILES_WERE_CREATED,
+            ADD_RECORD_NUMBER, BAD_SUPERWABAVERSION, BAD_SUPERWABAVERSION_CONT,
+            BAD_SUPERWABAVERSION_CONT2, S_DEVICE, S_DEFAULTDEVICE,
+            S_GISTEQTYPE1, S_GISTEQTYPE2, S_GISTEQTYPE3, BT_MAC_ADDR,
+            S_OUTPUT_LOGCONDITIONS, MEM_FREE, TRKPTCOMMENT, TRKPTNAME,
+            DOWNLOAD_INCREMENTAL, DOWNLOAD_FULL, DOWNLOAD_NORMAL, };
 
 }
 

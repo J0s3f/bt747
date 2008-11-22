@@ -62,7 +62,7 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
     protected final void onStart() {
         // Add all tick buttons.
         for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
-            chkLogFmtItems[i] = new MyCheck(Txt.logFmtItems[i]);
+            chkLogFmtItems[i] = new MyCheck(Txt.getLogFmtItem(i));
             add(
                     chkLogFmtItems[i],
                     ((i == 0) ? LEFT
@@ -72,8 +72,8 @@ public final class GpsFileLogFormat extends Container implements ModelListener {
                             : AFTER - 1);
             chkLogFmtItems[i].setEnabled(true);
         }
-        commentCheck = new MyCheck(Txt.TRKPTCOMMENT);
-        nameCheck = new MyCheck(Txt.TRKPTNAME);
+        commentCheck = new MyCheck(Txt.getString(Txt.TRKPTCOMMENT));
+        nameCheck = new MyCheck(Txt.getString(Txt.TRKPTNAME));
         add(commentCheck, LEFT, AFTER + 6);
         add(nameCheck, getClientRect().width / 2, SAME);
     }

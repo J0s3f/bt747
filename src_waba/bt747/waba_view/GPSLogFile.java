@@ -77,7 +77,7 @@ public final class GPSLogFile extends Container implements ModelListener {
         int idx;
 
         // OUTPUT DIRECTORY AND "+" button
-        add(tmp = new Label(Txt.OUTPUT_DIR), LEFT, AFTER); //$NON-NLS-1$
+        add(tmp = new Label(Txt.getString(Txt.OUTPUT_DIR)), LEFT, AFTER); //$NON-NLS-1$
         add(btSelectBaseDirName = new Button("+"), RIGHT, SAME);
         edBaseDirName = new Edit("");
         add(edBaseDirName); //$NON-NLS-1$
@@ -85,27 +85,27 @@ public final class GPSLogFile extends Container implements ModelListener {
                 - btSelectBaseDirName.getSize().width(), PREFERRED, tmp);
 
         // RAW DATA FILE
-        add(tmp = new Label(Txt.LOGFILE), LEFT, AFTER); //$NON-NLS-1$
+        add(tmp = new Label(Txt.getString(Txt.LOGFILE)), LEFT, AFTER); //$NON-NLS-1$
         add(btSelectLogFileName = new Button("+"), RIGHT, SAME);
         edLogFileName = new Edit("");
         add(edLogFileName);
         edLogFileName.setRect(AFTER, SAME, FILL
                 - btSelectLogFileName.getSize().width(), PREFERRED, tmp);
 
-        add(new Label(Txt.REPORT), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label(Txt.getString(Txt.REPORT)), LEFT, AFTER); //$NON-NLS-1$
         add(edReportBaseName = new Edit(""), AFTER, SAME); //$NON-NLS-1$
 
-        add(new Label(Txt.CHUNK), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label(Txt.getString(Txt.CHUNK)), LEFT, AFTER); //$NON-NLS-1$
         add(edChunkSize = new Edit(""), AFTER, SAME); //$NON-NLS-1$
         edChunkSize.setValidChars(Edit.numbersSet);
-        add(new Label(Txt.CHUNK_AHEAD), LEFT, AFTER);
+        add(new Label(Txt.getString(Txt.CHUNK_AHEAD)), LEFT, AFTER);
         add(cblogReqAhead = new ComboBox(C_LOG_REQ_AHEAD), AFTER, SAME);
         idx = m.getLogRequestAhead();
         if (idx > cblogReqAhead.size() - 1) {
             idx = cblogReqAhead.size() - 1;
         }
         cblogReqAhead.select(idx);
-        add(new Label(Txt.READ_TIMEOUT), LEFT, AFTER); //$NON-NLS-1$
+        add(new Label(Txt.getString(Txt.READ_TIMEOUT)), LEFT, AFTER); //$NON-NLS-1$
         add(edTimeout = new Edit(""), AFTER, SAME); //$NON-NLS-1$
         edTimeout.setValidChars(Edit.numbersSet);
 
@@ -126,15 +126,15 @@ public final class GPSLogFile extends Container implements ModelListener {
             if (Card == -1) {
                 idx = v.size() - 1;
             }
-            add(new Label(Txt.CARD_VOL), LEFT, AFTER); //$NON-NLS-1$
+            add(new Label(Txt.getString(Txt.CARD_VOL)), LEFT, AFTER); //$NON-NLS-1$
             add(cbVolumes = new ComboBox((String[]) v.toObjectArray()), AFTER,
                     SAME);
             cbVolumes.select(idx);
         }
 
-        btChangeSettings = new Button(Txt.APPLY_SET);
+        btChangeSettings = new Button(Txt.getString(Txt.APPLY_SET));
         add(btChangeSettings, CENTER, AFTER + 5);
-        btDefaultSettings = new Button(Txt.DEFAULT_SET);
+        btDefaultSettings = new Button(Txt.getString(Txt.DEFAULT_SET));
         add(btDefaultSettings, CENTER, AFTER + 5);
 
         updateValues();

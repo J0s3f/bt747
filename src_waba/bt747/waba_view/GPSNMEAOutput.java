@@ -79,10 +79,10 @@ public final class GPSNMEAOutput extends Container implements ModelListener {
             add(new Label(BT747Constants.NMEA_STRINGS[i]), AFTER, SAME);
             // chkNMEAItems[i].setEnabled(true);
         }
-        btSet = new Button(Txt.SET);
+        btSet = new Button(Txt.getString(Txt.SET));
         add(btSet, (getClientRect().width / 2), AFTER);
 
-        btSetDefaults = new Button(Txt.DEFAULTS);
+        btSetDefaults = new Button(Txt.getString(Txt.DEFAULTS));
         add(btSetDefaults, AFTER, SAME);
     }
 

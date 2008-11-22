@@ -64,14 +64,14 @@ public final class GPSHoluxSpecific extends Container implements ModelListener {
      * @see waba.ui.Container#onStart()
      */
     protected  final void onStart() {
-        lbHoluxName = new Label(Txt.HOLUX_NAME);
+        lbHoluxName = new Label(Txt.getString(Txt.HOLUX_NAME));
         add(lbHoluxName, LEFT, TOP);
         add(edHoluxName = new Edit(""), AFTER, SAME);
-        add(btSet = new Button(Txt.SET), CENTER, AFTER + 5);
-        lbBTMacAddr = new Label(Txt.BT_MAC_ADDR);
+        add(btSet = new Button(Txt.getString(Txt.SET)), CENTER, AFTER + 5);
+        lbBTMacAddr = new Label(Txt.getString(Txt.BT_MAC_ADDR));
         add(lbBTMacAddr, LEFT, AFTER + 5);
         add(edHoluxBT_MacAddr = new Edit(""), AFTER, SAME);
-        add(btMacSet = new Button(Txt.SET), CENTER, AFTER + 5);
+        add(btMacSet = new Button(Txt.getString(Txt.SET)), CENTER, AFTER + 5);
     }
 
     private void doSet() {

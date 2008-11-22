@@ -63,33 +63,33 @@ public final class GPSFlashOption extends Container implements ModelListener {
     protected final void onStart() {
         super.onStart();
 
-        add(new Label(Txt.TIMESLEFT), LEFT, TOP);
+        add(new Label(Txt.getString(Txt.TIMESLEFT)), LEFT, TOP);
         add(userOptionTimesLeft = new Edit(), AFTER, SAME);
         userOptionTimesLeft.setEnabled(false);
-        add(new Label(Txt.UPDATERATE), LEFT, AFTER);
+        add(new Label(Txt.getString(Txt.UPDATERATE)), LEFT, AFTER);
         add(edUpdateRate = new Edit(), AFTER, SAME);
-        add(new Label(Txt.BAUDRATE), LEFT, AFTER);
+        add(new Label(Txt.getString(Txt.BAUDRATE)), LEFT, AFTER);
         add(edBaudRate = new Edit(), AFTER, SAME);
         edBaudRate.setEditable(false); // To protect the user
         edBaudRate.setEnabled(false);
-        add(new Label("GLL " + Txt.PERIOD_ABBREV), LEFT, AFTER);
+        add(new Label("GLL " + Txt.getString(Txt.PERIOD_ABBREV)), LEFT, AFTER);
         add(edGLL_Period = new Edit(), AFTER, SAME);
-        add(new Label("RMC " + Txt.PERIOD_ABBREV), AFTER, SAME);
+        add(new Label("RMC " + Txt.getString(Txt.PERIOD_ABBREV)), AFTER, SAME);
         add(edRMC_Period = new Edit(), AFTER, SAME);
-        add(new Label("VTG " + Txt.PERIOD_ABBREV), LEFT, AFTER);
+        add(new Label("VTG " + Txt.getString(Txt.PERIOD_ABBREV)), LEFT, AFTER);
         add(edVTG_Period = new Edit(), AFTER, SAME);
-        add(new Label("GSA " + Txt.PERIOD_ABBREV), AFTER, SAME);
+        add(new Label("GSA " + Txt.getString(Txt.PERIOD_ABBREV)), AFTER, SAME);
         add(edGSA_Period = new Edit(), AFTER, SAME);
-        add(new Label("GSV " + Txt.PERIOD_ABBREV), LEFT, AFTER);
+        add(new Label("GSV " + Txt.getString(Txt.PERIOD_ABBREV)), LEFT, AFTER);
         add(edGSV_Period = new Edit(), AFTER, SAME);
-        add(new Label("GGA " + Txt.PERIOD_ABBREV), AFTER, SAME);
+        add(new Label("GGA " + Txt.getString(Txt.PERIOD_ABBREV)), AFTER, SAME);
         add(edGGA_Period = new Edit(), AFTER, SAME);
-        add(new Label("ZDA " + Txt.PERIOD_ABBREV), LEFT, AFTER);
+        add(new Label("ZDA " + Txt.getString(Txt.PERIOD_ABBREV)), LEFT, AFTER);
         add(edZDA_Period = new Edit(), AFTER, SAME);
-        add(new Label("MCHN " + Txt.PERIOD_ABBREV), AFTER, SAME);
+        add(new Label("MCHN " + Txt.getString(Txt.PERIOD_ABBREV)), AFTER, SAME);
         add(edMCHN_Period = new Edit(), AFTER, SAME);
 
-        btSet = new Button(Txt.SET);
+        btSet = new Button(Txt.getString(Txt.SET));
         add(btSet, CENTER, AFTER + 3); //$NON-NLS-1$
 
     }
@@ -124,9 +124,9 @@ public final class GPSFlashOption extends Container implements ModelListener {
 
     private void setSettings() {
         BT747MessageBox mb;
-        String[] mbStr = { Txt.WRITEFLASH, Txt.ABORT };
-        mb = new BT747MessageBox(Txt.TITLE_ATTENTION,
-                Txt.TXT_FLASH_LIMITED_WRITES, mbStr);
+        String[] mbStr = { Txt.getString(Txt.WRITEFLASH), Txt.getString(Txt.ABORT) };
+        mb = new BT747MessageBox(Txt.getString(Txt.TITLE_ATTENTION),
+                Txt.getString(Txt.TXT_FLASH_LIMITED_WRITES), mbStr);
         mb.popupBlockingModal();
         if (mb.getPressedButtonIndex() == 0) {
             c.setFlashUserOption(false, // lock

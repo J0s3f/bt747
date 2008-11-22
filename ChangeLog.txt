@@ -1,3 +1,7 @@
+Version 1.62
+* All languages in one package.
+* Limits on time interval, distance, speed increased.
+
 Version 1.61.10
 * Added reverse address lookup in HTML output.  Clicking the same location twice
   (not doubleclick!), shows the address of the location if known by GMaps.

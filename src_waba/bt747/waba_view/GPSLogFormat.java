@@ -65,7 +65,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
     public final void onStart() {
         // Add all tick buttons.
         for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
-            chkLogFmtItems[i] = new MyCheck(Txt.logFmtItems[i]);
+            chkLogFmtItems[i] = new MyCheck(Txt.getLogFmtItem(i));
             // int
             // extra_offset=chkLogFmtItems[i].fm.height-chkLogFmtItems[i].getPreferredHeight();
             // add(chkLogFmtItems[i]);
@@ -87,15 +87,15 @@ public final class GPSLogFormat extends Container implements ModelListener {
                             : AFTER - 1);
             chkLogFmtItems[i].setEnabled(true);
         }
-        lbEstNbrRecords = new Label("0000000" + Txt.REC_ESTIMATED);
+        lbEstNbrRecords = new Label("0000000" + Txt.getString(Txt.REC_ESTIMATED));
         add(lbEstNbrRecords, LEFT, AFTER);
         lbEstNbrRecords.setText("");
 
         // Add button confirming change of log format.
-        btChangeFormatErase = new Button(Txt.SET_ERASE);
+        btChangeFormatErase = new Button(Txt.getString(Txt.SET_ERASE));
         add(btChangeFormatErase, LEFT, AFTER + 5);
-        add(btChangeFormat = new Button(Txt.SET_NOERASE), AFTER + 10, SAME);
-        add(btErase = new Button(Txt.ERASE), RIGHT, SAME);
+        add(btChangeFormat = new Button(Txt.getString(Txt.SET_NOERASE)), AFTER + 10, SAME);
+        add(btErase = new Button(Txt.getString(Txt.ERASE)), RIGHT, SAME);
         setLogFormatControls();
     }
 
@@ -148,7 +148,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
 
         lbEstNbrRecords.setText(m
                 .getEstimatedNbrRecords(getSelectedLogFormat())
-                + Txt.REC_ESTIMATED);
+                + Txt.getString(Txt.REC_ESTIMATED));
     }
 
     /**
