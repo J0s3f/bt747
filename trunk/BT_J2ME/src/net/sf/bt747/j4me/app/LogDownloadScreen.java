@@ -267,7 +267,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
         previous.show();
     }
 
-    protected void keyPressed(int keyCode) {
+    protected void keyReleased(int keyCode) {
         if (keyCode == DeviceScreen.RIGHT) {
             // Show the menu
             declineNotify();
@@ -276,9 +276,8 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
             acceptNotify();
         } else if (keyCode == DeviceScreen.FIRE) {
             startDownload();
-        } else {
-            super.keyPressed(keyCode);
-        }
+        } 
+        super.keyReleased(keyCode);
     }
 
     private void downloadDone() {

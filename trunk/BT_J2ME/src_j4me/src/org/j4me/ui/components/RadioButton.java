@@ -361,12 +361,12 @@ public class RadioButton
 	 * 
 	 * @param keyCode is the key code of the key that was pressed.
 	 */
-	public void keyPressed (int keyCode)
+	public void keyReleased (int keyCode)
 	{
 		if ( (keyCode == DeviceScreen.UP) || (keyCode == DeviceScreen.DOWN) )
 		{
 			// Continue processing the key event.
-			super.keyPressed( keyCode );
+			super.keyReleased( keyCode );
 		}
 		else
 		{
