@@ -1097,7 +1097,7 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
         {
             keyRepeatTimer = new Timer();
             keyRepeatTimer.schedule(new KeyRepeater(translatedKey),
-                    REPEAT_PERIOD, REPEAT_PERIOD);
+                    REPEAT_PERIOD*2, REPEAT_PERIOD);
         }
     }
 
