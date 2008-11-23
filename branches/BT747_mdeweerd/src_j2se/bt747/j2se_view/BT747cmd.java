@@ -285,8 +285,6 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
     }
 
-    public static final int KMZ_LOGTYPE = -1;
-
     public final int convertLog(final int logType) {
         System.out.println("Input file: " + m.getStringOpt(Model.LOGFILEPATH));
         System.out.println("Output directory: "
@@ -294,7 +292,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         System.out.println("Output basename: "
                 + m.getStringOpt(Model.REPORTFILEBASE));
 
-        if (logType == KMZ_LOGTYPE) {
+        if (logType == Model.KMZ_LOGTYPE) {
             return c.doConvertLog(logType, new GPSKMZFile(), ".kmz");
         } else {
             return c.doConvertLog(logType);
@@ -758,7 +756,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 } else if (typeStr.equals("KML")) {
                     type = Model.KML_LOGTYPE;
                 } else if (typeStr.equals("KMZ")) {
-                    type = KMZ_LOGTYPE;
+                    type = Model.KMZ_LOGTYPE;
                 } else if (typeStr.equals("PLT")) {
                     type = Model.PLT_LOGTYPE;
                 } else if (typeStr.equals("TRK")) {

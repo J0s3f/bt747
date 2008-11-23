@@ -8,10 +8,6 @@ set MYSYSTEMRXTXBINS=%RXTXPATH%\Windows\i368-mingw32
 set             PATH=%MYSYSTEMRXTXBINS%;%MYROOTPATH%;%JAVA_HOME%\bin;%PATH%
 set        CLASSPATH=%MYDIST%\BT747_j2se.jar;%RXTXPATH%\RXTXcomm.jar;%MYDIST%\libBT747.jar;%MYLIB%\swing-layout-1.0.3.jar;%MYLIB%\jopt-simple-2.4.1.jar;%CLASSPATH%
 
-set       MYROOTPATH=%~dp0
-
-
-
 REM java -Dbt747_prefix="COM" -Dbt747_settings="bt747settings.pdb" waba.applet.Applet BT747
 
 echo *********** Currently in BETA **************
