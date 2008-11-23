@@ -144,7 +144,8 @@ public class Model extends AppSettings implements GPSListener {
             logFiltersAdv[i] = new GPSFilterAdvanced();
         }
         // Initialise times
-        filterStartTime = (Interface.getDateInstance(1, 1, 1983).dateToUTCepoch1970());
+        filterStartTime = (Interface.getDateInstance(1, 1, 1983)
+                .dateToUTCepoch1970());
         filterEndTime = (Interface.getDateInstance()).dateToUTCepoch1970()
                 + (SECONDS_PER_DAY - 1);
         gpsRxTx = new GPSrxtx();
@@ -249,7 +250,6 @@ public class Model extends AppSettings implements GPSListener {
         }
     }
 
-
     /**
      * Get the standard log filters.
      * 
@@ -259,19 +259,18 @@ public class Model extends AppSettings implements GPSListener {
         setupAdvancedFilters();
         return logFiltersAdv;
     }
-    
+
     /**
      * Multiplier to convert floating *DOP value to int value for device.
      */
     private static final int XDOP_FLOAT_TO_INT_100 = 100;
-
 
     private void setupBasicSettingsFilter(final GPSFilter[] logFilters) {
         logFilters[GPSFilter.TRKPT].setRcrMask(getTrkPtRCR());
         logFilters[GPSFilter.TRKPT].setValidMask(getTrkPtValid());
         logFilters[GPSFilter.WAYPT].setRcrMask(getWayPtRCR());
         logFilters[GPSFilter.WAYPT].setValidMask(getWayPtValid());
-    };   
+    };
 
     /**
      * @return the logFilters
@@ -722,7 +721,7 @@ public class Model extends AppSettings implements GPSListener {
                 count = logFreeMemUsefullSize() / size;
             }
         } catch (Exception e) {
-            Generic.debug("EstRecords",e);
+            Generic.debug("EstRecords", e);
         }
         return count;
     }
@@ -734,6 +733,17 @@ public class Model extends AppSettings implements GPSListener {
      */
     public static final boolean isDebug() {
         return Generic.isDebug();
+    }
+
+    /**
+     * Indicates if the given data is available.
+     * 
+     * @param dataType
+     * {@link GPSstate#DATA_MEM_USED}
+     * @return
+     */
+    public final boolean isAvailable(final int dataType) {
+        return gpsModel.isAvailable(dataType);
     }
 
     /**
