@@ -1,3 +1,7 @@
+Version 1.62.3
+* Waypoints in KML and KMZ output now arranged in subfolders labeled by date.d
+* run_j2se.bat startup script change to allow command line execution.
+
 Version 1.62.2
 * First implementation of GUI table output.
 * Fixed a bug in the HTML output - tracks were drawn during way point calculation.

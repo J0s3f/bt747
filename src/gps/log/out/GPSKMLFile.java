@@ -161,6 +161,7 @@ public class GPSKMLFile extends GPSFile {
         if (isWayType) {
             header = "  <Folder>\r\n" + "    <name>My Waypoints</name>\r\n"
                     + "  <open>0</open>\r\n";
+            isDateFolder = false;
         } else if (isTrackType) {
             header = "  <Folder>\r\n"// " <name>My Tracks</name>\r\n"+
                     + "    <name>My Trackpoints</name>\r\n"
@@ -198,18 +199,31 @@ public class GPSKMLFile extends GPSFile {
      * @see gps.log.out.GPSFile#writeDataFooter()
      */
     protected final void writeDataFooter() {
-        String footer;
+        String footer = "";
+        if(isDateFolder) {
+            footer = "   </Folder>\r\n";
+            isDateFolder = false;
+        }
         if (isWayType) {
-            footer = "  </Folder>\r\n" + "\r\n";
+            footer += "  </Folder>\r\n" + "\r\n";
         } else if (isTrackType) {
-            footer = "    </Folder>\r\n" + "  </Folder>\r\n" + "\r\n";
+            footer += "    </Folder>\r\n" + "  </Folder>\r\n" + "\r\n";
         } else {
-            footer = "      </coordinates>\r\n" + "     </LineString>\r\n"
+            footer += "      </coordinates>\r\n" + "     </LineString>\r\n"
                     + "    </Placemark>\r\n"
                     + "  </Folder>\r\n";
         }
         writeTxt(footer);
     }
+    
+    /**
+     * Indicates if waypoint sub folder is opened.
+     */
+    private boolean isDateFolder;
+    /**
+     * Provides the current WayFolderDate
+     */
+    private String currentWayFolderDate="";
 
     /*
      * (non-Javadoc)
@@ -222,8 +236,30 @@ public class GPSKMLFile extends GPSFile {
         if (activeFields != null) {
             rec.setLength(0);
             if (ptFilters[currentFilter].doFilter(s)) {
+                String dateString = "";
+                if (activeFields.utc != 0) {
+                    dateString = Convert.toString(t.getYear()) + "-"
+                            + (t.getMonth() < 10 ? "0" : "")
+                            + Convert.toString(t.getMonth()) + "-"
+                            + (t.getDay() < 10 ? "0" : "")
+                            + Convert.toString(t.getDay());
+                }
+                
                 if (isWayType
                         || (isTrackType && (isIncludeTrkName || isTrkComment))) {
+                    if(isDateFolder) {
+                        if(!dateString.equals(currentWayFolderDate)) {
+                            rec.append("</Folder>");
+                            isDateFolder = false;
+                        }
+                    }
+                    if(!isDateFolder) {
+                        rec.append("<Folder><name>");
+                        currentWayFolderDate=dateString;
+                        rec.append(dateString);
+                        rec.append("</name>\r\n");
+                        isDateFolder=true;
+                    }
                     rec.append("<Placemark>\r\n");
                     if (!isTrackType || isIncludeTrkName) {
                         rec.append("<name>");
@@ -259,11 +295,7 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("<TimeStamp><when>");
                         if ((activeFields.utc != 0)
                                 && (selectedFileFields.utc != 0)) {
-                            rec.append(Convert.toString(t.getYear()) + "-"
-                                    + (t.getMonth() < 10 ? "0" : "")
-                                    + Convert.toString(t.getMonth()) + "-"
-                                    + (t.getDay() < 10 ? "0" : "")
-                                    + Convert.toString(t.getDay()) + "T"
+                            rec.append(dateString + "T"
                                     + (t.getHour() < 10 ? "0" : "")
                                     + Convert.toString(t.getHour()) + ":"
                                     + (t.getMinute() < 10 ? "0" : "")

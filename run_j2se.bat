@@ -14,7 +14,15 @@ rem echo PATH = %PATH%
 rem echo CLASSPATH = %CLASSPATH%
 
 REM Change javaw to java in next line to see startup and debug messages
-START javaw bt747.j2se_view.BT747Main
-REM java -verbose bt747.j2se_view.BT747Main | more
-REM pause
+if x"%*"==x"debug" goto debug:
+if NOT x"%*"==x"" goto cmdline:
+START javaw bt747.j2se_view.BT747Main %*
+goto end:
+:cmdline
+java bt747.j2se_view.BT747Main %*
+goto end:
+:debug
+java -verbose bt747.j2se_view.BT747Main | more
+pause
+:end
 endlocal
