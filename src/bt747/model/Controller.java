@@ -335,13 +335,11 @@ public class Controller {
                 getOutFileExt(logType));
     }
     
-    public final int doConvertLog(final int logType, final GPSFile gpsFile, final String ext) {
-        int result;
-        String parameters = "Converting with parameters:\n"; // For debug
+    public final GPSLogConvert getInputConversionInstance(final int logType) {
         GPSLogConvert lc;
-        result = 0;
+        String parameters = "";
         int sourceHeightReference;
-        int destinationHeightReference;
+        int destinationHeightReference = getHeightReference(logType);
 
         /*
          * Check the input file
@@ -378,17 +376,6 @@ public class Controller {
                     + m.getBooleanOpt(AppSettings.IS_HOLUXM241) + "\n";
             sourceHeightReference = heightReferenceList[Model.BIN_LOGTYPE];
         }
-        GPSFilter[] usedFilters;
-        if (m.isAdvFilterActive()) {
-            usedFilters = m.getLogFiltersAdv();
-            parameters += "Advanced filter:\n"
-                    + m.getBooleanOpt(AppSettings.IS_HOLUXM241) + "\n";
-
-        } else {
-            parameters += "Standard filter:\n" + m.getLogFilters()[0].toString()
-                    + m.getLogFilters()[1].toString() + "\n";
-            usedFilters = m.getLogFilters();
-        }
         lc.setTimeOffset(m.getTimeOffsetHours() * SECONDS_PER_HOUR);
         destinationHeightReference = getHeightReference(logType);
         switch (m.getHeightConversionMode()) {
@@ -420,7 +407,51 @@ public class Controller {
         if ((logType == Model.GPX_LOGTYPE) && m.getGpxUTC0()) {
             lc.setTimeOffset(0);
         }
+        if(Generic.isDebug()) {
+            Generic.debug(parameters);
+        }
 
+        return lc;
+    }
+    
+    public final GPSFilter[] getLogFiltersToUse() {
+        GPSFilter[] usedFilters;
+        String parameters = "";
+        
+        if (m.isAdvFilterActive()) {
+            usedFilters = m.getLogFiltersAdv();
+            parameters += "Advanced filter:\n"
+                    + m.getBooleanOpt(AppSettings.IS_HOLUXM241) + "\n";
+
+        } else {
+            parameters += "Standard filter:\n" + m.getLogFilters()[0].toString()
+                    + m.getLogFilters()[1].toString() + "\n";
+            usedFilters = m.getLogFilters();
+        }
+        for (int i = 0; i < usedFilters.length; i++) {
+            usedFilters[i].setStartTime(m.getFilterStartTime());
+            usedFilters[i].setEndTime(m.getFilterEndTime());
+        }
+        if(Generic.isDebug()) {
+            Generic.debug(parameters);
+        }
+
+        return usedFilters;
+    }
+    
+    public final int doConvertLog(final int logType, final GPSFile gpsFile, final String ext) {
+        int result;
+        String parameters = ""; // For debug
+        GPSFilter[] usedFilters;
+        GPSLogConvert lc;
+        result = 0;
+        if(Generic.isDebug()) {
+            Generic.debug("Converting with parameters:\n");
+        }
+
+        lc = getInputConversionInstance(logType);
+        usedFilters = getLogFiltersToUse();
+        
         if (gpsFile != null) {
             if (filenameBuilder != null) {
                 gpsFile.setFilenameBuilder(filenameBuilder);
@@ -438,10 +469,6 @@ public class Controller {
                     .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
             gpsFile.setIncludeTrkName(m
                     .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME));
-            for (int i = 0; i < usedFilters.length; i++) {
-                usedFilters[i].setStartTime(m.getFilterStartTime());
-                usedFilters[i].setEndTime(m.getFilterEndTime());
-            }
             gpsFile.setFilters(usedFilters);
             gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m
                     .getIntOpt(Model.FILEFIELDFORMAT)));
@@ -481,51 +508,12 @@ public class Controller {
     public final GPSRecord[] doConvertLogToTrackPoints() {
         int error = 0;
         GPSRecord[] result;
+        GPSFilter[] usedFilters;
         GPSArray gpsFile = null;
         GPSLogConvert lc;
 
-        /*
-         * Check the input file
-         */
-        String logFileLC = m.getStringOpt(AppSettings.LOGFILEPATH)
-                .toLowerCase();
-        if (logFileLC.endsWith(".trl")) {
-            lc = new HoluxTrlLogConvert();
-        } else if (logFileLC.endsWith(".csv")) {
-            lc = new CSVLogConvert();
-        } else if (logFileLC.endsWith(".nmea") || logFileLC.endsWith(".nme")
-                || logFileLC.endsWith(".nma") || logFileLC.endsWith(".log")
-                || logFileLC.endsWith(".txt")) {
-            lc = new NMEALogConvert();
-        } else if (logFileLC.endsWith(".sr")) {
-            lc = new DPL700LogConvert();
-            // / TODO: set SR Log type correctly.
-            ((DPL700LogConvert) lc)
-                    .setLogType(m.getGPSType() == GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR ? 0
-                            : 1);
-        } else {
-                lc = new BT747LogConvert();
-                ((BT747LogConvert) lc).setHolux(m
-                        .getBooleanOpt(AppSettings.IS_HOLUXM241));
-        }
-        GPSFilter[] usedFilters;
-        if (m.isAdvFilterActive()) {
-            usedFilters = m.getLogFiltersAdv();
-        } else {
-            usedFilters = m.getLogFilters();
-        }
-        lc.setTimeOffset(m.getTimeOffsetHours() * SECONDS_PER_HOUR);
-        //TODO: think about height, no conversion
-        switch(m.getHeightConversionMode()) {
-        case Model.HEIGHT_AUTOMATIC:
-            lc.setConvertWGS84ToMSL(0);
-            break;
-        case Model.HEIGHT_NOCHANGE:
-            lc.setConvertWGS84ToMSL(0);
-            break;
-        case Model.HEIGHT_WGS84_TO_MSL:
-            lc.setConvertWGS84ToMSL(-1);
-        }
+        lc = getInputConversionInstance(Model.GMAP_LOGTYPE);  // For height conversion.
+        usedFilters = getLogFiltersToUse();
 
         gpsFile = new GPSArray();
 

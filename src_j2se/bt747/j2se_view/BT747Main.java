@@ -136,7 +136,8 @@ public class BT747Main extends javax.swing.JFrame implements
                 getString("OZI_Description"),
                 getString("NMEA_Description"),
                 getString("GMAP_Description"),
-                getString("KMZ_Description") }));
+                getString("KMZ_Description"),
+                getString("TABLE_Description")}));
     }
     
     private AdvancedDeviceSettingsPanel pnAdvancedSettingsPanel;
@@ -392,6 +393,30 @@ public class BT747Main extends javax.swing.JFrame implements
      * 
      */
     private void doLogConversion() {
+        setLogConversionParameters();
+        switch (selectedFormat) {
+        case J2SEAppController.TABLE_LOGTYPE:
+            int idx = tabbedPanelAll.getTabCount()-1;
+            if(tabbedPanelAll.getComponentAt(idx).getClass()==PositionTablePanel.class) {
+                tabbedPanelAll.removeTabAt(idx);
+            }
+            GPSRecord[] r;
+            r = c.convertLogToTrackPoints();
+            PositionTablePanel pt = new PositionTablePanel();
+            pt.setGpsRecords(r);
+            tabbedPanelAll.addTab(getString("Table"), pt);
+            tabbedPanelAll.setSelectedIndex(tabbedPanelAll.getTabCount()-1);
+            break;
+        default:
+            c.convertLog(selectedFormat);
+            break;
+        }
+    }
+
+    /**
+     * 
+     */
+    private void setLogConversionParameters() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate.getDate());
         BT747Date nd = Interface.getDateInstance(
@@ -413,8 +438,8 @@ public class BT747Main extends javax.swing.JFrame implements
         // Now actually set time filter.
         c.setFilterStartTime((int) (startTime));
         c.setFilterEndTime((int) (endTime));
-        c.convertLog(selectedFormat);
     }
+
     
     public void modelEvent(ModelEvent e) {
         // TODO Auto-generated method stub
@@ -1471,6 +1496,8 @@ private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
             selectedFormat = Model.TRK_LOGTYPE;
         } else if (selected.equals(getString("KMZ_Description"))) {
             selectedFormat = J2SEAppController.KMZ_LOGTYPE;
+        } else if (selected.equals(getString("TABLE_Description"))) {
+            selectedFormat = J2SEAppController.TABLE_LOGTYPE;
         } else {
             selectedFormat = Model.NO_LOG_LOGTYPE;
         }

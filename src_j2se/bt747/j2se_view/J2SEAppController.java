@@ -116,14 +116,13 @@ public final class J2SEAppController extends Controller {
      * Reference to the model.
      */
     private Model m;
-    
+
     /** Options for the first warning message. */
     private static String[] C_ERASE_OR_CANCEL;
     /** Options for the first warning message. */
     private static String[] C_YES_OR_CANCEL;
     /** Options for the second warning message - reverse order on purpose. */
     private static String[] C_CANCEL_OR_CONFIRM_ERASE;
-
 
     private void initStaticsFirstTime() {
         if (bundle == null) {
@@ -163,7 +162,7 @@ public final class J2SEAppController extends Controller {
         super.setModel(m);
         super.init();
         // c = new Controller(model);
-        String localeStr = m.getStringOpt(Model.LANGUAGE); 
+        String localeStr = m.getStringOpt(Model.LANGUAGE);
         if (localeStr.length() != 0) {
             String arg1 = "";
             String arg2 = "";
@@ -182,7 +181,8 @@ public final class J2SEAppController extends Controller {
             }
             Locale.setDefault(new Locale(arg1, arg2, arg3));
         }
-        // Initialised here to be sure that the app language can be changed after
+        // Initialised here to be sure that the app language can be changed
+        // after
         // static evaluation.
         initStaticsFirstTime();
         myLookAndFeel();
@@ -204,6 +204,7 @@ public final class J2SEAppController extends Controller {
      * @see Model#GMAP_LOGTYPE
      */
     public static final int KMZ_LOGTYPE = -1;
+    public static final int TABLE_LOGTYPE = -2;
 
     public final void convertLog(final int logType) {
         if (logType == KMZ_LOGTYPE) {
@@ -234,7 +235,12 @@ public final class J2SEAppController extends Controller {
     private static ResourceBundle bundle = null;
 
     public static final String getString(final String s) {
-        return bundle.getString(s);
+        try {
+            return bundle.getString(s);
+        } catch (Exception e) {
+            Generic.debug("No text found for \"" + s + "\"", e);
+            return s;
+        }
     }
 
     /**
@@ -426,7 +432,8 @@ public final class J2SEAppController extends Controller {
     protected final void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
             if (m.getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT)) {
-                c.setLoggingActive(false); // First command could fail, so repeat.
+                c.setLoggingActive(false); // First command could fail, so
+                                            // repeat.
                 c.setLoggingActive(false);
             }
             super.performOperationsAfterGPSConnect();
@@ -624,9 +631,7 @@ public final class J2SEAppController extends Controller {
                 null /* options */, null /* initialValue */);
         return overwriteResp == JOptionPane.OK_OPTION;
     }
-    
 
-    
     /***************************************************************************
      * Find the appropriate look and feel for the system
      **************************************************************************/
@@ -639,12 +644,11 @@ public final class J2SEAppController extends Controller {
             "javax.swing.plaf.mac.MacLookAndFeel", // NOI18N
             "com.apple.mrj.swing.MacLookAndFeel", // NOI18N
             "apple.laf.AquaLookAndFeel" // NOI18N
-            }; // NOI18N
+    }; // NOI18N
     /* Index for Mac look and feel */
     private static final int C_MAC_LOOKANDFEEL_IDX = lookAndFeels.length - 3;
-    private static String lookAndFeel=""; // NOI18N
-    public static String lookAndFeelMsg=""; // NOI18N
-
+    private static String lookAndFeel = ""; // NOI18N
+    public static String lookAndFeelMsg = ""; // NOI18N
 
     /**
      * Try setting a look and feel for the system - catch the Exception when not
@@ -671,7 +675,8 @@ public final class J2SEAppController extends Controller {
         boolean lookAndFeelIsSet = false;
         if (java.lang.System.getProperty("os.name").toLowerCase().startsWith(
                 "mac")) { // NOI18N
-            for (int i = C_MAC_LOOKANDFEEL_IDX; !lookAndFeelIsSet && (i < lookAndFeels.length); i++) {
+            for (int i = C_MAC_LOOKANDFEEL_IDX; !lookAndFeelIsSet
+                    && (i < lookAndFeels.length); i++) {
                 lookAndFeelIsSet = tryLookAndFeel(lookAndFeels[i]);
             }
         }
@@ -717,14 +722,11 @@ public final class J2SEAppController extends Controller {
         l = panel.getComponents();
         for (Component component : l) {
             component.setEnabled(en);
-            if(component.getClass()==JPanel.class) {
-                disablePanel((JPanel)component,en);
+            if (component.getClass() == JPanel.class) {
+                disablePanel((JPanel) component, en);
             }
         }
-        
+
     }
-
-
-
 
 }
