@@ -1,5 +1,6 @@
 package org.j4me.ui;
 
+import org.j4me.logging.Log;
 import org.j4me.ui.components.*;
 
 /**
@@ -192,7 +193,7 @@ public class Menu extends Dialog {
      *            is the key code of the button the user pressed.
      */
     protected void keyPressed(int keyCode) {
-        handleKeyPressOrRepeast(keyCode, false);
+        handleKeyPressOrRepeat(keyCode, false);
     }
 
     /*
@@ -201,10 +202,10 @@ public class Menu extends Dialog {
      * @see org.j4me.ui.Dialog#keyRepeated(int)
      */
     protected void keyRepeated(int keyCode) {
-        handleKeyPressOrRepeast(keyCode, true);
+        handleKeyPressOrRepeat(keyCode, true);
     }
 
-    private final void handleKeyPressOrRepeast(final int keyCode,
+    private final void handleKeyPressOrRepeat(final int keyCode,
             final boolean isRepeated) {
         int initialSize = size();
         int nextPos = -100; // Negative value means no movement
@@ -237,6 +238,7 @@ public class Menu extends Dialog {
         // keyPressed() will scroll again so we'll actually wind
         // up on the second or second-to-last menu choice.
         if ((nextPos >= 0) && (size() == initialSize)) {
+            Log.debug(isRepeated?"KeyRepeated":"KeyPressed");
             setSelected(nextPos);
         }
     }
