@@ -21,6 +21,7 @@ public class PositionTableModel implements TableModel {
     /**
      * Column identifications. Some taken from BT747Constants.
      */
+    private static final int FMT_RCR_DESCRIPTION = -14; // TODO: currently ignored
     private static final int FMT_FIXMODE = -13; // TODO: currently ignored
     private static final int FMT_VOX = -12;
     private static final int FMT_LONEW = -11;
@@ -42,6 +43,7 @@ public class PositionTableModel implements TableModel {
             FMT_REC_NBR,
             BT747Constants.FMT_UTC_IDX,
             BT747Constants.FMT_RCR_IDX,
+            FMT_RCR_DESCRIPTION,
             BT747Constants.FMT_VALID_IDX,
             BT747Constants.FMT_LATITUDE_IDX,
             BT747Constants.FMT_LONGITUDE_IDX,
@@ -164,6 +166,8 @@ public class PositionTableModel implements TableModel {
                 return "VOX/File";
             case BT747Constants.FMT_RCR_IDX:
                 return "RCR";
+            case FMT_RCR_DESCRIPTION:
+                return "RCR Description";
             case BT747Constants.FMT_MILLISECOND_IDX:
                 return "MS";
             case BT747Constants.FMT_DISTANCE_IDX:
@@ -297,6 +301,8 @@ public class PositionTableModel implements TableModel {
             return String.class;
         case BT747Constants.FMT_RCR_IDX:
             return String.class;
+        case FMT_RCR_DESCRIPTION:
+            return String.class;
         case BT747Constants.FMT_MILLISECOND_IDX:
             return Integer.class;
         case BT747Constants.FMT_DISTANCE_IDX:
@@ -369,6 +375,8 @@ public class PositionTableModel implements TableModel {
             return g.voxStr;
         case BT747Constants.FMT_RCR_IDX:
             return CommonOut.getRCRstr(g);
+        case FMT_RCR_DESCRIPTION:
+            return CommonOut.getRcrDescription(g);
         case BT747Constants.FMT_MILLISECOND_IDX:
             return new Integer(g.milisecond);
         case BT747Constants.FMT_DISTANCE_IDX:
@@ -443,6 +451,8 @@ public class PositionTableModel implements TableModel {
             case FMT_VOX:
                 break;
             case BT747Constants.FMT_RCR_IDX:
+                break;
+            case FMT_RCR_DESCRIPTION:
                 break;
             case BT747Constants.FMT_MILLISECOND_IDX:
                 break;
