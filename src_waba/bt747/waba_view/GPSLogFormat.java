@@ -26,6 +26,7 @@ import waba.ui.Event;
 import waba.ui.Label;
 
 import gps.BT747Constants;
+import gps.GPSstate;
 
 import bt747.Txt;
 import bt747.model.Model;
@@ -168,6 +169,7 @@ public final class GPSLogFormat extends Container implements ModelListener {
                 c.eraseLogWithDialogs();
             } else if (event.target == this) {
                 c.reqLogFormat();
+                updateLogFormat(m.getLogFormat());
                 event.consumed = true;
             } else {
                 boolean isLogFmtUpdated = false;

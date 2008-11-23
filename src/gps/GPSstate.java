@@ -137,11 +137,55 @@ public final class GPSstate implements BT747Thread {
         GPS_STATS = stats;
     }
 
-    private final boolean[] dataAvailable = new boolean[50];
-    private final int[] dataRequested = new int[50];
+    private final boolean[] dataAvailable = new boolean[DATA_LAST_INDEX + 1];
+    private final int[] dataRequested = new int[DATA_LAST_INDEX + 1];
+    private final boolean[] dataTimesOut = { // Indicates if data times out
+    true, // DATA_MEM_USED
+    true, // DATA_MEM_PTS_LOGGED
+            false, // DATA_FLASH_TYPE
+            false, // DATA_LOG_FORMAT
+            false, // DATA_MTK_VERSION
+            false, // DATA_MTK_RELEASE
+            false, // DATA_INITIAL_LOG
+            true, // DATA_LOG_STATUS
+            false, // DATA_LOG_VERSION
+    };
     public final static int DATA_MEM_USED = 0;
-    public final static int DATA_FLASH_TYPE = 1;
-    public final static int DATA_LOG_FORMAT = 2;
+    public final static int DATA_MEM_PTS_LOGGED = 1;
+    public final static int DATA_FLASH_TYPE = 2;
+    public final static int DATA_LOG_FORMAT = 3;
+    public final static int DATA_MTK_VERSION = 4;
+    public final static int DATA_MTK_RELEASE = 5;
+    public final static int DATA_INITIAL_LOG = 6; // TODO implement handling
+    public final static int DATA_LOG_STATUS = 7;
+    public final static int DATA_LOG_VERSION = 8;
+    private final static int DATA_LAST_INDEX = 8; // The last possible index
+
+    /**
+     * Reset the availability of all values - e.g. after loss of connection.
+     */
+    public final void resetAvailable() {
+        for (int i = 0; i < dataAvailable.length; i++) {
+            dataAvailable[i] = false;
+            dataRequested[i] = 0;
+        }
+        nextValueToCheck = 0;
+    }
+
+    private int nextValueToCheck = 0;
+
+    /**
+     * Called regularly to check if values are available and request them.
+     */
+    private void checkNextAvailable() {
+        int next = nextValueToCheck;
+        checkAvailable(next);
+        next += 1;
+        if (next >= dataAvailable.length) {
+            next = 0;
+        }
+        nextValueToCheck = next;
+    }
 
     /**
      * Check if the data is available and if it is not, requests it.
@@ -151,17 +195,37 @@ public final class GPSstate implements BT747Thread {
      */
     public final boolean checkAvailable(final int dataType) {
         int ts = Generic.getTimeStamp();
-        if (!dataAvailable[dataType] && ((ts - dataRequested[dataType]) > 3500)) {
+        if ((dataTimesOut[dataType] || !dataAvailable[dataType])
+                && ((ts - dataRequested[dataType]) > 3500)) {
             dataRequested[dataType] = ts;
             switch (dataType) {
-            case DATA_FLASH_TYPE:
-                reqFlashManuID();
-                break;
             case DATA_MEM_USED:
                 reqLogMemUsed();
                 break;
+            case DATA_MEM_PTS_LOGGED:
+                reqLogMemPtsLogged();
+                break;
+            case DATA_FLASH_TYPE:
+                reqFlashManuID();
+                break;
             case DATA_LOG_FORMAT:
                 reqLogFormat();
+                break;
+            case DATA_MTK_VERSION:
+                reqDeviceVersion();
+                break;
+            case DATA_MTK_RELEASE:
+                reqDeviceRelease();
+                break;
+            case DATA_INITIAL_LOG:
+                reqInitialLogMode();
+                break;
+            case DATA_LOG_STATUS:
+                reqLogStatus();
+                break;
+            case DATA_LOG_VERSION:
+                reqMtkLogVersion();
+                break;
             default:
                 break;
             }
@@ -175,16 +239,21 @@ public final class GPSstate implements BT747Thread {
         dataAvailable[dataType] = true;
         switch (dataType) {
         case DATA_FLASH_TYPE:
-            
+
             break;
         case DATA_LOG_FORMAT:
             dataOK |= C_OK_FORMAT;
-            default:
+            break;
+        default:
         case DATA_MEM_USED:
             break;
         }
     }
-    
+
+    public final boolean  isAvailable(final int dataType) {
+        return dataAvailable[dataType];
+    }
+
     private void setChanged(final int dataType) {
         dataAvailable[dataType] = false;
         dataRequested[dataType] = 0; // Just changed it - oblige 'timeout'.
@@ -263,24 +332,36 @@ public final class GPSstate implements BT747Thread {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_FULL_COLD_START_STR);
     }
 
-    public final void reqDeviceInfo() {
+    private final void reqDeviceVersion() {
         sendNMEA("PMTK" + BT747Constants.PMTK_Q_VERSION_STR);
+    }
+
+    private final void reqDeviceRelease() {
         sendNMEA("PMTK" + BT747Constants.PMTK_Q_RELEASE_STR);
-        reqFlashManuID(); // Should be last
-        reqMtkLogVersion();
+    }
+
+    public final void reqDeviceInfo() {
+        checkAvailable(DATA_MTK_RELEASE);
+        checkAvailable(DATA_MTK_VERSION);
+        checkAvailable(DATA_FLASH_TYPE);
+        checkAvailable(DATA_LOG_VERSION);
     }
 
     /**
-     * Request the initial log mode (the first value logged in memory).
-     * Will be analysed in {@link #analyseLogNmea(String[])}.
+     * Request the initial log mode (the first value logged in memory). Will be
+     * analyzed in {@link #analyseLogNmea(String[])}.<br>
+     * Must be accessed through {@link #DATA_INITIAL_LOG}
      */
-    public final void reqInitialLogMode() {
+    private final void reqInitialLogMode() {
         mtkLogHandler.readLog(6, 2); // 6 is the log mode offset in the log,
         // 2 is the size
         // Required to know if log is in overwrite mode.
     }
 
-    public final void reqFlashManuID() {
+    /**
+     * Must be accessed through {@link #DATA_FLASH_TYPE}
+     */
+    private final void reqFlashManuID() {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_QUERY_STR + ","
                 + BT747Constants.PMTK_LOG_FLASH_STR + "," + "9F");
@@ -290,33 +371,49 @@ public final class GPSstate implements BT747Thread {
         handler.setDownloadTimeOut(downloadTimeOut);
     }
 
-    /** Request the current log format from the device */
-    public final void reqLogFormat() {
+    /**
+     * Request the current log format from the device.<br>
+     * Must use {@link #checkAvailable(int)} and {@link #DATA_LOG_FORMAT}.
+     */
+    private final void reqLogFormat() {
         // Request log format from device
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_QUERY_STR + ","
                 + BT747Constants.PMTK_LOG_FORMAT_STR);
     }
 
-    public final void reqLogStatus() {
+    /**
+     * Request the current log status from the device.<br>
+     * Must use {@link #checkAvailable(int)} and {@link #DATA_LOG_STATUS}.
+     */
+    protected final void reqLogStatus() {
+
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_QUERY_STR + ","
                 + BT747Constants.PMTK_LOG_LOG_STATUS_STR);
     }
 
-    public final void reqLogMemUsed() {
+    /**
+     * Requests the amount of memory currently used.<br>
+     * Must use {@link #checkAvailable(int)} and {@link #DATA_MEM_USED}.
+     */
+    private final void reqLogMemUsed() {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_QUERY_STR + ","
                 + BT747Constants.PMTK_LOG_MEM_USED_STR);
     }
 
-    public final void reqLogMemPtsLogged() {
+    /**
+     * Requests the number of points logged in memory.<br>
+     * Must use {@link #checkAvailable(int)} and {@link #DATA_MEM_PTS_LOGGED}.
+     */
+    private final void reqLogMemPtsLogged() {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_QUERY_STR + ","
                 + BT747Constants.PMTK_LOG_NBR_LOG_PTS_STR);
     }
 
-    public final void reqMtkLogVersion() {
+    private final void reqMtkLogVersion() {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_QUERY_STR + ","
                 + BT747Constants.PMTK_LOG_VERSION_STR);
@@ -422,7 +519,7 @@ public final class GPSstate implements BT747Thread {
 
     /** Get the current status of the device */
     public final void reqStatus() {
-        reqLogFormat();
+        checkAvailable(DATA_LOG_FORMAT);
         getLogCtrlInfo();
         // getLogReasonStatus();
         // getPowerSaveEnabled();
@@ -438,11 +535,9 @@ public final class GPSstate implements BT747Thread {
     }
 
     private final void getLogCtrlInfo() {
-        reqMtkLogVersion();
-        // Request mem size from device
-        reqLogMemUsed();
-        // Request number of log points
-        reqLogMemPtsLogged();
+        checkAvailable(DATA_LOG_VERSION);
+        checkAvailable(DATA_MEM_USED);
+        checkAvailable(DATA_MEM_PTS_LOGGED);
         reqLogOverwrite();
     }
 
@@ -588,7 +683,8 @@ public final class GPSstate implements BT747Thread {
      */
     public final void setBtMacAddr(final String btMacAddr) {
         String myMacAddr = "";
-        BT747StringTokenizer fields = Interface.getStringTokenizerInstance(btMacAddr, ':');
+        BT747StringTokenizer fields = Interface.getStringTokenizerInstance(
+                btMacAddr, ':');
         while (fields.hasMoreTokens()) {
             myMacAddr = fields.nextToken() + myMacAddr;
         }
@@ -696,17 +792,18 @@ public final class GPSstate implements BT747Thread {
                     // log
                     // download for
                     // performance.
-                    && sNmea[0].length() != 0
-                    && sNmea[0].charAt(0)=='G') {
+                    && sNmea[0].length() != 0 && sNmea[0].charAt(0) == 'G') {
                 // Commented - not interpreted.
-                //Generic.debug("Before"+sNmea[0]+(new java.util.Date(gpsPos.utc*1000L)).toString()+"("+gpsPos.utc+")");
+                // Generic.debug("Before"+sNmea[0]+(new
+                // java.util.Date(gpsPos.utc*1000L)).toString()+"("+gpsPos.utc+")");
                 if (sNmea[0].startsWith("GPGGA")) {
                     analyzeGPGGA(sNmea, gpsPos);
                 } else if (sNmea[0].startsWith("GPRMC")) {
 
                     analyzeGPRMC(sNmea, gpsPos);
                 }
-                //Generic.debug("After"+sNmea[0]+(new java.util.Date(gpsPos.utc*1000L)+"("+gpsPos.utc+")").toString());
+                // Generic.debug("After"+sNmea[0]+(new
+                // java.util.Date(gpsPos.utc*1000L)+"("+gpsPos.utc+")").toString());
                 // else if(p_nmea[0].startsWith("GPZDA")) {
                 // // GPZDA,$time,$msec,$DD,$MO,$YYYY,03,00
                 // } else if(p_nmea[0].startsWith("GPRMC")) {
@@ -823,6 +920,7 @@ public final class GPSstate implements BT747Thread {
                     break;
                 case BT747Constants.PMTK_DT_VERSION: // CMD 704
                     mainVersion = sNmea[1] + "." + sNmea[2] + "." + sNmea[3];
+                    setAvailable(DATA_MTK_VERSION);
                     postEvent(GpsEvent.UPDATE_MTK_VERSION);
                     break;
                 case BT747Constants.PMTK_DT_RELEASE: // CMD 705
@@ -834,6 +932,7 @@ public final class GPSstate implements BT747Thread {
                     } else {
                         device = "";
                     }
+                    setAvailable(DATA_MTK_RELEASE);
                     postEvent(GpsEvent.UPDATE_MTK_RELEASE);
                     break;
 
@@ -927,6 +1026,7 @@ public final class GPSstate implements BT747Thread {
      */
 
     private int nextRun = 0;
+    private int nextAvailableRun = 0;
 
     /*
      * (non-Javadoc)
@@ -934,8 +1034,9 @@ public final class GPSstate implements BT747Thread {
      * @see waba.sys.Thread#run()
      */
     public final void run() {
-        if (Generic.getTimeStamp() >= nextRun) {
-            nextRun = Generic.getTimeStamp() + 10;
+        int timeStamp = Generic.getTimeStamp();
+        if (timeStamp >= nextRun) {
+            nextRun = timeStamp + 10;
             int loopsToGo = 0; // Setting to 0 for more responsiveness
             if (handler.isConnected()) {
                 mtkLogHandler.notifyRun();
@@ -947,6 +1048,11 @@ public final class GPSstate implements BT747Thread {
                     }
                     handler.checkSendCmdFromQueue();
                 } while ((loopsToGo-- > 0) && lastResponse != null);
+                if ((nextAvailableRun < timeStamp)
+                        && (getOutStandingCmdsCount() == 0)) {
+                    nextAvailableRun = nextRun + 300;
+                    checkNextAvailable();
+                }
             } else {
                 mtkLogHandler.notifyDisconnected();
                 Generic.removeThread(this);
@@ -1066,22 +1172,24 @@ public final class GPSstate implements BT747Thread {
                         loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
                         loggerNeedsInit = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGMUSTINIT_MASK) != 0));
                         loggerIsDisabled = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGDISABLED_MASK) != 0));
+                        setAvailable(DATA_LOG_STATUS);
                         postEvent(GpsEvent.UPDATE_LOG_LOG_STATUS);
                         break;
                     case BT747Constants.PMTK_LOG_MEM_USED: // 8;
                         setLogMemUsed(Conv.hex2Int(sNmea[3]));
                         logMemUsedPercent = (100 * (getLogMemUsed() - (0x200 * ((getLogMemUsed() + 0xFFFF) / 0x10000))))
                                 / logMemUsefullSize();
-                        dataAvailable[DATA_MEM_USED] = true;
+                        setAvailable(DATA_MEM_USED);
                         postEvent(GpsEvent.UPDATE_LOG_MEM_USED);
                         break;
                     case BT747Constants.PMTK_LOG_FLASH: // 9;
                         flashManuProdID = Conv.hex2Int(sNmea[3]);
-                        dataAvailable[DATA_FLASH_TYPE] = true;
+                        setAvailable(DATA_FLASH_TYPE);
                         postEvent(GpsEvent.UPDATE_LOG_FLASH);
                         break;
                     case BT747Constants.PMTK_LOG_NBR_LOG_PTS: // 10;
                         logNbrLogPts = Conv.hex2Int(sNmea[3]);
+                        setAvailable(DATA_MEM_PTS_LOGGED);
                         postEvent(GpsEvent.UPDATE_LOG_NBR_LOG_PTS);
                         break;
                     case BT747Constants.PMTK_LOG_FLASH_SECTORS: // 11;
@@ -1091,6 +1199,7 @@ public final class GPSstate implements BT747Thread {
                         MtkLogVersion = "V"
                                 + Convert.toString(
                                         Convert.toInt(sNmea[3]) / 100f, 2);
+                        setAvailable(DATA_LOG_VERSION);
                         postEvent(GpsEvent.UPDATE_LOG_VERSION);
                         break;
                     default:
@@ -1110,6 +1219,7 @@ public final class GPSstate implements BT747Thread {
                         // correct endian.
                         initialLogMode = (initialLogMode & 0xFF << 8)
                                 | (initialLogMode >> 8);
+                        setAvailable(DATA_INITIAL_LOG);
                     }
                 } catch (Exception e) {
                     // Do not care about exception

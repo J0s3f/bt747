@@ -736,21 +736,21 @@ public class Controller {
      * 
      */
     public final void reqMtkLogVersion() {
-        m.gpsModel().reqMtkLogVersion();
+        m.gpsModel().checkAvailable(GPSstate.DATA_LOG_VERSION);
     }
 
     /**
      * Request the amount of memory in use from the device.
      */
     public final void reqLogMemUsed() {
-        m.gpsModel().reqLogMemUsed();
+        m.gpsModel().checkAvailable(GPSstate.DATA_MEM_USED);
     }
 
     /**
      * Request the number of points logged in memory.
      */
     public final void reqLogMemPtsLogged() {
-        m.gpsModel().reqLogMemPtsLogged();
+        m.gpsModel().checkAvailable(GPSstate.DATA_MEM_PTS_LOGGED);
     }
 
     /**
@@ -779,7 +779,7 @@ public class Controller {
      * {@link GPSstate#loggerIsDisabled} (not currently public)<br>
      */
     public final void reqLogStatus() {
-        m.gpsModel().reqLogStatus();
+        m.gpsModel().checkAvailable(GPSstate.DATA_LOG_STATUS);
     }
 
     /**
@@ -788,7 +788,7 @@ public class Controller {
      * retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
      */
     public final void reqLogFormat() {
-        m.gpsModel().reqLogFormat();
+        m.gpsModel().checkAvailable(GPSstate.DATA_LOG_FORMAT);
     }
 
     /**
@@ -957,13 +957,15 @@ public class Controller {
      */
     protected void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
-            m.gpsModel().reqInitialLogMode(); // First may fail.
-            m.gpsModel().reqStatus();
-            m.gpsModel().reqFlashManuID(); // Should be last
+            GPSstate gpsModel = m.gpsModel();
+            gpsModel.resetAvailable();
+            gpsModel.checkAvailable(GPSstate.DATA_INITIAL_LOG); // First may fail.
+            gpsModel.reqStatus();
+            gpsModel.checkAvailable(GPSstate.DATA_FLASH_TYPE);
             reqLogFormat();
-            m.gpsModel().reqInitialLogMode();
+            gpsModel.checkAvailable(GPSstate.DATA_INITIAL_LOG);
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
-            m.gpsModel().setupTimer();
+            gpsModel.setupTimer();
             // Remember defaults
             m.setPortnbr(m.gpsRxTx().getPort());
             m.setBaudRate(m.gpsRxTx().getSpeed());
