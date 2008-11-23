@@ -69,7 +69,7 @@ public final class MainScreen extends Dialog implements ModelListener {
     private final DeviceScreen logFieldSelectScreen;
 
     private final java.util.Timer tm = new Timer();
-    private TimerTask tt;
+    private TimerTask ttLabels;
 
     /**
      * We use only one instantiation of the confirmation screen (sequence). This
@@ -109,12 +109,6 @@ public final class MainScreen extends Dialog implements ModelListener {
         this.c = c;
         this.midlet = midlet;
         UIManager.setTheme(new BlueTheme(getScreenWidth()));
-
-        tt = new TimerTask() {
-            public void run() {
-                myself.timedRun();
-            }
-        };
 
         // Set the title.
         setTitle("MTK Logger Control V"
@@ -242,20 +236,30 @@ public final class MainScreen extends Dialog implements ModelListener {
                 dataShown = SHOWN_WAYPOINTS_DATA;
                 labels = null;
                 deleteAll();
-                labels = new Label[12];
-                append(labels[0] = new Label("0. Took a picture"));
-                append(labels[1] = new Label("1. Gaz station"));
-                append(labels[2] = new Label("2. Phone booth"));
-                append(labels[3] = new Label("3. ATM"));
-                append(labels[4] = new Label("4. Bus stop"));
-                append(labels[5] = new Label("5. Parking"));
-                append(labels[6] = new Label("6. Post box"));
-                append(labels[7] = new Label("7. Railway"));
-                append(labels[8] = new Label("8. Restaurant"));
-                append(labels[9] = new Label("9. Bridge"));
-                append(labels[10] = new Label("*. Magnificent View"));
-                append(labels[11] = new Label("#. Other 3"));
+                Label[] tmpLabels = new Label[12];
+                tmpLabels = new Label[12];
+                append(tmpLabels[0] = new Label("0. Took a picture"));
+                append(tmpLabels[1] = new Label("1. Gaz station"));
+                append(tmpLabels[2] = new Label("2. Phone booth"));
+                append(tmpLabels[3] = new Label("3. ATM"));
+                append(tmpLabels[4] = new Label("4. Bus stop"));
+                append(tmpLabels[5] = new Label("5. Parking"));
+                append(tmpLabels[6] = new Label("6. Post box"));
+                append(tmpLabels[7] = new Label("7. Railway"));
+                append(tmpLabels[8] = new Label("8. Restaurant"));
+                append(tmpLabels[9] = new Label("9. Bridge"));
+                append(tmpLabels[10] = new Label("*. Magnificent View"));
+                append(tmpLabels[11] = new Label("#. Other 3"));
                 repaint();
+
+                labels = tmpLabels;
+                if (ttLabels == null) {
+                    ttLabels = new TimerTask() {
+                        public void run() {
+                            myself.timedRun();
+                        }
+                    };
+                }
             }
         } else {
             if (dataShown != SHOWN_NOCONNECTION) {
@@ -440,10 +444,12 @@ public final class MainScreen extends Dialog implements ModelListener {
      *            The index of the label to be highlighted.
      */
     private synchronized void hightlightLabel(final int i) {
-        if (labels != null) {
-            labels[i].setFontColor(Theme.RED);
-            labels[i].repaint();
-            tm.schedule(tt, 500);
+        if ((labels != null) && (i < labels.length)) {
+            if (labels[i] != null) {
+                labels[i].setFontColor(Theme.RED);
+                labels[i].repaint();
+                tm.schedule(ttLabels, 500);
+            }
         }
     }
 
@@ -455,7 +461,7 @@ public final class MainScreen extends Dialog implements ModelListener {
         if (labels != null) {
             int color = UIManager.getTheme().getFontColor();
             for (int i = 0; i < labels.length; i++) {
-                if (labels[i].getFontColor() != color) {
+                if ((labels[i] != null) && (labels[i].getFontColor() != color)) {
                     labels[i].setFontColor(color);
                     labels[i].repaint();
                 }
@@ -463,7 +469,9 @@ public final class MainScreen extends Dialog implements ModelListener {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.j4me.ui.Dialog#keyReleased(int)
      */
     protected void keyReleased(int keyCode) {
@@ -473,7 +481,7 @@ public final class MainScreen extends Dialog implements ModelListener {
             super.keyReleased(keyCode);
         }
     }
-    
+
     private void waypointFromKey(final int keyCode) {
         switch (keyCode) {
         case DeviceScreen.KEY_NUM0:
@@ -528,7 +536,7 @@ public final class MainScreen extends Dialog implements ModelListener {
             break;
         }
     }
-    
+
     /**
      * Called when key is pressed by user. Handles key.
      * 
@@ -538,8 +546,10 @@ public final class MainScreen extends Dialog implements ModelListener {
         waypointFromKey(keyCode);
         super.keyPressed(keyCode);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.j4me.ui.Dialog#keyRepeated(int)
      */
     protected void keyRepeated(int keyCode) {
@@ -558,7 +568,11 @@ public final class MainScreen extends Dialog implements ModelListener {
     }
 
     public void timedRun() {
-        resetLabels();
+        try {
+            resetLabels();
+        } catch (Exception e) {
+            Log.error("timedRun in MainScreen",e);
+        }
     }
 
     private DeviceScreen interruptedScreen = null;
