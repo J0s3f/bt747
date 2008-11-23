@@ -91,7 +91,8 @@ public final class GPSArray extends GPSFile {
         }
     }
 
-    protected int createFile(final String extra_ext) {
+    protected int createFile(final int utc, final String extra_ext,
+            final boolean createNewFile) {
         filesCreated++; // Always a success
         // Override to avoid file creation.
         return BT747Constants.NO_ERROR;

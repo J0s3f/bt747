@@ -35,6 +35,11 @@ public final class CommonOut {
         }
     }
 
+    
+    public final static String getRcrDescription(GPSRecord r) {
+        return wayPointStyles.get(getRCRKey(getRCRstr(r))).getDescription();
+    }
+    
     public final static void getHtml(final StringBuffer rec, final GPSRecord s,
             final GPSRecord activeFields, final GPSRecord selectedFields,
             final BT747Time t, final boolean recordNbrInLogs,
