@@ -129,15 +129,16 @@ public class BT747Main extends javax.swing.JFrame implements
                 "COM9:", "COM10:", "COM11:", "COM12:", "COM13:", "COM14:",  // NOI18N
                 "COM15:", "COM16:" }));  // NOI18N
         cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+                getString("TABLE_Description"),
                 getString("GPX_Description"),
-                getString("CSV_Description"),
-                getString("Compe_Description"),
-                getString("KML_Description"),
-                getString("OZI_Description"),
-                getString("NMEA_Description"),
                 getString("GMAP_Description"),
+                getString("CSV_Description"),
+                getString("KML_Description"),
                 getString("KMZ_Description"),
-                getString("TABLE_Description")}));
+                getString("NMEA_Description"),
+                getString("OZI_Description"),
+                getString("Compe_Description")
+                }));
     }
     
     private AdvancedDeviceSettingsPanel pnAdvancedSettingsPanel;
@@ -392,10 +393,10 @@ public class BT747Main extends javax.swing.JFrame implements
     /**
      * 
      */
-    private void doLogConversion() {
+    private void doLogConversion(final int selectedFormat) {
         setLogConversionParameters();
         switch (selectedFormat) {
-        case J2SEAppController.TABLE_LOGTYPE:
+        case Model.ARRAY_LOGTYPE:
             int idx = tabbedPanelAll.getTabCount()-1;
             if(tabbedPanelAll.getComponentAt(idx).getClass()==PositionTablePanel.class) {
                 tabbedPanelAll.removeTabAt(idx);
@@ -1023,8 +1024,6 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(lbConversionTime)))
         );
 
-        setSelectedFormat(cbFormat.getSelectedItem().toString());
-
         GPSDecodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.GPSDecodePanel.border.title"))); // NOI18N
 
         lbLatitude.setText(bundle.getString("BT747Main.lbLatitude.text")); // NOI18N
@@ -1379,7 +1378,7 @@ private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
     private void cbFormatItemStateChanged(java.awt.event.ItemEvent evt) {// GEN-FIRST:event_cbFormatItemStateChanged
         switch (evt.getStateChange()) {
         case java.awt.event.ItemEvent.SELECTED:
-            setSelectedFormat(evt.getItem().toString());
+            //getSelectedFormat(evt.getItem().toString());
             break;
         case java.awt.event.ItemEvent.DESELECTED:
             break;
@@ -1387,7 +1386,7 @@ private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
     }// GEN-LAST:event_cbFormatItemStateChanged
 
     private void btConvertActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btConvertActionPerformed
-        doLogConversion();
+        doLogConversion(getSelectedFormat(cbFormat.getSelectedItem().toString()));
     }// GEN-LAST:event_btConvertActionPerformed
 
     private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btOutputFileActionPerformed
@@ -1477,9 +1476,8 @@ private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
         }
     }// GEN-LAST:event_btWorkingDirectoryActionPerformed
 
-    private int selectedFormat = Model.NO_LOG_LOGTYPE;
-
-    private final void setSelectedFormat(final String selected) {
+    private final int getSelectedFormat(final String selected) {
+        int selectedFormat = Model.NO_LOG_LOGTYPE;
         if (selected.equals(getString("CSV_Description"))) {
             selectedFormat = Model.CSV_LOGTYPE;
         } else if (selected.equals(getString("GMAP_Description"))) {
@@ -1495,12 +1493,13 @@ private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
         } else if (selected.equals(getString("Compe_Description"))) {
             selectedFormat = Model.TRK_LOGTYPE;
         } else if (selected.equals(getString("KMZ_Description"))) {
-            selectedFormat = J2SEAppController.KMZ_LOGTYPE;
+            selectedFormat = Model.KMZ_LOGTYPE;
         } else if (selected.equals(getString("TABLE_Description"))) {
-            selectedFormat = J2SEAppController.TABLE_LOGTYPE;
+            selectedFormat = Model.ARRAY_LOGTYPE;
         } else {
             selectedFormat = Model.NO_LOG_LOGTYPE;
         }
+        return selectedFormat;
     }
 
 

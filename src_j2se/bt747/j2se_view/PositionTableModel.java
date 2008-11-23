@@ -21,6 +21,7 @@ public class PositionTableModel implements TableModel {
     /**
      * Column identifications. Some taken from BT747Constants.
      */
+    private static final int FMT_UTC_VALUE = -15; // TODO: currently ignored
     private static final int FMT_RCR_DESCRIPTION = -14; // TODO: currently ignored
     private static final int FMT_FIXMODE = -13; // TODO: currently ignored
     private static final int FMT_VOX = -12;
@@ -42,6 +43,7 @@ public class PositionTableModel implements TableModel {
     private int[] columnTypes = { 
             FMT_REC_NBR,
             BT747Constants.FMT_UTC_IDX,
+            //FMT_UTC_VALUE,
             BT747Constants.FMT_RCR_IDX,
             FMT_RCR_DESCRIPTION,
             BT747Constants.FMT_VALID_IDX,
@@ -120,6 +122,8 @@ public class PositionTableModel implements TableModel {
                 return "Record nbr";
             case BT747Constants.FMT_UTC_IDX:
                 return "Date & Time";
+            case FMT_UTC_VALUE:
+                return "UTC Value";
             case FMT_DATE:
                 return "Date";
             case FMT_TIME:
@@ -255,6 +259,8 @@ public class PositionTableModel implements TableModel {
             return Integer.class;
         case BT747Constants.FMT_UTC_IDX:
             return String.class;
+        case FMT_UTC_VALUE:
+            return Long.class;
         case FMT_DATE:
             break;
         case FMT_TIME:
@@ -329,6 +335,8 @@ public class PositionTableModel implements TableModel {
             return new Integer(g.recCount);
         case BT747Constants.FMT_UTC_IDX:
             return CommonOut.getTimeStr(g.utc);
+        case FMT_UTC_VALUE:
+            return new Long(g.utc);
         case FMT_DATE:
             break;
         case FMT_TIME:

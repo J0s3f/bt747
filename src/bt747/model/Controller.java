@@ -26,6 +26,7 @@ import gps.log.in.DPL700LogConvert;
 import gps.log.in.GPSLogConvert;
 import gps.log.in.HoluxTrlLogConvert;
 import gps.log.in.NMEALogConvert;
+import gps.log.out.CommonOut;
 import gps.log.out.GPSArray;
 import gps.log.out.GPSCSVFile;
 import gps.log.out.GPSCompoGPSTrkFile;
@@ -88,18 +89,19 @@ public class Controller {
             { Model.GPX_LOGTYPE, HEIGHT_WGS84 }, { Model.NMEA_LOGTYPE, HEIGHT_WGS84 },
             { Model.GMAP_LOGTYPE, HEIGHT_MSL }, { Model.TRL_LOGTYPE, HEIGHT_WGS84 },
             { Model.BIN_LOGTYPE, HEIGHT_WGS84 }, { Model.SR_LOGTYPE, HEIGHT_MSL },
+            { Model.KMZ_LOGTYPE, HEIGHT_MSL }, { Model.ARRAY_LOGTYPE, HEIGHT_MSL },
     };
     
     private final void initValues() {
         for (int i = 0; i < INIT_REFERENCE_LIST.length; i++) {
-            if(INIT_REFERENCE_LIST[i][0]<heightReferenceList.length) {
-                heightReferenceList[INIT_REFERENCE_LIST[i][0]]=INIT_REFERENCE_LIST[i][1];
+            if (INIT_REFERENCE_LIST[i][0] < heightReferenceList.length) {
+                heightReferenceList[INIT_REFERENCE_LIST[i][0]] = INIT_REFERENCE_LIST[i][1];
             }
         }
     }
     
     private final int getHeightReference(final int type) {
-        if(type<heightReferenceList.length) {
+        if ((type >= 0) && (type < heightReferenceList.length)) {
             return heightReferenceList[type];
         }
         return HEIGHT_WGS84;
@@ -417,21 +419,24 @@ public class Controller {
     public final GPSFilter[] getLogFiltersToUse() {
         GPSFilter[] usedFilters;
         String parameters = "";
+
+        parameters += "From:" + gps.log.out.CommonOut.getTimeStr(m.getFilterStartTime())+"("+m.getFilterStartTime()+")\n";
+        parameters += "To:" + gps.log.out.CommonOut.getTimeStr(m.getFilterEndTime())+"("+m.getFilterEndTime()+")\n";
         
         if (m.isAdvFilterActive()) {
             usedFilters = m.getLogFiltersAdv();
-            parameters += "Advanced filter:\n"
-                    + m.getBooleanOpt(AppSettings.IS_HOLUXM241) + "\n";
+            parameters += "Advanced filter:\n";
 
         } else {
-            parameters += "Standard filter:\n" + m.getLogFilters()[0].toString()
-                    + m.getLogFilters()[1].toString() + "\n";
+            parameters += "Standard filter:\n";
             usedFilters = m.getLogFilters();
         }
+        
         for (int i = 0; i < usedFilters.length; i++) {
             usedFilters[i].setStartTime(m.getFilterStartTime());
             usedFilters[i].setEndTime(m.getFilterEndTime());
         }
+        parameters += usedFilters[0].toString()+ usedFilters[1].toString();
         if(Generic.isDebug()) {
             Generic.debug(parameters);
         }
@@ -442,7 +447,6 @@ public class Controller {
     public final int doConvertLog(final int logType, final GPSFile gpsFile, final String ext) {
         int result;
         String parameters = ""; // For debug
-        GPSFilter[] usedFilters;
         GPSLogConvert lc;
         result = 0;
         if(Generic.isDebug()) {
@@ -450,7 +454,6 @@ public class Controller {
         }
 
         lc = getInputConversionInstance(logType);
-        usedFilters = getLogFiltersToUse();
         
         if (gpsFile != null) {
             if (filenameBuilder != null) {
@@ -469,7 +472,7 @@ public class Controller {
                     .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
             gpsFile.setIncludeTrkName(m
                     .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME));
-            gpsFile.setFilters(usedFilters);
+            gpsFile.setFilters(getLogFiltersToUse());
             gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m
                     .getIntOpt(Model.FILEFIELDFORMAT)));
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
@@ -508,12 +511,10 @@ public class Controller {
     public final GPSRecord[] doConvertLogToTrackPoints() {
         int error = 0;
         GPSRecord[] result;
-        GPSFilter[] usedFilters;
         GPSArray gpsFile = null;
         GPSLogConvert lc;
 
         lc = getInputConversionInstance(Model.GMAP_LOGTYPE);  // For height conversion.
-        usedFilters = getLogFiltersToUse();
 
         gpsFile = new GPSArray();
 
@@ -527,12 +528,7 @@ public class Controller {
                 .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
         gpsFile.setIncludeTrkName(m
                 .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
-
-        for (int i = 0; i < usedFilters.length; i++) {
-            usedFilters[i].setStartTime(m.getFilterStartTime());
-            usedFilters[i].setEndTime(m.getFilterEndTime());
-        }
-        gpsFile.setFilters(usedFilters);
+        gpsFile.setFilters(getLogFiltersToUse());
         // Next line must be called for initialisation.
         gpsFile.initialiseFile("", "", -1, m.getOutputFileSplitType());
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
