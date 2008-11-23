@@ -1,14 +1,10 @@
 package net.sf.bt747.j4me.app;
 
-import java.io.PrintStream;
-
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.DateField;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
@@ -73,6 +69,8 @@ public class MTKMidlet extends MIDlet implements CommandListener {
 
     private Command commandExit;
 
+    private boolean isNOErrorToShow = false;
+
     /**
      * Called when the application starts. Shows the first screen.
      * 
@@ -94,11 +92,26 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // (new ConvertTo(c, main)).doWork(); // Debug conversion
             main.show();
             // (new ConvertTo(c, main)).show();
+            isNOErrorToShow = true;
         } catch (Throwable t) {
-            Log.warn("Unhandled exception ", t);
             m = t;
         }
-        if(m!=null) {
+
+        if (m != null) {
+            displayThrowable(m, "MainScreen");
+        }
+
+    }
+
+    public final void displayThrowable(Throwable t, String n) {
+        if (t != null || n != null) {
+            try {
+                if (t != null) {
+                    Log.warn("Unhandled exception ", t);
+                }
+            } catch (Exception e) {
+                // Don't care
+            }
             // LogScreen l = new LogScreen(null);
             // l.show();
             Display disp;
@@ -121,8 +134,8 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // d = new DateField("help",DateField.DATE);
             javax.microedition.lcdui.TextField tb;
             tb = new TextField("", "", 250, TextField.ANY);
-            String s = m.getMessage();
-            String b = m.toString();
+            String s = t.getMessage();
+            String b = t.toString();
             String f = "";
             if (b != null) {
                 f += b;
@@ -132,6 +145,9 @@ public class MTKMidlet extends MIDlet implements CommandListener {
                     f += "\n";
                 }
                 f += s;
+            }
+            if (n != null) {
+                f += "\n" + n;
             }
             tb = new TextField(f, f, 250, TextField.ANY);
 
@@ -146,6 +162,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // affichage du formulaire
             disp.setCurrent(form);
         }
+        isNOErrorToShow = true;
     }
 
     /**
