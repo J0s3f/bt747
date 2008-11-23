@@ -1,5 +1,6 @@
 Version 1.62.2
 * First implementation of GUI table output.
+* Fixed a bug in the HTML output - tracks were drawn during way point calculation.
 
 Version 1.62.1
 * Auto update of values that change in the device without application intervention.

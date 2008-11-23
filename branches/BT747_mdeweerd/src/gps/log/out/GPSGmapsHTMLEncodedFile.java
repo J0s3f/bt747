@@ -519,35 +519,37 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
             } else {
                 // This log item is to be transcribed in the output file.
 
-                // StringBuffer rec=new StringBuffer(1024);
-                boolean isTimeSPlit;
-                isTimeSPlit = (activeFields.utc != 0)
-                        && ((s.utc - previousTime) > trackSepTime);
-                rec.setLength(0);
-                if (isNewTrack || isTimeSPlit) {
-                    isNewTrack = false;
-                    if ((activeFields.latitude != 0)
-                            && (activeFields.longitude != 0)) {
-                        if (!isTimeSPlit) {
-                            track.addTrackpoint(new Trackpoint(s.latitude,
-                                    s.longitude));
-                            endTrack(badTrackColor);
-                        } else {
-                            // points quite separated -
-                            // No line, but separate track
-                            // bt747.sys.Vm.debug(""+(s.utc-previousTime)+":"+isTimeSPlit);
-                            endTrack(goodTrackColor);
-                            splitOrEndTrack();
+                if (!isWayType) {
+                    // StringBuffer rec=new StringBuffer(1024);
+                    boolean isTimeSPlit;
+                    isTimeSPlit = (activeFields.utc != 0)
+                            && ((s.utc - previousTime) > trackSepTime);
+                    rec.setLength(0);
+                    if (isNewTrack || isTimeSPlit) {
+                        isNewTrack = false;
+                        if ((activeFields.latitude != 0)
+                                && (activeFields.longitude != 0)) {
+                            if (!isTimeSPlit) {
+                                track.addTrackpoint(new Trackpoint(s.latitude,
+                                        s.longitude));
+                                endTrack(badTrackColor);
+                            } else {
+                                // points quite separated -
+                                // No line, but separate track
+                                // bt747.sys.Vm.debug(""+(s.utc-previousTime)+":"+isTimeSPlit);
+                                endTrack(goodTrackColor);
+                                splitOrEndTrack();
+                            }
                         }
-                    }
-                    resetTrack();
-                    // Vm.debug("Pos:"+getTimeStr(s));
-                    trackStartInfo = "<b>#" + s.recCount + "# </b>"
-                            + CommonOut.getTimeStr(activeFields, t);
-                    if (trackDescription.length() == 0) {
-                        trackDescription = CommonOut
-                                .getTimeStr(activeFields, t);
-                        // bt747.sys.Vm.debug(trackDescription);
+                        resetTrack();
+                        // Vm.debug("Pos:"+getTimeStr(s));
+                        trackStartInfo = "<b>#" + s.recCount + "# </b>"
+                                + CommonOut.getTimeStr(activeFields, t);
+                        if (trackDescription.length() == 0) {
+                            trackDescription = CommonOut.getTimeStr(
+                                    activeFields, t);
+                            // bt747.sys.Vm.debug(trackDescription);
+                        }
                     }
                 }
 

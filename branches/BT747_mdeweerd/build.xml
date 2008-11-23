@@ -540,6 +540,7 @@
                         -keep public class bt747.sys.Interface { *; }
 			            -keep public class bt747.sys.Settings { *; }
 			            -keep public class bt747.sys.File { *; }
+			            -keep public class gps.log.CommonOut { *; }
                         -keep public class gps.BT747Constants { *; }
                         -keep public class gps.GpsEvent { *; }
                         -keep public class gps.GPSListener { *; }

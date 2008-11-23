@@ -93,6 +93,21 @@ public class Model extends AppSettings implements GPSListener {
      * log type (TRL holux log type).
      */
     public static final int SR_LOGTYPE = 10;
+    /**
+     * log type (KMZ log type).<br>
+     * Not provided by the default controller since not implemented on all
+     * systems.<br>
+     * Log type provided for application implementation.
+     */
+    public static final int KMZ_LOGTYPE = 11;
+
+    /**
+     * log type (Array log type - must call specific function to get array).<br>
+     * Not provided by the default controller since not implemented on all
+     * systems.<br>
+     * Log type provided for application implementation.
+     */
+    public static final int ARRAY_LOGTYPE = 12;
 
     /**
      * The number of seconds in a day.
@@ -739,7 +754,7 @@ public class Model extends AppSettings implements GPSListener {
      * Indicates if the given data is available.
      * 
      * @param dataType
-     * {@link GPSstate#DATA_MEM_USED}
+     *            {@link GPSstate#DATA_MEM_USED}
      * @return
      */
     public final boolean isAvailable(final int dataType) {
