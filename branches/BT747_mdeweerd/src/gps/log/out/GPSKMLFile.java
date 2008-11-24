@@ -20,6 +20,7 @@ import gps.log.GPSRecord;
 
 import bt747.Version;
 import bt747.sys.Convert;
+import bt747.sys.Generic;
 
 /**
  * Class to write a KML file.
@@ -29,7 +30,7 @@ import bt747.sys.Convert;
  */
 public class GPSKMLFile extends GPSFile {
     private final StringBuffer rec = new StringBuffer(1024); // reused
-                                                                // stringbuffer
+    // stringbuffer
 
     private boolean isWayType;
     private boolean isTrackType;
@@ -179,20 +180,47 @@ public class GPSKMLFile extends GPSFile {
                 color = "FFFFFF";
             }
             header = "  <Folder>\r\n" + "  <name>My Tracks</name>\r\n"
-                    + "  <open>0</open>\r\n"
-                    + "    <name>Track-" + trackName + "</name>\r\n"
-                    + "<Placemark>\r\n" + "    <Style>\r\n"
-                    + "      <LineStyle>\r\n" + "        <color>ff" + color
-                    + "</color>\r\n" + "        <width>3.0</width>\r\n"
-                    + "      </LineStyle>\r\n" + "    </Style>\r\n"
-                    + "    <LineString>\r\n" + "    <extrude>1</extrude>\r\n"
-                    + "    <tessellate>1</tessellate>\r\n"
-                    + "    <altitudeMode>absolute</altitudeMode>\r\n"
-                    + "    <coordinates>\r\n";
+                    + "  <open>0</open>\r\n" + "    <name>Track-" + trackName
+                    + "</name>\r\n";
         }
         writeTxt(header);
     }
 
+    
+    private boolean trackStarted = false;
+    private final void startTrack(final String name) {
+        String color;
+        String text;
+        if (goodTrackColor.length() == 6) {
+            color = goodTrackColor.substring(4)
+                    + goodTrackColor.substring(2, 4)
+                    + goodTrackColor.substring(0, 2);
+        } else {
+            color = "FFFFFF";
+        }
+        text ="<Folder><name>" + name +"</name>" + 
+            "<Placemark>\r\n" + "    <Style>\r\n"
+        + "      <LineStyle>\r\n" + "        <color>ff" + color
+        + "</color>\r\n" + "        <width>3.0</width>\r\n"
+        + "      </LineStyle>\r\n" + "    </Style>\r\n"
+        ;
+        writeTxt(text);
+        trackStarted = true;
+    }
+
+    private boolean isLineString = false;
+    
+    private final void endTrack() {
+        if(isLineString) {
+            writeTxt("      </coordinates>\r\n" + "     </LineString>\r\n");
+            isLineString = false;
+        }
+        if(trackStarted) {
+            writeTxt( "    </Placemark>\r\n" + "</Folder>");
+            trackStarted = false;
+        }
+
+    }
     /*
      * (non-Javadoc)
      * 
@@ -200,7 +228,7 @@ public class GPSKMLFile extends GPSFile {
      */
     protected final void writeDataFooter() {
         String footer = "";
-        if(isDateFolder) {
+        if (isDateFolder) {
             footer = "   </Folder>\r\n";
             isDateFolder = false;
         }
@@ -209,13 +237,12 @@ public class GPSKMLFile extends GPSFile {
         } else if (isTrackType) {
             footer += "    </Folder>\r\n" + "  </Folder>\r\n" + "\r\n";
         } else {
-            footer += "      </coordinates>\r\n" + "     </LineString>\r\n"
-                    + "    </Placemark>\r\n"
-                    + "  </Folder>\r\n";
+            endTrack();
+            footer += "  </Folder>\r\n";
         }
         writeTxt(footer);
     }
-    
+
     /**
      * Indicates if waypoint sub folder is opened.
      */
@@ -223,7 +250,7 @@ public class GPSKMLFile extends GPSFile {
     /**
      * Provides the current WayFolderDate
      */
-    private String currentWayFolderDate="";
+    private String currentWayFolderDate = "";
 
     /*
      * (non-Javadoc)
@@ -244,21 +271,21 @@ public class GPSKMLFile extends GPSFile {
                             + (t.getDay() < 10 ? "0" : "")
                             + Convert.toString(t.getDay());
                 }
-                
+
                 if (isWayType
                         || (isTrackType && (isIncludeTrkName || isTrkComment))) {
-                    if(isDateFolder) {
-                        if(!dateString.equals(currentWayFolderDate)) {
+                    if (isDateFolder) {
+                        if (!dateString.equals(currentWayFolderDate)) {
                             rec.append("</Folder>");
                             isDateFolder = false;
                         }
                     }
-                    if(!isDateFolder) {
+                    if (!isDateFolder) {
                         rec.append("<Folder><name>");
-                        currentWayFolderDate=dateString;
+                        currentWayFolderDate = dateString;
                         rec.append(dateString);
                         rec.append("</name>\r\n");
-                        isDateFolder=true;
+                        isDateFolder = true;
                     }
                     rec.append("<Placemark>\r\n");
                     if (!isTrackType || isIncludeTrkName) {
@@ -351,9 +378,35 @@ public class GPSKMLFile extends GPSFile {
                             && (selectedFileFields.longitude != 0)
                             && (activeFields.latitude != 0)
                             && (selectedFileFields.latitude != 0)) {
+                        boolean isChangeLineString = false;
+
+                        boolean isTimeSplit;
+                        isTimeSplit = (activeFields.utc != 0)
+                                && ((s.utc - previousTime) > trackSepTime);
+                        if(isTimeSplit) {
+                            endTrack();
+                        }
+                        if(!trackStarted) {
+                            String name = "";
+                            if(activeFields.utc!=0) {
+                                name = CommonOut.getTimeStr(s.utc);
+                            }
+                            startTrack(name);
+                        }
                         if (((activeFields.height != 0) && (selectedFileFields.height != 0)) != (altitudeMode == 0)) {
+                            // Must change altitude mode because height
+                            // availability changed.
+                            isChangeLineString = true;
+                        }
+
+                        if (isLineString && (isChangeLineString)) {
                             rec.append("</coordinates>");
-                            rec.append("    </LineString><LineString>\r\n"
+                            rec.append("</LineString>");
+                            isLineString = false;
+                        }
+                        if (!isLineString) {
+                            isLineString = true;
+                            rec.append("<LineString>\r\n"
                                     + "    <extrude>1</extrude>\r\n"
                                     + "    <tessellate>1</tessellate>\r\n"
                                     + "    <altitudeMode>");
