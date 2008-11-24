@@ -9,8 +9,8 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package gps.connection;
 
@@ -158,6 +158,7 @@ public final class GPSRxTxPort extends GPSPort {
         boolean portFound = false;
         if (os_name.toLowerCase().startsWith("mac")) {
             for (int i = 0; !portFound && (i < 3); i++) {
+                // /dev/tty.HOLUX_M-241-SPPSlave-1
                 freeTextPort = "/dev/tty.HOLUX_M-241-SSPSlave-" + i;
                 portFound = (new File(freeTextPort)).exists();
             }
