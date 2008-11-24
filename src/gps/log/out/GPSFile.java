@@ -106,6 +106,7 @@ public abstract class GPSFile {
 
     protected int previousDate = 0;
     protected int previousTime = 0;
+    protected int nextPreviousTime = 0;
     protected boolean separateTrack = false;
     /**
      * When two points are more than this time apart, a new track segment is
@@ -300,6 +301,7 @@ public abstract class GPSFile {
         String extraExt; // Extra extension for log file
         boolean newDate = false;
         int dateref = 0;
+        previousTime = nextPreviousTime;
 
         if (activeFields.utc != 0) {
             t.setUTCTime(r.utc); // Initialisation needed later too!
@@ -386,7 +388,7 @@ public abstract class GPSFile {
         }
 
         if (activeFields.utc != 0 && recordIsNeeded(r)) {
-            previousTime = r.utc;
+            nextPreviousTime = r.utc;
         }
     };
 
@@ -419,6 +421,8 @@ public abstract class GPSFile {
      */
     public boolean nextPass() {
         previousDate = 0;
+        previousTime = 0;
+        nextPreviousTime = 0;
         firstRecord = true;
         if (nbrOfPassesToGo == 0) {
             // Last Pass done

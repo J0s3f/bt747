@@ -1,3 +1,6 @@
+Version 1.62.4
+* Further improvement to KML/KMZ output and to GPX output (empty point).
+
 Version 1.62.3
 * Waypoints in KML and KMZ output now arranged in subfolders labeled by date.d
 * run_j2se.bat startup script change to allow command line execution.

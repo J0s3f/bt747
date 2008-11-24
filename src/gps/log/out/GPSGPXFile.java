@@ -9,14 +9,9 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************
 // Thanks to Marcus Schmidke for modifications to the output format
 // making it compatible with MapSource that requires specific field
 // ordering.
@@ -27,6 +22,7 @@ import gps.log.GPSRecord;
 
 import bt747.Version;
 import bt747.sys.Convert;
+import bt747.sys.Generic;
 
 /**
  * Class to write a GPX file.
@@ -455,7 +451,11 @@ public final class GPSGPXFile extends GPSFile {
                 } else {
                     rec.append("</trkpt>\r\n");
                 }
-                writeTxt(rec.toString());
+                String ss = rec.toString();
+                if(ss.length()>21) {
+                    writeTxt(ss);
+                }
+                rec.setLength(0);
 
                 isNewTrack = false;
 

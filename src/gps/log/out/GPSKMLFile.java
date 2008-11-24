@@ -186,8 +186,8 @@ public class GPSKMLFile extends GPSFile {
         writeTxt(header);
     }
 
-    
     private boolean trackStarted = false;
+
     private final void startTrack(final String name) {
         String color;
         String text;
@@ -198,29 +198,29 @@ public class GPSKMLFile extends GPSFile {
         } else {
             color = "FFFFFF";
         }
-        text ="<Folder><name>" + name +"</name>" + 
-            "<Placemark>\r\n" + "    <Style>\r\n"
-        + "      <LineStyle>\r\n" + "        <color>ff" + color
-        + "</color>\r\n" + "        <width>3.0</width>\r\n"
-        + "      </LineStyle>\r\n" + "    </Style>\r\n"
-        ;
+        text = "<Placemark>" + "<name>" + name + "</name>" + "\r\n"
+                + "    <Style>\r\n" + "      <LineStyle>\r\n"
+                + "        <color>ff" + color + "</color>\r\n"
+                + "        <width>3.0</width>\r\n" + "      </LineStyle>\r\n"
+                + "    </Style>\r\n";
         writeTxt(text);
         trackStarted = true;
     }
 
     private boolean isLineString = false;
-    
+
     private final void endTrack() {
-        if(isLineString) {
+        if (isLineString) {
             writeTxt("      </coordinates>\r\n" + "     </LineString>\r\n");
             isLineString = false;
         }
-        if(trackStarted) {
-            writeTxt( "    </Placemark>\r\n" + "</Folder>");
+        if (trackStarted) {
+            writeTxt("    </Placemark>\r\n");
             trackStarted = false;
         }
 
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -383,12 +383,12 @@ public class GPSKMLFile extends GPSFile {
                         boolean isTimeSplit;
                         isTimeSplit = (activeFields.utc != 0)
                                 && ((s.utc - previousTime) > trackSepTime);
-                        if(isTimeSplit) {
+                        if (isTimeSplit) {
                             endTrack();
                         }
-                        if(!trackStarted) {
+                        if (!trackStarted) {
                             String name = "";
-                            if(activeFields.utc!=0) {
+                            if (activeFields.utc != 0) {
                                 name = CommonOut.getTimeStr(s.utc);
                             }
                             startTrack(name);
