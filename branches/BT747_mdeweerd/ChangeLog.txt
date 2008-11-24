@@ -1,3 +1,6 @@
+Version 1.62.5
+* Problem with table initialization (GUI table) seen on Java 1.5 - should be corrected.
+
 Version 1.62.4
 * Further improvement to KML/KMZ output and to GPX output (empty point).
 

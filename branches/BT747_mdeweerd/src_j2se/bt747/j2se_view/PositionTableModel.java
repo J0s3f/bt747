@@ -1,6 +1,17 @@
-/**
- * 
- */
+//********************************************************************
+//***                           BT 747                             ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
+//***  *********************************************************** ***
 package bt747.j2se_view;
 
 import gps.BT747Constants;
@@ -51,10 +62,10 @@ public class PositionTableModel implements TableModel {
             BT747Constants.FMT_LONGITUDE_IDX,
             BT747Constants.FMT_HEIGHT_IDX,
             BT747Constants.FMT_HDOP_IDX,
-            BT747Constants.FMT_VDOP_IDX,
+            BT747Constants.FMT_PDOP_IDX,
             FMT_VOX};
 
-    private GPSRecord[] gpsData;
+    private GPSRecord[] gpsData = new GPSRecord[0];
 
     /**
      * @return the gpsData
@@ -366,11 +377,11 @@ public class PositionTableModel implements TableModel {
         case BT747Constants.FMT_DAGE_IDX:
             return new Integer(g.dage);
         case BT747Constants.FMT_PDOP_IDX:
-            return new Float(g.pdop/10.0f);
+            return new Float(g.pdop/100.0f);
         case BT747Constants.FMT_HDOP_IDX:
-            return new Float(g.hdop/10.0f);
+            return new Float(g.hdop/100.0f);
         case BT747Constants.FMT_VDOP_IDX:
-            return new Float(g.vdop/10.0f);
+            return new Float(g.vdop/100.0f);
         case BT747Constants.FMT_NSAT_IDX:
             return new Integer(g.nsat);
         case FMT_FIXMODE:
