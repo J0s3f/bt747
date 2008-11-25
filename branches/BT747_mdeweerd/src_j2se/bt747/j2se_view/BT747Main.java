@@ -37,6 +37,7 @@ import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
 
 import bt747.Version;
+import bt747.j2se_view.exif.ExifJPG;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
@@ -1606,6 +1607,7 @@ private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
      *            the command line arguments
      */
     public static void main(final String args[]) {
+        //new ExifJPG().setPath("D:\\My videos\\Appartement Bezons 1\\DSC00397-1.JPG");
         if(args.length>=1) {
             if(args[0].equals("arch")) {
                 System.out.print(java.lang.System.getProperty("os.arch"));
