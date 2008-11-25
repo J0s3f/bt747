@@ -25,7 +25,8 @@ import gps.log.GPSRecord;
  * 
  */
 public class ImageData {
-    private GPSRecord gpsInfo = GPSRecord.getLogFormatRecord(0); // Invalid values.
+    private GPSRecord gpsInfo = GPSRecord.getLogFormatRecord(0); // Invalid
+    // values.
     private int utc;
 
     private int width;
@@ -44,22 +45,36 @@ public class ImageData {
         getImageInfo();
     }
 
+    private double getLatOrLon(ExifAttribute atr) {
+        double xtitude = -99999;
+        if (atr.getCount() == 3) {
+            double a = atr.getFloatValue(0);
+            double b = atr.getFloatValue(1);
+            double c = atr.getFloatValue(2);
+            xtitude = a + b / 60 + c / 3600;
+
+        } else {
+            xtitude = -99999;
+        }
+        return xtitude;
+    }
+
     private void getImageInfo() {
         ExifJPG exifJpg = new ExifJPG();
         if (exifJpg.setPath(getPath())) {
             ExifAttribute atr;
-            atr = exifJpg.getExifAttribute(ExifConstants.TAG_IMAGEWIDTH);
+            atr = exifJpg.getExifAttribute(ExifConstants.TAG_PIXELXDIMENSION);
             if (atr != null) {
-                setWidth(atr.getIntValue());
+                setWidth(atr.getIntValue(0));
             }
 
-            atr = exifJpg.getExifAttribute(ExifConstants.TAG_IMAGELENGTH);
+            atr = exifJpg.getExifAttribute(ExifConstants.TAG_PIXELYDIMENSION);
             if (atr != null) {
-                setHeight(atr.getIntValue());
+                setHeight(atr.getIntValue(0));
             }
             atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSLATITUDE);
             if (atr != null) {
-                gpsInfo.latitude = atr.getFloatValue();
+                gpsInfo.latitude = getLatOrLon(atr);
                 atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSLATITUDEREF);
                 if (atr != null) {
                     if (atr.getStringValue().toUpperCase().indexOf('S') >= 0) {
@@ -69,27 +84,21 @@ public class ImageData {
             }
             atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSLONGITUDE);
             if (atr != null) {
-                gpsInfo.longitude = atr.getFloatValue();
-                atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSLONGITUDEREF);
+                gpsInfo.longitude = getLatOrLon(atr);
+                atr = exifJpg
+                        .getGpsAttribute(ExifConstants.TAG_GPSLONGITUDEREF);
                 if (atr != null) {
-                    if (atr.getStringValue().toUpperCase().indexOf('S') >= 0) {
+                    if (atr.getStringValue().toUpperCase().indexOf('W') >= 0) {
                         gpsInfo.longitude = -gpsInfo.longitude;
                     }
                 }
-            }
-            atr = exifJpg.getExifAttribute(ExifConstants.TAG_IMAGELENGTH);
-            if (atr != null) {
-                setHeight(atr.getIntValue());
-            }
-            atr = exifJpg.getExifAttribute(ExifConstants.TAG_IMAGELENGTH);
-            if (atr != null) {
-                setHeight(atr.getIntValue());
             }
         }
     }
 
     /**
-     * @param utc the utc to set
+     * @param utc
+     *            the utc to set
      */
     private void setUtc(int utc) {
         this.utc = utc;
@@ -103,7 +112,8 @@ public class ImageData {
     }
 
     /**
-     * @param width the width to set
+     * @param width
+     *            the width to set
      */
     private void setWidth(int width) {
         this.width = width;
@@ -117,7 +127,8 @@ public class ImageData {
     }
 
     /**
-     * @param height the height to set
+     * @param height
+     *            the height to set
      */
     private void setHeight(int height) {
         this.height = height;
@@ -126,12 +137,13 @@ public class ImageData {
     /**
      * @return the height
      */
-    private int getHeight() {
+    public int getHeight() {
         return height;
     }
 
     /**
-     * @param path the path to set
+     * @param path
+     *            the path to set
      */
     private void setPath(String path) {
         this.path = path;
@@ -145,7 +157,8 @@ public class ImageData {
     }
 
     /**
-     * @param card the card to set
+     * @param card
+     *            the card to set
      */
     private void setCard(int card) {
         this.card = card;
@@ -157,4 +170,20 @@ public class ImageData {
     public int getCard() {
         return card;
     }
+
+    /**
+     * @return the gpsInfo
+     */
+    public final GPSRecord getGpsInfo() {
+        return this.gpsInfo;
+    }
+
+    /**
+     * @param gpsInfo
+     *            the gpsInfo to set
+     */
+    public final void setGpsInfo(final GPSRecord gpsInfo) {
+        this.gpsInfo = gpsInfo;
+    }
+
 }

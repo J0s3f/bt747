@@ -27,7 +27,6 @@ public class ExifAttribute {
     private int type;
     private int count;
     private byte[] value;
-    private int denominator;
     private boolean endian;
 
     public ExifAttribute() {
@@ -113,15 +112,16 @@ public class ExifAttribute {
     public final String toString() {
         String s = "";
         StringBuffer sb;
+        // TOD: read all values if count !=1
         switch (type) {
         case ExifConstants.BYTE:
-            s = " Byte:" + getIntValue();
+            s = " Byte:" + getIntValue(0);
             break;
         case ExifConstants.SHORT:
-            s = " Short:" + getIntValue();
+            s = " Short:" + getIntValue(0);
             break;
         case ExifConstants.LONG:
-            s = " Long:" + getIntValue();
+            s = " Long:" + getIntValue(0);
             break;
         case ExifConstants.ASCII:
             sb = new StringBuffer(value.length + 10);
@@ -145,10 +145,10 @@ public class ExifAttribute {
             s = sb.toString();
             break;
         case ExifConstants.RATIONAL:
-            s = " Rat:" + getFloatValue();
+            s = " Rat:" + getFloatValue(0);
             break;
         case ExifConstants.SRATIONAL:
-            s = " Srat:" + getFloatValue();
+            s = " Srat:" + getFloatValue(0);
             break;
         default:
             break;
@@ -222,54 +222,54 @@ public class ExifAttribute {
         return value;
     }
 
-    public final float getFloatValue() {
-        int nom = ExifUtils.getLong4byte(value, 0, endian);
-        int denominator = ExifUtils.getLong4byte(value, 4, endian);
-        if (denominator == 0) {
-            Generic.debug("Invalid EXIF atribute value");
-            return (float) nom;
-        }
-        if ((nom < 0 & denominator < 0) || (nom >= 0 && denominator > 0)) {
-            return ((float) nom) / ((float) (denominator));
+    public final float getFloatValue(final int idx) {
+        if (type == ExifConstants.RATIONAL || type == ExifConstants.SRATIONAL) {
+            int offset = 8 * idx;
+            if (offset + 8 <= value.length) {
+                int nom = ExifUtils.getLong4byte(value, offset, endian);
+                int denominator = ExifUtils.getLong4byte(value, offset + 4,
+                        endian);
+                if (denominator == 0) {
+                    Generic.debug("Invalid EXIF atribute value");
+                    return (float) nom;
+                }
+                if ((nom < 0 & denominator < 0)
+                        || (nom >= 0 && denominator > 0)) {
+                    return ((float) nom) / ((float) (denominator));
+                } else {
+                    return (-(float) nom) / ((float) (denominator));
+                }
+            }
         } else {
-            return (-(float) nom) / ((float) (denominator));
+            Generic.debug("Attribute " + type + " is not a float");
         }
+        return 0.0f; // TODO: NaN
     }
 
     public final String getStringValue() {
         StringBuffer sb = new StringBuffer(value.length);
         for (int i = 0; i < value.length; i++) {
-            sb.append(Convert.unsigned2hex(value[i], 2));
+            sb.append((char) value[i]);
         }
         return sb.toString();
     }
 
-    public final int getIntValue() {
-        switch (type) {
-        case ExifConstants.BYTE:
-            return ExifUtils.getByte(value, 0, endian);
-        case ExifConstants.SHORT:
-            return ExifUtils.getShort2byte(value, 0, endian);
-        case ExifConstants.LONG:
-            return ExifUtils.getLong4byte(value, 0, endian);
-        default:
-            return 0;
+    public final int getIntValue(final int idx) {
+        int unitSize = getValueUnitSize(type); 
+        int offset = unitSize * idx;
+        if (offset + unitSize <= value.length) {
+            switch (type) {
+            case ExifConstants.BYTE:
+                return ExifUtils.getByte(value, offset, endian);
+            case ExifConstants.SHORT:
+                return ExifUtils.getShort2byte(value, offset, endian);
+            case ExifConstants.LONG:
+                return ExifUtils.getLong4byte(value, offset, endian);
+            default:
+                return 0;
+            }
         }
+        return 0; // TODO: similar to NaN?
 
-    }
-
-    /**
-     * @return the denominator
-     */
-    public final int getDenominator() {
-        return this.denominator;
-    }
-
-    /**
-     * @param denominator
-     *            the denominator to set
-     */
-    public final void setDenominator(final int denominator) {
-        this.denominator = denominator;
     }
 }
