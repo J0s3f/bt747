@@ -1,3 +1,6 @@
+Version 1.62.6
+* First image table added.
+
 Version 1.62.5
 * Problem with table initialization (GUI table) seen on Java 1.5 - should be corrected.
 
