@@ -101,6 +101,71 @@ public class ExifConstants {
     public static final int TAG_EXIF = 0x8769;
     /** GPS tag GPSInfo IFD Pointer 34853 8825 O O O O */
     public static final int TAG_GPSINFO = 0x8825;
+    /** Exposure time ExposureTime 33434 829A R R R R */
+    /** F number FNumber 33437 829D O O O O */
+    /** Exposure program ExposureProgram 34850 8822 O O O O */
+    /** Spectral sensitivity SpectralSensitivity 34852 8824 O O O O */
+    /** ISO speed ratings ISOSpeedRatings 34855 8827 O O O O */
+    /** Optoelectric coefficient OECF 34856 8828 O O O O */
+    /** Exif Version ExifVersion 36864 9000 M M M M */
+    /** Date and time original image was */
+    /** generated DateTimeOriginal 36867 9003 O O O O */
+    /** Date and time image was made */
+    /** digital data DateTimeDigitized 36868 9004 O O O O */
+    /** Meaning of each component ComponentsConfiguration 37121 9101 N N N M */
+    /** Image compression mode CompressedBitsPerPixel 37122 9102 N N N O */
+    /** Shutter speed ShutterSpeedValue 37377 9201 O O O O */
+    /** Aperture ApertureValue 37378 9202 O O O O */
+    /** Brightness BrightnessValue 37379 9203 O O O O */
+    /** Exposure bias ExposureBiasValue 37380 9204 O O O O */
+    /** Maximum lens aperture MaxApertureValue 37381 9205 O O O O */
+    /** Subject distance SubjectDistance 37382 9206 O O O O */
+    /** Metering mode MeteringMode 37383 9207 O O O O */
+    /** Light source LightSource 37384 9208 O O O O */
+    /** Flash Flash 37385 9209 R R R R */
+    /** Lens focal length FocalLength 37386 920A O O O O */
+    /** Subject area SubjectArea 37396 9214 O O O O */
+    /** Manufacturer notes MakerNote 37500 927C O O O O */
+    /** User comments UserComment 37510 9286 O O O O */
+    public static final int TAG_USERCOMMENT = 0xA002;
+    /** DateTime subseconds SubSecTime 37520 9290 O O O O */
+    /** DateTimeOriginal subseconds SubSecTimeOriginal 37521 9291 O O O O */
+    /** DateTimeDigitized subseconds SubSecTimeDigitized 37522 9292 O O O O */
+    /** Supported Flashpix version FlashpixVersion 40960 A000 M M M M */
+    /** Color space information ColorSpace 40961 A001 M M M M */
+    /** Valid image width PixelXDimension 40962 A002 N N N M */
+    public static final int TAG_PIXELXDIMENSION = 0xA002;
+    /** Valid image height PixelYDimension 40963 A003 N N N M */
+    public static final int TAG_PIXELYDIMENSION = 0xA003;
+    /** Related audio file RelatedSoundFile 40964 A004 O O O O */
+    public static final int TAG_RELATEDSOUNDFILE = 0xA004;
+    /** Interoperability tag Interoperability IFD Pointer 40965 A005 N N N O */
+    public static final int TAG_INTEROPERABILITY_IFD_POINTER = 0xA005;
+    /** Flash energy FlashEnergy 41483 A20B O O O O */
+    /** Spatial frequency response SpatialFrequencyResponse 41484 A20C O O O O */
+    /** Focal plane X resolution FocalPlaneXResolution 41486 A20E O O O O */
+    /** Focal plane Y resolution FocalPlaneYResolution 41487 A20F O O O O */
+    /** Focal plane resolution unit FocalPlaneResolutionUnit 41488 A210 O O O O */
+    /** Subject location SubjectLocation 41492 A214 O O O O */
+    /** Exposure index ExposureIndex 41493 A215 O O O O */
+    /** Sensing method SensingMethod 41495 A217 O O O O */
+    /** File source FileSource 41728 A300 O O O O */
+    /** Scene type SceneType 41729 A301 O O O O */
+    /** CFA pattern CFAPattern 41730 A302 O O O O */
+    /** Custom image processing CustomRendered 41985 A401 O O O O */
+    /** Exposure mode ExposureMode 41986 A402 R R R R */
+    /** White balance WhiteBalance 41987 A403 R R R R */
+    /** Digital zoom ratio DigitalZoomRatio 41988 A404 O O O O */
+    /** Focal length in 35 mm film FocalLengthIn35mmFilm 41989 A405 O O O O */
+    /** Scene capture type SceneCaptureType 41990 A406 R R R R */
+    /** Gain control GainControl 41991 A407 O O O O */
+    /** Contrast Contrast 41992 A408 O O O O */
+    /** Saturation Saturation 41993 A409 O O O O */
+    /** Sharpness Sharpness 41994 A40A O O O O */
+    /** Device settings description DeviceSettingDescription 41995 A40B O O O O */
+    /** Subject distance range SubjectDistanceRange 41996 A40C O O O O */
+    /** Unique image ID ImageUniqueID 42016 A420 O O O O */
+    public static final int TAG_IMAGEUNIQUEID = 0xA420;
 
     /** A. Tags Relating to GPS IFD */
     /** GPS tag version GPSVersionID 0 0 BYTE 4 */

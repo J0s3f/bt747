@@ -146,6 +146,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private FiltersPanel pnFiltersPanel;
     private OutputSettingsPanel pnOutputSettingsPanel;
     private AdvancedFileSettingsPanel pnAdvancedFileSettingsPanel;
+    private ImageTablePanel pnImagePanel;
     /**
      * Initialize application data. Gets the values from the model to set them
      * in the GUI.
@@ -180,6 +181,10 @@ public class BT747Main extends javax.swing.JFrame implements
         tabbedPanelAll.insertTab(getString("BT747Main.AdvancedfileSettingsPanel.TabConstraints.tabTitle"),
                 null, pnAdvancedFileSettingsPanel, null, 5);
 
+        pnImagePanel = new ImageTablePanel();
+        pnImagePanel.init(c);
+        tabbedPanelAll.insertTab(getString("ImagePanel.title"), null, pnImagePanel, null, 6);
+        
         this.pack();
 
         updateGuiData(); // For internationalisation - not so easy in netbeans
@@ -1606,7 +1611,6 @@ private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
      *            the command line arguments
      */
     public static void main(final String args[]) {
-        new bt747.j2se_view.exif.ExifJPG().setPath("D:\\My videos\\Appartement Bezons 1\\DSC00397-1.JPG");
         if(args.length>=1) {
             if(args[0].equals("arch")) {
                 System.out.print(java.lang.System.getProperty("os.arch"));

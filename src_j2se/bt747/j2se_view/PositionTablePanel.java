@@ -69,6 +69,7 @@ public class PositionTablePanel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblValues.setColumnSelectionAllowed(true);
         jScrollPane1.setViewportView(tblValues);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);

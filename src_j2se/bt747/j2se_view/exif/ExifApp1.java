@@ -80,9 +80,8 @@ public class ExifApp1 {
         ExifAttribute exifAtr;
         exifAtr = Ifd0.get(ExifConstants.TAG_EXIF);
         if (exifAtr != null) {
-            currentIdxInBuffer = exifAtr.getIntValue() + tiffHeaderStart;
             exifBlock = new ExifIfdBlock();
-            exifBlock.read(buffer, exifAtr.getIntValue() + tiffHeaderStart,
+            exifBlock.read(buffer, exifAtr.getIntValue(0) + tiffHeaderStart,
                     tiffHeaderStart, bigEndian);
         }
 
@@ -90,7 +89,7 @@ public class ExifApp1 {
         exifAtr = Ifd0.get(ExifConstants.TAG_GPSINFO);
         if (exifAtr != null) {
             gpsBlock = new ExifIfdBlock();
-            gpsBlock.read(buffer, exifAtr.getIntValue() + tiffHeaderStart,
+            gpsBlock.read(buffer, exifAtr.getIntValue(0) + tiffHeaderStart,
                     tiffHeaderStart, bigEndian);
         }
 
@@ -115,8 +114,8 @@ public class ExifApp1 {
     }
 
     public final ExifAttribute getGpsAttribute(final int tag) {
-        if (exifBlock != null) {
-            return exifBlock.get(tag);
+        if (gpsBlock != null) {
+            return gpsBlock.get(tag);
         } else {
             return null;
         }

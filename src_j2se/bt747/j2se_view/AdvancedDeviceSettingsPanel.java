@@ -22,7 +22,7 @@ import bt747.model.ModelListener;
 import bt747.sys.Convert;
 /**
  *
- * @author  Mario
+ * @author  Mario De Weerd
  */
 public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implements
     ModelListener

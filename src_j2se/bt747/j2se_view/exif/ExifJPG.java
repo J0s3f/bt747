@@ -55,7 +55,7 @@ public class ExifJPG {
         boolean success = false;
 
         try {
-            Generic.debug(Path);
+            //bt747.sys.Generic.debug(Path);
             p = new WindowedFile(Path, File.READ_ONLY, card);
             if (p != null && p.isOpen()) {
                 byte[] buffer;
@@ -117,14 +117,25 @@ public class ExifJPG {
     }
 
     public final ExifAttribute getExifAttribute(final int tag) {
-        return exifApp1.getExifAttribute(tag);
+        if (exifApp1 != null) {
+            return exifApp1.getExifAttribute(tag);
+        } else {
+            return null;
+        }
     }
 
     public final ExifAttribute getGpsAttribute(final int tag) {
-        return exifApp1.getGpsAttribute(tag);
+        if (exifApp1 != null) {
+            return exifApp1.getGpsAttribute(tag);
+        } else {
+            return null;
+        }
     }
 
     public final void setExifAttribute(final ExifAttribute atr) {
+        if (exifApp1 != null) {
+            exifApp1 = new ExifApp1();
+        }
         exifApp1.setExifAttribute(atr);
     }
 
