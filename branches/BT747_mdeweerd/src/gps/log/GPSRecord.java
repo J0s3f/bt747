@@ -55,8 +55,8 @@ public class GPSRecord {
     public int logPeriod; // Programmed period between logged points
     public int logSpeed; // Programmed minimum speed
     public int logDistance; // Programmed distance between logged points
-    
-    public String voxStr;  // Voice recording reference.
+
+    public String voxStr; // Voice recording reference.
 
     public GPSRecord() {
         utc = 0;
@@ -117,7 +117,7 @@ public class GPSRecord {
         this.logDistance = r.logDistance;
         this.logPeriod = r.logPeriod;
         this.logSpeed = r.logSpeed;
-        if(r.voxStr!=null) {
+        if (r.voxStr != null) {
             this.voxStr = r.voxStr;
         }
     }
@@ -135,19 +135,19 @@ public class GPSRecord {
             gpsRec.valid = -1;
         }
         if ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0) {
-            gpsRec.latitude = -1;
+            gpsRec.latitude = -1000000;
         }
         if ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0) {
-            gpsRec.longitude = -1;
+            gpsRec.longitude = -1000000;
         }
         if ((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0) {
-            gpsRec.height = -1;
+            gpsRec.height = -1000000;
         }
         if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
-            gpsRec.speed = -1;
+            gpsRec.speed = -1000000;
         }
         if ((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) != 0) {
-            gpsRec.heading = -1;
+            gpsRec.heading = -1000000;
         }
         if ((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0) {
             gpsRec.dsta = -1;
@@ -193,18 +193,100 @@ public class GPSRecord {
         /* End handling record */
         return gpsRec;
     }
-    
-    /* (non-Javadoc)
+
+    public final boolean hasUtc() {
+        return utc != -1;
+    }
+
+    public final boolean hasValid() {
+        return valid != -1;
+    }
+
+    public final boolean hasLatitude() {
+        return latitude != -1000000;
+    }
+
+    public final boolean hasLongitude() {
+        return longitude != -1000000;
+    }
+
+    public final boolean hasHeight() {
+        return height != -1000000;
+    }
+
+    public final boolean hasSpeed() {
+        return speed != -1000000;
+    }
+
+    public final boolean hasHeading() {
+        return heading != -1000000;
+    }
+
+    public final boolean hasDsta() {
+        return dsta != -1;
+    }
+
+    public final boolean hasDage() {
+        return dage != -1;
+    }
+
+    public final boolean hasPdop() {
+        return pdop != -1;
+    }
+
+    public final boolean hasHdop() {
+        return hdop != -1;
+    }
+
+    public final boolean hasNsat() {
+        return nsat != -1;
+    }
+
+    public final boolean hasSid() {
+        return sid != null && sid.length != 0;
+    }
+
+    public final boolean hasSidInUse() {
+        return sidinuse != null && sidinuse.length != 0;
+    }
+
+    public final boolean hasEle() {
+        return ele != null && ele.length != 0;
+    }
+
+    public final boolean hasAzi() {
+        return azi != null && azi.length != 0;
+    }
+
+    public final boolean hasSnr() {
+        return snr != null && snr.length != 0;
+    }
+
+    public final boolean hasRcr() {
+        return nsat != -1;
+    }
+
+    public final boolean hasMilisecond() {
+        return milisecond != -1;
+    }
+
+    public final boolean hasDistance() {
+        return distance != -1;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     public String toString() {
         StringBuffer rec = new StringBuffer(100);
         rec.setLength(0);
-        rec.append("UTC:"+utc);
-        rec.append("\nVALID:"+Convert.unsigned2hex(valid, 8));
-        rec.append("\nLAT;"+latitude);
-        rec.append("\nLON:"+longitude);
-        rec.append("\nRCR:"+Convert.unsigned2hex(rcr, 8));
+        rec.append("UTC:" + utc);
+        rec.append("\nVALID:" + Convert.unsigned2hex(valid, 8));
+        rec.append("\nLAT;" + latitude);
+        rec.append("\nLON:" + longitude);
+        rec.append("\nRCR:" + Convert.unsigned2hex(rcr, 8));
         rec.append('\n');
         return rec.toString();
     }
