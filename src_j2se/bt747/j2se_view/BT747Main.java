@@ -1,7 +1,6 @@
 //********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
+//***                           BT747                              ***
+//***                 (c)2007-2008 Mario De Weerd                  ***
 //***                     m.deweerd@ieee.org                       ***
 //***  **********************************************************  ***
 //***  Software is provided "AS IS," without a warranty of any     ***
@@ -10,6 +9,7 @@
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
 //***  IS ASSUMED BY THE USER.                                     ***
+//***                                                              ***
 //***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package bt747.j2se_view;
@@ -37,7 +37,6 @@ import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
 
 import bt747.Version;
-import bt747.j2se_view.exif.ExifJPG;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
@@ -1607,7 +1606,7 @@ private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
      *            the command line arguments
      */
     public static void main(final String args[]) {
-        //new ExifJPG().setPath("D:\\My videos\\Appartement Bezons 1\\DSC00397-1.JPG");
+        new bt747.j2se_view.exif.ExifJPG().setPath("D:\\My videos\\Appartement Bezons 1\\DSC00397-1.JPG");
         if(args.length>=1) {
             if(args[0].equals("arch")) {
                 System.out.print(java.lang.System.getProperty("os.arch"));
