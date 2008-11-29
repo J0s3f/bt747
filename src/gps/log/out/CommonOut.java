@@ -35,11 +35,15 @@ public final class CommonOut {
         }
     }
 
-    
     public final static String getRcrDescription(GPSRecord r) {
-        return wayPointStyles.get(getRCRKey(getRCRstr(r))).getDescription();
+        WayPointStyle w = wayPointStyles.get(getRCRKey(getRCRstr(r)));
+        if (w != null) {
+            return wayPointStyles.get(getRCRKey(getRCRstr(r))).getDescription();
+        } else {
+            return "";
+        }
     }
-    
+
     public final static void getHtml(final StringBuffer rec, final GPSRecord s,
             final GPSRecord activeFields, final GPSRecord selectedFields,
             final BT747Time t, final boolean recordNbrInLogs,
@@ -61,29 +65,31 @@ public final class CommonOut {
             style = wayPointStyles.get(getRCRKey(rcr));
             if (s.voxStr != null) {
                 String upperVox = s.voxStr.toUpperCase();
-                boolean isPicture = upperVox.endsWith(".JPG") || upperVox.endsWith("PNG");
+                boolean isPicture = upperVox.endsWith(".JPG")
+                        || upperVox.endsWith("PNG");
                 rec.append("<br />");
                 if (style != null) {
                     rec.append(style.getDescription());
                     rec.append(':');
-                    if(isPicture) {
+                    if (isPicture) {
                         rec.append("<br />");
                     }
-                    rec.append("<a target='_new' href='");
-                    rec.append(s.voxStr);
-                    if (s.voxStr.startsWith("VOX")) {
-                        rec.append(".wav");
-                    }
-                    rec.append("'>");
-                    if (isPicture) {
-                        rec.append("<img height=150 src='");
-                        rec.append(s.voxStr);
-                        rec.append("' />");
-                    } else {
-                        rec.append("Click here");
-                    }
-                    rec.append("</a>");
                 }
+                rec.append("<a target='_new' href='");
+                rec.append(s.voxStr);
+                if (s.voxStr.startsWith("VOX")) {
+                    rec.append(".wav");
+                }
+                rec.append("'>");
+                if (isPicture) {
+                    rec.append("<img height=150 src='");
+                    rec.append(s.voxStr);
+                    rec.append("' />");
+                } else {
+                    rec.append("Click here");
+                }
+                rec.append("</a>");
+
             } else {
                 if (style != null) {
                     rec.append(" <b>(");
@@ -347,7 +353,22 @@ public final class CommonOut {
             { "0500", "Way Point",
                     "http://maps.google.com/mapfiles/kml/pal4/icon29.png" }, };
 
-    public final static WayPointStyleSet wayPointStyles = new WayPointStyleSet(
+    private static WayPointStyleSet wayPointStyles = new WayPointStyleSet(
             IconStyles);
+
+    /**
+     * @param wayPointStyles
+     *            the wayPointStyles to set
+     */
+    public static final void setWayPointStyles(WayPointStyleSet wayPointStyles) {
+        CommonOut.wayPointStyles = wayPointStyles;
+    }
+
+    /**
+     * @return the wayPointStyles
+     */
+    public static final WayPointStyleSet getWayPointStyles() {
+        return wayPointStyles;
+    }
 
 }

@@ -108,10 +108,13 @@ public class ExifConstants {
     /** ISO speed ratings ISOSpeedRatings 34855 8827 O O O O */
     /** Optoelectric coefficient OECF 34856 8828 O O O O */
     /** Exif Version ExifVersion 36864 9000 M M M M */
+    public static final int TAG_EXIFVERSION = 0x9000;
     /** Date and time original image was */
     /** generated DateTimeOriginal 36867 9003 O O O O */
+    public static final int TAG_DATETIMEORIGINAL = 0x9003;
     /** Date and time image was made */
     /** digital data DateTimeDigitized 36868 9004 O O O O */
+    public static final int TAG_DATETIMEDIGITIZED = 0x9004;
     /** Meaning of each component ComponentsConfiguration 37121 9101 N N N M */
     /** Image compression mode CompressedBitsPerPixel 37122 9102 N N N O */
     /** Shutter speed ShutterSpeedValue 37377 9201 O O O O */
@@ -127,10 +130,13 @@ public class ExifConstants {
     /** Subject area SubjectArea 37396 9214 O O O O */
     /** Manufacturer notes MakerNote 37500 927C O O O O */
     /** User comments UserComment 37510 9286 O O O O */
-    public static final int TAG_USERCOMMENT = 0xA002;
+    public static final int TAG_USERCOMMENT = 0x9286;
     /** DateTime subseconds SubSecTime 37520 9290 O O O O */
+    public static final int TAG_SUBSECTIME= 0x9290;
     /** DateTimeOriginal subseconds SubSecTimeOriginal 37521 9291 O O O O */
+    public static final int TAG_SUBSECTIMEORIGINAL= 0x9291;
     /** DateTimeDigitized subseconds SubSecTimeDigitized 37522 9292 O O O O */
+    public static final int TAG_SUBSECTIMEDIGITIZED = 0x9292;
     /** Supported Flashpix version FlashpixVersion 40960 A000 M M M M */
     /** Color space information ColorSpace 40961 A001 M M M M */
     /** Valid image width PixelXDimension 40962 A002 N N N M */

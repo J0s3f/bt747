@@ -126,6 +126,11 @@ public class GPSRecord {
         return new GPSRecord(this);
     }
 
+    public final int getLogFormat() {
+        // Return log format based on content.
+        return 0xFFFFFFFF;
+    }
+
     public final static GPSRecord getLogFormatRecord(final int logFormat) {
         GPSRecord gpsRec = new GPSRecord();
         if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
@@ -272,6 +277,23 @@ public class GPSRecord {
 
     public final boolean hasDistance() {
         return distance != -1;
+    }
+
+    public final boolean equalsFormat(final GPSRecord r) {
+        return (hasUtc() == r.hasUtc()) && (hasValid() == r.hasValid())
+                && (hasLatitude() == r.hasLatitude())
+                && (hasLongitude() == r.hasLongitude())
+                && (hasHeight() == r.hasHeight())
+                && (hasSpeed() == r.hasSpeed())
+                && (hasHeading() == r.hasHeading())
+                && (hasDsta() == r.hasDsta()) && (hasDage() == r.hasDage())
+                && (hasPdop() == r.hasPdop()) && (hasHdop() == r.hasHdop())
+                && (hasNsat() == r.hasNsat()) && (hasSid() == r.hasSid())
+                && (hasSidInUse() == r.hasSidInUse())
+                && (hasEle() == r.hasEle()) && (hasAzi() == r.hasAzi())
+                && (hasSnr() == r.hasSnr()) && (hasRcr() == r.hasRcr())
+                && (hasMilisecond() == r.hasMilisecond())
+                && (hasDistance() == r.hasDistance());
     }
 
     /*

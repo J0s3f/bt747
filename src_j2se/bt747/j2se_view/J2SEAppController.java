@@ -18,6 +18,7 @@ import gps.BT747Constants;
 import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
+import gps.log.out.AllWayPointStyles;
 
 import java.awt.Component;
 import java.awt.Frame;
@@ -186,6 +187,7 @@ public final class J2SEAppController extends Controller {
         // static evaluation.
         initStaticsFirstTime();
         myLookAndFeel();
+        c.setWayPointStyles(new AllWayPointStyles());
     }
 
     // The next methods are to be moved to the application controller.

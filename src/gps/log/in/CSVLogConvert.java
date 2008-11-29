@@ -754,7 +754,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                     r.rcr = 1; // Suppose time (for filter)
                                 }
                                 // if (valid) {
-                                gpsFile.writeRecord(r);
+                                gpsFile.addLogRecord(r);
                                 // } // offsetInBuffer++;
                             } // if header
                         }

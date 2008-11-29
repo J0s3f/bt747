@@ -117,7 +117,7 @@ public class GPSKMLFile extends GPSFile {
                 + "  <open>1</open>\r\n");
 
         WayPointStyleSet iter;
-        iter = CommonOut.wayPointStyles.iterator();
+        iter = CommonOut.getWayPointStyles().iterator();
         while (iter.hasNext()) {
             WayPointStyle style = iter.next();
             for (int j = 0; j < 2; j++) {
@@ -132,7 +132,7 @@ public class GPSKMLFile extends GPSFile {
             }
         }
 
-        iter = CommonOut.wayPointStyles.iterator();
+        iter = CommonOut.getWayPointStyles().iterator();
         while (iter.hasNext()) {
             WayPointStyle style = iter.next();
             String x = "";

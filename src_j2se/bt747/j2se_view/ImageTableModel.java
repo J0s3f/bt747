@@ -3,6 +3,9 @@
  */
 package bt747.j2se_view;
 
+import gps.log.GPSRecord;
+import gps.log.out.CommonOut;
+
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -28,10 +31,19 @@ public class ImageTableModel extends AbstractTableModel {
             fireTableRowsInserted(row, row);
         }
     }
-    
+
+    public GPSRecord[] getSortedGPSRecords() {
+        GPSRecord[] rcrds;
+        rcrds = new GPSRecord[imageOrder.size()];
+        for (int i = 0; i < imageOrder.size(); i++) {
+            rcrds[i] = imageTable.get(imageOrder.get(i)).getGpsInfo();
+        }
+        java.util.Arrays.sort(rcrds, new GPSRecordComparator());
+        return rcrds;
+    }
 
     public void clear() {
-        int lastRow = getRowCount()-1;
+        int lastRow = getRowCount() - 1;
         imageOrder.clear();
         imageTable.clear();
         fireTableRowsDeleted(0, lastRow);
@@ -55,9 +67,11 @@ public class ImageTableModel extends AbstractTableModel {
         case GEOMETRY:
             return String.class;
         case LATITUDE:
-            return Object.class;//return Double.class;
+            return Object.class;// return Double.class;
         case LONGITUDE:
-            return Object.class;//return Double.class;
+            return Object.class;// return Double.class;
+        case DATETIME:
+            return String.class;
         default:
             return null;
         }
@@ -93,6 +107,8 @@ public class ImageTableModel extends AbstractTableModel {
             return "Latitude";
         case LONGITUDE:
             return "Longitude";
+        case DATETIME:
+            return "Date/Time";
         default:
             return null;
         }
@@ -114,8 +130,9 @@ public class ImageTableModel extends AbstractTableModel {
     public static final int GEOMETRY = 4;
     public static final int LATITUDE = 5;
     public static final int LONGITUDE = 6;
+    public static final int DATETIME = 7;
 
-    private int[] columns = { PATH, GEOMETRY, LATITUDE, LONGITUDE };
+    private int[] columns = { DATETIME, PATH, GEOMETRY, LATITUDE, LONGITUDE };
 
     private int columnToDataType(final int column) {
         if (column < columns.length) {
@@ -149,6 +166,12 @@ public class ImageTableModel extends AbstractTableModel {
             } else {
                 return null;
             }
+        case DATETIME:
+            if (img.getGpsInfo().hasUtc()) {
+                return CommonOut.getTimeStr(img.getGpsInfo().utc);
+            } else {
+                return null;
+            }
         default:
             return null;
         }
@@ -168,7 +191,6 @@ public class ImageTableModel extends AbstractTableModel {
         return getColumn(imageTable.get(imageOrder.elementAt(rowIndex)),
                 columnIndex);
     }
-    
 
     /*
      * (non-Javadoc)

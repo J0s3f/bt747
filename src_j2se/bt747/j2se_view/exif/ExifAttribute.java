@@ -37,7 +37,17 @@ public class ExifAttribute {
         setTag(tag);
         setType(type);
         setCount(count);
-        value = new byte[count * getValueUnitSize(type)];
+        newValue(count * getValueUnitSize(type));
+    }
+
+    private final void newValue(final int minsize) {
+        int size;
+        if ((minsize & 0x3) == 0) {
+            size = minsize;
+        } else {
+            size = (minsize & 0xFFFC) + 3;
+        }
+        value = new byte[size];
     }
 
     public static final int getValueUnitSize(final int valueType) {
@@ -93,7 +103,7 @@ public class ExifAttribute {
                         + ExifUtils.getLong4byte(buffer,
                                 currentIdxInBuffer + 8, bigEndian);
             }
-            value = new byte[size];
+            newValue(size);
             for (int i = 0; i < size; i++) {
                 value[i] = buffer[valueIdx + i];
             }
@@ -255,7 +265,7 @@ public class ExifAttribute {
     }
 
     public final int getIntValue(final int idx) {
-        int unitSize = getValueUnitSize(type); 
+        int unitSize = getValueUnitSize(type);
         int offset = unitSize * idx;
         if (offset + unitSize <= value.length) {
             switch (type) {

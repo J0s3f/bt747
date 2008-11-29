@@ -14,45 +14,22 @@
 //***  *********************************************************** ***
 package bt747.j2se_view;
 
-import java.io.File;
+import gps.log.GPSRecord;
 
-import javax.swing.filechooser.FileFilter;
+import java.util.Comparator;
 
 /**
  * @author Mario
- *
+ * 
  */
-public final class BinFileFilter extends FileFilter {
-
-    /**
-     * Lower case list of accepted extensions.
+public class GPSRecordComparator implements Comparator<GPSRecord> {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
-    private final String[] extensions = {
-            ".bin"
-    };
-    
-    
-    
-    /* (non-Javadoc)
-     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
-     */
-    @Override
-    public boolean accept(File f) {
-        String filename = f.getName().toLowerCase();
-        for (int i = 0; i < extensions.length; i++) {
-             if(filename.endsWith(extensions[i])) {
-                 return true;
-             }
-        }
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see javax.swing.filechooser.FileFilter#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return J2SEAppController.getString("BIN_Description");
+    public int compare(GPSRecord o1, GPSRecord o2) {
+        return o1.utc - o2.utc;
     }
 
 }

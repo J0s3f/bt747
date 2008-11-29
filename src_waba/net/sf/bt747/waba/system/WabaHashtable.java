@@ -89,7 +89,7 @@ public final class WabaHashtable implements BT747Hashtable {
      * 
      * @see net.sf.bt747.waba.system.BT747Hashtable#next()
      */
-    public final Object next() {
+    public final Object nextKey() {
         if (hasNext()) {
             return iterator.items[iteratorIdx++];
         } else {

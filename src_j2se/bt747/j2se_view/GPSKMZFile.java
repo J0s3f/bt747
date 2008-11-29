@@ -69,7 +69,7 @@ public final class GPSKMZFile extends GPSKMLFile {
             BT747Hashtable iter = zips.iterator();
 
             while (iter.hasNext()) {
-                Object key = iter.next();
+                Object key = iter.nextKey();
                 try {
                     currentZipStream = (ZipOutputStream) iter.get(key);
                     currentZipStream.closeEntry();

@@ -36,6 +36,8 @@ import gps.log.out.GPSGmapsHTMLEncodedFile;
 import gps.log.out.GPSKMLFile;
 import gps.log.out.GPSNMEAFile;
 import gps.log.out.GPSPLTFile;
+import gps.log.out.WayPointStyle;
+import gps.log.out.WayPointStyleSet;
 
 import bt747.sys.Generic;
 import bt747.sys.interfaces.BT747FileName;
@@ -245,6 +247,13 @@ public class Controller {
         filenameBuilder = builder;
     }
 
+    public final void setWayPointStyles(final WayPointStyleSet set) {
+        CommonOut.setWayPointStyles(set);
+    }
+
+    public final void addWayPointStyle(final WayPointStyle style) {
+        CommonOut.getWayPointStyles().add(style);
+    }
 
     private GPSFile getOutFileHandler(final int logType) {
         String parameters = ""; // For debug
@@ -444,6 +453,13 @@ public class Controller {
         return usedFilters;
     }
     
+    // TODO : Move to a model
+    private GPSRecord[] userWayPoints = null; 
+    
+    public final void setUserWayPoints(final GPSRecord[] rcrds) {
+        userWayPoints = rcrds;
+    }
+    
     public final int doConvertLog(final int logType, final GPSFile gpsFile, final String ext) {
         int result;
         String parameters = ""; // For debug
@@ -478,6 +494,7 @@ public class Controller {
             gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
                     m.getOutputFileSplitType());
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
+            gpsFile.setUserWayPointList(userWayPoints);
             currentGPSLogConvert = lc;
             if(Generic.isDebug()) {
                 Generic.debug(parameters);
@@ -517,6 +534,7 @@ public class Controller {
         lc = getInputConversionInstance(Model.GMAP_LOGTYPE);  // For height conversion.
 
         gpsFile = new GPSArray();
+        gpsFile.setUserWayPointList(userWayPoints);
 
         // m.logConversionStarted(log_type);
 

@@ -40,13 +40,13 @@ public class ExifIfdBlock {
         while ((--idx >= 0) && ((currentIdxInBuffer + 12) <= buffer.length)) {
             int len;
             atr = new ExifAttribute();
-            len = atr.read(buffer, currentIdxInBuffer,
-                    tiffHeaderStart, bigEndian);
+            len = atr.read(buffer, currentIdxInBuffer, tiffHeaderStart,
+                    bigEndian);
             if (len != 0) {
                 atrs.put(atr.getTag(), atr);
             }
             currentIdxInBuffer += len;
-            //bt747.sys.Generic.debug(atr.toString());
+            // bt747.sys.Generic.debug(atr.toString());
         }
         if (currentIdxInBuffer + 4 <= buffer.length) {
             nextIfdBlockOffset = ExifUtils.getLong4byte(buffer,
@@ -69,7 +69,6 @@ public class ExifIfdBlock {
         atrs.put(atr.getTag(), atr);
     }
 
-
     /**
      * @return the nextIfdBlockOffset
      */
@@ -83,5 +82,22 @@ public class ExifIfdBlock {
      */
     public final void setNextIfdBlockOffset(final int nextIfdBlockOffset) {
         this.nextIfdBlockOffset = nextIfdBlockOffset;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        String r = "";
+        BT747Hashtable iter = atrs.iterator();
+        while (iter.hasNext()) {
+            r += atrs.get(iter.nextKey()).toString();
+            r += "\n";
+        }
+        // TODO Auto-generated method stub
+        return r;
     }
 }

@@ -280,7 +280,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
 
                             r.valid = 0xFFFF;
                             r.rcr = 0x0001; // For filter
-                            gpsFile.writeRecord(r);
+                            gpsFile.addLogRecord(r);
                         }
                     }
                 } /* ContinueInBuffer */

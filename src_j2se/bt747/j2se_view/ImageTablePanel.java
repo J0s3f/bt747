@@ -1,15 +1,24 @@
-/*
- * ImageTablePanel.java
- *
- * Created on 25 novembre 2008, 16:05
- */
-
+//********************************************************************
+//***                           BT 747                             ***
+//***                      April 14, 2007                          ***
+//***                  (c)2007 Mario De Weerd                      ***
+//***                     m.deweerd@ieee.org                       ***
+//***  **********************************************************  ***
+//***  Software is provided "AS IS," without a warranty of any     ***
+//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
+//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
+//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
+//***  *********************************************************** ***
 package bt747.j2se_view;
 
 import java.io.File;
 
 import javax.swing.JFileChooser;
 
+import bt747.j2se_view.filefilters.JpgFileFilter;
 import bt747.model.Model;
 import bt747.sys.Generic;
 
@@ -36,8 +45,6 @@ public class ImageTablePanel extends javax.swing.JPanel {
         m = c.getModel();
 
         imageTableModel = new ImageTableModel();
-//        imageTableModel
-//                .add("D:\\My videos\\Appartement Bezons 1\\DSC00397-1.JPG");
         tbImageList.setModel(imageTableModel);
         // m.addListener(this);
 
@@ -46,13 +53,28 @@ public class ImageTablePanel extends javax.swing.JPanel {
                 selectImages();
             }
         });
-        
+
         btClearList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 imageTableModel.clear();
             }
         });
 
+        btTagFromTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                doConvert();
+            }
+        });
+
+        btSelectDestinationDir.setVisible(false);
+        btTagFromFile.setVisible(false);
+        btTagFromTable.setVisible(false);
+        tfDestinationDirectory.setVisible(false);
+    }
+
+    private void doConvert() {
+        // doLogConversion(getSelectedFormat(cbFormat.getSelectedItem().toString()));
+        // c.doLogConversion(Model.GMAP_LOGTYPE);
     }
 
     private void selectImages() {// GEN-FIRST:event_btRawLogFileActionPerformed
@@ -66,8 +88,9 @@ public class ImageTablePanel extends javax.swing.JPanel {
         // if (curDir.exists()) {
         // RawLogFileChooser.setCurrentDirectory(getRawLogFilePath());
         // }
+        ImageFileChooser.setCurrentDirectory(new File(m.getStringOpt(Model.IMAGEDIR)));
         ImageFileChooser.setAcceptAllFileFilterUsed(true);
-        // RawLogFileChooser.addChoosableFileFilter(new BinFileFilter());
+        ImageFileChooser.addChoosableFileFilter(new JpgFileFilter());
         // RawLogFileChooser.addChoosableFileFilter(new CSVFileFilter());
         // RawLogFileChooser.addChoosableFileFilter(new HoluxTRLFileFilter());
         // RawLogFileChooser.addChoosableFileFilter(new NMEAFileFilter());
@@ -76,13 +99,16 @@ public class ImageTablePanel extends javax.swing.JPanel {
         // RawLogFileChooser.addChoosableFileFilter(ff);
         // RawLogFileChooser.setFileFilter(ff);
         ImageFileChooser.setMultiSelectionEnabled(true);
-        if (ImageFileChooser.showDialog(this, getString("SetRawLogFile")) == JFileChooser.APPROVE_OPTION) {
+        if (ImageFileChooser.showDialog(this, getString("SelectImages")) == JFileChooser.APPROVE_OPTION) {
             try {
                 String path;
                 File[] files = ImageFileChooser.getSelectedFiles();
                 for (int i = 0; i < files.length; i++) {
                     imageTableModel.add(files[i].getCanonicalPath());
                 }
+                c.setStringOpt(Model.IMAGEDIR, ImageFileChooser
+                        .getCurrentDirectory().getCanonicalPath());
+                c.setUserWayPoints(imageTableModel.getSortedGPSRecords());
             } catch (Exception e) {
                 Generic.debug(getString("ImageFileChooser"), e);
             }
@@ -141,8 +167,8 @@ public class ImageTablePanel extends javax.swing.JPanel {
         btnPanel.setLayout(btnPanelLayout);
         btnPanelLayout.setHorizontalGroup(btnPanelLayout.createParallelGroup(
                 org.jdesktop.layout.GroupLayout.LEADING).add(
-                btnPanelLayout.createSequentialGroup()
-                        .add(btSelectImages).addPreferredGap(
+                btnPanelLayout.createSequentialGroup().add(btSelectImages)
+                        .addPreferredGap(
                                 org.jdesktop.layout.LayoutStyle.RELATED).add(
                                 btSelectDestinationDir).addPreferredGap(
                                 org.jdesktop.layout.LayoutStyle.RELATED).add(
@@ -166,8 +192,7 @@ public class ImageTablePanel extends javax.swing.JPanel {
                                                 btnPanelLayout
                                                         .createParallelGroup(
                                                                 org.jdesktop.layout.GroupLayout.BASELINE)
-                                                        .add(
-                                                                btSelectImages)
+                                                        .add(btSelectImages)
                                                         .add(
                                                                 btSelectDestinationDir)
                                                         .add(

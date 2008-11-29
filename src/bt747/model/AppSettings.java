@@ -166,8 +166,7 @@ public class AppSettings {
     private static final int C_NOT_USED1_IDX = C_FREETEXT_PORT_IDX
             + C_FREETEXT_PORT_SIZE;
     private static final int C_NOT_USED1_SIZE = 4;
-    private static final int C_GPSType_IDX = C_NOT_USED1_IDX
-            + C_NOT_USED1_SIZE;
+    private static final int C_GPSType_IDX = C_NOT_USED1_IDX + C_NOT_USED1_SIZE;
     private static final int C_GPSType_SIZE = 1;
     private static final int C_OUTPUTLOGCONDITIONS_IDX = C_GPSType_IDX
             + C_GPSType_SIZE;
@@ -193,7 +192,9 @@ public class AppSettings {
     private static final int C_LANGUAGE_IDX = C_LOGFILEPATH_IDX
             + C_LOGFILEPATH_SIZE;
     private static final int C_LANGUAGE_SIZE = 8;
-    private static final int C_NEXT_IDX = C_LANGUAGE_IDX + C_LANGUAGE_SIZE;
+    private static final int C_IMAGEDIR_IDX = C_LANGUAGE_IDX + C_LANGUAGE_SIZE;
+    private static final int C_IMAGEDIR_SIZE = 256;
+    private static final int C_NEXT_IDX = C_IMAGEDIR_IDX + C_IMAGEDIR_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -276,9 +277,14 @@ public class AppSettings {
     public static final int LOGFILERELPATH = 11;
     public static final int LOGFILEPATH = 12;
     /**
-     * The application's language.  Empty if not set by the user.
+     * The application's language. Empty if not set by the user.
      */
     public static final int LANGUAGE = 13;
+    /**
+     * The directory where the images are stored or where images were last
+     * chosen from. Can be used freely by the application.
+     */
+    public static final int IMAGEDIR = 14;
 
     private static final int[][] paramsList =
     // Type, idx, start, size
@@ -307,7 +313,7 @@ public class AppSettings {
                     C_LOGFILERELPATH_SIZE },
             { STRING, LOGFILEPATH, C_LOGFILEPATH_IDX, C_LOGFILEPATH_SIZE },
             { STRING, LANGUAGE, C_LANGUAGE_IDX, C_LANGUAGE_SIZE },
-            };
+            { STRING, IMAGEDIR, C_IMAGEDIR_IDX, C_IMAGEDIR_SIZE }, };
 
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
@@ -453,8 +459,11 @@ public class AppSettings {
             /* fall through */
 
         case 26:
-            setStringOpt(LANGUAGE,"");
-            setStringOpt(0, "0.27", C_VERSION_IDX, C_VERSION_SIZE);
+            setStringOpt(LANGUAGE, "");
+            /* fall through */
+        case 27: 
+            setStringOpt(IMAGEDIR, getStringOpt(LOGFILEPATH));
+            setStringOpt(0, "0.28", C_VERSION_IDX, C_VERSION_SIZE);
             /* fall through */
 
         default:
@@ -540,7 +549,7 @@ public class AppSettings {
                                 Settings.getAppSettings().length()) : ""));
         if (eventType != 0) {
             postEvent(ModelEvent.SETTING_CHANGE); // TODO: Argument is for
-                                                    // later.
+            // later.
         }
     }
 
@@ -893,8 +902,8 @@ public class AppSettings {
 
     /**
      * @param value
-     *            {@link #HEIGHT_WGS84_TO_MSL} - Setting is to convert the WGS84 height
-     *            to MSL height.
+     *            {@link #HEIGHT_WGS84_TO_MSL} - Setting is to convert the WGS84
+     *            height to MSL height.
      */
     public final void setHeightConversionMode(final int value) {
         setLocalIntOpt(0, value, C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
