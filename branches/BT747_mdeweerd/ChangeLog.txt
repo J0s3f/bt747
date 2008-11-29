@@ -1,3 +1,7 @@
+Version 1.62.7
+* Images in table with geotag information are now 'mapped' in the output.
+  Images without geotag information may be positions based on time (UTC).
+
 Version 1.62.6
 * First image table added.
 

@@ -14,11 +14,15 @@
 //***  *********************************************************** ***
 package bt747.j2se_view.image;
 
+import gps.BT747Constants;
+import gps.log.GPSRecord;
+
 import bt747.j2se_view.exif.ExifAttribute;
 import bt747.j2se_view.exif.ExifConstants;
 import bt747.j2se_view.exif.ExifJPG;
-
-import gps.log.GPSRecord;
+import bt747.sys.Convert;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Date;
 
 /**
  * @author Mario De Weerd
@@ -60,8 +64,26 @@ public class ImageData {
     }
 
     private void getImageInfo() {
+        gpsInfo.voxStr = path;
+        // TODO: change path setting.
+        int idx1 = gpsInfo.voxStr.lastIndexOf('/');
+        int idx2 = gpsInfo.voxStr.lastIndexOf('\\');
+        if (idx2 > idx1) {
+            idx1 = idx2;
+        }
+        gpsInfo.valid = BT747Constants.VALID_MANUAL_MASK;
+
+        // TODO Replace by constant to define in AllWayPointStyles
+        // Default = document
+        gpsInfo.rcr = 0x0104;
+        if (idx1 >= 0 && idx1 < gpsInfo.voxStr.length()) {
+            gpsInfo.voxStr = gpsInfo.voxStr.substring(idx1 + 1);
+        }
         ExifJPG exifJpg = new ExifJPG();
         if (exifJpg.setPath(getPath())) {
+            //bt747.sys.Generic.debug(exifJpg.toString());
+            // TODO Replace by constant to define in AllWayPointStyles
+            gpsInfo.rcr = 0x0101;
             ExifAttribute atr;
             atr = exifJpg.getExifAttribute(ExifConstants.TAG_PIXELXDIMENSION);
             if (atr != null) {
@@ -91,6 +113,41 @@ public class ImageData {
                     if (atr.getStringValue().toUpperCase().indexOf('W') >= 0) {
                         gpsInfo.longitude = -gpsInfo.longitude;
                     }
+                }
+            }
+
+            atr = exifJpg.getExifAttribute(ExifConstants.TAG_DATETIMEDIGITIZED);
+            if (atr == null) {
+                atr = exifJpg
+                        .getExifAttribute(ExifConstants.TAG_DATETIMEORIGINAL);
+                if (atr == null) {
+                    atr = exifJpg.getExifAttribute(ExifConstants.TAG_DATETIME);
+                }
+            }
+            if (atr != null) {
+                String DateTime = null;
+                DateTime = atr.getStringValue();
+                // Format is: "2007:08:05 13:13:43"
+                if ((DateTime.length() == 20) && (DateTime.charAt(4) == ':')
+                        && (DateTime.charAt(4) == ':')
+                        && (DateTime.charAt(7) == ':')
+                        && (DateTime.charAt(10) == ' ')
+                        && (DateTime.charAt(13) == ':')
+                        && (DateTime.charAt(16) == ':')) {
+                    int year;
+                    int month;
+                    int day;
+
+                    int seconds;
+                    year = Convert.toInt(DateTime.substring(0, 4));
+                    month = Convert.toInt(DateTime.substring(5, 7));
+                    day = Convert.toInt(DateTime.substring(8, 10));
+                    seconds = Convert.toInt(DateTime.substring(11, 13)) * 3600
+                            + Convert.toInt(DateTime.substring(14, 16)) * 60
+                            + Convert.toInt(DateTime.substring(17, 19));
+                    BT747Date d = Interface.getDateInstance(day, month, year);
+                    gpsInfo.utc = d.dateToUTCepoch1970() + seconds;
+
                 }
             }
         }

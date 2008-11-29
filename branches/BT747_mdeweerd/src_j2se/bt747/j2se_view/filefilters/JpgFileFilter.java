@@ -12,23 +12,26 @@
 //***  IS ASSUMED BY THE USER.                                     ***
 //***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-package bt747.j2se_view;
+package bt747.j2se_view.filefilters;
 
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
+import bt747.j2se_view.J2SEAppController;
+
 /**
  * @author Mario
  *
  */
-public final class NMEAFileFilter extends FileFilter {
+public final class JpgFileFilter extends FileFilter {
 
     /**
      * Lower case list of accepted extensions.
      */
     private final String[] extensions = {
-            ".nmea", ".txt", ".log", ".nme", ".nma"
+            ".jpg",
+            ".jpeg"
     };
     
     
@@ -52,7 +55,7 @@ public final class NMEAFileFilter extends FileFilter {
      */
     @Override
     public String getDescription() {
-        return J2SEAppController.getString("NMEA_FilterDescription");
+        return J2SEAppController.getString("JPEG_Description");
     }
 
 }

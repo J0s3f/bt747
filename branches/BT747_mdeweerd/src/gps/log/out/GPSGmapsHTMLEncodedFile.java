@@ -401,7 +401,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 		"baseIcon.iconSize = new GSize(32, 32);\n");
                 BT747Hashtable iter = icons.iterator();
                 while(iter.hasNext()) {
-                    Object key = iter.next();
+                    Object key = iter.nextKey();
                     rec.append("var ICON");
                     rec.append((String)key);
                     rec.append("=new GIcon(baseIcon);");
@@ -607,11 +607,11 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                     if (icons.get(r) == null) {
                         WayPointStyle style;
                         if(r.length()>0 && r.charAt(0)=='X') {
-                          style = CommonOut.wayPointStyles.get(r.substring(1));
+                          style = CommonOut.getWayPointStyles().get(r.substring(1));
                         } else if (r.length()>1) {
-                            style = CommonOut.wayPointStyles.get("M");
+                            style = CommonOut.getWayPointStyles().get("M");
                         } else {
-                            style = CommonOut.wayPointStyles.get(r);
+                            style = CommonOut.getWayPointStyles().get(r);
                         }
                         if(style!=null) {
                             String url = style.getIconUrl();

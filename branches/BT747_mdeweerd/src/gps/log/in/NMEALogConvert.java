@@ -266,7 +266,7 @@ public final class NMEALogConvert implements GPSLogConvert {
             // or
             // position change
             // condition.
-            gpsFile.writeRecord(r);
+            gpsFile.addLogRecord(r);
         }
     }
 

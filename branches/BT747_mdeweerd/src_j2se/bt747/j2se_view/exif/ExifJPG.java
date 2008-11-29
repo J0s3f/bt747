@@ -74,7 +74,7 @@ public class ExifJPG {
         return success;
     }
 
-    ExifApp1 exifApp1;
+    private ExifApp1 exifApp1;
 
     private final void examineBuffer(final byte[] buffer, final int sz) {
         int currentIdxInBuffer = 0;
@@ -139,4 +139,11 @@ public class ExifJPG {
         exifApp1.setExifAttribute(atr);
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return exifApp1.toString();
+    }
 }

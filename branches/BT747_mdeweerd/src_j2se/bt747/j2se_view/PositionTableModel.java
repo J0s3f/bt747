@@ -18,8 +18,7 @@ import gps.BT747Constants;
 import gps.log.GPSRecord;
 import gps.log.out.CommonOut;
 
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
+import javax.swing.table.AbstractTableModel;
 
 import bt747.sys.Generic;
 
@@ -27,7 +26,7 @@ import bt747.sys.Generic;
  * @author Mario De Weerd
  * 
  */
-public class PositionTableModel implements TableModel {
+public class PositionTableModel extends AbstractTableModel {
 
     /**
      * Column identifications. Some taken from BT747Constants.
@@ -78,18 +77,9 @@ public class PositionTableModel implements TableModel {
      * @param gpsData
      *            the gpsData to set
      */
-    public final void setGpsData(GPSRecord[] gpsData) {
+    public final void setGpsData(final GPSRecord[] gpsData) {
         this.gpsData = gpsData;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.swing.table.TableModel#addTableModelListener(javax.swing.event.TableModelListener)
-     */
-    public void addTableModelListener(TableModelListener l) {
-        // TODO Auto-generated method stub
-
+        fireTableStructureChanged();
     }
 
     /*
@@ -211,7 +201,7 @@ public class PositionTableModel implements TableModel {
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (rowIndex < gpsData.length) {
+        if (rowIndex < gpsData.length && gpsData[rowIndex]!= null) {
             return getValue(gpsData[rowIndex], columnIndex);
         } else {
             return null;
@@ -226,16 +216,6 @@ public class PositionTableModel implements TableModel {
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         // TODO Auto-generated method stub
         return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.swing.table.TableModel#removeTableModelListener(javax.swing.event.TableModelListener)
-     */
-    public void removeTableModelListener(TableModelListener l) {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -343,11 +323,11 @@ public class PositionTableModel implements TableModel {
         case FMT_EW:
             break;
         case FMT_REC_NBR:
-            return new Integer(g.recCount);
+            return Integer.valueOf(g.recCount);
         case BT747Constants.FMT_UTC_IDX:
             return CommonOut.getTimeStr(g.utc);
         case FMT_UTC_VALUE:
-            return new Long(g.utc);
+            return Long.valueOf(g.utc);
         case FMT_DATE:
             break;
         case FMT_TIME:

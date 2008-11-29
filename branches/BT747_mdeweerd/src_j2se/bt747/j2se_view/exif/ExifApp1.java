@@ -127,4 +127,20 @@ public class ExifApp1 {
         }
         exifBlock.set(atr);
     }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        String r = "";
+        if(exifBlock!=null) {
+            r += exifBlock.toString();
+        }
+        if(gpsBlock!=null) {
+            r += gpsBlock.toString();
+        }
+        // TODO Auto-generated method stub
+        return r;
+    }
 }

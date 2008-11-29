@@ -157,7 +157,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
                                     | (0xFF & bytes[recIdx++]) << 24;
                             r.height = Convert.toFloatBitwise(height);
                             CommonIn.convertHeight(r, factorConversionWGS84ToMSL, logFormat);
-                            gpsFile.writeRecord(r);
+                            gpsFile.addLogRecord(r);
                         }
                     }
                 } /* ContinueInBuffer */

@@ -12,23 +12,25 @@
 //***  IS ASSUMED BY THE USER.                                     ***
 //***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-package bt747.j2se_view;
+package bt747.j2se_view.filefilters;
 
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
+import bt747.j2se_view.J2SEAppController;
+
 /**
  * @author Mario
  *
  */
-public final class KnownFileFilter extends FileFilter {
+public final class BinFileFilter extends FileFilter {
 
     /**
      * Lower case list of accepted extensions.
      */
     private final String[] extensions = {
-            ".bin", ".nmea", ".txt", ".log", ".nme", ".nma", ".trl", ".csv", ".sr"
+            ".bin"
     };
     
     
@@ -52,7 +54,7 @@ public final class KnownFileFilter extends FileFilter {
      */
     @Override
     public String getDescription() {
-        return J2SEAppController.getString("KNOWN_Description");
+        return J2SEAppController.getString("BIN_Description");
     }
 
 }

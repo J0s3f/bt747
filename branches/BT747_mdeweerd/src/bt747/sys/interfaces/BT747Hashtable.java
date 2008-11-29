@@ -12,6 +12,6 @@ public interface BT747Hashtable {
 
     public abstract boolean hasNext();
 
-    public abstract Object next();
+    public abstract Object nextKey();
 
 }

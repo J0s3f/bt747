@@ -40,7 +40,12 @@ public final class J2SEHashtable  implements
      * @see bt747.sys.interfaces.BT747Hashtable#hasNext()
      */
     public boolean hasNext() {
-        return iterator.hasMoreElements();
+        if(iterator!=null) {
+            return iterator.hasMoreElements();
+        } else {
+            bt747.sys.Generic.debug("Iterator is null");
+            return false;
+        }
     }
 
     /* (non-Javadoc)
@@ -54,7 +59,7 @@ public final class J2SEHashtable  implements
     /* (non-Javadoc)
      * @see bt747.sys.interfaces.BT747Hashtable#next()
      */
-    public Object next() {
+    public Object nextKey() {
         // TODO Auto-generated method stub
         return iterator.nextElement();
     }

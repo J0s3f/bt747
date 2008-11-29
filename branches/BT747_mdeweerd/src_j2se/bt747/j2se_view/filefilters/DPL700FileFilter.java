@@ -12,11 +12,13 @@
 //***  IS ASSUMED BY THE USER.                                     ***
 //***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-package bt747.j2se_view;
+package bt747.j2se_view.filefilters;
 
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
+
+import bt747.j2se_view.J2SEAppController;
 
 /**
  * @author Mario
