@@ -14,6 +14,11 @@
 //***  *********************************************************** ***
 package bt747.j2se_view;
 
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.io.File;
 
 import javax.swing.JFileChooser;
@@ -26,7 +31,9 @@ import bt747.sys.Generic;
  * 
  * @author Mario
  */
-public class ImageTablePanel extends javax.swing.JPanel {
+public class ImageTablePanel extends javax.swing.JPanel
+implements DropTargetListener
+{
 
     /**
      * 
@@ -40,6 +47,8 @@ public class ImageTablePanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    private DropTarget dt;
+    
     public void init(J2SEAppController pC) {
         c = pC;
         m = c.getModel();
@@ -47,6 +56,10 @@ public class ImageTablePanel extends javax.swing.JPanel {
         imageTableModel = new ImageTableModel();
         tbImageList.setModel(imageTableModel);
         // m.addListener(this);
+        
+      
+        //dt = new DropTarget(tbImageList,this);
+        //tbImageList.setDropTarget(dt);
 
         btSelectImages.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,6 +134,53 @@ public class ImageTablePanel extends javax.swing.JPanel {
         return J2SEAppController.getString(s);
     }
 
+    
+    /**
+     * Drop actions.
+     */
+    /* (non-Javadoc)
+     * @see java.awt.dnd.DropTargetListener#dragEnter(java.awt.dnd.DropTargetDragEvent)
+     */
+    public void dragEnter(DropTargetDragEvent dtde) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.dnd.DropTargetListener#dragExit(java.awt.dnd.DropTargetEvent)
+     */
+    public void dragExit(DropTargetEvent dte) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.dnd.DropTargetListener#dragOver(java.awt.dnd.DropTargetDragEvent)
+     */
+    public void dragOver(DropTargetDragEvent dtde) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.dnd.DropTargetListener#drop(java.awt.dnd.DropTargetDropEvent)
+     */
+    public void drop(DropTargetDropEvent dtde) {
+        //dtde.acceptDrop(dropAction);
+        //dtde.rejectDrop();
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.dnd.DropTargetListener#dropActionChanged(java.awt.dnd.DropTargetDragEvent)
+     */
+    public void dropActionChanged(DropTargetDragEvent dtde) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    
     private ImageTableModel imageTableModel;
 
     /**
@@ -291,5 +351,6 @@ public class ImageTablePanel extends javax.swing.JPanel {
     private javax.swing.JTable tbImageList;
     private javax.swing.JTextField tfDestinationDirectory;
     // End of variables declaration//GEN-END:variables
+
 
 }

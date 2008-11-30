@@ -53,49 +53,49 @@ public final class CommonOut {
             rec.append(Convert.toString(s.recCount));
             rec.append("<br/>");
         }
-        if ((activeFields.utc != 0) && (selectedFields.utc != 0)) {
+        if ((activeFields.hasUtc()) && (selectedFields.hasUtc())) {
             rec.append("TIME: ");
             rec.append(getTimeStr(t));
         }
-        if ((activeFields.rcr != 0) && (selectedFields.rcr != 0)) {
+        WayPointStyle style = null;
+        if ((activeFields.hasRcr()) && (selectedFields.hasRcr())) {
             rec.append("<br/>RCR: ");
             String rcr = getRCRstr(s);
             rec.append(rcr);
-            WayPointStyle style;
             style = wayPointStyles.get(getRCRKey(rcr));
-            if (s.voxStr != null) {
-                String upperVox = s.voxStr.toUpperCase();
-                boolean isPicture = upperVox.endsWith(".JPG")
-                        || upperVox.endsWith("PNG");
-                rec.append("<br />");
-                if (style != null) {
-                    rec.append(style.getDescription());
-                    rec.append(':');
-                    if (isPicture) {
-                        rec.append("<br />");
-                    }
-                }
-                rec.append("<a target='_new' href='");
-                rec.append(s.voxStr);
-                if (s.voxStr.startsWith("VOX")) {
-                    rec.append(".wav");
-                }
-                rec.append("'>");
+        }
+        if (s.voxStr != null) {
+            String upperVox = s.voxStr.toUpperCase();
+            boolean isPicture = upperVox.endsWith(".JPG")
+                    || upperVox.endsWith("PNG");
+            rec.append("<br />");
+            if (style != null) {
+                rec.append(style.getDescription());
+                rec.append(':');
                 if (isPicture) {
-                    rec.append("<img height=150 src='");
-                    rec.append(s.voxStr);
-                    rec.append("' />");
-                } else {
-                    rec.append("Click here");
+                    rec.append("<br />");
                 }
-                rec.append("</a>");
-
+            }
+            rec.append("<a target='_new' href='");
+            rec.append(s.voxStr);
+            if (s.voxStr.startsWith("VOX")) {
+                rec.append(".wav");
+            }
+            rec.append("'>");
+            if (isPicture) {
+                rec.append("<img height=150 src='");
+                rec.append(s.voxStr);
+                rec.append("' />");
             } else {
-                if (style != null) {
-                    rec.append(" <b>(");
-                    rec.append(style.getDescription());
-                    rec.append(")</b>");
-                }
+                rec.append("Click here");
+            }
+            rec.append("</a>");
+
+        } else {
+            if (style != null) {
+                rec.append(" <b>(");
+                rec.append(style.getDescription());
+                rec.append(")</b>");
             }
         }
         // if(activeFields.utc!=0) {
@@ -115,12 +115,12 @@ public final class CommonOut {
         // +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
         // );
         // }
-        if ((activeFields.valid != 0) && (selectedFields.valid != 0)) {
+        if ((activeFields.hasValid()) && (selectedFields.hasValid())) {
             // rec.append("<br />VALID: ");
             rec.append("<br/>VALID: ");
             rec.append(getFixText(s.valid));
         }
-        if ((activeFields.latitude != 0) && (selectedFields.latitude != 0)) {
+        if ((activeFields.hasLatitude()) && (selectedFields.hasLatitude())) {
             rec.append("<br />LATITUDE: ");
             if (s.latitude >= 0) {
                 rec.append(Convert.toString(s.latitude, 6));
@@ -130,7 +130,7 @@ public final class CommonOut {
                 rec.append(" S");
             }
         }
-        if ((activeFields.longitude != 0) && (selectedFields.longitude != 0)) {
+        if ((activeFields.hasLongitude()) && (selectedFields.hasLongitude())) {
             rec.append("<br />LONGITUDE: ");
             if (s.longitude >= 0) {
                 rec.append(Convert.toString(s.longitude, 6));
@@ -140,7 +140,7 @@ public final class CommonOut {
                 rec.append(" W");
             }
         }
-        if ((activeFields.height != 0) && (selectedFields.height != 0)) {
+        if ((activeFields.hasHeight()) && (selectedFields.hasHeight())) {
             rec.append("<br />HEIGHT: ");
             if (!imperial) {
                 rec.append(Convert.toString(s.height, 3) + " m");
@@ -151,7 +151,7 @@ public final class CommonOut {
                         + " feet");
             }
         }
-        if ((activeFields.speed != 0) && (selectedFields.speed != 0)) {
+        if ((activeFields.hasSpeed()) && (selectedFields.hasSpeed())) {
             rec.append("<br />SPEED: ");
             if (!imperial) {
                 rec.append(Convert.toString(s.speed, 3) + " km/h");
@@ -160,31 +160,31 @@ public final class CommonOut {
                         + " mph");
             }
         }
-        if ((activeFields.heading != 0) && (selectedFields.heading != 0)) {
+        if ((activeFields.hasHeading()) && (selectedFields.hasHeading())) {
             rec.append("<br />HEADING: ");
             rec.append(Convert.toString(s.heading));
         }
-        if ((activeFields.dsta != 0) && (selectedFields.dsta != 0)) {
+        if ((activeFields.hasDsta()) && (selectedFields.hasDsta())) {
             rec.append("<br />DSTA: ");
             rec.append(Convert.toString(s.dsta));
         }
-        if ((activeFields.dage != 0) && (selectedFields.dage != 0)) {
+        if ((activeFields.hasDage()) && (selectedFields.hasDage())) {
             rec.append("<br />DAGE: ");
             rec.append(Convert.toString(s.dage));
         }
-        if ((activeFields.pdop != 0) && (selectedFields.pdop != 0)) {
+        if ((activeFields.hasPdop()) && (selectedFields.hasPdop())) {
             rec.append("<br />PDOP: ");
             rec.append(Convert.toString(s.pdop / 100.0, 2));
         }
-        if ((activeFields.hdop != 0) && (selectedFields.hdop != 0)) {
+        if ((activeFields.hasHdop()) && (selectedFields.hasHdop())) {
             rec.append("<br />HDOP: ");
             rec.append(Convert.toString(s.hdop / 100.0, 2));
         }
-        if ((activeFields.vdop != 0) && (selectedFields.vdop != 0)) {
+        if ((activeFields.hasVdop()) && (selectedFields.hasVdop())) {
             rec.append("<br />VDOP: ");
             rec.append(Convert.toString(s.vdop / 100.0, 2));
         }
-        if ((activeFields.distance != 0) && (selectedFields.distance != 0)) {
+        if ((activeFields.hasDistance()) && (selectedFields.hasDistance())) {
             rec.append("<br />DISTANCE: ");
             if (!imperial) {
                 rec.append(Convert.toString(s.distance, 2));
@@ -206,7 +206,7 @@ public final class CommonOut {
 
     public final static String getTimeStr(final GPSRecord activeFields,
             final BT747Time time) {
-        if ((activeFields.utc != 0)) {
+        if ((activeFields.hasUtc())) {
             return getTimeStr(time);
         } else {
             return "";

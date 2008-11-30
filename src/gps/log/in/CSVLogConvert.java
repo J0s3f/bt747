@@ -755,6 +755,7 @@ public final class CSVLogConvert implements GPSLogConvert {
                                 }
                                 // if (valid) {
                                 gpsFile.addLogRecord(r);
+                                r = new GPSRecord();
                                 // } // offsetInBuffer++;
                             } // if header
                         }

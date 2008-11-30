@@ -14,7 +14,8 @@
 //***  *********************************************************** ***
 // Thanks to Marcus Schmidke for modifications to the output format
 // making it compatible with MapSource that requires specific field
-// ordering.
+// ordering.<br>This was undone, but implemented differently
+// later by using XML validation.
 package gps.log.out;
 
 import gps.log.GPSFilter;
@@ -22,7 +23,6 @@ import gps.log.GPSRecord;
 
 import bt747.Version;
 import bt747.sys.Convert;
-import bt747.sys.Generic;
 
 /**
  * Class to write a GPX file.
@@ -30,7 +30,8 @@ import bt747.sys.Generic;
  * @author Mario De Weerd
  */
 public final class GPSGPXFile extends GPSFile {
-    private final StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
+    private final StringBuffer rec = new StringBuffer(1024); // reused
+                                                                // stringbuffer
 
     private boolean isWayType;
     private boolean isNewTrack = true;
@@ -155,7 +156,8 @@ public final class GPSGPXFile extends GPSFile {
             if (!ptFilters[currentFilter].doFilter(s)) {
                 // The track is interrupted by a removed log item.
                 // Break the track in the output file
-                if (!isWayType && !isNewTrack && !firstRecord && !ignoreBadPoints) {
+                if (!isWayType && !isNewTrack && !firstRecord
+                        && !ignoreBadPoints) {
                     if (isTrkSegSplitOnlyWhenSmall
                             && ((activeFields.utc == 0) || (previousTime
                                     + trackSepTime > s.utc))) {
@@ -175,8 +177,8 @@ public final class GPSGPXFile extends GPSFile {
                 String nsatStr = ""; // String that will represent number of
                 // sats
 
-                if ((activeFields.valid != 0)
-                        && (selectedFileFields.valid != 0)) {
+                if ((activeFields.hasValid())
+                        && (selectedFileFields.hasValid())) {
                     switch (s.valid) {
                     case 0x0001:
                         fixStr += "none"; // "No fix";
@@ -209,22 +211,22 @@ public final class GPSGPXFile extends GPSFile {
                         // tmp+="Unknown mode";
                     }
                 }
-                if ((activeFields.rcr != 0) && (selectedFileFields.rcr != 0)) {
+                if ((activeFields.hasRcr()) && (selectedFileFields.hasRcr())) {
                     rec.append("<type>");
                     rcrStr = CommonOut.getRCRstr(s);
                     rec.append("</type>\r\n");
                 }
 
-                if ((activeFields.hdop != 0) && (selectedFileFields.hdop != 0)) {
+                if ((activeFields.hasHdop()) && (selectedFileFields.hasHdop())) {
                     hdopStr = Convert.toString(s.hdop / 100.0, 2);
                 }
-                if ((activeFields.nsat != 0) && (selectedFileFields.nsat != 0)) {
+                if ((activeFields.hasNsat()) && (selectedFileFields.hasNsat())) {
                     nsatStr += Convert.toString(s.nsat / 256);
                 }
 
                 // StringBuffer rec=new StringBuffer(1024);
                 rec.setLength(0);
-                if ((activeFields.utc != 0) && (selectedFileFields.utc != 0)) {
+                if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
                     timeStr += Convert.toString(t.getYear()) + "-"
                             + (t.getMonth() < 10 ? "0" : "")
                             + Convert.toString(t.getMonth()) + "-"
@@ -236,8 +238,8 @@ public final class GPSGPXFile extends GPSFile {
                             + Convert.toString(t.getMinute()) + ":"
                             + (t.getSecond() < 10 ? "0" : "")
                             + Convert.toString(t.getSecond());
-                    if ((activeFields.milisecond != 0)
-                            && (selectedFileFields.milisecond != 0)) {
+                    if ((activeFields.hasMilisecond())
+                            && (selectedFileFields.hasMilisecond())) {
                         timeStr += ".";
                         timeStr += (s.milisecond < 100) ? "0" : "";
                         timeStr += (s.milisecond < 10) ? "0" : "";
@@ -255,8 +257,8 @@ public final class GPSGPXFile extends GPSFile {
                     tx.append(zeros, 0, nZeros);
                     trackName = "#" + tx.toString()
                             + Convert.toString(s.recCount) + "#";
-                    if ((activeFields.utc != 0)
-                            && (selectedFileFields.utc != 0)) {
+                    if ((activeFields.hasUtc())
+                            && (selectedFileFields.hasUtc())) {
                         trackName += " " + timeStr;
                     }
 
@@ -276,14 +278,14 @@ public final class GPSGPXFile extends GPSFile {
                 } else {
                     rec.append("<trkpt ");
                 }
-                if ((activeFields.latitude != 0)
-                        && (selectedFileFields.latitude != 0)) {
+                if ((activeFields.hasLatitude())
+                        && (selectedFileFields.hasLatitude())) {
                     rec.append("lat=\"");
                     rec.append(Convert.toString(s.latitude, 8));
                     rec.append("\" ");
                 }
-                if ((activeFields.longitude != 0)
-                        && (selectedFileFields.longitude != 0)) {
+                if ((activeFields.hasLongitude())
+                        && (selectedFileFields.hasLongitude())) {
                     rec.append("lon=\"");
                     rec.append(Convert.toString(s.longitude, 8));
                     rec.append("\"");
@@ -295,29 +297,29 @@ public final class GPSGPXFile extends GPSFile {
                 // }
                 // <ele> xsd:decimal </ele> [0..1] ? (elevation in meters)
 
-                if ((activeFields.height != 0)
-                        && (selectedFileFields.height != 0)) {
+                if ((activeFields.hasHeight())
+                        && (selectedFileFields.hasHeight())) {
                     rec.append("<ele>");
                     rec.append(Convert.toString(s.height, 3));
                     rec.append("</ele>\r\n");
                 }
 
                 // <time> xsd:dateTime </time> [0..1] ? //2005-05-16T11:49:06Z
-                if ((activeFields.utc != 0) && (selectedFileFields.utc != 0)) {
+                if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
                     rec.append("<time>");
                     rec.append(timeStr);
                     rec.append("</time>\r\n");
                 }
 
-                if ((activeFields.heading != 0)
-                        && (selectedFileFields.heading != 0)) {
+                if ((activeFields.hasHeading())
+                        && (selectedFileFields.hasHeading())) {
                     rec.append("<course>");
                     rec.append(Convert.toString(s.heading));
                     rec.append("</course>\r\n");
                 }
 
-                if ((activeFields.speed != 0)
-                        && (selectedFileFields.speed != 0)) {
+                if ((activeFields.hasSpeed())
+                        && (selectedFileFields.hasSpeed())) {
                     rec.append("<speed>");
                     rec.append(Convert.toString(s.speed / 3.6f, 4)); // must
                     // be
@@ -336,8 +338,8 @@ public final class GPSGPXFile extends GPSFile {
                     } else {
                         rec.append("trkpt-");
                     }
-                    if ((activeFields.utc != 0)
-                            && (selectedFileFields.utc != 0)) {
+                    if ((activeFields.hasUtc())
+                            && (selectedFileFields.hasUtc())) {
                         rec.append(timeStr);
                         if (isNewTrack) {
                             trackName += " " + timeStr;
@@ -355,9 +357,8 @@ public final class GPSGPXFile extends GPSFile {
                                 || hdopStr.length() != 0 || nsatStr.length() != 0)) {
                     rec.append("<cmt>");
                     rec.append("<![CDATA[");
-                    CommonOut.getHtml(rec, s, activeFields,
-                            selectedFileFields, t, recordNbrInLogs,
-                            imperial);
+                    CommonOut.getHtml(rec, s, activeFields, selectedFileFields,
+                            t, recordNbrInLogs, imperial);
                     rec.append("]]>");
                     rec.append("</cmt>\r\n");
                 }
@@ -367,7 +368,7 @@ public final class GPSGPXFile extends GPSFile {
                 // <sym> xsd:string </sym> [0..1] ?
 
                 // <type> xsd:string </type> [0..1] ?
-                if ((activeFields.rcr != 0) && (selectedFileFields.rcr != 0)) {
+                if ((activeFields.hasRcr()) && (selectedFileFields.hasRcr())) {
                     rec.append("<type>");
                     rec.append(rcrStr);
                     rec.append("</type>\r\n");
@@ -381,7 +382,7 @@ public final class GPSGPXFile extends GPSFile {
                 }
 
                 // <sat> xsd:nonNegativeInteger </sat> [0..1] ?
-                if ((activeFields.nsat != 0) && (selectedFileFields.nsat != 0)) {
+                if ((activeFields.hasNsat()) && (selectedFileFields.hasNsat())) {
                     rec.append("<sat>");
                     rec.append(nsatStr); // Sat used
                     rec.append("</sat>\r\n");
@@ -391,34 +392,34 @@ public final class GPSGPXFile extends GPSFile {
                 }
 
                 // <hdop> xsd:decimal </hdop> [0..1] ?
-                if ((activeFields.hdop != 0) && (selectedFileFields.hdop != 0)) {
+                if ((activeFields.hasHdop()) && (selectedFileFields.hasHdop())) {
                     rec.append("<hdop>");
                     rec.append(hdopStr);
                     rec.append("</hdop>\r\n");
                 }
                 // <vdop> xsd:decimal </vdop> [0..1] ?
-                if ((activeFields.vdop != 0) && (selectedFileFields.vdop != 0)) {
+                if ((activeFields.hasVdop()) && (selectedFileFields.hasVdop())) {
                     rec.append("<vdop>");
                     rec.append(Convert.toString(s.vdop / 100.0, 2));
                     rec.append("</vdop>\r\n");
                 }
                 // <pdop> xsd:decimal </pdop> [0..1] ?
                 // // <pdop> xsd:decimal </pdop> [0..1] ?
-                if ((activeFields.pdop != 0) && (selectedFileFields.pdop != 0)) {
+                if ((activeFields.hasPdop()) && (selectedFileFields.hasPdop())) {
                     rec.append("<pdop>");
                     rec.append(Convert.toString(s.pdop / 100.0, 2));
                     rec.append("</pdop>\r\n");
                 }
 
                 // <ageofdgpsdata> xsd:decimal </ageofdgpsdata> [0..1] ?
-                if ((activeFields.dage != 0) && (selectedFileFields.dage != 0)) {
+                if ((activeFields.hasDage()) && (selectedFileFields.hasDage())) {
                     rec.append("<ageofdgpsdata>");
                     rec.append(Convert.toString(s.dage));
                     rec.append("</ageofdgpsdata>\r\n");
                 }
 
                 // <dgpsid> dgpsStationType </dgpsid> [0..1] ?
-                if ((activeFields.dsta != 0) && (selectedFileFields.dsta != 0)) {
+                if ((activeFields.hasDsta()) && (selectedFileFields.hasDsta())) {
                     rec.append("<dgpsid>");
                     rec.append(Convert.toString(s.dsta));
                     rec.append("</dgpsid>\r\n");
@@ -428,16 +429,16 @@ public final class GPSGPXFile extends GPSFile {
 
                 if (false) {
                     // <extensions> extensionsType </extensions> [0..1] ?
-                    if ((activeFields.distance != 0)
-                            && (selectedFileFields.distance != 0)) {
+                    if ((activeFields.hasDistance())
+                            && (selectedFileFields.hasDistance())) {
                         rec.append("<extensions>");
                         // MS 20080327 seems to be unsupported in GPX 1.0:
                         // MS 20080327 don't know why but "speed" isn't
                         // understood
                         // by MapSource
 
-                        if ((activeFields.distance != 0)
-                                && (selectedFileFields.distance != 0)) {
+                        if ((activeFields.hasDistance())
+                                && (selectedFileFields.hasDistance())) {
                             rec.append("<distance>");
                             rec.append(Convert.toString(s.distance, 2)); // +"
                             // m\r\n"
@@ -452,7 +453,7 @@ public final class GPSGPXFile extends GPSFile {
                     rec.append("</trkpt>\r\n");
                 }
                 String ss = rec.toString();
-                if(ss.length()>21) {
+                if (ss.length() > 21) {
                     writeTxt(ss);
                 }
                 rec.setLength(0);
@@ -490,7 +491,8 @@ public final class GPSGPXFile extends GPSFile {
      * @param trkSegSplitOnlyWhenSmall
      *            The m_TrkSegSplitOnlyWhenSmall to set.
      */
-    public final void setTrkSegSplitOnlyWhenSmall(final boolean trkSegSplitOnlyWhenSmall) {
+    public final void setTrkSegSplitOnlyWhenSmall(
+            final boolean trkSegSplitOnlyWhenSmall) {
         isTrkSegSplitOnlyWhenSmall = trkSegSplitOnlyWhenSmall;
     }
 }

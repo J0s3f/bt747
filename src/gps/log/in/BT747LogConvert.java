@@ -352,6 +352,7 @@ public final class BT747LogConvert implements GPSLogConvert {
                                 if (valid) {
                                     if(!passToFindFirstBlockInLog) {
                                         gpsFile.addLogRecord(r);
+                                        r = new GPSRecord();
                                     } else {
                                         final BT747Time t = Interface.getTimeInstance();
                                         t.setUTCTime(r.utc); // Initialisation needed later too!
