@@ -133,65 +133,77 @@ public class GPSRecord {
 
     public final static GPSRecord getLogFormatRecord(final int logFormat) {
         GPSRecord gpsRec = new GPSRecord();
-        if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
-            gpsRec.utc = -1;
+        if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) == 0) {
+            gpsRec.utc = 0;
+        } else {
+            gpsRec.utc = 1;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_VALID_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_VALID_IDX)) == 0) {
             gpsRec.valid = -1;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) == 0) {
             gpsRec.latitude = -1000000;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) == 0) {
             gpsRec.longitude = -1000000;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) == 0) {
             gpsRec.height = -1000000;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) == 0) {
             gpsRec.speed = -1000000;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) == 0) {
             gpsRec.heading = -1000000;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) == 0) {
             gpsRec.dsta = -1;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_DAGE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_DAGE_IDX)) == 0) {
             gpsRec.dage = -1;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_PDOP_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_PDOP_IDX)) == 0) {
             gpsRec.pdop = -1;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_HDOP_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_HDOP_IDX)) == 0) {
             gpsRec.hdop = -1;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) == 0) {
             gpsRec.vdop = -1;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) == 0) {
             gpsRec.nsat = -1;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_SID_IDX)) == 0) {
+            gpsRec.sid = null;
+            gpsRec.sidinuse = null;
+        } else {
             gpsRec.sid = new int[0];
             gpsRec.sidinuse = new boolean[0];
         }
-        if ((logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) != 0) {
+         
+        if ((logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) == 0) {
+            gpsRec.ele = null;
+        } else {
             gpsRec.ele = new int[0];
         }
-        if ((logFormat & (1 << BT747Constants.FMT_AZIMUTH_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_AZIMUTH_IDX)) == 0) {
+            gpsRec.azi = null;
+        } else {
             gpsRec.azi = new int[0];
         }
-        if ((logFormat & (1 << BT747Constants.FMT_SNR_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_SNR_IDX)) == 0) {
+            gpsRec.snr = null;
+        } else {
             gpsRec.snr = new int[0];
         }
-        if ((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) == 0) {
             gpsRec.rcr = -1;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) == 0) {
             gpsRec.milisecond = -1;
         }
-        if ((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) {
+        if ((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) == 0) {
             gpsRec.distance = -1;
         }
 
@@ -200,7 +212,7 @@ public class GPSRecord {
     }
 
     public final boolean hasUtc() {
-        return utc != -1;
+        return utc != 0;
     }
 
     public final boolean hasValid() {
@@ -243,28 +255,32 @@ public class GPSRecord {
         return hdop != -1;
     }
 
+    public final boolean hasVdop() {
+        return vdop != -1;
+    }
+
     public final boolean hasNsat() {
         return nsat != -1;
     }
 
     public final boolean hasSid() {
-        return sid != null && sid.length != 0;
+        return sid != null;
     }
 
     public final boolean hasSidInUse() {
-        return sidinuse != null && sidinuse.length != 0;
+        return sidinuse != null;
     }
 
     public final boolean hasEle() {
-        return ele != null && ele.length != 0;
+        return ele != null;
     }
 
     public final boolean hasAzi() {
-        return azi != null && azi.length != 0;
+        return azi != null;
     }
 
     public final boolean hasSnr() {
-        return snr != null && snr.length != 0;
+        return snr != null;
     }
 
     public final boolean hasRcr() {
@@ -279,6 +295,10 @@ public class GPSRecord {
         return distance != -1;
     }
 
+    public final boolean hasVoxStr() {
+        return voxStr != null;
+    }
+
     public final boolean equalsFormat(final GPSRecord r) {
         return (hasUtc() == r.hasUtc()) && (hasValid() == r.hasValid())
                 && (hasLatitude() == r.hasLatitude())
@@ -288,12 +308,14 @@ public class GPSRecord {
                 && (hasHeading() == r.hasHeading())
                 && (hasDsta() == r.hasDsta()) && (hasDage() == r.hasDage())
                 && (hasPdop() == r.hasPdop()) && (hasHdop() == r.hasHdop())
-                && (hasNsat() == r.hasNsat()) && (hasSid() == r.hasSid())
+                && (hasVdop() == r.hasVdop()) && (hasNsat() == r.hasNsat())
+                && (hasSid() == r.hasSid())
                 && (hasSidInUse() == r.hasSidInUse())
                 && (hasEle() == r.hasEle()) && (hasAzi() == r.hasAzi())
                 && (hasSnr() == r.hasSnr()) && (hasRcr() == r.hasRcr())
                 && (hasMilisecond() == r.hasMilisecond())
-                && (hasDistance() == r.hasDistance());
+                && (hasDistance() == r.hasDistance())
+                && (hasVoxStr() == r.hasVoxStr());
     }
 
     /*

@@ -222,6 +222,7 @@ public abstract class GPSFile {
      * @param activeFileFieldsFormat
      */
     public final void setActiveFileFields(final GPSRecord activeFileFieldsFormat) {
+        // TODO: Take into account the waypoints.
         activeFileFields = activeFileFieldsFormat;
     }
 
@@ -287,6 +288,17 @@ public abstract class GPSFile {
         }
         return result;
     }
+    
+    private static GPSRecord previousRecord = null;
+    private static boolean previousResult = false;
+    public final boolean cachedRecordIsNeeded(final GPSRecord r) {
+        if(r==previousRecord) {
+            return previousResult;
+        } else {
+            previousRecord = r;
+            return (previousResult = recordIsNeeded(r));
+        }
+    }
 
     private GPSRecord[] userWayPointList;
 
@@ -325,13 +337,16 @@ public abstract class GPSFile {
     /**
      * A record is added from the input log. User way points are geotagged here
      * and inserted at the right spot.
-     * 
+     * <p>
      * This is not to be extended.
+     * <p>
+     * The provided record should no longer be referenced in the caller.<br>
+     * It is supposed to be unique.
      * 
      * @param r
      */
     public final void addLogRecord(final GPSRecord r) {
-        if (currentWayPointListIdx >= 0) {
+        if (currentWayPointListIdx >= 0 && cachedRecordIsNeeded(r)) {
             GPSRecord prevActiveFields = activeFields;
             if (prevRecord != null) {
                 boolean continueLoop = false;
@@ -341,6 +356,10 @@ public abstract class GPSFile {
                             + waypointTimeCorrection;
                     int diffPrevious = userWayPointUTC - prevRecord.utc;
                     int diffNext = userWayPointUTC - r.utc;
+                    if ((diffPrevious < 0) != (diffNext < 0)) {
+                        Generic.debug("Difference:" + diffPrevious + " "
+                                + diffNext);
+                    }
                     if ((diffPrevious > 0) && (diffNext < 0)) {
                         GPSRecord ref;
                         // WayPoint is in between two points.
@@ -375,9 +394,12 @@ public abstract class GPSFile {
                     GPSRecord userWayPoint = userWayPointList[currentWayPointListIdx];
                     int userWayPointUTC = userWayPoint.utc
                             + waypointTimeCorrection;
-                    //bt747.sys.Generic.debug(userWayPoint.toString());
+                    // bt747.sys.Generic.debug(userWayPoint.toString());
                     continueLoop = false;
                     if (userWayPointUTC < r.utc) {
+                        if (!activeFields.equalsFormat(userWayPoint)) {
+                            writeLogFmtHeader(userWayPoint);
+                        }
                         GPSRecord utcCorrectedRecord = userWayPoint
                                 .cloneRecord();
                         utcCorrectedRecord.utc = userWayPointUTC;
@@ -398,17 +420,20 @@ public abstract class GPSFile {
             }
         }
         writeRecord(r);
-        prevRecord = r;
+        if(cachedRecordIsNeeded(r)) {
+            prevRecord = r;
+        }
     }
 
     private final void addUntreatedWayPoints() {
         while (currentWayPointListIdx >= 0) {
             GPSRecord userWayPoint = userWayPointList[currentWayPointListIdx];
             if (userWayPoint.hasLatitude() && userWayPoint.hasLongitude()) {
+                if (!activeFields.equalsFormat(userWayPoint)) {
+                    writeLogFmtHeader(userWayPoint);
+                }
                 int userWayPointUTC = userWayPoint.utc + waypointTimeCorrection;
                 GPSRecord utcCorrectedRecord = userWayPoint.cloneRecord();
-                utcCorrectedRecord.valid = BT747Constants.VALID_MANUAL_MASK;
-                utcCorrectedRecord.rcr = BT747Constants.RCR_ALL_APP_MASK;
                 utcCorrectedRecord.utc = userWayPointUTC;
                 writeRecord(utcCorrectedRecord);
             }
@@ -441,7 +466,7 @@ public abstract class GPSFile {
         // bt747.sys.Generic.debug("Adding\n"+r.toString());
 
         if (activeFields.utc != 0) {
-            t.setUTCTime(r.utc); // Initialisation needed later too!
+            t.setUTCTime(r.utc); // Initialization needed later too!
             if (oneFilePerDay || oneFilePerTrack) {
                 dateref = (t.getYear() << 14) + (t.getMonth() << 7)
                         + t.getDay(); // year *
@@ -456,7 +481,7 @@ public abstract class GPSFile {
         if (((((oneFilePerDay && newDate) && activeFields.utc != 0) || firstRecord) || (oneFilePerTrack
                 && activeFields.utc != 0 && (r.utc > previousTime
                 + trackSepTime)))
-                && recordIsNeeded(r)) {
+                && cachedRecordIsNeeded(r)) {
             boolean createOK = true;
             previousDate = dateref;
 
@@ -557,7 +582,7 @@ public abstract class GPSFile {
      * @return true if analysis must go on.
      */
     public boolean nextPass() {
-        //bt747.sys.Generic.debug("Next pass");
+        // bt747.sys.Generic.debug("Next pass");
         addUntreatedWayPoints();
         if (nbrOfPassesToGo == 0) {
             // Last Pass done

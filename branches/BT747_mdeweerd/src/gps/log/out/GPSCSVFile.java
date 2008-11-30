@@ -47,88 +47,85 @@ public final class GPSCSVFile extends GPSFile {
         rec.setLength(0);
         // INDEX,RCR,DATE,TIME,VALID,LATITUDE,N/S,LONGITUDE,E/W,HEIGHT,SPEED,
         rec.append("INDEX");
-        if ((activeFileFields.rcr != 0) && (selectedFileFields.rcr != 0)) {
+        if ((activeFileFields.hasRcr()) && (selectedFileFields.hasRcr())) {
             rec.append(fieldSep + "RCR");
         }
-        if ((activeFileFields.utc != 0) && (selectedFileFields.utc != 0)) {
+        if ((activeFileFields.hasUtc()) && (selectedFileFields.hasUtc())) {
             rec.append(fieldSep + "DATE" + fieldSep + "TIME");
         }
-        if ((activeFileFields.valid != 0) && (selectedFileFields.valid != 0)) {
+        if ((activeFileFields.hasValid()) && (selectedFileFields.hasValid())) {
             rec.append(fieldSep + "VALID");
         }
-        if ((activeFileFields.latitude != 0)
-                && (selectedFileFields.latitude != 0)) {
+        if ((activeFileFields.hasLatitude())
+                && (selectedFileFields.hasLatitude())) {
             rec.append(fieldSep + "LATITUDE" + fieldSep + "N/S");
         }
-        if ((activeFileFields.longitude != 0)
-                && (selectedFileFields.longitude != 0)) {
+        if ((activeFileFields.hasLongitude())
+                && (selectedFileFields.hasLongitude())) {
             rec.append(fieldSep + "LONGITUDE" + fieldSep + "E/W");
         }
-        if ((activeFileFields.height != 0) && (selectedFileFields.height != 0)) {
+        if ((activeFileFields.hasHeight()) && (selectedFileFields.hasHeight())) {
             if (!imperial) {
                 rec.append(fieldSep + "HEIGHT(m)");
             } else {
                 rec.append(fieldSep + "HEIGHT(ft)");
             }
         }
-        if ((activeFileFields.speed != 0) && (selectedFileFields.speed != 0)) {
+        if ((activeFileFields.hasSpeed()) && (selectedFileFields.hasSpeed())) {
             if (!imperial) {
                 rec.append(fieldSep + "SPEED(km/h)");
             } else {
                 rec.append(fieldSep + "SPEED(mph)");
             }
         }
-        if ((activeFileFields.heading != 0)
-                && (selectedFileFields.heading != 0)) {
+        if ((activeFileFields.hasHeading())
+                && (selectedFileFields.hasHeading())) {
             rec.append(fieldSep + "HEADING");
         }
-        if ((activeFileFields.dsta != 0) && (selectedFileFields.dsta != 0)) {
+        if ((activeFileFields.hasDsta()) && (selectedFileFields.hasDsta())) {
             rec.append(fieldSep + "DSTA");
         }
-        if ((activeFileFields.dage != 0) && (selectedFileFields.dage != 0)) {
+        if ((activeFileFields.hasDage()) && (selectedFileFields.hasDage())) {
             rec.append(fieldSep + "DAGE");
         }
-        if ((activeFileFields.pdop != 0) && (selectedFileFields.pdop != 0)) {
+        if ((activeFileFields.hasPdop()) && (selectedFileFields.hasPdop())) {
             rec.append(fieldSep + "PDOP");
         }
-        if ((activeFileFields.hdop != 0) && (selectedFileFields.hdop != 0)) {
+        if ((activeFileFields.hasHdop()) && (selectedFileFields.hasHdop())) {
             rec.append(fieldSep + "HDOP");
         }
-        if ((activeFileFields.vdop != 0) && (selectedFileFields.vdop != 0)) {
+        if ((activeFileFields.hasVdop()) && (selectedFileFields.hasVdop())) {
             rec.append(fieldSep + "VDOP");
         }
-        if ((activeFileFields.nsat != 0) && (selectedFileFields.nsat != 0)) {
+        if ((activeFileFields.hasNsat()) && (selectedFileFields.hasNsat())) {
             rec.append(fieldSep + "NSAT (USED/VIEW)");
         }
         // SAT INFO NOT HANDLED
         // if(activeFileFields.milisecond!=0) {
         // rec.append(fieldSep+"MILISECOND");
         // }
-        if ((activeFileFields.distance != 0)
-                && (selectedFileFields.distance != 0)) {
+        if ((activeFileFields.hasDistance())
+                && (selectedFileFields.hasDistance())) {
             if (!imperial) {
                 rec.append(fieldSep + "DISTANCE(m)");
             } else {
                 rec.append(fieldSep + "DISTANCE(ft)");
             }
         }
-        if (activeFileFields.sid != null && (selectedFileFields.sid != null)) {
+        if (activeFileFields.hasSid() && (selectedFileFields.hasSid())) {
             rec.append(fieldSep + "SAT INFO (SID");
-            if ((activeFileFields.ele != null)
-                    && (selectedFileFields.ele != null)) {
+            if ((activeFileFields.hasEle()) && (selectedFileFields.hasEle())) {
                 rec.append("-ELE");
             }
-            if ((activeFileFields.azi != null)
-                    && (selectedFileFields.azi != null)) {
+            if ((activeFileFields.hasAzi()) && (selectedFileFields.hasAzi())) {
                 rec.append("-AZI");
             }
-            if ((activeFileFields.snr != null)
-                    && (selectedFileFields.snr != null)) {
+            if ((activeFileFields.hasSnr()) && (selectedFileFields.hasSnr())) {
                 rec.append("-SNR");
             }
             rec.append(")");
         }
-        if(activeFileFields.voxStr!=null) {
+        if (activeFileFields.hasVoxStr()) {
             rec.append(fieldSep + "VOX");
         }
         if (addLogConditionInfo) {
@@ -160,16 +157,16 @@ public final class GPSCSVFile extends GPSFile {
     public final void writeRecord(final GPSRecord r) {
         super.writeRecord(r);
 
-        if (activeFields != null && recordIsNeeded(r)) {
+        if (activeFields != null && cachedRecordIsNeeded(r)) {
             rec.setLength(0);
             rec.append(Convert.toString(r.recCount));
-            if ((activeFileFields.rcr != 0) && (selectedFileFields.rcr != 0)) {
+            if ((activeFileFields.hasRcr()) && (selectedFileFields.hasRcr())) {
                 rec.append(fieldSep);
             }
-            if ((activeFields.rcr != 0) && (selectedFileFields.rcr != 0)) {
+            if ((activeFields.hasRcr()) && (selectedFileFields.hasRcr())) {
                 rec.append(CommonOut.getRCRstr(r));
             }
-            if ((activeFields.utc != 0) && (selectedFileFields.utc != 0)) {
+            if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
                 rec.append(fieldSep + Convert.toString(t.getYear()) + "/"
                         + (t.getMonth() < 10 ? "0" : "")
                         + Convert.toString(t.getMonth()) + "/"
@@ -186,22 +183,22 @@ public final class GPSCSVFile extends GPSFile {
                     rec.append(Convert.toString((float) t.getSecond()
                             + r.milisecond / 1000.0, 3));
                 }
-            } else if ((activeFileFields.utc != 0)
-                    && (selectedFileFields.utc != 0)) {
+            } else if ((activeFileFields.hasUtc())
+                    && (selectedFileFields.hasUtc())) {
                 rec.append(fieldSep);
                 rec.append(fieldSep);
             }
 
-            if ((activeFields.valid != 0) && (selectedFileFields.valid != 0)) {
+            if ((activeFields.hasValid()) && (selectedFileFields.hasValid())) {
                 rec.append(fieldSep);
                 rec.append(CommonOut.getFixText(r.valid));
-            } else if ((activeFileFields.valid != 0)
-                    && (selectedFileFields.valid != 0)) {
+            } else if ((activeFileFields.hasValid())
+                    && (selectedFileFields.hasValid())) {
                 rec.append(fieldSep);
             }
 
-            if ((activeFields.latitude != 0)
-                    && (selectedFileFields.latitude != 0)) {
+            if ((activeFields.hasLatitude())
+                    && (selectedFileFields.hasLatitude())) {
                 rec.append(fieldSep);
                 rec.append(Convert.toString(r.latitude, 6));
                 if (r.latitude >= 0) {
@@ -209,13 +206,13 @@ public final class GPSCSVFile extends GPSFile {
                 } else {
                     rec.append(fieldSep + "S");
                 }
-            } else if ((activeFileFields.latitude != 0)
-                    && (selectedFileFields.latitude != 0)) {
+            } else if ((activeFileFields.hasLatitude())
+                    && (selectedFileFields.hasLatitude())) {
                 rec.append(fieldSep);
                 rec.append(fieldSep);
             }
-            if ((activeFields.longitude != 0)
-                    && (selectedFileFields.longitude != 0)) {
+            if ((activeFields.hasLongitude())
+                    && (selectedFileFields.hasLongitude())) {
                 rec.append(fieldSep);
                 rec.append(Convert.toString(r.longitude, 6));
                 if (r.longitude >= 0) {
@@ -223,12 +220,12 @@ public final class GPSCSVFile extends GPSFile {
                 } else {
                     rec.append(fieldSep + "W");
                 }
-            } else if ((activeFileFields.longitude != 0)
-                    && (selectedFileFields.longitude != 0)) {
+            } else if ((activeFileFields.hasLongitude())
+                    && (selectedFileFields.hasLongitude())) {
                 rec.append(fieldSep);
                 rec.append(fieldSep);
             }
-            if ((activeFields.height != 0) && (selectedFileFields.height != 0)) {
+            if ((activeFields.hasHeight()) && (selectedFileFields.hasHeight())) {
                 rec.append(fieldSep);
                 if (!imperial) {
                     rec.append(Convert.toString(r.height, 3));
@@ -244,11 +241,11 @@ public final class GPSCSVFile extends GPSFile {
                 // rec.append(Convert.toString(gps.convert.Conv.wgs84_separation(s.latitude,s.longitude),3));
                 // }
 
-            } else if ((activeFileFields.height != 0)
-                    && (selectedFileFields.height != 0)) {
+            } else if ((activeFileFields.hasHeight())
+                    && (selectedFileFields.hasHeight())) {
                 rec.append(fieldSep);
             }
-            if ((activeFields.speed != 0) && (selectedFileFields.speed != 0)) {
+            if ((activeFields.hasSpeed()) && (selectedFileFields.hasSpeed())) {
                 rec.append(fieldSep);
                 if (!imperial) {
                     rec.append(Convert.toString(r.speed, 3));
@@ -257,63 +254,63 @@ public final class GPSCSVFile extends GPSFile {
                             .append(Convert.toString(
                                     r.speed * 0.621371192237334, 3));
                 }
-            } else if ((activeFileFields.speed != 0)
-                    && (selectedFileFields.speed != 0)) {
+            } else if ((activeFileFields.hasSpeed())
+                    && (selectedFileFields.hasSpeed())) {
                 rec.append(fieldSep);
             }
-            if ((activeFields.heading != 0)
-                    && (selectedFileFields.heading != 0)) {
+            if ((activeFields.hasHeading())
+                    && (selectedFileFields.hasHeading())) {
                 rec.append(fieldSep);
                 rec.append(Convert.toString((double) r.heading, 6));
-            } else if ((activeFileFields.heading != 0)
-                    && (selectedFileFields.heading != 0)) {
+            } else if ((activeFileFields.hasHeading())
+                    && (selectedFileFields.hasHeading())) {
                 rec.append(fieldSep);
             }
-            if ((activeFields.dsta != 0) && (selectedFileFields.dsta != 0)) {
+            if ((activeFields.hasDsta()) && (selectedFileFields.hasDsta())) {
                 rec.append(fieldSep);
                 rec.append(Convert.toString(r.dsta));
-            } else if ((activeFileFields.dsta != 0)
-                    && (selectedFileFields.dsta != 0)) {
+            } else if ((activeFileFields.hasDsta())
+                    && (selectedFileFields.hasDsta())) {
                 rec.append(fieldSep);
             }
-            if ((activeFields.dage != 0) && (selectedFileFields.dage != 0)) {
+            if ((activeFields.hasDage()) && (selectedFileFields.hasDage())) {
                 rec.append(fieldSep);
                 rec.append(Convert.toString(r.dage));
-            } else if ((activeFileFields.dage != 0)
-                    && (selectedFileFields.dage != 0)) {
+            } else if ((activeFileFields.hasDage())
+                    && (selectedFileFields.hasDage())) {
                 rec.append(fieldSep);
             }
-            if ((activeFields.pdop != 0) && (selectedFileFields.pdop != 0)) {
+            if ((activeFields.hasPdop()) && (selectedFileFields.hasPdop())) {
                 rec.append(fieldSep);
                 rec.append(Convert.toString(r.pdop / 100.0, 2));
-            } else if ((activeFileFields.pdop != 0)
-                    && (selectedFileFields.pdop != 0)) {
+            } else if ((activeFileFields.hasPdop())
+                    && (selectedFileFields.hasPdop())) {
                 rec.append(fieldSep);
             }
-            if ((activeFields.hdop != 0) && (selectedFileFields.hdop != 0)) {
+            if ((activeFields.hasHdop()) && (selectedFileFields.hasHdop())) {
                 rec.append(fieldSep);
                 rec.append(Convert.toString(r.hdop / 100.0, 2));
-            } else if ((activeFileFields.hdop != 0)
-                    && (selectedFileFields.hdop != 0)) {
+            } else if ((activeFileFields.hasHdop())
+                    && (selectedFileFields.hasHdop())) {
                 rec.append(fieldSep);
             }
-            if ((activeFields.vdop != 0) && (selectedFileFields.vdop != 0)) {
+            if ((activeFields.hasVdop()) && (selectedFileFields.hasVdop())) {
                 rec.append(fieldSep);
                 rec.append(Convert.toString(r.vdop / 100.0, 2));
-            } else if ((activeFileFields.vdop != 0)
-                    && (selectedFileFields.vdop != 0)) {
+            } else if ((activeFileFields.hasVdop())
+                    && (selectedFileFields.hasVdop())) {
                 rec.append(fieldSep);
             }
-            if ((activeFields.nsat != 0) && (selectedFileFields.nsat != 0)) {
+            if ((activeFields.hasNsat()) && (selectedFileFields.hasNsat())) {
                 rec.append(fieldSep);
                 rec.append(Convert.toString((r.nsat & 0xFF00) >> 8));
                 rec.append("(" + Convert.toString(r.nsat & 0xFF) + ")");
-            } else if ((activeFileFields.nsat != 0)
-                    && (selectedFileFields.nsat != 0)) {
+            } else if ((activeFileFields.hasNsat())
+                    && (selectedFileFields.hasNsat())) {
                 rec.append(fieldSep);
             }
-            if ((activeFields.distance != 0)
-                    && (selectedFileFields.distance != 0)) {
+            if ((activeFields.hasDistance())
+                    && (selectedFileFields.hasDistance())) {
                 rec.append(fieldSep);
                 if (!imperial) {
                     rec.append(Convert.toString(r.distance, 2));
@@ -321,15 +318,14 @@ public final class GPSCSVFile extends GPSFile {
                     rec.append(Convert.toString(r.distance * 3.28083989501312,
                             2));
                 }
-            } else if ((activeFileFields.distance != 0)
-                    && (selectedFileFields.distance != 0)) {
+            } else if ((activeFileFields.hasDistance())
+                    && (selectedFileFields.hasDistance())) {
                 rec.append(fieldSep);
             }
-            if ((activeFileFields.sid != null)
-                    && (selectedFileFields.sid != null)) {
+            if ((activeFileFields.hasSid()) && (selectedFileFields.hasSid())) {
                 int j = 0;
                 rec.append(fieldSep);
-                if (activeFields.sid != null) {
+                if (activeFields.hasSid()) {
                     for (int i = r.sid.length - 1; i >= 0; i--) {
                         if (j != 0) {
                             rec.append(satSeperator);
@@ -341,20 +337,20 @@ public final class GPSCSVFile extends GPSFile {
                             rec.append('0');
                         }
                         rec.append(r.sid[j]);
-                        if (activeFileFields.ele != null
-                                && (selectedFileFields.ele != null)) {
+                        if (activeFileFields.hasEle()
+                                && (selectedFileFields.hasEle())) {
                             rec.append('-');
-                            if (activeFields.ele != null) {
+                            if (activeFields.hasEle()) {
                                 if (r.ele[j] < 10) {
                                     rec.append('0');
                                 }
                                 rec.append(r.ele[j]);
                             }
                         }
-                        if (activeFileFields.azi != null
-                                && (selectedFileFields.azi != null)) {
+                        if (activeFileFields.hasAzi()
+                                && (selectedFileFields.hasAzi())) {
                             rec.append('-');
-                            if (activeFields.azi != null) {
+                            if (activeFields.hasAzi()) {
                                 // if(s.azi[j]<100) {
                                 // rec.append('0');
                                 if (r.azi[j] < 10) {
@@ -364,10 +360,10 @@ public final class GPSCSVFile extends GPSFile {
                                 rec.append(r.azi[j]);
                             }
                         }
-                        if (activeFileFields.snr != null
-                                && (selectedFileFields.snr != null)) {
+                        if (activeFileFields.hasSnr()
+                                && (selectedFileFields.hasSnr())) {
                             rec.append('-');
-                            if (activeFields.snr != null) {
+                            if (activeFields.hasSnr()) {
                                 if (r.snr[j] < 10) {
                                     rec.append('0');
                                 }
@@ -399,7 +395,7 @@ public final class GPSCSVFile extends GPSFile {
             // prevRecord=new GPSRecord(s);
             // }
 
-            if (activeFileFields.voxStr != null) {
+            if (activeFileFields.hasVoxStr()) {
                 rec.append(fieldSep);
                 if (r.voxStr != null) {
                     rec.append(r.voxStr);

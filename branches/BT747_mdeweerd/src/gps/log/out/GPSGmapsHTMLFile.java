@@ -9,14 +9,9 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************  
 package gps.log.out;
 
 import gps.log.GPSFilter;
@@ -208,7 +203,7 @@ public final class GPSGmapsHTMLFile extends GPSFile {
                 // } else {
                 // rec.append("<trkpt ");
                 // }
-                if (activeFields.latitude != 0 && activeFields.longitude != 0) {
+                if (activeFields.hasLatitude() && activeFields.hasLongitude()) {
                     rec.append("points.push(new GLatLng(");
                     rec.append(Convert.toString(s.latitude, 6));
                     rec.append(',');

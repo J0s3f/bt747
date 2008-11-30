@@ -9,14 +9,9 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************  
 package gps.log.out;
 
 import gps.log.GPSFilter;
@@ -115,14 +110,14 @@ public final class GPSPLTFile extends GPSFile {
             String rec = "";
 
             // Field 1 : Latitude - decimal degrees.
-            if ((activeFields.latitude != 0)
-                    && (selectedFileFields.latitude != 0)) {
+            if ((activeFields.hasLatitude())
+                    && (selectedFileFields.hasLatitude())) {
                 rec += Convert.toString(s.latitude, 6);
             }
             rec += ",";
             // Field 2 : Longitude - decimal degrees.
-            if ((activeFields.longitude != 0)
-                    && (selectedFileFields.longitude != 0)) {
+            if ((activeFields.hasLongitude())
+                    && (selectedFileFields.hasLongitude())) {
                 rec += Convert.toString(s.longitude, 6);
             }
             rec += ",";
@@ -130,7 +125,7 @@ public final class GPSPLTFile extends GPSFile {
             rec += "0,"; // Normal for the moment - could detect break later
             // ...
             // Field 4 : Altitude in feet (-777 if not valid)
-            if ((activeFields.height != 0) && (selectedFileFields.height != 0)) {
+            if ((activeFields.hasHeight()) && (selectedFileFields.hasHeight())) {
                 rec += Convert
                         .toString((int) (s.height * 3.2808398950131233595800524934383));
             } else {
@@ -145,11 +140,11 @@ public final class GPSPLTFile extends GPSFile {
 
             // Field 6 : Date as a string
             // Field 7 : Time as a string
-            if ((activeFields.utc != 0) && (selectedFileFields.utc != 0)) {
+            if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
                 rec += Convert
                         .toString(
-                                (s.utc + ((activeFields.milisecond != 0)
-                                        && (selectedFileFields.milisecond != 0) ? (s.milisecond / 1000.0)
+                                (s.utc + ((activeFields.hasMilisecond())
+                                        && (selectedFileFields.hasMilisecond()) ? (s.milisecond / 1000.0)
                                         : 0)) / 86400.0 + 25569, // Days
                                 // since
                                 // 30/12/1899
@@ -166,8 +161,8 @@ public final class GPSPLTFile extends GPSFile {
                         + Convert.toString(t.getMinute()) + ":"
                         + (t.getSecond() < 10 ? "0" : "")
                         + Convert.toString(t.getSecond());
-                if ((activeFields.milisecond != 0)
-                        && (selectedFileFields.milisecond != 0)) {
+                if ((activeFields.hasMilisecond())
+                        && (selectedFileFields.hasMilisecond())) {
                     rec += ".";
                     rec += (s.milisecond < 100) ? "0" : "";
                     rec += (s.milisecond < 10) ? "0" : "";
