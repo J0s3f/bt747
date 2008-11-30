@@ -14,23 +14,60 @@
 //***  *********************************************************** ***
 package bt747.j2se_view.filefilters;
 
+import java.io.File;
+
+import javax.swing.filechooser.FileFilter;
+
+import bt747.j2se_view.J2SEAppController;
 
 /**
  * @author Mario
  * 
  */
-public final class CSVFileFilter extends ListFileFilter {
+public class ListFileFilter extends FileFilter {
 
     /**
      * Lower case list of accepted extensions.
      */
-    private static final String[] extensions = { ".csv" };
-    private static final String description = "CSV_Description";
+    private String[] extensions;
+
+    private String description;
 
     /**
      * 
      */
-    public CSVFileFilter() {
-        super(extensions, description);
-        // super(extensions,description);
-    }}
+    public ListFileFilter(final String[] ext, final String d) {
+        extensions = ext;
+        description = d;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
+     */
+    @Override
+    public final boolean accept(File f) {
+        if (f.isDirectory()) {
+            return true;
+        }
+        String filename = f.getName().toLowerCase();
+        for (int i = 0; i < extensions.length; i++) {
+            if (filename.endsWith(extensions[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.filechooser.FileFilter#getDescription()
+     */
+    @Override
+    public final String getDescription() {
+        return J2SEAppController.getString(description);
+    }
+
+}

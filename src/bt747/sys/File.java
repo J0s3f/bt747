@@ -59,57 +59,61 @@ public final class File {
         file = Interface.tr.getFileInstance(path, mode);
     }
 
-    public int getSize() {
+    public final int getSize() {
         return file.getSize();
     }
 
-    public boolean exists() {
+    public final boolean exists() {
         return file.exists();
     }
 
-    public boolean delete() {
+    public final boolean delete() {
         return file.delete();
     }
 
-    public boolean createDir() {
+    public final boolean createDir() {
         return file.createDir();
     }
 
-    public static boolean isAvailable() {
+    public final static boolean isAvailable() {
         return Interface.tr.isAvailable();
     }
 
     public static final char separatorChar = '/';
     public static final String separatorStr = "/";
 
-    public boolean close() {
+    public final boolean close() {
         return file.close();
     }
 
-    public boolean setPos(final int pos) {
+    public final boolean setPos(final int pos) {
         return file.setPos(pos);
     }
 
-    public boolean isOpen() {
+    public final boolean isOpen() {
         return file.isOpen();
     }
 
-    public int writeBytes(final byte[] b, final int off, final int len) {
+    public final int writeBytes(final byte[] b, final int off, final int len) {
         return file.writeBytes(b, off, len);
     }
 
-    public int readBytes(final byte[] b, final int off, final int len) {
+    public final int readBytes(final byte[] b, final int off, final int len) {
         return file.readBytes(b, off, len);
     }
 
-    public String getPath() {
+    public final String getPath() {
         return file.getPath();
     }
 
     /**
      * @return the lastError
      */
-    public int getLastError() {
+    public final int getLastError() {
         return file.getLastError();
+    }
+    
+    public final int getModificationTime() {
+        return file.getModificationTime();
     }
 }

@@ -31,7 +31,7 @@ import bt747.sys.Generic;
  * 
  * @author Mario
  */
-public class ImageTablePanel extends javax.swing.JPanel
+public class FileTablePanel extends javax.swing.JPanel
 implements DropTargetListener
 {
 
@@ -43,7 +43,7 @@ implements DropTargetListener
     private Model m;
 
     /** Creates new form ImageTablePanel */
-    public ImageTablePanel() {
+    public FileTablePanel() {
         initComponents();
     }
 
@@ -53,8 +53,8 @@ implements DropTargetListener
         c = pC;
         m = c.getModel();
 
-        imageTableModel = new ImageTableModel();
-        tbImageList.setModel(imageTableModel);
+        fileTableModel = new FileTableModel();
+        tbImageList.setModel(fileTableModel);
         // m.addListener(this);
         
       
@@ -69,7 +69,7 @@ implements DropTargetListener
 
         btClearList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                imageTableModel.clear();
+                fileTableModel.clear();
             }
         });
 
@@ -112,18 +112,18 @@ implements DropTargetListener
         // RawLogFileChooser.addChoosableFileFilter(ff);
         // RawLogFileChooser.setFileFilter(ff);
         ImageFileChooser.setMultiSelectionEnabled(true);
-        if (ImageFileChooser.showDialog(this, getString("SelectImages")) == JFileChooser.APPROVE_OPTION) {
+        if (ImageFileChooser.showDialog(this, getString("SelectFilesToTag")) == JFileChooser.APPROVE_OPTION) {
             try {
                 String path;
                 File[] files = ImageFileChooser.getSelectedFiles();
                 for (int i = 0; i < files.length; i++) {
-                    imageTableModel.add(files[i].getCanonicalPath());
+                    fileTableModel.add(files[i].getCanonicalPath());
                 }
                 c.setStringOpt(Model.IMAGEDIR, ImageFileChooser
                         .getCurrentDirectory().getCanonicalPath());
-                c.setUserWayPoints(imageTableModel.getSortedGPSRecords());
+                c.setUserWayPoints(fileTableModel.getSortedGPSRecords());
             } catch (Exception e) {
-                Generic.debug(getString("ImageFileChooser"), e);
+                Generic.debug(getString("FilesToTagFileChooser"), e);
             }
             // tfRawLogFilePath.setText(m.getStringOpt(AppSettings.LOGFILEPATH));
             // tfRawLogFilePath.setCaretPosition(tfRawLogFilePath.getText().length());
@@ -181,7 +181,7 @@ implements DropTargetListener
     }
 
     
-    private ImageTableModel imageTableModel;
+    private FileTableModel fileTableModel;
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -14,47 +14,24 @@
 //***  *********************************************************** ***
 package bt747.j2se_view.filefilters;
 
-import java.io.File;
-
-import javax.swing.filechooser.FileFilter;
-
-import bt747.j2se_view.J2SEAppController;
-
 /**
  * @author Mario
- *
+ * 
  */
-public final class BinFileFilter extends FileFilter {
+public final class BinFileFilter extends ListFileFilter {
 
     /**
      * Lower case list of accepted extensions.
      */
-    private final String[] extensions = {
-            ".bin"
-    };
-    
-    
-    
-    /* (non-Javadoc)
-     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
-     */
-    @Override
-    public boolean accept(File f) {
-        String filename = f.getName().toLowerCase();
-        for (int i = 0; i < extensions.length; i++) {
-             if(filename.endsWith(extensions[i])) {
-                 return true;
-             }
-        }
-        return false;
-    }
+    private final static String[] extensions = { ".bin" };
 
-    /* (non-Javadoc)
-     * @see javax.swing.filechooser.FileFilter#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return J2SEAppController.getString("BIN_Description");
-    }
+    private final static String description = "BIN_Description";
 
+    /**
+     * 
+     */
+    public BinFileFilter() {
+        super(extensions, description);
+        // super(extensions,description);
+    }
 }

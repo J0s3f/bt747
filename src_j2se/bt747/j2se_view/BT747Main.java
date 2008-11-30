@@ -152,7 +152,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private FiltersPanel pnFiltersPanel;
     private OutputSettingsPanel pnOutputSettingsPanel;
     private AdvancedFileSettingsPanel pnAdvancedFileSettingsPanel;
-    private ImageTablePanel pnImagePanel;
+    private FileTablePanel pnFilesToTagPanel;
     /**
      * Initialize application data. Gets the values from the model to set them
      * in the GUI.
@@ -187,9 +187,9 @@ public class BT747Main extends javax.swing.JFrame implements
         tabbedPanelAll.insertTab(getString("BT747Main.AdvancedfileSettingsPanel.TabConstraints.tabTitle"),
                 null, pnAdvancedFileSettingsPanel, null, 5);
 
-        pnImagePanel = new ImageTablePanel();
-        pnImagePanel.init(c);
-        tabbedPanelAll.insertTab(getString("ImagePanel.title"), null, pnImagePanel, null, 6);
+        pnFilesToTagPanel = new FileTablePanel();
+        pnFilesToTagPanel.init(c);
+        tabbedPanelAll.insertTab(getString("FilesToTagPanel.title"), null, pnFilesToTagPanel, null, 6);
         
         this.pack();
 
