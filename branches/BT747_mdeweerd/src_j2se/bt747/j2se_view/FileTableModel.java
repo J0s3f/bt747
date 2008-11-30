@@ -12,12 +12,13 @@ import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 import bt747.j2se_view.image.ImageData;
+import bt747.j2se_view.utils.GPSRecordComparator;
 
 /**
  * @author Mario
  * 
  */
-public class ImageTableModel extends AbstractTableModel {
+public class FileTableModel extends AbstractTableModel {
     private java.util.Hashtable<String, ImageData> imageTable = new Hashtable<String, ImageData>();
     private Vector<String> imageOrder = new Vector<String>();
 
@@ -153,7 +154,11 @@ public class ImageTableModel extends AbstractTableModel {
         case HEIGHT:
             return Integer.valueOf(img.getHeight());
         case GEOMETRY:
-            return img.getWidth() + "x" + img.getHeight();
+            if (img.getWidth() != 0) {
+                return img.getWidth() + "x" + img.getHeight();
+            } else {
+                return null;
+            }
         case LATITUDE:
             if (img.getGpsInfo().hasLatitude()) {
                 return Double.valueOf(img.getGpsInfo().latitude);

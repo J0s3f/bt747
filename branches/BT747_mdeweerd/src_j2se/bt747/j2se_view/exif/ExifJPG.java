@@ -97,7 +97,8 @@ public class ExifJPG {
             ) {
                 int marker = buffer[currentIdxInBuffer++] & 0xFF;
                 int marker_length = buffer[currentIdxInBuffer++] << 8 + buffer[currentIdxInBuffer++];
-                if ((marker == 0xE1) && (buffer[currentIdxInBuffer] == 'E')
+                if ((marker == 0xE1) // APP1
+                        && (buffer[currentIdxInBuffer] == 'E')
                         && (buffer[currentIdxInBuffer + 1] == 'x')
                         && (buffer[currentIdxInBuffer + 2] == 'i')
                         && (buffer[currentIdxInBuffer + 3] == 'f')
@@ -111,6 +112,14 @@ public class ExifJPG {
                     if (result < 0) {
                         exifApp1 = null;
                     }
+                } else if ((marker == 0xE0)  // APP0
+                        && (buffer[currentIdxInBuffer] == 'J')
+                        && (buffer[currentIdxInBuffer + 1] == 'F')
+                        && (buffer[currentIdxInBuffer + 2] == 'I')
+                        && (buffer[currentIdxInBuffer + 3] == 'F')
+                        && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
+                        ) { // APP0 JFIF marker
+                    
                 }
             }
         }

@@ -70,4 +70,13 @@ public final class WabaFile extends waba.io.File implements BT747File {
         return lastError;
     }
 
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747File#getModificationTime()
+     */
+    public int getModificationTime() {
+        super.getTime(TIME_MODIFIED);
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

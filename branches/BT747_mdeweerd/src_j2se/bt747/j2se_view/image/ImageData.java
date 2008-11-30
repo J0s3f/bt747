@@ -21,6 +21,7 @@ import bt747.j2se_view.exif.ExifAttribute;
 import bt747.j2se_view.exif.ExifConstants;
 import bt747.j2se_view.exif.ExifJPG;
 import bt747.sys.Convert;
+import bt747.sys.File;
 import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Date;
 
@@ -146,8 +147,14 @@ public class ImageData {
                             + Convert.toInt(DateTime.substring(14, 16)) * 60
                             + Convert.toInt(DateTime.substring(17, 19));
                     BT747Date d = Interface.getDateInstance(day, month, year);
-                    gpsInfo.utc = d.dateToUTCepoch1970() + seconds;
-
+                    setUtc(d.dateToUTCepoch1970() + seconds);
+                }
+            } else {
+                // Get file date & time.
+                File f = new File(path);
+                int u = f.getModificationTime();
+                if(u!=0) {
+                    setUtc(u);
                 }
             }
         }
@@ -158,6 +165,7 @@ public class ImageData {
      *            the utc to set
      */
     private void setUtc(int utc) {
+        gpsInfo.utc = utc;
         this.utc = utc;
     }
 

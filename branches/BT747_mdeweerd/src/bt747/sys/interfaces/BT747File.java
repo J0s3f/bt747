@@ -111,5 +111,9 @@ public interface BT747File {
      * @return
      */
     int getLastError();
-
+    
+    /**
+     * Get modification time (UTC)
+     */
+    int getModificationTime();
 }

@@ -235,6 +235,13 @@ public final class J2SEFile implements BT747File {
         return filePath;
     }
 
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747File#getModificationTime()
+     */
+    public int getModificationTime() {
+        return (int)(new java.io.File(filePath).lastModified()/1000L);
+    }
+
     // Kept for reference - unused.
     // public static char separatorChar = java.io.File.separatorChar;
     // public static String separatorStr = String.valueOf(separatorChar);
