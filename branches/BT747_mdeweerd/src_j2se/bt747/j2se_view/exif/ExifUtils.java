@@ -16,7 +16,7 @@ package bt747.j2se_view.exif;
 
 /**
  * @author Mario De Weerd
- *
+ * 
  */
 public final class ExifUtils {
 
@@ -31,7 +31,7 @@ public final class ExifUtils {
         if (bigEndian) {
             i = (buffer[offset] & 0xFF) << 24
                     | (buffer[offset + 1] & 0xFF) << 16
-                    | (buffer[offset + 1] & 0xFF) << 8
+                    | (buffer[offset + 2] & 0xFF) << 8
                     | (buffer[offset + 3] & 0xFF);
         } else {
             i = (buffer[offset + 3] & 0xFF) << 24
@@ -49,6 +49,34 @@ public final class ExifUtils {
         } else {
             return ((buffer[offset + 1] & 0xFF) << 8) | (buffer[offset] & 0xFF);
         }
+    }
+
+    public final static int addLong4byte(final byte[] buffer, final int offset,
+            final boolean bigEndian, final int l) {
+        if (bigEndian) {
+            buffer[offset + 0] = (byte) ((l >> 24) & 0xFF);
+            buffer[offset + 1] = (byte) ((l >> 16) & 0xFF);
+            buffer[offset + 2] = (byte) ((l >> 8) & 0xFF);
+            buffer[offset + 3] = (byte) (l & 0xFF);
+        } else {
+            buffer[offset + 0] = (byte) (l & 0xFF);
+            buffer[offset + 1] = (byte) ((l >> 8) & 0xFF);
+            buffer[offset + 2] = (byte) ((l >> 16) & 0xFF);
+            buffer[offset + 3] = (byte) ((l >> 24) & 0xFF);
+        }
+        return 4;
+    }
+
+    public final static int addShort2byte(final byte[] buffer,
+            final int offset, final boolean bigEndian, final int s) {
+        if (bigEndian) {
+            buffer[offset] = (byte) ((s >> 8) & 0xFF);
+            buffer[offset + 1] = (byte) (s & 0xFF);
+        } else {
+            buffer[offset] = (byte) (s & 0xFF);
+            buffer[offset + 1] = (byte) ((s >> 8) & 0xFF);
+        }
+        return 2;
     }
 
 }

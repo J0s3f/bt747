@@ -27,7 +27,7 @@ public class ExifAttribute {
     private int type;
     private int count;
     private byte[] value;
-    private boolean endian;
+    private boolean bigEndian;
 
     public ExifAttribute() {
 
@@ -42,10 +42,10 @@ public class ExifAttribute {
 
     private final void newValue(final int minsize) {
         int size;
-        if ((minsize & 0x3) == 0) {
+        if ((minsize & 0x1) == 0) {
             size = minsize;
         } else {
-            size = (minsize & 0xFFFC) + 3;
+            size = (minsize & 0xFFFE) + 2;
         }
         value = new byte[size];
     }
@@ -72,7 +72,7 @@ public class ExifAttribute {
 
     public final int read(final byte[] buffer, final int currentIdxInBuffer,
             final int tiffHeaderStart, final boolean bigEndian) {
-        endian = bigEndian;
+        this.bigEndian = bigEndian;
         if (currentIdxInBuffer + 12 < buffer.length) {
             setTag(ExifUtils.getShort2byte(buffer, currentIdxInBuffer,
                     bigEndian));
@@ -172,6 +172,37 @@ public class ExifAttribute {
 
     }
 
+    public final int getPayloadSize() {
+        if (value.length <= 4) {
+            return 0;
+        } else {
+            return value.length;
+        }
+    }
+
+    public final int fillBuffer(final byte[] buffer, final int recordOffset,
+            final boolean bigEndian, final int payloadOffset,
+            final int tiffHeaderOffset) {
+        ExifUtils.addShort2byte(buffer, recordOffset, bigEndian, tag);
+        ExifUtils.addShort2byte(buffer, recordOffset + 2, bigEndian, type);
+        ExifUtils.addLong4byte(buffer, recordOffset + 4, bigEndian, count);
+        int valueOffset;
+        int usedPayload;
+        if (value.length <= 4) {
+            valueOffset = recordOffset + 8;
+            usedPayload = 0;
+        } else {
+            valueOffset = payloadOffset;
+            ExifUtils.addLong4byte(buffer, recordOffset + 8, bigEndian,
+                    payloadOffset - tiffHeaderOffset);
+            usedPayload = value.length;
+        }
+        for (int i = 0; i < value.length; i++) {
+            buffer[valueOffset + i] = value[i];
+        }
+        return usedPayload;
+    }
+
     /**
      * @param tag
      *            the tag to set
@@ -236,9 +267,9 @@ public class ExifAttribute {
         if (type == ExifConstants.RATIONAL || type == ExifConstants.SRATIONAL) {
             int offset = 8 * idx;
             if (offset + 8 <= value.length) {
-                int nom = ExifUtils.getLong4byte(value, offset, endian);
+                int nom = ExifUtils.getLong4byte(value, offset, bigEndian);
                 int denominator = ExifUtils.getLong4byte(value, offset + 4,
-                        endian);
+                        bigEndian);
                 if (denominator == 0) {
                     Generic.debug("Invalid EXIF atribute value");
                     return (float) nom;
@@ -270,11 +301,11 @@ public class ExifAttribute {
         if (offset + unitSize <= value.length) {
             switch (type) {
             case ExifConstants.BYTE:
-                return ExifUtils.getByte(value, offset, endian);
+                return ExifUtils.getByte(value, offset, bigEndian);
             case ExifConstants.SHORT:
-                return ExifUtils.getShort2byte(value, offset, endian);
+                return ExifUtils.getShort2byte(value, offset, bigEndian);
             case ExifConstants.LONG:
-                return ExifUtils.getLong4byte(value, offset, endian);
+                return ExifUtils.getLong4byte(value, offset, bigEndian);
             default:
                 return 0;
             }
@@ -282,4 +313,25 @@ public class ExifAttribute {
         return 0; // TODO: similar to NaN?
 
     }
+    
+    public final void setIntValue(final int idx, final int val) {
+        int unitSize = getValueUnitSize(type);
+        int offset = unitSize * idx;
+        if (offset + unitSize <= value.length) {
+            switch (type) {
+            case ExifConstants.BYTE:
+                value[offset]=(byte)val;
+                break;
+            case ExifConstants.SHORT:
+                ExifUtils.addShort2byte(value, offset, bigEndian, val);
+                break;
+            case ExifConstants.LONG:
+                ExifUtils.addLong4byte(value, offset, bigEndian, val);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
 }
