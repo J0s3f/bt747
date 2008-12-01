@@ -111,4 +111,14 @@ public final class WabaHashtable implements BT747Hashtable {
     public WabaHashtable(final int initialCapacity, final float loadFactor) {
         hs = new Hashtable(initialCapacity, loadFactor);
     }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747Hashtable#getSize()
+     */
+    public final int size() {
+        // TODO Auto-generated method stub
+        return hs.size();
+    }
+    
+    
 }

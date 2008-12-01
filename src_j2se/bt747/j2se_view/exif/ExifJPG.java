@@ -55,7 +55,7 @@ public class ExifJPG {
         boolean success = false;
 
         try {
-            //bt747.sys.Generic.debug(Path);
+            // bt747.sys.Generic.debug(Path);
             p = new WindowedFile(Path, File.READ_ONLY, card);
             if (p != null && p.isOpen()) {
                 byte[] buffer;
@@ -87,7 +87,7 @@ public class ExifJPG {
                 // SOI
                 && ((buffer[currentIdxInBuffer + 1] & 0xFF) == 0xD8)) {
             // Looks like a JPG file.
-            // For the moment we suppose that the EXIF information is
+            // If present, EXIF information is
             // the first
             // Marker. If not, we will need to skip the markers until
             // the end
@@ -112,17 +112,57 @@ public class ExifJPG {
                     if (result < 0) {
                         exifApp1 = null;
                     }
-                } else if ((marker == 0xE0)  // APP0
+                    //bt747.sys.Generic.debug(this.toString());
+                } else if ((marker == 0xE0) // APP0
                         && (buffer[currentIdxInBuffer] == 'J')
                         && (buffer[currentIdxInBuffer + 1] == 'F')
                         && (buffer[currentIdxInBuffer + 2] == 'I')
                         && (buffer[currentIdxInBuffer + 3] == 'F')
                         && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
-                        ) { // APP0 JFIF marker
-                    
+                ) { // APP0 JFIF marker
+
                 }
             }
         }
+//        byte[] test = getBuffer();
+//        for (int i = 0; i < test.length; i++) {
+//            if (test[i] != buffer[i + 2]) {
+//                Generic.debug("D:" + i + ":" + test[i] + ":" + buffer[i + 2]);
+//            }
+//        }
+    }
+
+    private final byte[] getBuffer() {
+        byte[] buffer = null;
+        if (exifApp1 != null) {
+            // Get required size
+            int size;
+            // Exif header =
+            // - Application Marker = 2
+            // - Marker lenght = 2
+            // - Identifier Exif = 6
+            // Total = 10
+            size = 10;
+            size += exifApp1.getByteSize();
+            // Should check size of header < 64k
+            buffer = new byte[size];
+            // Application Marker
+            buffer[0] = (byte) 0xFF;
+            buffer[1] = (byte) 0xE1;
+            // Marker lenght (includes marker?)
+            buffer[2] = (byte) ((size - 2) >> 8);
+            buffer[3] = (byte) ((size - 2) & 0xFF);
+            buffer[4] = 'E';
+            buffer[5] = 'x';
+            buffer[6] = 'i';
+            buffer[7] = 'f';
+            buffer[8] = (byte) 0x00;
+            buffer[9] = (byte) 0x00;
+            // Exif itself.
+            exifApp1.fillBuffer(buffer, 10);
+
+        }
+        return buffer;
     }
 
     public final ExifAttribute getExifAttribute(final int tag) {
@@ -148,7 +188,9 @@ public class ExifJPG {
         exifApp1.setExifAttribute(atr);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override

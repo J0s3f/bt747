@@ -70,4 +70,11 @@ public final class J2SEHashtable  implements
     public void remove(Object o) {
         hash.remove(o);
     }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747Hashtable#getSize()
+     */
+    public int size() {
+        return hash.size();
+    }
 }

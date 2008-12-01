@@ -35,13 +35,13 @@ public class ExifApp1 {
     private ExifIfdBlock exifBlock;
     private ExifIfdBlock gpsBlock;
     private ExifIfdBlock Ifd1;
+    private boolean bigEndian;
 
     public final int read(final byte[] buffer, final int initialIdxInBuffer) {
         int currentIdxInBuffer = initialIdxInBuffer;
         int tiffHeaderStart = currentIdxInBuffer;
-        boolean bigEndian;
         // Next is Tiff header (8 bytes)
-        // Byte order
+        // Byte order8
         if ((buffer[tiffHeaderStart] == 'I')
                 && (buffer[tiffHeaderStart + 1] == 'I')) {
             // little endian (LSB first)
@@ -75,7 +75,7 @@ public class ExifApp1 {
         ifd1Offset = Ifd0.read(buffer, currentIdxInBuffer, tiffHeaderStart,
                 bigEndian);
 
-        //bt747.sys.Generic.debug("EXIF Header");
+        // bt747.sys.Generic.debug("EXIF Header");
 
         ExifAttribute exifAtr;
         exifAtr = Ifd0.get(ExifConstants.TAG_EXIF);
@@ -85,7 +85,7 @@ public class ExifApp1 {
                     tiffHeaderStart, bigEndian);
         }
 
-        //bt747.sys.Generic.debug("GPS Header");
+        // bt747.sys.Generic.debug("GPS Header");
         exifAtr = Ifd0.get(ExifConstants.TAG_GPSINFO);
         if (exifAtr != null) {
             gpsBlock = new ExifIfdBlock();
@@ -94,15 +94,178 @@ public class ExifApp1 {
         }
 
         if (ifd1Offset != 0) {
-            //bt747.sys.Generic.debug("Ifd1 Block");
+            // bt747.sys.Generic.debug("Ifd1 Block");
             Ifd1 = new ExifIfdBlock();
             Ifd1.read(buffer, ifd1Offset + tiffHeaderStart, tiffHeaderStart,
                     bigEndian);
 
             // EXIF offset is given in IFD0
-            //bt747.sys.Generic.debug("EXIF read");
+            // bt747.sys.Generic.debug("EXIF read");
+            int jpegAtrOffset;
+            ExifAttribute atr;
+            atr = Ifd1.get(ExifConstants.TAG_JPEGINTERCHANGEFORMAT);
+            if (atr != null) {
+                jpegAtrOffset = atr.getIntValue(0);
+                atr = Ifd1.get(ExifConstants.TAG_JPEGINTERCHANGEFORMATLENGTH);
+                if (atr != null) {
+                    int len = atr.getIntValue(0);
+                    if (len != 0) {
+                        int bufferIdx = tiffHeaderStart + jpegAtrOffset;
+                        jpegInterchange = new byte[len];
+                        for (int i = 0; i < jpegInterchange.length; i++) {
+                            jpegInterchange[i] = buffer[bufferIdx++];
+                        }
+                    }
+                }
+
+            }
         }
         return 0;
+    }
+
+    byte[] jpegInterchange = null;
+
+    public final int getByteSize() {
+        // TODO: Create Ifd0 block if needed
+        int size;
+
+        // Header takes 8 bytes
+        size = 8;
+        // Add IfdBlocks
+        if (Ifd0 != null) {
+            size += Ifd0.getByteSize();
+        }
+        if (exifBlock != null) {
+            size += exifBlock.getByteSize();
+        }
+        if (gpsBlock != null) {
+            size += gpsBlock.getByteSize();
+        }
+        if (Ifd1 != null) {
+            size += Ifd1.getByteSize();
+        }
+        if (jpegInterchange != null) {
+            size += jpegInterchange.length;
+        }
+        return size;
+    }
+
+    // Unfinished!
+    public final void fillBuffer(final byte[] buffer, final int tiffHeaderStart) {
+        int currentIdx = tiffHeaderStart;
+        // Next is Tiff header (8 bytes)
+        if (bigEndian) {
+            buffer[currentIdx++] = 'M';
+            buffer[currentIdx++] = 'M';
+        } else {
+            buffer[currentIdx++] = 'I';
+            buffer[currentIdx++] = 'I';
+        }
+        currentIdx += ExifUtils.addShort2byte(buffer, currentIdx, bigEndian,
+                0x002A);
+
+        // ifd0Offset - is next position: 8 !
+
+        currentIdx += ExifUtils.addLong4byte(buffer, currentIdx, bigEndian, 8);
+
+        // Ifd0 has to exist. TODO: check this ?!
+        int nextBlock;
+        int ifd1Block;
+        int ifd0size;
+        int ifd1size = 0;
+        int ifd1offset = 0;
+        int exifBlockSize = 0;
+        int exifOffset = 0;
+        int gpsBlockSize = 0;
+        int gpsOffset = 0;
+        ifd0size = Ifd0.getByteSize();
+        nextBlock = ifd0size;
+        nextBlock += currentIdx - tiffHeaderStart;
+        if (exifBlock != null) {
+            exifBlockSize = exifBlock.getByteSize();
+            exifOffset = nextBlock;
+            nextBlock += exifBlockSize;
+        }
+        if (gpsBlock != null) {
+            gpsBlockSize = gpsBlock.getByteSize();
+            gpsOffset = nextBlock;
+            nextBlock += gpsBlockSize;
+        }
+        if (Ifd1 != null) {
+            ifd1size = Ifd1.getByteSize();
+            ifd1offset = nextBlock;
+        }
+
+        // TODO: Set exifBlock offset
+        // TODO: Set gpsBlock offset
+
+        // TODO: nextBlock may need to point to current block.
+        Ifd0.setNextIfdBlockOffset(ifd1offset);
+
+        ExifAttribute atr;
+        if (exifOffset != 0) {
+            atr = new ExifAttribute(ExifConstants.TAG_EXIF, ExifConstants.LONG,
+                    1);
+            atr.setIntValue(0, exifOffset);
+            Ifd0.set(atr);
+        }
+        if (gpsOffset != 0) {
+            atr = new ExifAttribute(ExifConstants.TAG_GPSINFO,
+                    ExifConstants.LONG, 1);
+            atr.setIntValue(0, gpsOffset);
+            Ifd0.set(atr);
+        }
+
+        atr = Ifd0.get(ExifConstants.TAG_STRIPOFFSETS);
+        if (atr != null) {
+            // TODO adjust offset
+            // atr.setIntValue(0, val);
+        }
+        Ifd0.fillBuffer(buffer, tiffHeaderStart, bigEndian, currentIdx,
+                ifd1offset);
+
+        currentIdx += ifd0size;
+
+        if (exifBlock != null) {
+            int size;
+            size = exifBlock.getByteSize();
+            nextBlock = size;
+            nextBlock += currentIdx - tiffHeaderStart;
+            exifBlock.fillBuffer(buffer, tiffHeaderStart, bigEndian,
+                    currentIdx, 0);
+            currentIdx += size;
+        }
+
+        if (gpsBlock != null) {
+            int size;
+            size = gpsBlock.getByteSize();
+            nextBlock = gpsBlock.getByteSize();
+            nextBlock += currentIdx - tiffHeaderStart;
+            gpsBlock.fillBuffer(buffer, tiffHeaderStart, bigEndian, currentIdx,
+                    0);
+            currentIdx += size;
+        }
+
+        if (Ifd1 != null) {
+            int size;
+            atr = Ifd1.get(ExifConstants.TAG_STRIPOFFSETS);
+            if (atr != null) {
+                // TODO adjust offset
+                // atr.setIntValue(0, val);
+            }
+            size = Ifd1.getByteSize();
+            nextBlock = Ifd1.getByteSize();
+            nextBlock += currentIdx - tiffHeaderStart;
+            Ifd1.fillBuffer(buffer, tiffHeaderStart, bigEndian, currentIdx, 0);
+            currentIdx += size;
+        }
+        if (jpegInterchange != null) {
+            // TODO: adjust pointer in previous structure.
+            for (int i = 0; i < jpegInterchange.length; i++) {
+                buffer[currentIdx + i] = jpegInterchange[i];
+            }
+        }
+        // Write jpeginterchange
     }
 
     public final ExifAttribute getExifAttribute(final int tag) {
@@ -127,20 +290,27 @@ public class ExifApp1 {
         }
         exifBlock.set(atr);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
         String r = "";
-        if(exifBlock!=null) {
+        if (Ifd0 != null) {
+            r += Ifd0.toString();
+        }
+        if (exifBlock != null) {
             r += exifBlock.toString();
         }
-        if(gpsBlock!=null) {
+        if (gpsBlock != null) {
             r += gpsBlock.toString();
         }
-        // TODO Auto-generated method stub
+        if (Ifd1 != null) {
+            r += Ifd1.toString();
+        }
         return r;
     }
 }

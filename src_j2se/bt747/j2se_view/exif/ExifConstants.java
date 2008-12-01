@@ -70,6 +70,7 @@ public class ExifConstants {
     /** equipment Make 271 10F R R R R */
     /** Model of image input equipment Model 272 110 R R R R */
     /** Image data location StripOffsets 273 111 M M M N */
+    public static final int TAG_STRIPOFFSETS = 0x111;
     /** Orientation of image Orientation 274 112 R R R R */
     public static final int TAG_ORIENTATION = 0x112;
     /** Number of components SamplesPerPixel 277 115 M M M J */
@@ -88,7 +89,9 @@ public class ExifConstants {
     /** White point chromaticity WhitePoint 318 13E O O O O */
     /** Chromaticities of primaries PrimaryChromaticities 319 13F O O O O */
     /** Offset to JPEG SOI JPEGInterchangeFormat 513 201 N N N N */
+    public static final int TAG_JPEGINTERCHANGEFORMAT = 0x201; 
     /** Bytes of JPEG data JPEGInterchangeFormatLength 514 202 N N N N */
+    public static final int TAG_JPEGINTERCHANGEFORMATLENGTH = 0x202; 
     /** Color space transformation matrix */
     /** coefficients YCbCrCoefficients 529 211 N N O O */
     /** Subsampling ratio of Y to C YCbCrSubSampling 530 212 N N M J */
@@ -103,6 +106,7 @@ public class ExifConstants {
     public static final int TAG_GPSINFO = 0x8825;
     /** Exposure time ExposureTime 33434 829A R R R R */
     /** F number FNumber 33437 829D O O O O */
+    public static final int TAG_FNUMBER = 0x829D;
     /** Exposure program ExposureProgram 34850 8822 O O O O */
     /** Spectral sensitivity SpectralSensitivity 34852 8824 O O O O */
     /** ISO speed ratings ISOSpeedRatings 34855 8827 O O O O */
@@ -116,9 +120,11 @@ public class ExifConstants {
     /** digital data DateTimeDigitized 36868 9004 O O O O */
     public static final int TAG_DATETIMEDIGITIZED = 0x9004;
     /** Meaning of each component ComponentsConfiguration 37121 9101 N N N M */
+    public static final int TAG_COMPONENTSCONFIGURATION = 0x9101;
     /** Image compression mode CompressedBitsPerPixel 37122 9102 N N N O */
     /** Shutter speed ShutterSpeedValue 37377 9201 O O O O */
     /** Aperture ApertureValue 37378 9202 O O O O */
+    public static final int TAG_APERTUREVALUE = 0x9202;
     /** Brightness BrightnessValue 37379 9203 O O O O */
     /** Exposure bias ExposureBiasValue 37380 9204 O O O O */
     /** Maximum lens aperture MaxApertureValue 37381 9205 O O O O */
@@ -138,7 +144,9 @@ public class ExifConstants {
     /** DateTimeDigitized subseconds SubSecTimeDigitized 37522 9292 O O O O */
     public static final int TAG_SUBSECTIMEDIGITIZED = 0x9292;
     /** Supported Flashpix version FlashpixVersion 40960 A000 M M M M */
+    public static final int TAG_FLASHPIXVERSION = 0xA000;
     /** Color space information ColorSpace 40961 A001 M M M M */
+    public static final int TAG_COLORSPACE = 0xA001;
     /** Valid image width PixelXDimension 40962 A002 N N N M */
     public static final int TAG_PIXELXDIMENSION = 0xA002;
     /** Valid image height PixelYDimension 40963 A003 N N N M */
@@ -159,12 +167,19 @@ public class ExifConstants {
     /** Scene type SceneType 41729 A301 O O O O */
     /** CFA pattern CFAPattern 41730 A302 O O O O */
     /** Custom image processing CustomRendered 41985 A401 O O O O */
+    public static final int TAG_CUSTOMRENDERED = 0xA401;
     /** Exposure mode ExposureMode 41986 A402 R R R R */
+    public static final int TAG_EXPOSUREMODE = 0xA402;
     /** White balance WhiteBalance 41987 A403 R R R R */
+    public static final int TAG_WHITEBALANCE = 0xA403;
     /** Digital zoom ratio DigitalZoomRatio 41988 A404 O O O O */
+    public static final int TAG_DIGITALZOOMRATIO = 0xA404;
     /** Focal length in 35 mm film FocalLengthIn35mmFilm 41989 A405 O O O O */
+    public static final int TAG_FOCALLENGTHIN35MMFILM = 0xA405;
     /** Scene capture type SceneCaptureType 41990 A406 R R R R */
+    public static final int TAG_SCENECAPTURETYPE = 0xA406;
     /** Gain control GainControl 41991 A407 O O O O */
+    public static final int TAG_GAINCONTROL = 0xA406;
     /** Contrast Contrast 41992 A408 O O O O */
     /** Saturation Saturation 41993 A409 O O O O */
     /** Sharpness Sharpness 41994 A40A O O O O */

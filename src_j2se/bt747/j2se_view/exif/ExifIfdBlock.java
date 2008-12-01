@@ -57,6 +57,67 @@ public class ExifIfdBlock {
         return currentIdxInBuffer - initialIdxInBuffer;
     }
 
+    public final int getByteSize() {
+        int size;
+        // Interoperability = 2 bytes
+        size = 2;
+        // Each record individually = 12 bytes + payload
+        BT747Hashtable iter = atrs.iterator();
+        while (iter.hasNext()) {
+            size += 12;
+            ExifAttribute atr = (ExifAttribute) atrs.get(iter.nextKey());
+            size += atr.getPayloadSize();
+        }
+
+        size += 4; // NextIfdBlockOffset
+        return size;
+    }
+
+    public final void fillBuffer(final byte[] buffer,
+            final int tiffHeaderStart, boolean bigEndian, final int offset,
+            final int nextIfdOffset) {
+        int payloadOffset;
+        // Payload start is
+        // Current position in buffer
+        payloadOffset = offset;
+        // .. plus bytes needed for interoperabilitynumber
+        payloadOffset += 2;
+        // .. plus bytes needed for records
+        payloadOffset += 12 * atrs.size();
+        // .. plus bytes needed for nextIfdOffset
+        payloadOffset += 4;
+        
+        // Interoperability number (= count)
+        ExifUtils.addShort2byte(buffer, offset, bigEndian,atrs.size());
+        int recordOffset = offset + 2;
+        // TODO - needs to be in sorted order.
+        BT747Hashtable iter = atrs.iterator();
+        // Very simple sort.
+        int[] sortedKeys = new int[atrs.size()];
+        int idx = 0;
+        while (iter.hasNext()) {
+            int key = ((ExifAttribute) (atrs.get(iter.nextKey()))).getTag();
+            int i;
+            for (i = idx-1; i >= 0; i--) {
+                if(sortedKeys[i]>key) {
+                    sortedKeys[i+1] = sortedKeys[i];
+                } else {
+                    break;
+                }
+            }
+            sortedKeys[i+1] = key;
+            idx++;
+        }
+        for (int i = 0; i < sortedKeys.length; i++) {
+            int key = sortedKeys[i];
+            ExifAttribute atr = (ExifAttribute) (atrs.get(key));
+            payloadOffset += atr.fillBuffer(buffer, recordOffset, bigEndian,
+                    payloadOffset, tiffHeaderStart);
+            recordOffset += 12;
+        }
+        ExifUtils.addLong4byte(buffer, recordOffset, bigEndian, nextIfdOffset);
+    }
+
     public final boolean hasTag(final int tag) {
         return atrs.get(tag) != null;
     }
