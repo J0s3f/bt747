@@ -1,3 +1,7 @@
+Version 1.62.11
+* Problem when JFIF marker in front of EXIF marker solved.
+  This does not seem to comply with the EXIF2.2 specification though.
+
 Version 1.62.10
 * Writing back geotag information working when some EXIF information present.
   Need to check when EXIF not present.
