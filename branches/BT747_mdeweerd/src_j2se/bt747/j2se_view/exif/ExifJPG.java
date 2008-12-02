@@ -69,7 +69,7 @@ public class ExifJPG {
                 p.close();
                 p = null;
                 examineBuffer(buffer, sz);
-                //bt747.sys.Generic.debug(this.toString());
+                // bt747.sys.Generic.debug(this.toString());
                 success = true;
             }
         } catch (Exception e) {
@@ -98,11 +98,19 @@ public class ExifJPG {
             // the end
             // of the file.
             currentIdxInBuffer += 2;
-            if ((buffer[currentIdxInBuffer++] & 0xFF) == 0xFF // Marker prefix
-            ) {
-                int marker = buffer[currentIdxInBuffer++] & 0xFF;
-                int marker_length = buffer[currentIdxInBuffer++] << 8 + buffer[currentIdxInBuffer++];
-                if ((marker == 0xE1) // APP1
+            int marker;
+            int marker_length;
+            int skipMarkerPosition;
+            boolean skipMarkers;
+            do {
+                skipMarkers = false;
+                marker = ((buffer[currentIdxInBuffer++] & 0xFF) << 8)
+                        + (buffer[currentIdxInBuffer++] & 0xFF);
+                marker_length = ((buffer[currentIdxInBuffer++] & 0xFF) << 8)
+                        + (buffer[currentIdxInBuffer++] & 0xFF);
+                skipMarkerPosition = marker_length + currentIdxInBuffer - 2;
+
+                if ((marker == 0xFFE1) // APP1
                         && (buffer[currentIdxInBuffer] == 'E')
                         && (buffer[currentIdxInBuffer + 1] == 'x')
                         && (buffer[currentIdxInBuffer + 2] == 'i')
@@ -118,16 +126,20 @@ public class ExifJPG {
                         exifApp1 = null;
                     }
                     // bt747.sys.Generic.debug(this.toString());
-                } else if ((marker == 0xE0) // APP0
+                } else if ((marker == 0xFFE0) // APP0
                         && (buffer[currentIdxInBuffer] == 'J')
                         && (buffer[currentIdxInBuffer + 1] == 'F')
                         && (buffer[currentIdxInBuffer + 2] == 'I')
                         && (buffer[currentIdxInBuffer + 3] == 'F')
                         && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
                 ) { // APP0 JFIF marker
+                    skipMarkers = true;
 
                 }
-            }
+                if (skipMarkers) {
+                    currentIdxInBuffer = skipMarkerPosition;
+                }
+            } while (skipMarkers);
         }
         // byte[] test = getBuffer();
         // for (int i = 0; i < test.length; i++) {
@@ -264,10 +276,10 @@ public class ExifJPG {
             // bt747.sys.Generic.debug(Path);
             fromFile = new WindowedFile(Path, File.READ_ONLY, card);
             if (exifApp1 != null && fromFile != null && fromFile.isOpen()) {
-                //setUsedSoftWare();
+                // setUsedSoftWare();
                 byte[] buffer;
                 int sz;
-                //bt747.sys.Generic.debug(this.toString());
+                // bt747.sys.Generic.debug(this.toString());
                 fromFile.setBufferSize(64 * 1024);
                 fromFile.fillBuffer(0);
                 buffer = fromFile.getBuffer();
@@ -283,34 +295,56 @@ public class ExifJPG {
                         // SOI
                         && ((buffer[currentIdxInBuffer + 1] & 0xFF) == 0xD8)) {
                     currentIdxInBuffer += 2;
-                    int marker = ((buffer[currentIdxInBuffer++] & 0xFF) << 8)
-                            + (buffer[currentIdxInBuffer++] & 0xFF);
-                    int marker_length = ((buffer[currentIdxInBuffer++] & 0xFF) << 8)
-                            + (buffer[currentIdxInBuffer++] & 0xFF);
-                    int skipMarkerPosition = marker_length + currentIdxInBuffer
-                            - 2;
-                    if ((marker == 0xFFE1) // APP1
-                            && (buffer[currentIdxInBuffer] == 'E')
-                            && (buffer[currentIdxInBuffer + 1] == 'x')
-                            && (buffer[currentIdxInBuffer + 2] == 'i')
-                            && (buffer[currentIdxInBuffer + 3] == 'f')
-                            && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
-                            && (buffer[currentIdxInBuffer + 5] == 0x00)) { // Padding
-                        currentIdxInBuffer = skipMarkerPosition;
-                    }
+                    int marker;
+                    int marker_length;
+                    int skipMarkerPosition;
+                    int currentMarkerStart;
+                    boolean skipMarkers;
+                    do {
+                        skipMarkers = false;
+                        currentMarkerStart = currentIdxInBuffer;
+                        marker = ((buffer[currentIdxInBuffer] & 0xFF) << 8)
+                                + (buffer[currentIdxInBuffer + 1] & 0xFF);
+                        marker_length = ((buffer[currentIdxInBuffer + 2] & 0xFF) << 8)
+                                + (buffer[currentIdxInBuffer + 3] & 0xFF);
+                        skipMarkerPosition = marker_length + currentIdxInBuffer
+                                + 2;
+                        currentIdxInBuffer += 4;
+
+                        if ((marker == 0xFFE1) // APP1
+                                && (buffer[currentIdxInBuffer] == 'E')
+                                && (buffer[currentIdxInBuffer + 1] == 'x')
+                                && (buffer[currentIdxInBuffer + 2] == 'i')
+                                && (buffer[currentIdxInBuffer + 3] == 'f')
+                                && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
+                                && (buffer[currentIdxInBuffer + 5] == 0x00)) { // Padding
+                            currentIdxInBuffer = skipMarkerPosition;
+                        } else if ((marker == 0xFFE0) // APP0
+                                && (buffer[currentIdxInBuffer] == 'J')
+                                && (buffer[currentIdxInBuffer + 1] == 'F')
+                                && (buffer[currentIdxInBuffer + 2] == 'I')
+                                && (buffer[currentIdxInBuffer + 3] == 'F')
+                                && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
+                        ) { // APP0 JFIF marker
+                            skipMarkers = true;
+                        }
+                        if (skipMarkers) {
+                            currentIdxInBuffer = skipMarkerPosition;
+                        }
+                    } while (skipMarkers);
                     // TODO May have to delete the file first.
                     toFile = new File(path, File.CREATE, card);
-                    toFile.writeBytes(buffer, 0, 2);
+                    toFile.writeBytes(buffer, 0, currentMarkerStart);
                     // buffer = null;
                     byte[] exif;
                     exif = getBuffer();
-//                    byte[] test = exif;
-//                    for (int i = 0; i < test.length; i++) {
-//                        if (test[i] != buffer[i + 2]) {
-//                            Generic.debug("D:" + i + ":" + test[i] + ":"
-//                                    + buffer[i + 2]);
-//                        }
-//                    }
+                    // byte[] test = exif;
+                    // for (int i = 0; i < test.length; i++) {
+                    // if (test[i] != buffer[i + 2]) {
+                    // Generic.debug("D:" + i + ":" + test[i] + ":"
+                    // + buffer[i + 2]);
+                    // }
+                    // }
                     toFile.writeBytes(exif, 0, exif.length);
                     // Copy rest of file.
                     currentIdxInBuffer = skipMarkerPosition;
