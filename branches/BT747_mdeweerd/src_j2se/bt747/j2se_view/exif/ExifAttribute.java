@@ -313,14 +313,15 @@ public class ExifAttribute {
         return 0; // TODO: similar to NaN?
 
     }
-    
+
     public final void setIntValue(final int idx, final int val) {
         int unitSize = getValueUnitSize(type);
         int offset = unitSize * idx;
         if (offset + unitSize <= value.length) {
             switch (type) {
             case ExifConstants.BYTE:
-                value[offset]=(byte)val;
+            case ExifConstants.UNDEFINED:
+                value[offset] = (byte) val;
                 break;
             case ExifConstants.SHORT:
                 ExifUtils.addShort2byte(value, offset, bigEndian, val);
@@ -332,6 +333,72 @@ public class ExifAttribute {
                 break;
             }
         }
+    }
+
+    public final void setFloatValue(final int idx, final int nom, final int den) {
+        if (type == ExifConstants.RATIONAL || type == ExifConstants.SRATIONAL) {
+            int offset = 8 * idx;
+            if (offset + 8 <= value.length) {
+                ExifUtils.addLong4byte(value, offset, bigEndian, nom);
+                ExifUtils.addLong4byte(value, offset + 4, bigEndian, den);
+            }
+        } else {
+            Generic.debug("Attribute " + type + " is not a float");
+        }
+    }
+
+    public final float setGpsFloatValue(final double d) {
+        double g;
+        if (type == ExifConstants.RATIONAL && count == 3) {
+
+            if (d < 0) {
+                g = -d;
+            } else {
+                g = d;
+            }
+
+            int nom;
+            int den;
+            den = 1;
+            nom = (int) g;
+            g -= nom;
+            setFloatValue(0, nom, den);
+
+            den = 1;
+            g *= 60;
+            g*=den;
+            nom = (int) g;
+            g -= nom;
+            setFloatValue(1, nom, den);
+
+            den = 10000;
+            g *= 60;
+            g *= den;
+            nom = (int) g;
+            g -= nom;
+            setFloatValue(2, nom, den);
+
+        } else {
+            Generic.debug("Attribute " + type + " is not a float");
+        }
+        return 0.0f; // TODO: NaN
+    }
+
+    public final void setStringValue(final String s) {
+        if (type == ExifConstants.ASCII) {
+            if (s.length() + 1 != count) {
+                count = s.length() + 1;
+                newValue(count);
+            }
+            char[] carr = s.toCharArray();
+            for (int i = 0; i < carr.length; i++) {
+                value[i] = (byte) carr[i];
+            }
+            value[count - 1] = 0;
+        } else {
+            Generic.debug("Attribute " + type + " is not ASCII");
+        }
+
     }
 
 }

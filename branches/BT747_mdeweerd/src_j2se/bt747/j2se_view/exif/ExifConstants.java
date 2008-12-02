@@ -135,6 +135,7 @@ public class ExifConstants {
     /** Lens focal length FocalLength 37386 920A O O O O */
     /** Subject area SubjectArea 37396 9214 O O O O */
     /** Manufacturer notes MakerNote 37500 927C O O O O */
+    public static final int TAG_MAKERNOTE = 0x927C;
     /** User comments UserComment 37510 9286 O O O O */
     public static final int TAG_USERCOMMENT = 0x9286;
     /** DateTime subseconds SubSecTime 37520 9290 O O O O */

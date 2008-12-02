@@ -82,7 +82,7 @@ public class ImageData {
         }
         ExifJPG exifJpg = new ExifJPG();
         if (exifJpg.setPath(getPath())) {
-            //bt747.sys.Generic.debug(exifJpg.toString());
+            // bt747.sys.Generic.debug(exifJpg.toString());
             // TODO Replace by constant to define in AllWayPointStyles
             gpsInfo.rcr = 0x0101;
             ExifAttribute atr;
@@ -153,10 +153,19 @@ public class ImageData {
                 // Get file date & time.
                 File f = new File(path);
                 int u = f.getModificationTime();
-                if(u!=0) {
+                if (u != 0) {
                     setUtc(u);
                 }
             }
+        }
+    }
+
+    public final void writeImage(final String destPath, final int card) {
+        if (gpsInfo.hasLatitude() && gpsInfo.hasLongitude()) {
+            ExifJPG exifJpg = new ExifJPG();
+            exifJpg.setPath(getPath()); // Get exif data from file
+            exifJpg.setGpsPosition(gpsInfo.latitude, gpsInfo.longitude);
+            exifJpg.copyTo(destPath, card);
         }
     }
 

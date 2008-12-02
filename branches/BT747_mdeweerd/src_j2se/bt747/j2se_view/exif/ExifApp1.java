@@ -96,7 +96,8 @@ public class ExifApp1 {
         if (ifd1Offset != 0) {
             // bt747.sys.Generic.debug("Ifd1 Block");
             Ifd1 = new ExifIfdBlock();
-            Ifd1.read(buffer, ifd1Offset + tiffHeaderStart, tiffHeaderStart,
+            int nextOffset;
+            nextOffset = Ifd1.read(buffer, ifd1Offset + tiffHeaderStart, tiffHeaderStart,
                     bigEndian);
 
             // EXIF offset is given in IFD0
@@ -268,6 +269,15 @@ public class ExifApp1 {
         // Write jpeginterchange
     }
 
+    
+    public final ExifAttribute getIfd0Attribute(final int tag) {
+        if (Ifd0 != null) {
+            return Ifd0.get(tag);
+        } else {
+            return null;
+        }
+    }
+
     public final ExifAttribute getExifAttribute(final int tag) {
         if (exifBlock != null) {
             return exifBlock.get(tag);
@@ -284,11 +294,60 @@ public class ExifApp1 {
         }
     }
 
+    
+    private final void initIfd0Block() {
+        if(Ifd0 == null) {
+            Ifd0 = new ExifIfdBlock();
+        }
+    }
+    
+    private final void initIfd1Block() {
+        if(Ifd1 == null) {
+            Ifd1 = new ExifIfdBlock();
+        }
+    }
+
+    public final void setIfd0Attribute(final ExifAttribute atr) {
+        if (Ifd0 == null) {
+            Ifd0 = new ExifIfdBlock();
+            ExifAttribute v;
+            v = new ExifAttribute(ExifConstants.TAG_EXIFVERSION,ExifConstants.UNDEFINED,4);
+            v.setIntValue(0,'0');
+            v.setIntValue(1,'2');
+            v.setIntValue(2,'2');
+            v.setIntValue(3,'0');
+            Ifd0.set(v);
+        }
+        Ifd0.set(atr);
+    }
+
+    
     public final void setExifAttribute(final ExifAttribute atr) {
         if (exifBlock == null) {
             exifBlock = new ExifIfdBlock();
+            ExifAttribute v;
+            v = new ExifAttribute(ExifConstants.TAG_EXIFVERSION,ExifConstants.UNDEFINED,4);
+            v.setIntValue(0,'0');
+            v.setIntValue(1,'2');
+            v.setIntValue(2,'2');
+            v.setIntValue(3,'0');
+            exifBlock.set(v);
         }
         exifBlock.set(atr);
+    }
+
+    public final void setGpsAttribute(final ExifAttribute atr) {
+        if (gpsBlock == null) {
+            gpsBlock = new ExifIfdBlock();
+            ExifAttribute v;
+            v = new ExifAttribute(ExifConstants.TAG_GPSVERSIONID,ExifConstants.BYTE,4);
+            v.setIntValue(0,0x02);
+            v.setIntValue(1,0x02);
+            v.setIntValue(2,0x00);
+            v.setIntValue(3,0x00);
+            gpsBlock.set(v);
+        }
+        gpsBlock.set(atr);
     }
 
     /*

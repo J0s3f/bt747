@@ -15,7 +15,9 @@
 package bt747.j2se_view.exif;
 
 import gps.log.in.WindowedFile;
+import gps.log.out.GPSDefaultFileName;
 
+import bt747.Version;
 import bt747.sys.File;
 import bt747.sys.Generic;
 
@@ -64,7 +66,10 @@ public class ExifJPG {
                 p.fillBuffer(0);
                 buffer = p.getBuffer();
                 sz = p.getBufferFill();
+                p.close();
+                p = null;
                 examineBuffer(buffer, sz);
+                //bt747.sys.Generic.debug(this.toString());
                 success = true;
             }
         } catch (Exception e) {
@@ -112,7 +117,7 @@ public class ExifJPG {
                     if (result < 0) {
                         exifApp1 = null;
                     }
-                    //bt747.sys.Generic.debug(this.toString());
+                    // bt747.sys.Generic.debug(this.toString());
                 } else if ((marker == 0xE0) // APP0
                         && (buffer[currentIdxInBuffer] == 'J')
                         && (buffer[currentIdxInBuffer + 1] == 'F')
@@ -124,12 +129,12 @@ public class ExifJPG {
                 }
             }
         }
-//        byte[] test = getBuffer();
-//        for (int i = 0; i < test.length; i++) {
-//            if (test[i] != buffer[i + 2]) {
-//                Generic.debug("D:" + i + ":" + test[i] + ":" + buffer[i + 2]);
-//            }
-//        }
+        // byte[] test = getBuffer();
+        // for (int i = 0; i < test.length; i++) {
+        // if (test[i] != buffer[i + 2]) {
+        // Generic.debug("D:" + i + ":" + test[i] + ":" + buffer[i + 2]);
+        // }
+        // }
     }
 
     private final byte[] getBuffer() {
@@ -182,10 +187,153 @@ public class ExifJPG {
     }
 
     public final void setExifAttribute(final ExifAttribute atr) {
-        if (exifApp1 != null) {
+        if (exifApp1 == null) {
             exifApp1 = new ExifApp1();
         }
         exifApp1.setExifAttribute(atr);
+    }
+
+    public final void setGpsAttribute(final ExifAttribute atr) {
+        if (exifApp1 == null) {
+            exifApp1 = new ExifApp1();
+        }
+        exifApp1.setGpsAttribute(atr);
+    }
+
+    public final void setGpsPosition(final double lat, final double lon) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSLATITUDEREF,
+                ExifConstants.ASCII, 2);
+        if (lat < 0) {
+            atr.setStringValue("S");
+        } else {
+            atr.setStringValue("N");
+        }
+
+        setGpsAttribute(atr);
+
+        atr = new ExifAttribute(ExifConstants.TAG_GPSLATITUDE,
+                ExifConstants.RATIONAL, 3);
+        atr.setGpsFloatValue(lat);
+        setGpsAttribute(atr);
+
+        atr = new ExifAttribute(ExifConstants.TAG_GPSLONGITUDEREF,
+                ExifConstants.ASCII, 2);
+        if (lat < 0) {
+            atr.setStringValue("W");
+        } else {
+            atr.setStringValue("E");
+        }
+        setGpsAttribute(atr);
+
+        atr = new ExifAttribute(ExifConstants.TAG_GPSLONGITUDE,
+                ExifConstants.RATIONAL, 3);
+        atr.setGpsFloatValue(lon);
+        setGpsAttribute(atr);
+    }
+
+    private final static String SW = "BT747 " + Version.VERSION_NUMBER;
+
+    public final void setUsedSoftWare() {
+        ExifAttribute atr;
+        String sw;
+        Generic.debug(toString());
+        atr = exifApp1.getIfd0Attribute(ExifConstants.TAG_SOFTWARE);
+        if (atr != null) {
+            sw = " / " + atr.getStringValue();
+        } else {
+            sw = "";
+        }
+        if (sw.indexOf(SW) < 0) {
+            sw = SW + sw;
+            atr = new ExifAttribute(ExifConstants.TAG_SOFTWARE,
+                    ExifConstants.ASCII, sw.length() + 1);
+            atr.setStringValue(sw);
+            exifApp1.setIfd0Attribute(atr);
+            Generic.debug(toString());
+        }
+    }
+
+    public final boolean copyTo(final String path, final int card) {
+        File toFile;
+        WindowedFile fromFile;
+        int currentIdxInBuffer = 0;
+        boolean success = false;
+
+        try {
+            // bt747.sys.Generic.debug(Path);
+            fromFile = new WindowedFile(Path, File.READ_ONLY, card);
+            if (exifApp1 != null && fromFile != null && fromFile.isOpen()) {
+                //setUsedSoftWare();
+                byte[] buffer;
+                int sz;
+                //bt747.sys.Generic.debug(this.toString());
+                fromFile.setBufferSize(64 * 1024);
+                fromFile.fillBuffer(0);
+                buffer = fromFile.getBuffer();
+
+                sz = fromFile.getBufferFill();
+                if (((sz - currentIdxInBuffer) > 16) // Enough bytes to check
+                        // header
+                        && ((buffer[currentIdxInBuffer] & 0xFF) == 0xFF) // First
+                        // two
+                        // bytes
+                        // identify
+                        // JPG
+                        // SOI
+                        && ((buffer[currentIdxInBuffer + 1] & 0xFF) == 0xD8)) {
+                    currentIdxInBuffer += 2;
+                    int marker = ((buffer[currentIdxInBuffer++] & 0xFF) << 8)
+                            + (buffer[currentIdxInBuffer++] & 0xFF);
+                    int marker_length = ((buffer[currentIdxInBuffer++] & 0xFF) << 8)
+                            + (buffer[currentIdxInBuffer++] & 0xFF);
+                    int skipMarkerPosition = marker_length + currentIdxInBuffer
+                            - 2;
+                    if ((marker == 0xFFE1) // APP1
+                            && (buffer[currentIdxInBuffer] == 'E')
+                            && (buffer[currentIdxInBuffer + 1] == 'x')
+                            && (buffer[currentIdxInBuffer + 2] == 'i')
+                            && (buffer[currentIdxInBuffer + 3] == 'f')
+                            && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
+                            && (buffer[currentIdxInBuffer + 5] == 0x00)) { // Padding
+                        currentIdxInBuffer = skipMarkerPosition;
+                    }
+                    // TODO May have to delete the file first.
+                    toFile = new File(path, File.CREATE, card);
+                    toFile.writeBytes(buffer, 0, 2);
+                    // buffer = null;
+                    byte[] exif;
+                    exif = getBuffer();
+//                    byte[] test = exif;
+//                    for (int i = 0; i < test.length; i++) {
+//                        if (test[i] != buffer[i + 2]) {
+//                            Generic.debug("D:" + i + ":" + test[i] + ":"
+//                                    + buffer[i + 2]);
+//                        }
+//                    }
+                    toFile.writeBytes(exif, 0, exif.length);
+                    // Copy rest of file.
+                    currentIdxInBuffer = skipMarkerPosition;
+                    fromFile.fillBuffer(skipMarkerPosition);
+                    while (fromFile.getBufferFill() >= 0) {
+                        toFile.writeBytes(fromFile.getBuffer(), 0, fromFile
+                                .getBufferFill());
+                        currentIdxInBuffer += fromFile.getBufferFill();
+                        fromFile.fillBuffer(currentIdxInBuffer);
+                    }
+                    toFile.close();
+                    toFile = null;
+                }
+                fromFile.close();
+                fromFile = null;
+                success = true;
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            Generic.debug("EXIFJpg", e);
+        }
+        return success;
+
     }
 
     /*
