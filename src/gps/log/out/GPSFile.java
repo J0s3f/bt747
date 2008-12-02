@@ -349,8 +349,9 @@ public abstract class GPSFile {
         if (currentWayPointListIdx >= 0 && cachedRecordIsNeeded(r)) {
             GPSRecord prevActiveFields = activeFields;
             if (prevRecord != null) {
-                boolean continueLoop = false;
+                boolean continueLoop;
                 do {
+                    continueLoop = false;
                     GPSRecord userWayPoint = userWayPointList[currentWayPointListIdx];
                     int userWayPointUTC = userWayPoint.utc
                             + waypointTimeCorrection;

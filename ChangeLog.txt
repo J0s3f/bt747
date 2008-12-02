@@ -1,7 +1,11 @@
+Version 1.62.10
+* Writing back geotag information working when some EXIF information present.
+  Need to check when EXIF not present.
+
 Version 1.62.9
 * Getting modification time from files for files to tag and changed GUI text.
   File filters now allow directory listing.
-  
+    
 Version 1.62.8
 * Reworked code - images seem to be geopositioned correctly.  Surely still some
   problems remaining.

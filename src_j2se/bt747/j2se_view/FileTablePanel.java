@@ -1,54 +1,34 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+/*
+ * FileTablePanel.java
+ *
+ * Created on 2 décembre 2008, 02:06
+ */
+
 package bt747.j2se_view;
 
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
 import java.io.File;
 
 import javax.swing.JFileChooser;
 
 import bt747.j2se_view.filefilters.JpgFileFilter;
+import bt747.j2se_view.image.ImageData;
 import bt747.model.Model;
 import bt747.sys.Generic;
 
 /**
- * 
- * @author Mario
+ *
+ * @author  Mario
  */
-public class FileTablePanel extends javax.swing.JPanel
-implements DropTargetListener
-{
+public class FileTablePanel extends javax.swing.JPanel {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 7184807249568014595L;
-    private J2SEAppController c;
-    private Model m;
-
-    /** Creates new form ImageTablePanel */
+    /** Creates new form FileTablePanel */
     public FileTablePanel() {
         initComponents();
     }
 
-    private DropTarget dt;
-    
+    private J2SEAppController c;
+    private Model m;
+
     public void init(J2SEAppController pC) {
         c = pC;
         m = c.getModel();
@@ -56,28 +36,9 @@ implements DropTargetListener
         fileTableModel = new FileTableModel();
         tbImageList.setModel(fileTableModel);
         // m.addListener(this);
-        
-      
-        //dt = new DropTarget(tbImageList,this);
-        //tbImageList.setDropTarget(dt);
 
-        btSelectImages.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectImages();
-            }
-        });
-
-        btClearList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fileTableModel.clear();
-            }
-        });
-
-        btTagFromTable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                doConvert();
-            }
-        });
+        // dt = new DropTarget(tbImageList,this);
+        // tbImageList.setDropTarget(dt);
 
         btSelectDestinationDir.setVisible(false);
         btTagFromFile.setVisible(false);
@@ -85,12 +46,23 @@ implements DropTargetListener
         tfDestinationDirectory.setVisible(false);
     }
 
-    private void doConvert() {
+    private void doSavePositions() {
+        for (int i = 0; i < fileTableModel.getRowCount(); i++) {
+            ImageData img = fileTableModel.getImageData(i);
+            String p = img.getPath();
+            int ptIndex = p.lastIndexOf('.');
+            String newPath;
+            newPath = p.substring(0, ptIndex);
+            newPath += "_tagged";
+            newPath += p.substring(ptIndex);
+            img.writeImage(newPath, 0);
+        }
+        ;
         // doLogConversion(getSelectedFormat(cbFormat.getSelectedItem().toString()));
         // c.doLogConversion(Model.GMAP_LOGTYPE);
     }
 
-    private void selectImages() {// GEN-FIRST:event_btRawLogFileActionPerformed
+    private void selectImages() {
         javax.swing.JFileChooser ImageFileChooser;
         // File f= getRawLogFilePath();
         ImageFileChooser = new javax.swing.JFileChooser();
@@ -101,7 +73,8 @@ implements DropTargetListener
         // if (curDir.exists()) {
         // RawLogFileChooser.setCurrentDirectory(getRawLogFilePath());
         // }
-        ImageFileChooser.setCurrentDirectory(new File(m.getStringOpt(Model.IMAGEDIR)));
+        ImageFileChooser.setCurrentDirectory(new File(m
+                .getStringOpt(Model.IMAGEDIR)));
         ImageFileChooser.setAcceptAllFileFilterUsed(true);
         ImageFileChooser.addChoosableFileFilter(new JpgFileFilter());
         // RawLogFileChooser.addChoosableFileFilter(new CSVFileFilter());
@@ -128,59 +101,12 @@ implements DropTargetListener
             // tfRawLogFilePath.setText(m.getStringOpt(AppSettings.LOGFILEPATH));
             // tfRawLogFilePath.setCaretPosition(tfRawLogFilePath.getText().length());
         }
-    }// GEN-LAST:event_btRawLogFileActionPerformed
+    }
 
     private final String getString(final String s) {
         return J2SEAppController.getString(s);
     }
 
-    
-    /**
-     * Drop actions.
-     */
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DropTargetListener#dragEnter(java.awt.dnd.DropTargetDragEvent)
-     */
-    public void dragEnter(DropTargetDragEvent dtde) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DropTargetListener#dragExit(java.awt.dnd.DropTargetEvent)
-     */
-    public void dragExit(DropTargetEvent dte) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DropTargetListener#dragOver(java.awt.dnd.DropTargetDragEvent)
-     */
-    public void dragOver(DropTargetDragEvent dtde) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DropTargetListener#drop(java.awt.dnd.DropTargetDropEvent)
-     */
-    public void drop(DropTargetDropEvent dtde) {
-        //dtde.acceptDrop(dropAction);
-        //dtde.rejectDrop();
-        // TODO Auto-generated method stub
-        
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.dnd.DropTargetListener#dropActionChanged(java.awt.dnd.DropTargetDragEvent)
-     */
-    public void dropActionChanged(DropTargetDragEvent dtde) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    
     private FileTableModel fileTableModel;
 
     /**
@@ -189,168 +115,179 @@ implements DropTargetListener
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    private void initComponents() {// GEN-BEGIN:initComponents
+    private void initComponents() {//GEN-BEGIN:initComponents
 
+        spValues = new javax.swing.JScrollPane();
+        tbImageList = new javax.swing.JTable();
         btnPanel = new javax.swing.JPanel();
+        lbInformationMessage = new javax.swing.JLabel();
         btSelectImages = new javax.swing.JButton();
         btSelectDestinationDir = new javax.swing.JButton();
         tfDestinationDirectory = new javax.swing.JTextField();
         btClearList = new javax.swing.JButton();
         btTagFromTable = new javax.swing.JButton();
         btTagFromFile = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tbImageList = new javax.swing.JTable();
-        lbInformationMessage = new javax.swing.JLabel();
-
-        java.util.ResourceBundle bundle = java.util.ResourceBundle
-                .getBundle("bt747/j2se_view/Bundle"); // NOI18N
-        btSelectImages.setText(bundle
-                .getString("ImageTablePanel.btSelectImages.text")); // NOI18N
-
-        btSelectDestinationDir.setText(bundle
-                .getString("ImageTablePanel.btSelectDestinationDir.text")); // NOI18N
-
-        tfDestinationDirectory.setText(bundle
-                .getString("ImageTablePanel.tfDestinationDirectory.text")); // NOI18N
-
-        btClearList.setText(bundle
-                .getString("ImageTablePanel.btClearList.text")); // NOI18N
-
-        btTagFromTable.setText(bundle
-                .getString("ImageTablePanel.btTagFromTable.text")); // NOI18N
-
-        btTagFromFile.setText(bundle
-                .getString("ImageTablePanel.btTagFromFile.text")); // NOI18N
-
-        org.jdesktop.layout.GroupLayout btnPanelLayout = new org.jdesktop.layout.GroupLayout(
-                btnPanel);
-        btnPanel.setLayout(btnPanelLayout);
-        btnPanelLayout.setHorizontalGroup(btnPanelLayout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(
-                btnPanelLayout.createSequentialGroup().add(btSelectImages)
-                        .addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                btSelectDestinationDir).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                tfDestinationDirectory,
-                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                217, Short.MAX_VALUE).addContainerGap()).add(
-                btnPanelLayout.createSequentialGroup().add(btClearList)
-                        .addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                btTagFromTable).addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                btTagFromFile)));
-        btnPanelLayout
-                .setVerticalGroup(btnPanelLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                btnPanelLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                btnPanelLayout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.BASELINE)
-                                                        .add(btSelectImages)
-                                                        .add(
-                                                                btSelectDestinationDir)
-                                                        .add(
-                                                                tfDestinationDirectory,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                btnPanelLayout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.BASELINE)
-                                                        .add(btClearList).add(
-                                                                btTagFromTable)
-                                                        .add(btTagFromFile))));
+        btSaveTaggedFiles = new javax.swing.JButton();
 
         tbImageList.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] { { null, null, null, null },
-                        { null, null, null, null }, { null, null, null, null },
-                        { null, null, null, null } }, new String[] { "Title 1",
-                        "Title 2", "Title 3", "Title 4" }));
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
         tbImageList.setColumnSelectionAllowed(true);
-        jScrollPane1.setViewportView(tbImageList);
+        spValues.setViewportView(tbImageList);
 
-        lbInformationMessage.setText(bundle
-                .getString("ImageTablePanel.lbInformationMessage.text")); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        lbInformationMessage.setText(bundle.getString("ImageTablePanel.lbInformationMessage.text")); // NOI18N
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
-                this);
+        btSelectImages.setText(bundle.getString("ImageTablePanel.btSelectImages.text")); // NOI18N
+        btSelectImages.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSelectImagesActionPerformed(evt);
+            }
+        });
+
+        btSelectDestinationDir.setText(bundle.getString("ImageTablePanel.btSelectDestinationDir.text")); // NOI18N
+        btSelectDestinationDir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSelectDestinationDirActionPerformed(evt);
+            }
+        });
+
+        tfDestinationDirectory.setText(bundle.getString("ImageTablePanel.tfDestinationDirectory.text")); // NOI18N
+
+        btClearList.setText(bundle.getString("ImageTablePanel.btClearList.text")); // NOI18N
+        btClearList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btClearListActionPerformed(evt);
+            }
+        });
+
+        btTagFromTable.setText(bundle.getString("ImageTablePanel.btTagFromTable.text")); // NOI18N
+        btTagFromTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btTagFromTableActionPerformed(evt);
+            }
+        });
+
+        btTagFromFile.setText(bundle.getString("ImageTablePanel.btTagFromFile.text")); // NOI18N
+        btTagFromFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btTagFromFileActionPerformed(evt);
+            }
+        });
+
+        btSaveTaggedFiles.setText(bundle.getString("FileTablePanel.btSaveTaggedFiles.text")); // NOI18N
+        btSaveTaggedFiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSaveTaggedFilesActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout btnPanelLayout = new org.jdesktop.layout.GroupLayout(btnPanel);
+        btnPanel.setLayout(btnPanelLayout);
+        btnPanelLayout.setHorizontalGroup(
+            btnPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(btnPanelLayout.createSequentialGroup()
+                .add(btnPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(btnPanelLayout.createSequentialGroup()
+                        .add(btSelectImages)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btSelectDestinationDir)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(tfDestinationDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
+                    .add(btnPanelLayout.createSequentialGroup()
+                        .add(btClearList)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btTagFromTable)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btTagFromFile)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btSaveTaggedFiles))
+                    .add(lbInformationMessage))
+                .addContainerGap())
+        );
+        btnPanelLayout.setVerticalGroup(
+            btnPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(btnPanelLayout.createSequentialGroup()
+                .add(btnPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(btSelectImages)
+                    .add(btSelectDestinationDir)
+                    .add(tfDestinationDirectory, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btnPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(btClearList)
+                    .add(btTagFromTable)
+                    .add(btTagFromFile)
+                    .add(btSaveTaggedFiles))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbInformationMessage)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
-        layout
-                .setHorizontalGroup(layout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                layout
-                                        .createSequentialGroup()
-                                        .add(
-                                                layout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.LEADING)
-                                                        .add(
-                                                                layout
-                                                                        .createSequentialGroup()
-                                                                        .add(
-                                                                                12,
-                                                                                12,
-                                                                                12)
-                                                                        .add(
-                                                                                jScrollPane1,
-                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                                509,
-                                                                                Short.MAX_VALUE))
-                                                        .add(
-                                                                layout
-                                                                        .createSequentialGroup()
-                                                                        .addContainerGap()
-                                                                        .add(
-                                                                                lbInformationMessage))
-                                                        .add(
-                                                                layout
-                                                                        .createSequentialGroup()
-                                                                        .addContainerGap()
-                                                                        .add(
-                                                                                btnPanel,
-                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)))
-                                        .addContainerGap()));
-        layout.setVerticalGroup(layout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(
-                layout.createSequentialGroup().add(12, 12, 12).add(
-                        jScrollPane1,
-                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 187,
-                        Short.MAX_VALUE).addPreferredGap(
-                        org.jdesktop.layout.LayoutStyle.RELATED).add(
-                        lbInformationMessage).addPreferredGap(
-                        org.jdesktop.layout.LayoutStyle.UNRELATED).add(
-                        btnPanel,
-                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap()));
-    }// GEN-END:initComponents
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .addContainerGap()
+                .add(btnPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .add(spValues, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                .add(spValues, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btnPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        );
+    }//GEN-END:initComponents
+
+private void btSelectImagesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelectImagesActionPerformed
+                selectImages();
+
+}//GEN-LAST:event_btSelectImagesActionPerformed
+
+private void btSelectDestinationDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelectDestinationDirActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_btSelectDestinationDirActionPerformed
+
+private void btClearListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btClearListActionPerformed
+                fileTableModel.clear();
+}//GEN-LAST:event_btClearListActionPerformed
+
+private void btTagFromTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTagFromTableActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_btTagFromTableActionPerformed
+
+private void btTagFromFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTagFromFileActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_btTagFromFileActionPerformed
+
+private void btSaveTaggedFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveTaggedFilesActionPerformed
+                doSavePositions();
+}//GEN-LAST:event_btSaveTaggedFilesActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btSelectImages;
     private javax.swing.JButton btClearList;
+    private javax.swing.JButton btSaveTaggedFiles;
     private javax.swing.JButton btSelectDestinationDir;
+    private javax.swing.JButton btSelectImages;
     private javax.swing.JButton btTagFromFile;
     private javax.swing.JButton btTagFromTable;
     private javax.swing.JPanel btnPanel;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbInformationMessage;
+    private javax.swing.JScrollPane spValues;
     private javax.swing.JTable tbImageList;
     private javax.swing.JTextField tfDestinationDirectory;
     // End of variables declaration//GEN-END:variables
-
 
 }

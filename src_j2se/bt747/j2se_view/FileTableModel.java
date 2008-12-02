@@ -217,4 +217,11 @@ public class FileTableModel extends AbstractTableModel {
 
     }
 
+    public final ImageData getImageData(final int i) {
+        if (i < imageOrder.size()) {
+            return imageTable.get(imageOrder.elementAt(i));
+        } else {
+            return null;
+        }
+    }
 }
