@@ -73,27 +73,31 @@ public class Controller {
      */
     private Model m;
 
-
     /**
      * The reference for the height in the given format
      */
     private final int[] heightReferenceList = new int[20];
-    
+
     public final static int HEIGHT_MSL = 0;
     public final static int HEIGHT_WGS84 = 1;
-    
+
     /**
      * Initialization of references for the height.
      */
     private static final int[][] INIT_REFERENCE_LIST = {
-            { Model.CSV_LOGTYPE, HEIGHT_WGS84 }, { Model.TRK_LOGTYPE, HEIGHT_MSL },
-            { Model.KML_LOGTYPE, HEIGHT_MSL }, { Model.PLT_LOGTYPE, HEIGHT_MSL },
-            { Model.GPX_LOGTYPE, HEIGHT_WGS84 }, { Model.NMEA_LOGTYPE, HEIGHT_WGS84 },
-            { Model.GMAP_LOGTYPE, HEIGHT_MSL }, { Model.TRL_LOGTYPE, HEIGHT_WGS84 },
-            { Model.BIN_LOGTYPE, HEIGHT_WGS84 }, { Model.SR_LOGTYPE, HEIGHT_MSL },
-            { Model.KMZ_LOGTYPE, HEIGHT_MSL }, { Model.ARRAY_LOGTYPE, HEIGHT_MSL },
-    };
-    
+            { Model.CSV_LOGTYPE, HEIGHT_WGS84 },
+            { Model.TRK_LOGTYPE, HEIGHT_MSL },
+            { Model.KML_LOGTYPE, HEIGHT_MSL },
+            { Model.PLT_LOGTYPE, HEIGHT_MSL },
+            { Model.GPX_LOGTYPE, HEIGHT_WGS84 },
+            { Model.NMEA_LOGTYPE, HEIGHT_WGS84 },
+            { Model.GMAP_LOGTYPE, HEIGHT_MSL },
+            { Model.TRL_LOGTYPE, HEIGHT_WGS84 },
+            { Model.BIN_LOGTYPE, HEIGHT_WGS84 },
+            { Model.SR_LOGTYPE, HEIGHT_MSL },
+            { Model.KMZ_LOGTYPE, HEIGHT_MSL },
+            { Model.ARRAY_LOGTYPE, HEIGHT_MSL }, };
+
     private final void initValues() {
         for (int i = 0; i < INIT_REFERENCE_LIST.length; i++) {
             if (INIT_REFERENCE_LIST[i][0] < heightReferenceList.length) {
@@ -101,14 +105,14 @@ public class Controller {
             }
         }
     }
-    
+
     private final int getHeightReference(final int type) {
         if ((type >= 0) && (type < heightReferenceList.length)) {
             return heightReferenceList[type];
         }
         return HEIGHT_WGS84;
     }
-    
+
     /**
      * @param model
      *            The model to associate with this controller.
@@ -141,12 +145,12 @@ public class Controller {
         m.gpsModel().setDownloadTimeOut(m.getDownloadTimeOut());
         m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
 
-        int port = m.getPortnbr();
+        int port = m.getIntOpt(Model.PORTNBR);
         if (port != NOT_A_PORT_NUMBER) {
             // TODO: review this, especially with 'freetext port'
-            m.gpsRxTx().setDefaults(port, m.getBaudRate());
+            m.gpsRxTx().setDefaults(port, m.getIntOpt(Model.BAUDRATE));
         }
-        if (m.getStartupOpenPort()) {
+        if (m.getBooleanOpt(Model.OPENPORTATSTARTUP)) {
             connectGPS();
         }
     }
@@ -156,7 +160,7 @@ public class Controller {
      *            True when Imperial units are to be used where possible
      */
     public final void setImperial(final boolean on) {
-        setBooleanOpt(AppSettings.IMPERIAL, on);
+        setBooleanOpt(Model.IMPERIAL, on);
     }
 
     /**
@@ -167,7 +171,7 @@ public class Controller {
      * 
      */
     public final void setOutputLogConditions(final boolean on) {
-        setBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS, on);
+        setBooleanOpt(Model.OUTPUTLOGCONDITIONS, on);
     }
 
     /**
@@ -178,7 +182,7 @@ public class Controller {
      *            The relative log file path (including basename)
      */
     public final void setOutputFileRelPath(final String s) {
-        m.setStringOpt(AppSettings.REPORTFILEBASE, s);
+        m.setStringOpt(Model.REPORTFILEBASE, s);
     }
 
     /**
@@ -289,10 +293,18 @@ public class Controller {
             lastError = BT747Constants.ERROR_UNKNOWN_OUTPUT_FORMAT;
             lastErrorInfo = "" + logType;
         }
+        if (gpsFile != null) {
+            if (!((logType == Model.GPX_LOGTYPE) && m.getGpxUTC0())) {
+                gpsFile
+                        .setTimeOffset(m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS)
+                                * SECONDS_PER_HOUR);
+            }
+            gpsFile.setWayPointTimeCorrection(m.getIntOpt(AppSettings.FILETIMEOFFSET));
+        }
+
         return gpsFile;
     }
 
-    
     private String getOutFileExt(final int logType) {
         String ext; // For debug
         switch (logType) {
@@ -323,7 +335,6 @@ public class Controller {
         return ext;
     }
 
-    
     /**
      * Convert the log given the provided parameters using other methods.
      * 
@@ -345,7 +356,7 @@ public class Controller {
         return doConvertLog(logType, getOutFileHandler(logType),
                 getOutFileExt(logType));
     }
-    
+
     public final GPSLogConvert getInputConversionInstance(final int logType) {
         GPSLogConvert lc;
         String parameters = "";
@@ -355,8 +366,7 @@ public class Controller {
         /*
          * Check the input file
          */
-        String logFileLC = m.getStringOpt(AppSettings.LOGFILEPATH)
-                .toLowerCase();
+        String logFileLC = m.getStringOpt(Model.LOGFILEPATH).toLowerCase();
         if (logFileLC.endsWith(".trl")) {
             lc = new HoluxTrlLogConvert();
             parameters += "HoluxTRL\n";
@@ -381,13 +391,12 @@ public class Controller {
             sourceHeightReference = heightReferenceList[Model.SR_LOGTYPE];
         } else {
             lc = new BT747LogConvert();
-            ((BT747LogConvert) lc).setHolux(m
-                    .getBooleanOpt(AppSettings.IS_HOLUXM241));
-            parameters += "Force Holux:"
-                    + m.getBooleanOpt(AppSettings.IS_HOLUXM241) + "\n";
+            ((BT747LogConvert) lc)
+                    .setHolux(m.getBooleanOpt(Model.IS_HOLUXM241));
+            parameters += "Force Holux:" + m.getBooleanOpt(Model.IS_HOLUXM241)
+                    + "\n";
             sourceHeightReference = heightReferenceList[Model.BIN_LOGTYPE];
         }
-        lc.setTimeOffset(m.getTimeOffsetHours() * SECONDS_PER_HOUR);
         destinationHeightReference = getHeightReference(logType);
         switch (m.getHeightConversionMode()) {
         case Model.HEIGHT_AUTOMATIC:
@@ -415,23 +424,24 @@ public class Controller {
             break;
         }
 
-        if ((logType == Model.GPX_LOGTYPE) && m.getGpxUTC0()) {
-            lc.setTimeOffset(0);
-        }
-        if(Generic.isDebug()) {
+        if (Generic.isDebug()) {
             Generic.debug(parameters);
         }
 
         return lc;
     }
-    
+
     public final GPSFilter[] getLogFiltersToUse() {
         GPSFilter[] usedFilters;
         String parameters = "";
 
-        parameters += "From:" + gps.log.out.CommonOut.getTimeStr(m.getFilterStartTime())+"("+m.getFilterStartTime()+")\n";
-        parameters += "To:" + gps.log.out.CommonOut.getTimeStr(m.getFilterEndTime())+"("+m.getFilterEndTime()+")\n";
-        
+        parameters += "From:"
+                + gps.log.out.CommonOut.getTimeStr(m.getFilterStartTime())
+                + "(" + m.getFilterStartTime() + ")\n";
+        parameters += "To:"
+                + gps.log.out.CommonOut.getTimeStr(m.getFilterEndTime()) + "("
+                + m.getFilterEndTime() + ")\n";
+
         if (m.isAdvFilterActive()) {
             usedFilters = m.getLogFiltersAdv();
             parameters += "Advanced filter:\n";
@@ -440,37 +450,38 @@ public class Controller {
             parameters += "Standard filter:\n";
             usedFilters = m.getLogFilters();
         }
-        
+
         for (int i = 0; i < usedFilters.length; i++) {
             usedFilters[i].setStartTime(m.getFilterStartTime());
             usedFilters[i].setEndTime(m.getFilterEndTime());
         }
-        parameters += usedFilters[0].toString()+ usedFilters[1].toString();
-        if(Generic.isDebug()) {
+        parameters += usedFilters[0].toString() + usedFilters[1].toString();
+        if (Generic.isDebug()) {
             Generic.debug(parameters);
         }
 
         return usedFilters;
     }
-    
+
     // TODO : Move to a model
-    private GPSRecord[] userWayPoints = null; 
-    
+    private GPSRecord[] userWayPoints = null;
+
     public final void setUserWayPoints(final GPSRecord[] rcrds) {
         userWayPoints = rcrds;
     }
-    
-    public final int doConvertLog(final int logType, final GPSFile gpsFile, final String ext) {
+
+    public final int doConvertLog(final int logType, final GPSFile gpsFile,
+            final String ext) {
         int result;
         String parameters = ""; // For debug
         GPSLogConvert lc;
         result = 0;
-        if(Generic.isDebug()) {
+        if (Generic.isDebug()) {
             Generic.debug("Converting with parameters:\n");
         }
 
         lc = getInputConversionInstance(logType);
-        
+
         if (gpsFile != null) {
             if (filenameBuilder != null) {
                 gpsFile.setFilenameBuilder(filenameBuilder);
@@ -478,16 +489,16 @@ public class Controller {
             m.logConversionStarted(logType);
 
             gpsFile.setAddLogConditionInfo(m
-                    .getBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS));
-            gpsFile.setImperial(m.getBooleanOpt(AppSettings.IMPERIAL));
+                    .getBooleanOpt(Model.OUTPUTLOGCONDITIONS));
+            gpsFile.setImperial(m.getBooleanOpt(Model.IMPERIAL));
             gpsFile.setRecordNbrInLogs(m
-                    .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS));
+                    .getBooleanOpt(Model.IS_RECORDNBR_IN_LOGS));
             gpsFile.setBadTrackColor(m.getColorInvalidTrack());
             gpsFile.setGoodTrackColor(m.getColorValidTrack());
             gpsFile.setIncludeTrkComment(m
-                    .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
+                    .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
             gpsFile.setIncludeTrkName(m
-                    .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME));
+                    .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME));
             gpsFile.setFilters(getLogFiltersToUse());
             gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m
                     .getIntOpt(Model.FILEFIELDFORMAT)));
@@ -496,13 +507,12 @@ public class Controller {
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
             gpsFile.setUserWayPointList(userWayPoints);
             currentGPSLogConvert = lc;
-            if(Generic.isDebug()) {
+            if (Generic.isDebug()) {
                 Generic.debug(parameters);
             }
             try {
-                lastError = lc.toGPSFile(m
-                        .getStringOpt(AppSettings.LOGFILEPATH), gpsFile, m
-                        .getCard());
+                lastError = lc.toGPSFile(m.getStringOpt(Model.LOGFILEPATH),
+                        gpsFile, m.getCard());
             } catch (Throwable e) {
                 Generic.debug("During conversion", e);
             }
@@ -531,7 +541,8 @@ public class Controller {
         GPSArray gpsFile = null;
         GPSLogConvert lc;
 
-        lc = getInputConversionInstance(Model.GMAP_LOGTYPE);  // For height conversion.
+        lc = getInputConversionInstance(Model.GMAP_LOGTYPE); // For height
+        // conversion.
 
         gpsFile = new GPSArray();
         gpsFile.setUserWayPointList(userWayPoints);
@@ -543,17 +554,17 @@ public class Controller {
         // gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
         // gpsFile.setBadTrackColor(m.getColorInvalidTrack());
         gpsFile.setIncludeTrkComment(m
-                .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
+                .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
         gpsFile.setIncludeTrkName(m
-                .getBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
+                .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
         gpsFile.setFilters(getLogFiltersToUse());
         // Next line must be called for initialisation.
         gpsFile.initialiseFile("", "", -1, m.getOutputFileSplitType());
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         currentGPSLogConvert = lc;
         try {
-            error = lc.toGPSFile(m.getStringOpt(AppSettings.LOGFILEPATH),
-                    gpsFile, m.getCard());
+            error = lc.toGPSFile(m.getStringOpt(Model.LOGFILEPATH), gpsFile, m
+                    .getCard());
         } catch (Throwable e) {
             Generic.debug("During conversion", e);
         }
@@ -629,7 +640,7 @@ public class Controller {
             m.gpsModel().getLogInit(0, /* StartPosition */
             endAddress, /* EndPosition */
             m.getChunkSize(), /* Size per request */
-            m.getStringOpt(AppSettings.LOGFILEPATH), /* Log file name */
+            m.getStringOpt(Model.LOGFILEPATH), /* Log file name */
             m.getCard(), /* Card for file operations */
             /** Incremental download */
             m.getDownloadMethod() == Model.DOWNLOAD_INCREMENTAL);
@@ -664,7 +675,7 @@ public class Controller {
      * Initiate the download of a 'DPL700' log.
      */
     public final void startDPL700Download() {
-        m.gpsModel().getDPL700Log(m.getStringOpt(AppSettings.LOGFILEPATH),
+        m.gpsModel().getDPL700Log(m.getStringOpt(Model.LOGFILEPATH),
                 m.getCard());
     }
 
@@ -855,8 +866,8 @@ public class Controller {
      */
     public final void connectGPS() {
         closeGPS();
-        if (m.getFreeTextPort().length() != 0) {
-            openFreeTextPort(m.getFreeTextPort());
+        if (m.getStringOpt(Model.FREETEXTPORT).length() != 0) {
+            openFreeTextPort(m.getStringOpt(Model.FREETEXTPORT));
         } else {
             m.gpsRxTx().openPort();
             if (m.isConnected()) {
@@ -948,7 +959,7 @@ public class Controller {
      *            The path to the port.
      */
     public final void setFreeTextPort(final String portName) {
-        m.setFreeTextPort(portName);
+        m.setStringOpt(Model.FREETEXTPORT, portName);
     }
 
     /**
@@ -961,7 +972,8 @@ public class Controller {
         if (m.isConnected()) {
             GPSstate gpsModel = m.gpsModel();
             gpsModel.resetAvailable();
-            gpsModel.checkAvailable(GPSstate.DATA_INITIAL_LOG); // First may fail.
+            gpsModel.checkAvailable(GPSstate.DATA_INITIAL_LOG); // First may
+            // fail.
             gpsModel.reqStatus();
             gpsModel.checkAvailable(GPSstate.DATA_FLASH_TYPE);
             reqLogFormat();
@@ -969,9 +981,9 @@ public class Controller {
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
             gpsModel.setupTimer();
             // Remember defaults
-            m.setPortnbr(m.gpsRxTx().getPort());
-            m.setBaudRate(m.gpsRxTx().getSpeed());
-            m.setFreeTextPort(m.gpsRxTx().getFreeTextPort());
+            m.setIntOpt(Model.PORTNBR, m.gpsRxTx().getPort());
+            m.setIntOpt(Model.BAUDRATE, m.gpsRxTx().getSpeed());
+            m.setStringOpt(Model.FREETEXTPORT, m.gpsRxTx().getFreeTextPort());
             m.postEvent(ModelEvent.CONNECTED);
         }
     }
@@ -984,7 +996,7 @@ public class Controller {
      */
     public final void setDebugConn(final boolean isConnDebugActive) {
         m.gpsRxTx().setDebugConn(isConnDebugActive,
-                m.getStringOpt(AppSettings.OUTPUTDIRPATH));
+                m.getStringOpt(Model.OUTPUTDIRPATH));
     }
 
     /***************************************************************************
@@ -1027,8 +1039,8 @@ public class Controller {
         setFilterMaxHDOP(0);
         setFilterMaxVDOP(0);
         setFilterMinNSAT(0);
-        setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT, true);
-        setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME, true);
+        setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, true);
+        setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, true);
     }
 
     /**
@@ -1475,7 +1487,7 @@ public class Controller {
     }
 
     public final void setForceHolux241(final boolean b) {
-        setBooleanOpt(AppSettings.IS_HOLUXM241, b);
+        setBooleanOpt(Model.IS_HOLUXM241, b);
     }
 
     public final void setGpxTrkSegWhenBig(final boolean b) {
@@ -1488,7 +1500,7 @@ public class Controller {
 
     // For PDA - move through the menus using the arrows.
     public final void setTraversableFocus(final boolean b) {
-        setBooleanOpt(AppSettings.IS_TRAVERSABLE, b);
+        setBooleanOpt(Model.IS_TRAVERSABLE, b);
     }
 
     public final void setFilterEndTime(final int d) {
@@ -1500,7 +1512,7 @@ public class Controller {
     }
 
     public final void setRecordNbrInLogs(final boolean b) {
-        setBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS, b);
+        setBooleanOpt(Model.IS_RECORDNBR_IN_LOGS, b);
     }
 
     /**
@@ -1668,17 +1680,6 @@ public class Controller {
     }
 
     /**
-     * Set the local time offset versus UTC (used in adjusting the time in the
-     * output formats).
-     * 
-     * @param timeOffsetHours
-     *            The offset in hours.
-     */
-    public final void setTimeOffsetHours(final int timeOffsetHours) {
-        m.setTimeOffsetHours(timeOffsetHours);
-    }
-
-    /**
      * The way we split the input data.
      * 
      * @param value
@@ -1694,12 +1695,10 @@ public class Controller {
 
     /**
      * @param heightConversionMode
-     *
-     *            When true the height (WGS84) will be converted to Mean Sea
-     *            Level.
-     *            {@link Model#HEIGHT_AUTOMATIC}
-     *            {@link Model#HEIGHT_NOCHANGE}
-     *            {@link Model#HEIGHT_WGS84_TO_MSL}
+     * 
+     * When true the height (WGS84) will be converted to Mean Sea Level.
+     * {@link Model#HEIGHT_AUTOMATIC} {@link Model#HEIGHT_NOCHANGE}
+     * {@link Model#HEIGHT_WGS84_TO_MSL}
      */
     public final void setHeightConversionMode(final int heightConversionMode) {
         m.setHeightConversionMode(heightConversionMode);

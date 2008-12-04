@@ -36,7 +36,6 @@ public final class DPL700LogConvert implements GPSLogConvert {
     private int recordSize = 16;
     private int logFormat;
     private File inFile = null;
-    private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = (1 << BT747Constants.FMT_UTC_IDX)
             | (1 << BT747Constants.FMT_LATITUDE_IDX)
@@ -56,7 +55,6 @@ public final class DPL700LogConvert implements GPSLogConvert {
 
     public DPL700LogConvert() {
         super();
-        setTimeOffset(ITRACKU_NUMERIX);
     }
 
     private String errorInfo;
@@ -252,7 +250,6 @@ public final class DPL700LogConvert implements GPSLogConvert {
                                                 + 2000)).dateToUTCepoch1970();
                                 r.utc += 3600 * hour + 60 * minutes
                                         + seconds;
-                                r.utc += timeOffsetSeconds;
                                 break;
                             }
 
@@ -291,10 +288,6 @@ public final class DPL700LogConvert implements GPSLogConvert {
             Generic.debug("",e);
         }
         return BT747Constants.NO_ERROR;
-    }
-
-    public void setTimeOffset(final long offset) {
-        timeOffsetSeconds = offset;
     }
 
     public final void setConvertWGS84ToMSL(final int mode) {

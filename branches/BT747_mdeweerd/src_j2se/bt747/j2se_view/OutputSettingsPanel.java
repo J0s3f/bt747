@@ -87,7 +87,14 @@ public class OutputSettingsPanel extends javax.swing.JPanel
         }
         cbOneFilePerDay.setSelectedIndex(index);
         try {
-            cbUTCOffset.setSelectedIndex(m.getTimeOffsetHours() + 12);
+            int utcOffsetIdx;
+            utcOffsetIdx = m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS) + 12;
+            if(utcOffsetIdx>cbUTCOffset.getItemCount()) {
+                utcOffsetIdx = 12;
+            } else if (utcOffsetIdx<0) {
+                utcOffsetIdx = 12;
+            }
+            cbUTCOffset.setSelectedIndex(m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS));
         } catch (Exception e) {
             Generic.debug(getString("Problem_with_UTC_offset"), e);
         }
@@ -841,9 +848,9 @@ public class OutputSettingsPanel extends javax.swing.JPanel
         // TODO: Initialise offset
         String tmp = (String) cbUTCOffset.getSelectedItem();
         if (tmp.charAt(4) == '+') {
-            c.setTimeOffsetHours(Integer.parseInt((String) tmp.substring(5)));
+            c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Integer.parseInt((String) tmp.substring(5)));
         } else {
-            c.setTimeOffsetHours(Integer.parseInt(tmp.substring(4)));
+            c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Integer.parseInt(tmp.substring(4)));
         }
 
     }// GEN-LAST:event_cbUTCOffsetFocusLost

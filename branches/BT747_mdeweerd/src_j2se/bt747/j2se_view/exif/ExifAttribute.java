@@ -59,6 +59,14 @@ public class ExifAttribute {
             return 1;
         case ExifConstants.SHORT:
             return 2;
+        case ExifConstants.SSHORT:
+            return 2;
+        case ExifConstants.SBYTE:
+        return 1;
+        case ExifConstants.FLOAT:
+            return 4;
+        case ExifConstants.DOUBLE:
+            return 8;
         case ExifConstants.LONG:
         case ExifConstants.SLONG:
             return 4;

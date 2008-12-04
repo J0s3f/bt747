@@ -29,6 +29,7 @@ import java.util.TimeZone;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -180,7 +181,6 @@ public class BT747Main extends javax.swing.JFrame implements
         pnAdvancedSettingsPanel.init(c);
         tabbedPanelAll.insertTab(getString("BT747Main.AdvancedSettingsPanel.TabConstraints.tabTitle"),
                 null, pnAdvancedSettingsPanel, null, 4);
-        miExit.setVisible(false);
  
         pnAdvancedFileSettingsPanel = new AdvancedFileSettingsPanel();
         pnAdvancedFileSettingsPanel.init(c);
@@ -295,7 +295,7 @@ public class BT747Main extends javax.swing.JFrame implements
     
 
     private final void updateSerialSpeed() {
-        int speed = m.getBaudRate();
+        int speed = m.getIntOpt(AppSettings.BAUDRATE);
         cbSerialSpeed.setSelectedItem(new Integer(speed));
     }
     
@@ -326,6 +326,21 @@ public class BT747Main extends javax.swing.JFrame implements
             infoTextArea.append(message);
         }
     }
+    
+    public void exitApplication() {
+        c.saveSettings();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            /* (non-Javadoc)
+             * @see java.lang.Runnable#run()
+             */
+            public void run() {
+                // Basically just in case and 'invoked later' to make sure
+                // other operations finished.
+                System.exit(0);
+            }
+        });
+
+    }
 
     public void windowActivated(WindowEvent e) {
     }
@@ -334,7 +349,7 @@ public class BT747Main extends javax.swing.JFrame implements
     }
 
     public void windowClosing(WindowEvent e) {
-        c.saveSettings();
+        exitApplication();
     }
 
     public void windowDeactivated(WindowEvent e) {
@@ -442,7 +457,7 @@ public class BT747Main extends javax.swing.JFrame implements
         int endTime = nd.dateToUTCepoch1970();
         endTime += (24 * 3600 - 1); // Round to midnight / End of day
         // Offset requested split time
-        long offset;
+        int offset;
         offset = 60 * (sfTimeSplitHours.getValue() * 60 + spTimeSplitMinutes
                 .getValue());
         startTime += offset;
@@ -934,6 +949,18 @@ public class BT747Main extends javax.swing.JFrame implements
 
         lbFromDate.setText(bundle.getString("BT747Main.lbFromDate.text")); // NOI18N
 
+        startDate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                startDateFocusLost(evt);
+            }
+        });
+
+        endDate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                endDateFocusLost(evt);
+            }
+        });
+
         sfTimeSplitHours.setMaximum(23);
         sfTimeSplitHours.setMinimum(0);
         sfTimeSplitHours.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1076,6 +1103,7 @@ public class BT747Main extends javax.swing.JFrame implements
         txtMemoryUsed.setText(bundle.getString("BT747Main.txtMemoryUsed.text")); // NOI18N
 
         cbLoggingActive.setText(bundle.getString("BT747Main.cbLoggingActive.text")); // NOI18N
+        cbLoggingActive.setToolTipText(bundle.getString("BT747Main.cbLoggingActive.toolTipText")); // NOI18N
         cbLoggingActive.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbLoggingActiveFocusLost(evt);
@@ -1217,6 +1245,11 @@ public class BT747Main extends javax.swing.JFrame implements
         FileMenu.setText(bundle.getString("BT747Main.FileMenu.text")); // NOI18N
 
         miExit.setText(bundle.getString("BT747Main.miExit.text")); // NOI18N
+        miExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miExitActionPerformed(evt);
+            }
+        });
         FileMenu.add(miExit);
 
         jMenuBar.add(FileMenu);
@@ -1286,6 +1319,18 @@ private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
 private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbLoggingActiveFocusLost
     c.setLoggingActive(cbLoggingActive.isSelected());
 }//GEN-LAST:event_cbLoggingActiveFocusLost
+
+private void miExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
+    exitApplication();
+}//GEN-LAST:event_miExitActionPerformed
+
+private void startDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_startDateFocusLost
+// TODO add your handling code here:
+}//GEN-LAST:event_startDateFocusLost
+
+private void endDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_endDateFocusLost
+// TODO add your handling code here:
+}//GEN-LAST:event_endDateFocusLost
 
     
     private void cbDisableLoggingDuringDownloadFocusLost(
@@ -1602,10 +1647,10 @@ private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
     }
 
     private void getDefaultPort() {
-        if (m.getFreeTextPort().length() != 0) {
-            cbPortName.setSelectedItem(m.getFreeTextPort());
-        } else if (m.getPortnbr() >= 0) {
-            cbPortName.setSelectedItem("COM" + m.getPortnbr() + ":"); // NOI18N
+        if (m.getStringOpt(AppSettings.FREETEXTPORT).length() != 0) {
+            cbPortName.setSelectedItem(m.getStringOpt(AppSettings.FREETEXTPORT));
+        } else if (m.getIntOpt(AppSettings.PORTNBR) >= 0) {
+            cbPortName.setSelectedItem("COM" + m.getIntOpt(AppSettings.PORTNBR) + ":"); // NOI18N
 
         } else {
             // Do nothing
@@ -1632,6 +1677,11 @@ private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
 
             public final void run() {
                 final BT747Main app = new BT747Main(m, c);
+                try {
+                    app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                } catch (Exception e) {
+                    // A security exception could be thrown - ignore it.
+                }
                 app.setVisible(true);
             }
         });

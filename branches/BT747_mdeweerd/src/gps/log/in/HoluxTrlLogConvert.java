@@ -37,7 +37,6 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
             | (1 << BT747Constants.FMT_LONGITUDE_IDX)
             | (1 << BT747Constants.FMT_HEIGHT_IDX);;
     private File inFile = null;
-    private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = logFormat;
 
@@ -135,7 +134,6 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
                                     | (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
-                            r.utc += timeOffsetSeconds;
 
                             int latitude = (0xFF & bytes[recIdx++]) << 0
                                     | (0xFF & bytes[recIdx++]) << 8
@@ -168,10 +166,6 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
             Generic.debug("",e);
         }
         return BT747Constants.NO_ERROR;
-    }
-
-    public final void setTimeOffset(final long offset) {
-        timeOffsetSeconds = offset;
     }
 
     public final void setConvertWGS84ToMSL(final int mode) {

@@ -40,7 +40,6 @@ public final class CSVLogConvert implements GPSLogConvert {
     private int logFormat;
     private WindowedFile mFile = null;
 
-    private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
   
@@ -445,7 +444,6 @@ public final class CSVLogConvert implements GPSLogConvert {
                                                                     .toInt(tfields
                                                                             .nextToken());
                                                 }
-                                                r.utc += timeOffsetSeconds;
                                             }
                                         }
                                             break;
@@ -767,10 +765,6 @@ public final class CSVLogConvert implements GPSLogConvert {
             Generic.debug("parseFile",e);
         }
         return BT747Constants.NO_ERROR;
-    }
-
-    public final void setTimeOffset(final long offset) {
-        timeOffsetSeconds = offset;
     }
 
     public final void setConvertWGS84ToMSL(final int mode) {

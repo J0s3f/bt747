@@ -37,7 +37,6 @@ public final class BT747LogConvert implements GPSLogConvert {
     private int maxRecordSize;
     private int logFormat;
     private WindowedFile mFile = null;
-    private long timeOffsetSeconds = 0;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
     private boolean firstBlockDone = false;
@@ -448,10 +447,6 @@ public final class BT747LogConvert implements GPSLogConvert {
         }
     }
 
-    public final void setTimeOffset(final long offset) {
-        timeOffsetSeconds = offset;
-    }
-
     public final void setConvertWGS84ToMSL(final int mode) {
         factorConversionWGS84ToMSL = mode;
     }
@@ -664,7 +659,6 @@ public final class BT747LogConvert implements GPSLogConvert {
                 Generic.debug("Invalid time:" + r.utc);
                 valid = false;
             }
-            r.utc += timeOffsetSeconds;
         } else {
             r.utc = 1000; // Value after earliest date
         }

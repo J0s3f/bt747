@@ -420,6 +420,9 @@ public abstract class GPSFile {
                 }
             }
         }
+        if(activeFields.utc!=0) {
+            r.utc += timeOffsetSeconds;
+        }
         writeRecord(r);
         if(cachedRecordIsNeeded(r)) {
             prevRecord = r;
@@ -789,5 +792,18 @@ public abstract class GPSFile {
     public final void setFilenameBuilder(final BT747FileName filenameBuilder) {
         this.filenameBuilder = filenameBuilder;
     }
+
+    private int timeOffsetSeconds = 0;
+
+    /**
+     * The time offset to apply to the output records in seconds.
+     * 
+     * @param offset
+     *            The time offset in seconds.
+     */
+    public final void setTimeOffset(final int offset) {
+        timeOffsetSeconds = offset;
+    }
+
 
 }

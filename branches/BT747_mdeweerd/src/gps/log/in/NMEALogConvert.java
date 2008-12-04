@@ -271,12 +271,6 @@ public final class NMEALogConvert implements GPSLogConvert {
         }
     }
 
-    private long timeOffsetSeconds;
-
-    public final void setTimeOffset(final long offset) {
-        timeOffsetSeconds = offset;
-    }
-
     public final void setConvertWGS84ToMSL(final int mode) {
         factorConversionWGS84ToMSL = mode;
     }
