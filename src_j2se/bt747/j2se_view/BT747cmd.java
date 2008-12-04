@@ -400,7 +400,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (options.has("UTC")) {
             Integer offset = (Integer) options.valueOf("UTC");
-            c.setTimeOffsetHours(offset);
+            c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, offset);
         }
 
         if (options.has("color")) {

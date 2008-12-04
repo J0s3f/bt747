@@ -32,6 +32,7 @@ import gps.log.GPSRecord;
 
 import bt747.Txt;
 import bt747.Version;
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -95,9 +96,9 @@ public final class GPSconctrl extends Container implements ModelListener {
         }
         cbPorts = new ComboBox(portNbrs);
 
-        int portNbr = m.getPortnbr();
+        int portNbr = m.getIntOpt(AppSettings.PORTNBR);
 
-        String baudRate = Convert.toString(m.getBaudRate());
+        String baudRate = Convert.toString(m.getIntOpt(AppSettings.BAUDRATE));
         cbBaud = new ComboBox(BaudRates);
 
         add(btnBluetooth, LEFT, TOP);
@@ -108,7 +109,7 @@ public final class GPSconctrl extends Container implements ModelListener {
         add(btnConnectPort, LEFT, AFTER + 2);
         add(cbPorts, AFTER + 3, SAME);
         add(btnStopGps, RIGHT, SAME);
-        if (m.getPortnbr() < C_MAX_PORTNBR) {
+        if (m.getIntOpt(AppSettings.PORTNBR) < C_MAX_PORTNBR) {
             cbPorts.select(portNbr);
         }
         // repaintNow();
@@ -121,7 +122,7 @@ public final class GPSconctrl extends Container implements ModelListener {
         }
         // Set a default setting
         if (!baudRate.equals((String) cbBaud.getSelectedItem())) {
-            m.setBaudRate(Convert.toInt(baudRate));
+            c.setIntOpt(AppSettings.BAUDRATE, Convert.toInt(baudRate));
         }
         add(lbLat = new Label(""), LEFT, AFTER + 2); //$NON-NLS-1$)
         add(lbLon = new Label(""), LEFT, AFTER); //$NON-NLS-1$)

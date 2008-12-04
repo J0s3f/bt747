@@ -54,10 +54,10 @@ public class AppSettings {
     private static final int C_CARD_IDX = C_DOWNLOADTIMEOUT_IDX
             + C_DOWNLOADTIMEOUT_SIZE;
     private static final int C_CARD_SIZE = 4;
-    private static final int C_TIMEOFFSETHOURS_IDX = C_CARD_IDX + C_CARD_SIZE;
-    private static final int C_TIMEOFFSETHOURS_SIZE = 4;
-    private static final int C_WAYPT_RCR_IDX = C_TIMEOFFSETHOURS_IDX
-            + C_TIMEOFFSETHOURS_SIZE;
+    private static final int C_GPSTIMEOFFSETHOURS_IDX = C_CARD_IDX + C_CARD_SIZE;
+    private static final int C_GPSTIMEOFFSETHOURS_SIZE = 4;
+    private static final int C_WAYPT_RCR_IDX = C_GPSTIMEOFFSETHOURS_IDX
+            + C_GPSTIMEOFFSETHOURS_SIZE;
     private static final int C_WAYPT_RCR_SIZE = 4;
     private static final int C_WAYPT_VALID_IDX = C_WAYPT_RCR_IDX
             + C_WAYPT_RCR_SIZE;
@@ -160,11 +160,11 @@ public class AppSettings {
     private static final int C_HOLUX241_SIZE = 1;
     private static final int C_IMPERIAL_IDX = C_HOLUX241_IDX + C_HOLUX241_SIZE;
     private static final int C_IMPERIAL_SIZE = 1;
-    private static final int C_FREETEXT_PORT_IDX = C_IMPERIAL_IDX
+    private static final int C_FREETEXTPORT_IDX = C_IMPERIAL_IDX
             + C_IMPERIAL_SIZE;
-    private static final int C_FREETEXT_PORT_SIZE = 50;
-    private static final int C_NOT_USED1_IDX = C_FREETEXT_PORT_IDX
-            + C_FREETEXT_PORT_SIZE;
+    private static final int C_FREETEXTPORT_SIZE = 50;
+    private static final int C_NOT_USED1_IDX = C_FREETEXTPORT_IDX
+            + C_FREETEXTPORT_SIZE;
     private static final int C_NOT_USED1_SIZE = 4;
     private static final int C_GPSType_IDX = C_NOT_USED1_IDX + C_NOT_USED1_SIZE;
     private static final int C_GPSType_SIZE = 1;
@@ -194,7 +194,11 @@ public class AppSettings {
     private static final int C_LANGUAGE_SIZE = 8;
     private static final int C_IMAGEDIR_IDX = C_LANGUAGE_IDX + C_LANGUAGE_SIZE;
     private static final int C_IMAGEDIR_SIZE = 256;
-    private static final int C_NEXT_IDX = C_IMAGEDIR_IDX + C_IMAGEDIR_SIZE;
+    private static final int C_FILETIMEOFFSET_IDX = C_IMAGEDIR_IDX
+            + C_IMAGEDIR_SIZE;
+    private static final int C_FILETIMEOFFSET_SIZE = 4;
+    private static final int C_NEXT_IDX = C_FILETIMEOFFSET_IDX
+            + C_FILETIMEOFFSET_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -285,6 +289,25 @@ public class AppSettings {
      * chosen from. Can be used freely by the application.
      */
     public static final int IMAGEDIR = 14;
+    /**
+     * The time offset for files and images.
+     */
+    public static final int FILETIMEOFFSET = 15;
+    /**
+     * The serial port number to open.
+     */
+    public static final int PORTNBR = 16;
+    public static final int BAUDRATE = 17;
+    public static final int FREETEXTPORT = 18;
+    /**
+     * Indicates if the port must be opened at startup of the application.
+     */
+    public static final int OPENPORTATSTARTUP = 19;
+    /**
+     * @return The GPS time offset (UTC vs. local time). (used in adjusting the
+     *         time in the output formats).
+     */
+    public static final int GPSTIMEOFFSETHOURS = 20;
 
     private static final int[][] paramsList =
     // Type, idx, start, size
@@ -313,7 +336,14 @@ public class AppSettings {
                     C_LOGFILERELPATH_SIZE },
             { STRING, LOGFILEPATH, C_LOGFILEPATH_IDX, C_LOGFILEPATH_SIZE },
             { STRING, LANGUAGE, C_LANGUAGE_IDX, C_LANGUAGE_SIZE },
-            { STRING, IMAGEDIR, C_IMAGEDIR_IDX, C_IMAGEDIR_SIZE }, };
+            { STRING, IMAGEDIR, C_IMAGEDIR_IDX, C_IMAGEDIR_SIZE },
+            { INT, FILETIMEOFFSET, C_FILETIMEOFFSET_IDX, C_FILETIMEOFFSET_SIZE },
+            { INT, PORTNBR, C_PORTNBR_IDX, C_PORTNBR_SIZE },
+            { INT, BAUDRATE, C_BAUDRATE_IDX, C_BAUDRATE_SIZE },
+            { STRING, FREETEXTPORT, C_FREETEXTPORT_IDX, C_FREETEXTPORT_SIZE },
+            { BOOL, OPENPORTATSTARTUP, C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE },
+            { INT, GPSTIMEOFFSETHOURS, C_GPSTIMEOFFSETHOURS_IDX,
+                    C_GPSTIMEOFFSETHOURS_SIZE }, };
 
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
@@ -355,13 +385,13 @@ public class AppSettings {
     private void updateSettings(final int versionX100) {
         switch (versionX100) {
         case 0:
-            setPortnbr(-1);
-            setBaudRate(115200);
+            setIntOpt(PORTNBR, -1);
+            setIntOpt(BAUDRATE, 115200);
             setCard(-1);
             setStringOpt(OUTPUTDIRPATH, defaultBaseDirPath);
             setStringOpt(LOGFILERELPATH, "BT747log.bin");
             setStringOpt(REPORTFILEBASE, "GPSDATA");
-            setStartupOpenPort(false);
+            setBooleanOpt(OPENPORTATSTARTUP, false);
             setChunkSize(defaultChunkSize);
             setDownloadTimeOut(C_DEFAULT_DEVICE_TIMEOUT);
             /* fall through */
@@ -426,7 +456,7 @@ public class AppSettings {
             setBooleanOpt(IMPERIAL, false);
             /* fall through */
         case 18:
-            setFreeTextPort("");
+            setStringOpt(FREETEXTPORT, "");
             /* fall through */
         case 19:
             // setBinDecoder(0); // No longer used
@@ -461,9 +491,12 @@ public class AppSettings {
         case 26:
             setStringOpt(LANGUAGE, "");
             /* fall through */
-        case 27: 
+        case 27:
             setStringOpt(IMAGEDIR, getStringOpt(LOGFILEPATH));
-            setStringOpt(0, "0.28", C_VERSION_IDX, C_VERSION_SIZE);
+            /* fall through */
+        case 28:
+            setIntOpt(FILETIMEOFFSET, 0);
+            setStringOpt(0, "0.29", C_VERSION_IDX, C_VERSION_SIZE);
             /* fall through */
 
         default:
@@ -669,44 +702,6 @@ public class AppSettings {
     }
 
     /**
-     * @return Returns the portnbr.
-     */
-    public final int getPortnbr() {
-        return getLocalIntOpt(C_PORTNBR_IDX, C_PORTNBR_SIZE);
-    }
-
-    /**
-     * @param portnbr
-     *            The portnbr to set.
-     */
-    public final void setPortnbr(final int portnbr) {
-        setLocalIntOpt(0, portnbr, C_PORTNBR_IDX, C_PORTNBR_SIZE);
-    }
-
-    public final String getFreeTextPort() {
-        return getStringOpt(C_FREETEXT_PORT_IDX, C_FREETEXT_PORT_SIZE);
-    }
-
-    public final void setFreeTextPort(final String s) {
-        setStringOpt(0, s, C_FREETEXT_PORT_IDX, C_FREETEXT_PORT_SIZE);
-    }
-
-    /**
-     * @return The default baud rate
-     */
-    public final int getBaudRate() {
-        return getLocalIntOpt(C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
-    }
-
-    /**
-     * @param baudRate
-     *            The Baud rate to set as a default.
-     */
-    public final void setBaudRate(final int baudRate) {
-        setLocalIntOpt(0, baudRate, C_BAUDRATE_IDX, C_BAUDRATE_SIZE);
-    }
-
-    /**
      * Get the chunk size (or the default).
      * 
      * @return The default chunk size
@@ -768,39 +763,6 @@ public class AppSettings {
      */
     public final void setCard(final int card) {
         setLocalIntOpt(0, card, C_CARD_IDX, C_CARD_SIZE);
-    }
-
-    /**
-     * @return The time off set (UTC vs. local time)
-     */
-    public final int getTimeOffsetHours() {
-        int timeOffsetHours = getLocalIntOpt(C_TIMEOFFSETHOURS_IDX,
-                C_TIMEOFFSETHOURS_SIZE);
-        if (timeOffsetHours > 100) {
-            timeOffsetHours -= 0x10000;
-        }
-        return timeOffsetHours;
-    }
-
-    /**
-     * @param timeOffsetHours
-     *            The TIMEOFFSETHOURS to set as a default.
-     */
-    public final void setTimeOffsetHours(final int timeOffsetHours) {
-        setLocalIntOpt(0, timeOffsetHours, C_TIMEOFFSETHOURS_IDX,
-                C_TIMEOFFSETHOURS_SIZE);
-    }
-
-    public final boolean getStartupOpenPort() {
-        return getLocalBooleanOpt(C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
-    }
-
-    /**
-     * @param value
-     *            The default value for opening the port.
-     */
-    public final void setStartupOpenPort(final boolean value) {
-        setLocalBooleanOpt(0, value, C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE);
     }
 
     public final String getReportFileBasePath() {

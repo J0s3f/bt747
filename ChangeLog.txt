@@ -1,3 +1,7 @@
+Version 1.62.12
+* Added Exit button functionality & improved exit functionality.
+* Added time offset functionality for waypoint files.
+
 Version 1.62.11
 * Problem when JFIF marker in front of EXIF marker solved.
   This does not seem to comply with the EXIF2.2 specification though.

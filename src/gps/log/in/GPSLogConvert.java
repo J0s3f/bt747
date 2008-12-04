@@ -32,14 +32,6 @@ public interface GPSLogConvert {
     int parseFile(final GPSFile gpsFile);
 
     /**
-     * The time offset to apply to the output records in seconds.
-     * 
-     * @param offset
-     *            The time offset in seconds.
-     */
-    void setTimeOffset(final long offset);
-
-    /**
      * Height conversion active if true.
      * 
      * @param mode

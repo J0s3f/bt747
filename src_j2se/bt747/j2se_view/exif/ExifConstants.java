@@ -264,12 +264,16 @@ public class ExifConstants {
     public static final int LONG = 4; // 4 bytes
     public static final int RATIONAL = 5; // First long is numerator, second
     // is denominator
+    public static final int SBYTE = 6;
     public static final int UNDEFINED = 7; // 9 bit byte that can take any
     // value depending on field
     // def.
+    public static final int SSHORT = 8;
     public static final int SLONG = 9; // 4 byte signed integer
     public static final int SRATIONAL = 10; // First long is numerator, second
     // is denominator
+    public static final int FLOAT = 11;
+    public static final int DOUBLE = 12;
 
     /**
      * IFD Structure<br>

@@ -33,6 +33,7 @@ import waba.ui.Label;
 import net.sf.bt747.waba.system.WabaDate;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -143,9 +144,9 @@ public final class GPSLogGet extends Container implements ModelListener {
         edTrkSep.setText(Convert.toString(m.getTrkSep()));
         edTrkSep.alignment = RIGHT;
 
-        int offsetIdx = m.getTimeOffsetHours() + 12;
+        int offsetIdx = m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS) + 12;
         if (offsetIdx > 26) {
-            c.setTimeOffsetHours(0); // TODO: Change in call to control
+            c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, 0); // TODO: Change in call to control
             offsetIdx = 12;
         }
         cbTimeOffsetHours = new ComboBox(offsetStr);
@@ -251,8 +252,8 @@ public final class GPSLogGet extends Container implements ModelListener {
                 if (tmp.charAt(0) == '+') {
                     index = 1;
                 }
-                c.setTimeOffsetHours(Convert.toInt((String) tmp
-                        .substring(index)));
+                c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Convert.toInt((String) tmp
+                .substring(index)));
             } else if (event.target == chkLogOverwriteStop) {
                 c.setLogOverwrite(chkLogOverwriteStop.getChecked());
             } else if (event.target == cbFileSplitType) {
