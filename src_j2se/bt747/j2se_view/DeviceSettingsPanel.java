@@ -79,9 +79,30 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
     }// GEN-LAST:event_DeviceSettingsPanelFocusGained
 
 
+    private final void updateStoreButtons() {
+        btStoreSettings.setEnabled(c.isEnableStoreOK());
+        btRestoreSettings.setEnabled(m.isStoredSetting1());
+    }
+    
     public void modelEvent(final ModelEvent e) {
         // TODO Auto-generated method stub
         int type = e.getType();
+        switch(type) {
+        case ModelEvent.UPDATE_FIX_PERIOD:
+        case ModelEvent.UPDATE_DGPS_MODE:
+        case ModelEvent.UPDATE_SBAS:
+        case ModelEvent.UPDATE_SBAS_TEST:
+        case ModelEvent.UPDATE_DATUM:
+        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
+        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
+        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
+        case ModelEvent.UPDATE_LOG_FORMAT:
+        case ModelEvent.UPDATE_OUTPUT_NMEA_PERIOD:
+            updateStoreButtons();
+            break;
+        }
+
+
         switch (type) {
         case ModelEvent.CONNECTED:
             updateConnected(true);
@@ -172,16 +193,6 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
     private void initComponents() {//GEN-BEGIN:initComponents
 
         pnGPSSettings = new javax.swing.JPanel();
-        pnGPSStart = new javax.swing.JPanel();
-        btHotStart = new javax.swing.JButton();
-        btWarmStart = new javax.swing.JButton();
-        btColdStart = new javax.swing.JButton();
-        btFactoryResetDevice = new javax.swing.JButton();
-        pnSBAS = new javax.swing.JPanel();
-        cbDGPSType = new javax.swing.JComboBox();
-        cbUseSBAS = new javax.swing.JCheckBox();
-        cbIncludeTestSBAS = new javax.swing.JCheckBox();
-        btApplySBAS = new javax.swing.JButton();
         pnHoluxSettings = new javax.swing.JPanel();
         lbHoluxName = new javax.swing.JLabel();
         txtHoluxName = new javax.swing.JTextField();
@@ -204,6 +215,20 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         txtFixPeriod = new javax.swing.JTextField();
         lbFixMs = new javax.swing.JLabel();
         cbStopOrOverwriteWhenFull = new javax.swing.JComboBox();
+        jPanel1 = new javax.swing.JPanel();
+        pnVolatileSettings = new javax.swing.JPanel();
+        btStoreSettings = new javax.swing.JButton();
+        btRestoreSettings = new javax.swing.JButton();
+        pnGPSStart = new javax.swing.JPanel();
+        btHotStart = new javax.swing.JButton();
+        btWarmStart = new javax.swing.JButton();
+        btColdStart = new javax.swing.JButton();
+        btFactoryResetDevice = new javax.swing.JButton();
+        pnSBAS = new javax.swing.JPanel();
+        cbDGPSType = new javax.swing.JComboBox();
+        cbUseSBAS = new javax.swing.JCheckBox();
+        cbIncludeTestSBAS = new javax.swing.JCheckBox();
+        btApplySBAS = new javax.swing.JButton();
         pnLogFormat = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         btFormatAndErase = new javax.swing.JButton();
@@ -249,108 +274,6 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         });
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
-        pnGPSStart.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnGPSStart.border.title"))); // NOI18N
-
-        btHotStart.setText(bundle.getString("BT747Main.btHotStart.text")); // NOI18N
-        btHotStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btHotStartActionPerformed(evt);
-            }
-        });
-
-        btWarmStart.setText(bundle.getString("BT747Main.btWarmStart.text")); // NOI18N
-        btWarmStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btWarmStartActionPerformed(evt);
-            }
-        });
-
-        btColdStart.setText(bundle.getString("BT747Main.btColdStart.text")); // NOI18N
-        btColdStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btColdStartActionPerformed(evt);
-            }
-        });
-
-        btFactoryResetDevice.setText(bundle.getString("BT747Main.btFactoryResetDevice.text")); // NOI18N
-        btFactoryResetDevice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btFactoryResetDeviceActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnGPSStartLayout = new org.jdesktop.layout.GroupLayout(pnGPSStart);
-        pnGPSStart.setLayout(pnGPSStartLayout);
-        pnGPSStartLayout.setHorizontalGroup(
-            pnGPSStartLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnGPSStartLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnGPSStartLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
-                    .add(btColdStart)
-                    .add(btWarmStart)
-                    .add(btHotStart)
-                    .add(btFactoryResetDevice))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnGPSStartLayout.setVerticalGroup(
-            pnGPSStartLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnGPSStartLayout.createSequentialGroup()
-                .add(btHotStart)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btWarmStart)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btColdStart)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btFactoryResetDevice)
-                .addContainerGap())
-        );
-
-        pnSBAS.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnSBAS.border.title"))); // NOI18N
-
-        cbDGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No DGPS", "RTCM", "WAAS" }));
-        cbDGPSType.setToolTipText(bundle.getString("BT747Main.cbDGPSType.toolTipText")); // NOI18N
-
-        cbUseSBAS.setText(bundle.getString("BT747Main.cbUseSBAS.text")); // NOI18N
-        cbUseSBAS.setToolTipText(bundle.getString("BT747Main.cbUseSBAS.toolTipText")); // NOI18N
-
-        cbIncludeTestSBAS.setText(bundle.getString("BT747Main.cbIncludeTestSBAS.text")); // NOI18N
-        cbIncludeTestSBAS.setToolTipText(bundle.getString("BT747Main.cbIncludeTestSBAS.toolTipText")); // NOI18N
-
-        btApplySBAS.setText(bundle.getString("BT747Main.btApplySBAS.text")); // NOI18N
-        btApplySBAS.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btApplySBASActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout pnSBASLayout = new org.jdesktop.layout.GroupLayout(pnSBAS);
-        pnSBAS.setLayout(pnSBASLayout);
-        pnSBASLayout.setHorizontalGroup(
-            pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnSBASLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnSBASLayout.createSequentialGroup()
-                        .add(cbUseSBAS)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(cbDGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(cbIncludeTestSBAS)
-                    .add(btApplySBAS))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnSBASLayout.setVerticalGroup(
-            pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnSBASLayout.createSequentialGroup()
-                .add(pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(cbUseSBAS)
-                    .add(cbDGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbIncludeTestSBAS)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btApplySBAS)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         pnHoluxSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnHoluxSettings.border.title"))); // NOI18N
 
         lbHoluxName.setText(bundle.getString("BT747Main.lbHoluxName.text")); // NOI18N
@@ -510,27 +433,184 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                 .addContainerGap())
         );
 
+        pnVolatileSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("DeviceSettingsPanel.pnVolatileSettings.border.title"))); // NOI18N
+        pnVolatileSettings.setToolTipText(bundle.getString("DeviceSettingsPanel.pnVolatileSettings.toolTipText")); // NOI18N
+
+        btStoreSettings.setText(bundle.getString("DeviceSettingsPanel.btStoreSettings.text")); // NOI18N
+        btStoreSettings.setToolTipText(bundle.getString("DeviceSettingsPanel.btStoreSettings.toolTipText")); // NOI18N
+        btStoreSettings.setEnabled(false);
+        btStoreSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btStoreSettingsActionPerformed(evt);
+            }
+        });
+
+        btRestoreSettings.setText(bundle.getString("DeviceSettingsPanel.btRestoreSettings.text")); // NOI18N
+        btRestoreSettings.setToolTipText(bundle.getString("DeviceSettingsPanel.btRestoreSettings.toolTipText")); // NOI18N
+        btRestoreSettings.setEnabled(false);
+        btRestoreSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btRestoreSettingsActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnVolatileSettingsLayout = new org.jdesktop.layout.GroupLayout(pnVolatileSettings);
+        pnVolatileSettings.setLayout(pnVolatileSettingsLayout);
+        pnVolatileSettingsLayout.setHorizontalGroup(
+            pnVolatileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnVolatileSettingsLayout.createSequentialGroup()
+                .add(btStoreSettings)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btRestoreSettings))
+        );
+        pnVolatileSettingsLayout.setVerticalGroup(
+            pnVolatileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnVolatileSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(btStoreSettings)
+                .add(btRestoreSettings))
+        );
+
+        pnGPSStart.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnGPSStart.border.title"))); // NOI18N
+
+        btHotStart.setText(bundle.getString("BT747Main.btHotStart.text")); // NOI18N
+        btHotStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btHotStartActionPerformed(evt);
+            }
+        });
+
+        btWarmStart.setText(bundle.getString("BT747Main.btWarmStart.text")); // NOI18N
+        btWarmStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btWarmStartActionPerformed(evt);
+            }
+        });
+
+        btColdStart.setText(bundle.getString("BT747Main.btColdStart.text")); // NOI18N
+        btColdStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btColdStartActionPerformed(evt);
+            }
+        });
+
+        btFactoryResetDevice.setText(bundle.getString("BT747Main.btFactoryResetDevice.text")); // NOI18N
+        btFactoryResetDevice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFactoryResetDeviceActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnGPSStartLayout = new org.jdesktop.layout.GroupLayout(pnGPSStart);
+        pnGPSStart.setLayout(pnGPSStartLayout);
+        pnGPSStartLayout.setHorizontalGroup(
+            pnGPSStartLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnGPSStartLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(pnGPSStartLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
+                    .add(btColdStart)
+                    .add(btWarmStart)
+                    .add(btHotStart)
+                    .add(btFactoryResetDevice))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnGPSStartLayout.setVerticalGroup(
+            pnGPSStartLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnGPSStartLayout.createSequentialGroup()
+                .add(btHotStart)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btWarmStart)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btColdStart)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btFactoryResetDevice)
+                .addContainerGap())
+        );
+
+        pnSBAS.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnSBAS.border.title"))); // NOI18N
+
+        cbDGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No DGPS", "RTCM", "WAAS" }));
+        cbDGPSType.setToolTipText(bundle.getString("BT747Main.cbDGPSType.toolTipText")); // NOI18N
+
+        cbUseSBAS.setText(bundle.getString("BT747Main.cbUseSBAS.text")); // NOI18N
+        cbUseSBAS.setToolTipText(bundle.getString("BT747Main.cbUseSBAS.toolTipText")); // NOI18N
+
+        cbIncludeTestSBAS.setText(bundle.getString("BT747Main.cbIncludeTestSBAS.text")); // NOI18N
+        cbIncludeTestSBAS.setToolTipText(bundle.getString("BT747Main.cbIncludeTestSBAS.toolTipText")); // NOI18N
+
+        btApplySBAS.setText(bundle.getString("BT747Main.btApplySBAS.text")); // NOI18N
+        btApplySBAS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btApplySBASActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnSBASLayout = new org.jdesktop.layout.GroupLayout(pnSBAS);
+        pnSBAS.setLayout(pnSBASLayout);
+        pnSBASLayout.setHorizontalGroup(
+            pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnSBASLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnSBASLayout.createSequentialGroup()
+                        .add(cbUseSBAS)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(cbDGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(cbIncludeTestSBAS)
+                    .add(btApplySBAS))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnSBASLayout.setVerticalGroup(
+            pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnSBASLayout.createSequentialGroup()
+                .add(pnSBASLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(cbUseSBAS)
+                    .add(cbDGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbIncludeTestSBAS)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btApplySBAS))
+        );
+
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(pnGPSStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnVolatileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnSBAS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnGPSStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(pnSBAS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnVolatileSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        );
+
         org.jdesktop.layout.GroupLayout pnGPSSettingsLayout = new org.jdesktop.layout.GroupLayout(pnGPSSettings);
         pnGPSSettings.setLayout(pnGPSSettingsLayout);
         pnGPSSettingsLayout.setHorizontalGroup(
             pnGPSSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnGPSSettingsLayout.createSequentialGroup()
-                .add(pnGPSStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnSBAS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(pnHoluxSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(pnLogBy, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(pnGPSSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnHoluxSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnLogBy, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(20, 20, 20))
         );
         pnGPSSettingsLayout.setVerticalGroup(
             pnGPSSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnGPSSettingsLayout.createSequentialGroup()
-                .add(pnGPSSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnGPSStart, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pnSBAS, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(6, 6, 6)
                 .add(pnHoluxSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnLogBy, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnLogBy, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pnLogFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnLogFormat.border.title"))); // NOI18N
@@ -975,18 +1055,27 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             .add(layout.createSequentialGroup()
                 .add(pnLogFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnGPSSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnGPSSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnLogFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(pnGPSSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(pnGPSSettings, 0, 355, Short.MAX_VALUE)
+            .add(pnLogFormat, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }//GEN-END:initComponents
 
 private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
    DeviceSettingsPanelFocusGained(evt);
 }//GEN-LAST:event_formFocusGained
+
+private void btRestoreSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRestoreSettingsActionPerformed
+  c.restoreSetting1();
+}//GEN-LAST:event_btRestoreSettingsActionPerformed
+
+private void btStoreSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStoreSettingsActionPerformed
+   c.storeSetting1();
+}//GEN-LAST:event_btStoreSettingsActionPerformed
 
     private void btSetHoluxNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
         c.setHoluxName(txtHoluxName.getText());
@@ -1299,7 +1388,9 @@ private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_f
     private javax.swing.JButton btHotStart;
     private javax.swing.JButton btLogByApply;
     private javax.swing.JButton btRecoverMemory;
+    private javax.swing.JButton btRestoreSettings;
     private javax.swing.JButton btSetHoluxName;
+    private javax.swing.JButton btStoreSettings;
     private javax.swing.JButton btWarmStart;
     private javax.swing.JCheckBox cbAzimuth;
     private javax.swing.JCheckBox cbDAGE;
@@ -1330,6 +1421,7 @@ private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_f
     private javax.swing.JCheckBox ckLogDistanceActive;
     private javax.swing.JCheckBox ckLogSpeedActive;
     private javax.swing.JCheckBox ckLogTimeActive;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
@@ -1352,6 +1444,7 @@ private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_f
     private javax.swing.JPanel pnSBAS;
     private javax.swing.JPanel pnSatInfo;
     private javax.swing.JPanel pnTime;
+    private javax.swing.JPanel pnVolatileSettings;
     private javax.swing.JLabel txtEstimatedRecords;
     private javax.swing.JTextField txtFixPeriod;
     private javax.swing.JTextField txtHoluxName;

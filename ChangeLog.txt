@@ -1,3 +1,8 @@
+Version 1.62.13
+* Seconds added to file time offset.
+* Correction in new UTC offset combobox code.
+* Added BT mac address setting, other download methods, settings store & restore.
+
 Version 1.62.12
 * Added Exit button functionality & improved exit functionality.
 * Added time offset functionality for waypoint files.

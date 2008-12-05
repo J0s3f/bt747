@@ -146,6 +146,11 @@ public class BT747Main extends javax.swing.JFrame implements
                 getString("OZI_Description"),
                 getString("Compe_Description")
                 }));
+        cbDownloadMethod.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
+                getString("DOWNLOAD_INCREMENTAL"),
+                getString("DOWNLOAD_FULL"),
+                getString("DOWNLOAD_FILLED")
+        }));
     }
     
     private AdvancedDeviceSettingsPanel pnAdvancedSettingsPanel;
@@ -627,8 +632,8 @@ public class BT747Main extends javax.swing.JFrame implements
         lbNoFileExt = new javax.swing.JLabel();
         pnDownload = new javax.swing.JPanel();
         pnDownloadMethod = new javax.swing.JPanel();
-        cbIncremental = new javax.swing.JCheckBox();
         cbDisableLoggingDuringDownload = new javax.swing.JCheckBox();
+        cbDownloadMethod = new javax.swing.JComboBox();
         btDownloadIBlue = new javax.swing.JButton();
         btDownloadFromNumerix = new javax.swing.JButton();
         pnConvert = new javax.swing.JPanel();
@@ -828,12 +833,12 @@ public class BT747Main extends javax.swing.JFrame implements
                     .add(btOutputFile))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFilesLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, tfRawLogFilePath, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, tfRawLogFilePath, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
                     .add(pnFilesLayout.createSequentialGroup()
-                        .add(tfOutputFileBaseName, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                        .add(tfOutputFileBaseName, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(lbNoFileExt))
-                    .add(tfWorkDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE))
+                    .add(tfWorkDirectory, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnFilesLayout.setVerticalGroup(
@@ -858,34 +863,32 @@ public class BT747Main extends javax.swing.JFrame implements
 
         pnDownloadMethod.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnDownloadMethod.border.title"))); // NOI18N
 
-        cbIncremental.setText(bundle.getString("BT747Main.cbIncremental.text")); // NOI18N
-        cbIncremental.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbIncrementalActionPerformed(evt);
-            }
-        });
-
         cbDisableLoggingDuringDownload.setText(bundle.getString("BT747Main.cbDisableLoggingDuringDownload.text")); // NOI18N
+        cbDisableLoggingDuringDownload.setToolTipText(bundle.getString("BT747Main.cbDisableLoggingDuringDownload.toolTipText")); // NOI18N
         cbDisableLoggingDuringDownload.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbDisableLoggingDuringDownloadFocusLost(evt);
             }
         });
 
+        cbDownloadMethod.setToolTipText(bundle.getString("BT747Main.cbDownloadMethod.toolTipText")); // NOI18N
+
         org.jdesktop.layout.GroupLayout pnDownloadMethodLayout = new org.jdesktop.layout.GroupLayout(pnDownloadMethod);
         pnDownloadMethod.setLayout(pnDownloadMethodLayout);
         pnDownloadMethodLayout.setHorizontalGroup(
             pnDownloadMethodLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnDownloadMethodLayout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, pnDownloadMethodLayout.createSequentialGroup()
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(pnDownloadMethodLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(cbIncremental)
-                    .add(cbDisableLoggingDuringDownload)))
+                .add(cbDownloadMethod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(164, 164, 164))
+            .add(pnDownloadMethodLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(cbDisableLoggingDuringDownload))
         );
         pnDownloadMethodLayout.setVerticalGroup(
             pnDownloadMethodLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnDownloadMethodLayout.createSequentialGroup()
-                .add(cbIncremental)
+                .add(cbDownloadMethod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cbDisableLoggingDuringDownload))
         );
@@ -912,7 +915,7 @@ public class BT747Main extends javax.swing.JFrame implements
             pnDownloadLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnDownloadLayout.createSequentialGroup()
                 .add(pnDownloadMethod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(pnDownloadLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(btDownloadIBlue)
                     .add(btDownloadFromNumerix)))
@@ -930,6 +933,7 @@ public class BT747Main extends javax.swing.JFrame implements
         pnConvert.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnConvert.border.title"))); // NOI18N
 
         btConvert.setText(bundle.getString("BT747Main.btConvert.text")); // NOI18N
+        btConvert.setToolTipText(bundle.getString("BT747Main.btConvert.toolTipText")); // NOI18N
         btConvert.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btConvertActionPerformed(evt);
@@ -937,6 +941,7 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML", "KMZ", "OziExplorer (.PLT)", "NMEA" }));
+        cbFormat.setToolTipText(bundle.getString("BT747Main.cbFormat.toolTipText")); // NOI18N
         cbFormat.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbFormatItemStateChanged(evt);
@@ -1022,6 +1027,7 @@ public class BT747Main extends javax.swing.JFrame implements
         );
 
         cbGPSType.setModel(modelGpsType);
+        cbGPSType.setToolTipText(bundle.getString("BT747Main.cbGPSType.toolTipText")); // NOI18N
         cbGPSType.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbGPSTypeFocusLost(evt);
@@ -1229,7 +1235,7 @@ public class BT747Main extends javax.swing.JFrame implements
             InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)
                 .addContainerGap())
         );
         InfoPanelLayout.setVerticalGroup(
@@ -1422,8 +1428,7 @@ private void endDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_
     }// GEN-LAST:event_btConnectActionPerformed
 
     private void cbIncrementalActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbIncrementalActionPerformed
-
-        c.setIncremental(cbIncremental.isSelected());
+        setDownloadMethod();
     }// GEN-LAST:event_cbIncrementalActionPerformed
 
     private void btDownloadIBlueActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
@@ -1595,7 +1600,28 @@ private void endDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_
     }
 
     private void getIncremental() {
-        cbIncremental.setSelected(m.isIncremental());
+        switch(m.getDownloadMethod()) {
+        case Model.DOWNLOAD_FILLED:
+            cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_FILLED"));
+            break;
+        case Model.DOWNLOAD_FULL:
+            cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_FULL"));
+            break;
+        case Model.DOWNLOAD_INCREMENTAL:
+        cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_INCREMENTAL"));
+            break;
+        }
+    }
+    
+    private void setDownloadMethod() {
+        String v = (String) cbDownloadMethod.getSelectedItem();
+        if(v.equals(getString("DOWNLOAD_FILLED"))) {
+            c.setDownloadMethod(Model.DOWNLOAD_FILLED);
+        } else if(v.equals(getString("DOWNLOAD_FULL"))) {
+            c.setDownloadMethod(Model.DOWNLOAD_FULL);
+        } else if(v.equals(getString("DOWNLOAD_INCREMENTAL"))) {
+            c.setDownloadMethod(Model.DOWNLOAD_INCREMENTAL);
+        }
     }
 
     private void openPort(String s) {
@@ -1728,9 +1754,9 @@ private void endDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_
     private javax.swing.JButton btRawLogFile;
     private javax.swing.JButton btWorkingDirectory;
     private javax.swing.JCheckBox cbDisableLoggingDuringDownload;
+    private javax.swing.JComboBox cbDownloadMethod;
     private javax.swing.JComboBox cbFormat;
     private javax.swing.JComboBox cbGPSType;
-    private javax.swing.JCheckBox cbIncremental;
     private javax.swing.JCheckBox cbLoggingActive;
     private javax.swing.JComboBox cbPortName;
     private javax.swing.JComboBox cbSerialSpeed;
