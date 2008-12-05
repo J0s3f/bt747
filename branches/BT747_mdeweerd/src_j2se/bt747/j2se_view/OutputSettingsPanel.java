@@ -94,7 +94,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel
             } else if (utcOffsetIdx<0) {
                 utcOffsetIdx = 12;
             }
-            cbUTCOffset.setSelectedIndex(m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS));
+            cbUTCOffset.setSelectedIndex(utcOffsetIdx);
         } catch (Exception e) {
             Generic.debug(getString("Problem_with_UTC_offset"), e);
         }

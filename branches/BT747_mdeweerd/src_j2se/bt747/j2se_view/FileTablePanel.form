@@ -219,7 +219,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="sfTimeOffsetHours" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbHour" min="-2" pref="12" max="-2" attributes="0"/>
@@ -227,6 +227,10 @@
                       <Component id="spTimeOffsetMinutes" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbMinutes" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="spTimeOffsetSeconds" min="-2" pref="40" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lbSeconds" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -236,6 +240,8 @@
                   <Component id="sfTimeOffsetHours" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="spTimeOffsetMinutes" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="lbMinutes" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="spTimeOffsetSeconds" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="lbSeconds" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -271,6 +277,22 @@
               <Events>
                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="sfTimeOffsetHoursFocusLost"/>
               </Events>
+            </Component>
+            <Component class="com.toedter.components.JSpinField" name="spTimeOffsetSeconds">
+              <Properties>
+                <Property name="maximum" type="int" value="59"/>
+                <Property name="minimum" type="int" value="0"/>
+              </Properties>
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="spTimeOffsetSecondsFocusLost"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lbSeconds">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="FileTablePanel.lbSeconds.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

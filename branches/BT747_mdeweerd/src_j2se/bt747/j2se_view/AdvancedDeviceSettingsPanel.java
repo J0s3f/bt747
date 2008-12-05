@@ -58,6 +58,8 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
         case ModelEvent.UPDATE_FLASH_CONFIG:
             getFlashConfig();
             break;
+        case ModelEvent.UPDATE_BT_MAC_ADDR:
+            tfBluetoothMacAddress.setText(m.getBTAddr());
         }
     }
 
@@ -264,6 +266,9 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
         cbNMEAOutGRS = new javax.swing.JComboBox();
         cbNMEAOutMCHN = new javax.swing.JComboBox();
         lbPeriodMCHN1 = new javax.swing.JLabel();
+        pnBluetoothMacAdr = new javax.swing.JPanel();
+        tfBluetoothMacAddress = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         pnFlashSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFlashSettings.border.title"))); // NOI18N
@@ -662,6 +667,38 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
                 .addContainerGap())
         );
 
+        pnBluetoothMacAdr.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AdvancedDeviceSettingsPanel.pnBluetoothMacAdr.border.title"))); // NOI18N
+        pnBluetoothMacAdr.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.pnBluetoothMacAdr.toolTipText")); // NOI18N
+
+        tfBluetoothMacAddress.setText(bundle.getString("AdvancedDeviceSettingsPanel.tfBluetoothMacAddress.text")); // NOI18N
+        tfBluetoothMacAddress.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.tfBluetoothMacAddress.toolTipText")); // NOI18N
+
+        jButton1.setText(bundle.getString("AdvancedDeviceSettingsPanel.jButton1.text")); // NOI18N
+        jButton1.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.jButton1.toolTipText")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnBluetoothMacAdrLayout = new org.jdesktop.layout.GroupLayout(pnBluetoothMacAdr);
+        pnBluetoothMacAdr.setLayout(pnBluetoothMacAdrLayout);
+        pnBluetoothMacAdrLayout.setHorizontalGroup(
+            pnBluetoothMacAdrLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnBluetoothMacAdrLayout.createSequentialGroup()
+                .add(pnBluetoothMacAdrLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, tfBluetoothMacAddress)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jButton1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnBluetoothMacAdrLayout.setVerticalGroup(
+            pnBluetoothMacAdrLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnBluetoothMacAdrLayout.createSequentialGroup()
+                .add(tfBluetoothMacAddress, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jButton1))
+        );
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -669,12 +706,15 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
             .add(layout.createSequentialGroup()
                 .add(pnFlashSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnBluetoothMacAdr, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .add(pnFlashSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(pnBluetoothMacAdr, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
     }//GEN-END:initComponents
 
@@ -689,6 +729,10 @@ private void btSetNMEAOutputActionPerformed(java.awt.event.ActionEvent evt) {//G
 private void btSetNMEAOutputDefaultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSetNMEAOutputDefaultsActionPerformed
      c.setNMEADefaultPeriods();
 }//GEN-LAST:event_btSetNMEAOutputDefaultsActionPerformed
+
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+     c.setBTMacAddr(tfBluetoothMacAddress.getText());
+}//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -733,6 +777,7 @@ private void btSetNMEAOutputDefaultsActionPerformed(java.awt.event.ActionEvent e
     private javax.swing.JLabel cbType8Out;
     private javax.swing.JLabel cbType9Out;
     private javax.swing.JLabel cbVTGOut1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel lbBaudRate;
     private javax.swing.JLabel lbFlashZDA;
     private javax.swing.JLabel lbGLLOut;
@@ -751,8 +796,10 @@ private void btSetNMEAOutputDefaultsActionPerformed(java.awt.event.ActionEvent e
     private javax.swing.JLabel lbRMCOut1;
     private javax.swing.JLabel lbUpdateRate;
     private javax.swing.JLabel lbVTGOut;
+    private javax.swing.JPanel pnBluetoothMacAdr;
     private javax.swing.JPanel pnFlashSettings;
     private javax.swing.JPanel pnNMEAOutput;
+    private javax.swing.JTextField tfBluetoothMacAddress;
     private javax.swing.JTextField txtFlashBaudRate;
     private javax.swing.JTextField txtFlashTimesLeft;
     private javax.swing.JTextField txtFlashUpdateRate;
