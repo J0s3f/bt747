@@ -20,13 +20,13 @@
               <Component id="btnPanel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
-          <Component id="spValues" alignment="0" pref="617" max="32767" attributes="0"/>
+          <Component id="spValues" alignment="0" pref="687" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="spValues" pref="193" max="32767" attributes="0"/>
+              <Component id="spValues" pref="197" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnPanel" min="-2" max="-2" attributes="0"/>
           </Group>
@@ -51,6 +51,7 @@
                 <Column editable="true" title="Title 4" type="java.lang.Object"/>
               </Table>
             </Property>
+            <Property name="autoResizeMode" type="int" value="4"/>
             <Property name="columnSelectionAllowed" type="boolean" value="true"/>
           </Properties>
         </Component>
@@ -70,7 +71,6 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="tfDestinationDirectory" min="-2" pref="185" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="lbInformationMessage" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btClearList" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -80,10 +80,14 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btSaveTaggedFiles" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="lbInformationMessage" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="pnTimeOffset" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="pnTimeOffset" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbOverridePositions" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="62" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -91,7 +95,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="btSelectImages" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btSelectDestinationDir" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -107,7 +111,11 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbInformationMessage" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="pnTimeOffset" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="pnTimeOffset" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cbOverridePositions" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -218,17 +226,16 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="sfTimeOffsetHours" min="-2" pref="40" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="spTimeOffsetHours" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbHour" min="-2" pref="12" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="spTimeOffsetMinutes" min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="spTimeOffsetMinutes" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbMinutes" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="spTimeOffsetSeconds" min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="spTimeOffsetSeconds" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbSeconds" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -236,12 +243,14 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lbHour" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="sfTimeOffsetHours" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="spTimeOffsetMinutes" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="lbMinutes" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="spTimeOffsetSeconds" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="lbSeconds" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="spTimeOffsetHours" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbHour" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="spTimeOffsetMinutes" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbMinutes" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="spTimeOffsetSeconds" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbSeconds" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -260,33 +269,6 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="com.toedter.components.JSpinField" name="spTimeOffsetMinutes">
-              <Properties>
-                <Property name="maximum" type="int" value="59"/>
-                <Property name="minimum" type="int" value="0"/>
-              </Properties>
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="spTimeOffsetMinutesFocusLost"/>
-              </Events>
-            </Component>
-            <Component class="com.toedter.components.JSpinField" name="sfTimeOffsetHours">
-              <Properties>
-                <Property name="maximum" type="int" value="23"/>
-                <Property name="minimum" type="int" value="0"/>
-              </Properties>
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="sfTimeOffsetHoursFocusLost"/>
-              </Events>
-            </Component>
-            <Component class="com.toedter.components.JSpinField" name="spTimeOffsetSeconds">
-              <Properties>
-                <Property name="maximum" type="int" value="59"/>
-                <Property name="minimum" type="int" value="0"/>
-              </Properties>
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="spTimeOffsetSecondsFocusLost"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JLabel" name="lbSeconds">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
@@ -294,8 +276,30 @@
                 </Property>
               </Properties>
             </Component>
+            <Component class="javax.swing.JSpinner" name="spTimeOffsetHours">
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spTimeOffsetHoursStateChanged"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JSpinner" name="spTimeOffsetMinutes">
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spTimeOffsetMinutesStateChanged"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JSpinner" name="spTimeOffsetSeconds">
+            </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JCheckBox" name="cbOverridePositions">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="FileTablePanel.cbOverridePositions.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbOverridePositionsStateChanged"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

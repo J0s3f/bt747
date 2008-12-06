@@ -35,12 +35,12 @@ public final class CommonOut {
         }
     }
 
-    public final static String getRcrDescription(GPSRecord r) {
+    public final static String getRcrSymbolText(final GPSRecord r) {
         WayPointStyle w = wayPointStyles.get(getRCRKey(getRCRstr(r)));
         if (w != null) {
-            return wayPointStyles.get(getRCRKey(getRCRstr(r))).getDescription();
+            return wayPointStyles.get(getRCRKey(getRCRstr(r))).getSymbolText();
         } else {
-            return "";
+            return null;
         }
     }
 
@@ -70,7 +70,7 @@ public final class CommonOut {
                     || upperVox.endsWith("PNG");
             rec.append("<br />");
             if (style != null) {
-                rec.append(style.getDescription());
+                rec.append(style.getSymbolText());
                 rec.append(':');
                 if (isPicture) {
                     rec.append("<br />");
@@ -94,7 +94,7 @@ public final class CommonOut {
         } else {
             if (style != null) {
                 rec.append(" <b>(");
-                rec.append(style.getDescription());
+                rec.append(style.getSymbolText());
                 rec.append(")</b>");
             }
         }

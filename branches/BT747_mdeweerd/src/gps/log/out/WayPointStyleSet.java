@@ -52,7 +52,7 @@ public class WayPointStyleSet {
                 case 3:
                     style.setIconUrl(stylesList[i][2]);
                 case 2:
-                    style.setDescription(stylesList[i][1]);
+                    style.setSymbolText(stylesList[i][1]);
                     style.setKey(stylesList[i][0]);
                     styles.put(style.getKey(), style);
                     style = new WayPointStyle();
