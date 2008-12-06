@@ -375,7 +375,7 @@ public class PositionTableModel extends AbstractTableModel {
         case BT747Constants.FMT_RCR_IDX:
             return CommonOut.getRCRstr(g);
         case FMT_RCR_DESCRIPTION:
-            return CommonOut.getRcrDescription(g);
+            return CommonOut.getRcrSymbolText(g);
         case BT747Constants.FMT_MILLISECOND_IDX:
             return new Integer(g.milisecond);
         case BT747Constants.FMT_DISTANCE_IDX:

@@ -299,7 +299,7 @@ public class Controller {
                         .setTimeOffset(m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS)
                                 * SECONDS_PER_HOUR);
             }
-            gpsFile.setWayPointTimeCorrection(m.getIntOpt(AppSettings.FILETIMEOFFSET));
+            gpsFile.setWayPointTimeCorrection(-m.getIntOpt(AppSettings.FILETIMEOFFSET));
         }
 
         return gpsFile;

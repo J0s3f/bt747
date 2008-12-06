@@ -15,6 +15,7 @@
 package bt747.j2se_view.exif;
 
 import gps.log.in.WindowedFile;
+import gps.log.out.GPSDefaultFileName;
 
 import bt747.Version;
 import bt747.sys.File;
@@ -33,7 +34,7 @@ import bt747.sys.Generic;
  * Writing Exif data consists in replacing the APP1 Block and updating the SOI
  * Marker.
  * 
- * Specification at http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf
+ * Specification at http://www.exif.org/Exif2-2.PDF
  */
 public class ExifJPG {
 
@@ -52,7 +53,7 @@ public class ExifJPG {
     }
 
     private boolean getInfo() {
-        WindowedFile p;
+        WindowedFile p = null;
         boolean success = false;
 
         try {
@@ -73,7 +74,11 @@ public class ExifJPG {
             }
         } catch (Exception e) {
             // TODO: handle exception
-            Generic.debug("EXIFTiff", e);
+            Generic.debug("EXIFJpg", e);
+        }
+        if (p != null) {
+            p.close();
+            p = null;
         }
         return success;
     }
@@ -82,14 +87,70 @@ public class ExifJPG {
 
     private final void examineBuffer(final byte[] buffer, final int sz) {
         int currentIdxInBuffer = 0;
+        if (((sz - currentIdxInBuffer) > 16) // Enough bytes to check
+                // header
+                && ((buffer[currentIdxInBuffer] & 0xFF) == 0xFF) // First two
+                // bytes
+                // identify
+                // JPG
+                // SOI
+                && ((buffer[currentIdxInBuffer + 1] & 0xFF) == 0xD8)) {
+            // Looks like a JPG file.
+            // If present, EXIF information is
+            // the first
+            // Marker. If not, we will need to skip the markers until
+            // the end
+            // of the file.
+            currentIdxInBuffer += 2;
+            int marker;
+            int marker_length;
+            int skipMarkerPosition;
+            boolean skipMarkers;
+            do {
+                skipMarkers = false;
+                marker = ((buffer[currentIdxInBuffer++] & 0xFF) << 8)
+                        + (buffer[currentIdxInBuffer++] & 0xFF);
+                marker_length = ((buffer[currentIdxInBuffer++] & 0xFF) << 8)
+                        + (buffer[currentIdxInBuffer++] & 0xFF);
+                skipMarkerPosition = marker_length + currentIdxInBuffer - 2;
 
-        int result;
-        exifApp1 = new ExifApp1();
-        result = exifApp1.read(buffer, currentIdxInBuffer);
-        if (result < 0) {
-            exifApp1 = null;
+                if ((marker == 0xFFE1) // APP1
+                        && (buffer[currentIdxInBuffer] == 'E')
+                        && (buffer[currentIdxInBuffer + 1] == 'x')
+                        && (buffer[currentIdxInBuffer + 2] == 'i')
+                        && (buffer[currentIdxInBuffer + 3] == 'f')
+                        && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
+                        && (buffer[currentIdxInBuffer + 5] == 0x00) // Padding
+                ) { // Exif APP1 marker
+                    currentIdxInBuffer += 6;
+                    int result;
+                    exifApp1 = new ExifApp1();
+                    result = exifApp1.read(buffer, currentIdxInBuffer);
+                    if (result < 0) {
+                        exifApp1 = null;
+                    }
+                    // bt747.sys.Generic.debug(this.toString());
+                } else if ((marker == 0xFFE0) // APP0
+                        && (buffer[currentIdxInBuffer] == 'J')
+                        && (buffer[currentIdxInBuffer + 1] == 'F')
+                        && (buffer[currentIdxInBuffer + 2] == 'I')
+                        && (buffer[currentIdxInBuffer + 3] == 'F')
+                        && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
+                ) { // APP0 JFIF marker
+                    skipMarkers = true;
+
+                }
+                if (skipMarkers) {
+                    currentIdxInBuffer = skipMarkerPosition;
+                }
+            } while (skipMarkers);
         }
-        // bt747.sys.Generic.debug(this.toString());
+        // byte[] test = getBuffer();
+        // for (int i = 0; i < test.length; i++) {
+        // if (test[i] != buffer[i + 2]) {
+        // Generic.debug("D:" + i + ":" + test[i] + ":" + buffer[i + 2]);
+        // }
+        // }
     }
 
     private final byte[] getBuffer() {
@@ -97,9 +158,28 @@ public class ExifJPG {
         if (exifApp1 != null) {
             // Get required size
             int size;
-            size = exifApp1.getByteSize();
+            // Exif header =
+            // - Application Marker = 2
+            // - Marker lenght = 2
+            // - Identifier Exif = 6
+            // Total = 10
+            size = 10;
+            size += exifApp1.getByteSize();
             // Should check size of header < 64k
             buffer = new byte[size];
+            // Application Marker
+            buffer[0] = (byte) 0xFF;
+            buffer[1] = (byte) 0xE1;
+            // Marker lenght (includes marker?)
+            buffer[2] = (byte) ((size - 2) >> 8);
+            buffer[3] = (byte) ((size - 2) & 0xFF);
+            buffer[4] = 'E';
+            buffer[5] = 'x';
+            buffer[6] = 'i';
+            buffer[7] = 'f';
+            buffer[8] = (byte) 0x00;
+            buffer[9] = (byte) 0x00;
+            // Exif itself.
             exifApp1.fillBuffer(buffer, 10);
 
         }
@@ -191,8 +271,8 @@ public class ExifJPG {
     }
 
     public final boolean copyTo(final String path, final int card) {
-        File toFile;
-        WindowedFile fromFile;
+        File toFile = null;
+        WindowedFile fromFile = null;
         int currentIdxInBuffer = 0;
         boolean success = false;
 
@@ -209,34 +289,94 @@ public class ExifJPG {
                 buffer = fromFile.getBuffer();
 
                 sz = fromFile.getBufferFill();
-                toFile = new File(path, File.CREATE, card);
-                // buffer = null;
-                byte[] exif;
-                exif = getBuffer();
-                // byte[] test = exif;
-                // for (int i = 0; i < test.length; i++) {
-                // if (test[i] != buffer[i + 2]) {
-                // Generic.debug("D:" + i + ":" + test[i] + ":"
-                // + buffer[i + 2]);
-                // }
-                // }
-                toFile.writeBytes(exif, 0, exif.length);
+                if (((sz - currentIdxInBuffer) > 16) // Enough bytes to check
+                        // header
+                        && ((buffer[currentIdxInBuffer] & 0xFF) == 0xFF) // First
+                        // two
+                        // bytes
+                        // identify
+                        // JPG
+                        // SOI
+                        && ((buffer[currentIdxInBuffer + 1] & 0xFF) == 0xD8)) {
+                    currentIdxInBuffer += 2;
+                    int marker;
+                    int marker_length;
+                    int skipMarkerPosition;
+                    int currentMarkerStart;
+                    boolean skipMarkers;
+                    do {
+                        skipMarkers = false;
+                        currentMarkerStart = currentIdxInBuffer;
+                        marker = ((buffer[currentIdxInBuffer] & 0xFF) << 8)
+                                + (buffer[currentIdxInBuffer + 1] & 0xFF);
+                        marker_length = ((buffer[currentIdxInBuffer + 2] & 0xFF) << 8)
+                                + (buffer[currentIdxInBuffer + 3] & 0xFF);
+                        skipMarkerPosition = marker_length + currentIdxInBuffer
+                                + 2;
+                        currentIdxInBuffer += 4;
 
-                while (fromFile.getBufferFill() >= 0) {
-                    toFile.writeBytes(fromFile.getBuffer(), 0, fromFile
-                            .getBufferFill());
-                    currentIdxInBuffer += fromFile.getBufferFill();
-                    fromFile.fillBuffer(currentIdxInBuffer);
+                        if ((marker == 0xFFE1) // APP1
+                                && (buffer[currentIdxInBuffer] == 'E')
+                                && (buffer[currentIdxInBuffer + 1] == 'x')
+                                && (buffer[currentIdxInBuffer + 2] == 'i')
+                                && (buffer[currentIdxInBuffer + 3] == 'f')
+                                && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
+                                && (buffer[currentIdxInBuffer + 5] == 0x00)) { // Padding
+                            currentIdxInBuffer = skipMarkerPosition;
+                        } else if ((marker == 0xFFE0) // APP0
+                                && (buffer[currentIdxInBuffer] == 'J')
+                                && (buffer[currentIdxInBuffer + 1] == 'F')
+                                && (buffer[currentIdxInBuffer + 2] == 'I')
+                                && (buffer[currentIdxInBuffer + 3] == 'F')
+                                && (buffer[currentIdxInBuffer + 4] == 0x00) // Padding
+                        ) { // APP0 JFIF marker
+                            skipMarkers = true;
+                        }
+                        if (skipMarkers) {
+                            currentIdxInBuffer = skipMarkerPosition;
+                        }
+                    } while (skipMarkers);
+                    // TODO May have to delete the file first.
+                    toFile = new File(path, File.CREATE, card);
+                    toFile.writeBytes(buffer, 0, currentMarkerStart);
+                    // buffer = null;
+                    byte[] exif;
+                    exif = getBuffer();
+                    // byte[] test = exif;
+                    // for (int i = 0; i < test.length; i++) {
+                    // if (test[i] != buffer[i + 2]) {
+                    // Generic.debug("D:" + i + ":" + test[i] + ":"
+                    // + buffer[i + 2]);
+                    // }
+                    // }
+                    toFile.writeBytes(exif, 0, exif.length);
+                    // Copy rest of file.
+                    currentIdxInBuffer = skipMarkerPosition;
+                    fromFile.fillBuffer(skipMarkerPosition);
+                    while (fromFile.getBufferFill() >= 0) {
+                        toFile.writeBytes(fromFile.getBuffer(), 0, fromFile
+                                .getBufferFill());
+                        currentIdxInBuffer += fromFile.getBufferFill();
+                        fromFile.fillBuffer(currentIdxInBuffer);
+                    }
+                    toFile.close();
+                    toFile = null;
                 }
-                toFile.close();
-                toFile = null;
                 fromFile.close();
                 fromFile = null;
                 success = true;
             }
         } catch (Exception e) {
             // TODO: handle exception
-            Generic.debug("EXIFTiff", e);
+            Generic.debug("EXIFJpg", e);
+        }
+        if (fromFile != null) {
+            fromFile.close();
+            fromFile = null;
+        }
+        if (toFile != null) {
+            toFile.close();
+            toFile = null;
         }
         return success;
 

@@ -288,11 +288,12 @@ public abstract class GPSFile {
         }
         return result;
     }
-    
+
     private static GPSRecord previousRecord = null;
     private static boolean previousResult = false;
+
     public final boolean cachedRecordIsNeeded(final GPSRecord r) {
-        if(r==previousRecord) {
+        if (r == previousRecord) {
             return previousResult;
         } else {
             previousRecord = r;
@@ -335,6 +336,16 @@ public abstract class GPSFile {
     private int currentWayPointListIdx = -1;
 
     /**
+     * Difference in number of seconds that is allowed for tagging.
+     */
+    private int maxDiff = 300;
+
+    /**
+     * When true, ignore any previously applied tags
+     */
+    private boolean overridePreviousTag = false;
+
+    /**
      * A record is added from the input log. User way points are geotagged here
      * and inserted at the right spot.
      * <p>
@@ -357,20 +368,22 @@ public abstract class GPSFile {
                             + waypointTimeCorrection;
                     int diffPrevious = userWayPointUTC - prevRecord.utc;
                     int diffNext = userWayPointUTC - r.utc;
-                    if ((diffPrevious < 0) != (diffNext < 0)) {
-                        Generic.debug("Difference:" + diffPrevious + " "
-                                + diffNext);
-                    }
+
                     if ((diffPrevious > 0) && (diffNext < 0)) {
                         GPSRecord ref;
+                        int diff;
                         // WayPoint is in between two points.
                         if (diffPrevious < -diffNext) {
                             ref = prevRecord;
+                            diff = diffPrevious;
                         } else {
                             ref = r;
+                            diff = diffPrevious;
                         }
-                        if (!userWayPoint.hasLatitude()
-                                || !userWayPoint.hasLongitude()) {
+                        if ((diff <= maxDiff)
+                                && (overridePreviousTag || (!userWayPoint
+                                        .hasLatitude() || !userWayPoint
+                                        .hasLongitude()))) {
                             userWayPoint.latitude = ref.latitude;
                             userWayPoint.longitude = ref.longitude;
                         }
@@ -420,11 +433,11 @@ public abstract class GPSFile {
                 }
             }
         }
-        if(activeFields.utc!=0) {
+        if (activeFields.utc != 0) {
             r.utc += timeOffsetSeconds;
         }
         writeRecord(r);
-        if(cachedRecordIsNeeded(r)) {
+        if (cachedRecordIsNeeded(r)) {
             prevRecord = r;
         }
     }
@@ -804,6 +817,5 @@ public abstract class GPSFile {
     public final void setTimeOffset(final int offset) {
         timeOffsetSeconds = offset;
     }
-
 
 }

@@ -1,3 +1,7 @@
+Version 1.62.14
+* Added 'sym' field to GPX output (for PotLatch waypoints on OSM).
+* JPG Exif reading was broken.
+
 Version 1.62.13
 * Seconds added to file time offset.
 * Correction in new UTC offset combobox code.

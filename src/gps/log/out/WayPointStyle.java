@@ -22,7 +22,7 @@ public class WayPointStyle {
     /**
      * A short description of the way point type.
      */
-    private String description;
+    private String symbol;
     /**
      * A link to the icon: http:// or file:// like.
      */
@@ -46,16 +46,16 @@ public class WayPointStyle {
     /**
      * @return the description
      */
-    public final String getDescription() {
-        return this.description;
+    public final String getSymbolText() {
+        return this.symbol;
     }
 
     /**
-     * @param description
+     * @param symbol
      *            the description to set
      */
-    public final void setDescription(String description) {
-        this.description = description;
+    public final void setSymbolText(String symbol) {
+        this.symbol = symbol;
     }
 
     /**
