@@ -54,7 +54,7 @@ public class FileTablePanel extends javax.swing.JPanel {
         tfDestinationDirectory.setVisible(false);
 
         int offset = m.getIntOpt(Model.FILETIMEOFFSET);
-        spTimeOffsetHours.setValue((int) (offset / 24));
+        spTimeOffsetHours.setValue((int) (offset / (3600)));
         if (offset < 0) {
             offset = -offset;
         }
