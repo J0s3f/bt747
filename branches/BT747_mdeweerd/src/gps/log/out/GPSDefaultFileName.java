@@ -9,8 +9,8 @@
 //***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
 //***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
 //***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
+//***  IS ASSUMED BY THE USER.                                     ***
+//***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
 package gps.log.out;
 
@@ -27,7 +27,14 @@ public final class GPSDefaultFileName implements BT747FileName {
     public final String getOutputFileName(final String baseName,
             final int utcTimeSeconds, final String proposedExtension,
             final String proposedTimeSpec) {
-        return (baseName + proposedTimeSpec + proposedExtension);
+        if ((baseName.length() == 0
+                || baseName.charAt(baseName.length() - 1) == '/' || baseName
+                .charAt(baseName.length() - 1) == '\\')
+                && proposedTimeSpec.charAt(0) == '-') {
+            return (baseName + proposedTimeSpec.substring(1) + proposedExtension);
+        } else {
+            return (baseName + proposedTimeSpec + proposedExtension);
+        }
     }
 
 }
