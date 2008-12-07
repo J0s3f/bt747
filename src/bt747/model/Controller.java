@@ -156,25 +156,6 @@ public class Controller {
     }
 
     /**
-     * @param on
-     *            True when Imperial units are to be used where possible
-     */
-    public final void setImperial(final boolean on) {
-        setBooleanOpt(Model.IMPERIAL, on);
-    }
-
-    /**
-     * @param on
-     *            When true, writes the log conditions to certain output
-     *            formats. A log condition is for example: log a point every
-     *            second.
-     * 
-     */
-    public final void setOutputLogConditions(final boolean on) {
-        setBooleanOpt(Model.OUTPUTLOGCONDITIONS, on);
-    }
-
-    /**
      * Set the output file path (including basename, no extension) relative to
      * the BaseDirPath.
      * 
@@ -289,6 +270,9 @@ public class Controller {
             ((GPSGmapsHTMLEncodedFile) gpsFile).setGoogleKeyCode(m
                     .getGoogleMapKey());
             break;
+        case Model.ARRAY_LOGTYPE:
+            gpsFile = new GPSArray();
+            break;
         default:
             lastError = BT747Constants.ERROR_UNKNOWN_OUTPUT_FORMAT;
             lastErrorInfo = "" + logType;
@@ -296,10 +280,28 @@ public class Controller {
         if (gpsFile != null) {
             if (!((logType == Model.GPX_LOGTYPE) && m.getGpxUTC0())) {
                 gpsFile
-                        .setTimeOffset(m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS)
+                        .setTimeOffset(m.getIntOpt(Model.GPSTIMEOFFSETHOURS)
                                 * SECONDS_PER_HOUR);
             }
-            gpsFile.setWayPointTimeCorrection(-m.getIntOpt(AppSettings.FILETIMEOFFSET));
+            gpsFile.setWayPointTimeCorrection(-m.getIntOpt(Model.FILETIMEOFFSET));
+            gpsFile.setMaxDiff(m.getIntOpt(Model.TAG_MAXTIMEDIFFERENCE));
+            gpsFile.setOverridePreviousTag(m.getBooleanOpt(Model.TAG_OVERRIDEPOSITIONS));
+            gpsFile.setAddLogConditionInfo(m
+                    .getBooleanOpt(Model.OUTPUTLOGCONDITIONS));
+            gpsFile.setImperial(m.getBooleanOpt(Model.IMPERIAL));
+            gpsFile.setRecordNbrInLogs(m
+                    .getBooleanOpt(Model.IS_RECORDNBR_IN_LOGS));
+            gpsFile.setBadTrackColor(m.getColorInvalidTrack());
+            gpsFile.setGoodTrackColor(m.getColorValidTrack());
+            gpsFile.setIncludeTrkComment(m
+                    .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
+            gpsFile.setIncludeTrkName(m
+                    .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME));
+            gpsFile.setFilters(getLogFiltersToUse());
+            gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m
+                    .getIntOpt(Model.FILEFIELDFORMAT)));
+            gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
+            gpsFile.setUserWayPointList(userWayPoints);
         }
 
         return gpsFile;
@@ -385,15 +387,15 @@ public class Controller {
             lc = new DPL700LogConvert();
             // / TODO: set SR Log type correctly.
             ((DPL700LogConvert) lc)
-                    .setLogType(m.getGPSType() == GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR ? 0
+                    .setLogType(m.getIntOpt(Model.GPSTYPE) == Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR ? 0
                             : 1);
             parameters += "DPL700\n";
             sourceHeightReference = heightReferenceList[Model.SR_LOGTYPE];
         } else {
             lc = new BT747LogConvert();
             ((BT747LogConvert) lc)
-                    .setHolux(m.getBooleanOpt(Model.IS_HOLUXM241));
-            parameters += "Force Holux:" + m.getBooleanOpt(Model.IS_HOLUXM241)
+                    .setHolux(m.getBooleanOpt(Model.FORCE_HOLUXM241));
+            parameters += "Force Holux:" + m.getBooleanOpt(Model.FORCE_HOLUXM241)
                     + "\n";
             sourceHeightReference = heightReferenceList[Model.BIN_LOGTYPE];
         }
@@ -486,30 +488,14 @@ public class Controller {
             if (filenameBuilder != null) {
                 gpsFile.setFilenameBuilder(filenameBuilder);
             }
-            m.logConversionStarted(logType);
 
-            gpsFile.setAddLogConditionInfo(m
-                    .getBooleanOpt(Model.OUTPUTLOGCONDITIONS));
-            gpsFile.setImperial(m.getBooleanOpt(Model.IMPERIAL));
-            gpsFile.setRecordNbrInLogs(m
-                    .getBooleanOpt(Model.IS_RECORDNBR_IN_LOGS));
-            gpsFile.setBadTrackColor(m.getColorInvalidTrack());
-            gpsFile.setGoodTrackColor(m.getColorValidTrack());
-            gpsFile.setIncludeTrkComment(m
-                    .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
-            gpsFile.setIncludeTrkName(m
-                    .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME));
-            gpsFile.setFilters(getLogFiltersToUse());
-            gpsFile.setOutputFields(GPSRecord.getLogFormatRecord(m
-                    .getIntOpt(Model.FILEFIELDFORMAT)));
-            gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
-                    m.getOutputFileSplitType());
-            gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
-            gpsFile.setUserWayPointList(userWayPoints);
             currentGPSLogConvert = lc;
             if (Generic.isDebug()) {
                 Generic.debug(parameters);
             }
+            gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
+                    m.getOutputFileSplitType());
+            m.logConversionStarted(logType);
             try {
                 lastError = lc.toGPSFile(m.getStringOpt(Model.LOGFILEPATH),
                         gpsFile, m.getCard());
@@ -544,21 +530,8 @@ public class Controller {
         lc = getInputConversionInstance(Model.GMAP_LOGTYPE); // For height
         // conversion.
 
-        gpsFile = new GPSArray();
-        gpsFile.setUserWayPointList(userWayPoints);
+        gpsFile = (GPSArray) getOutFileHandler(Model.ARRAY_LOGTYPE);
 
-        // m.logConversionStarted(log_type);
-
-        // gpsFile.setAddLogConditionInfo(m.getOutputLogConditions());
-        // gpsFile.setImperial(m.getImperial());
-        // gpsFile.setRecordNbrInLogs(m.getRecordNbrInLogs());
-        // gpsFile.setBadTrackColor(m.getColorInvalidTrack());
-        gpsFile.setIncludeTrkComment(m
-                .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
-        gpsFile.setIncludeTrkName(m
-                .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
-        gpsFile.setFilters(getLogFiltersToUse());
-        // Next line must be called for initialisation.
         gpsFile.initialiseFile("", "", -1, m.getOutputFileSplitType());
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         currentGPSLogConvert = lc;
@@ -611,14 +584,14 @@ public class Controller {
      * Start the log download process.
      */
     public final void startDownload() {
-        switch (m.getGPSType()) {
+        switch (m.getIntOpt(Model.GPSTYPE)) {
         default:
-        case GPS_TYPE_DEFAULT:
+        case Model.GPS_TYPE_DEFAULT:
             startDefaultDownload();
             break;
-        case GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
-        case GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
-        case GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
+        case Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
+        case Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+        case Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             startDPL700Download();
             break;
         }
@@ -678,41 +651,6 @@ public class Controller {
         m.gpsModel().getDPL700Log(m.getStringOpt(Model.LOGFILEPATH),
                 m.getCard());
     }
-
-    /**
-     * Set the gpsType used for log conversion and some other operations (needed
-     * in cases where the type can not be automatically detected).
-     * 
-     * @param gpsType
-     *            A value out of: - {@link #GPS_TYPE_DEFAULT}<br> -
-     *            {@link #GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}<br> -
-     *            {@link #GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}<br> -
-     *            {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
-     */
-    public final void setGPSType(final int gpsType) {
-        m.setGPSType(gpsType);
-    }
-
-    /**
-     * Default gps type selection (MTK Logger).
-     */
-    public static final int GPS_TYPE_DEFAULT = 0;
-    /**
-     * Holux type.
-     */
-    public static final int GPS_TYPE_GISTEQ_ITRACKU_NEMERIX = 1;
-    /**
-     * ITrackU-Phototrackr type.
-     */
-    public static final int GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR = 2;
-    /**
-     * ITrackU-SirfIII type.
-     */
-    public static final int GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII = 3;
-
-    /***************************************************************************
-     * Device state
-     **************************************************************************/
 
     /**
      * Set logging status of device.
@@ -950,16 +888,6 @@ public class Controller {
         closeGPS();
         m.gpsRxTx().setFreeTextPortAndOpen(portName);
         performOperationsAfterGPSConnect();
-    }
-
-    /**
-     * Select a port by its 'path' (/dev/usb9 for example or /dev/com1.
-     * 
-     * @param portName
-     *            The path to the port.
-     */
-    public final void setFreeTextPort(final String portName) {
-        m.setStringOpt(Model.FREETEXTPORT, portName);
     }
 
     /**
@@ -1486,10 +1414,6 @@ public class Controller {
         m.gpsModel().setGpsDecode(value);
     }
 
-    public final void setForceHolux241(final boolean b) {
-        setBooleanOpt(Model.IS_HOLUXM241, b);
-    }
-
     public final void setGpxTrkSegWhenBig(final boolean b) {
         m.setGpxTrkSegWhenBig(b);
     }
@@ -1498,21 +1422,12 @@ public class Controller {
         m.setGpxUTC0(b);
     }
 
-    // For PDA - move through the menus using the arrows.
-    public final void setTraversableFocus(final boolean b) {
-        setBooleanOpt(Model.IS_TRAVERSABLE, b);
-    }
-
     public final void setFilterEndTime(final int d) {
         m.setFilterEndTime(d);
     }
 
     public final void setFilterStartTime(final int d) {
         m.setFilterStartTime(d);
-    }
-
-    public final void setRecordNbrInLogs(final boolean b) {
-        setBooleanOpt(Model.IS_RECORDNBR_IN_LOGS, b);
     }
 
     /**

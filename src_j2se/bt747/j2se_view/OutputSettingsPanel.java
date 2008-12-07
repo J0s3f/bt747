@@ -796,11 +796,11 @@ public class OutputSettingsPanel extends javax.swing.JPanel
     }// GEN-LAST:event_cbOneFilePerDayFocusLost
 
     private void cbRecordNumberInfoInLogFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbRecordNumberInfoInLogFocusLost
-        c.setRecordNbrInLogs(cbRecordNumberInfoInLog.isSelected());
+        c.setBooleanOpt(Model.IS_RECORDNBR_IN_LOGS, cbRecordNumberInfoInLog.isSelected());
     }// GEN-LAST:event_cbRecordNumberInfoInLogFocusLost
 
     private void cbImperialUnitsFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbImperialUnitsFocusLost
-        c.setImperial(cbImperialUnits.isSelected());
+        c.setBooleanOpt(Model.IMPERIAL, cbImperialUnits.isSelected());
     }// GEN-LAST:event_cbImperialUnitsFocusLost
 
     private void tfTrackSeparationTimeFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_tfTrackSeparationTimeFocusLost

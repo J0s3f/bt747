@@ -1,3 +1,6 @@
+Version 1.62.15
+* Solved several issues in geotagging.
+
 Version 1.62.14
 * Added 'sym' field to GPX output (for PotLatch waypoints on OSM).
 * JPG Exif reading was broken.

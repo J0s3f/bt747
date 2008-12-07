@@ -312,7 +312,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
 
         miRecordNumberInLogs.isChecked = m
                 .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS);
-        miHolux.isChecked = m.getBooleanOpt(AppSettings.IS_HOLUXM241);
+        miHolux.isChecked = m.getBooleanOpt(AppSettings.FORCE_HOLUXM241);
         miImperial.isChecked = m.getBooleanOpt(AppSettings.IMPERIAL);
         miOutputLogConditions.isChecked = m
                 .getBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS);
@@ -401,17 +401,17 @@ public class AppBT747 extends MainWindow implements ModelListener {
         miGisteqType1.isChecked = false;
         miGisteqType2.isChecked = false;
         miGisteqType3.isChecked = false;
-        switch (m.getGPSType()) {
-        case AppController.GPS_TYPE_DEFAULT:
+        switch (m.getIntOpt(AppSettings.GPSTYPE)) {
+        case Model.GPS_TYPE_DEFAULT:
             miDefaultDevice.isChecked = true;
             break;
-        case AppController.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
+        case Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
             miGisteqType1.isChecked = true;
             break;
-        case AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
+        case Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
             miGisteqType2.isChecked = true;
             break;
-        case AppController.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
+        case Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
             miGisteqType3.isChecked = true;
             break;
         default:
@@ -467,7 +467,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     c.closeGPS();
                     break;
                 case C_MENU_FOCUS_HIGHLIGHT:
-                    c.setTraversableFocus(miTraversableFocus.isChecked);
+                    c.setBooleanOpt(Model.IS_TRAVERSABLE, miTraversableFocus.isChecked);
                     waba.sys.Settings.keyboardFocusTraversable = m
                             .getBooleanOpt(AppSettings.IS_TRAVERSABLE);
                     break;
@@ -481,13 +481,13 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     c.setStats(miStats.isChecked);
                     break;
                 case C_MENU_HOLUX_241:
-                    c.setForceHolux241(miHolux.isChecked);
+                    c.setBooleanOpt(Model.FORCE_HOLUXM241, miHolux.isChecked);
                     break;
                 case C_MENU_OUTPUT_LOGCONDITIONS:
-                    c.setOutputLogConditions(miOutputLogConditions.isChecked);
+                    c.setBooleanOpt(Model.OUTPUTLOGCONDITIONS, miOutputLogConditions.isChecked);
                     break;
                 case C_MENU_IMPERIAL:
-                    c.setImperial(miImperial.isChecked);
+                    c.setBooleanOpt(Model.IMPERIAL, miImperial.isChecked);
                     break;
                 case C_MENU_GPX_UTC0:
                     c.setGpxUTC0(miGpxUTC0.isChecked);
@@ -499,7 +499,7 @@ public class AppBT747 extends MainWindow implements ModelListener {
                     c.setGpsDecode(miGpsDecode.isChecked);
                     break;
                 case C_MENU_RECORDNMBR_IN_LOGS:
-                    c.setRecordNbrInLogs(miRecordNumberInLogs.isChecked);
+                    c.setBooleanOpt(Model.IS_RECORDNBR_IN_LOGS, miRecordNumberInLogs.isChecked);
                     break;
                 case C_MENU_ABOUT:
                     new BT747MessageBox(Txt.getString(Txt.ABOUT_TITLE), Txt.getString(Txt.ABOUT_TXT))
@@ -515,21 +515,19 @@ public class AppBT747 extends MainWindow implements ModelListener {
                             Txt.getString(Txt.DISCLAIMER_TXT)).popupModal();
                     break;
                 case C_MENU_DEFAULTDEVICE:
-                    c.setGPSType(AppController.GPS_TYPE_DEFAULT);
+                    c.setIntOpt(AppSettings.GPSTYPE, Model.GPS_TYPE_DEFAULT);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE1:
-                    c.setGPSType(AppController.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX);
+                    c.setIntOpt(AppSettings.GPSTYPE, Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE2:
-                    c
-                            .setGPSType(AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR);
+                    c.setIntOpt(AppSettings.GPSTYPE, Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR);
                     gpsType();
                     break;
                 case C_MENU_GISTEQ_TYPE3:
-                    c
-                            .setGPSType(AppController.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
+                    c.setIntOpt(AppSettings.GPSTYPE, Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII);
                     gpsType();
                     break;
                 case C_MENU_LANG_DE:

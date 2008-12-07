@@ -17,6 +17,7 @@ package gps.log;
 import bt747.sys.Convert;
 
 import gps.BT747Constants;
+import gps.log.out.CommonOut;
 
 /**
  * Structure to hold GPS data for one point
@@ -181,7 +182,7 @@ public class GPSRecord {
             gpsRec.sid = new int[0];
             gpsRec.sidinuse = new boolean[0];
         }
-         
+
         if ((logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) == 0) {
             gpsRec.ele = null;
         } else {
@@ -326,7 +327,9 @@ public class GPSRecord {
     public String toString() {
         StringBuffer rec = new StringBuffer(100);
         rec.setLength(0);
-        rec.append("UTC:" + utc);
+        rec.append("CNT:" + recCount);
+        rec.append("\nUTC:" + gps.log.out.CommonOut.getTimeStr(utc) + "(" + utc
+                + ")");
         rec.append("\nVALID:" + Convert.unsigned2hex(valid, 8));
         rec.append("\nLAT;" + latitude);
         rec.append("\nLON:" + longitude);

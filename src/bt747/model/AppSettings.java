@@ -54,7 +54,8 @@ public class AppSettings {
     private static final int C_CARD_IDX = C_DOWNLOADTIMEOUT_IDX
             + C_DOWNLOADTIMEOUT_SIZE;
     private static final int C_CARD_SIZE = 4;
-    private static final int C_GPSTIMEOFFSETHOURS_IDX = C_CARD_IDX + C_CARD_SIZE;
+    private static final int C_GPSTIMEOFFSETHOURS_IDX = C_CARD_IDX
+            + C_CARD_SIZE;
     private static final int C_GPSTIMEOFFSETHOURS_SIZE = 4;
     private static final int C_WAYPT_RCR_IDX = C_GPSTIMEOFFSETHOURS_IDX
             + C_GPSTIMEOFFSETHOURS_SIZE;
@@ -166,10 +167,10 @@ public class AppSettings {
     private static final int C_NOT_USED1_IDX = C_FREETEXTPORT_IDX
             + C_FREETEXTPORT_SIZE;
     private static final int C_NOT_USED1_SIZE = 4;
-    private static final int C_GPSType_IDX = C_NOT_USED1_IDX + C_NOT_USED1_SIZE;
-    private static final int C_GPSType_SIZE = 1;
-    private static final int C_OUTPUTLOGCONDITIONS_IDX = C_GPSType_IDX
-            + C_GPSType_SIZE;
+    private static final int C_GPSTYPE_IDX = C_NOT_USED1_IDX + C_NOT_USED1_SIZE;
+    private static final int C_GPSTYPE_SIZE = 1;
+    private static final int C_OUTPUTLOGCONDITIONS_IDX = C_GPSTYPE_IDX
+            + C_GPSTYPE_SIZE;
     private static final int C_OUTPUTLOGCONDITIONS_SIZE = 1;
     private static final int C_IS_WRITE_TRACKPOINT_COMMENT_IDX = C_OUTPUTLOGCONDITIONS_IDX
             + C_OUTPUTLOGCONDITIONS_SIZE;
@@ -197,8 +198,14 @@ public class AppSettings {
     private static final int C_FILETIMEOFFSET_IDX = C_IMAGEDIR_IDX
             + C_IMAGEDIR_SIZE;
     private static final int C_FILETIMEOFFSET_SIZE = 4;
-    private static final int C_NEXT_IDX = C_FILETIMEOFFSET_IDX
+    private static final int C_TAG_OVERRIDEPOSITIONS_IDX = C_FILETIMEOFFSET_IDX
             + C_FILETIMEOFFSET_SIZE;
+    private static final int C_TAG_OVERRIDEPOSITIONS_SIZE = 1;
+    private static final int C_TAG_MAXTIMEDIFFERENCE_IDX = C_TAG_OVERRIDEPOSITIONS_IDX
+            + C_TAG_OVERRIDEPOSITIONS_SIZE;
+    private static final int C_TAG_MAXTIMEDIFFERENCE_SIZE = 4;
+    private static final int C_NEXT_IDX = C_TAG_MAXTIMEDIFFERENCE_IDX
+            + C_TAG_MAXTIMEDIFFERENCE_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -220,12 +227,20 @@ public class AppSettings {
     // To be used as parameter to functions to get the values.
     public static final int IS_WRITE_TRACKPOINT_COMMENT = 0;
     public static final int IS_WRITE_TRACKPOINT_NAME = 1;
+    /**
+     * When true, writes the log conditions to certain output formats. A log
+     * condition is for example: log a point every second.
+     * 
+     */
     public static final int OUTPUTLOGCONDITIONS = 2;
+    /**
+     * True when Imperial units are to be used where possible
+     */
     public static final int IMPERIAL = 3;
     /**
      * Param indicating forcing the data interpretation as holux.
      */
-    public static final int IS_HOLUXM241 = 4;
+    public static final int FORCE_HOLUXM241 = 4;
     /**
      * Param indicating that the record number for a position is to be written
      * to the log.
@@ -234,6 +249,7 @@ public class AppSettings {
 
     /**
      * Parameter indicating if on Waba the interface must be traversable.
+     * (for PDA)
      */
     public static final int IS_TRAVERSABLE = 6;
     /**
@@ -298,6 +314,9 @@ public class AppSettings {
      */
     public static final int PORTNBR = 16;
     public static final int BAUDRATE = 17;
+    /**
+     * Select a port by its 'path' (/dev/usb9 for example or /dev/com1.
+     */
     public static final int FREETEXTPORT = 18;
     /**
      * Indicates if the port must be opened at startup of the application.
@@ -308,6 +327,28 @@ public class AppSettings {
      *         time in the output formats).
      */
     public static final int GPSTIMEOFFSETHOURS = 20;
+    /**
+     * When true, will override already set positions while tagging.
+     */
+    public static final int TAG_OVERRIDEPOSITIONS = 21;
+
+    /**
+     * Max time difference between GPS time and file time to tag the file with
+     * the position.
+     */
+    public static final int TAG_MAXTIMEDIFFERENCE = 22;
+
+    /**
+     * Set the gpsType used for log conversion and some other operations (needed
+     * in cases where the type can not be automatically detected).
+     * 
+     * @param gpsType
+     *            A value out of: - {@link #GPS_TYPE_DEFAULT}<br> -
+     *            {@link #GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}<br> -
+     *            {@link #GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}<br> -
+     *            {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
+     */
+    public static final int GPSTYPE = 23;
 
     private static final int[][] paramsList =
     // Type, idx, start, size
@@ -320,7 +361,7 @@ public class AppSettings {
             { BOOL, OUTPUTLOGCONDITIONS, C_OUTPUTLOGCONDITIONS_IDX,
                     C_OUTPUTLOGCONDITIONS_SIZE },
             { BOOL, IMPERIAL, C_IMPERIAL_IDX, C_IMPERIAL_SIZE },
-            { BOOL, IS_HOLUXM241, C_HOLUX241_IDX, C_HOLUX241_SIZE },
+            { BOOL, FORCE_HOLUXM241, C_HOLUX241_IDX, C_HOLUX241_SIZE },
             { BOOL, IS_RECORDNBR_IN_LOGS, C_RECORDNBR_IN_LOGS_IDX,
                     C_RECORDNBR_IN_LOGS_SIZE },
             { BOOL, IS_TRAVERSABLE, C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE },
@@ -343,7 +384,12 @@ public class AppSettings {
             { STRING, FREETEXTPORT, C_FREETEXTPORT_IDX, C_FREETEXTPORT_SIZE },
             { BOOL, OPENPORTATSTARTUP, C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE },
             { INT, GPSTIMEOFFSETHOURS, C_GPSTIMEOFFSETHOURS_IDX,
-                    C_GPSTIMEOFFSETHOURS_SIZE }, };
+                    C_GPSTIMEOFFSETHOURS_SIZE },
+            { BOOL, TAG_OVERRIDEPOSITIONS, C_TAG_OVERRIDEPOSITIONS_IDX,
+                    C_TAG_OVERRIDEPOSITIONS_SIZE },
+            { INT, TAG_MAXTIMEDIFFERENCE, C_TAG_MAXTIMEDIFFERENCE_IDX,
+                    C_TAG_MAXTIMEDIFFERENCE_SIZE },
+            { INT, GPSTYPE, C_GPSTYPE_IDX, C_GPSTYPE_SIZE }, };
 
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
@@ -446,7 +492,7 @@ public class AppSettings {
             setBooleanOpt(IS_RECORDNBR_IN_LOGS, false);
             /* fall through */
         case 14:
-            setBooleanOpt(IS_HOLUXM241, false);
+            setBooleanOpt(FORCE_HOLUXM241, false);
             /* fall through */
         case 15:
             /* Value interpretation changed */
@@ -460,7 +506,7 @@ public class AppSettings {
             /* fall through */
         case 19:
             // setBinDecoder(0); // No longer used
-            setGPSType(0);
+            setIntOpt(GPSTYPE, 0);
         case 20:
             setBooleanOpt(OUTPUTLOGCONDITIONS, false);
             /* fall through */
@@ -496,7 +542,11 @@ public class AppSettings {
             /* fall through */
         case 28:
             setIntOpt(FILETIMEOFFSET, 0);
-            setStringOpt(0, "0.29", C_VERSION_IDX, C_VERSION_SIZE);
+            /* fall through */
+        case 29:
+            setBooleanOpt(TAG_OVERRIDEPOSITIONS, false);
+            setIntOpt(TAG_MAXTIMEDIFFERENCE, 300);
+            setStringOpt(0, "0.30", C_VERSION_IDX, C_VERSION_SIZE);
             /* fall through */
 
         default:
@@ -1246,18 +1296,26 @@ public class AppSettings {
         return getNMEASetting1().length() > 15;
     }
 
-    public final int getGPSType() {
-        return getLocalIntOpt(C_GPSType_IDX, C_GPSType_SIZE);
-    }
-
-    protected final void setGPSType(final int value) {
-        setLocalIntOpt(0, value, C_GPSType_IDX, C_GPSType_SIZE);
-    }
-
     /**
      * Google map file name (basename).
      */
     public static final String C_GMAP_KEY_FILENAME = "gmapkey.txt";
+    /**
+     * Default gps type selection (MTK Logger).
+     */
+    public static final int GPS_TYPE_DEFAULT = 0;
+    /**
+     * ITrackU-SirfIII type.
+     */
+    public static final int GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII = 3;
+    /**
+     * Holux type.
+     */
+    public static final int GPS_TYPE_GISTEQ_ITRACKU_NEMERIX = 1;
+    /**
+     * ITrackU-Phototrackr type.
+     */
+    public static final int GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR = 2;
 
     /**
      * Look for the google map site key in a file called "gmapkey.txt" Will look
