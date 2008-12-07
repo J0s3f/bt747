@@ -1,3 +1,7 @@
+Version 1.62.16
+* Fixed time offset calculation on value restoration.
+* No more adding the hyphen when the basename is empty.
+
 Version 1.62.15
 * Solved several issues in geotagging.
 

@@ -54,12 +54,12 @@ public class FileTablePanel extends javax.swing.JPanel {
         tfDestinationDirectory.setVisible(false);
 
         int offset = m.getIntOpt(Model.FILETIMEOFFSET);
-        spTimeOffsetHours.setValue(offset / 24);
+        spTimeOffsetHours.setValue((int) (offset / 24));
         if (offset < 0) {
             offset = -offset;
         }
         offset %= 3600;
-        spTimeOffsetMinutes.setValue(offset / 60);
+        spTimeOffsetMinutes.setValue((int) (offset / 60));
         spTimeOffsetSeconds.setValue(offset % 60);
 
         tfMaxTimeDiff.setText("" + m.getIntOpt(Model.TAG_MAXTIMEDIFFERENCE));
