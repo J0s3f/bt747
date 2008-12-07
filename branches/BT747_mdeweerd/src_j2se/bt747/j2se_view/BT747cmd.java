@@ -376,7 +376,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (options.has("p")) {
             String portStr;
             portStr = (String) options.valueOf("p");
-            c.setFreeTextPort(portStr);
+            c.setStringOpt(Model.FREETEXTPORT, portStr);
         } else {
             // c.setUsb();
         }
@@ -452,15 +452,15 @@ public class BT747cmd implements bt747.model.ModelListener {
             // AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
             // AppController.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII:
 
-            int deviceType = Controller.GPS_TYPE_DEFAULT;
+            int deviceType = Model.GPS_TYPE_DEFAULT;
             if (arg.equals("default")) {
-                deviceType = Controller.GPS_TYPE_DEFAULT;
-                c.setForceHolux241(false);
+                deviceType = Model.GPS_TYPE_DEFAULT;
+                c.setBooleanOpt(Model.FORCE_HOLUXM241, false);
             } else if (arg.equals("holux")) {
-                deviceType = Controller.GPS_TYPE_DEFAULT;
-                c.setForceHolux241(true);
+                deviceType = Model.GPS_TYPE_DEFAULT;
+                c.setBooleanOpt(Model.FORCE_HOLUXM241, true);
             }
-            c.setGPSType(deviceType);
+            c.setIntOpt(AppSettings.GPSTYPE, deviceType);
         }
 
         if (options.has("trkptinfo")) {

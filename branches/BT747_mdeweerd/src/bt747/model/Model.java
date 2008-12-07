@@ -700,7 +700,7 @@ public class Model extends AppSettings implements GPSListener {
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
         forHolux = (isHolux() && gpsRxTx.isConnected())
-                || getBooleanOpt(IS_HOLUXM241);
+                || getBooleanOpt(FORCE_HOLUXM241);
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {
@@ -724,7 +724,7 @@ public class Model extends AppSettings implements GPSListener {
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
         forHolux = (isHolux() && gpsRxTx.isConnected())
-                || getBooleanOpt(IS_HOLUXM241);
+                || getBooleanOpt(FORCE_HOLUXM241);
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {

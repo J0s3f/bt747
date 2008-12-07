@@ -58,8 +58,8 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         m.addListener(this);
 
         updateSatGuiItems();
-        cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 0
-                : 1);
+        cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 1
+                : 0);
         txtHoluxName.setText(m.getHoluxName());
         updateEstimatedNbrRecords();
         updateConnected(m.isConnected());
@@ -162,8 +162,8 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             updateLogFormatData();
             break;
         case ModelEvent.UPDATE_LOG_REC_METHOD:
-            cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 0
-                    : 1);
+            cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 1
+                    : 0);
             break;
         case ModelEvent.UPDATE_HOLUX_NAME:
             txtHoluxName.setText(m.getHoluxName());

@@ -16,17 +16,16 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="btnPanel" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="10" pref="10" max="10" attributes="0"/>
+              <Component id="btnPanel" min="-2" max="-2" attributes="0"/>
           </Group>
-          <Component id="spValues" alignment="0" pref="687" max="32767" attributes="0"/>
+          <Component id="spValues" alignment="0" pref="614" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="spValues" pref="197" max="32767" attributes="0"/>
+              <Component id="spValues" pref="154" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnPanel" min="-2" max="-2" attributes="0"/>
           </Group>
@@ -51,7 +50,7 @@
                 <Column editable="true" title="Title 4" type="java.lang.Object"/>
               </Table>
             </Property>
-            <Property name="autoResizeMode" type="int" value="4"/>
+            <Property name="autoResizeMode" type="int" value="1"/>
             <Property name="columnSelectionAllowed" type="boolean" value="true"/>
           </Properties>
         </Component>
@@ -65,30 +64,33 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="btSelectImages" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btSelectDestinationDir" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="tfDestinationDirectory" min="-2" pref="185" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="btClearList" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btTagFromTable" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="btTagFromFile" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btSaveTaggedFiles" min="-2" max="-2" attributes="0"/>
+                          <Component id="btTagFromTable" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="lbInformationMessage" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="btSelectImages" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btClearList" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btSaveTaggedFiles" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="1">
+                                  <Component id="btSelectDestinationDir" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tfDestinationDirectory" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="pnTagOptions" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="pnTimeOffset" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbOverridePositions" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="62" max="32767" attributes="0"/>
+                  <Component id="pnTimeOffset" min="-2" max="-2" attributes="0"/>
               </Group>
+              <Component id="lbInformationMessage" alignment="0" min="-2" max="-2" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -98,26 +100,25 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="btSelectImages" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btClearList" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btSaveTaggedFiles" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="btSelectDestinationDir" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="tfDestinationDirectory" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btClearList" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btTagFromTable" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btTagFromFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btSaveTaggedFiles" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btTagFromTable" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lbInformationMessage" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="pnTimeOffset" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="cbOverridePositions" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="pnTagOptions" min="-2" max="-2" attributes="0"/>
+                      <Component id="pnTimeOffset" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="lbInformationMessage" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -239,17 +240,32 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbSeconds" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="tfMaxTimeDiff" pref="90" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lbSeconds1" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="spTimeOffsetHours" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbHour" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="spTimeOffsetMinutes" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbMinutes" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="spTimeOffsetSeconds" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbSeconds" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="spTimeOffsetHours" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbHour" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="spTimeOffsetMinutes" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbMinutes" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="spTimeOffsetSeconds" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbSeconds" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbSeconds1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tfMaxTimeDiff" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -277,29 +293,106 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JSpinner" name="spTimeOffsetHours">
+              <Properties>
+                <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                  <SpinnerModel initial="0" maximum="48" minimum="-48" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                </Property>
+              </Properties>
               <Events>
                 <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spTimeOffsetHoursStateChanged"/>
               </Events>
             </Component>
             <Component class="javax.swing.JSpinner" name="spTimeOffsetMinutes">
+              <Properties>
+                <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                  <SpinnerModel initial="0" maximum="59" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                </Property>
+              </Properties>
               <Events>
                 <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spTimeOffsetMinutesStateChanged"/>
               </Events>
             </Component>
             <Component class="javax.swing.JSpinner" name="spTimeOffsetSeconds">
+              <Properties>
+                <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                  <SpinnerModel initial="0" maximum="59" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="spTimeOffsetSecondsStateChanged"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel1">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="FileTablePanel.jLabel1.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfMaxTimeDiff">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="FileTablePanel.tfMaxTimeDiff.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="FileTablePanel.tfMaxTimeDiff.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+                <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="J2SEAppController.IntVerifier" type="code"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tfMaxTimeDiffFocusLost"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lbSeconds1">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="FileTablePanel.lbSeconds1.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JCheckBox" name="cbOverridePositions">
+        <Container class="javax.swing.JPanel" name="pnTagOptions">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="FileTablePanel.cbOverridePositions.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder title="Tag options">
+                  <ResourceString PropertyName="titleX" bundle="bt747/j2se_view/Bundle.properties" key="FileTablePanel.pnTagOptions.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </TitledBorder>
+              </Border>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbOverridePositionsStateChanged"/>
-          </Events>
-        </Component>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="cbOverridePositions" min="-2" max="-2" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="cbOverridePositions" min="-2" max="-2" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JCheckBox" name="cbOverridePositions">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="FileTablePanel.cbOverridePositions.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="FileTablePanel.cbOverridePositions.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbOverridePositionsStateChanged"/>
+              </Events>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
   </SubComponents>

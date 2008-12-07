@@ -752,7 +752,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(DownloadProgressLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnBottomInformationLayout.setVerticalGroup(
@@ -877,19 +877,14 @@ public class BT747Main extends javax.swing.JFrame implements
         pnDownloadMethod.setLayout(pnDownloadMethodLayout);
         pnDownloadMethodLayout.setHorizontalGroup(
             pnDownloadMethodLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, pnDownloadMethodLayout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(cbDownloadMethod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(164, 164, 164))
-            .add(pnDownloadMethodLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(cbDisableLoggingDuringDownload))
+            .add(cbDisableLoggingDuringDownload)
+            .add(cbDownloadMethod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
         pnDownloadMethodLayout.setVerticalGroup(
             pnDownloadMethodLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnDownloadMethodLayout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, pnDownloadMethodLayout.createSequentialGroup()
                 .add(cbDownloadMethod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(cbDisableLoggingDuringDownload))
         );
 
@@ -1242,7 +1237,7 @@ public class BT747Main extends javax.swing.JFrame implements
             InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1297,10 +1292,9 @@ public class BT747Main extends javax.swing.JFrame implements
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(tabbedPanelAll))
+                .add(tabbedPanelAll)
                 .addContainerGap())
+            .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1349,36 +1343,36 @@ private void endDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_
     }// GEN-LAST:event_btDownloadFromNumerixActionPerformed
 
     private void cbGPSTypeFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbGPSTypeFocusLost
-        int type = Controller.GPS_TYPE_DEFAULT;
+        int type = Model.GPS_TYPE_DEFAULT;
         boolean forceHolux = false;
         switch(cbGPSType.getSelectedIndex()) {
         case 1:
-            type = Controller.GPS_TYPE_DEFAULT;
+            type = Model.GPS_TYPE_DEFAULT;
             forceHolux = true;
             break;
         case 2:
-            type = Controller.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX;
+            type = Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX;
             break;
         case 3:
-            type = Controller.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR;
+            type = Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR;
             break;
         case 4:
-            type = Controller.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII;
+            type = Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII;
             break;
         case 0:
         default:
-            type = Controller.GPS_TYPE_DEFAULT;
+            type = Model.GPS_TYPE_DEFAULT;
         }
-        c.setGPSType(type);
-        c.setForceHolux241(forceHolux);
+        c.setIntOpt(AppSettings.GPSTYPE, type);
+        c.setBooleanOpt(Model.FORCE_HOLUXM241, forceHolux);
     }// GEN-LAST:event_cbGPSTypeFocusLost
     
     private final void updateCbGPSType() {
-        if(m.getBooleanOpt(AppSettings.IS_HOLUXM241)) {
+        if(m.getBooleanOpt(AppSettings.FORCE_HOLUXM241)) {
             cbGPSType.setSelectedIndex(1);
         } else {
             int index = 0;
-            switch(m.getGPSType()) {
+            switch(m.getIntOpt(AppSettings.GPSTYPE)) {
             case 0:
                 index = 0;
                 break;

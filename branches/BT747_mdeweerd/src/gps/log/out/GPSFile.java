@@ -364,12 +364,16 @@ public abstract class GPSFile {
                 do {
                     continueLoop = false;
                     GPSRecord userWayPoint = userWayPointList[currentWayPointListIdx];
+                    boolean doWriteRecord = false;
                     int userWayPointUTC = userWayPoint.utc
                             + waypointTimeCorrection;
-                    int diffPrevious = userWayPointUTC - prevRecord.utc;
-                    int diffNext = userWayPointUTC - r.utc;
+                    int diffPrevious = userWayPointUTC - prevRecord.utc
+                            + timeOffsetSeconds;
+                    int diffNext = userWayPointUTC - r.utc; // If > 0, current
+                    // position is
+                    // earlier.
 
-                    if ((diffPrevious > 0) && (diffNext < 0)) {
+                    if ((diffPrevious >= 0) && (diffNext < 0)) {
                         GPSRecord ref;
                         int diff;
                         // WayPoint is in between two points.
@@ -378,7 +382,7 @@ public abstract class GPSFile {
                             diff = diffPrevious;
                         } else {
                             ref = r;
-                            diff = diffPrevious;
+                            diff = -diffNext;
                         }
                         if ((diff <= maxDiff)
                                 && (overridePreviousTag || (!userWayPoint
@@ -387,18 +391,31 @@ public abstract class GPSFile {
                             userWayPoint.latitude = ref.latitude;
                             userWayPoint.longitude = ref.longitude;
                         }
-                        // Update log format
-                        if (!activeFields.equalsFormat(userWayPoint)) {
-                            writeLogFmtHeader(userWayPoint);
+                        doWriteRecord = true;
+                    } else if (diffPrevious < 0) {
+                        // Skip record
+                        doWriteRecord = true;
+
+                    }
+                    if (doWriteRecord) {
+                        if (userWayPoint.hasLatitude()
+                                && userWayPoint.hasLongitude()) {
+                            // Update log format
+                            if (!activeFields.equalsFormat(userWayPoint)) {
+                                writeLogFmtHeader(userWayPoint);
+                            }
+                            // bt747.sys.Generic.debug(diffPrevious + " " +
+                            // diffNext);
+                            // bt747.sys.Generic.debug(gps.log.out.CommonOut
+                            // .getTimeStr(userWayPointUTC));
+                            // bt747.sys.Generic.debug(r.toString());
+                            // logFormat = userWayPoint.getLogFormat();
+                            GPSRecord utcCorrectedRecord = userWayPoint
+                                    .cloneRecord();
+                            utcCorrectedRecord.utc = userWayPointUTC;
+                            writeRecord(utcCorrectedRecord);
                         }
-
-                        // logFormat = userWayPoint.getLogFormat();
-                        GPSRecord utcCorrectedRecord = userWayPoint
-                                .cloneRecord();
-                        utcCorrectedRecord.utc = userWayPointUTC;
-                        writeRecord(utcCorrectedRecord);
                         nextWayPointIdx();
-
                         continueLoop = currentWayPointListIdx != -1;
                     }
                 } while (continueLoop);
@@ -816,6 +833,36 @@ public abstract class GPSFile {
      */
     public final void setTimeOffset(final int offset) {
         timeOffsetSeconds = offset;
+    }
+
+    /**
+     * @return the maxDiff
+     */
+    public final int getMaxDiff() {
+        return this.maxDiff;
+    }
+
+    /**
+     * @param maxDiff
+     *            the maxDiff to set
+     */
+    public final void setMaxDiff(int maxDiff) {
+        this.maxDiff = maxDiff;
+    }
+
+    /**
+     * @return the overridePreviousTag
+     */
+    public final boolean isOverridePreviousTag() {
+        return this.overridePreviousTag;
+    }
+
+    /**
+     * @param overridePreviousTag
+     *            the overridePreviousTag to set
+     */
+    public final void setOverridePreviousTag(boolean overridePreviousTag) {
+        this.overridePreviousTag = overridePreviousTag;
     }
 
 }
