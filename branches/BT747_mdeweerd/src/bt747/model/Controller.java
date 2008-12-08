@@ -23,7 +23,7 @@ import gps.log.GPSRecord;
 import gps.log.in.BT747LogConvert;
 import gps.log.in.CSVLogConvert;
 import gps.log.in.DPL700LogConvert;
-import gps.log.in.GPSLogConvert;
+import gps.log.in.GPSLogConvertInterface;
 import gps.log.in.HoluxTrlLogConvert;
 import gps.log.in.NMEALogConvert;
 import gps.log.out.CommonOut;
@@ -215,7 +215,7 @@ public class Controller {
      * Points to the object that is currently converting (to be able to stop
      * it).
      */
-    private GPSLogConvert currentGPSLogConvert;
+    private GPSLogConvertInterface currentGPSLogConvert;
 
     /**
      * Stop the conversion that is ongoing.
@@ -359,8 +359,8 @@ public class Controller {
                 getOutFileExt(logType));
     }
 
-    public final GPSLogConvert getInputConversionInstance(final int logType) {
-        GPSLogConvert lc;
+    public final GPSLogConvertInterface getInputConversionInstance(final int logType) {
+        GPSLogConvertInterface lc;
         String parameters = "";
         int sourceHeightReference;
         int destinationHeightReference = getHeightReference(logType);
@@ -476,7 +476,7 @@ public class Controller {
             final String ext) {
         int result;
         String parameters = ""; // For debug
-        GPSLogConvert lc;
+        GPSLogConvertInterface lc;
         result = 0;
         if (Generic.isDebug()) {
             Generic.debug("Converting with parameters:\n");
@@ -525,7 +525,7 @@ public class Controller {
         int error = 0;
         GPSRecord[] result;
         GPSArray gpsFile = null;
-        GPSLogConvert lc;
+        GPSLogConvertInterface lc;
 
         lc = getInputConversionInstance(Model.GMAP_LOGTYPE); // For height
         // conversion.

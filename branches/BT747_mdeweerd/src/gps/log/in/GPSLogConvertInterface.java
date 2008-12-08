@@ -21,7 +21,7 @@ import gps.log.out.GPSFile;
  * 
  * @author Mario De Weerd
  */
-public interface GPSLogConvert {
+public interface GPSLogConvertInterface {
     /**
      * Parses the file once and will use {@link GPSFile} to generate the output.
      * 
@@ -29,7 +29,7 @@ public interface GPSLogConvert {
      *            Represents the structure to generate the output.
      * @return error indication.
      */
-    int parseFile(final GPSFile gpsFile);
+    int parseFile(final GPSFileConverterInterface gpsFile);
 
     /**
      * Height conversion active if true.
@@ -41,7 +41,8 @@ public interface GPSLogConvert {
      */
     void setConvertWGS84ToMSL(final int mode);
 
-    int toGPSFile(final String fileName, final GPSFile gpsFile, final int card);
+    int toGPSFile(final String fileName,
+            final GPSFileConverterInterface gpsFile, final int card);
 
     /**
      * Returns some information regarding the reported error. To be thrown in a

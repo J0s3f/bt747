@@ -222,7 +222,6 @@ public class SimpleExample implements bt747.model.ModelListener {
     }
 
     public void modelEvent(ModelEvent e) {
-        // TODO Auto-generated method stub
         int type = e.getType();
         if (type == ModelEvent.GPRMC) {
             // updateRMCData((GPSRecord) e.getArg());

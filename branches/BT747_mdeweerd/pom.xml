@@ -5,6 +5,8 @@
   <name>BT747</name>
   <version>0.0.1-SNAPSHOT</version>
   <description>MTK Datalogger Control</description>
+  <repositories>
+  </repositories>
   <dependencies>
   	<dependency>
   		<groupId>net.sf.jopt-simple</groupId>

@@ -1,3 +1,6 @@
+Version 1.62.17
+* Drag and drop of files added to Files tab.
+
 Version 1.62.16
 * Fixed time offset calculation on value restoration.
 * No more adding the hyphen when the basename is empty.

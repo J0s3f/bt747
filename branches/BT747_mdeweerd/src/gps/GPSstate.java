@@ -156,7 +156,7 @@ public final class GPSstate implements BT747Thread {
     public final static int DATA_LOG_FORMAT = 3;
     public final static int DATA_MTK_VERSION = 4;
     public final static int DATA_MTK_RELEASE = 5;
-    public final static int DATA_INITIAL_LOG = 6; // TODO implement handling
+    public final static int DATA_INITIAL_LOG = 6;
     public final static int DATA_LOG_STATUS = 7;
     public final static int DATA_LOG_VERSION = 8;
     private final static int DATA_LAST_INDEX = 8; // The last possible index
@@ -679,7 +679,7 @@ public final class GPSstate implements BT747Thread {
      * 
      * @param btMacAddr
      *            The Mac address to set in the following format:<br>
-     *            00:1F:14:15:12:13. TODO: Verify implementation.
+     *            00:1F:14:15:12:13.
      */
     public final void setBtMacAddr(final String btMacAddr) {
         String myMacAddr = "";

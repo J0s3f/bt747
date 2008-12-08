@@ -18,6 +18,7 @@ import gps.BT747Constants;
 import gps.Txt;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
+import gps.log.in.GPSFileConverterInterface;
 
 import bt747.sys.Convert;
 import bt747.sys.File;
@@ -33,7 +34,7 @@ import bt747.sys.interfaces.BT747FileName;
  * Derived classes will be able to write the desired output in the formats they
  * implement.
  */
-public abstract class GPSFile {
+public abstract class GPSFile implements GPSFileConverterInterface {
     /**
      * The track filters used.
      */

@@ -353,6 +353,11 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         lbFixMs.setText(bundle.getString("BT747Main.lbFixMs.text")); // NOI18N
 
         cbStopOrOverwriteWhenFull.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Stop when full", "Overwrite when full" }));
+        cbStopOrOverwriteWhenFull.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbStopOrOverwriteWhenFullItemStateChanged(evt);
+            }
+        });
         cbStopOrOverwriteWhenFull.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbStopOrOverwriteWhenFullFocusLost(evt);
@@ -1077,6 +1082,12 @@ private void btStoreSettingsActionPerformed(java.awt.event.ActionEvent evt) {//G
    c.storeSetting1();
 }//GEN-LAST:event_btStoreSettingsActionPerformed
 
+private void cbStopOrOverwriteWhenFullItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbStopOrOverwriteWhenFullItemStateChanged
+    if(cbStopOrOverwriteWhenFull.hasFocus()) {
+        sendStopOrOverwrite();
+    }
+}//GEN-LAST:event_cbStopOrOverwriteWhenFullItemStateChanged
+
     private void btSetHoluxNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btHotStartActionPerformed
         c.setHoluxName(txtHoluxName.getText());
     }// GEN-LAST:event_btHotStartActionPerformed
@@ -1134,8 +1145,15 @@ private void btStoreSettingsActionPerformed(java.awt.event.ActionEvent evt) {//G
         }
     }// GEN-LAST:event_btHotStartActionPerformed
 
+    
+    private void sendStopOrOverwrite() {
+        boolean newSetting = (cbStopOrOverwriteWhenFull.getSelectedIndex() == 1);
+        if(newSetting!=m.isLogFullOverwrite()) {
+            c.setLogOverwrite(newSetting);
+        }
+    }
     private void cbStopOrOverwriteWhenFullFocusLost( java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cbStopOrOverwriteWhenFullFocusLost
-        c.setLogOverwrite(cbStopOrOverwriteWhenFull.getSelectedIndex() == 1);
+        sendStopOrOverwrite();
     }// GEN-LAST:event_cbStopOrOverwriteWhenFullFocusLost
 
     

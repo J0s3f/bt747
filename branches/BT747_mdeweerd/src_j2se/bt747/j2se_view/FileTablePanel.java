@@ -15,8 +15,11 @@
 package bt747.j2se_view;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
+
+import net.iharder.dnd.FileDrop;
 
 import bt747.j2se_view.filefilters.JpgFileFilter;
 import bt747.j2se_view.image.ImageData;
@@ -65,6 +68,12 @@ public class FileTablePanel extends javax.swing.JPanel {
         tfMaxTimeDiff.setText("" + m.getIntOpt(Model.TAG_MAXTIMEDIFFERENCE));
         cbOverridePositions.setSelected(m
                 .getBooleanOpt(Model.TAG_OVERRIDEPOSITIONS));
+
+        new FileDrop(this, new FileDrop.Listener() {
+            public void filesDropped(File[] files) {
+                addFiles(files);
+            }
+        });
     }
 
     private void doSavePositions() {
@@ -110,17 +119,27 @@ public class FileTablePanel extends javax.swing.JPanel {
             try {
                 String path;
                 File[] files = ImageFileChooser.getSelectedFiles();
-                for (int i = 0; i < files.length; i++) {
-                    fileTableModel.add(files[i].getCanonicalPath());
-                }
                 c.setStringOpt(Model.IMAGEDIR, ImageFileChooser
                         .getCurrentDirectory().getCanonicalPath());
-                c.setUserWayPoints(fileTableModel.getSortedGPSRecords());
+                addFiles(files);
             } catch (Exception e) {
                 Generic.debug(getString("FilesToTagFileChooser"), e);
             }
             // tfRawLogFilePath.setText(m.getStringOpt(AppSettings.LOGFILEPATH));
             // tfRawLogFilePath.setCaretPosition(tfRawLogFilePath.getText().length());
+        }
+    }
+    
+    private final void addFiles(File[] files) {
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                try {
+                fileTableModel.add(files[i].getCanonicalPath());
+                } catch (IOException e) {
+                    // TODO: handle exception
+                }
+            }
+            c.setUserWayPoints(fileTableModel.getSortedGPSRecords());
         }
     }
 

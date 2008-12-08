@@ -370,6 +370,7 @@
                 </Property>
               </Properties>
               <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbStopOrOverwriteWhenFullItemStateChanged"/>
                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="cbStopOrOverwriteWhenFullFocusLost"/>
               </Events>
             </Component>
