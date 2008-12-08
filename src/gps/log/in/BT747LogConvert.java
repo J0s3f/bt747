@@ -16,7 +16,6 @@ package gps.log.in;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;
-import gps.log.out.GPSFile;
 
 import bt747.sys.Convert;
 import bt747.sys.File;
@@ -27,12 +26,12 @@ import bt747.sys.interfaces.BT747Time;
 /**
  * This class is used to convert the binary log to a new format. Basically this
  * class interprets the log and creates a {@link GPSRecord}. The
- * {@link GPSRecord} is then sent to the {@link GPSFile} class object to write
+ * {@link GPSRecord} is then sent to the {@link GPSFileConverterInterface} class object to write
  * it to the output.
  * 
  * @author Mario De Weerd
  */
-public final class BT747LogConvert implements GPSLogConvert {
+public final class BT747LogConvert implements GPSLogConvertInterface {
     private int minRecordSize;
     private int maxRecordSize;
     private int logFormat;
@@ -55,7 +54,7 @@ public final class BT747LogConvert implements GPSLogConvert {
 
     private int badrecord_count = 0;
 
-    private void updateLogFormat(final GPSFile gpsFile, final int newLogFormat) {
+    private void updateLogFormat(final GPSFileConverterInterface gpsFile, final int newLogFormat) {
         int[] result;
         logFormat = newLogFormat;
         activeFileFields |= logFormat;
@@ -90,7 +89,7 @@ public final class BT747LogConvert implements GPSLogConvert {
      *            object doing actual write to files
      * 
      */
-    public final int parseFile(final GPSFile gpsFile) {
+    public final int parseFile(final GPSFileConverterInterface gpsFile) {
         GPSRecord r = new GPSRecord();
         byte[] bytes;
         int sizeToRead;
@@ -457,7 +456,7 @@ public final class BT747LogConvert implements GPSLogConvert {
         return errorInfo;
     }
 
-    public final int toGPSFile(final String fileName, final GPSFile gpsFile,
+    public final int toGPSFile(final String fileName, final GPSFileConverterInterface gpsFile,
             final int Card) {
         int error = BT747Constants.NO_ERROR;
         stop = false;
@@ -531,7 +530,7 @@ public final class BT747LogConvert implements GPSLogConvert {
      * @return int / number of bytes found
      */
     private final int getSpecialRecord(final byte[] bytes,
-            final int offsetInBuffer, final GPSFile gpsFile) {
+            final int offsetInBuffer, final GPSFileConverterInterface gpsFile) {
         int newLogFormat;
         int nbrBytesDone = 0;
         if (((0xFF & bytes[offsetInBuffer + 0]) == 0xAA)
@@ -862,4 +861,5 @@ public final class BT747LogConvert implements GPSLogConvert {
         return valid;
 
     }
+
 }

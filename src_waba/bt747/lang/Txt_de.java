@@ -25,8 +25,8 @@ public final class Txt_de implements TxtInterface {
     private static final String S_DEBUG = "Debug";
     private static final String S_STATS = "Stats";
     private static final String S_INFO = "Info";
-    private static final String S_ABOUT_BT747 = "Über BT747";
-    private static final String S_ABOUT_SUPERWABA = "Über SuperWaba VM";
+    private static final String S_ABOUT_BT747 = "ï¿½ber BT747";
+    private static final String S_ABOUT_SUPERWABA = "ï¿½ber SuperWaba VM";
 
     private static final String S_TITLE = "BT747 - MTK Logger Control";
 
@@ -46,7 +46,7 @@ public final class Txt_de implements TxtInterface {
 
 
     private static final String ABOUT_TITLE =
-        "Über BT747 V"+Version.VERSION_NUMBER;
+        "ï¿½ber BT747 V"+Version.VERSION_NUMBER;
     private static final String ABOUT_TXT =
         "Erstellt mit SuperWaba"
         + "|http://www.superwaba.org"
@@ -54,15 +54,15 @@ public final class Txt_de implements TxtInterface {
         + "|von Mario De Weerd"
         + "|m.deweerd@ieee.org"
         + "|Diese Anw. erlaubt die Kontrolle"
-        + "|über den iBlue 747 Empfänger."
+        + "|ï¿½ber den iBlue 747 Empfï¿½nger."
         + "|Volle Kontr. per Bluetooth kann per"
         + "|Hardwaremod. erreicht werden. "
         + "|Weitere Informationen im Internet."
-        + "|Übersetzung von Dirk Haase";
+        + "|ï¿½bersetzung von Dirk Haase";
 
 
     private static final String ABOUT_SUPERWABA_TITLE =
-        "Über SuperWaba";
+        "ï¿½ber SuperWaba";
     private static final String ABOUT_SUPERWABA_TXT =
         "SuperWaba Virtual Machine ";
     private static final String ABOUT_SUPERWABA_TXT_CONTINUE =
@@ -78,7 +78,7 @@ public final class Txt_de implements TxtInterface {
     private static final String DISCLAIMER_TITLE =
         "Disclaimer";
     private static final String DISCLAIMER_TXT =
-        "bt747 wird zur Verfügung gestellt,"
+        "bt747 wird zur Verfï¿½gung gestellt,"
         + "|wie sie ist, ohne Garantie irgendw. Art."
         + "|ALL EXPRESS"
         + "|OR IMPLIED REPRESENTATIONS AND "
@@ -105,18 +105,18 @@ public final class Txt_de implements TxtInterface {
     // Conctrl strings
     private static final String BT_BLUETOOTH = "Bluetooth";
     private static final String BT_CONNECT_PRT = "Port verbinden";
-    private static final String BT_CLOSE_PRT = "Port schließen";
-    private static final String BT_REOPEN_PRT  = "Port neu öffnen";
+    private static final String BT_CLOSE_PRT = "Port schlieï¿½en";
+    private static final String BT_REOPEN_PRT  = "Port neu ï¿½ffnen";
     private static final String MAIN = "Main: ";  //TODO: translate to german
     private static final String FIRMWARE = "Firmware: "; 
     private static final String MODEL = "Model: ";
     private static final String FLASHINFO = "FlashInfo: ";
     private static final String TIME_SEP = "  - Zeit :";
     private static final String LAT = "Breite: ";
-    private static final String LON = "Länge: ";
+    private static final String LON = "Lï¿½nge: ";
     private static final String GEOID = "Geoid: ";
     private static final String CALC = "(berechn.: ";
-    private static final String HGHT_SEP = " - Höhe:";
+    private static final String HGHT_SEP = " - Hï¿½he:";
     private static final String METERS_ABBR = "m";
     // Filters tab panel
     private static final String STANDARD = "Standard";
@@ -132,10 +132,10 @@ public final class Txt_de implements TxtInterface {
             };
     private static final String [] logFmtItems = {
         "ZEIT (UTC)",        // = 0x00001    // 0
-        "GÜLTIG",      // = 0x00002    // 1
+        "Gï¿½LTIG",      // = 0x00002    // 1
         "GEO. BREITE", // = 0x00004    // 2
-        "GEO. LÄNGE",  // = 0x00008    // 3
-        "HÖHE",        // = 0x00010    // 4
+        "GEO. Lï¿½NGE",  // = 0x00008    // 3
+        "Hï¿½HE",        // = 0x00010    // 4
         "GESCHW.",     // = 0x00020    // 5
         "RICHTUNG",  // = 0x00040    // 6 
         "DSTA",     // = 0x00080    // 7
@@ -151,7 +151,7 @@ public final class Txt_de implements TxtInterface {
         "RCR",      // = 0x20000    // 11
         "MILISEK.",// = 0x40000   // 12
         "ENTFERNUNG",  // = 0x80000    // 13
-        "NÜR GLTG DATEI" // =0x80000000
+        "Nï¿½R GLTG DATEI" // =0x80000000
     };
     private static final String C_BAD_LOG_FORMAT = "Falsches Log-Format";
 
@@ -159,33 +159,33 @@ public final class Txt_de implements TxtInterface {
     // Holux specific
     private static final String HOLUX_NAME = "Holux Name";
 
-    private static final String SET = "Setzen";  //TODO*: translate to german ?
+    private static final String SET = "Setzen"; 
 
     // EASY TAB
     private static final String BT_5HZ_FIX = "5Hz fix und log";
     private static final String BT_2HZ_FIX = "2Hz fix"; //(verhindert Navigation)";
-    private static final String BT_HOT = "Heißstart";
+    private static final String BT_HOT = "Heiï¿½start";
     private static final String BT_WARM = "Warmstart";
     private static final String BT_COLD = "Kaltstart";
     private static final String BT_FACT_RESET = "Firmware-Reset";
-    private static final String BT_FORCED_ERASE = "Löschen erzwingen";
-    private static final String BT_PT_WITH_REASON = "Klicken für entspr. Log-Ereignis:";
+    private static final String BT_FORCED_ERASE = "Lï¿½schen erzwingen";
+    private static final String BT_PT_WITH_REASON = "Klicken fï¿½r entspr. Log-Ereignis:";
 
     private static final String CONFIRM_FACT_RESET =
             "Sie wollen einen Firmware-Reset ihres|"
-            + "GPS-Loggers durchführen.|"
-            + "||Durchführung erfolgt auf ihr|"
+            + "GPS-Loggers durchfï¿½hren.|"
+            + "||Durchfï¿½hrung erfolgt auf ihr|"
             + "eigenes Risko ???";
 
     // File tab
     private static final String OUTPUT_DIR = "Ausgabe-Verzeichnis:";
     private static final String LOGFILE = "Log-Datei:";
     private static final String REPORT = "Bericht :";  
-    private static final String CHUNK = "Blockgröße :";
-    private static final String CHUNK_AHEAD = "Blockgröße Wiederholung:";
-    private static final String READ_TIMEOUT = "Lese-Zeitbeschränkung (ms) :";
+    private static final String CHUNK = "Blockgrï¿½ï¿½e :";
+    private static final String CHUNK_AHEAD = "Blockgrï¿½ï¿½e Wiederholung:";
+    private static final String READ_TIMEOUT = "Lese-Zeitbeschrï¿½nkung (ms) :";
     private static final String CARD_VOL = "Karte/Laufwerk:";
-    private static final String APPLY_SET = "Werte übernehmen";
+    private static final String APPLY_SET = "Werte ï¿½bernehmen";
     private static final String DEFAULT_SET = "Voreinstellungen";
 
     // Log filter
@@ -214,46 +214,46 @@ public final class Txt_de implements TxtInterface {
     private static final String FLTR_VDOP = "VDOP <= ";
     private static final String FLTR_NSAT = "<= NSAT";
 
-    private static final String CLEAR = "Löschen";
+    private static final String CLEAR = "Lï¿½schen";
 
     // Log format
-    private static final String REC_ESTIMATED = " geschätzte Datensätze";
-    private static final String SET_ERASE = "Setzen&Löschen";
+    private static final String REC_ESTIMATED = " geschï¿½tzte Datensï¿½tze";
+    private static final String SET_ERASE = "Setzen&Lï¿½schen";
     private static final String SET_NOERASE = "Nur setzen";
-    private static final String ERASE = "Löschen";
-    private static final String CONFIRM_ERASE = "Löschen bestätigen";
+    private static final String ERASE = "Lï¿½schen";
+    private static final String CONFIRM_ERASE = "Lï¿½schen bestï¿½tigen";
 
     private static final String C_msgWarningFormatIncompatibilityRisk =
         "Ihre Wahl wird das Log-Format setzen ohne den "
-        + "Log-Speicher zu löschen.|"
-        + "Andere Software kann möglicherweise nicht mit "
+        + "Log-Speicher zu lï¿½schen.|"
+        + "Andere Software kann mï¿½glicherweise nicht mit "
         + "Daten arbeiten!||"
         + "Sind sie damit einverstanden?"; 
 
     /** Message warning user about impact of changing log format */
     private static final String C_msgWarningFormatAndErase =
-        "Sie wollen das Log-Format ändern"
+        "Sie wollen das Log-Format ï¿½ndern"
         + "|und"
-        + "|den Log-Speicher LÖSCHEN"
+        + "|den Log-Speicher Lï¿½SCHEN"
         + "|"
-        + "|LOG-FORMAT ÄNDERN UND LÖSCHEN?";
+        + "|LOG-FORMAT ï¿½NDERN UND Lï¿½SCHEN?";
     /** Message warning the user again about the impact of a log format change */
     private static final String C_msgWarningFormatAndErase2 =
         "Dies ist ihre letzte Chance"
-        + "|das Löschen abzubrechen."
+        + "|das Lï¿½schen abzubrechen."
         + "|"
-        + "|LOG-FORMAT ÄNDERN UND LÖSCHEN?";
+        + "|LOG-FORMAT ï¿½NDERN UND Lï¿½SCHEN?";
     /** Message warning user about impact of changing log format */
     private static final String C_msgEraseWarning =
         "Sie wollen den"
-        + "|Log-Speicher löschen."
+        + "|Log-Speicher lï¿½schen."
         + "|"
-        + "|LOG LÖSCHEN?";
+        + "|LOG Lï¿½SCHEN?";
     private static final String C_msgEraseWarning2 =
         "Dies ist ihre letzte Chance"
-        + "|das Löschen abzubrechen."
+        + "|das Lï¿½schen abzubrechen."
         + "|"
-        + "|LOG LÖSCHEN?";
+        + "|LOG Lï¿½SCHEN?";
 
     private static final String ONE_FILE = "Eine Datei";
     private static final String ONE_FILE_DAY = "Eine Datei/Tag";
@@ -261,7 +261,7 @@ public final class Txt_de implements TxtInterface {
     private static final String DEV_LOGONOFF = "Log ein(/aus)";
     private static final String INCREMENTAL = "Incremental";
 
-    private static final String LOG_OVRWR_FULL = "Log überschreiben(/stop) wenn voll";
+    private static final String LOG_OVRWR_FULL = "Log ï¿½berschreiben(/stop) wenn voll";
     private static final String DATE_RANGE = "Datum: ";
     private static final String GET_LOG = "Log laden";
     private static final String CANCEL_GET = "Stop";
@@ -269,7 +269,7 @@ public final class Txt_de implements TxtInterface {
     private static final String TRK_SEP = "Trk sep:";
     private static final String MIN = "min";
     private static final String UTC = "UTC";
-    private static final String HGHT_GEOID_DIFF = "Höhe-geoid diff";  // diff = difference
+    private static final String HGHT_GEOID_DIFF = "Hï¿½he-geoid diff";  // diff = difference
     private static final String TO_CSV = "-> CSV";
     private static final String TO_GPX = "-> GPX";
     private static final String TO_KML = "-> KML";
@@ -278,7 +278,7 @@ public final class Txt_de implements TxtInterface {
     private static final String TO_GMAP= "-> GMAP";
     private static final String TO_NMEA= "-> NMEA";
     private static final String MEM_USED = "Speicher genutzt   : ";
-    private static final String NBR_RECORDS = "Anzahl Datensätze: ";
+    private static final String NBR_RECORDS = "Anzahl Datensï¿½tze: ";
 
 
     //Log reason
@@ -306,34 +306,34 @@ public final class Txt_de implements TxtInterface {
     // Log convert
     private static final String ERROR = "Fehler";
     private static final String PROBLEM_READING = "Leseproblem|";
-    private static final String COULD_NOT_OPEN = "Kann nicht öffnen|";
+    private static final String COULD_NOT_OPEN = "Kann nicht ï¿½ffnen|";
 
 
     // GPS State
-    private static final String CANCEL_WAITING = "Löschen abbrechen";
+    private static final String CANCEL_WAITING = "Lï¿½schen abbrechen";
     private static final String TITLE_WAITING_ERASE =
-        "Warten bis Löschen beendet";
+        "Warten bis Lï¿½schen beendet";
     private static final String TXT_WAITING_ERASE =
-        "Warten bis Löschen beendet.|"
-        + "Sie können das Warten auf eigenes|"
+        "Warten bis Lï¿½schen beendet.|"
+        + "Sie kï¿½nnen das Warten auf eigenes|"
         + "Risiko abbrechen";
     private static final String UNKNOWN = "Unbekannt";
     private static final String CHK_PATH =
-        "|Prüfen ob Pfad und Karte beschreibbar";
+        "|Prï¿½fen ob Pfad und Karte beschreibbar";
 
-    private static final String OVERWRITE = "Überschreiben";
+    private static final String OVERWRITE = "ï¿½berschreiben";
     private static final String ABORT_DOWNLOAD = "Laden abbrechen";
     private static final String DATA_NOT_SAME =
     "Die DATEN vom Logger stimmen NICHT mit|"
-    + "den zuvor geladenen DATEN überein.|"
+    + "den zuvor geladenen DATEN ï¿½berein.|"
     + "|"
-    + "Sollen die DATEN überschrieben werden?";
+    + "Sollen die DATEN ï¿½berschrieben werden?";
     private static final String LOGGER = "Logger: ";  // For logger SW version
 
 
     // GPSFile
     private static final String CLOSE_FAILED =
-        "Schließen fehlgeschlagen (Datei schließen) - eventuell ein Bug.";
+        "Schlieï¿½en fehlgeschlagen (Datei schlieï¿½en) - eventuell ein Bug.";
     private static final String WRITING_CLOSED =
         "Schreiben in geschlossene Datei";
 
@@ -342,13 +342,13 @@ public final class Txt_de implements TxtInterface {
     private static final String UPDATERATE = "Wiederhol. Rate (Hz)";
     private static final String BAUDRATE = "Baudrate"; 
     private static final String WRITEFLASH = "Schreibe Flash"; 
-    private static final String ABORT = "Über";  
+    private static final String ABORT = "ï¿½ber";  
     private static final String TXT_FLASH_LIMITED_WRITES =
-        "Die Anzahl der Schreibvorgänge des|"
+        "Die Anzahl der Schreibvorgï¿½nge des|"
         + "des Flash-Speichers ist begrenzt und|"
-        + "eine Änderung der Einstellungen kann|"
-        + "das Gerät unbrauchbar machen.|"
-        + "(z.B., eine Änderung der Baudrate)|"
+        + "eine ï¿½nderung der Einstellungen kann|"
+        + "das Gerï¿½t unbrauchbar machen.|"
+        + "(z.B., eine ï¿½nderung der Baudrate)|"
         + "ABBRECHEN durch klicken auf Abbrechen!!";
     private static final String PERIOD_ABBREV = "Per";
 
@@ -366,26 +366,26 @@ public final class Txt_de implements TxtInterface {
         "Es wurde keine Ausgabe-Datei erzeugt!"
         + "||"
         + "Dies kann folgende Ursachen haben:"
-        + "|- der Filter hat nicht alle Punkte gewählt"
-        + "|- das Log enthält keine Daten"
+        + "|- der Filter hat nicht alle Punkte gewï¿½hlt"
+        + "|- das Log enthï¿½lt keine Daten"
         + "|"
-        + "|Versuchen Sie alle Punkte zu wählen."
+        + "|Versuchen Sie alle Punkte zu wï¿½hlen."
         + "|Wenn dies nicht funktioniert,"
-        + "| ist es möglicherweise ein Fehler/Bug.";
+        + "| ist es mï¿½glicherweise ein Fehler/Bug.";
     private static final String ADD_RECORD_NUMBER =
         "Rekord-Nummer im Log";
     
     private static final String S_DEBUG_CONN= "Debug Verbindung";
     private static final String S_IMPERIAL= "Britische Einheiten";
     private static final String BAD_SUPERWABAVERSION =
-        "Diese Anwendung wurde erstellt|für SuperWaba V";
+        "Diese Anwendung wurde erstellt|fï¿½r SuperWaba V";
     private static final String BAD_SUPERWABAVERSION_CONT =
         ".|Diese Version ist V";
     private static final String BAD_SUPERWABAVERSION_CONT2 =
         "|bt747 beenden";
 
-    private static final String S_DEVICE = "Gerät";
-    private static final String S_DEFAULTDEVICE = "Vorgegeb. Gerät";
+    private static final String S_DEVICE = "Gerï¿½t";
+    private static final String S_DEFAULTDEVICE = "Vorgegeb. Gerï¿½t";
     private static final String S_GISTEQTYPE1 = "Gisteq Typ 1";
     private static final String S_GISTEQTYPE2 = "Gisteq Typ 2";
     private static final String S_GISTEQTYPE3 = "iTrackU-SIRFIII";
@@ -393,7 +393,7 @@ public final class Txt_de implements TxtInterface {
 
     private static final String BT_MAC_ADDR = "BT Mac Addr:";
 
-    private static final String S_OUTPUT_LOGCONDITIONS = "Bed. für Log-Ausgabe";
+    private static final String S_OUTPUT_LOGCONDITIONS = "Bed. fï¿½r Log-Ausgabe";
     private static final String MEM_FREE = "frei";
 
     private static final String TRKPTCOMMENT = "TRK PT INFO";

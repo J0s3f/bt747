@@ -195,8 +195,14 @@ public class BT747Main extends javax.swing.JFrame implements
         pnFilesToTagPanel = new FileTablePanel();
         pnFilesToTagPanel.init(c);
         tabbedPanelAll.insertTab(getString("FilesToTagPanel.title"), null, pnFilesToTagPanel, null, 6);
-        
         this.pack();
+        try {
+            // Currently debuggin
+            JPanel pnBrowserPanel = (JPanel) (Class.forName("bt747.j2se_view.MyWebClient").newInstance());
+            tabbedPanelAll.addTab("Web", null, pnBrowserPanel, null);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
 
         updateGuiData(); // For internationalisation - not so easy in netbeans
         infoTextArea.setEnabled(true);

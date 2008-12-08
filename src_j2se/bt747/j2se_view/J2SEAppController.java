@@ -232,8 +232,18 @@ public final class J2SEAppController extends Controller {
         return result;
     }
 
+    /**
+     * The resource bundle used for localization.
+     */
     private static ResourceBundle bundle = null;
 
+    /**
+     * I18N. Internationalization - get the localized string.
+     * 
+     * @param s
+     *            String reference for localization.
+     * @return Localized String.
+     */
     public static final String getString(final String s) {
         try {
             return bundle.getString(s);
@@ -343,6 +353,9 @@ public final class J2SEAppController extends Controller {
         }
     }
 
+    /**
+     * Perform a factory reset, but first request confirmation from the user.
+     */
     public final void doFactoryReset() {
         int choice;
         choice = JOptionPane.showOptionDialog(rootFrame,
@@ -356,6 +369,48 @@ public final class J2SEAppController extends Controller {
 
     }
 
+    /**
+     * Change the flashconfiguration but first request confirmation from the
+     * user. The MTK device stores a number of settings in its internal flash
+     * which is different from the log memory. These settings are restored after
+     * loss of power for example.
+     * {@link Controller#setFlashUserOption(boolean, int, int, int, int, int, int, int, int, int, int)}
+     * 
+     * @param lock
+     *            When true, subsequent changes in these settings will be
+     *            impossible.
+     * @param updateRate
+     *            The 'fix period' of the GPS in ms. When this is 200, then the
+     *            Fix is 5Hz.
+     * @param baudRate
+     *            The speed of the serial communication of the MTK chipset. Be
+     *            carefull - this may be the internal speed - not the external
+     *            speed!
+     * @param periodGLL
+     *            The period of emission of the GLL sentence (relative to the
+     *            fix).
+     * @param periodRMC
+     *            The period of emission of the RMC sentence (relative to the
+     *            fix).
+     * @param periodVTG
+     *            The period of emission of the VTG sentence (relative to the
+     *            fix).
+     * @param periodGSA
+     *            The period of emission of the GSA sentence (relative to the
+     *            fix).
+     * @param periodGSV
+     *            The period of emission of the GSV sentence (relative to the
+     *            fix).
+     * @param periodGGA
+     *            The period of emission of the GGA sentence (relative to the
+     *            fix).
+     * @param periodZDA
+     *            The period of emission of the ZDA sentence (relative to the
+     *            fix).
+     * @param periodMCHN
+     *            The period of emission of the MCHN sentence (relative to the
+     *            fix).
+     */
     public final void setFlashConfig(final boolean lock, final int updateRate,
             final int baudRate, final int periodGLL, final int periodRMC,
             final int periodVTG, final int periodGSA, final int periodGSV,
@@ -433,7 +488,7 @@ public final class J2SEAppController extends Controller {
         if (m.isConnected()) {
             if (m.getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT)) {
                 c.setLoggingActive(false); // First command could fail, so
-                                            // repeat.
+                // repeat.
                 c.setLoggingActive(false);
             }
             super.performOperationsAfterGPSConnect();
@@ -441,6 +496,9 @@ public final class J2SEAppController extends Controller {
         }
     }
 
+    /**
+     * Initialise the application settings.
+     */
     private void initAppSettings() {
         AppSettings.defaultBaseDirPath = java.lang.System
                 .getProperty("user.home");
@@ -474,6 +532,12 @@ public final class J2SEAppController extends Controller {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see bt747.model.Controller#saveSettings() Application specific
+     *      implementation of saveSettings
+     */
     public final void saveSettings() {
         File preferencesFile;
         try {
@@ -530,7 +594,7 @@ public final class J2SEAppController extends Controller {
         rootFrame = f;
         rootFrame.setIconImage(appIcon);
     }
-    
+
     public Frame getRootFrame() {
         return rootFrame;
     }
@@ -649,9 +713,15 @@ public final class J2SEAppController extends Controller {
             "com.apple.mrj.swing.MacLookAndFeel", // NOI18N
             "apple.laf.AquaLookAndFeel" // NOI18N
     }; // NOI18N
-    /* Index for Mac look and feel */
+    /** Index for Mac look and feel */
     private static final int C_MAC_LOOKANDFEEL_IDX = lookAndFeels.length - 3;
+    /**
+     * Selected Look And Feel
+     */
     private static String lookAndFeel = ""; // NOI18N
+    /**
+     * Message build up during Look And Feel search.
+     */
     public static String lookAndFeelMsg = ""; // NOI18N
 
     /**
@@ -692,6 +762,9 @@ public final class J2SEAppController extends Controller {
         }
     }
 
+    /**
+     * An integer input verifier available for use in the GUI buildup.
+     */
     public static final InputVerifier IntVerifier = new InputVerifier() {
         public boolean verify(JComponent comp) {
             boolean returnValue;
@@ -706,6 +779,9 @@ public final class J2SEAppController extends Controller {
         }
     };
 
+    /**
+     * A floating point input verifier available for use in the GUI buildup.
+     */
     public static final InputVerifier FloatVerifier = new InputVerifier() {
 
         public boolean verify(JComponent comp) {
@@ -721,6 +797,12 @@ public final class J2SEAppController extends Controller {
         }
     };
 
+    /**
+     * Disable a panel and its children.
+     * 
+     * @param panel
+     * @param en
+     */
     public static final void disablePanel(final JPanel panel, final boolean en) {
         Component[] l;
         l = panel.getComponents();

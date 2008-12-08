@@ -152,11 +152,7 @@ public final class Txt_nl implements TxtInterface {
     private static final String BT_WARM = "Warme start";
     private static final String BT_COLD = "Koude start";
     private static final String BT_FACT_RESET = "Fabrieksinstellingen";
-    private static final String BT_FORCED_ERASE = "Volledig wissen"; // TODO:
-    // translate
-    // to DUTCH
-    // "Forced
-    // erase"
+    private static final String BT_FORCED_ERASE = "Volledig wissen";
     private static final String BT_PT_WITH_REASON = "Sla een punt op met als kenmerk:";
 
     private static final String CONFIRM_FACT_RESET = "U staat op het punt om uw GPS Logger apparaat |"
@@ -166,19 +162,11 @@ public final class Txt_nl implements TxtInterface {
     // File tab
     private static final String OUTPUT_DIR = "Opslag folder:";
     private static final String LOGFILE = "Log-bestand:";
-    private static final String REPORT = "Resultaat :"; // TODO: translate to
-    // DUTCH " Report "
+    private static final String REPORT = "Resultaat :"; 
     private static final String CHUNK = "Blokgrootte :";
     private static final String CHUNK_AHEAD = "Blokken vooruitlezen:";
-    private static final String READ_TIMEOUT = "Lees timeout (ms) :"; // TODO:
-    // translate
-    // to
-    // DUTCH
-    // "
-    // Volume
-    // "
-    private static final String CARD_VOL = "Kaart:"; // TODO: translate to DUTCH
-    // " Volume "
+    private static final String READ_TIMEOUT = "Lees timeout (ms) :"; 
+    private static final String CARD_VOL = "Kaart:"; 
     private static final String APPLY_SET = "Toepassen";
     private static final String DEFAULT_SET = "Standaard instellingen";
 
@@ -234,13 +222,11 @@ public final class Txt_nl implements TxtInterface {
     private static final String C_msgEraseWarning2 = " Dit is uw laatste kans om te voorkomen "
             + "|het wissen af te breken " + "|" + "|LOG-bestand WISSEN?";
 
-    private static final String ONE_FILE = "Eén bestand";
-    private static final String ONE_FILE_DAY = "Eén bestand / dag";
-    private static final String ONE_FILE_TRK = "Eén bestand / trk";
+    private static final String ONE_FILE = "Eï¿½n bestand";
+    private static final String ONE_FILE_DAY = "Eï¿½n bestand / dag";
+    private static final String ONE_FILE_TRK = "Eï¿½n bestand / trk";
     private static final String DEV_LOGONOFF = "Loggen aan(/uit)";
-    private static final String INCREMENTAL = "Incrementeel"; // TODO:
-    // translate
-    // to DUTCH " "
+    private static final String INCREMENTAL = "Incrementeel"; 
 
     private static final String LOG_OVRWR_FULL = "Log overschrijven(/stop) indien vol";
     private static final String DATE_RANGE = "Periode: ";
@@ -350,12 +336,7 @@ public final class Txt_nl implements TxtInterface {
 
     private static final String BT_MAC_ADDR = "BT MAC-adres:";
 
-    private static final String S_OUTPUT_LOGCONDITIONS = "Schrijf log condities"; // TODO:
-    // translate
-    // to
-    // DUTCH
-    // " "
-
+    private static final String S_OUTPUT_LOGCONDITIONS = "Schrijf log condities"; 
     private static final String MEM_FREE = "Vrij";
 
     private static final String TRKPTCOMMENT = "TRK PT INFO";

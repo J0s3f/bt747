@@ -16,7 +16,6 @@ package gps.log.in;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;
-import gps.log.out.GPSFile;
 
 import bt747.sys.Convert;
 import bt747.sys.File;
@@ -25,12 +24,12 @@ import bt747.sys.Generic;
 /**
  * This class is used to convert the binary log to a new format. Basically this
  * class interprets the log and creates a {@link GPSRecord}. The
- * {@link GPSRecord} is then sent to the {@link GPSFile} class object to write
+ * {@link GPSRecord} is then sent to the {@link GPSFileConverterInterface} class object to write
  * it to the output.
  * 
  * @author Mario De Weerd
  */
-public final class HoluxTrlLogConvert implements GPSLogConvert {
+public final class HoluxTrlLogConvert implements GPSLogConvertInterface {
     private int recordSize;
     private final int logFormat = (1 << BT747Constants.FMT_UTC_IDX)
             | (1 << BT747Constants.FMT_LATITUDE_IDX)
@@ -57,7 +56,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         stop = true;
     }
 
-    public final int parseFile(final GPSFile gpsFile) {
+    public final int parseFile(final GPSFileConverterInterface gpsFile) {
         try {
             GPSRecord r = new GPSRecord();
             final int C_BUF_SIZE = 0x800;
@@ -172,7 +171,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvert {
         factorConversionWGS84ToMSL = mode;
     }
 
-    public final int toGPSFile(final String fileName, final GPSFile gpsFile,
+    public final int toGPSFile(final String fileName, final GPSFileConverterInterface gpsFile,
             final int card) {
         int error = BT747Constants.NO_ERROR;
         stop = false;

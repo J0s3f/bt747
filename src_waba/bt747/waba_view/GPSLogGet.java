@@ -146,7 +146,7 @@ public final class GPSLogGet extends Container implements ModelListener {
 
         int offsetIdx = m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS) + 12;
         if (offsetIdx > 26) {
-            c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, 0); // TODO: Change in call to control
+            c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, 0);
             offsetIdx = 12;
         }
         cbTimeOffsetHours = new ComboBox(offsetStr);

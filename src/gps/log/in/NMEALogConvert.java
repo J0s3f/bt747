@@ -17,7 +17,6 @@ package gps.log.in;
 import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
-import gps.log.out.GPSFile;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
@@ -27,12 +26,12 @@ import bt747.sys.interfaces.BT747StringTokenizer;
 /**
  * This class is used to convert the binary log to a new format. Basically this
  * class interprets the log and creates a {@link GPSRecord}. The
- * {@link GPSRecord} is then sent to the {@link GPSFile} class object to write
+ * {@link GPSRecord} is then sent to the {@link GPSFileConverterInterface} class object to write
  * it to the output.
  * 
  * @author Mario De Weerd
  */
-public final class NMEALogConvert implements GPSLogConvert {
+public final class NMEALogConvert implements GPSLogConvertInterface {
     private static final int EOL = 0x0D;
     private static final int CR = 0x0A;
 
@@ -63,15 +62,15 @@ public final class NMEALogConvert implements GPSLogConvert {
     }
 
     /**
-     * Convert the input file set using other methods towards gpsFile. ({@link #toGPSFile(String, GPSFile, int)}
+     * Convert the input file set using other methods towards gpsFile. ({@link #toGPSFile(String, GPSFileConverterInterface, int)}
      * is one of them.
      * 
      * @param gpsFile
      *            The object representing the output format.
      * @return {@link BT747Constants#NO_ERROR} if no error (0)
-     * @see gps.log.in.GPSLogConvert#parseFile(gps.log.out.GPSFile)
+     * @see gps.log.in.GPSLogConvertInterface#parseFile(gps.log.out.GPSFileConverterInterface)
      */
-    public final int parseFile(final GPSFile gpsFile) {
+    public final int parseFile(final GPSFileConverterInterface gpsFile) {
         GPSRecord gpsRec = new GPSRecord();
         byte[] bytes = new byte[BUF_SIZE];
         int sizeToRead;
@@ -246,7 +245,7 @@ public final class NMEALogConvert implements GPSLogConvert {
         return BT747Constants.NO_ERROR;
     }
 
-    private void finalizeRecord(GPSFile gpsFile, GPSRecord r,
+    private void finalizeRecord(GPSFileConverterInterface gpsFile, GPSRecord r,
             int curLogFormat) {
         CommonIn.convertHeight(r, factorConversionWGS84ToMSL, curLogFormat);
 
@@ -275,7 +274,7 @@ public final class NMEALogConvert implements GPSLogConvert {
         factorConversionWGS84ToMSL = mode;
     }
 
-    public final int toGPSFile(final String fileName, final GPSFile gpsFile,
+    public final int toGPSFile(final String fileName, final GPSFileConverterInterface gpsFile,
             final int card) {
         int error = BT747Constants.NO_ERROR;
         stop = false;
@@ -321,7 +320,7 @@ public final class NMEALogConvert implements GPSLogConvert {
         return error;
     }
 
-    private void updateLogFormat(final GPSFile gpsFile, final int newLogFormat) {
+    private void updateLogFormat(final GPSFileConverterInterface gpsFile, final int newLogFormat) {
         logFormat = newLogFormat;
         activeFileFields |= logFormat;
         if (!passToFindFieldsActivatedInLog) {

@@ -17,7 +17,6 @@ package gps.log.in;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;
-import gps.log.out.GPSFile;
 
 import bt747.sys.File;
 import bt747.sys.Generic;
@@ -26,12 +25,12 @@ import bt747.sys.Interface;
 /**
  * This class is used to convert the binary log to a new format. Basically this
  * class interprets the log and creates a {@link GPSRecord}. The
- * {@link GPSRecord} is then sent to the {@link GPSFile} class object to write
+ * {@link GPSRecord} is then sent to the {@link GPSFileConverterInterface} class object to write
  * it to the output.
  * 
  * @author Mario De Weerd
  */
-public final class DPL700LogConvert implements GPSLogConvert {
+public final class DPL700LogConvert implements GPSLogConvertInterface {
     private static final int X_FF = 0xFF;
     private int recordSize = 16;
     private int logFormat;
@@ -96,7 +95,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
     }
 
 
-    public int parseFile(final GPSFile gpsFile) {
+    public int parseFile(final GPSFileConverterInterface gpsFile) {
         try {
             GPSRecord r = new GPSRecord();
             final int C_BUF_SIZE = 0x800;
@@ -296,7 +295,7 @@ public final class DPL700LogConvert implements GPSLogConvert {
 
     public int toGPSFile(
             final String fileName,
-            final GPSFile gpsFile,
+            final GPSFileConverterInterface gpsFile,
             final int card) {
         int error = BT747Constants.NO_ERROR;
         stop = false;

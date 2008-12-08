@@ -58,7 +58,7 @@ public final class GPSOtherTabPanel extends Container implements ModelListener {
         add(tabPanel = new TabPanel(c_tpCaptions), CENTER, CENTER);
         tabPanel.setBorderStyle(Window.NO_BORDER);
         tabPanel.setRect(getClientRect().modifiedBy(0, 0, 0, 0));
-        // TODO Auto-generated method stub
+
         tabPanel.setPanel(0, new GPSFlashOption(m, c));
         tabPanel.setPanel(1, new GPSNMEAOutput(m, c));
         tabPanel.setPanel(2, new GPSFileNMEAOutputSel(c, m));

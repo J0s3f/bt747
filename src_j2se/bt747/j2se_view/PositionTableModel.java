@@ -88,7 +88,6 @@ public class PositionTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getColumnCount()
      */
     public int getColumnCount() {
-        // TODO Auto-generated method stub
         return columnTypes.length;
     }
 
