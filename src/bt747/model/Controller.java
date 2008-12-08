@@ -472,6 +472,10 @@ public class Controller {
         userWayPoints = rcrds;
     }
 
+    public final GPSRecord[] getUserWayPoints() {
+        return userWayPoints;
+    }
+
     public final int doConvertLog(final int logType, final GPSFile gpsFile,
             final String ext) {
         int result;

@@ -40,6 +40,7 @@ public class FileTablePanel extends javax.swing.JPanel {
     private J2SEAppController c;
     private Model m;
 
+    private FileDrop fd;
     public void init(J2SEAppController pC) {
         c = pC;
         m = c.getModel();
@@ -69,7 +70,7 @@ public class FileTablePanel extends javax.swing.JPanel {
         cbOverridePositions.setSelected(m
                 .getBooleanOpt(Model.TAG_OVERRIDEPOSITIONS));
 
-        new FileDrop(this, new FileDrop.Listener() {
+        fd = new FileDrop(this, new FileDrop.Listener() {
             public void filesDropped(File[] files) {
                 addFiles(files);
             }
@@ -139,7 +140,7 @@ public class FileTablePanel extends javax.swing.JPanel {
                     // TODO: handle exception
                 }
             }
-            c.setUserWayPoints(fileTableModel.getSortedGPSRecords());
+            c.updateWayPoints(fileTableModel.getSortedGPSRecords());
         }
     }
 

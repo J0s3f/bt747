@@ -216,6 +216,9 @@ public final class J2SEAppController extends Controller {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
         }
+        if(c.getUserWayPoints()!=null) {
+            updateWayPoints(c.getUserWayPoints());
+        }
     }
 
     /**
@@ -813,6 +816,19 @@ public final class J2SEAppController extends Controller {
             }
         }
 
+    }
+    
+    private MapViewerInterface mapViewer = null;
+    
+    public void setMapViewer(final MapViewerInterface m) {
+        mapViewer = m;
+    }
+    
+    public void updateWayPoints(final GPSRecord[] waypoints) {
+        c.setUserWayPoints(waypoints);
+       if(mapViewer!=null) {
+           mapViewer.setWayPoints(waypoints);
+       }
     }
 
 }

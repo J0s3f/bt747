@@ -11,6 +11,8 @@ which javaw >/dev/null 2>&1 && JAVA=javaw
 export CLASSPATH
 CLASSPATH=${ROOT_DIR}/lib/jcalendar-1.3.2.jar:$CLASSPATH
 CLASSPATH=${ROOT_DIR}/lib/swing-layout-1.0.3.jar:$CLASSPATH
+CLASSPATH=${ROOT_DIR}/lib/swingx.jar:$CLASSPATH
+CLASSPATH=${ROOT_DIR}/lib/swingx-ws.jar:$CLASSPATH
 CLASSPATH=${ROOT_DIR}/dist/libBT747.jar:$CLASSPATH
 
 if [ -e /usr/share/java/RXTXcomm.jar ] ; then

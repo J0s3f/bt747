@@ -2,19 +2,29 @@
  * 
  */
 package bt747.j2se_view;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
-import java.net.URL;
+import java.awt.Frame;
+import java.awt.Panel;
 import java.net.MalformedURLException;
-//import org.jdesktop.jdic.browser.*;
+import java.net.URL;
+
+import javax.swing.JPanel;
+
+import org.jdesktop.jdic.browser.WebBrowser;
+
+import bt747.sys.Generic;
 
 /**
  * @author Mario
  *
  */
-public class MyBrowserSample {
+public class MyJDICWebClient extends JPanel {
+    // Abandonned because project does not work on macosX
+    
+    // Alternative:http://djproject.sourceforge.net/ns/ (Win and Linux only).
+    
+    // also read. http://forums.java.net/jive/message.jspa?messageID=318889
+    
+    
 // // JDICsample.pde
 // // Marius Watz - http://workshop.evolutionzone.com
 //
@@ -105,16 +115,45 @@ public class MyBrowserSample {
 // // the embedded browser engine.
 //
 // public class aBrowser {
-//   Frame frame;
-//   Panel panel;
-//   WebBrowser webBrowser;
-//
-//   public aBrowser() {
-//     // Set engine to IE
+   Frame frame;
+   Panel panel;
+   WebBrowser webBrowser;
+
+   public MyJDICWebClient() throws MalformedURLException {
+     // Set engine to IE
 //     BrowserEngineManager mng=BrowserEngineManager.instance();
 //     mng.setActiveEngine(BrowserEngineManager.IE);
-//     webBrowser = new WebBrowser();
-//   }
+       //Generic.debug(WebBrowserUtil.getBrowserPath());
+       WebBrowser.setDebug(true);
+       org.jdesktop.jdic.browser.internal.WebBrowserUtil.enableDebugMessages(true);
+       
+       URL url;
+       // tries to open C:\devdir\BT747\"c:\program files\mozilla firefox\firefox.exe"  NAME INVALID    
+       webBrowser = new WebBrowser(true);
+
+     //add(webBrowser);
+
+     org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(this);
+     this.setLayout(InfoPanelLayout);
+     InfoPanelLayout.setHorizontalGroup(
+         InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+         .add(InfoPanelLayout.createSequentialGroup()
+             //.addContainerGap()
+             .add(webBrowser, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)
+             //.addContainerGap()
+             )
+     );
+     InfoPanelLayout.setVerticalGroup(
+         InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+         .add(InfoPanelLayout.createSequentialGroup()
+             //.addContainerGap()
+             .add(webBrowser, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+             //.addContainerGap()
+             )
+     );
+
+     setURL("http://bt747.free.fr/x/s.html");
+   }
 //
 //   public void initPanel(int w,int h) {
 //     frame=new Frame("JIDCsample.pde");
@@ -145,19 +184,19 @@ public class MyBrowserSample {
 //     frame.setVisible(true);
 //   }
 //
-//   public void setContent(String htmlContent) {
-//     webBrowser.setContent(htmlContent);
-//   }
-//
-//   public void setURL(String url) {
-//     try {
-//       webBrowser.setURL(new URL(url));
-//       // Print out debug messages in the command line.
-//       webBrowser.setDebug(false);
-//     }
-//     catch (MalformedURLException e) {
-//       System.out.println(e.getMessage());
-//       return;
-//     }
-//   }
+   public void setContent(String htmlContent) {
+     webBrowser.setContent(htmlContent);
+   }
+
+   public void setURL(String url) {
+     try {
+       webBrowser.setURL(new URL(url));
+       // Print out debug messages in the command line.
+       //webBrowser.setDebug(false);
+     }
+     catch (MalformedURLException e) {
+       Generic.debug(null,e);
+       return;
+     }
+   }
 }

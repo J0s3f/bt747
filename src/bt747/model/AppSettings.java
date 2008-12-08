@@ -204,8 +204,10 @@ public class AppSettings {
     private static final int C_TAG_MAXTIMEDIFFERENCE_IDX = C_TAG_OVERRIDEPOSITIONS_IDX
             + C_TAG_OVERRIDEPOSITIONS_SIZE;
     private static final int C_TAG_MAXTIMEDIFFERENCE_SIZE = 4;
-    private static final int C_NEXT_IDX = C_TAG_MAXTIMEDIFFERENCE_IDX
+    private static final int C_DISABLELOGDURINGDOWNLOAD_IDX = C_TAG_MAXTIMEDIFFERENCE_IDX
             + C_TAG_MAXTIMEDIFFERENCE_SIZE;
+    private static final int C_DISABLELOGDURINGDOWNLOAD_SIZE = 1;
+    private static final int C_NEXT_IDX = C_DISABLELOGDURINGDOWNLOAD_IDX + C_DISABLELOGDURINGDOWNLOAD_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -349,6 +351,11 @@ public class AppSettings {
      *            {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
      */
     public static final int GPSTYPE = 23;
+    /**
+     * When true logging is disabled during download.
+     */
+    public static final int DISABLELOGDURINGDOWNLOAD = 24;
+
 
     private static final int[][] paramsList =
     // Type, idx, start, size
@@ -389,7 +396,9 @@ public class AppSettings {
                     C_TAG_OVERRIDEPOSITIONS_SIZE },
             { INT, TAG_MAXTIMEDIFFERENCE, C_TAG_MAXTIMEDIFFERENCE_IDX,
                     C_TAG_MAXTIMEDIFFERENCE_SIZE },
-            { INT, GPSTYPE, C_GPSTYPE_IDX, C_GPSTYPE_SIZE }, };
+            { INT, GPSTYPE, C_GPSTYPE_IDX, C_GPSTYPE_SIZE },
+            { BOOL, DISABLELOGDURINGDOWNLOAD, C_DISABLELOGDURINGDOWNLOAD_IDX, C_DISABLELOGDURINGDOWNLOAD_SIZE }, 
+            };
 
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
@@ -546,8 +555,10 @@ public class AppSettings {
         case 29:
             setBooleanOpt(TAG_OVERRIDEPOSITIONS, false);
             setIntOpt(TAG_MAXTIMEDIFFERENCE, 300);
-            setStringOpt(0, "0.30", C_VERSION_IDX, C_VERSION_SIZE);
             /* fall through */
+        case 30:
+            setBooleanOpt(DISABLELOGDURINGDOWNLOAD, true);
+            setStringOpt(0, "0.31", C_VERSION_IDX, C_VERSION_SIZE);
 
         default:
             // Always force lat and lon and utc and height active on restart for
