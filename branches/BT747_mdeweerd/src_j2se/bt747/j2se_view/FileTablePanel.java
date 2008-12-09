@@ -70,8 +70,11 @@ public class FileTablePanel extends javax.swing.JPanel {
         cbOverridePositions.setSelected(m
                 .getBooleanOpt(Model.TAG_OVERRIDEPOSITIONS));
 
-        fd = new FileDrop(this, new FileDrop.Listener() {
-            public void filesDropped(File[] files) {
+        fd = new FileDrop(this, new FileDrop.DropListener() {
+            /* (non-Javadoc)
+             * @see net.iharder.dnd.FileDrop.Listener#filesDropped(java.io.File[])
+             */
+            public void filesDropped(final java.io.File[] files) {
                 addFiles(files);
             }
         });
