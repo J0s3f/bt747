@@ -601,7 +601,7 @@ public class FileDrop {
     frame.getContentPane().add(new javax.swing.JScrollPane(text),
         java.awt.BorderLayout.CENTER);
 
-    new FileDrop(System.out, text, /* dragBorder, */new FileDrop.DropListener() {
+    new FileDrop(System.out, text, /* dragBorder, */new DropListener() {
       public void filesDropped(java.io.File[] files) {
         for (int i = 0; i < files.length; i++) {
           try {
@@ -617,32 +617,5 @@ public class FileDrop {
     frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
     frame.show();
   } // end main
-
-  /* ******** I N N E R I N T E R F A C E L I S T E N E R ******** */
-
-  /**
-   * Implement this inner interface to listen for when files are dropped. For
-   * example your class declaration may begin like this: <code><pre>
-   *      public class MyClass implements FileDrop.Listener
-   *      ...
-   *      public void filesDropped( java.io.File[] files )
-   *      {
-   *          ...
-   *      }   // end filesDropped
-   *      ...
-   * </pre></code>
-   * 
-   * @since 1.0
-   */
-  public interface DropListener {
-    /**
-     * This method is called when files have been successfully dropped.
-     * 
-     * @param files
-     *          An array of <tt>File</tt>s that were dropped.
-     * @since 1.0
-     */
-    public abstract void filesDropped(java.io.File[] files);
-  } // end inner-interface Listener
 
 } // end class FileDrop

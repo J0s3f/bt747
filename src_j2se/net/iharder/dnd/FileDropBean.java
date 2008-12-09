@@ -43,7 +43,7 @@ public class FileDropBean implements java.io.Serializable {
    * @since 1.1
    */
   public void addFileDropTarget(java.awt.Component comp) {
-    FileDrop.DropListener listener = new FileDrop.DropListener() {
+    DropListener listener = new DropListener() {
       public void filesDropped(java.io.File[] files) {
         fireFileDropHappened(files);
       } // end filesDropped

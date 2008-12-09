@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 
+import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
 
 import bt747.j2se_view.filefilters.JpgFileFilter;
@@ -70,7 +71,7 @@ public class FileTablePanel extends javax.swing.JPanel {
         cbOverridePositions.setSelected(m
                 .getBooleanOpt(Model.TAG_OVERRIDEPOSITIONS));
 
-        fd = new FileDrop(this, new FileDrop.DropListener() {
+        fd = new FileDrop(this, new DropListener() {
             /* (non-Javadoc)
              * @see net.iharder.dnd.FileDrop.Listener#filesDropped(java.io.File[])
              */
