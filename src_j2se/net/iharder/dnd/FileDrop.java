@@ -73,7 +73,7 @@ public class FileDrop {
    *          Listens for <tt>filesDropped</tt>.
    * @since 1.0
    */
-  public FileDrop(final java.awt.Component c, final Listener listener) {
+  public FileDrop(final java.awt.Component c, final DropListener listener) {
     this(null, // Logging stream
         c, // Drop target
         javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2,
@@ -97,7 +97,7 @@ public class FileDrop {
    * @since 1.0
    */
   public FileDrop(final java.awt.Component c, final boolean recursive,
-      final Listener listener) {
+      final DropListener listener) {
     this(null, // Logging stream
         c, // Drop target
         javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2,
@@ -123,7 +123,7 @@ public class FileDrop {
    * @since 1.0
    */
   public FileDrop(final java.io.PrintStream out, final java.awt.Component c,
-      final Listener listener) {
+      final DropListener listener) {
     this(out, // Logging stream
         c, // Drop target
         javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2,
@@ -153,7 +153,7 @@ public class FileDrop {
    * @since 1.0
    */
   public FileDrop(final java.io.PrintStream out, final java.awt.Component c,
-      final boolean recursive, final Listener listener) {
+      final boolean recursive, final DropListener listener) {
     this(out, // Logging stream
         c, // Drop target
         javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2,
@@ -174,7 +174,7 @@ public class FileDrop {
    * @since 1.0
    */
   public FileDrop(final java.awt.Component c,
-      final javax.swing.border.Border dragBorder, final Listener listener) {
+      final javax.swing.border.Border dragBorder, final DropListener listener) {
     this(null, // Logging stream
         c, // Drop target
         dragBorder, // Drag border
@@ -200,7 +200,7 @@ public class FileDrop {
    */
   public FileDrop(final java.awt.Component c,
       final javax.swing.border.Border dragBorder, final boolean recursive,
-      final Listener listener) {
+      final DropListener listener) {
     this(null, c, dragBorder, recursive, listener);
   } // end constructor
 
@@ -222,7 +222,7 @@ public class FileDrop {
    * @since 1.0
    */
   public FileDrop(final java.io.PrintStream out, final java.awt.Component c,
-      final javax.swing.border.Border dragBorder, final Listener listener) {
+      final javax.swing.border.Border dragBorder, final DropListener listener) {
     this(out, // Logging stream
         c, // Drop target
         dragBorder, // Drag border
@@ -251,7 +251,7 @@ public class FileDrop {
    */
   public FileDrop(final java.io.PrintStream out, final java.awt.Component c,
       final javax.swing.border.Border dragBorder, final boolean recursive,
-      final Listener listener) {
+      final DropListener listener) {
 
     if (supportsDnD()) { // Make a drop listener
       dropListener = new java.awt.dnd.DropTargetListener() {
@@ -601,7 +601,7 @@ public class FileDrop {
     frame.getContentPane().add(new javax.swing.JScrollPane(text),
         java.awt.BorderLayout.CENTER);
 
-    new FileDrop(System.out, text, /* dragBorder, */new FileDrop.Listener() {
+    new FileDrop(System.out, text, /* dragBorder, */new FileDrop.DropListener() {
       public void filesDropped(java.io.File[] files) {
         for (int i = 0; i < files.length; i++) {
           try {
@@ -634,7 +634,7 @@ public class FileDrop {
    * 
    * @since 1.0
    */
-  public interface Listener {
+  public interface DropListener {
     /**
      * This method is called when files have been successfully dropped.
      * 
