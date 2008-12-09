@@ -195,8 +195,9 @@ public class BT747Main extends javax.swing.JFrame implements
                 pnFilesToTagPanel, null, 6);
         try {
             // Currently debuggin
-            JPanel pnMap = (JPanel) (Class.forName("bt747.j2se_view.MyMap")
-                    .newInstance());
+//            JPanel pnMap = (JPanel) (Class.forName("bt747.j2se_view.MyMap")
+//                    .newInstance());
+            MyMap pnMap = new MyMap();
             c.setMapViewer((MapViewerInterface) pnMap);
             tabbedPanelAll.addTab(getString("map.tabTitle"), null, pnMap, null);
         } catch (Exception e) {
