@@ -133,9 +133,9 @@ final class MTKLogDownloadHandler {
 
         logFileName = fileName;
         logFileCard = card;
-        
+
         incremental = isIncremental;
-        
+
         logState = C_LOG_START;
     }
 
@@ -345,6 +345,13 @@ final class MTKLogDownloadHandler {
                 if (z_Step > logRequestStep) {
                     z_Step = logRequestStep;
                 }
+                int stepUntilBoundary = ((logNextReqAddr + 0x10000) & ~0xFFFF)
+                        - logNextReqAddr;
+                if (z_Step > stepUntilBoundary) {
+                    // Avoid crossing 0x10000 boundaries that seem to result
+                    // in download trouble on some devices.
+                    z_Step = stepUntilBoundary;
+                }
                 readLog(logNextReqAddr, z_Step);
                 logNextReqAddr += z_Step;
                 if (logState == C_LOG_ACTIVE) {
@@ -394,8 +401,12 @@ final class MTKLogDownloadHandler {
 
                 // The Palm platform showed problems writing 0x800 blocks.
                 // This splits it in smaller blocks and solves that problem.
-                if (dataLength != 0x800 && dataLength != logRequestStep
-                        && ((logNextReadAddr + dataLength) != logNextReqAddr)) {
+                if (dataLength != 0x800
+                        && dataLength != logRequestStep
+                        && ((logNextReadAddr + dataLength) != logNextReqAddr)
+                        // Datalength is up to 0x10000 boundary
+                        && (dataLength != ((logNextReadAddr + 0x10000) & ~0xFFFF)
+                                - logNextReadAddr)) {
                     // Received data is not the right size - transmission error.
                     // Can happen on Palm over BT.
                     if (Generic.isDebug()) {
