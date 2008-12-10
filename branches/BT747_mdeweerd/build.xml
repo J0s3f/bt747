@@ -870,7 +870,8 @@
 				<include name="${src_j2se.dir}/**" unless="is.j2se" />
 				<include name="${src_waba.dir}/**" if="exclude.waba" />
 				<include name="*/bt747/*view/**" if="is.lib" />
-                <include name="*/net/iharder/dnd/**" if="is.lib" />
+                <include name="${src_j2se.dir}/net/sf/bt747/j2se/app/**" if="is.lib" />
+                <include name="${src_j2se.dir}/net/iharder/dnd/**" if="is.lib" />
 			</fileset>
 		</delete>
 		<javac verbose="no"
