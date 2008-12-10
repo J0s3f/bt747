@@ -1,3 +1,7 @@
+Version 1.63.2
+* Setting the boundary limit resulted in permanent problem.
+  No longer automatically requesting data during download now.
+
 Version 1.63.1
 * Log download requests no longer include a 0x10000 boundary.
 

@@ -14,6 +14,7 @@
 //***  *********************************************************** ***
 package bt747.j2se_view;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 
@@ -71,14 +72,16 @@ public class FileTablePanel extends javax.swing.JPanel {
         cbOverridePositions.setSelected(m
                 .getBooleanOpt(Model.TAG_OVERRIDEPOSITIONS));
 
-        fd = new FileDrop(this, new DropListener() {
+        DropListener dl;
+        dl = new DropListener() {
             /* (non-Javadoc)
              * @see net.iharder.dnd.FileDrop.Listener#filesDropped(java.io.File[])
              */
             public void filesDropped(final java.io.File[] files) {
                 addFiles(files);
             }
-        });
+        };
+        fd = new FileDrop((Component) this, dl);
     }
 
     private void doSavePositions() {

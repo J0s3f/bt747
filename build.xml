@@ -287,7 +287,6 @@
 		>
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/j2se_view/BT747cmd.java" />
-			<include name="bt747/j2se_view/BT747Intl.java" />
 			<exclude name="bt747/waba_view/**" />
 			<exclude name="net/sf/net/bt747/waba/**" />
 			<compilerarg line="-Xlint:unchecked"/>
@@ -542,7 +541,7 @@
                           !net/sf/bt747/waba/**,
 			              !bt747/*_view/**,
 			              !bt747/gps/connection/GPSWabaPort.class)
-                        -optimizationpasses 1
+                        -optimizationpasses 2
                         -keep public class bt747.sys.Interface { *; }
 			            -keep public class bt747.sys.Settings { *; }
 			            -keep public class bt747.sys.File { *; }
@@ -871,6 +870,7 @@
 				<include name="${src_j2se.dir}/**" unless="is.j2se" />
 				<include name="${src_waba.dir}/**" if="exclude.waba" />
 				<include name="*/bt747/*view/**" if="is.lib" />
+                <include name="*/net/iharder/dnd/**" if="is.lib" />
 			</fileset>
 		</delete>
 		<javac verbose="no"
@@ -1381,7 +1381,7 @@
 	</target>
 
 	<!-- Execute EXEGEN with WinCE CAB and populate distribution directory -->
-	<target name="dist" depends="dist.pda,dist.rxtx,dist.j2se">
+	<target name="dist" depends="dist.j2se,dist.pda,dist.rxtx">
 
 	</target>
 

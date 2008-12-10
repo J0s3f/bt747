@@ -787,7 +787,7 @@ public final class GPSstate implements BT747Thread {
                 Generic.debug("Problem - report NMEA is 0 length");
             } else if (sNmea.length == 1 && sNmea[0].startsWith("WP")) {
                 AnalyseDPL700Data(sNmea[0]);
-            } else if (gpsDecode && !mtkLogHandler.isLogDownloadOnGoing() // Not
+            } else if (gpsDecode && !isLogDownloadOnGoing() // Not
                     // during
                     // log
                     // download for
@@ -1049,13 +1049,14 @@ public final class GPSstate implements BT747Thread {
                     handler.checkSendCmdFromQueue();
                 } while ((loopsToGo-- > 0) && lastResponse != null);
                 if ((nextAvailableRun < timeStamp)
-                        && (getOutStandingCmdsCount() == 0)) {
+                        && (getOutStandingCmdsCount() == 0)
+                        && !isLogDownloadOnGoing()) {
                     nextAvailableRun = nextRun + 300;
                     checkNextAvailable();
                 }
             } else {
-                mtkLogHandler.notifyDisconnected();
                 Generic.removeThread(this);
+                mtkLogHandler.notifyDisconnected();
             }
         }
     }
@@ -1270,7 +1271,7 @@ public final class GPSstate implements BT747Thread {
 
     protected final void updateIgnoreNMEA() {
         handler.setIgnoreNMEA((!this.gpsDecode)
-                || mtkLogHandler.isLogDownloadOnGoing());
+                || isLogDownloadOnGoing());
     }
 
     /**
