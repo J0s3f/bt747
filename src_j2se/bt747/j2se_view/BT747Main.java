@@ -34,16 +34,16 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import net.sf.bt747.j2se.app.filefilters.BinFileFilter;
+import net.sf.bt747.j2se.app.filefilters.CSVFileFilter;
+import net.sf.bt747.j2se.app.filefilters.DPL700FileFilter;
+import net.sf.bt747.j2se.app.filefilters.HoluxTRLFileFilter;
+import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
+import net.sf.bt747.j2se.app.filefilters.NMEAFileFilter;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
 
 import bt747.Version;
-import bt747.j2se_view.filefilters.BinFileFilter;
-import bt747.j2se_view.filefilters.CSVFileFilter;
-import bt747.j2se_view.filefilters.DPL700FileFilter;
-import bt747.j2se_view.filefilters.HoluxTRLFileFilter;
-import bt747.j2se_view.filefilters.KnownFileFilter;
-import bt747.j2se_view.filefilters.NMEAFileFilter;
 import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
@@ -1810,12 +1810,9 @@ public class BT747Main extends javax.swing.JFrame implements
         }
     }// GEN-LAST:event_btConnectActionPerformed
 
-    private void cbIncrementalActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbIncrementalActionPerformed
-        setDownloadMethod();
-    }// GEN-LAST:event_cbIncrementalActionPerformed
-
     private void btDownloadIBlueActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
-
+        //TODO: next line must be done on button action
+        setDownloadMethod();
         c.startDefaultDownload();
     }// GEN-LAST:event_jButton1ActionPerformed
 
