@@ -1,3 +1,6 @@
+Version 1.63.3
+* Removed other data request that was inappropriate.
+
 Version 1.63.2
 * Setting the boundary limit resulted in permanent problem.
   No longer automatically requesting data during download now.

@@ -987,7 +987,6 @@ public final class GPSstate implements BT747Thread {
      * @return the logMemSize
      */
     public final int getLogMemSize() {
-        checkAvailable(DATA_MEM_USED);
         return BT747Constants.getFlashSize(flashManuProdID);
     }
 
