@@ -22,8 +22,8 @@ import javax.swing.JFileChooser;
 
 import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
+import net.sf.bt747.j2se.app.filefilters.JpgFileFilter;
 
-import bt747.j2se_view.filefilters.JpgFileFilter;
 import bt747.j2se_view.image.ImageData;
 import bt747.model.Model;
 import bt747.sys.Generic;
