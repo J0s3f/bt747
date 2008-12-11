@@ -15,7 +15,6 @@
 package bt747.j2se_view.exif;
 
 import gps.log.in.WindowedFile;
-import gps.log.out.GPSDefaultFileName;
 
 import bt747.Version;
 import bt747.sys.File;
@@ -235,7 +234,7 @@ public class ExifJPG {
 
         atr = new ExifAttribute(ExifConstants.TAG_GPSLONGITUDEREF,
                 ExifConstants.ASCII, 2);
-        if (lat < 0) {
+        if (lon < 0) {
             atr.setStringValue("W");
         } else {
             atr.setStringValue("E");
