@@ -438,10 +438,10 @@ public class Controller {
         String parameters = "";
 
         parameters += "From:"
-                + gps.log.out.CommonOut.getTimeStr(m.getFilterStartTime())
+                + gps.log.out.CommonOut.getDateTimeStr(m.getFilterStartTime())
                 + "(" + m.getFilterStartTime() + ")\n";
         parameters += "To:"
-                + gps.log.out.CommonOut.getTimeStr(m.getFilterEndTime()) + "("
+                + gps.log.out.CommonOut.getDateTimeStr(m.getFilterEndTime()) + "("
                 + m.getFilterEndTime() + ")\n";
 
         if (m.isAdvFilterActive()) {

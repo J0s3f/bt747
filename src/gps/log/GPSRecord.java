@@ -328,7 +328,7 @@ public class GPSRecord {
         StringBuffer rec = new StringBuffer(100);
         rec.setLength(0);
         rec.append("CNT:" + recCount);
-        rec.append("\nUTC:" + gps.log.out.CommonOut.getTimeStr(utc) + "(" + utc
+        rec.append("\nUTC:" + gps.log.out.CommonOut.getDateTimeStr(utc) + "(" + utc
                 + ")");
         rec.append("\nVALID:" + Convert.unsigned2hex(valid, 8));
         rec.append("\nLAT;" + latitude);

@@ -52,7 +52,9 @@ public class PositionTableModel extends AbstractTableModel {
 
     private int[] columnTypes = { 
             FMT_REC_NBR,
-            BT747Constants.FMT_UTC_IDX,
+            FMT_DATE,
+            FMT_TIME,
+            //BT747Constants.FMT_UTC_IDX,
             //FMT_UTC_VALUE,
             BT747Constants.FMT_RCR_IDX,
             FMT_RCR_DESCRIPTION,
@@ -252,9 +254,9 @@ public class PositionTableModel extends AbstractTableModel {
         case FMT_UTC_VALUE:
             return Long.class;
         case FMT_DATE:
-            break;
+            return String.class;
         case FMT_TIME:
-            break;
+            return String.class;
         case BT747Constants.FMT_VALID_IDX:
             return String.class;
         case FMT_LATNS:
@@ -324,13 +326,13 @@ public class PositionTableModel extends AbstractTableModel {
         case FMT_REC_NBR:
             return Integer.valueOf(g.recCount);
         case BT747Constants.FMT_UTC_IDX:
-            return CommonOut.getTimeStr(g.utc);
+            return CommonOut.getDateTimeStr(g.utc);
         case FMT_UTC_VALUE:
             return Long.valueOf(g.utc);
         case FMT_DATE:
-            break;
+            return CommonOut.getDateStr(g.utc);
         case FMT_TIME:
-            break;
+            return CommonOut.getTimeStr(g.utc);
         case BT747Constants.FMT_VALID_IDX:
             return CommonOut.getFixText(g.valid);
         case FMT_LATNS:

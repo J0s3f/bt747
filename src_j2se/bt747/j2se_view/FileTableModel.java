@@ -72,6 +72,8 @@ public class FileTableModel extends AbstractTableModel {
         case LONGITUDE:
             return Object.class;// return Double.class;
         case DATETIME:
+        case DATE:
+        case TIME:
             return String.class;
         default:
             return null;
@@ -110,6 +112,10 @@ public class FileTableModel extends AbstractTableModel {
             return "Longitude";
         case DATETIME:
             return "Date/Time";
+        case DATE:
+            return "Date";
+        case TIME:
+            return "Time";
         default:
             return null;
         }
@@ -132,8 +138,10 @@ public class FileTableModel extends AbstractTableModel {
     public static final int LATITUDE = 5;
     public static final int LONGITUDE = 6;
     public static final int DATETIME = 7;
+    public static final int DATE = 8;
+    public static final int TIME = 9;
 
-    private int[] columns = { DATETIME, PATH, GEOMETRY, LATITUDE, LONGITUDE };
+    private int[] columns = { DATE, TIME, PATH, GEOMETRY, LATITUDE, LONGITUDE };
 
     private int columnToDataType(final int column) {
         if (column < columns.length) {
@@ -172,6 +180,18 @@ public class FileTableModel extends AbstractTableModel {
                 return null;
             }
         case DATETIME:
+            if (img.getGpsInfo().hasUtc()) {
+                return CommonOut.getDateTimeStr(img.getGpsInfo().utc);
+            } else {
+                return null;
+            }
+        case DATE:
+            if (img.getGpsInfo().hasUtc()) {
+                return CommonOut.getDateStr(img.getGpsInfo().utc);
+            } else {
+                return null;
+            }
+        case TIME:
             if (img.getGpsInfo().hasUtc()) {
                 return CommonOut.getTimeStr(img.getGpsInfo().utc);
             } else {
