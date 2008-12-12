@@ -30,14 +30,14 @@ public final class GPSCSVFile extends GPSFile {
      */
     private final StringBuffer rec = new StringBuffer(1024);
     /**
-     * CSV field separator - fixed now, but may become a parameter in the future.
+     * CSV field separator - fixed now, but may become a parameter in the
+     * future.
      */
     private static final char fieldSep = ',';
     /**
      * Separator in the satellite field - for future parameterization.
      */
     private static final char satSeperator = ';';
-
 
     public final boolean needPassToFindFieldsActivatedInLog() {
         return true;
@@ -167,21 +167,17 @@ public final class GPSCSVFile extends GPSFile {
                 rec.append(CommonOut.getRCRstr(r));
             }
             if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
-                rec.append(fieldSep + Convert.toString(t.getYear()) + "/"
-                        + (t.getMonth() < 10 ? "0" : "")
-                        + Convert.toString(t.getMonth()) + "/"
-                        + (t.getDay() < 10 ? "0" : "")
-                        + Convert.toString(t.getDay()) + fieldSep
-                        + (t.getHour() < 10 ? "0" : "")
-                        + Convert.toString(t.getHour()) + ":"
-                        + (t.getMinute() < 10 ? "0" : "")
-                        + Convert.toString(t.getMinute()) + ":"
-                        + (t.getSecond() < 10 ? "0" : ""));
-                if (activeFields.milisecond == 0) {
-                    rec.append(Convert.toString(t.getSecond()));
-                } else {
-                    rec.append(Convert.toString((float) t.getSecond()
-                            + r.milisecond / 1000.0, 3));
+                rec.append(fieldSep + CommonOut.getDateStr(t) + fieldSep
+                        + CommonOut.getTimeStr(t));
+                if (activeFields.milisecond != 0) {
+                    rec.append('.');
+                    if (r.milisecond < 100) {
+                        rec.append('0');
+                    }
+                    if (r.milisecond < 10) {
+                        rec.append('0');
+                    }
+                    rec.append(Convert.toString(r.milisecond));
                 }
             } else if ((activeFileFields.hasUtc())
                     && (selectedFileFields.hasUtc())) {

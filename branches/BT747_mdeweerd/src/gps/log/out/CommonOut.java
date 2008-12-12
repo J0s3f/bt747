@@ -55,7 +55,7 @@ public final class CommonOut {
         }
         if ((activeFields.hasUtc()) && (selectedFields.hasUtc())) {
             rec.append("TIME: ");
-            rec.append(getTimeStr(t));
+            rec.append(getDateTimeStr(t));
         }
         WayPointStyle style = null;
         if ((activeFields.hasRcr()) && (selectedFields.hasRcr())) {
@@ -198,39 +198,58 @@ public final class CommonOut {
         }
     }
 
+    public final static String getDateTimeStr(final int utcTime) {
+        BT747Time t = Interface.getTimeInstance();
+        t.setUTCTime(utcTime);
+        return getDateTimeStr(t);
+    }
+
+    public final static String getDateStr(final int utcTime) {
+        BT747Time t = Interface.getTimeInstance();
+        t.setUTCTime(utcTime);
+        return getDateStr(t);
+    }
+
     public final static String getTimeStr(final int utcTime) {
         BT747Time t = Interface.getTimeInstance();
         t.setUTCTime(utcTime);
         return getTimeStr(t);
     }
 
-    public final static String getTimeStr(final GPSRecord activeFields,
+    public final static String getDateTimeStr(final GPSRecord activeFields,
             final BT747Time time) {
         if ((activeFields.hasUtc())) {
-            return getTimeStr(time);
+            return getDateTimeStr(time);
         } else {
             return "";
         }
     }
 
     public final static String getTimeStr(final BT747Time time) {
-        return // Day
-        ((time.getDay() < 10) ? "0" : "")
+        return ((time.getHour() < 10) ? "0" : "")
+                + Convert.toString(time.getHour())
+                + ":"
+                // Minute
+                + ((time.getMinute() < 10) ? "0" : "")
+                + Convert.toString(time.getMinute()) // +":"
+                + ":"
+                + ((time.getSecond() < 10) ? "0" : "")
+                + Convert.toString(time.getSecond()) // +":"
+        ;
+    }
+
+    public final static String getDateStr(final BT747Time time) {
+        return ((time.getDay() < 10) ? "0" : "")
                 + Convert.toString(time.getDay())
                 + "-"
                 // Month
                 + CommonOut.MONTHS_AS_TEXT[time.getMonth() - 1] + "-"
                 + (((time.getYear() % 100)) < 10 ? "0" : "")
-                + Convert.toString(time.getYear() % 100)
-                + " "
-                // Hour
-                + ((time.getHour() < 10) ? "0" : "")
-                + Convert.toString(time.getHour()) + ":"
-                // Minute
-                + ((time.getMinute() < 10) ? "0" : "")
-                + Convert.toString(time.getMinute()) // +":"
-        // +(t.getSecond()<10?"0":"")+Convert.toString(t.getSecond())
-        ;
+                + Convert.toString(time.getYear() % 100);
+    }
+
+    public final static String getDateTimeStr(final BT747Time time) {
+        return getDateStr(time) + " " + getTimeStr(time);
     }
 
     public final static String getRCRstr(final GPSRecord s) {

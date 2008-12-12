@@ -389,7 +389,7 @@ public class GPSKMLFile extends GPSFile {
                         if (!trackStarted) {
                             String name = "";
                             if (activeFields.hasUtc()) {
-                                name = CommonOut.getTimeStr(s.utc);
+                                name = CommonOut.getDateTimeStr(s.utc);
                             }
                             startTrack(name);
                         }

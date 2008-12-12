@@ -378,7 +378,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
             rec.append(",'click',makeLatLonInfo(\"<b>Track span</b><br/>"
                     + trackStartInfo + "<br/>");
             rec.append("<b>#" + previousRec + "# </b>"
-                    + CommonOut.getTimeStr(previousTime));
+                    + CommonOut.getDateTimeStr(previousTime));
             rec.append("\"));\n");
             // writeTxt(PolylineEncoder.replace(rec.toString(),"\\", "\\\\"));
             writeTxt(rec.toString());
@@ -544,9 +544,9 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         resetTrack();
                         // Vm.debug("Pos:"+getTimeStr(s));
                         trackStartInfo = "<b>#" + s.recCount + "# </b>"
-                                + CommonOut.getTimeStr(activeFields, t);
+                                + CommonOut.getDateTimeStr(activeFields, t);
                         if (trackDescription.length() == 0) {
-                            trackDescription = CommonOut.getTimeStr(
+                            trackDescription = CommonOut.getDateTimeStr(
                                     activeFields, t);
                             // bt747.sys.Vm.debug(trackDescription);
                         }
