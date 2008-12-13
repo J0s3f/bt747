@@ -552,9 +552,7 @@
                         -keep public class gps.BT747Constants { *; }
                         -keep public class gps.GpsEvent { *; }
                         -keep public class gps.GPSListener { *; }
-                        -keep public class gps.log.GPSRecord { *; }
-                        -keep public class gps.log.GPSFilter { *; }
-                        -keep public class gps.log.GPSFilterAdvanced { *; }
+                        -keep public class gps.log.* { *; }
 		                -keep public class gps.log.in.WindowedFile { *; }
                         -keep public class bt747.model.* { *; }
                         -keep public class bt747.model.BT747View { *; }

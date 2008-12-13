@@ -15,9 +15,9 @@
 package gps.log.out;
 
 import gps.BT747Constants;
-import gps.TracksAndWayPoints;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
+import gps.log.TracksAndWayPoints;
 
 import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Vector;

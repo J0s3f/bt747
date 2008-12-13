@@ -1,6 +1,5 @@
-package gps;
+package gps.log;
 
-import gps.log.GPSRecord;
 
 import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Vector;
