@@ -210,10 +210,11 @@ public class MyMap extends JPanel implements MapViewerInterface {
         @Override
         protected void doPaint(Graphics2D g, JXMapViewer map, int width,
                 int height) {
-            
+            if (tracks!=null) {
             // Paint tracks
-            for(List<GPSRecord> track: tracks) {
-               trackRenderer.paintTrack(g, map, track);
+                for(List<GPSRecord> track: tracks) {
+                    trackRenderer.paintTrack(g, map, track);
+                }
             }
             
             // Paint waypoints

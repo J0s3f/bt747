@@ -194,6 +194,7 @@
 		          ignorewarnings="true"
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
+            <libraryjar file="${rxtxcomm.jar}" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${rxtxbuild.dir}/tmp.jar" />
 			<outjar path="${proguard.infile}" />
@@ -699,7 +700,8 @@
 			<libraryjar file="${swcollections.jar}" />
 		    <libraryjar file="${swingx.jar}" />
 		    <libraryjar file="${swingx-ws.jar}" />
-			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
+            <libraryjar file="${rxtxcomm.jar}" />
+            <libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
 			/>
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${suffix}.jar" />
