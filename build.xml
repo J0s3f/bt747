@@ -287,6 +287,7 @@
 		>
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/j2se_view/BT747cmd.java" />
+            <include name="net/sf/net/bt747/j2se/map/**" />
 			<exclude name="bt747/waba_view/**" />
 			<exclude name="net/sf/net/bt747/waba/**" />
 			<compilerarg line="-Xlint:unchecked"/>
@@ -404,7 +405,7 @@
 			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
 			<outjar path="${j2sebuild.dir}/${ant.project.name}_j2se.jar" />
                      -injar ${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar
-                     -optimizationpasses 1
+                     -optimizationpasses 2
                      -keepclasseswithmembers public class * {
                           public static void main(java.lang.String[]); }
             </proguard>
