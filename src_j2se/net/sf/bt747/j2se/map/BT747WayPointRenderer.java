@@ -57,7 +57,7 @@ public class BT747WayPointRenderer implements WaypointRenderer {
         // super(); // Gets image
     }
 
-    private Color color = new Color(0, 0, 255, 125);
+    private Color color = new Color(255, 0, 0, 125);
 
     /**
      * {@inheritDoc}

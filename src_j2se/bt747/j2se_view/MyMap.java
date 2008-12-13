@@ -20,6 +20,7 @@ package bt747.j2se_view;
 import gps.log.GPSRecord;
 
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -27,12 +28,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JPanel;
 
-import net.sf.bt747.j2se.map.BT747WayPointRenderer;
+import net.sf.bt747.j2se.map.BT747TrackRenderer;
 import net.sf.bt747.j2se.map.WayPointRendererFactoryMethod;
 import net.sf.bt747.j2se.map.WaypointAdapter;
 
@@ -61,10 +62,12 @@ public class MyMap extends JPanel implements MapViewerInterface {
         // TODO Auto-generated constructor stub
         map = new JXMapKit();
         map.setMiniMapVisible(true);
-        map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        //map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        setOpenstreetMap();
         mapViewer = map.getMainMap();
         waypointPainter = new MyWaypointPainter<JXMapViewer>();
-        waypointPainter.setRenderer(WayPointRendererFactoryMethod.getInstance());
+        waypointPainter
+                .setRenderer(WayPointRendererFactoryMethod.getInstance());
         mapViewer.setRecenterOnClickEnabled(true);
         mapViewer.setOverlayPainter(waypointPainter);
 
@@ -93,7 +96,6 @@ public class MyMap extends JPanel implements MapViewerInterface {
         // .addContainerGap()
                 ));
 
-
         // map.setAddressLocation(new GeoPosition(41.881944,2.5));
     }
 
@@ -106,17 +108,17 @@ public class MyMap extends JPanel implements MapViewerInterface {
             }
         }
     }
-    
+
     private java.util.Set<Waypoint> waypoints = new java.util.HashSet<Waypoint>();
     private java.util.Set<Waypoint> filepoints = new java.util.HashSet<Waypoint>();
     private java.util.Set<Waypoint> allpoints = new java.util.HashSet<Waypoint>();
- 
+
     private void updateWaypoints() {
         java.util.Set<GeoPosition> myPositions = new java.util.HashSet<GeoPosition>();
         allpoints.clear();
         allpoints.addAll(waypoints);
         allpoints.addAll(filepoints);
-        for(Waypoint w:allpoints) {
+        for (Waypoint w : allpoints) {
             myPositions.add(w.getPosition());
         }
         mapViewer.calculateZoomFrom(myPositions);
@@ -128,12 +130,15 @@ public class MyMap extends JPanel implements MapViewerInterface {
         addToSet(filepoints, records);
         updateWaypoints();
     }
-    
-    public void addTrack(GPSRecord[] records) {
-        
+
+    public void addTrack(List<GPSRecord> track) {
+        waypointPainter.addTrack(track);
     }
-    
-    
+
+    public void setTracks(List<List<GPSRecord>> tracks) {
+        waypointPainter.setTracks(tracks);
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -145,6 +150,28 @@ public class MyMap extends JPanel implements MapViewerInterface {
         updateWaypoints();
     }
 
+    /**
+     * 
+     */
+    private void setOpenstreetMap() {
+        final int max = 19;
+        TileFactoryInfo info = new TileFactoryInfo(1,max-2,max,
+                256, true, true, // tile size is 256 and x/y orientation is normal
+                "http://tile.openstreetmap.org",//5/15/10.png",
+                "x","y","z") {
+            public String getTileUrl(int x, int y, int zoom) {
+                zoom = max-zoom;
+                String url = this.baseURL +"/"+zoom+"/"+x+"/"+y+".png";
+                return url;
+            }
+            
+        };
+        TileFactory tf = new DefaultTileFactory(info);
+        map.setTileFactory(tf);
+        map.setZoom(11);
+        map.setAddressLocation(new GeoPosition(51.5,0));
+    }
+    
     private void setOtherMaps() {
         // http://khm2.google.com/kh?v=33g&x=1042&y=686&z=11&s=Gali
         final int max = 17;
@@ -174,8 +201,35 @@ public class MyMap extends JPanel implements MapViewerInterface {
             WaypointPainter<JXMapViewer> {
         private JXMapViewer map = mapViewer;
 
-        public Waypoint getContains(Point pt) {
+        private List<List<GPSRecord>> tracks;
+        private BT747TrackRenderer trackRenderer = BT747TrackRenderer.getInstance();
+        
+        /* (non-Javadoc)
+         * @see org.jdesktop.swingx.mapviewer.WaypointPainter#doPaint(java.awt.Graphics2D, org.jdesktop.swingx.JXMapViewer, int, int)
+         */
+        @Override
+        protected void doPaint(Graphics2D g, JXMapViewer map, int width,
+                int height) {
             
+            // Paint tracks
+            for(List<GPSRecord> track: tracks) {
+               trackRenderer.paintTrack(g, map, track);
+            }
+            
+            // Paint waypoints
+            super.doPaint(g, map, width, height);
+        }
+        
+        public void setTracks(List<List<GPSRecord>> trks) {
+            tracks = trks;
+        }
+
+        public void addTrack(List<GPSRecord> track) {
+            tracks.add(track);
+        }
+
+        public Waypoint getContains(Point pt) {
+
             // figure out which waypoints are within this map viewport
             // so, get the bounds
             Rectangle viewportBounds = map.getViewportBounds();
@@ -204,7 +258,8 @@ public class MyMap extends JPanel implements MapViewerInterface {
                     - sizeInPixels.getWidth(), viewportBounds.getY(),
                     viewportBounds.getWidth(), viewportBounds.getHeight());
 
-            WayPointRendererFactoryMethod factory = WayPointRendererFactoryMethod.getInstance();
+            WayPointRendererFactoryMethod factory = WayPointRendererFactoryMethod
+                    .getInstance();
             // for each waypoint within these bounds
             for (Waypoint w : (Set<Waypoint>) getWaypoints()) {
                 Point2D point = map.getTileFactory().geoToPixel(
@@ -227,6 +282,13 @@ public class MyMap extends JPanel implements MapViewerInterface {
             }
             return null;
         }
+
+        /**
+         * @param trackRenderer the trackRenderer to set
+         */
+        public final void setTrackRenderer(BT747TrackRenderer trackRenderer) {
+            this.trackRenderer = trackRenderer;
+        }
     }
 
     private class mouseListener implements MouseListener, MouseMotionListener {
@@ -239,9 +301,17 @@ public class MyMap extends JPanel implements MapViewerInterface {
          * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
          */
         public void mouseClicked(MouseEvent e) {
-            Point pt = e.getPoint();
+            switch (e.getButton()) {
+            case MouseEvent.BUTTON1:
+                Point pt = e.getPoint();
 
-            Waypoint w = waypointPainter.getContains(pt);
+                Waypoint w = waypointPainter.getContains(pt);
+
+                break;
+
+            default:
+                break;
+            }
         }
 
         /*
@@ -274,19 +344,25 @@ public class MyMap extends JPanel implements MapViewerInterface {
         int yOffset;
 
         public void mousePressed(MouseEvent e) {
-            // TODO Auto-generated method stub
-            Point pt = e.getPoint();
+            switch (e.getButton()) {
+            case MouseEvent.BUTTON1:
+                Point pt = e.getPoint();
 
-            Waypoint w = waypointPainter.getContains(pt);
+                Waypoint w = waypointPainter.getContains(pt);
 
-            if (w != null) {
-                currentWaypoint = w;
-                previous = pt;
-                Point2D p = mapViewer.convertGeoPositionToPoint(
-                        w.getPosition());
-                xOffset = (int) (pt.getX() - p.getX());
-                yOffset = (int) (pt.getY() - p.getY());
-                mapViewer.setPanEnabled(false);
+                if (w != null) {
+                    currentWaypoint = w;
+                    previous = pt;
+                    Point2D p = mapViewer.convertGeoPositionToPoint(w
+                            .getPosition());
+                    xOffset = (int) (pt.getX() - p.getX());
+                    yOffset = (int) (pt.getY() - p.getY());
+                    mapViewer.setPanEnabled(false);
+                }
+                break;
+
+            default:
+                break;
             }
         }
 
@@ -296,9 +372,14 @@ public class MyMap extends JPanel implements MapViewerInterface {
          * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
          */
         public void mouseReleased(MouseEvent e) {
-            if (currentWaypoint != null) {
-                mapViewer.setPanEnabled(true);
-                currentWaypoint = null;
+            switch (e.getButton()) {
+            case MouseEvent.BUTTON1:
+                if (currentWaypoint != null) {
+                    mapViewer.setPanEnabled(true);
+                    currentWaypoint = null;
+                }
+            default:
+                break;
             }
         }
 
@@ -311,10 +392,9 @@ public class MyMap extends JPanel implements MapViewerInterface {
             if (currentWaypoint != null) {
                 e.consume();
                 Point pt = e.getPoint();
-                currentWaypoint.setPosition(mapViewer.convertPointToGeoPosition(
-                                new Point2D.Double(pt.getX() - xOffset, pt
-                                        .getY()
-                                        - yOffset)));
+                currentWaypoint.setPosition(mapViewer
+                        .convertPointToGeoPosition(new Point2D.Double(pt.getX()
+                                - xOffset, pt.getY() - yOffset)));
                 mapViewer.repaint();
 
             }

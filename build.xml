@@ -400,8 +400,11 @@
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${jopt-simple.jar}" />
+            <libraryjar file="${jcalendar.jar}" />
             <libraryjar file="${swingx.jar}" />
             <libraryjar file="${swingx-ws.jar}" />
+            <libraryjar file="${swinglayout.jar}" />
+            <libraryjar file="${rxtxcomm.jar}" />
 			<libraryjar file="${dist}/lib${ant.project.name}.jar" />
 			<outjar path="${j2sebuild.dir}/${ant.project.name}_j2se.jar" />
                      -injar ${j2sebuild.dir}/${ant.project.name}_j2se_unopt.jar
@@ -534,8 +537,11 @@
 		          ignorewarnings="true"
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
+            <libraryjar file="${jcalendar.jar}" />
             <libraryjar file="${swingx.jar}" />
             <libraryjar file="${swingx-ws.jar}" />
+            <libraryjar file="${swinglayout.jar}" />
+            <libraryjar file="${rxtxcomm.jar}" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
 			/>
              	        -printmapping ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.map
