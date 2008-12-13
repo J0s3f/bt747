@@ -11,6 +11,7 @@ import gps.log.GPSRecord;
  */
 public interface MapViewerInterface {
 
+    public void setUserWayPoints(GPSRecord[] records);
     public void setWayPoints(GPSRecord[] records);
 
 }

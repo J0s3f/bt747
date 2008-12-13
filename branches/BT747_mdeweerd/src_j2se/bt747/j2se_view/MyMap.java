@@ -27,6 +27,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.JPanel;
@@ -64,7 +65,12 @@ public class MyMap extends JPanel implements MapViewerInterface {
         mapViewer = map.getMainMap();
         waypointPainter = new MyWaypointPainter<JXMapViewer>();
         waypointPainter.setRenderer(WayPointRendererFactoryMethod.getInstance());
+        mapViewer.setRecenterOnClickEnabled(true);
         mapViewer.setOverlayPainter(waypointPainter);
+
+        mouseListener ml = new mouseListener();
+        mapViewer.addMouseListener(ml);
+        mapViewer.addMouseMotionListener(ml);
 
         add(map);
         org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(
@@ -87,42 +93,56 @@ public class MyMap extends JPanel implements MapViewerInterface {
         // .addContainerGap()
                 ));
 
-        // myPositions.add(new GeoPosition(41.881944, 2.5));
-        // myWaypoints.add(new Waypoint(41.88, 2.5));
-        // myWaypoints.add(new Waypoint(42.88, 2.56));
-        // setWayPoints(myWaypoints);
+
         // map.setAddressLocation(new GeoPosition(41.881944,2.5));
     }
 
+    private static void addToSet(Set<Waypoint> waypoints, GPSRecord[] records) {
+        for (int i = 0; i < records.length; i++) {
+            GPSRecord r = records[i];
+            if (r.hasLatitude() && r.hasLongitude()) {
+                Waypoint w = new WaypointAdapter(r);
+                waypoints.add(w);
+            }
+        }
+    }
+    
+    private java.util.Set<Waypoint> waypoints = new java.util.HashSet<Waypoint>();
+    private java.util.Set<Waypoint> filepoints = new java.util.HashSet<Waypoint>();
+    private java.util.Set<Waypoint> allpoints = new java.util.HashSet<Waypoint>();
+ 
+    private void updateWaypoints() {
+        java.util.Set<GeoPosition> myPositions = new java.util.HashSet<GeoPosition>();
+        allpoints.clear();
+        allpoints.addAll(waypoints);
+        allpoints.addAll(filepoints);
+        for(Waypoint w:allpoints) {
+            myPositions.add(w.getPosition());
+        }
+        mapViewer.calculateZoomFrom(myPositions);
+        waypointPainter.setWaypoints(waypoints);
+    }
+
+    public void setUserWayPoints(GPSRecord[] records) {
+        filepoints.clear();
+        addToSet(filepoints, records);
+        updateWaypoints();
+    }
+    
+    public void addTrack(GPSRecord[] records) {
+        
+    }
+    
+    
     /*
      * (non-Javadoc)
      * 
      * @see bt747.j2se_view.MapViewerInterface#setWayPoints(gps.log.GPSRecord[])
      */
     public void setWayPoints(GPSRecord[] records) {
-        java.util.Set<Waypoint> waypoints = new java.util.HashSet<Waypoint>();
-        java.util.Set<GeoPosition> myPositions = new java.util.HashSet<GeoPosition>();
-
-        for (int i = 0; i < records.length; i++) {
-            GPSRecord r = records[i];
-            if (r.hasLatitude() && r.hasLongitude()) {
-                Waypoint w = new WaypointAdapter(r);
-                waypoints.add(w);
-                myPositions.add(w.getPosition());
-            }
-        }
-        mapViewer.calculateZoomFrom(myPositions);
-        // Iterator<Waypoint> iter = positions.iterator();
-        // while(iter.hasNext()) {
-        waypointPainter.setWaypoints(waypoints);
-        // setGoogleMaps();
-        waypointPainter.setRenderer(new BT747WayPointRenderer());
-
-        mouseListener ml = new mouseListener();
-        mapViewer.addMouseListener(ml);
-        mapViewer.addMouseMotionListener(ml);
-
-        // To get position from pixel position do tilefactory.pixelToGeo
+        waypoints.clear();
+        addToSet(waypoints, records);
+        updateWaypoints();
     }
 
     private void setOtherMaps() {

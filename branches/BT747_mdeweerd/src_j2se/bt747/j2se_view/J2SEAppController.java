@@ -15,6 +15,7 @@
 package bt747.j2se_view;
 
 import gps.BT747Constants;
+import gps.TracksAndWayPoints;
 import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
@@ -216,8 +217,8 @@ public final class J2SEAppController extends Controller {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
         }
-        if(c.getUserWayPoints()!=null) {
-            updateWayPoints(c.getUserWayPoints());
+        if (c.getUserWayPoints() != null) {
+            updateUserWayPoints(c.getUserWayPoints());
         }
     }
 
@@ -226,9 +227,9 @@ public final class J2SEAppController extends Controller {
      * 
      * @return Array of selected trackpoints.
      */
-    public final GPSRecord[] convertLogToTrackPoints() {
-        GPSRecord[] result;
-        result = c.doConvertLogToTrackPoints();
+    public final TracksAndWayPoints convertLogToTrackAndWayPoints() {
+        TracksAndWayPoints result;
+        result = c.doConvertLogToTracksAndWayPoints();
         if (result == null) {
             reportError(c.getLastError(), c.getLastErrorInfo());
         }
@@ -817,18 +818,25 @@ public final class J2SEAppController extends Controller {
         }
 
     }
-    
+
     private MapViewerInterface mapViewer = null;
-    
+
     public void setMapViewer(final MapViewerInterface m) {
         mapViewer = m;
     }
-    
-    public void updateWayPoints(final GPSRecord[] waypoints) {
+
+    public void updateUserWayPoints(final GPSRecord[] waypoints) {
         c.setUserWayPoints(waypoints);
-       if(mapViewer!=null) {
-           mapViewer.setWayPoints(waypoints);
-       }
+        if (mapViewer != null) {
+            mapViewer.setUserWayPoints(waypoints);
+        }
+    }
+
+    public void updateWayPoints(final GPSRecord[] waypoints) {
+        // c.setUserWayPoints(waypoints);
+        if (mapViewer != null) {
+            mapViewer.setWayPoints(waypoints);
+        }
     }
 
 }
