@@ -287,13 +287,13 @@
 		>
 			<include name="bt747/j2se_view/BT747Main.java" />
 			<include name="bt747/j2se_view/BT747cmd.java" />
-            <include name="net/sf/net/bt747/j2se/map/**" />
 			<exclude name="bt747/waba_view/**" />
 			<exclude name="net/sf/net/bt747/waba/**" />
 			<compilerarg line="-Xlint:unchecked"/>
 		</javac>
 
 		<!--
+            <include name="net/sf/net/bt747/j2se/map/**" />
         <copy todir="${j2sebuild.dir}">
             <fileset dir="src">
                 <exclude name="**/*.java" />
@@ -534,6 +534,8 @@
 		          ignorewarnings="true"
 		>
 			<libraryjar file="${proguard.java.rt.lib}" />
+            <libraryjar file="${swingx.jar}" />
+            <libraryjar file="${swingx-ws.jar}" />
 			<outjar path="${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.jar"
 			/>
              	        -printmapping ${rxtxbuild.dir}/${ant.project.name}${libtmp_suffix}.map
@@ -689,6 +691,8 @@
 			<keep name="bt747.j2se_view.BT747" />
 			<libraryjar file="${proguard.java.rt.lib}" />
 			<libraryjar file="${swcollections.jar}" />
+		    <libraryjar file="${swingx.jar}" />
+		    <libraryjar file="${swingx-ws.jar}" />
 			<libraryjar file="${superwaba_root}/lib/SuperWaba.jar" />
 			<injar path="${rxtxbuild.dir}/${ant.project.name}${suffix}_unopt.jar"
 			/>
