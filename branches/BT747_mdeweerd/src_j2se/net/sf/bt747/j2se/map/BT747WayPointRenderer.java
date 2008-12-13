@@ -30,76 +30,60 @@ import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
 /**
  * @author Mario
- *
+ * 
  */
 public class BT747WayPointRenderer implements WaypointRenderer {
 
     private final static float scale = 8f;
     private final static GeneralPath gp = new GeneralPath();
-    
+    private final static BT747WayPointRenderer instance = new BT747WayPointRenderer();
+
+    public static BT747WayPointRenderer getInstance() {
+        return instance;
+    }
+
     static {
-        Line2D l1 = new Line2D.Float(0.f,0.f,-1*scale,-2*scale);
-        gp.append(l1,true);
-        final float diam = 2*scale;
-        Arc2D cc = new Arc2D.Float(-scale,-2*scale-(diam/2),diam,diam,180.f,-180.f,Arc2D.OPEN);
-        //        Float(
-//        100.0f, 100.0f, // starting point
-//        125.0f, 125.0f, // control point 1
-//        150.0f, 125.0f, // control point 2
-//        175.0f, 100.0f // ending point );
-        gp.append(cc,true);
-        Line2D l2 = new Line2D.Float(100.0f,100.0f,
-        0.0f,0.0f);
-        //gp.append(l2,true);
+        Line2D l1 = new Line2D.Float(0.f, 0.f, -1 * scale, -2 * scale);
+        gp.append(l1, true);
+        final float diam = 2 * scale;
+        Arc2D cc = new Arc2D.Float(-scale, -2 * scale - (diam / 2), diam, diam,
+                180.f, -180.f, Arc2D.OPEN);
+        gp.append(cc, true);
+        Line2D l2 = new Line2D.Float(100.0f, 100.0f, 0.0f, 0.0f);
         gp.closePath();
     }
+
     public BT747WayPointRenderer() {
-        //super(); // Gets image
+        // super(); // Gets image
     }
-    
-    private Color color = new Color(0,0,255,200);
+
+    private Color color = new Color(0, 0, 255, 125);
+
     /**
      * {@inheritDoc}
+     * 
      * @param g
      * @param map
      * @param waypoint
      * @return
      */
-    //@Override
-    public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint waypoint) {
-//        super.paintWaypoint(g, map, waypoint);
-//        if(img != null) {
-//            g.drawImage(img,-img.getWidth()/2,-img.getHeight(),null);
-//        } else {
-
-        //g.translate(x, y);
-//        WaypointComponent wc = new WaypointComponent((int)g.getTransform().getTranslateX(), (int)g.getTransform().getTranslateY());
-//        map.add(wc);
-//        //wc.setLocation((int)g.getTransform().getTranslateX(), (int)g.getTransform().getTranslateY());
-//        map.validate();
-
-//        g.getTransform().getTranslateX();
-        
-        color = new Color(0,0,255,125);
+    // @Override
+    public boolean paintWaypoint(Graphics2D g, JXMapViewer map,
+            Waypoint waypoint) {
         g.setColor(color);
         g.draw(gp);
         g.fill(gp);
-//            g.setStroke(new BasicStroke(3f));
-//            g.setColor(Color.BLUE);
-//            g.drawOval(-10,-10,20,20);
-//            g.setStroke(new BasicStroke(1f));
-            g.drawLine(-10,0,10,0);
-            g.drawLine(0,-10,0,10);
-//        }
-//            MouseInputListener mia = new PanMouseInputListener();
-//            setRecenterOnClickEnabled(false);
-//            this.addMouseListener(mia);
-//            this.addMouseMotionListener(mia);
-        //wc.setLocation(map.g)
+        g.drawLine(-10, 0, 10, 0);
+        g.drawLine(0, -10, 0, 10);
         return false;
     }
 
+    /**
+     * @param pt
+     *            relative to position of waypoint.
+     * @return
+     */
     public boolean contains(Point pt) {
         return gp.contains(pt);
-    }    
+    }
 }

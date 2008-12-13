@@ -1,3 +1,7 @@
+Version 1.63.4
+* Positions (waypoints) can be moved around on the map and the positions
+  in the file list get updated.
+
 Version 1.63.3
 * Removed other data request that was inappropriate.
 

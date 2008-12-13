@@ -32,6 +32,8 @@ import java.util.Set;
 import javax.swing.JPanel;
 
 import net.sf.bt747.j2se.map.BT747WayPointRenderer;
+import net.sf.bt747.j2se.map.WayPointRendererFactoryMethod;
+import net.sf.bt747.j2se.map.WaypointAdapter;
 
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.JXMapViewer;
@@ -41,7 +43,6 @@ import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
-import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
 /**
  * @author Mario
@@ -62,7 +63,7 @@ public class MyMap extends JPanel implements MapViewerInterface {
         map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         mapViewer = map.getMainMap();
         waypointPainter = new MyWaypointPainter<JXMapViewer>();
-        waypointPainter.setRenderer(new BT747WayPointRenderer());
+        waypointPainter.setRenderer(WayPointRendererFactoryMethod.getInstance());
         mapViewer.setOverlayPainter(waypointPainter);
 
         add(map);
@@ -99,21 +100,21 @@ public class MyMap extends JPanel implements MapViewerInterface {
      * @see bt747.j2se_view.MapViewerInterface#setWayPoints(gps.log.GPSRecord[])
      */
     public void setWayPoints(GPSRecord[] records) {
-        java.util.Set<Waypoint> positions = new java.util.HashSet<Waypoint>();
+        java.util.Set<Waypoint> waypoints = new java.util.HashSet<Waypoint>();
         java.util.Set<GeoPosition> myPositions = new java.util.HashSet<GeoPosition>();
 
         for (int i = 0; i < records.length; i++) {
             GPSRecord r = records[i];
             if (r.hasLatitude() && r.hasLongitude()) {
-                Waypoint w = new Waypoint(r.latitude, r.longitude);
-                positions.add(w);
+                Waypoint w = new WaypointAdapter(r);
+                waypoints.add(w);
                 myPositions.add(w.getPosition());
             }
         }
         mapViewer.calculateZoomFrom(myPositions);
         // Iterator<Waypoint> iter = positions.iterator();
         // while(iter.hasNext()) {
-        waypointPainter.setWaypoints(positions);
+        waypointPainter.setWaypoints(waypoints);
         // setGoogleMaps();
         waypointPainter.setRenderer(new BT747WayPointRenderer());
 
@@ -151,14 +152,10 @@ public class MyMap extends JPanel implements MapViewerInterface {
 
     private class MyWaypointPainter<T extends JXMapViewer> extends
             WaypointPainter<JXMapViewer> {
-        private BT747WayPointRenderer renderer = new BT747WayPointRenderer();
         private JXMapViewer map = mapViewer;
 
         public Waypoint getContains(Point pt) {
-            if (renderer == null) {
-                return null;
-            }
-
+            
             // figure out which waypoints are within this map viewport
             // so, get the bounds
             Rectangle viewportBounds = map.getViewportBounds();
@@ -187,6 +184,7 @@ public class MyMap extends JPanel implements MapViewerInterface {
                     - sizeInPixels.getWidth(), viewportBounds.getY(),
                     viewportBounds.getWidth(), viewportBounds.getHeight());
 
+            WayPointRendererFactoryMethod factory = WayPointRendererFactoryMethod.getInstance();
             // for each waypoint within these bounds
             for (Waypoint w : (Set<Waypoint>) getWaypoints()) {
                 Point2D point = map.getTileFactory().geoToPixel(
@@ -203,13 +201,12 @@ public class MyMap extends JPanel implements MapViewerInterface {
                 }
                 Point p = new Point((int) (pt.getX() - x),
                         (int) (pt.getY() - y));
-                if (renderer.contains(p)) {
+                if (factory.rendererContains(w, p)) {
                     return w;
                 }
             }
             return null;
         }
-
     }
 
     private class mouseListener implements MouseListener, MouseMotionListener {
