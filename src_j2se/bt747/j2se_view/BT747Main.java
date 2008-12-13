@@ -15,9 +15,9 @@
 package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
-import gps.TracksAndWayPoints;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
+import gps.log.TracksAndWayPoints;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;

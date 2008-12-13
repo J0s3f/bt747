@@ -17,10 +17,10 @@ package bt747.model;
 import gps.BT747Constants;
 import gps.GPSstate;
 import gps.GpsEvent;
-import gps.TracksAndWayPoints;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
+import gps.log.TracksAndWayPoints;
 import gps.log.in.BT747LogConvert;
 import gps.log.in.CSVLogConvert;
 import gps.log.in.DPL700LogConvert;
@@ -532,7 +532,7 @@ public class Controller {
     
     public final TracksAndWayPoints doConvertLogToTracksAndWayPoints() {
         int error = 0;
-        gps.TracksAndWayPoints result;
+        gps.log.TracksAndWayPoints result;
         GPSArray gpsFile = null;
         GPSLogConvertInterface lc;
 
