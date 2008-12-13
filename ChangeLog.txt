@@ -1,3 +1,6 @@
+Version 1.63.5
+* Trackpoints from log added to the map.
+
 Version 1.63.4
 * Positions (waypoints) can be moved around on the map and the positions
   in the file list get updated.

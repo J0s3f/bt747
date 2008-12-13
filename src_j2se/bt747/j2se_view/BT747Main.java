@@ -15,6 +15,7 @@
 package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
+import gps.TracksAndWayPoints;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 
@@ -147,6 +148,8 @@ public class BT747Main extends javax.swing.JFrame implements
     private OutputSettingsPanel pnOutputSettingsPanel;
     private AdvancedFileSettingsPanel pnAdvancedFileSettingsPanel;
     private FileTablePanel pnFilesToTagPanel;
+    MyMap pnMap = new MyMap();
+
 
     /**
      * Initialize application data. Gets the values from the model to set them
@@ -197,7 +200,6 @@ public class BT747Main extends javax.swing.JFrame implements
             // Currently debuggin
 //            JPanel pnMap = (JPanel) (Class.forName("bt747.j2se_view.MyMap")
 //                    .newInstance());
-            MyMap pnMap = new MyMap();
             c.setMapViewer((MapViewerInterface) pnMap);
             tabbedPanelAll.addTab(getString("map.tabTitle"), null, pnMap, null);
         } catch (Exception e) {
@@ -440,10 +442,11 @@ public class BT747Main extends javax.swing.JFrame implements
             if (tabbedPanelAll.getComponentAt(idx).getClass() == PositionTablePanel.class) {
                 tabbedPanelAll.removeTabAt(idx);
             }
-            GPSRecord[] r;
-            r = c.convertLogToTrackPoints();
+            TracksAndWayPoints r;
+            r = c.convertLogToTrackAndWayPoints();
             PositionTablePanel pt = new PositionTablePanel();
-            pt.setGpsRecords(r);
+            pt.setGpsRecords(r.getTrackPoints());
+            c.updateWayPoints(r.getWayPoints());
             tabbedPanelAll.addTab(getString("Table"), pt);
             tabbedPanelAll.setSelectedIndex(tabbedPanelAll.getTabCount() - 1);
             break;

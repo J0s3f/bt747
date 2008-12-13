@@ -15,8 +15,12 @@
 package gps.log.out;
 
 import gps.BT747Constants;
+import gps.TracksAndWayPoints;
 import gps.log.GPSFilter;
 import gps.log.GPSRecord;
+
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * Class to output to an internal array.
@@ -24,14 +28,27 @@ import gps.log.GPSRecord;
  * @author Mario De Weerd
  */
 public final class GPSArray extends GPSFile {
-    private GPSRecord[] gpsTrackPoints;
-    private GPSRecord[] gpsWayPoints;
+    private BT747Vector track;
+    private BT747Vector gpsWayPoints;
+    private TracksAndWayPoints result = new TracksAndWayPoints();
 
     public GPSArray() {
         super();
-        numberOfPasses = 2;
-        trackPointCount = 0;
-        wayPointCount = 0;
+        numberOfPasses = 1;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.log.out.GPSFile#initialiseFile(java.lang.String,
+     *      java.lang.String, int, int)
+     */
+    public void initialiseFile(String baseName, String extension, int fileCard,
+            int fileSeparationFreq) {
+        super.initialiseFile(baseName, extension, fileCard, fileSeparationFreq);
+        result = new TracksAndWayPoints();
+        gpsWayPoints = result.waypoints;
+        track = Interface.getVectorInstance();
     }
 
     public final boolean needPassToFindFieldsActivatedInLog() {
@@ -47,17 +64,20 @@ public final class GPSArray extends GPSFile {
         return ptFilters[GPSFilter.TRKPT].doFilter(s);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.log.out.GPSFile#finaliseFile()
+     */
+    public void finaliseFile() {
+        endTrack();
+    }
+
     public final boolean nextPass() {
         super.nextPass();
         if (nbrOfPassesToGo > 0) {
             nbrOfPassesToGo--;
             previousDate = 0;
-            if (nbrOfPassesToGo == 0) {
-                gpsTrackPoints = new GPSRecord[trackPointCount];
-                gpsWayPoints = new GPSRecord[wayPointCount];
-            }
-            trackPointCount = 0;
-            wayPointCount = 0;
             return true;
         } else {
             return false;
@@ -65,8 +85,12 @@ public final class GPSArray extends GPSFile {
 
     }
 
-    private int trackPointCount;
-    private int wayPointCount;
+    private void endTrack() {
+        result.tracks.addElement(track);
+        track = Interface.getVectorInstance();
+    }
+
+    boolean isNewTrack = true;
 
     // private GPSRecord prevRecord=null;
     /*
@@ -76,18 +100,48 @@ public final class GPSArray extends GPSFile {
      */
     public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
-        if (ptFilters[GPSFilter.TRKPT].doFilter(s)) {
-            if (nbrOfPassesToGo == 0) {
-                gpsTrackPoints[trackPointCount] = s.cloneRecord();
-            }
-            trackPointCount++;
-        }
 
         if (ptFilters[GPSFilter.WAYPT].doFilter(s)) {
             if (nbrOfPassesToGo == 0) {
-                gpsWayPoints[wayPointCount] = s.cloneRecord();
+                gpsWayPoints.addElement(s.cloneRecord());
             }
-            wayPointCount++;
+        }
+
+        if (!ptFilters[GPSFilter.TRKPT].doFilter(s)) {
+            // The track is interrupted by a removed log item.
+            // Break the track in the output file
+            if (!isNewTrack && !firstRecord && !ignoreBadPoints) {
+                isNewTrack = true;
+                if (track.size() != 0) {
+                    // Trackpoint tp = track.get(track.size() - 1);
+                    endTrack();
+                    track.addElement(s.cloneRecord());
+                }
+            }
+        } else {
+            // This is a trackpoint
+            // This log item is to be transcribed in the output file.
+
+            // StringBuffer rec=new StringBuffer(1024);
+            boolean isTimeSPlit;
+            isTimeSPlit = (activeFields.hasUtc())
+                    && ((s.utc - previousTime) > trackSepTime);
+            if (isNewTrack || isTimeSPlit) {
+                isNewTrack = false;
+                if ((activeFields.hasLatitude())
+                        && (activeFields.hasLongitude())) {
+                    if (!isTimeSPlit) {
+                        track.addElement(s.cloneRecord());
+                        endTrack();
+                    } else {
+                        // points quite separated -
+                        // No line, but separate track
+                        // bt747.sys.Vm.debug(""+(s.utc-previousTime)+":"+isTimeSPlit);
+                        endTrack();
+                    }
+                }
+            }
+            track.addElement(s.cloneRecord());
         }
     }
 
@@ -103,11 +157,17 @@ public final class GPSArray extends GPSFile {
     }
 
     public final GPSRecord[] getGpsTrackPoints() {
-        return gpsTrackPoints;
+        return result.getTrackPoints();
     }
 
     public final GPSRecord[] getGpsWayPoints() {
-        return gpsWayPoints;
+        return result.getWayPoints();
     }
 
+    /**
+     * @return the result
+     */
+    public final TracksAndWayPoints getResult() {
+        return this.result;
+    }
 }

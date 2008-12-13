@@ -32,7 +32,8 @@ public class PositionTableModel extends AbstractTableModel {
      * Column identifications. Some taken from BT747Constants.
      */
     private static final int FMT_UTC_VALUE = -15; // TODO: currently ignored
-    private static final int FMT_RCR_DESCRIPTION = -14; // TODO: currently ignored
+    private static final int FMT_RCR_DESCRIPTION = -14; // TODO: currently
+                                                        // ignored
     private static final int FMT_FIXMODE = -13; // TODO: currently ignored
     private static final int FMT_VOX = -12;
     private static final int FMT_LONEW = -11;
@@ -50,21 +51,16 @@ public class PositionTableModel extends AbstractTableModel {
     private static final int FMT_SPEED_MPH_IDX = BT747Constants.FMT_SPEED_IDX + 100;
     private static final int FMT_DISTANCE_FT_IDX = BT747Constants.FMT_DISTANCE_IDX + 100;
 
-    private int[] columnTypes = { 
+    private int[] columnTypes = {
             FMT_REC_NBR,
             FMT_DATE,
             FMT_TIME,
-            //BT747Constants.FMT_UTC_IDX,
-            //FMT_UTC_VALUE,
-            BT747Constants.FMT_RCR_IDX,
-            FMT_RCR_DESCRIPTION,
-            BT747Constants.FMT_VALID_IDX,
-            BT747Constants.FMT_LATITUDE_IDX,
-            BT747Constants.FMT_LONGITUDE_IDX,
-            BT747Constants.FMT_HEIGHT_IDX,
-            BT747Constants.FMT_HDOP_IDX,
-            BT747Constants.FMT_PDOP_IDX,
-            FMT_VOX};
+            // BT747Constants.FMT_UTC_IDX,
+            // FMT_UTC_VALUE,
+            BT747Constants.FMT_RCR_IDX, FMT_RCR_DESCRIPTION,
+            BT747Constants.FMT_VALID_IDX, BT747Constants.FMT_LATITUDE_IDX,
+            BT747Constants.FMT_LONGITUDE_IDX, BT747Constants.FMT_HEIGHT_IDX,
+            BT747Constants.FMT_HDOP_IDX, BT747Constants.FMT_PDOP_IDX, FMT_VOX };
 
     private GPSRecord[] gpsData = new GPSRecord[0];
 
@@ -92,7 +88,6 @@ public class PositionTableModel extends AbstractTableModel {
     public int getColumnCount() {
         return columnTypes.length;
     }
-
 
     private int columnToType(final int index) {
         if (index < columnTypes.length) {
@@ -193,7 +188,11 @@ public class PositionTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getRowCount()
      */
     public int getRowCount() {
-        return gpsData.length;
+        if (gpsData != null) {
+            return gpsData.length;
+        } else {
+            return 0;
+        }
     }
 
     /*
@@ -202,7 +201,7 @@ public class PositionTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (rowIndex < gpsData.length && gpsData[rowIndex]!= null) {
+        if (rowIndex < gpsData.length && gpsData[rowIndex] != null) {
             return getValue(gpsData[rowIndex], columnIndex);
         } else {
             return null;
@@ -358,11 +357,11 @@ public class PositionTableModel extends AbstractTableModel {
         case BT747Constants.FMT_DAGE_IDX:
             return new Integer(g.dage);
         case BT747Constants.FMT_PDOP_IDX:
-            return new Float(g.pdop/100.0f);
+            return new Float(g.pdop / 100.0f);
         case BT747Constants.FMT_HDOP_IDX:
-            return new Float(g.hdop/100.0f);
+            return new Float(g.hdop / 100.0f);
         case BT747Constants.FMT_VDOP_IDX:
-            return new Float(g.vdop/100.0f);
+            return new Float(g.vdop / 100.0f);
         case BT747Constants.FMT_NSAT_IDX:
             return new Integer(g.nsat);
         case FMT_FIXMODE:

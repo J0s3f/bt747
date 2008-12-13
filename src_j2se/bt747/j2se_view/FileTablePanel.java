@@ -147,7 +147,7 @@ public class FileTablePanel extends javax.swing.JPanel {
                     // TODO: handle exception
                 }
             }
-            c.updateWayPoints(fileTableModel.getSortedGPSRecords());
+            c.updateUserWayPoints(fileTableModel.getSortedGPSRecords());
         }
     }
 

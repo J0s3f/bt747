@@ -17,6 +17,7 @@ package bt747.model;
 import gps.BT747Constants;
 import gps.GPSstate;
 import gps.GpsEvent;
+import gps.TracksAndWayPoints;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
@@ -524,10 +525,14 @@ public class Controller {
      * 
      * @return Array of selected trackpoints.
      */
-
     public final GPSRecord[] doConvertLogToTrackPoints() {
+        return doConvertLogToTracksAndWayPoints().getTrackPoints();
+    }
+
+    
+    public final TracksAndWayPoints doConvertLogToTracksAndWayPoints() {
         int error = 0;
-        GPSRecord[] result;
+        gps.TracksAndWayPoints result;
         GPSArray gpsFile = null;
         GPSLogConvertInterface lc;
 
@@ -552,7 +557,7 @@ public class Controller {
             lastErrorInfo = lc.getErrorInfo();
             result = null;
         } else {
-            result = gpsFile.getGpsTrackPoints();
+            result = gpsFile.getResult();
         }
         return result;
     }
