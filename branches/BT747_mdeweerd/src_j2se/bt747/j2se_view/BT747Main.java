@@ -26,7 +26,10 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Set;
+import java.util.List;
 import java.util.TimeZone;
+import java.util.Vector;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.JFileChooser;
@@ -55,6 +58,7 @@ import bt747.sys.Generic;
 import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Time;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * J2SE Implementation (GUI) of BT747.
@@ -447,6 +451,16 @@ public class BT747Main extends javax.swing.JFrame implements
             PositionTablePanel pt = new PositionTablePanel();
             pt.setGpsRecords(r.getTrackPoints());
             c.updateWayPoints(r.getWayPoints());
+            Vector<List<GPSRecord>> trks = new Vector<List<GPSRecord>>(r.tracks.size());
+            for(int i = 0; i<r.tracks.size(); i++) {
+                BT747Vector trk = (BT747Vector) r.tracks.elementAt(i);
+                Vector<GPSRecord> ntrk = new Vector<GPSRecord>(trk.size());
+                for(int j = 0; j<trk.size();j++) {
+                    ntrk.add((GPSRecord)trk.elementAt(j));
+                }
+                trks.add(ntrk);
+            }
+            c.setTracks(trks);
             tabbedPanelAll.addTab(getString("Table"), pt);
             tabbedPanelAll.setSelectedIndex(tabbedPanelAll.getTabCount() - 1);
             break;

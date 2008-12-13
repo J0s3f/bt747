@@ -33,6 +33,7 @@ import java.io.FileOutputStream;
 import java.net.URL;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -839,4 +840,9 @@ public final class J2SEAppController extends Controller {
         }
     }
 
+    public void setTracks(List<List<GPSRecord>> trks) {
+        if (mapViewer != null) {
+            mapViewer.setTracks(trks);
+        }
+        }
 }

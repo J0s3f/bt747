@@ -1,3 +1,6 @@
+Version 1.63.6
+* Tracks added on the map.  Not perfect yet when the track goes outside the window.
+
 Version 1.63.5
 * Trackpoints from log added to the map.
 
