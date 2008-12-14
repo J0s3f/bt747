@@ -56,4 +56,13 @@ public class WayPointRendererFactoryMethod implements WaypointRenderer {
         }
         return contains; 
     }
+
+    public final void toggleSelected(Waypoint waypoint) {
+        try {
+            ((WaypointAdapter)(waypoint)).toggleSelected();
+        } catch (ClassCastException e) {
+            
+        }
+
+    }
 }
