@@ -1,3 +1,8 @@
+Version 1.64.1
+* Improvements on track calculations.
+* New unused classes added for future reference.
+* Setup in Netbeans 6.5 (classpath)
+
 Version 1.64
 * Right click on waypoint will show record number and type.
 * Some corrections to track rendering and added waypoints tab.

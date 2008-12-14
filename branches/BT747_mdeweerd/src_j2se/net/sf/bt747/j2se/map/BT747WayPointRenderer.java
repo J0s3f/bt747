@@ -27,13 +27,19 @@ import java.awt.Point;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.mapviewer.Waypoint;
+import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
+
+import bt747.j2se_view.WayPointPanel;
 
 /**
  * @author Mario
@@ -143,6 +149,15 @@ public class BT747WayPointRenderer implements WaypointRenderer {
         Composite old_comp = g.getComposite();
         g.setComposite(AlphaComposite
                 .getInstance(AlphaComposite.SRC_OVER, 0.75f));
+        
+//        WayPointPanel wp = new WayPointPanel();
+//        Point2D pt = map.getTileFactory().geoToPixel(waypoint.getPosition(),map.getZoom());
+//        Point2D pt2 = map.getViewportBounds().getLocation();
+//        wp.setBounds((int)(pt.getX()-pt2.getX()),(int)(pt.getY()-pt2.getX()),120,120);
+//        //map.add(wp);
+//        //wp.setLocation(120,120);
+//        wp.paint(g);
+        //map.remove(wp);
         //g.addRenderingHints(hints)
         g.setColor(Color.GRAY);
         g.fillRoundRect(1, 1, 150, 30, 10, 10);
@@ -170,5 +185,13 @@ public class BT747WayPointRenderer implements WaypointRenderer {
 
         g.setComposite(old_comp);
         // /g.translate(-summaryBounds.x, -summaryBounds.y);
+        
+//        WayPointPanel wp = new WayPointPanel();
+//        JFrame fm = new JFrame();
+//        fm.add(wp);
+//        fm.pack();
+//        fm.remove(wp);
+//        wp.paint(g);
+        
     }
 }
