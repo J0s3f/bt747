@@ -27,19 +27,10 @@ import java.awt.Point;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.mapviewer.Waypoint;
-import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
-
-import bt747.j2se_view.WayPointPanel;
 
 /**
  * @author Mario
@@ -91,7 +82,7 @@ public class BT747WayPointRenderer implements WaypointRenderer {
 
         try {
             if (((WaypointAdapter) waypoint).isSelected()) {
-                paintWaypointSummary(g, map, (WaypointAdapter)waypoint);
+                paintWaypointSummary(g, map, (WaypointAdapter) waypoint);
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -147,24 +138,28 @@ public class BT747WayPointRenderer implements WaypointRenderer {
     protected void paintWaypointSummary(Graphics2D g, JXMapViewer map,
             WaypointAdapter waypoint) {
         Composite old_comp = g.getComposite();
-        g.setComposite(AlphaComposite
-                .getInstance(AlphaComposite.SRC_OVER, 0.75f));
-        
-//        WayPointPanel wp = new WayPointPanel();
-//        Point2D pt = map.getTileFactory().geoToPixel(waypoint.getPosition(),map.getZoom());
-//        Point2D pt2 = map.getViewportBounds().getLocation();
-//        wp.setBounds((int)(pt.getX()-pt2.getX()),(int)(pt.getY()-pt2.getX()),120,120);
-//        //map.add(wp);
-//        //wp.setLocation(120,120);
-//        wp.paint(g);
-        //map.remove(wp);
-        //g.addRenderingHints(hints)
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                0.75f));
+
+        // WayPointPanel wp = new WayPointPanel();
+        // Point2D pt =
+        // map.getTileFactory().geoToPixel(waypoint.getPosition(),map.getZoom());
+        // Point2D pt2 = map.getViewportBounds().getLocation();
+        // wp.setBounds((int)(pt.getX()-pt2.getX()),(int)(pt.getY()-pt2.getX()),120,120);
+        // //map.add(wp);
+        // //wp.setLocation(120,120);
+        // wp.paint(g);
+        // map.remove(wp);
+        // g.addRenderingHints(hints)
         g.setColor(Color.GRAY);
-        g.fillRoundRect(1, 1, 150, 30, 10, 10);
         // ap.paintBackground(g, dummy);
 
-        g.setColor(Color.WHITE);
         g.setFont(g.getFont().deriveFont(Font.BOLD, 14f));
+        int width = (int) g.getFontMetrics().getStringBounds(
+                waypoint.getDescription(), g).getWidth();
+        g.fillRoundRect(1, 1, width + 20, 30, 10, 10);
+
+        g.setColor(Color.WHITE);
         trimAndPaint(g, "" + waypoint.getDescription(), 18, 10, 20);
         g.setFont(g.getFont().deriveFont(Font.PLAIN, 12f));
         // trimAndPaint(g, waypoint.getTitle(), 23, 10, 36);
@@ -185,13 +180,40 @@ public class BT747WayPointRenderer implements WaypointRenderer {
 
         g.setComposite(old_comp);
         // /g.translate(-summaryBounds.x, -summaryBounds.y);
-        
-//        WayPointPanel wp = new WayPointPanel();
-//        JFrame fm = new JFrame();
-//        fm.add(wp);
-//        fm.pack();
-//        fm.remove(wp);
-//        wp.paint(g);
-        
+
+        // WayPointPanel wp = new WayPointPanel();
+        // JFrame fm = new JFrame();
+        // fm.add(wp);
+        // fm.pack();
+        // fm.remove(wp);
+        // wp.paint(g);
+
     }
+
+    // http://today.java.net/pub/a/today/2007/11/13/mapping-mashups-with-jxmapviewer.html
+    // public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp)
+    // {
+    // WikiWaypoint wwp = (WikiMashupView.WikiWaypoint) wp;
+    //    
+    // //draw tab
+    // g.setPaint(new Color(0,0,255,200));
+    // Polygon triangle = new Polygon();
+    // triangle.addPoint(0,0);
+    // triangle.addPoint(11,11);
+    // triangle.addPoint(-11,11);
+    // g.fill(triangle);
+    // int width = (int) g.getFontMetrics().getStringBounds(wwp.getTitle(),
+    // g).getWidth();
+    // g.fillRoundRect(-width/2 -5, 10, width+10, 20, 10, 10);
+    //    
+    // //draw text w/ shadow
+    // g.setPaint(Color.BLACK);
+    // g.drawString(wwp.getTitle(), -width/2-1, 26-1); //shadow
+    // g.drawString(wwp.getTitle(), -width/2-1, 26-1); //shadow
+    // g.setPaint(Color.WHITE);
+    // g.drawString(wwp.getTitle(), -width/2, 26); //text
+    // return false;
+    // }
+    // }
+
 }
