@@ -228,7 +228,7 @@ public class MyMap extends JPanel implements MapViewerInterface {
         };
         TileFactory tf = new DefaultTileFactory(info);
         map.setTileFactory(tf);
-        map.setZoom(0);
+        map.setZoom(tf.getInfo().getMaximumZoomLevel()-4);
         map.setAddressLocation(new GeoPosition(51.5, 0));
     }
 
