@@ -100,51 +100,30 @@ public class BT747TrackRenderer implements TrackRenderer {
             boolean first = true;
             float x = 0f, y = 0f;
 
-
+            boolean previousShown = false;
+            double vpX = 0.0d;
+            double vpY = 0.0d;
             for (GPSRecord tp : track) {
                 Point2D point = map.getTileFactory().geoToPixel(
                         new GeoPosition(tp.latitude, tp.longitude),
                         map.getZoom());
                 boolean show = true;
+                // This has to be refactored.
                 if (vp2.contains(point)) {
-                    if(prev!=null) {
-                        x = (float) (prev.getX() - vp2.getX());
-                        y = (float) (prev.getY() - vp2.getY());
-                        if (first) {
-                            gp.moveTo(x, y);
-                            first = false;
-                        } else {
-                            gp.lineTo(x, y);
-                        }
-                    }
-                    x = (float) (point.getX() - vp2.getX());
-                    y = (float) (point.getY() - vp2.getY());
-                    
+                    vpX = vp2.getX();
+                    vpY = vp2.getY();
                 } else if (vp3.contains(point)) {
-                    if(prev!=null) {
-                        x = (float) (prev.getX() - vp3.getX());
-                        y = (float) (prev.getY() - vp3.getY());
-                        if (first) {
-                            gp.moveTo(x, y);
-                            first = false;
-                        } else {
-                            gp.lineTo(x, y);
-                        }
-                    }
-                    x = (float) (point.getX() - vp3.getX());
-                    y = (float) (point.getY() - vp3.getY());
+                    vpX = vp3.getX();
+                    vpY = vp3.getY();
                 } else {
                     show = false;
-                    if(prev==null) {
-                        g.draw(gp);
-                        gp = new GeneralPath(GeneralPath.WIND_NON_ZERO, track
-                            .size());
-                        first = true;
-                    }
-                    prev = point;
                 }
-                if (show) {
-                    prev = null;
+
+                if (prev != null && !previousShown && show) {
+                    // There was a previous point that was not shown.
+                    // Draw it to get a line from outside the viewport
+                    x = (float) (prev.getX() - vpX);
+                    y = (float) (prev.getY() - vpY);
                     if (first) {
                         gp.moveTo(x, y);
                         first = false;
@@ -152,6 +131,32 @@ public class BT747TrackRenderer implements TrackRenderer {
                         gp.lineTo(x, y);
                     }
                 }
+
+                if (show) {
+                    prev = null;
+                }
+                if (show || previousShown) {
+                    prev = null;
+                    x = (float) (point.getX() - vpX);
+                    y = (float) (point.getY() - vpY);
+                    if (first) {
+                        gp.moveTo(x, y);
+                        first = false;
+                    } else {
+                        gp.lineTo(x, y);
+                    }
+                }
+                if (previousShown && !show) {
+                    // This position is not shown - end path and start new.
+                    if (prev == null) {
+                        g.draw(gp);
+                        gp = new GeneralPath(GeneralPath.WIND_NON_ZERO, track
+                                .size());
+                        first = true;
+                    }
+                }
+                prev = point;
+                previousShown = show;
             }
 
             g.draw(gp);
