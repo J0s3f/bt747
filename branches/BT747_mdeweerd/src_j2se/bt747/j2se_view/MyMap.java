@@ -184,7 +184,8 @@ public class MyMap extends JPanel implements MapViewerInterface {
         Set<GeoPosition> bounds = new HashSet<GeoPosition>();
         bounds.add(new GeoPosition(minlat, minlon));
         bounds.add(new GeoPosition(maxlat, maxlon));
-        if (mapViewer.getZoom() > 15) {
+        if (mapViewer.getZoom() > mapViewer.getTileFactory().getInfo()
+                .getMaximumZoomLevel() - 6) {
             mapViewer.setZoom(2);
         }
         mapViewer.calculateZoomFrom(bounds);
@@ -228,7 +229,7 @@ public class MyMap extends JPanel implements MapViewerInterface {
         };
         TileFactory tf = new DefaultTileFactory(info);
         map.setTileFactory(tf);
-        map.setZoom(tf.getInfo().getMaximumZoomLevel()-4);
+        map.setZoom(tf.getInfo().getMaximumZoomLevel() - 4);
         map.setAddressLocation(new GeoPosition(51.5, 0));
     }
 
@@ -299,9 +300,10 @@ public class MyMap extends JPanel implements MapViewerInterface {
         public void addTrack(List<GPSRecord> track) {
             tracks.add(track);
         }
-        
+
         public void toggleSelected(Waypoint w) {
-            WayPointRendererFactoryMethod f = WayPointRendererFactoryMethod.getInstance();
+            WayPointRendererFactoryMethod f = WayPointRendererFactoryMethod
+                    .getInstance();
             f.toggleSelected(w);
             repaint();
         }
