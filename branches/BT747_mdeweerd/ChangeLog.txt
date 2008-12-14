@@ -1,3 +1,7 @@
+Version 1.64
+* Right click on waypoint will show record number and type.
+* Some corrections to track rendering and added waypoints tab.
+
 Version 1.63.7
 * Tracks added on the map.  Not perfect yet when the track goes outside the window.
 

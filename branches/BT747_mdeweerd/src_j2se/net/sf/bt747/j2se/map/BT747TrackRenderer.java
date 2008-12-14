@@ -91,26 +91,60 @@ public class BT747TrackRenderer implements TrackRenderer {
                     viewportBounds.getWidth(), viewportBounds.getHeight());
 
             TileFactory tf = map.getTileFactory();
+            Stroke org = g.getStroke();
+            g.setStroke(new BasicStroke(1.5f));
+            g.setPaint(Color.BLUE);
             GeneralPath gp = new GeneralPath(GeneralPath.WIND_NON_ZERO, track
                     .size());
-            Point2D pt;
+            Point2D prev = null;
             boolean first = true;
             float x = 0f, y = 0f;
+
+
             for (GPSRecord tp : track) {
                 Point2D point = map.getTileFactory().geoToPixel(
                         new GeoPosition(tp.latitude, tp.longitude),
                         map.getZoom());
                 boolean show = true;
                 if (vp2.contains(point)) {
+                    if(prev!=null) {
+                        x = (float) (prev.getX() - vp2.getX());
+                        y = (float) (prev.getY() - vp2.getY());
+                        if (first) {
+                            gp.moveTo(x, y);
+                            first = false;
+                        } else {
+                            gp.lineTo(x, y);
+                        }
+                    }
                     x = (float) (point.getX() - vp2.getX());
                     y = (float) (point.getY() - vp2.getY());
+                    
                 } else if (vp3.contains(point)) {
+                    if(prev!=null) {
+                        x = (float) (prev.getX() - vp3.getX());
+                        y = (float) (prev.getY() - vp3.getY());
+                        if (first) {
+                            gp.moveTo(x, y);
+                            first = false;
+                        } else {
+                            gp.lineTo(x, y);
+                        }
+                    }
                     x = (float) (point.getX() - vp3.getX());
                     y = (float) (point.getY() - vp3.getY());
                 } else {
                     show = false;
+                    if(prev==null) {
+                        g.draw(gp);
+                        gp = new GeneralPath(GeneralPath.WIND_NON_ZERO, track
+                            .size());
+                        first = true;
+                    }
+                    prev = point;
                 }
                 if (show) {
+                    prev = null;
                     if (first) {
                         gp.moveTo(x, y);
                         first = false;
@@ -120,9 +154,6 @@ public class BT747TrackRenderer implements TrackRenderer {
                 }
             }
 
-            Stroke org = g.getStroke();
-            g.setStroke(new BasicStroke(1.5f));
-            g.setPaint(Color.BLUE);
             g.draw(gp);
             g.setStroke(org);
         }

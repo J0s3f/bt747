@@ -442,14 +442,17 @@ public class BT747Main extends javax.swing.JFrame implements
         setLogConversionParameters();
         switch (selectedFormat) {
         case Model.ARRAY_LOGTYPE:
-            int idx = tabbedPanelAll.getTabCount() - 1;
-            if (tabbedPanelAll.getComponentAt(idx).getClass() == PositionTablePanel.class) {
-                tabbedPanelAll.removeTabAt(idx);
+            for(int idx = tabbedPanelAll.getTabCount() - 1; idx>=0;idx--) {
+                if (tabbedPanelAll.getComponentAt(idx).getClass() == PositionTablePanel.class) {
+                    tabbedPanelAll.removeTabAt(idx);
+                }
             }
             TracksAndWayPoints r;
             r = c.convertLogToTrackAndWayPoints();
-            PositionTablePanel pt = new PositionTablePanel();
-            pt.setGpsRecords(r.getTrackPoints());
+            PositionTablePanel trackPanel = new PositionTablePanel();
+            trackPanel.setGpsRecords(r.getTrackPoints());
+            PositionTablePanel waypointPanel = new PositionTablePanel();
+            waypointPanel.setGpsRecords(r.getWayPoints());
             c.updateWayPoints(r.getWayPoints());
             Vector<List<GPSRecord>> trks = new Vector<List<GPSRecord>>(r.tracks.size());
             for(int i = 0; i<r.tracks.size(); i++) {
@@ -461,7 +464,9 @@ public class BT747Main extends javax.swing.JFrame implements
                 trks.add(ntrk);
             }
             c.setTracks(trks);
-            tabbedPanelAll.addTab(getString("Table"), pt);
+            tabbedPanelAll.addTab(getString("Track.tabTitle"), trackPanel);
+            tabbedPanelAll.setSelectedIndex(tabbedPanelAll.getTabCount() - 1);
+            tabbedPanelAll.addTab(getString("WayPoints.tabTitle"), waypointPanel);
             tabbedPanelAll.setSelectedIndex(tabbedPanelAll.getTabCount() - 1);
             break;
         default:

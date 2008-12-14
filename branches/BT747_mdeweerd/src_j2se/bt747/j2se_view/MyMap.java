@@ -17,6 +17,7 @@
  */
 package bt747.j2se_view;
 
+import gps.connection.GPSPort;
 import gps.log.GPSRecord;
 
 import java.awt.Dimension;
@@ -28,8 +29,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 
@@ -62,7 +65,7 @@ public class MyMap extends JPanel implements MapViewerInterface {
         // TODO Auto-generated constructor stub
         map = new JXMapKit();
         map.setMiniMapVisible(true);
-        //map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        // map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         setOpenstreetMap();
         mapViewer = map.getMainMap();
         waypointPainter = new MyWaypointPainter<JXMapViewer>();
@@ -118,11 +121,8 @@ public class MyMap extends JPanel implements MapViewerInterface {
         allpoints.clear();
         allpoints.addAll(waypoints);
         allpoints.addAll(filepoints);
-        for (Waypoint w : allpoints) {
-            myPositions.add(w.getPosition());
-        }
-        mapViewer.calculateZoomFrom(myPositions);
-        waypointPainter.setWaypoints(waypoints);
+        waypointPainter.setWaypoints(allpoints);
+        setZoom();
     }
 
     public void setUserWayPoints(GPSRecord[] records) {
@@ -133,10 +133,69 @@ public class MyMap extends JPanel implements MapViewerInterface {
 
     public void addTrack(List<GPSRecord> track) {
         waypointPainter.addTrack(track);
+        setZoom();
+    }
+
+    /**
+     * 
+     */
+    private void setZoom() {
+        // TODO Auto-generated method stub
+
+        double minlat = 180f;
+        double minlon = 90f;
+        double maxlat = -180f;
+        double maxlon = -90f;
+        if (waypointPainter.getTracks() != null) {
+            for (List<GPSRecord> trk : waypointPainter.getTracks()) {
+                for (GPSRecord r : trk) {
+                    if (r.latitude < minlat) {
+                        minlat = r.latitude;
+                    }
+                    if (r.latitude > maxlat) {
+                        maxlat = r.latitude;
+                    }
+                    if (r.longitude < minlon) {
+                        minlon = r.longitude;
+                    }
+                    if (r.longitude > maxlon) {
+                        maxlon = r.longitude;
+                    }
+                }
+            }
+        }
+
+        for (Waypoint w : allpoints) {
+            GeoPosition r = w.getPosition();
+            if (r.getLatitude() < minlat) {
+                minlat = r.getLatitude();
+            }
+            if (r.getLatitude() > maxlat) {
+                maxlat = r.getLatitude();
+            }
+            if (r.getLongitude() < minlon) {
+                minlon = r.getLongitude();
+            }
+            if (r.getLongitude() > maxlon) {
+                maxlon = r.getLongitude();
+            }
+        }
+
+        Set<GeoPosition> bounds = new HashSet<GeoPosition>();
+        bounds.add(new GeoPosition(minlat, minlon));
+        bounds.add(new GeoPosition(maxlat, maxlon));
+        if (mapViewer.getZoom() > 15) {
+            mapViewer.setZoom(2);
+        }
+        mapViewer.calculateZoomFrom(bounds);
+
     }
 
     public void setTracks(List<List<GPSRecord>> tracks) {
+
         waypointPainter.setTracks(tracks);
+        setZoom();
+
     }
 
     /*
@@ -155,23 +214,24 @@ public class MyMap extends JPanel implements MapViewerInterface {
      */
     private void setOpenstreetMap() {
         final int max = 19;
-        TileFactoryInfo info = new TileFactoryInfo(1,max-2,max,
-                256, true, true, // tile size is 256 and x/y orientation is normal
-                "http://tile.openstreetmap.org",//5/15/10.png",
-                "x","y","z") {
+        TileFactoryInfo info = new TileFactoryInfo(1, max - 2, max, 256, true,
+                true, // tile size is 256 and x/y orientation is normal
+                "http://tile.openstreetmap.org",// 5/15/10.png",
+                "x", "y", "z") {
             public String getTileUrl(int x, int y, int zoom) {
-                zoom = max-zoom;
-                String url = this.baseURL +"/"+zoom+"/"+x+"/"+y+".png";
+                zoom = max - zoom;
+                String url = this.baseURL + "/" + zoom + "/" + x + "/" + y
+                        + ".png";
                 return url;
             }
-            
+
         };
         TileFactory tf = new DefaultTileFactory(info);
         map.setTileFactory(tf);
-        map.setZoom(11);
-        map.setAddressLocation(new GeoPosition(51.5,0));
+        map.setZoom(0);
+        map.setAddressLocation(new GeoPosition(51.5, 0));
     }
-    
+
     private void setOtherMaps() {
         // http://khm2.google.com/kh?v=33g&x=1042&y=686&z=11&s=Gali
         final int max = 17;
@@ -202,31 +262,48 @@ public class MyMap extends JPanel implements MapViewerInterface {
         private JXMapViewer map = mapViewer;
 
         private List<List<GPSRecord>> tracks;
-        private BT747TrackRenderer trackRenderer = BT747TrackRenderer.getInstance();
-        
-        /* (non-Javadoc)
-         * @see org.jdesktop.swingx.mapviewer.WaypointPainter#doPaint(java.awt.Graphics2D, org.jdesktop.swingx.JXMapViewer, int, int)
+        private BT747TrackRenderer trackRenderer = BT747TrackRenderer
+                .getInstance();
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.jdesktop.swingx.mapviewer.WaypointPainter#doPaint(java.awt.Graphics2D,
+         *      org.jdesktop.swingx.JXMapViewer, int, int)
          */
         @Override
         protected void doPaint(Graphics2D g, JXMapViewer map, int width,
                 int height) {
-            if (tracks!=null) {
-            // Paint tracks
-                for(List<GPSRecord> track: tracks) {
+            if (tracks != null) {
+                // Paint tracks
+                for (List<GPSRecord> track : tracks) {
                     trackRenderer.paintTrack(g, map, track);
                 }
             }
-            
+
             // Paint waypoints
             super.doPaint(g, map, width, height);
         }
-        
+
         public void setTracks(List<List<GPSRecord>> trks) {
             tracks = trks;
         }
 
+        /**
+         * @return the tracks
+         */
+        public final List<List<GPSRecord>> getTracks() {
+            return this.tracks;
+        }
+
         public void addTrack(List<GPSRecord> track) {
             tracks.add(track);
+        }
+        
+        public void toggleSelected(Waypoint w) {
+            WayPointRendererFactoryMethod f = WayPointRendererFactoryMethod.getInstance();
+            f.toggleSelected(w);
+            repaint();
         }
 
         public Waypoint getContains(Point pt) {
@@ -285,7 +362,8 @@ public class MyMap extends JPanel implements MapViewerInterface {
         }
 
         /**
-         * @param trackRenderer the trackRenderer to set
+         * @param trackRenderer
+         *            the trackRenderer to set
          */
         public final void setTrackRenderer(BT747TrackRenderer trackRenderer) {
             this.trackRenderer = trackRenderer;
@@ -303,10 +381,14 @@ public class MyMap extends JPanel implements MapViewerInterface {
          */
         public void mouseClicked(MouseEvent e) {
             switch (e.getButton()) {
-            case MouseEvent.BUTTON1:
+            case MouseEvent.BUTTON3:
                 Point pt = e.getPoint();
 
                 Waypoint w = waypointPainter.getContains(pt);
+                if (w != null) {
+                    waypointPainter.toggleSelected(w);
+                    e.consume();
+                }
 
                 break;
 

@@ -17,14 +17,21 @@
  */
 package net.sf.bt747.j2se.map;
 
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 
+import javax.swing.JComponent;
+
 import org.jdesktop.swingx.JXMapViewer;
+import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
@@ -75,6 +82,27 @@ public class BT747WayPointRenderer implements WaypointRenderer {
         g.fill(gp);
         g.drawLine(-10, 0, 10, 0);
         g.drawLine(0, -10, 0, 10);
+
+        try {
+            if (((WaypointAdapter) waypoint).isSelected()) {
+                paintWaypointSummary(g, map, (WaypointAdapter)waypoint);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return false;
+    }
+
+    /**
+     * At the position of the waypoint.
+     * 
+     * @param g
+     * @param map
+     * @param waypoint
+     * @return
+     */
+    public boolean paintInfoWindow(Graphics2D g, JXMapViewer map,
+            Waypoint waypoint) {
         return false;
     }
 
@@ -85,5 +113,62 @@ public class BT747WayPointRenderer implements WaypointRenderer {
      */
     public boolean contains(Point pt) {
         return gp.contains(pt);
+    }
+
+    // private static Rectangle getSummaryBounds(JXMapViewer map,
+    // Trip.Waypoint waypoint) {
+    // // Point2D center =
+    // // GoogleUtil.getBitmapCoordinate(waypoint.getPosition(),
+    // // map.getZoom());
+    // Point2D center = map.getTileFactory().getBitmapCoordinate(
+    // waypoint.getPosition(), map.getZoom());
+    // Rectangle bounds = map.getViewportBounds();
+    // int x = (int) (center.getX() - bounds.getX());
+    // int y = (int) (center.getY() - bounds.getY());
+    // return new Rectangle(x - 55, y + 20, 170, 90);
+    // }
+
+    private static void trimAndPaint(Graphics2D g, String title, int length,
+            int x, int y) {
+        if (title != null) {
+            if (title.length() > length) {
+                title = title.substring(0, length) + "...";
+            }
+            g.drawString(title, x, y);
+        }
+    }
+
+    protected void paintWaypointSummary(Graphics2D g, JXMapViewer map,
+            WaypointAdapter waypoint) {
+        Composite old_comp = g.getComposite();
+        g.setComposite(AlphaComposite
+                .getInstance(AlphaComposite.SRC_OVER, 0.75f));
+        //g.addRenderingHints(hints)
+        g.setColor(Color.GRAY);
+        g.fillRoundRect(1, 1, 150, 30, 10, 10);
+        // ap.paintBackground(g, dummy);
+
+        g.setColor(Color.WHITE);
+        g.setFont(g.getFont().deriveFont(Font.BOLD, 14f));
+        trimAndPaint(g, "" + waypoint.getDescription(), 18, 10, 20);
+        g.setFont(g.getFont().deriveFont(Font.PLAIN, 12f));
+        // trimAndPaint(g, waypoint.getTitle(), 23, 10, 36);
+        g.setStroke(new BasicStroke(1f));
+
+        // if (waypoint.getPhotoCount() > 0) {
+        // try {
+        // BufferedImage image = waypoint.getPhoto(0).getImage();
+        // if (image != null) {
+        // image = GraphicsUtil.createThumbnail(image, 150);
+        // CroppedImageIcon icon = new CroppedImageIcon(image, 37);
+        // icon.paintIcon(null, g, 10, 43);
+        // }
+        // } catch (Exception ex) {
+        // ex.printStackTrace();
+        // }
+        // }
+
+        g.setComposite(old_comp);
+        // /g.translate(-summaryBounds.x, -summaryBounds.y);
     }
 }
