@@ -207,7 +207,11 @@ public class AppSettings {
     private static final int C_DISABLELOGDURINGDOWNLOAD_IDX = C_TAG_MAXTIMEDIFFERENCE_IDX
             + C_TAG_MAXTIMEDIFFERENCE_SIZE;
     private static final int C_DISABLELOGDURINGDOWNLOAD_SIZE = 1;
-    private static final int C_NEXT_IDX = C_DISABLELOGDURINGDOWNLOAD_IDX + C_DISABLELOGDURINGDOWNLOAD_SIZE;
+    private static final int C_MAPCACHEDIRECTORY_IDX = C_DISABLELOGDURINGDOWNLOAD_IDX
+            + C_DISABLELOGDURINGDOWNLOAD_SIZE;
+    private static final int C_MAPCACHEDIRECTORY_SIZE = 255;
+    private static final int C_NEXT_IDX = C_MAPCACHEDIRECTORY_IDX
+            + C_MAPCACHEDIRECTORY_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -250,8 +254,8 @@ public class AppSettings {
     public static final int IS_RECORDNBR_IN_LOGS = 5;
 
     /**
-     * Parameter indicating if on Waba the interface must be traversable.
-     * (for PDA)
+     * Parameter indicating if on Waba the interface must be traversable. (for
+     * PDA)
      */
     public static final int IS_TRAVERSABLE = 6;
     /**
@@ -356,6 +360,15 @@ public class AppSettings {
      */
     public static final int DISABLELOGDURINGDOWNLOAD = 24;
 
+    /**
+     * The directory where the map cache is to be stored.
+     */
+    public static final int MAPCACHEDIRECTORY = 25;
+
+    /**
+     * Version of the parameters. Do not change this!
+     */
+    public static final int VERSION = 26;
 
     private static final int[][] paramsList =
     // Type, idx, start, size
@@ -397,8 +410,11 @@ public class AppSettings {
             { INT, TAG_MAXTIMEDIFFERENCE, C_TAG_MAXTIMEDIFFERENCE_IDX,
                     C_TAG_MAXTIMEDIFFERENCE_SIZE },
             { INT, GPSTYPE, C_GPSTYPE_IDX, C_GPSTYPE_SIZE },
-            { BOOL, DISABLELOGDURINGDOWNLOAD, C_DISABLELOGDURINGDOWNLOAD_IDX, C_DISABLELOGDURINGDOWNLOAD_SIZE }, 
-            };
+            { BOOL, DISABLELOGDURINGDOWNLOAD, C_DISABLELOGDURINGDOWNLOAD_IDX,
+                    C_DISABLELOGDURINGDOWNLOAD_SIZE },
+            { STRING, MAPCACHEDIRECTORY, C_MAPCACHEDIRECTORY_IDX,
+                    C_MAPCACHEDIRECTORY_SIZE },
+            { STRING, VERSION, C_VERSION_IDX, C_VERSION_SIZE }, };
 
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
@@ -427,7 +443,7 @@ public class AppSettings {
             }
         }
 
-        mVersion = getStringOpt(C_VERSION_IDX, C_VERSION_SIZE);
+        mVersion = getStringOpt(VERSION);
         if ((mVersion.length() == 4) && (mVersion.charAt(1) == '.')) {
             VersionX100 = Convert.toInt(mVersion.charAt(0)
                     + mVersion.substring(2, 4));
@@ -558,7 +574,10 @@ public class AppSettings {
             /* fall through */
         case 30:
             setBooleanOpt(DISABLELOGDURINGDOWNLOAD, true);
-            setStringOpt(0, "0.31", C_VERSION_IDX, C_VERSION_SIZE);
+
+        case 31:
+            setStringOpt(MAPCACHEDIRECTORY, "/temp/mapcache");
+            setStringOpt(VERSION, "0.32");
 
         default:
             // Always force lat and lon and utc and height active on restart for
@@ -642,8 +661,7 @@ public class AppSettings {
                         .getAppSettings().substring(idx + size,
                                 Settings.getAppSettings().length()) : ""));
         if (eventType != 0) {
-            postEvent(ModelEvent.SETTING_CHANGE); // TODO: Argument is for
-            // later.
+            postEvent(ModelEvent.SETTING_CHANGE, Convert.toString(eventType));
         }
     }
 
@@ -1414,7 +1432,11 @@ public class AppSettings {
         while (it.hasNext()) {
             ModelListener l = (ModelListener) it.next();
             ModelEvent e = new ModelEvent(type, o);
-            l.modelEvent(e);
+            try {
+                l.modelEvent(e);
+            } catch (Exception evt) {
+                Generic.debug("Listener " + l.getClass(), evt);
+            }
         }
     }
 

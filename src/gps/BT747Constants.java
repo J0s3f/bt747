@@ -649,6 +649,8 @@ public final class BT747Constants { // dev as in device
         // Recognition based on 'device'
         if (device.length() == 0) {
             // Do nothing
+        } else if (device.startsWith("TSI_747A+")) {
+            mdStr = "iBlue 747 A+";
         } else if (device.startsWith("TSI747")) {
             mdStr = "iBlue 747";
         } else if (device.startsWith("TSI757")) {

@@ -17,7 +17,6 @@
  */
 package bt747.j2se_view;
 
-import gps.connection.GPSPort;
 import gps.log.GPSRecord;
 
 import java.awt.Dimension;
@@ -29,10 +28,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.swing.JPanel;
 
@@ -49,14 +48,19 @@ import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 
+import bt747.model.Model;
+import bt747.model.ModelEvent;
+import bt747.model.ModelListener;
+
 /**
  * @author Mario
  * 
  */
-public class MyMap extends JPanel implements MapViewerInterface {
+public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
     JXMapKit map;
     JXMapViewer mapViewer;
     MyWaypointPainter<JXMapViewer> waypointPainter;
+    DefaultTileFactory tf = null;
 
     /**
      * 
@@ -100,6 +104,59 @@ public class MyMap extends JPanel implements MapViewerInterface {
                 ));
 
         // map.setAddressLocation(new GeoPosition(41.881944,2.5));
+    }
+
+    private J2SEAppController c;
+    private Model m;
+
+    public void init(J2SEAppController pC) {
+        c = pC;
+        m = c.getModel();
+        m.addListener(this);
+        
+        setMapTileCacheDirectory();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
+     */
+    public void modelEvent(ModelEvent e) {
+        switch (e.getType()) {
+        case ModelEvent.SETTING_CHANGE:
+            if (e.getArg() != null) {
+                if (e.getArg().equals(String.valueOf(Model.MAPCACHEDIRECTORY))) {
+                    setMapTileCacheDirectory(m
+                            .getStringOpt(Model.MAPCACHEDIRECTORY));
+                }
+            }
+
+            break;
+
+        default:
+            break;
+        }
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setMapTileCacheDirectory() {
+        if (m != null) {
+            setMapTileCacheDirectory(m.getStringOpt(Model.MAPCACHEDIRECTORY));
+        }
+    }
+
+    public void setMapTileCacheDirectory(final String path) {
+        File f;
+        f = new File(path);
+        if (f.exists() && f.isDirectory() && tf != null) {
+            try {
+                tf.getTileCache().setDiskCacheDir(f);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+        }
     }
 
     private static void addToSet(Set<Waypoint> waypoints, GPSRecord[] records) {
@@ -227,7 +284,8 @@ public class MyMap extends JPanel implements MapViewerInterface {
             }
 
         };
-        TileFactory tf = new DefaultTileFactory(info);
+        tf = new DefaultTileFactory(info);
+        setMapTileCacheDirectory();
         map.setTileFactory(tf);
         map.setZoom(tf.getInfo().getMaximumZoomLevel() - 4);
         map.setAddressLocation(new GeoPosition(51.5, 0));
@@ -497,102 +555,103 @@ public class MyMap extends JPanel implements MapViewerInterface {
 
     }
 
-    
- // From http://today.java.net/pub/a/today/2007/11/13/mapping-mashups-with-jxmapviewer.html
-//  final JLabel hoverLabel = new JLabel("Java");
-//  hoverLabel.setVisible(false);
-//  jXMapKit1.getMainMap().add(hoverLabel);
-//
-//  jXMapKit1.getMainMap().addMouseMotionListener(new MouseMotionListener() {
-//      public void mouseDragged(MouseEvent e) { }
-//
-//      public void mouseMoved(MouseEvent e) {
-//          JXMapViewer map = jXMapKit1.getMainMap();
-//          //location of Java
-//          GeoPosition gp = new GeoPosition(-7.502778, 111.263056); 
-//          //convert to world bitmap
-//          Point2D gp_pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
-//          //convert to screen
-//          Rectangle rect = map.getViewportBounds();
-//          Point converted_gp_pt = new Point((int)gp_pt.getX()-rect.x,
-//                                            (int)gp_pt.getY()-rect.y);
-//          //check if near the mouse
-//          if(converted_gp_pt.distance(e.getPoint()) < 10) {
-//              hoverLabel.setLocation(converted_gp_pt);
-//              hoverLabel.setVisible(true);
-//          } else {
-//              hoverLabel.setVisible(false);
-//          }
-//      }
-//  });
+    // From
+    // http://today.java.net/pub/a/today/2007/11/13/mapping-mashups-with-jxmapviewer.html
+    // final JLabel hoverLabel = new JLabel("Java");
+    // hoverLabel.setVisible(false);
+    // jXMapKit1.getMainMap().add(hoverLabel);
+    //
+    // jXMapKit1.getMainMap().addMouseMotionListener(new MouseMotionListener() {
+    // public void mouseDragged(MouseEvent e) { }
+    //
+    // public void mouseMoved(MouseEvent e) {
+    // JXMapViewer map = jXMapKit1.getMainMap();
+    // //location of Java
+    // GeoPosition gp = new GeoPosition(-7.502778, 111.263056);
+    // //convert to world bitmap
+    // Point2D gp_pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
+    // //convert to screen
+    // Rectangle rect = map.getViewportBounds();
+    // Point converted_gp_pt = new Point((int)gp_pt.getX()-rect.x,
+    // (int)gp_pt.getY()-rect.y);
+    // //check if near the mouse
+    // if(converted_gp_pt.distance(e.getPoint()) < 10) {
+    // hoverLabel.setLocation(converted_gp_pt);
+    // hoverLabel.setVisible(true);
+    // } else {
+    // hoverLabel.setVisible(false);
+    // }
+    // }
+    // });
 
-  
-//  @Override protected Set<WikiWaypoint> doInBackground() {
-//      try {
-//          // example: http://ws.geonames.org/wikipediaSearch?q=london&maxRows=10
-//          URL url = new URL("http://ws.geonames.org/wikipediaSearch?q="+
-//              jTextField1.getText()+"&maxRows=10");
-//
-//          XPath xpath = XPathFactory.newInstance().newXPath();
-//          NodeList list = (NodeList) xpath.evaluate("//entry", 
-//                  new InputSource(url.openStream()),
-//                  XPathConstants.NODESET);
-//
-//          Set<WikiWaypoint> waypoints = new
-//              HashSet<WikiMashupView.WikiWaypoint>();
-//          for(int i = 0; i < list.getLength(); i++) {
-//              Node node = list.item(i);
-//              String title = (String) xpath.evaluate("title/text()",
-//                  node, XPathConstants.STRING);
-//              Double lat = (Double) xpath.evaluate("lat/text()",
-//                  node, XPathConstants.NUMBER);
-//              Double lon = (Double) xpath.evaluate("lng/text()",
-//                  node, XPathConstants.NUMBER);
-//              waypoints.add(new WikiWaypoint(lat, lon, title));
-//          }
-//          return waypoints;  // return your result
-//      } catch (Exception ex) {
-//          ex.printStackTrace();
-//          return null;
-//      }
-//  }
-  
-//  @Override protected void succeeded(Set<WikiWaypoint> waypoints) {
-//      // move to the center
-//      jXMapKit1.setAddressLocation(waypoints.iterator().next().getPosition());
-//      
-//      WaypointPainter painter = new WaypointPainter();
-//      
-//      //set the waypoints
-//      painter.setWaypoints(waypoints);
-//      
-//      //create a renderer
-//      painter.setRenderer(new WaypointRenderer() {
-//          public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp) {
-//              WikiWaypoint wwp = (WikiMashupView.WikiWaypoint) wp;
-//              
-//              //draw tab
-//              g.setPaint(new Color(0,0,255,200));
-//              Polygon triangle = new Polygon();
-//              triangle.addPoint(0,0);
-//              triangle.addPoint(11,11);
-//              triangle.addPoint(-11,11);
-//              g.fill(triangle);
-//              int width = (int) g.getFontMetrics().getStringBounds(wwp.getTitle(), g).getWidth();
-//              g.fillRoundRect(-width/2 -5, 10, width+10, 20, 10, 10);
-//              
-//              //draw text w/ shadow
-//              g.setPaint(Color.BLACK);
-//              g.drawString(wwp.getTitle(), -width/2-1, 26-1); //shadow
-//              g.drawString(wwp.getTitle(), -width/2-1, 26-1); //shadow
-//              g.setPaint(Color.WHITE);
-//              g.drawString(wwp.getTitle(), -width/2, 26); //text
-//              return false;
-//          }
-//      });
-//      jXMapKit1.getMainMap().setOverlayPainter(painter);
-//      jXMapKit1.getMainMap().repaint();
-//  }
-//
+    // @Override protected Set<WikiWaypoint> doInBackground() {
+    // try {
+    // // example: http://ws.geonames.org/wikipediaSearch?q=london&maxRows=10
+    // URL url = new URL("http://ws.geonames.org/wikipediaSearch?q="+
+    // jTextField1.getText()+"&maxRows=10");
+    //
+    // XPath xpath = XPathFactory.newInstance().newXPath();
+    // NodeList list = (NodeList) xpath.evaluate("//entry",
+    // new InputSource(url.openStream()),
+    // XPathConstants.NODESET);
+    //
+    // Set<WikiWaypoint> waypoints = new
+    // HashSet<WikiMashupView.WikiWaypoint>();
+    // for(int i = 0; i < list.getLength(); i++) {
+    // Node node = list.item(i);
+    // String title = (String) xpath.evaluate("title/text()",
+    // node, XPathConstants.STRING);
+    // Double lat = (Double) xpath.evaluate("lat/text()",
+    // node, XPathConstants.NUMBER);
+    // Double lon = (Double) xpath.evaluate("lng/text()",
+    // node, XPathConstants.NUMBER);
+    // waypoints.add(new WikiWaypoint(lat, lon, title));
+    // }
+    // return waypoints; // return your result
+    // } catch (Exception ex) {
+    // ex.printStackTrace();
+    // return null;
+    // }
+    // }
+
+    // @Override protected void succeeded(Set<WikiWaypoint> waypoints) {
+    // // move to the center
+    // jXMapKit1.setAddressLocation(waypoints.iterator().next().getPosition());
+    //      
+    // WaypointPainter painter = new WaypointPainter();
+    //      
+    // //set the waypoints
+    // painter.setWaypoints(waypoints);
+    //      
+    // //create a renderer
+    // painter.setRenderer(new WaypointRenderer() {
+    // public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp)
+    // {
+    // WikiWaypoint wwp = (WikiMashupView.WikiWaypoint) wp;
+    //              
+    // //draw tab
+    // g.setPaint(new Color(0,0,255,200));
+    // Polygon triangle = new Polygon();
+    // triangle.addPoint(0,0);
+    // triangle.addPoint(11,11);
+    // triangle.addPoint(-11,11);
+    // g.fill(triangle);
+    // int width = (int) g.getFontMetrics().getStringBounds(wwp.getTitle(),
+    // g).getWidth();
+    // g.fillRoundRect(-width/2 -5, 10, width+10, 20, 10, 10);
+    //              
+    // //draw text w/ shadow
+    // g.setPaint(Color.BLACK);
+    // g.drawString(wwp.getTitle(), -width/2-1, 26-1); //shadow
+    // g.drawString(wwp.getTitle(), -width/2-1, 26-1); //shadow
+    // g.setPaint(Color.WHITE);
+    // g.drawString(wwp.getTitle(), -width/2, 26); //text
+    // return false;
+    // }
+    // });
+    // jXMapKit1.getMainMap().setOverlayPainter(painter);
+    // jXMapKit1.getMainMap().repaint();
+    // }
+    //
 
 }

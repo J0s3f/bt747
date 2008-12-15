@@ -1,3 +1,6 @@
+Version 1.64.2
+* Map can be cached on disk.
+
 Version 1.64.1
 * Improvements on track calculations.
 * New unused classes added for future reference.
