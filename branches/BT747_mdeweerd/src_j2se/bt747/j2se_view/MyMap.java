@@ -113,7 +113,7 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
         c = pC;
         m = c.getModel();
         m.addListener(this);
-        
+
         setMapTileCacheDirectory();
     }
 
@@ -272,8 +272,8 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
      */
     private void setOpenstreetMap() {
         final int max = 19;
-        TileFactoryInfo info = new TileFactoryInfo(1, max - 2, max, 256, true,
-                true, // tile size is 256 and x/y orientation is normal
+        TileFactoryInfo info = new TileFactoryInfo("osm", 1, max - 2, max, 256,
+                true, true, // tile size is 256 and x/y orientation is normal
                 "http://tile.openstreetmap.org",// 5/15/10.png",
                 "x", "y", "z") {
             public String getTileUrl(int x, int y, int zoom) {
@@ -294,8 +294,8 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
     private void setOtherMaps() {
         // http://khm2.google.com/kh?v=33g&x=1042&y=686&z=11&s=Gali
         final int max = 17;
-        TileFactoryInfo info = new TileFactoryInfo(1, max - 2, max, 256, true,
-                true, // tile size is 256 and x/y orientation is
+        TileFactoryInfo info = new TileFactoryInfo("mapname", 1, max - 2, max,
+                256, true, true, // tile size is 256 and x/y orientation is
                 // normal
                 // "http://mt2.google.com/mt?n=404&v=w2.21",//5/15/10.png",
                 "http://khm2.google.com/kh?v=33", "x", "y", "z") {
