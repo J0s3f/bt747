@@ -41,6 +41,7 @@ import javax.swing.ImageIcon;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -78,6 +79,8 @@ public final class J2SEAppController extends Controller {
 
     private static Image app128Icon;
     private static final String icon128Path = "icons/bt747_128x128.gif";
+    
+    public static final String MAPCACHEDIRECTORYPROPERTY = "mapcachedirectory";
 
     private static final void setAppIcon() {
         URL u = BT747Main.class.getResource("/" + iconPath);
@@ -801,6 +804,32 @@ public final class J2SEAppController extends Controller {
             return returnValue;
         }
     };
+    
+    public final void selectMapCacheDirectory() {
+        javax.swing.JFileChooser CacheDirChooser;
+        File f = new File(m.getStringOpt(AppSettings.MAPCACHEDIRECTORY));
+        CacheDirChooser = new javax.swing.JFileChooser(f);
+        CacheDirChooser.setSelectedFile(f);
+        CacheDirChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        CacheDirChooser
+                .setToolTipText(getString("SelectCacheDirectory.tooltip"));
+        // if (curDir.exists()) {
+        // CacheDirChooser.setCurrentDirectory(getOutputFilePath());
+        // }
+        if (CacheDirChooser.showDialog(rootFrame, getString("SetCacheDir.button")) == JFileChooser.APPROVE_OPTION) {
+            try {
+                String relPath = CacheDirChooser
+                                .getSelectedFile().getCanonicalPath();
+                if (relPath.lastIndexOf('.') == relPath.length() - 4) {
+                    relPath = relPath.substring(0, relPath.length() - 4);
+                }
+                c.setStringOpt(AppSettings.MAPCACHEDIRECTORY, relPath);
+            } catch (Exception e) {
+                Generic.debug(getString("CacheDirChooser"), e);
+            }
+        }
+    }
+
 
     /**
      * Disable a panel and its children.
