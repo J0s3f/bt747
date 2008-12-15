@@ -158,15 +158,18 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
         case ModelEvent.UPDATE_FIX_PERIOD:
             txtFixPeriod.setText(Convert.toString(m.getLogFixPeriod()));
             break;
+        case ModelEvent.UPDATE_HOLUX_NAME:
+            txtHoluxName.setText(m.getHoluxName());
+            /* Fall through */
+        case ModelEvent.UPDATE_LOG_FLASH:
+            updateEstimatedNbrRecords();
+            break;
         case ModelEvent.UPDATE_LOG_FORMAT:
             updateLogFormatData();
             break;
         case ModelEvent.UPDATE_LOG_REC_METHOD:
             cbStopOrOverwriteWhenFull.setSelectedIndex(m.isLogFullOverwrite() ? 1
                     : 0);
-            break;
-        case ModelEvent.UPDATE_HOLUX_NAME:
-            txtHoluxName.setText(m.getHoluxName());
             break;
         }
     }
@@ -1314,6 +1317,7 @@ private void cbStopOrOverwriteWhenFullItemStateChanged(java.awt.event.ItemEvent 
                 .setSelected((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0);
         cbValidFixOnly
                 .setSelected((logFormat & (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX)) != 0);
+        updateEstimatedNbrRecords();
 
     }
 

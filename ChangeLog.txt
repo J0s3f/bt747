@@ -1,3 +1,6 @@
+Version 1.64.3
+* Map mashup code improved + cache identifies map type in filename.
+
 Version 1.64.2
 * Map can be cached on disk.
 
