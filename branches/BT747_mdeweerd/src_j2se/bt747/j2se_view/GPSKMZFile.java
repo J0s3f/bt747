@@ -32,7 +32,7 @@ import bt747.sys.interfaces.BT747Hashtable;
  * Class to write a KML file.
  * 
  * @author Mario De Weerd
- * @author Herbert Geus (Waypoint code&Track code)
+ * 
  */
 public final class GPSKMZFile extends GPSKMLFile {
     private ZipOutputStream currentZipStream;
@@ -64,23 +64,19 @@ public final class GPSKMZFile extends GPSKMLFile {
      */
     public final void finaliseFile() {
         super.finaliseFile();
-        if (zips != null) {
-            // close all zips.
-            BT747Hashtable iter = zips.iterator();
-
-            while (iter.hasNext()) {
-                Object key = iter.nextKey();
-                try {
-                    currentZipStream = (ZipOutputStream) iter.get(key);
-                    currentZipStream.closeEntry();
-                    currentZipStream.close();
-                } catch (Exception e) {
-                    Generic.debug("finaliseFile", e);
-                    // TODO: handle exception
-                }
+        if (currentZipStream != null) {
+            try {
+                zips.remove(currentZipStream);
+            } catch (Exception e) {
+                Generic.debug("zip stream removal", e);
+            }
+            try {
+                currentZipStream.closeEntry();
+                currentZipStream.close();
+            } catch (Exception e) {
+                Generic.debug("finaliseFile", e);
             }
             currentZipStream = null;
-            zips = null;
         }
     }
 
@@ -99,15 +95,15 @@ public final class GPSKMZFile extends GPSKMLFile {
         int l;
         l = zipEntryFileName.lastIndexOf('/');
         if (l > 0) {
-            zipEntryFileName = zipEntryFileName.substring(l+1);
+            zipEntryFileName = zipEntryFileName.substring(l + 1);
         }
         l = zipEntryFileName.lastIndexOf('\\');
         if (l > 0) {
-            zipEntryFileName = zipEntryFileName.substring(l+1);
+            zipEntryFileName = zipEntryFileName.substring(l + 1);
         }
         l = zipEntryFileName.lastIndexOf(':');
         if (l > 0) {
-            zipEntryFileName = zipEntryFileName.substring(l+1);
+            zipEntryFileName = zipEntryFileName.substring(l + 1);
         }
 
         int error = BT747Constants.NO_ERROR;
@@ -135,7 +131,14 @@ public final class GPSKMZFile extends GPSKMLFile {
                 currentZipStream.putNextEntry(e);
                 zips.put(zipFileName, currentZipStream);
             } else {
+                if (zips == null) {
+                    Generic.debug("Zip name is null ");
+                }
                 currentZipStream = (ZipOutputStream) zips.get(zipFileName);
+                if (currentZipStream == null) {
+                    Generic.debug("Could not find " + zipFileName
+                            + " zip stream.");
+                }
             }
             // try {
             // int mode = createNewFile ? File.CREATE : File.WRITE_ONLY;
@@ -160,7 +163,9 @@ public final class GPSKMZFile extends GPSKMLFile {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.out.GPSFile#isOpen()
      */
     @Override

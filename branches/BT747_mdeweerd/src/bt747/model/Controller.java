@@ -278,8 +278,12 @@ public class Controller {
             lastError = BT747Constants.ERROR_UNKNOWN_OUTPUT_FORMAT;
             lastErrorInfo = "" + logType;
         }
+        return gpsFile;
+    }
+    
+    private void configureGpsFile(GPSFile gpsFile) {
         if (gpsFile != null) {
-            if (!((logType == Model.GPX_LOGTYPE) && m.getGpxUTC0())) {
+            if (!((gpsFile.getClass() == GPSGPXFile.class) && m.getGpxUTC0())) {
                 gpsFile
                         .setTimeOffset(m.getIntOpt(Model.GPSTIMEOFFSETHOURS)
                                 * SECONDS_PER_HOUR);
@@ -304,8 +308,6 @@ public class Controller {
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
             gpsFile.setUserWayPointList(userWayPoints);
         }
-
-        return gpsFile;
     }
 
     private String getOutFileExt(final int logType) {
@@ -483,6 +485,8 @@ public class Controller {
         String parameters = ""; // For debug
         GPSLogConvertInterface lc;
         result = 0;
+        configureGpsFile(gpsFile);
+
         if (Generic.isDebug()) {
             Generic.debug("Converting with parameters:\n");
         }
@@ -540,6 +544,7 @@ public class Controller {
         // conversion.
 
         gpsFile = (GPSArray) getOutFileHandler(Model.ARRAY_LOGTYPE);
+        configureGpsFile(gpsFile);
 
         gpsFile.initialiseFile("", "", -1, m.getOutputFileSplitType());
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
