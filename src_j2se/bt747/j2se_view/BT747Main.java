@@ -26,7 +26,6 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Locale;
-import java.util.Set;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.Vector;
@@ -269,13 +268,6 @@ public class BT747Main extends javax.swing.JFrame implements
 
         lbConversionTime.setVisible(false);
 
-        // Looking for ports asynchronously
-        new Thread() {
-            public final void run() {
-                addPortsToGui();
-            }
-        }.start();
-
         addWindowListener(this);
 
         J2SEGeneric.addListener(this);
@@ -440,40 +432,50 @@ public class BT747Main extends javax.swing.JFrame implements
      * 
      */
     private void doLogConversion(final int selectedFormat) {
-        setLogConversionParameters();
-        switch (selectedFormat) {
-        case Model.ARRAY_LOGTYPE:
-            for(int idx = tabbedPanelAll.getTabCount() - 1; idx>=0;idx--) {
-                if (tabbedPanelAll.getComponentAt(idx).getClass() == PositionTablePanel.class) {
-                    tabbedPanelAll.removeTabAt(idx);
+        new Thread() {
+            public final void run() {
+                setLogConversionParameters();
+                switch (selectedFormat) {
+                case Model.ARRAY_LOGTYPE:
+                    for (int idx = tabbedPanelAll.getTabCount() - 1; idx >= 0; idx--) {
+                        if (tabbedPanelAll.getComponentAt(idx).getClass() == PositionTablePanel.class) {
+                            tabbedPanelAll.removeTabAt(idx);
+                        }
+                    }
+                    TracksAndWayPoints r;
+                    r = c.convertLogToTrackAndWayPoints();
+                    PositionTablePanel trackPanel = new PositionTablePanel();
+                    trackPanel.setGpsRecords(r.getTrackPoints());
+                    PositionTablePanel waypointPanel = new PositionTablePanel();
+                    waypointPanel.setGpsRecords(r.getWayPoints());
+                    c.updateWayPoints(r.getWayPoints());
+                    Vector<List<GPSRecord>> trks = new Vector<List<GPSRecord>>(
+                            r.tracks.size());
+                    for (int i = 0; i < r.tracks.size(); i++) {
+                        BT747Vector trk = (BT747Vector) r.tracks.elementAt(i);
+                        Vector<GPSRecord> ntrk = new Vector<GPSRecord>(trk
+                                .size());
+                        for (int j = 0; j < trk.size(); j++) {
+                            ntrk.add((GPSRecord) trk.elementAt(j));
+                        }
+                        trks.add(ntrk);
+                    }
+                    c.setTracks(trks);
+                    tabbedPanelAll.addTab(getString("Track.tabTitle"),
+                            trackPanel);
+                    tabbedPanelAll.setSelectedIndex(tabbedPanelAll
+                            .getTabCount() - 1);
+                    tabbedPanelAll.addTab(getString("WayPoints.tabTitle"),
+                            waypointPanel);
+                    tabbedPanelAll.setSelectedIndex(tabbedPanelAll
+                            .getTabCount() - 1);
+                    break;
+                default:
+                    c.convertLog(selectedFormat);
+                    break;
                 }
             }
-            TracksAndWayPoints r;
-            r = c.convertLogToTrackAndWayPoints();
-            PositionTablePanel trackPanel = new PositionTablePanel();
-            trackPanel.setGpsRecords(r.getTrackPoints());
-            PositionTablePanel waypointPanel = new PositionTablePanel();
-            waypointPanel.setGpsRecords(r.getWayPoints());
-            c.updateWayPoints(r.getWayPoints());
-            Vector<List<GPSRecord>> trks = new Vector<List<GPSRecord>>(r.tracks.size());
-            for(int i = 0; i<r.tracks.size(); i++) {
-                BT747Vector trk = (BT747Vector) r.tracks.elementAt(i);
-                Vector<GPSRecord> ntrk = new Vector<GPSRecord>(trk.size());
-                for(int j = 0; j<trk.size();j++) {
-                    ntrk.add((GPSRecord)trk.elementAt(j));
-                }
-                trks.add(ntrk);
-            }
-            c.setTracks(trks);
-            tabbedPanelAll.addTab(getString("Track.tabTitle"), trackPanel);
-            tabbedPanelAll.setSelectedIndex(tabbedPanelAll.getTabCount() - 1);
-            tabbedPanelAll.addTab(getString("WayPoints.tabTitle"), waypointPanel);
-            tabbedPanelAll.setSelectedIndex(tabbedPanelAll.getTabCount() - 1);
-            break;
-        default:
-            c.convertLog(selectedFormat);
-            break;
-        }
+        }.start();
     }
 
     /**
@@ -494,7 +496,7 @@ public class BT747Main extends javax.swing.JFrame implements
         endTime += (24 * 3600 - 1); // Round to midnight / End of day
         // Offset requested split time
         int offset;
-        offset = 60 * (sfTimeSplitHours.getValue() * 60 + spTimeSplitMinutes
+        offset = 60 * ((Integer)spTimeSplitHours.getValue() * 60 + (Integer)spTimeSplitMinutes
                 .getValue());
         startTime += offset;
         endTime += offset;
@@ -585,13 +587,22 @@ public class BT747Main extends javax.swing.JFrame implements
             break;
         case ModelEvent.CONVERSION_STARTED:
             conversionStartTime = System.currentTimeMillis();
+            lbConversionTime.setVisible(false);
+            lbBusySpinner.setVisible(true);
+            lbBusySpinner.setEnabled(true);
+            lbBusySpinner.setBusy(true);
+            btConvert.setText(getString("Stop_Convert.text"));
             break;
         case ModelEvent.CONVERSION_ENDED:
-            lbConversionTime
-                    .setText(getString("Time_to_convert:_")
+            
+            //lbConversionTime.setText(
+            Generic.debug(getString("Time_to_convert:_")
                             + ((int) (System.currentTimeMillis() - conversionStartTime))
                             + getString("_ms"));
-            lbConversionTime.setVisible(true);
+            //lbConversionTime.setVisible(true);
+            lbBusySpinner.setVisible(false);
+            lbBusySpinner.setBusy(false);
+            btConvert.setText(getString("BT747Main.btConvert.text"));
             break;
         case ModelEvent.CONNECTED:
             btConnect.setText(getString("Disconnect"));
@@ -668,21 +679,31 @@ public class BT747Main extends javax.swing.JFrame implements
         btDownloadIBlue = new javax.swing.JButton();
         btDownloadFromNumerix = new javax.swing.JButton();
         pnConvert = new javax.swing.JPanel();
+        pnConvButtons = new javax.swing.JPanel();
+        btGPX = new javax.swing.JButton();
+        btKML = new javax.swing.JButton();
+        btKMZ = new javax.swing.JButton();
+        btNMEA = new javax.swing.JButton();
+        btHTML = new javax.swing.JButton();
+        btCSV = new javax.swing.JButton();
+        pnLeftConversion = new javax.swing.JPanel();
+        lbConversionTime = new javax.swing.JLabel();
+        lbDeviceType = new javax.swing.JLabel();
         btConvert = new javax.swing.JButton();
-        cbFormat = new javax.swing.JComboBox();
         pnDateFilter = new javax.swing.JPanel();
         lbToDate = new javax.swing.JLabel();
         lbFromDate = new javax.swing.JLabel();
-        startDate = new com.toedter.calendar.JDateChooser();
-        endDate = new com.toedter.calendar.JDateChooser();
-        sfTimeSplitHours = new com.toedter.components.JSpinField();
         lbHour = new javax.swing.JLabel();
-        spTimeSplitMinutes = new com.toedter.components.JSpinField();
         txtTimeSplit = new javax.swing.JLabel();
         lbMinutes = new javax.swing.JLabel();
+        startDate = new org.jdesktop.swingx.JXDatePicker();
+        endDate = new org.jdesktop.swingx.JXDatePicker();
+        spTimeSplitHours = new javax.swing.JSpinner();
+        spTimeSplitMinutes = new javax.swing.JSpinner();
+        cbFormat = new javax.swing.JComboBox();
+        lbBusySpinner = new org.jdesktop.swingx.JXBusyLabel();
+        lbBusySpinner.setVisible(false);
         cbGPSType = new javax.swing.JComboBox();
-        lbDeviceType = new javax.swing.JLabel();
-        lbConversionTime = new javax.swing.JLabel();
         GPSDecodePanel = new javax.swing.JPanel();
         lbLatitude = new javax.swing.JLabel();
         lbLongitude = new javax.swing.JLabel();
@@ -708,7 +729,8 @@ public class BT747Main extends javax.swing.JFrame implements
         infoTextArea = new javax.swing.JTextArea();
         jMenuBar = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
-        setMapCacheDir = new javax.swing.JMenuItem();
+        miFindSerialPorts = new javax.swing.JMenuItem();
+        miMapCacheDir = new javax.swing.JMenuItem();
         miExit = new javax.swing.JMenuItem();
         SettingsMenu = new javax.swing.JMenu();
         btGPSDebug = new javax.swing.JRadioButtonMenuItem();
@@ -959,19 +981,100 @@ public class BT747Main extends javax.swing.JFrame implements
 
         pnConvert.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnConvert.border.title"))); // NOI18N
 
+        pnConvButtons.setPreferredSize(new java.awt.Dimension(30, 30));
+
+        btGPX.setText(bundle.getString("BT747Main.btGPX.text")); // NOI18N
+        btGPX.setToolTipText(bundle.getString("BT747Main.btGPX.toolTipText")); // NOI18N
+        btGPX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btGPXActionPerformed(evt);
+            }
+        });
+
+        btKML.setText(bundle.getString("BT747Main.btKML.text")); // NOI18N
+        btKML.setToolTipText(bundle.getString("BT747Main.btKML.toolTipText")); // NOI18N
+        btKML.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btKMLActionPerformed(evt);
+            }
+        });
+
+        btKMZ.setText(bundle.getString("BT747Main.btKMZ.text")); // NOI18N
+        btKMZ.setToolTipText(bundle.getString("BT747Main.btKMZ.toolTipText")); // NOI18N
+        btKMZ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btKMZActionPerformed(evt);
+            }
+        });
+
+        btNMEA.setText(bundle.getString("BT747Main.btNMEA.text")); // NOI18N
+        btNMEA.setToolTipText(bundle.getString("BT747Main.btNMEA.toolTipText")); // NOI18N
+        btNMEA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btNMEAActionPerformed(evt);
+            }
+        });
+
+        btHTML.setText(bundle.getString("BT747Main.btHTML.text")); // NOI18N
+        btHTML.setToolTipText(bundle.getString("BT747Main.btHTML.toolTipText")); // NOI18N
+        btHTML.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btHTMLActionPerformed(evt);
+            }
+        });
+
+        btCSV.setText(bundle.getString("BT747Main.btCSV.text")); // NOI18N
+        btCSV.setToolTipText(bundle.getString("BT747Main.btCSV.toolTipText")); // NOI18N
+        btCSV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCSVActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout pnConvButtonsLayout = new org.jdesktop.layout.GroupLayout(pnConvButtons);
+        pnConvButtons.setLayout(pnConvButtonsLayout);
+        pnConvButtonsLayout.setHorizontalGroup(
+            pnConvButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnConvButtonsLayout.createSequentialGroup()
+                .add(pnConvButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(btGPX)
+                    .add(btKML)
+                    .add(btKMZ))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnConvButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(btCSV)
+                    .add(btHTML)
+                    .add(btNMEA)))
+        );
+
+        pnConvButtonsLayout.linkSize(new java.awt.Component[] {btCSV, btGPX, btHTML, btKML, btKMZ, btNMEA}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
+        pnConvButtonsLayout.setVerticalGroup(
+            pnConvButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnConvButtonsLayout.createSequentialGroup()
+                .add(btGPX)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btKML)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btKMZ))
+            .add(pnConvButtonsLayout.createSequentialGroup()
+                .add(btCSV)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btHTML)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btNMEA))
+        );
+
+        lbConversionTime.setText(bundle.getString("BT747Main.lbConversionTime.text")); // NOI18N
+        lbConversionTime.setToolTipText(bundle.getString("BT747Main.lbConversionTime.toolTipText")); // NOI18N
+
+        lbDeviceType.setText(bundle.getString("BT747Main.lbDeviceType.text")); // NOI18N
+
         btConvert.setText(bundle.getString("BT747Main.btConvert.text")); // NOI18N
         btConvert.setToolTipText(bundle.getString("BT747Main.btConvert.toolTipText")); // NOI18N
         btConvert.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btConvertActionPerformed(evt);
-            }
-        });
-
-        cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML", "KMZ", "OziExplorer (.PLT)", "NMEA" }));
-        cbFormat.setToolTipText(bundle.getString("BT747Main.cbFormat.toolTipText")); // NOI18N
-        cbFormat.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbFormatItemStateChanged(evt);
             }
         });
 
@@ -981,77 +1084,99 @@ public class BT747Main extends javax.swing.JFrame implements
 
         lbFromDate.setText(bundle.getString("BT747Main.lbFromDate.text")); // NOI18N
 
-        startDate.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                startDateFocusLost(evt);
-            }
-        });
-
-        endDate.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                endDateFocusLost(evt);
-            }
-        });
-
-        sfTimeSplitHours.setMaximum(23);
-        sfTimeSplitHours.setMinimum(0);
-        sfTimeSplitHours.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                sfTimeSplitHoursFocusLost(evt);
-            }
-        });
-
         lbHour.setText(bundle.getString("BT747Main.lbHour.text")); // NOI18N
-
-        spTimeSplitMinutes.setMaximum(59);
-        spTimeSplitMinutes.setMinimum(0);
-        spTimeSplitMinutes.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                spTimeSplitMinutesFocusLost(evt);
-            }
-        });
 
         txtTimeSplit.setText(bundle.getString("BT747Main.txtTimeSplit.text")); // NOI18N
         txtTimeSplit.setToolTipText(bundle.getString("BT747Main.txtTimeSplit.toolTipText")); // NOI18N
 
         lbMinutes.setText(bundle.getString("BT747Main.lbMinutes.text")); // NOI18N
 
+        startDate.setToolTipText(bundle.getString("BT747Main.startDate.toolTipText")); // NOI18N
+        startDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startDateActionPerformed(evt);
+            }
+        });
+        startDate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                startDateFocusLost(evt);
+            }
+        });
+
+        endDate.setToolTipText(bundle.getString("BT747Main.endDate.toolTipText")); // NOI18N
+        endDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                endDateActionPerformed(evt);
+            }
+        });
+        endDate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                endDateFocusLost(evt);
+            }
+        });
+
+        spTimeSplitHours.setModel(new javax.swing.SpinnerNumberModel(0, 0, 24, 1));
+        spTimeSplitHours.setToolTipText(bundle.getString("BT747Main.spTimeSplitHours.toolTipText")); // NOI18N
+        spTimeSplitHours.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                spTimeSplitHoursFocusLost(evt);
+            }
+        });
+
+        spTimeSplitMinutes.setModel(new javax.swing.SpinnerNumberModel(0, 0, 24, 1));
+        spTimeSplitMinutes.setToolTipText(bundle.getString("BT747Main.spTimeSplitMinutes.toolTipText")); // NOI18N
+        spTimeSplitMinutes.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                spTimeSplitMinutesFocusLost(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout pnDateFilterLayout = new org.jdesktop.layout.GroupLayout(pnDateFilter);
         pnDateFilter.setLayout(pnDateFilterLayout);
         pnDateFilterLayout.setHorizontalGroup(
             pnDateFilterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnDateFilterLayout.createSequentialGroup()
-                .add(10, 10, 10)
                 .add(lbFromDate)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(startDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 120, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(startDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(lbToDate)
+                .add(4, 4, 4)
+                .add(endDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(endDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 120, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(txtTimeSplit)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(sfTimeSplitHours, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(4, 4, 4)
+                .add(spTimeSplitHours, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(lbHour, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(spTimeSplitMinutes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(spTimeSplitMinutes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(lbMinutes))
         );
         pnDateFilterLayout.setVerticalGroup(
             pnDateFilterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(endDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(lbToDate)
-            .add(lbFromDate)
-            .add(startDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(sfTimeSplitHours, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(txtTimeSplit)
-            .add(lbHour)
-            .add(spTimeSplitMinutes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(lbMinutes)
+            .add(pnDateFilterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(lbFromDate)
+                .add(startDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(lbToDate)
+                .add(endDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(txtTimeSplit)
+                .add(spTimeSplitHours, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(lbHour)
+                .add(spTimeSplitMinutes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(lbMinutes))
         );
+
+        cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GPX", "CSV", "CompeGPS (.TRK,.WPT)", "KML", "KMZ", "OziExplorer (.PLT)", "NMEA" }));
+        cbFormat.setToolTipText(bundle.getString("BT747Main.cbFormat.toolTipText")); // NOI18N
+        cbFormat.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbFormatItemStateChanged(evt);
+            }
+        });
+
+        lbBusySpinner.setText(bundle.getString("BT747Main.lbBusySpinner.text")); // NOI18N
 
         cbGPSType.setModel(modelGpsType);
         cbGPSType.setToolTipText(bundle.getString("BT747Main.cbGPSType.toolTipText")); // NOI18N
@@ -1061,38 +1186,58 @@ public class BT747Main extends javax.swing.JFrame implements
             }
         });
 
-        lbDeviceType.setText(bundle.getString("BT747Main.lbDeviceType.text")); // NOI18N
-
-        lbConversionTime.setText(bundle.getString("BT747Main.lbConversionTime.text")); // NOI18N
-        lbConversionTime.setToolTipText(bundle.getString("BT747Main.lbConversionTime.toolTipText")); // NOI18N
-
-        org.jdesktop.layout.GroupLayout pnConvertLayout = new org.jdesktop.layout.GroupLayout(pnConvert);
-        pnConvert.setLayout(pnConvertLayout);
-        pnConvertLayout.setHorizontalGroup(
-            pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnDateFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(pnConvertLayout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout pnLeftConversionLayout = new org.jdesktop.layout.GroupLayout(pnLeftConversion);
+        pnLeftConversion.setLayout(pnLeftConversionLayout);
+        pnLeftConversionLayout.setHorizontalGroup(
+            pnLeftConversionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnLeftConversionLayout.createSequentialGroup()
                 .add(btConvert)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(lbBusySpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(lbDeviceType)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cbGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(lbConversionTime))
+            .add(pnDateFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+        );
+        pnLeftConversionLayout.setVerticalGroup(
+            pnLeftConversionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnLeftConversionLayout.createSequentialGroup()
+                .add(pnDateFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnLeftConversionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(lbBusySpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(btConvert)
+                    .add(pnLeftConversionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(lbDeviceType)
+                        .add(cbGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(lbConversionTime)))
+                .addContainerGap())
+        );
+
+        org.jdesktop.layout.GroupLayout pnConvertLayout = new org.jdesktop.layout.GroupLayout(pnConvert);
+        pnConvert.setLayout(pnConvertLayout);
+        pnConvertLayout.setHorizontalGroup(
+            pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnConvertLayout.createSequentialGroup()
+                .add(0, 0, 0)
+                .add(pnLeftConversion, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnConvButtons, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 132, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(10, 10, 10))
         );
         pnConvertLayout.setVerticalGroup(
             pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnConvertLayout.createSequentialGroup()
-                .add(pnDateFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 48, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(btConvert)
-                    .add(cbFormat, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(lbDeviceType)
-                    .add(cbGPSType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(lbConversionTime)))
+                .add(pnConvertLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnLeftConversion, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnConvButtons, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 81, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(0, 0, 0))
         );
 
         GPSDecodePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.GPSDecodePanel.border.title"))); // NOI18N
@@ -1269,7 +1414,7 @@ public class BT747Main extends javax.swing.JFrame implements
             InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1277,13 +1422,22 @@ public class BT747Main extends javax.swing.JFrame implements
 
         FileMenu.setText(bundle.getString("BT747Main.FileMenu.text")); // NOI18N
 
-        setMapCacheDir.setText(bundle.getString("BT747Main.setMapCacheDir.text")); // NOI18N
-        setMapCacheDir.addActionListener(new java.awt.event.ActionListener() {
+        miFindSerialPorts.setText(bundle.getString("BT747Main.miFindSerialPorts.text")); // NOI18N
+        miFindSerialPorts.setToolTipText(bundle.getString("BT747Main.miFindSerialPorts.toolTipText")); // NOI18N
+        miFindSerialPorts.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setMapCacheDirActionPerformed(evt);
+                miFindSerialPortsActionPerformed(evt);
             }
         });
-        FileMenu.add(setMapCacheDir);
+        FileMenu.add(miFindSerialPorts);
+
+        miMapCacheDir.setText(bundle.getString("BT747Main.miMapCacheDir.text")); // NOI18N
+        miMapCacheDir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miMapCacheDirActionPerformed(evt);
+            }
+        });
+        FileMenu.add(miMapCacheDir);
 
         miExit.setText(bundle.getString("BT747Main.miExit.text")); // NOI18N
         miExit.addActionListener(new java.awt.event.ActionListener() {
@@ -1332,7 +1486,7 @@ public class BT747Main extends javax.swing.JFrame implements
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(tabbedPanelAll)
+                .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 653, Short.MAX_VALUE)
                 .addContainerGap())
             .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -1363,14 +1517,6 @@ public class BT747Main extends javax.swing.JFrame implements
     private void miExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
         exitApplication();
     }//GEN-LAST:event_miExitActionPerformed
-
-    private void startDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_startDateFocusLost
-    // TODO add your handling code here:
-    }//GEN-LAST:event_startDateFocusLost
-
-    private void endDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_endDateFocusLost
-    // TODO add your handling code here:
-    }//GEN-LAST:event_endDateFocusLost
 
     private void cbDisableLoggingDuringDownloadFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbDisableLoggingDuringDownloadFocusLost
         c.setBooleanOpt(Model.DISABLELOGDURINGDOWNLOAD, cbDisableLoggingDuringDownload.isSelected());
@@ -1474,7 +1620,11 @@ public class BT747Main extends javax.swing.JFrame implements
     }//GEN-LAST:event_cbFormatItemStateChanged
 
     private void btConvertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConvertActionPerformed
-        doLogConversion(getSelectedFormat(cbFormat.getSelectedItem().toString()));
+        if(btConvert.getText().equals(getString("Stop_Convert.text")) ) {
+            c.stopLogConvert();
+        } else {
+            doLogConversion(getSelectedFormat(cbFormat.getSelectedItem().toString()));
+        }
     }//GEN-LAST:event_btConvertActionPerformed
 
     private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOutputFileActionPerformed
@@ -1751,21 +1901,72 @@ public class BT747Main extends javax.swing.JFrame implements
                 .getText()).getPath());
     }//GEN-LAST:event_tfWorkDirectoryFocusLost
 
-    private void sfTimeSplitHoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_sfTimeSplitHoursFocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_sfTimeSplitHoursFocusLost
-
-    private void spTimeSplitMinutesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTimeSplitMinutesFocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_spTimeSplitMinutesFocusLost
-
     private void tfOutputFileBaseNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfOutputFileBaseNameFocusLost
         c.setOutputFileRelPath(tfOutputFileBaseName.getText());
     }//GEN-LAST:event_tfOutputFileBaseNameFocusLost
 
-    private void setMapCacheDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setMapCacheDirActionPerformed
+    private void miMapCacheDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMapCacheDirActionPerformed
         c.selectMapCacheDirectory();
-}//GEN-LAST:event_setMapCacheDirActionPerformed
+}//GEN-LAST:event_miMapCacheDirActionPerformed
+
+    private void startDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_startDateFocusLost
+        // TODO add your handling code here:
+}//GEN-LAST:event_startDateFocusLost
+
+    private void startDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startDateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_startDateActionPerformed
+
+    private void endDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endDateActionPerformed
+        // TODO add your handling code here:
+}//GEN-LAST:event_endDateActionPerformed
+
+    private void endDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_endDateFocusLost
+        // TODO add your handling code here:
+}//GEN-LAST:event_endDateFocusLost
+
+    private void spTimeSplitHoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTimeSplitHoursFocusLost
+        // TODO add your handling code here:
+}//GEN-LAST:event_spTimeSplitHoursFocusLost
+
+    private void spTimeSplitMinutesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTimeSplitMinutesFocusLost
+        // TODO add your handling code here:
+}//GEN-LAST:event_spTimeSplitMinutesFocusLost
+
+    private void btGPXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGPXActionPerformed
+        doLogConversion(Model.GPX_LOGTYPE);
+    }//GEN-LAST:event_btGPXActionPerformed
+
+    private void btKMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btKMLActionPerformed
+        doLogConversion(Model.KML_LOGTYPE);
+    }//GEN-LAST:event_btKMLActionPerformed
+
+    private void btKMZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btKMZActionPerformed
+        doLogConversion(Model.KMZ_LOGTYPE);
+    }//GEN-LAST:event_btKMZActionPerformed
+
+    private void btCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCSVActionPerformed
+        doLogConversion(Model.CSV_LOGTYPE);
+    }//GEN-LAST:event_btCSVActionPerformed
+
+    private void btHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btHTMLActionPerformed
+        doLogConversion(Model.GMAP_LOGTYPE);
+    }//GEN-LAST:event_btHTMLActionPerformed
+
+    private void btNMEAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNMEAActionPerformed
+        doLogConversion(Model.NMEA_LOGTYPE);
+    }//GEN-LAST:event_btNMEAActionPerformed
+
+    private void miFindSerialPortsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFindSerialPortsActionPerformed
+        // Looking for ports asynchronously
+        new Thread() {
+            public final void run() {
+                addPortsToGui();
+            }
+        }.start();
+
+
+}//GEN-LAST:event_miFindSerialPortsActionPerformed
 
     // public static void main(String args) {
     // main((String[])null);
@@ -1782,12 +1983,18 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JPanel InfoPanel;
     private javax.swing.JPanel LogOperationsPanel;
     private javax.swing.JMenu SettingsMenu;
+    private javax.swing.JButton btCSV;
     private javax.swing.JButton btConnect;
     private javax.swing.JButton btConvert;
     private javax.swing.JButton btDownloadFromNumerix;
     private javax.swing.JButton btDownloadIBlue;
     private javax.swing.JRadioButtonMenuItem btGPSConnectDebug;
     private javax.swing.JRadioButtonMenuItem btGPSDebug;
+    private javax.swing.JButton btGPX;
+    private javax.swing.JButton btHTML;
+    private javax.swing.JButton btKML;
+    private javax.swing.JButton btKMZ;
+    private javax.swing.JButton btNMEA;
     private javax.swing.JButton btOutputFile;
     private javax.swing.JButton btRawLogFile;
     private javax.swing.JButton btWorkingDirectory;
@@ -1798,11 +2005,12 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JCheckBox cbLoggingActive;
     private javax.swing.JComboBox cbPortName;
     private javax.swing.JComboBox cbSerialSpeed;
-    private com.toedter.calendar.JDateChooser endDate;
+    private org.jdesktop.swingx.JXDatePicker endDate;
     private javax.swing.JTextArea infoTextArea;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JScrollPane jScrollPane1;
+    private org.jdesktop.swingx.JXBusyLabel lbBusySpinner;
     private javax.swing.JLabel lbConversionTime;
     private javax.swing.JLabel lbDeviceType;
     private javax.swing.JLabel lbFirmWare;
@@ -1821,16 +2029,19 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JLabel lbTime;
     private javax.swing.JLabel lbToDate;
     private javax.swing.JMenuItem miExit;
+    private javax.swing.JMenuItem miFindSerialPorts;
+    private javax.swing.JMenuItem miMapCacheDir;
     private javax.swing.JPanel pnBottomInformation;
+    private javax.swing.JPanel pnConvButtons;
     private javax.swing.JPanel pnConvert;
     private javax.swing.JPanel pnDateFilter;
     private javax.swing.JPanel pnDownload;
     private javax.swing.JPanel pnDownloadMethod;
     private javax.swing.JPanel pnFiles;
-    private javax.swing.JMenuItem setMapCacheDir;
-    private com.toedter.components.JSpinField sfTimeSplitHours;
-    private com.toedter.components.JSpinField spTimeSplitMinutes;
-    private com.toedter.calendar.JDateChooser startDate;
+    private javax.swing.JPanel pnLeftConversion;
+    private javax.swing.JSpinner spTimeSplitHours;
+    private javax.swing.JSpinner spTimeSplitMinutes;
+    private org.jdesktop.swingx.JXDatePicker startDate;
     private javax.swing.JTabbedPane tabbedPanelAll;
     private javax.swing.JTextField tfOutputFileBaseName;
     private javax.swing.JTextField tfRawLogFilePath;

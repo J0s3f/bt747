@@ -18,7 +18,7 @@
 			<attribute name="javadoc_location" value="jar:file:/C:/Download/swingx-ws-2008_11_30-javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/swingx.jar">
+	<classpathentry kind="lib" path="lib/swingx.jar" sourcepath="C:/Download/swingx-2008_11_30-src.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:file:/C:/Download/swingx-2008_11_30-javadoc.zip!/"/>
 		</attributes>
