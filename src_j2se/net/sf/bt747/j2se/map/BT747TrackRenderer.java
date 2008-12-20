@@ -90,7 +90,6 @@ public class BT747TrackRenderer implements TrackRenderer {
                     - sizeInPixels.getWidth(), viewportBounds.getY(),
                     viewportBounds.getWidth(), viewportBounds.getHeight());
 
-            TileFactory tf = map.getTileFactory();
             Stroke org = g.getStroke();
             g.setStroke(new BasicStroke(1.5f));
             g.setPaint(Color.BLUE);

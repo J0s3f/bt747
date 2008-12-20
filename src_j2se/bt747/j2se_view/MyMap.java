@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -41,12 +42,13 @@ import net.sf.bt747.j2se.map.WaypointAdapter;
 
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.JXMapViewer;
+import org.jdesktop.swingx.hyperlink.LinkAction;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
-import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
+import org.jdesktop.swingx.painter.CompoundPainter;
 
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -70,13 +72,15 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
         map = new JXMapKit();
         map.setMiniMapVisible(true);
         // map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
-        setOpenstreetMap();
         mapViewer = map.getMainMap();
         waypointPainter = new MyWaypointPainter<JXMapViewer>();
         waypointPainter
                 .setRenderer(WayPointRendererFactoryMethod.getInstance());
         mapViewer.setRecenterOnClickEnabled(true);
-        mapViewer.setOverlayPainter(waypointPainter);
+        mapViewer.getOverlayPainter();
+        CompoundPainter cp = new CompoundPainter();
+        cp.setPainters(mapViewer.getOverlayPainter(), waypointPainter);
+        mapViewer.setOverlayPainter(cp);
 
         mouseListener ml = new mouseListener();
         mapViewer.addMouseListener(ml);
@@ -114,6 +118,10 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
         m = c.getModel();
         m.addListener(this);
 
+        updateMap();
+        map.setZoom(tf.getInfo().getMaximumZoomLevel() - 4);
+        map.setAddressLocation(new GeoPosition(51.5, 0));
+
         setMapTileCacheDirectory();
     }
 
@@ -125,13 +133,20 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
     public void modelEvent(ModelEvent e) {
         switch (e.getType()) {
         case ModelEvent.SETTING_CHANGE:
-            if (e.getArg() != null) {
-                if (e.getArg().equals(String.valueOf(Model.MAPCACHEDIRECTORY))) {
+            try {
+                int arg = Integer.valueOf((String) e.getArg());
+                switch (arg) {
+                case Model.MAPCACHEDIRECTORY:
                     setMapTileCacheDirectory(m
                             .getStringOpt(Model.MAPCACHEDIRECTORY));
+                    break;
+                case Model.MAPTYPE:
+                    updateMap();
+                    break;
                 }
+            } catch (Exception ex) {
+                // TODO: handle exception
             }
-
             break;
 
         default:
@@ -139,6 +154,10 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
         }
         // TODO Auto-generated method stub
 
+    }
+
+    private void updateMap() {
+        setMap(m.getIntOpt(Model.MAPTYPE));
     }
 
     public void setMapTileCacheDirectory() {
@@ -267,53 +286,171 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
         updateWaypoints();
     }
 
+    private final TileFactoryInfo tfiOpenStreetMap = new MyTileFactoryInfo(
+            "osm", 1,
+            // tile size is 256 and x/y orientation is normal
+            18, 19, 256, true, true, "http://tile.openstreetmap.org", "x", "y",
+            "z",
+            // Provider Description
+            "OpenStreetMap (Mapnik)",
+            // Provider Link
+            "http://www.openstreetmap.org") {
+        public String getTileUrl(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            return url;
+        }
+    };
+
+    private final TileFactoryInfo tfiOSM_OSMARENDER = new MyTileFactoryInfo(
+            // tile size is 256 and x/y orientation is normal
+            "osmarender", 1, 18, 19, 256, true, true,
+            "http://tah.openstreetmap.org/Tiles/tile", "x", "y", "z",
+            // Provider Description
+            "Open Street Map (Osmarender)",
+            // Provider Link
+            "http://www.openstreetmap.org") {
+        public String getTileUrl(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            return url;
+        }
+    };
+
+    private final TileFactoryInfo tfiOSM_OSM_CYCLE = new MyTileFactoryInfo(
+            // tile size is 256 and x/y orientation is normal
+            "osmcycle", 1, 15, 19, 256, true, true,
+            "http://www.thunderflames.org/tiles/cycle", "x", "y", "z",
+            // Provider Description
+            "OpenCycleMap.org - Creative Commons-by-SA License",
+            // Provider Link
+            "http://www.opencylemap.org") {
+        public String getTileUrl(int x, int y, int zoom) {
+            zoom = getTotalMapZoom() - zoom;
+            String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            return url;
+        }
+
+    };
+
+    class MyTileFactoryInfo extends TileFactoryInfo {
+        public String description;
+        public String url;
+
+        /**
+         * @param name
+         * @param minimumZoomLevel
+         * @param maximumZoomLevel
+         * @param totalMapZoom
+         * @param tileSize
+         * @param xr2l
+         * @param yt2b
+         * @param baseURL
+         * @param xparam
+         * @param yparam
+         * @param zparam
+         */
+        public MyTileFactoryInfo(String name, int minimumZoomLevel,
+                int maximumZoomLevel, int totalMapZoom, int tileSize,
+                boolean xr2l, boolean yt2b, String baseURL, String xparam,
+                String yparam, String zparam, String description,
+                String url) {
+            super(name, minimumZoomLevel, maximumZoomLevel, totalMapZoom,
+                    tileSize, xr2l, yt2b, baseURL, xparam, yparam, zparam);
+            this.url = url;
+            this.description = description;
+        }
+
+    }
+
+    // Not used for license reasons
+    private final int GOOGLEMAPS_MAX_ZOOM = 18;
+    private TileFactoryInfo tfiGoogleMaps = new TileFactoryInfo(
+            // tile size is 256 and x/y orientation is normal
+            "gmapstreet", 1, GOOGLEMAPS_MAX_ZOOM - 2, GOOGLEMAPS_MAX_ZOOM, 256,
+            true, true,
+            // "http://mt2.google.com/mt?n=404&v=w2.21",//5/15/10.png",
+            "http://khm2.google.com/kh?v=33", "x", "y", "z") {
+        public String getTileUrl(int x, int y, int zoom) {
+            zoom = GOOGLEMAPS_MAX_ZOOM - zoom;
+            String url = this.baseURL + "&x=" + x + "&y=" + y + "&z=" + zoom;
+            return url;
+        }
+
+    };
+
+    enum MapType {
+        OpenStreetMap, OsmaRender, Cycle
+    };
+
+    private void setMap(int maptypeOrdinal) {
+        setMap(MapType.values()[maptypeOrdinal]);
+
+    }
+
+    private class MyLinkAction extends LinkAction<String> {
+
+            /**
+         * 
+         */
+        private static final long serialVersionUID = -3604244390869862416L;
+            private String des;
+            private String url;
+            
+            public MyLinkAction(String description, String b) {
+                des = description;
+                url = b;
+            }
+
+            public String toString() {
+                return des;
+            };
+
+        /* (non-Javadoc)
+         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+         */
+        public void actionPerformed(ActionEvent e) {
+            BrowserControl.displayURL(url);
+        }
+    };
+
     /**
      * 
      */
-    private void setOpenstreetMap() {
-        final int max = 19;
-        TileFactoryInfo info = new TileFactoryInfo("osm", 1, max - 2, max, 256,
-                true, true, // tile size is 256 and x/y orientation is normal
-                "http://tile.openstreetmap.org",// 5/15/10.png",
-                "x", "y", "z") {
-            public String getTileUrl(int x, int y, int zoom) {
-                zoom = max - zoom;
-                String url = this.baseURL + "/" + zoom + "/" + x + "/" + y
-                        + ".png";
-                return url;
-            }
-
-        };
+    private void setMap(MapType maptype) {
+        TileFactoryInfo info;
+        ;
+        switch (maptype) {
+        case OsmaRender:
+            info = tfiOSM_OSMARENDER;
+            break;
+        case Cycle:
+            info = tfiOSM_OSM_CYCLE;
+            break;
+        case OpenStreetMap:
+        default:
+            info = tfiOpenStreetMap;
+        }
+        int currentzoom = map.getMainMap().getZoom();
         tf = new DefaultTileFactory(info);
         setMapTileCacheDirectory();
         map.setTileFactory(tf);
-        map.setZoom(tf.getInfo().getMaximumZoomLevel() - 4);
-        map.setAddressLocation(new GeoPosition(51.5, 0));
-    }
+        map.getMainMap().setZoom(currentzoom);
 
-    private void setOtherMaps() {
-        // http://khm2.google.com/kh?v=33g&x=1042&y=686&z=11&s=Gali
-        final int max = 17;
-        TileFactoryInfo info = new TileFactoryInfo("mapname", 1, max - 2, max,
-                256, true, true, // tile size is 256 and x/y orientation is
-                // normal
-                // "http://mt2.google.com/mt?n=404&v=w2.21",//5/15/10.png",
-                "http://khm2.google.com/kh?v=33", "x", "y", "z") {
-            public String getTileUrl(int x, int y, int zoom) {
-                zoom = max - zoom;
-                String url = this.baseURL + "&x=" + x + "&y=" + y + "&z="
-                        + zoom;
-                return url;
-            }
-
-        };
-        TileFactory tf = new DefaultTileFactory(info);
-        mapViewer.setTileFactory(tf);
-
-    }
-
-    private class myMapKit extends JXMapKit {
-
+        if(MyTileFactoryInfo.class.isInstance(info)) {
+            MyTileFactoryInfo tfi = (MyTileFactoryInfo)info;
+            map.getDataProviderLink().setAction(
+                    new MyLinkAction(tfi.description, tfi.url));
+            map.getDataProviderLink().setText(tfi.description);
+            //map.setDataProviderCreditShown(true);
+            map.setDataProviderLinkShown(true);
+            //map.setAddressLocationShown(true);
+        } else {
+            //map.setDataProviderCreditShown(false);
+            map.setDataProviderLinkShown(false);
+        }
+        map.setAddressLocationShown(false);
+        System.gc();
     }
 
     private class MyWaypointPainter<T extends JXMapViewer> extends
