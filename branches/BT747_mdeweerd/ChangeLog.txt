@@ -1,3 +1,6 @@
+Version 1.64.5
+* Selection between different maps is possible.
+
 Version 1.64.4
 * Extra buttons added.
 * Mapping library updated.
