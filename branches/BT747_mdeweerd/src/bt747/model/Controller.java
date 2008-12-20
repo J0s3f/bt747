@@ -268,8 +268,7 @@ public class Controller {
             break;
         case Model.GMAP_LOGTYPE:
             gpsFile = new GPSGmapsHTMLEncodedFile();
-            ((GPSGmapsHTMLEncodedFile) gpsFile).setGoogleKeyCode(m
-                    .getGoogleMapKey());
+            ((GPSGmapsHTMLEncodedFile) gpsFile).setGoogleKeyCode(m.getStringOpt(AppSettings.GOOGLEMAPKEY));
             break;
         case Model.ARRAY_LOGTYPE:
             gpsFile = new GPSArray();
