@@ -17,7 +17,6 @@ package gps.log;
 import bt747.sys.Convert;
 
 import gps.BT747Constants;
-import gps.log.out.CommonOut;
 
 /**
  * Structure to hold GPS data for one point
@@ -285,7 +284,7 @@ public class GPSRecord {
     }
 
     public final boolean hasRcr() {
-        return nsat != -1;
+        return rcr != -1;
     }
 
     public final boolean hasMilisecond() {

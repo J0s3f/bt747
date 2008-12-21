@@ -101,9 +101,6 @@ public final class GPSCSVFile extends GPSFile {
             rec.append(fieldSep + "NSAT (USED/VIEW)");
         }
         // SAT INFO NOT HANDLED
-        // if(activeFileFields.milisecond!=0) {
-        // rec.append(fieldSep+"MILISECOND");
-        // }
         if ((activeFileFields.hasDistance())
                 && (selectedFileFields.hasDistance())) {
             if (!imperial) {
@@ -169,7 +166,7 @@ public final class GPSCSVFile extends GPSFile {
             if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
                 rec.append(fieldSep + CommonOut.getDateStr(t) + fieldSep
                         + CommonOut.getTimeStr(t));
-                if (activeFields.milisecond != 0) {
+                if (activeFields.hasMilisecond()) {
                     rec.append('.');
                     if (r.milisecond < 100) {
                         rec.append('0');
