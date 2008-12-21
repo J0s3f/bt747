@@ -1,3 +1,6 @@
+Version 1.64.7
+* Hopefully fixed a minor naming problem in KML output.
+
 Version 1.64.6
 * fix in CSV output format and correction to RCR field detection in GPSRecord.
 

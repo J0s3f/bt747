@@ -20,7 +20,6 @@ import gps.log.GPSRecord;
 
 import bt747.Version;
 import bt747.sys.Convert;
-import bt747.sys.Generic;
 
 /**
  * Class to write a KML file.
@@ -104,7 +103,6 @@ public class GPSKMLFile extends GPSFile {
      */
     public final void writeFileHeader(final String name) {
         StringBuffer header = new StringBuffer(2048);
-        trackName = name;
         header.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
                 // + "<kml xmlns=\"http://schemas.opengis.net/kml/2.2.0\""
                 // opengis was not understood by google maps
@@ -167,21 +165,18 @@ public class GPSKMLFile extends GPSFile {
             header = "  <Folder>\r\n"// " <name>My Tracks</name>\r\n"+
                     + "    <name>My Trackpoints</name>\r\n"
                     + "    <Folder>\r\n"// " <name>Track-"+m_name+"</name>\r\n"+
-                    + "    <name>Trackpoints-" + trackName
+                    + "    <name>Trackpoints" + trackName
                     + "</name>\r\n"
                     + "      <open>0</open>\r\n" + "\r\n";
         } else {
-            String color;
-            if (goodTrackColor.length() == 6) {
-                color = goodTrackColor.substring(4)
-                        + goodTrackColor.substring(2, 4)
-                        + goodTrackColor.substring(0, 2);
-            } else {
-                color = "FFFFFF";
-            }
-            header = "  <Folder>\r\n" + "  <name>My Tracks</name>\r\n"
-                    + "  <open>0</open>\r\n" + "    <name>Track-" + trackName
-                    + "</name>\r\n";
+            header = "" // New folder for the tracks
+                    + "  <Folder>\r\n"
+                    // Folder name
+                    + "  <name>My Tracks</name>\r\n"
+                    // Folder is closed by default
+                    + "  <open>0</open>\r\n"
+                    // Name for the first track in the folder.
+                    + "    <name>Track" + trackName + "</name>\r\n";
         }
         writeTxt(header);
     }
@@ -318,7 +313,8 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("</description>");
                     }
 
-                    if (((activeFields.hasUtc()) && (selectedFileFields.hasUtc()))) {
+                    if (((activeFields.hasUtc()) && (selectedFileFields
+                            .hasUtc()))) {
                         rec.append("<TimeStamp><when>");
                         if ((activeFields.hasUtc())
                                 && (selectedFileFields.hasUtc())) {
@@ -354,8 +350,10 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("</styleUrl>\r\n");
                     }
 
-                    if (((activeFields.hasLongitude()) && (selectedFileFields.hasLongitude()))
-                            && ((activeFields.hasLatitude()) && (selectedFileFields.hasLatitude()))) {
+                    if (((activeFields.hasLongitude()) && (selectedFileFields
+                            .hasLongitude()))
+                            && ((activeFields.hasLatitude()) && (selectedFileFields
+                                    .hasLatitude()))) {
                         rec.append("<Point>\r\n");
                         rec.append("<coordinates>");
                         rec.append(Convert.toString(s.longitude, 6));
@@ -393,7 +391,8 @@ public class GPSKMLFile extends GPSFile {
                             }
                             startTrack(name);
                         }
-                        if (((activeFields.hasHeight()) && (selectedFileFields.hasHeight())) != (altitudeMode == 0)) {
+                        if (((activeFields.hasHeight()) && (selectedFileFields
+                                .hasHeight())) != (altitudeMode == 0)) {
                             // Must change altitude mode because height
                             // availability changed.
                             isChangeLineString = true;
@@ -439,6 +438,17 @@ public class GPSKMLFile extends GPSFile {
         } // activeFields!=null
     }
 
+    /* (non-Javadoc)
+     * @see gps.log.out.GPSFile#createFile(int, java.lang.String, boolean)
+     */
+    // @Override
+    protected int createFile(int utc, String extra_ext, boolean createNewFile) {
+        /* This is called every time a file is opened or reopened.
+         * Recover the extension for the trackname label in the KML file.
+         */
+        trackName = extra_ext;
+        return super.createFile(utc, extra_ext, createNewFile);
+    }
     /*
      * (non-Javadoc)
      * 
