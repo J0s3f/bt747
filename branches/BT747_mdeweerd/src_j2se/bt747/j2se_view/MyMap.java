@@ -309,7 +309,7 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
             // Provider Description
             "Open Street Map (Osmarender)",
             // Provider Link
-            "http://www.openstreetmap.org") {
+            "http://www.openstreetmap.org/?layers=0B00FTF") {
         public String getTileUrl(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
             String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
