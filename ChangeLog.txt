@@ -1,3 +1,6 @@
+Version 1.64.8
+* More thread synchronisation protection for serial connection.
+
 Version 1.64.7
 * Hopefully fixed a minor naming problem in KML output.
 

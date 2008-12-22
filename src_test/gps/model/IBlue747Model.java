@@ -14,21 +14,16 @@
 //***  *********************************************************** ***
 package gps.model;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import bt747.j2se_view.BT747cmd;
-import bt747.model.Controller;
-import bt747.model.Model;
-import bt747.sys.Convert;
-import bt747.sys.Generic;
-import bt747.sys.Interface;
-
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.convert.Conv;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import bt747.sys.Convert;
+import bt747.sys.Generic;
+import bt747.sys.Interface;
 
 /**
  * Implement a model of the BT747 (to run on PC).
@@ -255,9 +250,14 @@ public class IBlue747Model {
                 // case BT747_dev.PMTK_DT_DATUM: // CMD 530
                 // case BT747_dev.PMTK_DT_FLASH_USER_OPTION: // CMD 590
             case BT747Constants.PMTK_Q_RELEASE:
+//                m_GPSrxtx.sendPacket("PMTK" + BT747Constants.PMTK_DT_RELEASE
+//                        + "," + "AXN_1.0-B_1.3_C01" + "," + "0001" + ","
+//                        + "TSI_747A+" + "," + "1.0");
                 m_GPSrxtx.sendPacket("PMTK" + BT747Constants.PMTK_DT_RELEASE
-                        + "," + "AXN_1.0-B_1.3_C01" + "," + "0001" + ","
-                        + "TSI_747A+" + "," + "1.0");
+                        + "," + "AXN_1.0-B_1.3_C01" + "," + "8805" + ","
+                        + "QST1300" + "," + "1.0");
+                
+                //AXN_0.3-B_1.3_C01
                 break;
             case BT747Constants.PMTK_Q_VERSION:
                 break;
