@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class makes it easy to drag and drop files from the operating system to
@@ -305,9 +303,9 @@ public class FileDrop {
               log(out, "FileDrop: file list accepted.");
 
               // Get a useful list
-              java.util.List fileList = (java.util.List) tr
+              java.util.List<File> fileList = (java.util.List<File>) tr
                   .getTransferData(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
-              java.util.Iterator iterator = fileList.iterator();
+              //java.util.Iterator iterator = fileList.iterator();
 
               // Convert list to array
               java.io.File[] filesTemp = new java.io.File[fileList.size()];
@@ -433,7 +431,7 @@ public class FileDrop {
 
   private static File[] createFileArray(BufferedReader bReader, PrintStream out) {
     try {
-      java.util.List list = new java.util.ArrayList();
+      java.util.List<File> list = new java.util.ArrayList<File>();
       java.lang.String line = null;
       while ((line = bReader.readLine()) != null) {
         try {
@@ -448,7 +446,7 @@ public class FileDrop {
         }
       }
 
-      return (java.io.File[]) list.toArray(new File[list.size()]);
+      return list.toArray(new File[list.size()]);
     } catch (IOException ex) {
       log(out, "FileDrop: IOException");
     }
