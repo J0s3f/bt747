@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.InputVerifier;
@@ -48,12 +49,11 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bt747.Version;
-import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
-import bt747.model.Model;
 import bt747.sys.Generic;
 import bt747.sys.Settings;
+import bt747.sys.interfaces.BT747Vector;
 
 public final class J2SEAppController extends Controller {
 
@@ -121,7 +121,7 @@ public final class J2SEAppController extends Controller {
     /**
      * Reference to the model.
      */
-    private Model m;
+    private J2SEAppModel m;
 
     /** Options for the first warning message. */
     private static String[] C_ERASE_OR_CANCEL;
@@ -178,7 +178,7 @@ public final class J2SEAppController extends Controller {
      * @param model
      *            The model to associate with this controller.
      */
-    public J2SEAppController(final Model model) {
+    public J2SEAppController(final J2SEAppModel model) {
         initGpsPort();
 
         this.m = model;
@@ -190,7 +190,7 @@ public final class J2SEAppController extends Controller {
         super.setModel(m);
         super.init();
         // c = new Controller(model);
-        String localeStr = m.getStringOpt(Model.LANGUAGE);
+        String localeStr = m.getStringOpt(J2SEAppModel.LANGUAGE);
         Locale.setDefault(localeFromString(localeStr));
         // Initialised here to be sure that the app language can be changed
         // after
@@ -217,7 +217,7 @@ public final class J2SEAppController extends Controller {
      */
 
     public final void convertLog(final int logType) {
-        if (logType == Model.KMZ_LOGTYPE) {
+        if (logType == J2SEAppModel.KMZ_LOGTYPE) {
             if (doConvertLog(logType, new GPSKMZFile(), ".kmz") != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
@@ -227,7 +227,7 @@ public final class J2SEAppController extends Controller {
             }
         }
         if (c.getUserWayPoints() != null) {
-            updateUserWayPoints(c.getUserWayPoints());
+            m.setUserWayPoints(c.getUserWayPoints());
         }
     }
 
@@ -499,7 +499,7 @@ public final class J2SEAppController extends Controller {
      */
     protected final void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
-            if (m.getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT)) {
+            if (m.getBooleanOpt(J2SEAppModel.IS_STOP_LOGGING_ON_CONNECT)) {
                 c.setLoggingActive(false); // First command could fail, so
                 // repeat.
                 c.setLoggingActive(false);
@@ -513,7 +513,7 @@ public final class J2SEAppController extends Controller {
      * Initialise the application settings.
      */
     private void initAppSettings() {
-        AppSettings.defaultBaseDirPath = java.lang.System
+        J2SEAppModel.defaultBaseDirPath = java.lang.System
                 .getProperty("user.home");
 
         if ((Settings.getAppSettings() == null)
@@ -812,7 +812,7 @@ public final class J2SEAppController extends Controller {
     
     public final void selectMapCacheDirectory() {
         javax.swing.JFileChooser CacheDirChooser;
-        File f = new File(m.getStringOpt(AppSettings.MAPCACHEDIRECTORY));
+        File f = new File(m.getStringOpt(J2SEAppModel.MAPCACHEDIRECTORY));
         CacheDirChooser = new javax.swing.JFileChooser(f);
         CacheDirChooser.setSelectedFile(f);
         CacheDirChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
@@ -828,7 +828,7 @@ public final class J2SEAppController extends Controller {
                 if (relPath.lastIndexOf('.') == relPath.length() - 4) {
                     relPath = relPath.substring(0, relPath.length() - 4);
                 }
-                c.setStringOpt(AppSettings.MAPCACHEDIRECTORY, relPath);
+                c.setStringOpt(J2SEAppModel.MAPCACHEDIRECTORY, relPath);
             } catch (Exception e) {
                 Generic.debug(getString("CacheDirChooser"), e);
             }
@@ -854,29 +854,45 @@ public final class J2SEAppController extends Controller {
 
     }
 
-    private MapViewerInterface mapViewer = null;
-
-    public void setMapViewer(final MapViewerInterface m) {
-        mapViewer = m;
+    /**
+     * 
+     */
+    public void doLogConversion(final int selectedFormat) {
+        new Thread() {
+            public final void run() {
+                //setLogConversionParameters();
+                switch (selectedFormat) {
+                case J2SEAppModel.ARRAY_LOGTYPE:
+                    TracksAndWayPoints r;
+                    r = convertLogToTrackAndWayPoints();
+                    PositionTablePanel trackPanel = new PositionTablePanel();
+                    trackPanel.setGpsRecords(r.getTrackPoints());
+                    PositionTablePanel waypointPanel = new PositionTablePanel();
+                    waypointPanel.setGpsRecords(r.getWayPoints());
+                    m.setWayPoints(r.getWayPoints());
+                    Vector<List<GPSRecord>> trks = new Vector<List<GPSRecord>>(
+                            r.tracks.size());
+                    for (int i = 0; i < r.tracks.size(); i++) {
+                        BT747Vector trk = (BT747Vector) r.tracks.elementAt(i);
+                        Vector<GPSRecord> ntrk = new Vector<GPSRecord>(trk
+                                .size());
+                        for (int j = 0; j < trk.size(); j++) {
+                            ntrk.add((GPSRecord) trk.elementAt(j));
+                        }
+                        trks.add(ntrk);
+                    }
+                    m.setTracks(trks);
+                    break;
+                default:
+                    convertLog(selectedFormat);
+                    break;
+                }
+            }
+        }.start();
+    }
+    
+    public final J2SEAppModel getAppModel() {
+        return m;
     }
 
-    public void updateUserWayPoints(final GPSRecord[] waypoints) {
-        c.setUserWayPoints(waypoints);
-        if (mapViewer != null) {
-            mapViewer.setUserWayPoints(waypoints);
-        }
-    }
-
-    public void updateWayPoints(final GPSRecord[] waypoints) {
-        // c.setUserWayPoints(waypoints);
-        if (mapViewer != null) {
-            mapViewer.setWayPoints(waypoints);
-        }
-    }
-
-    public void setTracks(List<List<GPSRecord>> trks) {
-        if (mapViewer != null) {
-            mapViewer.setTracks(trks);
-        }
-        }
 }

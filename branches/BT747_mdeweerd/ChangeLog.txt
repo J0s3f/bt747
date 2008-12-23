@@ -1,3 +1,7 @@
+Version 1.65.0
+* Refactoring of Log Operations Panel.  Solved problem with short cut conversion buttons
+  not being displayed on some systems.
+
 Version 1.64.8
 * More thread synchronisation protection for serial connection.
 

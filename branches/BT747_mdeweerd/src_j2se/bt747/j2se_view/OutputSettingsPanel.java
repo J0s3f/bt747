@@ -297,6 +297,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
 
         cbGoodFixColor.setText(bundle.getString("BT747Main.cbGoodFixColor.text")); // NOI18N
         cbGoodFixColor.setToolTipText(bundle.getString("BT747Main.cbGoodFixColor.toolTipText")); // NOI18N
+        cbGoodFixColor.setBorderPainted(false);
         cbGoodFixColor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbGoodFixColorActionPerformed(evt);
@@ -305,6 +306,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
 
         cbNoFixColor.setText(bundle.getString("BT747Main.cbNoFixColor.text")); // NOI18N
         cbNoFixColor.setToolTipText(bundle.getString("BT747Main.cbNoFixColor.toolTipText")); // NOI18N
+        cbNoFixColor.setBorderPainted(false);
         cbNoFixColor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbNoFixColorActionPerformed(evt);
