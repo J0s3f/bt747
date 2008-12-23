@@ -34,7 +34,6 @@ import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.filefilters.NMEAFileFilter;
 
 import bt747.model.AppSettings;
-import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Convert;
@@ -65,6 +64,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     /** Creates new form BT747Main */
     public LogOperationsPanel() {
         initComponents();
+        lbBusySpinner.setVisible(false);
     }
     
     public void init(J2SEAppController pC) {
@@ -327,6 +327,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
             lbBusySpinner.setVisible(true);
             lbBusySpinner.setEnabled(true);
             lbBusySpinner.setBusy(true);
+            lbBusySpinner.repaint();
             btConvert.setText(getString("Stop_Convert.text"));
             break;
         case ModelEvent.CONVERSION_ENDED:
@@ -339,6 +340,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
             // lbConversionTime.setVisible(true);
             lbBusySpinner.setVisible(false);
             lbBusySpinner.setBusy(false);
+            lbBusySpinner.repaint();
             btConvert.setText(getString("BT747Main.btConvert.text"));
             break;
         case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:

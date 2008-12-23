@@ -546,6 +546,7 @@ public class Controller {
         configureGpsFile(gpsFile);
 
         gpsFile.initialiseFile("", "", -1, m.getOutputFileSplitType());
+        m.logConversionStarted(Model.ARRAY_LOGTYPE);
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         currentGPSLogConvert = lc;
         try {
@@ -554,6 +555,7 @@ public class Controller {
         } catch (Throwable e) {
             Generic.debug("During conversion", e);
         }
+        m.logConversionEnded(Model.ARRAY_LOGTYPE);
         currentGPSLogConvert = null;
 
         if (error != 0) {
