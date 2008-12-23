@@ -444,12 +444,14 @@ public class BT747Main extends javax.swing.JFrame implements
         case J2SEAppModel.UPDATE_WAYPOINT_LIST:
             if (waypointPanel == null) {
                 waypointPanel = new PositionTablePanel();
+                waypointPanel.setGpsRecords(m.getWayPoints());
                 tabbedPanelAll.addTab(getString("WayPoints.tabTitle"),
                         waypointPanel);
 //                tabbedPanelAll
 //                        .setSelectedIndex(tabbedPanelAll.getTabCount() - 1);
+            } else {
+               waypointPanel.setGpsRecords(m.getWayPoints());
             }
-            waypointPanel.setGpsRecords(m.getWayPoints());
             updateWayPoints();
             break;
         case J2SEAppModel.UPDATE_USERWAYPOINT_LIST:
@@ -458,10 +460,12 @@ public class BT747Main extends javax.swing.JFrame implements
         case J2SEAppModel.UPDATE_TRACKPOINT_LIST:
             if (trackPanel == null) {
                 trackPanel = new PositionTablePanel();
+                trackPanel.setGpsRecords(m.getTracks());
                 tabbedPanelAll
                         .addTab(getString("Track.tabTitle"), trackPanel);
+            } else {
+                trackPanel.setGpsRecords(m.getTracks());
             }
-            trackPanel.setGpsRecords(m.getTracks());
             setTracks();
             tabbedPanelAll.setSelectedComponent(pnMap);
             // for (int idx = tabbedPanelAll.getTabCount() - 1; idx >= 0;
