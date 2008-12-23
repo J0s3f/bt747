@@ -90,7 +90,7 @@ public class Controller {
             { Model.TRK_LOGTYPE, HEIGHT_MSL },
             { Model.KML_LOGTYPE, HEIGHT_MSL },
             { Model.PLT_LOGTYPE, HEIGHT_MSL },
-            { Model.GPX_LOGTYPE, HEIGHT_WGS84 },
+            { Model.GPX_LOGTYPE, HEIGHT_MSL }, // Output in <ele> field
             { Model.NMEA_LOGTYPE, HEIGHT_WGS84 },
             { Model.GMAP_LOGTYPE, HEIGHT_MSL },
             { Model.TRL_LOGTYPE, HEIGHT_WGS84 },

@@ -18,6 +18,9 @@ import gps.BT747Constants;
 import gps.log.GPSRecord;
 import gps.log.out.CommonOut;
 
+import java.util.List;
+import java.util.Vector;
+
 import javax.swing.table.AbstractTableModel;
 
 import bt747.sys.Generic;
@@ -62,12 +65,12 @@ public class PositionTableModel extends AbstractTableModel {
             BT747Constants.FMT_LONGITUDE_IDX, BT747Constants.FMT_HEIGHT_IDX,
             BT747Constants.FMT_HDOP_IDX, BT747Constants.FMT_PDOP_IDX, FMT_VOX };
 
-    private GPSRecord[] gpsData = new GPSRecord[0];
+    private volatile List<List<GPSRecord>> gpsData;
 
     /**
      * @return the gpsData
      */
-    public final GPSRecord[] getGpsData() {
+    public final List<List<GPSRecord>> getGpsData() {
         return this.gpsData;
     }
 
@@ -75,8 +78,25 @@ public class PositionTableModel extends AbstractTableModel {
      * @param gpsData
      *            the gpsData to set
      */
-    public final void setGpsData(final GPSRecord[] gpsData) {
-        this.gpsData = gpsData;
+    public final void setGpsData(final GPSRecord[] gpsdata) {
+        gpsData = null;
+        Vector<List<GPSRecord>> tmp = new Vector<List<GPSRecord>>(1);
+        Vector<GPSRecord>tmpList = new Vector<GPSRecord>(gpsdata.length);
+        for(GPSRecord g:gpsdata) {
+            tmpList.add(g);
+        }
+        tmp.add(tmpList);
+        gpsData = tmp;
+        fireTableStructureChanged();
+    }
+
+    
+    /**
+     * @param gpsData
+     *            the gpsData to set
+     */
+    public final void setGpsData(final List<List<GPSRecord>> gpsdata) {
+        gpsData = gpsdata;
         fireTableStructureChanged();
     }
 
@@ -189,10 +209,28 @@ public class PositionTableModel extends AbstractTableModel {
      */
     public int getRowCount() {
         if (gpsData != null) {
-            return gpsData.length;
+            int count = 0;
+            for(List<GPSRecord> g:gpsData) {
+                count += g.size();
+            }
+            return count;
         } else {
             return 0;
         }
+    }
+
+    
+
+    public GPSRecord getRecordValueAt(int rowIndex) {
+        if (gpsData != null) {
+            int count = rowIndex;
+            for(List<GPSRecord> g:gpsData) {
+                if(count<g.size()) {
+                    return g.get(count);
+                }
+            }
+        }
+        return null;
     }
 
     /*
@@ -201,11 +239,11 @@ public class PositionTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (rowIndex < gpsData.length && gpsData[rowIndex] != null) {
-            return getValue(gpsData[rowIndex], columnIndex);
-        } else {
-            return null;
+        GPSRecord g = getRecordValueAt(rowIndex);
+        if(g!=null) {
+            return getValue(g, columnIndex); 
         }
+        return null;
     }
 
     /*
@@ -224,8 +262,9 @@ public class PositionTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
      */
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        if (rowIndex < gpsData.length) {
-            setValue(value, gpsData[rowIndex], columnIndex);
+        GPSRecord g = getRecordValueAt(rowIndex);
+        if(g!=null) {
+            setValue(value, g, columnIndex);
         }
     }
 

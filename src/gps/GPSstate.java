@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps;
 
 import gps.connection.GPSrxtx;
@@ -27,10 +27,10 @@ import bt747.sys.interfaces.BT747StringTokenizer;
 import bt747.sys.interfaces.BT747Thread;
 
 /**
- * GPSstate maintains a higher level state of communication with the GPS device.
- * It currently contains very specific commands MTK loggers but that could
- * change in the future by extending GPSstate with such features in a derived
- * class.
+ * GPSstate maintains a higher level state of communication with the GPS
+ * device. It currently contains very specific commands MTK loggers but that
+ * could change in the future by extending GPSstate with such features in a
+ * derived class.
  * 
  * @author Mario De Weerd
  * @see GPSrxtx
@@ -68,7 +68,8 @@ public final class GPSstate implements BT747Thread {
     public boolean loggerNeedsInit = false;
     public boolean loggerIsDisabled = false;
 
-    private boolean logFullOverwrite = false; // When true, overwrite log when
+    private boolean logFullOverwrite = false; // When true, overwrite log
+    // when
     // device is full
 
     private int dgpsMode = 0;
@@ -141,7 +142,7 @@ public final class GPSstate implements BT747Thread {
     private final int[] dataRequested = new int[DATA_LAST_INDEX + 1];
     private final boolean[] dataTimesOut = { // Indicates if data times out
     true, // DATA_MEM_USED
-    true, // DATA_MEM_PTS_LOGGED
+            true, // DATA_MEM_PTS_LOGGED
             false, // DATA_FLASH_TYPE
             false, // DATA_LOG_FORMAT
             false, // DATA_MTK_VERSION
@@ -194,45 +195,48 @@ public final class GPSstate implements BT747Thread {
      * @return
      */
     public final boolean checkAvailable(final int dataType) {
-        int ts = Generic.getTimeStamp();
-        if ((dataTimesOut[dataType] || !dataAvailable[dataType])
-                && ((ts - dataRequested[dataType]) > 3500)) {
-            dataRequested[dataType] = ts;
-            switch (dataType) {
-            case DATA_MEM_USED:
-                reqLogMemUsed();
-                break;
-            case DATA_MEM_PTS_LOGGED:
-                reqLogMemPtsLogged();
-                break;
-            case DATA_FLASH_TYPE:
-                reqFlashManuID();
-                break;
-            case DATA_LOG_FORMAT:
-                reqLogFormat();
-                break;
-            case DATA_MTK_VERSION:
-                reqDeviceVersion();
-                break;
-            case DATA_MTK_RELEASE:
-                reqDeviceRelease();
-                break;
-            case DATA_INITIAL_LOG:
-                reqInitialLogMode();
-                break;
-            case DATA_LOG_STATUS:
-                reqLogStatus();
-                break;
-            case DATA_LOG_VERSION:
-                reqMtkLogVersion();
-                break;
-            default:
-                break;
+        if (handler.isConnected()) {
+            int ts = Generic.getTimeStamp();
+            if ((dataTimesOut[dataType] || !dataAvailable[dataType])
+                    && ((ts - dataRequested[dataType]) > 3500)) {
+                dataRequested[dataType] = ts;
+                switch (dataType) {
+                case DATA_MEM_USED:
+                    reqLogMemUsed();
+                    break;
+                case DATA_MEM_PTS_LOGGED:
+                    reqLogMemPtsLogged();
+                    break;
+                case DATA_FLASH_TYPE:
+                    reqFlashManuID();
+                    break;
+                case DATA_LOG_FORMAT:
+                    reqLogFormat();
+                    break;
+                case DATA_MTK_VERSION:
+                    reqDeviceVersion();
+                    break;
+                case DATA_MTK_RELEASE:
+                    reqDeviceRelease();
+                    break;
+                case DATA_INITIAL_LOG:
+                    reqInitialLogMode();
+                    break;
+                case DATA_LOG_STATUS:
+                    reqLogStatus();
+                    break;
+                case DATA_LOG_VERSION:
+                    reqMtkLogVersion();
+                    break;
+                default:
+                    break;
+                }
+                return false;
+            } else {
+                return true;
             }
-            return false;
-        } else {
-            return true;
         }
+        return false;
     }
 
     private void setAvailable(final int dataType) {
@@ -250,7 +254,7 @@ public final class GPSstate implements BT747Thread {
         }
     }
 
-    public final boolean  isAvailable(final int dataType) {
+    public final boolean isAvailable(final int dataType) {
         return dataAvailable[dataType];
     }
 
@@ -279,8 +283,8 @@ public final class GPSstate implements BT747Thread {
 
     /**
      * Start the timer To be called once the port is opened. The timer is used
-     * to launch functions that will check if there is information on the serial
-     * connection or to send to the GPS device.
+     * to launch functions that will check if there is information on the
+     * serial connection or to send to the GPS device.
      */
     public final void setupTimer() {
         // TODO: set up thread in gpsRxTx directly (through controller)
@@ -296,7 +300,7 @@ public final class GPSstate implements BT747Thread {
      * Best followed by eraseLog.
      * 
      * @param newLogFormat
-     *            The format to set.
+     *                The format to set.
      */
     public final void setLogFormat(final int newLogFormat) {
         // Ensure option consistency.
@@ -348,12 +352,13 @@ public final class GPSstate implements BT747Thread {
     }
 
     /**
-     * Request the initial log mode (the first value logged in memory). Will be
-     * analyzed in {@link #analyseLogNmea(String[])}.<br>
+     * Request the initial log mode (the first value logged in memory). Will
+     * be analyzed in {@link #analyseLogNmea(String[])}.<br>
      * Must be accessed through {@link #DATA_INITIAL_LOG}
      */
     private final void reqInitialLogMode() {
-        mtkLogHandler.readLog(6, 2); // 6 is the log mode offset in the log,
+        mtkLogHandler.readLog(6, 2); // 6 is the log mode offset in the
+        // log,
         // 2 is the size
         // Required to know if log is in overwrite mode.
     }
@@ -650,7 +655,7 @@ public final class GPSstate implements BT747Thread {
 
     /**
      * @param holuxName
-     *            The holuxName to set.
+     *                The holuxName to set.
      */
     public final void setHoluxName(final String holuxName) {
         sendNMEA(BT747Constants.HOLUX_MAIN_CMD
@@ -678,8 +683,8 @@ public final class GPSstate implements BT747Thread {
      * Sets the current mac address for bluetooth (Holux 241 devices).
      * 
      * @param btMacAddr
-     *            The Mac address to set in the following format:<br>
-     *            00:1F:14:15:12:13.
+     *                The Mac address to set in the following format:<br>
+     *                00:1F:14:15:12:13.
      */
     public final void setBtMacAddr(final String btMacAddr) {
         String myMacAddr = "";
@@ -736,9 +741,9 @@ public final class GPSstate implements BT747Thread {
                 // currently
                 // ignore
                 // parameter
-                + "," + GLL_Period + "," + RMC_Period + "," + VTG_Period + ","
-                + GSA_Period + "," + GSV_Period + "," + GGA_Period + ","
-                + ZDA_Period + "," + MCHN_Period);
+                + "," + GLL_Period + "," + RMC_Period + "," + VTG_Period
+                + "," + GSA_Period + "," + GSV_Period + "," + GGA_Period
+                + "," + ZDA_Period + "," + MCHN_Period);
 
     }
 
@@ -810,7 +815,8 @@ public final class GPSstate implements BT747Thread {
                 // //
                 // GPRMC,$time,$fix,$latf1,$ns,$lonf1,$ew,$knots,$bear,$date,$magnvar,$magnew,$magnfix
                 // } else if(p_nmea[0].startsWith("GPSTPV")) {
-                // // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
+                // //
+                // GPSTPV,$epoch.$msec,?,$lat,$lon,,$alt,,$speed,,$bear,,,,A
                 // }
             } else if (sNmea[0].startsWith("PMTK")) {
                 if (Generic.isDebug()) {
@@ -994,7 +1000,7 @@ public final class GPSstate implements BT747Thread {
      * Get the amount of memory used.
      * 
      * @param logMemUsed
-     *            the logMemUsed to set
+     *                the logMemUsed to set
      */
     private void setLogMemUsed(final int logMemUsed) {
         this.logMemUsed = logMemUsed;
@@ -1020,7 +1026,7 @@ public final class GPSstate implements BT747Thread {
         return model.length() != 0 ? model + " (" + modelName() + ')' : "";
     }
 
-    /***************************************************************************
+    /*************************************************************************
      * Thread methods implementation
      */
 
@@ -1078,13 +1084,14 @@ public final class GPSstate implements BT747Thread {
 
     }
 
-    /***************************************************************************
+    /*************************************************************************
      * LOGGING FUNCTIONALITY
-     **************************************************************************/
+     ************************************************************************/
 
     /**
-     * <code>dataOK</code> indicates if all volatile data from the device has
-     * been fetched. This is usefull to know if the settings can be backed up.
+     * <code>dataOK</code> indicates if all volatile data from the device
+     * has been fetched. This is usefull to know if the settings can be backed
+     * up.
      */
     private int dataOK = 0;
 
@@ -1106,11 +1113,11 @@ public final class GPSstate implements BT747Thread {
 
     /**
      * @param sNmea
-     *            Elements of the NMEA packet to analyze. <br>
-     *            Example: PMTK182,3,4 <br>
-     *            nmea[0] PMTK182 <br>
-     *            nmea[1] 3 <br>
-     *            nmea[2] 4
+     *                Elements of the NMEA packet to analyze. <br>
+     *                Example: PMTK182,3,4 <br>
+     *                nmea[0] PMTK182 <br>
+     *                nmea[1] 3 <br>
+     *                nmea[2] 4
      * @return
      * @see #reqInitialLogMode()
      */
@@ -1161,12 +1168,14 @@ public final class GPSstate implements BT747Thread {
                         logFullOverwrite = (Convert.toInt(sNmea[3]) == 1);
                         postEvent(GpsEvent.UPDATE_LOG_REC_METHOD);
                         break;
-                    case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2 =
+                    case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2
+                        // =
                         // logging
                         // on/off
                         logStatus = Convert.toInt(sNmea[3]);
                         // logFullOverwrite = (((logStatus &
-                        // BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK) !=
+                        // BT747Constants.PMTK_LOG_STATUS_LOGSTOP_OVER_MASK)
+                        // !=
                         // 0));
                         loggingActive = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGONOF_MASK) != 0));
                         loggerIsFull = (((logStatus & BT747Constants.PMTK_LOG_STATUS_LOGISFULL_MASK) != 0));
@@ -1215,7 +1224,8 @@ public final class GPSstate implements BT747Thread {
                     /** @see #reqInitialLogMode() */
 
                     if (Conv.hex2Int(sNmea[2]) == 6) {
-                        initialLogMode = Conv.hex2Int(sNmea[3].substring(0, 4));
+                        initialLogMode = Conv.hex2Int(sNmea[3]
+                                .substring(0, 4));
                         // correct endian.
                         initialLogMode = (initialLogMode & 0xFF << 8)
                                 | (initialLogMode >> 8);
@@ -1246,7 +1256,7 @@ public final class GPSstate implements BT747Thread {
         return 0; // Done.
     }
 
-    /***************************************************************************
+    /*************************************************************************
      * Getters and Setters
      * 
      */
@@ -1260,8 +1270,8 @@ public final class GPSstate implements BT747Thread {
 
     /**
      * @param gpsDecode
-     *            Activate gps decoding if true, do not decode if false. This
-     *            may improve performance.
+     *                Activate gps decoding if true, do not decode if false.
+     *                This may improve performance.
      */
     public final void setGpsDecode(final boolean gpsDecode) {
         this.gpsDecode = gpsDecode;
@@ -1269,8 +1279,7 @@ public final class GPSstate implements BT747Thread {
     }
 
     protected final void updateIgnoreNMEA() {
-        handler.setIgnoreNMEA((!this.gpsDecode)
-                || isLogDownloadOnGoing());
+        handler.setIgnoreNMEA((!this.gpsDecode) || isLogDownloadOnGoing());
     }
 
     /**
@@ -1303,7 +1312,7 @@ public final class GPSstate implements BT747Thread {
 
     /**
      * @param forceHolux
-     *            Indicates if this device needs special holux decoding.
+     *                Indicates if this device needs special holux decoding.
      */
     public final void setHolux(final boolean forceHolux) {
         this.holux = forceHolux;
@@ -1537,7 +1546,7 @@ public final class GPSstate implements BT747Thread {
      * checksum - this is added by the method.
      * 
      * @param s
-     *            NMEA string to send.
+     *                NMEA string to send.
      */
     public final void sendNMEA(final String s) {
         handler.sendNMEA(s);
@@ -1592,20 +1601,20 @@ public final class GPSstate implements BT747Thread {
 
     /**
      * The GpsModel is waiting for a reply to the question if the currently
-     * existing log with different data can be overwritten. This method must be
-     * called to replay to this question which is in principle the result of a
-     * user reply to a message box.
+     * existing log with different data can be overwritten. This method must
+     * be called to replay to this question which is in principle the result
+     * of a user reply to a message box.
      * 
      * @param isOkToOverwrite
-     *            If true, the existing log can be overwritten
+     *                If true, the existing log can be overwritten
      */
     public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
         mtkLogHandler.replyToOkToOverwrite(isOkToOverwrite);
     }
 
     /**
-     * The log is being erased - the user request to abandon waiting for the end
-     * of this operation.
+     * The log is being erased - the user request to abandon waiting for the
+     * end of this operation.
      */
     public final void stopErase() {
         mtkLogHandler.stopErase();

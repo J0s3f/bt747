@@ -16,6 +16,8 @@ package bt747.j2se_view;
 
 import gps.log.GPSRecord;
 
+import java.util.List;
+
 /**
  *
  * @author  Mario De Weerd
@@ -35,17 +37,18 @@ public class PositionTablePanel extends javax.swing.JPanel {
         tblValues.setModel(tableModel);
     }
 
-    private GPSRecord[] gpsRecords; 
-    
     public void setGpsRecords(final GPSRecord[] records) {
-        // Could transform this in vector table.  Not for the moment.
-        gpsRecords = records;
-        tableModel.setGpsData(gpsRecords);
+        tableModel.setGpsData(records);
     }
     
-    public GPSRecord[] getGpsRecords() {
-        return gpsRecords;
+    public void setGpsRecords(final List<List<GPSRecord>> records) {
+        tableModel.setGpsData(records);
     }
+
+    
+//    public java.util.List<List<GPSRecord>> getGpsRecords() {
+//        return tableModel.getGpsData();
+//    }
     
     /** This method is called from within the constructor to
      * initialize the form.
