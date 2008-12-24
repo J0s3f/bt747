@@ -135,12 +135,13 @@ public class BT747Main extends javax.swing.JFrame implements
 
         pnLogOperationsPanel = new LogOperationsPanel();
         pnLogOperationsPanel.init(c);
+//        pnLogOperationsPanel.setPreferredSize(new java.awt.Dimension(800,800));
+//        getLayout().preferredLayoutSize(tabbedPanelAll);
         tabbedPanelAll
                 .insertTab(
                         getString("LogOperations.tabTitle"),
                         null, pnLogOperationsPanel, null, 0);
         tabbedPanelAll.setSelectedIndex(0);
-
         
         pnOutputSettingsPanel = new OutputSettingsPanel();
         pnOutputSettingsPanel.init(c);
@@ -193,6 +194,22 @@ public class BT747Main extends javax.swing.JFrame implements
             Generic.debug("During map setup", e);
             // TODO: handle exception
         }
+        tabbedPanelAll.invalidate();
+//        tabbedPanelAll.setPreferredSize(null);
+//        tabbedPanelAll.setSize(tabbedPanelAll.getPreferredSize());
+//        jScrollPane2.setMinimumSize(tabbedPanelAll.getPreferredSize());
+//        jScrollPane2.setPreferredSize(tabbedPanelAll.getPreferredSize());
+//        jScrollPane2.setSize(tabbedPanelAll.getPreferredSize());
+//        jScrollPane2.invalidate();
+//        jScrollPane2.validate();
+//        jScrollPane2.setSize(tabbedPanelAll.getPreferredSize());
+//        jScrollPane2.setSize(tabbedPanelAll.getPreferredSize());
+//this.setSize(null);
+//this.setPreferredSize(null);
+        pnBottomInformation.invalidate();
+
+        this.invalidate();
+        this.validate();
         this.pack();
 
         updateGuiData(); // For internationalisation - not so easy in
@@ -489,7 +506,13 @@ public class BT747Main extends javax.swing.JFrame implements
      */
     @SuppressWarnings("unchecked")
     private void initComponents() {//GEN-BEGIN:initComponents
+        java.awt.GridBagConstraints gridBagConstraints;
 
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabbedPanelAll = new javax.swing.JTabbedPane();
+        InfoPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        infoTextArea = new javax.swing.JTextArea();
         pnBottomInformation = new javax.swing.JPanel();
         DownloadProgressBar = new javax.swing.JProgressBar();
         DownloadProgressLabel = new javax.swing.JLabel();
@@ -497,10 +520,6 @@ public class BT747Main extends javax.swing.JFrame implements
         btConnect = new javax.swing.JButton();
         cbSerialSpeed = new javax.swing.JComboBox();
         lbSerialSpeed = new javax.swing.JLabel();
-        tabbedPanelAll = new javax.swing.JTabbedPane();
-        InfoPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        infoTextArea = new javax.swing.JTextArea();
         jMenuBar = new javax.swing.JMenuBar();
         FileMenu = new javax.swing.JMenu();
         miFindSerialPorts = new javax.swing.JMenuItem();
@@ -518,30 +537,57 @@ public class BT747Main extends javax.swing.JFrame implements
         Info = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle
-                .getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         setTitle(bundle.getString("BT747Main.title")); // NOI18N
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setName("BT747Frame"); // NOI18N
 
-        DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults()
-                .getColor("nbProgressBar.Foreground"));
+        jScrollPane2.setBorder(null);
+
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setOpaque(false);
+
+        infoTextArea.setColumns(20);
+        infoTextArea.setLineWrap(true);
+        infoTextArea.setRows(5);
+        infoTextArea.setText(bundle.getString("BT747Main.infoTextArea.text")); // NOI18N
+        infoTextArea.setAutoscrolls(false);
+        infoTextArea.setFocusable(false);
+        infoTextArea.setOpaque(false);
+        jScrollPane1.setViewportView(infoTextArea);
+
+        org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(InfoPanel);
+        InfoPanel.setLayout(InfoPanelLayout);
+        InfoPanelLayout.setHorizontalGroup(
+            InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(InfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        InfoPanelLayout.setVerticalGroup(
+            InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(InfoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        tabbedPanelAll.addTab(bundle.getString("BT747Main.InfoPanel.TabConstraints.tabTitle"), InfoPanel); // NOI18N
+
+        jScrollPane2.setViewportView(tabbedPanelAll);
+        tabbedPanelAll.getAccessibleContext().setAccessibleName(bundle.getString("Log_download_&_Convert")); // NOI18N
+
+        DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
         DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
-        DownloadProgressBar.setToolTipText(bundle
-                .getString("BT747Main.DownloadProgressBar.toolTipText")); // NOI18N
+        DownloadProgressBar.setToolTipText(bundle.getString("BT747Main.DownloadProgressBar.toolTipText")); // NOI18N
         DownloadProgressBar.setFocusable(false);
 
-        DownloadProgressLabel.setText(bundle
-                .getString("BT747Main.DownloadProgressLabel.text")); // NOI18N
+        DownloadProgressLabel.setText(bundle.getString("BT747Main.DownloadProgressLabel.text")); // NOI18N
 
         cbPortName.setEditable(true);
-        cbPortName.setModel(new javax.swing.DefaultComboBoxModel(
-                new String[] { "USB (for Linux, Mac)", "BLUETOOTH (for Mac)",
-                        "COM1:", "COM2:", "COM3:", "COM4:", "COM5:", "COM6:",
-                        "COM7:", "COM8:", "COM9:", "COM10:", "COM11:",
-                        "COM12:", "COM13:", "COM14:", "COM15:", "COM16:" }));
-        cbPortName.setToolTipText(bundle
-                .getString("BT747Main.cbPortName.toolTipText")); // NOI18N
+        cbPortName.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "USB (for Linux, Mac)", "BLUETOOTH (for Mac)", "COM1:", "COM2:", "COM3:", "COM4:", "COM5:", "COM6:", "COM7:", "COM8:", "COM9:", "COM10:", "COM11:", "COM12:", "COM13:", "COM14:", "COM15:", "COM16:" }));
+        cbPortName.setToolTipText(bundle.getString("BT747Main.cbPortName.toolTipText")); // NOI18N
         cbPortName.setPreferredSize(new java.awt.Dimension(200, 22));
         cbPortName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -557,143 +603,63 @@ public class BT747Main extends javax.swing.JFrame implements
         });
 
         cbSerialSpeed.setEditable(true);
-        cbSerialSpeed.setModel(new javax.swing.DefaultComboBoxModel(
-                new String[] { "38400", "115200" }));
-        cbSerialSpeed.setToolTipText(bundle
-                .getString("BT747Main.cbSerialSpeed.toolTipText")); // NOI18N
+        cbSerialSpeed.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "38400", "115200" }));
+        cbSerialSpeed.setToolTipText(bundle.getString("BT747Main.cbSerialSpeed.toolTipText")); // NOI18N
         cbSerialSpeed.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbSerialSpeedFocusLost(evt);
             }
         });
 
-        lbSerialSpeed.setText(bundle
-                .getString("BT747Main.lbSerialSpeed.text")); // NOI18N
+        lbSerialSpeed.setText(bundle.getString("BT747Main.lbSerialSpeed.text")); // NOI18N
 
-        org.jdesktop.layout.GroupLayout pnBottomInformationLayout = new org.jdesktop.layout.GroupLayout(
-                pnBottomInformation);
+        org.jdesktop.layout.GroupLayout pnBottomInformationLayout = new org.jdesktop.layout.GroupLayout(pnBottomInformation);
         pnBottomInformation.setLayout(pnBottomInformationLayout);
-        pnBottomInformationLayout
-                .setHorizontalGroup(pnBottomInformationLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                pnBottomInformationLayout
-                                        .createSequentialGroup()
-                                        .add(btConnect)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                cbPortName,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                250,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.UNRELATED)
-                                        .add(lbSerialSpeed)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                cbSerialSpeed,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.UNRELATED)
-                                        .add(DownloadProgressLabel)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                DownloadProgressBar,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                25, Short.MAX_VALUE)));
-        pnBottomInformationLayout
-                .setVerticalGroup(pnBottomInformationLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                pnBottomInformationLayout
-                                        .createParallelGroup(
-                                                org.jdesktop.layout.GroupLayout.BASELINE)
-                                        .add(btConnect)
-                                        .add(
-                                                cbPortName,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .add(
-                                                cbSerialSpeed,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .add(lbSerialSpeed).add(
-                                                DownloadProgressLabel))
-                        .add(
-                                DownloadProgressBar,
-                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                23,
-                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE));
+        pnBottomInformationLayout.setHorizontalGroup(
+            pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnBottomInformationLayout.createSequentialGroup()
+                .add(btConnect)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbPortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 250, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(lbSerialSpeed)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbSerialSpeed, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(DownloadProgressLabel)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
+        );
+        pnBottomInformationLayout.setVerticalGroup(
+            pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnBottomInformationLayout.createSequentialGroup()
+                .add(0, 0, 0)
+                .add(pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(btConnect)
+                        .add(cbPortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(cbSerialSpeed, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(lbSerialSpeed)
+                        .add(DownloadProgressLabel)))
+                .add(0, 0, 0))
+        );
 
-        DownloadProgressBar.getAccessibleContext().setAccessibleName(
-                bundle.getString("DownloadProgessBar")); // NOI18N
+        DownloadProgressBar.getAccessibleContext().setAccessibleName(bundle.getString("DownloadProgessBar")); // NOI18N
         progressBarUpdate();
-
-        jScrollPane1
-                .setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setOpaque(false);
-
-        infoTextArea.setColumns(20);
-        infoTextArea.setLineWrap(true);
-        infoTextArea.setRows(5);
-        infoTextArea.setText(bundle.getString("BT747Main.infoTextArea.text")); // NOI18N
-        infoTextArea.setAutoscrolls(false);
-        infoTextArea.setFocusable(false);
-        infoTextArea.setOpaque(false);
-        jScrollPane1.setViewportView(infoTextArea);
-
-        org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(
-                InfoPanel);
-        InfoPanel.setLayout(InfoPanelLayout);
-        InfoPanelLayout
-                .setHorizontalGroup(InfoPanelLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                InfoPanelLayout
-                                        .createSequentialGroup()
-                                        .addContainerGap()
-                                        .add(
-                                                jScrollPane1,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                589, Short.MAX_VALUE)
-                                        .addContainerGap()));
-        InfoPanelLayout.setVerticalGroup(InfoPanelLayout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(
-                InfoPanelLayout.createSequentialGroup().addContainerGap()
-                        .add(jScrollPane1,
-                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                237, Short.MAX_VALUE).addContainerGap()));
-
-        tabbedPanelAll.addTab(bundle
-                .getString("BT747Main.InfoPanel.TabConstraints.tabTitle"),
-                InfoPanel); // NOI18N
 
         FileMenu.setText(bundle.getString("BT747Main.FileMenu.text")); // NOI18N
 
-        miFindSerialPorts.setText(bundle
-                .getString("BT747Main.miFindSerialPorts.text")); // NOI18N
-        miFindSerialPorts.setToolTipText(bundle
-                .getString("BT747Main.miFindSerialPorts.toolTipText")); // NOI18N
-        miFindSerialPorts
-                .addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        miFindSerialPortsActionPerformed(evt);
-                    }
-                });
+        miFindSerialPorts.setText(bundle.getString("BT747Main.miFindSerialPorts.text")); // NOI18N
+        miFindSerialPorts.setToolTipText(bundle.getString("BT747Main.miFindSerialPorts.toolTipText")); // NOI18N
+        miFindSerialPorts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miFindSerialPortsActionPerformed(evt);
+            }
+        });
         FileMenu.add(miFindSerialPorts);
 
-        miMapCacheDir.setText(bundle
-                .getString("BT747Main.miMapCacheDir.text")); // NOI18N
+        miMapCacheDir.setText(bundle.getString("BT747Main.miMapCacheDir.text")); // NOI18N
         miMapCacheDir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 miMapCacheDirActionPerformed(evt);
@@ -721,14 +687,12 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         SettingsMenu.add(btGPSDebug);
 
-        btGPSConnectDebug.setText(bundle
-                .getString("BT747Main.btGPSConnectDebug.text")); // NOI18N
-        btGPSConnectDebug
-                .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                        btGPSConnectDebugStateChanged(evt);
-                    }
-                });
+        btGPSConnectDebug.setText(bundle.getString("BT747Main.btGPSConnectDebug.text")); // NOI18N
+        btGPSConnectDebug.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                btGPSConnectDebugStateChanged(evt);
+            }
+        });
         SettingsMenu.add(btGPSConnectDebug);
 
         miMap.setText(bundle.getString("BT747Main.miMap.text")); // NOI18N
@@ -773,40 +737,23 @@ public class BT747Main extends javax.swing.JFrame implements
 
         setJMenuBar(jMenuBar);
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
-                getContentPane());
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING)
-                .add(pnBottomInformation,
-                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                        Short.MAX_VALUE).add(tabbedPanelAll,
-                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 614,
-                        Short.MAX_VALUE));
-        layout
-                .setVerticalGroup(layout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                org.jdesktop.layout.GroupLayout.TRAILING,
-                                layout
-                                        .createSequentialGroup()
-                                        .add(tabbedPanelAll)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                pnBottomInformation,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap()));
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jScrollPane2)
+            .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(jScrollPane2)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
-        tabbedPanelAll.getAccessibleContext().setAccessibleName(
-                bundle.getString("Log_download_&_Convert")); // NOI18N
-
-        getAccessibleContext().setAccessibleName(
-                "MTK Datalogger Control (BT747)");
+        getAccessibleContext().setAccessibleName("MTK Datalogger Control (BT747)");
 
         pack();
     }//GEN-END:initComponents
@@ -994,6 +941,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JTextArea infoTextArea;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbSerialSpeed;
     private javax.swing.JRadioButtonMenuItem miCycle;
     private javax.swing.JMenuItem miExit;
