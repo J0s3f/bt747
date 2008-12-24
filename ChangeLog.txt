@@ -1,3 +1,6 @@
+Version 1.65.1
+* Fixed buttons that were unavailable after connection in log operations panel.
+
 Version 1.65.0
 * Refactoring of Log Operations Panel.  Solved problem with short cut conversion buttons
   not being displayed on some systems.

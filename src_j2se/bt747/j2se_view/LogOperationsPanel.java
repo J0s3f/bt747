@@ -109,6 +109,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         getOutputFilePath();
         getDownloadMethod();
         cbLoggingActive.setSelected(m.isLoggingActive());
+        lbConversionTime.setVisible(false);
 
         updateCbGPSType();
 
@@ -297,6 +298,10 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
             break;
         case ModelEvent.UPDATE_LOG_LOG_STATUS:
             cbLoggingActive.setSelected(m.isLoggingActive());
+            break;
+        case ModelEvent.CONNECTED:
+        case ModelEvent.DISCONNECTED:
+            updateConnected(m.isConnected());
             break;
         case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
             // TODO

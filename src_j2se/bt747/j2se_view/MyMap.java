@@ -1,20 +1,14 @@
-//********************************************************************
-//***                           BT747                              ***
-//***                 (c)2007-2008 Mario De Weerd                  ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***                                                              ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
-/**
- * This needs to be refactored!
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
+
+/*
+ * MapReference.java
+ *
+ * Created on 23 déc. 2008, 21:59:04
+ */
+
 package bt747.j2se_view;
 
 import gps.log.GPSRecord;
@@ -34,13 +28,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.JPanel;
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 
 import net.sf.bt747.j2se.map.BT747TrackRenderer;
 import net.sf.bt747.j2se.map.WayPointRendererFactoryMethod;
 import net.sf.bt747.j2se.map.WaypointAdapter;
 
-import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.hyperlink.LinkAction;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
@@ -50,27 +44,48 @@ import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.painter.CompoundPainter;
 
+import bt747.Version;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 
 /**
+ *
  * @author Mario
- * 
  */
-public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
-    JXMapKit map;
-    JXMapViewer mapViewer;
-    MyWaypointPainter<JXMapViewer> waypointPainter;
-    DefaultTileFactory tf = null;
+public class MyMap extends javax.swing.JPanel implements
+MapViewerInterface, ModelListener {
 
-    /**
-     * 
-     */
+    
+    private JXMapViewer mapViewer;
+    private MyWaypointPainter<JXMapViewer> waypointPainter;
+    private DefaultTileFactory tf = null;
+
+    /** Creates new form MapReference */
     public MyMap() {
-        // TODO Auto-generated constructor stub
-        map = new JXMapKit();
+        initComponents();
+    }
+
+    
+    private J2SEAppController c;
+    private Model m;
+
+    public void init(J2SEAppController pC) {
+        c = pC;
+        m = c.getModel();
+        m.addListener(this);
+
+        initGui();
+        updateMap();
+        map.setZoom(tf.getInfo().getMaximumZoomLevel() - 4);
+        map.setAddressLocation(new GeoPosition(51.5, 0));
+
+        setMapTileCacheDirectory();
+    }
+
+    private void initGui() {
         map.setMiniMapVisible(true);
+        wayPointScrollPane.setVisible(Version.VERSION_NUMBER.equals("d.evel"));
         // map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         mapViewer = map.getMainMap();
         waypointPainter = new MyWaypointPainter<JXMapViewer>();
@@ -86,44 +101,8 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
         mapViewer.addMouseListener(ml);
         mapViewer.addMouseMotionListener(ml);
 
-        add(map);
-        org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(
-                this);
-        this.setLayout(InfoPanelLayout);
-        InfoPanelLayout.setHorizontalGroup(InfoPanelLayout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(
-                InfoPanelLayout.createSequentialGroup()
-                // .addContainerGap()
-                        .add(map, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                300, Short.MAX_VALUE)
-        // .addContainerGap()
-                ));
-        InfoPanelLayout.setVerticalGroup(InfoPanelLayout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(
-                InfoPanelLayout.createSequentialGroup()
-                // .addContainerGap()
-                        .add(map, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                312, Short.MAX_VALUE)
-        // .addContainerGap()
-                ));
-
-        // map.setAddressLocation(new GeoPosition(41.881944,2.5));
     }
-
-    private J2SEAppController c;
-    private Model m;
-
-    public void init(J2SEAppController pC) {
-        c = pC;
-        m = c.getModel();
-        m.addListener(this);
-
-        updateMap();
-        map.setZoom(tf.getInfo().getMaximumZoomLevel() - 4);
-        map.setAddressLocation(new GeoPosition(51.5, 0));
-
-        setMapTileCacheDirectory();
-    }
+    
 
     /*
      * (non-Javadoc)
@@ -178,6 +157,15 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
         }
     }
 
+    private static void addToList(List<Waypoint> waypoints, GPSRecord[] records) {
+        for(GPSRecord r:records) {
+            if (r.hasLatitude() && r.hasLongitude()) {
+                Waypoint w = new WaypointAdapter(r);
+                waypoints.add(w);
+            }
+        }
+    }
+
     private static void addToSet(Set<Waypoint> waypoints, GPSRecord[] records) {
         for (int i = 0; i < records.length; i++) {
             GPSRecord r = records[i];
@@ -188,8 +176,8 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
         }
     }
 
-    private java.util.Set<Waypoint> waypoints = new java.util.HashSet<Waypoint>();
-    private java.util.Set<Waypoint> filepoints = new java.util.HashSet<Waypoint>();
+    private java.util.Vector<Waypoint> waypoints = new java.util.Vector<Waypoint>();
+    private java.util.Vector<Waypoint> filepoints = new java.util.Vector<Waypoint>();
     private java.util.Set<Waypoint> allpoints = new java.util.HashSet<Waypoint>();
 
     private void updateWaypoints() {
@@ -203,8 +191,35 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
 
     public void setUserWayPoints(GPSRecord[] records) {
         filepoints.clear();
-        addToSet(filepoints, records);
+        addToList(filepoints,records);
         updateWaypoints();
+        WayPointListModel waypointListModel = 
+            new WayPointListModel();
+        waypointList.setModel(waypointListModel);
+        // Next should be call to factory.
+        waypointList.setCellRenderer(new PictureListCellRenderer());
+    }
+    
+    @SuppressWarnings("serial")
+    private class WayPointListModel extends AbstractListModel {
+
+        /* (non-Javadoc)
+         * @see javax.swing.ListModel#getElementAt(int)
+         */
+        public Object getElementAt(int index) {
+            if(index<filepoints.size()) {
+                return filepoints.get(index);
+            }
+            return null;
+        }
+
+        /* (non-Javadoc)
+         * @see javax.swing.ListModel#getSize()
+         */
+        public int getSize() {
+            return filepoints.size();
+        }
+        
     }
 
     public void addTrack(List<GPSRecord> track) {
@@ -282,7 +297,7 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
      */
     public void setWayPoints(GPSRecord[] records) {
         waypoints.clear();
-        addToSet(waypoints, records);
+        addToList(waypoints, records);
         updateWaypoints();
     }
 
@@ -692,6 +707,7 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
 
     }
 
+
     // From
     // http://today.java.net/pub/a/today/2007/11/13/mapping-mashups-with-jxmapviewer.html
     // final JLabel hoverLabel = new JLabel("Java");
@@ -790,5 +806,53 @@ public class MyMap extends JPanel implements MapViewerInterface, ModelListener {
     // jXMapKit1.getMainMap().repaint();
     // }
     //
+
+    
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    private void initComponents() {//GEN-BEGIN:initComponents
+
+        wayPointScrollPane = new javax.swing.JScrollPane();
+        waypointList = new javax.swing.JList();
+        map = new org.jdesktop.swingx.JXMapKit();
+
+        wayPointScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        wayPointScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        waypointList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Waypoint" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        waypointList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        waypointList.setOpaque(false);
+        wayPointScrollPane.setViewportView(waypointList);
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(wayPointScrollPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 110, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(map, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(map, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 236, Short.MAX_VALUE)
+            .add(wayPointScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+        );
+    }//GEN-END:initComponents
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.jdesktop.swingx.JXMapKit map;
+    private javax.swing.JScrollPane wayPointScrollPane;
+    private javax.swing.JList waypointList;
+    // End of variables declaration//GEN-END:variables
 
 }
