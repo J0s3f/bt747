@@ -17,7 +17,8 @@ import javax.swing.JList;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
-import net.sf.bt747.j2se.map.GPSRecordWaypointAdapter;
+import bt747.j2se_view.model.GPSRecordWaypointAdapter;
+
 
 /**
  * @author Mario

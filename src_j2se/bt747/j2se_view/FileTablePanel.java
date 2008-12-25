@@ -24,8 +24,8 @@ import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
 import net.sf.bt747.j2se.app.filefilters.JpgFileFilter;
 
-import bt747.j2se_view.image.ImageData;
 import bt747.j2se_view.model.FileTableModel;
+import bt747.j2se_view.model.ImageData;
 import bt747.sys.Generic;
 
 /**
