@@ -227,7 +227,7 @@ public final class J2SEAppController extends Controller {
             }
         }
         if (c.getUserWayPoints() != null) {
-            m.setUserWayPoints(c.getUserWayPoints());
+            m.getPositionData().setUserWayPoints(c.getUserWayPoints());
         }
     }
 
@@ -869,7 +869,7 @@ public final class J2SEAppController extends Controller {
                     trackPanel.setGpsRecords(r.getTrackPoints());
                     PositionTablePanel waypointPanel = new PositionTablePanel();
                     waypointPanel.setGpsRecords(r.getWayPoints());
-                    m.setWayPoints(r.getWayPoints());
+                    m.getPositionData().setWayPoints(r.getWayPoints());
                     Vector<List<GPSRecord>> trks = new Vector<List<GPSRecord>>(
                             r.tracks.size());
                     for (int i = 0; i < r.tracks.size(); i++) {
@@ -881,7 +881,7 @@ public final class J2SEAppController extends Controller {
                         }
                         trks.add(ntrk);
                     }
-                    m.setTracks(trks);
+                    m.getPositionData().setTracks(trks);
                     break;
                 default:
                     convertLog(selectedFormat);

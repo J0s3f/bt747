@@ -1,7 +1,7 @@
 /**
  * 
  */
-package bt747.j2se_view;
+package bt747.j2se_view.model;
 
 import gps.log.GPSRecord;
 import gps.log.out.CommonOut;
@@ -12,12 +12,13 @@ import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 import bt747.j2se_view.image.ImageData;
-import bt747.j2se_view.utils.GPSRecordComparator;
+import bt747.j2se_view.utils.GPSRecordTimeComparator;
 
 /**
  * @author Mario
  * 
  */
+@SuppressWarnings("serial")
 public class FileTableModel extends AbstractTableModel {
     private java.util.Hashtable<String, ImageData> imageTable = new Hashtable<String, ImageData>();
     private Vector<String> imageOrder = new Vector<String>();
@@ -39,7 +40,7 @@ public class FileTableModel extends AbstractTableModel {
         for (int i = 0; i < imageOrder.size(); i++) {
             rcrds[i] = imageTable.get(imageOrder.get(i)).getGpsInfo();
         }
-        java.util.Arrays.sort(rcrds, new GPSRecordComparator());
+        java.util.Arrays.sort(rcrds, new GPSRecordTimeComparator());
         return rcrds;
     }
 

@@ -353,19 +353,19 @@ public class BT747Main extends javax.swing.JFrame implements
 
     public void updateUserWayPoints() {
         if (mapViewer != null) {
-            mapViewer.setUserWayPoints(m.getUserWayPoints());
+            mapViewer.setUserWayPoints(m.getPositionData().getWayPoints());
         }
     }
 
     public void updateWayPoints() {
         if (mapViewer != null) {
-            mapViewer.setWayPoints(m.getWayPoints());
+            mapViewer.setWayPoints(m.getPositionData().getWayPoints());
         }
     }
 
     public void setTracks() {
         if (mapViewer != null) {
-            mapViewer.setTracks(m.getTracks());
+            mapViewer.setTracks(m.getPositionData().getTracks());
         }
     }
 
@@ -461,13 +461,13 @@ public class BT747Main extends javax.swing.JFrame implements
         case J2SEAppModel.UPDATE_WAYPOINT_LIST:
             if (waypointPanel == null) {
                 waypointPanel = new PositionTablePanel();
-                waypointPanel.setGpsRecords(m.getWayPoints());
+                waypointPanel.setGpsRecords(m.getPositionData().getWayPoints());
                 tabbedPanelAll.addTab(getString("WayPoints.tabTitle"),
                         waypointPanel);
 //                tabbedPanelAll
 //                        .setSelectedIndex(tabbedPanelAll.getTabCount() - 1);
             } else {
-               waypointPanel.setGpsRecords(m.getWayPoints());
+               waypointPanel.setGpsRecords(m.getPositionData().getWayPoints());
             }
             updateWayPoints();
             break;
@@ -477,11 +477,11 @@ public class BT747Main extends javax.swing.JFrame implements
         case J2SEAppModel.UPDATE_TRACKPOINT_LIST:
             if (trackPanel == null) {
                 trackPanel = new PositionTablePanel();
-                trackPanel.setGpsRecords(m.getTracks());
+                trackPanel.setGpsRecords(m.getPositionData().getTracks());
                 tabbedPanelAll
                         .addTab(getString("Track.tabTitle"), trackPanel);
             } else {
-                trackPanel.setGpsRecords(m.getTracks());
+                trackPanel.setGpsRecords(m.getPositionData().getTracks());
             }
             setTracks();
             tabbedPanelAll.setSelectedComponent(pnMap);

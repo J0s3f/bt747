@@ -18,6 +18,8 @@ import gps.log.GPSRecord;
 
 import java.util.List;
 
+import bt747.j2se_view.model.PositionTableModel;
+
 /**
  *
  * @author  Mario De Weerd

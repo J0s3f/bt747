@@ -4,6 +4,7 @@
 package bt747.j2se_view;
 
 import gps.log.GPSRecord;
+import gps.log.out.CommonOut;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -16,7 +17,7 @@ import javax.swing.JList;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
-import net.sf.bt747.j2se.map.WaypointAdapter;
+import net.sf.bt747.j2se.map.GPSRecordWaypointAdapter;
 
 /**
  * @author Mario
@@ -25,37 +26,45 @@ import net.sf.bt747.j2se.map.WaypointAdapter;
 public class PictureListCellRenderer extends
         javax.swing.DefaultListCellRenderer {
 
-    private final static Border empty = BorderFactory.createEmptyBorder(3, 3, 5, 3);
-    private final static Border selection = new CompoundBorder(
-        BorderFactory.createEmptyBorder(0, 0, 2, 0),
-        BorderFactory.createLineBorder(Color.WHITE, 3));
+    private final static Border empty = BorderFactory.createEmptyBorder(3, 3,
+            5, 3);
+    private final static Border selection = new CompoundBorder(BorderFactory
+            .createEmptyBorder(0, 0, 2, 0), BorderFactory.createLineBorder(
+            Color.WHITE, 3));
 
-    
-    /* (non-Javadoc)
-     * @see javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax.swing.JList,
+     *      java.lang.Object, int, boolean, boolean)
      */
     @Override
     public Component getListCellRendererComponent(JList list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {
-        
+
         // Use a label augmented with an icon representing the picture.
-        
-        if(value!=null) {
-            WaypointAdapter wp = (WaypointAdapter) value;
-            GPSRecord record = wp.getGpsRec();
+
+        GPSRecord record = null;
+        if (value != null) {
+            GPSRecordWaypointAdapter wp = (GPSRecordWaypointAdapter) value;
+            record = wp.getGpsRec();
         }
         JLabel label = new JLabel();
         label.setText("No picture for now.");
         label.setOpaque(false);
 
-        //label.setIcon();
-        
+        // label.setIcon();
+
         label.setBackground(null);
         label.setBorder(isSelected ? selection : empty);
         label.setOpaque(false);
+        if (record != null) {
+            label.setToolTipText("<html>" + CommonOut.getHtml(record));
+        }
 
         return label;
     }
+
     /*
      * (non-Javadoc)
      * 

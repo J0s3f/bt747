@@ -22,7 +22,7 @@ import java.util.Comparator;
  * @author Mario
  * 
  */
-public class GPSRecordComparator implements Comparator<GPSRecord> {
+public class GPSRecordTimeComparator implements Comparator<GPSRecord> {
     /*
      * (non-Javadoc)
      * 

@@ -36,13 +36,13 @@ import org.jdesktop.swingx.mapviewer.WaypointRenderer;
  * @author Mario
  * 
  */
-public class BT747WayPointRenderer implements WaypointRenderer {
+public class BT747MapWayPointRenderer implements WaypointRenderer {
 
     private final static float scale = 8f;
     private final static GeneralPath gp = new GeneralPath();
-    private final static BT747WayPointRenderer instance = new BT747WayPointRenderer();
+    private final static BT747MapWayPointRenderer instance = new BT747MapWayPointRenderer();
 
-    public static BT747WayPointRenderer getInstance() {
+    public static BT747MapWayPointRenderer getInstance() {
         return instance;
     }
 
@@ -57,7 +57,7 @@ public class BT747WayPointRenderer implements WaypointRenderer {
         gp.closePath();
     }
 
-    public BT747WayPointRenderer() {
+    public BT747MapWayPointRenderer() {
         // super(); // Gets image
     }
 
@@ -81,8 +81,8 @@ public class BT747WayPointRenderer implements WaypointRenderer {
         g.drawLine(0, -10, 0, 10);
 
         try {
-            if (((WaypointAdapter) waypoint).isSelected()) {
-                paintWaypointSummary(g, map, (WaypointAdapter) waypoint);
+            if (((GPSRecordWaypointAdapter) waypoint).isShowTag()) {
+                paintWaypointSummary(g, map, (GPSRecordWaypointAdapter) waypoint);
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -136,7 +136,7 @@ public class BT747WayPointRenderer implements WaypointRenderer {
     }
 
     protected void paintWaypointSummary(Graphics2D g, JXMapViewer map,
-            WaypointAdapter waypoint) {
+            GPSRecordWaypointAdapter waypoint) {
         Composite old_comp = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 0.75f));
