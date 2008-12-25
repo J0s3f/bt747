@@ -11,7 +11,8 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import bt747.j2se_view.utils.GPSRecordTimeComparator;
+import net.sf.bt747.j2se.utils.GPSRecordTimeComparator;
+
 
 /**
  * @author Mario
