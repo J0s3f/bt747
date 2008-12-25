@@ -12,7 +12,7 @@
 //***                                                              ***
 //***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-package bt747.j2se_view.exif;
+package net.sf.bt747.j2se.exif;
 
 import gps.log.in.WindowedFile;
 
