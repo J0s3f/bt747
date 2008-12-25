@@ -33,7 +33,7 @@ import javax.swing.DefaultListModel;
 
 import net.sf.bt747.j2se.map.BT747TrackRenderer;
 import net.sf.bt747.j2se.map.WayPointRendererFactoryMethod;
-import net.sf.bt747.j2se.map.WaypointAdapter;
+import net.sf.bt747.j2se.map.GPSRecordWaypointAdapter;
 
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.hyperlink.LinkAction;
@@ -45,6 +45,7 @@ import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.painter.CompoundPainter;
 
 import bt747.Version;
+import bt747.j2se_view.utils.BrowserControl;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -160,7 +161,7 @@ MapViewerInterface, ModelListener {
     private static void addToList(List<Waypoint> waypoints, GPSRecord[] records) {
         for(GPSRecord r:records) {
             if (r.hasLatitude() && r.hasLongitude()) {
-                Waypoint w = new WaypointAdapter(r);
+                Waypoint w = new GPSRecordWaypointAdapter(r);
                 waypoints.add(w);
             }
         }
@@ -170,7 +171,7 @@ MapViewerInterface, ModelListener {
         for (int i = 0; i < records.length; i++) {
             GPSRecord r = records[i];
             if (r.hasLatitude() && r.hasLongitude()) {
-                Waypoint w = new WaypointAdapter(r);
+                Waypoint w = new GPSRecordWaypointAdapter(r);
                 waypoints.add(w);
             }
         }

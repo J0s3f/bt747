@@ -17,6 +17,7 @@ import org.jdesktop.swingx.JXPanel;
  *
  * @author Mario
  */
+@SuppressWarnings("serial")
 public class WayPointPanel extends JXPanel {
 
     /** Creates new form WayPointPanel */

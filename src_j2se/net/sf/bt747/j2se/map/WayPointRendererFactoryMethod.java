@@ -40,7 +40,7 @@ public class WayPointRendererFactoryMethod implements WaypointRenderer {
     public final WaypointRenderer getRenderer(Waypoint waypoint) {
         WaypointRenderer renderer = null;
         try {
-            renderer = ((WaypointAdapter) waypoint).getRenderer();
+            renderer = ((GPSRecordWaypointAdapter) waypoint).getRenderer();
         } catch (ClassCastException e) {
             renderer = defaultRenderer;
         }
@@ -50,7 +50,7 @@ public class WayPointRendererFactoryMethod implements WaypointRenderer {
     public final boolean rendererContains(Waypoint waypoint, Point pt) {
         boolean contains;
         try {
-            contains = ((BT747WayPointRenderer)getRenderer(waypoint)).contains(pt);
+            contains = ((BT747MapWayPointRenderer)getRenderer(waypoint)).contains(pt);
         } catch (ClassCastException e) {
             contains = false;
         }
@@ -59,7 +59,7 @@ public class WayPointRendererFactoryMethod implements WaypointRenderer {
 
     public final void toggleSelected(Waypoint waypoint) {
         try {
-            ((WaypointAdapter)(waypoint)).toggleSelected();
+            ((GPSRecordWaypointAdapter)(waypoint)).toggleShowTag();
         } catch (ClassCastException e) {
             
         }

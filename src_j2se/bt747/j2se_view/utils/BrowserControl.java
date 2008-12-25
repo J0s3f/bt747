@@ -1,4 +1,4 @@
-package bt747.j2se_view;
+package bt747.j2se_view.utils;
 
 import java.io.IOException;
 /** Source: http://www.javaworld.com/javaworld/javatips/jw-javatip66.html */

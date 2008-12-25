@@ -14,15 +14,15 @@ import org.jdesktop.swingx.mapviewer.WaypointRenderer;
  * @author Mario
  * 
  */
-public class WaypointAdapter extends Waypoint {
+public class GPSRecordWaypointAdapter extends Waypoint {
 
     private GPSRecord gpsRec;
-    private WaypointRenderer renderer = BT747WayPointRenderer.getInstance();
+    private WaypointRenderer renderer = BT747MapWayPointRenderer.getInstance();
 
     /**
      * 
      */
-    public WaypointAdapter(final GPSRecord r) {
+    public GPSRecordWaypointAdapter(final GPSRecord r) {
         gpsRec = r;
     }
 
@@ -77,21 +77,21 @@ public class WaypointAdapter extends Waypoint {
         this.renderer = renderer;
     }
 
-    private boolean selected = false;
+    private boolean showTag = false;
 
     /**
      * @return the selected
      */
-    public final boolean isSelected() {
-        return this.selected;
+    public final boolean isShowTag() {
+        return this.showTag;
     }
 
     /**
-     * @param selected
+     * @param showTag
      *            the selected to set
      */
-    public final void toggleSelected() {
-        this.selected = !selected;
+    public final void toggleShowTag() {
+        this.showTag = !showTag;
     }
 
     public String getDescription() {

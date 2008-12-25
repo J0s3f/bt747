@@ -12,7 +12,7 @@
 //***  IS ASSUMED BY THE USER.                                     ***
 //***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-package bt747.j2se_view;
+package bt747.j2se_view.model;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;
@@ -29,6 +29,7 @@ import bt747.sys.Generic;
  * @author Mario De Weerd
  * 
  */
+@SuppressWarnings("serial")
 public class PositionTableModel extends AbstractTableModel {
 
     /**

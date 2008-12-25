@@ -18,6 +18,7 @@ import java.util.Locale;
  *
  * @author  Mario
  */
+@SuppressWarnings("serial")
 public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
 
     private J2SEAppController c;
