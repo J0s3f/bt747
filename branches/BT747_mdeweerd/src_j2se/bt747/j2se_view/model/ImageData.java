@@ -12,7 +12,7 @@
 //***                                                              ***
 //***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-package bt747.j2se_view.image;
+package bt747.j2se_view.model;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;

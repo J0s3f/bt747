@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sf.bt747.j2se.map;
+package bt747.j2se_view.model;
 
 /**
  * @author Mario

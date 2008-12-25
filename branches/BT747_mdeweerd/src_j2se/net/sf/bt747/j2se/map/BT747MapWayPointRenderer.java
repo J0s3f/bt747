@@ -32,6 +32,8 @@ import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
+import bt747.j2se_view.model.GPSRecordWaypointAdapter;
+
 /**
  * @author Mario
  * 

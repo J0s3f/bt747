@@ -1,11 +1,10 @@
 /**
  * 
  */
-package net.sf.bt747.j2se.map;
+package bt747.j2se_view.model;
 
 import org.jdesktop.swingx.mapviewer.Waypoint;
 
-import bt747.j2se_view.image.ImageData;
 
 /**
  * @author Mario

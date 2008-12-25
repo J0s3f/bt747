@@ -1,10 +1,12 @@
 /**
  * 
  */
-package net.sf.bt747.j2se.map;
+package bt747.j2se_view.model;
 
 import gps.log.GPSRecord;
 import gps.log.out.CommonOut;
+
+import net.sf.bt747.j2se.map.BT747MapWayPointRenderer;
 
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.Waypoint;
