@@ -1,4 +1,4 @@
-package net.sf.bt747.j2se.utils;
+package net.sf.bt747.j2se.app.utils;
 
 import java.io.IOException;
 /** Source: http://www.javaworld.com/javaworld/javatips/jw-javatip66.html */
