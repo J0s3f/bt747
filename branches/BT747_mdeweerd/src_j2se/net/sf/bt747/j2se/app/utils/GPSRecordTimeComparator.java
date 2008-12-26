@@ -12,7 +12,7 @@
 //***  IS ASSUMED BY THE USER.                                     ***
 //***  See the GNU General Public License Version 3 for details.   ***
 //***  *********************************************************** ***
-package net.sf.bt747.j2se.utils;
+package net.sf.bt747.j2se.app.utils;
 
 import gps.log.GPSRecord;
 

@@ -29,9 +29,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.bt747.j2se.map.BT747TrackRenderer;
-import net.sf.bt747.j2se.map.MapRendererFactoryMethod;
-import net.sf.bt747.j2se.utils.BrowserControl;
+import net.sf.bt747.j2se.app.map.BT747TrackRenderer;
+import net.sf.bt747.j2se.app.map.MapRendererFactoryMethod;
+import net.sf.bt747.j2se.app.utils.BrowserControl;
 
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.hyperlink.LinkAction;

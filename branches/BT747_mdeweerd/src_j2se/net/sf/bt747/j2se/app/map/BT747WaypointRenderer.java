@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sf.bt747.j2se.map;
+package net.sf.bt747.j2se.app.map;
 
 import java.awt.geom.Point2D;
 

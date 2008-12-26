@@ -14,9 +14,9 @@
 //***  *********************************************************** ***
 package bt747.j2se_view.model;
 
-import net.sf.bt747.j2se.exif.ExifAttribute;
-import net.sf.bt747.j2se.exif.ExifConstants;
-import net.sf.bt747.j2se.exif.ExifJPG;
+import net.sf.bt747.j2se.app.exif.ExifAttribute;
+import net.sf.bt747.j2se.app.exif.ExifConstants;
+import net.sf.bt747.j2se.app.exif.ExifJPG;
 import gps.BT747Constants;
 import gps.log.GPSRecord;
 

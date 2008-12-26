@@ -15,7 +15,7 @@
 /**
  * This needs to be refactored!
  */
-package net.sf.bt747.j2se.map;
+package net.sf.bt747.j2se.app.map;
 
 import gps.log.GPSRecord;
 
