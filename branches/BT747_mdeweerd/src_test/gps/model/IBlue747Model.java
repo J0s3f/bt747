@@ -132,7 +132,7 @@ public class IBlue747Model {
                 // DATA = Parameter data
                 // $PMTK182,3,TYPE,DATA
                 int z_type = Convert.toInt(p_nmea[2]);
-                if (p_nmea.length == 3) {
+                if (p_nmea.length >= 3) {
                     switch (z_type) {
                     case BT747Constants.PMTK_LOG_FORMAT: // 2;
                         // if(GPS_DEBUG) {
@@ -153,14 +153,39 @@ public class IBlue747Model {
                     case BT747Constants.PMTK_LOG_REC_METHOD: // 6;
                         break;
                     case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2 =
+                        m_GPSrxtx.sendPacket("PMTK"
+                                + BT747Constants.PMTK_CMD_LOG + ","
+                                + BT747Constants.PMTK_LOG_RESP_STR + ","
+                                + BT747Constants.PMTK_LOG_LOG_STATUS + ","
+                                + "9F"
+                        );
                         // logging
                         // on/off
                         break;
                     case BT747Constants.PMTK_LOG_MEM_USED: // 8;
+                        m_GPSrxtx.sendPacket("PMTK"
+                                + BT747Constants.PMTK_CMD_LOG + ","
+                                + BT747Constants.PMTK_LOG_RESP_STR + ","
+                                + BT747Constants.PMTK_LOG_MEM_USED + ","
+                                + "000323C2"
+                        );
                         break;
-                    case BT747Constants.PMTK_LOG_INIT: // 9;
+                    case BT747Constants.PMTK_LOG_FLASH: // 9;
+                        m_GPSrxtx.sendPacket("PMTK"
+                                + BT747Constants.PMTK_CMD_LOG + ","
+                                + BT747Constants.PMTK_LOG_RESP_STR + ","
+                                + BT747Constants.PMTK_LOG_FLASH + ","
+                                + "C22015C2"
+                        );
+
                         break;
                     case BT747Constants.PMTK_LOG_NBR_LOG_PTS: // 10;
+                        m_GPSrxtx.sendPacket("PMTK"
+                                + BT747Constants.PMTK_CMD_LOG + ","
+                                + BT747Constants.PMTK_LOG_RESP_STR + ","
+                                + BT747Constants.PMTK_LOG_NBR_LOG_PTS + ","
+                                + "0000D014"
+                        );
                         break;
                     case BT747Constants.PMTK_LOG_FLASH_SECTORS: // 11;
                         break;
@@ -242,13 +267,16 @@ public class IBlue747Model {
             case BT747Constants.PMTK_API_Q_DATUM: // CMD 430
             case BT747Constants.PMTK_API_Q_DATUM_ADVANCE: // CMD 431
             case BT747Constants.PMTK_API_Q_GET_USER_OPTION: // CMD 490
+                m_GPSrxtx.sendPacket("PMTK590,0,1,115200,0,1,0,1,1,1,0,0,0,2,9600");
+                break;
                 // case BT747_dev.PMTK_DT_FIX_CTL: // CMD 500
                 // case BT747_dev.PMTK_DT_DGPS_MODE: // CMD 501
                 // case BT747_dev.PMTK_DT_SBAS: // CMD 513
                 // case BT747_dev.PMTK_DT_NMEA_OUTPUT: // CMD 514
                 // case BT747_dev.PMTK_DT_PWR_SAV_MODE: // CMD 520
                 // case BT747_dev.PMTK_DT_DATUM: // CMD 530
-                // case BT747_dev.PMTK_DT_FLASH_USER_OPTION: // CMD 590
+            //case BT747Constants.PMTK_DT_FLASH_USER_OPTION: // CMD 590
+                //break;
             case BT747Constants.PMTK_Q_RELEASE:
 //                m_GPSrxtx.sendPacket("PMTK" + BT747Constants.PMTK_DT_RELEASE
 //                        + "," + "AXN_1.0-B_1.3_C01" + "," + "0001" + ","
@@ -262,6 +290,20 @@ public class IBlue747Model {
             case BT747Constants.PMTK_Q_VERSION:
                 break;
             } // End switch
+        } else if (p_nmea[0].startsWith("PTSI")) {
+            z_Cmd = Convert.toInt(p_nmea[0].substring(4));
+
+            replyMTK_Ack(p_nmea);
+            
+            switch (z_Cmd) {
+            case 999:
+                if(p_nmea[1].equals("IAMAP"));
+                m_GPSrxtx.sendPacket("PTSI999,IAMAP");
+                break;
+
+            default:
+                break;
+            }
         } // End if
         return z_Result;
     } // End method

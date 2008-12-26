@@ -411,7 +411,7 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
                     .add(cbFlashMCHN, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(lbPeriodMCHN)
                     .add(btSetFlash))
-                .add(19, 19, 19))
+                .add(0, 0, 0))
         );
 
         pnNMEAOutput.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnNMEAOutput.border.title"))); // NOI18N
@@ -664,7 +664,7 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
                     .add(btSetNMEAOutput))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(btSetNMEAOutputDefaults)
-                .addContainerGap())
+                .add(0, 0, 0))
         );
 
         pnBluetoothMacAdr.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AdvancedDeviceSettingsPanel.pnBluetoothMacAdr.border.title"))); // NOI18N

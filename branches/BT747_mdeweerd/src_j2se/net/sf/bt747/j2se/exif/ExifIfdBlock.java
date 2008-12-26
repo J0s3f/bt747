@@ -87,7 +87,7 @@ public class ExifIfdBlock {
         // .. plus bytes needed for nextIfdOffset
         payloadOffset += 4;
         
-        // Interoperability number (= count)
+        // Interoperability number (= count) System.err.println(this.toString())
         ExifUtils.addShort2byte(buffer, offset, bigEndian,atrs.size());
         int recordOffset = offset + 2;
         // TODO - needs to be in sorted order.

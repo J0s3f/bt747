@@ -17,6 +17,8 @@
  */
 package net.sf.bt747.j2se.map;
 
+import gps.log.GPSRecord;
+
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -32,13 +34,14 @@ import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
-import bt747.j2se_view.model.GPSRecordWaypointAdapter;
+import bt747.j2se_view.model.BT747Waypoint;
+
 
 /**
  * @author Mario
  * 
  */
-public class BT747MapWayPointRenderer implements WaypointRenderer {
+public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
 
     private final static float scale = 8f;
     private final static GeneralPath gp = new GeneralPath();
@@ -63,6 +66,13 @@ public class BT747MapWayPointRenderer implements WaypointRenderer {
         // super(); // Gets image
     }
 
+    /* (non-Javadoc)
+     * @see net.sf.bt747.j2se.map.BT747WaypointRenderer#isRendererOf(java.lang.Object)
+     */
+    public boolean isRendererOf(Object o) {
+        return true || BT747Waypoint.class.isInstance(o);
+    }
+
     private Color color = new Color(255, 0, 0, 125);
 
     /**
@@ -83,8 +93,8 @@ public class BT747MapWayPointRenderer implements WaypointRenderer {
         g.drawLine(0, -10, 0, 10);
 
         try {
-            if (((GPSRecordWaypointAdapter) waypoint).isShowTag()) {
-                paintWaypointSummary(g, map, (GPSRecordWaypointAdapter) waypoint);
+            if (((BT747Waypoint) waypoint).isShowTag()) {
+                paintWaypointSummary(g, map, (BT747Waypoint) waypoint);
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -138,7 +148,7 @@ public class BT747MapWayPointRenderer implements WaypointRenderer {
     }
 
     protected void paintWaypointSummary(Graphics2D g, JXMapViewer map,
-            GPSRecordWaypointAdapter waypoint) {
+            BT747Waypoint waypoint) {
         Composite old_comp = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 0.75f));
@@ -191,6 +201,7 @@ public class BT747MapWayPointRenderer implements WaypointRenderer {
         // wp.paint(g);
 
     }
+
 
     // http://today.java.net/pub/a/today/2007/11/13/mapping-mashups-with-jxmapviewer.html
     // public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp)

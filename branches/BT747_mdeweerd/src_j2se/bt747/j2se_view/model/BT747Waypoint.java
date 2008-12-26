@@ -6,25 +6,48 @@ package bt747.j2se_view.model;
 import gps.log.GPSRecord;
 import gps.log.out.CommonOut;
 
-import net.sf.bt747.j2se.map.BT747MapWayPointRenderer;
-
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.Waypoint;
-import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
-/**
+/** Waypoint with extra data associated to location.
  * @author Mario
- * 
+ *
  */
-public class GPSRecordWaypointAdapter extends Waypoint {
+public class BT747Waypoint extends Waypoint {
+    private Object data;
 
+    public Object getData() {
+        return this.data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+    
+    
+    private boolean showTag = false;
+
+    /**
+     * @return the selected
+     */
+    public final boolean isShowTag() {
+        return this.showTag;
+    }
+
+    /**
+     * @param showTag
+     *            the selected to set
+     */
+    public final void toggleShowTag() {
+        this.showTag = !showTag;
+    }
+    
+    
     private GPSRecord gpsRec;
-    private WaypointRenderer renderer = BT747MapWayPointRenderer.getInstance();
-
     /**
      * 
      */
-    public GPSRecordWaypointAdapter(final GPSRecord r) {
+    public BT747Waypoint(final GPSRecord r) {
         gpsRec = r;
     }
 
@@ -52,7 +75,7 @@ public class GPSRecordWaypointAdapter extends Waypoint {
     /**
      * @return the gpsRec
      */
-    public final GPSRecord getGpsRec() {
+    public final GPSRecord getGpsRecord() {
         return this.gpsRec;
     }
 
@@ -64,39 +87,8 @@ public class GPSRecordWaypointAdapter extends Waypoint {
         this.gpsRec = gpsRec;
     }
 
-    /**
-     * @return the renderer
-     */
-    public final WaypointRenderer getRenderer() {
-        return this.renderer;
-    }
-
-    /**
-     * @param renderer
-     *            the renderer to set
-     */
-    public final void setRenderer(WaypointRenderer renderer) {
-        this.renderer = renderer;
-    }
-
-    private boolean showTag = false;
-
-    /**
-     * @return the selected
-     */
-    public final boolean isShowTag() {
-        return this.showTag;
-    }
-
-    /**
-     * @param showTag
-     *            the selected to set
-     */
-    public final void toggleShowTag() {
-        this.showTag = !showTag;
-    }
-
     public String getDescription() {
         return "#" + gpsRec.recCount + " " + CommonOut.getRcrSymbolText(gpsRec);
     }
+
 }

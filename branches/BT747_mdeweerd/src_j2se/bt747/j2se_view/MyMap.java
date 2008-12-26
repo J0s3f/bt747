@@ -1,11 +1,11 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * To change this template, choose Tools | Templates and open the template in
+ * the editor.
  */
 
 /*
  * MapReference.java
- *
+ * 
  * Created on 23 déc. 2008, 21:59:04
  */
 
@@ -25,14 +25,12 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.AbstractListModel;
-import javax.swing.DefaultListModel;
-
 import net.sf.bt747.j2se.map.BT747TrackRenderer;
-import net.sf.bt747.j2se.map.WayPointRendererFactoryMethod;
+import net.sf.bt747.j2se.map.MapRendererFactoryMethod;
 import net.sf.bt747.j2se.utils.BrowserControl;
 
 import org.jdesktop.swingx.JXMapViewer;
@@ -45,19 +43,20 @@ import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.painter.CompoundPainter;
 
 import bt747.Version;
-import bt747.j2se_view.model.GPSRecordWaypointAdapter;
+import bt747.j2se_view.model.BT747Waypoint;
+import bt747.j2se_view.model.PositionData;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
+import bt747.sys.Generic;
 
 /**
- *
+ * 
  * @author Mario
  */
-public class MyMap extends javax.swing.JPanel implements
-MapViewerInterface, ModelListener {
+@SuppressWarnings("serial")
+public class MyMap extends javax.swing.JPanel implements ModelListener {
 
-    
     private JXMapViewer mapViewer;
     private MyWaypointPainter<JXMapViewer> waypointPainter;
     private DefaultTileFactory tf = null;
@@ -67,13 +66,12 @@ MapViewerInterface, ModelListener {
         initComponents();
     }
 
-    
     private J2SEAppController c;
-    private Model m;
+    private J2SEAppModel m;
 
     public void init(J2SEAppController pC) {
         c = pC;
-        m = c.getModel();
+        m = c.getAppModel();
         m.addListener(this);
 
         initGui();
@@ -86,24 +84,24 @@ MapViewerInterface, ModelListener {
 
     private void initGui() {
         map.setMiniMapVisible(true);
-        wayPointScrollPane.setVisible(Version.VERSION_NUMBER.equals("d.evel"));
+        wayPointScrollPane
+                .setVisible(Version.VERSION_NUMBER.equals("d.evel"));
         // map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         mapViewer = map.getMainMap();
         waypointPainter = new MyWaypointPainter<JXMapViewer>();
-        waypointPainter
-                .setRenderer(WayPointRendererFactoryMethod.getInstance());
+        waypointPainter.setRenderer(MapRendererFactoryMethod.getInstance());
         mapViewer.setRecenterOnClickEnabled(true);
         mapViewer.getOverlayPainter();
-        CompoundPainter cp = new CompoundPainter();
+        CompoundPainter<Object> cp = new CompoundPainter<Object>();
         cp.setPainters(mapViewer.getOverlayPainter(), waypointPainter);
         mapViewer.setOverlayPainter(cp);
 
         mouseListener ml = new mouseListener();
         mapViewer.addMouseListener(ml);
         mapViewer.addMouseMotionListener(ml);
+        waypointList.setModel(m.getPositionData().getWaypointListModel());
 
     }
-    
 
     /*
      * (non-Javadoc)
@@ -127,6 +125,14 @@ MapViewerInterface, ModelListener {
             } catch (Exception ex) {
                 // TODO: handle exception
             }
+            break;
+        case J2SEAppModel.UPDATE_TRACKPOINT_LIST:
+            setZoom();
+            break;
+        case J2SEAppModel.UPDATE_WAYPOINT_LIST:
+        case J2SEAppModel.UPDATE_USERWAYPOINT_LIST:
+            updateWaypoints();
+            setZoom();
             break;
 
         default:
@@ -158,73 +164,8 @@ MapViewerInterface, ModelListener {
         }
     }
 
-    private static void addToList(List<Waypoint> waypoints, GPSRecord[] records) {
-        for(GPSRecord r:records) {
-            if (r.hasLatitude() && r.hasLongitude()) {
-                Waypoint w = new GPSRecordWaypointAdapter(r);
-                waypoints.add(w);
-            }
-        }
-    }
-
-    private static void addToSet(Set<Waypoint> waypoints, GPSRecord[] records) {
-        for (int i = 0; i < records.length; i++) {
-            GPSRecord r = records[i];
-            if (r.hasLatitude() && r.hasLongitude()) {
-                Waypoint w = new GPSRecordWaypointAdapter(r);
-                waypoints.add(w);
-            }
-        }
-    }
-
-    private java.util.Vector<Waypoint> waypoints = new java.util.Vector<Waypoint>();
-    private java.util.Vector<Waypoint> filepoints = new java.util.Vector<Waypoint>();
-    private java.util.Set<Waypoint> allpoints = new java.util.HashSet<Waypoint>();
 
     private void updateWaypoints() {
-        java.util.Set<GeoPosition> myPositions = new java.util.HashSet<GeoPosition>();
-        allpoints.clear();
-        allpoints.addAll(waypoints);
-        allpoints.addAll(filepoints);
-        waypointPainter.setWaypoints(allpoints);
-        setZoom();
-    }
-
-    public void setUserWayPoints(GPSRecord[] records) {
-        filepoints.clear();
-        addToList(filepoints,records);
-        updateWaypoints();
-        WayPointListModel waypointListModel = 
-            new WayPointListModel();
-        waypointList.setModel(waypointListModel);
-        // Next should be call to factory.
-        waypointList.setCellRenderer(new PictureListCellRenderer());
-    }
-    
-    @SuppressWarnings("serial")
-    private class WayPointListModel extends AbstractListModel {
-
-        /* (non-Javadoc)
-         * @see javax.swing.ListModel#getElementAt(int)
-         */
-        public Object getElementAt(int index) {
-            if(index<filepoints.size()) {
-                return filepoints.get(index);
-            }
-            return null;
-        }
-
-        /* (non-Javadoc)
-         * @see javax.swing.ListModel#getSize()
-         */
-        public int getSize() {
-            return filepoints.size();
-        }
-        
-    }
-
-    public void addTrack(List<GPSRecord> track) {
-        waypointPainter.addTrack(track);
         setZoom();
     }
 
@@ -238,8 +179,10 @@ MapViewerInterface, ModelListener {
         double minlon = 90f;
         double maxlat = -180f;
         double maxlon = -90f;
-        if (waypointPainter.getTracks() != null) {
-            for (List<GPSRecord> trk : waypointPainter.getTracks()) {
+        PositionData pd = m.getPositionData();
+
+        if (pd.getTracks().size() != 0) {
+            for (List<GPSRecord> trk : pd.getTracks()) {
                 for (GPSRecord r : trk) {
                     if (r.latitude < minlat) {
                         minlat = r.latitude;
@@ -257,7 +200,7 @@ MapViewerInterface, ModelListener {
             }
         }
 
-        for (Waypoint w : allpoints) {
+        for (Waypoint w : getWaypointsIterable()) {
             GeoPosition r = w.getPosition();
             if (r.getLatitude() < minlat) {
                 minlat = r.getLatitude();
@@ -284,36 +227,19 @@ MapViewerInterface, ModelListener {
 
     }
 
-    public void setTracks(List<List<GPSRecord>> tracks) {
-
-        waypointPainter.setTracks(tracks);
-        setZoom();
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see bt747.j2se_view.MapViewerInterface#setWayPoints(gps.log.GPSRecord[])
-     */
-    public void setWayPoints(GPSRecord[] records) {
-        waypoints.clear();
-        addToList(waypoints, records);
-        updateWaypoints();
-    }
-
     private final TileFactoryInfo tfiOpenStreetMap = new MyTileFactoryInfo(
             "osm", 1,
             // tile size is 256 and x/y orientation is normal
-            18, 19, 256, true, true, "http://tile.openstreetmap.org", "x", "y",
-            "z",
+            18, 19, 256, true, true, "http://tile.openstreetmap.org", "x",
+            "y", "z",
             // Provider Description
             "OpenStreetMap (Mapnik)",
             // Provider Link
             "http://www.openstreetmap.org") {
         public String getTileUrl(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
-            String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            String url = this.baseURL + "/" + zoom + "/" + x + "/" + y
+                    + ".png";
             return url;
         }
     };
@@ -328,7 +254,8 @@ MapViewerInterface, ModelListener {
             "http://www.openstreetmap.org/?layers=0B00FTF") {
         public String getTileUrl(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
-            String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            String url = this.baseURL + "/" + zoom + "/" + x + "/" + y
+                    + ".png";
             return url;
         }
     };
@@ -343,7 +270,8 @@ MapViewerInterface, ModelListener {
             "http://www.opencylemap.org") {
         public String getTileUrl(int x, int y, int zoom) {
             zoom = getTotalMapZoom() - zoom;
-            String url = this.baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+            String url = this.baseURL + "/" + zoom + "/" + x + "/" + y
+                    + ".png";
             return url;
         }
 
@@ -369,8 +297,7 @@ MapViewerInterface, ModelListener {
         public MyTileFactoryInfo(String name, int minimumZoomLevel,
                 int maximumZoomLevel, int totalMapZoom, int tileSize,
                 boolean xr2l, boolean yt2b, String baseURL, String xparam,
-                String yparam, String zparam, String description,
-                String url) {
+                String yparam, String zparam, String description, String url) {
             super(name, minimumZoomLevel, maximumZoomLevel, totalMapZoom,
                     tileSize, xr2l, yt2b, baseURL, xparam, yparam, zparam);
             this.url = url;
@@ -381,10 +308,11 @@ MapViewerInterface, ModelListener {
 
     // Not used for license reasons
     private final int GOOGLEMAPS_MAX_ZOOM = 18;
+    @SuppressWarnings("unused")
     private TileFactoryInfo tfiGoogleMaps = new TileFactoryInfo(
             // tile size is 256 and x/y orientation is normal
-            "gmapstreet", 1, GOOGLEMAPS_MAX_ZOOM - 2, GOOGLEMAPS_MAX_ZOOM, 256,
-            true, true,
+            "gmapstreet", 1, GOOGLEMAPS_MAX_ZOOM - 2, GOOGLEMAPS_MAX_ZOOM,
+            256, true, true,
             // "http://mt2.google.com/mt?n=404&v=w2.21",//5/15/10.png",
             "http://khm2.google.com/kh?v=33", "x", "y", "z") {
         public String getTileUrl(int x, int y, int zoom) {
@@ -406,23 +334,25 @@ MapViewerInterface, ModelListener {
 
     private class MyLinkAction extends LinkAction<String> {
 
-            /**
+        /**
          * 
          */
         private static final long serialVersionUID = -3604244390869862416L;
-            private String des;
-            private String url;
-            
-            public MyLinkAction(String description, String b) {
-                des = description;
-                url = b;
-            }
+        private String des;
+        private String url;
 
-            public String toString() {
-                return des;
-            };
+        public MyLinkAction(String description, String b) {
+            des = description;
+            url = b;
+        }
 
-        /* (non-Javadoc)
+        public String toString() {
+            return des;
+        };
+
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent e) {
@@ -453,16 +383,16 @@ MapViewerInterface, ModelListener {
         map.setTileFactory(tf);
         map.getMainMap().setZoom(currentzoom);
 
-        if(MyTileFactoryInfo.class.isInstance(info)) {
-            MyTileFactoryInfo tfi = (MyTileFactoryInfo)info;
+        if (MyTileFactoryInfo.class.isInstance(info)) {
+            MyTileFactoryInfo tfi = (MyTileFactoryInfo) info;
             map.getDataProviderLink().setAction(
                     new MyLinkAction(tfi.description, tfi.url));
             map.getDataProviderLink().setText(tfi.description);
-            //map.setDataProviderCreditShown(true);
+            // map.setDataProviderCreditShown(true);
             map.setDataProviderLinkShown(true);
-            //map.setAddressLocationShown(true);
+            // map.setAddressLocationShown(true);
         } else {
-            //map.setDataProviderCreditShown(false);
+            // map.setDataProviderCreditShown(false);
             map.setDataProviderLinkShown(false);
         }
         map.setAddressLocationShown(false);
@@ -473,7 +403,6 @@ MapViewerInterface, ModelListener {
             WaypointPainter<JXMapViewer> {
         private JXMapViewer map = mapViewer;
 
-        private List<List<GPSRecord>> tracks;
         private BT747TrackRenderer trackRenderer = BT747TrackRenderer
                 .getInstance();
 
@@ -486,39 +415,34 @@ MapViewerInterface, ModelListener {
         @Override
         protected void doPaint(Graphics2D g, JXMapViewer map, int width,
                 int height) {
-            if (tracks != null) {
-                // Paint tracks
-                for (List<GPSRecord> track : tracks) {
-                    trackRenderer.paintTrack(g, map, track);
-                }
+            for (List<GPSRecord> track : m.getPositionData().getTracks()) {
+                trackRenderer.paintTrack(g, map, track);
             }
 
             // Paint waypoints
             super.doPaint(g, map, width, height);
         }
 
-        public void setTracks(List<List<GPSRecord>> trks) {
-            tracks = trks;
-        }
-
-        /**
-         * @return the tracks
-         */
-        public final List<List<GPSRecord>> getTracks() {
-            return this.tracks;
-        }
-
-        public void addTrack(List<GPSRecord> track) {
-            tracks.add(track);
-        }
-
         public void toggleSelected(Waypoint w) {
-            WayPointRendererFactoryMethod f = WayPointRendererFactoryMethod
+            MapRendererFactoryMethod f = MapRendererFactoryMethod
                     .getInstance();
             f.toggleSelected(w);
             repaint();
         }
+        
+        /* (non-Javadoc)
+         * @see org.jdesktop.swingx.mapviewer.WaypointPainter#setWaypoints(java.lang.Iterable)
+         */
+        @Override
+        public void setWaypoints(Iterable<Waypoint> waypoints) {
+            Generic.debug("Waypoints should not be set this way");
+        }
+        
 
+        public java.lang.Iterable<Waypoint> getWaypoints() {
+            return getWaypointsIterable();
+        }
+        
         public Waypoint getContains(Point pt) {
 
             // figure out which waypoints are within this map viewport
@@ -527,8 +451,8 @@ MapViewerInterface, ModelListener {
             int zoom = map.getZoom();
             Dimension sizeInTiles = map.getTileFactory().getMapSize(zoom);
             int tileSize = map.getTileFactory().getTileSize(zoom);
-            Dimension sizeInPixels = new Dimension(
-                    sizeInTiles.width * tileSize, sizeInTiles.height * tileSize);
+            Dimension sizeInPixels = new Dimension(sizeInTiles.width
+                    * tileSize, sizeInTiles.height * tileSize);
 
             double vpx = viewportBounds.getX();
             // normalize the left edge of the viewport to be positive
@@ -542,17 +466,37 @@ MapViewerInterface, ModelListener {
             }
 
             // create two new viewports next to eachother
-            Rectangle2D vp2 = new Rectangle2D.Double(vpx,
-                    viewportBounds.getY(), viewportBounds.getWidth(),
-                    viewportBounds.getHeight());
+            Rectangle2D vp2 = new Rectangle2D.Double(vpx, viewportBounds
+                    .getY(), viewportBounds.getWidth(), viewportBounds
+                    .getHeight());
             Rectangle2D vp3 = new Rectangle2D.Double(vpx
                     - sizeInPixels.getWidth(), viewportBounds.getY(),
                     viewportBounds.getWidth(), viewportBounds.getHeight());
 
-            WayPointRendererFactoryMethod factory = WayPointRendererFactoryMethod
+            MapRendererFactoryMethod factory = MapRendererFactoryMethod
                     .getInstance();
-            // for each waypoint within these bounds
-            for (Waypoint w : (Set<Waypoint>) getWaypoints()) {
+
+            Waypoint w;
+            w = findContainingWaypoint(m.getPositionData()
+                    .getBT747UserWaypoints(), pt, vp2, vp3, factory);
+            if (w != null)
+                return w;
+            w = findContainingWaypoint(m.getPositionData()
+                    .getBT747Waypoints(), pt, vp2, vp3, factory);
+            return w;
+        }
+
+        /**
+         * @param pt
+         * @param vp2
+         * @param vp3
+         * @param factory
+         * @return
+         */
+        private Waypoint findContainingWaypoint(List<BT747Waypoint> list,
+                Point pt, Rectangle2D vp2, Rectangle2D vp3,
+                MapRendererFactoryMethod factory) {
+            for (Waypoint w : list) {
                 Point2D point = map.getTileFactory().geoToPixel(
                         w.getPosition(), map.getZoom());
                 int x, y;
@@ -576,12 +520,77 @@ MapViewerInterface, ModelListener {
 
         /**
          * @param trackRenderer
-         *            the trackRenderer to set
+         *                the trackRenderer to set
          */
         public final void setTrackRenderer(BT747TrackRenderer trackRenderer) {
             this.trackRenderer = trackRenderer;
         }
     }
+    
+    private class wpIterable implements Iterable<Waypoint> {
+
+        private Iterable<BT747Waypoint> itr;
+        
+        /**
+         * 
+         */
+        public wpIterable(Iterable<BT747Waypoint> i) {
+            itr = i;
+        }
+        
+        /* (non-Javadoc)
+         * @see java.lang.Iterable#iterator()
+         */
+        public Iterator<Waypoint> iterator() {
+            return new I();
+        }
+        
+        private class I implements Iterator<Waypoint> {
+            private Iterator<BT747Waypoint> i;
+            private int type = 0;
+            public I() {
+                i = m.getPositionData().getBT747Waypoints().iterator();
+            }
+            
+            /* (non-Javadoc)
+             * @see java.util.Iterator#hasNext()
+             */
+            public boolean hasNext() {
+                if (i.hasNext()) {
+                    return true;
+                } else {
+                    if (type == 0) {
+                        type = 1;
+                        i = m.getPositionData().getBT747UserWaypoints()
+                                .iterator();
+                        return i.hasNext();
+                    } else {
+                        return false;
+                    }
+                }
+            }
+
+            /* (non-Javadoc)
+             * @see java.util.Iterator#next()
+             */
+            public Waypoint next() {
+                return i.next();
+            }
+
+            /* (non-Javadoc)
+             * @see java.util.Iterator#remove()
+             */
+            public void remove() {
+                i.remove();
+                i = null;
+            }
+        }
+    }
+
+    public java.lang.Iterable<Waypoint> getWaypointsIterable() {
+        return new wpIterable(m.getPositionData().getBT747Waypoints());
+    };
+
 
     private class mouseListener implements MouseListener, MouseMotionListener {
 
@@ -689,7 +698,8 @@ MapViewerInterface, ModelListener {
                 e.consume();
                 Point pt = e.getPoint();
                 currentWaypoint.setPosition(mapViewer
-                        .convertPointToGeoPosition(new Point2D.Double(pt.getX()
+                        .convertPointToGeoPosition(new Point2D.Double(pt
+                                .getX()
                                 - xOffset, pt.getY() - yOffset)));
                 mapViewer.repaint();
 
@@ -708,147 +718,59 @@ MapViewerInterface, ModelListener {
 
     }
 
-
-    // From
-    // http://today.java.net/pub/a/today/2007/11/13/mapping-mashups-with-jxmapviewer.html
-    // final JLabel hoverLabel = new JLabel("Java");
-    // hoverLabel.setVisible(false);
-    // jXMapKit1.getMainMap().add(hoverLabel);
-    //
-    // jXMapKit1.getMainMap().addMouseMotionListener(new MouseMotionListener() {
-    // public void mouseDragged(MouseEvent e) { }
-    //
-    // public void mouseMoved(MouseEvent e) {
-    // JXMapViewer map = jXMapKit1.getMainMap();
-    // //location of Java
-    // GeoPosition gp = new GeoPosition(-7.502778, 111.263056);
-    // //convert to world bitmap
-    // Point2D gp_pt = map.getTileFactory().geoToPixel(gp, map.getZoom());
-    // //convert to screen
-    // Rectangle rect = map.getViewportBounds();
-    // Point converted_gp_pt = new Point((int)gp_pt.getX()-rect.x,
-    // (int)gp_pt.getY()-rect.y);
-    // //check if near the mouse
-    // if(converted_gp_pt.distance(e.getPoint()) < 10) {
-    // hoverLabel.setLocation(converted_gp_pt);
-    // hoverLabel.setVisible(true);
-    // } else {
-    // hoverLabel.setVisible(false);
-    // }
-    // }
-    // });
-
-    // @Override protected Set<WikiWaypoint> doInBackground() {
-    // try {
-    // // example: http://ws.geonames.org/wikipediaSearch?q=london&maxRows=10
-    // URL url = new URL("http://ws.geonames.org/wikipediaSearch?q="+
-    // jTextField1.getText()+"&maxRows=10");
-    //
-    // XPath xpath = XPathFactory.newInstance().newXPath();
-    // NodeList list = (NodeList) xpath.evaluate("//entry",
-    // new InputSource(url.openStream()),
-    // XPathConstants.NODESET);
-    //
-    // Set<WikiWaypoint> waypoints = new
-    // HashSet<WikiMashupView.WikiWaypoint>();
-    // for(int i = 0; i < list.getLength(); i++) {
-    // Node node = list.item(i);
-    // String title = (String) xpath.evaluate("title/text()",
-    // node, XPathConstants.STRING);
-    // Double lat = (Double) xpath.evaluate("lat/text()",
-    // node, XPathConstants.NUMBER);
-    // Double lon = (Double) xpath.evaluate("lng/text()",
-    // node, XPathConstants.NUMBER);
-    // waypoints.add(new WikiWaypoint(lat, lon, title));
-    // }
-    // return waypoints; // return your result
-    // } catch (Exception ex) {
-    // ex.printStackTrace();
-    // return null;
-    // }
-    // }
-
-    // @Override protected void succeeded(Set<WikiWaypoint> waypoints) {
-    // // move to the center
-    // jXMapKit1.setAddressLocation(waypoints.iterator().next().getPosition());
-    //      
-    // WaypointPainter painter = new WaypointPainter();
-    //      
-    // //set the waypoints
-    // painter.setWaypoints(waypoints);
-    //      
-    // //create a renderer
-    // painter.setRenderer(new WaypointRenderer() {
-    // public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp)
-    // {
-    // WikiWaypoint wwp = (WikiMashupView.WikiWaypoint) wp;
-    //              
-    // //draw tab
-    // g.setPaint(new Color(0,0,255,200));
-    // Polygon triangle = new Polygon();
-    // triangle.addPoint(0,0);
-    // triangle.addPoint(11,11);
-    // triangle.addPoint(-11,11);
-    // g.fill(triangle);
-    // int width = (int) g.getFontMetrics().getStringBounds(wwp.getTitle(),
-    // g).getWidth();
-    // g.fillRoundRect(-width/2 -5, 10, width+10, 20, 10, 10);
-    //              
-    // //draw text w/ shadow
-    // g.setPaint(Color.BLACK);
-    // g.drawString(wwp.getTitle(), -width/2-1, 26-1); //shadow
-    // g.drawString(wwp.getTitle(), -width/2-1, 26-1); //shadow
-    // g.setPaint(Color.WHITE);
-    // g.drawString(wwp.getTitle(), -width/2, 26); //text
-    // return false;
-    // }
-    // });
-    // jXMapKit1.getMainMap().setOverlayPainter(painter);
-    // jXMapKit1.getMainMap().repaint();
-    // }
-    //
-
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
+    /**
+     * This method is called from within the constructor to initialize the
+     * form. WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    private void initComponents() {//GEN-BEGIN:initComponents
+    private void initComponents() {// GEN-BEGIN:initComponents
 
         wayPointScrollPane = new javax.swing.JScrollPane();
         waypointList = new javax.swing.JList();
         map = new org.jdesktop.swingx.JXMapKit();
 
-        wayPointScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        wayPointScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        wayPointScrollPane
+                .setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        wayPointScrollPane
+                .setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         waypointList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Waypoint" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+
+            public int getSize() {
+                return strings.length;
+            }
+
+            public Object getElementAt(int i) {
+                return strings[i];
+            }
         });
-        waypointList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        waypointList
+                .setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         waypointList.setOpaque(false);
         wayPointScrollPane.setViewportView(waypointList);
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
+                this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(wayPointScrollPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 110, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(map, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(map, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 236, Short.MAX_VALUE)
-            .add(wayPointScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
-        );
-    }//GEN-END:initComponents
-
+        layout.setHorizontalGroup(layout.createParallelGroup(
+                org.jdesktop.layout.GroupLayout.LEADING).add(
+                layout.createSequentialGroup().add(wayPointScrollPane,
+                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 110,
+                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(
+                                org.jdesktop.layout.LayoutStyle.RELATED).add(
+                                map,
+                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                304, Short.MAX_VALUE)));
+        layout.setVerticalGroup(layout.createParallelGroup(
+                org.jdesktop.layout.GroupLayout.LEADING).add(map,
+                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 236,
+                Short.MAX_VALUE).add(wayPointScrollPane,
+                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 236,
+                Short.MAX_VALUE));
+    }// GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdesktop.swingx.JXMapKit map;
