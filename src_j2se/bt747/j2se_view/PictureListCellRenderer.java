@@ -17,13 +17,14 @@ import javax.swing.JList;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
-import bt747.j2se_view.model.GPSRecordWaypointAdapter;
+import bt747.j2se_view.model.BT747Waypoint;
 
 
 /**
  * @author Mario
  * 
  */
+@SuppressWarnings("serial")
 public class PictureListCellRenderer extends
         javax.swing.DefaultListCellRenderer {
 
@@ -47,8 +48,8 @@ public class PictureListCellRenderer extends
 
         GPSRecord record = null;
         if (value != null) {
-            GPSRecordWaypointAdapter wp = (GPSRecordWaypointAdapter) value;
-            record = wp.getGpsRec();
+            BT747Waypoint wp = (BT747Waypoint) value;
+            record = wp.getGpsRecord();
         }
         JLabel label = new JLabel();
         label.setText("No picture for now.");

@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.log.out;
 
 import gps.BT747Constants;
@@ -38,20 +38,30 @@ public final class CommonOut {
     public final static String getRcrSymbolText(final GPSRecord r) {
         WayPointStyle w = wayPointStyles.get(getRCRKey(getRCRstr(r)));
         if (w != null) {
-            return wayPointStyles.get(getRCRKey(getRCRstr(r))).getSymbolText();
+            return wayPointStyles.get(getRCRKey(getRCRstr(r)))
+                    .getSymbolText();
         } else {
             return null;
         }
     }
 
-    public final static void getHtml(final StringBuffer rec, final GPSRecord s,
-            final GPSRecord activeFields, final GPSRecord selectedFields,
-            final BT747Time t, final boolean recordNbrInLogs,
-            final boolean imperial) {
+    public final static String getHtml(GPSRecord s) {
+        StringBuffer rec = new StringBuffer(200);
+        CommonOut
+                .getHtml(rec, s, s, s, s.getBT747Time(), true, false /* imperial */);
+        String r = rec.toString();
+        rec = null;
+        return r;
+    }
+
+    public final static void getHtml(final StringBuffer rec,
+            final GPSRecord s, final GPSRecord activeFields,
+            final GPSRecord selectedFields, final BT747Time t,
+            final boolean recordNbrInLogs, final boolean imperial) {
         if (recordNbrInLogs) {
             rec.append("IDX: ");
             rec.append(Convert.toString(s.recCount));
-            rec.append("<br/>");
+            rec.append("<br>");
         }
         if ((activeFields.hasUtc()) && (selectedFields.hasUtc())) {
             rec.append("TIME: ");
@@ -59,7 +69,7 @@ public final class CommonOut {
         }
         WayPointStyle style = null;
         if ((activeFields.hasRcr()) && (selectedFields.hasRcr())) {
-            rec.append("<br/>RCR: ");
+            rec.append("<br>RCR: ");
             String rcr = getRCRstr(s);
             rec.append(rcr);
             style = wayPointStyles.get(getRCRKey(rcr));
@@ -68,12 +78,12 @@ public final class CommonOut {
             String upperVox = s.voxStr.toUpperCase();
             boolean isPicture = upperVox.endsWith(".JPG")
                     || upperVox.endsWith("PNG");
-            rec.append("<br />");
+            rec.append("<br>");
             if (style != null) {
                 rec.append(style.getSymbolText());
                 rec.append(':');
                 if (isPicture) {
-                    rec.append("<br />");
+                    rec.append("<br>");
                 }
             }
             rec.append("<a target='_new' href='");
@@ -85,7 +95,7 @@ public final class CommonOut {
             if (isPicture) {
                 rec.append("<img height=150 src='");
                 rec.append(s.voxStr);
-                rec.append("' />");
+                rec.append("' >");
             } else {
                 rec.append("Click here");
             }
@@ -101,7 +111,7 @@ public final class CommonOut {
         // if(activeFields.utc!=0) {
         // Time t=utcTime(s.utc);
         //                    
-        // rec.append("<br />DATE: ");
+        // rec.append("<br>DATE: ");
         // rec.append(Convert.toString(t.getYear())+"/"
         // +(
         // t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
@@ -116,12 +126,12 @@ public final class CommonOut {
         // );
         // }
         if ((activeFields.hasValid()) && (selectedFields.hasValid())) {
-            // rec.append("<br />VALID: ");
-            rec.append("<br/>VALID: ");
+            // rec.append("<br>VALID: ");
+            rec.append("<br>VALID: ");
             rec.append(getFixText(s.valid));
         }
         if ((activeFields.hasLatitude()) && (selectedFields.hasLatitude())) {
-            rec.append("<br />LATITUDE: ");
+            rec.append("<br>LATITUDE: ");
             if (s.latitude >= 0) {
                 rec.append(Convert.toString(s.latitude, 6));
                 rec.append(" N");
@@ -131,7 +141,7 @@ public final class CommonOut {
             }
         }
         if ((activeFields.hasLongitude()) && (selectedFields.hasLongitude())) {
-            rec.append("<br />LONGITUDE: ");
+            rec.append("<br>LONGITUDE: ");
             if (s.longitude >= 0) {
                 rec.append(Convert.toString(s.longitude, 6));
                 rec.append(" E");
@@ -141,7 +151,7 @@ public final class CommonOut {
             }
         }
         if ((activeFields.hasHeight()) && (selectedFields.hasHeight())) {
-            rec.append("<br />HEIGHT: ");
+            rec.append("<br>HEIGHT: ");
             if (!imperial) {
                 rec.append(Convert.toString(s.height, 3) + " m");
             } else {
@@ -152,7 +162,7 @@ public final class CommonOut {
             }
         }
         if ((activeFields.hasSpeed()) && (selectedFields.hasSpeed())) {
-            rec.append("<br />SPEED: ");
+            rec.append("<br>SPEED: ");
             if (!imperial) {
                 rec.append(Convert.toString(s.speed, 3) + " km/h");
             } else {
@@ -161,38 +171,37 @@ public final class CommonOut {
             }
         }
         if ((activeFields.hasHeading()) && (selectedFields.hasHeading())) {
-            rec.append("<br />HEADING: ");
+            rec.append("<br>HEADING: ");
             rec.append(Convert.toString(s.heading));
         }
         if ((activeFields.hasDsta()) && (selectedFields.hasDsta())) {
-            rec.append("<br />DSTA: ");
+            rec.append("<br>DSTA: ");
             rec.append(Convert.toString(s.dsta));
         }
         if ((activeFields.hasDage()) && (selectedFields.hasDage())) {
-            rec.append("<br />DAGE: ");
+            rec.append("<br>DAGE: ");
             rec.append(Convert.toString(s.dage));
         }
         if ((activeFields.hasPdop()) && (selectedFields.hasPdop())) {
-            rec.append("<br />PDOP: ");
+            rec.append("<br>PDOP: ");
             rec.append(Convert.toString(s.pdop / 100.0, 2));
         }
         if ((activeFields.hasHdop()) && (selectedFields.hasHdop())) {
-            rec.append("<br />HDOP: ");
+            rec.append("<br>HDOP: ");
             rec.append(Convert.toString(s.hdop / 100.0, 2));
         }
         if ((activeFields.hasVdop()) && (selectedFields.hasVdop())) {
-            rec.append("<br />VDOP: ");
+            rec.append("<br>VDOP: ");
             rec.append(Convert.toString(s.vdop / 100.0, 2));
         }
         if ((activeFields.hasDistance()) && (selectedFields.hasDistance())) {
-            rec.append("<br />DISTANCE: ");
+            rec.append("<br>DISTANCE: ");
             if (!imperial) {
                 rec.append(Convert.toString(s.distance, 2));
                 rec.append(" m");
             } else {
-                rec
-                        .append(Convert.toString(
-                                s.distance * 3.2808398950131234, 2));
+                rec.append(Convert.toString(s.distance * 3.2808398950131234,
+                        2));
                 rec.append(" feet");
             }
         }
@@ -232,8 +241,7 @@ public final class CommonOut {
                 // Minute
                 + ((time.getMinute() < 10) ? "0" : "")
                 + Convert.toString(time.getMinute()) // +":"
-                + ":"
-                + ((time.getSecond() < 10) ? "0" : "")
+                + ":" + ((time.getSecond() < 10) ? "0" : "")
                 + Convert.toString(time.getSecond()) // +":"
         ;
     }
@@ -322,8 +330,8 @@ public final class CommonOut {
      * Table of records related to icons for waypoints:<br>
      * id Label URL x y w h
      * 
-     * The table must at least contain the ids T,D,S,B and M. The other IDs are
-     * related to application/user specific way points and must be the hex
+     * The table must at least contain the ids T,D,S,B and M. The other IDs
+     * are related to application/user specific way points and must be the hex
      * representation: 0102 for instance.
      */
 
@@ -338,10 +346,14 @@ public final class CommonOut {
                     "http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png" },
             { "M", "MixStamp",
                     "http://maps.google.com/mapfiles/kml/paddle/M.png" },
-            // { "0001", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
-            // { "0002", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
-            // { "0004", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
-            // { "0008", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
+            // { "0001", "", "http://maps.google.com/mapfiles/kml/pal4/.png"
+            // },
+            // { "0002", "", "http://maps.google.com/mapfiles/kml/pal4/.png"
+            // },
+            // { "0004", "", "http://maps.google.com/mapfiles/kml/pal4/.png"
+            // },
+            // { "0008", "", "http://maps.google.com/mapfiles/kml/pal4/.png"
+            // },
             { "0010", "Picture",
                     "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
             { "0020", "Gaz Station",
@@ -377,7 +389,7 @@ public final class CommonOut {
 
     /**
      * @param wayPointStyles
-     *            the wayPointStyles to set
+     *                the wayPointStyles to set
      */
     public static final void setWayPointStyles(WayPointStyleSet wayPointStyles) {
         CommonOut.wayPointStyles = wayPointStyles;

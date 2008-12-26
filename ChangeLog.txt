@@ -1,3 +1,6 @@
+Version 1.65.3
+* Interoperability block taken into account in EXIF
+
 Version 1.65.2
 * Added scroll bar to tab pane
 

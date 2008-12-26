@@ -16,6 +16,9 @@ package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -23,6 +26,7 @@ import java.util.Enumeration;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -121,18 +125,15 @@ public class BT747Main extends javax.swing.JFrame implements
     private FileTablePanel pnFilesToTagPanel;
     private MyMap pnMap = new MyMap();
 
-    /**
-     * To make sure we use the interface methods.
-     */
-    private MapViewerInterface mapViewer = null;
-
-    /**
-     * Initialize application data. Gets the values from the model to set them
-     * in the GUI.
-     */
-    private void initAppData() {
-        c.setRootFrame(this);
-
+    private final Component inScrollPane(JPanel p) {
+        JScrollPane sp;
+        sp = new JScrollPane(p);
+        sp.setBorder(null);
+        sp.setMinimumSize(new Dimension(30,30));
+        return sp;
+    }
+    
+    private final void completeGui() {
         pnLogOperationsPanel = new LogOperationsPanel();
         pnLogOperationsPanel.init(c);
 //        pnLogOperationsPanel.setPreferredSize(new java.awt.Dimension(800,800));
@@ -140,78 +141,85 @@ public class BT747Main extends javax.swing.JFrame implements
         tabbedPanelAll
                 .insertTab(
                         getString("LogOperations.tabTitle"),
-                        null, pnLogOperationsPanel, null, 0);
+                        null, inScrollPane(pnLogOperationsPanel), null, 0);
         tabbedPanelAll.setSelectedIndex(0);
         
         pnOutputSettingsPanel = new OutputSettingsPanel();
-        pnOutputSettingsPanel.init(c);
         tabbedPanelAll
                 .insertTab(
                         getString("BT747Main.FileSettingsPanel.TabConstraints.tabTitle"),
-                        null, pnOutputSettingsPanel, null, 1);
+                        null, inScrollPane(pnOutputSettingsPanel), null, 1);
 
         pnFiltersPanel = new FiltersPanel();
-        pnFiltersPanel.init(c);
         tabbedPanelAll
                 .insertTab(
                         getString("BT747Main.LogFiltersPanel.TabConstraints.tabTitle"),
-                        null, pnFiltersPanel, null, 2);
+                        null, inScrollPane(pnFiltersPanel), null, 2);
 
         pnDeviceSettingsPanel = new DeviceSettingsPanel();
-        pnDeviceSettingsPanel.init(c);
         tabbedPanelAll
                 .insertTab(
                         getString("BT747Main.DeviceSettingsPanel.TabConstraints.tabTitle"),
-                        null, pnDeviceSettingsPanel, null, 3);
+                        null, inScrollPane(pnDeviceSettingsPanel), null, 3);
 
         pnAdvancedSettingsPanel = new AdvancedDeviceSettingsPanel();
-        pnAdvancedSettingsPanel.init(c);
         tabbedPanelAll
                 .insertTab(
                         getString("BT747Main.AdvancedSettingsPanel.TabConstraints.tabTitle"),
-                        null, pnAdvancedSettingsPanel, null, 4);
+                        null, inScrollPane(pnAdvancedSettingsPanel), null, 4);
 
         pnAdvancedFileSettingsPanel = new AdvancedFileSettingsPanel();
         pnAdvancedFileSettingsPanel.init(c);
         tabbedPanelAll
                 .insertTab(
                         getString("BT747Main.AdvancedfileSettingsPanel.TabConstraints.tabTitle"),
-                        null, pnAdvancedFileSettingsPanel, null, 5);
+                        null, inScrollPane(pnAdvancedFileSettingsPanel), null, 5);
 
         pnFilesToTagPanel = new FileTablePanel();
-        pnFilesToTagPanel.init(c);
         tabbedPanelAll.insertTab(getString("FilesToTagPanel.title"), null,
-                pnFilesToTagPanel, null, 6);
+                pnFilesToTagPanel, null, 1);
         try {
             // Currently debuggin
             // JPanel pnMap = (JPanel) (Class.forName("bt747.j2se_view.MyMap")
             // .newInstance());
-            pnMap.init(c);
-            mapViewer = pnMap;
-            tabbedPanelAll.addTab(getString("map.tabTitle"), null, pnMap,
-                    null);
+            tabbedPanelAll.insertTab(getString("map.tabTitle"), null, pnMap,
+                    null,2);
         } catch (Exception e) {
             Generic.debug("During map setup", e);
             // TODO: handle exception
         }
-        tabbedPanelAll.invalidate();
-//        tabbedPanelAll.setPreferredSize(null);
-//        tabbedPanelAll.setSize(tabbedPanelAll.getPreferredSize());
-//        jScrollPane2.setMinimumSize(tabbedPanelAll.getPreferredSize());
-//        jScrollPane2.setPreferredSize(tabbedPanelAll.getPreferredSize());
-//        jScrollPane2.setSize(tabbedPanelAll.getPreferredSize());
-//        jScrollPane2.invalidate();
-//        jScrollPane2.validate();
-//        jScrollPane2.setSize(tabbedPanelAll.getPreferredSize());
-//        jScrollPane2.setSize(tabbedPanelAll.getPreferredSize());
-//this.setSize(null);
-//this.setPreferredSize(null);
-        pnBottomInformation.invalidate();
-
-        this.invalidate();
-        this.validate();
-        this.pack();
-
+        //System.err.println(tabbedPanelAll.getPreferredSize());
+//        tabbedPanelAll.invalidate();
+//        pnBottomInformation.invalidate();
+//        this.invalidate();
+//        this.pack();
+    }
+    /**
+     * Initialize application data. Gets the values from the model to set them
+     * in the GUI.
+     */
+    private void initAppData() {
+        c.setRootFrame(this);
+        completeGui();
+        pnMap.init(c);
+        pnFilesToTagPanel.init(c);
+        pnAdvancedSettingsPanel.init(c);
+        pnDeviceSettingsPanel.init(c);
+        pnFiltersPanel.init(c);
+        pnOutputSettingsPanel.init(c);
+        pack();
+        int x = getWidth()+(int)tabbedPanelAll.getPreferredSize().getWidth()-tabbedPanelAll.getWidth();
+        int y = getHeight()+(int)tabbedPanelAll.getPreferredSize().getHeight()-tabbedPanelAll.getHeight()+10;
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        if(x>dim.getWidth()) {
+            x=(int)dim.getWidth();
+        }
+        if(y>dim.getHeight()) {
+            y=(int)dim.getHeight();
+        }
+        
+        setSize(x,y);
+        validate();
         updateGuiData(); // For internationalisation - not so easy in
         // netbeans
         infoTextArea.setEnabled(true);
@@ -351,24 +359,6 @@ public class BT747Main extends javax.swing.JFrame implements
 
     boolean btConnectFunctionIsConnect = true;
 
-    public void updateUserWayPoints() {
-        if (mapViewer != null) {
-            mapViewer.setUserWayPoints(m.getPositionData().getWayPoints());
-        }
-    }
-
-    public void updateWayPoints() {
-        if (mapViewer != null) {
-            mapViewer.setWayPoints(m.getPositionData().getWayPoints());
-        }
-    }
-
-    public void setTracks() {
-        if (mapViewer != null) {
-            mapViewer.setTracks(m.getPositionData().getTracks());
-        }
-    }
-
     private void updateMapType() {
         try {
             int idx;
@@ -461,29 +451,38 @@ public class BT747Main extends javax.swing.JFrame implements
         case J2SEAppModel.UPDATE_WAYPOINT_LIST:
             if (waypointPanel == null) {
                 waypointPanel = new PositionTablePanel();
-                waypointPanel.setGpsRecords(m.getPositionData().getWayPoints());
-                tabbedPanelAll.addTab(getString("WayPoints.tabTitle"),
-                        waypointPanel);
-//                tabbedPanelAll
-//                        .setSelectedIndex(tabbedPanelAll.getTabCount() - 1);
+                int idx = tabbedPanelAll.indexOfComponent(trackPanel)+1;
+                if (idx <= 0) {
+                    idx = tabbedPanelAll.indexOfComponent(pnMap)+1;
+                    if (idx <= 0) {
+                        idx = tabbedPanelAll.indexOfComponent(pnLogOperationsPanel)+1;
+                    }
+                }
+                waypointPanel.setGpsRecords(m.getPositionData()
+                        .getWayPoints());
+                tabbedPanelAll.insertTab(getString("WayPoints.tabTitle"),
+                        null, waypointPanel, null, idx);
             } else {
                waypointPanel.setGpsRecords(m.getPositionData().getWayPoints());
             }
-            updateWayPoints();
             break;
-        case J2SEAppModel.UPDATE_USERWAYPOINT_LIST:
-            updateUserWayPoints();
-            break;
+
         case J2SEAppModel.UPDATE_TRACKPOINT_LIST:
             if (trackPanel == null) {
                 trackPanel = new PositionTablePanel();
                 trackPanel.setGpsRecords(m.getPositionData().getTracks());
+                int idx = tabbedPanelAll.indexOfComponent(waypointPanel);
+                if (idx < 0) {
+                    idx = tabbedPanelAll.indexOfComponent(pnMap)+1;
+                    if (idx < 0) {
+                        idx = tabbedPanelAll.indexOfComponent(pnLogOperationsPanel)+1;
+                    }
+                }
                 tabbedPanelAll
-                        .addTab(getString("Track.tabTitle"), trackPanel);
+                        .insertTab(getString("Track.tabTitle"), null, trackPanel, null, idx);
             } else {
                 trackPanel.setGpsRecords(m.getPositionData().getTracks());
             }
-            setTracks();
             tabbedPanelAll.setSelectedComponent(pnMap);
             // for (int idx = tabbedPanelAll.getTabCount() - 1; idx >= 0;
             // idx--) {
@@ -495,7 +494,7 @@ public class BT747Main extends javax.swing.JFrame implements
             break;
         }
     }
-
+    
     private PositionTablePanel trackPanel = null;
     private PositionTablePanel waypointPanel = null;
 
@@ -506,9 +505,8 @@ public class BT747Main extends javax.swing.JFrame implements
      */
     @SuppressWarnings("unchecked")
     private void initComponents() {//GEN-BEGIN:initComponents
-        java.awt.GridBagConstraints gridBagConstraints;
 
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
         tabbedPanelAll = new javax.swing.JTabbedPane();
         InfoPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -542,7 +540,12 @@ public class BT747Main extends javax.swing.JFrame implements
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setName("BT747Frame"); // NOI18N
 
-        jScrollPane2.setBorder(null);
+        jPanel1.setDoubleBuffered(false);
+
+        tabbedPanelAll.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPanelAll.setPreferredSize(null);
+
+        InfoPanel.setPreferredSize(null);
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setOpaque(false);
@@ -551,9 +554,11 @@ public class BT747Main extends javax.swing.JFrame implements
         infoTextArea.setLineWrap(true);
         infoTextArea.setRows(5);
         infoTextArea.setText(bundle.getString("BT747Main.infoTextArea.text")); // NOI18N
-        infoTextArea.setAutoscrolls(false);
-        infoTextArea.setFocusable(false);
+        infoTextArea.setDragEnabled(true);
+        infoTextArea.setMinimumSize(null);
         infoTextArea.setOpaque(false);
+        infoTextArea.setPreferredSize(null);
+        infoTextArea.setVerifyInputWhenFocusTarget(false);
         jScrollPane1.setViewportView(infoTextArea);
 
         org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(InfoPanel);
@@ -562,26 +567,24 @@ public class BT747Main extends javax.swing.JFrame implements
             InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
                 .addContainerGap())
         );
         InfoPanelLayout.setVerticalGroup(
             InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 8, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         tabbedPanelAll.addTab(bundle.getString("BT747Main.InfoPanel.TabConstraints.tabTitle"), InfoPanel); // NOI18N
 
-        jScrollPane2.setViewportView(tabbedPanelAll);
-        tabbedPanelAll.getAccessibleContext().setAccessibleName(bundle.getString("Log_download_&_Convert")); // NOI18N
-
         DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
         DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
         DownloadProgressBar.setToolTipText(bundle.getString("BT747Main.DownloadProgressBar.toolTipText")); // NOI18N
         DownloadProgressBar.setFocusable(false);
+        DownloadProgressBar.setPreferredSize(new java.awt.Dimension(10, 16));
 
         DownloadProgressLabel.setText(bundle.getString("BT747Main.DownloadProgressLabel.text")); // NOI18N
 
@@ -628,25 +631,42 @@ public class BT747Main extends javax.swing.JFrame implements
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(DownloadProgressLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
+                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnBottomInformationLayout.setVerticalGroup(
             pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnBottomInformationLayout.createSequentialGroup()
                 .add(0, 0, 0)
                 .add(pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(btConnect)
                         .add(cbPortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .add(cbSerialSpeed, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .add(lbSerialSpeed)
-                        .add(DownloadProgressLabel)))
-                .add(0, 0, 0))
+                        .add(DownloadProgressLabel))))
         );
 
         DownloadProgressBar.getAccessibleContext().setAccessibleName(bundle.getString("DownloadProgessBar")); // NOI18N
         progressBarUpdate();
+
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
+            .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+                .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        tabbedPanelAll.getAccessibleContext().setAccessibleName(bundle.getString("Log_download_&_Convert")); // NOI18N
 
         FileMenu.setText(bundle.getString("BT747Main.FileMenu.text")); // NOI18N
 
@@ -741,21 +761,16 @@ public class BT747Main extends javax.swing.JFrame implements
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jScrollPane2)
-            .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(layout.createSequentialGroup()
+                .add(0, 0, 0)
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(jScrollPane2)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         getAccessibleContext().setAccessibleName("MTK Datalogger Control (BT747)");
-
-        pack();
     }//GEN-END:initComponents
 
     private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbSerialSpeedFocusLost
@@ -940,8 +955,8 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JComboBox cbSerialSpeed;
     private javax.swing.JTextArea infoTextArea;
     private javax.swing.JMenuBar jMenuBar;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbSerialSpeed;
     private javax.swing.JRadioButtonMenuItem miCycle;
     private javax.swing.JMenuItem miExit;

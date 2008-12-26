@@ -15,6 +15,8 @@
 package gps.log;
 
 import bt747.sys.Convert;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Time;
 
 import gps.BT747Constants;
 
@@ -316,6 +318,12 @@ public class GPSRecord {
                 && (hasMilisecond() == r.hasMilisecond())
                 && (hasDistance() == r.hasDistance())
                 && (hasVoxStr() == r.hasVoxStr());
+    }
+    
+    public final BT747Time getBT747Time() {
+        BT747Time t = Interface.getTimeInstance();
+        t.setUTCTime(utc);
+        return t;
     }
 
     /*

@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.j2se_view.model;
 
 import gps.BT747Constants;
@@ -32,39 +32,17 @@ import bt747.sys.Generic;
 @SuppressWarnings("serial")
 public class PositionTableModel extends AbstractTableModel {
 
-    /**
-     * Column identifications. Some taken from BT747Constants.
-     */
-    private static final int FMT_UTC_VALUE = -15; // TODO: currently ignored
-    private static final int FMT_RCR_DESCRIPTION = -14; // TODO: currently
-                                                        // ignored
-    private static final int FMT_FIXMODE = -13; // TODO: currently ignored
-    private static final int FMT_VOX = -12;
-    private static final int FMT_LONEW = -11;
-    private static final int FMT_LATNS = -10;
-    private static final int C_LOGTIME = -9;
-    private static final int C_LOGDIST = -8;
-    private static final int C_LOGSPD = -7;
-    private static final int FMT_NS = -6;
-    private static final int FMT_EW = -5;
-    private static final int FMT_REC_NBR = -4;
-    private static final int FMT_DATE = -3;
-    private static final int FMT_TIME = -2;
-    private static final int FMT_NO_FIELD = -1;
-    private static final int FMT_HEIGHT_FT_IDX = BT747Constants.FMT_HEIGHT_IDX + 100;
-    private static final int FMT_SPEED_MPH_IDX = BT747Constants.FMT_SPEED_IDX + 100;
-    private static final int FMT_DISTANCE_FT_IDX = BT747Constants.FMT_DISTANCE_IDX + 100;
-
     private int[] columnTypes = {
-            FMT_REC_NBR,
-            FMT_DATE,
-            FMT_TIME,
+            PositionData.FMT_REC_NBR,
+            PositionData.FMT_DATE,
+            PositionData.FMT_TIME,
             // BT747Constants.FMT_UTC_IDX,
             // FMT_UTC_VALUE,
-            BT747Constants.FMT_RCR_IDX, FMT_RCR_DESCRIPTION,
+            BT747Constants.FMT_RCR_IDX, PositionData.FMT_RCR_DESCRIPTION,
             BT747Constants.FMT_VALID_IDX, BT747Constants.FMT_LATITUDE_IDX,
             BT747Constants.FMT_LONGITUDE_IDX, BT747Constants.FMT_HEIGHT_IDX,
-            BT747Constants.FMT_HDOP_IDX, BT747Constants.FMT_PDOP_IDX, FMT_VOX };
+            BT747Constants.FMT_HDOP_IDX, BT747Constants.FMT_PDOP_IDX,
+            PositionData.FMT_VOX };
 
     private volatile List<List<GPSRecord>> gpsData;
 
@@ -77,13 +55,13 @@ public class PositionTableModel extends AbstractTableModel {
 
     /**
      * @param gpsData
-     *            the gpsData to set
+     *                the gpsData to set
      */
     public final void setGpsData(final GPSRecord[] gpsdata) {
         gpsData = null;
         Vector<List<GPSRecord>> tmp = new Vector<List<GPSRecord>>(1);
-        Vector<GPSRecord>tmpList = new Vector<GPSRecord>(gpsdata.length);
-        for(GPSRecord g:gpsdata) {
+        Vector<GPSRecord> tmpList = new Vector<GPSRecord>(gpsdata.length);
+        for (GPSRecord g : gpsdata) {
             tmpList.add(g);
         }
         tmp.add(tmpList);
@@ -91,10 +69,9 @@ public class PositionTableModel extends AbstractTableModel {
         fireTableStructureChanged();
     }
 
-    
     /**
      * @param gpsData
-     *            the gpsData to set
+     *                the gpsData to set
      */
     public final void setGpsData(final List<List<GPSRecord>> gpsdata) {
         gpsData = gpsdata;
@@ -114,7 +91,7 @@ public class PositionTableModel extends AbstractTableModel {
         if (index < columnTypes.length) {
             return columnTypes[index];
         } else {
-            return FMT_NO_FIELD;
+            return PositionData.FMT_NO_FIELD;
         }
     }
 
@@ -125,82 +102,10 @@ public class PositionTableModel extends AbstractTableModel {
      */
     public String getColumnName(int columnIndex) {
         if (columnIndex < columnTypes.length) {
-            switch (columnToType(columnIndex)) {
-            case C_LOGTIME:
-                break;
-            case C_LOGDIST:
-                break;
-            case C_LOGSPD:
-                break;
-            case FMT_NS:
-                break;
-            case FMT_EW:
-                break;
-            case FMT_REC_NBR:
-                return "Record nbr";
-            case BT747Constants.FMT_UTC_IDX:
-                return "Date & Time";
-            case FMT_UTC_VALUE:
-                return "UTC Value";
-            case FMT_DATE:
-                return "Date";
-            case FMT_TIME:
-                return "Time";
-            case BT747Constants.FMT_VALID_IDX:
-                return "Valid";
-            case FMT_LATNS:
-                break;
-            case FMT_LONEW:
-                break;
-            case BT747Constants.FMT_LATITUDE_IDX:
-                return "Latitude";
-            case BT747Constants.FMT_LONGITUDE_IDX:
-                return "Longitude";
-            case BT747Constants.FMT_HEIGHT_IDX:
-                return "Height (m)";
-            case FMT_HEIGHT_FT_IDX:
-                return "Height (ft)";
-            case BT747Constants.FMT_SPEED_IDX:
-                return "Speed (km/h)";
-            case FMT_SPEED_MPH_IDX:
-                return "Speed (mph)";
-            case BT747Constants.FMT_HEADING_IDX:
-                return "Heading";
-            case BT747Constants.FMT_DSTA_IDX:
-                return "DSTA";
-            case BT747Constants.FMT_DAGE_IDX:
-                return "DAGE";
-            case BT747Constants.FMT_PDOP_IDX:
-                return "PDOP";
-            case BT747Constants.FMT_HDOP_IDX:
-                return "HDOP";
-            case BT747Constants.FMT_VDOP_IDX:
-                return "VDOP";
-            case BT747Constants.FMT_NSAT_IDX:
-                return "NSAT";
-            case FMT_FIXMODE:
-                return "Fix";
-            case BT747Constants.FMT_MAX_SATS:
-                return "Max Sats";
-            case BT747Constants.FMT_SID_IDX:
-                return "SID";
-            case FMT_VOX:
-                return "VOX/File";
-            case BT747Constants.FMT_RCR_IDX:
-                return "RCR";
-            case FMT_RCR_DESCRIPTION:
-                return "RCR Description";
-            case BT747Constants.FMT_MILLISECOND_IDX:
-                return "MS";
-            case BT747Constants.FMT_DISTANCE_IDX:
-                return "Distance (m)";
-            case FMT_DISTANCE_FT_IDX:
-                return "Distance (ft)";
-            }
-            return null;
-        } else {
-            return null;
+            return PositionData
+                    .getDataDescriptionTitle(columnToType(columnIndex));
         }
+        return null;
     }
 
     /*
@@ -211,7 +116,7 @@ public class PositionTableModel extends AbstractTableModel {
     public int getRowCount() {
         if (gpsData != null) {
             int count = 0;
-            for(List<GPSRecord> g:gpsData) {
+            for (List<GPSRecord> g : gpsData) {
                 count += g.size();
             }
             return count;
@@ -220,13 +125,11 @@ public class PositionTableModel extends AbstractTableModel {
         }
     }
 
-    
-
     public GPSRecord getRecordValueAt(int rowIndex) {
         if (gpsData != null) {
             int count = rowIndex;
-            for(List<GPSRecord> g:gpsData) {
-                if(count<g.size()) {
+            for (List<GPSRecord> g : gpsData) {
+                if (count < g.size()) {
                     return g.get(count);
                 }
             }
@@ -241,8 +144,8 @@ public class PositionTableModel extends AbstractTableModel {
      */
     public Object getValueAt(int rowIndex, int columnIndex) {
         GPSRecord g = getRecordValueAt(rowIndex);
-        if(g!=null) {
-            return getValue(g, columnIndex); 
+        if (g != null) {
+            return getValue(g, columnIndex);
         }
         return null;
     }
@@ -260,11 +163,12 @@ public class PositionTableModel extends AbstractTableModel {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
+     * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int,
+     *      int)
      */
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         GPSRecord g = getRecordValueAt(rowIndex);
-        if(g!=null) {
+        if (g != null) {
             setValue(value, g, columnIndex);
         }
     }
@@ -276,31 +180,31 @@ public class PositionTableModel extends AbstractTableModel {
      */
     public Class<?> getColumnClass(int columnIndex) {
         switch (columnToType(columnIndex)) {
-        case C_LOGTIME:
+        case PositionData.C_LOGTIME:
             return Float.class;
-        case C_LOGDIST:
+        case PositionData.C_LOGDIST:
             return Float.class;
-        case C_LOGSPD:
+        case PositionData.C_LOGSPD:
             return Float.class;
-        case FMT_NS:
+        case PositionData.FMT_NS:
             return String.class;
-        case FMT_EW:
+        case PositionData.FMT_EW:
             return String.class;
-        case FMT_REC_NBR:
+        case PositionData.FMT_REC_NBR:
             return Integer.class;
         case BT747Constants.FMT_UTC_IDX:
             return String.class;
-        case FMT_UTC_VALUE:
+        case PositionData.FMT_UTC_VALUE:
             return Long.class;
-        case FMT_DATE:
+        case PositionData.FMT_DATE:
             return String.class;
-        case FMT_TIME:
+        case PositionData.FMT_TIME:
             return String.class;
         case BT747Constants.FMT_VALID_IDX:
             return String.class;
-        case FMT_LATNS:
+        case PositionData.FMT_LATNS:
             return String.class;
-        case FMT_LONEW:
+        case PositionData.FMT_LONEW:
             return String.class;
         case BT747Constants.FMT_LATITUDE_IDX:
             break;
@@ -308,11 +212,11 @@ public class PositionTableModel extends AbstractTableModel {
             break;
         case BT747Constants.FMT_HEIGHT_IDX:
             break;
-        case FMT_HEIGHT_FT_IDX:
+        case PositionData.FMT_HEIGHT_FT_IDX:
             break;
         case BT747Constants.FMT_SPEED_IDX:
             return Float.class;
-        case FMT_SPEED_MPH_IDX:
+        case PositionData.FMT_SPEED_MPH_IDX:
             return Float.class;
         case BT747Constants.FMT_HEADING_IDX:
             return Float.class;
@@ -328,23 +232,23 @@ public class PositionTableModel extends AbstractTableModel {
             return Float.class;
         case BT747Constants.FMT_NSAT_IDX:
             return Integer.class;
-        case FMT_FIXMODE:
+        case PositionData.FMT_FIXMODE:
             return String.class;
         case BT747Constants.FMT_MAX_SATS:
             return Integer.class;
         case BT747Constants.FMT_SID_IDX:
             break;
-        case FMT_VOX:
+        case PositionData.FMT_VOX:
             return String.class;
         case BT747Constants.FMT_RCR_IDX:
             return String.class;
-        case FMT_RCR_DESCRIPTION:
+        case PositionData.FMT_RCR_DESCRIPTION:
             return String.class;
         case BT747Constants.FMT_MILLISECOND_IDX:
             return Integer.class;
         case BT747Constants.FMT_DISTANCE_IDX:
             return Float.class;
-        case FMT_DISTANCE_FT_IDX:
+        case PositionData.FMT_DISTANCE_FT_IDX:
             return Float.class;
         }
         return Object.class;
@@ -352,31 +256,31 @@ public class PositionTableModel extends AbstractTableModel {
 
     private final Object getValue(final GPSRecord g, final int index) {
         switch (columnToType(index)) {
-        case C_LOGTIME:
+        case PositionData.C_LOGTIME:
             break;
-        case C_LOGDIST:
+        case PositionData.C_LOGDIST:
             break;
-        case C_LOGSPD:
+        case PositionData.C_LOGSPD:
             break;
-        case FMT_NS:
+        case PositionData.FMT_NS:
             break;
-        case FMT_EW:
+        case PositionData.FMT_EW:
             break;
-        case FMT_REC_NBR:
+        case PositionData.FMT_REC_NBR:
             return Integer.valueOf(g.recCount);
         case BT747Constants.FMT_UTC_IDX:
             return CommonOut.getDateTimeStr(g.utc);
-        case FMT_UTC_VALUE:
+        case PositionData.FMT_UTC_VALUE:
             return Long.valueOf(g.utc);
-        case FMT_DATE:
+        case PositionData.FMT_DATE:
             return CommonOut.getDateStr(g.utc);
-        case FMT_TIME:
+        case PositionData.FMT_TIME:
             return CommonOut.getTimeStr(g.utc);
         case BT747Constants.FMT_VALID_IDX:
             return CommonOut.getFixText(g.valid);
-        case FMT_LATNS:
+        case PositionData.FMT_LATNS:
             break;
-        case FMT_LONEW:
+        case PositionData.FMT_LONEW:
             break;
         case BT747Constants.FMT_LATITUDE_IDX:
             return new Double(g.latitude);
@@ -384,11 +288,11 @@ public class PositionTableModel extends AbstractTableModel {
             return new Double(g.longitude);
         case BT747Constants.FMT_HEIGHT_IDX:
             return new Float(g.height);
-        case FMT_HEIGHT_FT_IDX:
+        case PositionData.FMT_HEIGHT_FT_IDX:
             break;
         case BT747Constants.FMT_SPEED_IDX:
             return new Float(g.speed);
-        case FMT_SPEED_MPH_IDX:
+        case PositionData.FMT_SPEED_MPH_IDX:
             break;
         case BT747Constants.FMT_HEADING_IDX:
             return new Float(g.heading);
@@ -404,23 +308,23 @@ public class PositionTableModel extends AbstractTableModel {
             return new Float(g.vdop / 100.0f);
         case BT747Constants.FMT_NSAT_IDX:
             return new Integer(g.nsat);
-        case FMT_FIXMODE:
+        case PositionData.FMT_FIXMODE:
             return CommonOut.getFixText(g.valid);
         case BT747Constants.FMT_MAX_SATS:
             break;
         case BT747Constants.FMT_SID_IDX:
             break;
-        case FMT_VOX:
+        case PositionData.FMT_VOX:
             return g.voxStr;
         case BT747Constants.FMT_RCR_IDX:
             return CommonOut.getRCRstr(g);
-        case FMT_RCR_DESCRIPTION:
+        case PositionData.FMT_RCR_DESCRIPTION:
             return CommonOut.getRcrSymbolText(g);
         case BT747Constants.FMT_MILLISECOND_IDX:
             return new Integer(g.milisecond);
         case BT747Constants.FMT_DISTANCE_IDX:
             return new Double(g.distance);
-        case FMT_DISTANCE_FT_IDX:
+        case PositionData.FMT_DISTANCE_FT_IDX:
             break;
         }
         return null; // Default;
@@ -430,28 +334,28 @@ public class PositionTableModel extends AbstractTableModel {
             final int index) {
         try {
             switch (columnToType(index)) {
-            case C_LOGTIME:
+            case PositionData.C_LOGTIME:
                 break;
-            case C_LOGDIST:
+            case PositionData.C_LOGDIST:
                 break;
-            case C_LOGSPD:
+            case PositionData.C_LOGSPD:
                 break;
-            case FMT_NS:
+            case PositionData.FMT_NS:
                 break;
-            case FMT_EW:
+            case PositionData.FMT_EW:
                 break;
-            case FMT_REC_NBR:
+            case PositionData.FMT_REC_NBR:
                 g.recCount = (Integer) o;
                 break;
-            case FMT_DATE:
+            case PositionData.FMT_DATE:
                 break;
-            case FMT_TIME:
+            case PositionData.FMT_TIME:
                 break;
             case BT747Constants.FMT_VALID_IDX:
                 break;
-            case FMT_LATNS:
+            case PositionData.FMT_LATNS:
                 break;
-            case FMT_LONEW:
+            case PositionData.FMT_LONEW:
                 break;
             case BT747Constants.FMT_LATITUDE_IDX:
                 g.latitude = (Double) o;
@@ -461,11 +365,11 @@ public class PositionTableModel extends AbstractTableModel {
                 break;
             case BT747Constants.FMT_HEIGHT_IDX:
                 break;
-            case FMT_HEIGHT_FT_IDX:
+            case PositionData.FMT_HEIGHT_FT_IDX:
                 break;
             case BT747Constants.FMT_SPEED_IDX:
                 break;
-            case FMT_SPEED_MPH_IDX:
+            case PositionData.FMT_SPEED_MPH_IDX:
                 break;
             case BT747Constants.FMT_HEADING_IDX:
                 break;
@@ -481,23 +385,23 @@ public class PositionTableModel extends AbstractTableModel {
                 break;
             case BT747Constants.FMT_NSAT_IDX:
                 break;
-            case FMT_FIXMODE:
+            case PositionData.FMT_FIXMODE:
                 break;
             case BT747Constants.FMT_MAX_SATS:
                 break;
             case BT747Constants.FMT_SID_IDX:
                 break;
-            case FMT_VOX:
+            case PositionData.FMT_VOX:
                 break;
             case BT747Constants.FMT_RCR_IDX:
                 break;
-            case FMT_RCR_DESCRIPTION:
+            case PositionData.FMT_RCR_DESCRIPTION:
                 break;
             case BT747Constants.FMT_MILLISECOND_IDX:
                 break;
             case BT747Constants.FMT_DISTANCE_IDX:
                 break;
-            case FMT_DISTANCE_FT_IDX:
+            case PositionData.FMT_DISTANCE_FT_IDX:
                 break;
             case BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX:
                 break;
