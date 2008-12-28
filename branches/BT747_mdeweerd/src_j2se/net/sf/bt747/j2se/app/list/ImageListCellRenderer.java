@@ -11,12 +11,12 @@ import java.io.FileInputStream;
 import java.lang.ref.SoftReference;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JList;
 
 import org.jdesktop.swingx.graphics.GraphicsUtilities;
@@ -42,6 +42,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
                     return t;
                 }
             });
+    private Semaphore availThreads = new Semaphore(4);
 
     public Component getListCellRendererComponent(JList list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {
@@ -102,21 +103,27 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
          */
         public void run() {
             try {
-                Icon icon;
-                java.io.File file = new java.io.File(path);
-                FileInputStream fis = new FileInputStream(file);
-                icon = new ImageIcon(GraphicsUtilities.createThumbnail(
-                        ImageIO.read(fis), 80));
-                fis.close();
-                fis = null;
-                pn.setIcon(icon);
-                c.validate();
-                // c.doLayout();
-                c.repaint();
+                availThreads.acquire();
+                try {
+                    Icon icon;
+                    java.io.File file = new java.io.File(path);
+                    FileInputStream fis = new FileInputStream(file);
+                    icon = new ImageIcon(GraphicsUtilities.createThumbnail(
+                            ImageIO.read(fis), 80));
+                    fis.close();
+                    fis = null;
+                    pn.setIcon(icon);
+                    c.validate();
+                    // c.doLayout();
+                    c.repaint();
 
+                } catch (Exception e) {
+                    bt747.sys.Generic.debug("Icon creation", e);
+                }
             } catch (Exception e) {
-                bt747.sys.Generic.debug("Icon creation", e);
+
             }
+            availThreads.release();
         }
     }
 
