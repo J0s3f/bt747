@@ -3,15 +3,12 @@
  */
 package bt747.j2se_view.model;
 
-import gps.log.GPSRecord;
-import gps.log.out.CommonOut;
-
-import java.util.Hashtable;
-import java.util.Vector;
-
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.table.AbstractTableModel;
 
-import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
+import bt747.j2se_view.model.PositionData.UserWayPointListModel;
+
 
 
 /**
@@ -20,65 +17,67 @@ import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
  */
 @SuppressWarnings("serial")
 public class FileTableModel extends AbstractTableModel {
-    private java.util.Hashtable<String, ImageData> imageTable = new Hashtable<String, ImageData>();
-    private Vector<String> imageOrder = new Vector<String>();
 
-    public void add(final String path) {
-        if (!imageTable.contains(path)) {
-            ImageData id = new ImageData();
-            id.setImagePath(path);
-            imageTable.put(path, id);
-            imageOrder.add(path);
-            int row = imageOrder.size();
-            fireTableRowsInserted(row, row);
-        }
+    private UserWayPointListModel wpListModel;
+
+
+    /**
+     * The columns currently shown.
+     */
+    private int[] columns = { 
+            PositionData.DATE, PositionData.TIME, PositionData.PATH, PositionData.GEOMETRY,
+            PositionData.LATITUDE, PositionData.LONGITUDE };
+
+    /**
+     * 
+     */
+    public FileTableModel(UserWayPointListModel m) {
+        wpListModel = m;
+        wpListModel.addListDataListener(new WPListDataListener());
     }
+    
+    private final class WPListDataListener implements ListDataListener {
 
-    public GPSRecord[] getSortedGPSRecords() {
-        GPSRecord[] rcrds;
-        rcrds = new GPSRecord[imageOrder.size()];
-        for (int i = 0; i < imageOrder.size(); i++) {
-            rcrds[i] = imageTable.get(imageOrder.get(i)).getGpsInfo();
+        /* (non-Javadoc)
+         * @see javax.swing.event.ListDataListener#contentsChanged(javax.swing.event.ListDataEvent)
+         */
+        public void contentsChanged(ListDataEvent e) {
+            fireTableRowsUpdated(e.getIndex0(), e.getIndex1());
         }
-        java.util.Arrays.sort(rcrds, new GPSRecordTimeComparator());
-        return rcrds;
-    }
 
+        /* (non-Javadoc)
+         * @see javax.swing.event.ListDataListener#intervalAdded(javax.swing.event.ListDataEvent)
+         */
+        public void intervalAdded(ListDataEvent e) {
+            fireTableRowsInserted(e.getIndex0(), e.getIndex1());
+        }
+
+        /* (non-Javadoc)
+         * @see javax.swing.event.ListDataListener#intervalRemoved(javax.swing.event.ListDataEvent)
+         */
+        public void intervalRemoved(ListDataEvent e) {
+            fireTableRowsDeleted(e.getIndex0(), e.getIndex1());
+            
+        }
+        
+    }
+    public void add(String path) {
+        wpListModel.add(path);
+    }
+    
+    /**
+     * 
+     */
     public void clear() {
-        int lastRow = getRowCount() - 1;
-        imageOrder.clear();
-        imageTable.clear();
-        fireTableRowsDeleted(0, lastRow);
+        wpListModel.clear();
     }
-
     /*
      * (non-Javadoc)
      * 
      * @see javax.swing.table.TableModel#getColumnClass(int)
      */
     public Class<?> getColumnClass(int columnIndex) {
-        switch (columnToDataType(columnIndex)) {
-        case NONE:
-            return null;
-        case PATH:
-            return String.class;
-        case WIDTH:
-            return Integer.class;
-        case HEIGHT:
-            return Integer.class;
-        case GEOMETRY:
-            return String.class;
-        case LATITUDE:
-            return Object.class;// return Double.class;
-        case LONGITUDE:
-            return Object.class;// return Double.class;
-        case DATETIME:
-        case DATE:
-        case TIME:
-            return String.class;
-        default:
-            return null;
-        }
+        return PositionData.getDataDisplayClass(columnToDataType(columnIndex));
     }
 
     /*
@@ -96,30 +95,7 @@ public class FileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getColumnName(int)
      */
     public String getColumnName(int columnIndex) {
-        switch (columnToDataType(columnIndex)) {
-        case NONE:
-            return "None";
-        case PATH:
-            return "Image path";
-        case WIDTH:
-            return "Width";
-        case HEIGHT:
-            return "Height";
-        case GEOMETRY:
-            return "Geometry";
-        case LATITUDE:
-            return "Latitude";
-        case LONGITUDE:
-            return "Longitude";
-        case DATETIME:
-            return "Date/Time";
-        case DATE:
-            return "Date";
-        case TIME:
-            return "Time";
-        default:
-            return null;
-        }
+        return PositionData.getDataDisplayName(columnToDataType(columnIndex));
     }
 
     /*
@@ -128,84 +104,16 @@ public class FileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getRowCount()
      */
     public int getRowCount() {
-        return imageTable.size();
+        return wpListModel.getSize();
     }
 
-    public static final int NONE = 0;
-    public static final int PATH = 1;
-    public static final int WIDTH = 2;
-    public static final int HEIGHT = 3;
-    public static final int GEOMETRY = 4;
-    public static final int LATITUDE = 5;
-    public static final int LONGITUDE = 6;
-    public static final int DATETIME = 7;
-    public static final int DATE = 8;
-    public static final int TIME = 9;
-
-    private int[] columns = { DATE, TIME, PATH, GEOMETRY, LATITUDE, LONGITUDE };
 
     private int columnToDataType(final int column) {
         if (column < columns.length) {
             return columns[column];
         } else {
-            return NONE;
+            return PositionData.NONE;
         }
-    }
-
-    private Object getData(final ImageData img, final int dataType) {
-        switch (dataType) {
-        case NONE:
-            return null;
-        case PATH:
-            return img.getPath();
-        case WIDTH:
-            return Integer.valueOf(img.getWidth());
-        case HEIGHT:
-            return Integer.valueOf(img.getHeight());
-        case GEOMETRY:
-            if (img.getWidth() != 0) {
-                return img.getWidth() + "x" + img.getHeight();
-            } else {
-                return null;
-            }
-        case LATITUDE:
-            if (img.getGpsInfo().hasLatitude()) {
-                return Double.valueOf(img.getGpsInfo().latitude);
-            } else {
-                return null;
-            }
-        case LONGITUDE:
-            if (img.getGpsInfo().hasLongitude()) {
-                return Double.valueOf(img.getGpsInfo().longitude);
-            } else {
-                return null;
-            }
-        case DATETIME:
-            if (img.getGpsInfo().hasUtc()) {
-                return CommonOut.getDateTimeStr(img.getGpsInfo().utc);
-            } else {
-                return null;
-            }
-        case DATE:
-            if (img.getGpsInfo().hasUtc()) {
-                return CommonOut.getDateStr(img.getGpsInfo().utc);
-            } else {
-                return null;
-            }
-        case TIME:
-            if (img.getGpsInfo().hasUtc()) {
-                return CommonOut.getTimeStr(img.getGpsInfo().utc);
-            } else {
-                return null;
-            }
-        default:
-            return null;
-        }
-
-    }
-
-    private Object getColumn(final ImageData img, final int column) {
-        return getData(img, columnToDataType(column));
     }
 
     /*
@@ -214,8 +122,8 @@ public class FileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return getColumn(imageTable.get(imageOrder.elementAt(rowIndex)),
-                columnIndex);
+        return PositionData.getData((ImageData)wpListModel.getElementAt(rowIndex),
+                columnToDataType(columnIndex));
     }
 
     /*
@@ -237,12 +145,5 @@ public class FileTableModel extends AbstractTableModel {
         // TODO Auto-generated method stub
 
     }
-
-    public final ImageData getImageData(final int i) {
-        if (i < imageOrder.size()) {
-            return imageTable.get(imageOrder.elementAt(i));
-        } else {
-            return null;
-        }
-    }
+    
 }

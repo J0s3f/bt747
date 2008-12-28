@@ -180,6 +180,14 @@ public final class GPSRxTxPort extends GPSPort {
                 freeTextPort = "/dev/tty.iBT-GPS-SPPslave-" + i;
                 portFound = (new File(freeTextPort)).exists();
             }
+            for (int i = 0; !portFound && (i < 3); i++) {
+                freeTextPort = "/dev/cu.QstarzGPS-SPPslave-" + i;
+                portFound = (new File(freeTextPort)).exists();
+            }
+            for (int i = 0; !portFound && (i < 3); i++) {
+                freeTextPort = "/dev/tty.QstarzGPS-SPPslave-" + i;
+                portFound = (new File(freeTextPort)).exists();
+            }
         }
         if (!portFound) {
             freeTextPort = "";
@@ -205,6 +213,10 @@ public final class GPSRxTxPort extends GPSPort {
         if (!portFound) {
             freeTextPort = "/dev/cu.SLAB_USBtoUART";
             portFound = (new File(freeTextPort)).exists();
+        }
+        if (!portFound) {
+           freeTextPort = "/dev/cu.usbmodem1b10";
+           portFound = (new File(freeTextPort)).exists();
         }
         if (!portFound && os_name.toLowerCase().startsWith("lin")) {
             for (int i = 0; !portFound && (i < 6); i++) {

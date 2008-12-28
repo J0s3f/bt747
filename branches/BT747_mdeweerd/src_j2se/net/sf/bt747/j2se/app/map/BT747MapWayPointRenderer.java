@@ -1,23 +1,21 @@
-//********************************************************************
-//***                           BT747                              ***
-//***                 (c)2007-2008 Mario De Weerd                  ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***                                                              ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT747 ***
+// *** (c)2007-2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 /**
  * This needs to be refactored!
  */
 package net.sf.bt747.j2se.app.map;
-
-import gps.log.GPSRecord;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -32,10 +30,8 @@ import java.awt.geom.Line2D;
 
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.Waypoint;
-import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 
 import bt747.j2se_view.model.BT747Waypoint;
-
 
 /**
  * @author Mario
@@ -55,10 +51,10 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
         Line2D l1 = new Line2D.Float(0.f, 0.f, -1 * scale, -2 * scale);
         gp.append(l1, true);
         final float diam = 2 * scale;
-        Arc2D cc = new Arc2D.Float(-scale, -2 * scale - (diam / 2), diam, diam,
-                180.f, -180.f, Arc2D.OPEN);
+        Arc2D cc = new Arc2D.Float(-scale, -2 * scale - (diam / 2), diam,
+                diam, 180.f, -180.f, Arc2D.OPEN);
         gp.append(cc, true);
-        Line2D l2 = new Line2D.Float(100.0f, 100.0f, 0.0f, 0.0f);
+        // Line2D l2 = new Line2D.Float(100.0f, 100.0f, 0.0f, 0.0f);
         gp.closePath();
     }
 
@@ -66,7 +62,9 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
         // super(); // Gets image
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sf.bt747.j2se.map.BT747WaypointRenderer#isRendererOf(java.lang.Object)
      */
     public boolean isRendererOf(Object o) {
@@ -74,6 +72,7 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
     }
 
     private Color color = new Color(255, 0, 0, 125);
+    private Color selectedColor = new Color(0, 0, 255, 125);
 
     /**
      * {@inheritDoc}
@@ -86,13 +85,18 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
     // @Override
     public boolean paintWaypoint(Graphics2D g, JXMapViewer map,
             Waypoint waypoint) {
-        g.setColor(color);
-        g.draw(gp);
-        g.fill(gp);
-        g.drawLine(-10, 0, 10, 0);
-        g.drawLine(0, -10, 0, 10);
-
         try {
+            g.setColor(color);
+            if (BT747Waypoint.class.isInstance(waypoint)) {
+                if (((BT747Waypoint) waypoint).isSelected()) {
+                    g.setColor(selectedColor);
+                }
+            }
+            g.draw(gp);
+            g.fill(gp);
+            g.drawLine(-10, 0, 10, 0);
+            g.drawLine(0, -10, 0, 10);
+
             if (((BT747Waypoint) waypoint).isShowTag()) {
                 paintWaypointSummary(g, map, (BT747Waypoint) waypoint);
             }
@@ -117,7 +121,7 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
 
     /**
      * @param pt
-     *            relative to position of waypoint.
+     *                relative to position of waypoint.
      * @return
      */
     public boolean contains(Point pt) {
@@ -202,9 +206,9 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
 
     }
 
-
     // http://today.java.net/pub/a/today/2007/11/13/mapping-mashups-with-jxmapviewer.html
-    // public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp)
+    // public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint
+    // wp)
     // {
     // WikiWaypoint wwp = (WikiMashupView.WikiWaypoint) wp;
     //    

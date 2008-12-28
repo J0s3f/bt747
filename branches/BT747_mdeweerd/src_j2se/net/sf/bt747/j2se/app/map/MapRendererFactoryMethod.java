@@ -33,7 +33,7 @@ public class MapRendererFactoryMethod implements WaypointRenderer {
 //        
 //    }
     
-    private static Hashtable<Class, BT747WaypointRenderer> renderHash = new Hashtable<Class, BT747WaypointRenderer>();
+    private static Hashtable<Class<?>, BT747WaypointRenderer> renderHash = new Hashtable<Class<?>, BT747WaypointRenderer>();
     private static final java.util.Vector<BT747WaypointRenderer> renderers = new Vector<BT747WaypointRenderer>();
     
 
