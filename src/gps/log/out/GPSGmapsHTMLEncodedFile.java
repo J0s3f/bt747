@@ -130,7 +130,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "<meta name=\"description\" "
                         + "content=\"Tracks - Generated with BT747 V"
                         + Version.VERSION_NUMBER
-                        + " http://sf.net/projects/bt747 - powered by Google Maps\" />\n"
+                        + " http://bt747.free.fr - powered by Google Maps\" />\n"
                         + "\n"
                         + "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp");
         l_header.append(keyCode());
@@ -279,7 +279,8 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         // + "var mgrOptions = { borderPadding: 50, maxZoom: 15,
                         // trackMarkers: true };\n"
                         + " var mgr = new GMarkerManager(map);\n"
-                        + " map.setMapType(G_SATELLITE_MAP);\n"
+                        // Default map = plan = google's default
+                        //+ " map.setMapType(G_SATELLITE_MAP);\n"
                         + " map.addMapType(G_PHYSICAL_MAP);\n "
                         + " map.enableScrollWheelZoom();\n"
                         + " map.addControl(new GLargeMapControl());\n"
