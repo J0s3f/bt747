@@ -3,10 +3,8 @@
  */
 package bt747.j2se_view;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -16,7 +14,7 @@ import bt747.sys.Generic;
  * @author Mario
  * 
  */
-public class AGPS {
+public class J2SEAGPS {
     // Transystem download information:
     // ftp://tsi0001:xxxxxx@www.transystem.com.tw/
     // Files: MTK14.EPO and MTK7d.EPO
