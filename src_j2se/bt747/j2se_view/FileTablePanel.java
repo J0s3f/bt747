@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.j2se_view;
 
 import java.awt.Component;
@@ -19,11 +19,13 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
+import javax.swing.JTable;
 
 import net.iharder.dnd.DropListener;
 import net.iharder.dnd.FileDrop;
 import net.sf.bt747.j2se.app.filefilters.JpgFileFilter;
 
+import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.FileTableModel;
 import bt747.j2se_view.model.ImageData;
 import bt747.sys.Generic;
@@ -32,9 +34,10 @@ import bt747.sys.Generic;
  * 
  * @author Mario
  */
+@SuppressWarnings("serial")
 public class FileTablePanel extends javax.swing.JPanel {
 
-    /** Creates new form FileTablePanel */
+    /** Creates new form FileTablePanel. */
     public FileTablePanel() {
         initComponents();
     }
@@ -42,13 +45,14 @@ public class FileTablePanel extends javax.swing.JPanel {
     private J2SEAppController c;
     private J2SEAppModel m;
 
-    private FileDrop fd;
-    public void init(J2SEAppController pC) {
+    public final void init(final J2SEAppController pC) {
         c = pC;
         m = c.getAppModel();
 
-        fileTableModel = new FileTableModel();
+        fileTableModel = new FileTableModel(m.getPositionData()
+                .getWaypointListModel());
         tbImageList.setModel(fileTableModel);
+        tbImageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         // m.addListener(this);
 
         // dt = new DropTarget(tbImageList,this);
@@ -68,34 +72,38 @@ public class FileTablePanel extends javax.swing.JPanel {
         spTimeOffsetMinutes.setValue((int) (offset / 60));
         spTimeOffsetSeconds.setValue(offset % 60);
 
-        tfMaxTimeDiff.setText("" + m.getIntOpt(J2SEAppModel.TAG_MAXTIMEDIFFERENCE));
+        tfMaxTimeDiff.setText(""
+                + m.getIntOpt(J2SEAppModel.TAG_MAXTIMEDIFFERENCE));
         cbOverridePositions.setSelected(m
                 .getBooleanOpt(J2SEAppModel.TAG_OVERRIDEPOSITIONS));
 
         DropListener dl;
         dl = new DropListener() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
+             * 
              * @see net.iharder.dnd.FileDrop.Listener#filesDropped(java.io.File[])
              */
             public void filesDropped(final java.io.File[] files) {
-                addFiles(files);
+                m.getPositionData().addFiles(files);
             }
         };
-        fd = new FileDrop((Component) this, dl);
+        new FileDrop((Component) this, dl);
     }
 
     private void doSavePositions() {
-        for (int i = 0; i < fileTableModel.getRowCount(); i++) {
-            ImageData img = fileTableModel.getImageData(i);
-            String p = img.getPath();
-            int ptIndex = p.lastIndexOf('.');
-            String newPath;
-            newPath = p.substring(0, ptIndex);
-            newPath += "_tagged";
-            newPath += p.substring(ptIndex);
-            img.writeImage(newPath, 0);
+        for (BT747Waypoint w : m.getPositionData().getUserWayPoints()) {
+            if (ImageData.class.isInstance(w)) {
+                ImageData img = (ImageData) w;
+                String p = img.getPath();
+                int ptIndex = p.lastIndexOf('.');
+                String newPath;
+                newPath = p.substring(0, ptIndex);
+                newPath += "_tagged";
+                newPath += p.substring(ptIndex);
+                img.writeImage(newPath, 0);
+            }
         }
-        ;
         // doLogConversion(getSelectedFormat(cbFormat.getSelectedItem().toString()));
         // c.doLogConversion(J2SEAppModel.GMAP_LOGTYPE);
     }
@@ -125,29 +133,15 @@ public class FileTablePanel extends javax.swing.JPanel {
         ImageFileChooser.setMultiSelectionEnabled(true);
         if (ImageFileChooser.showDialog(this, getString("SelectFilesToTag")) == JFileChooser.APPROVE_OPTION) {
             try {
-                String path;
                 File[] files = ImageFileChooser.getSelectedFiles();
                 c.setStringOpt(J2SEAppModel.IMAGEDIR, ImageFileChooser
                         .getCurrentDirectory().getCanonicalPath());
-                addFiles(files);
+                m.getPositionData().addFiles(files);
             } catch (Exception e) {
                 Generic.debug(getString("FilesToTagFileChooser"), e);
             }
             // tfRawLogFilePath.setText(m.getStringOpt(AppSettings.LOGFILEPATH));
             // tfRawLogFilePath.setCaretPosition(tfRawLogFilePath.getText().length());
-        }
-    }
-    
-    private final void addFiles(File[] files) {
-        if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                try {
-                fileTableModel.add(files[i].getCanonicalPath());
-                } catch (IOException e) {
-                    // TODO: handle exception
-                }
-            }
-            m.getPositionData().setUserWayPoints(fileTableModel.getSortedGPSRecords());
         }
     }
 
@@ -173,12 +167,12 @@ public class FileTablePanel extends javax.swing.JPanel {
     private FileTableModel fileTableModel;
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * This method is called from within the constructor to initialize the
+     * form. WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    private void initComponents() {//GEN-BEGIN:initComponents
+    private void initComponents() {// GEN-BEGIN:initComponents
 
         spValues = new javax.swing.JScrollPane();
         tbImageList = new javax.swing.JTable();
@@ -206,9 +200,10 @@ public class FileTablePanel extends javax.swing.JPanel {
 
         tbImageList.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][] { { null, null, null, null },
-                        { null, null, null, null }, { null, null, null, null },
-                        { null, null, null, null } }, new String[] { "Title 1",
-                        "Title 2", "Title 3", "Title 4" }));
+                        { null, null, null, null },
+                        { null, null, null, null },
+                        { null, null, null, null } }, new String[] {
+                        "Title 1", "Title 2", "Title 3", "Title 4" }));
         tbImageList
                 .setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tbImageList.setColumnSelectionAllowed(true);
@@ -224,7 +219,7 @@ public class FileTablePanel extends javax.swing.JPanel {
         btSelectImages.setToolTipText(bundle
                 .getString("FileTablePanel.btSelectImages.toolTipText")); // NOI18N
         btSelectImages.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 btSelectImagesActionPerformed(evt);
             }
         });
@@ -233,7 +228,8 @@ public class FileTablePanel extends javax.swing.JPanel {
                 .getString("ImageTablePanel.btSelectDestinationDir.text")); // NOI18N
         btSelectDestinationDir
                 .addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    public void actionPerformed(
+                            final java.awt.event.ActionEvent evt) {
                         btSelectDestinationDirActionPerformed(evt);
                     }
                 });
@@ -242,7 +238,7 @@ public class FileTablePanel extends javax.swing.JPanel {
                 .getString("ImageTablePanel.tfDestinationDirectory.text")); // NOI18N
         tfDestinationDirectory
                 .addFocusListener(new java.awt.event.FocusAdapter() {
-                    public void focusLost(java.awt.event.FocusEvent evt) {
+                    public void focusLost(final java.awt.event.FocusEvent evt) {
                         tfDestinationDirectoryFocusLost(evt);
                     }
                 });
@@ -252,7 +248,7 @@ public class FileTablePanel extends javax.swing.JPanel {
         btClearList.setToolTipText(bundle
                 .getString("FileTablePanel.btClearList.toolTipText")); // NOI18N
         btClearList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 btClearListActionPerformed(evt);
             }
         });
@@ -260,7 +256,7 @@ public class FileTablePanel extends javax.swing.JPanel {
         btTagFromTable.setText(bundle
                 .getString("ImageTablePanel.btTagFromTable.text")); // NOI18N
         btTagFromTable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 btTagFromTableActionPerformed(evt);
             }
         });
@@ -268,7 +264,7 @@ public class FileTablePanel extends javax.swing.JPanel {
         btTagFromFile.setText(bundle
                 .getString("ImageTablePanel.btTagFromFile.text")); // NOI18N
         btTagFromFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 btTagFromFileActionPerformed(evt);
             }
         });
@@ -279,14 +275,16 @@ public class FileTablePanel extends javax.swing.JPanel {
                 .getString("FileTablePanel.btSaveTaggedFiles.toolTipText")); // NOI18N
         btSaveTaggedFiles
                 .addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    public void actionPerformed(
+                            final java.awt.event.ActionEvent evt) {
                         btSaveTaggedFilesActionPerformed(evt);
                     }
                 });
 
         pnTimeOffset
-                .setBorder(javax.swing.BorderFactory.createTitledBorder(bundle
-                        .getString("FileTablePanel.pnTimeOffset.border.title"))); // NOI18N
+                .setBorder(javax.swing.BorderFactory
+                        .createTitledBorder(bundle
+                                .getString("FileTablePanel.pnTimeOffset.border.title"))); // NOI18N
         pnTimeOffset.setToolTipText(bundle
                 .getString("FileTablePanel.pnTimeOffset.toolTipText")); // NOI18N
 
@@ -300,7 +298,8 @@ public class FileTablePanel extends javax.swing.JPanel {
                 48, 1));
         spTimeOffsetHours
                 .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                    public void stateChanged(
+                            final javax.swing.event.ChangeEvent evt) {
                         spTimeOffsetHoursStateChanged(evt);
                     }
                 });
@@ -309,7 +308,8 @@ public class FileTablePanel extends javax.swing.JPanel {
                 59, 1));
         spTimeOffsetMinutes
                 .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                    public void stateChanged(
+                            final javax.swing.event.ChangeEvent evt) {
                         spTimeOffsetMinutesStateChanged(evt);
                     }
                 });
@@ -318,7 +318,8 @@ public class FileTablePanel extends javax.swing.JPanel {
                 59, 1));
         spTimeOffsetSeconds
                 .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                    public void stateChanged(
+                            final javax.swing.event.ChangeEvent evt) {
                         spTimeOffsetSecondsStateChanged(evt);
                     }
                 });
@@ -331,12 +332,13 @@ public class FileTablePanel extends javax.swing.JPanel {
                 .getString("FileTablePanel.tfMaxTimeDiff.toolTipText")); // NOI18N
         tfMaxTimeDiff.setInputVerifier(J2SEAppController.IntVerifier);
         tfMaxTimeDiff.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
+            public void focusLost(final java.awt.event.FocusEvent evt) {
                 tfMaxTimeDiffFocusLost(evt);
             }
         });
 
-        lbSeconds1.setText(bundle.getString("FileTablePanel.lbSeconds1.text")); // NOI18N
+        lbSeconds1
+                .setText(bundle.getString("FileTablePanel.lbSeconds1.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout pnTimeOffsetLayout = new org.jdesktop.layout.GroupLayout(
                 pnTimeOffset);
@@ -437,8 +439,9 @@ public class FileTablePanel extends javax.swing.JPanel {
                                                                 org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))));
 
         pnTagOptions
-                .setBorder(javax.swing.BorderFactory.createTitledBorder(bundle
-                        .getString("FileTablePanel.pnTagOptions.border.title"))); // NOI18N
+                .setBorder(javax.swing.BorderFactory
+                        .createTitledBorder(bundle
+                                .getString("FileTablePanel.pnTagOptions.border.title"))); // NOI18N
 
         cbOverridePositions.setText(bundle
                 .getString("FileTablePanel.cbOverridePositions.text")); // NOI18N
@@ -446,7 +449,8 @@ public class FileTablePanel extends javax.swing.JPanel {
                 .getString("FileTablePanel.cbOverridePositions.toolTipText")); // NOI18N
         cbOverridePositions
                 .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                    public void stateChanged(
+                            final javax.swing.event.ChangeEvent evt) {
                         cbOverridePositionsStateChanged(evt);
                     }
                 });
@@ -607,64 +611,72 @@ public class FileTablePanel extends javax.swing.JPanel {
                 layout.createSequentialGroup().add(spValues,
                         org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 154,
                         Short.MAX_VALUE).addPreferredGap(
-                        org.jdesktop.layout.LayoutStyle.RELATED).add(btnPanel,
+                        org.jdesktop.layout.LayoutStyle.RELATED).add(
+                        btnPanel,
                         org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
                         org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
                         org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)));
-    }//GEN-END:initComponents
+    }// GEN-END:initComponents
 
     private void cbOverridePositionsStateChanged(
-            javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbOverridePositionsStateChanged
-        c.setBooleanOpt(J2SEAppModel.TAG_OVERRIDEPOSITIONS, cbOverridePositions
-                .isSelected());
-    }//GEN-LAST:event_cbOverridePositionsStateChanged
+            final javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_cbOverridePositionsStateChanged
+        c.setBooleanOpt(J2SEAppModel.TAG_OVERRIDEPOSITIONS,
+                cbOverridePositions.isSelected());
+    }// GEN-LAST:event_cbOverridePositionsStateChanged
 
-    private void spTimeOffsetHoursStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spTimeOffsetHoursStateChanged
+    private void spTimeOffsetHoursStateChanged(
+            final javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_spTimeOffsetHoursStateChanged
         updateOffset();
-    }//GEN-LAST:event_spTimeOffsetHoursStateChanged
+    }// GEN-LAST:event_spTimeOffsetHoursStateChanged
 
     private void spTimeOffsetMinutesStateChanged(
-            javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spTimeOffsetMinutesStateChanged
+            final javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_spTimeOffsetMinutesStateChanged
         updateOffset();
-    }//GEN-LAST:event_spTimeOffsetMinutesStateChanged
+    }// GEN-LAST:event_spTimeOffsetMinutesStateChanged
 
-    private void tfMaxTimeDiffFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfMaxTimeDiffFocusLost
+    private void tfMaxTimeDiffFocusLost(final java.awt.event.FocusEvent evt) {// GEN-FIRST:event_tfMaxTimeDiffFocusLost
         c.setIntOpt(J2SEAppModel.TAG_MAXTIMEDIFFERENCE, Integer.valueOf(
                 tfMaxTimeDiff.getText()).intValue());
-    }//GEN-LAST:event_tfMaxTimeDiffFocusLost
+    }// GEN-LAST:event_tfMaxTimeDiffFocusLost
 
     private void spTimeOffsetSecondsStateChanged(
-            javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spTimeOffsetSecondsStateChanged
+            final javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_spTimeOffsetSecondsStateChanged
         updateOffset();
-    }//GEN-LAST:event_spTimeOffsetSecondsStateChanged
+    }// GEN-LAST:event_spTimeOffsetSecondsStateChanged
 
-    private void btSelectImagesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelectImagesActionPerformed
+    private void btSelectImagesActionPerformed(
+            final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btSelectImagesActionPerformed
         selectImages();
 
-    }//GEN-LAST:event_btSelectImagesActionPerformed
+    }// GEN-LAST:event_btSelectImagesActionPerformed
 
     private void btSelectDestinationDirActionPerformed(
-            java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelectDestinationDirActionPerformed
+            final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btSelectDestinationDirActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btSelectDestinationDirActionPerformed
+    }// GEN-LAST:event_btSelectDestinationDirActionPerformed
 
-    private void btClearListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btClearListActionPerformed
+    private void btClearListActionPerformed(
+            final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btClearListActionPerformed
         fileTableModel.clear();
-    }//GEN-LAST:event_btClearListActionPerformed
+    }// GEN-LAST:event_btClearListActionPerformed
 
-    private void btTagFromTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTagFromTableActionPerformed
+    private void btTagFromTableActionPerformed(
+            final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btTagFromTableActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btTagFromTableActionPerformed
+    }// GEN-LAST:event_btTagFromTableActionPerformed
 
-    private void btTagFromFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTagFromFileActionPerformed
+    private void btTagFromFileActionPerformed(
+            final java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btTagFromFileActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btTagFromFileActionPerformed
+    }// GEN-LAST:event_btTagFromFileActionPerformed
 
-    private void btSaveTaggedFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveTaggedFilesActionPerformed
+    private void btSaveTaggedFilesActionPerformed(
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSaveTaggedFilesActionPerformed
         doSavePositions();
     }//GEN-LAST:event_btSaveTaggedFilesActionPerformed
 
-    private void tfDestinationDirectoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfDestinationDirectoryFocusLost
+    private void tfDestinationDirectoryFocusLost(
+            final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfDestinationDirectoryFocusLost
         // TODO add your handling code here:
     }//GEN-LAST:event_tfDestinationDirectoryFocusLost
 

@@ -13,6 +13,7 @@ package bt747.j2se_view;
 
 import gps.log.GPSRecord;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -23,12 +24,19 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.ScrollPaneConstants;
+
+import net.iharder.dnd.DropListener;
+import net.iharder.dnd.FileDrop;
+import net.sf.bt747.j2se.app.list.BT747WaypointListCellRenderer;
 import net.sf.bt747.j2se.app.map.BT747TrackRenderer;
 import net.sf.bt747.j2se.app.map.MapRendererFactoryMethod;
 import net.sf.bt747.j2se.app.utils.BrowserControl;
@@ -82,10 +90,13 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         setMapTileCacheDirectory();
     }
 
+    mouseListener ml;
+    
     private void initGui() {
         map.setMiniMapVisible(true);
-        wayPointScrollPane
-                .setVisible(Version.VERSION_NUMBER.equals("d.evel"));
+//        wayPointScrollPane
+//                .setVisible(Version.VERSION_NUMBER.equals("d.evel"));
+        wayPointScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         // map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         mapViewer = map.getMainMap();
         waypointPainter = new MyWaypointPainter<JXMapViewer>();
@@ -96,12 +107,56 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         cp.setPainters(mapViewer.getOverlayPainter(), waypointPainter);
         mapViewer.setOverlayPainter(cp);
 
-        mouseListener ml = new mouseListener();
+        ml = new mouseListener();
         mapViewer.addMouseListener(ml);
         mapViewer.addMouseMotionListener(ml);
         waypointList.setModel(m.getPositionData().getWaypointListModel());
-
+        waypointList.setCellRenderer(new BT747WaypointListCellRenderer());
+        //waypointList.setPreferredSize(new Dimension(100,0));
+        splitPane.setDividerLocation(100);
+        
+        m.getPositionData().addPropertyChangeListener(PositionData.WPDISPLAYCHANGE, wpChangeListener);
+        m.getPositionData().addPropertyChangeListener(PositionData.WAYPOINTSELECTED, wpSelectedListener);
+        
+        DropListener dl;
+        dl = new DropListener() {
+            /*
+             * (non-Javadoc)
+             * 
+             * @see net.iharder.dnd.FileDrop.Listener#filesDropped(java.io.File[])
+             */
+            public void filesDropped(final java.io.File[] files) {
+                m.getPositionData().addFiles(files);
+            }
+        };
+        new FileDrop((Component) this, dl);
     }
+
+    private PropertyChangeListener wpChangeListener = 
+        new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                map.repaint();
+            }
+    };
+
+    private PropertyChangeListener wpSelectedListener = 
+        new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                try {
+                    BT747Waypoint w = (BT747Waypoint) evt.getNewValue();
+                    if(w!=waypointList.getSelectedValue()) {
+                        waypointList.setSelectedValue(w, true);
+                        ml.selectedWaypoint(w);
+                        map.repaint();
+                    }
+                } catch (Exception e) {
+                    bt747.sys.Generic.debug("Waypoint selection",e);
+                    // TODO: handle exception
+                }
+            }
+    };
 
     /*
      * (non-Javadoc)
@@ -259,7 +314,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             return url;
         }
     };
-
+    
     private final TileFactoryInfo tfiOSM_OSM_CYCLE = new MyTileFactoryInfo(
             // tile size is 256 and x/y orientation is normal
             "osmcycle", 1, 15, 19, 256, true, true,
@@ -423,11 +478,8 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             super.doPaint(g, map, width, height);
         }
 
-        public void toggleSelected(Waypoint w) {
-            MapRendererFactoryMethod f = MapRendererFactoryMethod
-                    .getInstance();
-            f.toggleSelected(w);
-            repaint();
+        public void toggleSelected(BT747Waypoint w) {
+            w.toggleShowTag();
         }
         
         /* (non-Javadoc)
@@ -529,13 +581,11 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
     
     private class wpIterable implements Iterable<Waypoint> {
 
-        private Iterable<BT747Waypoint> itr;
-        
         /**
          * 
          */
-        public wpIterable(Iterable<BT747Waypoint> i) {
-            itr = i;
+        public wpIterable() {
+            //itr = i;
         }
         
         /* (non-Javadoc)
@@ -588,7 +638,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
     }
 
     public java.lang.Iterable<Waypoint> getWaypointsIterable() {
-        return new wpIterable(m.getPositionData().getBT747Waypoints());
+        return new wpIterable();
     };
 
 
@@ -603,19 +653,16 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          */
         public void mouseClicked(MouseEvent e) {
             switch (e.getButton()) {
-            case MouseEvent.BUTTON3:
+            case MouseEvent.BUTTON3: {
                 Point pt = e.getPoint();
 
-                Waypoint w = waypointPainter.getContains(pt);
+                BT747Waypoint w = (BT747Waypoint)waypointPainter.getContains(pt);
                 if (w != null) {
-                    waypointPainter.toggleSelected(w);
+                    w.toggleShowTag();
                     e.consume();
                 }
-
                 break;
-
-            default:
-                break;
+            }
             }
         }
 
@@ -639,7 +686,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
         }
 
-        private Waypoint currentWaypoint = null;
+        private BT747Waypoint currentWaypoint = null;
         /*
          * (non-Javadoc)
          * 
@@ -648,21 +695,50 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         int xOffset;
         int yOffset;
 
+        private void clearWaypointSelection() {
+            if (currentWaypoint != null) {
+                currentWaypoint.setSelected(false);
+                currentWaypoint = null;
+            }
+        }
+        
+        /**
+         * 
+         */
+        private void selectedWaypoint(BT747Waypoint w) {
+            if(w!=currentWaypoint) {
+                clearWaypointSelection();
+            }
+        }
+        
         public void mousePressed(MouseEvent e) {
             switch (e.getButton()) {
             case MouseEvent.BUTTON1:
                 Point pt = e.getPoint();
 
-                Waypoint w = waypointPainter.getContains(pt);
+                try {
+                    BT747Waypoint w = (BT747Waypoint) waypointPainter
+                            .getContains(pt);
 
-                if (w != null) {
-                    currentWaypoint = w;
-                    previous = pt;
-                    Point2D p = mapViewer.convertGeoPositionToPoint(w
-                            .getPosition());
-                    xOffset = (int) (pt.getX() - p.getX());
-                    yOffset = (int) (pt.getY() - p.getY());
-                    mapViewer.setPanEnabled(false);
+                    if (w == null) {
+                        clearWaypointSelection();
+                    } else {
+                        if (w != currentWaypoint) {
+                            clearWaypointSelection();
+                        }
+
+                        currentWaypoint = w;
+                        w.setSelected(true);
+                        previous = pt;
+                        Point2D p = mapViewer.convertGeoPositionToPoint(w
+                                .getPosition());
+                        xOffset = (int) (pt.getX() - p.getX());
+                        yOffset = (int) (pt.getY() - p.getY());
+                        mapViewer.setPanEnabled(false);
+                        repaint();
+                    }
+                } catch (Exception ex) {
+                    // TODO: handle exception
                 }
                 break;
 
@@ -681,7 +757,6 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             case MouseEvent.BUTTON1:
                 if (currentWaypoint != null) {
                     mapViewer.setPanEnabled(true);
-                    currentWaypoint = null;
                 }
             default:
                 break;
@@ -724,56 +799,51 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    private void initComponents() {// GEN-BEGIN:initComponents
+    private void initComponents() {//GEN-BEGIN:initComponents
 
+        splitPane = new javax.swing.JSplitPane();
+        map = new org.jdesktop.swingx.JXMapKit();
         wayPointScrollPane = new javax.swing.JScrollPane();
         waypointList = new javax.swing.JList();
-        map = new org.jdesktop.swingx.JXMapKit();
 
-        wayPointScrollPane
-                .setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        wayPointScrollPane
-                .setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        splitPane.setBorder(null);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setOpaque(false);
+        splitPane.setRightComponent(map);
+
+        wayPointScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        wayPointScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         waypointList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Waypoint" };
-
-            public int getSize() {
-                return strings.length;
-            }
-
-            public Object getElementAt(int i) {
-                return strings[i];
-            }
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
         });
-        waypointList
-                .setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        waypointList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         waypointList.setOpaque(false);
         wayPointScrollPane.setViewportView(waypointList);
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
-                this);
+        splitPane.setLeftComponent(wayPointScrollPane);
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(
-                layout.createSequentialGroup().add(wayPointScrollPane,
-                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 110,
-                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(
-                                org.jdesktop.layout.LayoutStyle.RELATED).add(
-                                map,
-                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                304, Short.MAX_VALUE)));
-        layout.setVerticalGroup(layout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(map,
-                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 236,
-                Short.MAX_VALUE).add(wayPointScrollPane,
-                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 236,
-                Short.MAX_VALUE));
-    }// GEN-END:initComponents
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(0, 0, 0)
+                .add(splitPane))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(0, 0, 0)
+                .add(splitPane))
+        );
+    }//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdesktop.swingx.JXMapKit map;
+    private javax.swing.JSplitPane splitPane;
     private javax.swing.JScrollPane wayPointScrollPane;
     private javax.swing.JList waypointList;
     // End of variables declaration//GEN-END:variables

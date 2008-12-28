@@ -96,18 +96,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         cbTrkDistance
                 .setSelected((BT747Constants.RCR_DISTANCE_MASK & trkRCR) != 0);
         cbTrkButton.setSelected((BT747Constants.RCR_BUTTON_MASK & trkRCR) != 0);
-        cbTrkUser1.setSelected((BT747Constants.RCR_APP0_MASK & trkRCR) != 0);
-        cbTrkUser2.setSelected((BT747Constants.RCR_APP1_MASK & trkRCR) != 0);
-        cbTrkUser3.setSelected((BT747Constants.RCR_APP2_MASK & trkRCR) != 0);
-        cbTrkUser4.setSelected((BT747Constants.RCR_APP3_MASK & trkRCR) != 0);
-        cbTrkUser5.setSelected((BT747Constants.RCR_APP4_MASK & trkRCR) != 0);
-        cbTrkUser6.setSelected((BT747Constants.RCR_APP5_MASK & trkRCR) != 0);
-        cbTrkUser7.setSelected((BT747Constants.RCR_APP6_MASK & trkRCR) != 0);
-        cbTrkUser8.setSelected((BT747Constants.RCR_APP7_MASK & trkRCR) != 0);
-        cbTrkUser9.setSelected((BT747Constants.RCR_APP8_MASK & trkRCR) != 0);
-        cbTrkUser10.setSelected((BT747Constants.RCR_APP9_MASK & trkRCR) != 0);
-        cbTrkUser11.setSelected((BT747Constants.RCR_APPY_MASK & trkRCR) != 0);
-        cbTrkUser12.setSelected((BT747Constants.RCR_APPZ_MASK & trkRCR) != 0);
+        cbTrkUser1.setSelected((BT747Constants.RCR_ALL_APP_MASK & trkRCR) != 0);
 
         cbWayNoFix
                 .setSelected((wayValid & BT747Constants.VALID_NO_FIX_MASK) != 0);
@@ -128,18 +117,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         cbWayDistance
                 .setSelected((BT747Constants.RCR_DISTANCE_MASK & wayRCR) != 0);
         cbWayButton.setSelected((BT747Constants.RCR_BUTTON_MASK & wayRCR) != 0);
-        cbWayUser1.setSelected((BT747Constants.RCR_APP0_MASK & wayRCR) != 0);
-        cbWayUser2.setSelected((BT747Constants.RCR_APP1_MASK & wayRCR) != 0);
-        cbWayUser3.setSelected((BT747Constants.RCR_APP2_MASK & wayRCR) != 0);
-        cbWayUser4.setSelected((BT747Constants.RCR_APP3_MASK & wayRCR) != 0);
-        cbWayUser5.setSelected((BT747Constants.RCR_APP4_MASK & wayRCR) != 0);
-        cbWayUser6.setSelected((BT747Constants.RCR_APP5_MASK & wayRCR) != 0);
-        cbWayUser7.setSelected((BT747Constants.RCR_APP6_MASK & wayRCR) != 0);
-        cbWayUser8.setSelected((BT747Constants.RCR_APP7_MASK & wayRCR) != 0);
-        cbWayUser9.setSelected((BT747Constants.RCR_APP8_MASK & wayRCR) != 0);
-        cbWayUser10.setSelected((BT747Constants.RCR_APP9_MASK & wayRCR) != 0);
-        cbWayUser11.setSelected((BT747Constants.RCR_APPY_MASK & wayRCR) != 0);
-        cbWayUser12.setSelected((BT747Constants.RCR_APPZ_MASK & wayRCR) != 0);
+        cbWayUser1.setSelected((BT747Constants.RCR_ALL_APP_MASK & wayRCR) != 0);
     }
 
     void setTrkValidFilterSettings() {
@@ -222,40 +200,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
             trkRCR |= BT747Constants.RCR_BUTTON_MASK;
         }
         if (cbTrkUser1.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP0_MASK;
-        }
-        if (cbTrkUser2.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP1_MASK;
-        }
-        if (cbTrkUser3.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP2_MASK;
-        }
-        if (cbTrkUser4.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP3_MASK;
-        }
-        if (cbTrkUser5.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP4_MASK;
-        }
-        if (cbTrkUser6.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP5_MASK;
-        }
-        if (cbTrkUser7.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP6_MASK;
-        }
-        if (cbTrkUser8.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP7_MASK;
-        }
-        if (cbTrkUser9.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP8_MASK;
-        }
-        if (cbTrkUser10.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APP9_MASK;
-        }
-        if (cbTrkUser11.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APPY_MASK;
-        }
-        if (cbTrkUser12.isSelected()) {
-            trkRCR |= BT747Constants.RCR_APPZ_MASK;
+            trkRCR |= BT747Constants.RCR_ALL_APP_MASK;
         }
         c.setTrkPtRCR(trkRCR);
     }
@@ -275,40 +220,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
             wayRCR |= BT747Constants.RCR_BUTTON_MASK;
         }
         if (cbWayUser1.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP0_MASK;
-        }
-        if (cbWayUser2.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP1_MASK;
-        }
-        if (cbWayUser3.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP2_MASK;
-        }
-        if (cbWayUser4.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP3_MASK;
-        }
-        if (cbWayUser5.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP4_MASK;
-        }
-        if (cbWayUser6.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP5_MASK;
-        }
-        if (cbWayUser7.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP6_MASK;
-        }
-        if (cbWayUser8.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP7_MASK;
-        }
-        if (cbWayUser9.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP8_MASK;
-        }
-        if (cbWayUser10.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APP9_MASK;
-        }
-        if (cbWayUser11.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APPY_MASK;
-        }
-        if (cbWayUser12.isSelected()) {
-            wayRCR |= BT747Constants.RCR_APPZ_MASK;
+            wayRCR |= BT747Constants.RCR_ALL_APP_MASK;
         }
         c.setWayPtRCR(wayRCR);
     }
@@ -339,17 +251,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         cbTrkDistance = new javax.swing.JCheckBox();
         cbTrkButton = new javax.swing.JCheckBox();
         cbTrkUser1 = new javax.swing.JCheckBox();
-        cbTrkUser2 = new javax.swing.JCheckBox();
-        cbTrkUser3 = new javax.swing.JCheckBox();
-        cbTrkUser4 = new javax.swing.JCheckBox();
-        cbTrkUser5 = new javax.swing.JCheckBox();
-        cbTrkUser6 = new javax.swing.JCheckBox();
-        cbTrkUser7 = new javax.swing.JCheckBox();
-        cbTrkUser8 = new javax.swing.JCheckBox();
-        cbTrkUser9 = new javax.swing.JCheckBox();
-        cbTrkUser10 = new javax.swing.JCheckBox();
-        cbTrkUser11 = new javax.swing.JCheckBox();
-        cbTrkUser12 = new javax.swing.JCheckBox();
         pnCommonFilter = new javax.swing.JPanel();
         pnFilterOther = new javax.swing.JPanel();
         txtRecCntMin = new javax.swing.JTextField();
@@ -389,17 +290,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         cbWayDistance = new javax.swing.JCheckBox();
         cbWayButton = new javax.swing.JCheckBox();
         cbWayUser1 = new javax.swing.JCheckBox();
-        cbWayUser2 = new javax.swing.JCheckBox();
-        cbWayUser3 = new javax.swing.JCheckBox();
-        cbWayUser4 = new javax.swing.JCheckBox();
-        cbWayUser5 = new javax.swing.JCheckBox();
-        cbWayUser6 = new javax.swing.JCheckBox();
-        cbWayUser7 = new javax.swing.JCheckBox();
-        cbWayUser8 = new javax.swing.JCheckBox();
-        cbWayUser9 = new javax.swing.JCheckBox();
-        cbWayUser10 = new javax.swing.JCheckBox();
-        cbWayUser11 = new javax.swing.JCheckBox();
-        cbWayUser12 = new javax.swing.JCheckBox();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         pnTrackpoint.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnTrackpoint.border.title"))); // NOI18N
@@ -488,6 +378,9 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
                     .add(cbTrkSimulate))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        pnTrkFixTypeLayout.linkSize(new java.awt.Component[] {cbTrkDGPS, cbTrkEstimate, cbTrkFRTK, cbTrkManual, cbTrkNoFix, cbTrkPPS, cbTrkRTK, cbTrkSPS, cbTrkSimulate}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
         pnTrkFixTypeLayout.setVerticalGroup(
             pnTrkFixTypeLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnTrkFixTypeLayout.createSequentialGroup()
@@ -508,7 +401,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
                 .add(cbTrkManual)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cbTrkSimulate)
-                .add(30, 30, 30))
+                .addContainerGap())
         );
 
         pnTrkLogReason.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnTrkLogReason.border.title"))); // NOI18N
@@ -548,83 +441,6 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
             }
         });
 
-        cbTrkUser2.setText(bundle.getString("BT747Main.cbTrkUser2.text")); // NOI18N
-        cbTrkUser2.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser2TrkRCRAction(evt);
-            }
-        });
-
-        cbTrkUser3.setText(bundle.getString("BT747Main.cbTrkUser3.text")); // NOI18N
-        cbTrkUser3.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser3TrkRCRAction(evt);
-            }
-        });
-
-        cbTrkUser4.setText(bundle.getString("BT747Main.cbTrkUser4.text")); // NOI18N
-        cbTrkUser4.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser4TrkRCRAction(evt);
-            }
-        });
-
-        cbTrkUser5.setText(bundle.getString("BT747Main.cbTrkUser5.text")); // NOI18N
-        cbTrkUser5.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser5TrkRCRAction(evt);
-            }
-        });
-
-        cbTrkUser6.setText(bundle.getString("BT747Main.cbTrkUser6.text")); // NOI18N
-        cbTrkUser6.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser6TrkRCRAction(evt);
-            }
-        });
-
-        cbTrkUser7.setText(bundle.getString("BT747Main.cbTrkUser7.text")); // NOI18N
-        cbTrkUser7.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser7TrkRCRAction(evt);
-            }
-        });
-
-        cbTrkUser8.setText(bundle.getString("BT747Main.cbTrkUser8.text")); // NOI18N
-        cbTrkUser8.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser8TrkRCRAction(evt);
-            }
-        });
-
-        cbTrkUser9.setText(bundle.getString("BT747Main.cbTrkUser9.text")); // NOI18N
-        cbTrkUser9.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser9TrkRCRAction(evt);
-            }
-        });
-
-        cbTrkUser10.setText(bundle.getString("BT747Main.cbTrkUser10.text")); // NOI18N
-        cbTrkUser10.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser10TrkRCRAction(evt);
-            }
-        });
-
-        cbTrkUser11.setText(bundle.getString("BT747Main.cbTrkUser11.text")); // NOI18N
-        cbTrkUser11.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser11TrkRCRAction(evt);
-            }
-        });
-
-        cbTrkUser12.setText(bundle.getString("BT747Main.cbTrkUser12.text")); // NOI18N
-        cbTrkUser12.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbTrkUser12TrkRCRAction(evt);
-            }
-        });
-
         org.jdesktop.layout.GroupLayout pnTrkLogReasonLayout = new org.jdesktop.layout.GroupLayout(pnTrkLogReason);
         pnTrkLogReason.setLayout(pnTrkLogReasonLayout);
         pnTrkLogReasonLayout.setHorizontalGroup(
@@ -636,24 +452,12 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
                     .add(cbTrkSpeed)
                     .add(cbTrkDistance)
                     .add(cbTrkButton)
-                    .add(pnTrkLogReasonLayout.createSequentialGroup()
-                        .add(pnTrkLogReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(cbTrkUser1)
-                            .add(cbTrkUser2)
-                            .add(cbTrkUser3)
-                            .add(cbTrkUser4)
-                            .add(cbTrkUser5)
-                            .add(cbTrkUser6))
-                        .add(18, 18, 18)
-                        .add(pnTrkLogReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(cbTrkUser7)
-                            .add(cbTrkUser8)
-                            .add(cbTrkUser9)
-                            .add(cbTrkUser10)
-                            .add(cbTrkUser11)
-                            .add(cbTrkUser12))))
+                    .add(cbTrkUser1))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        pnTrkLogReasonLayout.linkSize(new java.awt.Component[] {cbTrkButton, cbTrkDistance, cbTrkSpeed, cbTrkTime, cbTrkUser1}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
         pnTrkLogReasonLayout.setVerticalGroup(
             pnTrkLogReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnTrkLogReasonLayout.createSequentialGroup()
@@ -665,32 +469,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cbTrkButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnTrkLogReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnTrkLogReasonLayout.createSequentialGroup()
-                        .add(cbTrkUser7)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbTrkUser8)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbTrkUser9)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbTrkUser10)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbTrkUser11)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbTrkUser12))
-                    .add(pnTrkLogReasonLayout.createSequentialGroup()
-                        .add(cbTrkUser1)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbTrkUser2)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbTrkUser3)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbTrkUser4)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbTrkUser5)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbTrkUser6)))
-                .addContainerGap())
+                .add(cbTrkUser1))
         );
 
         org.jdesktop.layout.GroupLayout pnTrackpointLayout = new org.jdesktop.layout.GroupLayout(pnTrackpoint);
@@ -700,12 +479,12 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
             .add(pnTrackpointLayout.createSequentialGroup()
                 .add(pnTrkFixType, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
-                .add(pnTrkLogReason, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnTrkLogReason, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnTrackpointLayout.setVerticalGroup(
             pnTrackpointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnTrkFixType, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
-            .add(pnTrkLogReason, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(pnTrkFixType, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(pnTrkLogReason, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
         );
 
         pnCommonFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnCommonFilter.border.title"))); // NOI18N
@@ -942,7 +721,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
                 .add(cbAdvancedActive)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnFilterPrecision, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(0, 0, 0)
                 .add(pnFilterOther, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(lbIgnore0Values))
@@ -1034,6 +813,9 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
                     .add(cbWaySimulate))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        pnWayPointFixLayout.linkSize(new java.awt.Component[] {cbWayDGPS, cbWayEstimate, cbWayFRTK, cbWayManual, cbWayNoFix, cbWayPPS, cbWayRTK, cbWaySPS, cbWaySimulate}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
         pnWayPointFixLayout.setVerticalGroup(
             pnWayPointFixLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWayPointFixLayout.createSequentialGroup()
@@ -1054,7 +836,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
                 .add(cbWayManual)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cbWaySimulate)
-                .add(23, 23, 23))
+                .addContainerGap())
         );
 
         pnWayPointRCR.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnWayPointRCR.border.title"))); // NOI18N
@@ -1094,108 +876,24 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
             }
         });
 
-        cbWayUser2.setText(bundle.getString("BT747Main.cbWayUser2.text")); // NOI18N
-        cbWayUser2.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser2WayRCRAction(evt);
-            }
-        });
-
-        cbWayUser3.setText(bundle.getString("BT747Main.cbWayUser3.text")); // NOI18N
-        cbWayUser3.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser3WayRCRAction(evt);
-            }
-        });
-
-        cbWayUser4.setText(bundle.getString("BT747Main.cbWayUser4.text")); // NOI18N
-        cbWayUser4.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser4WayRCRAction(evt);
-            }
-        });
-
-        cbWayUser5.setText(bundle.getString("BT747Main.cbWayUser5.text")); // NOI18N
-        cbWayUser5.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser5WayRCRAction(evt);
-            }
-        });
-
-        cbWayUser6.setText(bundle.getString("BT747Main.cbWayUser6.text")); // NOI18N
-        cbWayUser6.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser6WayRCRAction(evt);
-            }
-        });
-
-        cbWayUser7.setText(bundle.getString("BT747Main.cbWayUser7.text")); // NOI18N
-        cbWayUser7.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser7WayRCRAction(evt);
-            }
-        });
-
-        cbWayUser8.setText(bundle.getString("BT747Main.cbWayUser8.text")); // NOI18N
-        cbWayUser8.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser8WayRCRAction(evt);
-            }
-        });
-
-        cbWayUser9.setText(bundle.getString("BT747Main.cbWayUser9.text")); // NOI18N
-        cbWayUser9.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser9WayRCRAction(evt);
-            }
-        });
-
-        cbWayUser10.setText(bundle.getString("BT747Main.cbWayUser10.text")); // NOI18N
-        cbWayUser10.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser10WayRCRAction(evt);
-            }
-        });
-
-        cbWayUser11.setText(bundle.getString("BT747Main.cbWayUser11.text")); // NOI18N
-        cbWayUser11.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser11WayRCRAction(evt);
-            }
-        });
-
-        cbWayUser12.setText(bundle.getString("BT747Main.cbWayUser12.text")); // NOI18N
-        cbWayUser12.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                cbWayUser12WayRCRAction(evt);
-            }
-        });
-
         org.jdesktop.layout.GroupLayout pnWayPointRCRLayout = new org.jdesktop.layout.GroupLayout(pnWayPointRCR);
         pnWayPointRCR.setLayout(pnWayPointRCRLayout);
         pnWayPointRCRLayout.setHorizontalGroup(
             pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(cbWayTime)
-            .add(cbWaySpeed)
-            .add(cbWayDistance)
-            .add(cbWayButton)
             .add(pnWayPointRCRLayout.createSequentialGroup()
                 .add(pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(cbWayUser1)
-                    .add(cbWayUser2)
-                    .add(cbWayUser3)
-                    .add(cbWayUser4)
-                    .add(cbWayUser5)
-                    .add(cbWayUser6))
-                .add(18, 18, 18)
-                .add(pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(cbWayUser7)
-                    .add(cbWayUser8)
-                    .add(cbWayUser9)
-                    .add(cbWayUser10)
-                    .add(cbWayUser11)
-                    .add(cbWayUser12)))
+                    .add(cbWayTime)
+                    .add(cbWaySpeed)
+                    .add(cbWayDistance)
+                    .add(cbWayButton)
+                    .add(pnWayPointRCRLayout.createSequentialGroup()
+                        .add(cbWayUser1)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        pnWayPointRCRLayout.linkSize(new java.awt.Component[] {cbWayButton, cbWayDistance, cbWaySpeed, cbWayTime, cbWayUser1}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
         pnWayPointRCRLayout.setVerticalGroup(
             pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnWayPointRCRLayout.createSequentialGroup()
@@ -1207,31 +905,8 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(cbWayButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(pnWayPointRCRLayout.createSequentialGroup()
-                        .add(cbWayUser7)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbWayUser8)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbWayUser9)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbWayUser10)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbWayUser11)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbWayUser12))
-                    .add(pnWayPointRCRLayout.createSequentialGroup()
-                        .add(cbWayUser1)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbWayUser2)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbWayUser3)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbWayUser4)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbWayUser5)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(cbWayUser6))))
+                .add(cbWayUser1)
+                .addContainerGap())
         );
 
         org.jdesktop.layout.GroupLayout pnWaypointLayout = new org.jdesktop.layout.GroupLayout(pnWaypoint);
@@ -1241,12 +916,12 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
             .add(pnWaypointLayout.createSequentialGroup()
                 .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
-                .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnWaypointLayout.setVerticalGroup(
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 256, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+            .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
@@ -1254,11 +929,11 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(pnTrackpoint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(pnTrackpoint, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(0, 0, 0)
                 .add(pnCommonFilter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(0, 0, 0)
-                .add(pnWaypoint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(pnWaypoint, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1339,50 +1014,6 @@ private void cbTrkButtonTrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-F
 private void cbTrkUser1TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser1TrkRCRAction
     TrkRCRAction(evt);
 }//GEN-LAST:event_cbTrkUser1TrkRCRAction
-
-private void cbTrkUser2TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser2TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser2TrkRCRAction
-
-private void cbTrkUser3TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser3TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser3TrkRCRAction
-
-private void cbTrkUser4TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser4TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser4TrkRCRAction
-
-private void cbTrkUser5TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser5TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser5TrkRCRAction
-
-private void cbTrkUser6TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser6TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser6TrkRCRAction
-
-private void cbTrkUser7TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser7TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser7TrkRCRAction
-
-private void cbTrkUser8TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser8TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser8TrkRCRAction
-
-private void cbTrkUser9TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser9TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser9TrkRCRAction
-
-private void cbTrkUser10TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser10TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser10TrkRCRAction
-
-private void cbTrkUser11TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser11TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser11TrkRCRAction
-
-private void cbTrkUser12TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbTrkUser12TrkRCRAction
-    TrkRCRAction(evt);
-}//GEN-LAST:event_cbTrkUser12TrkRCRAction
 
     private void txtPDOPMaxFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtPDOPMaxFocusLost
         c.setFilterMaxPDOP(Float.parseFloat(txtPDOPMax.getText()));
@@ -1499,50 +1130,6 @@ private void cbWayUser1WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FI
    WayRCRAction(evt);
 }//GEN-LAST:event_cbWayUser1WayRCRAction
 
-private void cbWayUser2WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser2WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser2WayRCRAction
-
-private void cbWayUser3WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser3WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser3WayRCRAction
-
-private void cbWayUser4WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser4WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser4WayRCRAction
-
-private void cbWayUser5WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser5WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser5WayRCRAction
-
-private void cbWayUser6WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser6WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser6WayRCRAction
-
-private void cbWayUser7WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser7WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser7WayRCRAction
-
-private void cbWayUser8WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser8WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser8WayRCRAction
-
-private void cbWayUser9WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser9WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser9WayRCRAction
-
-private void cbWayUser10WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser10WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser10WayRCRAction
-
-private void cbWayUser11WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser11WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser11WayRCRAction
-
-private void cbWayUser12WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbWayUser12WayRCRAction
-   WayRCRAction(evt);
-}//GEN-LAST:event_cbWayUser12WayRCRAction
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbAdvancedActive;
@@ -1560,17 +1147,6 @@ private void cbWayUser12WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-F
     private javax.swing.JCheckBox cbTrkSpeed;
     private javax.swing.JCheckBox cbTrkTime;
     private javax.swing.JCheckBox cbTrkUser1;
-    private javax.swing.JCheckBox cbTrkUser10;
-    private javax.swing.JCheckBox cbTrkUser11;
-    private javax.swing.JCheckBox cbTrkUser12;
-    private javax.swing.JCheckBox cbTrkUser2;
-    private javax.swing.JCheckBox cbTrkUser3;
-    private javax.swing.JCheckBox cbTrkUser4;
-    private javax.swing.JCheckBox cbTrkUser5;
-    private javax.swing.JCheckBox cbTrkUser6;
-    private javax.swing.JCheckBox cbTrkUser7;
-    private javax.swing.JCheckBox cbTrkUser8;
-    private javax.swing.JCheckBox cbTrkUser9;
     private javax.swing.JCheckBox cbWayButton;
     private javax.swing.JCheckBox cbWayDGPS;
     private javax.swing.JCheckBox cbWayDistance;
@@ -1585,17 +1161,6 @@ private void cbWayUser12WayRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-F
     private javax.swing.JCheckBox cbWaySpeed;
     private javax.swing.JCheckBox cbWayTime;
     private javax.swing.JCheckBox cbWayUser1;
-    private javax.swing.JCheckBox cbWayUser10;
-    private javax.swing.JCheckBox cbWayUser11;
-    private javax.swing.JCheckBox cbWayUser12;
-    private javax.swing.JCheckBox cbWayUser2;
-    private javax.swing.JCheckBox cbWayUser3;
-    private javax.swing.JCheckBox cbWayUser4;
-    private javax.swing.JCheckBox cbWayUser5;
-    private javax.swing.JCheckBox cbWayUser6;
-    private javax.swing.JCheckBox cbWayUser7;
-    private javax.swing.JCheckBox cbWayUser8;
-    private javax.swing.JCheckBox cbWayUser9;
     private javax.swing.JLabel lbDistanceFltr;
     private javax.swing.JLabel lbHDOPLimit;
     private javax.swing.JLabel lbIgnore0Values;

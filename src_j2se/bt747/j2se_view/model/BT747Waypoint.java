@@ -9,9 +9,11 @@ import gps.log.out.CommonOut;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 
-/** Waypoint with extra data associated to location.
+/**
+ * Waypoint with extra data associated to location.
+ * 
  * @author Mario
- *
+ * 
  */
 public class BT747Waypoint extends Waypoint {
     private Object data;
@@ -23,9 +25,30 @@ public class BT747Waypoint extends Waypoint {
     public void setData(Object data) {
         this.data = data;
     }
-    
-    
+
+    public static final String PROPERTY_SELECTED = "selected";
+    public static final String PROPERTY_SHOWTAG = "showtag";
+
+    /**
+     * @param selected
+     *                the selected to set
+     */
+    public void setSelected(boolean selected) {
+        if (selected != this.selected) {
+            this.selected = selected;
+            firePropertyChange(PROPERTY_SELECTED, !selected, selected);
+        }
+    }
+
+    /**
+     * @return the selected
+     */
+    public boolean isSelected() {
+        return selected;
+    }
+
     private boolean showTag = false;
+    private boolean selected = false;
 
     /**
      * @return the selected
@@ -36,14 +59,21 @@ public class BT747Waypoint extends Waypoint {
 
     /**
      * @param showTag
-     *            the selected to set
+     *                the selected to set
      */
     public final void toggleShowTag() {
-        this.showTag = !showTag;
+        setShowTag(!showTag);
     }
-    
-    
+
+    public final void setShowTag(boolean b) {
+        if (b != showTag) {
+            showTag = b;
+            firePropertyChange(PROPERTY_SHOWTAG, !b, b);
+        }
+    }
+
     private GPSRecord gpsRec;
+
     /**
      * 
      */
@@ -81,14 +111,15 @@ public class BT747Waypoint extends Waypoint {
 
     /**
      * @param gpsRec
-     *            the gpsRec to set
+     *                the gpsRec to set
      */
     public final void setGpsRec(GPSRecord gpsRec) {
         this.gpsRec = gpsRec;
     }
 
     public String getDescription() {
-        return "#" + gpsRec.recCount + " " + CommonOut.getRcrSymbolText(gpsRec);
+        return "#" + gpsRec.recCount + " "
+                + CommonOut.getRcrSymbolText(gpsRec);
     }
 
 }

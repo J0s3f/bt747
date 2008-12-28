@@ -17,11 +17,11 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="pnTrackpoint" min="-2" max="-2" attributes="0"/>
+              <Component id="pnTrackpoint" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
               <Component id="pnCommonFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-              <Component id="pnWaypoint" min="-2" max="-2" attributes="0"/>
+              <Component id="pnWaypoint" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -54,14 +54,14 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="pnTrkFixType" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  <Component id="pnTrkLogReason" min="-2" max="-2" attributes="0"/>
+                  <Component id="pnTrkLogReason" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="pnTrkFixType" alignment="0" pref="263" max="32767" attributes="1"/>
-              <Component id="pnTrkLogReason" alignment="0" max="32767" attributes="1"/>
+              <Component id="pnTrkFixType" alignment="0" max="32767" attributes="1"/>
+              <Component id="pnTrkLogReason" alignment="0" pref="240" max="32767" attributes="1"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -83,15 +83,15 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cbTrkNoFix" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkSPS" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkDGPS" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkPPS" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkRTK" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkFRTK" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkEstimate" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkManual" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkSimulate" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkNoFix" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkSPS" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkDGPS" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkPPS" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkRTK" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkFRTK" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkEstimate" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkManual" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkSimulate" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -117,7 +117,7 @@
                       <Component id="cbTrkManual" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cbTrkSimulate" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -232,29 +232,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cbTrkTime" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkSpeed" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkDistance" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbTrkButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="cbTrkUser1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbTrkUser2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbTrkUser3" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbTrkUser4" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbTrkUser5" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbTrkUser6" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="cbTrkUser7" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbTrkUser8" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbTrkUser9" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbTrkUser10" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbTrkUser11" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbTrkUser12" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="cbTrkTime" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkSpeed" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkDistance" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkButton" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbTrkUser1" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -271,35 +253,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cbTrkButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="cbTrkUser7" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbTrkUser8" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbTrkUser9" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbTrkUser10" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbTrkUser11" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbTrkUser12" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="cbTrkUser1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbTrkUser2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbTrkUser3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbTrkUser4" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbTrkUser5" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbTrkUser6" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="cbTrkUser1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -355,116 +309,6 @@
                 <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser1TrkRCRAction"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser2">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser2.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser2TrkRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser3">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser3.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser3TrkRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser4">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser4.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser4TrkRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser5">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser5.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser5TrkRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser6">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser6.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser6TrkRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser7">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser7.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser7TrkRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser8">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser8.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser8TrkRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser9">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser9.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser9TrkRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser10">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser10.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser10TrkRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser11">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser11.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser11TrkRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbTrkUser12">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbTrkUser12.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbTrkUser12TrkRCRAction"/>
-              </Events>
-            </Component>
           </SubComponents>
         </Container>
       </SubComponents>
@@ -499,7 +343,7 @@
               <Component id="pnFilterOther" alignment="0" max="32767" attributes="1"/>
               <Group type="102" alignment="0" attributes="0">
                   <Component id="pnFilterPrecision" min="-2" max="-2" attributes="1"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -507,9 +351,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="cbAdvancedActive" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="pnFilterPrecision" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   <Component id="pnFilterOther" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lbIgnore0Values" min="-2" max="-2" attributes="0"/>
@@ -899,14 +743,14 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="pnWayPointFix" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  <Component id="pnWayPointRCR" min="-2" max="-2" attributes="0"/>
+                  <Component id="pnWayPointRCR" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="pnWayPointRCR" alignment="0" max="32767" attributes="1"/>
-              <Component id="pnWayPointFix" alignment="0" min="-2" pref="256" max="-2" attributes="1"/>
+              <Component id="pnWayPointRCR" alignment="0" pref="240" max="32767" attributes="1"/>
+              <Component id="pnWayPointFix" alignment="0" min="-2" max="-2" attributes="1"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -928,15 +772,15 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cbWayNoFix" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWaySPS" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayDGPS" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayPPS" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayRTK" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayFRTK" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayEstimate" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayManual" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWaySimulate" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayNoFix" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWaySPS" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayDGPS" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayPPS" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayRTK" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayFRTK" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayEstimate" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayManual" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWaySimulate" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -962,7 +806,7 @@
                       <Component id="cbWayManual" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cbWaySimulate" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1074,28 +918,18 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="cbWayTime" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="cbWaySpeed" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="cbWayDistance" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="cbWayButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cbWayUser1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayUser2" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayUser3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayUser4" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayUser5" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayUser6" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayTime" linkSize="2" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWaySpeed" linkSize="2" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayDistance" linkSize="2" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbWayButton" linkSize="2" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="cbWayUser1" linkSize="2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cbWayUser7" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayUser8" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayUser9" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayUser10" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayUser11" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbWayUser12" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1109,35 +943,9 @@
                       <Component id="cbWayDistance" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cbWayButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="cbWayUser7" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbWayUser8" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbWayUser9" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbWayUser10" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbWayUser11" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbWayUser12" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="cbWayUser1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbWayUser2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbWayUser3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbWayUser4" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbWayUser5" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbWayUser6" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="cbWayUser1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1191,116 +999,6 @@
               </Properties>
               <Events>
                 <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser1WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser2">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser2.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser2WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser3">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser3.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser3WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser4">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser4.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser4WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser5">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser5.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser5WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser6">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser6.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser6WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser7">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser7.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser7WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser8">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser8.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser8WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser9">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser9.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser9WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser10">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser10.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser10WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser11">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser11.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser11WayRCRAction"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbWayUser12">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="BT747Main.cbWayUser12.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="cbWayUser12WayRCRAction"/>
               </Events>
             </Component>
           </SubComponents>

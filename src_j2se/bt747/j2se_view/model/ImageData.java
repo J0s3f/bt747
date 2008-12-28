@@ -14,6 +14,16 @@
 //***  *********************************************************** ***
 package bt747.j2se_view.model;
 
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.lang.ref.SoftReference;
+
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import org.jdesktop.swingx.graphics.GraphicsUtilities;
+
 import net.sf.bt747.j2se.app.exif.ExifAttribute;
 import net.sf.bt747.j2se.app.exif.ExifConstants;
 import net.sf.bt747.j2se.app.exif.ExifJPG;
@@ -29,8 +39,15 @@ import bt747.sys.interfaces.BT747Date;
  * @author Mario De Weerd
  * 
  */
-public class ImageData {
-    private GPSRecord gpsInfo = GPSRecord.getLogFormatRecord(0); // Invalid
+public class ImageData extends BT747Waypoint {
+    /**
+     * @param r
+     */
+    public ImageData() {
+        super(GPSRecord.getLogFormatRecord(0));
+        // TODO Auto-generated constructor stub
+    }
+
     // values.
     private int utc;
 
@@ -40,14 +57,18 @@ public class ImageData {
     private String path;
     private int card;
 
-    public void setImagePath(final String path, final int card) {
+    public void setPath(final String path, final int card) {
         this.setCard(card);
-        setImagePath(path);
+        setPath(path);
     }
 
-    public void setImagePath(final String path) {
-        this.setPath(path);
+    public void setPath(final String path) {
+        this.path = path;
         getImageInfo();
+    }
+    
+    public String getPath() {
+        return path;
     }
 
     private double getLatOrLon(ExifAttribute atr) {
@@ -65,26 +86,26 @@ public class ImageData {
     }
 
     private void getImageInfo() {
-        gpsInfo.voxStr = path;
+        getGpsRecord().voxStr = path;
         // TODO: change path setting.
-        int idx1 = gpsInfo.voxStr.lastIndexOf('/');
-        int idx2 = gpsInfo.voxStr.lastIndexOf('\\');
+        int idx1 = getGpsRecord().voxStr.lastIndexOf('/');
+        int idx2 = getGpsRecord().voxStr.lastIndexOf('\\');
         if (idx2 > idx1) {
             idx1 = idx2;
         }
-        gpsInfo.valid = BT747Constants.VALID_MANUAL_MASK;
+        getGpsRecord().valid = BT747Constants.VALID_MANUAL_MASK;
 
         // TODO Replace by constant to define in AllWayPointStyles
         // Default = document
-        gpsInfo.rcr = 0x0104;
-        if (idx1 >= 0 && idx1 < gpsInfo.voxStr.length()) {
-            gpsInfo.voxStr = gpsInfo.voxStr.substring(idx1 + 1);
+        getGpsRecord().rcr = 0x0104;
+        if (idx1 >= 0 && idx1 < getGpsRecord().voxStr.length()) {
+            getGpsRecord().voxStr = getGpsRecord().voxStr.substring(idx1 + 1);
         }
         ExifJPG exifJpg = new ExifJPG();
         if (exifJpg.setPath(getPath())) {
             // bt747.sys.Generic.debug(exifJpg.toString());
             // TODO Replace by constant to define in AllWayPointStyles
-            gpsInfo.rcr = 0x0101;
+            getGpsRecord().rcr = 0x0101;
             ExifAttribute atr;
             atr = exifJpg.getExifAttribute(ExifConstants.TAG_PIXELXDIMENSION);
             if (atr != null) {
@@ -97,22 +118,22 @@ public class ImageData {
             }
             atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSLATITUDE);
             if (atr != null) {
-                gpsInfo.latitude = getLatOrLon(atr);
+                getGpsRecord().latitude = getLatOrLon(atr);
                 atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSLATITUDEREF);
                 if (atr != null) {
                     if (atr.getStringValue().toUpperCase().indexOf('S') >= 0) {
-                        gpsInfo.latitude = -gpsInfo.latitude;
+                        getGpsRecord().latitude = -getGpsRecord().latitude;
                     }
                 }
             }
             atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSLONGITUDE);
             if (atr != null) {
-                gpsInfo.longitude = getLatOrLon(atr);
+                getGpsRecord().longitude = getLatOrLon(atr);
                 atr = exifJpg
                         .getGpsAttribute(ExifConstants.TAG_GPSLONGITUDEREF);
                 if (atr != null) {
                     if (atr.getStringValue().toUpperCase().indexOf('W') >= 0) {
-                        gpsInfo.longitude = -gpsInfo.longitude;
+                        getGpsRecord().longitude = -getGpsRecord().longitude;
                     }
                 }
             }
@@ -161,10 +182,10 @@ public class ImageData {
     }
 
     public final void writeImage(final String destPath, final int card) {
-        if (gpsInfo.hasLatitude() && gpsInfo.hasLongitude()) {
+        if (getGpsRecord().hasLatitude() && getGpsRecord().hasLongitude()) {
             ExifJPG exifJpg = new ExifJPG();
             exifJpg.setPath(getPath()); // Get exif data from file
-            exifJpg.setGpsPosition(gpsInfo.latitude, gpsInfo.longitude);
+            exifJpg.setGpsPosition(getGpsRecord().latitude, getGpsRecord().longitude);
             exifJpg.copyTo(destPath, card);
         }
     }
@@ -174,7 +195,7 @@ public class ImageData {
      *            the utc to set
      */
     private void setUtc(int utc) {
-        gpsInfo.utc = utc;
+        getGpsRecord().utc = utc;
         this.utc = utc;
     }
 
@@ -216,21 +237,6 @@ public class ImageData {
     }
 
     /**
-     * @param path
-     *            the path to set
-     */
-    private void setPath(String path) {
-        this.path = path;
-    }
-
-    /**
-     * @return the path
-     */
-    public String getPath() {
-        return path;
-    }
-
-    /**
      * @param card
      *            the card to set
      */
@@ -243,21 +249,5 @@ public class ImageData {
      */
     public int getCard() {
         return card;
-    }
-
-    /**
-     * @return the gpsInfo
-     */
-    public final GPSRecord getGpsInfo() {
-        return this.gpsInfo;
-    }
-
-    /**
-     * @param gpsInfo
-     *            the gpsInfo to set
-     */
-    public final void setGpsInfo(final GPSRecord gpsInfo) {
-        this.gpsInfo = gpsInfo;
-    }
-
+    }    
 }

@@ -226,9 +226,7 @@ public final class J2SEAppController extends Controller {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
         }
-        if (c.getUserWayPoints() != null) {
-            m.getPositionData().setUserWayPoints(c.getUserWayPoints());
-        }
+        m.getPositionData().dataUpdated();
     }
 
     /**
