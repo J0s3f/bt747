@@ -25,7 +25,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="imageIcon" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="imageText" pref="14" max="32767" attributes="0"/>
+              <Component id="imageText" pref="30" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -33,9 +33,6 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="imageIcon">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/net/sf/bt747/j2se/app/resources/image.png"/>
-        </Property>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="Form"/>
         </Property>
