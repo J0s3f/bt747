@@ -245,7 +245,13 @@ public class PositionData extends AbstractBean {
         rcrds = new GPSRecord[userWayPoints.size()];
         int i = 0;
         for (BT747Waypoint w : userWayPoints) {
-            rcrds[i] = w.getGpsRecord();
+            GPSRecord r = w.getGpsRecord();
+            if (r != null) {
+                rcrds[i++] = r;
+            } else {
+                r = GPSRecord.getLogFormatRecord(0);
+                bt747.sys.Generic.debug("Null GPS Record found");
+            }
         }
         java.util.Arrays.sort(rcrds, new GPSRecordTimeComparator());
         return rcrds;
@@ -262,11 +268,11 @@ public class PositionData extends AbstractBean {
             }
         }
     }
-    
+
     public final static String WPDISPLAYCHANGE = "wpdisplaychange";
-    
+
     private void fireWpDisplayChange() {
-        firePropertyChange(WPDISPLAYCHANGE,null,Boolean.TRUE);
+        firePropertyChange(WPDISPLAYCHANGE, null, Boolean.TRUE);
     }
 
     @SuppressWarnings("serial")
@@ -376,7 +382,7 @@ public class PositionData extends AbstractBean {
             if (evt.getPropertyName().equals(BT747Waypoint.PROPERTY_SELECTED)) {
                 fireWpDisplayChange();
                 try {
-                    if((Boolean)evt.getNewValue()) {
+                    if ((Boolean) evt.getNewValue()) {
                         fireWpSelected((BT747Waypoint) evt.getSource());
                     }
                 } catch (Exception e) {
@@ -389,10 +395,11 @@ public class PositionData extends AbstractBean {
         }
 
     }
-    
+
     public static final String WAYPOINTSELECTED = "selectedwaypoint";
+
     private void fireWpSelected(BT747Waypoint w) {
-        firePropertyChange(WAYPOINTSELECTED,null,w);
+        firePropertyChange(WAYPOINTSELECTED, null, w);
     }
 
     public static Object getData(final ImageData img, final int dataType) {

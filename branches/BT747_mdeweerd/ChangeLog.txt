@@ -1,3 +1,7 @@
+Version 1.66.1
+* Waypoint tagging did not work anymore following data structure changes.
+  Fixed.
+
 Version 1.66.0
 * User Waypoint List added to map view.
 

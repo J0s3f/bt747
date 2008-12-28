@@ -50,7 +50,6 @@ import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.painter.CompoundPainter;
 
-import bt747.Version;
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.PositionData;
 import bt747.model.Model;
@@ -178,6 +177,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                     break;
                 }
             } catch (Exception ex) {
+                Generic.debug("MyMap modelevent",ex);
                 // TODO: handle exception
             }
             break;
@@ -214,6 +214,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             try {
                 tf.getTileCache().setDiskCacheDir(f);
             } catch (Exception e) {
+                Generic.debug("Map tile directory setting",e);
                 // TODO: handle exception
             }
         }
@@ -255,19 +256,39 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             }
         }
 
-        for (Waypoint w : getWaypointsIterable()) {
-            GeoPosition r = w.getPosition();
-            if (r.getLatitude() < minlat) {
-                minlat = r.getLatitude();
+        for (BT747Waypoint w : m.getPositionData().getBT747Waypoints()) {
+            GPSRecord r = w.getGpsRecord();
+            if(r.hasLatitude() && r.hasLongitude()) {
+                if (r.latitude < minlat) {
+                    minlat = r.latitude;
+                }
+                if (r.latitude > maxlat) {
+                    maxlat = r.latitude;
+                }
+                if (r.longitude < minlon) {
+                    minlon = r.longitude;
+                }
+                if (r.longitude > maxlon) {
+                    maxlon = r.longitude;
+                }
             }
-            if (r.getLatitude() > maxlat) {
-                maxlat = r.getLatitude();
-            }
-            if (r.getLongitude() < minlon) {
-                minlon = r.getLongitude();
-            }
-            if (r.getLongitude() > maxlon) {
-                maxlon = r.getLongitude();
+        }
+
+        for (BT747Waypoint w : m.getPositionData().getBT747UserWaypoints()) {
+            GPSRecord r = w.getGpsRecord();
+            if(r.hasLatitude() && r.hasLongitude()) {
+                if (r.latitude < minlat) {
+                    minlat = r.latitude;
+                }
+                if (r.latitude > maxlat) {
+                    maxlat = r.latitude;
+                }
+                if (r.longitude < minlon) {
+                    minlon = r.longitude;
+                }
+                if (r.longitude > maxlon) {
+                    maxlon = r.longitude;
+                }
             }
         }
 
@@ -377,7 +398,28 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
 
     };
+    
 
+//    private TileFactoryInfo
+//    /** Creates a new instance of WMSTileFactory */
+//    public WMSTileFactory(final WMSService wms) {
+//        super(new TileFactoryInfo(0,15,17, 
+//                    512, true, true, // tile size and x/y orientation is r2l & t2b
+//                "","x","y","zoom") {
+//                    public String getTileUrl(int x, int y, int zoom) {
+//                        int zz = 17-zoom;
+//                        int z = 4;
+//                        z = (int)Math.pow(2,(double)zz-1);
+//                        return wms.toWMSURL(x-z, z-1-y, zz, getTileSize(zoom));
+//                    }
+//                    
+//        });
+//    }
+//
+//    private final TileFactoryInfo tfiGEOFOTO = new WMSService (
+//            "http://www.geofoto.ch/cgi/mapserv?map=/home/an/mapserverdata/relief_u_pk_kombi/relief_u_pk_kombi_jpeg.map&SERVICE=WMS","pk_kombi,Watermark");
+
+      
     enum MapType {
         OpenStreetMap, OsmaRender, Cycle
     };
@@ -738,6 +780,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                         repaint();
                     }
                 } catch (Exception ex) {
+                    Generic.debug("Mouse pressed",ex);
                     // TODO: handle exception
                 }
                 break;

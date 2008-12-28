@@ -29,6 +29,12 @@ public class GPSRecordTimeComparator implements Comparator<GPSRecord> {
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     public int compare(GPSRecord o1, GPSRecord o2) {
+        if(o2==null) {
+            return -1;
+        }
+        if(o1==null) {
+            return 1;
+        }
         return o1.utc - o2.utc;
     }
 
