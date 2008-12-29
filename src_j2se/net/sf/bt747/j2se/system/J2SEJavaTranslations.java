@@ -13,10 +13,7 @@
 //********************************************************************
 package net.sf.bt747.j2se.system;
 
-import sun.security.action.GetLongAction;
-
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Locale;
 
 import bt747.sys.interfaces.BT747Date;

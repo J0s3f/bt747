@@ -622,12 +622,13 @@ public final class J2SEAppController extends Controller {
         mbErase = new JOptionPane(getString("WAITING_ERASE_TEXT"),
                 JOptionPane.WARNING_MESSAGE);
         // mbErase.add
-        mbErase.setVisible(true);
         mbErase.setOptions(eraseOption);
+        mbErase.setVisible(true);
 
         mbEraseDialog = mbErase.createDialog(rootFrame,
                 getString("WAITING_ERASE_TITLE"));
         mbEraseDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        //mbEraseDialog.setVisible(true);
         // mbEraseDialog.addWindowListener(new WindowAdapter() {
         // public void windowClosing(WindowEvent we) {
         // setLabel("Thwarted user attempt to close window.");

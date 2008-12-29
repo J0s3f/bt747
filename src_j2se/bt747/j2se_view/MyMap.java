@@ -27,6 +27,7 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -148,8 +149,11 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                     if(w!=waypointList.getSelectedValue()) {
                         waypointList.setSelectedValue(w, true);
                         ml.selectedWaypoint(w);
-                        map.repaint();
                     }
+                    if(w.getGpsRecord().hasLocation()) {
+                        map.setAddressLocation(w.getPosition());
+                    }
+                    map.repaint();
                 } catch (Exception e) {
                     bt747.sys.Generic.debug("Waypoint selection",e);
                     // TODO: handle exception
@@ -520,10 +524,6 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             super.doPaint(g, map, width, height);
         }
 
-        public void toggleSelected(BT747Waypoint w) {
-            w.toggleShowTag();
-        }
-        
         /* (non-Javadoc)
          * @see org.jdesktop.swingx.mapviewer.WaypointPainter#setWaypoints(java.lang.Iterable)
          */
@@ -701,6 +701,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                 BT747Waypoint w = (BT747Waypoint)waypointPainter.getContains(pt);
                 if (w != null) {
                     w.toggleShowTag();
+                    map.repaint();
                     e.consume();
                 }
                 break;
@@ -753,7 +754,9 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             }
         }
         
+        private long selectionTime = 0;
         public void mousePressed(MouseEvent e) {
+            selectionTime = 0;
             switch (e.getButton()) {
             case MouseEvent.BUTTON1:
                 Point pt = e.getPoint();
@@ -783,6 +786,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                     Generic.debug("Mouse pressed",ex);
                     // TODO: handle exception
                 }
+                selectionTime = System.currentTimeMillis();
                 break;
 
             default:
@@ -806,13 +810,19 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             }
         }
 
+        private final static int MINIMUM_TIME_FOR_DRAG = 150;
         /*
          * (non-Javadoc)
          * 
          * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
          */
         public void mouseDragged(MouseEvent e) {
-            if (currentWaypoint != null) {
+            if(selectionTime!=0 && (System.currentTimeMillis()-selectionTime<MINIMUM_TIME_FOR_DRAG)) {
+                // Moving too fast - not moving waypoint.
+                mapViewer.setPanEnabled(true);
+                selectionTime = 0;
+            }
+            if (selectionTime!=0 && currentWaypoint != null) {
                 e.consume();
                 Point pt = e.getPoint();
                 currentWaypoint.setPosition(mapViewer

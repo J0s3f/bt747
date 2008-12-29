@@ -258,12 +258,12 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
                     .unsigned2hex(m.getFlashManuProdID(), 8)
                     + " " + m.getFlashDesc() : "")); // NOI18N
             break;
-        case ModelEvent.ERASE_ONGOING_NEED_POPUP:
-            c.createErasePopup();
-            break;
-        case ModelEvent.ERASE_DONE_REMOVE_POPUP:
-            c.removeErasePopup();
-            break;
+//        case ModelEvent.ERASE_ONGOING_NEED_POPUP:
+//            c.createErasePopup();
+//            break;
+//        case ModelEvent.ERASE_DONE_REMOVE_POPUP:
+//            c.removeErasePopup();
+//            break;
 
         case ModelEvent.UPDATE_MTK_VERSION:
         case ModelEvent.UPDATE_MTK_RELEASE:

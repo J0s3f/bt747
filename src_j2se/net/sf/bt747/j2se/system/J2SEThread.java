@@ -1,10 +1,12 @@
 package net.sf.bt747.j2se.system;
 
+import bt747.sys.Generic;
+
 public final class J2SEThread implements java.lang.Runnable {
 
-    public java.lang.Thread jvThread;
-    public bt747.sys.interfaces.BT747Thread btThread = null;
-    public boolean running = false;
+    protected java.lang.Thread jvThread;
+    protected bt747.sys.interfaces.BT747Thread btThread = null;
+    private volatile boolean running = false;
 
     public J2SEThread(final bt747.sys.interfaces.BT747Thread t) {
         btThread = t;
@@ -13,16 +15,32 @@ public final class J2SEThread implements java.lang.Runnable {
     public final void run() {
         running = true;
         // System.out.println("new Thread().run() succeed");
-        while (btThread != null) {
+        while (running) {
             try {
                 btThread.run();
+                //J2SEGeneric.debug("Thread waiting", null);
                 java.lang.Thread.sleep(2);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Generic.debug("Thread " + this, e);
             }
         }
         running = false;
+        //J2SEGeneric.debug("Thread " + this + " ended", null);
         // Vm.debug("Thread ended");
     }
 
+    /**
+     * @param running
+     *                the running to set
+     */
+    protected void setRunning(boolean running) {
+        this.running = running;
+    }
+
+    /**
+     * @return the running
+     */
+    protected boolean isRunning() {
+        return this.running;
+    }
 }
