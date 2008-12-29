@@ -75,9 +75,16 @@ public final class WindowedFile {
         }
     }
 
-    private final void readBytes(final int bytesToRead) {
+    private final boolean readBytes(final int bytesToRead) {
         currentPosition += bufferFill;
-        bufferFill = file.readBytes(buffer, 0, bytesToRead);
+        int read = file.readBytes(buffer, 0, bytesToRead);
+        if(read<=0) {
+            bufferFill = 0;
+            return false;
+        } else {
+            bufferFill = read;
+            return true;
+        }
     }
 
     public final byte[] fillBuffer(final int newPosition) {
@@ -98,7 +105,9 @@ public final class WindowedFile {
                 if (bytesToRead > bufferSize) {
                     bytesToRead = bufferSize;
                 }
-                readBytes(bytesToRead);
+                if(!readBytes(bytesToRead)) {
+                    return buffer;
+                }
                 bytesToSkip -= bufferFill;
             } while (bytesToSkip > 0);
         }

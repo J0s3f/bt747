@@ -221,6 +221,10 @@ public class GPSRecord {
         return valid != -1;
     }
 
+    public final boolean hasLocation() {
+        return hasLatitude() && hasLongitude();
+    }
+    
     public final boolean hasLatitude() {
         return latitude != -1000000;
     }

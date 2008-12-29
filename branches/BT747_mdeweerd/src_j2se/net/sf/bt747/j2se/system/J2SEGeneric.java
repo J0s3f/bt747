@@ -31,13 +31,16 @@ public final class J2SEGeneric {
     // TODO: Improve next code - for the moment it is functional.
 
     public static void addThread(final BT747Thread t, final boolean b) {
+        if(oos.contains(t)) {
+            removeIfStoppedThread(t);
+        }
         if (!oos.contains(t)) {
             if (Generic.isDebug()) {
                 Generic.debug("Adding " + t, null);
             }
             J2SEThread mt = new J2SEThread(t);
             t.started();
-            mt.jvThread = new java.lang.Thread(mt);
+            mt.jvThread = new java.lang.Thread(mt, t.toString());
             if (mt != null) {
                 // System.out.println("new Thread() succeed");
             } else {
@@ -59,8 +62,7 @@ public final class J2SEGeneric {
         while (it.hasNext()) {
             J2SEThread tt = (J2SEThread) it.next();
             if (tt.btThread.equals(t)) {
-                // tt.jvThread.stop();
-                tt.btThread = null; // When this is null, the thread stops.
+                tt.setRunning(false);
                 h.remove(tt);
                 oos.remove(t);
             }
@@ -68,15 +70,13 @@ public final class J2SEGeneric {
 
     }
 
-    public static void removeIfStoppedThread(final Thread t) {
+    public static void removeIfStoppedThread(final BT747Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
         final Iterator<Object> it = h.iterator();
         while (it.hasNext()) {
             J2SEThread tt = (J2SEThread) it.next();
             if (tt.btThread.equals(t)) {
-                // tt.jvThread.stop();
-                if (tt.running) {
-                    // When this is null, the thread stops.)
+                if (!tt.isRunning()) {
                     h.remove(tt);
                     oos.remove(t);
                 }

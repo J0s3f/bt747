@@ -196,11 +196,11 @@ public final class BT747Constants { // dev as in device
     // PMTK182,1,DATA,CMD (DATA = what parameter to set/read/replied, CMD =
     // extra param)
 
-    public static final int PMTK_LOG_USER = 1; // User initiated log point,
-    // takes RCR as param.
-    public static final int PMTK_LOG_FLASH_STAT = 1; // User initiated log
-    // point, takes RCR as
-    // param.
+    /** User specific log position (1). */ 
+    public static final int PMTK_LOG_USER = 1; 
+    /** Indicates flash (erase) status (1). */
+    public static final int PMTK_LOG_FLASH_STAT = 1;
+    /** User initiated log point, takes RCR as parameter. (2)*/
     public static final int PMTK_LOG_FORMAT = 2;
     public static final int PMTK_LOG_TIME_INTERVAL = 3;
     public static final int PMTK_LOG_DISTANCE_INTERVAL = 4;

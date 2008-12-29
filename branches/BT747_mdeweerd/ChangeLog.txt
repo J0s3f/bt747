@@ -1,3 +1,9 @@
+Version 1.66.2
+* Fixed problem in 'windowed' file - solves problem with smart download.
+* Fixed problem (J2SE) with erase window being showed twice.
+* Added delay for waypoint move on map.
+* Added centering for 'user waypoints'.
+
 Version 1.66.1
 * Waypoint tagging did not work anymore following data structure changes.
   Fixed.

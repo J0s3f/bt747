@@ -667,10 +667,10 @@ final class MTKLogDownloadHandler {
     }
 
     private void waitEraseDone() {
-        gpsState.postEvent(GpsEvent.ERASE_ONGOING_NEED_POPUP);
         gpsState.setEraseOngoing(true);
         logState = C_LOG_ERASE_STATE;
         gpsState.resetLogTimeOut();
+        gpsState.postEvent(GpsEvent.ERASE_ONGOING_NEED_POPUP);
         // readLogFlashStatus(); - Will be done after timeout
     }
 
@@ -688,7 +688,7 @@ final class MTKLogDownloadHandler {
     }
 
     /**
-     * Called from within run of GPSstate (regurarly called).
+     * Called from within run of GPSstate (regularly called).
      */
     protected void notifyRun() {
         if ((gpsState.getOutStandingCmdsCount() == 0)
