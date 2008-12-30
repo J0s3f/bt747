@@ -443,6 +443,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 rec.append("\n");
                 // Small popup:
                 writeTxt(rec.toString());
+                rec.setLength(0);
                 waypoints.removeAll();
                 infoHtmls.setLength(0);
                 iconList.removeAllElements();
@@ -629,6 +630,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                 }
 
                 writeTxt(rec.toString());
+                rec.setLength(0);
 
             }
         } // activeFields!=null
