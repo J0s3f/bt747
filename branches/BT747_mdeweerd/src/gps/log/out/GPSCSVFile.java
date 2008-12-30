@@ -132,6 +132,7 @@ public final class GPSCSVFile extends GPSFile {
         }
         rec.append(fieldSep + "\r\n");
         writeTxt(rec.toString());
+        rec.setLength(0);
         // "NSAT (USED/VIEW),SAT INFO (SID-ELE-AZI-SNR)
     }
 
@@ -420,6 +421,7 @@ public final class GPSCSVFile extends GPSFile {
 
             rec.append("\r\n");
             writeTxt(rec.toString());
+            rec.setLength(0);
         } // activeFields!=null
     }
 

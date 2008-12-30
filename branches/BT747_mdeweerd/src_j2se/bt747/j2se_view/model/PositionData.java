@@ -129,6 +129,10 @@ public class PositionData extends AbstractBean {
         return userWayPoints;
     }
 
+    public void userWaypointsUpdated() {
+        fireUserWaypointUpdate();
+    }
+    
     public void dataUpdated() {
         fireTrackPointListChange();
         fireWaypointListUpdate();

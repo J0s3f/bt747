@@ -148,6 +148,7 @@ public class GPSKMLFile extends GPSFile {
         }
 
         writeTxt(header.toString());
+        header.setLength(0);
     }
 
     /*
@@ -370,6 +371,7 @@ public class GPSKMLFile extends GPSFile {
 
                     rec.append("</Placemark>\r\n");
                     writeTxt(rec.toString());
+                    rec.setLength(0);
                 } else if (isPathType) {
                     rec.setLength(0);
                     if ((activeFields.hasLongitude())
@@ -431,6 +433,7 @@ public class GPSKMLFile extends GPSFile {
                         }
                         rec.append("\r\n");
                         writeTxt(rec.toString());
+                        rec.setLength(0);
                     }
                 }
 

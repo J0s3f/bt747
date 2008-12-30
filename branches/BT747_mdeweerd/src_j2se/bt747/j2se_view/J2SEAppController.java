@@ -227,7 +227,7 @@ public final class J2SEAppController extends Controller {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
         }
-        m.getPositionData().dataUpdated();
+        m.getPositionData().userWaypointsUpdated();
     }
 
     /**
@@ -242,6 +242,7 @@ public final class J2SEAppController extends Controller {
         if (result == null) {
             reportError(c.getLastError(), c.getLastErrorInfo());
         }
+        m.getPositionData().dataUpdated();
         return result;
     }
 
@@ -859,7 +860,7 @@ public final class J2SEAppController extends Controller {
      * 
      */
     public void doLogConversion(final int selectedFormat) {
-        new Thread() {
+        new Thread("convert") {
             public final void run() {
                 //setLogConversionParameters();
                 switch (selectedFormat) {

@@ -1,3 +1,8 @@
+Version 1.66.3
+* Fixed problem in KML/HTML and possibly some other output formats where data
+  from other files was repeated in 'One file per day' mode.
+* Conversion to a file no longer makes the tab jump to the map.
+
 Version 1.66.2
 * Fixed problem in 'windowed' file - solves problem with smart download.
 * Fixed problem (J2SE) with erase window being showed twice.
