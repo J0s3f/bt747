@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import net.sf.bt747.j2se.app.filefilters.BinFileFilter;
 import net.sf.bt747.j2se.app.filefilters.CSVFileFilter;
 import net.sf.bt747.j2se.app.filefilters.DPL700FileFilter;
+import net.sf.bt747.j2se.app.filefilters.GPXFileFilter;
 import net.sf.bt747.j2se.app.filefilters.HoluxTRLFileFilter;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.filefilters.NMEAFileFilter;
@@ -1132,6 +1133,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         // }
         RawLogFileChooser.setAcceptAllFileFilterUsed(true);
         RawLogFileChooser.addChoosableFileFilter(new BinFileFilter());
+        RawLogFileChooser.addChoosableFileFilter(new GPXFileFilter());
         RawLogFileChooser.addChoosableFileFilter(new CSVFileFilter());
         RawLogFileChooser.addChoosableFileFilter(new HoluxTRLFileFilter());
         RawLogFileChooser.addChoosableFileFilter(new NMEAFileFilter());

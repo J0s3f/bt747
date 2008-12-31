@@ -90,7 +90,7 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
         int ts = getTileSize(zoom);
         GeoPosition gp1 = GeoUtil.getPosition(new Point2D.Double(xx*ts,yy*ts), zoom, this);
         GeoPosition gp2 = GeoUtil.getPosition(new Point2D.Double((xx+1)*ts,(yy+1)*ts), zoom, this);
-        double ulx;// = MercatorUtils.xToLong(x * ts, radius);
+        double ulx = MercatorUtils.xToLong(xx * ts, radiusAtZoom[zoom]);
         double uly;// = MercatorUtils.yToLat(y * ts, radius);
         double lrx;// = MercatorUtils.xToLong((x + 1) * ts, radius);
         double lry;// = MercatorUtils.yToLat((y + 1) * ts, radius);

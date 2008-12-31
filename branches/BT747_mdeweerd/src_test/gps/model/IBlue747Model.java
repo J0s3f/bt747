@@ -139,7 +139,7 @@ public class IBlue747Model {
                         // waba.sys.Vm.debug("FMT:"+p_nmea[0]+","+p_nmea[1]+","+p_nmea[2]+","+p_nmea[3]+"\n");}
                         m_GPSrxtx.sendPacket("PMTK"
                                 + BT747Constants.PMTK_CMD_LOG + ","
-                                + BT747Constants.PMTK_LOG_RESP_STR + ","
+                                + BT747Constants.PMTK_LOG_DT + ","
                                 + p_nmea[2] + ","
                                 + Convert.unsigned2hex(logFormat, 2) // Address
                         );
@@ -155,7 +155,7 @@ public class IBlue747Model {
                     case BT747Constants.PMTK_LOG_LOG_STATUS: // 7; // bit 2 =
                         m_GPSrxtx.sendPacket("PMTK"
                                 + BT747Constants.PMTK_CMD_LOG + ","
-                                + BT747Constants.PMTK_LOG_RESP_STR + ","
+                                + BT747Constants.PMTK_LOG_DT + ","
                                 + BT747Constants.PMTK_LOG_LOG_STATUS + ","
                                 + "9F"
                         );
@@ -165,7 +165,7 @@ public class IBlue747Model {
                     case BT747Constants.PMTK_LOG_MEM_USED: // 8;
                         m_GPSrxtx.sendPacket("PMTK"
                                 + BT747Constants.PMTK_CMD_LOG + ","
-                                + BT747Constants.PMTK_LOG_RESP_STR + ","
+                                + BT747Constants.PMTK_LOG_DT + ","
                                 + BT747Constants.PMTK_LOG_MEM_USED + ","
                                 + "000323C2"
                         );
@@ -173,7 +173,7 @@ public class IBlue747Model {
                     case BT747Constants.PMTK_LOG_FLASH: // 9;
                         m_GPSrxtx.sendPacket("PMTK"
                                 + BT747Constants.PMTK_CMD_LOG + ","
-                                + BT747Constants.PMTK_LOG_RESP_STR + ","
+                                + BT747Constants.PMTK_LOG_DT + ","
                                 + BT747Constants.PMTK_LOG_FLASH + ","
                                 + "C22015C2"
                         );
@@ -182,7 +182,7 @@ public class IBlue747Model {
                     case BT747Constants.PMTK_LOG_NBR_LOG_PTS: // 10;
                         m_GPSrxtx.sendPacket("PMTK"
                                 + BT747Constants.PMTK_CMD_LOG + ","
-                                + BT747Constants.PMTK_LOG_RESP_STR + ","
+                                + BT747Constants.PMTK_LOG_DT + ","
                                 + BT747Constants.PMTK_LOG_NBR_LOG_PTS + ","
                                 + "0000D014"
                         );

@@ -14,24 +14,23 @@
 //***  *********************************************************** ***
 package net.sf.bt747.j2se.app.filefilters;
 
+
 /**
  * @author Mario
  * 
  */
-public final class KnownFileFilter extends ListFileFilter {
+public final class GPXFileFilter extends ListFileFilter {
 
     /**
      * Lower case list of accepted extensions.
      */
-    private static final String[] extensions = { ".bin", ".nmea", ".txt",
-            ".log", ".nme", ".nma", ".trl", ".csv", ".sr", ".gpx" };
-
-    private static final String description = "KNOWN_Description";
+    private static final String[] extensions = { ".gpx" };
+    private static final String description = "GPX_Description";
 
     /**
      * 
      */
-    public KnownFileFilter() {
+    public GPXFileFilter() {
         super(extensions, description);
-    }
-}
+        // super(extensions,description);
+    }}

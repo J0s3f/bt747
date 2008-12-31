@@ -669,6 +669,10 @@ public class Model extends AppSettings implements GPSListener {
     public final boolean isLogFullOverwrite() {
         return gpsModel.isLogFullOverwrite();
     }
+    
+    public final boolean isInitialLogOverwrite() {
+        return gpsModel.isInitialLogOverwrite();
+    }
 
     public final boolean isSBASEnabled() {
         return gpsModel.isSBASEnabled();

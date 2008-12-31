@@ -1,22 +1,19 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package gps;
 
-import gps.convert.Conv;
-
-import bt747.sys.Convert;
 import bt747.sys.Generic;
 
 /**
@@ -28,8 +25,8 @@ public final class BT747Constants { // dev as in device
 
     /**
      * String description of the log format items of the iBlue 747 device.<br>
-     * Entries are in order. The entry position corresponds to the bit position
-     * in the log format 'byte'.
+     * Entries are in order. The entry position corresponds to the bit
+     * position in the log format 'byte'.
      */
     public static String[] logFmtItems = Txt.logFmtItems;
     /** Index of bit for log format setting */
@@ -81,8 +78,8 @@ public final class BT747Constants { // dev as in device
      * <b>The log record length is variable is satelite information is logged:</b><br>
      * SID, ELEVATION, AZIMUTH and SNR are repeated NSAT times.<br>
      * <br>
-     * Entries are in order. The entry position corresponds to the bit position
-     * in the log format 'byte'.
+     * Entries are in order. The entry position corresponds to the bit
+     * position in the log format 'byte'.
      */
     public static final int[] logFmtByteSizes = { 4, // "UTC", // = 0x00001
             // // // 0
@@ -196,11 +193,11 @@ public final class BT747Constants { // dev as in device
     // PMTK182,1,DATA,CMD (DATA = what parameter to set/read/replied, CMD =
     // extra param)
 
-    /** User specific log position (1). */ 
-    public static final int PMTK_LOG_USER = 1; 
+    /** User specific log position (1). */
+    public static final int PMTK_LOG_USER = 1;
     /** Indicates flash (erase) status (1). */
     public static final int PMTK_LOG_FLASH_STAT = 1;
-    /** User initiated log point, takes RCR as parameter. (2)*/
+    /** User initiated log point, takes RCR as parameter. (2) */
     public static final int PMTK_LOG_FORMAT = 2;
     public static final int PMTK_LOG_TIME_INTERVAL = 3;
     public static final int PMTK_LOG_DISTANCE_INTERVAL = 4;
@@ -285,163 +282,132 @@ public final class BT747Constants { // dev as in device
      */
     public static final int PMTK_ACK_SUCCEEDED = 3;
 
-    // The next constants are the same as above but convered to strings.
-    public static final String PMTK_LOG_SET_STR = Convert
-            .toString(PMTK_LOG_SET);
-    public static final String PMTK_LOG_QUERY_STR = Convert
-            .toString(PMTK_LOG_Q);
-    public static final String PMTK_LOG_RESP_STR = Convert
-            .toString(PMTK_LOG_DT); // REPLY
-    public static final String PMTK_LOG_ON_STR = Convert.toString(PMTK_LOG_ON);
-    public static final String PMTK_LOG_OFF_STR = Convert
-            .toString(PMTK_LOG_OFF);
-    public static final String PMTK_LOG_ERASE_STR = Convert
-            .toString(PMTK_LOG_ERASE);
-    public static final String PMTK_LOG_REQ_DATA_STR = Convert
-            .toString(PMTK_LOG_Q_LOG);
-    public static final String PMTK_LOG_RESP_DATA_STR = Convert
-            .toString(PMTK_LOG_DT_LOG); // REPLY.
-    public static final String PMTK_LOG_INIT_STR = Convert
-            .toString(PMTK_LOG_INIT);
-
     public static final String PMTK_LOG_ERASE_YES_STR = "1";
 
-    // PMTK182,1,DATA (DATA_STR = Convert.toString((DATA)what parameter to
+    // PMTK182,1,DATA (DATA_STR = "" + (DATAwhat parameter to
     // set/read/replied)
 
-    public static final String PMTK_LOG_USER_STR = Convert
-            .toString(PMTK_LOG_USER);
-    public static final String PMTK_LOG_FLASH_STAT_STR = Convert
-            .toString(PMTK_LOG_FLASH_STAT);
-    public static final String PMTK_LOG_FORMAT_STR = Convert
-            .toString(PMTK_LOG_FORMAT);
-    public static final String PMTK_LOG_TIME_INTERVAL_STR = Convert
-            .toString(PMTK_LOG_TIME_INTERVAL);
-    public static final String PMTK_LOG_DISTANCE_INTERVAL_STR = Convert
-            .toString(PMTK_LOG_DISTANCE_INTERVAL);
-    public static final String PMTK_LOG_SPEED_INTERVAL_STR = Convert
-            .toString(PMTK_LOG_SPEED_INTERVAL);
-    public static final String PMTK_LOG_REC_METHOD_STR = Convert
-            .toString(PMTK_LOG_REC_METHOD);
-    public static final String PMTK_LOG_LOG_STATUS_STR = Convert
-            .toString(PMTK_LOG_LOG_STATUS);
-    public static final String PMTK_LOG_MEM_USED_STR = Convert
-            .toString(PMTK_LOG_MEM_USED); // bit 2 = logging on/off
-    public static final String PMTK_LOG_FLASH_STR = Convert
-            .toString(PMTK_LOG_FLASH);
-    public static final String PMTK_LOG_NBR_LOG_PTS_STR = Convert
-            .toString(PMTK_LOG_NBR_LOG_PTS);
-    public static final String PMTK_LOG_FLASH_SECTORS_STR = Convert
-            .toString(PMTK_LOG_FLASH_SECTORS);
-    public static final String PMTK_LOG_VERSION_STR = Convert
-            .toString(PMTK_LOG_VERSION);
+    public static final String PMTK_LOG_USER_STR = "" + PMTK_LOG_USER;
+    public static final String PMTK_LOG_FLASH_STAT_STR = ""
+            + PMTK_LOG_FLASH_STAT;
+    public static final String PMTK_LOG_FORMAT_STR = "" + PMTK_LOG_FORMAT;
+    public static final String PMTK_LOG_TIME_INTERVAL_STR = ""
+            + PMTK_LOG_TIME_INTERVAL;
+    public static final String PMTK_LOG_DISTANCE_INTERVAL_STR = ""
+            + PMTK_LOG_DISTANCE_INTERVAL;
+    public static final String PMTK_LOG_SPEED_INTERVAL_STR = ""
+            + PMTK_LOG_SPEED_INTERVAL;
+    public static final String PMTK_LOG_REC_METHOD_STR = ""
+            + PMTK_LOG_REC_METHOD;
+    public static final String PMTK_LOG_LOG_STATUS_STR = ""
+            + PMTK_LOG_LOG_STATUS;
+    public static final String PMTK_LOG_MEM_USED_STR = "" + PMTK_LOG_MEM_USED; // bit
+    // 2 =
+    // logging
+    // on/off
+    public static final String PMTK_LOG_FLASH_STR = "" + PMTK_LOG_FLASH;
+    public static final String PMTK_LOG_NBR_LOG_PTS_STR = ""
+            + PMTK_LOG_NBR_LOG_PTS;
+    public static final String PMTK_LOG_FLASH_SECTORS_STR = ""
+            + PMTK_LOG_FLASH_SECTORS;
+    public static final String PMTK_LOG_VERSION_STR = "" + PMTK_LOG_VERSION;
 
     /** Mask for bit in log status indicating that log is active */
     public static final int PMTK_LOG_STATUS_LOGISFULL_MASK = 0x800; // bit 11
     public static final int PMTK_LOG_STATUS_LOGMUSTINIT_MASK = 0x400; // bit
     // 10
-    public static final int PMTK_LOG_STATUS_LOGDISABLED_MASK = 0x200; // bit 9
-    public static final int PMTK_LOG_STATUS_LOGENABLED_MASK = 0x100; // bit 8
-    public static final int PMTK_LOG_STATUS_LOGSTOP_OVER_MASK = 0x04; // bit 2
+    public static final int PMTK_LOG_STATUS_LOGDISABLED_MASK = 0x200; // bit
+    // 9
+    public static final int PMTK_LOG_STATUS_LOGENABLED_MASK = 0x100; // bit
+    // 8
+    public static final int PMTK_LOG_STATUS_LOGSTOP_OVER_MASK = 0x04; // bit
+    // 2
     public static final int PMTK_LOG_STATUS_LOGONOF_MASK = 0x02; // bit 1
 
     // Other MTK commands
-    public static final String PMTK_TEST_STR = "000"; // Convert.toString(PMTK_TEST);
-    public static final String PMTK_ACK_STR = "001"; // Convert.toString(PMTK_ACK);
-    public static final String PMTK_SYS_MSG_STR = "010"; // Convert.toString(PMTK_SYS_MSG);
-    public static final String PMTK_CMD_HOT_START_STR = Convert
-            .toString(PMTK_CMD_HOT_START);
-    public static final String PMTK_CMD_WARM_START_STR = Convert
-            .toString(PMTK_CMD_WARM_START);
-    public static final String PMTK_CMD_COLD_START_STR = Convert
-            .toString(PMTK_CMD_COLD_START);
-    public static final String PMTK_CMD_FULL_COLD_START_STR = Convert
-            .toString(PMTK_CMD_FULL_COLD_START);
-    public static final String PMTK_CMD_LOG_STR = Convert
-            .toString(PMTK_CMD_LOG);
-    public static final String PMTK_SET_NMEA_BAUD_RATE_STR = Convert
-            .toString(PMTK_SET_NMEA_BAUD_RATE);
-    public static final String PMTK_API_SET_FIX_CTL_STR = Convert
-            .toString(PMTK_API_SET_FIX_CTL);
-    public static final String PMTK_API_SET_DGPS_MODE_STR = Convert
-            .toString(PMTK_API_SET_DGPS_MODE);
-    public static final String PMTK_API_SET_SBAS_STR = Convert
-            .toString(PMTK_API_SET_SBAS);
-    public static final String PMTK_API_SET_NMEA_OUTPUT_STR = Convert
-            .toString(PMTK_API_SET_NMEA_OUTPUT);
-    public static final String PMTK_API_SET_SBAS_TEST_STR = Convert
-            .toString(PMTK_API_SET_SBAS_TEST);
-    public static final String PMTK_API_SET_PWR_SAV_MODE_STR = Convert
-            .toString(PMTK_API_SET_PWR_SAV_MODE);
-    public static final String PMTK_API_SET_DATUM_STR = Convert
-            .toString(PMTK_API_SET_DATUM);
-    public static final String PMTK_API_SET_DATUM_ADVANCE_STR = Convert
-            .toString(PMTK_API_SET_DATUM_ADVANCE);
-    public static final String PMTK_API_SET_USER_OPTION_STR = Convert
-            .toString(PMTK_API_SET_USER_OPTION);
-    public static final String PMTK_API_Q_FIX_CTL_STR = Convert
-            .toString(PMTK_API_Q_FIX_CTL);
-    public static final String PMTK_API_Q_DGPS_MODE_STR = Convert
-            .toString(PMTK_API_Q_DGPS_MODE);
-    public static final String PMTK_API_Q_SBAS_STR = Convert
-            .toString(PMTK_API_Q_SBAS);
-    public static final String PMTK_API_Q_NMEA_OUTPUT_STR = Convert
-            .toString(PMTK_API_Q_NMEA_OUTPUT);
-    public static final String PMTK_API_Q_SBAS_TEST_STR = Convert
-            .toString(PMTK_API_Q_SBAS_TEST);
-    public static final String PMTK_API_Q_PWR_SAV_MOD_STR = Convert
-            .toString(PMTK_API_Q_PWR_SAV_MOD);
-    public static final String PMTK_API_Q_DATUM_STR = Convert
-            .toString(PMTK_API_Q_DATUM);
-    public static final String PMTK_API_Q_DATUM_ADVANCE_STR = Convert
-            .toString(PMTK_API_Q_DATUM_ADVANCE);
-    public static final String PMTK_API_GET_USER_OPTION_STR = Convert
-            .toString(PMTK_API_Q_GET_USER_OPTION);
-    public static final String PMTK_DT_FIX_CTL_STR = Convert
-            .toString(PMTK_DT_FIX_CTL);
-    public static final String PMTK_DT_DGPS_MODE_STR = Convert
-            .toString(PMTK_DT_DGPS_MODE);
-    public static final String PMTK_DT_SBAS_STR = Convert
-            .toString(PMTK_DT_SBAS);
-    public static final String PMTK_DT_NMEA_OUTPUT_STR = Convert
-            .toString(PMTK_DT_NMEA_OUTPUT);
-    public static final String PMTK_DT_SBAS_TEST_STR = Convert
-            .toString(PMTK_DT_SBAS_TEST);
-    public static final String PMTK_DT_PWR_SAV_MODE_STR = Convert
-            .toString(PMTK_DT_PWR_SAV_MODE);
-    public static final String PMTK_DT_DATUM_STR = Convert
-            .toString(PMTK_DT_DATUM);
-    public static final String PMTK_DT_FLASH_USER_OPTION_STR = Convert
-            .toString(PMTK_DT_FLASH_USER_OPTION);
-    public static final String PMTK_Q_VERSION_STR = Convert
-            .toString(PMTK_Q_VERSION);
-    public static final String PMTK_Q_RELEASE_STR = Convert
-            .toString(PMTK_Q_RELEASE);
-    public static final String PMTK_Q_DGPS_INFO_STR = Convert
-            .toString(PMTK_Q_DGPS_INFO);
+    public static final String PMTK_TEST_STR = "000"; // "" + PMTK_TEST;
+    public static final String PMTK_ACK_STR = "001"; // "" + PMTK_ACK;
+    public static final String PMTK_SYS_MSG_STR = "010"; // "" +
+    // PMTK_SYS_MSG;
+    public static final String PMTK_CMD_HOT_START_STR = ""
+            + PMTK_CMD_HOT_START;
+    public static final String PMTK_CMD_WARM_START_STR = ""
+            + PMTK_CMD_WARM_START;
+    public static final String PMTK_CMD_COLD_START_STR = ""
+            + PMTK_CMD_COLD_START;
+    public static final String PMTK_CMD_FULL_COLD_START_STR = ""
+            + PMTK_CMD_FULL_COLD_START;
+    public static final String PMTK_CMD_LOG_STR = "" + PMTK_CMD_LOG;
+    public static final String PMTK_SET_NMEA_BAUD_RATE_STR = ""
+            + PMTK_SET_NMEA_BAUD_RATE;
+    public static final String PMTK_API_SET_FIX_CTL_STR = ""
+            + PMTK_API_SET_FIX_CTL;
+    public static final String PMTK_API_SET_DGPS_MODE_STR = ""
+            + PMTK_API_SET_DGPS_MODE;
+    public static final String PMTK_API_SET_SBAS_STR = "" + PMTK_API_SET_SBAS;
+    public static final String PMTK_API_SET_NMEA_OUTPUT_STR = ""
+            + PMTK_API_SET_NMEA_OUTPUT;
+    public static final String PMTK_API_SET_SBAS_TEST_STR = ""
+            + PMTK_API_SET_SBAS_TEST;
+    public static final String PMTK_API_SET_PWR_SAV_MODE_STR = ""
+            + PMTK_API_SET_PWR_SAV_MODE;
+    public static final String PMTK_API_SET_DATUM_STR = ""
+            + PMTK_API_SET_DATUM;
+    public static final String PMTK_API_SET_DATUM_ADVANCE_STR = ""
+            + PMTK_API_SET_DATUM_ADVANCE;
+    public static final String PMTK_API_SET_USER_OPTION_STR = ""
+            + PMTK_API_SET_USER_OPTION;
+    public static final String PMTK_API_Q_FIX_CTL_STR = ""
+            + PMTK_API_Q_FIX_CTL;
+    public static final String PMTK_API_Q_DGPS_MODE_STR = ""
+            + PMTK_API_Q_DGPS_MODE;
+    public static final String PMTK_API_Q_SBAS_STR = "" + PMTK_API_Q_SBAS;
+    public static final String PMTK_API_Q_NMEA_OUTPUT_STR = ""
+            + PMTK_API_Q_NMEA_OUTPUT;
+    public static final String PMTK_API_Q_SBAS_TEST_STR = ""
+            + PMTK_API_Q_SBAS_TEST;
+    public static final String PMTK_API_Q_PWR_SAV_MOD_STR = ""
+            + PMTK_API_Q_PWR_SAV_MOD;
+    public static final String PMTK_API_Q_DATUM_STR = "" + PMTK_API_Q_DATUM;
+    public static final String PMTK_API_Q_DATUM_ADVANCE_STR = ""
+            + PMTK_API_Q_DATUM_ADVANCE;
+    public static final String PMTK_API_GET_USER_OPTION_STR = ""
+            + PMTK_API_Q_GET_USER_OPTION;
+    public static final String PMTK_DT_FIX_CTL_STR = "" + PMTK_DT_FIX_CTL;
+    public static final String PMTK_DT_DGPS_MODE_STR = "" + PMTK_DT_DGPS_MODE;
+    public static final String PMTK_DT_SBAS_STR = "" + PMTK_DT_SBAS;
+    public static final String PMTK_DT_NMEA_OUTPUT_STR = ""
+            + PMTK_DT_NMEA_OUTPUT;
+    public static final String PMTK_DT_SBAS_TEST_STR = "" + PMTK_DT_SBAS_TEST;
+    public static final String PMTK_DT_PWR_SAV_MODE_STR = ""
+            + PMTK_DT_PWR_SAV_MODE;
+    public static final String PMTK_DT_DATUM_STR = "" + PMTK_DT_DATUM;
+    public static final String PMTK_DT_FLASH_USER_OPTION_STR = ""
+            + PMTK_DT_FLASH_USER_OPTION;
+    public static final String PMTK_Q_VERSION_STR = "" + PMTK_Q_VERSION;
+    public static final String PMTK_Q_RELEASE_STR = "" + PMTK_Q_RELEASE;
+    public static final String PMTK_Q_DGPS_INFO_STR = "" + PMTK_Q_DGPS_INFO;
 
     /**
      * Parameter 1 of PMTK_ACK reply. Packet invalid.
      */
-    public static final String PMTK_ACK_INVALID_STR = Convert
-            .toString(PMTK_ACK_INVALID);
+    public static final String PMTK_ACK_INVALID_STR = "" + PMTK_ACK_INVALID;
     /**
      * Parameter 1 of PMTK_ACK reply. Packet not supported by device.
      */
-    public static final String PMTK_ACK_UNSUPPORTED_STR = Convert
-            .toString(PMTK_ACK_UNSUPPORTED);
+    public static final String PMTK_ACK_UNSUPPORTED_STR = ""
+            + PMTK_ACK_UNSUPPORTED;
     /**
      * Parameter 1 of PMTK_ACK reply. Packet supported, but action failed.
      */
-    public static final String PMTK_ACK_FAILED_STR = Convert
-            .toString(PMTK_ACK_FAILED);
+    public static final String PMTK_ACK_FAILED_STR = "" + PMTK_ACK_FAILED;
     /**
      * Parameter 1 of PMTK_ACK reply. Packet success.
      */
-    public static final String PMTK_ACK_SUCCEEDED_STR = Convert
-            .toString(PMTK_ACK_SUCCEEDED);
+    public static final String PMTK_ACK_SUCCEEDED_STR = ""
+            + PMTK_ACK_SUCCEEDED;
 
-    /***************************************************************************
+    /*************************************************************************
      * Holux specific
      */
 
@@ -468,9 +434,10 @@ public final class BT747Constants { // dev as in device
      * checksum.
      * 
      * @param p_logFormat
-     *            The log format of the device.
+     *                The log format of the device.
      * @param holux
-     *            True when this must be calculated for a Holux M241 device.
+     *                True when this must be calculated for a Holux M241
+     *                device.
      * 
      * @return Size of the header
      */
@@ -514,10 +481,10 @@ public final class BT747Constants { // dev as in device
      * 
      * @param logFormat
      * @param holux
-     *            When true, then the log record size is calculated for a Holux
-     *            M241 device.
+     *                When true, then the log record size is calculated for a
+     *                Holux M241 device.
      * @param sats
-     *            Estimated number of satellites per record.
+     *                Estimated number of satellites per record.
      * @return The estimated record size.
      */
     public static final int logRecordSize(final int logFormat,
@@ -740,26 +707,27 @@ public final class BT747Constants { // dev as in device
     /** PMTKCHN interval - GPS channel status. */
     public static final int NMEA_SEN_MCHN_IDX = 18;
 
-//    private static final int SPI_Y2_MAN_ID_MASK = 0xff00;
-//    private static final int SPI_Y2_DEV_ID_MASK = 0x00ff;
+    // private static final int SPI_Y2_MAN_ID_MASK = 0xff00;
+    // private static final int SPI_Y2_DEV_ID_MASK = 0x00ff;
 
     /* SPI flash manufacturer ID's */
-//    private static final int SPI_MAN_ID_AMD = 0x01;
-//    private static final int SPI_MAN_ID_FUJITSU = 0x04;
-//    private static final int SPI_MAN_ID_ST_M25P10 = 0x10;
-//    private static final int SPI_MAN_ID_ST_M25P20 = 0x11;
+    // private static final int SPI_MAN_ID_AMD = 0x01;
+    // private static final int SPI_MAN_ID_FUJITSU = 0x04;
+    // private static final int SPI_MAN_ID_ST_M25P10 = 0x10;
+    // private static final int SPI_MAN_ID_ST_M25P20 = 0x11;
     private static final int SPI_MAN_ID_EON = 0x1C;
-//    private static final int SPI_MAN_ID_MITSUBISHI = 0x1C;
-//    private static final int SPI_MAN_ID_ATMEL = 0x1F;
-//    private static final int SPI_MAN_ID_STMICROELECTRONICS = 0x20;
-//    private static final int SPI_MAN_ID_CATALYST = 0x31;
-//    private static final int SPI_MAN_ID_SYNCMOS = 0x40;
-//    private static final int SPI_MAN_ID_INTEL = 0x89;
-//    private static final int SPI_MAN_ID_HYUNDAI = 0xAD;
-//    private static final int SPI_MAN_ID_SST = 0xBF; // Silicon Storage
+    // private static final int SPI_MAN_ID_MITSUBISHI = 0x1C;
+    // private static final int SPI_MAN_ID_ATMEL = 0x1F;
+    // private static final int SPI_MAN_ID_STMICROELECTRONICS = 0x20;
+    // private static final int SPI_MAN_ID_CATALYST = 0x31;
+    // private static final int SPI_MAN_ID_SYNCMOS = 0x40;
+    // private static final int SPI_MAN_ID_INTEL = 0x89;
+    // private static final int SPI_MAN_ID_HYUNDAI = 0xAD;
+    // private static final int SPI_MAN_ID_SST = 0xBF; // Silicon Storage
     // Technology
     private static final int SPI_MAN_ID_MACRONIX = 0xC2; // MX
-//    private static final int SPI_MAN_ID_WINBOND = 0xDA;
+
+    // private static final int SPI_MAN_ID_WINBOND = 0xDA;
 
     // #define MX_29F002 0xB0
     // +/* MX25L chips are SPI, first byte of device id is memory type,

@@ -1,32 +1,29 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 /*
- * To run:
- *   Path must include RXTX.  
- *   In Eclipse, set in environment, for example (on windows):
- *     PATH  ${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32/;%PATH%
- *   classpath must include:
- *      libBT747.jar
- *      collections-superwaba.jar (if the libBT747 is a debug library).
+ * To run: Path must include RXTX. In Eclipse, set in environment, for example
+ * (on windows): PATH
+ * ${project_loc:BT747}/lib/rxtx-2.1-7-bins-r2/Windows/i368-mingw32/;%PATH%
+ * classpath must include: libBT747.jar collections-superwaba.jar (if the
+ * libBT747 is a debug library).
  */
 package bt747.j2se_view;
 
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -132,7 +129,8 @@ public class BT747cmd implements bt747.model.ModelListener {
     // // When the data on the device is not the same, overwrite
     // // automatically.
     // System.out
-    // .println("Overwriting previously downloaded data that looks different.");
+    // .println("Overwriting previously downloaded data that looks
+    // different.");
     // c.replyToOkToOverwrite(true);
     // } else if (type == ModelEvent.DOWNLOAD_STATE_CHANGE
     // || type == ModelEvent.LOG_DOWNLOAD_STARTED) {
@@ -189,9 +187,10 @@ public class BT747cmd implements bt747.model.ModelListener {
             } else {
                 System.out.println("\n#### DOWNLOAD SUCCESS ####");
             }
-            System.out.println("Time to download data (ms): "
-                    + ((int) (System.currentTimeMillis() - downloadStartTime))
-                    + " ms");
+            System.out
+                    .println("Time to download data (ms): "
+                            + ((int) (System.currentTimeMillis() - downloadStartTime))
+                            + " ms");
             break;
         case ModelEvent.LOG_DOWNLOAD_SUCCESS:
             downloadIsSuccessFull = true;
@@ -286,7 +285,8 @@ public class BT747cmd implements bt747.model.ModelListener {
     }
 
     public final int convertLog(final int logType) {
-        System.out.println("Input file: " + m.getStringOpt(Model.LOGFILEPATH));
+        System.out
+                .println("Input file: " + m.getStringOpt(Model.LOGFILEPATH));
         System.out.println("Output directory: "
                 + m.getStringOpt(Model.OUTPUTDIRPATH));
         System.out.println("Output basename: "
@@ -393,8 +393,8 @@ public class BT747cmd implements bt747.model.ModelListener {
             } else if (heightOpt.equals("KEEP")) {
                 c.setHeightConversionMode(Model.HEIGHT_NOCHANGE);
             } else {
-                System.err
-                        .println("Height parameter (" + heightOpt + "unknown");
+                System.err.println("Height parameter (" + heightOpt
+                        + "unknown");
             }
         }
 
@@ -415,7 +415,8 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (options.has("splittype")) {
-            String option = ((String) options.valueOf("splittype")).toUpperCase();
+            String option = ((String) options.valueOf("splittype"))
+                    .toUpperCase();
             /**
              * The way we split the input track:<br>
              * ONE_FILE = 0<br>
@@ -474,6 +475,10 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (m.isConnected()) {
             // Connection is made.
             c.reqDeviceInfo();
+            c.reqLogMemUsed();
+            c.reqInitialLogMode();
+            c.reqMtkLogVersion();
+            
             // c.req
             // c.reqMtkLogVersion();
 
@@ -493,7 +498,8 @@ public class BT747cmd implements bt747.model.ModelListener {
             // printf("Logging TIME interval: %6.2f s\n", $1 / 10);
             // printf("Logging DISTANCE interval: %6.2f m\n", $1 / 10);
             // printf("Logging SPEED limit: %6.2f km/h\n", $1 / 10);
-            // printf("Recording method on memory full: (%u) %s\n", $rec_method,
+            // printf("Recording method on memory full: (%u) %s\n",
+            // $rec_method,
             // describe_recording_method($rec_method));
             // printf("Log status: (%012b) %s\n", $log_status,
             // describe_log_status($log_status));
@@ -505,7 +511,8 @@ public class BT747cmd implements bt747.model.ModelListener {
             // printf("WARNING! Log status DISABLE_LOG, may too many failed
             // sectors!\n");
             // }
-            // printf("Next write address: %u (0x%08X)\n", $next_write_address,
+            // printf("Next write address: %u (0x%08X)\n",
+            // $next_write_address,
             // $next_write_address);
             // printf("Number of records: %u\n", $expected_records_total);
             // printf("Memory health status (failed sectors mask): %s\n",
@@ -514,7 +521,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             // device...\n", $bytes_to_read, $bytes_to_read);
 
             if (options.has("r")) {
-                List list = options.valuesOf("r");
+                List<?> list = options.valuesOf("r");
                 if (list.size() == 3) {
                     System.out
                             .println(">> Setting recording criteria: time, distance, speed\n");
@@ -529,15 +536,16 @@ public class BT747cmd implements bt747.model.ModelListener {
                             + distance);
                     c.setLogDistanceInterval(distance * 10);
                 } else {
-                    System.err.println("parameter for '-r' option is invalid");
+                    System.err
+                            .println("parameter for '-r' option is invalid");
                 }
             }
 
             flushOutstandingCmds();
 
             if (options.has("o")) {
-                List list = options.valuesOf("o");
-                Iterator iter = list.iterator();
+                List<?> list = options.valuesOf("o");
+                Iterator<?> iter = list.iterator();
 
                 int newLogFormat = m.getLogFormat();
                 while (iter.hasNext()) {
@@ -638,11 +646,26 @@ public class BT747cmd implements bt747.model.ModelListener {
                             .println("Argument of '-p' must be 'STOP' or 'OVERLAP'");
                 }
             }
-
             flushOutstandingCmds();
+
+            System.out.println("Device reports " + m.logMemUsed()
+                    + " bytes used (" + m.logMemUsedPercent() + "% of "
+                    + m.logMemSize() + ").");
+            System.out.println("Device was in " + (m.isInitialLogOverwrite()?"OVERLAP":"STOP") +" on initialisation");
 
             if (options.has("a") && !(options.has("b"))) {
                 c.setDownloadMethod(Model.DOWNLOAD_INCREMENTAL);
+                if (options.has("download-method")) {
+                    String arg = options.argumentOf("download-method")
+                            .toLowerCase();
+                    if (arg.equals("full")) {
+                        c.setDownloadMethod(Model.DOWNLOAD_FULL);
+                    } else if (arg.equals("smart")) {
+                        c.setDownloadMethod(Model.DOWNLOAD_INCREMENTAL);
+                    } else if (arg.equals("reported")) {
+                        c.setDownloadMethod(Model.DOWNLOAD_FILLED);
+                    }
+                }
                 // printf(">> Retrieving %u (0x%08X) bytes of log data from
                 // device...\n", $bytes_to_read, $bytes_to_read);
                 System.out.println(">> Getting data from device");
@@ -699,7 +722,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                     case 0:
                         return baseName + "_trk" + proposedExtension;
                     default:
-                        return baseName + proposedTimeSpec + "_trk" + proposedExtension;
+                        return baseName + proposedTimeSpec + "_trk"
+                                + proposedExtension;
                     }
                 }
             });
@@ -728,7 +752,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                     case 0:
                         return baseName + "_wpt" + proposedExtension;
                     default:
-                        return baseName + proposedTimeSpec + "_wpt" + proposedExtension;
+                        return baseName + proposedTimeSpec + "_wpt"
+                                + proposedExtension;
                     }
                 }
             });
@@ -739,8 +764,8 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (options.has("outtype")) {
-            List list = options.valuesOf("outtype");
-            Iterator iter = list.iterator();
+            List<?> list = options.valuesOf("outtype");
+            Iterator<?> iter = list.iterator();
 
             while (iter.hasNext()) {
                 String typeStr = ((String) iter.next()).toUpperCase();
@@ -783,7 +808,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                             case 0:
                                 return baseName + proposedExtension;
                             default:
-                                return baseName + proposedTimeSpec + proposedExtension;
+                                return baseName + proposedTimeSpec
+                                        + proposedExtension;
                             }
                         }
                     });
@@ -799,21 +825,22 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     /**
      * @param args
-     *            the command line arguments
+     *                the command line arguments
      */
     public static void main(String args[]) {
         OptionParser parser = new OptionParser() {
             {
                 accepts("h", "Displays help");
-                accepts("a", "Read all the log memory (overlapped data)");
+                accepts("a",
+                        "Download the log memory (default method = full)");
                 accepts(
                         "b",
                         "Do not read device, read a previously saved file."
                                 + "The file type is selected according to the filename extension."
                                 + "Recognized file extensions are .bin, .csv, .trl,"
                                 + ".nmea, .nme, .nma, .txt, .log, .sr .")
-                        .withRequiredArg().describedAs("filename.bin").ofType(
-                                String.class);
+                        .withRequiredArg().describedAs("filename.bin")
+                        .ofType(String.class);
                 accepts("d", "Debug level: 0..2").withRequiredArg()
                         .describedAs("DEBUG_LEVEL").ofType(Integer.class);
 
@@ -823,7 +850,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                                 String.class);
                 accepts("l", "Turn logging ON/OFF").withRequiredArg()
                         .describedAs("(on|off)").ofType(String.class);
-                accepts("m", "Set STOP/OVERLAP recording method on memory full")
+                accepts("m",
+                        "Set STOP/OVERLAP recording method on memory full")
                         .withRequiredArg().describedAs("(stop|overlap)")
                         .ofType(String.class);
                 accepts(
@@ -873,21 +901,36 @@ public class BT747cmd implements bt747.model.ModelListener {
                         "Color to use for 'bad part' in tracks  (HEX RGB value), ex 00FFFF")
                         .withRequiredArg().describedAs("HEXCOLOR");
                 ;
-                accepts("splittype", "The way to split the input data: NOSPLIT, DAY or TRACK")
-                .withRequiredArg().describedAs("SPLITTYPE");
-                accepts("timesplit", "Time separation in minutes needed for track segment or track separation.")
-                .withRequiredArg().describedAs("MINUTES").ofType(
-                        Integer.class);
-                accepts("height", "Adjust height.  According to formats when 'AUTOMATIC'," +
-                		"WGS84 height (elevation) to MSL (Mean Sea Level) when 'MSL'," +
-                		"MSL to WGS84 when 'WGS84'").withRequiredArg().describedAs("AUTOMATIC|KEEP|WGS84_TO_MSL|MSL_TO_WGS84");
+                accepts("splittype",
+                        "The way to split the input data: NOSPLIT, DAY or TRACK")
+                        .withRequiredArg().describedAs("SPLITTYPE");
+                accepts("timesplit",
+                        "Time separation in minutes needed for track segment or track separation.")
+                        .withRequiredArg().describedAs("MINUTES").ofType(
+                                Integer.class);
+                accepts(
+                        "height",
+                        "Adjust height.  According to formats when 'AUTOMATIC',"
+                                + "WGS84 height (elevation) to MSL (Mean Sea Level) when 'MSL',"
+                                + "MSL to WGS84 when 'WGS84'")
+                        .withRequiredArg().describedAs(
+                                "AUTOMATIC|KEEP|WGS84_TO_MSL|MSL_TO_WGS84");
+                accepts(
+                        "download-method",
+                        "Select the download method."
+                                + " FULL = All the memory,"
+                                + " SMART=According to previous download,"
+                                + " REPORTED=Ignores overwrite setting and download reported used memory.")
+                        .withRequiredArg().describedAs("FULL|SMART|REPORTED");
             }
         };
 
         try {
             final OptionSet options = parser.parse(args);
-            System.out.println("BT747 Cmd V" + bt747.Version.VERSION_NUMBER
-                    + " build " + bt747.Version.BUILD_STR + " GPL V3 LICENSE");
+            System.out
+                    .println("BT747 Cmd V" + bt747.Version.VERSION_NUMBER
+                            + " build " + bt747.Version.BUILD_STR
+                            + " GPL V3 LICENSE");
             if (options.has("h") || args.length == 0) {
                 parser.printHelpOn(System.out);
             } else if (options.has("v")) {
@@ -927,18 +970,18 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
     }
 
-    private void initAppSettings() {
-        // AppSettings.defaultBaseDirPath = java.lang.System
-        // .getProperty("user.home");
-
-        try {
-            AppSettings.defaultBaseDirPath = (new File(".")).getCanonicalPath();
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-
-        Settings.setAppSettings(new String(new byte[2048]));
-        m.init();
-    }
+    // private void initAppSettings() {
+    // // AppSettings.defaultBaseDirPath = java.lang.System
+    // // .getProperty("user.home");
+    //
+    // try {
+    // AppSettings.defaultBaseDirPath = (new File(".")).getCanonicalPath();
+    // } catch (Exception e) {
+    // // TODO: handle exception
+    // }
+    //
+    // Settings.setAppSettings(new String(new byte[2048]));
+    // m.init();
+    // }
 
 }

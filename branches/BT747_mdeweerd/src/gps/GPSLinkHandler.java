@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package gps;
 
 import gps.connection.GPSrxtx;
@@ -24,19 +24,25 @@ import bt747.sys.interfaces.BT747Vector;
 
 final class GPSLinkHandler {
     private GPSrxtx gpsRxTx = null;
+    private static final int INITIAL_WAIT = 500;
 
     /**
      * If currently erasing, this variable is true.
      */
     private boolean eraseOngoing = false;
 
-
-    private final BT747Vector sentCmds = Interface.getVectorInstance(); // List of sent commands
+    private final BT747Vector sentCmds = Interface.getVectorInstance(); // List
+    // of
+    // sent
+    // commands
 
     private static final int C_MAX_SENT_COMMANDS = 10; // Max commands to put
     // in list
 
-    private final BT747Vector toSendCmds = Interface.getVectorInstance(); // List of sent commands
+    private final BT747Vector toSendCmds = Interface.getVectorInstance(); // List
+    // of
+    // sent
+    // commands
 
     private static final int C_MAX_TOSEND_COMMANDS = 20; // Max commands to
     // put in
@@ -46,7 +52,6 @@ final class GPSLinkHandler {
 
     private static final int C_MIN_TIME_BETWEEN_CMDS = 30;
 
-    
     public final void setGPSRxtx(final GPSrxtx gpsRxTx) {
         if (this.gpsRxTx != null) {
             // TODO Remove myself as listener
@@ -72,6 +77,9 @@ final class GPSLinkHandler {
             // Ok to buffer more cmds
             cmdBuffersAccess.down();
             toSendCmds.addElement(cmd);
+            if (Generic.isDebug()) {
+                Generic.debug("#" + cmd);
+            }
             cmdBuffersAccess.up();
         }
     }
@@ -82,7 +90,8 @@ final class GPSLinkHandler {
 
     private int nextCmdSendTime = 0;
 
-    private final BT747Semaphore cmdBuffersAccess = Interface.getSemaphoreInstance(1);
+    private final BT747Semaphore cmdBuffersAccess = Interface
+            .getSemaphoreInstance(1);
 
     protected final void doSendNMEA(final String cmd) {
         resetLogTimeOut();
@@ -96,7 +105,8 @@ final class GPSLinkHandler {
             if (Generic.isDebug()) {
                 Generic.debug(">" + cmd + " " + gpsRxTx.isConnected());
             }
-            nextCmdSendTime = Generic.getTimeStamp() + C_MIN_TIME_BETWEEN_CMDS;
+            nextCmdSendTime = Generic.getTimeStamp()
+                    + C_MIN_TIME_BETWEEN_CMDS;
             if (sentCmds.size() > C_MAX_SENT_COMMANDS) {
                 sentCmds.removeElementAt(0);
             }
@@ -105,9 +115,13 @@ final class GPSLinkHandler {
         }
         cmdBuffersAccess.up();
     }
-    
+
     private int logTimer = 0;
     private int downloadTimeOut = 3500;
+
+    protected final void initConnected() {
+        nextCmdSendTime = Generic.getTimeStamp() + INITIAL_WAIT;
+    }
 
     protected final void checkSendCmdFromQueue() {
         int cTime = Generic.getTimeStamp();
@@ -122,7 +136,8 @@ final class GPSLinkHandler {
                                 + ">" + downloadTimeOut, null);
                     }
                     // sentCmds.removeElementAt(0); // Previous cleaning
-                    // Since the last command that was sent is a timeout ago, we
+                    // Since the last command that was sent is a timeout ago,
+                    // we
                     // suppose that all the subsequent ones are forfeit too.
                     sentCmds.removeAllElements();
                     logTimer = cTime;
@@ -247,11 +262,11 @@ final class GPSLinkHandler {
     protected final void sendDPL700Cmd(final String cmd) {
         gpsRxTx.sendDPL700Cmd(cmd);
     }
-    
+
     protected final byte[] getDPL700_buffer() {
         return gpsRxTx.getDPL700_buffer();
     }
-    
+
     protected final int getDPL700_buffer_idx() {
         return gpsRxTx.getDPL700_buffer_idx();
     }
