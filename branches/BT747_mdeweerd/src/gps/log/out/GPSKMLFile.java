@@ -261,11 +261,11 @@ public class GPSKMLFile extends GPSFile {
             if (ptFilters[currentFilter].doFilter(s)) {
                 String dateString = "";
                 if (activeFields.hasUtc()) {
-                    dateString = Convert.toString(t.getYear()) + "-"
+                    dateString = t.getYear() + "-"
                             + (t.getMonth() < 10 ? "0" : "")
-                            + Convert.toString(t.getMonth()) + "-"
+                            + t.getMonth() + "-"
                             + (t.getDay() < 10 ? "0" : "")
-                            + Convert.toString(t.getDay());
+                            + t.getDay();
                 }
 
                 if (isWayType
@@ -289,14 +289,14 @@ public class GPSKMLFile extends GPSFile {
                         if ((activeFields.hasUtc())
                                 && (selectedFileFields.hasUtc())) {
                             rec.append("TIME: " + (t.getHour() < 10 ? "0" : "")
-                                    + Convert.toString(t.getHour()) + ":"
+                                    + t.getHour() + ":"
                                     + (t.getMinute() < 10 ? "0" : "")
-                                    + Convert.toString(t.getMinute()) + ":"
+                                    + t.getMinute() + ":"
                                     + (t.getSecond() < 10 ? "0" : "")
-                                    + Convert.toString(t.getSecond()));
+                                    + t.getSecond());
                         } else {
                             rec.append("IDX: ");
-                            rec.append(Convert.toString(s.recCount));
+                            rec.append(s.recCount);
                         }
                         rec.append("</name>\r\n");
                     }
@@ -321,12 +321,12 @@ public class GPSKMLFile extends GPSFile {
                                 && (selectedFileFields.hasUtc())) {
                             rec.append(dateString + "T"
                                     + (t.getHour() < 10 ? "0" : "")
-                                    + Convert.toString(t.getHour()) + ":"
+                                    + t.getHour() + ":"
                                     + (t.getMinute() < 10 ? "0" : "")
-                                    + Convert.toString(t.getMinute()) + ":"
+                                    + t.getMinute() + ":"
                                     + (t.getSecond() < 10 ? "0" : ""));
                             if (activeFields.milisecond == 0) {
-                                rec.append(Convert.toString(t.getSecond()));
+                                rec.append(t.getSecond());
                             } else {
                                 rec.append(Convert.toString((float) t
                                         .getSecond()

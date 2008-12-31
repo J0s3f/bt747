@@ -113,7 +113,7 @@ public final class GPSRxTxPort extends GPSPort {
         String portStr;
         if (freeTextPort.length() == 0) {
             portStr = java.lang.System.getProperty("bt747_port", portPrefix
-                    + (hasPortNbr ? Convert.toString(spPortNbr) : ""));
+                    + (hasPortNbr ? spPortNbr : ""));
         } else {
             portStr = freeTextPort;
         }

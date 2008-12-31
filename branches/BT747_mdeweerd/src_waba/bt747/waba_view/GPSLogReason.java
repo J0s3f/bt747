@@ -107,7 +107,7 @@ public final class GPSLogReason extends Container implements ModelListener {
         chkSpeedOnOff.setChecked(m.getLogSpeedInterval() != 0);
         edSpeed.setEnabled(m.getLogSpeedInterval() != 0);
         if (m.getLogSpeedInterval() != 0) {
-            edSpeed.setText(Convert.toString(m.getLogSpeedInterval()));
+            edSpeed.setText("" + m.getLogSpeedInterval());
         }
         chkDistanceOnOff.setChecked(m.getLogDistanceInterval() != 0);
         edDistance.setEnabled(m.getLogDistanceInterval() != 0);
@@ -115,7 +115,7 @@ public final class GPSLogReason extends Container implements ModelListener {
             edDistance.setText(Convert.toString((float) m
                     .getLogDistanceInterval() / 10, 1));
         }
-        edFix.setText(Convert.toString(m.getLogFixPeriod()));
+        edFix.setText("" + m.getLogFixPeriod());
         chkSBASOnOff.setChecked(m.isSBASEnabled());
         chkSBASTestOnOff.setChecked(m.isSBASTestEnabled());
         cbDGPSMode.select(m.getDgpsMode());

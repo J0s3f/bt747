@@ -523,16 +523,16 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             if (activeFields.utc != 0) {
                 if ((r.utc < 24 * 3600) // No date provided by log.
                         || (t.getYear() > 2000)) {
-                    extraExt = "-" + Convert.toString(t.getYear())
+                    extraExt = "-" + t.getYear()
                             + (t.getMonth() < 10 ? "0" : "")
-                            + Convert.toString(t.getMonth())
+                            + t.getMonth()
                             + (t.getDay() < 10 ? "0" : "")
-                            + Convert.toString(t.getDay());
+                            + t.getDay();
                     if (oneFilePerTrack) {
                         extraExt += "_" + (t.getHour() < 10 ? "0" : "")
-                                + Convert.toString(t.getHour())
+                                + t.getHour()
                                 + (t.getMinute() < 10 ? "0" : "")
-                                + Convert.toString(t.getMinute());
+                                + t.getMinute();
                     }
                 } else {
                     extraExt = "";

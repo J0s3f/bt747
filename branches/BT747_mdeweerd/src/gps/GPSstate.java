@@ -475,7 +475,7 @@ public final class GPSstate implements BT747Thread {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR + ","
-                + Convert.toString(z_value));
+                + z_value);
     }
 
     public final void setLogDistanceInterval(final int value) {
@@ -490,7 +490,7 @@ public final class GPSstate implements BT747Thread {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL_STR + ","
-                + Convert.toString(z_value));
+                + z_value);
     }
 
     public final void setLogSpeedInterval(final int value) {
@@ -504,7 +504,7 @@ public final class GPSstate implements BT747Thread {
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
                 + BT747Constants.PMTK_LOG_SPEED_INTERVAL_STR + ","
-                + Convert.toString(z_value * 10));
+                + (z_value * 10));
     }
 
     public final void setFixInterval(final int value) {
@@ -517,7 +517,7 @@ public final class GPSstate implements BT747Thread {
 
         /* Set log distance interval */
         sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_FIX_CTL + ","
-                + Convert.toString(z_value) + ",0,0,0.0,0.0");
+                + z_value + ",0,0,0.0,0.0");
     }
 
     public final void reqFixInterval() {
@@ -625,7 +625,7 @@ public final class GPSstate implements BT747Thread {
         // Request log format from device
         if (mode >= 0 && mode <= 2) {
             sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_DGPS_MODE_STR + ","
-                    + Convert.toString(mode));
+                    + mode);
         }
     }
 
@@ -638,7 +638,7 @@ public final class GPSstate implements BT747Thread {
         // Request log format from device
         if (mode >= 0 && mode <= 2) {
             sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_DATUM_STR + ","
-                    + Convert.toString(mode));
+                    + mode);
         }
     }
 

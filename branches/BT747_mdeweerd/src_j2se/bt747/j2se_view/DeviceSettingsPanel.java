@@ -147,8 +147,8 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             break;
         case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
             ckLogSpeedActive.setSelected(m.getLogSpeedInterval() != 0);
-            txtLogSpeedInterval.setText(Convert.toString(m
-                    .getLogSpeedInterval()));
+            txtLogSpeedInterval.setText(""+m
+                    .getLogSpeedInterval());
             break;
         case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
             ckLogDistanceActive.setSelected(m.getLogDistanceInterval() != 0);
@@ -156,7 +156,7 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
                     .getLogDistanceInterval() / 10., 1));
             break;
         case ModelEvent.UPDATE_FIX_PERIOD:
-            txtFixPeriod.setText(Convert.toString(m.getLogFixPeriod()));
+            txtFixPeriod.setText(""+m.getLogFixPeriod());
             break;
         case ModelEvent.UPDATE_HOLUX_NAME:
             txtHoluxName.setText(m.getHoluxName());

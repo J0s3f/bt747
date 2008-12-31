@@ -1126,7 +1126,7 @@ public class AppSettings {
                         (src.length() < (size - 1)) ? (idx + src.length())
                                 : (idx + size)));
         if (eventType != 0) {
-            postEvent(ModelEvent.SETTING_CHANGE, Convert.toString(eventType));
+            postEvent(ModelEvent.SETTING_CHANGE, ""+eventType);
         }
     }
     
@@ -1141,7 +1141,7 @@ public class AppSettings {
                         .getAppSettings().substring(idx + size,
                                 Settings.getAppSettings().length()) : ""));
         if (eventType != 0) {
-            postEvent(ModelEvent.SETTING_CHANGE, Convert.toString(eventType));
+            postEvent(ModelEvent.SETTING_CHANGE, ""+eventType);
         }
     }
 

@@ -141,8 +141,8 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
     }
 
     private void getSettings() {
-        minRecCount.setText(Convert.toString(m.getFilterMinRecCount()));
-        maxRecCount.setText(Convert.toString(m.getFilterMaxRecCount()));
+        minRecCount.setText("" + m.getFilterMinRecCount());
+        maxRecCount.setText("" + m.getFilterMaxRecCount());
         minSpeed.setText(Convert.toString(m.getFilterMinSpeed(), 2));
         maxSpeed.setText(Convert.toString(m.getFilterMaxSpeed(), 2));
         minDist.setText(Convert.toString(m.getFilterMinDist(), 2));
@@ -150,7 +150,7 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
         maxPDOP.setText(Convert.toString(m.getFilterMaxPDOP(), 2));
         maxHDOP.setText(Convert.toString(m.getFilterMaxHDOP(), 2));
         maxVDOP.setText(Convert.toString(m.getFilterMaxVDOP(), 2));
-        minNSAT.setText(Convert.toString(m.getFilterMinNSAT()));
+        minNSAT.setText("" + m.getFilterMinNSAT());
         c.setFilters();
     }
 

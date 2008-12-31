@@ -251,8 +251,8 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
             updateRMCData((GPSRecord) e.getArg());
             break;
         case ModelEvent.UPDATE_LOG_MEM_USED:
-            txtMemoryUsed.setText(Convert.toString(m.logMemUsed()) + " ("
-                    + Convert.toString(m.logMemUsedPercent()) + "%)"); // NOI18N
+            txtMemoryUsed.setText(m.logMemUsed() + " ("
+                    + m.logMemUsedPercent() + "%)"); // NOI18N
             break;
         case ModelEvent.UPDATE_LOG_FLASH:
             txtFlashInfo.setText(((m.getFlashManuProdID() != 0) ? Convert

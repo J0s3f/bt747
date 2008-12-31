@@ -26,9 +26,9 @@ public final class Convert {
         return Interface.tr.toString(p);
     }
 
-    public final static String toString(final int p) {
-        return Interface.tr.toString(p);
-    }
+//    public final static String toString(final int p) {
+//        return Interface.tr.toString(p);
+//    }
 
     public final static String toString(final float p) {
         return Interface.tr.toString(p);

@@ -126,8 +126,7 @@ public final class GPSPLTFile extends GPSFile {
             // ...
             // Field 4 : Altitude in feet (-777 if not valid)
             if ((activeFields.hasHeight()) && (selectedFileFields.hasHeight())) {
-                rec += Convert
-                        .toString((int) (s.height * 3.2808398950131233595800524934383));
+                rec += ((int) (s.height * 3.2808398950131233595800524934383));
             } else {
                 rec += "-777";
             }
@@ -151,22 +150,22 @@ public final class GPSPLTFile extends GPSFile {
                                 7); // 7 fractional digits
                 rec += ",";
                 rec += (t.getMonth() < 10 ? "0" : "")
-                        + Convert.toString(t.getMonth()) + "/"
+                         + t.getMonth() + "/"
                         + (t.getDay() < 10 ? "0" : "")
-                        + Convert.toString(t.getDay()) + "/"
-                        + Convert.toString(t.getYear()) + ","
+                        + t.getDay() + "/"
+                        + t.getYear() + ","
                         + (t.getHour() < 10 ? "0" : "")
-                        + Convert.toString(t.getHour()) + ":"
+                        + t.getHour() + ":"
                         + (t.getMinute() < 10 ? "0" : "")
-                        + Convert.toString(t.getMinute()) + ":"
+                        + t.getMinute() + ":"
                         + (t.getSecond() < 10 ? "0" : "")
-                        + Convert.toString(t.getSecond());
+                        + t.getSecond();
                 if ((activeFields.hasMilisecond())
                         && (selectedFileFields.hasMilisecond())) {
                     rec += ".";
                     rec += (s.milisecond < 100) ? "0" : "";
                     rec += (s.milisecond < 10) ? "0" : "";
-                    rec += Convert.toString(s.milisecond);
+                    rec += s.milisecond;
                 }
             } else {
                 rec += ",,";

@@ -92,13 +92,13 @@ public final class GPSconctrl extends Container implements ModelListener {
 
         String[] portNbrs = new String[C_MAX_PORTNBR + 1];
         for (int i = 0; i <= C_MAX_PORTNBR; i++) {
-            portNbrs[i] = Convert.toString(i);
+            portNbrs[i] = "" + i;
         }
         cbPorts = new ComboBox(portNbrs);
 
         int portNbr = m.getIntOpt(AppSettings.PORTNBR);
 
-        String baudRate = Convert.toString(m.getIntOpt(AppSettings.BAUDRATE));
+        String baudRate = "" + m.getIntOpt(AppSettings.BAUDRATE);
         cbBaud = new ComboBox(BaudRates);
 
         add(btnBluetooth, LEFT, TOP);
@@ -188,11 +188,11 @@ public final class GPSconctrl extends Container implements ModelListener {
                     // t.getMonth()<10?"0":"")+Convert.toString(t.getMonth())+"/"
                     // +( t.getDay()<10?"0":"")+Convert.toString(t.getDay())+" "
                     (t.getHour() < 10 ? "0" : "")
-                    + Convert.toString(t.getHour()) + ":"
+                    + t.getHour() + ":"
                     + (t.getMinute() < 10 ? "0" : "")
-                    + Convert.toString(t.getMinute()) + ":"
+                    + t.getMinute() + ":"
                     + (t.getSecond() < 10 ? "0" : "")
-                    + Convert.toString(t.getSecond());
+                    + t.getSecond();
 
         }
     }

@@ -64,10 +64,9 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
     }
 
     void getFlashConfig() {
-        txtFlashTimesLeft.setText(Convert
-                .toString(m.getDtUserOptionTimesLeft()));
-        txtFlashUpdateRate.setText(Convert.toString(m.getDtUpdateRate()));
-        txtFlashBaudRate.setText(Convert.toString(m.getDtBaudRate()));
+        txtFlashTimesLeft.setText(""+m.getDtUserOptionTimesLeft());
+        txtFlashUpdateRate.setText(""+m.getDtUpdateRate());
+        txtFlashBaudRate.setText(""+m.getDtBaudRate());
         cbFlashGLL.setSelectedIndex(m.getDtGLL_Period());
         cbFlashRMC.setSelectedIndex(m.getDtRMC_Period());
         cbFlashVTG.setSelectedIndex(m.getDtVTG_Period());

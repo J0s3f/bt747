@@ -161,25 +161,25 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
                 rec.append(
                 // Day calculation
                         ((t.getDay() < 10) ? "0" : "")
-                                + Convert.toString(t.getDay())
+                                + t.getDay()
                                 + "-"
                                 // Month calculation
                                 + CommonOut.MONTHS_AS_TEXT[t.getMonth() - 1]
                                 + "-"
                                 + (((t.getYear() % 100) < 10) ? "0" : "")
                                 // Year calculation
-                                + Convert.toString(t.getYear() % 100)
+                                + (t.getYear() % 100)
                                 + " "
                                 // Hour
                                 + ((t.getHour() < 10) ? "0" : "")
-                                + Convert.toString(t.getHour())
+                                + t.getHour()
                                 + ":"
                                 // Minute
                                 + ((t.getMinute() < 10) ? "0" : "")
-                                + Convert.toString(t.getMinute()) + ":"
+                                + t.getMinute() + ":"
                                 // Second
                                 + ((t.getSecond() < 10) ? "0" : "")
-                                + Convert.toString(t.getSecond()));
+                                + t.getSecond());
                 // if (activeFields.milisecond!=0) {
                 // rec+=".";
                 // rec+=(s.milisecond<100)?"0":"";
