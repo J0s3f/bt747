@@ -1,3 +1,6 @@
+Version 1.66.6
+* Fix for GPX input in case an initial pass is needed for the file log format.
+
 Version 1.66.4
 * Read GPX files.
 * UPdate to BT747Cmd to select download method.

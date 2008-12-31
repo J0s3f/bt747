@@ -72,11 +72,14 @@ public class GPXLogConvert implements GPSLogConvertInterface {
                             Node pt = segs.item(x);
                             if (pt.getNodeName().equalsIgnoreCase("trkpt")) {
                                 GPSRecord r = convertNodeToGPSRecord(pt);
-                                if (!r.equalsFormat(activeFields)) {
-                                    activeFields = r.cloneRecord();
-                                    gpsFile.writeLogFmtHeader(activeFields);
+                                if (!passToFindFieldsActivatedInLog) {
+                                    if (!r.equalsFormat(activeFields)) {
+                                        activeFields = r.cloneRecord();
+                                        gpsFile
+                                                .writeLogFmtHeader(activeFields);
+                                    }
+                                    gpsFile.addLogRecord(r);
                                 }
-                                gpsFile.addLogRecord(r);
                                 r.recCount = reccount++;
                                 // System.err.println(r.toString());
                                 if (stop) {
@@ -119,7 +122,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
     private java.io.File mFile = null;
 
     enum infoType {
-        ele, time, speed, hdop, vdop, pdop, fix, type, sym, course, cmt, sat
+        ele, time, speed, hdop, vdop, pdop, fix, type, sym, course, cmt, sat, name
     };
 
     private Document doc;
@@ -214,7 +217,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
                     try {
                         switch (infoType.valueOf(infoName)) {
                         case speed:
-                            r.speed = Float.valueOf(nodeText)*3.6f;
+                            r.speed = Float.valueOf(nodeText) * 3.6f;
                             activeFileFields.speed = 0;
                             break;
                         case course:
@@ -257,15 +260,18 @@ public class GPXLogConvert implements GPSLogConvertInterface {
 
                             break;
                         case hdop:
-                            r.hdop = Math.round(Float.valueOf(nodeText) * 100.f);
+                            r.hdop = Math
+                                    .round(Float.valueOf(nodeText) * 100.f);
                             activeFileFields.hdop = 100;
                             break;
                         case vdop:
-                            r.vdop = Math.round(Float.valueOf(nodeText) * 100.f);
+                            r.vdop = Math
+                                    .round(Float.valueOf(nodeText) * 100.f);
                             activeFileFields.vdop = 100;
                             break;
                         case pdop:
-                            r.pdop = Math.round(Float.valueOf(nodeText) * 100.f);
+                            r.pdop = Math
+                                    .round(Float.valueOf(nodeText) * 100.f);
                             activeFileFields.pdop = 100;
                             break;
                         case fix:
@@ -324,6 +330,8 @@ public class GPXLogConvert implements GPSLogConvertInterface {
                         case sat:
                             r.nsat = Integer.valueOf(nodeText);
                             activeFileFields.nsat = 10;
+                            break;
+                        case name:
                             break;
                         default:
                             break;
