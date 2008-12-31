@@ -654,14 +654,14 @@ public class BT747cmd implements bt747.model.ModelListener {
             System.out.println("Device was in " + (m.isInitialLogOverwrite()?"OVERLAP":"STOP") +" on initialisation");
 
             if (options.has("a") && !(options.has("b"))) {
-                c.setDownloadMethod(Model.DOWNLOAD_INCREMENTAL);
+                c.setDownloadMethod(Model.DOWNLOAD_SMART);
                 if (options.has("download-method")) {
                     String arg = options.argumentOf("download-method")
                             .toLowerCase();
                     if (arg.equals("full")) {
                         c.setDownloadMethod(Model.DOWNLOAD_FULL);
                     } else if (arg.equals("smart")) {
-                        c.setDownloadMethod(Model.DOWNLOAD_INCREMENTAL);
+                        c.setDownloadMethod(Model.DOWNLOAD_SMART);
                     } else if (arg.equals("reported")) {
                         c.setDownloadMethod(Model.DOWNLOAD_FILLED);
                     }
@@ -832,12 +832,12 @@ public class BT747cmd implements bt747.model.ModelListener {
             {
                 accepts("h", "Displays help");
                 accepts("a",
-                        "Download the log memory (default method = full)");
+                        "Download the log memory (default method = smart)");
                 accepts(
                         "b",
                         "Do not read device, read a previously saved file."
                                 + "The file type is selected according to the filename extension."
-                                + "Recognized file extensions are .bin, .csv, .trl,"
+                                + "Recognized file extensions are .bin, .csv, .gpx, .trl,"
                                 + ".nmea, .nme, .nma, .txt, .log, .sr .")
                         .withRequiredArg().describedAs("filename.bin")
                         .ofType(String.class);

@@ -1,3 +1,7 @@
+Version 1.66.7
+* Binary log decoding made smarter for device log that was in a really bad shape.
+* Fetching initial data from device made more robust (especially for Cmd mode).
+
 Version 1.66.6
 * Fix for GPX input in case an initial pass is needed for the file log format.
 
