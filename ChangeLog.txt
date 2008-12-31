@@ -1,3 +1,6 @@
+Version 1.66.8
+* Changes to BT747cmd (default = no overwrite for download) + gpx.
+
 Version 1.66.7
 * Binary log decoding made smarter for device log that was in a really bad shape.
 * Fetching initial data from device made more robust (especially for Cmd mode).

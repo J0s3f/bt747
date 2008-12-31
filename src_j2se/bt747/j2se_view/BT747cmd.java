@@ -31,7 +31,6 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
 import bt747.model.AppSettings;
-import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Interface;
@@ -43,6 +42,119 @@ import bt747.sys.interfaces.BT747FileName;
  * @author Mario De Weerd
  */
 public class BT747cmd implements bt747.model.ModelListener {
+
+    /**
+     * 
+     */
+    private static final String OPT_OVERWRITE = "overwrite";
+    /**
+     * 
+     */
+    private static final String OPT_DOWNLOAD_METHOD = "download-method";
+    /**
+     * 
+     */
+    private static final String OPT_TRKPTNAME = "trkptname";
+    /**
+     * 
+     */
+    private static final String OPT_TRKPTINFO = "trkptinfo";
+    /**
+     * 
+     */
+    private static final String OPT_OUTPUT_TYPE = "outtype";
+    /**
+     * 
+     */
+    private static final String OPT_CREATE_GPX_WAYPOINTS = "w";
+    /**
+     * 
+     */
+    private static final String OPT_VERSION_ONLY = "v";
+    /**
+     * 
+     */
+    private static final String OPT_CREATE_GPX_TRACKS = "t";
+    /**
+     * 
+     */
+    private static final String OPT_SET_LOG_CRITERIA = "r";
+    /**
+     * 
+     */
+    private static final String OPT_RECOVER_LOGGER = "R";
+    /**
+     * 
+     */
+    private static final String OPT_SET_LOG_FIELDS = "o";
+    /**
+     * 
+     */
+    private static final String OPT_OVERLAP_STOP_SETTING = "m";
+    /**
+     * 
+     */
+    private static final String OPT_LOGGING_ON_OFF = "l";
+    /**
+     * 
+     */
+    private static final String OPT_ERASE_MEMORY = "E";
+    /**
+     * 
+     */
+    private static final String OPT_DOWNLOAD = "a";
+    /**
+     * 
+     */
+    private static final String OPT_HELP = "h";
+    /**
+     * 
+     */
+    private static final String OPT_DEVICETYPE = "device";
+    /**
+     * 
+     */
+    private static final String OPT_TIMESPLIT = "timesplit";
+    /**
+     * 
+     */
+    private static final String OPT_SPLITTYPE = "splittype";
+    /**
+     * 
+     */
+    private static final String OPT_BADCOLOR = "badcolor";
+    /**
+     * 
+     */
+    private static final String OPT_COLOR = "color";
+    /**
+     * 
+     */
+    private static final String OPT_UTC = "UTC";
+    /**
+     * 
+     */
+    private static final String OPT_HEIGHT = "height";
+    /**
+     * 
+     */
+    private static final String OPT_SERIAL_PORT = "p";
+    /**
+     * 
+     */
+    private static final String OPT_SERIAL_SPEED = "s";
+    /**
+     * 
+     */
+    private static final String OPT_BINARY_FILE = "b";
+    /**
+     * 
+     */
+    private static final String OPT_FILE_BASENAME = "f";
+    /**
+     * 
+     */
+    private static final String OPT_DEBUG = "d";
 
     /**
      * Set up system specific classes.
@@ -61,16 +173,17 @@ public class BT747cmd implements bt747.model.ModelListener {
      */
     private static final long serialVersionUID = 1L;
     private Model m;
-    private Controller c;
+    private J2SEController c;
 
-    public BT747cmd(final Model m, final Controller c, final OptionSet options) {
+    public BT747cmd(final Model m, final J2SEController c,
+            final OptionSet options) {
         Settings.setAppSettings(new String(new byte[2048]));
         setController(c);
         setModel(m);
         handleOptions(options);
     }
 
-    public void setController(final Controller c) {
+    public void setController(final J2SEController c) {
         this.c = c; // Should check that c is an AppController or do it
     }
 
@@ -96,6 +209,8 @@ public class BT747cmd implements bt747.model.ModelListener {
     // }
 
     private void reportError(final int error, final String errorInfo) {
+        System.err.println("\n####    ERROR  !!! ####");
+
         switch (error) {
         case BT747Constants.ERROR_COULD_NOT_OPEN:
             System.err.println("Could not open " + errorInfo);
@@ -160,10 +275,11 @@ public class BT747cmd implements bt747.model.ModelListener {
     // }
     // }
 
-    private boolean downloadIsSuccessFull = true;
-    private Boolean eraseOngoing = Boolean.FALSE;
+    private volatile boolean downloadIsSuccessFull = true;
+    private volatile Boolean eraseOngoing = Boolean.FALSE;
     private long conversionStartTime;
     private long downloadStartTime;
+    private volatile boolean overwriteDownloadOk = false;
 
     public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
@@ -196,11 +312,19 @@ public class BT747cmd implements bt747.model.ModelListener {
             downloadIsSuccessFull = true;
             break;
         case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
-            // // When the data on the device is not the same, overwrite
-            // // automatically.
-            System.out.println("Overwriting previously downloaded data"
-                    + " that looks different.");
-            c.replyToOkToOverwrite(true);
+            if (overwriteDownloadOk) {
+                // // When the data on the device is not the same, overwrite
+                // // automatically.
+                System.out.println("Overwriting previously downloaded data"
+                        + " that looks different.");
+                c.replyToOkToOverwrite(true);
+            } else {
+                System.out
+                        .println("\n#### DOWNLOAD ABORTED BECAUSE DATA ON DISK IS DIFFERENT ####");
+                System.out
+                        .println("\n####    Change destination file or use '-overwrite'     ####");
+                c.replyToOkToOverwrite(false);
+            }
             break;
         case ModelEvent.ERASE_ONGOING_NEED_POPUP:
             setEraseOngoing(true);
@@ -231,7 +355,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 // + m.getOutstandingCommandsCount());
                 // System.out.flush();
                 Thread.sleep(50);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
                 // Do nothing
             }
@@ -277,7 +401,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         while (getEraseOngoing()) {
             try {
                 Thread.sleep(50);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
                 // Do nothing
             }
@@ -321,9 +445,9 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         c.setChunkSize(0x00010000);
 
-        if (options.has("d")) {
+        if (options.has(OPT_DEBUG)) {
             Integer debugLevel;
-            debugLevel = (Integer) (options.valueOf("d"));
+            debugLevel = (Integer) (options.valueOf(OPT_DEBUG));
             switch (debugLevel) {
             case 1:
                 c.setDebug(true);
@@ -340,9 +464,9 @@ public class BT747cmd implements bt747.model.ModelListener {
         // Default value
         c.setStringOpt(AppSettings.LOGFILEPATH, "BT747_log.bin");
 
-        if (options.has("f")) {
+        if (options.has(OPT_FILE_BASENAME)) {
             // Basename of files.
-            String fullname = options.argumentOf("f");
+            final String fullname = options.argumentOf(OPT_FILE_BASENAME);
             String basename;
             int splitIdx;
             String path = "";
@@ -365,25 +489,25 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         // Input is "/BT747/BT747_sample.bin"
-        if (options.has("b")) {
-            c.setStringOpt(AppSettings.LOGFILEPATH, options.argumentOf("b"));
+        if (options.has(OPT_BINARY_FILE)) {
+            c.setStringOpt(AppSettings.LOGFILEPATH, options.argumentOf(OPT_BINARY_FILE));
         }
 
-        if (options.has("s")) {
-            c.setBaudRate((((Integer) options.valueOf("s")).intValue()));
+        if (options.has(OPT_SERIAL_SPEED)) {
+            c.setBaudRate((((Integer) options.valueOf(OPT_SERIAL_SPEED)).intValue()));
         }
 
-        if (options.has("p")) {
+        if (options.has(OPT_SERIAL_PORT)) {
             String portStr;
-            portStr = (String) options.valueOf("p");
+            portStr = (String) options.valueOf(OPT_SERIAL_PORT);
             c.setStringOpt(Model.FREETEXTPORT, portStr);
         } else {
             // c.setUsb();
         }
 
-        if (options.has("height")) {
+        if (options.has(OPT_HEIGHT)) {
             String heightOpt;
-            heightOpt = ((String) options.valueOf("height")).toUpperCase();
+            heightOpt = ((String) options.valueOf(OPT_HEIGHT)).toUpperCase();
             if (heightOpt.equals("AUTOMATIC")) {
                 c.setHeightConversionMode(Model.HEIGHT_AUTOMATIC);
             } else if (heightOpt.equals("MSL_TO_WGS84")) {
@@ -398,24 +522,24 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
         }
 
-        if (options.has("UTC")) {
-            Integer offset = (Integer) options.valueOf("UTC");
+        if (options.has(OPT_UTC)) {
+            final Integer offset = (Integer) options.valueOf(OPT_UTC);
             c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, offset);
         }
 
-        if (options.has("color")) {
-            c.setColorValidTrack((String) options.valueOf("color"));
+        if (options.has(OPT_COLOR)) {
+            c.setColorValidTrack((String) options.valueOf(OPT_COLOR));
             // Default: bad color is the same
-            c.setColorInvalidTrack((String) options.valueOf("color"));
+            c.setColorInvalidTrack((String) options.valueOf(OPT_COLOR));
         }
 
-        if (options.has("badcolor")) {
+        if (options.has(OPT_BADCOLOR)) {
             // Overrides previous default setting in "color"
-            c.setColorInvalidTrack((String) options.valueOf("badcolor"));
+            c.setColorInvalidTrack((String) options.valueOf(OPT_BADCOLOR));
         }
 
-        if (options.has("splittype")) {
-            String option = ((String) options.valueOf("splittype"))
+        if (options.has(OPT_SPLITTYPE)) {
+            final String option = ((String) options.valueOf(OPT_SPLITTYPE))
                     .toUpperCase();
             /**
              * The way we split the input track:<br>
@@ -434,20 +558,20 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
         }
 
-        if (options.has("timesplit")) {
-            Integer split = (Integer) options.valueOf("timesplit");
+        if (options.has(OPT_TIMESPLIT)) {
+            final Integer split = (Integer) options.valueOf(OPT_TIMESPLIT);
             c.setTrkSep(split);
         }
 
         // Options for which a connection is needed.
-        if (options.has("p") || (options.has("a") && !(options.has("b")))
-                || options.has("l") || options.has("m") || options.has("r")
-                || options.has("E") || options.has("o") || options.has("R")) {
+        if (options.has(OPT_SERIAL_PORT) || (options.has(OPT_DOWNLOAD) && !(options.has(OPT_BINARY_FILE)))
+                || options.has(OPT_LOGGING_ON_OFF) || options.has(OPT_OVERLAP_STOP_SETTING) || options.has(OPT_SET_LOG_CRITERIA)
+                || options.has(OPT_ERASE_MEMORY) || options.has(OPT_SET_LOG_FIELDS) || options.has(OPT_RECOVER_LOGGER)) {
             c.connectGPS();
         }
 
-        if (options.has("device")) {
-            String arg = options.argumentOf("l").toLowerCase();
+        if (options.has(OPT_DEVICETYPE)) {
+            final String arg = options.argumentOf(OPT_LOGGING_ON_OFF).toLowerCase();
             // AppController.GPS_TYPE_DEFAULT:
             // AppController.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
             // AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
@@ -464,12 +588,16 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.setIntOpt(AppSettings.GPSTYPE, deviceType);
         }
 
-        if (options.has("trkptinfo")) {
+        if (options.has(OPT_TRKPTINFO)) {
             c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, true);
         }
 
-        if (options.has("trkptname")) {
+        if (options.has(OPT_TRKPTNAME)) {
             c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, true);
+        }
+
+        if (options.has(OPT_OVERWRITE)) {
+            overwriteDownloadOk = true;
         }
 
         if (m.isConnected()) {
@@ -478,7 +606,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.reqLogMemUsed();
             c.reqInitialLogMode();
             c.reqMtkLogVersion();
-            
+
             // c.req
             // c.reqMtkLogVersion();
 
@@ -520,14 +648,14 @@ public class BT747cmd implements bt747.model.ModelListener {
             // printf(">> Retrieving %u (0x%08X) bytes of log data from
             // device...\n", $bytes_to_read, $bytes_to_read);
 
-            if (options.has("r")) {
-                List<?> list = options.valuesOf("r");
+            if (options.has(OPT_SET_LOG_CRITERIA)) {
+                final List<?> list = options.valuesOf(OPT_SET_LOG_CRITERIA);
                 if (list.size() == 3) {
                     System.out
                             .println(">> Setting recording criteria: time, distance, speed\n");
-                    int time = (Integer) list.get(0);
-                    int speed = (Integer) list.get(1);
-                    int distance = (Integer) list.get(2);
+                    final int time = (Integer) list.get(0);
+                    final int speed = (Integer) list.get(1);
+                    final int distance = (Integer) list.get(2);
                     System.out.println("Setting time interval to " + time);
                     c.setLogTimeInterval(time * 10);
                     System.out.println("Setting speed interval to " + speed);
@@ -543,9 +671,9 @@ public class BT747cmd implements bt747.model.ModelListener {
 
             flushOutstandingCmds();
 
-            if (options.has("o")) {
-                List<?> list = options.valuesOf("o");
-                Iterator<?> iter = list.iterator();
+            if (options.has(OPT_SET_LOG_FIELDS)) {
+                final List<?> list = options.valuesOf(OPT_SET_LOG_FIELDS);
+                final Iterator<?> iter = list.iterator();
 
                 int newLogFormat = m.getLogFormat();
                 while (iter.hasNext()) {
@@ -557,7 +685,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                             field = field.substring(1);
                             enableField = false;
                         }
-                        if (field.equals("UTC")) {
+                        if (field.equals(OPT_UTC)) {
                             logField = (1 << BT747Constants.FMT_UTC_IDX);
                         } else if (field.equals("VALID")) {
                             logField = (1 << BT747Constants.FMT_VALID_IDX);
@@ -617,8 +745,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 
                 c.setLogFormat(newLogFormat);
             }
-            if (options.has("l")) {
-                String arg = options.argumentOf("l").toLowerCase();
+            if (options.has(OPT_LOGGING_ON_OFF)) {
+                final String arg = options.argumentOf(OPT_LOGGING_ON_OFF).toLowerCase();
                 if (arg.equals("on")) {
                     System.out.println(">> Switch recording to ON\n");
                     c.setLoggingActive(true);
@@ -631,8 +759,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                 }
             }
 
-            if (options.has("m")) {
-                String arg = options.argumentOf("l").toLowerCase();
+            if (options.has(OPT_OVERLAP_STOP_SETTING)) {
+                final String arg = options.argumentOf(OPT_LOGGING_ON_OFF).toLowerCase();
                 if (arg.equals("overlap")) {
                     System.out
                             .println(">> Setting method OVERLAP on memory full\n");
@@ -651,12 +779,14 @@ public class BT747cmd implements bt747.model.ModelListener {
             System.out.println("Device reports " + m.logMemUsed()
                     + " bytes used (" + m.logMemUsedPercent() + "% of "
                     + m.logMemSize() + ").");
-            System.out.println("Device was in " + (m.isInitialLogOverwrite()?"OVERLAP":"STOP") +" on initialisation");
+            System.out.println("Device was in "
+                    + (m.isInitialLogOverwrite() ? "OVERLAP" : "STOP")
+                    + " on initialisation");
 
-            if (options.has("a") && !(options.has("b"))) {
+            if (options.has(OPT_DOWNLOAD) && !(options.has(OPT_BINARY_FILE))) {
                 c.setDownloadMethod(Model.DOWNLOAD_SMART);
-                if (options.has("download-method")) {
-                    String arg = options.argumentOf("download-method")
+                if (options.has(OPT_DOWNLOAD_METHOD)) {
+                    final String arg = options.argumentOf(OPT_DOWNLOAD_METHOD)
                             .toLowerCase();
                     if (arg.equals("full")) {
                         c.setDownloadMethod(Model.DOWNLOAD_FULL);
@@ -680,7 +810,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                         // System.out.flush();
                         progressUpdate();
                         Thread.sleep(50);
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         e.printStackTrace();
                         // Do nothing
                     }
@@ -688,13 +818,13 @@ public class BT747cmd implements bt747.model.ModelListener {
 
             }
 
-            if (options.has("E") && downloadIsSuccessFull) {
+            if (options.has(OPT_ERASE_MEMORY) && downloadIsSuccessFull) {
                 System.out.println(">> Erasing log memory...\n");
                 c.eraseLog();
                 waitForErase();
             }
 
-            if (options.has("R") && downloadIsSuccessFull) {
+            if (options.has(OPT_RECOVER_LOGGER) && downloadIsSuccessFull) {
                 System.out.println(">> Recover from disable log:"
                         + " ENABLE LOG and FORMAT LOG ALL...\n");
                 c.recoveryEraseLog();
@@ -703,7 +833,7 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.closeGPS();
         }
 
-        if (options.has("t")) {
+        if (options.has(OPT_CREATE_GPX_TRACKS)) {
             System.out.println("Converting to GPX (trackpoints)");
             c
                     .setTrkPtValid(
@@ -715,9 +845,10 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.setTrkPtRCR(0xFFFFFFFF);
             // The output filename does not depend on the time.
             c.setFileNameBuilder(new BT747FileName() {
-                public String getOutputFileName(String baseName,
-                        int utcTimeSeconds, String proposedExtension,
-                        String proposedTimeSpec) {
+                public String getOutputFileName(final String baseName,
+                        final int utcTimeSeconds,
+                        final String proposedExtension,
+                        final String proposedTimeSpec) {
                     switch (m.getOutputFileSplitType()) {
                     case 0:
                         return baseName + "_trk" + proposedExtension;
@@ -727,13 +858,13 @@ public class BT747cmd implements bt747.model.ModelListener {
                     }
                 }
             });
-            int error = convertLog(Model.GPX_LOGTYPE);
+            final int error = convertLog(Model.GPX_LOGTYPE);
             if (error != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
         }
 
-        if (options.has("w")) {
+        if (options.has(OPT_CREATE_GPX_WAYPOINTS)) {
             System.out.println("Converting to GPX (waypoints)");
             c
                     .setTrkPtValid(
@@ -745,9 +876,10 @@ public class BT747cmd implements bt747.model.ModelListener {
                     | BT747Constants.RCR_ALL_APP_MASK);
             c.setTrkPtRCR(0);
             c.setFileNameBuilder(new BT747FileName() {
-                public String getOutputFileName(String baseName,
-                        int utcTimeSeconds, String proposedExtension,
-                        String proposedTimeSpec) {
+                public String getOutputFileName(final String baseName,
+                        final int utcTimeSeconds,
+                        final String proposedExtension,
+                        final String proposedTimeSpec) {
                     switch (m.getOutputFileSplitType()) {
                     case 0:
                         return baseName + "_wpt" + proposedExtension;
@@ -757,18 +889,18 @@ public class BT747cmd implements bt747.model.ModelListener {
                     }
                 }
             });
-            int error = convertLog(Model.GPX_LOGTYPE);
+            final int error = convertLog(Model.GPX_LOGTYPE);
             if (error != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
         }
 
-        if (options.has("outtype")) {
-            List<?> list = options.valuesOf("outtype");
-            Iterator<?> iter = list.iterator();
+        if (options.has(OPT_OUTPUT_TYPE)) {
+            final List<?> list = options.valuesOf(OPT_OUTPUT_TYPE);
+            final Iterator<?> iter = list.iterator();
 
             while (iter.hasNext()) {
-                String typeStr = ((String) iter.next()).toUpperCase();
+                final String typeStr = ((String) iter.next()).toUpperCase();
                 int type = Model.NO_LOG_LOGTYPE;
                 if (typeStr.equals("GPX")) {
                     type = Model.GPX_LOGTYPE;
@@ -801,9 +933,11 @@ public class BT747cmd implements bt747.model.ModelListener {
                             | BT747Constants.RCR_ALL_APP_MASK);
                     c.setTrkPtRCR(0xFFFFFFFF);
                     c.setFileNameBuilder(new BT747FileName() {
-                        public String getOutputFileName(String baseName,
-                                int utcTimeSeconds, String proposedExtension,
-                                String proposedTimeSpec) {
+                        public String getOutputFileName(
+                                final String baseName,
+                                final int utcTimeSeconds,
+                                final String proposedExtension,
+                                final String proposedTimeSpec) {
                             switch (m.getOutputFileSplitType()) {
                             case 0:
                                 return baseName + proposedExtension;
@@ -813,12 +947,21 @@ public class BT747cmd implements bt747.model.ModelListener {
                             }
                         }
                     });
-                    int error = convertLog(type);
+                    final int error = convertLog(type);
                     if (error != 0) {
                         reportError(c.getLastError(), c.getLastErrorInfo());
                     }
                 }
             }
+            if (options.has(OPT_DOWNLOAD) && !(options.has(OPT_BINARY_FILE))) {
+                if (!downloadIsSuccessFull) {
+                    System.out
+                            .println("\n####    DOWNLOAD FAILED !!!!!!!!!!!!!!!!!!!   ####");
+                    System.out
+                            .println("#### [Conversions used partial or wrong data] ####");
+                }
+            }
+
         }
         System.exit(0);
     }
@@ -827,35 +970,35 @@ public class BT747cmd implements bt747.model.ModelListener {
      * @param args
      *                the command line arguments
      */
-    public static void main(String args[]) {
-        OptionParser parser = new OptionParser() {
+    public static void main(final String args[]) {
+        final OptionParser parser = new OptionParser() {
             {
-                accepts("h", "Displays help");
-                accepts("a",
+                accepts(OPT_HELP, "Displays help");
+                accepts(OPT_DOWNLOAD,
                         "Download the log memory (default method = smart)");
                 accepts(
-                        "b",
+                        OPT_BINARY_FILE,
                         "Do not read device, read a previously saved file."
                                 + "The file type is selected according to the filename extension."
                                 + "Recognized file extensions are .bin, .csv, .gpx, .trl,"
                                 + ".nmea, .nme, .nma, .txt, .log, .sr .")
                         .withRequiredArg().describedAs("filename.bin")
                         .ofType(String.class);
-                accepts("d", "Debug level: 0..2").withRequiredArg()
+                accepts(OPT_DEBUG, "Debug level: 0..2").withRequiredArg()
                         .describedAs("DEBUG_LEVEL").ofType(Integer.class);
 
-                accepts("E", "Erase data log memory");
-                accepts("f", "Base name for saved files (.bin and other)")
+                accepts(OPT_ERASE_MEMORY, "Erase data log memory");
+                accepts(OPT_FILE_BASENAME, "Base name for saved files (.bin and other)")
                         .withRequiredArg().describedAs("filename").ofType(
                                 String.class);
-                accepts("l", "Turn logging ON/OFF").withRequiredArg()
+                accepts(OPT_LOGGING_ON_OFF, "Turn logging ON/OFF").withRequiredArg()
                         .describedAs("(on|off)").ofType(String.class);
-                accepts("m",
+                accepts(OPT_OVERLAP_STOP_SETTING,
                         "Set STOP/OVERLAP recording method on memory full")
                         .withRequiredArg().describedAs("(stop|overlap)")
                         .ofType(String.class);
                 accepts(
-                        "o",
+                        OPT_SET_LOG_FIELDS,
                         "Enable or disable log fields "
                                 + "(FIELD1,-FIELD2,...), available fields: "
                                 + "UTC,VALID,LATITUDE,LONGITUDE,HEIGHT,SPEED,HEADING,"
@@ -864,64 +1007,66 @@ public class BT747cmd implements bt747.model.ModelListener {
                                 + "DISTANCE,VALID_ONLY").withRequiredArg()
                         .describedAs("log_format").withValuesSeparatedBy(',')
                         .ofType(String.class);
-                accepts("p", "Communication port, default: /dev/ttyUSB0")
+                accepts(OPT_SERIAL_PORT, "Communication port, default: /dev/ttyUSB0")
                         .withRequiredArg().describedAs("port").ofType(
                                 String.class);
-                accepts("R",
+                accepts(OPT_RECOVER_LOGGER,
                         "Recover from disabled log: erase data and reset recording criteria");
-                accepts("r", "Set logging criteria (zero to disable)")
+                accepts(OPT_SET_LOG_CRITERIA, "Set logging criteria (zero to disable)")
                         .withRequiredArg().describedAs("time:distance:speed")
                         .ofType(Integer.class).withValuesSeparatedBy(':');
-                accepts("s", "Serial port speed, default 115200 baud")
+                accepts(OPT_SERIAL_SPEED, "Serial port speed, default 115200 baud")
                         .withRequiredArg().describedAs("speed").ofType(
                                 Integer.class);
-                accepts("t", "Create a gpx file with tracks");
-                accepts("v", "Print BT747 version and exit");
-                accepts("w", "Create a gpx file with waypoints");
+                accepts(OPT_CREATE_GPX_TRACKS, "Create a gpx file with tracks");
+                accepts(OPT_VERSION_ONLY, "Print BT747 version and exit");
+                accepts(OPT_CREATE_GPX_WAYPOINTS, "Create a gpx file with waypoints");
                 accepts(
-                        "outtype",
+                        OPT_OUTPUT_TYPE,
                         "Create a gpx file of type NMEA, GPX, GMAP, KML, KMZ, CSV, PLT, TRK."
                                 + "More than one format can be specified when separated with ','")
                         .withRequiredArg().describedAs("OUTPUTTYPE")
                         .withValuesSeparatedBy(',');
-                accepts("UTC", "Define UTC offset to apply to output file")
+                accepts(OPT_UTC, "Define UTC offset to apply to output file")
                         .withRequiredArg().describedAs("UTCoffset").ofType(
                                 Integer.class);
-                accepts("device",
+                accepts(OPT_DEVICETYPE,
                         "Make sure the raw bin file is correctly interpreted (DEFAULT, HOLUX).")
                         .withRequiredArg().describedAs("DEVICE");
-                accepts("trkptinfo",
+                accepts(OPT_TRKPTINFO,
                         "Add record information for each trackpoint.");
-                accepts("trkptname",
+                accepts(OPT_TRKPTNAME,
                         "Give each trackpoint a name (based on time)");
-                accepts("color",
+                accepts(OPT_COLOR,
                         "Color to use for tracks (HEX RGB value, ex 00FF00)")
                         .withRequiredArg().describedAs("HEXCOLOR");
-                accepts("badcolor",
+                accepts(OPT_BADCOLOR,
                         "Color to use for 'bad part' in tracks  (HEX RGB value), ex 00FFFF")
                         .withRequiredArg().describedAs("HEXCOLOR");
                 ;
-                accepts("splittype",
+                accepts(OPT_SPLITTYPE,
                         "The way to split the input data: NOSPLIT, DAY or TRACK")
                         .withRequiredArg().describedAs("SPLITTYPE");
-                accepts("timesplit",
+                accepts(OPT_TIMESPLIT,
                         "Time separation in minutes needed for track segment or track separation.")
                         .withRequiredArg().describedAs("MINUTES").ofType(
                                 Integer.class);
                 accepts(
-                        "height",
+                        OPT_HEIGHT,
                         "Adjust height.  According to formats when 'AUTOMATIC',"
                                 + "WGS84 height (elevation) to MSL (Mean Sea Level) when 'MSL',"
                                 + "MSL to WGS84 when 'WGS84'")
                         .withRequiredArg().describedAs(
                                 "AUTOMATIC|KEEP|WGS84_TO_MSL|MSL_TO_WGS84");
                 accepts(
-                        "download-method",
+                        OPT_DOWNLOAD_METHOD,
                         "Select the download method."
                                 + " FULL = All the memory,"
                                 + " SMART=According to previous download,"
                                 + " REPORTED=Ignores overwrite setting and download reported used memory.")
                         .withRequiredArg().describedAs("FULL|SMART|REPORTED");
+                accepts(OPT_OVERWRITE,
+                        "Overwrite data even if downloaded data is different");
             }
         };
 
@@ -931,14 +1076,14 @@ public class BT747cmd implements bt747.model.ModelListener {
                     .println("BT747 Cmd V" + bt747.Version.VERSION_NUMBER
                             + " build " + bt747.Version.BUILD_STR
                             + " GPL V3 LICENSE");
-            if (options.has("h") || args.length == 0) {
+            if (options.has(OPT_HELP) || (args.length == 0)) {
                 parser.printHelpOn(System.out);
-            } else if (options.has("v")) {
+            } else if (options.has(OPT_VERSION_ONLY)) {
             } else {
                 java.awt.EventQueue.invokeLater(new Runnable() {
 
                     Model m = new Model();
-                    Controller c = new Controller(m);
+                    J2SEController c = new J2SEController(m);
 
                     public void run() {
                         new BT747cmd(m, c, options);
@@ -946,10 +1091,10 @@ public class BT747cmd implements bt747.model.ModelListener {
                 });
                 // parser.printHelpOn(System.err);
             }
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             try {
                 parser.printHelpOn(System.err);
-            } catch (Exception e) {
+            } catch (final Exception e) {
             } finally {
 
             }

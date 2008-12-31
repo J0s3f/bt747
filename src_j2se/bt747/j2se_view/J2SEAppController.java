@@ -19,12 +19,6 @@ import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
-import gps.log.in.BT747LogConvert;
-import gps.log.in.CSVLogConvert;
-import gps.log.in.DPL700LogConvert;
-import gps.log.in.GPSLogConvertInterface;
-import gps.log.in.HoluxTrlLogConvert;
-import gps.log.in.NMEALogConvert;
 import gps.log.out.AllWayPointStyles;
 
 import java.awt.Component;
@@ -37,7 +31,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.URL;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -62,7 +55,7 @@ import bt747.sys.Generic;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747Vector;
 
-public final class J2SEAppController extends Controller {
+public final class J2SEAppController extends J2SEController {
 
     private final static String platform = java.lang.System
             .getProperty("os.name");
@@ -89,6 +82,8 @@ public final class J2SEAppController extends Controller {
 
     public static final String MAPCACHEDIRECTORYPROPERTY = "mapcachedirectory";
 
+    J2SEAppModel m;
+    
     private static final void setAppIcon() {
         URL u = BT747Main.class.getResource("/" + iconPath);
 
@@ -124,11 +119,6 @@ public final class J2SEAppController extends Controller {
      * the future.
      */
     private Controller c;
-
-    /**
-     * Reference to the model.
-     */
-    private J2SEAppModel m;
 
     /** Options for the first warning message. */
     private static String[] C_ERASE_OR_CANCEL;
@@ -902,50 +892,6 @@ public final class J2SEAppController extends Controller {
                 }
             }
         }.start();
-    }
-
-    public GPSLogConvertInterface getInputConversionInstance(final int logType) {
-        String logFileLC = m.getStringOpt(Model.LOGFILEPATH).toLowerCase();
-        if (logFileLC.endsWith(".gpx")) {
-            GPSLogConvertInterface lc = new GPXLogConvert();
-            String parameters = "";
-            int sourceHeightReference = getHeightReference(Model.GPX_LOGTYPE);
-            int destinationHeightReference = getHeightReference(logType);
-
-            switch (m.getHeightConversionMode()) {
-            case Model.HEIGHT_AUTOMATIC:
-                if (sourceHeightReference == HEIGHT_MSL
-                        && destinationHeightReference == HEIGHT_WGS84) {
-                    /* Need to add the height in automatic mode */
-                    lc.setConvertWGS84ToMSL(+1);
-                } else if (sourceHeightReference == HEIGHT_WGS84
-                        && destinationHeightReference == HEIGHT_MSL) {
-                    /* Need to substract the height in automatic mode */
-                    lc.setConvertWGS84ToMSL(-1);
-                } else {
-                    /* Do nothing */
-                    lc.setConvertWGS84ToMSL(0);
-                }
-                break;
-            case Model.HEIGHT_WGS84_TO_MSL:
-                lc.setConvertWGS84ToMSL(-1);
-                break;
-            case Model.HEIGHT_NOCHANGE:
-                lc.setConvertWGS84ToMSL(0);
-                break;
-            case Model.HEIGHT_MSL_TO_WGS84:
-                lc.setConvertWGS84ToMSL(1);
-                break;
-            }
-
-            if (Generic.isDebug()) {
-                Generic.debug(parameters);
-            }
-
-            return lc;
-        } else {
-            return super.getInputConversionInstance(logType);
-        }
     }
 
     public final J2SEAppModel getAppModel() {
