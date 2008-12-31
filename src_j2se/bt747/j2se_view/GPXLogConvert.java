@@ -6,6 +6,7 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
+import gps.log.in.CommonIn;
 import gps.log.in.GPSFileConverterInterface;
 import gps.log.in.GPSLogConvertInterface;
 
@@ -78,6 +79,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
                                         gpsFile
                                                 .writeLogFmtHeader(activeFields);
                                     }
+                                    CommonIn.convertHeight(r, factorConversionWGS84ToMSL);
                                     gpsFile.addLogRecord(r);
                                 }
                                 r.recCount = reccount++;
@@ -98,7 +100,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
         return 0;
     }
 
-    private int convertMode = 0;
+    private int factorConversionWGS84ToMSL = 0;
 
     /*
      * (non-Javadoc)
@@ -106,7 +108,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
      * @see gps.log.in.GPSLogConvertInterface#setConvertWGS84ToMSL(int)
      */
     public void setConvertWGS84ToMSL(int mode) {
-        convertMode = mode;
+        factorConversionWGS84ToMSL = mode;
     }
 
     /*
