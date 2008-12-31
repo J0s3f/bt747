@@ -176,7 +176,6 @@
               -overloadaggressively
               -repackageclasses ''
               -allowaccessmodification
-              
                       -keep public class bt747.ui.MessageBox { *; }
               
           -->
@@ -187,7 +186,6 @@
 		          obfuscate="false"
 		          allowaccessmodification="${proguard.accessmodification}"
 		          flattenpackagehierarchy=""
-		          repackageclasses="false"
 		          printusage="false"
 		          overloadaggressively="false"
 		          verbose="true"
@@ -393,7 +391,6 @@
 		          defaultpackage=""
 		          optimize="${proguard.optimize}"
 		          obfuscate="false"
-		          repackageclasses="false"
 		          printusage="false"
 		          overloadaggressively="false"
 		          verbose="true"
@@ -433,7 +430,6 @@
                   defaultpackage=""
                   optimize="${proguard.optimize}"
                   obfuscate="false"
-                  repackageclasses="false"
                   printusage="false"
                   overloadaggressively="false"
                   verbose="true"
@@ -531,7 +527,6 @@
 		          defaultpackage=""
 		          optimize="${proguard.optimize}"
 		          obfuscate="false"
-		          repackageclasses="false"
 		          printusage="false"
 		          overloadaggressively="false"
 		          verbose="true"
@@ -556,6 +551,7 @@
 			            -keep public class bt747.sys.Settings { *; }
 			            -keep public class bt747.sys.File { *; }
 			            -keep public class gps.log.out.CommonOut { *; }
+			            -keep public class gps.log.out.CommonIn { *; }
                         -keep public class gps.BT747Constants { *; }
                         -keep public class gps.GpsEvent { *; }
                         -keep public class gps.GPSListener { *; }
@@ -679,7 +675,6 @@
 		          obfuscate="false"
 		          allowaccessmodification="no"
 		          flattenpackagehierarchy=""
-		          repackageclasses="false"
 		          printusage="false"
 		          overloadaggressively="false"
 		          verbose="true"
@@ -1138,7 +1133,7 @@
 		          obfuscate="${proguard.obfuscate}"
 		          allowaccessmodification="${proguard.accessmodification}"
 		          flattenpackagehierarchy=""
-		          repackageclasses="${proguard.repackage}"
+		          repackageclasses=""
 		          printusage="false"
 		          overloadaggressively="${proguard.overload}"
 		          verbose="true"
@@ -1146,7 +1141,6 @@
 		          optimizationpasses="${proguard.optimizationpasses}"
 		          printmapping="${dist}/${ant.project.name}.mapping"
 		>
-
 			<keep name="${mainClass}" />
 
 			<!-- to check if methods are Waba compatible -->
