@@ -1,3 +1,7 @@
+Version 1.66.4
+* Read GPX files.
+* UPdate to BT747Cmd to select download method.
+
 Version 1.66.3
 * Fixed problem in KML/HTML and possibly some other output formats where data
   from other files was repeated in 'One file per day' mode.
