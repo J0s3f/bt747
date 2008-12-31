@@ -130,7 +130,7 @@ public class Controller {
         initValues();
     }
 
-    public final void setModel(final Model model) {
+    public void setModel(final Model model) {
         this.m = model;
     }
 
