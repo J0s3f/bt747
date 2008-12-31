@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.j2se_view;
 
 import gps.BT747Constants;
@@ -19,6 +19,12 @@ import gps.connection.GPSPort;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
+import gps.log.in.BT747LogConvert;
+import gps.log.in.CSVLogConvert;
+import gps.log.in.DPL700LogConvert;
+import gps.log.in.GPSLogConvertInterface;
+import gps.log.in.HoluxTrlLogConvert;
+import gps.log.in.NMEALogConvert;
 import gps.log.out.AllWayPointStyles;
 
 import java.awt.Component;
@@ -51,6 +57,7 @@ import javax.swing.UIManager;
 import bt747.Version;
 import bt747.model.BT747View;
 import bt747.model.Controller;
+import bt747.model.Model;
 import bt747.sys.Generic;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747Vector;
@@ -79,7 +86,7 @@ public final class J2SEAppController extends Controller {
 
     private static Image app128Icon;
     private static final String icon128Path = "icons/bt747_128x128.gif";
-    
+
     public static final String MAPCACHEDIRECTORYPROPERTY = "mapcachedirectory";
 
     private static final void setAppIcon() {
@@ -113,8 +120,8 @@ public final class J2SEAppController extends Controller {
     }
 
     /**
-     * The lower level controller. This should become a separate instance in the
-     * future.
+     * The lower level controller. This should become a separate instance in
+     * the future.
      */
     private Controller c;
 
@@ -143,7 +150,8 @@ public final class J2SEAppController extends Controller {
              * Options for the second warning message - reverse order on
              * purpose.
              */
-            String[] my_CANCEL_OR_CONFIRM_ERASE = { getString("CANCEL_BUTTON"),
+            String[] my_CANCEL_OR_CONFIRM_ERASE = {
+                    getString("CANCEL_BUTTON"),
                     getString("CONFIRM_ERASE_BUTTON") };
             C_ERASE_OR_CANCEL = my_ERASE_OR_CANCEL;
             C_YES_OR_CANCEL = my_YES_OR_CANCEL;
@@ -151,7 +159,6 @@ public final class J2SEAppController extends Controller {
         }
         /** Options for the first warning message. */
     }
-
 
     public static final Locale localeFromString(final String localeStr) {
         if (localeStr.length() != 0) {
@@ -170,13 +177,14 @@ public final class J2SEAppController extends Controller {
                 arg3 = localeStr.substring(6);
 
             }
-            return(new Locale(arg1, arg2, arg3));
+            return (new Locale(arg1, arg2, arg3));
         }
         return Locale.getDefault();
     }
+
     /**
      * @param model
-     *            The model to associate with this controller.
+     *                The model to associate with this controller.
      */
     public J2SEAppController(final J2SEAppModel model) {
         initGpsPort();
@@ -205,8 +213,8 @@ public final class J2SEAppController extends Controller {
      * Convert the log given the provided parameters using other methods.
      * 
      * @param logType
-     *            Indicates the type of log that should be written. For example
-     *            Model.CSV_LOGTYPE .
+     *                Indicates the type of log that should be written. For
+     *                example Model.CSV_LOGTYPE .
      * @see Model#CSV_LOGTYPE
      * @see Model#TRK_LOGTYPE
      * @see Model#KML_LOGTYPE
@@ -255,7 +263,7 @@ public final class J2SEAppController extends Controller {
      * I18N. Internationalization - get the localized string.
      * 
      * @param s
-     *            String reference for localization.
+     *                String reference for localization.
      * @return Localized String.
      */
     public static final String getString(final String s) {
@@ -275,17 +283,17 @@ public final class J2SEAppController extends Controller {
         int choice;
         choice = JOptionPane.showOptionDialog(rootFrame,
                 getString("ERASE_WARNING_1_TEXT"),
-                getString("ERASE_WARNING_TITLE"), JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.WARNING_MESSAGE, null, C_ERASE_OR_CANCEL,
-                C_ERASE_OR_CANCEL[1]);
+                getString("ERASE_WARNING_TITLE"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, C_ERASE_OR_CANCEL, C_ERASE_OR_CANCEL[1]);
 
         if (choice == 0) {
             choice = JOptionPane.showOptionDialog(rootFrame,
                     getString("ERASE_WARNING_2_TEXT"),
                     getString("ERASE_WARNING_TITLE"),
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-                    null, C_CANCEL_OR_CONFIRM_ERASE,
-                    C_CANCEL_OR_CONFIRM_ERASE[0]);
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE, null,
+                    C_CANCEL_OR_CONFIRM_ERASE, C_CANCEL_OR_CONFIRM_ERASE[0]);
             if (choice == 1) {
                 // Erase log
                 c.recoveryEraseLog();
@@ -295,18 +303,19 @@ public final class J2SEAppController extends Controller {
     }
 
     /**
-     * (User) request to change the log format. Warns about requirement to erase
-     * the log too.
+     * (User) request to change the log format. Warns about requirement to
+     * erase the log too.
      * 
      * @param logFormat
-     *            The logFormat to set upon erase.
+     *                The logFormat to set upon erase.
      */
     public final void changeLogFormatAndErase(final int logFormat) {
         int choice;
         choice = JOptionPane.showOptionDialog(rootFrame,
-                getString("FORMAT_ERASE_WARNING_TEXT"), getString("ATTENTION"),
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-                null, C_ERASE_OR_CANCEL, C_ERASE_OR_CANCEL[1]);
+                getString("FORMAT_ERASE_WARNING_TEXT"),
+                getString("ATTENTION"), JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.WARNING_MESSAGE, null, C_ERASE_OR_CANCEL,
+                C_ERASE_OR_CANCEL[1]);
 
         if (choice == 0) {
             choice = JOptionPane.showOptionDialog(rootFrame,
@@ -323,11 +332,11 @@ public final class J2SEAppController extends Controller {
     }
 
     /**
-     * (User) request to change the log format. The log is not erased and may be
-     * incompatible with other applications.
+     * (User) request to change the log format. The log is not erased and may
+     * be incompatible with other applications.
      * 
      * @param logFormat
-     *            The new log format to set.
+     *                The new log format to set.
      */
     public final void changeLogFormat(final int logFormat) {
         int choice;
@@ -342,24 +351,24 @@ public final class J2SEAppController extends Controller {
     }
 
     /**
-     * (User) request to change the log format. Warns about requirement to erase
-     * the log too.
+     * (User) request to change the log format. Warns about requirement to
+     * erase the log too.
      */
     public final void eraseLogWithDialogs() {
         int choice;
         choice = JOptionPane.showOptionDialog(rootFrame,
                 getString("ERASE_WARNING_1_TEXT"),
-                getString("ERASE_WARNING_TITLE"), JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.WARNING_MESSAGE, null, C_ERASE_OR_CANCEL,
-                C_ERASE_OR_CANCEL[1]);
+                getString("ERASE_WARNING_TITLE"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, C_ERASE_OR_CANCEL, C_ERASE_OR_CANCEL[1]);
 
         if (choice == 0) {
             choice = JOptionPane.showOptionDialog(rootFrame,
                     getString("ERASE_WARNING_2_TEXT"),
                     getString("ERASE_WARNING_TITLE"),
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-                    null, C_CANCEL_OR_CONFIRM_ERASE,
-                    C_CANCEL_OR_CONFIRM_ERASE[0]);
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE, null,
+                    C_CANCEL_OR_CONFIRM_ERASE, C_CANCEL_OR_CONFIRM_ERASE[0]);
             if (choice == 1) {
                 // Erase log
                 c.eraseLog();
@@ -386,49 +395,50 @@ public final class J2SEAppController extends Controller {
     /**
      * Change the flashconfiguration but first request confirmation from the
      * user. The MTK device stores a number of settings in its internal flash
-     * which is different from the log memory. These settings are restored after
-     * loss of power for example.
+     * which is different from the log memory. These settings are restored
+     * after loss of power for example.
      * {@link Controller#setFlashUserOption(boolean, int, int, int, int, int, int, int, int, int, int)}
      * 
      * @param lock
-     *            When true, subsequent changes in these settings will be
-     *            impossible.
+     *                When true, subsequent changes in these settings will be
+     *                impossible.
      * @param updateRate
-     *            The 'fix period' of the GPS in ms. When this is 200, then the
-     *            Fix is 5Hz.
+     *                The 'fix period' of the GPS in ms. When this is 200,
+     *                then the Fix is 5Hz.
      * @param baudRate
-     *            The speed of the serial communication of the MTK chipset. Be
-     *            carefull - this may be the internal speed - not the external
-     *            speed!
+     *                The speed of the serial communication of the MTK
+     *                chipset. Be carefull - this may be the internal speed -
+     *                not the external speed!
      * @param periodGLL
-     *            The period of emission of the GLL sentence (relative to the
-     *            fix).
+     *                The period of emission of the GLL sentence (relative to
+     *                the fix).
      * @param periodRMC
-     *            The period of emission of the RMC sentence (relative to the
-     *            fix).
+     *                The period of emission of the RMC sentence (relative to
+     *                the fix).
      * @param periodVTG
-     *            The period of emission of the VTG sentence (relative to the
-     *            fix).
+     *                The period of emission of the VTG sentence (relative to
+     *                the fix).
      * @param periodGSA
-     *            The period of emission of the GSA sentence (relative to the
-     *            fix).
+     *                The period of emission of the GSA sentence (relative to
+     *                the fix).
      * @param periodGSV
-     *            The period of emission of the GSV sentence (relative to the
-     *            fix).
+     *                The period of emission of the GSV sentence (relative to
+     *                the fix).
      * @param periodGGA
-     *            The period of emission of the GGA sentence (relative to the
-     *            fix).
+     *                The period of emission of the GGA sentence (relative to
+     *                the fix).
      * @param periodZDA
-     *            The period of emission of the ZDA sentence (relative to the
-     *            fix).
+     *                The period of emission of the ZDA sentence (relative to
+     *                the fix).
      * @param periodMCHN
-     *            The period of emission of the MCHN sentence (relative to the
-     *            fix).
+     *                The period of emission of the MCHN sentence (relative to
+     *                the fix).
      */
-    public final void setFlashConfig(final boolean lock, final int updateRate,
-            final int baudRate, final int periodGLL, final int periodRMC,
-            final int periodVTG, final int periodGSA, final int periodGSV,
-            final int periodGGA, final int periodZDA, final int periodMCHN) {
+    public final void setFlashConfig(final boolean lock,
+            final int updateRate, final int baudRate, final int periodGLL,
+            final int periodRMC, final int periodVTG, final int periodGSA,
+            final int periodGSV, final int periodGGA, final int periodZDA,
+            final int periodMCHN) {
         String[] mbStr = { getString("WRITE_FLASH_BUTTON"),
                 getString("CANCEL_BUTTON") };
         int choice;
@@ -448,9 +458,9 @@ public final class J2SEAppController extends Controller {
      * Report an error.
      * 
      * @param error
-     *            The error number.
+     *                The error number.
      * @param errorInfo
-     *            A text string related to the error (filename, ...).
+     *                A text string related to the error (filename, ...).
      */
     private void reportError(final int error, final String errorInfo) {
         String errorMsg;
@@ -463,8 +473,8 @@ public final class J2SEAppController extends Controller {
             break;
         case BT747Constants.ERROR_NO_FILES_WERE_CREATED:
             JOptionPane.showMessageDialog(rootFrame,
-                    getString("NO_FILES_CREATED"), getString("WARNING_TITLE"),
-                    JOptionPane.WARNING_MESSAGE);
+                    getString("NO_FILES_CREATED"),
+                    getString("WARNING_TITLE"), JOptionPane.WARNING_MESSAGE);
             break;
         case BT747Constants.ERROR_READING_FILE:
             JOptionPane.showMessageDialog(rootFrame,
@@ -485,7 +495,7 @@ public final class J2SEAppController extends Controller {
      * Attach a view to the controller.
      * 
      * @param view
-     *            The view that must be attached.
+     *                The view that must be attached.
      */
     public final void addView(final BT747View view) {
         views.add(view);
@@ -629,7 +639,7 @@ public final class J2SEAppController extends Controller {
         mbEraseDialog = mbErase.createDialog(rootFrame,
                 getString("WAITING_ERASE_TITLE"));
         mbEraseDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        //mbEraseDialog.setVisible(true);
+        // mbEraseDialog.setVisible(true);
         // mbEraseDialog.addWindowListener(new WindowAdapter() {
         // public void windowClosing(WindowEvent we) {
         // setLabel("Thwarted user attempt to close window.");
@@ -689,7 +699,7 @@ public final class J2SEAppController extends Controller {
      * Show error message that file could not be opened.
      * 
      * @param fileName
-     *            The file that could not be opened.
+     *                The file that could not be opened.
      */
     public void couldNotOpenFileMessage(final String fileName) {
         JOptionPane.showMessageDialog(rootFrame,
@@ -715,9 +725,9 @@ public final class J2SEAppController extends Controller {
         return overwriteResp == JOptionPane.OK_OPTION;
     }
 
-    /***************************************************************************
+    /*************************************************************************
      * Find the appropriate look and feel for the system
-     **************************************************************************/
+     ************************************************************************/
     private static final String[] lookAndFeels = {
             "com.sun.java.swing.plaf.windows.WindowsLookAndFeel", // NOI18N
             "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel", // NOI18N
@@ -740,8 +750,8 @@ public final class J2SEAppController extends Controller {
     public static String lookAndFeelMsg = ""; // NOI18N
 
     /**
-     * Try setting a look and feel for the system - catch the Exception when not
-     * found.
+     * Try setting a look and feel for the system - catch the Exception when
+     * not found.
      * 
      * @return true if successfull
      */
@@ -811,22 +821,24 @@ public final class J2SEAppController extends Controller {
             return returnValue;
         }
     };
-    
+
     public final void selectMapCacheDirectory() {
         javax.swing.JFileChooser CacheDirChooser;
         File f = new File(m.getStringOpt(J2SEAppModel.MAPCACHEDIRECTORY));
         CacheDirChooser = new javax.swing.JFileChooser(f);
         CacheDirChooser.setSelectedFile(f);
-        CacheDirChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        CacheDirChooser
+                .setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         CacheDirChooser
                 .setToolTipText(getString("SelectCacheDirectory.tooltip"));
         // if (curDir.exists()) {
         // CacheDirChooser.setCurrentDirectory(getOutputFilePath());
         // }
-        if (CacheDirChooser.showDialog(rootFrame, getString("SetCacheDir.button")) == JFileChooser.APPROVE_OPTION) {
+        if (CacheDirChooser.showDialog(rootFrame,
+                getString("SetCacheDir.button")) == JFileChooser.APPROVE_OPTION) {
             try {
-                String relPath = CacheDirChooser
-                                .getSelectedFile().getCanonicalPath();
+                String relPath = CacheDirChooser.getSelectedFile()
+                        .getCanonicalPath();
                 if (relPath.lastIndexOf('.') == relPath.length() - 4) {
                     relPath = relPath.substring(0, relPath.length() - 4);
                 }
@@ -836,7 +848,6 @@ public final class J2SEAppController extends Controller {
             }
         }
     }
-
 
     /**
      * Disable a panel and its children.
@@ -862,7 +873,7 @@ public final class J2SEAppController extends Controller {
     public void doLogConversion(final int selectedFormat) {
         new Thread("convert") {
             public final void run() {
-                //setLogConversionParameters();
+                // setLogConversionParameters();
                 switch (selectedFormat) {
                 case J2SEAppModel.ARRAY_LOGTYPE:
                     TracksAndWayPoints r;
@@ -892,7 +903,51 @@ public final class J2SEAppController extends Controller {
             }
         }.start();
     }
-    
+
+    public GPSLogConvertInterface getInputConversionInstance(final int logType) {
+        String logFileLC = m.getStringOpt(Model.LOGFILEPATH).toLowerCase();
+        if (logFileLC.endsWith(".gpx")) {
+            GPSLogConvertInterface lc = new GPXLogConvert();
+            String parameters = "";
+            int sourceHeightReference = getHeightReference(Model.GPX_LOGTYPE);
+            int destinationHeightReference = getHeightReference(logType);
+
+            switch (m.getHeightConversionMode()) {
+            case Model.HEIGHT_AUTOMATIC:
+                if (sourceHeightReference == HEIGHT_MSL
+                        && destinationHeightReference == HEIGHT_WGS84) {
+                    /* Need to add the height in automatic mode */
+                    lc.setConvertWGS84ToMSL(+1);
+                } else if (sourceHeightReference == HEIGHT_WGS84
+                        && destinationHeightReference == HEIGHT_MSL) {
+                    /* Need to substract the height in automatic mode */
+                    lc.setConvertWGS84ToMSL(-1);
+                } else {
+                    /* Do nothing */
+                    lc.setConvertWGS84ToMSL(0);
+                }
+                break;
+            case Model.HEIGHT_WGS84_TO_MSL:
+                lc.setConvertWGS84ToMSL(-1);
+                break;
+            case Model.HEIGHT_NOCHANGE:
+                lc.setConvertWGS84ToMSL(0);
+                break;
+            case Model.HEIGHT_MSL_TO_WGS84:
+                lc.setConvertWGS84ToMSL(1);
+                break;
+            }
+
+            if (Generic.isDebug()) {
+                Generic.debug(parameters);
+            }
+
+            return lc;
+        } else {
+            return super.getInputConversionInstance(logType);
+        }
+    }
+
     public final J2SEAppModel getAppModel() {
         return m;
     }

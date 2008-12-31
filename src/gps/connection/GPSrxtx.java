@@ -186,6 +186,8 @@ public final class GPSrxtx {
                 Generic.debug("sendPacket", e);
             }
             writeOngoing.up(); // Semaphore - release link
+        } else {
+            Generic.debug("Not connected: skipped " + p_Packet);
         }
     }
 

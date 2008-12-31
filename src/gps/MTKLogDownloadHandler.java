@@ -743,7 +743,7 @@ final class MTKLogDownloadHandler {
      */
     protected final void readLog(final int startAddr, final int size) {
         gpsState.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
-                + BT747Constants.PMTK_LOG_REQ_DATA_STR + ","
+                + BT747Constants.PMTK_LOG_Q_LOG + ","
                 + Convert.unsigned2hex(startAddr, 8) + ","
                 + Convert.unsigned2hex(size, 8));
     }

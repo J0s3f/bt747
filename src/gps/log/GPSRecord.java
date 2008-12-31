@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.log;
 
 import bt747.sys.Convert;
@@ -224,7 +224,7 @@ public class GPSRecord {
     public final boolean hasLocation() {
         return hasLatitude() && hasLongitude();
     }
-    
+
     public final boolean hasLatitude() {
         return latitude != -1000000;
     }
@@ -323,7 +323,7 @@ public class GPSRecord {
                 && (hasDistance() == r.hasDistance())
                 && (hasVoxStr() == r.hasVoxStr());
     }
-    
+
     public final BT747Time getBT747Time() {
         BT747Time t = Interface.getTimeInstance();
         t.setUTCTime(utc);
@@ -339,13 +339,244 @@ public class GPSRecord {
         StringBuffer rec = new StringBuffer(100);
         rec.setLength(0);
         rec.append("CNT:" + recCount);
-        rec.append("\nUTC:" + gps.log.out.CommonOut.getDateTimeStr(utc) + "(" + utc
-                + ")");
-        rec.append("\nVALID:" + Convert.unsigned2hex(valid, 8));
-        rec.append("\nLAT;" + latitude);
-        rec.append("\nLON:" + longitude);
-        rec.append("\nRCR:" + Convert.unsigned2hex(rcr, 8));
+        if (hasUtc())
+            rec.append("\nUTC:" + gps.log.out.CommonOut.getDateTimeStr(utc)
+                    + "(" + utc + ")");
+        if (hasValid())
+            rec.append("\nVALID:" + Convert.unsigned2hex(valid, 8));
+        if (hasLatitude())
+            rec.append("\nLAT;" + latitude);
+        if (hasLongitude())
+            rec.append("\nLON:" + longitude);
+        if (hasRcr())
+            rec.append("\nRCR:" + Convert.unsigned2hex(rcr, 8));
+        if (hasHeight())
+            rec.append("\nHEIGHT:" + height);
+        if (hasSpeed())
+            rec.append("\nSPEED:" + speed);
+        if (hasHdop())
+            rec.append("\nHDOP:" + hdop/100.f);
+        if (hasVdop())
+            rec.append("\nVDOP:" + vdop/100.f);
+        if (hasPdop())
+            rec.append("\nPDOP:" + pdop/100.f);
         rec.append('\n');
         return rec.toString();
+    }
+
+    public final int getUtc() {
+        return this.utc;
+    }
+
+    public final void setUtc(int utc) {
+        this.utc = utc;
+    }
+
+    public final int getValid() {
+        return this.valid;
+    }
+
+    public final void setValid(int valid) {
+        this.valid = valid;
+    }
+
+    public final double getLatitude() {
+        return this.latitude;
+    }
+
+    public final void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public final double getLongitude() {
+        return this.longitude;
+    }
+
+    public final void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public final float getHeight() {
+        return this.height;
+    }
+
+    public final void setHeight(float height) {
+        this.height = height;
+    }
+
+    public final float getSpeed() {
+        return this.speed;
+    }
+
+    public final void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public final float getHeading() {
+        return this.heading;
+    }
+
+    public final void setHeading(float heading) {
+        this.heading = heading;
+    }
+
+    public final int getDsta() {
+        return this.dsta;
+    }
+
+    public final void setDsta(int dsta) {
+        this.dsta = dsta;
+    }
+
+    public final int getDage() {
+        return this.dage;
+    }
+
+    public final void setDage(int dage) {
+        this.dage = dage;
+    }
+
+    public final int getPdop() {
+        return this.pdop;
+    }
+
+    public final void setPdop(int pdop) {
+        this.pdop = pdop;
+    }
+
+    public final int getHdop() {
+        return this.hdop;
+    }
+
+    public final void setHdop(int hdop) {
+        this.hdop = hdop;
+    }
+
+    public final int getVdop() {
+        return this.vdop;
+    }
+
+    public final void setVdop(int vdop) {
+        this.vdop = vdop;
+    }
+
+    public final int getNsat() {
+        return this.nsat;
+    }
+
+    public final void setNsat(int nsat) {
+        this.nsat = nsat;
+    }
+
+    public final int[] getSid() {
+        return this.sid;
+    }
+
+    public final void setSid(int[] sid) {
+        this.sid = sid;
+    }
+
+    public final boolean[] getSidinuse() {
+        return this.sidinuse;
+    }
+
+    public final void setSidinuse(boolean[] sidinuse) {
+        this.sidinuse = sidinuse;
+    }
+
+    public final int[] getEle() {
+        return this.ele;
+    }
+
+    public final void setEle(int[] ele) {
+        this.ele = ele;
+    }
+
+    public final int[] getAzi() {
+        return this.azi;
+    }
+
+    public final void setAzi(int[] azi) {
+        this.azi = azi;
+    }
+
+    public final int[] getSnr() {
+        return this.snr;
+    }
+
+    public final void setSnr(int[] snr) {
+        this.snr = snr;
+    }
+
+    public final int getRcr() {
+        return this.rcr;
+    }
+
+    public final void setRcr(int rcr) {
+        this.rcr = rcr;
+    }
+
+    public final int getMilisecond() {
+        return this.milisecond;
+    }
+
+    public final void setMilisecond(int milisecond) {
+        this.milisecond = milisecond;
+    }
+
+    public final double getDistance() {
+        return this.distance;
+    }
+
+    public final void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public final float getGeoid() {
+        return this.geoid;
+    }
+
+    public final void setGeoid(float geoid) {
+        this.geoid = geoid;
+    }
+
+    public final int getRecCount() {
+        return this.recCount;
+    }
+
+    public final void setRecCount(int recCount) {
+        this.recCount = recCount;
+    }
+
+    public final int getLogPeriod() {
+        return this.logPeriod;
+    }
+
+    public final void setLogPeriod(int logPeriod) {
+        this.logPeriod = logPeriod;
+    }
+
+    public final int getLogSpeed() {
+        return this.logSpeed;
+    }
+
+    public final void setLogSpeed(int logSpeed) {
+        this.logSpeed = logSpeed;
+    }
+
+    public final int getLogDistance() {
+        return this.logDistance;
+    }
+
+    public final void setLogDistance(int logDistance) {
+        this.logDistance = logDistance;
+    }
+
+    public final String getVoxStr() {
+        return this.voxStr;
+    }
+
+    public final void setVoxStr(String voxStr) {
+        this.voxStr = voxStr;
     }
 }

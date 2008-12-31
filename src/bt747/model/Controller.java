@@ -107,7 +107,7 @@ public class Controller {
         }
     }
 
-    private final int getHeightReference(final int type) {
+    public int getHeightReference(final int type) {
         if ((type >= 0) && (type < heightReferenceList.length)) {
             return heightReferenceList[type];
         }
@@ -361,7 +361,7 @@ public class Controller {
                 getOutFileExt(logType));
     }
 
-    public final GPSLogConvertInterface getInputConversionInstance(final int logType) {
+    public GPSLogConvertInterface getInputConversionInstance(final int logType) {
         GPSLogConvertInterface lc;
         String parameters = "";
         int sourceHeightReference;
@@ -711,6 +711,10 @@ public class Controller {
     public final void reqLogMemUsed() {
         m.gpsModel().checkAvailable(GPSstate.DATA_MEM_USED);
     }
+    
+    public final void reqInitialLogMode() {
+        m.gpsModel().checkAvailable(GPSstate.DATA_INITIAL_LOG);
+    }
 
     /**
      * Request the number of points logged in memory.
@@ -922,7 +926,7 @@ public class Controller {
             reqLogFormat();
             gpsModel.checkAvailable(GPSstate.DATA_INITIAL_LOG);
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
-            gpsModel.setupTimer();
+            gpsModel.initConnection();
             // Remember defaults
             m.setIntOpt(Model.PORTNBR, m.gpsRxTx().getPort());
             m.setIntOpt(Model.BAUDRATE, m.gpsRxTx().getSpeed());
