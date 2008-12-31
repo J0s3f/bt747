@@ -79,7 +79,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
                                         gpsFile
                                                 .writeLogFmtHeader(activeFields);
                                     }
-                                    CommonIn.convertHeight(r, factorConversionWGS84ToMSL);
+                                    CommonIn.adjustHeight(r, factorConversionWGS84ToMSL);
                                     gpsFile.addLogRecord(r);
                                 }
                                 r.recCount = reccount++;
