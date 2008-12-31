@@ -582,7 +582,7 @@ public class Controller {
     /**
      * Set the download method. <br>
      * Possible values:<br> - {@link #DOWNLOAD_FILLED}<br> -{@link #DOWNLOAD_FULL}<br> -
-     * {@link #DOWNLOAD_INCREMENTAL}
+     * {@link #DOWNLOAD_SMART}
      */
     public final void setDownloadMethod(final int downloadMethod) {
         m.setDownloadMethod(downloadMethod);
@@ -631,7 +631,7 @@ public class Controller {
             m.getStringOpt(Model.LOGFILEPATH), /* Log file name */
             m.getCard(), /* Card for file operations */
             /** Incremental download */
-            m.getDownloadMethod() == Model.DOWNLOAD_INCREMENTAL);
+            m.getDownloadMethod() == Model.DOWNLOAD_SMART);
         } catch (Exception e) {
             Generic.debug("StartDefaultDownload", e);
             // TODO: handle exception

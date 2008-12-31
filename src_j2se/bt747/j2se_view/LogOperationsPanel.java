@@ -1238,7 +1238,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         case Model.DOWNLOAD_FULL:
             cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_FULL"));
             break;
-        case Model.DOWNLOAD_INCREMENTAL:
+        case Model.DOWNLOAD_SMART:
             cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_INCREMENTAL"));
             break;
         }
@@ -1251,7 +1251,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         } else if (v.equals(getString("DOWNLOAD_FULL"))) {
             c.setDownloadMethod(Model.DOWNLOAD_FULL);
         } else if (v.equals(getString("DOWNLOAD_INCREMENTAL"))) {
-            c.setDownloadMethod(Model.DOWNLOAD_INCREMENTAL);
+            c.setDownloadMethod(Model.DOWNLOAD_SMART);
         }
     }
 

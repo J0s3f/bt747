@@ -420,7 +420,7 @@ public class Model extends AppSettings implements GPSListener {
         return gpsModel.getNextReadAddr();
     }
 
-    private int downloadMethod = DOWNLOAD_INCREMENTAL;
+    private int downloadMethod = DOWNLOAD_SMART;
 
     /**
      * Get the 'incremental download' status.
@@ -429,7 +429,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return true if the Incremental log download is activated.
      */
     public final boolean isIncremental() {
-        return downloadMethod == DOWNLOAD_INCREMENTAL;
+        return downloadMethod == DOWNLOAD_SMART;
     }
 
     /**
@@ -441,7 +441,7 @@ public class Model extends AppSettings implements GPSListener {
      */
     protected final void setIncremental(final boolean incrementalDownload) {
         if (incrementalDownload) {
-            this.downloadMethod = DOWNLOAD_INCREMENTAL;
+            this.downloadMethod = DOWNLOAD_SMART;
         } else {
             this.downloadMethod = DOWNLOAD_FILLED;
         }
@@ -455,7 +455,7 @@ public class Model extends AppSettings implements GPSListener {
     /**
      * Download reported memory - incremental.
      */
-    public static final int DOWNLOAD_INCREMENTAL = 1;
+    public static final int DOWNLOAD_SMART = 1;
 
     /**
      * Download full memory.
@@ -467,7 +467,7 @@ public class Model extends AppSettings implements GPSListener {
      * 
      * @return The set download method. Possible values:
      *         {@link #DOWNLOAD_FILLED} {@link #DOWNLOAD_FULL}
-     *         {@link #DOWNLOAD_INCREMENTAL}
+     *         {@link #DOWNLOAD_SMART}
      */
     public final int getDownloadMethod() {
         return this.downloadMethod;
@@ -476,7 +476,7 @@ public class Model extends AppSettings implements GPSListener {
     /**
      * Set the download method.<br>
      * Possible values: {@link #DOWNLOAD_FILLED} {@link #DOWNLOAD_FULL}
-     * {@link #DOWNLOAD_INCREMENTAL}
+     * {@link #DOWNLOAD_SMART}
      */
     public final void setDownloadMethod(final int downloadMethod) {
         this.downloadMethod = downloadMethod;

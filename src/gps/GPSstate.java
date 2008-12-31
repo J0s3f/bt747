@@ -14,6 +14,7 @@
 // *** *********************************************************** ***
 package gps;
 
+import sun.rmi.runtime.GetThreadPoolAction;
 import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
@@ -166,9 +167,10 @@ public final class GPSstate implements BT747Thread {
      * Reset the availability of all values - e.g. after loss of connection.
      */
     public final void resetAvailable() {
+        int ts = Generic.getTimeStamp() - 5*60*1000;
         for (int i = 0; i < dataAvailable.length; i++) {
             dataAvailable[i] = false;
-            dataRequested[i] = 0;
+            dataRequested[i] = ts;
         }
         nextValueToCheck = 0;
     }
@@ -197,6 +199,12 @@ public final class GPSstate implements BT747Thread {
     public final boolean checkAvailable(final int dataType) {
         if (handler.isConnected()) {
             int ts = Generic.getTimeStamp();
+            if (Generic.getDebugLevel() > 1) {
+                Generic.debug("ts:"+ts+" type:" + dataType + " timesout:"
+                        + dataTimesOut[dataType] + " available:"
+                        + dataAvailable[dataType] + " requested:"
+                        + (ts - dataRequested[dataType]));
+            }
             if ((dataTimesOut[dataType] || !dataAvailable[dataType])
                     && ((ts - dataRequested[dataType]) > 3500)) {
                 dataRequested[dataType] = ts;
@@ -292,6 +300,7 @@ public final class GPSstate implements BT747Thread {
         // TODO: set up thread in gpsRxTx directly (through controller)
         if (handler.isConnected()) {
             nextRun = Generic.getTimeStamp() + 300; // Delay before first
+            resetAvailable();
             handler.initConnected();
             // transaction
             Generic.addThread(this, false);
@@ -474,8 +483,7 @@ public final class GPSstate implements BT747Thread {
         }
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
                 + BT747Constants.PMTK_LOG_SET + ","
-                + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR + ","
-                + z_value);
+                + BT747Constants.PMTK_LOG_TIME_INTERVAL_STR + "," + z_value);
     }
 
     public final void setLogDistanceInterval(final int value) {
@@ -516,8 +524,8 @@ public final class GPSstate implements BT747Thread {
         }
 
         /* Set log distance interval */
-        sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_FIX_CTL + ","
-                + z_value + ",0,0,0.0,0.0");
+        sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_FIX_CTL + "," + z_value
+                + ",0,0,0.0,0.0");
     }
 
     public final void reqFixInterval() {
