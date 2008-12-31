@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.log.in;
 
 import gps.BT747Constants;
@@ -101,9 +101,9 @@ public final class CommonIn {
      * intact)
      * 
      * @param gpsRec
-     *            record to update.
+     *                record to update.
      * @param time
-     *            time to set.
+     *                time to set.
      */
     private static final void setTime(final GPSRecord gpsRec, final int time) {
         int newTime;
@@ -125,9 +125,9 @@ public final class CommonIn {
      * intact) from a typical NMEA time string.
      * 
      * @param gpsRec
-     *            record to update.
+     *                record to update.
      * @param nmeaTimeStr
-     *            time to set.
+     *                time to set.
      * @return true if milliseconds were also set.
      */
     private static final boolean setTime(final GPSRecord gpsRec,
@@ -149,7 +149,8 @@ public final class CommonIn {
         return false;
     }
 
-    private static final void setDate(final GPSRecord gpsRec, final String date) {
+    private static final void setDate(final GPSRecord gpsRec,
+            final String date) {
         int dateInt = Convert.toInt(date);
         int day = dateInt / 10000;
         int month = (dateInt / 100) % 100;
@@ -179,9 +180,9 @@ public final class CommonIn {
      * Analyze a NMEA sentence.
      * 
      * @param sNmea
-     *            elements of the sentence.
+     *                elements of the sentence.
      * @param gpsRec
-     *            The record that will hold the updated information.
+     *                The record that will hold the updated information.
      * @return logFormat indicating the fields that were filled.
      */
     public static final int analyzeNMEA(final String[] sNmea,
@@ -206,9 +207,9 @@ public final class CommonIn {
      * Analyze a GPRMC sentence.
      * 
      * @param sNmea
-     *            elements of the sentence.
+     *                elements of the sentence.
      * @param gpsRec
-     *            The record that will hold the updated information.
+     *                The record that will hold the updated information.
      * @return logFormat indicating the fields that were filled.
      */
     public static final int analyzeGPRMC(final String[] sNmea,
@@ -278,9 +279,9 @@ public final class CommonIn {
      * Analyze a GPGGA sentence.
      * 
      * @param sNmea
-     *            elements of the sentence.
+     *                elements of the sentence.
      * @param gpsRec
-     *            The record that will hold the updated information.
+     *                The record that will hold the updated information.
      * @return logFormat indicating the fields that were filled.
      */
     public static final int analyzeGPGGA(final String[] sNmea,
@@ -351,7 +352,8 @@ public final class CommonIn {
                 } else {
                     if (((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
                             && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)) {
-                        gpsRec.geoid = (float)Conv.wgs84Separation(gpsRec.latitude, gpsRec.longitude);
+                        gpsRec.geoid = (float) Conv.wgs84Separation(
+                                gpsRec.latitude, gpsRec.longitude);
                     } else {
                         gpsRec.geoid = 0;
                     }
@@ -387,9 +389,9 @@ public final class CommonIn {
      * Analyze a GPGSV sentence.
      * 
      * @param sNmea
-     *            elements of the sentence.
+     *                elements of the sentence.
      * @param gpsRec
-     *            The record that will hold the updated information.
+     *                The record that will hold the updated information.
      * @return logFormat indicating the fields that were filled.
      */
     public static final int analyzeGPGSV(final String[] sNmea,
@@ -451,13 +453,14 @@ public final class CommonIn {
         return logFormat;
     }
 
-    public final static void convertHeight(final GPSRecord r, final int factorConversionWGS84ToMSL, final int logFormat) {
+    public final static void convertHeight(final GPSRecord r,
+            final int factorConversionWGS84ToMSL, final int logFormat) {
         if (factorConversionWGS84ToMSL != 0
                 && ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0)
                 && ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0)
-                //&& valid
-                ) {
-            if(factorConversionWGS84ToMSL<0) {
+        // && valid
+        ) {
+            if (factorConversionWGS84ToMSL < 0) {
                 r.height -= Conv.wgs84Separation(r.latitude, r.longitude);
             } else { // > 0
                 r.height += Conv.wgs84Separation(r.latitude, r.longitude);
@@ -465,4 +468,18 @@ public final class CommonIn {
         }
 
     }
+
+    public final static void convertHeight(final GPSRecord r,
+            final int factorConversionWGS84ToMSL) {
+        if (factorConversionWGS84ToMSL != 0 && r.hasLocation()
+                && r.hasHeight()) {
+            if (factorConversionWGS84ToMSL < 0) {
+                r.height -= Conv.wgs84Separation(r.latitude, r.longitude);
+            } else { // > 0
+                r.height += Conv.wgs84Separation(r.latitude, r.longitude);
+            }
+        }
+
+    }
+
 }
