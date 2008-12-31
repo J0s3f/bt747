@@ -69,15 +69,15 @@ public final class GPSNMEAFile extends GPSFile {
 
             if ((activeFields.hasUtc())) {
                 timeStr = (t.getHour() < 10 ? "0" : "")
-                        + Convert.toString(t.getHour())
+                        + t.getHour()
                         + (t.getMinute() < 10 ? "0" : "")
-                        + Convert.toString(t.getMinute())
+                        + t.getMinute()
                         + (t.getSecond() < 10 ? "0" : "")
-                        + Convert.toString(t.getSecond());
+                        + t.getSecond();
                 if (activeFields.hasMilisecond()) {
                     timeStr += "." + ((s.milisecond < 100) ? "0" : "")
                             + ((s.milisecond < 10) ? "0" : "")
-                            + (Convert.toString(s.milisecond));
+                            + (s.milisecond);
                 }
             }
 
@@ -209,11 +209,11 @@ public final class GPSNMEAFile extends GPSFile {
         if ((activeFields.hasUtc())) {
             // DATE & TIME
             rec.append((t.getDay() < 10 ? "0" : "")
-                    + Convert.toString(t.getDay())
+                    + t.getDay()
                     + (t.getMonth() < 10 ? "0" : "")
-                    + Convert.toString(t.getMonth())
+                    + t.getMonth()
                     + (((t.getYear() % 100) < 10) ? "0" : "")
-                    + Convert.toString(t.getYear() % 100));
+                    + (t.getYear() % 100));
         }
         rec.append(",,");
         // Extra field on transystem
@@ -323,7 +323,7 @@ public final class GPSNMEAFile extends GPSFile {
 
         // - 08 is the number of SV's being tracked
         if (activeFields.hasNsat()) {
-            rec.append(Convert.toString((s.nsat & 0xFF00) >> 8));
+            rec.append((s.nsat & 0xFF00) >> 8);
             // rec+="("+Convert.toString(s.nsat&0xFF)+")";
         }
         rec.append(",");
@@ -358,12 +358,12 @@ public final class GPSNMEAFile extends GPSFile {
         // - *42 is the checksum field
 
         if ((activeFields.hasDage())) {
-            rec.append(Convert.toString(s.dage));
+            rec.append(s.dage);
         }
         rec.append(",");
 
         if ((activeFields.hasDsta())) {
-            rec.append(Convert.toString(s.dsta));
+            rec.append(s.dsta);
         }
 
         writeNMEA(rec.toString());
@@ -405,7 +405,7 @@ public final class GPSNMEAFile extends GPSFile {
                 rec.append(",");
                 // rec.append(Convert.toString((s.nsat&0xFF00)>>8)); //
                 // in use
-                rec.append(Convert.toString(s.nsat & 0xFF)); // in
+                rec.append(s.nsat & 0xFF); // in
                 // view
                 rec.append(",");
                 int n;
@@ -463,10 +463,10 @@ public final class GPSNMEAFile extends GPSFile {
             // DATE & TIME
             rec.append(timeStr);
             rec.append("," + (t.getDay() < 10 ? "0" : "")
-                    + Convert.toString(t.getDay()) + ","
+                    + t.getDay() + ","
                     + (t.getMonth() < 10 ? "0" : "")
-                    + Convert.toString(t.getMonth()) + ","
-                    + Convert.toString(t.getYear()) + ",,");
+                    + t.getMonth() + ","
+                    + t.getYear() + ",,");
 
             writeNMEA(rec.toString());
             rec.setLength(0);

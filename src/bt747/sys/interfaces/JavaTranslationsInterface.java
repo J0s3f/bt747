@@ -65,7 +65,7 @@ public interface JavaTranslationsInterface {
      *            int to convert.
      * @return String corresponding to boolean.
      */
-    String toString(final int p);
+    //String toString(final int p);
 
     /**
      * System method to convert a float to a string.

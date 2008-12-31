@@ -149,8 +149,8 @@ public final class GPSLogFile extends Container implements ModelListener {
             edReportBaseName
                     .setText(m.getStringOpt(AppSettings.REPORTFILEBASE));
             edLogFileName.setText(m.getStringOpt(AppSettings.LOGFILERELPATH));
-            edChunkSize.setText(Convert.toString(m.getChunkSize()));
-            edTimeout.setText(Convert.toString(m.getDownloadTimeOut()));
+            edChunkSize.setText("" + m.getChunkSize());
+            edTimeout.setText("" + m.getDownloadTimeOut());
         }
     }
 

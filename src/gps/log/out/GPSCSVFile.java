@@ -157,7 +157,7 @@ public final class GPSCSVFile extends GPSFile {
 
         if (activeFields != null && cachedRecordIsNeeded(r)) {
             rec.setLength(0);
-            rec.append(Convert.toString(r.recCount));
+            rec.append(r.recCount);
             if ((activeFileFields.hasRcr()) && (selectedFileFields.hasRcr())) {
                 rec.append(fieldSep);
             }
@@ -175,7 +175,7 @@ public final class GPSCSVFile extends GPSFile {
                     if (r.milisecond < 10) {
                         rec.append('0');
                     }
-                    rec.append(Convert.toString(r.milisecond));
+                    rec.append(r.milisecond);
                 }
             } else if ((activeFileFields.hasUtc())
                     && (selectedFileFields.hasUtc())) {
@@ -262,14 +262,14 @@ public final class GPSCSVFile extends GPSFile {
             }
             if ((activeFields.hasDsta()) && (selectedFileFields.hasDsta())) {
                 rec.append(fieldSep);
-                rec.append(Convert.toString(r.dsta));
+                rec.append(r.dsta);
             } else if ((activeFileFields.hasDsta())
                     && (selectedFileFields.hasDsta())) {
                 rec.append(fieldSep);
             }
             if ((activeFields.hasDage()) && (selectedFileFields.hasDage())) {
                 rec.append(fieldSep);
-                rec.append(Convert.toString(r.dage));
+                rec.append(r.dage);
             } else if ((activeFileFields.hasDage())
                     && (selectedFileFields.hasDage())) {
                 rec.append(fieldSep);
@@ -297,8 +297,8 @@ public final class GPSCSVFile extends GPSFile {
             }
             if ((activeFields.hasNsat()) && (selectedFileFields.hasNsat())) {
                 rec.append(fieldSep);
-                rec.append(Convert.toString((r.nsat & 0xFF00) >> 8));
-                rec.append("(" + Convert.toString(r.nsat & 0xFF) + ")");
+                rec.append((r.nsat & 0xFF00) >> 8);
+                rec.append("(" + (r.nsat & 0xFF) + ")");
             } else if ((activeFileFields.hasNsat())
                     && (selectedFileFields.hasNsat())) {
                 rec.append(fieldSep);
@@ -399,19 +399,19 @@ public final class GPSCSVFile extends GPSFile {
             if (addLogConditionInfo) {
                 rec.append(fieldSep);
                 if (r.logPeriod % 10 == 0) {
-                    rec.append(Convert.toString(r.logPeriod / 10));
+                    rec.append(r.logPeriod / 10);
                 } else {
                     rec.append(Convert.toString(r.logPeriod / 10.0, 1));
                 }
                 rec.append(fieldSep);
                 if (r.logDistance % 10 == 0) {
-                    rec.append(Convert.toString(r.logDistance / 10));
+                    rec.append(r.logDistance / 10);
                 } else {
                     rec.append(Convert.toString(r.logDistance / 10.0, 1));
                 }
                 rec.append(fieldSep);
                 if (r.logSpeed % 10 == 0) {
-                    rec.append(Convert.toString(r.logSpeed / 10));
+                    rec.append(r.logSpeed / 10);
                 } else {
                     rec.append(Convert.toString(r.logSpeed / 10.0, 1));
                 }

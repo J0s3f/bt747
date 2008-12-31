@@ -97,7 +97,7 @@ public class GPSFilePort extends GPSPort {
         int result = -1;
         String portStr;
         portStr = java.lang.System.getProperty("bt747_port", portPrefix
-                + (hasPortNbr ? Convert.toString(spPortNbr) : ""));
+                + (hasPortNbr ? spPortNbr : ""));
 
         closePort();
 

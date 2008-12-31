@@ -305,7 +305,7 @@ public final class GPSrxtx {
         if (gpsPort.debugActive()) {
             // Test to avoid unnecessary lost time
             gpsPort.writeDebug("\r\nR:"
-                    + Convert.toString(Generic.getTimeStamp()) + ":");
+                    + Generic.getTimeStamp() + ":");
         }
 
         if (current_state == C_FOUND_STATE) {
@@ -595,7 +595,7 @@ public final class GPSrxtx {
                     } else {
                         if (gpsPort.debugActive()) {
                             String q = "("
-                                    + Convert.toString(Generic.getTimeStamp()) + ")";
+                                    + Generic.getTimeStamp() + ")";
                             gpsPort.writeDebug(q.getBytes(), 0, q.length());
                             gpsPort.writeDebug(read_buf, 0, bytesRead);
                         }

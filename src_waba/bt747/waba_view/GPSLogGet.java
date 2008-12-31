@@ -141,7 +141,7 @@ public final class GPSLogGet extends Container implements ModelListener {
         add(edTrkSep = new Edit("00000"), AFTER, SAME); //$NON-NLS-1$
         edTrkSep.setValidChars(Edit.numbersSet);
         add(new Label(Txt.getString(Txt.MIN)), AFTER, SAME); //$NON-NLS-1$
-        edTrkSep.setText(Convert.toString(m.getTrkSep()));
+        edTrkSep.setText("" + m.getTrkSep());
         edTrkSep.alignment = RIGHT;
 
         int offsetIdx = m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS) + 12;
@@ -208,11 +208,11 @@ public final class GPSLogGet extends Container implements ModelListener {
         // m_chkLogOnOff.repaintNow();
         chkLogOverwriteStop.setChecked(m.isLogFullOverwrite());
         // m_chkLogOverwriteStop.repaintNow();
-        lbUsedMem.setText(Txt.getString(Txt.MEM_USED) + Convert.toString(m.logMemUsed()) + "("
-                + Convert.toString(m.logMemUsedPercent()) + "%)");
+        lbUsedMem.setText(Txt.getString(Txt.MEM_USED) + m.logMemUsed() + "("
+                + m.logMemUsedPercent() + "%)");
         // m_UsedLabel.repaintNow();
         lbUsedRecords.setText(Txt.getString(Txt.NBR_RECORDS)
-                + Convert.toString(m.logNbrLogPts()) + " ("
+                + m.logNbrLogPts() + " ("
                 + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
                 + Txt.getString(Txt.MEM_FREE) + ")");
         // m_RecordsLabel.repaintNow();
@@ -303,7 +303,7 @@ public final class GPSLogGet extends Container implements ModelListener {
         case ControlEvent.FOCUS_OUT:
             if (event.target == edTrkSep) {
                 c.setTrkSep(Convert.toInt(edTrkSep.getText()));
-                edTrkSep.setText(Convert.toString(m.getTrkSep()));
+                edTrkSep.setText("" + m.getTrkSep());
             }
             break;
 

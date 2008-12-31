@@ -222,42 +222,42 @@ public final class GPSGPXFile extends GPSFile {
                     hdopStr = Convert.toString(r.hdop / 100.0, 2);
                 }
                 if ((activeFields.hasNsat()) && (selectedFileFields.hasNsat())) {
-                    nsatStr += Convert.toString(r.nsat / 256);
+                    nsatStr += (r.nsat / 256);
                 }
 
                 // StringBuffer rec=new StringBuffer(1024);
                 rec.setLength(0);
                 if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
-                    timeStr += Convert.toString(t.getYear()) + "-"
+                    timeStr += t.getYear() + "-"
                             + (t.getMonth() < 10 ? "0" : "")
-                            + Convert.toString(t.getMonth()) + "-"
+                            + t.getMonth() + "-"
                             + (t.getDay() < 10 ? "0" : "")
-                            + Convert.toString(t.getDay()) + "T"
+                            + t.getDay() + "T"
                             + (t.getHour() < 10 ? "0" : "")
-                            + Convert.toString(t.getHour()) + ":"
+                            + t.getHour() + ":"
                             + (t.getMinute() < 10 ? "0" : "")
-                            + Convert.toString(t.getMinute()) + ":"
+                            + t.getMinute() + ":"
                             + (t.getSecond() < 10 ? "0" : "")
-                            + Convert.toString(t.getSecond());
+                            + t.getSecond();
                     if ((activeFields.hasMilisecond())
                             && (selectedFileFields.hasMilisecond())) {
                         timeStr += ".";
                         timeStr += (r.milisecond < 100) ? "0" : "";
                         timeStr += (r.milisecond < 10) ? "0" : "";
-                        timeStr += Convert.toString(r.milisecond);
+                        timeStr += r.milisecond;
                     }
                     timeStr += "Z";
                 }
                 if (isNewTrack) {
                     StringBuffer tx = new StringBuffer();
-                    String tmp = Convert.toString(r.recCount);
+                    String tmp = "" + r.recCount;
                     int nZeros = 5 - tmp.length();
                     if (nZeros < 0) {
                         nZeros = 0;
                     }
                     tx.append(zeros, 0, nZeros);
                     trackName = "#" + tx.toString()
-                            + Convert.toString(r.recCount) + "#";
+                            + r.recCount + "#";
                     if ((activeFields.hasUtc())
                             && (selectedFileFields.hasUtc())) {
                         trackName += " " + timeStr;
@@ -346,7 +346,7 @@ public final class GPSGPXFile extends GPSFile {
                             trackName += " " + timeStr;
                         }
                     } else {
-                        rec.append(Convert.toString(r.recCount));
+                        rec.append(r.recCount);
                     }
                     rec.append("</name>\r\n");
                 }
@@ -432,14 +432,14 @@ public final class GPSGPXFile extends GPSFile {
                 // <ageofdgpsdata> xsd:decimal </ageofdgpsdata> [0..1] ?
                 if ((activeFields.hasDage()) && (selectedFileFields.hasDage())) {
                     rec.append("<ageofdgpsdata>");
-                    rec.append(Convert.toString(r.dage));
+                    rec.append(r.dage);
                     rec.append("</ageofdgpsdata>\r\n");
                 }
 
                 // <dgpsid> dgpsStationType </dgpsid> [0..1] ?
                 if ((activeFields.hasDsta()) && (selectedFileFields.hasDsta())) {
                     rec.append("<dgpsid>");
-                    rec.append(Convert.toString(r.dsta));
+                    rec.append(r.dsta);
                     rec.append("</dgpsid>\r\n");
                 }
 

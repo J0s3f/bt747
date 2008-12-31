@@ -60,7 +60,7 @@ public final class CommonOut {
             final boolean recordNbrInLogs, final boolean imperial) {
         if (recordNbrInLogs) {
             rec.append("IDX: ");
-            rec.append(Convert.toString(s.recCount));
+            rec.append(s.recCount);
             rec.append("<br>");
         }
         if ((activeFields.hasUtc()) && (selectedFields.hasUtc())) {
@@ -176,11 +176,11 @@ public final class CommonOut {
         }
         if ((activeFields.hasDsta()) && (selectedFields.hasDsta())) {
             rec.append("<br>DSTA: ");
-            rec.append(Convert.toString(s.dsta));
+            rec.append(s.dsta);
         }
         if ((activeFields.hasDage()) && (selectedFields.hasDage())) {
             rec.append("<br>DAGE: ");
-            rec.append(Convert.toString(s.dage));
+            rec.append(s.dage);
         }
         if ((activeFields.hasPdop()) && (selectedFields.hasPdop())) {
             rec.append("<br>PDOP: ");
@@ -236,24 +236,24 @@ public final class CommonOut {
 
     public final static String getTimeStr(final BT747Time time) {
         return ((time.getHour() < 10) ? "0" : "")
-                + Convert.toString(time.getHour())
+                + time.getHour()
                 + ":"
                 // Minute
                 + ((time.getMinute() < 10) ? "0" : "")
-                + Convert.toString(time.getMinute()) // +":"
+                + time.getMinute() // +":"
                 + ":" + ((time.getSecond() < 10) ? "0" : "")
-                + Convert.toString(time.getSecond()) // +":"
+                + time.getSecond() // +":"
         ;
     }
 
     public final static String getDateStr(final BT747Time time) {
         return ((time.getDay() < 10) ? "0" : "")
-                + Convert.toString(time.getDay())
+                + time.getDay()
                 + "-"
                 // Month
                 + CommonOut.MONTHS_AS_TEXT[time.getMonth() - 1] + "-"
                 + (((time.getYear() % 100)) < 10 ? "0" : "")
-                + Convert.toString(time.getYear() % 100);
+                + time.getYear() % 100;
     }
 
     public final static String getDateTimeStr(final BT747Time time) {
