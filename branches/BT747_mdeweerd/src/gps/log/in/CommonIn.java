@@ -469,7 +469,7 @@ public final class CommonIn {
 
     }
 
-    public final static void convertHeight(final GPSRecord r,
+    public final static void adjustHeight(final GPSRecord r,
             final int factorConversionWGS84ToMSL) {
         if (factorConversionWGS84ToMSL != 0 && r.hasLocation()
                 && r.hasHeight()) {
