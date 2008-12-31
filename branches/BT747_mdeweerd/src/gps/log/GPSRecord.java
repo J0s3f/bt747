@@ -47,6 +47,10 @@ public class GPSRecord {
     public int[] snr;
 
     public int rcr;
+    private static final int NO_RCR = 0x80000000
+            | BT747Constants.RCR_DISTANCE_MASK
+            | BT747Constants.RCR_SPEED_MASK | BT747Constants.RCR_TIME_MASK;
+
     /** Recorder reason */
     public int milisecond;
     public double distance;
@@ -200,7 +204,7 @@ public class GPSRecord {
             gpsRec.snr = new int[0];
         }
         if ((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) == 0) {
-            gpsRec.rcr = -1;
+            gpsRec.rcr = NO_RCR;
         }
         if ((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) == 0) {
             gpsRec.milisecond = -1;
@@ -290,7 +294,7 @@ public class GPSRecord {
     }
 
     public final boolean hasRcr() {
-        return rcr != -1;
+        return rcr != NO_RCR;
     }
 
     public final boolean hasMilisecond() {
@@ -355,11 +359,11 @@ public class GPSRecord {
         if (hasSpeed())
             rec.append("\nSPEED:" + speed);
         if (hasHdop())
-            rec.append("\nHDOP:" + hdop/100.f);
+            rec.append("\nHDOP:" + hdop / 100.f);
         if (hasVdop())
-            rec.append("\nVDOP:" + vdop/100.f);
+            rec.append("\nVDOP:" + vdop / 100.f);
         if (hasPdop())
-            rec.append("\nPDOP:" + pdop/100.f);
+            rec.append("\nPDOP:" + pdop / 100.f);
         rec.append('\n');
         return rec.toString();
     }
