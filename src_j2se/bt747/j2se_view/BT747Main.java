@@ -194,6 +194,9 @@ public class BT747Main extends javax.swing.JFrame implements
 //        this.invalidate();
 //        this.pack();
     }
+    
+    private final static int PREFERRED_INITIAL_X_SIZE = 928;
+    private final static int PREFERRED_INITIAL_Y_SIZE = 512;
     /**
      * Initialize application data. Gets the values from the model to set them
      * in the GUI.
@@ -213,9 +216,15 @@ public class BT747Main extends javax.swing.JFrame implements
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         if(x>dim.getWidth()) {
             x=(int)dim.getWidth();
+        } else if(dim.getWidth()-100 > PREFERRED_INITIAL_X_SIZE
+                && x < PREFERRED_INITIAL_X_SIZE) {
+            x = PREFERRED_INITIAL_X_SIZE;
         }
         if(y>dim.getHeight()) {
             y=(int)dim.getHeight();
+        } else if(dim.getHeight()-100 > PREFERRED_INITIAL_Y_SIZE
+                && y < PREFERRED_INITIAL_Y_SIZE) {
+            y = PREFERRED_INITIAL_Y_SIZE;
         }
         
         setSize(x,y);
@@ -233,10 +242,6 @@ public class BT747Main extends javax.swing.JFrame implements
         infoTextArea.append(java.lang.System.getProperty("java.version")); // NOI18N
         infoTextArea.append("\n"); // NOI18N
         infoTextArea.append(J2SEAppController.lookAndFeelMsg);
-        LookAndFeelInfo[] a = UIManager.getInstalledLookAndFeels();
-        for (int i = 0; i < a.length; i++) {
-            infoTextArea.append(a[i].getClassName() + "\n"); // NOI18N
-        }
         progressBarUpdate();
         getDefaultPort();
         updateSerialSpeed();

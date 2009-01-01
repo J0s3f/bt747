@@ -46,6 +46,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import bt747.Version;
 import bt747.model.BT747View;
@@ -762,6 +763,10 @@ public final class J2SEAppController extends J2SEController {
      */
     public static void myLookAndFeel() {
         boolean lookAndFeelIsSet = false;
+        if (java.lang.System.getProperty("bt747.laf")!=null) {
+            tryLookAndFeel(java.lang.System.getProperty("bt747.laf"));
+        }
+                
         if (java.lang.System.getProperty("os.name").toLowerCase().startsWith(
                 "mac")) { // NOI18N
             for (int i = C_MAC_LOOKANDFEEL_IDX; !lookAndFeelIsSet
@@ -774,6 +779,11 @@ public final class J2SEAppController extends J2SEController {
         }
         if (!lookAndFeelIsSet) {
             tryLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+        // List available managers
+        LookAndFeelInfo[] a = UIManager.getInstalledLookAndFeels();
+        for (int i = 0; i < a.length; i++) {
+            lookAndFeelMsg += a[i].getClassName() + "\n"; // NOI18N
         }
     }
 

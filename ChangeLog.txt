@@ -1,3 +1,8 @@
+Version 1.66.9
+* Track shown in only one viewport (where the map is shown) - this avoids wrapping 
+  with nasty side effects.
+* Internal changes in table models.
+
 Version 1.66.8
 * Changes to BT747cmd (default = no overwrite for download) + gpx.
 

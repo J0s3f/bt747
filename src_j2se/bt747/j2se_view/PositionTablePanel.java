@@ -16,9 +16,13 @@ package bt747.j2se_view;
 
 import gps.log.GPSRecord;
 
+import java.awt.Component;
 import java.util.List;
 
+import javax.swing.table.TableCellRenderer;
+
 import bt747.j2se_view.model.PositionTableModel;
+import bt747.sys.Generic;
 
 /**
  *
@@ -47,6 +51,24 @@ public class PositionTablePanel extends javax.swing.JPanel {
         tableModel.setGpsData(records);
     }
 
+    // Was used for debug.
+//    @SuppressWarnings("serial")
+//    private class MyJTable extends javax.swing.JTable {
+//        /* (non-Javadoc)
+//         * @see javax.swing.JTable#prepareRenderer(javax.swing.table.TableCellRenderer, int, int)
+//         */
+//        @Override
+//        public Component prepareRenderer(TableCellRenderer renderer, int row,
+//                int column) {
+//            Component r = null;
+//            try {
+//                r = super.prepareRenderer(renderer, row, column);
+//            } catch (Exception e) {
+//                Generic.debug("prepareRenderer", e);
+//            }
+//            return r;
+//        }
+//    }
     
 //    public java.util.List<List<GPSRecord>> getGpsRecords() {
 //        return tableModel.getGpsData();
