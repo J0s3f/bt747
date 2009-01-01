@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT747                              ***
-//***                 (c)2007-2008 Mario De Weerd                  ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***                                                              ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT747 ***
+// *** (c)2007-2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 /**
  * This needs to be refactored!
  */
@@ -66,29 +66,32 @@ public class BT747TrackRenderer implements TrackRenderer {
         if (track.size() > 0) {
             Rectangle viewportBounds = map.getViewportBounds();
             int zoom = map.getZoom();
-            Dimension sizeInTiles = map.getTileFactory().getMapSize(zoom);
-            int tileSize = map.getTileFactory().getTileSize(zoom);
-            Dimension sizeInPixels = new Dimension(
-                    sizeInTiles.width * tileSize, sizeInTiles.height * tileSize);
+            // Dimension sizeInTiles = map.getTileFactory().getMapSize(zoom);
+            // int tileSize = map.getTileFactory().getTileSize(zoom);
+            // Dimension sizeInPixels = new Dimension(sizeInTiles.width
+            // * tileSize, sizeInTiles.height * tileSize);
+
+            // Looking at one viewport only.
 
             double vpx = viewportBounds.getX();
-            // normalize the left edge of the viewport to be positive
-            while (vpx < 0) {
-                vpx += sizeInPixels.getWidth();
-            }
-            // normalize the left edge of the viewport to no wrap around the
-            // world
-            while (vpx > sizeInPixels.getWidth()) {
-                vpx -= sizeInPixels.getWidth();
-            }
+            // // normalize the left edge of the viewport to be positive
+            // while (vpx < 0) {
+            // vpx += sizeInPixels.getWidth();
+            // }
+            // // normalize the left edge of the viewport to no wrap around
+            // the
+            // // world
+            // while (vpx > sizeInPixels.getWidth()) {
+            // vpx -= sizeInPixels.getWidth();
+            // }
 
             // create two new viewports next to eachother
-            Rectangle2D vp2 = new Rectangle2D.Double(vpx,
-                    viewportBounds.getY(), viewportBounds.getWidth(),
-                    viewportBounds.getHeight());
-            Rectangle2D vp3 = new Rectangle2D.Double(vpx
-                    - sizeInPixels.getWidth(), viewportBounds.getY(),
-                    viewportBounds.getWidth(), viewportBounds.getHeight());
+            Rectangle2D vp2 = new Rectangle2D.Double(vpx, viewportBounds
+                    .getY(), viewportBounds.getWidth(), viewportBounds
+                    .getHeight());
+            // Rectangle2D vp3 = new Rectangle2D.Double(vpx
+            // - sizeInPixels.getWidth(), viewportBounds.getY(),
+            // viewportBounds.getWidth(), viewportBounds.getHeight());
 
             Stroke org = g.getStroke();
             g.setStroke(new BasicStroke(1.5f));
@@ -106,17 +109,31 @@ public class BT747TrackRenderer implements TrackRenderer {
                 Point2D point = map.getTileFactory().geoToPixel(
                         new GeoPosition(tp.latitude, tp.longitude),
                         map.getZoom());
+                int Vp;
                 boolean show = true;
                 // This has to be refactored.
+                // if (vp3.contains(point)) {
+                // vpX = vp3.getX();
+                // vpY = vp3.getY();
+                // Vp = 3;
+                // } else
                 if (vp2.contains(point)) {
                     vpX = vp2.getX();
                     vpY = vp2.getY();
-                } else if (vp3.contains(point)) {
-                    vpX = vp3.getX();
-                    vpY = vp3.getY();
                 } else {
                     show = false;
                 }
+
+                // if (prevVp == 2 && Vp == 3) {
+                // // This position is not shown - end path and start new.
+                // if (prev == null) {
+                // g.draw(gp);
+                // gp = new GeneralPath(GeneralPath.WIND_NON_ZERO, track
+                // .size());
+                // first = true;
+                // }
+                // previousShown = false;
+                // }
 
                 if (prev != null && !previousShown && show) {
                     // There was a previous point that was not shown.
