@@ -1,3 +1,7 @@
+Version 1.66.10
+* EPSG4326 map type working.
+* Maximum Heap size for J2SE startup increased (for image rendering). 
+
 Version 1.66.9
 * Track shown in only one viewport (where the map is shown) - this avoids wrapping 
   with nasty side effects.

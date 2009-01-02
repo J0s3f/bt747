@@ -1,11 +1,10 @@
 /**
  * 
  */
-package bt747.j2se_view;
+package net.sf.bt747.j2se.app.map;
 
 import java.awt.geom.Point2D;
 
-import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
 
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.util.GeoUtil;
@@ -64,6 +63,10 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
     private static final double dd2MercMetersLng(double p_lng) {
     return MAGIC_NUMBER*(p_lng*DEG2RAD);
     }
+    
+    //Clipping at 85.05112878
+    private static final double CLIP_LIMIT = 85.05112878;
+
     private static final double dd2MercMetersLat(double p_lat) {
     if (p_lat >= 85) p_lat=85;
     if (p_lat <= -85) p_lat=-85;
@@ -78,8 +81,8 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
     private String styles = "";
     private double bbxmin = -180.;
     private double bbxmax = 180.;
-    private double bbymin = -90.;
-    private double bbymax = 90.;
+    private double bbymin = -80.;
+    private double bbymax = 80.;
 
     //&SRS=EPSG:4326&BBOX=2.31726828957381,48.9179588116455,2.31842233403588,48.9192730492482&WIDTH=353&HEIGHT=402
     //&&BBOX=-152.40234375,-89.12777169565308,-152.314453125,-89.12643273928488&width=512&height=512&SRS=WMS&Styles=
@@ -88,17 +91,17 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
         srs = "EPSG:4326";
         styles = "";
         int ts = getTileSize(zoom);
-        GeoPosition gp1 = GeoUtil.getPosition(new Point2D.Double(xx*ts,yy*ts), zoom, this);
-        GeoPosition gp2 = GeoUtil.getPosition(new Point2D.Double((xx+1)*ts,(yy+1)*ts), zoom, this);
+//        GeoPosition gp1 = getPosition(new Point2D.Double(xx*ts,yy*ts), zoom, this);
+//        GeoPosition gp2 = getPosition(new Point2D.Double((xx+1)*ts,(yy+1)*ts), zoom, this);
         double ulx = MercatorUtils.xToLong(xx * ts, radiusAtZoom[zoom]);
         double uly;// = MercatorUtils.yToLat(y * ts, radius);
         double lrx;// = MercatorUtils.xToLong((x + 1) * ts, radius);
         double lry;// = MercatorUtils.yToLat((y + 1) * ts, radius);
-        String bbox;
-        ulx = gp1.getLongitude();
-        uly= gp1.getLatitude();
-        lrx = gp2.getLongitude();
-        lry= gp2.getLatitude();
+        String bbox="";
+//        ulx = gp1.getLongitude();
+//        uly= gp1.getLatitude();
+//        lrx = gp2.getLongitude();
+//        lry= gp2.getLatitude();
 
         //var ts = this.tileSize;
         //var ul = this.getLatLng(a*ts,(b+1)*ts, c);
@@ -108,8 +111,12 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
 //         bbox = dd2MercMetersLng(ulx) + "," + dd2MercMetersLat(uly) + "," + dd2MercMetersLng(lrx)+ "," + dd2MercMetersLat(lry);
 //          srs="EPSG:54004";
 //        } else {
-         bbox = ulx + "," + uly + "," + lrx + "," + lry;
-        srs="EPSG:4326";
+//         bbox = ulx + "," + uly + "," + lrx + "," + lry;
+         // srs="EPSG:3785" // GlobalMercator [Google Maps, Yahoo Maps, Microsoft Maps]
+        srs="EPSG:4326"; // GlobalGeodetic [OpenLayers Base Map, Google Earth] 
+        // Convert to EPSG:900913 (Spherical Mercator) in meters (Total =  2 * PI * 6378137]
+
+
 //        }
 //        var url = url + "REQUEST=GetMap&SERVICE=WMS&VERSION=1.1.1&LAYERS=" + layers + "&STYLES=" + this.Styles + "&FORMAT=" + format + "&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE&"+l_strSRS+"&BBOX=" + bbox + "&WIDTH=" + ts + "&HEIGHT=" + ;
 //        this.cURL=url;
@@ -155,6 +162,8 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
         return toWMSURL(x, y, zoom);
     }
     
+    /** Usefull help from
+     */
     /*
      * The number of tiles wide at each zoom level
      */
@@ -172,7 +181,10 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
         mapCenterInPixelsAtZoom = new Point2D.Double[totalMapZoom+1];
         mapWidthInTilesAtZoom = new int[totalMapZoom+1];
         radiusAtZoom = new double[totalMapZoom+1];
-    
+
+        // 2 * math.pi * 6378137 ;
+
+        
         // for each zoom level
         for (int z = totalMapZoom; z >= 0; --z) {
             int t2 = this.getTileSize(z) / 2;
@@ -181,8 +193,10 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
             radiusAtZoom[z] = (mapWidthInTilesAtZoom[z]/2)/Math.PI;
             tilesize *= 2;
         }
-
     }
+    
+    
+    
     
     public String getLayer() {
         return layer;
