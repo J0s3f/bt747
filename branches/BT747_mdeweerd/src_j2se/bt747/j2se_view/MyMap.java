@@ -310,7 +310,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
     }
 
     enum MapType {
-        OpenStreetMap, OsmaRender, Cycle
+        OpenStreetMap, OsmaRender, Cycle, Map4
     };
 
     private void setMap(int maptypeOrdinal) {
@@ -361,7 +361,9 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             break;
         case Cycle:
             info = MapFactoryInfos.tfiOSM_OSM_CYCLE;
-            // info = MapFactoryInfos.tfiDigitalGlobe;
+            break;
+        case Map4:
+            info = MapFactoryInfos.tfiDigitalGlobe512;
             break;
         case OpenStreetMap:
         default:

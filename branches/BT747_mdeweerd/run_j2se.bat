@@ -13,6 +13,8 @@ REM java -Dbt747_prefix="COM" -Dbt747_settings="bt747settings.pdb" waba.applet.A
 rem echo PATH = %PATH%
 rem echo CLASSPATH = %CLASSPATH%
 
+SET  MEM_HEAP_OPTION=-Xmx192m
+
 REM Change javaw to java in next line to see startup and debug messages
 if x"%*"==x"debug" goto debug:
 if NOT x"%*"==x"" goto cmdline:
@@ -22,7 +24,7 @@ goto end:
 java bt747.j2se_view.BT747Main %*
 goto end:
 :debug
-java -verbose bt747.j2se_view.BT747Main | more
+java $MEM_HEAP_OPTION -verbose bt747.j2se_view.BT747Main | more
 pause
 :end
 endlocal

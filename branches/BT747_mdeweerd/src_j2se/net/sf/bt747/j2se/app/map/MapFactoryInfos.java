@@ -5,7 +5,6 @@ package net.sf.bt747.j2se.app.map;
 
 import org.jdesktop.swingx.mapviewer.wms.WMSService;
 
-import bt747.j2se_view.WMSTileFactoryInfo;
 
 /**
  * @author Mario
@@ -83,10 +82,58 @@ public class MapFactoryInfos {
     };
 
     
-    public final static MyTileFactoryInfo tfiDigitalGlobe = new WMSTileFactoryInfo(
+    public final static MyTileFactoryInfo tfiDigitalGlobe = new WmsEPSG4326TileFactoryInfo(
             "dig256", 1,
-            15, 19, 256, true, true, "http://wms.globexplorer.com/gexservlets/wms?", "x",
+            18, 19, 256, true, true, "http://wms.globexplorer.com/gexservlets/wms?", "x",
             "y", "z", "Digital Globe", "http://www.digitalglobe.com") {
+        
+        public String getLayer() {
+            return "GlobeXplorer%20Image";
+        }
+        
+        /* (non-Javadoc)
+         * @see net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
+         */
+        @Override
+        public String getFormat() {
+            return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
+        }
+        
+    };
+
+    public final static MyTileFactoryInfo tfiDigitalGlobe128 = new WmsEPSG4326TileFactoryInfo(
+            "dig128", 4,
+            18, 19, 128, true, true, "http://wms.globexplorer.com/gexservlets/wms?", "x",
+            "y", "z", "Digital Globe", "http://www.digitalglobe.com") {
+        public String getLayer() {
+            return "GlobeXplorer%20Image";
+        }
+        
+        /* (non-Javadoc)
+         * @see net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
+         */
+        @Override
+        public String getFormat() {
+            return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
+        }
+        
+    };
+
+    public final static MyTileFactoryInfo tfiDigitalGlobe512 = new WmsEPSG4326TileFactoryInfo(
+            "dig512", 1,
+            18, 19, 512, true, true, "http://wms.globexplorer.com/gexservlets/wms?", "x",
+            "y", "z", "Digital Globe", "http://www.digitalglobe.com") {
+        public String getLayer() {
+            return "GlobeXplorer%20Image";
+        }
+        
+        /* (non-Javadoc)
+         * @see net.sf.bt747.j2se.app.map.WmsEPSG4326TileFactoryInfo#getFormat()
+         */
+        @Override
+        public String getFormat() {
+            return "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
+        }
         
     };
 

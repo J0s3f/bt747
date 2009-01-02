@@ -27,8 +27,6 @@ import java.util.Enumeration;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
@@ -375,6 +373,7 @@ public class BT747Main extends javax.swing.JFrame implements
             miMapnik.setSelected(mt == MapType.OpenStreetMap);
             miOsmarender.setSelected(mt == MapType.OsmaRender);
             miCycle.setSelected(mt == MapType.Cycle);
+            mMap4.setSelected(mt == MapType.Map4);
         } catch (Exception ex) {
             // TODO: handle exception
         }
@@ -535,6 +534,7 @@ public class BT747Main extends javax.swing.JFrame implements
         miMapnik = new javax.swing.JRadioButtonMenuItem();
         miOsmarender = new javax.swing.JRadioButtonMenuItem();
         miCycle = new javax.swing.JRadioButtonMenuItem();
+        mMap4 = new javax.swing.JRadioButtonMenuItem();
         InfoMenu = new javax.swing.JMenu();
         AboutBT747 = new javax.swing.JMenuItem();
         Info = new javax.swing.JMenuItem();
@@ -746,6 +746,14 @@ public class BT747Main extends javax.swing.JFrame implements
         });
         miMap.add(miCycle);
 
+        mMap4.setText(bundle.getString("BT747Main.mMap4.text")); // NOI18N
+        mMap4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mMap4ActionPerformed(evt);
+            }
+        });
+        miMap.add(mMap4);
+
         SettingsMenu.add(miMap);
 
         jMenuBar.add(SettingsMenu);
@@ -940,6 +948,11 @@ public class BT747Main extends javax.swing.JFrame implements
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.Cycle.ordinal());
     }//GEN-LAST:event_miCycleActionPerformed
 
+    private void mMap4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mMap4ActionPerformed
+        c.setIntOpt(Model.MAPTYPE, MyMap.MapType.Map4.ordinal());
+
+}//GEN-LAST:event_mMap4ActionPerformed
+
     // public static void main(String args) {
     // main((String[])null);
     // }
@@ -963,6 +976,7 @@ public class BT747Main extends javax.swing.JFrame implements
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbSerialSpeed;
+    private javax.swing.JRadioButtonMenuItem mMap4;
     private javax.swing.JRadioButtonMenuItem miCycle;
     private javax.swing.JMenuItem miExit;
     private javax.swing.JMenuItem miFindSerialPorts;
