@@ -50,36 +50,37 @@ public class GPXLogConvert implements GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#parseFile(gps.log.in.GPSFileConverterInterface)
      */
-    public int parseFile(GPSFileConverterInterface gpsFile) {
+    public int parseFile(final GPSFileConverterInterface gpsFile) {
         Node gpx;
         try {
             gpx = (Node) xpath.evaluate("//gpx", doc, XPathConstants.NODE);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("Did not find 'gpx' path", e);
             errorInfo = "Did not find 'gpx' path in gpx file";
             return BT747Constants.ERROR_READING_FILE;
         }
-        NodeList gpxElements = gpx.getChildNodes();
+        final NodeList gpxElements = gpx.getChildNodes();
         int reccount = 0;
         for (int i = 0; i < gpxElements.getLength(); i++) {
-            Node n = gpxElements.item(i);
+            final Node n = gpxElements.item(i);
             if (n.getNodeName().equalsIgnoreCase("trk")) {
-                NodeList trk = (NodeList) n.getChildNodes();
+                final NodeList trk = n.getChildNodes();
                 for (int j = 0; j < trk.getLength(); j++) {
-                    Node seg = trk.item(j);
+                    final Node seg = trk.item(j);
                     if (seg.getNodeName().equalsIgnoreCase("trkseg")) {
-                        NodeList segs = (NodeList) seg.getChildNodes();
+                        final NodeList segs = seg.getChildNodes();
                         for (int x = 0; x < segs.getLength(); x++) {
-                            Node pt = segs.item(x);
+                            final Node pt = segs.item(x);
                             if (pt.getNodeName().equalsIgnoreCase("trkpt")) {
-                                GPSRecord r = convertNodeToGPSRecord(pt);
+                                final GPSRecord r = convertNodeToGPSRecord(pt);
                                 if (!passToFindFieldsActivatedInLog) {
                                     if (!r.equalsFormat(activeFields)) {
                                         activeFields = r.cloneRecord();
                                         gpsFile
                                                 .writeLogFmtHeader(activeFields);
                                     }
-                                    CommonIn.adjustHeight(r, factorConversionWGS84ToMSL);
+                                    CommonIn.adjustHeight(r,
+                                            factorConversionWGS84ToMSL);
                                     gpsFile.addLogRecord(r);
                                 }
                                 r.recCount = reccount++;
@@ -107,7 +108,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#setConvertWGS84ToMSL(int)
      */
-    public void setConvertWGS84ToMSL(int mode) {
+    public void setConvertWGS84ToMSL(final int mode) {
         factorConversionWGS84ToMSL = mode;
     }
 
@@ -123,8 +124,8 @@ public class GPXLogConvert implements GPSLogConvertInterface {
     private volatile boolean stop;
     private java.io.File mFile = null;
 
-    enum infoType {
-        ele, time, speed, hdop, vdop, pdop, fix, type, sym, course, cmt, sat, name
+    private enum infoType {
+        ELE, TIME, SPEED, HDOP, VDOP, PDOP, FIX, TYPE, SYM, COURSE, CMT, SAT, NAME, DGPSID, AGEOFDGPSDATA
     };
 
     private Document doc;
@@ -139,8 +140,8 @@ public class GPXLogConvert implements GPSLogConvertInterface {
      * @see gps.log.in.GPSLogConvertInterface#toGPSFile(java.lang.String,
      *      gps.log.in.GPSFileConverterInterface, int)
      */
-    public int toGPSFile(String fileName, GPSFileConverterInterface gpsFile,
-            int card) {
+    public int toGPSFile(final String fileName,
+            GPSFileConverterInterface gpsFile, final int card) {
         int error = BT747Constants.NO_ERROR;
         stop = false;
         if (File.isAvailable()) {
@@ -151,7 +152,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
                 doc = builder.parse(mFile);
                 builder = null;
                 xpath = XPathFactory.newInstance().newXPath();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("Initialising GPX reading " + fileName, e);
                 errorInfo = fileName + "\n" + e.getMessage();
                 error = BT747Constants.ERROR_COULD_NOT_OPEN;
@@ -169,7 +170,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
             passToFindFieldsActivatedInLog = false;
             do {
                 error = parseFile(gpsFile);
-            } while (error == BT747Constants.NO_ERROR && gpsFile.nextPass());
+            } while ((error == BT747Constants.NO_ERROR) && gpsFile.nextPass());
         }
         doc = null;
         xpath = null;
@@ -186,65 +187,65 @@ public class GPXLogConvert implements GPSLogConvertInterface {
      * @param pt
      * @return
      */
-    private GPSRecord convertNodeToGPSRecord(Node pt) {
-        NodeList trkPtInfo = pt.getChildNodes();
-        GPSRecord r = GPSRecord.getLogFormatRecord(0);
-        NamedNodeMap latlon = pt.getAttributes();
+    private GPSRecord convertNodeToGPSRecord(final Node pt) {
+        final NodeList trkPtInfo = pt.getChildNodes();
+        final GPSRecord r = GPSRecord.getLogFormatRecord(0);
+        final NamedNodeMap latlon = pt.getAttributes();
         for (int i = 0; i < latlon.getLength(); i++) {
             try {
-                Node lat = latlon.getNamedItem("lat");
+                final Node lat = latlon.getNamedItem("lat");
                 if (lat != null) {
-                    r.latitude = Double.valueOf((String) lat.getNodeValue());
+                    r.latitude = Double.valueOf(lat.getNodeValue());
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // TODO: handle exception
             }
             try {
-                Node lon = latlon.getNamedItem("lon");
+                final Node lon = latlon.getNamedItem("lon");
                 if (lon != null) {
-                    r.longitude = Double.valueOf((String) lon.getNodeValue());
+                    r.longitude = Double.valueOf(lon.getNodeValue());
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // TODO: handle exception
             }
         }
         for (int y = 0; y < trkPtInfo.getLength(); y++) {
-            Node info = trkPtInfo.item(y);
-            String infoName = info.getNodeName().toLowerCase();
+            final Node info = trkPtInfo.item(y);
+            final String infoName = info.getNodeName().toUpperCase();
             if (!infoName.startsWith("#")) {
-                Node valueNode = info.getFirstChild();
-                if (valueNode != null
-                        && valueNode.getNodeType() == Node.TEXT_NODE) {
-                    String nodeText = (String) valueNode.getNodeValue();
+                final Node valueNode = info.getFirstChild();
+                if ((valueNode != null)
+                        && (valueNode.getNodeType() == Node.TEXT_NODE)) {
+                    final String nodeText = valueNode.getNodeValue();
                     try {
                         switch (infoType.valueOf(infoName)) {
-                        case speed:
+                        case SPEED:
                             r.speed = Float.valueOf(nodeText) * 3.6f;
                             activeFileFields.speed = 0;
                             break;
-                        case course:
+                        case COURSE:
                             r.heading = Float.valueOf(nodeText);
                             activeFileFields.heading = 0;
                             break;
-                        case ele:
+                        case ELE:
                             r.height = Float.valueOf(nodeText);
                             activeFileFields.height = 0;
-                        case time:
+                        case TIME:
                             // >2008-09-15T20:25:03.000Z<
                             // See NMEA???
                             if (nodeText.length() > "2008-09-15T20:25:03Z"
                                     .length()) {
-                                int year = Integer.valueOf(nodeText
+                                final int year = Integer.valueOf(nodeText
                                         .substring(0, 4));
-                                int month = Integer.valueOf(nodeText
+                                final int month = Integer.valueOf(nodeText
                                         .substring(5, 7));
-                                int day = Integer.valueOf(nodeText.substring(
-                                        8, 10));
-                                int hour = Integer.valueOf(nodeText
+                                final int day = Integer.valueOf(nodeText
+                                        .substring(8, 10));
+                                final int hour = Integer.valueOf(nodeText
                                         .substring(11, 13));
-                                int minutes = Integer.valueOf(nodeText
+                                final int minutes = Integer.valueOf(nodeText
                                         .substring(14, 16));
-                                int seconds = Integer.valueOf(nodeText
+                                final int seconds = Integer.valueOf(nodeText
                                         .substring(17, 19));
                                 int utc = Interface.getDateInstance(day,
                                         month, year).dateToUTCepoch1970();
@@ -261,23 +262,23 @@ public class GPXLogConvert implements GPSLogConvertInterface {
                             }
 
                             break;
-                        case hdop:
+                        case HDOP:
                             r.hdop = Math
                                     .round(Float.valueOf(nodeText) * 100.f);
                             activeFileFields.hdop = 100;
                             break;
-                        case vdop:
+                        case VDOP:
                             r.vdop = Math
                                     .round(Float.valueOf(nodeText) * 100.f);
                             activeFileFields.vdop = 100;
                             break;
-                        case pdop:
+                        case PDOP:
                             r.pdop = Math
                                     .round(Float.valueOf(nodeText) * 100.f);
                             activeFileFields.pdop = 100;
                             break;
-                        case fix:
-                            String fixStr = nodeText.toLowerCase();
+                        case FIX:
+                            final String fixStr = nodeText.toLowerCase();
 
                             if (fixStr.equals("none")) {
                                 r.valid = BT747Constants.VALID_NO_FIX_MASK;
@@ -290,7 +291,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
                             }
                             activeFileFields.valid = 10;
                             break;
-                        case type:
+                        case TYPE:
                             r.rcr = 0;
                             activeFileFields.rcr = 1;
                             if (nodeText.charAt(0) != 'X') {
@@ -325,20 +326,26 @@ public class GPXLogConvert implements GPSLogConvertInterface {
                             }
 
                             break;
-                        case sym:
+                        case SYM:
                             break;
-                        case cmt:
+                        case CMT:
                             break;
-                        case sat:
+                        case SAT:
                             r.nsat = Integer.valueOf(nodeText);
                             activeFileFields.nsat = 10;
                             break;
-                        case name:
+                        case NAME:
+                            break;
+                        case AGEOFDGPSDATA:
+                            r.dage = Integer.valueOf(nodeText);
+                            break;
+                        case DGPSID:
+                            r.dsta = Integer.valueOf(nodeText);
                             break;
                         default:
                             break;
                         }
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         Generic.debug("Problem in trackpoint info:"
                                 + infoName, e);
                     }
@@ -348,9 +355,9 @@ public class GPXLogConvert implements GPSLogConvertInterface {
         return r;
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         Interface.setJavaTranslationInterface(new J2SEJavaTranslations());
-        GPXLogConvert x = new GPXLogConvert();
+        final GPXLogConvert x = new GPXLogConvert();
         x.toGPSFile("c:/BT747/20080915_2010.gpx", null, 0);
     }
 
