@@ -212,9 +212,12 @@ public class WmsEPSG4326TileFactoryInfo extends MyTileFactoryInfo {
             final int zoomLevel) {
         final double res = resolution(zoomLevel) / getTileSize(zoomLevel);
         final double wx = pixelCoordinate.getX();
-        double wy = pixelCoordinate.getY();
+        final double wy = pixelCoordinate.getY();
         final double lon = wx * res - 180;
         final double lat = -wy * res + 90;
+        //System.err.println("Request:"+pixelCoordinate);
+        //System.err.println(getBitmapCoordinate(lat, lon, zoomLevel));
+        // getBitmapCoordinate(lat,lon);
         return new GeoPosition(lat, lon);
     }
 

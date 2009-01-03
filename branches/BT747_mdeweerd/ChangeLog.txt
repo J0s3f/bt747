@@ -1,3 +1,6 @@
+Version 1.66.12
+* Improved automatic zoom algorithm in swingx library + automatic rezoom after map change in BT747.
+
 Version 1.66.11
 * Some internal changes + display tile url in specific case for debug.
 

@@ -47,6 +47,7 @@ import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.hyperlink.LinkAction;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.TileFactoryInfo;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
@@ -302,7 +303,8 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             bounds.add(new GeoPosition(maxlat, maxlon));
             if (mapViewer.getZoom() > mapViewer.getTileFactory().getInfo()
                     .getMaximumZoomLevel() - 6) {
-                mapViewer.setZoom(2);
+                mapViewer.setZoom(mapViewer.getTileFactory().getInfo()
+                        .getMinimumZoomLevel());
             }
             mapViewer.calculateZoomFrom(bounds);
         }
@@ -369,11 +371,18 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         default:
             info = MapFactoryInfos.tfiOpenStreetMap;
         }
-        int currentzoom = map.getMainMap().getZoom();
+        final Rectangle r = map.getMainMap().getViewportBounds();
+        Set<GeoPosition> bounds = new HashSet<GeoPosition>();
+        final TileFactory currentFactory =map.getMainMap().getTileFactory();
+        int zoom = map.getMainMap().getZoom();
+        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX(),r.getY()),zoom));
+        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX(),r.getY()+r.getHeight()),zoom));
+        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX()+r.getWidth(),r.getY()),zoom));
+        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX()+r.getWidth(),r.getY()+r.getHeight()),zoom));
+        
         tf = new DefaultTileFactory(info);
         setMapTileCacheDirectory();
         map.setTileFactory(tf);
-        map.getMainMap().setZoom(currentzoom);
 
         if (MyTileFactoryInfo.class.isInstance(info)) {
             MyTileFactoryInfo tfi = (MyTileFactoryInfo) info;
@@ -388,6 +397,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             map.setDataProviderLinkShown(false);
         }
         map.setAddressLocationShown(false);
+        mapViewer.calculateZoomFrom(bounds);
         System.gc();
     }
 
