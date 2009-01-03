@@ -137,4 +137,13 @@ public class MapFactoryInfos {
         
     };
 
+    // Key needed:
+    // Get key:
+    // http://api.ign.fr/getToken?key=XXXXXXXXXXX&output=json&callback=Geoportal.GeoRMHandler.UXXXX.callback
+//    "http://wxs.ign.fr/geoportail/wmsc?" +
+//    "LAYERS=ORTHOIMAGERY.ORTHOPHOTOS&EXCEPTIONS=text/xml" +
+//    "&FORMAT=image/jpeg&SERVICE=WMS&VERSION=1.1.1" +
+//    "&REQUEST=GetMap&STYLES=&SRS=IGNF:GEOPORTALANF" +
+//    "&BBOX=-6639616,1777664,-6637568,1779712" +
+//    "&WIDTH=256&HEIGHT=256&TILED=true";
 }

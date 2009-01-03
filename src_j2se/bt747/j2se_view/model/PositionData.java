@@ -37,77 +37,49 @@ public class PositionData extends AbstractBean {
     // private GPSRecord[] wayPoints = null;
     // private GPSRecord[] userWayPoints = null;
 
-    public static final int NONE = 200;
-    public static final int IMAGE_PATH = 201;
-    public static final int IMAGE_WIDTH = 202;
-    public static final int IMAGE_HEIGHT = 203;
-    public static final int GEOMETRY = 204;
-//    public static final int LATITUDE = 205;
-//    public static final int LONGITUDE = 206;
-    public static final int DATETIME = 207;
-    public static final int DATE = 208;
-    public static final int TIME = 209;
-
-    
-
-    public static final int UTC_TIME = 0;
-
+    public static final int NONE = 0;
     public static final int FIX_VALID = 1;
-
     public static final int LATITUDE = 2;
-
     public static final int LONGITUDE = 3;
     public static final int POSITION_HEIGHT = 4;
     public static final int SPEED = 5;
     public static final int HEADING = 6;
     public static final int DSTA = 7;
-    /** Index of bit for log format setting */
     public static final int DAGE = 8;
-    /** Index of bit for log format setting */
-    public static final int FMT_PDOP_IDX = 9;
-    /** Index of bit for log format setting */
-    public static final int FMT_HDOP_IDX = 10;
-    /** Index of bit for log format setting */
-    public static final int FMT_VDOP_IDX = 11;
-    /** Index of bit for log format setting */
-    public static final int FMT_NSAT_IDX = 12;
-    public static final int FMT_MAX_SATS = 32; // Guess (maximum)
-    /** Index of bit for log format setting */
-    public static final int FMT_SID_IDX = 13;
-    /** Index of bit for log format setting */
-    public static final int FMT_ELEVATION_IDX = 14;
-    /** Index of bit for log format setting */
-    public static final int FMT_AZIMUTH_IDX = 15;
-    /** Index of bit for log format setting */
-    public static final int FMT_SNR_IDX = 16;
-    /** Index of bit for log format setting */
-    public static final int FMT_RCR_IDX = 17;
-    /** Index of bit for log format setting */
-    public static final int FMT_MILLISECOND_IDX = 18;
-    /** Index of bit for log format setting */
-    public static final int FMT_DISTANCE_IDX = 19;
-    /** Index of bit for log format setting */
-    public static final int FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX = 31;
-
-    protected static final int C_LOGDIST = -8;
-    protected static final int C_LOGSPD = -7;
-    protected static final int C_LOGTIME = -9;
-    protected static final int FMT_DATE = -3;
-    protected static final int FMT_DISTANCE_FT_IDX = FMT_DISTANCE_IDX + 100;
-    protected static final int FMT_EW = -5;
-    protected static final int FMT_FIXMODE = -13;
-    protected static final int FMT_HEIGHT_FT_IDX = POSITION_HEIGHT + 100;
-    protected static final int FMT_LATNS = -10;
-    protected static final int FMT_LONEW = -11;
-    protected static final int FMT_NO_FIELD = -1;
-    protected static final int FMT_NS = -6;
-    protected static final int FMT_RCR_DESCRIPTION = -14;
-    protected static final int FMT_REC_NBR = -4;
-    protected static final int FMT_SPEED_MPH_IDX = SPEED + 100;
-    protected static final int FMT_TIME = -2;
-
-    protected static final int FMT_UTC_VALUE = -15;
-    protected static final int FMT_VOX = -12;
+    public static final int PDOP = 9;
+    public static final int HDOP = 10;
+    public static final int VDOP = 11;
+    public static final int NSAT = 12;
+    public static final int SID = 13;
+    public static final int ELEVATION = 14;
+    public static final int AZIMUTH = 15;
+    public static final int SNR = 16;
+    public static final int RCR = 17;
+    public static final int MILLISECOND = 18;
+    public static final int DISTANCE = 19;
+    public static final int LOGDIST = 20;
+    public static final int LOGSPD = 21;
+    public static final int LOGTIME = 22;
+    public static final int DISTANCE_FEET = 23;
+    public static final int EW = 24;
+    public static final int FMT_FIXMODE = 25;
+    public static final int FMT_HEIGHT_FT_IDX = 26;
+    public static final int LATITUDE_POSITIVE = 27;
+    public static final int LONGITUDE_POSITIVE = 28;
+    public static final int NS = 29;
+    public static final int RCR_DESCRIPTION = 30;
+    public static final int RECORDNUMBER = 31;
+    public static final int SPEED_MPH = 32;
+    public static final int UTC_VALUE = 33;
+    public static final int VOX = 34;
+    public static final int IMAGE_PATH = 35;
+    public static final int IMAGE_WIDTH = 36;
+    public static final int IMAGE_HEIGHT = 37;
+    public static final int GEOMETRY = 38;
+    public static final int DATETIME = 39;
+    public static final int DATE = 40;
+    public static final int TIME = 41;
+    public static final int UTC_TIME = 42;
 
     /**
      * 
@@ -442,31 +414,27 @@ public class PositionData extends AbstractBean {
         case DATE:
         case TIME:
             return String.class;
-        case C_LOGTIME:
+        case LOGTIME:
             return Float.class;
-        case C_LOGDIST:
+        case LOGDIST:
             return Float.class;
-        case C_LOGSPD:
+        case LOGSPD:
             return Float.class;
-        case FMT_NS:
+        case NS:
             return String.class;
-        case FMT_EW:
+        case EW:
             return String.class;
-        case FMT_REC_NBR:
+        case RECORDNUMBER:
             return Integer.class;
         case UTC_TIME:
             return String.class;
-        case FMT_UTC_VALUE:
+        case UTC_VALUE:
             return Long.class;
-        case FMT_DATE:
-            return String.class;
-        case FMT_TIME:
-            return String.class;
         case FIX_VALID:
             return String.class;
-        case FMT_LATNS:
+        case LATITUDE_POSITIVE:
             return String.class;
-        case FMT_LONEW:
+        case LONGITUDE_POSITIVE:
             return String.class;
         case POSITION_HEIGHT:
             break;
@@ -474,7 +442,7 @@ public class PositionData extends AbstractBean {
             break;
         case SPEED:
             return Float.class;
-        case FMT_SPEED_MPH_IDX:
+        case SPEED_MPH:
             return Float.class;
         case HEADING:
             return Float.class;
@@ -482,31 +450,29 @@ public class PositionData extends AbstractBean {
             return Integer.class;
         case DAGE:
             return Integer.class;
-        case FMT_PDOP_IDX:
+        case PDOP:
             return Float.class;
-        case FMT_HDOP_IDX:
+        case HDOP:
             return Float.class;
-        case FMT_VDOP_IDX:
+        case VDOP:
             return Float.class;
-        case FMT_NSAT_IDX:
+        case NSAT:
             return Integer.class;
         case FMT_FIXMODE:
             return String.class;
-        case FMT_MAX_SATS:
-            return Integer.class;
-        case FMT_SID_IDX:
+        case SID:
             break;
-        case FMT_VOX:
+        case VOX:
             return String.class;
-        case FMT_RCR_IDX:
+        case RCR:
             return String.class;
-        case FMT_RCR_DESCRIPTION:
+        case RCR_DESCRIPTION:
             return String.class;
-        case FMT_MILLISECOND_IDX:
+        case MILLISECOND:
             return Integer.class;
-        case FMT_DISTANCE_IDX:
+        case DISTANCE:
             return Float.class;
-        case FMT_DISTANCE_FT_IDX:
+        case DISTANCE_FEET:
             return Float.class;
         default:
             return Object.class;
@@ -536,31 +502,27 @@ public class PositionData extends AbstractBean {
             return "Date";
         case TIME:
             return "Time";
-        case C_LOGTIME:
-            break;
-        case C_LOGDIST:
-            break;
-        case C_LOGSPD:
-            break;
-        case FMT_NS:
-            break;
-        case FMT_EW:
-            break;
-        case FMT_REC_NBR:
+        case LOGTIME:
+            return "Log time";
+        case LOGDIST:
+            return "Log Dist";
+        case LOGSPD:
+            return "Log speed";
+        case NS:
+            return "N/S";
+        case EW:
+            return "E/W";
+        case RECORDNUMBER:
             return "Record nbr";
         case UTC_TIME:
             return "Date & Time";
-        case FMT_UTC_VALUE:
+        case UTC_VALUE:
             return "UTC Value";
-        case FMT_DATE:
-            return "Date";
-        case FMT_TIME:
-            return "Time";
         case FIX_VALID:
             return "Valid";
-        case FMT_LATNS:
+        case LATITUDE_POSITIVE:
             break;
-        case FMT_LONEW:
+        case LONGITUDE_POSITIVE:
             break;
         case POSITION_HEIGHT:
             return "Height (m)";
@@ -568,7 +530,7 @@ public class PositionData extends AbstractBean {
             return "Height (ft)";
         case SPEED:
             return "Speed (km/h)";
-        case FMT_SPEED_MPH_IDX:
+        case SPEED_MPH:
             return "Speed (mph)";
         case HEADING:
             return "Heading";
@@ -576,31 +538,29 @@ public class PositionData extends AbstractBean {
             return "DSTA";
         case DAGE:
             return "DAGE";
-        case FMT_PDOP_IDX:
+        case PDOP:
             return "PDOP";
-        case FMT_HDOP_IDX:
+        case HDOP:
             return "HDOP";
-        case FMT_VDOP_IDX:
+        case VDOP:
             return "VDOP";
-        case FMT_NSAT_IDX:
+        case NSAT:
             return "NSAT";
         case FMT_FIXMODE:
             return "Fix";
-        case FMT_MAX_SATS:
-            return "Max Sats";
-        case FMT_SID_IDX:
+        case SID:
             return "SID";
-        case FMT_VOX:
+        case VOX:
             return "VOX/File";
-        case FMT_RCR_IDX:
+        case RCR:
             return "RCR";
-        case FMT_RCR_DESCRIPTION:
+        case RCR_DESCRIPTION:
             return "RCR Description";
-        case FMT_MILLISECOND_IDX:
+        case MILLISECOND:
             return "MS";
-        case FMT_DISTANCE_IDX:
+        case DISTANCE:
             return "Distance (m)";
-        case FMT_DISTANCE_FT_IDX:
+        case DISTANCE_FEET:
             return "Distance (ft)";
         default:
             return null;
@@ -610,31 +570,31 @@ public class PositionData extends AbstractBean {
 
     public static final Object getValue(final GPSRecord g, final int type) {
         switch (type) {
-        case C_LOGTIME:
+        case LOGTIME:
             break;
-        case C_LOGDIST:
+        case LOGDIST:
             break;
-        case C_LOGSPD:
+        case LOGSPD:
             break;
-        case FMT_NS:
+        case NS:
             break;
-        case FMT_EW:
+        case EW:
             break;
-        case FMT_REC_NBR:
+        case RECORDNUMBER:
             return Integer.valueOf(g.recCount);
         case UTC_TIME:
             return CommonOut.getDateTimeStr(g.utc);
-        case FMT_UTC_VALUE:
+        case UTC_VALUE:
             return Long.valueOf(g.utc);
-        case FMT_DATE:
+        case DATE:
             return CommonOut.getDateStr(g.utc);
-        case FMT_TIME:
+        case TIME:
             return CommonOut.getTimeStr(g.utc);
         case FIX_VALID:
             return CommonOut.getFixText(g.valid);
-        case FMT_LATNS:
+        case LATITUDE_POSITIVE:
             break;
-        case FMT_LONEW:
+        case LONGITUDE_POSITIVE:
             break;
         case LATITUDE:
             return new Double(g.latitude);
@@ -646,7 +606,7 @@ public class PositionData extends AbstractBean {
             break;
         case SPEED:
             return new Float(g.speed);
-        case FMT_SPEED_MPH_IDX:
+        case SPEED_MPH:
             break;
         case HEADING:
             return new Float(g.heading);
@@ -654,31 +614,29 @@ public class PositionData extends AbstractBean {
             return new Integer(g.dsta);
         case DAGE:
             return new Integer(g.dage);
-        case FMT_PDOP_IDX:
+        case PDOP:
             return new Float(g.pdop / 100.0f);
-        case FMT_HDOP_IDX:
+        case HDOP:
             return new Float(g.hdop / 100.0f);
-        case FMT_VDOP_IDX:
+        case VDOP:
             return new Float(g.vdop / 100.0f);
-        case FMT_NSAT_IDX:
+        case NSAT:
             return new Integer(g.nsat);
         case FMT_FIXMODE:
             return CommonOut.getFixText(g.valid);
-        case FMT_MAX_SATS:
+        case SID:
             break;
-        case FMT_SID_IDX:
-            break;
-        case FMT_VOX:
+        case VOX:
             return g.voxStr;
-        case FMT_RCR_IDX:
+        case RCR:
             return CommonOut.getRCRstr(g);
-        case FMT_RCR_DESCRIPTION:
+        case RCR_DESCRIPTION:
             return CommonOut.getRcrSymbolText(g);
-        case FMT_MILLISECOND_IDX:
+        case MILLISECOND:
             return new Integer(g.milisecond);
-        case FMT_DISTANCE_IDX:
+        case DISTANCE:
             return new Double(g.distance);
-        case FMT_DISTANCE_FT_IDX:
+        case DISTANCE_FEET:
             break;
         }
         return null; // Default;
@@ -688,28 +646,28 @@ public class PositionData extends AbstractBean {
             final GPSRecord g, final int type) {
         try {
             switch (type) {
-            case C_LOGTIME:
+            case LOGTIME:
                 break;
-            case C_LOGDIST:
+            case LOGDIST:
                 break;
-            case C_LOGSPD:
+            case LOGSPD:
                 break;
-            case FMT_NS:
+            case NS:
                 break;
-            case FMT_EW:
+            case EW:
                 break;
-            case FMT_REC_NBR:
+            case RECORDNUMBER:
                 g.recCount = (Integer) value;
                 break;
-            case FMT_DATE:
+            case DATE:
                 break;
-            case FMT_TIME:
+            case TIME:
                 break;
             case FIX_VALID:
                 break;
-            case FMT_LATNS:
+            case LATITUDE_POSITIVE:
                 break;
-            case FMT_LONEW:
+            case LONGITUDE_POSITIVE:
                 break;
             case LATITUDE:
                 g.latitude = (Double) value;
@@ -723,7 +681,7 @@ public class PositionData extends AbstractBean {
                 break;
             case SPEED:
                 break;
-            case FMT_SPEED_MPH_IDX:
+            case SPEED_MPH:
                 break;
             case HEADING:
                 break;
@@ -731,33 +689,29 @@ public class PositionData extends AbstractBean {
                 break;
             case DAGE:
                 break;
-            case FMT_PDOP_IDX:
+            case PDOP:
                 break;
-            case FMT_HDOP_IDX:
+            case HDOP:
                 break;
-            case FMT_VDOP_IDX:
+            case VDOP:
                 break;
-            case FMT_NSAT_IDX:
+            case NSAT:
                 break;
             case FMT_FIXMODE:
                 break;
-            case FMT_MAX_SATS:
+            case SID:
                 break;
-            case FMT_SID_IDX:
+            case VOX:
                 break;
-            case FMT_VOX:
+            case RCR:
                 break;
-            case FMT_RCR_IDX:
+            case RCR_DESCRIPTION:
                 break;
-            case FMT_RCR_DESCRIPTION:
+            case MILLISECOND:
                 break;
-            case FMT_MILLISECOND_IDX:
+            case DISTANCE:
                 break;
-            case FMT_DISTANCE_IDX:
-                break;
-            case FMT_DISTANCE_FT_IDX:
-                break;
-            case FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX:
+            case DISTANCE_FEET:
                 break;
             }
             return true;

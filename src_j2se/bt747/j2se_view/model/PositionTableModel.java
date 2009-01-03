@@ -29,16 +29,16 @@ import javax.swing.table.AbstractTableModel;
 public class PositionTableModel extends AbstractTableModel {
 
     private int[] columnTypes = {
-            PositionData.FMT_REC_NBR,
-            PositionData.FMT_DATE,
-            PositionData.FMT_TIME,
+            PositionData.RECORDNUMBER,
+            PositionData.DATE,
+            PositionData.TIME,
             // PositionData.FMT_UTC_IDX,
             // FMT_UTC_VALUE,
-            PositionData.FMT_RCR_IDX, PositionData.FMT_RCR_DESCRIPTION,
+            PositionData.RCR, PositionData.RCR_DESCRIPTION,
             PositionData.FIX_VALID, PositionData.LATITUDE,
             PositionData.LONGITUDE, PositionData.POSITION_HEIGHT,
-            PositionData.FMT_HDOP_IDX, PositionData.FMT_PDOP_IDX,
-            PositionData.FMT_VOX };
+            PositionData.HDOP, PositionData.PDOP,
+            PositionData.VOX };
 
     private volatile List<List<GPSRecord>> gpsData;
 
@@ -88,7 +88,7 @@ public class PositionTableModel extends AbstractTableModel {
         if (index < columnTypes.length) {
             return columnTypes[index];
         } else {
-            return PositionData.FMT_NO_FIELD;
+            return PositionData.NONE;
         }
     }
 

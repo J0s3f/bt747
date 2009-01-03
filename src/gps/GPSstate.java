@@ -14,7 +14,6 @@
 // *** *********************************************************** ***
 package gps;
 
-import sun.rmi.runtime.GetThreadPoolAction;
 import gps.connection.GPSrxtx;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
@@ -167,7 +166,7 @@ public final class GPSstate implements BT747Thread {
      * Reset the availability of all values - e.g. after loss of connection.
      */
     public final void resetAvailable() {
-        int ts = Generic.getTimeStamp() - 5*60*1000;
+        final int ts = Generic.getTimeStamp() - 5 * 60 * 1000;
         for (int i = 0; i < dataAvailable.length; i++) {
             dataAvailable[i] = false;
             dataRequested[i] = ts;
@@ -198,9 +197,9 @@ public final class GPSstate implements BT747Thread {
      */
     public final boolean checkAvailable(final int dataType) {
         if (handler.isConnected()) {
-            int ts = Generic.getTimeStamp();
+            final int ts = Generic.getTimeStamp();
             if (Generic.getDebugLevel() > 1) {
-                Generic.debug("ts:"+ts+" type:" + dataType + " timesout:"
+                Generic.debug("ts:" + ts + " type:" + dataType + " timesout:"
                         + dataTimesOut[dataType] + " available:"
                         + dataAvailable[dataType] + " requested:"
                         + (ts - dataRequested[dataType]));
@@ -243,8 +242,9 @@ public final class GPSstate implements BT747Thread {
             } else {
                 return true;
             }
-        } else {
-            Generic.debug("Availability of " + dataType + "skipped");
+        }
+        if (Generic.isDebug() && (Generic.getDebugLevel() >= 2)) {
+            Generic.debug("Data request of " + dataType + " skipped");
         }
         return false;
     }
@@ -478,7 +478,7 @@ public final class GPSstate implements BT747Thread {
 
     public final void setLogTimeInterval(final int value) {
         int z_value = value;
-        if (z_value != 0 && z_value > 36000) {
+        if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
         }
         sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG + ","
@@ -488,9 +488,9 @@ public final class GPSstate implements BT747Thread {
 
     public final void setLogDistanceInterval(final int value) {
         int z_value = value;
-        if (z_value != 0 && z_value > 36000) {
+        if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
-        } else if (z_value != 0 && z_value < 1) {
+        } else if ((z_value != 0) && (z_value < 1)) {
             z_value = 1;
         }
 
@@ -503,9 +503,9 @@ public final class GPSstate implements BT747Thread {
 
     public final void setLogSpeedInterval(final int value) {
         int z_value = value;
-        if (z_value != 0 && z_value > 36000) {
+        if ((z_value != 0) && (z_value > 36000)) {
             z_value = 36000;
-        } else if (z_value != 0 && z_value < 1) {
+        } else if ((z_value != 0) && (z_value < 1)) {
             z_value = 1;
         }
         /* Get log distance interval */
@@ -631,7 +631,7 @@ public final class GPSstate implements BT747Thread {
 
     public final void setDGPSMode(final int mode) {
         // Request log format from device
-        if (mode >= 0 && mode <= 2) {
+        if ((mode >= 0) && (mode <= 2)) {
             sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_DGPS_MODE_STR + ","
                     + mode);
         }
@@ -644,7 +644,7 @@ public final class GPSstate implements BT747Thread {
 
     public final void setDatumMode(final int mode) {
         // Request log format from device
-        if (mode >= 0 && mode <= 2) {
+        if ((mode >= 0) && (mode <= 2)) {
             sendNMEA("PMTK" + BT747Constants.PMTK_API_SET_DATUM_STR + ","
                     + mode);
         }
@@ -699,8 +699,8 @@ public final class GPSstate implements BT747Thread {
      */
     public final void setBtMacAddr(final String btMacAddr) {
         String myMacAddr = "";
-        BT747StringTokenizer fields = Interface.getStringTokenizerInstance(
-                btMacAddr, ':');
+        final BT747StringTokenizer fields = Interface
+                .getStringTokenizerInstance(btMacAddr, ':');
         while (fields.hasMoreTokens()) {
             myMacAddr = fields.nextToken() + myMacAddr;
         }
@@ -714,7 +714,7 @@ public final class GPSstate implements BT747Thread {
     }
 
     public final void setNMEAPeriods(final int[] periods) {
-        StringBuffer sb = new StringBuffer(255);
+        final StringBuffer sb = new StringBuffer(255);
         sb.setLength(0);
         sb.append("PMTK" + BT747Constants.PMTK_API_SET_NMEA_OUTPUT);
         for (int i = 0; i < periods.length; i++) {
@@ -725,7 +725,7 @@ public final class GPSstate implements BT747Thread {
     }
 
     public final void setNMEADefaultPeriods() {
-        int[] periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
+        final int[] periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
 
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             periods[i] = 0;
@@ -801,14 +801,16 @@ public final class GPSstate implements BT747Thread {
             if (sNmea.length == 0) {
                 // Should not happen, problem in program
                 Generic.debug("Problem - report NMEA is 0 length");
-            } else if (sNmea.length == 1 && sNmea[0].startsWith("WP")) {
+            } else if ((sNmea.length == 1) && sNmea[0].startsWith("WP")) {
                 AnalyseDPL700Data(sNmea[0]);
-            } else if (gpsDecode && !isLogDownloadOnGoing() // Not
+            } else if (gpsDecode
+                    && !isLogDownloadOnGoing() // Not
                     // during
                     // log
                     // download for
                     // performance.
-                    && sNmea[0].length() != 0 && sNmea[0].charAt(0) == 'G') {
+                    && (sNmea[0].length() != 0)
+                    && (sNmea[0].charAt(0) == 'G')) {
                 // Commented - not interpreted.
                 // Generic.debug("Before"+sNmea[0]+(new
                 // java.util.Date(gpsPos.utc*1000L)).toString()+"("+gpsPos.utc+")");
@@ -961,7 +963,7 @@ public final class GPSstate implements BT747Thread {
                 result = -1; // Suppose cmd not treated
                 if (Generic.isDebug()) {
                     String s;
-                    int length = sNmea.length;
+                    final int length = sNmea.length;
 
                     s = "<";
                     for (int i = 0; i < length; i++) {
@@ -976,7 +978,7 @@ public final class GPSstate implements BT747Thread {
                 switch (cmd) {
                 case BT747Constants.HOLUX_API_DT_NAME:
                     if (sNmea.length == 3) {
-                        this.holuxName = sNmea[2];
+                        holuxName = sNmea[2];
                         postEvent(GpsEvent.UPDATE_HOLUX_NAME);
                     }
                     break;
@@ -984,7 +986,7 @@ public final class GPSstate implements BT747Thread {
                     break;
                 }
             } // End if
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("AnalyzeNMEA", e);
         }
         return result;
@@ -1050,7 +1052,7 @@ public final class GPSstate implements BT747Thread {
      * @see waba.sys.Thread#run()
      */
     public final void run() {
-        int timeStamp = Generic.getTimeStamp();
+        final int timeStamp = Generic.getTimeStamp();
         if (timeStamp >= nextRun) {
             nextRun = timeStamp + 10;
             int loopsToGo = 0; // Setting to 0 for more responsiveness
@@ -1063,7 +1065,7 @@ public final class GPSstate implements BT747Thread {
                         analyseNMEA(lastResponse);
                     }
                     handler.checkSendCmdFromQueue();
-                } while ((loopsToGo-- > 0) && lastResponse != null);
+                } while ((loopsToGo-- > 0) && (lastResponse != null));
                 if ((nextAvailableRun < timeStamp)
                         && (getOutStandingCmdsCount() == 0)
                         && !isLogDownloadOnGoing()) {
@@ -1147,7 +1149,7 @@ public final class GPSstate implements BT747Thread {
                 // TYPE = Parameter type
                 // DATA = Parameter data
                 // $PMTK182,3,TYPE,DATA
-                int z_type = Convert.toInt(sNmea[2]);
+                final int z_type = Convert.toInt(sNmea[2]);
                 if (sNmea.length == 4) {
                     switch (z_type) {
                     case BT747Constants.PMTK_LOG_FLASH_STAT:
@@ -1242,7 +1244,7 @@ public final class GPSstate implements BT747Thread {
                                 | (initialLogMode >> 8);
                         setAvailable(DATA_INITIAL_LOG);
                     }
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     // Do not care about exception
                 }
                 // logFullOverwrite = (((logStatus &
@@ -1253,7 +1255,7 @@ public final class GPSstate implements BT747Thread {
                     // AnalyzeLog:"+p_nmea[3].length());
                     mtkLogHandler.analyzeLogPart(Conv.hex2Int(sNmea[2]),
                             sNmea[3]);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     Generic.debug("analyzeLogNMEA", e);
 
                     // During debug: array index out of bounds
@@ -1290,7 +1292,7 @@ public final class GPSstate implements BT747Thread {
     }
 
     protected final void updateIgnoreNMEA() {
-        handler.setIgnoreNMEA((!this.gpsDecode) || isLogDownloadOnGoing());
+        handler.setIgnoreNMEA((!gpsDecode) || isLogDownloadOnGoing());
     }
 
     /**
@@ -1326,7 +1328,7 @@ public final class GPSstate implements BT747Thread {
      *                Indicates if this device needs special holux decoding.
      */
     public final void setHolux(final boolean forceHolux) {
-        this.holux = forceHolux;
+        holux = forceHolux;
     }
 
     /**
@@ -1360,9 +1362,9 @@ public final class GPSstate implements BT747Thread {
     }
 
     protected final void postEvent(final GpsEvent e) {
-        BT747HashSet it = listeners.iterator();
+        final BT747HashSet it = listeners.iterator();
         while (it.hasNext()) {
-            GPSListener l = (GPSListener) it.next();
+            final GPSListener l = (GPSListener) it.next();
             l.gpsEvent(e);
         }
     }
@@ -1533,7 +1535,7 @@ public final class GPSstate implements BT747Thread {
                                 handler.getDPL700_buffer(), 0,
                                 handler.getDPL700_buffer_idx());
                         mtkLogHandler.getLogFile().close();
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         Generic.debug("", e);
                         // TODO: handle exception
                     }

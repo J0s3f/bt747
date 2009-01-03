@@ -7,6 +7,8 @@ import java.awt.geom.Point2D;
 
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 
+import bt747.sys.Generic;
+
 /**
  * @author Mario
  * 
@@ -122,7 +124,9 @@ public class WmsEPSG4326TileFactoryInfo extends MyTileFactoryInfo {
                 // Apparently transparency is possible.
                 // "&transparent=TRUE"+
                 "";
-        // System.err.println(url);
+        if(Generic.isDebug()) {
+            Generic.debug(url);
+        }
         return url;
         // return url;
     }

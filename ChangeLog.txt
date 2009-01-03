@@ -1,3 +1,6 @@
+Version 1.66.11
+* Some internal changes + display tile url in specific case for debug.
+
 Version 1.66.10
 * EPSG4326 map type working.
 * Maximum Heap size for J2SE startup increased (for image rendering). 
@@ -19,7 +22,7 @@ Version 1.66.6
 
 Version 1.66.4
 * Read GPX files.
-* UPdate to BT747Cmd to select download method.
+* Update to BT747Cmd to select download method.
 
 Version 1.66.3
 * Fixed problem in KML/HTML and possibly some other output formats where data
