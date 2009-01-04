@@ -76,10 +76,15 @@ public class PositionData extends AbstractBean {
     public static final int IMAGE_WIDTH = 36;
     public static final int IMAGE_HEIGHT = 37;
     public static final int GEOMETRY = 38;
-    public static final int DATETIME = 39;
-    public static final int DATE = 40;
-    public static final int TIME = 41;
-    public static final int UTC_TIME = 42;
+    public static final int GPS_DATETIME = 39;
+    public static final int GPS_DATE = 40;
+    public static final int GPS_TIME = 41;
+    public static final int TAG_DATETIME = 42;
+    public static final int TAG_DATE = 43;
+    public static final int TAG_TIME = 44;
+    public static final int FILE_DATETIME = 45;
+    public static final int FILE_DATE = 46;
+    public static final int FILE_TIME = 47;
 
     /**
      * 
@@ -358,9 +363,15 @@ public class PositionData extends AbstractBean {
             return Object.class;// return Double.class;
         case LONGITUDE:
             return Object.class;// return Double.class;
-        case DATETIME:
-        case DATE:
-        case TIME:
+        case FILE_DATE:
+        case FILE_DATETIME:
+        case FILE_TIME:
+        case TAG_DATE:
+        case TAG_DATETIME:
+        case TAG_TIME:
+        case GPS_DATETIME:
+        case GPS_DATE:
+        case GPS_TIME:
             return String.class;
         case LOGTIME:
             return Float.class;
@@ -374,8 +385,6 @@ public class PositionData extends AbstractBean {
             return String.class;
         case RECORDNUMBER:
             return Integer.class;
-        case UTC_TIME:
-            return String.class;
         case UTC_VALUE:
             return Long.class;
         case FIX_VALID:
@@ -444,12 +453,24 @@ public class PositionData extends AbstractBean {
             return "Latitude";
         case LONGITUDE:
             return "Longitude";
-        case DATETIME:
-            return "Date/Time";
-        case DATE:
-            return "Date";
-        case TIME:
-            return "Time";
+        case FILE_DATETIME:
+            return "File Date/Time";
+        case FILE_DATE:
+            return "File Date";
+        case FILE_TIME:
+            return "File Time";
+        case TAG_DATETIME:
+            return "Tag Date/Time";
+        case TAG_DATE:
+            return "Tag Date";
+        case TAG_TIME:
+            return "Tag Time";
+        case GPS_DATETIME:
+            return "GPS Date/Time";
+        case GPS_DATE:
+            return "GPS Date";
+        case GPS_TIME:
+            return "GPS Time";
         case LOGTIME:
             return "Log time";
         case LOGDIST:
@@ -462,8 +483,6 @@ public class PositionData extends AbstractBean {
             return "E/W";
         case RECORDNUMBER:
             return "Record nbr";
-        case UTC_TIME:
-            return "Date & Time";
         case UTC_VALUE:
             return "UTC Value";
         case FIX_VALID:
@@ -523,6 +542,12 @@ public class PositionData extends AbstractBean {
             if (ImageData.class.isInstance(w)) {
                 final ImageData img = (ImageData) w;
                 switch (type) {
+                case FILE_DATE:
+                        return CommonOut.getDateStr(img.getUtc());
+                case FILE_TIME:
+                        return CommonOut.getTimeStr(img.getUtc());
+                case FILE_DATETIME:
+                        return CommonOut.getDateTimeStr(img.getUtc());
                 case IMAGE_PATH:
                     return img.getPath();
                 case IMAGE_WIDTH:
@@ -557,24 +582,40 @@ public class PositionData extends AbstractBean {
                 return Integer.valueOf(g.recCount);
             }
             break;
-        case UTC_TIME:
-            if (g.hasUtc()) {
-                return CommonOut.getDateTimeStr(g.utc);
-            }
-            break;
         case UTC_VALUE:
             if (g.hasUtc()) {
                 return Long.valueOf(g.utc);
             }
             break;
-        case DATE:
+        case GPS_DATE:
             if (g.hasUtc()) {
                 return CommonOut.getDateStr(g.utc);
             }
             break;
-        case TIME:
+        case GPS_TIME:
             if (g.hasUtc()) {
                 return CommonOut.getTimeStr(g.utc);
+            }
+            break;
+        case GPS_DATETIME:
+            if (g.hasUtc()) {
+                return CommonOut.getDateTimeStr(g.utc);
+            }
+            break;
+
+        case TAG_DATE:
+            if (g.hasTagUtc()) {
+                return CommonOut.getDateStr(g.tagutc);
+            }
+            break;
+        case TAG_TIME:
+            if (g.hasTagUtc()) {
+                return CommonOut.getTimeStr(g.tagutc);
+            }
+            break;
+        case TAG_DATETIME:
+            if (g.hasTagUtc()) {
+                return CommonOut.getDateTimeStr(g.tagutc);
             }
             break;
         case FIX_VALID:
@@ -716,9 +757,9 @@ public class PositionData extends AbstractBean {
             case RECORDNUMBER:
                 g.recCount = (Integer) value;
                 break;
-            case DATE:
+            case GPS_DATE:
                 break;
-            case TIME:
+            case GPS_TIME:
                 break;
             case FIX_VALID:
                 break;

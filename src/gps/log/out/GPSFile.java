@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.log.out;
 
 import gps.BT747Constants;
@@ -30,8 +30,8 @@ import bt747.sys.interfaces.BT747Time;
  * @author Mario De Weerd
  * 
  * This abstract class defines the 'interface' with the BT747LogConvert class.
- * Derived classes will be able to write the desired output in the formats they
- * implement.
+ * Derived classes will be able to write the desired output in the formats
+ * they implement.
  */
 public abstract class GPSFile implements GPSFileConverterInterface {
     /**
@@ -62,8 +62,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     protected GPSRecord selectedFileFields;
 
     /**
-     * True if the current record is the first record - needed for initial file
-     * creation and track handling in extending classes.
+     * True if the current record is the first record - needed for initial
+     * file creation and track handling in extending classes.
      */
     protected boolean firstRecord;
 
@@ -99,8 +99,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     private File outFile = null;
 
     /**
-     * The time of the current record as a Time object. This will avoid creating
-     * multiple time objects.
+     * The time of the current record as a Time object. This will avoid
+     * creating multiple time objects.
      */
     protected final BT747Time t = Interface.getTimeInstance();
 
@@ -116,14 +116,14 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      */
     protected int trackSepTime = 60 * 60;
     /**
-     * The number of files that were created. This value is also used to detect
-     * if any record has been written.
+     * The number of files that were created. This value is also used to
+     * detect if any record has been written.
      */
     protected int filesCreated = 0;
 
     /**
-     * When true, one file is created for each detected track. Default value is
-     * false.
+     * When true, one file is created for each detected track. Default value
+     * is false.
      * 
      * @see #trackSepTime
      */
@@ -151,8 +151,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     protected boolean imperial = false;
 
     /**
-     * The filename builder allows a big flexibility in defining the output file
-     * name.
+     * The filename builder allows a big flexibility in defining the output
+     * file name.
      */
     protected BT747FileName filenameBuilder = new GPSDefaultFileName();
 
@@ -165,15 +165,15 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * conversion. Other parameters can be set through other methods.
      * 
      * @param baseName
-     *            Base name of the output file. This value will be provided to
-     *            the filename builder.
+     *                Base name of the output file. This value will be
+     *                provided to the filename builder.
      * @param extension
-     *            Extension of the output file. This value will be provided to
-     *            the filename builder.
+     *                Extension of the output file. This value will be
+     *                provided to the filename builder.
      * @param fileCard
-     *            Card number used on certain devices like a Palm.
+     *                Card number used on certain devices like a Palm.
      * @param fileSeparationFreq
-     *            Indicates how the file must be separated.
+     *                Indicates how the file must be separated.
      * 
      * @see #FILE_SPLIT_NONE
      * @see #FILE_SPLIT_ONE_FILE_PER_DAY
@@ -208,8 +208,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * Set the track separation time.
      * 
      * @param time
-     *            Seconds of unavailable positions require before deciding to
-     *            hava a new track.
+     *                Seconds of unavailable positions require before deciding
+     *                to hava a new track.
      */
     public final void setTrackSepTime(final int time) {
         trackSepTime = time;
@@ -221,7 +221,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * 
      * @param activeFileFieldsFormat
      */
-    public final void setActiveFileFields(final GPSRecord activeFileFieldsFormat) {
+    public final void setActiveFileFields(
+            final GPSRecord activeFileFieldsFormat) {
         // TODO: Take into account the waypoints.
         activeFileFields = activeFileFieldsFormat;
     }
@@ -256,7 +257,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * application.
      * 
      * @param ourFilters
-     *            Track point and way point filters.
+     *                Track point and way point filters.
      */
     public final void setFilters(final GPSFilter[] ourFilters) {
         ptFilters = ourFilters;
@@ -266,15 +267,15 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * Indicate whether Imperial units (miles, knots, mph) should be used.
      * 
      * @param useImperial
-     *            when true, use imperial units.
+     *                when true, use imperial units.
      */
     public final void setImperial(final boolean useImperial) {
         this.imperial = useImperial;
     }
 
     /**
-     * Check whether there is any need at all for the current record for any of
-     * the position filters.
+     * Check whether there is any need at all for the current record for any
+     * of the position filters.
      * 
      * @return true if the record is needed.
      */
@@ -346,8 +347,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     private boolean overridePreviousTag = false;
 
     /**
-     * A record is added from the input log. User way points are geotagged here
-     * and inserted at the right spot.
+     * A record is added from the input log. User way points are geotagged
+     * here and inserted at the right spot.
      * <p>
      * This is not to be extended.
      * <p>
@@ -365,10 +366,13 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                     continueLoop = false;
                     GPSRecord userWayPoint = userWayPointList[currentWayPointListIdx];
                     boolean doWriteRecord = false;
-                    int userWayPointUTC = userWayPoint.utc
-                            + waypointTimeCorrection;
-                    int diffPrevious = userWayPointUTC - prevRecord.utc
-                            + timeOffsetSeconds;
+                    int userWayPointUTC = userWayPoint.tagutc
+                            + waypointTimeCorrection; // UTC time now //
+                                                        // CommonOut.getDateTimeStr(userWayPointUTC)
+                    int diffPrevious = userWayPointUTC - prevRecord.utc // CommonOut.getDateTimeStr(prevRecord.utc)
+                            + timeOffsetSeconds; // - prevRecord.utc +
+                                                    // r.utc
+                                                    // +timeOffsetSeconds
                     int diffNext = userWayPointUTC - r.utc; // If > 0, current
                     // position is
                     // earlier.
@@ -376,22 +380,26 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                     if ((diffPrevious >= 0) && (diffNext < 0)) {
                         GPSRecord ref;
                         int diff;
+                        int gpstime;
                         // WayPoint is in between two points.
                         if (diffPrevious < -diffNext) {
                             ref = prevRecord;
+                            gpstime = prevRecord.utc - timeOffsetSeconds;
                             diff = diffPrevious;
                         } else {
                             ref = r;
                             diff = -diffNext;
+                            gpstime = r.utc;
                         }
                         if ((diff <= maxDiff)
                                 && (overridePreviousTag || (!userWayPoint
                                         .hasLatitude() || !userWayPoint
                                         .hasLongitude()))) {
                             userWayPoint.tagFromRecord(ref);
+                            userWayPoint.utc = gpstime;
                         }
                         doWriteRecord = true;
-                    } else if (diffPrevious < 0) {
+                    } else if (diffPrevious < -maxDiff) {
                         // Skip record
                         doWriteRecord = true;
 
@@ -404,42 +412,41 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                                 writeLogFmtHeader(userWayPoint);
                             }
                             // bt747.sys.Generic.debug(diffPrevious + " " +
-                            // diffNext); // utcCorrectedRecord.utc - userWayPoint.utc
+                            // diffNext); // utcCorrectedRecord.utc -
+                            // userWayPoint.utc
                             // bt747.sys.Generic.debug(gps.log.out.CommonOut
                             // .getTimeStr(userWayPointUTC));
                             // bt747.sys.Generic.debug(r.toString());
                             // logFormat = userWayPoint.getLogFormat();
-                            GPSRecord utcCorrectedRecord = userWayPoint
-                                    .cloneRecord();
-                            utcCorrectedRecord.utc = userWayPointUTC;
-                            writeUtc0Record(utcCorrectedRecord);
+                            // userWayPoint.utc = userWayPointUTC;
+                            userWayPoint.utc-=timeOffsetSeconds;
+                            writeUtc0Record(userWayPoint);
                         }
                         nextWayPointIdx();
                         continueLoop = currentWayPointListIdx != -1;
                     }
                 } while (continueLoop);
-            } else {
-                boolean continueLoop = false;
-                do {
-                    GPSRecord userWayPoint = userWayPointList[currentWayPointListIdx];
-                    int userWayPointUTC = userWayPoint.utc
-                            + waypointTimeCorrection;
-                    // bt747.sys.Generic.debug(userWayPoint.toString());
-                    continueLoop = false;
-                    if (userWayPointUTC < r.utc) {
-                        if (!activeFields.equalsFormat(userWayPoint)) {
-                            writeLogFmtHeader(userWayPoint);
-                        }
-                        GPSRecord utcCorrectedRecord = userWayPoint
-                                .cloneRecord();
-                        utcCorrectedRecord.utc = userWayPointUTC;
-                        writeUtc0Record(utcCorrectedRecord);
-                        nextWayPointIdx();
-                        if (currentWayPointListIdx >= 0) {
-                            continueLoop = true;
-                        }
-                    }
-                } while (continueLoop);
+                // } else {
+                // boolean continueLoop = false;
+                // do {
+                // GPSRecord userWayPoint =
+                // userWayPointList[currentWayPointListIdx];
+                // int userWayPointUTC = userWayPoint.tagutc
+                // + waypointTimeCorrection;
+                // // bt747.sys.Generic.debug(userWayPoint.toString());
+                // continueLoop = false;
+                // if (userWayPointUTC < r.utc) {
+                // if (!activeFields.equalsFormat(userWayPoint)) {
+                // writeLogFmtHeader(userWayPoint);
+                // }
+                // //userWayPoint.utc = userWayPointUTC;
+                // writeUtc0Record(userWayPoint);
+                // nextWayPointIdx();
+                // if (currentWayPointListIdx >= 0) {
+                // continueLoop = true;
+                // }
+                // }
+                // } while (continueLoop);
 
             }
             if (prevActiveFields != activeFields) {
@@ -454,7 +461,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             prevRecord = r;
         }
     }
-    
+
     private final void writeUtc0Record(final GPSRecord r) {
         if (activeFields.utc != 0) {
             r.utc += timeOffsetSeconds;
@@ -469,10 +476,10 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                 if (!activeFields.equalsFormat(userWayPoint)) {
                     writeLogFmtHeader(userWayPoint);
                 }
-                int userWayPointUTC = userWayPoint.utc + waypointTimeCorrection;
-                GPSRecord utcCorrectedRecord = userWayPoint.cloneRecord();
-                utcCorrectedRecord.utc = userWayPointUTC;
-                writeRecord(utcCorrectedRecord);
+                // int userWayPointUTC = userWayPoint.utc +
+                // waypointTimeCorrection;
+                // userWayPoint.utc = userWayPointUTC;
+                writeRecord(userWayPoint);
             }
             nextWayPointIdx();
         }
@@ -487,13 +494,13 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     }
 
     /**
-     * Called for any new position. This method is called by the input analysis
-     * class and should be extended for the output format. The extension must
-     * call super(). That will make sure that the appropriate files are opened,
-     * and the {@link #t} property set.
+     * Called for any new position. This method is called by the input
+     * analysis class and should be extended for the output format. The
+     * extension must call super(). That will make sure that the appropriate
+     * files are opened, and the {@link #t} property set.
      * 
      * @param r
-     *            information regarding the position.
+     *                information regarding the position.
      */
     public void writeRecord(final GPSRecord r) {
         String extraExt; // Extra extension for log file
@@ -526,10 +533,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                 if ((r.utc < 24 * 3600) // No date provided by log.
                         || (t.getYear() > 2000)) {
                     extraExt = "-" + t.getYear()
-                            + (t.getMonth() < 10 ? "0" : "")
-                            + t.getMonth()
-                            + (t.getDay() < 10 ? "0" : "")
-                            + t.getDay();
+                            + (t.getMonth() < 10 ? "0" : "") + t.getMonth()
+                            + (t.getDay() < 10 ? "0" : "") + t.getDay();
                     if (oneFilePerTrack) {
                         extraExt += "_" + (t.getHour() < 10 ? "0" : "")
                                 + t.getHour()
@@ -611,8 +616,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
     /**
      * Called when the input file has been parsed. This method checks if other
-     * passes are needed and performs some closing operations if that is not the
-     * case.<br>
+     * passes are needed and performs some closing operations if that is not
+     * the case.<br>
      * This method must be extended, call super.nextPass() and then update
      * nbrOfPassesToGo.
      * 
@@ -652,7 +657,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * file.
      * 
      * @param Name
-     *            Identifier for the output file that can be used in the header.
+     *                Identifier for the output file that can be used in the
+     *                header.
      */
     protected void writeFileHeader(final String Name) {
     };
@@ -743,7 +749,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
     /**
      * @param badTrackColor
-     *            The badTrackColor to set.
+     *                The badTrackColor to set.
      */
     public final void setBadTrackColor(final String badTrackColor) {
         this.badTrackColor = badTrackColor;
@@ -759,7 +765,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
     /**
      * @param goodTrackColor
-     *            The goodTrackColor to set.
+     *                The goodTrackColor to set.
      */
     public final void setGoodTrackColor(final String goodTrackColor) {
         this.goodTrackColor = goodTrackColor;
@@ -788,7 +794,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
     /**
      * @param recordNbrInLogs
-     *            The recordNbrInLogs to set.
+     *                The recordNbrInLogs to set.
      */
     public final void setRecordNbrInLogs(final boolean recordNbrInLogs) {
         this.recordNbrInLogs = recordNbrInLogs;
@@ -832,7 +838,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * The time offset to apply to the output records in seconds.
      * 
      * @param offset
-     *            The time offset in seconds.
+     *                The time offset in seconds.
      */
     public final void setTimeOffset(final int offset) {
         timeOffsetSeconds = offset;
@@ -847,7 +853,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
     /**
      * @param maxDiff
-     *            the maxDiff to set
+     *                the maxDiff to set
      */
     public final void setMaxDiff(int maxDiff) {
         this.maxDiff = maxDiff;
@@ -862,7 +868,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
     /**
      * @param overridePreviousTag
-     *            the overridePreviousTag to set
+     *                the overridePreviousTag to set
      */
     public final void setOverridePreviousTag(boolean overridePreviousTag) {
         this.overridePreviousTag = overridePreviousTag;

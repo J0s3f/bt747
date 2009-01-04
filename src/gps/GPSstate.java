@@ -789,7 +789,7 @@ public final class GPSstate implements BT747Thread {
     }
 
     private boolean gpsDecode = true;
-    private final GPSRecord gpsPos = new GPSRecord();
+    private final GPSRecord gpsPos = GPSRecord.getLogFormatRecord(0);
 
     public final int analyseNMEA(final String[] sNmea) {
         int cmd;

@@ -9,8 +9,6 @@ import javax.swing.table.AbstractTableModel;
 
 import bt747.j2se_view.model.PositionData.UserWayPointListModel;
 
-
-
 /**
  * @author Mario
  * 
@@ -20,12 +18,12 @@ public class FileTableModel extends AbstractTableModel {
 
     private UserWayPointListModel wpListModel;
 
-
     /**
      * The columns currently shown.
      */
-    private int[] columns = { 
-            PositionData.DATE, PositionData.TIME, PositionData.IMAGE_PATH, PositionData.GEOMETRY,
+    private int[] columns = { PositionData.FILE_DATE, PositionData.FILE_TIME,
+            PositionData.GPS_TIME, //PositionData.TAG_TIME,
+            PositionData.IMAGE_PATH, PositionData.GEOMETRY,
             PositionData.LATITUDE, PositionData.LONGITUDE };
 
     /**
@@ -35,49 +33,58 @@ public class FileTableModel extends AbstractTableModel {
         wpListModel = m;
         wpListModel.addListDataListener(new WPListDataListener());
     }
-    
+
     private final class WPListDataListener implements ListDataListener {
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see javax.swing.event.ListDataListener#contentsChanged(javax.swing.event.ListDataEvent)
          */
         public void contentsChanged(ListDataEvent e) {
             fireTableRowsUpdated(e.getIndex0(), e.getIndex1());
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see javax.swing.event.ListDataListener#intervalAdded(javax.swing.event.ListDataEvent)
          */
         public void intervalAdded(ListDataEvent e) {
             fireTableRowsInserted(e.getIndex0(), e.getIndex1());
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see javax.swing.event.ListDataListener#intervalRemoved(javax.swing.event.ListDataEvent)
          */
         public void intervalRemoved(ListDataEvent e) {
             fireTableRowsDeleted(e.getIndex0(), e.getIndex1());
-            
+
         }
-        
+
     }
+
     public void add(String path) {
         wpListModel.add(path);
     }
-    
+
     /**
      * 
      */
     public void clear() {
         wpListModel.clear();
     }
+
     /*
      * (non-Javadoc)
      * 
      * @see javax.swing.table.TableModel#getColumnClass(int)
      */
     public Class<?> getColumnClass(int columnIndex) {
-        return PositionData.getDataDisplayClass(columnToDataType(columnIndex));
+        return PositionData
+                .getDataDisplayClass(columnToDataType(columnIndex));
     }
 
     /*
@@ -107,7 +114,6 @@ public class FileTableModel extends AbstractTableModel {
         return wpListModel.getSize();
     }
 
-
     private int columnToDataType(final int column) {
         if (column < columns.length) {
             return columns[column];
@@ -122,8 +128,8 @@ public class FileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return PositionData.getData((ImageData)wpListModel.getElementAt(rowIndex),
-                columnToDataType(columnIndex));
+        return PositionData.getData((ImageData) wpListModel
+                .getElementAt(rowIndex), columnToDataType(columnIndex));
     }
 
     /*
@@ -139,11 +145,12 @@ public class FileTableModel extends AbstractTableModel {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
+     * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int,
+     *      int)
      */
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         // TODO Auto-generated method stub
 
     }
-    
+
 }

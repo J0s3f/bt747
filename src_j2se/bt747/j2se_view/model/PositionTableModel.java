@@ -30,8 +30,8 @@ public class PositionTableModel extends AbstractTableModel {
 
     private int[] columnTypes = {
             PositionData.RECORDNUMBER,
-            PositionData.DATE,
-            PositionData.TIME,
+            PositionData.GPS_DATE,
+            PositionData.GPS_TIME,
             // PositionData.FMT_UTC_IDX,
             // FMT_UTC_VALUE,
             PositionData.RCR, PositionData.RCR_DESCRIPTION,
