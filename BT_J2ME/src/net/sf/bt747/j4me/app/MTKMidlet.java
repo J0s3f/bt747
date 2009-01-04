@@ -42,6 +42,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
     public MTKMidlet() {
         try {
             MTKMidlet.setInstance(this);
+            UIManager.init(this);
             Log.setLevel(Level.DEBUG);
             m = new AppModel();
             c = new AppController(m);
@@ -80,7 +81,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
         Throwable m = null;
         // Initialize the J4ME UI manager.
         try {
-            UIManager.init(this);
+            // UIManager.init(this);
             DeviceScreen main = new MainScreen(c, this);
             // Change the theme.
             // Show the first screen.

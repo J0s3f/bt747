@@ -108,6 +108,7 @@ public final class MainScreen extends Dialog implements ModelListener {
     public MainScreen(final AppController c, final MTKMidlet midlet) {
         this.c = c;
         this.midlet = midlet;
+        //UIManager.init(midlet);
         UIManager.setTheme(new BlueTheme(getScreenWidth()));
 
         // Set the title.
@@ -275,7 +276,7 @@ public final class MainScreen extends Dialog implements ModelListener {
     }
 
     /**
-     * Is true when the application is launched and when initialisation is
+     * Is true when the application is launched and when initialization is
      * required when the main screen is shown.
      */
     private static boolean isFirstLaunch = true;
