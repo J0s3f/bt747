@@ -11,6 +11,7 @@ import org.j4me.ui.components.TextBox;
 
 import com.sun.midp.io.j2me.storage.File;
 
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.sys.Convert;
 
@@ -128,7 +129,7 @@ public final class ConvertToScreen extends
             rbDevice = new RadioButton();
             rbDevice.append("Default device");
             rbDevice.append("Holux M-241");
-            if (!c.getAppModel().getBooleanOpt(Model.IS_HOLUXM241)) {
+            if (!c.getAppModel().getBooleanOpt(Model.FORCE_HOLUXM241)) {
                 rbDevice.setSelectedIndex(0);
             } else {
                 rbDevice.setSelectedIndex(1);
@@ -139,7 +140,7 @@ public final class ConvertToScreen extends
             rbFiles.append("One file");
             rbFiles.append("One file/day");
             rbFiles.append("One file/track");
-            rbFiles.setSelectedIndex(c.getModel().getOutputFileSplitType());
+            rbFiles.setSelectedIndex(m().getOutputFileSplitType());
             append(rbFiles);
 
             rbHeightCorrection = new RadioButton();
@@ -147,7 +148,7 @@ public final class ConvertToScreen extends
             rbHeightCorrection.append("Keep height");
             rbHeightCorrection.append("WGS84 to MSL");
             rbHeightCorrection.append("MSL to WGS84");
-            switch(c.getModel().getHeightConversionMode()) {
+            switch(m().getHeightConversionMode()) {
             case Model.HEIGHT_AUTOMATIC:
                 rbFiles.setSelectedIndex(0);
                 break;
@@ -166,7 +167,7 @@ public final class ConvertToScreen extends
             tbTrackSeparation = new TextBox();
             tbTrackSeparation.setForNumericOnly();
             tbTrackSeparation.setLabel("Trk separation time (min)");
-            tbTrackSeparation.setString(Integer.toString(c.getModel()
+            tbTrackSeparation.setString(Integer.toString(m()
                     .getTrkSep()));
             append(tbTrackSeparation);
 
@@ -174,9 +175,9 @@ public final class ConvertToScreen extends
             for (int i = 0; i < offsetStr.length; i++) {
                 rbTimeOffsetHours.append(offsetStr[i]);
             }
-            int offsetIdx = c.getModel().getTimeOffsetHours() + 12;
+            int offsetIdx = m().getIntOpt(Model.GPSTIMEOFFSETHOURS) + 12;
             if (offsetIdx > 26) {
-                c.setTimeOffsetHours(0); // TODO: Change in call to control
+                c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, 0); // TODO: Change in call to control
                 offsetIdx = 12;
             }
             rbTimeOffsetHours.setSelectedIndex(offsetIdx);
@@ -184,6 +185,9 @@ public final class ConvertToScreen extends
         }
     }
 
+    private final AppModel m() {
+        return c.getAppModel();
+    }
     public void show() {
         setUpScreen();
         super.show();
@@ -208,14 +212,14 @@ public final class ConvertToScreen extends
             break;
         }
         c.setTrkSep(Integer.parseInt(tbTrackSeparation.getString()));
-        c.setBooleanOpt(Model.IS_HOLUXM241, rbDevice.getSelectedIndex() == 1);
+        c.setBooleanOpt(Model.FORCE_HOLUXM241, rbDevice.getSelectedIndex() == 1);
         int index = 0;
         // Work around superwaba bug
         String tmp = (String) rbTimeOffsetHours.getSelectedValue();
         if (tmp.charAt(0) == '+') {
             index = 1;
         }
-        c.setTimeOffsetHours(Convert.toInt((String) tmp.substring(index)));
+        c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Convert.toInt((String) tmp.substring(index)));
 
         progressScreen = new ConvertToProgressScreen(c, previous,
                 getSelectedLogType());
@@ -233,14 +237,14 @@ public final class ConvertToScreen extends
     // TODO: to generalise
     private void selectBaseFile() {
         DeviceScreen d;
-        d = new PathSelectionScreen("Input file", this, c.getModel()
+        d = new PathSelectionScreen("Input file", this, m()
                 .getStringOpt(AppModel.LOGFILEPATH), false) {
             protected void notifyPathSelected(final String path) {
                 c.setStringOpt(AppModel.LOGFILERELPATH, gps.convert.FileUtil
-                        .getRelativePath(c.getModel().getStringOpt(
+                        .getRelativePath(m().getStringOpt(
                                 AppModel.OUTPUTDIRPATH), path, '/'));
                 c.setPaths();
-                tbBinFile.setString(c.getModel().getStringOpt(
+                tbBinFile.setString(m().getStringOpt(
                         AppModel.LOGFILERELPATH));
             }
         };

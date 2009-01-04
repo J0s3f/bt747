@@ -50,7 +50,7 @@ public final class J2MEHashtable implements
     /* (non-Javadoc)
      * @see bt747.sys.interfaces.BT747Hashtable#next()
      */
-    public final Object next() {
+    public final Object nextKey() {
         return enumerator.nextElement();
     }
     
@@ -70,5 +70,12 @@ public final class J2MEHashtable implements
      */
     public final Object put(final Object key, final Object value) {
         return hash.put(key, value);
+    }
+
+    /* (non-Javadoc)
+     * @see bt747.sys.interfaces.BT747Hashtable#size()
+     */
+    public int size() {
+        return hash.size();
     }
 }

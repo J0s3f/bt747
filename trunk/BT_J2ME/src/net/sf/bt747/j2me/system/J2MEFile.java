@@ -50,10 +50,10 @@ public final class J2MEFile implements BT747File {
             case bt747.sys.File.CREATE:
                 lMode = Connector.READ_WRITE;
                 FileConnection f = tmpFileConnection(path);
-                    f.create();
-                    f.close();
-                    f = null;
-                    break;
+                f.create();
+                f.close();
+                f = null;
+                break;
             case bt747.sys.File.READ_WRITE:
                 lMode = Connector.READ_WRITE;
                 break;
@@ -261,5 +261,18 @@ public final class J2MEFile implements BT747File {
 
     public int getLastError() {
         return lastError;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see bt747.sys.interfaces.BT747File#getModificationTime()
+     */
+    public int getModificationTime() {
+        try {
+            return (int) (tmpFileConnection(path).lastModified() / 1000L);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }
