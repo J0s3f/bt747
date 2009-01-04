@@ -110,10 +110,10 @@ public class MTKMidlet extends MIDlet implements CommandListener {
                 }
 
             } catch (Exception e) {
-                Log.warn("Exception in display throwable");
+                // Log.warn("Exception in display throwable");
                 // Don't care
             }
-            Log.info("Display throwable",t);
+            // Log.info("Display throwable",t);
             // LogScreen l = new LogScreen(null);
             // l.show();
             Display disp;
