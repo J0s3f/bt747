@@ -342,58 +342,6 @@ public class PositionData extends AbstractBean {
         firePropertyChange(WAYPOINTSELECTED, null, w);
     }
 
-    public static Object getData(final ImageData img, final int dataType) {
-        switch (dataType) {
-        case NONE:
-            return null;
-        case IMAGE_PATH:
-            return img.getPath();
-        case IMAGE_WIDTH:
-            return Integer.valueOf(img.getWidth());
-        case IMAGE_HEIGHT:
-            return Integer.valueOf(img.getHeight());
-        case GEOMETRY:
-            if (img.getWidth() != 0) {
-                return img.getWidth() + "x" + img.getHeight();
-            } else {
-                return null;
-            }
-        case LATITUDE:
-            if (img.getGpsRecord().hasLatitude()) {
-                return Double.valueOf(img.getGpsRecord().latitude);
-            } else {
-                return null;
-            }
-        case LONGITUDE:
-            if (img.getGpsRecord().hasLongitude()) {
-                return Double.valueOf(img.getGpsRecord().longitude);
-            } else {
-                return null;
-            }
-        case DATETIME:
-            if (img.getGpsRecord().hasUtc()) {
-                return CommonOut.getDateTimeStr(img.getGpsRecord().utc);
-            } else {
-                return null;
-            }
-        case DATE:
-            if (img.getGpsRecord().hasUtc()) {
-                return CommonOut.getDateStr(img.getGpsRecord().utc);
-            } else {
-                return null;
-            }
-        case TIME:
-            if (img.getGpsRecord().hasUtc()) {
-                return CommonOut.getTimeStr(img.getGpsRecord().utc);
-            } else {
-                return null;
-            }
-        default:
-            return null;
-        }
-
-    }
-
     public static final Class<?> getDataDisplayClass(final int datatype) {
         switch (datatype) {
         case NONE:
@@ -568,6 +516,30 @@ public class PositionData extends AbstractBean {
         return null;
     }
 
+    public static final Object getData(final BT747Waypoint w, final int type) {
+        Object result;
+        result = getValue(w.getGpsRecord(), type);
+        if (result == null) {
+            if (ImageData.class.isInstance(w)) {
+                final ImageData img = (ImageData) w;
+                switch (type) {
+                case IMAGE_PATH:
+                    return img.getPath();
+                case IMAGE_WIDTH:
+                    return Integer.valueOf(img.getWidth());
+                case IMAGE_HEIGHT:
+                    return Integer.valueOf(img.getHeight());
+                case GEOMETRY:
+                    if (img.getWidth() != 0) {
+                        return img.getWidth() + "x" + img.getHeight();
+                    }
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
     public static final Object getValue(final GPSRecord g, final int type) {
         switch (type) {
         case LOGTIME:
@@ -581,63 +553,148 @@ public class PositionData extends AbstractBean {
         case EW:
             break;
         case RECORDNUMBER:
-            return Integer.valueOf(g.recCount);
+            if (g.hasRecCount()) {
+                return Integer.valueOf(g.recCount);
+            }
+            break;
         case UTC_TIME:
-            return CommonOut.getDateTimeStr(g.utc);
+            if (g.hasUtc()) {
+                return CommonOut.getDateTimeStr(g.utc);
+            }
+            break;
         case UTC_VALUE:
-            return Long.valueOf(g.utc);
+            if (g.hasUtc()) {
+                return Long.valueOf(g.utc);
+            }
+            break;
         case DATE:
-            return CommonOut.getDateStr(g.utc);
+            if (g.hasUtc()) {
+                return CommonOut.getDateStr(g.utc);
+            }
+            break;
         case TIME:
-            return CommonOut.getTimeStr(g.utc);
+            if (g.hasUtc()) {
+                return CommonOut.getTimeStr(g.utc);
+            }
+            break;
         case FIX_VALID:
-            return CommonOut.getFixText(g.valid);
+            if (g.hasValid()) {
+                return CommonOut.getFixText(g.valid);
+            }
+            break;
         case LATITUDE_POSITIVE:
+            if (g.hasLatitude()) {
+                if (g.latitude < 0.) {
+                    return -g.latitude;
+                } else {
+                    return g.latitude;
+                }
+            }
             break;
         case LONGITUDE_POSITIVE:
+            if (g.hasLongitude()) {
+                if (g.longitude < 0.) {
+                    return -g.longitude;
+                } else {
+                    return g.longitude;
+                }
+            }
             break;
         case LATITUDE:
-            return new Double(g.latitude);
+            if (g.hasLatitude()) {
+                return new Double(g.latitude);
+            }
+            break;
         case LONGITUDE:
-            return new Double(g.longitude);
+            if (g.hasLongitude()) {
+                return new Double(g.longitude);
+            }
+            break;
         case POSITION_HEIGHT:
-            return new Float(g.height);
+            if (g.hasHeight()) {
+                return new Float(g.height);
+            }
+            break;
         case FMT_HEIGHT_FT_IDX:
             break;
         case SPEED:
-            return new Float(g.speed);
+            if (g.hasSpeed()) {
+                return new Float(g.speed);
+            }
+            break;
         case SPEED_MPH:
             break;
         case HEADING:
-            return new Float(g.heading);
+            if (g.hasHeading()) {
+                return new Float(g.heading);
+            }
+            break;
         case DSTA:
-            return new Integer(g.dsta);
+            if (g.hasDsta()) {
+                return new Integer(g.dsta);
+            }
+            break;
         case DAGE:
-            return new Integer(g.dage);
+            if (g.hasDage()) {
+                return new Integer(g.dage);
+            }
+            break;
         case PDOP:
-            return new Float(g.pdop / 100.0f);
+            if (g.hasPdop()) {
+                return new Float(g.pdop / 100.0f);
+            }
+            break;
         case HDOP:
-            return new Float(g.hdop / 100.0f);
+            if (g.hasHdop()) {
+                return new Float(g.hdop / 100.0f);
+            }
+            break;
         case VDOP:
-            return new Float(g.vdop / 100.0f);
+            if (g.hasVdop()) {
+                return new Float(g.vdop / 100.0f);
+            }
+            break;
         case NSAT:
-            return new Integer(g.nsat);
+            if (g.hasNsat()) {
+                return new Integer(g.nsat);
+            }
+            break;
         case FMT_FIXMODE:
-            return CommonOut.getFixText(g.valid);
+            if (g.hasValid()) {
+                return CommonOut.getFixText(g.valid);
+            }
+            break;
         case SID:
+
             break;
         case VOX:
-            return g.voxStr;
+            if (g.hasVoxStr()) {
+                return g.voxStr;
+            }
+            break;
         case RCR:
-            return CommonOut.getRCRstr(g);
+            if (g.hasRcr()) {
+                return CommonOut.getRCRstr(g);
+            }
+            break;
         case RCR_DESCRIPTION:
-            return CommonOut.getRcrSymbolText(g);
+            if (g.hasRcr()) {
+                return CommonOut.getRcrSymbolText(g);
+            }
+            break;
         case MILLISECOND:
-            return new Integer(g.milisecond);
+            if (g.hasMilisecond()) {
+                return new Integer(g.milisecond);
+            }
+            break;
         case DISTANCE:
-            return new Double(g.distance);
+            if (g.hasDistance()) {
+                return new Double(g.distance);
+            }
+            break;
         case DISTANCE_FEET:
             break;
+        // Image specific
         }
         return null; // Default;
     }

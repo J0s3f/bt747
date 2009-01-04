@@ -14,21 +14,11 @@
 //***  *********************************************************** ***
 package bt747.j2se_view.model;
 
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.lang.ref.SoftReference;
-
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-
-import org.jdesktop.swingx.graphics.GraphicsUtilities;
-
+import gps.BT747Constants;
+import gps.log.GPSRecord;
 import net.sf.bt747.j2se.app.exif.ExifAttribute;
 import net.sf.bt747.j2se.app.exif.ExifConstants;
 import net.sf.bt747.j2se.app.exif.ExifJPG;
-import gps.BT747Constants;
-import gps.log.GPSRecord;
 
 import bt747.sys.Convert;
 import bt747.sys.File;
