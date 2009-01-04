@@ -58,7 +58,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvertInterface {
 
     public final int parseFile(final GPSFileConverterInterface gpsFile) {
         try {
-            GPSRecord r = new GPSRecord();
+            GPSRecord r = GPSRecord.getLogFormatRecord(0);
             final int C_BUF_SIZE = 0x800;
             byte[] bytes = new byte[C_BUF_SIZE];
             int sizeToRead;
@@ -155,7 +155,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvertInterface {
                             r.height = Convert.toFloatBitwise(height);
                             CommonIn.convertHeight(r, factorConversionWGS84ToMSL, logFormat);
                             gpsFile.addLogRecord(r);
-                            r = new GPSRecord();
+                            r = GPSRecord.getLogFormatRecord(0);
                         }
                     }
                 } /* ContinueInBuffer */

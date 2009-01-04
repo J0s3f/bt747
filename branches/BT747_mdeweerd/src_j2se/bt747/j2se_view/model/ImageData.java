@@ -185,7 +185,7 @@ public class ImageData extends BT747Waypoint {
      *            the utc to set
      */
     private void setUtc(int utc) {
-        getGpsRecord().utc = utc;
+        getGpsRecord().tagutc = utc;
         this.utc = utc;
     }
 

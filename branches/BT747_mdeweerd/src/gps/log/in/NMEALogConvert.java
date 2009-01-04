@@ -71,7 +71,7 @@ public final class NMEALogConvert implements GPSLogConvertInterface {
      * @see gps.log.in.GPSLogConvertInterface#parseFile(gps.log.out.GPSFileConverterInterface)
      */
     public final int parseFile(final GPSFileConverterInterface gpsFile) {
-        GPSRecord gpsRec = new GPSRecord();
+        GPSRecord gpsRec = GPSRecord.getLogFormatRecord(0);
         byte[] bytes = new byte[BUF_SIZE];
         int sizeToRead;
         int nextAddrToRead;
@@ -192,7 +192,7 @@ public final class NMEALogConvert implements GPSLogConvertInterface {
                                 sNmea[idx++] = fields.nextToken();
                             }
 
-                            GPSRecord gpsNewRec = new GPSRecord(); // Value
+                            GPSRecord gpsNewRec = GPSRecord.getLogFormatRecord(0); // Value
                             // after
                             int newLogFormat;
                             newLogFormat = CommonIn.analyzeNMEA(sNmea,
@@ -266,7 +266,7 @@ public final class NMEALogConvert implements GPSLogConvertInterface {
             // position change
             // condition.
             gpsFile.addLogRecord(r);
-            r = new GPSRecord();
+            r = GPSRecord.getLogFormatRecord(0);
         }
     }
 
@@ -297,8 +297,7 @@ public final class NMEALogConvert implements GPSLogConvertInterface {
                     if (passToFindFieldsActivatedInLog) {
                         activeFileFields = 0;
                         error = parseFile(gpsFile);
-                        gpsFile.setActiveFileFields(CommonIn
-                                .getLogFormatRecord(activeFileFields));
+                        gpsFile.setActiveFileFields(GPSRecord.getLogFormatRecord(activeFileFields));
                     }
                     passToFindFieldsActivatedInLog = false;
                     if (error == BT747Constants.NO_ERROR) {
@@ -324,7 +323,7 @@ public final class NMEALogConvert implements GPSLogConvertInterface {
         logFormat = newLogFormat;
         activeFileFields |= logFormat;
         if (!passToFindFieldsActivatedInLog) {
-            gpsFile.writeLogFmtHeader(CommonIn.getLogFormatRecord(logFormat));
+            gpsFile.writeLogFmtHeader(GPSRecord.getLogFormatRecord(logFormat));
         }
     }
 }

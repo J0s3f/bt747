@@ -96,7 +96,7 @@ public final class CSVLogConvert implements GPSLogConvertInterface {
      * @see gps.log.in.GPSLogConvertInterface#parseFile(gps.log.out.GPSFileConverterInterface)
      */
     public final int parseFile(final GPSFileConverterInterface gpsFile) {
-        GPSRecord r = new GPSRecord();
+        GPSRecord r = GPSRecord.getLogFormatRecord(0);
         byte[] bytes;
         int sizeToRead;
         int nextAddrToRead;
@@ -313,7 +313,7 @@ public final class CSVLogConvert implements GPSLogConvertInterface {
                                 int fieldNbr = 0;
                                 int curLogFormat = 0;
                                 // Defaults
-                                r = new GPSRecord(); // Value after
+                                r = GPSRecord.getLogFormatRecord(0); // Value after
                                 // earliest date
                                 r.recCount = ++recCount;
                                 r.valid = 0xFFFF; // In case valid is not
@@ -752,7 +752,7 @@ public final class CSVLogConvert implements GPSLogConvertInterface {
                                 }
                                 // if (valid) {
                                 gpsFile.addLogRecord(r);
-                                r = new GPSRecord();
+                                r = GPSRecord.getLogFormatRecord(0);
                                 // } // offsetInBuffer++;
                             } // if header
                         }
@@ -796,8 +796,7 @@ public final class CSVLogConvert implements GPSLogConvertInterface {
                         activeFileFields = 0;
                         activeFileFieldVox = false;
                         error = parseFile(gpsFile);
-                        GPSRecord r = CommonIn
-                        .getLogFormatRecord(activeFileFields);
+                        GPSRecord r = GPSRecord.getLogFormatRecord(activeFileFields);
                         if(activeFileFieldVox) {
                             r.voxStr = "VOX";
                         }
@@ -833,9 +832,9 @@ public final class CSVLogConvert implements GPSLogConvertInterface {
         }
         if (!passToFindFieldsActivatedInLog) {
             GPSRecord r;
-            r = CommonIn.getLogFormatRecord(logFormat);
+            r = GPSRecord.getLogFormatRecord(logFormat);
             r.voxStr = hasVox ? "" : null;
-            gpsFile.writeLogFmtHeader(CommonIn.getLogFormatRecord(logFormat));
+            gpsFile.writeLogFmtHeader(GPSRecord.getLogFormatRecord(logFormat));
         }
     }
 }

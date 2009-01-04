@@ -1,3 +1,7 @@
+Version 1.66.14
+* Further corrections to tagging + added functionality to separate GPS tiem from
+  filetime from tag time & show it.
+
 Version 1.66.13
 * Correction in time for tagged positions + copying "all" GPS info to file tag info.
 
