@@ -20,12 +20,11 @@ import gps.log.GPSFilter;
 import gps.log.GPSRecord;
 import gps.log.in.GPSFileConverterInterface;
 
-import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.Interface;
-import bt747.sys.interfaces.BT747Time;
 import bt747.sys.interfaces.BT747FileName;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * @author Mario De Weerd
@@ -389,8 +388,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                                 && (overridePreviousTag || (!userWayPoint
                                         .hasLatitude() || !userWayPoint
                                         .hasLongitude()))) {
-                            userWayPoint.latitude = ref.latitude;
-                            userWayPoint.longitude = ref.longitude;
+                            userWayPoint.tagFromRecord(ref);
                         }
                         doWriteRecord = true;
                     } else if (diffPrevious < 0) {
@@ -406,7 +404,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                                 writeLogFmtHeader(userWayPoint);
                             }
                             // bt747.sys.Generic.debug(diffPrevious + " " +
-                            // diffNext);
+                            // diffNext); // utcCorrectedRecord.utc - userWayPoint.utc
                             // bt747.sys.Generic.debug(gps.log.out.CommonOut
                             // .getTimeStr(userWayPointUTC));
                             // bt747.sys.Generic.debug(r.toString());
@@ -414,7 +412,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                             GPSRecord utcCorrectedRecord = userWayPoint
                                     .cloneRecord();
                             utcCorrectedRecord.utc = userWayPointUTC;
-                            writeRecord(utcCorrectedRecord);
+                            writeUtc0Record(utcCorrectedRecord);
                         }
                         nextWayPointIdx();
                         continueLoop = currentWayPointListIdx != -1;
@@ -435,7 +433,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                         GPSRecord utcCorrectedRecord = userWayPoint
                                 .cloneRecord();
                         utcCorrectedRecord.utc = userWayPointUTC;
-                        writeRecord(utcCorrectedRecord);
+                        writeUtc0Record(utcCorrectedRecord);
                         nextWayPointIdx();
                         if (currentWayPointListIdx >= 0) {
                             continueLoop = true;
@@ -451,13 +449,17 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                 }
             }
         }
+        writeUtc0Record(r);
+        if (cachedRecordIsNeeded(r)) {
+            prevRecord = r;
+        }
+    }
+    
+    private final void writeUtc0Record(final GPSRecord r) {
         if (activeFields.utc != 0) {
             r.utc += timeOffsetSeconds;
         }
         writeRecord(r);
-        if (cachedRecordIsNeeded(r)) {
-            prevRecord = r;
-        }
     }
 
     private final void addUntreatedWayPoints() {

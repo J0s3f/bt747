@@ -1,3 +1,6 @@
+Version 1.66.13
+* Correction in time for tagged positions + copying "all" GPS info to file tag info.
+
 Version 1.66.12
 * Improved automatic zoom algorithm in swingx library + automatic rezoom after map change in BT747.
 

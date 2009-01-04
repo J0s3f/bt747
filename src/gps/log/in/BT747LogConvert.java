@@ -95,7 +95,7 @@ public final class BT747LogConvert implements GPSLogConvertInterface {
      * 
      */
     public final int parseFile(final GPSFileConverterInterface gpsFile) {
-        GPSRecord r = new GPSRecord();
+        GPSRecord r = GPSRecord.getLogFormatRecord(0);
         byte[] bytes;
         int sizeToRead;
         int nextAddrToRead;
@@ -378,7 +378,7 @@ public final class BT747LogConvert implements GPSLogConvertInterface {
                                 if (valid) {
                                     if (!passToFindFirstBlockInLog) {
                                         gpsFile.addLogRecord(r);
-                                        r = new GPSRecord();
+                                        r = GPSRecord.getLogFormatRecord(0);
                                     } else {
                                         if (r.utc >= minValidUtcTime) {
                                             if (r.utc > biggestBlockUtc) {
