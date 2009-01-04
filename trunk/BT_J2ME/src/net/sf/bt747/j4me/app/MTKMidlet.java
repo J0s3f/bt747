@@ -35,23 +35,19 @@ public class MTKMidlet extends MIDlet implements CommandListener {
     private static AppModel m;
     private static AppController c;
 
+    private volatile boolean ok = false;
     /**
      * Constructs the midlet. This is called before
      * &lt;code&gt;startApp&lt;/code&gt;.
      */
     public MTKMidlet() {
         try {
-            MTKMidlet.setInstance(this);
             UIManager.init(this);
-            Log.setLevel(Level.DEBUG);
-            m = new AppModel();
-            c = new AppController(m);
+            MTKMidlet.setInstance(this);
+            ok = true;
         } catch (Throwable t) {
-            Log.warn("Unhandled exception ", t);
-            LogScreen l = new LogScreen(null);
-            l.show();
+            displayThrowable(t, "MTKMidlet");
         }
-
     }
 
     private static void setInstance(final MTKMidlet midlet) {
@@ -70,18 +66,20 @@ public class MTKMidlet extends MIDlet implements CommandListener {
 
     private Command commandExit;
 
-    private boolean isNOErrorToShow = false;
-
     /**
      * Called when the application starts. Shows the first screen.
      * 
      * @see javax.microedition.midlet.MIDlet#startApp()
      */
     protected final void startApp() throws MIDletStateChangeException {
-        Throwable m = null;
+        if(!ok) {
+            return;
+        }
         // Initialize the J4ME UI manager.
         try {
-            // UIManager.init(this);
+            m = new AppModel();
+            c = new AppController(m);
+
             DeviceScreen main = new MainScreen(c, this);
             // Change the theme.
             // Show the first screen.
@@ -93,26 +91,29 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // (new ConvertTo(c, main)).doWork(); // Debug conversion
             main.show();
             // (new ConvertTo(c, main)).show();
-            isNOErrorToShow = true;
-        } catch (Throwable t) {
-            m = t;
+        } catch (Exception t) {
+            displayThrowable(t, "MainScreen");
         }
-
-        if (m != null) {
-            displayThrowable(m, "MainScreen");
-        }
-
     }
 
     public final void displayThrowable(Throwable t, String n) {
         if (t != null || n != null) {
             try {
-                if (t != null) {
-                    Log.warn("Unhandled exception ", t);
+                try {
+                    UIManager.getDisplay();
+                } catch (Exception e) {
+                    UIManager.init(this);
+                    Log.setLevel(Level.DEBUG);
+                    if (t != null) {
+                        Log.warn("Exception thrown ", t);
+                    }
                 }
+
             } catch (Exception e) {
+                Log.warn("Exception in display throwable");
                 // Don't care
             }
+            Log.info("Display throwable",t);
             // LogScreen l = new LogScreen(null);
             // l.show();
             Display disp;
@@ -135,17 +136,19 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // d = new DateField("help",DateField.DATE);
             javax.microedition.lcdui.TextField tb;
             tb = new TextField("", "", 250, TextField.ANY);
-            String s = t.getMessage();
-            String b = t.toString();
             String f = "";
-            if (b != null) {
-                f += b;
-            }
-            if (s != null) {
-                if (f.length() > 0) {
-                    f += "\n";
+            if (t != null) {
+                String s = t.getMessage();
+                String b = t.toString();
+                if (b != null) {
+                    f += b;
                 }
-                f += s;
+                if (s != null) {
+                    if (f.length() > 0) {
+                        f += "\n";
+                    }
+                    f += s;
+                }
             }
             if (n != null) {
                 f += "\n" + n;
@@ -163,7 +166,6 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // affichage du formulaire
             disp.setCurrent(form);
         }
-        isNOErrorToShow = true;
     }
 
     /**
