@@ -1,17 +1,17 @@
-//********************************************************************
-//***                            BT747                             ***
-//***                 (c)2007-2008 Mario De Weerd                  ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***                                                              ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT747 ***
+// *** (c)2007-2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j2se.app.exif;
 
 import gps.log.in.WindowedFile;
@@ -58,7 +58,7 @@ public class ExifJPG {
         try {
             // bt747.sys.Generic.debug(Path);
             p = new WindowedFile(Path, File.READ_ONLY, card);
-            if (p != null && p.isOpen()) {
+            if ((p != null) && p.isOpen()) {
                 byte[] buffer;
                 int sz;
                 p.setBufferSize(64 * 1024 + 10);
@@ -71,7 +71,7 @@ public class ExifJPG {
                 // bt747.sys.Generic.debug(this.toString());
                 success = true;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // TODO: handle exception
             Generic.debug("EXIFJpg", e);
         }
@@ -88,7 +88,8 @@ public class ExifJPG {
         int currentIdxInBuffer = 0;
         if (((sz - currentIdxInBuffer) > 16) // Enough bytes to check
                 // header
-                && ((buffer[currentIdxInBuffer] & 0xFF) == 0xFF) // First two
+                && ((buffer[currentIdxInBuffer] & 0xFF) == 0xFF) // First
+                // two
                 // bytes
                 // identify
                 // JPG
@@ -247,12 +248,164 @@ public class ExifJPG {
         setGpsAttribute(atr);
     }
 
+    public final void setGpsAltitudeMSL(final float altitude) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSALTITUDEREF,
+                ExifConstants.BYTE, 1);
+        ExifAttribute altitudeAtr;
+        altitudeAtr = new ExifAttribute(ExifConstants.TAG_GPSALTITUDE,
+                ExifConstants.RATIONAL, 1);
+        if (altitude < 0) {
+            atr.setIntValue(0, 1);
+            altitudeAtr.setFloatValue(0, (int) (-altitude * 100), 100);
+        } else {
+            atr.setIntValue(0, 0);
+            altitudeAtr.setFloatValue(0, (int) (altitude * 100), 100);
+        }
+        setGpsAttribute(atr);
+        setGpsAttribute(altitudeAtr);
+    }
+
+    public final void setGpsTime(final int year, final int month,
+            final int day, final int hour, final int minutes,
+            final int seconds) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSTIMESTAMP,
+                ExifConstants.RATIONAL, 3);
+        atr.setFloatValue(0, hour, 1);
+        atr.setFloatValue(1, minutes, 1);
+        atr.setFloatValue(2, seconds, 1);
+        setGpsAttribute(atr);
+
+        atr = new ExifAttribute(ExifConstants.TAG_GPSDATESTAMP,
+                ExifConstants.ASCII, 11);
+
+        String dateStr = "" + year + ":";
+
+        if (month < 10) {
+            dateStr += "0" + month + ":";
+        } else {
+            dateStr += month + ":";
+        }
+
+        if (day < 10) {
+            dateStr += "0" + day;
+        } else {
+            dateStr += day;
+        }
+        atr.setStringValue(dateStr);
+        setGpsAttribute(atr);
+    }
+
+    public final void setDifferential(final boolean isDifferential) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSTIMESTAMP,
+                ExifConstants.SHORT, 1);
+        atr.setIntValue(0, isDifferential ? 1 : 0);
+    }
+
+    public final void setGpsSatInformation(final String str) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSSATELLITES,
+                ExifConstants.ASCII, str.length() + 1);
+        atr.setStringValue(str);
+        setGpsAttribute(atr);
+    }
+
+    /**
+     * Attention : related to HDOP/PDOP reading.
+     * 
+     * @param measurementInProgressA
+     */
+    public final void setGpsStatus(final boolean measurementInProgressA) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSSTATUS,
+                ExifConstants.ASCII, 2);
+        if (measurementInProgressA) {
+            atr.setStringValue("A");
+        } else {
+            atr.setStringValue("V");
+        }
+        setGpsAttribute(atr);
+    }
+
+    /**
+     * Attention: also
+     */
+    public final void setGpsMeasureMode(final boolean is3d) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSMEASUREMODE,
+                ExifConstants.ASCII, 2);
+        if (is3d) {
+            atr.setStringValue("3");
+        } else {
+            atr.setStringValue("2");
+        }
+        setGpsAttribute(atr);
+    }
+
+    /**
+     * Attention: also set GPS HDOP (also sets GpsMeasureMode)
+     */
+    public final void setGpsHDOP(final float hdopX100) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSDOP,
+                ExifConstants.RATIONAL, 1);
+        atr.setFloatValue(0, (int) hdopX100, 100);
+        setGpsAttribute(atr);
+        setGpsMeasureMode(false);
+    }
+
+    /**
+     * Attention: also set GPS PDOP (also sets GpsMeasureMode)
+     */
+    public final void setGpsPDOP(final int pdopX100) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSDOP,
+                ExifConstants.RATIONAL, 1);
+        atr.setFloatValue(0, pdopX100, 100);
+        setGpsAttribute(atr);
+        setGpsMeasureMode(true);
+    }
+
+    /**
+     * Sets the speed
+     */
+    public final void setGpsSpeedKmH(final float speed) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSSPEEDREF,
+                ExifConstants.ASCII, 2);
+        ExifAttribute speedAtr;
+        speedAtr = new ExifAttribute(ExifConstants.TAG_GPSSPEED,
+                ExifConstants.RATIONAL, 1);
+        atr.setStringValue("K");
+        speedAtr.setFloatValue(0, (int) (speed * 100), 100);
+        setGpsAttribute(atr);
+        setGpsAttribute(speedAtr);
+    }
+
+    /**
+     * Sets the heading.
+     */
+    public final void setGpsTrack(final float heading) {
+        ExifAttribute atr;
+        atr = new ExifAttribute(ExifConstants.TAG_GPSTRACKREF,
+                ExifConstants.ASCII, 2);
+        ExifAttribute trackAtr;
+        trackAtr = new ExifAttribute(ExifConstants.TAG_GPSTRACK,
+                ExifConstants.RATIONAL, 1);
+        atr.setStringValue("T");
+        trackAtr.setFloatValue(0, (int) (heading * 100), 100);
+        setGpsAttribute(atr);
+        setGpsAttribute(trackAtr);
+    }
+
     private final static String SW = "BT747 " + Version.VERSION_NUMBER;
 
     public final void setUsedSoftWare() {
         ExifAttribute atr;
         String sw;
-        Generic.debug(toString());
+        // Generic.debug(toString());
         atr = exifApp1.getIfd0Attribute(ExifConstants.TAG_SOFTWARE);
         if (atr != null) {
             sw = " / " + atr.getStringValue();
@@ -265,7 +418,7 @@ public class ExifJPG {
                     ExifConstants.ASCII, sw.length() + 1);
             atr.setStringValue(sw);
             exifApp1.setIfd0Attribute(atr);
-            Generic.debug(toString());
+            // Generic.debug(toString());
         }
     }
 
@@ -278,7 +431,7 @@ public class ExifJPG {
         try {
             // bt747.sys.Generic.debug(Path);
             fromFile = new WindowedFile(Path, File.READ_ONLY, card);
-            if (exifApp1 != null && fromFile != null && fromFile.isOpen()) {
+            if ((exifApp1 != null) && (fromFile != null) && fromFile.isOpen()) {
                 // setUsedSoftWare();
                 byte[] buffer;
                 int sz;
@@ -288,7 +441,8 @@ public class ExifJPG {
                 buffer = fromFile.getBuffer();
 
                 sz = fromFile.getBufferFill();
-                if (((sz - currentIdxInBuffer) > 16) // Enough bytes to check
+                if (((sz - currentIdxInBuffer) > 16) // Enough bytes to
+                        // check
                         // header
                         && ((buffer[currentIdxInBuffer] & 0xFF) == 0xFF) // First
                         // two
@@ -310,8 +464,8 @@ public class ExifJPG {
                                 + (buffer[currentIdxInBuffer + 1] & 0xFF);
                         marker_length = ((buffer[currentIdxInBuffer + 2] & 0xFF) << 8)
                                 + (buffer[currentIdxInBuffer + 3] & 0xFF);
-                        skipMarkerPosition = marker_length + currentIdxInBuffer
-                                + 2;
+                        skipMarkerPosition = marker_length
+                                + currentIdxInBuffer + 2;
                         currentIdxInBuffer += 4;
 
                         if ((marker == 0xFFE1) // APP1
@@ -365,7 +519,7 @@ public class ExifJPG {
                 fromFile = null;
                 success = true;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // TODO: handle exception
             Generic.debug("EXIFJpg", e);
         }

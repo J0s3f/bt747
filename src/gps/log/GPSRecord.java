@@ -66,10 +66,10 @@ public class GPSRecord {
     private static final int NO_HEIGHT = -1000000;
     private static final int HAS_HEIGHT = 0;
 
-    private static final int NO_SPEED = -1000000;
+    private static final int NO_SPEED = -100000;
     private static final int HAS_SPEED = 0;
 
-    private static final int NO_HEADING = -1;
+    private static final int NO_HEADING = -100000;
     private static final int HAS_HEADING = 0;
     
     private static final int NO_XDOP = -1;
@@ -268,7 +268,7 @@ public class GPSRecord {
     }
 
     public final boolean hasHeading() {
-        return heading != -1000000;
+        return heading != NO_HEADING;
     }
 
     public final boolean hasDsta() {
