@@ -1,3 +1,6 @@
+Version 1.66.16
+* Tag button added to 'Files to Tag' tab.
+
 Version 1.66.15
 * Added more GPS information to EXIF output.
 

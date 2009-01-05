@@ -96,8 +96,6 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
                         getString("DOWNLOAD_FILLED") }));
     }
 
-    MyMap pnMap = new MyMap();
-
     /**
      * Initialize application data. Gets the values from the model to set them
      * in the GUI.
@@ -125,12 +123,15 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         cal.set(d.getYear(), d.getMonth() - 1, d.getDay(), 0, 0, 0);
         // startDate.getDateEditor().
         startDate.setDate(cal.getTime());
+        updateStartDate();
         // startDate.setCalendar(cal);
         d.setUTCTime(m.getFilterEndTime());
         cal = Calendar.getInstance();
         // cal.setTimeZone(TimeZone.getTimeZone("GMT"));
         cal.set(d.getYear(), d.getMonth() - 1, d.getDay(), 0, 0, 0);
         endDate.setDate(cal.getTime());
+        updateEndDate();
+        setTimeSplit();
         // endDate.setCalendar(cal);
         // TODO: Deactivate debug by default
         c.setDebug(true);
@@ -203,35 +204,9 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
      * 
      */
     private void doLogConversion(final int selectedFormat) {
-        setLogConversionParameters();
+        c.setChangeToMap(true);
+        c.setLogConversionParameters();
         c.doLogConversion(selectedFormat);
-    }
-
-    /**
-     * 
-     */
-    private void setLogConversionParameters() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(startDate.getDate());
-        BT747Date nd = Interface.getDateInstance(
-                cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1
-                        - Calendar.JANUARY, cal.get(Calendar.YEAR));
-        int startTime = nd.dateToUTCepoch1970();
-        cal.setTime(endDate.getDate());
-        nd = Interface.getDateInstance(cal.get(Calendar.DAY_OF_MONTH), cal
-                .get(Calendar.MONTH)
-                + 1 - Calendar.JANUARY, cal.get(Calendar.YEAR));
-        int endTime = nd.dateToUTCepoch1970();
-        endTime += (24 * 3600 - 1); // Round to midnight / End of day
-        // Offset requested split time
-        int offset;
-        offset = 60 * ((Integer) spTimeSplitHours.getValue() * 60 + (Integer) spTimeSplitMinutes
-                .getValue());
-        startTime += offset;
-        endTime += offset;
-        // Now actually set time filter.
-        c.setFilterStartTime((int) (startTime));
-        c.setFilterEndTime((int) (endTime));
     }
 
     public void modelEvent(ModelEvent e) {
@@ -614,11 +589,6 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         lbMinutes.setText(bundle.getString("BT747Main.lbMinutes.text")); // NOI18N
 
         startDate.setToolTipText(bundle.getString("BT747Main.startDate.toolTipText")); // NOI18N
-        startDate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startDateActionPerformed(evt);
-            }
-        });
         startDate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 startDateFocusLost(evt);
@@ -626,11 +596,6 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         });
 
         endDate.setToolTipText(bundle.getString("BT747Main.endDate.toolTipText")); // NOI18N
-        endDate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                endDateActionPerformed(evt);
-            }
-        });
         endDate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 endDateFocusLost(evt);
@@ -1265,27 +1230,49 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     }//GEN-LAST:event_tfOutputFileBaseNameFocusLost
 
     private void startDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_startDateFocusLost
-        // TODO add your handling code here:
+        updateStartDate();
     }//GEN-LAST:event_startDateFocusLost
 
-    private void startDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startDateActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_startDateActionPerformed
+    private void updateStartDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate.getDate());
+        BT747Date nd = Interface.getDateInstance(
+                cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1
+                        - Calendar.JANUARY, cal.get(Calendar.YEAR));
+        int startTime = nd.dateToUTCepoch1970();
+        c.setStartTimeNoOffset(startTime);
 
-    private void endDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endDateActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_endDateActionPerformed
-
+    }
     private void endDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_endDateFocusLost
-        // TODO add your handling code here:
+        updateEndDate();
     }//GEN-LAST:event_endDateFocusLost
+    
+    private void updateEndDate() {
+        Calendar cal = Calendar.getInstance();
+        BT747Date nd;
+        cal.setTime(endDate.getDate());
+        nd = Interface.getDateInstance(cal.get(Calendar.DAY_OF_MONTH), cal
+                .get(Calendar.MONTH)
+                + 1 - Calendar.JANUARY, cal.get(Calendar.YEAR));
+        int endTime = nd.dateToUTCepoch1970();
+        endTime += (24 * 3600 - 1); // Round to midnight / End of day
+        c.setEndTimeNoOffset(endTime);
+    }
 
     private void spTimeSplitHoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTimeSplitHoursFocusLost
-        // TODO add your handling code here:
+       setTimeSplit();
     }//GEN-LAST:event_spTimeSplitHoursFocusLost
+    
+    private void setTimeSplit() {
+        // Offset requested split time
+        int offset;
+        offset = 60 * ((Integer) spTimeSplitHours.getValue() * 60 + (Integer) spTimeSplitMinutes
+                .getValue());
+        c.setTimeOffset(offset);
+    }
 
     private void spTimeSplitMinutesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTimeSplitMinutesFocusLost
-        // TODO add your handling code here:
+        setTimeSplit();
     }//GEN-LAST:event_spTimeSplitMinutesFocusLost
 
     private void btGPXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGPXActionPerformed

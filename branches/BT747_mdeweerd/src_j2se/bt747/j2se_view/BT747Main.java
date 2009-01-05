@@ -487,7 +487,6 @@ public class BT747Main extends javax.swing.JFrame implements
             } else {
                 trackPanel.setGpsRecords(m.getPositionData().getTracks());
             }
-            tabbedPanelAll.setSelectedComponent(pnMap);
             // for (int idx = tabbedPanelAll.getTabCount() - 1; idx >= 0;
             // idx--) {
             // if (tabbedPanelAll.getComponentAt(idx) == trackPanel) {
@@ -495,6 +494,9 @@ public class BT747Main extends javax.swing.JFrame implements
             // }
             // }
 
+            break;
+        case J2SEAppModel.CHANGE_TO_MAP:
+            tabbedPanelAll.setSelectedComponent(pnMap);
             break;
         }
     }

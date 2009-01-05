@@ -49,9 +49,11 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import bt747.Version;
+import bt747.model.AppSettings;
 import bt747.model.BT747View;
 import bt747.model.Controller;
 import bt747.model.Model;
+import bt747.model.ModelEvent;
 import bt747.sys.Generic;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747Vector;
@@ -84,7 +86,7 @@ public final class J2SEAppController extends J2SEController {
     public static final String MAPCACHEDIRECTORYPROPERTY = "mapcachedirectory";
 
     J2SEAppModel m;
-    
+
     private static final void setAppIcon() {
         URL u = BT747Main.class.getResource("/" + iconPath);
 
@@ -132,16 +134,16 @@ public final class J2SEAppController extends J2SEController {
         if (bundle == null) {
             bundle = java.util.ResourceBundle
                     .getBundle("bt747/j2se_view/Bundle");
-            String[] my_ERASE_OR_CANCEL = { getString("ERASE_BUTTON"),
+            final String[] my_ERASE_OR_CANCEL = { getString("ERASE_BUTTON"),
                     getString("CANCEL_BUTTON") };
             /** Options for the first warning message. */
-            String[] my_YES_OR_CANCEL = { getString("YES_BUTTON"),
+            final String[] my_YES_OR_CANCEL = { getString("YES_BUTTON"),
                     getString("CANCEL_BUTTON") };
             /**
              * Options for the second warning message - reverse order on
              * purpose.
              */
-            String[] my_CANCEL_OR_CONFIRM_ERASE = {
+            final String[] my_CANCEL_OR_CONFIRM_ERASE = {
                     getString("CANCEL_BUTTON"),
                     getString("CONFIRM_ERASE_BUTTON") };
             C_ERASE_OR_CANCEL = my_ERASE_OR_CANCEL;
@@ -180,7 +182,7 @@ public final class J2SEAppController extends J2SEController {
     public J2SEAppController(final J2SEAppModel model) {
         initGpsPort();
 
-        this.m = model;
+        m = model;
         c = this; // Temporary solution until application controller methods
 
         initAppSettings();
@@ -189,7 +191,7 @@ public final class J2SEAppController extends J2SEController {
         super.setModel(m);
         super.init();
         // c = new Controller(model);
-        String localeStr = m.getStringOpt(J2SEAppModel.LANGUAGE);
+        final String localeStr = m.getStringOpt(AppSettings.LANGUAGE);
         Locale.setDefault(localeFromString(localeStr));
         // Initialised here to be sure that the app language can be changed
         // after
@@ -197,6 +199,24 @@ public final class J2SEAppController extends J2SEController {
         initStaticsFirstTime();
         myLookAndFeel();
         c.setWayPointStyles(new AllWayPointStyles());
+    }
+
+    private int startTimeNoOffset;
+    private int endTimeNoOffset;
+    private int timeOffset;
+
+    /**
+     * 
+     */
+    public void setLogConversionParameters() {
+        int startTime;
+        int endTime;
+
+        startTime = timeOffset + startTimeNoOffset;
+        endTime = timeOffset + endTimeNoOffset;
+        // Now actually set time filter.
+        c.setFilterStartTime((startTime));
+        c.setFilterEndTime((endTime));
     }
 
     // The next methods are to be moved to the application controller.
@@ -260,7 +280,7 @@ public final class J2SEAppController extends J2SEController {
     public static final String getString(final String s) {
         try {
             return bundle.getString(s);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("No text found for \"" + s + "\"", e);
             return s;
         }
@@ -430,7 +450,7 @@ public final class J2SEAppController extends J2SEController {
             final int periodRMC, final int periodVTG, final int periodGSA,
             final int periodGSV, final int periodGGA, final int periodZDA,
             final int periodMCHN) {
-        String[] mbStr = { getString("WRITE_FLASH_BUTTON"),
+        final String[] mbStr = { getString("WRITE_FLASH_BUTTON"),
                 getString("CANCEL_BUTTON") };
         int choice;
         choice = JOptionPane.showOptionDialog(rootFrame,
@@ -491,7 +511,7 @@ public final class J2SEAppController extends J2SEController {
     public final void addView(final BT747View view) {
         views.add(view);
         view.setController(this);
-        view.setModel(this.m);
+        view.setModel(m);
     }
 
     /*
@@ -520,7 +540,7 @@ public final class J2SEAppController extends J2SEController {
 
         if ((Settings.getAppSettings() == null)
                 || (Settings.getAppSettings().length() < 100)
-                || java.lang.System.getProperty("bt747_settings") != null) {
+                || (java.lang.System.getProperty("bt747_settings") != null)) {
             Settings.setAppSettings(new String(new byte[2048]));
             int readLength = 0;
 
@@ -529,19 +549,19 @@ public final class J2SEAppController extends J2SEController {
                 preferencesFile = new FileInputStream(CONFIG_FILE_NAME);
                 readLength = preferencesFile.available();
                 if (readLength >= 100) {
-                    byte[] appSettingsArray = new byte[2048];
+                    final byte[] appSettingsArray = new byte[2048];
 
                     preferencesFile.read(appSettingsArray, 0, readLength);
                     Settings.setAppSettings(new String(appSettingsArray));
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // Vm.debug("Exception new log create");
             }
             try {
                 if (preferencesFile != null) {
                     preferencesFile.close();
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
 
             }
         }
@@ -556,12 +576,12 @@ public final class J2SEAppController extends J2SEController {
     public final void saveSettings() {
         File preferencesFile;
         try {
-            File m_Dir = new File(CONFIG_FILE_NAME.substring(0,
+            final File m_Dir = new File(CONFIG_FILE_NAME.substring(0,
                     CONFIG_FILE_NAME.lastIndexOf('/')));
             if (!m_Dir.exists()) {
                 m_Dir.mkdirs();
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Vm.debug("Exception new log delete");
             // e.printStackTrace();
         }
@@ -570,7 +590,7 @@ public final class J2SEAppController extends J2SEController {
             if (preferencesFile.exists()) {
                 preferencesFile.delete();
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Vm.debug("Exception new log delete");
         }
         try {
@@ -581,7 +601,7 @@ public final class J2SEAppController extends J2SEController {
             os.write(Settings.getAppSettings().getBytes(), 0, Settings
                     .getAppSettings().length());
             os.close();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
@@ -593,7 +613,7 @@ public final class J2SEAppController extends J2SEController {
             gpsPort = new gps.connection.GPSRxTxPort();
             gpsPort.setPort(4);
             GPSrxtx.setGpsPortInstance(gpsPort);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
@@ -620,7 +640,7 @@ public final class J2SEAppController extends J2SEController {
      * Show the pop up.
      */
     public void createErasePopup() {
-        String[] eraseOption = { getString("CANCEL") };
+        final String[] eraseOption = { getString("CANCEL") };
         mbErase = new JOptionPane(getString("WAITING_ERASE_TEXT"),
                 JOptionPane.WARNING_MESSAGE);
         // mbErase.add
@@ -637,8 +657,8 @@ public final class J2SEAppController extends J2SEController {
         // }
         // });
         mbErase.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent e) {
-                String prop = e.getPropertyName();
+            public void propertyChange(final PropertyChangeEvent e) {
+                final String prop = e.getPropertyName();
 
                 if ((mbEraseDialog != null) && mbEraseDialog.isVisible()
                         && (e.getSource() == mbErase)
@@ -746,13 +766,13 @@ public final class J2SEAppController extends J2SEController {
      * 
      * @return true if successfull
      */
-    private final static boolean tryLookAndFeel(String s) {
+    private final static boolean tryLookAndFeel(final String s) {
         try {
             UIManager.setLookAndFeel(s);
             lookAndFeel = s;
             lookAndFeelMsg += getString("Success_") + s + "\n";
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
         }
         lookAndFeelMsg += getString("Fail_") + s + "\n";
         return false;
@@ -763,10 +783,10 @@ public final class J2SEAppController extends J2SEController {
      */
     public static void myLookAndFeel() {
         boolean lookAndFeelIsSet = false;
-        if (java.lang.System.getProperty("bt747.laf")!=null) {
+        if (java.lang.System.getProperty("bt747.laf") != null) {
             tryLookAndFeel(java.lang.System.getProperty("bt747.laf"));
         }
-                
+
         if (java.lang.System.getProperty("os.name").toLowerCase().startsWith(
                 "mac")) { // NOI18N
             for (int i = C_MAC_LOOKANDFEEL_IDX; !lookAndFeelIsSet
@@ -781,7 +801,7 @@ public final class J2SEAppController extends J2SEController {
             tryLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         }
         // List available managers
-        LookAndFeelInfo[] a = UIManager.getInstalledLookAndFeels();
+        final LookAndFeelInfo[] a = UIManager.getInstalledLookAndFeels();
         for (int i = 0; i < a.length; i++) {
             lookAndFeelMsg += a[i].getClassName() + "\n"; // NOI18N
         }
@@ -824,7 +844,8 @@ public final class J2SEAppController extends J2SEController {
 
     public final void selectMapCacheDirectory() {
         javax.swing.JFileChooser CacheDirChooser;
-        File f = new File(m.getStringOpt(J2SEAppModel.MAPCACHEDIRECTORY));
+        final File f = new File(m
+                .getStringOpt(J2SEAppModel.MAPCACHEDIRECTORY));
         CacheDirChooser = new javax.swing.JFileChooser(f);
         CacheDirChooser.setSelectedFile(f);
         CacheDirChooser
@@ -843,7 +864,7 @@ public final class J2SEAppController extends J2SEController {
                     relPath = relPath.substring(0, relPath.length() - 4);
                 }
                 c.setStringOpt(J2SEAppModel.MAPCACHEDIRECTORY, relPath);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug(getString("CacheDirChooser"), e);
             }
         }
@@ -858,7 +879,7 @@ public final class J2SEAppController extends J2SEController {
     public static final void disablePanel(final JPanel panel, final boolean en) {
         Component[] l;
         l = panel.getComponents();
-        for (Component component : l) {
+        for (final Component component : l) {
             component.setEnabled(en);
             if (component.getClass() == JPanel.class) {
                 disablePanel((JPanel) component, en);
@@ -867,6 +888,7 @@ public final class J2SEAppController extends J2SEController {
 
     }
 
+    private boolean changeToMap = false;
     /**
      * 
      */
@@ -878,23 +900,32 @@ public final class J2SEAppController extends J2SEController {
                 case J2SEAppModel.ARRAY_LOGTYPE:
                     TracksAndWayPoints r;
                     r = convertLogToTrackAndWayPoints();
-                    PositionTablePanel trackPanel = new PositionTablePanel();
-                    trackPanel.setGpsRecords(r.getTrackPoints());
-                    PositionTablePanel waypointPanel = new PositionTablePanel();
-                    waypointPanel.setGpsRecords(r.getWayPoints());
-                    m.getPositionData().setWayPoints(r.getWayPoints());
-                    Vector<List<GPSRecord>> trks = new Vector<List<GPSRecord>>(
-                            r.tracks.size());
-                    for (int i = 0; i < r.tracks.size(); i++) {
-                        BT747Vector trk = (BT747Vector) r.tracks.elementAt(i);
-                        Vector<GPSRecord> ntrk = new Vector<GPSRecord>(trk
-                                .size());
-                        for (int j = 0; j < trk.size(); j++) {
-                            ntrk.add((GPSRecord) trk.elementAt(j));
+                    if (r != null) {
+                        final PositionTablePanel trackPanel = new PositionTablePanel();
+                        trackPanel.setGpsRecords(r.getTrackPoints());
+                        final PositionTablePanel waypointPanel = new PositionTablePanel();
+                        waypointPanel.setGpsRecords(r.getWayPoints());
+                        m.getPositionData().setWayPoints(r.getWayPoints());
+                        final Vector<List<GPSRecord>> trks = new Vector<List<GPSRecord>>(
+                                r.tracks.size());
+                        for (int i = 0; i < r.tracks.size(); i++) {
+                            final BT747Vector trk = (BT747Vector) r.tracks
+                                    .elementAt(i);
+                            final Vector<GPSRecord> ntrk = new Vector<GPSRecord>(
+                                    trk.size());
+                            for (int j = 0; j < trk.size(); j++) {
+                                ntrk.add((GPSRecord) trk.elementAt(j));
+                            }
+                            trks.add(ntrk);
                         }
-                        trks.add(ntrk);
+                        m.getPositionData().setTracks(trks);
+                    } else {
+                        m.getPositionData().setWayPoints(null);
+                        m.getPositionData().setTracks(null);
                     }
-                    m.getPositionData().setTracks(trks);
+                    if(changeToMap) {
+                    m.postModelEvent(new ModelEvent(J2SEAppModel.CHANGE_TO_MAP,null));
+                    }
                     break;
                 default:
                     convertLog(selectedFormat);
@@ -906,6 +937,34 @@ public final class J2SEAppController extends J2SEController {
 
     public final J2SEAppModel getAppModel() {
         return m;
+    }
+
+    public final int getStartTimeNoOffset() {
+        return startTimeNoOffset;
+    }
+
+    public final void setStartTimeNoOffset(final int startTimeNoOffset) {
+        this.startTimeNoOffset = startTimeNoOffset;
+    }
+
+    public final int getEndTimeNoOffset() {
+        return endTimeNoOffset;
+    }
+
+    public final void setEndTimeNoOffset(final int endTimeNoOffset) {
+        this.endTimeNoOffset = endTimeNoOffset;
+    }
+
+    public final int getTimeOffset() {
+        return timeOffset;
+    }
+
+    public final void setTimeOffset(final int timeOffset) {
+        this.timeOffset = timeOffset;
+    }
+
+    public final void setChangeToMap(boolean changeToMap) {
+        this.changeToMap = changeToMap;
     }
 
 }
