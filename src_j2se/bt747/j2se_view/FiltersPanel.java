@@ -405,6 +405,8 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         );
 
         pnTrkLogReason.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnTrkLogReason.border.title"))); // NOI18N
+        pnTrkLogReason.setMaximumSize(new java.awt.Dimension(100, 32767));
+        pnTrkLogReason.setVerifyInputWhenFocusTarget(false);
 
         cbTrkTime.setText(bundle.getString("BT747Main.cbTrkTime.text")); // NOI18N
         cbTrkTime.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -446,14 +448,13 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         pnTrkLogReasonLayout.setHorizontalGroup(
             pnTrkLogReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnTrkLogReasonLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(pnTrkLogReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(cbTrkTime)
                     .add(cbTrkSpeed)
                     .add(cbTrkDistance)
                     .add(cbTrkButton)
-                    .add(cbTrkUser1))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(cbTrkUser1)))
         );
 
         pnTrkLogReasonLayout.linkSize(new java.awt.Component[] {cbTrkButton, cbTrkDistance, cbTrkSpeed, cbTrkTime, cbTrkUser1}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -840,6 +841,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         );
 
         pnWayPointRCR.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnWayPointRCR.border.title"))); // NOI18N
+        pnWayPointRCR.setMaximumSize(new java.awt.Dimension(100, 32767));
 
         cbWayTime.setText(bundle.getString("BT747Main.cbWayTime.text")); // NOI18N
         cbWayTime.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -880,16 +882,11 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         pnWayPointRCR.setLayout(pnWayPointRCRLayout);
         pnWayPointRCRLayout.setHorizontalGroup(
             pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnWayPointRCRLayout.createSequentialGroup()
-                .add(pnWayPointRCRLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(cbWayTime)
-                    .add(cbWaySpeed)
-                    .add(cbWayDistance)
-                    .add(cbWayButton)
-                    .add(pnWayPointRCRLayout.createSequentialGroup()
-                        .add(cbWayUser1)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(cbWayTime)
+            .add(cbWaySpeed)
+            .add(cbWayDistance)
+            .add(cbWayButton)
+            .add(cbWayUser1)
         );
 
         pnWayPointRCRLayout.linkSize(new java.awt.Component[] {cbWayButton, cbWayDistance, cbWaySpeed, cbWayTime, cbWayUser1}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -920,7 +917,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         );
         pnWaypointLayout.setVerticalGroup(
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+            .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 

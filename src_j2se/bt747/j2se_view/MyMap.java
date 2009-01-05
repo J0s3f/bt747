@@ -301,11 +301,6 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             Set<GeoPosition> bounds = new HashSet<GeoPosition>();
             bounds.add(new GeoPosition(minlat, minlon));
             bounds.add(new GeoPosition(maxlat, maxlon));
-            if (mapViewer.getZoom() > mapViewer.getTileFactory().getInfo()
-                    .getMaximumZoomLevel() - 6) {
-                mapViewer.setZoom(mapViewer.getTileFactory().getInfo()
-                        .getMinimumZoomLevel());
-            }
             mapViewer.calculateZoomFrom(bounds);
         }
         return hasPositions;
