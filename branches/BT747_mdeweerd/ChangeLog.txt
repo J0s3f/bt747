@@ -1,3 +1,6 @@
+Version 1.66.15
+* Added more GPS information to EXIF output.
+
 Version 1.66.14
 * Further corrections to tagging + added functionality to separate GPS tiem from
   filetime from tag time & show it.

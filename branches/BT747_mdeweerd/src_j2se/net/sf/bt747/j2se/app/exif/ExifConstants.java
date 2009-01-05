@@ -213,7 +213,7 @@ public class ExifConstants {
     /** GPS measurement mode GPSMeasureMode 10 A ASCII 2 */
     public static final int TAG_GPSMEASUREMODE = 0x000A;
     /** Measurement precision GPSDOP 11 B RATIONAL 1 */
-    public static final int TAG_GPSMEASUREDOP = 0x000B;
+    public static final int TAG_GPSDOP = 0x000B;
     /** Speed unit GPSSpeedRef 12 C ASCII 2 */
     public static final int TAG_GPSSPEEDREF = 0x000C;
     /** Speed of GPS receiver GPSSpeed 13 D RATIONAL 1 */

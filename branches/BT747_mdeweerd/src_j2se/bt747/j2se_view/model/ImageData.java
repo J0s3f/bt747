@@ -1,21 +1,23 @@
-//********************************************************************
-//***                            BT747                             ***
-//***                 (c)2007-2008 Mario De Weerd                  ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***                                                              ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT747 ***
+// *** (c)2007-2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.j2se_view.model;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;
+import gps.log.in.CommonIn;
+import gps.log.out.CommonOut;
 import net.sf.bt747.j2se.app.exif.ExifAttribute;
 import net.sf.bt747.j2se.app.exif.ExifConstants;
 import net.sf.bt747.j2se.app.exif.ExifJPG;
@@ -24,6 +26,7 @@ import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Date;
+import bt747.sys.interfaces.BT747Time;
 
 /**
  * @author Mario De Weerd
@@ -56,7 +59,7 @@ public class ImageData extends BT747Waypoint {
         this.path = path;
         getImageInfo();
     }
-    
+
     public String getPath() {
         return path;
     }
@@ -109,7 +112,8 @@ public class ImageData extends BT747Waypoint {
             atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSLATITUDE);
             if (atr != null) {
                 getGpsRecord().latitude = getLatOrLon(atr);
-                atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSLATITUDEREF);
+                atr = exifJpg
+                        .getGpsAttribute(ExifConstants.TAG_GPSLATITUDEREF);
                 if (atr != null) {
                     if (atr.getStringValue().toUpperCase().indexOf('S') >= 0) {
                         getGpsRecord().latitude = -getGpsRecord().latitude;
@@ -128,12 +132,14 @@ public class ImageData extends BT747Waypoint {
                 }
             }
 
-            atr = exifJpg.getExifAttribute(ExifConstants.TAG_DATETIMEDIGITIZED);
+            atr = exifJpg
+                    .getExifAttribute(ExifConstants.TAG_DATETIMEDIGITIZED);
             if (atr == null) {
                 atr = exifJpg
                         .getExifAttribute(ExifConstants.TAG_DATETIMEORIGINAL);
                 if (atr == null) {
-                    atr = exifJpg.getExifAttribute(ExifConstants.TAG_DATETIME);
+                    atr = exifJpg
+                            .getExifAttribute(ExifConstants.TAG_DATETIME);
                 }
             }
             if (atr != null) {
@@ -154,7 +160,8 @@ public class ImageData extends BT747Waypoint {
                     year = Convert.toInt(DateTime.substring(0, 4));
                     month = Convert.toInt(DateTime.substring(5, 7));
                     day = Convert.toInt(DateTime.substring(8, 10));
-                    seconds = Convert.toInt(DateTime.substring(11, 13)) * 3600
+                    seconds = Convert.toInt(DateTime.substring(11, 13))
+                            * 3600
                             + Convert.toInt(DateTime.substring(14, 16)) * 60
                             + Convert.toInt(DateTime.substring(17, 19));
                     BT747Date d = Interface.getDateInstance(day, month, year);
@@ -175,14 +182,109 @@ public class ImageData extends BT747Waypoint {
         if (getGpsRecord().hasLatitude() && getGpsRecord().hasLongitude()) {
             ExifJPG exifJpg = new ExifJPG();
             exifJpg.setPath(getPath()); // Get exif data from file
-            exifJpg.setGpsPosition(getGpsRecord().latitude, getGpsRecord().longitude);
+            GPSRecord g = getGpsRecord();
+            if (g.hasLocation()) {
+                exifJpg.setGpsPosition(g.latitude, g.longitude);
+            }
+            if (g.hasPdop()) {
+                exifJpg.setGpsPDOP(g.pdop);
+            } else if (g.hasHdop()) {
+                exifJpg.setGpsHDOP(g.hdop);
+            }
+            if (g.hasUtc()) {
+                BT747Time t = Interface.getTimeInstance();
+                t.setUTCTime(g.utc);
+                exifJpg.setGpsTime(t.getYear(), t.getMonth(), t.getDay(), t
+                        .getHour(), t.getMinute(), t.getSecond());
+            }
+
+            if (g.hasHeight()) {
+                // TODO: CommonIn.convertHeight(r, factorConversionWGS84ToMSL,
+                // logFormat);
+                // Or make sure in application.
+                // Should be MSL height.
+                exifJpg.setGpsAltitudeMSL(g.height);
+            }
+            String satInfo = "";
+            if (g.hasNsat()) {
+                satInfo = ((g.nsat >> 256) & 0xFF) + "(" + (g.nsat & 0xFF)
+                        + ")";
+            }
+            if (g.hasSid()) {
+                if (satInfo.length() != 0) {
+                    satInfo += " ";
+                }
+                satInfo += nsatInfoToString(g);
+            }
+            if (satInfo.length() != 0) {
+                exifJpg.setGpsSatInformation(satInfo);
+            }
+            if (g.hasHeading()) {
+                exifJpg.setGpsTrack(g.heading);
+            }
+            if (g.hasSpeed()) {
+                exifJpg.setGpsSpeedKmH(g.speed);
+            }
+            if (g.hasValid()) {
+                exifJpg
+                        .setDifferential((g.valid & BT747Constants.VALID_DGPS_MASK) != 0);
+            }
             exifJpg.copyTo(destPath, card);
+            exifJpg.setUsedSoftWare();
         }
+    }
+
+    private final static String nsatInfoToString(GPSRecord r) {
+        final char satSeperator = ';';
+        StringBuffer rec = new StringBuffer();
+        if (r.hasSid()) {
+            int j = 0;
+            if (r.hasSid()) {
+                for (int i = r.sid.length - 1; i >= 0; i--) {
+                    if (j != 0) {
+                        rec.append(satSeperator);
+                    }
+                    if (r.sidinuse[j]) {
+                        rec.append('#');
+                    }
+                    if (r.sid[j] < 10) {
+                        rec.append('0');
+                    }
+                    rec.append(r.sid[j]);
+                    rec.append('-');
+                    if (r.hasEle()) {
+                        if (r.ele[j] < 10) {
+                            rec.append('0');
+                        }
+                        rec.append(r.ele[j]);
+                    }
+                    rec.append('-');
+                    if (r.hasAzi()) {
+                        // if(s.azi[j]<100) {
+                        // rec.append('0');
+                        if (r.azi[j] < 10) {
+                            rec.append('0');
+                        }
+                        // }
+                        rec.append(r.azi[j]);
+                    }
+                    rec.append('-');
+                    if (r.hasSnr()) {
+                        if (r.snr[j] < 10) {
+                            rec.append('0');
+                        }
+                        rec.append(r.snr[j]);
+                    }
+                    j++;
+                }
+            }
+        }
+        return rec.toString();
     }
 
     /**
      * @param utc
-     *            the utc to set
+     *                the utc to set
      */
     private void setUtc(int utc) {
         getGpsRecord().tagutc = utc;
@@ -198,7 +300,7 @@ public class ImageData extends BT747Waypoint {
 
     /**
      * @param width
-     *            the width to set
+     *                the width to set
      */
     private void setWidth(int width) {
         this.width = width;
@@ -213,7 +315,7 @@ public class ImageData extends BT747Waypoint {
 
     /**
      * @param height
-     *            the height to set
+     *                the height to set
      */
     private void setHeight(int height) {
         this.height = height;
@@ -228,7 +330,7 @@ public class ImageData extends BT747Waypoint {
 
     /**
      * @param card
-     *            the card to set
+     *                the card to set
      */
     private void setCard(int card) {
         this.card = card;
@@ -239,5 +341,5 @@ public class ImageData extends BT747Waypoint {
      */
     public int getCard() {
         return card;
-    }    
+    }
 }
