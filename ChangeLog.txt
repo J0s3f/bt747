@@ -1,3 +1,6 @@
+Version 1.66.17
+* StarT/enddate issue sovle - GPS time offset issue should be solved (not checked).
+
 Version 1.66.16
 * Tag button added to 'Files to Tag' tab.
 

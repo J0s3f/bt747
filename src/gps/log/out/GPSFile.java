@@ -397,12 +397,20 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                                         .hasLongitude()))) {
                             userWayPoint.tagFromRecord(ref);
                             userWayPoint.utc = gpstime;
+                        } else {
+                            // Time added later.
+                            if(userWayPoint.hasUtc()) { 
+                                userWayPoint.utc -= timeOffsetSeconds;
+                            }
                         }
                         doWriteRecord = true;
                     } else if (diffPrevious < -maxDiff) {
                         // Skip record
                         doWriteRecord = true;
-
+                        // Time added later.
+                        if(userWayPoint.hasUtc())  {
+                            userWayPoint.utc -= timeOffsetSeconds;
+                        }
                     }
                     if (doWriteRecord) {
                         if (userWayPoint.hasLatitude()

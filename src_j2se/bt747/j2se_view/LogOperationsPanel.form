@@ -515,7 +515,7 @@
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="startDateFocusLost"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startDateActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="org.jdesktop.swingx.JXDatePicker" name="endDate">
@@ -525,7 +525,7 @@
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="endDateFocusLost"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="endDateActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JSpinner" name="spTimeSplitHours">
