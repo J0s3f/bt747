@@ -183,7 +183,7 @@ public class ImageData extends BT747Waypoint {
             ExifJPG exifJpg = new ExifJPG();
             exifJpg.setPath(getPath()); // Get exif data from file
             GPSRecord g = getGpsRecord();
-            if (g.hasLocation()) {
+            if (g.hasPosition()) {
                 exifJpg.setGpsPosition(g.latitude, g.longitude);
             }
             if (g.hasPdop()) {

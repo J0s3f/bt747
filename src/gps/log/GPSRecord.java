@@ -247,7 +247,7 @@ public class GPSRecord {
         return valid != NO_VALID;
     }
 
-    public final boolean hasLocation() {
+    public final boolean hasPosition() {
         return hasLatitude() && hasLongitude();
     }
 

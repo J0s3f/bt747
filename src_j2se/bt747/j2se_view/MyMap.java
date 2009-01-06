@@ -153,7 +153,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                     waypointList.setSelectedValue(w, true);
                     ml.selectedWaypoint(w);
                 }
-                if (w.getGpsRecord().hasLocation()) {
+                if (w.getGpsRecord().hasPosition()) {
                     map.setAddressLocation(w.getPosition());
                 }
                 map.repaint();
