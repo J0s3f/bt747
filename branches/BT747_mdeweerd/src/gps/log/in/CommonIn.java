@@ -403,7 +403,7 @@ public final class CommonIn {
 
     public final static void adjustHeight(final GPSRecord r,
             final int factorConversionWGS84ToMSL) {
-        if (factorConversionWGS84ToMSL != 0 && r.hasLocation()
+        if (factorConversionWGS84ToMSL != 0 && r.hasPosition()
                 && r.hasHeight()) {
             if (factorConversionWGS84ToMSL < 0) {
                 r.height -= Conv.wgs84Separation(r.latitude, r.longitude);

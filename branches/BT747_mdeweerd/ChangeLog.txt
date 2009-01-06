@@ -1,4 +1,7 @@
-Version
+Version 1.66.19
+* GPStime now maintained in file list (tested!)
+
+Version 1.66.18
 * Other fix in EXIF regarding thumbnail image.
 
 Version 1.66.17

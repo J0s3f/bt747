@@ -393,24 +393,15 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                         }
                         if ((diff <= maxDiff)
                                 && (overridePreviousTag || (!userWayPoint
-                                        .hasLatitude() || !userWayPoint
-                                        .hasLongitude()))) {
+                                        .hasPosition() ))) {
                             userWayPoint.tagFromRecord(ref);
                             userWayPoint.utc = gpstime;
-                        } else {
-                            // Time added later.
-                            if(userWayPoint.hasUtc()) { 
-                                userWayPoint.utc -= timeOffsetSeconds;
-                            }
                         }
                         doWriteRecord = true;
                     } else if (diffPrevious < -maxDiff) {
                         // Skip record
                         doWriteRecord = true;
                         // Time added later.
-                        if(userWayPoint.hasUtc())  {
-                            userWayPoint.utc -= timeOffsetSeconds;
-                        }
                     }
                     if (doWriteRecord) {
                         if (userWayPoint.hasLatitude()
@@ -419,14 +410,6 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                             if (!activeFields.equalsFormat(userWayPoint)) {
                                 writeLogFmtHeader(userWayPoint);
                             }
-                            // bt747.sys.Generic.debug(diffPrevious + " " +
-                            // diffNext); // utcCorrectedRecord.utc -
-                            // userWayPoint.utc
-                            // bt747.sys.Generic.debug(gps.log.out.CommonOut
-                            // .getTimeStr(userWayPointUTC));
-                            // bt747.sys.Generic.debug(r.toString());
-                            // logFormat = userWayPoint.getLogFormat();
-                            // userWayPoint.utc = userWayPointUTC;
                             userWayPoint.utc-=timeOffsetSeconds;
                             writeUtc0Record(userWayPoint);
                         }
@@ -471,7 +454,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     }
 
     private final void writeUtc0Record(final GPSRecord r) {
-        if (activeFields.utc != 0) {
+        if (r.hasUtc()) {
             r.utc += timeOffsetSeconds;
         }
         writeRecord(r);
