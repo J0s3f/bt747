@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.j2se_view;
 
 import gnu.io.CommPortIdentifier;
@@ -46,11 +46,10 @@ import bt747.sys.Interface;
  * @author Mario De Weerd
  */
 public class BT747Main extends javax.swing.JFrame implements
-        bt747.model.ModelListener, WindowListener,
-        J2SEMessageListener {
+        bt747.model.ModelListener, WindowListener, J2SEMessageListener {
 
     /**
-     * Initialise the lower level interface class. Needed for BT747 to work.
+     * Initialize the lower level interface class. Needed for BT747 to work.
      */
     static {
         Interface
@@ -70,7 +69,7 @@ public class BT747Main extends javax.swing.JFrame implements
         initAppData();
     }
 
-    public BT747Main(J2SEAppModel m, J2SEAppController c) {
+    public BT747Main(final J2SEAppModel m, final J2SEAppController c) {
         setModel(m);
         setController(c);
         initComponents();
@@ -78,12 +77,12 @@ public class BT747Main extends javax.swing.JFrame implements
     }
 
     public void setController(final Controller c) {
-        if (this.m != null) {
-            this.m.removeListener(this);
+        if (m != null) {
+            m.removeListener(this);
         }
         this.c = (J2SEAppController) c; // Should check that c is an
         // AppController or do it differently
-        if (this.m != null) {
+        if (m != null) {
             m.addListener(this);
         }
     }
@@ -123,25 +122,24 @@ public class BT747Main extends javax.swing.JFrame implements
     private FileTablePanel pnFilesToTagPanel;
     private MyMap pnMap = new MyMap();
 
-    private final Component inScrollPane(JPanel p) {
+    private final Component inScrollPane(final JPanel p) {
         JScrollPane sp;
         sp = new JScrollPane(p);
         sp.setBorder(null);
-        sp.setMinimumSize(new Dimension(30,30));
+        sp.setMinimumSize(new Dimension(30, 30));
         return sp;
     }
-    
+
     private final void completeGui() {
         pnLogOperationsPanel = new LogOperationsPanel();
         pnLogOperationsPanel.init(c);
-//        pnLogOperationsPanel.setPreferredSize(new java.awt.Dimension(800,800));
-//        getLayout().preferredLayoutSize(tabbedPanelAll);
-        tabbedPanelAll
-                .insertTab(
-                        getString("LogOperations.tabTitle"),
-                        null, inScrollPane(pnLogOperationsPanel), null, 0);
+        // pnLogOperationsPanel.setPreferredSize(new
+        // java.awt.Dimension(800,800));
+        // getLayout().preferredLayoutSize(tabbedPanelAll);
+        tabbedPanelAll.insertTab(getString("LogOperations.tabTitle"), null,
+                inScrollPane(pnLogOperationsPanel), null, 0);
         tabbedPanelAll.setSelectedIndex(0);
-        
+
         pnOutputSettingsPanel = new OutputSettingsPanel();
         tabbedPanelAll
                 .insertTab(
@@ -171,7 +169,8 @@ public class BT747Main extends javax.swing.JFrame implements
         tabbedPanelAll
                 .insertTab(
                         getString("BT747Main.AdvancedfileSettingsPanel.TabConstraints.tabTitle"),
-                        null, inScrollPane(pnAdvancedFileSettingsPanel), null, 5);
+                        null, inScrollPane(pnAdvancedFileSettingsPanel),
+                        null, 5);
 
         pnFilesToTagPanel = new FileTablePanel();
         tabbedPanelAll.insertTab(getString("FilesToTagPanel.title"), null,
@@ -181,20 +180,21 @@ public class BT747Main extends javax.swing.JFrame implements
             // JPanel pnMap = (JPanel) (Class.forName("bt747.j2se_view.MyMap")
             // .newInstance());
             tabbedPanelAll.insertTab(getString("map.tabTitle"), null, pnMap,
-                    null,2);
-        } catch (Exception e) {
+                    null, 2);
+        } catch (final Exception e) {
             Generic.debug("During map setup", e);
             // TODO: handle exception
         }
-        //System.err.println(tabbedPanelAll.getPreferredSize());
-//        tabbedPanelAll.invalidate();
-//        pnBottomInformation.invalidate();
-//        this.invalidate();
-//        this.pack();
+        // System.err.println(tabbedPanelAll.getPreferredSize());
+        // tabbedPanelAll.invalidate();
+        // pnBottomInformation.invalidate();
+        // this.invalidate();
+        // this.pack();
     }
-    
+
     private final static int PREFERRED_INITIAL_X_SIZE = 928;
     private final static int PREFERRED_INITIAL_Y_SIZE = 512;
+
     /**
      * Initialize application data. Gets the values from the model to set them
      * in the GUI.
@@ -209,23 +209,27 @@ public class BT747Main extends javax.swing.JFrame implements
         pnFiltersPanel.init(c);
         pnOutputSettingsPanel.init(c);
         pack();
-        int x = getWidth()+(int)tabbedPanelAll.getPreferredSize().getWidth()-tabbedPanelAll.getWidth();
-        int y = getHeight()+(int)tabbedPanelAll.getPreferredSize().getHeight()-tabbedPanelAll.getHeight()+10;
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        if(x>dim.getWidth()) {
-            x=(int)dim.getWidth();
-        } else if(dim.getWidth()-100 > PREFERRED_INITIAL_X_SIZE
-                && x < PREFERRED_INITIAL_X_SIZE) {
+        int x = getWidth()
+                + (int) tabbedPanelAll.getPreferredSize().getWidth()
+                - tabbedPanelAll.getWidth();
+        int y = getHeight()
+                + (int) tabbedPanelAll.getPreferredSize().getHeight()
+                - tabbedPanelAll.getHeight() + 10;
+        final Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        if (x > dim.getWidth()) {
+            x = (int) dim.getWidth();
+        } else if ((dim.getWidth() - 100 > PREFERRED_INITIAL_X_SIZE)
+                && (x < PREFERRED_INITIAL_X_SIZE)) {
             x = PREFERRED_INITIAL_X_SIZE;
         }
-        if(y>dim.getHeight()) {
-            y=(int)dim.getHeight();
-        } else if(dim.getHeight()-100 > PREFERRED_INITIAL_Y_SIZE
-                && y < PREFERRED_INITIAL_Y_SIZE) {
+        if (y > dim.getHeight()) {
+            y = (int) dim.getHeight();
+        } else if ((dim.getHeight() - 100 > PREFERRED_INITIAL_Y_SIZE)
+                && (y < PREFERRED_INITIAL_Y_SIZE)) {
             y = PREFERRED_INITIAL_Y_SIZE;
         }
-        
-        setSize(x,y);
+
+        setSize(x, y);
         validate();
         updateGuiData(); // For internationalisation - not so easy in
         // netbeans
@@ -262,7 +266,7 @@ public class BT747Main extends javax.swing.JFrame implements
              * 
              * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
              */
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 c.showAbout();
             }
         });
@@ -272,7 +276,7 @@ public class BT747Main extends javax.swing.JFrame implements
              * 
              * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
              */
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 c.showLicense();
             }
         });
@@ -281,31 +285,31 @@ public class BT747Main extends javax.swing.JFrame implements
     }
 
     private final void updateConnected(final boolean connected) {
-        JPanel[] panels = { pnAdvancedSettingsPanel };
+        final JPanel[] panels = { pnAdvancedSettingsPanel };
 
-        for (JPanel panel : panels) {
+        for (final JPanel panel : panels) {
             J2SEAppController.disablePanel(panel, connected);
         }
     }
 
     private final void updateSerialSpeed() {
-        int speed = m.getIntOpt(AppSettings.BAUDRATE);
+        final int speed = m.getIntOpt(AppSettings.BAUDRATE);
         cbSerialSpeed.setSelectedItem(new Integer(speed));
     }
 
     @SuppressWarnings("unchecked")
     private void addPortsToGui() {
         try {
-            Enumeration<CommPortIdentifier> list = CommPortIdentifier
+            final Enumeration<CommPortIdentifier> list = CommPortIdentifier
                     .getPortIdentifiers();
             while (list.hasMoreElements()) {
-                CommPortIdentifier iden = list.nextElement();
+                final CommPortIdentifier iden = list.nextElement();
                 if (iden.getPortType() == CommPortIdentifier.PORT_SERIAL) {
                     ((javax.swing.DefaultComboBoxModel) cbPortName.getModel())
                             .addElement(iden.getName());
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug(getString("While_adding_ports"), e);
         }
     }
@@ -338,26 +342,26 @@ public class BT747Main extends javax.swing.JFrame implements
 
     }
 
-    public void windowActivated(WindowEvent e) {
+    public void windowActivated(final WindowEvent e) {
     }
 
-    public void windowClosed(WindowEvent e) {
+    public void windowClosed(final WindowEvent e) {
     }
 
-    public void windowClosing(WindowEvent e) {
+    public void windowClosing(final WindowEvent e) {
         exitApplication();
     }
 
-    public void windowDeactivated(WindowEvent e) {
+    public void windowDeactivated(final WindowEvent e) {
     }
 
-    public void windowDeiconified(WindowEvent e) {
+    public void windowDeiconified(final WindowEvent e) {
     }
 
-    public void windowIconified(WindowEvent e) {
+    public void windowIconified(final WindowEvent e) {
     }
 
-    public void windowOpened(WindowEvent e) {
+    public void windowOpened(final WindowEvent e) {
     }
 
     boolean btConnectFunctionIsConnect = true;
@@ -374,19 +378,19 @@ public class BT747Main extends javax.swing.JFrame implements
             miOsmarender.setSelected(mt == MapType.OsmaRender);
             miCycle.setSelected(mt == MapType.Cycle);
             mMap4.setSelected(mt == MapType.Map4);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             // TODO: handle exception
         }
 
     }
 
-    public void modelEvent(ModelEvent e) {
+    public void modelEvent(final ModelEvent e) {
         // TODO Auto-generated method stub
-        int type = e.getType();
+        final int type = e.getType();
         switch (type) {
 
         case ModelEvent.SETTING_CHANGE:
-            int arg = Integer.valueOf((String) e.getArg());
+            final int arg = Integer.valueOf((String) e.getArg());
             switch (arg) {
             case Model.MAPTYPE:
                 updateMapType();
@@ -455,11 +459,12 @@ public class BT747Main extends javax.swing.JFrame implements
         case J2SEAppModel.UPDATE_WAYPOINT_LIST:
             if (waypointPanel == null) {
                 waypointPanel = new PositionTablePanel();
-                int idx = tabbedPanelAll.indexOfComponent(trackPanel)+1;
+                int idx = tabbedPanelAll.indexOfComponent(trackPanel) + 1;
                 if (idx <= 0) {
-                    idx = tabbedPanelAll.indexOfComponent(pnMap)+1;
+                    idx = tabbedPanelAll.indexOfComponent(pnMap) + 1;
                     if (idx <= 0) {
-                        idx = tabbedPanelAll.indexOfComponent(pnLogOperationsPanel)+1;
+                        idx = tabbedPanelAll
+                                .indexOfComponent(pnLogOperationsPanel) + 1;
                     }
                 }
                 waypointPanel.setGpsRecords(m.getPositionData()
@@ -467,7 +472,8 @@ public class BT747Main extends javax.swing.JFrame implements
                 tabbedPanelAll.insertTab(getString("WayPoints.tabTitle"),
                         null, waypointPanel, null, idx);
             } else {
-               waypointPanel.setGpsRecords(m.getPositionData().getWayPoints());
+                waypointPanel.setGpsRecords(m.getPositionData()
+                        .getWayPoints());
             }
             break;
 
@@ -477,13 +483,14 @@ public class BT747Main extends javax.swing.JFrame implements
                 trackPanel.setGpsRecords(m.getPositionData().getTracks());
                 int idx = tabbedPanelAll.indexOfComponent(waypointPanel);
                 if (idx < 0) {
-                    idx = tabbedPanelAll.indexOfComponent(pnMap)+1;
+                    idx = tabbedPanelAll.indexOfComponent(pnMap) + 1;
                     if (idx < 0) {
-                        idx = tabbedPanelAll.indexOfComponent(pnLogOperationsPanel)+1;
+                        idx = tabbedPanelAll
+                                .indexOfComponent(pnLogOperationsPanel) + 1;
                     }
                 }
-                tabbedPanelAll
-                        .insertTab(getString("Track.tabTitle"), null, trackPanel, null, idx);
+                tabbedPanelAll.insertTab(getString("Track.tabTitle"), null,
+                        trackPanel, null, idx);
             } else {
                 trackPanel.setGpsRecords(m.getPositionData().getTracks());
             }
@@ -500,7 +507,7 @@ public class BT747Main extends javax.swing.JFrame implements
             break;
         }
     }
-    
+
     private PositionTablePanel trackPanel = null;
     private PositionTablePanel waypointPanel = null;
 
@@ -542,19 +549,22 @@ public class BT747Main extends javax.swing.JFrame implements
         Info = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        final java.util.ResourceBundle bundle = java.util.ResourceBundle
+                .getBundle("bt747/j2se_view/Bundle"); // NOI18N
         setTitle(bundle.getString("BT747Main.title")); // NOI18N
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setName("BT747Frame"); // NOI18N
 
         jPanel1.setDoubleBuffered(false);
 
-        tabbedPanelAll.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPanelAll
+                .setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPanelAll.setPreferredSize(null);
 
         InfoPanel.setPreferredSize(null);
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1
+                .setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setOpaque(false);
 
         infoTextArea.setColumns(20);
@@ -568,127 +578,206 @@ public class BT747Main extends javax.swing.JFrame implements
         infoTextArea.setVerifyInputWhenFocusTarget(false);
         jScrollPane1.setViewportView(infoTextArea);
 
-        org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(InfoPanel);
+        final org.jdesktop.layout.GroupLayout InfoPanelLayout = new org.jdesktop.layout.GroupLayout(
+                InfoPanel);
         InfoPanel.setLayout(InfoPanelLayout);
-        InfoPanelLayout.setHorizontalGroup(
-            InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(InfoPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        InfoPanelLayout.setVerticalGroup(
-            InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(InfoPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 8, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        InfoPanelLayout
+                .setHorizontalGroup(InfoPanelLayout
+                        .createParallelGroup(
+                                org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(
+                                InfoPanelLayout
+                                        .createSequentialGroup()
+                                        .addContainerGap()
+                                        .add(
+                                                jScrollPane1,
+                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                                574, Short.MAX_VALUE)
+                                        .addContainerGap()));
+        InfoPanelLayout.setVerticalGroup(InfoPanelLayout.createParallelGroup(
+                org.jdesktop.layout.GroupLayout.LEADING).add(
+                InfoPanelLayout.createSequentialGroup().addContainerGap()
+                        .add(jScrollPane1,
+                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                8, Short.MAX_VALUE).addContainerGap()));
 
-        tabbedPanelAll.addTab(bundle.getString("BT747Main.InfoPanel.TabConstraints.tabTitle"), InfoPanel); // NOI18N
+        tabbedPanelAll.addTab(bundle
+                .getString("BT747Main.InfoPanel.TabConstraints.tabTitle"),
+                InfoPanel); // NOI18N
 
-        DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults().getColor("nbProgressBar.Foreground"));
+        DownloadProgressBar.setBackground(javax.swing.UIManager.getDefaults()
+                .getColor("nbProgressBar.Foreground"));
         DownloadProgressBar.setForeground(new java.awt.Color(204, 255, 204));
-        DownloadProgressBar.setToolTipText(bundle.getString("BT747Main.DownloadProgressBar.toolTipText")); // NOI18N
+        DownloadProgressBar.setToolTipText(bundle
+                .getString("BT747Main.DownloadProgressBar.toolTipText")); // NOI18N
         DownloadProgressBar.setFocusable(false);
         DownloadProgressBar.setPreferredSize(new java.awt.Dimension(10, 16));
 
-        DownloadProgressLabel.setText(bundle.getString("BT747Main.DownloadProgressLabel.text")); // NOI18N
+        DownloadProgressLabel.setText(bundle
+                .getString("BT747Main.DownloadProgressLabel.text")); // NOI18N
 
         cbPortName.setEditable(true);
-        cbPortName.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "USB (for Linux, Mac)", "BLUETOOTH (for Mac)", "COM1:", "COM2:", "COM3:", "COM4:", "COM5:", "COM6:", "COM7:", "COM8:", "COM9:", "COM10:", "COM11:", "COM12:", "COM13:", "COM14:", "COM15:", "COM16:" }));
-        cbPortName.setToolTipText(bundle.getString("BT747Main.cbPortName.toolTipText")); // NOI18N
+        cbPortName.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "USB (for Linux, Mac)", "BLUETOOTH (for Mac)",
+                        "COM1:", "COM2:", "COM3:", "COM4:", "COM5:", "COM6:",
+                        "COM7:", "COM8:", "COM9:", "COM10:", "COM11:",
+                        "COM12:", "COM13:", "COM14:", "COM15:", "COM16:" }));
+        cbPortName.setToolTipText(bundle
+                .getString("BT747Main.cbPortName.toolTipText")); // NOI18N
         cbPortName.setPreferredSize(new java.awt.Dimension(200, 22));
         cbPortName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 cbPortNameActionPerformed(evt);
             }
         });
 
         btConnect.setText(bundle.getString("BT747Main.btConnect.text")); // NOI18N
         btConnect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 btConnectActionPerformed(evt);
             }
         });
 
         cbSerialSpeed.setEditable(true);
-        cbSerialSpeed.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "38400", "115200" }));
-        cbSerialSpeed.setToolTipText(bundle.getString("BT747Main.cbSerialSpeed.toolTipText")); // NOI18N
+        cbSerialSpeed.setModel(new javax.swing.DefaultComboBoxModel(
+                new String[] { "38400", "115200" }));
+        cbSerialSpeed.setToolTipText(bundle
+                .getString("BT747Main.cbSerialSpeed.toolTipText")); // NOI18N
         cbSerialSpeed.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
+            public void focusLost(final java.awt.event.FocusEvent evt) {
                 cbSerialSpeedFocusLost(evt);
             }
         });
 
-        lbSerialSpeed.setText(bundle.getString("BT747Main.lbSerialSpeed.text")); // NOI18N
+        lbSerialSpeed.setText(bundle
+                .getString("BT747Main.lbSerialSpeed.text")); // NOI18N
 
-        org.jdesktop.layout.GroupLayout pnBottomInformationLayout = new org.jdesktop.layout.GroupLayout(pnBottomInformation);
+        final org.jdesktop.layout.GroupLayout pnBottomInformationLayout = new org.jdesktop.layout.GroupLayout(
+                pnBottomInformation);
         pnBottomInformation.setLayout(pnBottomInformationLayout);
-        pnBottomInformationLayout.setHorizontalGroup(
-            pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnBottomInformationLayout.createSequentialGroup()
-                .add(btConnect)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbPortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 250, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(lbSerialSpeed)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(cbSerialSpeed, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(DownloadProgressLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnBottomInformationLayout.setVerticalGroup(
-            pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnBottomInformationLayout.createSequentialGroup()
-                .add(0, 0, 0)
-                .add(pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(DownloadProgressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pnBottomInformationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                        .add(btConnect)
-                        .add(cbPortName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(cbSerialSpeed, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(lbSerialSpeed)
-                        .add(DownloadProgressLabel))))
-        );
+        pnBottomInformationLayout
+                .setHorizontalGroup(pnBottomInformationLayout
+                        .createParallelGroup(
+                                org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(
+                                pnBottomInformationLayout
+                                        .createSequentialGroup()
+                                        .add(btConnect)
+                                        .addPreferredGap(
+                                                org.jdesktop.layout.LayoutStyle.RELATED)
+                                        .add(
+                                                cbPortName,
+                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
+                                                250,
+                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(
+                                                org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                        .add(lbSerialSpeed)
+                                        .addPreferredGap(
+                                                org.jdesktop.layout.LayoutStyle.RELATED)
+                                        .add(
+                                                cbSerialSpeed,
+                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
+                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(
+                                                org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                        .add(DownloadProgressLabel)
+                                        .addPreferredGap(
+                                                org.jdesktop.layout.LayoutStyle.RELATED)
+                                        .add(
+                                                DownloadProgressBar,
+                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                                Short.MAX_VALUE)));
+        pnBottomInformationLayout
+                .setVerticalGroup(pnBottomInformationLayout
+                        .createParallelGroup(
+                                org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(
+                                pnBottomInformationLayout
+                                        .createSequentialGroup()
+                                        .add(0, 0, 0)
+                                        .add(
+                                                pnBottomInformationLayout
+                                                        .createParallelGroup(
+                                                                org.jdesktop.layout.GroupLayout.LEADING)
+                                                        .add(
+                                                                DownloadProgressBar,
+                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
+                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                                        .add(
+                                                                pnBottomInformationLayout
+                                                                        .createParallelGroup(
+                                                                                org.jdesktop.layout.GroupLayout.BASELINE)
+                                                                        .add(
+                                                                                btConnect)
+                                                                        .add(
+                                                                                cbPortName,
+                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
+                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                                                        .add(
+                                                                                cbSerialSpeed,
+                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
+                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                                                        .add(
+                                                                                lbSerialSpeed)
+                                                                        .add(
+                                                                                DownloadProgressLabel)))));
 
-        DownloadProgressBar.getAccessibleContext().setAccessibleName(bundle.getString("DownloadProgessBar")); // NOI18N
+        DownloadProgressBar.getAccessibleContext().setAccessibleName(
+                bundle.getString("DownloadProgessBar")); // NOI18N
         progressBarUpdate();
 
-        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        final org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(
+                jPanel1);
         jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
-            .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnBottomInformation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(
+                org.jdesktop.layout.GroupLayout.LEADING).add(tabbedPanelAll,
+                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 599,
+                Short.MAX_VALUE)
+                .add(pnBottomInformation,
+                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE));
+        jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(
+                org.jdesktop.layout.GroupLayout.LEADING).add(
+                org.jdesktop.layout.GroupLayout.TRAILING,
+                jPanel1Layout.createSequentialGroup().add(tabbedPanelAll,
+                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 52,
+                        Short.MAX_VALUE).addPreferredGap(
+                        org.jdesktop.layout.LayoutStyle.RELATED).add(
+                        pnBottomInformation,
+                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
+                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap()));
 
-        tabbedPanelAll.getAccessibleContext().setAccessibleName(bundle.getString("Log_download_&_Convert")); // NOI18N
+        tabbedPanelAll.getAccessibleContext().setAccessibleName(
+                bundle.getString("Log_download_&_Convert")); // NOI18N
 
         FileMenu.setText(bundle.getString("BT747Main.FileMenu.text")); // NOI18N
 
-        miFindSerialPorts.setText(bundle.getString("BT747Main.miFindSerialPorts.text")); // NOI18N
-        miFindSerialPorts.setToolTipText(bundle.getString("BT747Main.miFindSerialPorts.toolTipText")); // NOI18N
-        miFindSerialPorts.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miFindSerialPortsActionPerformed(evt);
-            }
-        });
+        miFindSerialPorts.setText(bundle
+                .getString("BT747Main.miFindSerialPorts.text")); // NOI18N
+        miFindSerialPorts.setToolTipText(bundle
+                .getString("BT747Main.miFindSerialPorts.toolTipText")); // NOI18N
+        miFindSerialPorts
+                .addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(
+                            final java.awt.event.ActionEvent evt) {
+                        miFindSerialPortsActionPerformed(evt);
+                    }
+                });
         FileMenu.add(miFindSerialPorts);
 
-        miMapCacheDir.setText(bundle.getString("BT747Main.miMapCacheDir.text")); // NOI18N
+        miMapCacheDir.setText(bundle
+                .getString("BT747Main.miMapCacheDir.text")); // NOI18N
         miMapCacheDir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 miMapCacheDirActionPerformed(evt);
             }
         });
@@ -696,7 +785,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         miExit.setText(bundle.getString("BT747Main.miExit.text")); // NOI18N
         miExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 miExitActionPerformed(evt);
             }
         });
@@ -708,25 +797,28 @@ public class BT747Main extends javax.swing.JFrame implements
 
         btGPSDebug.setText(bundle.getString("BT747Main.btGPSDebug.text")); // NOI18N
         btGPSDebug.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+            public void stateChanged(final javax.swing.event.ChangeEvent evt) {
                 btGPSDebugStateChanged(evt);
             }
         });
         SettingsMenu.add(btGPSDebug);
 
-        btGPSConnectDebug.setText(bundle.getString("BT747Main.btGPSConnectDebug.text")); // NOI18N
-        btGPSConnectDebug.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                btGPSConnectDebugStateChanged(evt);
-            }
-        });
+        btGPSConnectDebug.setText(bundle
+                .getString("BT747Main.btGPSConnectDebug.text")); // NOI18N
+        btGPSConnectDebug
+                .addChangeListener(new javax.swing.event.ChangeListener() {
+                    public void stateChanged(
+                            final javax.swing.event.ChangeEvent evt) {
+                        btGPSConnectDebugStateChanged(evt);
+                    }
+                });
         SettingsMenu.add(btGPSConnectDebug);
 
         miMap.setText(bundle.getString("BT747Main.miMap.text")); // NOI18N
 
         miMapnik.setText(bundle.getString("BT747Main.miMapnik.text")); // NOI18N
         miMapnik.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 miMapnikActionPerformed(evt);
             }
         });
@@ -734,7 +826,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         miOsmarender.setText(bundle.getString("BT747Main.miOsmarender.text")); // NOI18N
         miOsmarender.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 miOsmarenderActionPerformed(evt);
             }
         });
@@ -742,7 +834,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         miCycle.setText(bundle.getString("BT747Main.miCycle.text")); // NOI18N
         miCycle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 miCycleActionPerformed(evt);
             }
         });
@@ -750,7 +842,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
         mMap4.setText(bundle.getString("BT747Main.mMap4.text")); // NOI18N
         mMap4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(final java.awt.event.ActionEvent evt) {
                 mMap4ActionPerformed(evt);
             }
         });
@@ -772,44 +864,49 @@ public class BT747Main extends javax.swing.JFrame implements
 
         setJMenuBar(jMenuBar);
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        final org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
+                getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(0, 0, 0)
-                .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        layout.setHorizontalGroup(layout.createParallelGroup(
+                org.jdesktop.layout.GroupLayout.LEADING).add(
+                layout.createSequentialGroup().add(0, 0, 0).add(jPanel1,
+                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE)));
+        layout.setVerticalGroup(layout.createParallelGroup(
+                org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
+                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE));
 
-        getAccessibleContext().setAccessibleName("MTK Datalogger Control (BT747)");
+        getAccessibleContext().setAccessibleName(
+                "MTK Datalogger Control (BT747)");
     }//GEN-END:initComponents
 
-    private void cbSerialSpeedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbSerialSpeedFocusLost
+    private void cbSerialSpeedFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbSerialSpeedFocusLost
         // TODO add your handling code here:
     }//GEN-LAST:event_cbSerialSpeedFocusLost
 
-    private void miExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
+    private void miExitActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
         exitApplication();
     }//GEN-LAST:event_miExitActionPerformed
 
-    private void btGPSDebugStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btGPSDebugStateChanged
+    private void btGPSDebugStateChanged(
+            final javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btGPSDebugStateChanged
         c.setDebug(btGPSDebug.isSelected());
     }//GEN-LAST:event_btGPSDebugStateChanged
 
     private void btGPSConnectDebugStateChanged(
-            javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btGPSConnectDebugStateChanged
+            final javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btGPSConnectDebugStateChanged
         c.setDebugConn(btGPSConnectDebug.isSelected());
     }//GEN-LAST:event_btGPSConnectDebugStateChanged
 
-    private void cbPortNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPortNameActionPerformed
+    private void cbPortNameActionPerformed(
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPortNameActionPerformed
         // selectPort(jComboBox1.getSelectedItem().toString());
     }//GEN-LAST:event_cbPortNameActionPerformed
 
-    private void btConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConnectActionPerformed
+    private void btConnectActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConnectActionPerformed
 
         if (btConnectFunctionIsConnect) {
             openPort(cbPortName.getSelectedItem().toString());
@@ -831,7 +928,7 @@ public class BT747Main extends javax.swing.JFrame implements
         // this.paintAll(this.getGraphics());
     }
 
-    private void openPort(String s) {
+    private void openPort(final String s) {
         boolean foundPort = false;
         int port = 0;
         try {
@@ -839,14 +936,14 @@ public class BT747Main extends javax.swing.JFrame implements
             if (String.valueOf(port).equals(s)) {
                 foundPort = true;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Ignore exception
         }
         try {
             if (!foundPort && s.toUpperCase().startsWith("COM")) {
-                if (s.length() == 5 && s.charAt(4) == ':') {
+                if ((s.length() == 5) && (s.charAt(4) == ':')) {
                     port = Integer.parseInt(s.substring(3, 4));
-                } else if (s.length() == 6 && s.charAt(5) == ':') {
+                } else if ((s.length() == 6) && (s.charAt(5) == ':')) {
                     port = Integer.parseInt(s.substring(3, 5));
                 } else {
                     port = Integer.parseInt(s.substring(3));
@@ -858,13 +955,13 @@ public class BT747Main extends javax.swing.JFrame implements
                     foundPort = true;
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Ignore exception
         }
         try {
             c.setBaudRate(Integer.parseInt((String) cbSerialSpeed
                     .getSelectedItem()));
-        } catch (Exception e) {
+        } catch (final Exception e) {
 
         }
         if (foundPort) {
@@ -915,7 +1012,7 @@ public class BT747Main extends javax.swing.JFrame implements
                 final BT747Main app = new BT747Main(m, c);
                 try {
                     app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     // A security exception could be thrown - ignore it.
                 }
                 app.setVisible(true);
@@ -923,12 +1020,13 @@ public class BT747Main extends javax.swing.JFrame implements
         });
     }
 
-    private void miMapCacheDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMapCacheDirActionPerformed
+    private void miMapCacheDirActionPerformed(
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMapCacheDirActionPerformed
         c.selectMapCacheDirectory();
     }//GEN-LAST:event_miMapCacheDirActionPerformed
 
     private void miFindSerialPortsActionPerformed(
-            java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFindSerialPortsActionPerformed
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFindSerialPortsActionPerformed
         // Looking for ports asynchronously
         new Thread() {
             public final void run() {
@@ -938,22 +1036,23 @@ public class BT747Main extends javax.swing.JFrame implements
 
     }//GEN-LAST:event_miFindSerialPortsActionPerformed
 
-    private void miMapnikActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMapnikActionPerformed
+    private void miMapnikActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miMapnikActionPerformed
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OpenStreetMap.ordinal());
     }//GEN-LAST:event_miMapnikActionPerformed
 
-    private void miOsmarenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOsmarenderActionPerformed
+    private void miOsmarenderActionPerformed(
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOsmarenderActionPerformed
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.OsmaRender.ordinal());
     }//GEN-LAST:event_miOsmarenderActionPerformed
 
-    private void miCycleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCycleActionPerformed
+    private void miCycleActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCycleActionPerformed
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.Cycle.ordinal());
     }//GEN-LAST:event_miCycleActionPerformed
 
-    private void mMap4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mMap4ActionPerformed
+    private void mMap4ActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mMap4ActionPerformed
         c.setIntOpt(Model.MAPTYPE, MyMap.MapType.Map4.ordinal());
 
-}//GEN-LAST:event_mMap4ActionPerformed
+    }//GEN-LAST:event_mMap4ActionPerformed
 
     // public static void main(String args) {
     // main((String[])null);

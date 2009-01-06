@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT747                              ***
-//***                 (c)2007-2008 Mario De Weerd                  ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***                                                              ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT747 ***
+// *** (c)2007-2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.j2se_view;
 
 import gps.convert.Conv;
@@ -42,6 +42,7 @@ import bt747.sys.Generic;
 import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Date;
 import bt747.sys.interfaces.BT747Time;
+import org.jdesktop.swingx.JXDatePicker;
 
 /**
  * J2SE Implementation (GUI) of BT747.
@@ -60,40 +61,39 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 
     // TODO: remove this part after updating GUI. Handled in updateGui.
     private static final ComboBoxModel modelGpsType = new javax.swing.DefaultComboBoxModel(
-            new String[] { "" });
+            new String[]{""});
 
     /** Creates new form BT747Main */
     public LogOperationsPanel() {
         initComponents();
         lbBusySpinner.setVisible(false);
     }
-    
-    public void init(J2SEAppController pC) {
+
+    public void init(final J2SEAppController pC) {
         c = pC;
         m = c.getModel();
         m.addListener(this);
         initAppData();
     }
 
-
     private final String getString(final String s) {
         return J2SEAppController.getString(s);
     }
 
     private void updateGuiData() {
-        cbGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                getString("DEFAULT_DEVICE"), "Holux M-241", "iTrackU-Nemerix",
-                "PhotoTrackr", "iTrackU-SIRFIII" }));
-        cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[] {
-                getString("TABLE_Description"), getString("GPX_Description"),
-                getString("GMAP_Description"), getString("CSV_Description"),
-                getString("KML_Description"), getString("KMZ_Description"),
-                getString("NMEA_Description"), getString("OZI_Description"),
-                getString("Compe_Description") }));
+        cbGPSType.setModel(new javax.swing.DefaultComboBoxModel(new String[]{
+                    getString("DEFAULT_DEVICE"), "Holux M-241",
+                    "iTrackU-Nemerix", "PhotoTrackr", "iTrackU-SIRFIII"}));
+        cbFormat.setModel(new javax.swing.DefaultComboBoxModel(new String[]{
+                    getString("TABLE_Description"), getString("GPX_Description"),
+                    getString("GMAP_Description"), getString("CSV_Description"),
+                    getString("KML_Description"), getString("KMZ_Description"),
+                    getString("NMEA_Description"), getString("OZI_Description"),
+                    getString("Compe_Description")}));
         cbDownloadMethod.setModel(new javax.swing.DefaultComboBoxModel(
-                new String[] { getString("DOWNLOAD_INCREMENTAL"),
-                        getString("DOWNLOAD_FULL"),
-                        getString("DOWNLOAD_FILLED") }));
+                new String[]{getString("DOWNLOAD_INCREMENTAL"),
+                    getString("DOWNLOAD_FULL"),
+                    getString("DOWNLOAD_FILLED")}));
     }
 
     /**
@@ -112,8 +112,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 
         updateCbGPSType();
 
-        cbDisableLoggingDuringDownload.setSelected(m
-                .getBooleanOpt(Model.DISABLELOGDURINGDOWNLOAD));
+        cbDisableLoggingDuringDownload.setSelected(m.getBooleanOpt(Model.DISABLELOGDURINGDOWNLOAD));
 
         BT747Time d;
         d = Interface.getTimeInstance();
@@ -140,16 +139,14 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     }
 
     private final void updateConnected(final boolean connected) {
-        JPanel[] panels = { GPSDecodePanel };
+        final JPanel[] panels = {GPSDecodePanel};
 
         btDownloadFromNumerix.setEnabled(connected);
         btDownloadIBlue.setEnabled(connected);
-        for (JPanel panel : panels) {
+        for (final JPanel panel : panels) {
             J2SEAppController.disablePanel(panel, connected);
         }
     }
-
-
     private long conversionStartTime;
 
     private void updateRMCData(final GPSRecord gps) {
@@ -168,17 +165,13 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
             // System.out.println(TimeStr);
             // TODO: Look for some ideas here:
             // http://java.sun.com/j2se/1.5.0/docs/api/java/util/Formatter.html#syntax
-            BT747Time t = Interface.getTimeInstance();
+            final BT747Time t = Interface.getTimeInstance();
             t.setUTCTime(gps.utc);
             TimeStr =
-            // String.valueOf(t.getYear())+"/"
-            // +( t.getMonth()<10?"0":"")+String.valueOf(t.getMonth())+"/"
-            // +( t.getDay()<10?"0":"")+String.valueOf(t.getDay())+" " +
-            (t.getHour() < 10 ? "0" : "") + String.valueOf(t.getHour()) + ":"
-                    + (t.getMinute() < 10 ? "0" : "")
-                    + String.valueOf(t.getMinute()) + ":"
-                    + (t.getSecond() < 10 ? "0" : "")
-                    + String.valueOf(t.getSecond());
+                    // String.valueOf(t.getYear())+"/"
+                    // +( t.getMonth()<10?"0":"")+String.valueOf(t.getMonth())+"/"
+                    // +( t.getDay()<10?"0":"")+String.valueOf(t.getDay())+" " +
+                    (t.getHour() < 10 ? "0" : "") + String.valueOf(t.getHour()) + ":" + (t.getMinute() < 10 ? "0" : "") + String.valueOf(t.getMinute()) + ":" + (t.getSecond() < 10 ? "0" : "") + String.valueOf(t.getSecond());
             txtTime.setText(TimeStr); // NO18N
         }
         updateGPSData(gps);
@@ -188,16 +181,13 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 
         txtLatitude.setText(String.format((Locale) null, "%.8f", gps.latitude)); // NOI18N
         // lbHeight.setText(String.valueOf(gps.height,3)+"m");
-        txtLongitude.setText(String
-                .format((Locale) null, "%.8f", gps.longitude)); // NOI18N
+        txtLongitude.setText(String.format((Locale) null, "%.8f",
+                gps.longitude)); // NOI18N
         txtGeoid.setText(String.format((Locale) null, "%.1f", gps.geoid) // NOI18N
-                + getString("m")
-                + getString("(calc:")
-                + String.format((Locale) null, "%.1f", Conv.wgs84Separation(
-                        gps.latitude, gps.longitude)) + getString("m") + ")"); // NOI18N
+                + getString("m") + getString("(calc:") + String.format((Locale) null, "%.1f", Conv.wgs84Separation(
+                gps.latitude, gps.longitude)) + getString("m") + ")"); // NOI18N
 
     }
-
     boolean btConnectFunctionIsConnect = true;
 
     /**
@@ -209,134 +199,127 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         c.doLogConversion(selectedFormat);
     }
 
-    public void modelEvent(ModelEvent e) {
+    public void modelEvent(final ModelEvent e) {
         // TODO Auto-generated method stub
-        int type = e.getType();
+        final int type = e.getType();
         switch (type) {
 
-        case ModelEvent.SETTING_CHANGE:
-//                int arg = Integer.valueOf((String) e.getArg());
-//                switch (arg) {
-//                case Model.MAPTYPE:
-//                    updateMapType();
-//                    break;
-//                }
-            break;
-        case ModelEvent.GPRMC:
-            updateRMCData((GPSRecord) e.getArg());
-            break;
-        case ModelEvent.UPDATE_LOG_MEM_USED:
-            txtMemoryUsed.setText(m.logMemUsed() + " ("
-                    + m.logMemUsedPercent() + "%)"); // NOI18N
-            break;
-        case ModelEvent.UPDATE_LOG_FLASH:
-            txtFlashInfo.setText(((m.getFlashManuProdID() != 0) ? Convert
-                    .unsigned2hex(m.getFlashManuProdID(), 8)
-                    + " " + m.getFlashDesc() : "")); // NOI18N
-            break;
-//        case ModelEvent.ERASE_ONGOING_NEED_POPUP:
-//            c.createErasePopup();
-//            break;
-//        case ModelEvent.ERASE_DONE_REMOVE_POPUP:
-//            c.removeErasePopup();
-//            break;
+            case ModelEvent.SETTING_CHANGE:
+                // int arg = Integer.valueOf((String) e.getArg());
+                // switch (arg) {
+                // case Model.MAPTYPE:
+                // updateMapType();
+                // break;
+                // }
+                break;
+            case ModelEvent.GPRMC:
+                updateRMCData((GPSRecord) e.getArg());
+                break;
+            case ModelEvent.UPDATE_LOG_MEM_USED:
+                txtMemoryUsed.setText(m.logMemUsed() + " (" + m.logMemUsedPercent() + "%)"); // NOI18N
+                break;
+            case ModelEvent.UPDATE_LOG_FLASH:
+                txtFlashInfo.setText(((m.getFlashManuProdID() != 0) ? Convert.unsigned2hex(m.getFlashManuProdID(), 8) + " " + m.getFlashDesc() : "")); // NOI18N
+                break;
+            // case ModelEvent.ERASE_ONGOING_NEED_POPUP:
+            // c.createErasePopup();
+            // break;
+            // case ModelEvent.ERASE_DONE_REMOVE_POPUP:
+            // c.removeErasePopup();
+            // break;
 
-        case ModelEvent.UPDATE_MTK_VERSION:
-        case ModelEvent.UPDATE_MTK_RELEASE:
-            txtModel.setText(m.getModel());
-            String fwString;
-            fwString = "";
-            lbFirmWare.setToolTipText("");
-            if (m.getMainVersion().length() + m.getFirmwareVersion().length() != 0) {
-                if (m.getMainVersion().length()
-                        + m.getFirmwareVersion().length() > 20) {
-                    fwString = "<html>";
-                    if (m.getMainVersion().length() > 20) {
-                        fwString += m.getMainVersion().substring(0, 17) + "...";
-                        lbFirmWare.setToolTipText(m.getMainVersion());
+            case ModelEvent.UPDATE_MTK_VERSION:
+            case ModelEvent.UPDATE_MTK_RELEASE:
+                txtModel.setText(m.getModel());
+                String fwString;
+                fwString = "";
+                lbFirmWare.setToolTipText("");
+                if (m.getMainVersion().length() + m.getFirmwareVersion().length() != 0) {
+                    if (m.getMainVersion().length() + m.getFirmwareVersion().length() > 20) {
+                        fwString = "<html>";
+                        if (m.getMainVersion().length() > 20) {
+                            fwString += m.getMainVersion().substring(0, 17) + "...";
+                            lbFirmWare.setToolTipText(m.getMainVersion());
+                        } else {
+                            fwString += m.getMainVersion();
+                        }
+                        fwString += (m.getMainVersion().length() != 0 ? "<br>"
+                                : "") + m.getFirmwareVersion(); // NOI18N
                     } else {
-                        fwString += m.getMainVersion();
+                        fwString = m.getMainVersion() + " " + m.getFirmwareVersion(); // NOI18N
                     }
-                    fwString += (m.getMainVersion().length() != 0 ? "<br>" : "")
-                            + m.getFirmwareVersion(); // NOI18N
-                } else {
-                    fwString = m.getMainVersion() + " "
-                            + m.getFirmwareVersion(); // NOI18N
                 }
-            }
-            txtFirmWare.setText(fwString); // NOI18N
-            break;
-        case ModelEvent.UPDATE_LOG_VERSION:
-            txtLoggerSWVersion.setText(m.getMtkLogVersion());
-            break;
-        case ModelEvent.GPGGA:
-            updateGPSData((GPSRecord) e.getArg());
-            break;
-        case ModelEvent.UPDATE_LOG_LOG_STATUS:
-            cbLoggingActive.setSelected(m.isLoggingActive());
-            break;
-        case ModelEvent.CONNECTED:
-        case ModelEvent.DISCONNECTED:
-            updateConnected(m.isConnected());
-            break;
-        case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
-            // TODO
-            // lbUsedMem.setText(Txt.MEM_USED + Convert.toString(m.logMemUsed())
-            // + "("
-            // + Convert.toString(m.logMemUsedPercent()) + "%)");
-            // m_UsedLabel.repaintNow();
-            // lbUsedRecords.setText(Txt.NBR_RECORDS
-            // + Convert.toString(m.logNbrLogPts()) + " ("
-            // + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
-            // + Txt.MEM_FREE + ")");
-            break;
-        // case ModelEvent.LOGFILEPATH_UPDATE:
-        // getRawLogFilePath();
-        // break;
-        // case ModelEvent.OUTPUTFILEPATH_UPDATE:
-        // getOutputFilePath();
-        // break;
-        // case ModelEvent.WORKDIRPATH_UPDATE:
-        // getWorkDirPath();
-        // break;
-        case ModelEvent.DOWNLOAD_METHOD_CHANGE:
-            getDownloadMethod();
-            break;
-        case ModelEvent.CONVERSION_STARTED:
-            conversionStartTime = System.currentTimeMillis();
-            lbConversionTime.setVisible(false);
-            lbBusySpinner.setVisible(true);
-            lbBusySpinner.setEnabled(true);
-            lbBusySpinner.setBusy(true);
-            lbBusySpinner.repaint();
-            btConvert.setText(getString("Stop_Convert.text"));
-            break;
-        case ModelEvent.CONVERSION_ENDED:
+                txtFirmWare.setText(fwString); // NOI18N
+                break;
+            case ModelEvent.UPDATE_LOG_VERSION:
+                txtLoggerSWVersion.setText(m.getMtkLogVersion());
+                break;
+            case ModelEvent.GPGGA:
+                updateGPSData((GPSRecord) e.getArg());
+                break;
+            case ModelEvent.UPDATE_LOG_LOG_STATUS:
+                cbLoggingActive.setSelected(m.isLoggingActive());
+                break;
+            case ModelEvent.CONNECTED:
+            case ModelEvent.DISCONNECTED:
+                updateConnected(m.isConnected());
+                break;
+            case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
+                // TODO
+                // lbUsedMem.setText(Txt.MEM_USED +
+                // Convert.toString(m.logMemUsed())
+                // + "("
+                // + Convert.toString(m.logMemUsedPercent()) + "%)");
+                // m_UsedLabel.repaintNow();
+                // lbUsedRecords.setText(Txt.NBR_RECORDS
+                // + Convert.toString(m.logNbrLogPts()) + " ("
+                // + m.getEstimatedNbrRecordsFree(m.getLogFormat()) + " "
+                // + Txt.MEM_FREE + ")");
+                break;
+            // case ModelEvent.LOGFILEPATH_UPDATE:
+            // getRawLogFilePath();
+            // break;
+            // case ModelEvent.OUTPUTFILEPATH_UPDATE:
+            // getOutputFilePath();
+            // break;
+            // case ModelEvent.WORKDIRPATH_UPDATE:
+            // getWorkDirPath();
+            // break;
+            case ModelEvent.DOWNLOAD_METHOD_CHANGE:
+                getDownloadMethod();
+                break;
+            case ModelEvent.CONVERSION_STARTED:
+                conversionStartTime = System.currentTimeMillis();
+                lbConversionTime.setVisible(false);
+                lbBusySpinner.setVisible(true);
+                lbBusySpinner.setEnabled(true);
+                lbBusySpinner.setBusy(true);
+                lbBusySpinner.repaint();
+                btConvert.setText(getString("Stop_Convert.text"));
+                break;
+            case ModelEvent.CONVERSION_ENDED:
 
-            // lbConversionTime.setText(
-            Generic
-                    .debug(getString("Time_to_convert:_")
-                            + ((int) (System.currentTimeMillis() - conversionStartTime))
-                            + getString("_ms"));
-            // lbConversionTime.setVisible(true);
-            lbBusySpinner.setVisible(false);
-            lbBusySpinner.setBusy(false);
-            lbBusySpinner.repaint();
-            btConvert.setText(getString("BT747Main.btConvert.text"));
-            break;
-        case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
-            c.replyToOkToOverwrite(c.getRequestToOverwriteFromDialog());
-            break;
-        case ModelEvent.COULD_NOT_OPEN_FILE:
-            c.couldNotOpenFileMessage((String) e.getArg());
-            break;
+                // lbConversionTime.setText(
+                Generic.debug(getString("Time_to_convert:_") + ((int) (System.currentTimeMillis() - conversionStartTime)) + getString("_ms"));
+                // lbConversionTime.setVisible(true);
+                lbBusySpinner.setVisible(false);
+                lbBusySpinner.setBusy(false);
+                lbBusySpinner.repaint();
+                btConvert.setText(getString("BT747Main.btConvert.text"));
+                break;
+            case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
+                c.replyToOkToOverwrite(c.getRequestToOverwriteFromDialog());
+                break;
+            case ModelEvent.COULD_NOT_OPEN_FILE:
+                c.couldNotOpenFileMessage((String) e.getArg());
+                break;
         }
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * This method is called from within the constructor to initialize the
+     * form. WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     private void initComponents() {//GEN-BEGIN:initComponents
@@ -589,16 +572,16 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         lbMinutes.setText(bundle.getString("BT747Main.lbMinutes.text")); // NOI18N
 
         startDate.setToolTipText(bundle.getString("BT747Main.startDate.toolTipText")); // NOI18N
-        startDate.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                startDateFocusLost(evt);
+        startDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startDateActionPerformed(evt);
             }
         });
 
         endDate.setToolTipText(bundle.getString("BT747Main.endDate.toolTipText")); // NOI18N
-        endDate.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                endDateFocusLost(evt);
+        endDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                endDateActionPerformed(evt);
             }
         });
 
@@ -960,41 +943,41 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         getAccessibleContext().setAccessibleName("MTK Datalogger Control (BT747)");
     }//GEN-END:initComponents
 
-    private void cbLoggingActiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbLoggingActiveFocusLost
+    private void cbLoggingActiveFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbLoggingActiveFocusLost
         c.setLoggingActive(cbLoggingActive.isSelected());
     }//GEN-LAST:event_cbLoggingActiveFocusLost
 
     private void cbDisableLoggingDuringDownloadFocusLost(
-            java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbDisableLoggingDuringDownloadFocusLost
+            final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbDisableLoggingDuringDownloadFocusLost
         c.setBooleanOpt(Model.DISABLELOGDURINGDOWNLOAD,
                 cbDisableLoggingDuringDownload.isSelected());
     }//GEN-LAST:event_cbDisableLoggingDuringDownloadFocusLost
 
     private void btDownloadFromNumerixActionPerformed(
-            java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDownloadFromNumerixActionPerformed
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDownloadFromNumerixActionPerformed
         c.startDPL700Download();
     }//GEN-LAST:event_btDownloadFromNumerixActionPerformed
 
-    private void cbGPSTypeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbGPSTypeFocusLost
+    private void cbGPSTypeFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbGPSTypeFocusLost
         int type = Model.GPS_TYPE_DEFAULT;
         boolean forceHolux = false;
         switch (cbGPSType.getSelectedIndex()) {
-        case 1:
-            type = Model.GPS_TYPE_DEFAULT;
-            forceHolux = true;
-            break;
-        case 2:
-            type = Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX;
-            break;
-        case 3:
-            type = Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR;
-            break;
-        case 4:
-            type = Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII;
-            break;
-        case 0:
-        default:
-            type = Model.GPS_TYPE_DEFAULT;
+            case 1:
+                type = Model.GPS_TYPE_DEFAULT;
+                forceHolux = true;
+                break;
+            case 2:
+                type = Model.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX;
+                break;
+            case 3:
+                type = Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR;
+                break;
+            case 4:
+                type = Model.GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII;
+                break;
+            case 0:
+            default:
+                type = Model.GPS_TYPE_DEFAULT;
         }
         c.setIntOpt(AppSettings.GPSTYPE, type);
         c.setBooleanOpt(Model.FORCE_HOLUXM241, forceHolux);
@@ -1006,86 +989,84 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         } else {
             int index = 0;
             switch (m.getIntOpt(AppSettings.GPSTYPE)) {
-            case 0:
-                index = 0;
-                break;
-            case 1:
-                index = 2;
-                break;
-            case 2:
-                index = 3;
-                break;
-            case 3:
-                index = 4;
-                break;
+                case 0:
+                    index = 0;
+                    break;
+                case 1:
+                    index = 2;
+                    break;
+                case 2:
+                    index = 3;
+                    break;
+                case 3:
+                    index = 4;
+                    break;
             }
             cbGPSType.setSelectedIndex(index);
         }
 
     }
 
-    private void tfRawLogFilePathFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfRawLogFilePathFocusLost
+    private void tfRawLogFilePathFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfRawLogFilePathFocusLost
 
         c.setStringOpt(AppSettings.LOGFILEPATH, tfRawLogFilePath.getText());
     }//GEN-LAST:event_tfRawLogFilePathFocusLost
 
-    private void btDownloadIBlueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btDownloadIBlueActionPerformed(
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO: next line must be done on button action
         setDownloadMethod();
         c.startDefaultDownload();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void cbFormatItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbFormatItemStateChanged
+    private void cbFormatItemStateChanged(final java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbFormatItemStateChanged
         switch (evt.getStateChange()) {
-        case java.awt.event.ItemEvent.SELECTED:
-            // getSelectedFormat(evt.getItem().toString());
-            break;
-        case java.awt.event.ItemEvent.DESELECTED:
-            break;
+            case java.awt.event.ItemEvent.SELECTED:
+                // getSelectedFormat(evt.getItem().toString());
+                break;
+            case java.awt.event.ItemEvent.DESELECTED:
+                break;
         }
     }//GEN-LAST:event_cbFormatItemStateChanged
 
-    private void btConvertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConvertActionPerformed
+    private void btConvertActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConvertActionPerformed
         if (btConvert.getText().equals(getString("Stop_Convert.text"))) {
             c.stopLogConvert();
         } else {
-            doLogConversion(getSelectedFormat(cbFormat.getSelectedItem()
-                    .toString()));
+            doLogConversion(getSelectedFormat(cbFormat.getSelectedItem().toString()));
         }
     }//GEN-LAST:event_btConvertActionPerformed
 
-    private void btOutputFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOutputFileActionPerformed
+    private void btOutputFileActionPerformed(
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOutputFileActionPerformed
         javax.swing.JFileChooser OutputFileChooser;
-        File f = getOutputFilePath();
+        final File f = getOutputFilePath();
         OutputFileChooser = new javax.swing.JFileChooser(f.getParent());
         OutputFileChooser.setSelectedFile(f);
-        OutputFileChooser
-                .setToolTipText(getString("Select_the_basename_of_the_output_file."));
+        OutputFileChooser.setToolTipText(getString("Select_the_basename_of_the_output_file."));
         // if (curDir.exists()) {
         // OutputFileChooser.setCurrentDirectory(getOutputFilePath());
         // }
         if (OutputFileChooser.showDialog(this, getString("Set_basename")) == JFileChooser.APPROVE_OPTION) {
             try {
                 String relPath = gps.convert.FileUtil.getRelativePath(
-                        (new File(m.getStringOpt(AppSettings.OUTPUTDIRPATH)))
-                                .getCanonicalPath(), OutputFileChooser
-                                .getSelectedFile().getCanonicalPath(),
+                        (new File(m.getStringOpt(AppSettings.OUTPUTDIRPATH))).getCanonicalPath(), OutputFileChooser.getSelectedFile().getCanonicalPath(),
                         File.separatorChar);
                 if (relPath.lastIndexOf('.') == relPath.length() - 4) {
                     relPath = relPath.substring(0, relPath.length() - 4);
                 }
                 c.setOutputFileRelPath(relPath);
                 getOutputFilePath();
-                tfOutputFileBaseName.setCaretPosition(tfOutputFileBaseName
-                        .getText().length());
+                tfOutputFileBaseName.setCaretPosition(tfOutputFileBaseName.getText().length());
 
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug(getString("OutputFileChooser"), e);
             }
         }
     }//GEN-LAST:event_btOutputFileActionPerformed
 
-    private void btRawLogFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRawLogFileActionPerformed
+    private void btRawLogFileActionPerformed(
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRawLogFileActionPerformed
         javax.swing.JFileChooser RawLogFileChooser;
         File f = getRawLogFilePath();
         RawLogFileChooser = new javax.swing.JFileChooser(f.getParent());
@@ -1103,47 +1084,41 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         RawLogFileChooser.addChoosableFileFilter(new HoluxTRLFileFilter());
         RawLogFileChooser.addChoosableFileFilter(new NMEAFileFilter());
         RawLogFileChooser.addChoosableFileFilter(new DPL700FileFilter());
-        KnownFileFilter ff = new KnownFileFilter();
+        final KnownFileFilter ff = new KnownFileFilter();
         RawLogFileChooser.addChoosableFileFilter(ff);
         RawLogFileChooser.setFileFilter(ff);
         if (RawLogFileChooser.showDialog(this, getString("SetRawLogFile")) == JFileChooser.APPROVE_OPTION) {
             try {
-                c.setStringOpt(AppSettings.LOGFILEPATH, RawLogFileChooser
-                        .getSelectedFile().getCanonicalPath());
-            } catch (Exception e) {
+                c.setStringOpt(AppSettings.LOGFILEPATH, RawLogFileChooser.getSelectedFile().getCanonicalPath());
+            } catch (final Exception e) {
                 Generic.debug(getString("RawFileChooser"), e);
             }
             tfRawLogFilePath.setText(m.getStringOpt(AppSettings.LOGFILEPATH));
-            tfRawLogFilePath.setCaretPosition(tfRawLogFilePath.getText()
-                    .length());
+            tfRawLogFilePath.setCaretPosition(tfRawLogFilePath.getText().length());
         }
     }//GEN-LAST:event_btRawLogFileActionPerformed
 
     private void btWorkingDirectoryActionPerformed(
-            java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btWorkingDirectoryActionPerformed
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btWorkingDirectoryActionPerformed
         javax.swing.JFileChooser WorkingDirectoryChooser;
-        File curDir = getWorkDirPath();
+        final File curDir = getWorkDirPath();
         // if (curDir.exists()) {
         WorkingDirectoryChooser = new javax.swing.JFileChooser(curDir);
         // } else {
         // WorkingDirectoryChooser = new javax.swing.JFileChooser();
         // }
 
-        WorkingDirectoryChooser
-                .setDialogTitle(getString("Choose_Working_Directory"));
-        WorkingDirectoryChooser
-                .setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        WorkingDirectoryChooser.setDialogTitle(getString("Choose_Working_Directory"));
+        WorkingDirectoryChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         if (WorkingDirectoryChooser.showDialog(this, getString("SetWorkDir")) == JFileChooser.APPROVE_OPTION) {
             try {
                 c.setStringOpt(AppSettings.OUTPUTDIRPATH,
-                        WorkingDirectoryChooser.getSelectedFile()
-                                .getCanonicalPath());
-            } catch (Exception e) {
+                        WorkingDirectoryChooser.getSelectedFile().getCanonicalPath());
+            } catch (final Exception e) {
                 Generic.debug(getString("WorkingDirChooser"), e);
             }
             tfWorkDirectory.setText(m.getStringOpt(AppSettings.OUTPUTDIRPATH));
-            tfWorkDirectory
-                    .setCaretPosition(tfWorkDirectory.getText().length());
+            tfWorkDirectory.setCaretPosition(tfWorkDirectory.getText().length());
         }
     }//GEN-LAST:event_btWorkingDirectoryActionPerformed
 
@@ -1176,8 +1151,7 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     private File getOutputFilePath() {
         File curDir;
         curDir = new File(m.getReportFileBasePath());
-        tfOutputFileBaseName
-                .setText(m.getStringOpt(AppSettings.REPORTFILEBASE));
+        tfOutputFileBaseName.setText(m.getStringOpt(AppSettings.REPORTFILEBASE));
         return curDir;
     }
 
@@ -1197,20 +1171,20 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
 
     private void getDownloadMethod() {
         switch (m.getDownloadMethod()) {
-        case Model.DOWNLOAD_FILLED:
-            cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_FILLED"));
-            break;
-        case Model.DOWNLOAD_FULL:
-            cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_FULL"));
-            break;
-        case Model.DOWNLOAD_SMART:
-            cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_INCREMENTAL"));
-            break;
+            case Model.DOWNLOAD_FILLED:
+                cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_FILLED"));
+                break;
+            case Model.DOWNLOAD_FULL:
+                cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_FULL"));
+                break;
+            case Model.DOWNLOAD_SMART:
+                cbDownloadMethod.setSelectedItem(getString("DOWNLOAD_INCREMENTAL"));
+                break;
         }
     }
 
     private void setDownloadMethod() {
-        String v = (String) cbDownloadMethod.getSelectedItem();
+        final String v = (String) cbDownloadMethod.getSelectedItem();
         if (v.equals(getString("DOWNLOAD_FILLED"))) {
             c.setDownloadMethod(Model.DOWNLOAD_FILLED);
         } else if (v.equals(getString("DOWNLOAD_FULL"))) {
@@ -1220,84 +1194,85 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
         }
     }
 
-    private void tfWorkDirectoryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfWorkDirectoryFocusLost
-        c.setStringOpt(AppSettings.OUTPUTDIRPATH, new File(tfWorkDirectory
-                .getText()).getPath());
+    private void tfWorkDirectoryFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfWorkDirectoryFocusLost
+        c.setStringOpt(AppSettings.OUTPUTDIRPATH, new File(tfWorkDirectory.getText()).getPath());
     }//GEN-LAST:event_tfWorkDirectoryFocusLost
 
-    private void tfOutputFileBaseNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfOutputFileBaseNameFocusLost
+    private void tfOutputFileBaseNameFocusLost(
+            final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfOutputFileBaseNameFocusLost
         c.setOutputFileRelPath(tfOutputFileBaseName.getText());
     }//GEN-LAST:event_tfOutputFileBaseNameFocusLost
 
-    private void startDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_startDateFocusLost
-        updateStartDate();
-    }//GEN-LAST:event_startDateFocusLost
-
     private void updateStartDate() {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTime(startDate.getDate());
-        BT747Date nd = Interface.getDateInstance(
-                cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1
-                        - Calendar.JANUARY, cal.get(Calendar.YEAR));
-        int startTime = nd.dateToUTCepoch1970();
+        final BT747Date nd = Interface.getDateInstance(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1 - Calendar.JANUARY, cal.get(Calendar.YEAR));
+        final int startTime = nd.dateToUTCepoch1970();
         c.setStartTimeNoOffset(startTime);
 
     }
-    private void endDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_endDateFocusLost
-        updateEndDate();
-    }//GEN-LAST:event_endDateFocusLost
-    
+
     private void updateEndDate() {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         BT747Date nd;
         cal.setTime(endDate.getDate());
-        nd = Interface.getDateInstance(cal.get(Calendar.DAY_OF_MONTH), cal
-                .get(Calendar.MONTH)
-                + 1 - Calendar.JANUARY, cal.get(Calendar.YEAR));
+        nd = Interface.getDateInstance(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1 - Calendar.JANUARY, cal.get(Calendar.YEAR));
         int endTime = nd.dateToUTCepoch1970();
         endTime += (24 * 3600 - 1); // Round to midnight / End of day
         c.setEndTimeNoOffset(endTime);
     }
 
-    private void spTimeSplitHoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTimeSplitHoursFocusLost
-       setTimeSplit();
+    private void spTimeSplitHoursFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTimeSplitHoursFocusLost
+        setTimeSplit();
     }//GEN-LAST:event_spTimeSplitHoursFocusLost
-    
+
     private void setTimeSplit() {
         // Offset requested split time
         int offset;
-        offset = 60 * ((Integer) spTimeSplitHours.getValue() * 60 + (Integer) spTimeSplitMinutes
-                .getValue());
+        offset = 60 * ((Integer) spTimeSplitHours.getValue() * 60 + (Integer) spTimeSplitMinutes.getValue());
         c.setTimeOffset(offset);
     }
 
-    private void spTimeSplitMinutesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTimeSplitMinutesFocusLost
+    private void spTimeSplitMinutesFocusLost(
+            final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTimeSplitMinutesFocusLost
         setTimeSplit();
     }//GEN-LAST:event_spTimeSplitMinutesFocusLost
 
-    private void btGPXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGPXActionPerformed
+    private void btGPXActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGPXActionPerformed
         doLogConversion(Model.GPX_LOGTYPE);
     }//GEN-LAST:event_btGPXActionPerformed
 
-    private void btKMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btKMLActionPerformed
+    private void btKMLActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btKMLActionPerformed
         doLogConversion(Model.KML_LOGTYPE);
     }//GEN-LAST:event_btKMLActionPerformed
 
-    private void btKMZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btKMZActionPerformed
+    private void btKMZActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btKMZActionPerformed
         doLogConversion(Model.KMZ_LOGTYPE);
     }//GEN-LAST:event_btKMZActionPerformed
 
-    private void btCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCSVActionPerformed
+    private void btCSVActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCSVActionPerformed
         doLogConversion(Model.CSV_LOGTYPE);
     }//GEN-LAST:event_btCSVActionPerformed
 
-    private void btHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btHTMLActionPerformed
+    private void btHTMLActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btHTMLActionPerformed
         doLogConversion(Model.GMAP_LOGTYPE);
     }//GEN-LAST:event_btHTMLActionPerformed
 
-    private void btNMEAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNMEAActionPerformed
+    private void btNMEAActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNMEAActionPerformed
         doLogConversion(Model.NMEA_LOGTYPE);
     }//GEN-LAST:event_btNMEAActionPerformed
+
+    private void startDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startDateActionPerformed
+        if (JXDatePicker.COMMIT_KEY.equals(evt.getActionCommand())) {
+            updateStartDate();
+        }
+    }//GEN-LAST:event_startDateActionPerformed
+
+    private void endDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endDateActionPerformed
+        if (JXDatePicker.COMMIT_KEY.equals(evt.getActionCommand())) {
+            updateEndDate();
+        }
+    }//GEN-LAST:event_endDateActionPerformed
 
     // public static void main(String args) {
     // main((String[])null);
@@ -1364,5 +1339,4 @@ public class LogOperationsPanel extends javax.swing.JPanel implements
     private javax.swing.JLabel txtTime;
     private javax.swing.JLabel txtTimeSplit;
     // End of variables declaration//GEN-END:variables
-
 }
