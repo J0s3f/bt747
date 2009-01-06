@@ -1,3 +1,6 @@
+Version
+* Other fix in EXIF regarding thumbnail image.
+
 Version 1.66.17
 * StarT/enddate issue sovle - GPS time offset issue should be solved (not checked).
 

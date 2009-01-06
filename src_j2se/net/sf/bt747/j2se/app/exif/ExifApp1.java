@@ -313,6 +313,16 @@ public class ExifApp1 {
         }
         if (Ifd1 != null) {
             int size;
+            if(jpegInterchange!=null) {
+                atr = new ExifAttribute(ExifConstants.TAG_JPEGINTERCHANGEFORMAT,
+                        ExifConstants.LONG,1); 
+                atr.setIntValue(0, jpgInterChangeOffset);
+                Ifd1.set(atr);
+                atr = new ExifAttribute(ExifConstants.TAG_JPEGINTERCHANGEFORMATLENGTH,
+                        ExifConstants.LONG,1); 
+                atr.setIntValue(0, jpegInterchange.length);
+                Ifd1.set(atr);
+            }
             atr = Ifd1.get(ExifConstants.TAG_STRIPOFFSETS);
             if (atr != null) {
                 // TODO adjust offset
