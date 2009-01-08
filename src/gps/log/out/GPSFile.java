@@ -358,7 +358,10 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * @param r
      */
     public final void addLogRecord(final GPSRecord r) {
-        if (currentWayPointListIdx >= 0 && cachedRecordIsNeeded(r)) {
+        if (r.hasUtc()) {
+            r.utc += timeOffsetSeconds;
+        }
+        if (currentWayPointListIdx >= 0 && cachedRecordIsNeeded(r) && r.hasUtc()) {
             GPSRecord prevActiveFields = activeFields;
             if (prevRecord != null) {
                 boolean continueLoop;
@@ -373,7 +376,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                             + timeOffsetSeconds; // - prevRecord.utc +
                                                     // r.utc
                                                     // +timeOffsetSeconds
-                    int diffNext = userWayPointUTC - r.utc; // If > 0, current
+                    int diffNext = userWayPointUTC - r.utc + timeOffsetSeconds; // If > 0, current
                     // position is
                     // earlier.
 
@@ -389,7 +392,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                         } else {
                             ref = r;
                             diff = -diffNext;
-                            gpstime = r.utc;
+                            gpstime = r.utc - timeOffsetSeconds;
                         }
                         if ((diff <= maxDiff)
                                 && (overridePreviousTag || (!userWayPoint
@@ -411,7 +414,10 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                                 writeLogFmtHeader(userWayPoint);
                             }
                             userWayPoint.utc-=timeOffsetSeconds;
-                            writeUtc0Record(userWayPoint);
+                            if (userWayPoint.hasUtc()) {
+                                userWayPoint.utc += timeOffsetSeconds;
+                            }
+                            writeRecord(userWayPoint);
                         }
                         nextWayPointIdx();
                         continueLoop = currentWayPointListIdx != -1;
@@ -447,17 +453,10 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                 }
             }
         }
-        writeUtc0Record(r);
+        writeRecord(r);
         if (cachedRecordIsNeeded(r)) {
             prevRecord = r;
         }
-    }
-
-    private final void writeUtc0Record(final GPSRecord r) {
-        if (r.hasUtc()) {
-            r.utc += timeOffsetSeconds;
-        }
-        writeRecord(r);
     }
 
     private final void addUntreatedWayPoints() {

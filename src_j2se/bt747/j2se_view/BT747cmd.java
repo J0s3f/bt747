@@ -23,13 +23,20 @@ package bt747.j2se_view;
 
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
+import gps.log.GPSRecord;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
+
+import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
+import bt747.j2se_view.model.BT747Waypoint;
+import bt747.j2se_view.model.ImageData;
 import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
@@ -408,6 +415,28 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
     }
 
+    private final Vector<BT747Waypoint> waypointsToTag = new Vector<BT747Waypoint>();
+
+    private static final Vector<File> filesToTag = new Vector<File>();
+
+    
+    private static GPSRecord[] getSortedGPSRecords(List<BT747Waypoint> userWayPoints) {
+        GPSRecord[] rcrds;
+        rcrds = new GPSRecord[userWayPoints.size()];
+        int i = 0;
+        for (final BT747Waypoint w : userWayPoints) {
+            GPSRecord r = w.getGpsRecord();
+            if (r != null) {
+                rcrds[i++] = r;
+            } else {
+                r = GPSRecord.getLogFormatRecord(0);
+                bt747.sys.Generic.debug("Null GPS Record found");
+            }
+        }
+        java.util.Arrays.sort(rcrds, new GPSRecordTimeComparator());
+        return rcrds;
+    }
+
     public final int convertLog(final int logType) {
         System.out
                 .println("Input file: " + m.getStringOpt(Model.LOGFILEPATH));
@@ -415,6 +444,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 + m.getStringOpt(Model.OUTPUTDIRPATH));
         System.out.println("Output basename: "
                 + m.getStringOpt(Model.REPORTFILEBASE));
+
 
         if (logType == Model.KMZ_LOGTYPE) {
             return c.doConvertLog(logType, new GPSKMZFile(), ".kmz");
@@ -490,11 +520,13 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         // Input is "/BT747/BT747_sample.bin"
         if (options.has(OPT_BINARY_FILE)) {
-            c.setStringOpt(AppSettings.LOGFILEPATH, options.argumentOf(OPT_BINARY_FILE));
+            c.setStringOpt(AppSettings.LOGFILEPATH, options
+                    .argumentOf(OPT_BINARY_FILE));
         }
 
         if (options.has(OPT_SERIAL_SPEED)) {
-            c.setBaudRate((((Integer) options.valueOf(OPT_SERIAL_SPEED)).intValue()));
+            c.setBaudRate((((Integer) options.valueOf(OPT_SERIAL_SPEED))
+                    .intValue()));
         }
 
         if (options.has(OPT_SERIAL_PORT)) {
@@ -564,14 +596,20 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         // Options for which a connection is needed.
-        if (options.has(OPT_SERIAL_PORT) || (options.has(OPT_DOWNLOAD) && !(options.has(OPT_BINARY_FILE)))
-                || options.has(OPT_LOGGING_ON_OFF) || options.has(OPT_OVERLAP_STOP_SETTING) || options.has(OPT_SET_LOG_CRITERIA)
-                || options.has(OPT_ERASE_MEMORY) || options.has(OPT_SET_LOG_FIELDS) || options.has(OPT_RECOVER_LOGGER)) {
+        if (options.has(OPT_SERIAL_PORT)
+                || (options.has(OPT_DOWNLOAD))
+                || options.has(OPT_LOGGING_ON_OFF)
+                || options.has(OPT_OVERLAP_STOP_SETTING)
+                || options.has(OPT_SET_LOG_CRITERIA)
+                || options.has(OPT_ERASE_MEMORY)
+                || options.has(OPT_SET_LOG_FIELDS)
+                || options.has(OPT_RECOVER_LOGGER)) {
             c.connectGPS();
         }
 
         if (options.has(OPT_DEVICETYPE)) {
-            final String arg = options.argumentOf(OPT_LOGGING_ON_OFF).toLowerCase();
+            final String arg = options.argumentOf(OPT_LOGGING_ON_OFF)
+                    .toLowerCase();
             // AppController.GPS_TYPE_DEFAULT:
             // AppController.GPS_TYPE_GISTEQ_ITRACKU_NEMERIX:
             // AppController.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR:
@@ -746,7 +784,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                 c.setLogFormat(newLogFormat);
             }
             if (options.has(OPT_LOGGING_ON_OFF)) {
-                final String arg = options.argumentOf(OPT_LOGGING_ON_OFF).toLowerCase();
+                final String arg = options.argumentOf(OPT_LOGGING_ON_OFF)
+                        .toLowerCase();
                 if (arg.equals("on")) {
                     System.out.println(">> Switch recording to ON\n");
                     c.setLoggingActive(true);
@@ -760,7 +799,8 @@ public class BT747cmd implements bt747.model.ModelListener {
             }
 
             if (options.has(OPT_OVERLAP_STOP_SETTING)) {
-                final String arg = options.argumentOf(OPT_LOGGING_ON_OFF).toLowerCase();
+                final String arg = options.argumentOf(OPT_LOGGING_ON_OFF)
+                        .toLowerCase();
                 if (arg.equals("overlap")) {
                     System.out
                             .println(">> Setting method OVERLAP on memory full\n");
@@ -783,11 +823,11 @@ public class BT747cmd implements bt747.model.ModelListener {
                     + (m.isInitialLogOverwrite() ? "OVERLAP" : "STOP")
                     + " on initialisation");
 
-            if (options.has(OPT_DOWNLOAD) && !(options.has(OPT_BINARY_FILE))) {
+            if (options.has(OPT_DOWNLOAD)) {
                 c.setDownloadMethod(Model.DOWNLOAD_SMART);
                 if (options.has(OPT_DOWNLOAD_METHOD)) {
-                    final String arg = options.argumentOf(OPT_DOWNLOAD_METHOD)
-                            .toLowerCase();
+                    final String arg = options
+                            .argumentOf(OPT_DOWNLOAD_METHOD).toLowerCase();
                     if (arg.equals("full")) {
                         c.setDownloadMethod(Model.DOWNLOAD_FULL);
                     } else if (arg.equals("smart")) {
@@ -858,9 +898,37 @@ public class BT747cmd implements bt747.model.ModelListener {
                     }
                 }
             });
+
+            
+            // TODO code to move elsewhere
+            if(filesToTag.size()!=0) {
+                for (File f : filesToTag) {
+                    ImageData id = new ImageData();
+                    id.setPath(f.getAbsolutePath());
+                    waypointsToTag.add(id);
+                }
+            }
+            c.setUserWayPoints(getSortedGPSRecords(waypointsToTag));
+
             final int error = convertLog(Model.GPX_LOGTYPE);
             if (error != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
+            } else {
+                /* TODO code to move elsewhere*/
+                if(waypointsToTag.size()!=0) {
+                    for(BT747Waypoint wpt:waypointsToTag) {
+                        if(ImageData.class.isInstance(wpt)) {
+                            final ImageData img = (ImageData) wpt;
+                            String p = img.getPath();
+                            int ptIndex = p.lastIndexOf('.');
+                            String newPath;
+                            newPath = p.substring(0, ptIndex);
+                            newPath += "_tagged";
+                            newPath += p.substring(ptIndex);
+                            img.writeImage(newPath, 0);
+                        }
+                    }
+                }
             }
         }
 
@@ -971,6 +1039,8 @@ public class BT747cmd implements bt747.model.ModelListener {
      *                the command line arguments
      */
     public static void main(final String args[]) {
+        boolean success = true;
+        Throwable exception = null;
         final OptionParser parser = new OptionParser() {
             {
                 accepts(OPT_HELP, "Displays help");
@@ -988,11 +1058,13 @@ public class BT747cmd implements bt747.model.ModelListener {
                         .describedAs("DEBUG_LEVEL").ofType(Integer.class);
 
                 accepts(OPT_ERASE_MEMORY, "Erase data log memory");
-                accepts(OPT_FILE_BASENAME, "Base name for saved files (.bin and other)")
+                accepts(OPT_FILE_BASENAME,
+                        "Base name for saved files (.bin and other)")
                         .withRequiredArg().describedAs("filename").ofType(
                                 String.class);
-                accepts(OPT_LOGGING_ON_OFF, "Turn logging ON/OFF").withRequiredArg()
-                        .describedAs("(on|off)").ofType(String.class);
+                accepts(OPT_LOGGING_ON_OFF, "Turn logging ON/OFF")
+                        .withRequiredArg().describedAs("(on|off)").ofType(
+                                String.class);
                 accepts(OPT_OVERLAP_STOP_SETTING,
                         "Set STOP/OVERLAP recording method on memory full")
                         .withRequiredArg().describedAs("(stop|overlap)")
@@ -1007,20 +1079,25 @@ public class BT747cmd implements bt747.model.ModelListener {
                                 + "DISTANCE,VALID_ONLY").withRequiredArg()
                         .describedAs("log_format").withValuesSeparatedBy(',')
                         .ofType(String.class);
-                accepts(OPT_SERIAL_PORT, "Communication port, default: /dev/ttyUSB0")
+                accepts(OPT_SERIAL_PORT,
+                        "Communication port, default: /dev/ttyUSB0")
                         .withRequiredArg().describedAs("port").ofType(
                                 String.class);
                 accepts(OPT_RECOVER_LOGGER,
                         "Recover from disabled log: erase data and reset recording criteria");
-                accepts(OPT_SET_LOG_CRITERIA, "Set logging criteria (zero to disable)")
+                accepts(OPT_SET_LOG_CRITERIA,
+                        "Set logging criteria (zero to disable)")
                         .withRequiredArg().describedAs("time:distance:speed")
                         .ofType(Integer.class).withValuesSeparatedBy(':');
-                accepts(OPT_SERIAL_SPEED, "Serial port speed, default 115200 baud")
+                accepts(OPT_SERIAL_SPEED,
+                        "Serial port speed, default 115200 baud")
                         .withRequiredArg().describedAs("speed").ofType(
                                 Integer.class);
-                accepts(OPT_CREATE_GPX_TRACKS, "Create a gpx file with tracks");
+                accepts(OPT_CREATE_GPX_TRACKS,
+                        "Create a gpx file with tracks");
                 accepts(OPT_VERSION_ONLY, "Print BT747 version and exit");
-                accepts(OPT_CREATE_GPX_WAYPOINTS, "Create a gpx file with waypoints");
+                accepts(OPT_CREATE_GPX_WAYPOINTS,
+                        "Create a gpx file with waypoints");
                 accepts(
                         OPT_OUTPUT_TYPE,
                         "Create a gpx file of type NMEA, GPX, GMAP, KML, KMZ, CSV, PLT, TRK."
@@ -1076,7 +1153,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                     .println("BT747 Cmd V" + bt747.Version.VERSION_NUMBER
                             + " build " + bt747.Version.BUILD_STR
                             + " GPL V3 LICENSE");
-            if (options.has(OPT_HELP) || (args.length == 0)) {
+            if (options.has(OPT_HELP)) {
                 parser.printHelpOn(System.out);
             } else if (options.has(OPT_VERSION_ONLY)) {
             } else {
@@ -1091,15 +1168,36 @@ public class BT747cmd implements bt747.model.ModelListener {
                 });
                 // parser.printHelpOn(System.err);
             }
+            if (args.length != 0) {
+                // Other files are file list.
+                for (int i = 0; i < args.length; i++) {
+                    String arg = args[i];
+                    File f = new File(arg);
+                    if (f.exists()) {
+                        filesToTag.add(f);
+                    } else {
+                        System.err.println("File not found: "
+                                + f.getCanonicalPath());
+                        success = false;
+                    }
+                }
+            }
         } catch (final Exception ex) {
+            success = false;
+            exception = ex;
+        }
+        if (!success) {
+
             try {
                 parser.printHelpOn(System.err);
             } catch (final Exception e) {
             } finally {
 
             }
-            System.err.println("====");
-            System.err.println(ex.getMessage());
+            if (exception != null) {
+                System.err.println("====");
+                System.err.println(exception.getMessage());
+            }
         }
     }
 
