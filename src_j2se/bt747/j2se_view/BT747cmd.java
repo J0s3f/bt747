@@ -419,8 +419,8 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     private static final Vector<File> filesToTag = new Vector<File>();
 
-    
-    private static GPSRecord[] getSortedGPSRecords(List<BT747Waypoint> userWayPoints) {
+    private static GPSRecord[] getSortedGPSRecords(
+            List<BT747Waypoint> userWayPoints) {
         GPSRecord[] rcrds;
         rcrds = new GPSRecord[userWayPoints.size()];
         int i = 0;
@@ -438,6 +438,7 @@ public class BT747cmd implements bt747.model.ModelListener {
     }
 
     public final int convertLog(final int logType) {
+        int error = 0;
         System.out
                 .println("Input file: " + m.getStringOpt(Model.LOGFILEPATH));
         System.out.println("Output directory: "
@@ -445,12 +446,38 @@ public class BT747cmd implements bt747.model.ModelListener {
         System.out.println("Output basename: "
                 + m.getStringOpt(Model.REPORTFILEBASE));
 
+        // TODO code to move elsewhere
+        if (filesToTag.size() != 0) {
+            for (File f : filesToTag) {
+                ImageData id = new ImageData();
+                id.setPath(f.getAbsolutePath());
+                waypointsToTag.add(id);
+            }
+        }
+        c.setUserWayPoints(getSortedGPSRecords(waypointsToTag));
 
         if (logType == Model.KMZ_LOGTYPE) {
-            return c.doConvertLog(logType, new GPSKMZFile(), ".kmz");
+            error = c.doConvertLog(logType, new GPSKMZFile(), ".kmz");
         } else {
-            return c.doConvertLog(logType);
+            error = c.doConvertLog(logType);
         }
+
+        /* TODO code to move elsewhere */
+        if (error == 0 && waypointsToTag.size() != 0) {
+            for (BT747Waypoint wpt : waypointsToTag) {
+                if (ImageData.class.isInstance(wpt)) {
+                    final ImageData img = (ImageData) wpt;
+                    String p = img.getPath();
+                    int ptIndex = p.lastIndexOf('.');
+                    String newPath;
+                    newPath = p.substring(0, ptIndex);
+                    newPath += "_tagged";
+                    newPath += p.substring(ptIndex);
+                    img.writeImage(newPath, 0);
+                }
+            }
+        }
+        return error;
     }
 
     private void handleOptions(final OptionSet options) {
@@ -596,8 +623,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         // Options for which a connection is needed.
-        if (options.has(OPT_SERIAL_PORT)
-                || (options.has(OPT_DOWNLOAD))
+        if (options.has(OPT_SERIAL_PORT) || (options.has(OPT_DOWNLOAD))
                 || options.has(OPT_LOGGING_ON_OFF)
                 || options.has(OPT_OVERLAP_STOP_SETTING)
                 || options.has(OPT_SET_LOG_CRITERIA)
@@ -899,36 +925,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                 }
             });
 
-            
-            // TODO code to move elsewhere
-            if(filesToTag.size()!=0) {
-                for (File f : filesToTag) {
-                    ImageData id = new ImageData();
-                    id.setPath(f.getAbsolutePath());
-                    waypointsToTag.add(id);
-                }
-            }
-            c.setUserWayPoints(getSortedGPSRecords(waypointsToTag));
-
             final int error = convertLog(Model.GPX_LOGTYPE);
             if (error != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
-            } else {
-                /* TODO code to move elsewhere*/
-                if(waypointsToTag.size()!=0) {
-                    for(BT747Waypoint wpt:waypointsToTag) {
-                        if(ImageData.class.isInstance(wpt)) {
-                            final ImageData img = (ImageData) wpt;
-                            String p = img.getPath();
-                            int ptIndex = p.lastIndexOf('.');
-                            String newPath;
-                            newPath = p.substring(0, ptIndex);
-                            newPath += "_tagged";
-                            newPath += p.substring(ptIndex);
-                            img.writeImage(newPath, 0);
-                        }
-                    }
-                }
             }
         }
 
@@ -1157,21 +1156,8 @@ public class BT747cmd implements bt747.model.ModelListener {
                 parser.printHelpOn(System.out);
             } else if (options.has(OPT_VERSION_ONLY)) {
             } else {
-                java.awt.EventQueue.invokeLater(new Runnable() {
-
-                    Model m = new Model();
-                    J2SEController c = new J2SEController(m);
-
-                    public void run() {
-                        new BT747cmd(m, c, options);
-                    }
-                });
-                // parser.printHelpOn(System.err);
-            }
-            if (args.length != 0) {
-                // Other files are file list.
-                for (int i = 0; i < args.length; i++) {
-                    String arg = args[i];
+                for (Object s : options.nonOptionArguments()) {
+                    String arg = (String) s;
                     File f = new File(arg);
                     if (f.exists()) {
                         filesToTag.add(f);
@@ -1181,6 +1167,18 @@ public class BT747cmd implements bt747.model.ModelListener {
                         success = false;
                     }
                 }
+                if (success) {
+                    java.awt.EventQueue.invokeLater(new Runnable() {
+
+                        Model m = new Model();
+                        J2SEController c = new J2SEController(m);
+
+                        public void run() {
+                            new BT747cmd(m, c, options);
+                        }
+                    });
+                }
+                // parser.printHelpOn(System.err);
             }
         } catch (final Exception ex) {
             success = false;

@@ -1,6 +1,7 @@
 Version 1.67.0
 * Correction to tagging (wrong time used for record filtering).
-* Added code for image tagging in cmd line mode (untested).
+* Added code for image tagging in cmd line mode (but will need
+  extra UTC offset parameter!).
 
 Version 1.66.20
 * Russian updated.
