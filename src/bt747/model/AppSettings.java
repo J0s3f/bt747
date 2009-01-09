@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***  
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.model;
 
 import gps.BT747Constants;
@@ -28,7 +28,7 @@ import bt747.sys.interfaces.BT747HashSet;
  * @author Mario De Weerd
  */
 public class AppSettings {
-    
+
     /**
      * Google map file name (basename).
      */
@@ -49,8 +49,6 @@ public class AppSettings {
      * ITrackU-Phototrackr type.
      */
     public static final int GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR = 2;
-
-    
 
     private static final int C_DEFAULT_DEVICE_TIMEOUT = 3500; // ms
     private static final int C_DEFAULT_LOG_REQUEST_AHEAD = 3;
@@ -164,8 +162,8 @@ public class AppSettings {
      */
     public static final int OPENPORTATSTARTUP = 19;
     /**
-     * @return The GPS time offset (UTC vs. local time). (used in adjusting the
-     *         time in the output formats).
+     * @return The GPS time offset (UTC vs. local time). (used in adjusting
+     *         the time in the output formats).
      */
     public static final int GPSTIMEOFFSETHOURS = 20;
     /**
@@ -180,14 +178,14 @@ public class AppSettings {
     public static final int TAG_MAXTIMEDIFFERENCE = 22;
 
     /**
-     * Set the gpsType used for log conversion and some other operations (needed
-     * in cases where the type can not be automatically detected).
+     * Set the gpsType used for log conversion and some other operations
+     * (needed in cases where the type can not be automatically detected).
      * 
      * @param gpsType
-     *            A value out of: - {@link #GPS_TYPE_DEFAULT}<br> -
-     *            {@link #GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}<br> -
-     *            {@link #GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}<br> -
-     *            {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
+     *                A value out of: - {@link #GPS_TYPE_DEFAULT}<br> -
+     *                {@link #GPS_TYPE_GISTEQ_GISTEQ_ITRACKU_SIRFIII}<br> -
+     *                {@link #GPS_TYPE_GISTEQ_ITRACKU_NEMERIX}<br> -
+     *                {@link #GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR}<br>
      */
     public static final int GPSTYPE = 23;
     /**
@@ -209,15 +207,34 @@ public class AppSettings {
      * The type of the map to show (certain apps).
      */
     public static final int MAPTYPE = 27;
-    
+
     /**
-     * Look for the google map site key in a file called "gmapkey.txt" Will look
-     * in the output dir first, then in the source dir, then in the settings
-     * dir.
+     * Look for the google map site key in a file called "gmapkey.txt" Will
+     * look in the output dir first, then in the source dir, then in the
+     * settings dir.
      * 
      * @return The google map key
      */
     public static final int GOOGLEMAPKEY = 28;
+
+    /**
+     * Stored setting for NMEA data.
+     */
+    public static final int SETTING1_NMEA = 29;
+
+    public final static int SETTING1_TIME = 30;
+    public final static int SETTING1_SPEED = 31;
+    public final static int SETTING1_DIST = 32;
+    public final static int SETTING1_FIX = 33;
+    public final static int SETTING1_DGPS = 34;
+    public final static int SETTING1_TEST = 35;
+    public final static int SETTING1_LOG_OVR = 36;
+    public final static int SETTING1_LOG_FORMAT = 37;
+    public final static int SETTING1_SBAS = 38;
+    public final static int ADVFILTACTIVE = 39;
+    public final static int GPXUTC0 = 40;
+    public final static int DECODEGPS = 41;
+    public final static int GPXTRKSEGBIG = 42;
 
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
@@ -286,13 +303,13 @@ public class AppSettings {
             setNMEAset(0x0002000A);
             /* fall through */
         case 6:
-            setGpxUTC0(false);
+            setBooleanOpt(GPXUTC0, false);
             /* fall through */
         case 7:
             setTrkSep(60);
             /* fall through */
         case 8:
-            setAdvFilterActive(false);
+            setBooleanOpt(ADVFILTACTIVE, false);
             setFilterMinRecCount(0);
             setFilterMaxRecCount(0);
             setFilterMinSpeed(0);
@@ -305,10 +322,10 @@ public class AppSettings {
             setFilterMinNSAT(0);
             /* fall through */
         case 9:
-            setGpxTrkSegWhenBig(true);
+            setBooleanOpt(GPXTRKSEGBIG, true);
             /* fall through */
         case 10:
-            setGpsDecode(true);
+            setBooleanOpt(DECODEGPS, true);
             /* fall through */
         case 11:
             setColorInvalidTrack("0000FF");
@@ -324,7 +341,7 @@ public class AppSettings {
             /* fall through */
         case 15:
             /* Value interpretation changed */
-            setDistConditionSetting1(getDistConditionSetting1() * 10);
+            setIntOpt(SETTING1_DIST, getIntOpt(SETTING1_DIST) * 10);
             /* fall through */
         case 16:
             setBooleanOpt(IMPERIAL, false);
@@ -351,7 +368,10 @@ public class AppSettings {
             setBooleanOpt(IS_STOP_LOGGING_ON_CONNECT, false);
             /* fall through */
 
-            /* Must be last line in case (not 'default'), sets settings version */
+            /*
+             * Must be last line in case (not 'default'), sets settings
+             * version
+             */
         case 24:
             setColorValidTrack("0000FF");
             /* fall through */
@@ -386,7 +406,8 @@ public class AppSettings {
             setStringOpt(VERSION, "0.33");
 
         default:
-            // Always force lat and lon and utc and height active on restart for
+            // Always force lat and lon and utc and height active on restart
+            // for
             // basic users.
             setIntOpt(FILEFIELDFORMAT, getIntOpt(FILEFIELDFORMAT)
                     | (1 << BT747Constants.FMT_LATITUDE_IDX)
@@ -413,8 +434,8 @@ public class AppSettings {
     public final boolean getBooleanOpt(final int param) {
         if ((param < paramsList.length)
                 && (paramsList[param][TYPE_IDX] == BOOL)) {
-            return getLocalBooleanOpt(paramsList[param][START_IDX],
-                    paramsList[param][SIZE_IDX]);
+            return getLocalIntOpt(paramsList[param][START_IDX],
+                    paramsList[param][SIZE_IDX]) == 1;
         } else {
             // TODO: throw something
             Generic.debug("Invalid parameter index " + param);
@@ -425,8 +446,8 @@ public class AppSettings {
     protected final void setBooleanOpt(final int param, final boolean value) {
         if ((param < paramsList.length)
                 && (paramsList[param][TYPE_IDX] == BOOL)) {
-            setLocalBooleanOpt(param, value, paramsList[param][START_IDX],
-                    paramsList[param][SIZE_IDX]);
+            setStringOpt(param, (value ? "1" : "0"),
+                    paramsList[param][START_IDX], paramsList[param][SIZE_IDX]);
         } else {
             // TODO: throw something
             Generic.debug("Invalid parameter index " + param);
@@ -441,7 +462,8 @@ public class AppSettings {
         // paramsList[param][SIZE_IDX]),8), null);
         //
         // }
-        if ((param < paramsList.length) && (paramsList[param][TYPE_IDX] == INT)) {
+        if ((param < paramsList.length)
+                && (paramsList[param][TYPE_IDX] == INT)) {
             return getLocalIntOpt(paramsList[param][START_IDX],
                     paramsList[param][SIZE_IDX]);
         } else {
@@ -459,7 +481,8 @@ public class AppSettings {
         // + bt747.sys.Convert.unsigned2hex(value, 8), null);
         //
         // }
-        if ((param < paramsList.length) && (paramsList[param][TYPE_IDX] == INT)) {
+        if ((param < paramsList.length)
+                && (paramsList[param][TYPE_IDX] == INT)) {
             setLocalIntOpt(param, value, paramsList[param][START_IDX],
                     paramsList[param][SIZE_IDX]);
         } else {
@@ -516,7 +539,7 @@ public class AppSettings {
      * Set the chunk size.
      * 
      * @param chunkSize
-     *            The ChunkSize to set as a default.
+     *                The ChunkSize to set as a default.
      */
     public final void setChunkSize(final int chunkSize) {
         setLocalIntOpt(0, chunkSize, C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE);
@@ -536,7 +559,7 @@ public class AppSettings {
 
     /**
      * @param downloadTimeOut
-     *            The DownloadTimeOut to set as a default.
+     *                The DownloadTimeOut to set as a default.
      */
     public final void setDownloadTimeOut(final int downloadTimeOut) {
         setLocalIntOpt(0, downloadTimeOut, C_DOWNLOADTIMEOUT_IDX,
@@ -556,14 +579,15 @@ public class AppSettings {
 
     /**
      * @param card
-     *            The Card to set as a default.
+     *                The Card to set as a default.
      */
     public final void setCard(final int card) {
         setLocalIntOpt(0, card, C_CARD_IDX, C_CARD_SIZE);
     }
 
     public final String getReportFileBasePath() {
-        return getStringOpt(OUTPUTDIRPATH) + "/" + getStringOpt(REPORTFILEBASE);
+        return getStringOpt(OUTPUTDIRPATH) + "/"
+                + getStringOpt(REPORTFILEBASE);
     }
 
     public final int getWayPtRCR() {
@@ -572,7 +596,7 @@ public class AppSettings {
 
     /**
      * @param value
-     *            The default value for opening the port.
+     *                The default value for opening the port.
      */
     protected final void setWayPtRCR(final int value) {
         setLocalIntOpt(0, value, C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
@@ -585,7 +609,7 @@ public class AppSettings {
 
     /**
      * @param value
-     *            The default value for opening the port.
+     *                The default value for opening the port.
      */
     protected final void setWayPtValid(final int value) {
         setLocalIntOpt(0, value, C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
@@ -598,7 +622,7 @@ public class AppSettings {
 
     /**
      * @param value
-     *            The default value for opening the port.
+     *                The default value for opening the port.
      */
     protected final void setTrkPtRCR(final int value) {
         setLocalIntOpt(0, value, C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
@@ -611,7 +635,7 @@ public class AppSettings {
 
     /**
      * @param value
-     *            The default value for opening the port.
+     *                The default value for opening the port.
      */
     protected final void setTrkPtValid(final int value) {
         setLocalIntOpt(0, value, C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
@@ -637,7 +661,7 @@ public class AppSettings {
      * ONE_FILE_PER_TRACK = 2
      * 
      * @param value
-     *            New setting
+     *                New setting
      */
     protected final void setOutputFileSplitType(final int value) {
         setLocalIntOpt(0, value, C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
@@ -661,23 +685,11 @@ public class AppSettings {
 
     /**
      * @param value
-     *            {@link #HEIGHT_WGS84_TO_MSL} - Setting is to convert the WGS84
-     *            height to MSL height.
+     *                {@link #HEIGHT_WGS84_TO_MSL} - Setting is to convert the
+     *                WGS84 height to MSL height.
      */
     public final void setHeightConversionMode(final int value) {
         setLocalIntOpt(0, value, C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
-    }
-
-    public final boolean isAdvFilterActive() {
-        return getLocalBooleanOpt(C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
-    }
-
-    /**
-     * @param value
-     *            The default value for opening the port.
-     */
-    protected final void setAdvFilterActive(final boolean value) {
-        setLocalBooleanOpt(0, value, C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE);
     }
 
     public final int getLogRequestAhead() {
@@ -686,7 +698,7 @@ public class AppSettings {
 
     /**
      * @param value
-     *            The default value for opening the port.
+     *                The default value for opening the port.
      */
     protected final void setLogRequestAhead(final int value) {
         setLocalIntOpt(0, value, C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
@@ -720,48 +732,24 @@ public class AppSettings {
      * Sets the NMEA string types to write to the NMEA output file format.
      * 
      * @param formatNMEA
-     *            Bit format using following bit indexes:<br>-
-     *            {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
-     *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     *                Bit format using following bit indexes:<br>-
+     *                {@link BT747Constants#NMEA_SEN_GLL_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_RMC_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_VTG_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_GGA_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_GSA_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_GSV_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_GRS_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_GST_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_MALM_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br>-
+     *                {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
      */
     protected final void setNMEAset(final int formatNMEA) {
         setLocalIntOpt(0, formatNMEA, C_NMEASET_IDX, C_NMEASET_SIZE);
-    }
-
-    public final boolean getGpxUTC0() {
-        return getLocalBooleanOpt(C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
-    }
-
-    protected final void setGpxUTC0(final boolean value) {
-        setLocalBooleanOpt(0, value, C_GPXUTC0_IDX, C_GPXUTC0_SIZE);
-    }
-
-    public final boolean getGpsDecode() {
-        return getLocalBooleanOpt(C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
-    }
-
-    protected final void setGpsDecode(final boolean value) {
-        setLocalBooleanOpt(0, value, C_DECODEGPS_IDX, C_DECODEGPS_SIZE);
-    }
-
-    public final boolean getGpxTrkSegWhenBig() {
-        return getLocalBooleanOpt(C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
-    }
-
-    protected final void setGpxTrkSegWhenBig(final boolean value) {
-        setLocalBooleanOpt(0, value, C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE);
     }
 
     public final int getTrkSep() {
@@ -781,7 +769,7 @@ public class AppSettings {
 
     /**
      * @param maxDist
-     *            The maxDist to setFilter.
+     *                The maxDist to setFilter.
      */
     protected final void setFilterMaxDist(final float maxDist) {
         setFloatOpt(0, maxDist, C_MAX_DISTANCE_IDX, C_MAX_DISTANCE_SIZE);
@@ -796,7 +784,7 @@ public class AppSettings {
 
     /**
      * @param maxHDOP
-     *            The maxHDOP to setFilter.
+     *                The maxHDOP to setFilter.
      */
     protected final void setFilterMaxHDOP(final float maxHDOP) {
         setFloatOpt(0, maxHDOP, C_maxHDOP_IDX, C_maxHDOP_SIZE);
@@ -811,7 +799,7 @@ public class AppSettings {
 
     /**
      * @param maxPDOP
-     *            The maxPDOP to setFilter.
+     *                The maxPDOP to setFilter.
      */
     protected final void setFilterMaxPDOP(final float maxPDOP) {
         setFloatOpt(0, maxPDOP, C_maxPDOP_IDX, C_maxPDOP_SIZE);
@@ -826,7 +814,7 @@ public class AppSettings {
 
     /**
      * @param maxRecCnt
-     *            The maxRecCnt to setFilter.
+     *                The maxRecCnt to setFilter.
      */
     protected final void setFilterMaxRecCount(final int maxRecCnt) {
         setLocalIntOpt(0, maxRecCnt, C_maxRecCount_IDX, C_maxRecCount_SIZE);
@@ -841,7 +829,7 @@ public class AppSettings {
 
     /**
      * @param maxSpeed
-     *            The maxSpeed to setFilter.
+     *                The maxSpeed to setFilter.
      */
     protected final void setFilterMaxSpeed(final float maxSpeed) {
         setFloatOpt(0, maxSpeed, C_maxSpeed_IDX, C_maxSpeed_SIZE);
@@ -856,7 +844,7 @@ public class AppSettings {
 
     /**
      * @param maxVDOP
-     *            The maxVDOP to setFilter.
+     *                The maxVDOP to setFilter.
      */
     protected final void setFilterMaxVDOP(final float maxVDOP) {
         setFloatOpt(0, maxVDOP, C_maxVDOP_IDX, C_maxVDOP_SIZE);
@@ -871,7 +859,7 @@ public class AppSettings {
 
     /**
      * @param minDist
-     *            The minDist to setFilter.
+     *                The minDist to setFilter.
      */
     protected final void setFilterMinDist(final float minDist) {
         setFloatOpt(0, minDist, C_minDist_IDX, C_minDist_SIZE);
@@ -886,7 +874,7 @@ public class AppSettings {
 
     /**
      * @param minNSAT
-     *            The minNSAT to setFilter.
+     *                The minNSAT to setFilter.
      */
     protected final void setFilterMinNSAT(final int minNSAT) {
         setLocalIntOpt(0, minNSAT, C_minNSAT_IDX, C_minNSAT_SIZE);
@@ -901,7 +889,7 @@ public class AppSettings {
 
     /**
      * @param minRecCnt
-     *            The minRecCnt to setFilter.
+     *                The minRecCnt to setFilter.
      */
     protected final void setFilterMinRecCount(final int minRecCnt) {
         setLocalIntOpt(0, minRecCnt, C_minRecCount_IDX, C_minRecCount_SIZE);
@@ -916,14 +904,15 @@ public class AppSettings {
 
     /**
      * @param minSpeed
-     *            The minSpeed to setFilter.
+     *                The minSpeed to setFilter.
      */
     protected final void setFilterMinSpeed(final float minSpeed) {
         setFloatOpt(0, minSpeed, C_minSpeed_IDX, C_minSpeed_SIZE);
     }
 
     public final String getColorInvalidTrack() {
-        return getStringOpt(C_COLOR_INVALIDTRACK_IDX, C_COLOR_INVALIDTRACK_SIZE);
+        return getStringOpt(C_COLOR_INVALIDTRACK_IDX,
+                C_COLOR_INVALIDTRACK_SIZE);
     }
 
     protected final void setColorInvalidTrack(final String colorInvalidTrack) {
@@ -949,104 +938,20 @@ public class AppSettings {
 
     /**
      * @param solveMacLagProblem
-     *            The solveMacLagProblem to set.
+     *                The solveMacLagProblem to set.
      */
     public final static void setSolveMacLagProblem(final boolean arg) {
         solveMacLagProblem = arg;
     }
 
-    protected final void setTimeConditionSetting1(final int value) {
-        setLocalIntOpt(0, value, C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE);
-    }
-
-    public final int getTimeConditionSetting1() {
-        return getLocalIntOpt(C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE);
-    }
-
-    protected final void setSpeedConditionSetting1(final int value) {
-        setLocalIntOpt(0, value, C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
-    }
-
-    public final int getSpeedConditionSetting1() {
-        return getLocalIntOpt(C_SETTING1_SPEED_IDX, C_SETTING1_SPEED_SIZE);
-    }
-
-    protected final void setDistConditionSetting1(final int value) {
-        setLocalIntOpt(0, value, C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
-    }
-
-    public final int getDistConditionSetting1() {
-        return getLocalIntOpt(C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE);
-    }
-
-    protected final void setFixSetting1(final int value) {
-        setLocalIntOpt(0, value, C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
-    }
-
-    public final int getFixSetting1() {
-        return getLocalIntOpt(C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE);
-    }
-
-    protected final void setLogFormatConditionSetting1(final int value) {
-        setLocalIntOpt(0, value, C_SETTING1_LOG_FORMAT_IDX,
-                C_SETTING1_LOG_FORMAT_SIZE);
-    }
-
-    public final int getLogFormatSetting1() {
-        return getLocalIntOpt(C_SETTING1_LOG_FORMAT_IDX,
-                C_SETTING1_LOG_FORMAT_SIZE);
-    }
-
-    protected final void setSBASSetting1(final boolean value) {
-        setLocalBooleanOpt(0, value, C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
-    }
-
-    public final boolean getSBASSetting1() {
-        return getLocalBooleanOpt(C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE);
-    }
-
-    protected final void setDGPSSetting1(final int value) {
-        setLocalIntOpt(0, value, C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
-    }
-
-    public final int getDPGSSetting1() {
-        return getLocalIntOpt(C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE);
-    }
-
-    public final boolean getTestSBASSetting1() {
-        return getLocalBooleanOpt(C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
-    }
-
-    protected final void setTestSBASSetting1(final boolean value) {
-        setLocalBooleanOpt(0, value, C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE);
-    }
-
-    public final boolean getLogOverwriteSetting1() {
-        return getLocalBooleanOpt(C_SETTING1_LOG_OVR_IDX,
-                C_SETTING1_LOG_OVR_SIZE);
-    }
-
-    protected final void setLogOverwriteSetting1(final boolean value) {
-        setLocalBooleanOpt(0, value, C_SETTING1_LOG_OVR_IDX,
-                C_SETTING1_LOG_OVR_SIZE);
-    }
-
-    public final String getNMEASetting1() {
-        return getStringOpt(C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
-    }
-
-    protected final void setNMEASetting1(final String value) {
-        setStringOpt(0, value, C_SETTING1_NMEA_IDX, C_SETTING1_NMEA_SIZE);
-    }
-
     public final boolean isStoredSetting1() {
-        return getNMEASetting1().length() > 15;
+        return getStringOpt(SETTING1_NMEA).length() > 15;
     }
 
     /**
-     * Look for the google map site key in a file called "gmapkey.txt" Will look
-     * in the output dir first, then in the source dir, then in the settings
-     * dir.
+     * Look for the google map site key in a file called "gmapkey.txt" Will
+     * look in the output dir first, then in the source dir, then in the
+     * settings dir.
      * 
      * @return The google map key
      */
@@ -1126,50 +1031,41 @@ public class AppSettings {
                         (src.length() < (size - 1)) ? (idx + src.length())
                                 : (idx + size)));
         if (eventType != 0) {
-            postEvent(ModelEvent.SETTING_CHANGE, ""+eventType);
-        }
-    }
-    
-    private final void setStringOpt(final int eventType, final String src,
-            final int idx, final int size) {
-        Settings.setAppSettings(Settings.getAppSettings().substring(0, idx)
-                + src.substring(0, (src.length() < size) ? src.length() : size)
-                + ((src.length() < size) ? "\0" : "")
-                + ((src.length() < (size - 1)) ? new String(new byte[size
-                        - src.length() - 1]) : "")
-                + ((Settings.getAppSettings().length() > idx + size) ? Settings
-                        .getAppSettings().substring(idx + size,
-                                Settings.getAppSettings().length()) : ""));
-        if (eventType != 0) {
-            postEvent(ModelEvent.SETTING_CHANGE, ""+eventType);
+            postEvent(ModelEvent.SETTING_CHANGE, "" + eventType);
         }
     }
 
+    private final void setStringOpt(final int eventType, final String src,
+            final int idx, final int size) {
+        Settings
+                .setAppSettings(Settings.getAppSettings().substring(0, idx)
+                        + src.substring(0, (src.length() < size) ? src
+                                .length() : size)
+                        + ((src.length() < size) ? "\0" : "")
+                        + ((src.length() < (size - 1)) ? new String(
+                                new byte[size - src.length() - 1]) : "")
+                        + ((Settings.getAppSettings().length() > idx + size) ? Settings
+                                .getAppSettings().substring(idx + size,
+                                        Settings.getAppSettings().length())
+                                : ""));
+        if (eventType != 0) {
+            postEvent(ModelEvent.SETTING_CHANGE, "" + eventType);
+        }
+    }
 
     private final void setLocalIntOpt(final int param, final int src,
             final int idx, final int size) {
-        setOpt(param, Convert.unsigned2hex(src, size), idx,
-                size);
+        setOpt(param, Convert.unsigned2hex(src, size), idx, size);
     }
 
     private final int getLocalIntOpt(final int idx, final int size) {
         return Conv.hex2Int(getStringOpt(idx, size));
     }
 
-    private final void setLocalBooleanOpt(final int param, final boolean value,
-            final int idx, final int size) {
-        setStringOpt(param, (value ? "1" : "0"), idx, size);
-    }
-
-    private final boolean getLocalBooleanOpt(final int idx, final int size) {
-        return getLocalIntOpt(idx, size) == 1;
-    }
-
     private final void setFloatOpt(final int eventType, final float src,
             final int idx, final int size) {
-        setOpt(eventType,
-                Convert.unsigned2hex(Convert.toIntBitwise(src), size), idx,
-                size);
+        setOpt(eventType, Convert.unsigned2hex(Convert.toIntBitwise(src),
+                size), idx, size);
     }
 
     private final float getFloatOpt(final int idx, final int size) {
@@ -1242,7 +1138,8 @@ public class AppSettings {
     private static final int C_BAUDRATE_SIZE = 8;
     private static final int C_VERSION_IDX = C_BAUDRATE_IDX + C_BAUDRATE_SIZE;
     private static final int C_VERSION_SIZE = 8;
-    private static final int C_BASEDIRPATH_IDX = C_VERSION_IDX + C_VERSION_SIZE;
+    private static final int C_BASEDIRPATH_IDX = C_VERSION_IDX
+            + C_VERSION_SIZE;
     private static final int C_BASEDIRPATH_SIZE = 256;
     private static final int C_REPORTFILEBASE_IDX = C_BASEDIRPATH_IDX
             + C_BASEDIRPATH_SIZE;
@@ -1292,7 +1189,8 @@ public class AppSettings {
     private static final int C_GPXUTC0_SIZE = 1;
     private static final int C_TRKSEP_IDX = C_GPXUTC0_IDX + C_GPXUTC0_SIZE;
     private static final int C_TRKSEP_SIZE = 4;
-    private static final int C_ADVFILTACTIVE_IDX = C_TRKSEP_IDX + C_TRKSEP_SIZE;
+    private static final int C_ADVFILTACTIVE_IDX = C_TRKSEP_IDX
+            + C_TRKSEP_SIZE;
     private static final int C_ADVFILTACTIVE_SIZE = 1;
     private static final int C_minDist_IDX = C_ADVFILTACTIVE_IDX
             + C_ADVFILTACTIVE_SIZE;
@@ -1303,7 +1201,8 @@ public class AppSettings {
     private static final int C_minSpeed_IDX = C_MAX_DISTANCE_IDX
             + C_MAX_DISTANCE_SIZE;
     private static final int C_minSpeed_SIZE = 8;
-    private static final int C_maxSpeed_IDX = C_minSpeed_IDX + C_minSpeed_SIZE;
+    private static final int C_maxSpeed_IDX = C_minSpeed_IDX
+            + C_minSpeed_SIZE;
     private static final int C_maxSpeed_SIZE = 8;
     private static final int C_maxHDOP_IDX = C_maxSpeed_IDX + C_maxSpeed_SIZE;
     private static final int C_maxHDOP_SIZE = 8;
@@ -1311,7 +1210,8 @@ public class AppSettings {
     private static final int C_maxPDOP_SIZE = 8;
     private static final int C_maxVDOP_IDX = C_maxPDOP_IDX + C_maxPDOP_SIZE;
     private static final int C_maxVDOP_SIZE = 8;
-    private static final int C_minRecCount_IDX = C_maxVDOP_IDX + C_maxVDOP_SIZE;
+    private static final int C_minRecCount_IDX = C_maxVDOP_IDX
+            + C_maxVDOP_SIZE;
     private static final int C_minRecCount_SIZE = 8;
     private static final int C_maxRecCount_IDX = C_minRecCount_IDX
             + C_minRecCount_SIZE;
@@ -1367,7 +1267,8 @@ public class AppSettings {
     private static final int C_HOLUX241_IDX = C_RECORDNBR_IN_LOGS_IDX
             + C_RECORDNBR_IN_LOGS_SIZE;
     private static final int C_HOLUX241_SIZE = 1;
-    private static final int C_IMPERIAL_IDX = C_HOLUX241_IDX + C_HOLUX241_SIZE;
+    private static final int C_IMPERIAL_IDX = C_HOLUX241_IDX
+            + C_HOLUX241_SIZE;
     private static final int C_IMPERIAL_SIZE = 1;
     private static final int C_FREETEXTPORT_IDX = C_IMPERIAL_IDX
             + C_IMPERIAL_SIZE;
@@ -1375,7 +1276,8 @@ public class AppSettings {
     private static final int C_NOT_USED1_IDX = C_FREETEXTPORT_IDX
             + C_FREETEXTPORT_SIZE;
     private static final int C_NOT_USED1_SIZE = 4;
-    private static final int C_GPSTYPE_IDX = C_NOT_USED1_IDX + C_NOT_USED1_SIZE;
+    private static final int C_GPSTYPE_IDX = C_NOT_USED1_IDX
+            + C_NOT_USED1_SIZE;
     private static final int C_GPSTYPE_SIZE = 1;
     private static final int C_OUTPUTLOGCONDITIONS_IDX = C_GPSTYPE_IDX
             + C_GPSTYPE_SIZE;
@@ -1401,7 +1303,8 @@ public class AppSettings {
     private static final int C_LANGUAGE_IDX = C_LOGFILEPATH_IDX
             + C_LOGFILEPATH_SIZE;
     private static final int C_LANGUAGE_SIZE = 8;
-    private static final int C_IMAGEDIR_IDX = C_LANGUAGE_IDX + C_LANGUAGE_SIZE;
+    private static final int C_IMAGEDIR_IDX = C_LANGUAGE_IDX
+            + C_LANGUAGE_SIZE;
     private static final int C_IMAGEDIR_SIZE = 256;
     private static final int C_FILETIMEOFFSET_IDX = C_IMAGEDIR_IDX
             + C_IMAGEDIR_SIZE;
@@ -1428,51 +1331,69 @@ public class AppSettings {
     private static final int C_NEW_NEXT_IDX = C_NEXT_IDX + C_NEXT_SIZE;
 
     private static final int[][] paramsList =
-        // Type, idx, start, size
-        {
-                { BOOL, IS_WRITE_TRACKPOINT_COMMENT,
-                        C_IS_WRITE_TRACKPOINT_COMMENT_IDX,
-                        C_IS_WRITE_TRACKPOINT_COMMENT_SIZE },
-                { BOOL, IS_WRITE_TRACKPOINT_NAME, C_IS_WRITE_TRACKPOINT_NAME_IDX,
-                        C_IS_WRITE_TRACKPOINT_NAME_SIZE },
-                { BOOL, OUTPUTLOGCONDITIONS, C_OUTPUTLOGCONDITIONS_IDX,
-                        C_OUTPUTLOGCONDITIONS_SIZE },
-                { BOOL, IMPERIAL, C_IMPERIAL_IDX, C_IMPERIAL_SIZE },
-                { BOOL, FORCE_HOLUXM241, C_HOLUX241_IDX, C_HOLUX241_SIZE },
-                { BOOL, IS_RECORDNBR_IN_LOGS, C_RECORDNBR_IN_LOGS_IDX,
-                        C_RECORDNBR_IN_LOGS_SIZE },
-                { BOOL, IS_TRAVERSABLE, C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE },
-                { INT, FILEFIELDFORMAT, C_FILEFIELDFORMAT_IDX,
-                        C_FILEFIELDFORMAT_SIZE },
-                // Application parameter
-                { BOOL, IS_STOP_LOGGING_ON_CONNECT, C_STOP_LOG_ON_CONNECT_IDX,
-                        C_STOP_LOG_ON_CONNECT_SIZE },
-                { STRING, OUTPUTDIRPATH, C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE },
-                { STRING, REPORTFILEBASE, C_REPORTFILEBASE_IDX,
-                        C_REPORTFILEBASE_SIZE },
-                { STRING, LOGFILERELPATH, C_LOGFILERELPATH_IDX,
-                        C_LOGFILERELPATH_SIZE },
-                { STRING, LOGFILEPATH, C_LOGFILEPATH_IDX, C_LOGFILEPATH_SIZE },
-                { STRING, LANGUAGE, C_LANGUAGE_IDX, C_LANGUAGE_SIZE },
-                { STRING, IMAGEDIR, C_IMAGEDIR_IDX, C_IMAGEDIR_SIZE },
-                { INT, FILETIMEOFFSET, C_FILETIMEOFFSET_IDX, C_FILETIMEOFFSET_SIZE },
-                { INT, PORTNBR, C_PORTNBR_IDX, C_PORTNBR_SIZE },
-                { INT, BAUDRATE, C_BAUDRATE_IDX, C_BAUDRATE_SIZE },
-                { STRING, FREETEXTPORT, C_FREETEXTPORT_IDX, C_FREETEXTPORT_SIZE },
-                { BOOL, OPENPORTATSTARTUP, C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE },
-                { INT, GPSTIMEOFFSETHOURS, C_GPSTIMEOFFSETHOURS_IDX,
-                        C_GPSTIMEOFFSETHOURS_SIZE },
-                { BOOL, TAG_OVERRIDEPOSITIONS, C_TAG_OVERRIDEPOSITIONS_IDX,
-                        C_TAG_OVERRIDEPOSITIONS_SIZE },
-                { INT, TAG_MAXTIMEDIFFERENCE, C_TAG_MAXTIMEDIFFERENCE_IDX,
-                        C_TAG_MAXTIMEDIFFERENCE_SIZE },
-                { INT, GPSTYPE, C_GPSTYPE_IDX, C_GPSTYPE_SIZE },
-                { BOOL, DISABLELOGDURINGDOWNLOAD, C_DISABLELOGDURINGDOWNLOAD_IDX,
-                        C_DISABLELOGDURINGDOWNLOAD_SIZE },
-                { STRING, MAPCACHEDIRECTORY, C_MAPCACHEDIRECTORY_IDX,
-                        C_MAPCACHEDIRECTORY_SIZE },
-                { STRING, VERSION, C_VERSION_IDX, C_VERSION_SIZE },
-                { INT, MAPTYPE, C_MAPTYPE_IDX, C_MAPTYPE_SIZE },
-                { STRING, GOOGLEMAPKEY, 0, 0 },
-                };
+    // Type, idx, start, size
+    {
+            { BOOL, IS_WRITE_TRACKPOINT_COMMENT,
+                    C_IS_WRITE_TRACKPOINT_COMMENT_IDX,
+                    C_IS_WRITE_TRACKPOINT_COMMENT_SIZE },
+            { BOOL, IS_WRITE_TRACKPOINT_NAME, C_IS_WRITE_TRACKPOINT_NAME_IDX,
+                    C_IS_WRITE_TRACKPOINT_NAME_SIZE },
+            { BOOL, OUTPUTLOGCONDITIONS, C_OUTPUTLOGCONDITIONS_IDX,
+                    C_OUTPUTLOGCONDITIONS_SIZE },
+            { BOOL, IMPERIAL, C_IMPERIAL_IDX, C_IMPERIAL_SIZE },
+            { BOOL, FORCE_HOLUXM241, C_HOLUX241_IDX, C_HOLUX241_SIZE },
+            { BOOL, IS_RECORDNBR_IN_LOGS, C_RECORDNBR_IN_LOGS_IDX,
+                    C_RECORDNBR_IN_LOGS_SIZE },
+            { BOOL, IS_TRAVERSABLE, C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE },
+            { INT, FILEFIELDFORMAT, C_FILEFIELDFORMAT_IDX,
+                    C_FILEFIELDFORMAT_SIZE },
+            // Application parameter
+            { BOOL, IS_STOP_LOGGING_ON_CONNECT, C_STOP_LOG_ON_CONNECT_IDX,
+                    C_STOP_LOG_ON_CONNECT_SIZE },
+            { STRING, OUTPUTDIRPATH, C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE },
+            { STRING, REPORTFILEBASE, C_REPORTFILEBASE_IDX,
+                    C_REPORTFILEBASE_SIZE },
+            { STRING, LOGFILERELPATH, C_LOGFILERELPATH_IDX,
+                    C_LOGFILERELPATH_SIZE },
+            { STRING, LOGFILEPATH, C_LOGFILEPATH_IDX, C_LOGFILEPATH_SIZE },
+            { STRING, LANGUAGE, C_LANGUAGE_IDX, C_LANGUAGE_SIZE },
+            { STRING, IMAGEDIR, C_IMAGEDIR_IDX, C_IMAGEDIR_SIZE },
+            { INT, FILETIMEOFFSET, C_FILETIMEOFFSET_IDX,
+                    C_FILETIMEOFFSET_SIZE },
+            { INT, PORTNBR, C_PORTNBR_IDX, C_PORTNBR_SIZE },
+            { INT, BAUDRATE, C_BAUDRATE_IDX, C_BAUDRATE_SIZE },
+            { STRING, FREETEXTPORT, C_FREETEXTPORT_IDX, C_FREETEXTPORT_SIZE },
+            { BOOL, OPENPORTATSTARTUP, C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE },
+            { INT, GPSTIMEOFFSETHOURS, C_GPSTIMEOFFSETHOURS_IDX,
+                    C_GPSTIMEOFFSETHOURS_SIZE },
+            { BOOL, TAG_OVERRIDEPOSITIONS, C_TAG_OVERRIDEPOSITIONS_IDX,
+                    C_TAG_OVERRIDEPOSITIONS_SIZE },
+            { INT, TAG_MAXTIMEDIFFERENCE, C_TAG_MAXTIMEDIFFERENCE_IDX,
+                    C_TAG_MAXTIMEDIFFERENCE_SIZE },
+            { INT, GPSTYPE, C_GPSTYPE_IDX, C_GPSTYPE_SIZE },
+            { BOOL, DISABLELOGDURINGDOWNLOAD, C_DISABLELOGDURINGDOWNLOAD_IDX,
+                    C_DISABLELOGDURINGDOWNLOAD_SIZE },
+            { STRING, MAPCACHEDIRECTORY, C_MAPCACHEDIRECTORY_IDX,
+                    C_MAPCACHEDIRECTORY_SIZE },
+            { STRING, VERSION, C_VERSION_IDX, C_VERSION_SIZE },
+            { INT, MAPTYPE, C_MAPTYPE_IDX, C_MAPTYPE_SIZE },
+            { STRING, GOOGLEMAPKEY, 0, 0 },
+            { STRING, SETTING1_NMEA, C_SETTING1_NMEA_IDX,
+                    C_SETTING1_NMEA_SIZE },
+            { INT, SETTING1_TIME, C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE },
+            { INT, SETTING1_SPEED, C_SETTING1_SPEED_IDX,
+                    C_SETTING1_SPEED_SIZE },
+            { INT, SETTING1_DIST, C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE },
+            { INT, SETTING1_FIX, C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE },
+            { INT, SETTING1_DGPS, C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE },
+            { BOOL, SETTING1_TEST, C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE },
+            { BOOL, SETTING1_LOG_OVR, C_SETTING1_LOG_OVR_IDX,
+                    C_SETTING1_LOG_OVR_SIZE },
+            { INT, SETTING1_LOG_FORMAT, C_SETTING1_LOG_FORMAT_IDX,
+                    C_SETTING1_LOG_FORMAT_SIZE },
+            { BOOL, SETTING1_SBAS, C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE },
+            { BOOL, ADVFILTACTIVE, C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE },
+            { BOOL, GPXUTC0, C_GPXUTC0_IDX, C_GPXUTC0_SIZE },
+            { BOOL, DECODEGPS, C_DECODEGPS_IDX, C_DECODEGPS_SIZE },
+            { BOOL, GPXTRKSEGBIG, C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE }, };
 }

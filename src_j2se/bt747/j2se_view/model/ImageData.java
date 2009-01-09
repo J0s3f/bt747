@@ -132,6 +132,36 @@ public class ImageData extends BT747Waypoint {
                 }
             }
 
+            atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSALTITUDE);
+            if (atr != null) {
+                float altitude = atr.getFloatValue(0);
+                atr = exifJpg
+                        .getGpsAttribute(ExifConstants.TAG_GPSALTITUDEREF);
+                if (atr != null) {
+                    if (atr.getIntValue(0) == 1) {
+                        altitude = -altitude;
+                    }
+                }
+                getGpsRecord().height = altitude;
+            }
+
+            atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSDATESTAMP);
+            if (atr != null) {
+                String dateStr = atr.getStringValue();
+                try {
+                    int day;
+                    int month;
+                    int year;
+                    year = Integer.valueOf(dateStr.substring(0,4));
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+            }
+
+            atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSTIMESTAMP);
+            if (atr != null) {
+            }
+
             atr = exifJpg
                     .getExifAttribute(ExifConstants.TAG_DATETIMEDIGITIZED);
             if (atr == null) {

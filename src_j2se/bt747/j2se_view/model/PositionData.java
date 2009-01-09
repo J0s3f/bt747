@@ -41,7 +41,7 @@ public class PositionData extends AbstractBean {
     public static final int FIX_VALID = 1;
     public static final int LATITUDE = 2;
     public static final int LONGITUDE = 3;
-    public static final int POSITION_HEIGHT = 4;
+    public static final int HEIGHT_METERS = 4;
     public static final int SPEED = 5;
     public static final int HEADING = 6;
     public static final int DSTA = 7;
@@ -62,8 +62,8 @@ public class PositionData extends AbstractBean {
     public static final int LOGTIME = 22;
     public static final int DISTANCE_FEET = 23;
     public static final int EW = 24;
-    public static final int FMT_FIXMODE = 25;
-    public static final int FMT_HEIGHT_FT_IDX = 26;
+    public static final int FIXMODE = 25;
+    public static final int HEIGHT_FEET = 26;
     public static final int LATITUDE_POSITIVE = 27;
     public static final int LONGITUDE_POSITIVE = 28;
     public static final int NS = 29;
@@ -393,9 +393,9 @@ public class PositionData extends AbstractBean {
             return String.class;
         case LONGITUDE_POSITIVE:
             return String.class;
-        case POSITION_HEIGHT:
+        case HEIGHT_METERS:
             break;
-        case FMT_HEIGHT_FT_IDX:
+        case HEIGHT_FEET:
             break;
         case SPEED:
             return Float.class;
@@ -415,7 +415,7 @@ public class PositionData extends AbstractBean {
             return Float.class;
         case NSAT:
             return Integer.class;
-        case FMT_FIXMODE:
+        case FIXMODE:
             return String.class;
         case SID:
             break;
@@ -491,9 +491,9 @@ public class PositionData extends AbstractBean {
             break;
         case LONGITUDE_POSITIVE:
             break;
-        case POSITION_HEIGHT:
+        case HEIGHT_METERS:
             return "Height (m)";
-        case FMT_HEIGHT_FT_IDX:
+        case HEIGHT_FEET:
             return "Height (ft)";
         case SPEED:
             return "Speed (km/h)";
@@ -513,7 +513,7 @@ public class PositionData extends AbstractBean {
             return "VDOP";
         case NSAT:
             return "NSAT";
-        case FMT_FIXMODE:
+        case FIXMODE:
             return "Fix";
         case SID:
             return "SID";
@@ -651,12 +651,12 @@ public class PositionData extends AbstractBean {
                 return new Double(g.longitude);
             }
             break;
-        case POSITION_HEIGHT:
+        case HEIGHT_METERS:
             if (g.hasHeight()) {
                 return new Float(g.height);
             }
             break;
-        case FMT_HEIGHT_FT_IDX:
+        case HEIGHT_FEET:
             break;
         case SPEED:
             if (g.hasSpeed()) {
@@ -700,7 +700,7 @@ public class PositionData extends AbstractBean {
                 return new Integer(g.nsat);
             }
             break;
-        case FMT_FIXMODE:
+        case FIXMODE:
             if (g.hasValid()) {
                 return CommonOut.getFixText(g.valid);
             }
@@ -773,9 +773,9 @@ public class PositionData extends AbstractBean {
             case LONGITUDE:
                 g.longitude = g.longitude;
                 break;
-            case POSITION_HEIGHT:
+            case HEIGHT_METERS:
                 break;
-            case FMT_HEIGHT_FT_IDX:
+            case HEIGHT_FEET:
                 break;
             case SPEED:
                 break;
@@ -795,7 +795,7 @@ public class PositionData extends AbstractBean {
                 break;
             case NSAT:
                 break;
-            case FMT_FIXMODE:
+            case FIXMODE:
                 break;
             case SID:
                 break;

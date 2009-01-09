@@ -28,6 +28,7 @@ import waba.ui.Label;
 import waba.ui.PushButtonGroup;
 
 import bt747.Txt;
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -118,7 +119,7 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
                 PushButtonGroup.NORMAL // Only one selected at a time
         ), RIGHT, SAME);
 
-        pbPtType.setSelected(m.isAdvFilterActive() ? 0 : 1);
+        pbPtType.setSelected(m.getBooleanOpt(AppSettings.ADVFILTACTIVE) ? 0 : 1);
 
         getSettings();
     }

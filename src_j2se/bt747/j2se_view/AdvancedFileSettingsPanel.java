@@ -14,6 +14,7 @@
 //***  *********************************************************** ***
 package bt747.j2se_view;
 
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -43,9 +44,9 @@ implements ModelListener {
         m = c.getModel();
         m.addListener(this);
 
-        cbNotApplyUTCOffset.setSelected(m.getGpxUTC0());
-        cbGPXTrkSegWhenSmall.setSelected(m.getGpxTrkSegWhenBig());
-        cbNotApplyUTCOffset.setSelected(m.getGpxUTC0());
+        cbNotApplyUTCOffset.setSelected(m.getBooleanOpt(AppSettings.GPXUTC0));
+        cbGPXTrkSegWhenSmall.setSelected(m.getBooleanOpt(AppSettings.GPXTRKSEGBIG));
+        cbNotApplyUTCOffset.setSelected(m.getBooleanOpt(AppSettings.GPXUTC0));
         getNMEAOutFile();
     }
     

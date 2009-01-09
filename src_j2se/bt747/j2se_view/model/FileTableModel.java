@@ -24,7 +24,8 @@ public class FileTableModel extends AbstractTableModel {
     private int[] columns = { PositionData.FILE_DATE, PositionData.FILE_TIME,
             PositionData.GPS_TIME, //PositionData.TAG_TIME,
             PositionData.IMAGE_PATH, PositionData.GEOMETRY,
-            PositionData.LATITUDE, PositionData.LONGITUDE };
+            PositionData.LATITUDE, PositionData.LONGITUDE,
+            PositionData.HEIGHT_METERS};
 
     /**
      * 
