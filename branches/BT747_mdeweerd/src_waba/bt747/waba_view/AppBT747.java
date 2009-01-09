@@ -304,11 +304,11 @@ public class AppBT747 extends MainWindow implements ModelListener {
         // Doing this on the windows platform
         // if (Settings.platform.equals("Java")) m_model= new BT747model();
         // sp.writeBytes(buf,0,1);
-        miGpxUTC0.isChecked = m.getGpxUTC0();
+        miGpxUTC0.isChecked = m.getBooleanOpt(AppSettings.GPXUTC0);
 
-        miGpxTrkSegWhenBig.isChecked = m.getGpxTrkSegWhenBig();
+        miGpxTrkSegWhenBig.isChecked = m.getBooleanOpt(AppSettings.GPXTRKSEGBIG);
 
-        miGpsDecode.isChecked = m.getGpsDecode();
+        miGpsDecode.isChecked = m.getBooleanOpt(AppSettings.DECODEGPS);
 
         miRecordNumberInLogs.isChecked = m
                 .getBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS);

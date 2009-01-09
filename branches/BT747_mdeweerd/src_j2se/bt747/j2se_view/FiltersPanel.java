@@ -8,6 +8,7 @@ package bt747.j2se_view;
 
 import gps.BT747Constants;
 
+import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
@@ -35,7 +36,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         m.addListener(this);
         
         updateGuiLogFilterSettings();
-        cbAdvancedActive.setSelected(m.isAdvFilterActive());
+        cbAdvancedActive.setSelected(m.getBooleanOpt(AppSettings.ADVFILTACTIVE));
         updateAdvancedFilter();
 
         txtPDOPMax.setText(String.format((Locale) null, "%.2f", m
@@ -1059,7 +1060,7 @@ private void cbAdvancedActiveStateChanged(javax.swing.event.ChangeEvent evt) {//
 }//GEN-LAST:event_cbAdvancedActiveStateChanged
 
 private void updateAdvancedFilter() {
-        boolean en = m.isAdvFilterActive();
+        boolean en = m.getBooleanOpt(AppSettings.ADVFILTACTIVE);
         Component[] l;
         l = pnFilterPrecision.getComponents();
         for (Component component : l) {

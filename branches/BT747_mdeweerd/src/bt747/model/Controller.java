@@ -142,7 +142,7 @@ public class Controller {
      * Called when the Controller starts. Used for initialization.
      */
     public void init() {
-        m.setGpsDecode(m.getGpsDecode());
+        m.setBooleanOpt(AppSettings.DECODEGPS, m.getBooleanOpt(AppSettings.DECODEGPS));
         m.gpsModel().setDownloadTimeOut(m.getDownloadTimeOut());
         m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
 
@@ -259,8 +259,7 @@ public class Controller {
             break;
         case Model.GPX_LOGTYPE:
             gpsFile = new GPSGPXFile();
-            ((GPSGPXFile) gpsFile).setTrkSegSplitOnlyWhenSmall(m
-                    .getGpxTrkSegWhenBig());
+            ((GPSGPXFile) gpsFile).setTrkSegSplitOnlyWhenSmall(m.getBooleanOpt(AppSettings.GPXTRKSEGBIG));
             break;
         case Model.NMEA_LOGTYPE:
             gpsFile = new GPSNMEAFile();
@@ -282,7 +281,7 @@ public class Controller {
     
     private void configureGpsFile(GPSFile gpsFile) {
         if (gpsFile != null) {
-            if (!((gpsFile.getClass() == GPSGPXFile.class) && m.getGpxUTC0())) {
+            if (!((gpsFile.getClass() == GPSGPXFile.class) && m.getBooleanOpt(AppSettings.GPXUTC0))) {
                 gpsFile
                         .setTimeOffset(m.getIntOpt(Model.GPSTIMEOFFSETHOURS)
                                 * SECONDS_PER_HOUR);
@@ -446,7 +445,7 @@ public class Controller {
                 + gps.log.out.CommonOut.getDateTimeStr(m.getFilterEndTime()) + "("
                 + m.getFilterEndTime() + ")\n";
 
-        if (m.isAdvFilterActive()) {
+        if (m.getBooleanOpt(AppSettings.ADVFILTACTIVE)) {
             usedFilters = m.getLogFiltersAdv();
             parameters += "Advanced filter:\n";
 
@@ -1429,16 +1428,16 @@ public class Controller {
     }
 
     public final void setGpsDecode(final boolean value) {
-        m.setGpsDecode(value);
+        m.setBooleanOpt(AppSettings.DECODEGPS, value);
         m.gpsModel().setGpsDecode(value);
     }
 
     public final void setGpxTrkSegWhenBig(final boolean b) {
-        m.setGpxTrkSegWhenBig(b);
+        m.setBooleanOpt(AppSettings.GPXTRKSEGBIG, b);
     }
 
     public final void setGpxUTC0(final boolean b) {
-        m.setGpxUTC0(b);
+        m.setBooleanOpt(AppSettings.GPXUTC0, b);
     }
 
     public final void setFilterEndTime(final int d) {
@@ -1478,34 +1477,34 @@ public class Controller {
     // - NMEA output [18 byte]
 
     public final void storeSetting1() {
-        m.setTimeConditionSetting1(m.getLogTimeInterval());
-        m.setDistConditionSetting1(m.getLogDistanceInterval());
-        m.setSpeedConditionSetting1(m.getLogSpeedInterval());
-        m.setLogFormatConditionSetting1(m.getLogFormat());
-        m.setFixSetting1(m.getLogFixPeriod());
-        m.setSBASSetting1(m.isSBASEnabled());
-        m.setDGPSSetting1(m.getDgpsMode());
-        m.setTestSBASSetting1(m.isSBASTestEnabled());
-        m.setLogOverwriteSetting1(m.isLogFullOverwrite());
+        m.setIntOpt(AppSettings.SETTING1_TIME, m.getLogTimeInterval());
+        m.setIntOpt(AppSettings.SETTING1_DIST, m.getLogDistanceInterval());
+        m.setIntOpt(AppSettings.SETTING1_SPEED, m.getLogSpeedInterval());
+        m.setIntOpt(AppSettings.SETTING1_LOG_FORMAT, m.getLogFormat());
+        m.setIntOpt(AppSettings.SETTING1_FIX, m.getLogFixPeriod());
+        m.setBooleanOpt(AppSettings.SETTING1_SBAS, m.isSBASEnabled());
+        m.setIntOpt(AppSettings.SETTING1_DGPS, m.getDgpsMode());
+        m.setBooleanOpt(AppSettings.SETTING1_TEST, m.isSBASTestEnabled());
+        m.setBooleanOpt(AppSettings.SETTING1_LOG_OVR, m.isLogFullOverwrite());
         String sNMEA = "";
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             sNMEA += (m.getNMEAPeriod(i));
         }
-        m.setNMEASetting1(sNMEA);
+        m.setStringOpt(AppSettings.SETTING1_NMEA, sNMEA);
     }
 
     public final void restoreSetting1() {
-        setLogTimeInterval(m.getTimeConditionSetting1());
-        setLogDistanceInterval(m.getDistConditionSetting1());
-        setLogSpeedInterval(m.getSpeedConditionSetting1());
-        setLogFormat(m.getLogFormatSetting1());
-        setFixInterval(m.getFixSetting1());
-        setSBASEnabled(m.getSBASSetting1());
-        setSBASTestEnabled(m.getTestSBASSetting1());
-        setDGPSMode(m.getDPGSSetting1());
-        setLogOverwrite(m.getLogOverwriteSetting1());
+        setLogTimeInterval(m.getIntOpt(AppSettings.SETTING1_TIME));
+        setLogDistanceInterval(m.getIntOpt(AppSettings.SETTING1_DIST));
+        setLogSpeedInterval(m.getIntOpt(AppSettings.SETTING1_SPEED));
+        setLogFormat(m.getIntOpt(AppSettings.SETTING1_LOG_FORMAT));
+        setFixInterval(m.getIntOpt(AppSettings.SETTING1_FIX));
+        setSBASEnabled(m.getBooleanOpt(AppSettings.SETTING1_SBAS));
+        setSBASTestEnabled(m.getBooleanOpt(AppSettings.SETTING1_TEST));
+        setDGPSMode(m.getIntOpt(AppSettings.SETTING1_DGPS));
+        setLogOverwrite(m.getBooleanOpt(AppSettings.SETTING1_LOG_OVR));
 
-        String sNMEA = m.getNMEASetting1();
+        String sNMEA = m.getStringOpt(AppSettings.SETTING1_NMEA);
         int[] periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
 
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
@@ -1526,7 +1525,7 @@ public class Controller {
     }
 
     public final void setAdvFilterActive(final boolean b) {
-        m.setAdvFilterActive(b);
+        m.setBooleanOpt(AppSettings.ADVFILTACTIVE, b);
     };
 
     public final void setFilterMinRecCount(final int i) {

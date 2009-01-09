@@ -36,7 +36,7 @@ public class PositionTableModel extends AbstractTableModel {
             // FMT_UTC_VALUE,
             PositionData.RCR, PositionData.RCR_DESCRIPTION,
             PositionData.FIX_VALID, PositionData.LATITUDE,
-            PositionData.LONGITUDE, PositionData.POSITION_HEIGHT,
+            PositionData.LONGITUDE, PositionData.HEIGHT_METERS,
             PositionData.HDOP, PositionData.PDOP,
             PositionData.VOX };
 

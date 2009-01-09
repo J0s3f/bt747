@@ -159,10 +159,15 @@ public class BT747cmd implements bt747.model.ModelListener {
      */
     private static final String OPT_FILE_BASENAME = "f";
     /**
-     * 
+     * Debug option.
      */
     private static final String OPT_DEBUG = "d";
 
+    /**
+     * Photo time offset option.
+     */
+    private static final String OPT_FILE_TIMEZONE = "tz";
+    
     /**
      * Set up system specific classes.
      */
@@ -584,6 +589,27 @@ public class BT747cmd implements bt747.model.ModelListener {
         if (options.has(OPT_UTC)) {
             final Integer offset = (Integer) options.valueOf(OPT_UTC);
             c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, offset);
+            // Default value for filetime offset
+            c.setIntOpt(Model.FILETIMEOFFSET, offset*3600);
+        }
+        
+        if(options.has(OPT_FILE_TIMEZONE)) {
+            final String tz = (String) options.valueOf(OPT_FILE_TIMEZONE);
+            int hour = 0;
+            int minute = 0;
+            int seconds = 0;
+            if(tz.matches("(-?[0-9][0-9]):([0-9][0-9])")) {
+                hour = Integer.valueOf(tz.substring(0,tz.length()-4));
+                minute = Integer.valueOf(tz.substring(tz.length()-3));
+            } else {
+                if(tz.matches("(-?[0-9][0-9]):([0-9][0-9]):([0-9][0-9])")) {
+                    hour = Integer.valueOf(tz.substring(0,tz.length()-7));
+                    minute = Integer.valueOf(tz.substring(tz.length()-6,tz.length()-3));
+                    seconds = Integer.valueOf(tz.substring(tz.length()-3));
+                }
+
+            }
+            c.setIntOpt(Model.FILETIMEOFFSET, hour*3600 + minute*60 + seconds);
         }
 
         if (options.has(OPT_COLOR)) {
@@ -1143,6 +1169,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                         .withRequiredArg().describedAs("FULL|SMART|REPORTED");
                 accepts(OPT_OVERWRITE,
                         "Overwrite data even if downloaded data is different");
+                accepts(OPT_FILE_TIMEZONE,
+                "Time zone expressed in difference to Greenwhich time (e.g. -01:00)." +
+                "Defaults to UTC value.").withRequiredArg().describedAs("TIME");
             }
         };
 

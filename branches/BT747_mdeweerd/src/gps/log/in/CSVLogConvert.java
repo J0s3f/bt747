@@ -758,6 +758,10 @@ public final class CSVLogConvert implements GPSLogConvertInterface {
                         }
                     } // line found
                 } while (continueInBuffer);
+                if(offsetInBuffer==0) {
+                    // Nothing usefull found in buffer / end of file
+                    break;
+                }
                 nextAddrToRead -= (sizeToRead - offsetInBuffer);
             } /* nextAddrToRead<fileSize */
         } catch (Exception e) {

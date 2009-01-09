@@ -159,7 +159,7 @@ public final class GPSGPXFile extends GPSFile {
                 if (!isWayType && !isNewTrack && !firstRecord
                         && !ignoreBadPoints) {
                     if (isTrkSegSplitOnlyWhenSmall
-                            && ((activeFields.utc == 0) || (previousTime
+                            && ((!activeFields.hasUtc()) || (previousTime
                                     + trackSepTime > r.utc))) {
                         writeTrkSegSplit();
                     } else {

@@ -6,9 +6,9 @@ import bt747.sys.Generic;
 /**
  * This class copes with the inability of the VM to handle random access files
  * when one wants to look at the file content using a forward moving window on
- * the file. The new start position of the window must be at least the previous
- * start position of the window. This class performs the required internal
- * buffer copy and then required file read.
+ * the file. The new start position of the window must be at least the
+ * previous start position of the window. This class performs the required
+ * internal buffer copy and then required file read.
  * 
  * @author Mario De Weerd
  * 
@@ -78,7 +78,7 @@ public final class WindowedFile {
     private final boolean readBytes(final int bytesToRead) {
         currentPosition += bufferFill;
         int read = file.readBytes(buffer, 0, bytesToRead);
-        if(read<=0) {
+        if (read <= 0) {
             bufferFill = 0;
             return false;
         } else {
@@ -105,7 +105,7 @@ public final class WindowedFile {
                 if (bytesToRead > bufferSize) {
                     bytesToRead = bufferSize;
                 }
-                if(!readBytes(bytesToRead)) {
+                if (!readBytes(bytesToRead) || bufferFill == 0) {
                     return buffer;
                 }
                 bytesToSkip -= bufferFill;
@@ -130,12 +130,15 @@ public final class WindowedFile {
         if (bufferSize != bufferFill) {
             try {
                 if (currentPosition != newPosition) {
-                    Generic.debug(path + ": Problem in position " + currentPosition
-                            + " request:" + newPosition);
+                    Generic.debug(path + ": Problem in position "
+                            + currentPosition + " request:" + newPosition);
                 }
-//                currentPosition = newPosition;
-                bufferFill += file.readBytes(buffer, bufferFill, bufferSize
-                        - bufferFill);
+                // currentPosition = newPosition;
+                final int extraBytes = file.readBytes(buffer, bufferFill,
+                        bufferSize - bufferFill);
+                if (extraBytes > 0) {
+                    bufferFill += extraBytes;
+                }
             } catch (Exception e) {
                 Generic.debug("Read problem during fillBuffer", e);
                 return null;
