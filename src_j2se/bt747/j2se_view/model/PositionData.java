@@ -443,94 +443,137 @@ public class PositionData extends AbstractBean {
         switch (datatype) {
         case NONE:
             label = "TAB_TITLE_None";
+            break;
         case IMAGE_PATH:
             label = "TAB_TITLE_Image_path";
+            break;
         case IMAGE_WIDTH:
             label = "TAB_TITLE_Width";
+            break;
         case IMAGE_HEIGHT:
             label = "TAB_TITLE_Height";
+            break;
         case GEOMETRY:
             label = "TAB_TITLE_Geometry";
+            break;
         case LATITUDE:
             label = "TAB_TITLE_Latitude";
+            break;
         case LONGITUDE:
             label = "TAB_TITLE_Longitude";
+            break;
         case FILE_DATETIME:
             label = "TAB_TITLE_File_Date_Time";
+            break;
         case FILE_DATE:
             label = "TAB_TITLE_File_Date";
+            break;
         case FILE_TIME:
             label = "TAB_TITLE_File_Time";
+            break;
         case TAG_DATETIME:
             label = "TAB_TITLE_Tag_Date_Time";
+            break;
         case TAG_DATE:
             label = "TAB_TITLE_Tag_Date";
+            break;
         case TAG_TIME:
             label = "TAB_TITLE_Tag_Time";
+            break;
         case GPS_DATETIME:
             label = "TAB_TITLE_GPS_Date_Time";
+            break;
         case GPS_DATE:
             label = "TAB_TITLE_GPS_Date";
+            break;
         case GPS_TIME:
             label = "TAB_TITLE_GPS_Time";
+            break;
         case LOGTIME:
             label = "TAB_TITLE_Log_time";
+            break;
         case LOGDIST:
             label = "TAB_TITLE_Log_Dist";
+            break;
         case LOGSPD:
             label = "TAB_TITLE_Log_speed";
+            break;
         case NS:
             label = "TAB_TITLE_NS";
+            break;
         case EW:
             label = "TAB_TITLE_EW";
+            break;
         case RECORDNUMBER:
             label = "TAB_TITLE_Record_nbr";
+            break;
         case UTC_VALUE:
             label = "TAB_TITLE_UTC_Value";
+            break;
         case FIX_VALID:
             label = "TAB_TITLE_Valid";
+            break;
         case LATITUDE_POSITIVE:
             break;
         case LONGITUDE_POSITIVE:
             break;
         case HEIGHT_METERS:
             label = "TAB_TITLE_Height_m";
+            break;
         case HEIGHT_FEET:
             label = "TAB_TITLE_Height_ft";
+            break;
         case SPEED:
             label = "TAB_TITLE_Speed_kmh";
+            break;
         case SPEED_MPH:
             label = "TAB_TITLE_Speed_mph";
+            break;
         case HEADING:
             label = "TAB_TITLE_Heading";
+            break;
         case DSTA:
             label = "TAB_TITLE_DSTA";
+            break;
         case DAGE:
             label = "TAB_TITLE_DAGE";
+            break;
         case PDOP:
             label = "TAB_TITLE_PDOP";
+            break;
         case HDOP:
             label = "TAB_TITLE_HDOP";
+            break;
         case VDOP:
             label = "TAB_TITLE_VDOP";
+            break;
         case NSAT:
             label = "TAB_TITLE_NSAT";
+            break;
         case FIXMODE:
             label = "TAB_TITLE_Fix";
+            break;
         case SID:
             label = "TAB_TITLE_SID";
+            break;
         case VOX:
             label = "TAB_TITLE_VOX_File";
+            break;
         case RCR:
             label = "TAB_TITLE_RCR";
+            break;
         case RCR_DESCRIPTION:
             label = "TAB_TITLE_RCR_Description";
+            break;
         case MILLISECOND:
             label = "TAB_TITLE_MS";
+            break;
         case DISTANCE:
             label = "TAB_TITLE_Distance_m";
+            break;
         case DISTANCE_FEET:
             label = "TAB_TITLE_Distance_ft";
+            break;
         default:
         }
         if (label != null) {
