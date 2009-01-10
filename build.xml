@@ -358,6 +358,7 @@
             <fileset dir="${icon.dir}/.." includes="icons/bt747_32x32.gif" />
             <fileset dir="${icon.dir}/.." includes="icons/bt747_128x128.gif" />
             <fileset dir="${src_j2se.dir}" includes="**/Bundle*.properties" />
+            <fileset dir="${src_j2se.dir}" includes="**/resources/*" />
             <fileset dir="${j2sebuild.dir}" includes="**/*.class" />
         </jar>
 

@@ -55,10 +55,10 @@ public class AppSettings {
 
     // Parameter types
     //
-    public static final int INT = 1;
-    public static final int BOOL = 2;
-    public static final int STRING = 3;
-    public static final int FLOAT = 4;
+    private static final int INT = 1;
+    private static final int BOOL = 2;
+    private static final int STRING = 3;
+    private static final int FLOAT = 4;
 
     // New method for parameters.
 
@@ -238,10 +238,10 @@ public class AppSettings {
     public final static int COLOR_VALIDTRACK = 43;
     public final static int COLOR_INVALIDTRACK = 44;
 
-    private int TYPE_IDX = 0;
-    private int PARAM_IDX = 1;
-    private int START_IDX = 2;
-    private int SIZE_IDX = 3;
+    private final static int TYPE_IDX = 0;
+    private final static int PARAM_IDX = 1;
+    private final static int START_IDX = 2;
+    private final static int SIZE_IDX = 3;
 
     public static boolean defaultTraversable = false;
     public static int defaultChunkSize = 0x10000;
@@ -966,12 +966,12 @@ public class AppSettings {
                 path = path.substring(0, path.lastIndexOf('/'));
             }
             try {
-                String gmapPath = path + "/" + C_GMAP_KEY_FILENAME;
+                final String gmapPath = path + "/" + C_GMAP_KEY_FILENAME;
                 if (new File(gmapPath).exists()) {
-                    File gmap = new File(gmapPath, File.READ_ONLY);
+                    final File gmap = new File(gmapPath, File.READ_ONLY);
 
                     if (gmap.isOpen()) {
-                        byte[] b = new byte[100];
+                        final byte[] b = new byte[100];
                         int len;
                         len = gmap.readBytes(b, 0, 99);
                         gmap.close();
@@ -990,7 +990,7 @@ public class AppSettings {
                         }
                     }
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // TODO: handle exception
             }
         }
@@ -1086,31 +1086,31 @@ public class AppSettings {
     }
 
     protected final void postEvent(final int type, final Object o) {
-        BT747HashSet it = listeners.iterator();
+        final BT747HashSet it = listeners.iterator();
         while (it.hasNext()) {
-            ModelListener l = (ModelListener) it.next();
-            ModelEvent e = new ModelEvent(type, o);
+            final ModelListener l = (ModelListener) it.next();
+            final ModelEvent e = new ModelEvent(type, o);
             try {
                 l.modelEvent(e);
-            } catch (Exception evt) {
+            } catch (final Exception evt) {
                 Generic.debug("Listener " + l.getClass(), evt);
             }
         }
     }
 
     protected final void postEvent(final int type) {
-        BT747HashSet it = listeners.iterator();
+        final BT747HashSet it = listeners.iterator();
         while (it.hasNext()) {
-            ModelListener l = (ModelListener) it.next();
-            ModelEvent e = new ModelEvent(type, l);
+            final ModelListener l = (ModelListener) it.next();
+            final ModelEvent e = new ModelEvent(type, l);
             l.modelEvent(e);
         }
     }
 
     protected final void postEvent(final ModelEvent e) {
-        BT747HashSet it = listeners.iterator();
+        final BT747HashSet it = listeners.iterator();
         while (it.hasNext()) {
-            ModelListener l = (ModelListener) it.next();
+            final ModelListener l = (ModelListener) it.next();
             l.modelEvent(new ModelEvent(e));
         }
     }

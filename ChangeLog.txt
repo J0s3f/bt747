@@ -1,6 +1,7 @@
 Version 1.67.2
 * Added Spanish
 * Showing track segments on internal map + using color set by the user.
+* Added tab icons.
 
 Version 1.67.1
 * Fixed problem in CSV (when CSV did not have line ending).
