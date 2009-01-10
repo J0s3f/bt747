@@ -21,7 +21,6 @@ import gps.log.GPSRecord;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Stroke;
@@ -29,12 +28,9 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
-import java.util.Set;
 
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
-import org.jdesktop.swingx.mapviewer.TileFactory;
-import org.jdesktop.swingx.mapviewer.Waypoint;
 
 /**
  * @author Mario
@@ -42,7 +38,7 @@ import org.jdesktop.swingx.mapviewer.Waypoint;
  */
 public class BT747TrackRenderer implements TrackRenderer {
 
-    private final static GeneralPath gp = new GeneralPath();
+    //private final static GeneralPath gp = new GeneralPath();
     private final static BT747TrackRenderer instance = new BT747TrackRenderer();
 
     public static BT747TrackRenderer getInstance() {
@@ -53,7 +49,7 @@ public class BT747TrackRenderer implements TrackRenderer {
         // super(); // Gets image
     }
 
-    private Color color = new Color(0, 0, 255, 125);
+    private Color color = Color.BLUE;
 
     /*
      * (non-Javadoc)
@@ -61,11 +57,11 @@ public class BT747TrackRenderer implements TrackRenderer {
      * @see net.sf.bt747.j2se.map.TrackRenderer#paintWaypoint(java.awt.Graphics2D,
      *      org.jdesktop.swingx.JXMapViewer, java.util.Set)
      */
-    public boolean paintTrack(Graphics2D g, JXMapViewer map,
-            Collection<GPSRecord> track) {
+    public boolean paintTrack(final Graphics2D g, final JXMapViewer map,
+            final Collection<GPSRecord> track) {
         if (track.size() > 0) {
-            Rectangle viewportBounds = map.getViewportBounds();
-            int zoom = map.getZoom();
+            final Rectangle viewportBounds = map.getViewportBounds();
+            //final int zoom = map.getZoom();
             // Dimension sizeInTiles = map.getTileFactory().getMapSize(zoom);
             // int tileSize = map.getTileFactory().getTileSize(zoom);
             // Dimension sizeInPixels = new Dimension(sizeInTiles.width
@@ -73,7 +69,7 @@ public class BT747TrackRenderer implements TrackRenderer {
 
             // Looking at one viewport only.
 
-            double vpx = viewportBounds.getX();
+            final double vpx = viewportBounds.getX();
             // // normalize the left edge of the viewport to be positive
             // while (vpx < 0) {
             // vpx += sizeInPixels.getWidth();
@@ -86,16 +82,16 @@ public class BT747TrackRenderer implements TrackRenderer {
             // }
 
             // create two new viewports next to eachother
-            Rectangle2D vp2 = new Rectangle2D.Double(vpx, viewportBounds
-                    .getY(), viewportBounds.getWidth(), viewportBounds
-                    .getHeight());
+            final Rectangle2D vp2 = new Rectangle2D.Double(vpx,
+                    viewportBounds.getY(), viewportBounds.getWidth(),
+                    viewportBounds.getHeight());
             // Rectangle2D vp3 = new Rectangle2D.Double(vpx
             // - sizeInPixels.getWidth(), viewportBounds.getY(),
             // viewportBounds.getWidth(), viewportBounds.getHeight());
 
-            Stroke org = g.getStroke();
+            final Stroke org = g.getStroke();
             g.setStroke(new BasicStroke(1.5f));
-            g.setPaint(Color.BLUE);
+            g.setPaint(color);
             GeneralPath gp = new GeneralPath(GeneralPath.WIND_NON_ZERO, track
                     .size());
             Point2D prev = null;
@@ -105,11 +101,10 @@ public class BT747TrackRenderer implements TrackRenderer {
             boolean previousShown = false;
             double vpX = 0.0d;
             double vpY = 0.0d;
-            for (GPSRecord tp : track) {
-                Point2D point = map.getTileFactory().geoToPixel(
+            for (final GPSRecord tp : track) {
+                final Point2D point = map.getTileFactory().geoToPixel(
                         new GeoPosition(tp.latitude, tp.longitude),
                         map.getZoom());
-                int Vp;
                 boolean show = true;
                 // This has to be refactored.
                 // if (vp3.contains(point)) {
@@ -135,7 +130,7 @@ public class BT747TrackRenderer implements TrackRenderer {
                 // previousShown = false;
                 // }
 
-                if (prev != null && !previousShown && show) {
+                if ((prev != null) && !previousShown && show) {
                     // There was a previous point that was not shown.
                     // Draw it to get a line from outside the viewport
                     x = (float) (prev.getX() - vpX);
@@ -179,5 +174,12 @@ public class BT747TrackRenderer implements TrackRenderer {
             g.setStroke(org);
         }
         return false;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

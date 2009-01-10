@@ -235,6 +235,8 @@ public class AppSettings {
     public final static int GPXUTC0 = 40;
     public final static int DECODEGPS = 41;
     public final static int GPXTRKSEGBIG = 42;
+    public final static int COLOR_VALIDTRACK = 43;
+    public final static int COLOR_INVALIDTRACK = 44;
 
     private int TYPE_IDX = 0;
     private int PARAM_IDX = 1;
@@ -328,7 +330,7 @@ public class AppSettings {
             setBooleanOpt(DECODEGPS, true);
             /* fall through */
         case 11:
-            setColorInvalidTrack("0000FF");
+            setStringOpt(COLOR_INVALIDTRACK, "0000FF");
             /* fall through */
         case 12:
             setBooleanOpt(IS_TRAVERSABLE, defaultTraversable);
@@ -373,7 +375,7 @@ public class AppSettings {
              * version
              */
         case 24:
-            setColorValidTrack("0000FF");
+            setStringOpt(COLOR_VALIDTRACK, "0000FF");
             /* fall through */
 
         case 25:
@@ -910,25 +912,6 @@ public class AppSettings {
         setFloatOpt(0, minSpeed, C_minSpeed_IDX, C_minSpeed_SIZE);
     }
 
-    public final String getColorInvalidTrack() {
-        return getStringOpt(C_COLOR_INVALIDTRACK_IDX,
-                C_COLOR_INVALIDTRACK_SIZE);
-    }
-
-    protected final void setColorInvalidTrack(final String colorInvalidTrack) {
-        setStringOpt(0, colorInvalidTrack, C_COLOR_INVALIDTRACK_IDX,
-                C_COLOR_INVALIDTRACK_SIZE);
-    }
-
-    public final String getColorValidTrack() {
-        return getStringOpt(C_COLOR_VALIDTRACK_IDX, C_COLOR_VALIDTRACK_SIZE);
-    }
-
-    protected final void setColorValidTrack(final String colorValidTrack) {
-        setStringOpt(0, colorValidTrack, C_COLOR_VALIDTRACK_IDX,
-                C_COLOR_VALIDTRACK_SIZE);
-    }
-
     /**
      * @return Returns the solveMacLagProblem.
      */
@@ -1395,5 +1378,11 @@ public class AppSettings {
             { BOOL, ADVFILTACTIVE, C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE },
             { BOOL, GPXUTC0, C_GPXUTC0_IDX, C_GPXUTC0_SIZE },
             { BOOL, DECODEGPS, C_DECODEGPS_IDX, C_DECODEGPS_SIZE },
-            { BOOL, GPXTRKSEGBIG, C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE }, };
+            { BOOL, GPXTRKSEGBIG, C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE },
+            { STRING, COLOR_VALIDTRACK, C_COLOR_VALIDTRACK_IDX,
+                    C_COLOR_VALIDTRACK_SIZE },
+            { STRING, COLOR_INVALIDTRACK, C_COLOR_INVALIDTRACK_IDX,
+                    C_COLOR_INVALIDTRACK_SIZE },
+    // End of list
+    };
 }

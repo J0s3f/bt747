@@ -11,9 +11,10 @@
 
 package bt747.j2se_view;
 
+import gps.convert.Conv;
 import gps.log.GPSRecord;
 
-import java.awt.Component;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -55,7 +56,7 @@ import org.jdesktop.swingx.painter.CompoundPainter;
 
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.PositionData;
-import bt747.model.Model;
+import bt747.model.AppSettings;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Generic;
@@ -70,6 +71,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
     private JXMapViewer mapViewer;
     private MyWaypointPainter<JXMapViewer> waypointPainter;
     private DefaultTileFactory tf = null;
+    private BT747TrackRenderer trackRenderer;
 
     /** Creates new form MapReference */
     public MyMap() {
@@ -79,7 +81,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
     private J2SEAppController c;
     private J2SEAppModel m;
 
-    public void init(J2SEAppController pC) {
+    public void init(final J2SEAppController pC) {
         c = pC;
         m = c.getAppModel();
         m.addListener(this);
@@ -103,10 +105,12 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         // map.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         mapViewer = map.getMainMap();
         waypointPainter = new MyWaypointPainter<JXMapViewer>();
+        trackRenderer = BT747TrackRenderer.getInstance();
+        waypointPainter.setTrackRenderer(trackRenderer);
         waypointPainter.setRenderer(MapRendererFactoryMethod.getInstance());
         mapViewer.setRecenterOnClickEnabled(true);
         mapViewer.getOverlayPainter();
-        CompoundPainter<Object> cp = new CompoundPainter<Object>();
+        final CompoundPainter<Object> cp = new CompoundPainter<Object>();
         cp.setPainters(mapViewer.getOverlayPainter(), waypointPainter);
         mapViewer.setOverlayPainter(cp);
 
@@ -134,7 +138,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                 m.getPositionData().addFiles(files);
             }
         };
-        new FileDrop((Component) this, dl);
+        new FileDrop(this, dl);
     }
 
     private PropertyChangeListener wpChangeListener = new PropertyChangeListener() {
@@ -169,21 +173,26 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
      * 
      * @see bt747.model.ModelListener#modelEvent(bt747.model.ModelEvent)
      */
-    public void modelEvent(ModelEvent e) {
+    public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
         case ModelEvent.SETTING_CHANGE:
             try {
-                int arg = Integer.valueOf((String) e.getArg());
+                final int arg = Integer.valueOf((String) e.getArg());
                 switch (arg) {
-                case Model.MAPCACHEDIRECTORY:
+                case AppSettings.MAPCACHEDIRECTORY:
                     setMapTileCacheDirectory(m
-                            .getStringOpt(Model.MAPCACHEDIRECTORY));
+                            .getStringOpt(AppSettings.MAPCACHEDIRECTORY));
                     break;
-                case Model.MAPTYPE:
+                case AppSettings.MAPTYPE:
                     updateMap();
                     break;
+                case AppSettings.COLOR_VALIDTRACK:
+                    final Color validColor = new Color(Conv.hex2Int(m
+                            .getStringOpt(AppSettings.COLOR_VALIDTRACK)));
+                    trackRenderer.setColor(validColor);
+                    break;
                 }
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 Generic.debug("MyMap modelevent", ex);
                 // TODO: handle exception
             }
@@ -204,22 +213,23 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
     }
 
     private void updateMap() {
-        setMap(m.getIntOpt(Model.MAPTYPE));
+        setMap(m.getIntOpt(AppSettings.MAPTYPE));
     }
 
     public void setMapTileCacheDirectory() {
         if (m != null) {
-            setMapTileCacheDirectory(m.getStringOpt(Model.MAPCACHEDIRECTORY));
+            setMapTileCacheDirectory(m
+                    .getStringOpt(AppSettings.MAPCACHEDIRECTORY));
         }
     }
 
     public void setMapTileCacheDirectory(final String path) {
         File f;
         f = new File(path);
-        if (f.exists() && f.isDirectory() && tf != null) {
+        if (f.exists() && f.isDirectory() && (tf != null)) {
             try {
                 tf.getTileCache().setDiskCacheDir(f);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("Map tile directory setting", e);
                 // TODO: handle exception
             }
@@ -237,11 +247,11 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         double maxlat = -180f;
         double maxlon = -90f;
         boolean hasPositions = false;
-        PositionData pd = m.getPositionData();
+        final PositionData pd = m.getPositionData();
 
         if (pd.getTracks().size() != 0) {
-            for (List<GPSRecord> trk : pd.getTracks()) {
-                for (GPSRecord r : trk) {
+            for (final List<GPSRecord> trk : pd.getTracks()) {
+                for (final GPSRecord r : trk) {
                     if (r.latitude < minlat) {
                         minlat = r.latitude;
                     }
@@ -259,8 +269,8 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             }
         }
 
-        for (BT747Waypoint w : m.getPositionData().getBT747Waypoints()) {
-            GPSRecord r = w.getGpsRecord();
+        for (final BT747Waypoint w : m.getPositionData().getBT747Waypoints()) {
+            final GPSRecord r = w.getGpsRecord();
             if (r.hasLatitude() && r.hasLongitude()) {
                 if (r.latitude < minlat) {
                     minlat = r.latitude;
@@ -278,8 +288,9 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             }
         }
 
-        for (BT747Waypoint w : m.getPositionData().getBT747UserWaypoints()) {
-            GPSRecord r = w.getGpsRecord();
+        for (final BT747Waypoint w : m.getPositionData()
+                .getBT747UserWaypoints()) {
+            final GPSRecord r = w.getGpsRecord();
             if (r.hasLatitude() && r.hasLongitude()) {
                 if (r.latitude < minlat) {
                     minlat = r.latitude;
@@ -298,7 +309,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
 
         if (hasPositions) {
-            Set<GeoPosition> bounds = new HashSet<GeoPosition>();
+            final Set<GeoPosition> bounds = new HashSet<GeoPosition>();
             bounds.add(new GeoPosition(minlat, minlon));
             bounds.add(new GeoPosition(maxlat, maxlon));
             mapViewer.calculateZoomFrom(bounds);
@@ -310,10 +321,10 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         OpenStreetMap, OsmaRender, Cycle, Map4
     };
 
-    private void setMap(int maptypeOrdinal) {
+    private void setMap(final int maptypeOrdinal) {
         try {
             setMap(MapType.values()[maptypeOrdinal]);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             setMap(MapType.values()[0]);
         }
     }
@@ -327,7 +338,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         private String des;
         private String url;
 
-        public MyLinkAction(String description, String b) {
+        public MyLinkAction(final String description, final String b) {
             des = description;
             url = b;
         }
@@ -341,7 +352,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * 
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(final ActionEvent e) {
             BrowserControl.displayURL(url);
         }
     };
@@ -349,7 +360,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
     /**
      * 
      */
-    private void setMap(MapType maptype) {
+    private void setMap(final MapType maptype) {
         TileFactoryInfo info = null;
 
         switch (maptype) {
@@ -367,20 +378,25 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             info = MapFactoryInfos.tfiOpenStreetMap;
         }
         final Rectangle r = map.getMainMap().getViewportBounds();
-        Set<GeoPosition> bounds = new HashSet<GeoPosition>();
-        final TileFactory currentFactory =map.getMainMap().getTileFactory();
-        int zoom = map.getMainMap().getZoom();
-        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX(),r.getY()),zoom));
-        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX(),r.getY()+r.getHeight()),zoom));
-        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX()+r.getWidth(),r.getY()),zoom));
-        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX()+r.getWidth(),r.getY()+r.getHeight()),zoom));
-        
+        final Set<GeoPosition> bounds = new HashSet<GeoPosition>();
+        final TileFactory currentFactory = map.getMainMap().getTileFactory();
+        final int zoom = map.getMainMap().getZoom();
+        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX(), r
+                .getY()), zoom));
+        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX(), r
+                .getY()
+                + r.getHeight()), zoom));
+        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX()
+                + r.getWidth(), r.getY()), zoom));
+        bounds.add(currentFactory.pixelToGeo(new Point2D.Double(r.getX()
+                + r.getWidth(), r.getY() + r.getHeight()), zoom));
+
         tf = new DefaultTileFactory(info);
         setMapTileCacheDirectory();
         map.setTileFactory(tf);
 
         if (MyTileFactoryInfo.class.isInstance(info)) {
-            MyTileFactoryInfo tfi = (MyTileFactoryInfo) info;
+            final MyTileFactoryInfo tfi = (MyTileFactoryInfo) info;
             map.getDataProviderLink().setAction(
                     new MyLinkAction(tfi.description, tfi.url));
             map.getDataProviderLink().setText(tfi.description);
@@ -400,8 +416,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             WaypointPainter<JXMapViewer> {
         private JXMapViewer map = mapViewer;
 
-        private BT747TrackRenderer trackRenderer = BT747TrackRenderer
-                .getInstance();
+        private BT747TrackRenderer trackRenderer;
 
         /*
          * (non-Javadoc)
@@ -410,9 +425,10 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          *      org.jdesktop.swingx.JXMapViewer, int, int)
          */
         @Override
-        protected void doPaint(Graphics2D g, JXMapViewer map, int width,
-                int height) {
-            for (List<GPSRecord> track : m.getPositionData().getTracks()) {
+        protected void doPaint(final Graphics2D g, final JXMapViewer map,
+                final int width, final int height) {
+            for (final List<GPSRecord> track : m.getPositionData()
+                    .getTracks()) {
                 trackRenderer.paintTrack(g, map, track);
             }
 
@@ -426,7 +442,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * @see org.jdesktop.swingx.mapviewer.WaypointPainter#setWaypoints(java.lang.Iterable)
          */
         @Override
-        public void setWaypoints(Iterable<Waypoint> waypoints) {
+        public void setWaypoints(final Iterable<Waypoint> waypoints) {
             Generic.debug("Waypoints should not be set this way");
         }
 
@@ -434,15 +450,16 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             return getWaypointsIterable();
         }
 
-        public Waypoint getContains(Point pt) {
+        public Waypoint getContains(final Point pt) {
 
             // figure out which waypoints are within this map viewport
             // so, get the bounds
-            Rectangle viewportBounds = map.getViewportBounds();
-            int zoom = map.getZoom();
-            Dimension sizeInTiles = map.getTileFactory().getMapSize(zoom);
-            int tileSize = map.getTileFactory().getTileSize(zoom);
-            Dimension sizeInPixels = new Dimension(sizeInTiles.width
+            final Rectangle viewportBounds = map.getViewportBounds();
+            final int zoom = map.getZoom();
+            final Dimension sizeInTiles = map.getTileFactory().getMapSize(
+                    zoom);
+            final int tileSize = map.getTileFactory().getTileSize(zoom);
+            final Dimension sizeInPixels = new Dimension(sizeInTiles.width
                     * tileSize, sizeInTiles.height * tileSize);
 
             double vpx = viewportBounds.getX();
@@ -457,21 +474,22 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             }
 
             // create two new viewports next to eachother
-            Rectangle2D vp2 = new Rectangle2D.Double(vpx, viewportBounds
-                    .getY(), viewportBounds.getWidth(), viewportBounds
-                    .getHeight());
-            Rectangle2D vp3 = new Rectangle2D.Double(vpx
+            final Rectangle2D vp2 = new Rectangle2D.Double(vpx,
+                    viewportBounds.getY(), viewportBounds.getWidth(),
+                    viewportBounds.getHeight());
+            final Rectangle2D vp3 = new Rectangle2D.Double(vpx
                     - sizeInPixels.getWidth(), viewportBounds.getY(),
                     viewportBounds.getWidth(), viewportBounds.getHeight());
 
-            MapRendererFactoryMethod factory = MapRendererFactoryMethod
+            final MapRendererFactoryMethod factory = MapRendererFactoryMethod
                     .getInstance();
 
             Waypoint w;
             w = findContainingWaypoint(m.getPositionData()
                     .getBT747UserWaypoints(), pt, vp2, vp3, factory);
-            if (w != null)
+            if (w != null) {
                 return w;
+            }
             w = findContainingWaypoint(m.getPositionData()
                     .getBT747Waypoints(), pt, vp2, vp3, factory);
             return w;
@@ -484,11 +502,12 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * @param factory
          * @return
          */
-        private Waypoint findContainingWaypoint(List<BT747Waypoint> list,
-                Point pt, Rectangle2D vp2, Rectangle2D vp3,
-                MapRendererFactoryMethod factory) {
-            for (Waypoint w : list) {
-                Point2D point = map.getTileFactory().geoToPixel(
+        private Waypoint findContainingWaypoint(
+                final List<BT747Waypoint> list, final Point pt,
+                final Rectangle2D vp2, final Rectangle2D vp3,
+                final MapRendererFactoryMethod factory) {
+            for (final Waypoint w : list) {
+                final Point2D point = map.getTileFactory().geoToPixel(
                         w.getPosition(), map.getZoom());
                 int x, y;
                 if (vp2.contains(point)) {
@@ -500,8 +519,8 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                 } else {
                     continue;
                 }
-                Point p = new Point((int) (pt.getX() - x),
-                        (int) (pt.getY() - y));
+                final Point p = new Point((int) (pt.getX() - x), (int) (pt
+                        .getY() - y));
                 if (factory.rendererContains(w, p)) {
                     return w;
                 }
@@ -513,7 +532,8 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * @param trackRenderer
          *                the trackRenderer to set
          */
-        public final void setTrackRenderer(BT747TrackRenderer trackRenderer) {
+        public final void setTrackRenderer(
+                final BT747TrackRenderer trackRenderer) {
             this.trackRenderer = trackRenderer;
         }
     }
@@ -598,12 +618,12 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * 
          * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
          */
-        public void mouseClicked(MouseEvent e) {
+        public void mouseClicked(final MouseEvent e) {
             switch (e.getButton()) {
             case MouseEvent.BUTTON3: {
-                Point pt = e.getPoint();
+                final Point pt = e.getPoint();
 
-                BT747Waypoint w = (BT747Waypoint) waypointPainter
+                final BT747Waypoint w = (BT747Waypoint) waypointPainter
                         .getContains(pt);
                 if (w != null) {
                     w.toggleShowTag();
@@ -620,7 +640,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * 
          * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
          */
-        public void mouseEntered(MouseEvent e) {
+        public void mouseEntered(final MouseEvent e) {
             // TODO Auto-generated method stub
 
         }
@@ -630,7 +650,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * 
          * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
          */
-        public void mouseExited(MouseEvent e) {
+        public void mouseExited(final MouseEvent e) {
             // TODO Auto-generated method stub
 
         }
@@ -654,7 +674,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         /**
          * 
          */
-        private void selectedWaypoint(BT747Waypoint w) {
+        private void selectedWaypoint(final BT747Waypoint w) {
             if (w != currentWaypoint) {
                 clearWaypointSelection();
             }
@@ -662,14 +682,14 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
         private long selectionTime = 0;
 
-        public void mousePressed(MouseEvent e) {
+        public void mousePressed(final MouseEvent e) {
             selectionTime = 0;
             switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                Point pt = e.getPoint();
+                final Point pt = e.getPoint();
 
                 try {
-                    BT747Waypoint w = (BT747Waypoint) waypointPainter
+                    final BT747Waypoint w = (BT747Waypoint) waypointPainter
                             .getContains(pt);
 
                     if (w == null) {
@@ -682,14 +702,14 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                         currentWaypoint = w;
                         w.setSelected(true);
                         previous = pt;
-                        Point2D p = mapViewer.convertGeoPositionToPoint(w
-                                .getPosition());
+                        final Point2D p = mapViewer
+                                .convertGeoPositionToPoint(w.getPosition());
                         xOffset = (int) (pt.getX() - p.getX());
                         yOffset = (int) (pt.getY() - p.getY());
                         mapViewer.setPanEnabled(false);
                         repaint();
                     }
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     Generic.debug("Mouse pressed", ex);
                     // TODO: handle exception
                 }
@@ -706,7 +726,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * 
          * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
          */
-        public void mouseReleased(MouseEvent e) {
+        public void mouseReleased(final MouseEvent e) {
             switch (e.getButton()) {
             case MouseEvent.BUTTON1:
                 if (currentWaypoint != null) {
@@ -724,16 +744,16 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * 
          * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
          */
-        public void mouseDragged(MouseEvent e) {
-            if (selectionTime != 0
+        public void mouseDragged(final MouseEvent e) {
+            if ((selectionTime != 0)
                     && (System.currentTimeMillis() - selectionTime < MINIMUM_TIME_FOR_DRAG)) {
                 // Moving too fast - not moving waypoint.
                 mapViewer.setPanEnabled(true);
                 selectionTime = 0;
             }
-            if (selectionTime != 0 && currentWaypoint != null) {
+            if ((selectionTime != 0) && (currentWaypoint != null)) {
                 e.consume();
-                Point pt = e.getPoint();
+                final Point pt = e.getPoint();
                 currentWaypoint.setPosition(mapViewer
                         .convertPointToGeoPosition(new Point2D.Double(pt
                                 .getX()
@@ -748,7 +768,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * 
          * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
          */
-        public void mouseMoved(MouseEvent e) {
+        public void mouseMoved(final MouseEvent e) {
             // TODO Auto-generated method stub
 
         }
@@ -761,7 +781,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    private void initComponents() {// GEN-BEGIN:initComponents
+    private void initComponents() {//GEN-BEGIN:initComponents
 
         splitPane = new javax.swing.JSplitPane();
         map = new org.jdesktop.swingx.JXMapKit();
@@ -785,7 +805,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                 return strings.length;
             }
 
-            public Object getElementAt(int i) {
+            public Object getElementAt(final int i) {
                 return strings[i];
             }
         });
@@ -796,16 +816,16 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
         splitPane.setLeftComponent(wayPointScrollPane);
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
+        final org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
                 this);
-        this.setLayout(layout);
+        setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(
                 org.jdesktop.layout.GroupLayout.LEADING).add(
                 layout.createSequentialGroup().add(0, 0, 0).add(splitPane)));
         layout.setVerticalGroup(layout.createParallelGroup(
                 org.jdesktop.layout.GroupLayout.LEADING).add(
                 layout.createSequentialGroup().add(0, 0, 0).add(splitPane)));
-    }// GEN-END:initComponents
+    }//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdesktop.swingx.JXMapKit map;

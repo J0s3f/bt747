@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.model;
 
 import gps.BT747Constants;
@@ -116,7 +116,7 @@ public class Controller {
 
     /**
      * @param model
-     *            The model to associate with this controller.
+     *                The model to associate with this controller.
      */
     public Controller(final Model model) {
         initValues();
@@ -142,7 +142,7 @@ public class Controller {
      * Called when the Controller starts. Used for initialization.
      */
     public void init() {
-        m.setBooleanOpt(AppSettings.DECODEGPS, m.getBooleanOpt(AppSettings.DECODEGPS));
+        m.gpsModel().setGpsDecode(m.getBooleanOpt(AppSettings.DECODEGPS));
         m.gpsModel().setDownloadTimeOut(m.getDownloadTimeOut());
         m.gpsModel().setLogRequestAhead(m.getLogRequestAhead());
 
@@ -161,16 +161,16 @@ public class Controller {
      * the BaseDirPath.
      * 
      * @param s
-     *            The relative log file path (including basename)
+     *                The relative log file path (including basename)
      */
     public final void setOutputFileRelPath(final String s) {
-        m.setStringOpt(Model.REPORTFILEBASE, s);
+        setStringOpt(Model.REPORTFILEBASE, s);
     }
 
     /**
      * @param chunkSize
-     *            The amount of data that is requested from the device in a
-     *            single command when downloading the data.
+     *                The amount of data that is requested from the device in
+     *                a single command when downloading the data.
      */
 
     public final void setChunkSize(final int chunkSize) {
@@ -179,9 +179,10 @@ public class Controller {
 
     /**
      * @param timeout
-     *            The timeout in ms after which the lack of reply from the
-     *            device will be considered as a communication failure.
-     *            Depending on the operation, a recovery will be attempted.
+     *                The timeout in ms after which the lack of reply from the
+     *                device will be considered as a communication failure.
+     *                Depending on the operation, a recovery will be
+     *                attempted.
      */
     public final void setDownloadTimeOut(final int timeout) {
         m.setDownloadTimeOut(timeout);
@@ -190,11 +191,11 @@ public class Controller {
 
     /**
      * @param card
-     *            The card number that the filepaths refer to. This is usefull
-     *            on PDA's only and probably only on a Palm. This is used by the
-     *            'SuperWaba' environment if used. '-1' refers to the 'last card
-     *            in the system' which is normally the card that can be inserted
-     *            by the PDA user.
+     *                The card number that the filepaths refer to. This is
+     *                usefull on PDA's only and probably only on a Palm. This
+     *                is used by the 'SuperWaba' environment if used. '-1'
+     *                refers to the 'last card in the system' which is
+     *                normally the card that can be inserted by the PDA user.
      */
     public final void setCard(final int card) {
         m.setCard(card);
@@ -202,10 +203,10 @@ public class Controller {
 
     /**
      * @param numberOfRequestsAhead
-     *            Especially when downloading using Bluetooth, downloading is
-     *            slow when no request pipeline is implemented. This number
-     *            defines how many 'chunk download' request will be sent to
-     *            device while the first reply is still pending.
+     *                Especially when downloading using Bluetooth, downloading
+     *                is slow when no request pipeline is implemented. This
+     *                number defines how many 'chunk download' request will be
+     *                sent to device while the first reply is still pending.
      */
     public final void setLogRequestAhead(final int numberOfRequestsAhead) {
         m.setLogRequestAhead(numberOfRequestsAhead);
@@ -259,7 +260,8 @@ public class Controller {
             break;
         case Model.GPX_LOGTYPE:
             gpsFile = new GPSGPXFile();
-            ((GPSGPXFile) gpsFile).setTrkSegSplitOnlyWhenSmall(m.getBooleanOpt(AppSettings.GPXTRKSEGBIG));
+            ((GPSGPXFile) gpsFile).setTrkSegSplitOnlyWhenSmall(m
+                    .getBooleanOpt(AppSettings.GPXTRKSEGBIG));
             break;
         case Model.NMEA_LOGTYPE:
             gpsFile = new GPSNMEAFile();
@@ -267,7 +269,8 @@ public class Controller {
             break;
         case Model.GMAP_LOGTYPE:
             gpsFile = new GPSGmapsHTMLEncodedFile();
-            ((GPSGmapsHTMLEncodedFile) gpsFile).setGoogleKeyCode(m.getStringOpt(AppSettings.GOOGLEMAPKEY));
+            ((GPSGmapsHTMLEncodedFile) gpsFile).setGoogleKeyCode(m
+                    .getStringOpt(AppSettings.GOOGLEMAPKEY));
             break;
         case Model.ARRAY_LOGTYPE:
             gpsFile = new GPSArray();
@@ -278,24 +281,28 @@ public class Controller {
         }
         return gpsFile;
     }
-    
+
     private void configureGpsFile(GPSFile gpsFile) {
         if (gpsFile != null) {
-            if (!((gpsFile.getClass() == GPSGPXFile.class) && m.getBooleanOpt(AppSettings.GPXUTC0))) {
-                gpsFile
-                        .setTimeOffset(m.getIntOpt(Model.GPSTIMEOFFSETHOURS)
-                                * SECONDS_PER_HOUR);
+            if (!((gpsFile.getClass() == GPSGPXFile.class) && m
+                    .getBooleanOpt(AppSettings.GPXUTC0))) {
+                gpsFile.setTimeOffset(m.getIntOpt(Model.GPSTIMEOFFSETHOURS)
+                        * SECONDS_PER_HOUR);
             }
-            gpsFile.setWayPointTimeCorrection(-m.getIntOpt(Model.FILETIMEOFFSET));
+            gpsFile.setWayPointTimeCorrection(-m
+                    .getIntOpt(Model.FILETIMEOFFSET));
             gpsFile.setMaxDiff(m.getIntOpt(Model.TAG_MAXTIMEDIFFERENCE));
-            gpsFile.setOverridePreviousTag(m.getBooleanOpt(Model.TAG_OVERRIDEPOSITIONS));
+            gpsFile.setOverridePreviousTag(m
+                    .getBooleanOpt(Model.TAG_OVERRIDEPOSITIONS));
             gpsFile.setAddLogConditionInfo(m
                     .getBooleanOpt(Model.OUTPUTLOGCONDITIONS));
             gpsFile.setImperial(m.getBooleanOpt(Model.IMPERIAL));
             gpsFile.setRecordNbrInLogs(m
                     .getBooleanOpt(Model.IS_RECORDNBR_IN_LOGS));
-            gpsFile.setBadTrackColor(m.getColorInvalidTrack());
-            gpsFile.setGoodTrackColor(m.getColorValidTrack());
+            gpsFile.setBadTrackColor(m
+                    .getStringOpt(AppSettings.COLOR_INVALIDTRACK));
+            gpsFile.setGoodTrackColor(m
+                    .getStringOpt(AppSettings.COLOR_VALIDTRACK));
             gpsFile.setIncludeTrkComment(m
                     .getBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT));
             gpsFile.setIncludeTrkName(m
@@ -345,8 +352,8 @@ public class Controller {
      *         returned and related text in {@link #getLastErrorInfo()}
      * 
      * @param logType
-     *            Indicates the type of log that should be written. For example
-     *            Model.CSV_LOGTYPE .
+     *                Indicates the type of log that should be written. For
+     *                example Model.CSV_LOGTYPE .
      * @see Model#CSV_LOGTYPE
      * @see Model#TRK_LOGTYPE
      * @see Model#KML_LOGTYPE
@@ -394,10 +401,10 @@ public class Controller {
             sourceHeightReference = heightReferenceList[Model.SR_LOGTYPE];
         } else {
             lc = new BT747LogConvert();
-            ((BT747LogConvert) lc)
-                    .setHolux(m.getBooleanOpt(Model.FORCE_HOLUXM241));
-            parameters += "Force Holux:" + m.getBooleanOpt(Model.FORCE_HOLUXM241)
-                    + "\n";
+            ((BT747LogConvert) lc).setHolux(m
+                    .getBooleanOpt(Model.FORCE_HOLUXM241));
+            parameters += "Force Holux:"
+                    + m.getBooleanOpt(Model.FORCE_HOLUXM241) + "\n";
             sourceHeightReference = heightReferenceList[Model.BIN_LOGTYPE];
         }
         destinationHeightReference = getHeightReference(logType);
@@ -439,11 +446,12 @@ public class Controller {
         String parameters = "";
 
         parameters += "From:"
-                + gps.log.out.CommonOut.getDateTimeStr(m.getFilterStartTime())
-                + "(" + m.getFilterStartTime() + ")\n";
+                + gps.log.out.CommonOut
+                        .getDateTimeStr(m.getFilterStartTime()) + "("
+                + m.getFilterStartTime() + ")\n";
         parameters += "To:"
-                + gps.log.out.CommonOut.getDateTimeStr(m.getFilterEndTime()) + "("
-                + m.getFilterEndTime() + ")\n";
+                + gps.log.out.CommonOut.getDateTimeStr(m.getFilterEndTime())
+                + "(" + m.getFilterEndTime() + ")\n";
 
         if (m.getBooleanOpt(AppSettings.ADVFILTACTIVE)) {
             usedFilters = m.getLogFiltersAdv();
@@ -500,8 +508,8 @@ public class Controller {
             if (Generic.isDebug()) {
                 Generic.debug(parameters);
             }
-            gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m.getCard(),
-                    m.getOutputFileSplitType());
+            gpsFile.initialiseFile(m.getReportFileBasePath(), ext, m
+                    .getCard(), m.getOutputFileSplitType());
             m.logConversionStarted(logType);
             try {
                 lastError = lc.toGPSFile(m.getStringOpt(Model.LOGFILEPATH),
@@ -531,7 +539,6 @@ public class Controller {
         return doConvertLogToTracksAndWayPoints().getTrackPoints();
     }
 
-    
     public final TracksAndWayPoints doConvertLogToTracksAndWayPoints() {
         int error = 0;
         gps.log.TracksAndWayPoints result;
@@ -549,8 +556,8 @@ public class Controller {
         // gpsFile.setTrackSepTime(m.getTrkSep() * 60);
         currentGPSLogConvert = lc;
         try {
-            error = lc.toGPSFile(m.getStringOpt(Model.LOGFILEPATH), gpsFile, m
-                    .getCard());
+            error = lc.toGPSFile(m.getStringOpt(Model.LOGFILEPATH), gpsFile,
+                    m.getCard());
         } catch (Throwable e) {
             Generic.debug("During conversion", e);
         }
@@ -572,7 +579,7 @@ public class Controller {
      * 
      * @deprecated Use {@link #setDownloadMethod(int)} instead
      * @param incrementalDownload
-     *            true if the log download should be incremental.
+     *                true if the log download should be incremental.
      */
     public final void setIncremental(final boolean incrementalDownload) {
         m.setIncremental(incrementalDownload);
@@ -639,20 +646,20 @@ public class Controller {
 
     /**
      * The GpsModel is waiting for a reply to the question if the currently
-     * existing log with different data can be overwritten. This method must be
-     * called to replay to this question which is in principle the result of a
-     * user reply to a message box.
+     * existing log with different data can be overwritten. This method must
+     * be called to replay to this question which is in principle the result
+     * of a user reply to a message box.
      * 
      * @param isOkToOverwrite
-     *            If true, the existing log can be overwritten
+     *                If true, the existing log can be overwritten
      */
     public final void replyToOkToOverwrite(final boolean isOkToOverwrite) {
         m.gpsModel().replyToOkToOverwrite(isOkToOverwrite);
     }
 
     /**
-     * The log is being erased - the user request to abandon waiting for the end
-     * of this operation.
+     * The log is being erased - the user request to abandon waiting for the
+     * end of this operation.
      */
     public final void stopErase() {
         m.gpsModel().stopErase();
@@ -670,7 +677,7 @@ public class Controller {
      * Set logging status of device.
      * 
      * @param on
-     *            When true, logging will be turned on.
+     *                When true, logging will be turned on.
      */
     public final void setLoggingActive(final boolean on) {
         if (on) {
@@ -685,8 +692,8 @@ public class Controller {
      * Set log overwrite mode on the device.
      * 
      * @param isOverWriteLog
-     *            true - overwrite data in device when full false - stop logging
-     *            when device is full
+     *                true - overwrite data in device when full false - stop
+     *                logging when device is full
      */
     public final void setLogOverwrite(final boolean isOverWriteLog) {
         m.gpsModel().setLogOverwrite(isOverWriteLog);
@@ -710,7 +717,7 @@ public class Controller {
     public final void reqLogMemUsed() {
         m.gpsModel().checkAvailable(GPSstate.DATA_MEM_USED);
     }
-    
+
     public final void reqInitialLogMode() {
         m.gpsModel().checkAvailable(GPSstate.DATA_INITIAL_LOG);
     }
@@ -732,8 +739,8 @@ public class Controller {
     }
 
     /**
-     * Request a set of device information from the GPS device that can be after
-     * specific {@link GpsEvent} events.
+     * Request a set of device information from the GPS device that can be
+     * after specific {@link GpsEvent} events.
      */
     public final void reqDeviceInfo() {
         m.gpsModel().reqDeviceInfo();
@@ -741,9 +748,9 @@ public class Controller {
 
     /**
      * Request the status register from the device.<br>
-     * After the associated {@link gps.GpsEvent#UPDATE_LOG_LOG_STATUS} event one
-     * can retrieve the data using:<br> - {@link Model#isLoggingActive()} <br> -
-     * {@link GPSstate#loggerIsFull} (not currently public)<br> -
+     * After the associated {@link gps.GpsEvent#UPDATE_LOG_LOG_STATUS} event
+     * one can retrieve the data using:<br> - {@link Model#isLoggingActive()}
+     * <br> - {@link GPSstate#loggerIsFull} (not currently public)<br> -
      * {@link GPSstate#loggerNeedsInit} (not currently public)<br> -
      * {@link GPSstate#loggerIsDisabled} (not currently public)<br>
      */
@@ -753,8 +760,8 @@ public class Controller {
 
     /**
      * Request the current log format from the device.<br>
-     * After the associated {@link gps.GpsEvent#UPDATE_LOG_FORMAT} event one can
-     * retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
+     * After the associated {@link gps.GpsEvent#UPDATE_LOG_FORMAT} event one
+     * can retrieve the data using:<br> - {@link Model#getLogFormat()} <br>
      */
     public final void reqLogFormat() {
         m.gpsModel().checkAvailable(GPSstate.DATA_LOG_FORMAT);
@@ -764,33 +771,33 @@ public class Controller {
      * Sets a new log format on the device.<br>
      * 
      * @param newLogFormat
-     *            <br>
-     *            The bits in the newLogFormat can be defined using a bitwise OR
-     *            of expressions like<br>
-     *            (1<< IDX) <br>
-     *            where IDX is one of the following:<br> -
-     *            {@link BT747Constants#FMT_UTC_IDX} <br> -
-     *            {@link BT747Constants#FMT_VALID_IDX} <br> -
-     *            {@link BT747Constants#FMT_LATITUDE_IDX} <br> -
-     *            {@link BT747Constants#FMT_LONGITUDE_IDX} <br> -
-     *            {@link BT747Constants#FMT_HEIGHT_IDX} <br> -
-     *            {@link BT747Constants#FMT_SPEED_IDX} <br> -
-     *            {@link BT747Constants#FMT_HEADING_IDX} <br> -
-     *            {@link BT747Constants#FMT_DSTA_IDX} <br> -
-     *            {@link BT747Constants#FMT_DAGE_IDX} <br> -
-     *            {@link BT747Constants#FMT_PDOP_IDX} <br> -
-     *            {@link BT747Constants#FMT_HDOP_IDX} <br> -
-     *            {@link BT747Constants#FMT_VDOP_IDX} <br> -
-     *            {@link BT747Constants#FMT_NSAT_IDX} <br> -
-     *            {@link BT747Constants#FMT_SID_IDX} <br> -
-     *            {@link BT747Constants#FMT_ELEVATION_IDX} <br> -
-     *            {@link BT747Constants#FMT_AZIMUTH_IDX} <br> -
-     *            {@link BT747Constants#FMT_SNR_IDX} <br> -
-     *            {@link BT747Constants#FMT_RCR_IDX} <br> -
-     *            {@link BT747Constants#FMT_MILLISECOND_IDX} <br> -
-     *            {@link BT747Constants#FMT_DISTANCE_IDX} <br> -
-     *            {@link BT747Constants#FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX}
-     *            <br>
+     *                <br>
+     *                The bits in the newLogFormat can be defined using a
+     *                bitwise OR of expressions like<br>
+     *                (1<< IDX) <br>
+     *                where IDX is one of the following:<br> -
+     *                {@link BT747Constants#FMT_UTC_IDX} <br> -
+     *                {@link BT747Constants#FMT_VALID_IDX} <br> -
+     *                {@link BT747Constants#FMT_LATITUDE_IDX} <br> -
+     *                {@link BT747Constants#FMT_LONGITUDE_IDX} <br> -
+     *                {@link BT747Constants#FMT_HEIGHT_IDX} <br> -
+     *                {@link BT747Constants#FMT_SPEED_IDX} <br> -
+     *                {@link BT747Constants#FMT_HEADING_IDX} <br> -
+     *                {@link BT747Constants#FMT_DSTA_IDX} <br> -
+     *                {@link BT747Constants#FMT_DAGE_IDX} <br> -
+     *                {@link BT747Constants#FMT_PDOP_IDX} <br> -
+     *                {@link BT747Constants#FMT_HDOP_IDX} <br> -
+     *                {@link BT747Constants#FMT_VDOP_IDX} <br> -
+     *                {@link BT747Constants#FMT_NSAT_IDX} <br> -
+     *                {@link BT747Constants#FMT_SID_IDX} <br> -
+     *                {@link BT747Constants#FMT_ELEVATION_IDX} <br> -
+     *                {@link BT747Constants#FMT_AZIMUTH_IDX} <br> -
+     *                {@link BT747Constants#FMT_SNR_IDX} <br> -
+     *                {@link BT747Constants#FMT_RCR_IDX} <br> -
+     *                {@link BT747Constants#FMT_MILLISECOND_IDX} <br> -
+     *                {@link BT747Constants#FMT_DISTANCE_IDX} <br> -
+     *                {@link BT747Constants#FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX}
+     *                <br>
      */
     public final void setLogFormat(final int newLogFormat) {
         m.gpsModel().setLogFormat(newLogFormat);
@@ -813,9 +820,9 @@ public class Controller {
         m.gpsModel().recoveryEraseLog();
     }
 
-    /***************************************************************************
+    /*************************************************************************
      * SECTION FOR CONNECTION RELATED METHODS.
-     **************************************************************************/
+     ************************************************************************/
 
     /**
      * Connect to the GPS (open the serial connection).
@@ -852,9 +859,9 @@ public class Controller {
     }
 
     /**
-     * open a Bluetooth connection Calls getStatus to request initial parameters
-     * from the device. Set up the timer to regurarly poll the connection for
-     * data.
+     * open a Bluetooth connection Calls getStatus to request initial
+     * parameters from the device. Set up the timer to regurarly poll the
+     * connection for data.
      */
     public final void setBluetooth() {
         closeGPS();
@@ -863,8 +870,9 @@ public class Controller {
     }
 
     /**
-     * open a Usb connection Calls getStatus to request initial parameters from
-     * the device. Set up the timer to regurarly poll the connection for data.
+     * open a Usb connection Calls getStatus to request initial parameters
+     * from the device. Set up the timer to regurarly poll the connection for
+     * data.
      */
     public final void setUsb() {
         closeGPS();
@@ -878,7 +886,7 @@ public class Controller {
      * the connection for data.
      * 
      * @param port
-     *            Port number to open
+     *                Port number to open
      */
     public final void setPort(final int port) {
         closeGPS();
@@ -890,7 +898,7 @@ public class Controller {
      * Sets the port's speed (baud rate).
      * 
      * @param baudRate
-     *            The baud rate to set.
+     *                The baud rate to set.
      */
     public final void setBaudRate(final int baudRate) {
         m.gpsRxTx().setBaudRate(baudRate);
@@ -900,7 +908,7 @@ public class Controller {
      * Select a port by its 'path' (/dev/usb9 for example or /dev/com1.
      * 
      * @param portName
-     *            The path to the port.
+     *                The path to the port.
      */
     public final void openFreeTextPort(final String portName) {
         closeGPS();
@@ -910,9 +918,10 @@ public class Controller {
 
     /**
      * This does a number of operations once the GPS is effectively connected.
-     * Can be extended by the application. It gets certain informations required
-     * by the application. It stores the settings related to the port (since the
-     * connection was successful) and starts of the Model to do port queries.
+     * Can be extended by the application. It gets certain informations
+     * required by the application. It stores the settings related to the port
+     * (since the connection was successful) and starts of the Model to do
+     * port queries.
      */
     protected void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
@@ -927,9 +936,9 @@ public class Controller {
             // TODO: Setup timer in gpsRxTx instead of in the gpsModel
             gpsModel.initConnection();
             // Remember defaults
-            m.setIntOpt(Model.PORTNBR, m.gpsRxTx().getPort());
-            m.setIntOpt(Model.BAUDRATE, m.gpsRxTx().getSpeed());
-            m.setStringOpt(Model.FREETEXTPORT, m.gpsRxTx().getFreeTextPort());
+            setIntOpt(Model.PORTNBR, m.gpsRxTx().getPort());
+            setIntOpt(Model.BAUDRATE, m.gpsRxTx().getSpeed());
+            setStringOpt(Model.FREETEXTPORT, m.gpsRxTx().getFreeTextPort());
             m.postEvent(ModelEvent.CONNECTED);
         }
     }
@@ -938,16 +947,16 @@ public class Controller {
      * Set the debugging state of the connection.
      * 
      * @param isConnDebugActive
-     *            When true, the connection debug information is active.
+     *                When true, the connection debug information is active.
      */
     public final void setDebugConn(final boolean isConnDebugActive) {
         m.gpsRxTx().setDebugConn(isConnDebugActive,
                 m.getStringOpt(Model.OUTPUTDIRPATH));
     }
 
-    /***************************************************************************
+    /*************************************************************************
      * END OF SECTION FOR CONNECTION RELATED METHODS
-     **************************************************************************/
+     ************************************************************************/
 
     /**
      * Save all the user settings to disk.
@@ -960,7 +969,7 @@ public class Controller {
      * Set the general debugging state.
      * 
      * @param isDebugActive
-     *            If true, activate general debug.
+     *                If true, activate general debug.
      * 
      * @see #setDebugConn(boolean) for other debug functionality.
      */
@@ -993,23 +1002,23 @@ public class Controller {
      * Sets the trackpoint RCR mask for the active filter.
      * 
      * @param rcrMask -
-     *            {@link BT747Constants#RCR_TIME_MASK}<br> -
-     *            {@link BT747Constants#RCR_SPEED_MASK}<br> -
-     *            {@link BT747Constants#RCR_DISTANCE_MASK}<br> -
-     *            {@link BT747Constants#RCR_BUTTON_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP0_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP1_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP2_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP3_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP4_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP5_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP6_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP7_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP8_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP9_MASK}<br> -
-     *            {@link BT747Constants#RCR_APPY_MASK}<br> -
-     *            {@link BT747Constants#RCR_APPZ_MASK}<br> -
-     *            {@link BT747Constants#RCR_ALL_APP_MASK}
+     *                {@link BT747Constants#RCR_TIME_MASK}<br> -
+     *                {@link BT747Constants#RCR_SPEED_MASK}<br> -
+     *                {@link BT747Constants#RCR_DISTANCE_MASK}<br> -
+     *                {@link BT747Constants#RCR_BUTTON_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP0_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP1_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP2_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP3_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP4_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP5_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP6_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP7_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP8_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP9_MASK}<br> -
+     *                {@link BT747Constants#RCR_APPY_MASK}<br> -
+     *                {@link BT747Constants#RCR_APPZ_MASK}<br> -
+     *                {@link BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void setTrkPtRCR(final int rcrMask) {
         m.setTrkPtRCR(rcrMask);
@@ -1019,23 +1028,23 @@ public class Controller {
      * Sets the waypoint RCR mask for the active filter.
      * 
      * @param rcrMask -
-     *            {@link BT747Constants#RCR_TIME_MASK}<br> -
-     *            {@link BT747Constants#RCR_SPEED_MASK}<br> -
-     *            {@link BT747Constants#RCR_DISTANCE_MASK}<br> -
-     *            {@link BT747Constants#RCR_BUTTON_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP0_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP1_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP2_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP3_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP4_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP5_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP6_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP7_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP8_MASK}<br> -
-     *            {@link BT747Constants#RCR_APP9_MASK}<br> -
-     *            {@link BT747Constants#RCR_APPY_MASK}<br> -
-     *            {@link BT747Constants#RCR_APPZ_MASK}<br> -
-     *            {@link BT747Constants#RCR_ALL_APP_MASK}
+     *                {@link BT747Constants#RCR_TIME_MASK}<br> -
+     *                {@link BT747Constants#RCR_SPEED_MASK}<br> -
+     *                {@link BT747Constants#RCR_DISTANCE_MASK}<br> -
+     *                {@link BT747Constants#RCR_BUTTON_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP0_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP1_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP2_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP3_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP4_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP5_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP6_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP7_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP8_MASK}<br> -
+     *                {@link BT747Constants#RCR_APP9_MASK}<br> -
+     *                {@link BT747Constants#RCR_APPY_MASK}<br> -
+     *                {@link BT747Constants#RCR_APPZ_MASK}<br> -
+     *                {@link BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void setWayPtRCR(final int rcrMask) {
         m.setWayPtRCR(rcrMask);
@@ -1045,17 +1054,17 @@ public class Controller {
      * Sets the 'Valid' filter mask for the current track filter.
      * 
      * @param validMask
-     *            The filter mask to set for the validity filter. Use the
-     *            following constants:<br> -
-     *            {@link BT747Constants#VALID_NO_FIX_MASK} <br> -
-     *            {@link BT747Constants#VALID_SPS_MASK} <br> -
-     *            {@link BT747Constants#VALID_DGPS_MASK} <br> -
-     *            {@link BT747Constants#VALID_PPS_MASK} <br> -
-     *            {@link BT747Constants#VALID_RTK_MASK} <br> -
-     *            {@link BT747Constants#VALID_FRTK_MASK} <br> -
-     *            {@link BT747Constants#VALID_ESTIMATED_MASK} <br> -
-     *            {@link BT747Constants#VALID_MANUAL_MASK} <br> -
-     *            {@link BT747Constants#VALID_SIMULATOR_MASK} <br> -
+     *                The filter mask to set for the validity filter. Use the
+     *                following constants:<br> -
+     *                {@link BT747Constants#VALID_NO_FIX_MASK} <br> -
+     *                {@link BT747Constants#VALID_SPS_MASK} <br> -
+     *                {@link BT747Constants#VALID_DGPS_MASK} <br> -
+     *                {@link BT747Constants#VALID_PPS_MASK} <br> -
+     *                {@link BT747Constants#VALID_RTK_MASK} <br> -
+     *                {@link BT747Constants#VALID_FRTK_MASK} <br> -
+     *                {@link BT747Constants#VALID_ESTIMATED_MASK} <br> -
+     *                {@link BT747Constants#VALID_MANUAL_MASK} <br> -
+     *                {@link BT747Constants#VALID_SIMULATOR_MASK} <br> -
      * 
      */
     public final void setTrkPtValid(final int validMask) {
@@ -1066,17 +1075,17 @@ public class Controller {
      * Sets the 'Valid' filter mask for the current waypoint filter.
      * 
      * @param validMask
-     *            The filter mask to set for the validity filter. Use the
-     *            following constants:<br> -
-     *            {@link BT747Constants#VALID_NO_FIX_MASK} <br> -
-     *            {@link BT747Constants#VALID_SPS_MASK} <br> -
-     *            {@link BT747Constants#VALID_DGPS_MASK} <br> -
-     *            {@link BT747Constants#VALID_PPS_MASK} <br> -
-     *            {@link BT747Constants#VALID_RTK_MASK} <br> -
-     *            {@link BT747Constants#VALID_FRTK_MASK} <br> -
-     *            {@link BT747Constants#VALID_ESTIMATED_MASK} <br> -
-     *            {@link BT747Constants#VALID_MANUAL_MASK} <br> -
-     *            {@link BT747Constants#VALID_SIMULATOR_MASK} <br> -
+     *                The filter mask to set for the validity filter. Use the
+     *                following constants:<br> -
+     *                {@link BT747Constants#VALID_NO_FIX_MASK} <br> -
+     *                {@link BT747Constants#VALID_SPS_MASK} <br> -
+     *                {@link BT747Constants#VALID_DGPS_MASK} <br> -
+     *                {@link BT747Constants#VALID_PPS_MASK} <br> -
+     *                {@link BT747Constants#VALID_RTK_MASK} <br> -
+     *                {@link BT747Constants#VALID_FRTK_MASK} <br> -
+     *                {@link BT747Constants#VALID_ESTIMATED_MASK} <br> -
+     *                {@link BT747Constants#VALID_MANUAL_MASK} <br> -
+     *                {@link BT747Constants#VALID_SIMULATOR_MASK} <br> -
      * 
      */
     public final void setWayPtValid(final int validMask) {
@@ -1087,54 +1096,54 @@ public class Controller {
 
     /**
      * This sets MTK specific settings into its flash.<br>
-     * The MTK device stores a number of settings in its internal flash which is
-     * different from the log memory. These settings are restored after loss of
-     * power for example.
+     * The MTK device stores a number of settings in its internal flash which
+     * is different from the log memory. These settings are restored after
+     * loss of power for example.
      * 
      * 
      * @param lock
-     *            When true, subsequent changes in these settings will be
-     *            impossible.
+     *                When true, subsequent changes in these settings will be
+     *                impossible.
      * @param updateRate
-     *            The 'fix period' of the GPS in ms. When this is 200, then the
-     *            Fix is 5Hz.
+     *                The 'fix period' of the GPS in ms. When this is 200,
+     *                then the Fix is 5Hz.
      * @param baudRate
-     *            The speed of the serial communication of the MTK chipset. Be
-     *            carefull - this may be the internal speed - not the external
-     *            speed!
+     *                The speed of the serial communication of the MTK
+     *                chipset. Be carefull - this may be the internal speed -
+     *                not the external speed!
      * @param periodGLL
-     *            The period of emission of the GLL sentence (relative to the
-     *            fix).
+     *                The period of emission of the GLL sentence (relative to
+     *                the fix).
      * @param periodRMC
-     *            The period of emission of the RMC sentence (relative to the
-     *            fix).
+     *                The period of emission of the RMC sentence (relative to
+     *                the fix).
      * @param periodVTG
-     *            The period of emission of the VTG sentence (relative to the
-     *            fix).
+     *                The period of emission of the VTG sentence (relative to
+     *                the fix).
      * @param periodGSA
-     *            The period of emission of the GSA sentence (relative to the
-     *            fix).
+     *                The period of emission of the GSA sentence (relative to
+     *                the fix).
      * @param periodGSV
-     *            The period of emission of the GSV sentence (relative to the
-     *            fix).
+     *                The period of emission of the GSV sentence (relative to
+     *                the fix).
      * @param periodGGA
-     *            The period of emission of the GGA sentence (relative to the
-     *            fix).
+     *                The period of emission of the GGA sentence (relative to
+     *                the fix).
      * @param periodZDA
-     *            The period of emission of the ZDA sentence (relative to the
-     *            fix).
+     *                The period of emission of the ZDA sentence (relative to
+     *                the fix).
      * @param periodMCHN
-     *            The period of emission of the MCHN sentence (relative to the
-     *            fix).
+     *                The period of emission of the MCHN sentence (relative to
+     *                the fix).
      */
     public final void setFlashUserOption(final boolean lock,
             final int updateRate, final int baudRate, final int periodGLL,
             final int periodRMC, final int periodVTG, final int periodGSA,
             final int periodGSV, final int periodGGA, final int periodZDA,
             final int periodMCHN) {
-        m.gpsModel().setFlashUserOption(lock, updateRate, baudRate, periodGLL,
-                periodRMC, periodVTG, periodGSA, periodGSV, periodGGA,
-                periodZDA, periodMCHN);
+        m.gpsModel().setFlashUserOption(lock, updateRate, baudRate,
+                periodGLL, periodRMC, periodVTG, periodGSA, periodGSV,
+                periodGGA, periodZDA, periodMCHN);
         reqFlashUserOption();
     }
 
@@ -1171,8 +1180,8 @@ public class Controller {
      * Sets the MAC address for bluetooth (for devices that support it).
      * 
      * @param btMacAddr
-     *            The Mac address to set in the following format:<br>
-     *            00:1F:14:15:12:13.
+     *                The Mac address to set in the following format:<br>
+     *                00:1F:14:15:12:13.
      */
     public final void setBTMacAddr(final String btMacAddr) {
         m.gpsModel().setBtMacAddr(btMacAddr);
@@ -1183,7 +1192,7 @@ public class Controller {
      * Set the textual description of the holux device.
      * 
      * @param holuxName
-     *            The string to set as the Holux Name.
+     *                The string to set as the Holux Name.
      */
     public final void setHoluxName(final String holuxName) {
         m.gpsModel().setHoluxName(holuxName);
@@ -1201,21 +1210,21 @@ public class Controller {
      * Set the NMEA period settings of the device.
      * 
      * @param periods
-     *            The array indexes are given by:<br> -
-     *            {@link BT747Constants#NMEA_SEN_GLL_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_RMC_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_VTG_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_GGA_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_GSA_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_GSV_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_GRS_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_GST_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_MALM_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br> -
+     *                The array indexes are given by:<br> -
+     *                {@link BT747Constants#NMEA_SEN_GLL_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_RMC_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_VTG_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_GGA_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_GSA_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_GSV_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_GRS_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_GST_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_MALM_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br> -
      */
     public final void setNMEAPeriods(final int[] periods) {
         m.gpsModel().setNMEAPeriods(periods);
@@ -1233,7 +1242,7 @@ public class Controller {
      * Sets the enable of SBAS (DGPS) satellites that are in test.
      * 
      * @param isSBASTestEnabled
-     *            When true, enable test satellites.
+     *                When true, enable test satellites.
      */
     public final void setSBASTestEnabled(final boolean isSBASTestEnabled) {
         m.gpsModel().setSBASTestEnabled(isSBASTestEnabled);
@@ -1253,7 +1262,7 @@ public class Controller {
      * Enable SBAS (DGPS).
      * 
      * @param set
-     *            When true, enables SBAS.
+     *                When true, enables SBAS.
      */
     public final void setSBASEnabled(final boolean set) {
         m.gpsModel().setSBASEnabled(set);
@@ -1261,8 +1270,8 @@ public class Controller {
     }
 
     /**
-     * Request the current status of SBAS (DGPS) enable setting. Actual value to
-     * be retrieved later with {@link Model#isSBASEnabled()}.
+     * Request the current status of SBAS (DGPS) enable setting. Actual value
+     * to be retrieved later with {@link Model#isSBASEnabled()}.
      */
     public final void reqSBASEnabled() {
         m.gpsModel().reqSBASEnabled();
@@ -1280,7 +1289,7 @@ public class Controller {
      * Set GPS's Datum mode.
      * 
      * @param mode
-     *            The datum mode to set.
+     *                The datum mode to set.
      */
     public final void setDatumMode(final int mode) {
         m.gpsModel().setDatumMode(mode);
@@ -1291,7 +1300,7 @@ public class Controller {
      * Set the DGPS mode to use when SBAS enabled.
      * 
      * @param mode
-     *            The mode to use.
+     *                The mode to use.
      */
     public final void setDGPSMode(final int mode) {
         m.gpsModel().setDGPSMode(mode);
@@ -1310,7 +1319,7 @@ public class Controller {
      * Enable the power save mode on the device - this setting is untested.
      * 
      * @param set
-     *            If true, enable power save mode.
+     *                If true, enable power save mode.
      */
     public final void setPowerSaveEnabled(final boolean set) {
         m.gpsModel().setPowerSaveEnabled(set);
@@ -1318,8 +1327,8 @@ public class Controller {
     }
 
     /**
-     * Request the power save mode setting of the device. Need to get the actual
-     * setting later with {@link Model#isPowerSaveEnabled()}.
+     * Request the power save mode setting of the device. Need to get the
+     * actual setting later with {@link Model#isPowerSaveEnabled()}.
      */
     public final void reqPowerSaveEnabled() {
         m.gpsModel().reqPowerSaveEnabled();
@@ -1338,8 +1347,8 @@ public class Controller {
     }
 
     /**
-     * Request the fix interval setting from the device. Need to get the actual
-     * value through {@link Model#getLogFixPeriod()}.
+     * Request the fix interval setting from the device. Need to get the
+     * actual value through {@link Model#getLogFixPeriod()}.
      * 
      */
     public final void reqFixInterval() {
@@ -1347,27 +1356,27 @@ public class Controller {
     }
 
     /**
-     * Force the logger to record the current position tagged with the given log
-     * reason.
+     * Force the logger to record the current position tagged with the given
+     * log reason.
      * 
      * @param value
-     *            {@link BT747Constants#RCR_TIME_MASK}
-     *            {@link BT747Constants#RCR_SPEED_MASK}
-     *            {@link BT747Constants#RCR_DISTANCE_MASK}
-     *            {@link BT747Constants#RCR_BUTTON_MASK}
-     *            {@link BT747Constants#RCR_APP0_MASK}
-     *            {@link BT747Constants#RCR_APP1_MASK}
-     *            {@link BT747Constants#RCR_APP2_MASK}
-     *            {@link BT747Constants#RCR_APP3_MASK}
-     *            {@link BT747Constants#RCR_APP4_MASK}
-     *            {@link BT747Constants#RCR_APP5_MASK}
-     *            {@link BT747Constants#RCR_APP6_MASK}
-     *            {@link BT747Constants#RCR_APP7_MASK}
-     *            {@link BT747Constants#RCR_APP8_MASK}
-     *            {@link BT747Constants#RCR_APP9_MASK}
-     *            {@link BT747Constants#RCR_APPY_MASK}
-     *            {@link BT747Constants#RCR_APPZ_MASK}
-     *            {@link BT747Constants#RCR_ALL_APP_MASK}
+     *                {@link BT747Constants#RCR_TIME_MASK}
+     *                {@link BT747Constants#RCR_SPEED_MASK}
+     *                {@link BT747Constants#RCR_DISTANCE_MASK}
+     *                {@link BT747Constants#RCR_BUTTON_MASK}
+     *                {@link BT747Constants#RCR_APP0_MASK}
+     *                {@link BT747Constants#RCR_APP1_MASK}
+     *                {@link BT747Constants#RCR_APP2_MASK}
+     *                {@link BT747Constants#RCR_APP3_MASK}
+     *                {@link BT747Constants#RCR_APP4_MASK}
+     *                {@link BT747Constants#RCR_APP5_MASK}
+     *                {@link BT747Constants#RCR_APP6_MASK}
+     *                {@link BT747Constants#RCR_APP7_MASK}
+     *                {@link BT747Constants#RCR_APP8_MASK}
+     *                {@link BT747Constants#RCR_APP9_MASK}
+     *                {@link BT747Constants#RCR_APPY_MASK}
+     *                {@link BT747Constants#RCR_APPZ_MASK}
+     *                {@link BT747Constants#RCR_ALL_APP_MASK}
      */
     public final void logImmediate(final int value) {
         m.gpsModel().logImmediate(value);
@@ -1428,16 +1437,16 @@ public class Controller {
     }
 
     public final void setGpsDecode(final boolean value) {
-        m.setBooleanOpt(AppSettings.DECODEGPS, value);
+        setBooleanOpt(AppSettings.DECODEGPS, value);
         m.gpsModel().setGpsDecode(value);
     }
 
     public final void setGpxTrkSegWhenBig(final boolean b) {
-        m.setBooleanOpt(AppSettings.GPXTRKSEGBIG, b);
+        setBooleanOpt(AppSettings.GPXTRKSEGBIG, b);
     }
 
     public final void setGpxUTC0(final boolean b) {
-        m.setBooleanOpt(AppSettings.GPXUTC0, b);
+        setBooleanOpt(AppSettings.GPXUTC0, b);
     }
 
     public final void setFilterEndTime(final int d) {
@@ -1453,44 +1462,27 @@ public class Controller {
      * time or more, a track separation is inserted.
      * 
      * @param value
-     *            Time in minutes for a track separation.
+     *                Time in minutes for a track separation.
      */
     public final void setTrkSep(final int value) {
         m.setTrkSep(value);
     }
 
-    public final void setColorValidTrack(final String s) {
-        m.setColorValidTrack(s);
-    }
-
-    public final void setColorInvalidTrack(final String s) {
-        m.setColorInvalidTrack(s);
-    }
-
-    // "Volatile" settings of the MTK loggers:
-    // - Log conditions;
-    // - Time, Speed, Distance[3x 4 byte]
-    // - Log format; [4 byte]
-    // - Fix period [4 byte]
-    // - SBAS /DGPS / TEST SBAS [byte, byte, byte]
-    // - Log overwrite/STOP [byte, byte]
-    // - NMEA output [18 byte]
-
     public final void storeSetting1() {
-        m.setIntOpt(AppSettings.SETTING1_TIME, m.getLogTimeInterval());
-        m.setIntOpt(AppSettings.SETTING1_DIST, m.getLogDistanceInterval());
-        m.setIntOpt(AppSettings.SETTING1_SPEED, m.getLogSpeedInterval());
-        m.setIntOpt(AppSettings.SETTING1_LOG_FORMAT, m.getLogFormat());
-        m.setIntOpt(AppSettings.SETTING1_FIX, m.getLogFixPeriod());
-        m.setBooleanOpt(AppSettings.SETTING1_SBAS, m.isSBASEnabled());
-        m.setIntOpt(AppSettings.SETTING1_DGPS, m.getDgpsMode());
-        m.setBooleanOpt(AppSettings.SETTING1_TEST, m.isSBASTestEnabled());
-        m.setBooleanOpt(AppSettings.SETTING1_LOG_OVR, m.isLogFullOverwrite());
+        setIntOpt(AppSettings.SETTING1_TIME, m.getLogTimeInterval());
+        setIntOpt(AppSettings.SETTING1_DIST, m.getLogDistanceInterval());
+        setIntOpt(AppSettings.SETTING1_SPEED, m.getLogSpeedInterval());
+        setIntOpt(AppSettings.SETTING1_LOG_FORMAT, m.getLogFormat());
+        setIntOpt(AppSettings.SETTING1_FIX, m.getLogFixPeriod());
+        setBooleanOpt(AppSettings.SETTING1_SBAS, m.isSBASEnabled());
+        setIntOpt(AppSettings.SETTING1_DGPS, m.getDgpsMode());
+        setBooleanOpt(AppSettings.SETTING1_TEST, m.isSBASTestEnabled());
+        setBooleanOpt(AppSettings.SETTING1_LOG_OVR, m.isLogFullOverwrite());
         String sNMEA = "";
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
             sNMEA += (m.getNMEAPeriod(i));
         }
-        m.setStringOpt(AppSettings.SETTING1_NMEA, sNMEA);
+        setStringOpt(AppSettings.SETTING1_NMEA, sNMEA);
     }
 
     public final void restoreSetting1() {
@@ -1525,7 +1517,7 @@ public class Controller {
     }
 
     public final void setAdvFilterActive(final boolean b) {
-        m.setBooleanOpt(AppSettings.ADVFILTACTIVE, b);
+        setBooleanOpt(AppSettings.ADVFILTACTIVE, b);
     };
 
     public final void setFilterMinRecCount(final int i) {
@@ -1592,21 +1584,21 @@ public class Controller {
      * Sets the NMEA string types to write to the NMEA output file format.
      * 
      * @param formatNMEA
-     *            Bit format using following bit indexes:<br> -
-     *            {@link BT747Constants#NMEA_SEN_GLL_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_RMC_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_VTG_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_GGA_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_GSA_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_GSV_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_GRS_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_GST_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_MALM_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br> -
-     *            {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
+     *                Bit format using following bit indexes:<br> -
+     *                {@link BT747Constants#NMEA_SEN_GLL_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_RMC_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_VTG_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_GGA_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_GSA_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_GSV_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_GRS_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_GST_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_MALM_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_MEPH_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_MDGP_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_MDBG_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_ZDA_IDX}<br> -
+     *                {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
      */
     public final void setNMEAset(final int formatNMEA) {
         m.setNMEAset(formatNMEA);
@@ -1616,11 +1608,12 @@ public class Controller {
      * The way we split the input data.
      * 
      * @param value
-     *            0=all data in one file;<br>
-     *            1=one file per day (split at midnight after time offset
-     *            calculation)<br>
-     *            2=one file per track (a track separation occurs when the time
-     *            between two log points is bigger than a given number.
+     *                0=all data in one file;<br>
+     *                1=one file per day (split at midnight after time offset
+     *                calculation)<br>
+     *                2=one file per track (a track separation occurs when the
+     *                time between two log points is bigger than a given
+     *                number.
      */
     public final void setOutputFileSplitType(final int value) {
         m.setOutputFileSplitType(value);
@@ -1651,15 +1644,15 @@ public class Controller {
         return lastErrorInfo;
     }
 
-    public final void setBooleanOpt(final int param, final boolean value) {
+    public void setBooleanOpt(final int param, final boolean value) {
         m.setBooleanOpt(param, value);
     }
 
-    public final void setIntOpt(final int param, final int value) {
+    public void setIntOpt(final int param, final int value) {
         m.setIntOpt(param, value);
     }
 
-    public final void setStringOpt(final int param, final String value) {
+    public void setStringOpt(final int param, final String value) {
         m.setStringOpt(param, value);
     }
 

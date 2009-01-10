@@ -142,8 +142,8 @@ public final class GPSPLTFile extends GPSFile {
             if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
                 rec += Convert
                         .toString(
-                                (s.utc + ((activeFields.hasMilisecond())
-                                        && (selectedFileFields.hasMilisecond()) ? (s.milisecond / 1000.0)
+                                (s.utc + ((activeFields.hasMillisecond())
+                                        && (selectedFileFields.hasMillisecond()) ? (s.milisecond / 1000.0)
                                         : 0)) / 86400.0 + 25569, // Days
                                 // since
                                 // 30/12/1899
@@ -160,8 +160,8 @@ public final class GPSPLTFile extends GPSFile {
                         + t.getMinute() + ":"
                         + (t.getSecond() < 10 ? "0" : "")
                         + t.getSecond();
-                if ((activeFields.hasMilisecond())
-                        && (selectedFileFields.hasMilisecond())) {
+                if ((activeFields.hasMillisecond())
+                        && (selectedFileFields.hasMillisecond())) {
                     rec += ".";
                     rec += (s.milisecond < 100) ? "0" : "";
                     rec += (s.milisecond < 10) ? "0" : "";
