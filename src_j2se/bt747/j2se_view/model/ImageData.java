@@ -16,8 +16,6 @@ package bt747.j2se_view.model;
 
 import gps.BT747Constants;
 import gps.log.GPSRecord;
-import gps.log.in.CommonIn;
-import gps.log.out.CommonOut;
 import net.sf.bt747.j2se.app.exif.ExifAttribute;
 import net.sf.bt747.j2se.app.exif.ExifConstants;
 import net.sf.bt747.j2se.app.exif.ExifJPG;
@@ -145,21 +143,44 @@ public class ImageData extends BT747Waypoint {
                 getGpsRecord().height = altitude;
             }
 
-            atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSDATESTAMP);
-            if (atr != null) {
-                String dateStr = atr.getStringValue();
-                try {
-                    int day;
-                    int month;
-                    int year;
-                    year = Integer.valueOf(dateStr.substring(0,4));
-                } catch (Exception e) {
-                    // TODO: handle exception
+            {
+                int day = 0;
+                int month = 0;
+                int year = 0;
+                int hour = 0;
+                int minutes = 0;
+                int seconds = 0;
+                boolean hasData = false;
+                atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSDATESTAMP);
+                if (atr != null) {
+                    String dateStr = atr.getStringValue();
+                    try {
+                        year = Integer.valueOf(dateStr.substring(0, 4));
+                        month = Integer.valueOf(dateStr.substring(5, 6));
+                        day = Integer.valueOf(dateStr.substring(7, 8));
+                        hasData = true;
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
                 }
-            }
 
-            atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSTIMESTAMP);
-            if (atr != null) {
+                atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSTIMESTAMP);
+                if (atr != null) {
+                    try {
+                        hour = (int) atr.getFloatValue(0);
+                        minutes = (int) atr.getFloatValue(1);
+                        seconds = (int) atr.getFloatValue(2);
+                        hasData = true;
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+                if (hasData) {
+                    int t = Interface.getDateInstance(day, month, year)
+                            .dateToUTCepoch1970();
+                    t += hour * 3600 + minutes * 60 + seconds;
+                    getGpsRecord().utc = t;
+                }
             }
 
             atr = exifJpg

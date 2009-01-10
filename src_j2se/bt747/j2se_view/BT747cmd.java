@@ -493,8 +493,8 @@ public class BT747cmd implements bt747.model.ModelListener {
         c.setOutputFileRelPath("GPSDATA");
         c.setIntOpt(Model.FILEFIELDFORMAT, 0xFFFFFFFF); // All fields
         c.setTrkSep(60);
-        c.setColorValidTrack("0000FF");
-        c.setColorInvalidTrack("0000FF");
+        c.setStringOpt(AppSettings.COLOR_VALIDTRACK, "0000FF");
+        c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, "0000FF");
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, false);
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, false);
         c.setOutputFileSplitType(0);
@@ -613,14 +613,14 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (options.has(OPT_COLOR)) {
-            c.setColorValidTrack((String) options.valueOf(OPT_COLOR));
+            c.setStringOpt(AppSettings.COLOR_VALIDTRACK, ((String) options.valueOf(OPT_COLOR)));
             // Default: bad color is the same
-            c.setColorInvalidTrack((String) options.valueOf(OPT_COLOR));
+            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, ((String) options.valueOf(OPT_COLOR)));
         }
 
         if (options.has(OPT_BADCOLOR)) {
             // Overrides previous default setting in "color"
-            c.setColorInvalidTrack((String) options.valueOf(OPT_BADCOLOR));
+            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, ((String) options.valueOf(OPT_BADCOLOR)));
         }
 
         if (options.has(OPT_SPLITTYPE)) {

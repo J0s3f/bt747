@@ -175,7 +175,7 @@ public final class GPSLogGet extends Container implements ModelListener {
         add(lbUsedMem = new Label(""), LEFT, AFTER + 3);
         add(lbUsedRecords = new Label(""), LEFT, AFTER + 3);
 
-        String s = m.getColorInvalidTrack();
+        String s = m.getStringOpt(AppSettings.COLOR_INVALIDTRACK);
         cbColors.select(0);
         for (int i = 0; i < cbColors.size() - 1; i++) {
             if (s.equals((String) cbColors.getItemAt(i))) {
@@ -244,7 +244,7 @@ public final class GPSLogGet extends Container implements ModelListener {
             } else if (event.target == chkLogOnOff) {
                 c.setLoggingActive(chkLogOnOff.getChecked());
             } else if (event.target == cbColors) {
-                c.setColorInvalidTrack((String) cbColors.getSelectedItem());
+                c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, ((String) cbColors.getSelectedItem()));
             } else if (event.target == cbTimeOffsetHours) {
                 int index = 0;
                 // Work around superwaba bug

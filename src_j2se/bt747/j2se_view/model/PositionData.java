@@ -724,7 +724,7 @@ public class PositionData extends AbstractBean {
             }
             break;
         case MILLISECOND:
-            if (g.hasMilisecond()) {
+            if (g.hasMillisecond()) {
                 return new Integer(g.milisecond);
             }
             break;

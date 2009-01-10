@@ -167,7 +167,7 @@ public final class GPSCSVFile extends GPSFile {
             if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
                 rec.append(fieldSep + CommonOut.getDateStr(t) + fieldSep
                         + CommonOut.getTimeStr(t));
-                if (activeFields.hasMilisecond()) {
+                if (activeFields.hasMillisecond()) {
                     rec.append('.');
                     if (r.milisecond < 100) {
                         rec.append('0');

@@ -863,41 +863,41 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
 
     private void cbNoFixColorActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
-        Color myColor = new Color(Conv.hex2Int(m.getColorInvalidTrack()));
+        Color myColor = new Color(Conv.hex2Int(m.getStringOpt(AppSettings.COLOR_INVALIDTRACK)));
         myColor = JColorChooser
                 .showDialog(
                         this,
                         getString("Choose_the_color_for_a_'bad_track'_(pure_blue_to_ignore)"),
                         myColor);
         if (myColor != null) {
-            c.setColorInvalidTrack(Convert.unsigned2hex(
-                    myColor.getRGB() & 0xFFFFFF, 6));
+            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, Convert.unsigned2hex(
+            myColor.getRGB() & 0xFFFFFF, 6));
         }
         updateColorButtons();
     }                                          
 
     private void cbGoodFixColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFixColorActionPerformed
         // TODO add your handling code here:
-        Color myColor = new Color(Conv.hex2Int(m.getColorValidTrack()));
+        Color myColor = new Color(Conv.hex2Int(m.getStringOpt(AppSettings.COLOR_VALIDTRACK)));
         myColor = JColorChooser
                 .showDialog(
                         this,
                         getString("Choose_the_color_for_a_'good_track'_(pure_blue_to_ignore)"),
                         myColor);
         if (myColor != null) {
-            c.setColorValidTrack(Convert.unsigned2hex(
-                    myColor.getRGB() & 0xFFFFFF, 6));
+            c.setStringOpt(AppSettings.COLOR_VALIDTRACK, Convert.unsigned2hex(
+            myColor.getRGB() & 0xFFFFFF, 6));
         }
         updateColorButtons();
     }//GEN-LAST:event_cbFixColorActionPerformed
 
     private void updateColorButtons() {
-        Color myColor = new Color(Conv.hex2Int(m.getColorValidTrack()));
+        Color myColor = new Color(Conv.hex2Int(m.getStringOpt(AppSettings.COLOR_VALIDTRACK)));
         cbGoodFixColor.setBackground(myColor);
         cbGoodFixColor.setForeground(new Color(255 - myColor.getRed(),
                 255 - myColor.getGreen(), 255 - myColor.getBlue()));
         cbGoodFixColor.setOpaque(true);
-        myColor = new Color(Conv.hex2Int(m.getColorInvalidTrack()));
+        myColor = new Color(Conv.hex2Int(m.getStringOpt(AppSettings.COLOR_INVALIDTRACK)));
         cbNoFixColor.setBackground(myColor);
         cbNoFixColor.setForeground(new Color(255 - myColor.getRed(),
                 255 - myColor.getGreen(), 255 - myColor.getBlue()));

@@ -239,8 +239,8 @@ public final class GPSGPXFile extends GPSFile {
                             + t.getMinute() + ":"
                             + (t.getSecond() < 10 ? "0" : "")
                             + t.getSecond();
-                    if ((activeFields.hasMilisecond())
-                            && (selectedFileFields.hasMilisecond())) {
+                    if ((activeFields.hasMillisecond())
+                            && (selectedFileFields.hasMillisecond())) {
                         timeStr += ".";
                         timeStr += (r.milisecond < 100) ? "0" : "";
                         timeStr += (r.milisecond < 10) ? "0" : "";
