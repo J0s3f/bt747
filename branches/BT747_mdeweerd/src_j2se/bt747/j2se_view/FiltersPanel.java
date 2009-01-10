@@ -449,13 +449,14 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         pnTrkLogReasonLayout.setHorizontalGroup(
             pnTrkLogReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnTrkLogReasonLayout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .add(pnTrkLogReasonLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(cbTrkTime)
                     .add(cbTrkSpeed)
                     .add(cbTrkDistance)
                     .add(cbTrkButton)
-                    .add(cbTrkUser1)))
+                    .add(cbTrkUser1))
+                .add(0, 0, Short.MAX_VALUE))
         );
 
         pnTrkLogReasonLayout.linkSize(new java.awt.Component[] {cbTrkButton, cbTrkDistance, cbTrkSpeed, cbTrkTime, cbTrkUser1}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -918,7 +919,7 @@ public class FiltersPanel extends javax.swing.JPanel implements ModelListener {
         );
         pnWaypointLayout.setVerticalGroup(
             pnWaypointLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .add(pnWayPointRCR, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
             .add(pnWayPointFix, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 

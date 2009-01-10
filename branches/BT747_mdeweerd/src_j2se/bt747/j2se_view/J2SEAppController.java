@@ -37,6 +37,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
@@ -284,6 +285,18 @@ public final class J2SEAppController extends J2SEController {
             Generic.debug("No text found for \"" + s + "\"", e);
             return s;
         }
+    }
+
+    public static final Icon getIcon(final String iconPath) {
+        Icon i = null;
+        try {
+            final URL u = BT747Main.class
+                    .getResource("/bt747/j2se_view/resources/" + iconPath);
+            i = new javax.swing.ImageIcon(u);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return i;
     }
 
     /**
@@ -889,6 +902,7 @@ public final class J2SEAppController extends J2SEController {
     }
 
     private boolean changeToMap = false;
+
     /**
      * 
      */
@@ -923,8 +937,9 @@ public final class J2SEAppController extends J2SEController {
                         m.getPositionData().setWayPoints(null);
                         m.getPositionData().setTracks(null);
                     }
-                    if(changeToMap) {
-                    m.postModelEvent(new ModelEvent(J2SEAppModel.CHANGE_TO_MAP,null));
+                    if (changeToMap) {
+                        m.postModelEvent(new ModelEvent(
+                                J2SEAppModel.CHANGE_TO_MAP, null));
                     }
                     break;
                 default:

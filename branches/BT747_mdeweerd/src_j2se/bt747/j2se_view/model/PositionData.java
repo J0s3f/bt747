@@ -20,6 +20,7 @@ import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
 
 import org.jdesktop.beans.AbstractBean;
 
+import bt747.j2se_view.J2SEAppController;
 import bt747.j2se_view.J2SEAppModel;
 import bt747.model.ModelEvent;
 import bt747.sys.Generic;
@@ -438,101 +439,104 @@ public class PositionData extends AbstractBean {
     }
 
     public static final String getDataDisplayName(final int datatype) {
+        String label = null;
         switch (datatype) {
         case NONE:
-            return "None";
+            label = "TAB_TITLE_None";
         case IMAGE_PATH:
-            return "Image path";
+            label = "TAB_TITLE_Image_path";
         case IMAGE_WIDTH:
-            return "Width";
+            label = "TAB_TITLE_Width";
         case IMAGE_HEIGHT:
-            return "Height";
+            label = "TAB_TITLE_Height";
         case GEOMETRY:
-            return "Geometry";
+            label = "TAB_TITLE_Geometry";
         case LATITUDE:
-            return "Latitude";
+            label = "TAB_TITLE_Latitude";
         case LONGITUDE:
-            return "Longitude";
+            label = "TAB_TITLE_Longitude";
         case FILE_DATETIME:
-            return "File Date/Time";
+            label = "TAB_TITLE_File_Date_Time";
         case FILE_DATE:
-            return "File Date";
+            label = "TAB_TITLE_File_Date";
         case FILE_TIME:
-            return "File Time";
+            label = "TAB_TITLE_File_Time";
         case TAG_DATETIME:
-            return "Tag Date/Time";
+            label = "TAB_TITLE_Tag_Date_Time";
         case TAG_DATE:
-            return "Tag Date";
+            label = "TAB_TITLE_Tag_Date";
         case TAG_TIME:
-            return "Tag Time";
+            label = "TAB_TITLE_Tag_Time";
         case GPS_DATETIME:
-            return "GPS Date/Time";
+            label = "TAB_TITLE_GPS_Date_Time";
         case GPS_DATE:
-            return "GPS Date";
+            label = "TAB_TITLE_GPS_Date";
         case GPS_TIME:
-            return "GPS Time";
+            label = "TAB_TITLE_GPS_Time";
         case LOGTIME:
-            return "Log time";
+            label = "TAB_TITLE_Log_time";
         case LOGDIST:
-            return "Log Dist";
+            label = "TAB_TITLE_Log_Dist";
         case LOGSPD:
-            return "Log speed";
+            label = "TAB_TITLE_Log_speed";
         case NS:
-            return "N/S";
+            label = "TAB_TITLE_NS";
         case EW:
-            return "E/W";
+            label = "TAB_TITLE_EW";
         case RECORDNUMBER:
-            return "Record nbr";
+            label = "TAB_TITLE_Record_nbr";
         case UTC_VALUE:
-            return "UTC Value";
+            label = "TAB_TITLE_UTC_Value";
         case FIX_VALID:
-            return "Valid";
+            label = "TAB_TITLE_Valid";
         case LATITUDE_POSITIVE:
             break;
         case LONGITUDE_POSITIVE:
             break;
         case HEIGHT_METERS:
-            return "Height (m)";
+            label = "TAB_TITLE_Height_m";
         case HEIGHT_FEET:
-            return "Height (ft)";
+            label = "TAB_TITLE_Height_ft";
         case SPEED:
-            return "Speed (km/h)";
+            label = "TAB_TITLE_Speed_kmh";
         case SPEED_MPH:
-            return "Speed (mph)";
+            label = "TAB_TITLE_Speed_mph";
         case HEADING:
-            return "Heading";
+            label = "TAB_TITLE_Heading";
         case DSTA:
-            return "DSTA";
+            label = "TAB_TITLE_DSTA";
         case DAGE:
-            return "DAGE";
+            label = "TAB_TITLE_DAGE";
         case PDOP:
-            return "PDOP";
+            label = "TAB_TITLE_PDOP";
         case HDOP:
-            return "HDOP";
+            label = "TAB_TITLE_HDOP";
         case VDOP:
-            return "VDOP";
+            label = "TAB_TITLE_VDOP";
         case NSAT:
-            return "NSAT";
+            label = "TAB_TITLE_NSAT";
         case FIXMODE:
-            return "Fix";
+            label = "TAB_TITLE_Fix";
         case SID:
-            return "SID";
+            label = "TAB_TITLE_SID";
         case VOX:
-            return "VOX/File";
+            label = "TAB_TITLE_VOX_File";
         case RCR:
-            return "RCR";
+            label = "TAB_TITLE_RCR";
         case RCR_DESCRIPTION:
-            return "RCR Description";
+            label = "TAB_TITLE_RCR_Description";
         case MILLISECOND:
-            return "MS";
+            label = "TAB_TITLE_MS";
         case DISTANCE:
-            return "Distance (m)";
+            label = "TAB_TITLE_Distance_m";
         case DISTANCE_FEET:
-            return "Distance (ft)";
+            label = "TAB_TITLE_Distance_ft";
         default:
-            return null;
         }
-        return null;
+        if (label != null) {
+            label = J2SEAppController.getString(label);
+        }
+        return label;
     }
 
     public static final Object getData(final BT747Waypoint w, final int type) {
@@ -543,11 +547,11 @@ public class PositionData extends AbstractBean {
                 final ImageData img = (ImageData) w;
                 switch (type) {
                 case FILE_DATE:
-                        return CommonOut.getDateStr(img.getUtc());
+                    return CommonOut.getDateStr(img.getUtc());
                 case FILE_TIME:
-                        return CommonOut.getTimeStr(img.getUtc());
+                    return CommonOut.getTimeStr(img.getUtc());
                 case FILE_DATETIME:
-                        return CommonOut.getDateTimeStr(img.getUtc());
+                    return CommonOut.getDateTimeStr(img.getUtc());
                 case IMAGE_PATH:
                     return img.getPath();
                 case IMAGE_WIDTH:
