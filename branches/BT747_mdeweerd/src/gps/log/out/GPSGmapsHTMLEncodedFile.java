@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.log.out;
 
 import gps.log.GPSFilter;
@@ -35,7 +35,8 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     /**
      * Local StringBuffer for output.
      */
-    private final StringBuffer rec = new StringBuffer(1024); // reused stringbuffer
+    private final StringBuffer rec = new StringBuffer(1024); // reused
+                                                                // stringbuffer
 
     /**
      * When true, currently handling waypoints, otherwise trackpoints.
@@ -49,10 +50,11 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
 
     private int trackIndex = 0; // Index for tracks
 
-    private String trackOnClickFuncCalls = ""; // Javascript function calls if
+    private String trackOnClickFuncCalls = ""; // Javascript function calls
+                                                // if
     // click.
-    private StringBuffer infoHtmls = new StringBuffer(1024);
-    private BT747Vector iconList = Interface.getVectorInstance();
+    private final StringBuffer infoHtmls = new StringBuffer(1024);
+    private final BT747Vector iconList = Interface.getVectorInstance();
     private String trackStartInfo = "";
     private String trackDescription = "";
 
@@ -113,14 +115,13 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     }
 
     protected final void writeFileHeader(final String trackName) {
-        StringBuffer l_header = new StringBuffer(1700);
+        final StringBuffer l_header = new StringBuffer(1700);
         l_header.setLength(0);
         l_header
                 .append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\""
                         + " \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\""
-                        + " xmlns:v=VML>\n"
-                        + "<head>\n" + "<title>");
+                        + " xmlns:v=VML>\n" + "<head>\n" + "<title>");
         l_header.append(trackName);
 
         l_header
@@ -190,7 +191,8 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "    }\n"
                         + "   });\n"
                         + "  }\n"
-                        + " }\n" + "\n"
+                        + " }\n"
+                        + "\n"
                         + "function latlonTxt(latlon) {\n"
                         + " if(latlon) {\n"
                         + "     var s=\'<b>Last click: \'+ latlon.toUrlValue()+\' </b>\';\n"
@@ -242,13 +244,14 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "  var windowHeight=getWindowHeight();\n"
                         + "  var footerElement=document.getElementById(\'footer\');\n"
                         + "  var footerHeight=footerElement.offsetHeight;\n"
-//                        + "  if (windowHeight-footerHeight>400) {\n"
+                        // + " if (windowHeight-footerHeight>400) {\n"
                         + "   document.getElementById(\'map\').style.height=\n"
                         + "    (windowHeight-footerHeight)+\'px\';\n"
-//                        + "  } else {\n"
-//                        + "   document.getElementById(\'map\').style.height=400;\n"
+                        // + " } else {\n"
+                        // + "
+                        // document.getElementById(\'map\').style.height=400;\n"
                         // + " footerElement.style.position=\'static\';\n"
-//                        + "  }\n" // else
+                        // + " }\n" // else
                         + " }\n"
                         + "}\n" // Function
                         + "function trackClick(trk,val) {\n"
@@ -276,11 +279,12 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
 
                         + " var map = new GMap2(document.getElementById(\"map\"));\n"
                         + " map.setCenter(new GLatLng(0,0));\n"
-                        // + "var mgrOptions = { borderPadding: 50, maxZoom: 15,
+                        // + "var mgrOptions = { borderPadding: 50, maxZoom:
+                        // 15,
                         // trackMarkers: true };\n"
                         + " var mgr = new GMarkerManager(map);\n"
                         // Default map = plan = google's default
-                        //+ " map.setMapType(G_SATELLITE_MAP);\n"
+                        // + " map.setMapType(G_SATELLITE_MAP);\n"
                         + " map.addMapType(G_PHYSICAL_MAP);\n "
                         + " map.enableScrollWheelZoom();\n"
                         + " map.addControl(new GLargeMapControl());\n"
@@ -315,8 +319,8 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         + "{ tileUrlTemplate: \'http://tah.openstreetmap.org/Tiles/tile/{Z}/{X}/{Y}.png\',\n"
                         + " isPng: true, opacity: 1.0 })],\n"
                         + "new GMercatorProjection(19),\n" + "\'Osmardr\',\n"
-                        + "{ errorMessage:\"More OSM coming soon\"}\n" + ");\n"
-                        + "map.addMapType(OSM);\n"
+                        + "{ errorMessage:\"More OSM coming soon\"}\n"
+                        + ");\n" + "map.addMapType(OSM);\n"
                         + "map.addMapType(OSMcycle);\n"
                         + "map.addMapType(Osmarender);\n");
         // "points.push(new GPoint(3.11492833333333,45.75697))";
@@ -341,7 +345,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     }
 
     protected final void endTrack(final String hexColor) {
-        PolylineEncoder a = new PolylineEncoder();
+        final PolylineEncoder a = new PolylineEncoder();
         BT747Hashtable res;
         if (false) {
             res = a.createEncodings(track, 17, 4);
@@ -388,48 +392,49 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         trackIndex++;
         resetTrack();
     }
-    
-    private final BT747Hashtable icons = Interface.getHashtableInstance(10); 
 
-    /* (non-Javadoc)
+    private final BT747Hashtable icons = Interface.getHashtableInstance(10);
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.out.GPSFile#writeDataFooter()
      */
     protected final void writeDataFooter() {
         if (isWayType) {
             if (waypoints.size() != 0) {
                 rec.setLength(0);
-                rec.append("var baseIcon = new GIcon(G_DEFAULT_ICON);\n" +
-                		"baseIcon.iconSize = new GSize(32, 32);\n");
-                BT747Hashtable iter = icons.iterator();
-                while(iter.hasNext()) {
-                    Object key = iter.nextKey();
+                rec.append("var baseIcon = new GIcon(G_DEFAULT_ICON);\n"
+                        + "baseIcon.iconSize = new GSize(32, 32);\n");
+                final BT747Hashtable iter = icons.iterator();
+                while (iter.hasNext()) {
+                    final Object key = iter.nextKey();
                     rec.append("var ICON");
-                    rec.append((String)key);
+                    rec.append((String) key);
                     rec.append("=new GIcon(baseIcon);");
                     rec.append("ICON");
-                    rec.append((String)key);
+                    rec.append((String) key);
                     rec.append(".image='");
-                    rec.append((String)iter.get(key));
+                    rec.append((String) iter.get(key));
                     rec.append("';\n");
                 }
-                
+
                 rec.append("var markers;markers=[");
                 for (int i = 0; i < waypoints.size(); i++) {
                     rec.append("\n new GMarker(new GLatLng(");
-                    rec
-                            .append(Convert.toString(waypoints.get(i)
-                                    .getLatDouble(), 5));
+                    rec.append(Convert.toString(waypoints.get(i)
+                            .getLatDouble(), 5));
                     rec.append(',');
-                    rec
-                            .append(Convert.toString(waypoints.get(i)
-                                    .getLonDouble(), 5));
+                    rec.append(Convert.toString(waypoints.get(i)
+                            .getLonDouble(), 5));
                     rec.append(')');
                     if (((String) iconList.elementAt(i)).length() != 0) {
                         rec.append(',');
                         rec.append(iconList.elementAt(i));
                     }
-            		rec.append("),");  // Last char must be ',' to erase it below
-            		
+                    rec.append("),"); // Last char must be ',' to erase it
+                                        // below
+
                 }
                 rec.setCharAt(rec.length() - 1, ']'); // Delete last ','
                 rec.append(";\n infoHtmls=[\n");
@@ -456,7 +461,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     }
 
     private final void splitOrEndTrack() {
-        StringBuffer lrec = new StringBuffer();
+        final StringBuffer lrec = new StringBuffer();
         if (!isWayType && (trackOnClickFuncCalls.length() != 0)) {
             lrec.setLength(0);
             // Vm.debug("Do:"trackDescription);
@@ -496,14 +501,16 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         && !ignoreBadPoints) {
                     isNewTrack = true;
                     if (track.size() != 0) {
-                        Trackpoint tp = track.get(track.size() - 1);
+                        final Trackpoint tp = track.get(track.size() - 1);
                         endTrack(goodTrackColor);
                         track.addTrackpoint(tp);
+                        trackStartInfo = "<b>#" + previousRec + "# </b>"
+                                + CommonOut.getDateTimeStr(previousTime);
                     }
                     // "points.push(new GPoint(3.11492833333333,45.75697))";
                     // map.addOverlay(new GPolyline(points,"#960000",2,.75));
                 }
-                if(!isWayType && cachedRecordIsNeeded(s)) {
+                if (!isWayType && cachedRecordIsNeeded(s)) {
                     // Update map boundaries
                     if (s.latitude < minlat) {
                         minlat = s.latitude;
@@ -532,8 +539,12 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         if ((activeFields.hasLatitude())
                                 && (activeFields.hasLongitude())) {
                             if (!isTimeSPlit) {
-                                track.addTrackpoint(new Trackpoint(s.latitude,
-                                        s.longitude));
+                                track.addTrackpoint(new Trackpoint(
+                                        s.latitude, s.longitude));
+                                if ((activeFields.hasUtc())) {
+                                    previousTime = s.utc;
+                                    previousRec = s.recCount;
+                                }
                                 endTrack(badTrackColor);
                             } else {
                                 // points quite separated -
@@ -580,7 +591,8 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                     // rec.append(',');
                     // rec.append(Convert.toString(s.longitude,6));
                     // rec.append("));");
-                    Trackpoint tp = new Trackpoint(s.latitude, s.longitude);
+                    final Trackpoint tp = new Trackpoint(s.latitude,
+                            s.longitude);
                     //                    
                     track.addTrackpoint(tp);
 
@@ -604,22 +616,23 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                     waypoints.addTrackpoint(new Trackpoint(s.latitude,
                             s.longitude));
                     infoHtmls.append("\"");
-                    String r = CommonOut.getRCRstr(s);
+                    final String r = CommonOut.getRCRstr(s);
                     String icon = "";
                     if (icons.get(r) == null) {
                         WayPointStyle style;
-                        if(r.length()>0 && r.charAt(0)=='X') {
-                          style = CommonOut.getWayPointStyles().get(r.substring(1));
-                        } else if (r.length()>1) {
+                        if ((r.length() > 0) && (r.charAt(0) == 'X')) {
+                            style = CommonOut.getWayPointStyles().get(
+                                    r.substring(1));
+                        } else if (r.length() > 1) {
                             style = CommonOut.getWayPointStyles().get("M");
                         } else {
                             style = CommonOut.getWayPointStyles().get(r);
                         }
-                        if(style!=null) {
-                            String url = style.getIconUrl();
+                        if (style != null) {
+                            final String url = style.getIconUrl();
                             icons.put(r, url);
                             icon = "ICON" + r;
-                        } 
+                        }
                     } else {
                         icon = "ICON" + r;
                     }
@@ -642,7 +655,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
      * @see gps.GPSFile#FinaliseFile()
      */
     public final void finaliseFile() {
-        if (this.isOpen()) {
+        if (isOpen()) {
             String footer;
             writeDataFooter();
             footer = "clickString();\n"
@@ -690,9 +703,9 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
 
     /**
      * @param sGoogleKeyCode
-     *            The googleKeyCode to set.
+     *                The googleKeyCode to set.
      */
     public final void setGoogleKeyCode(final String sGoogleKeyCode) {
-        this.googleKeyCode = sGoogleKeyCode;
+        googleKeyCode = sGoogleKeyCode;
     }
 }

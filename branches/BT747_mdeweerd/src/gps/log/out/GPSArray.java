@@ -113,9 +113,11 @@ public final class GPSArray extends GPSFile {
             if (!isNewTrack && !firstRecord && !ignoreBadPoints) {
                 isNewTrack = true;
                 if (track.size() != 0) {
+                    // Get the last position of previous track for the bad track.
                     // Trackpoint tp = track.get(track.size() - 1);
                     endTrack();
-                    track.addElement(s.cloneRecord());
+                    // Not logging bad tracks here! [currently at least]
+                    // track.addElement(s.cloneRecord());
                 }
             }
         } else {
@@ -124,12 +126,11 @@ public final class GPSArray extends GPSFile {
 
             // StringBuffer rec=new StringBuffer(1024);
             boolean isTimeSPlit;
-            isTimeSPlit = (activeFields.hasUtc())
+            isTimeSPlit = (s.hasUtc())
                     && ((s.utc - previousTime) > trackSepTime);
             if (isNewTrack || isTimeSPlit) {
                 isNewTrack = false;
-                if ((activeFields.hasLatitude())
-                        && (activeFields.hasLongitude())) {
+                if ((s.hasPosition())) {
                     if (!isTimeSPlit) {
                         track.addElement(s.cloneRecord());
                         endTrack();

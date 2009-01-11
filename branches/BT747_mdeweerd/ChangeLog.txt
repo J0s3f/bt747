@@ -1,3 +1,7 @@
+Version 1.67.3
+* Improvement to array extraction from track.
+* Correction in GMAPS output for bad track info label.
+
 Version 1.67.2
 * Added Spanish
 * Showing track segments on internal map + using color set by the user.

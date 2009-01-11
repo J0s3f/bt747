@@ -124,7 +124,7 @@ public class WmsEPSG4326TileFactoryInfo extends MyTileFactoryInfo {
                 // Apparently transparency is possible.
                 // "&transparent=TRUE"+
                 "";
-        if(Generic.isDebug()) {
+        if (Generic.getDebugLevel() > 1) {
             Generic.debug(url);
         }
         return url;
@@ -215,8 +215,8 @@ public class WmsEPSG4326TileFactoryInfo extends MyTileFactoryInfo {
         final double wy = pixelCoordinate.getY();
         final double lon = wx * res - 180;
         final double lat = -wy * res + 90;
-        //System.err.println("Request:"+pixelCoordinate);
-        //System.err.println(getBitmapCoordinate(lat, lon, zoomLevel));
+        // System.err.println("Request:"+pixelCoordinate);
+        // System.err.println(getBitmapCoordinate(lat, lon, zoomLevel));
         // getBitmapCoordinate(lat,lon);
         return new GeoPosition(lat, lon);
     }
