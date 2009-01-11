@@ -506,7 +506,7 @@ public class ExifJPG {
                     // Copy rest of file.
                     currentIdxInBuffer = skipMarkerPosition;
                     fromFile.fillBuffer(skipMarkerPosition);
-                    while (fromFile.getBufferFill() >= 0) {
+                    while (fromFile.getBufferFill() > 0) {
                         toFile.writeBytes(fromFile.getBuffer(), 0, fromFile
                                 .getBufferFill());
                         currentIdxInBuffer += fromFile.getBufferFill();

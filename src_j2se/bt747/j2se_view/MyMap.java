@@ -42,6 +42,7 @@ import net.sf.bt747.j2se.app.map.BT747TrackRenderer;
 import net.sf.bt747.j2se.app.map.MapFactoryInfos;
 import net.sf.bt747.j2se.app.map.MapRendererFactoryMethod;
 import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
+import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
 import net.sf.bt747.j2se.app.utils.BrowserControl;
 
 import org.jdesktop.swingx.JXMapViewer;
@@ -353,7 +354,8 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(final ActionEvent e) {
-            BrowserControl.displayURL(url);
+            BareBonesBrowserLaunch.openURL(url);
+            //BrowserControl.displayURL(url);
         }
     };
 

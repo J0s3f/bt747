@@ -1,3 +1,7 @@
+Version 1.67.7
+* Other method used to open external browser.
+* Getting closer to configureable filename for tagged files.
+
 Version 1.67.6
 * Fix in KMZ output regarding track naming.
 

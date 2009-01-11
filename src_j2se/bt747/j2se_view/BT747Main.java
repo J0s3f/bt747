@@ -29,6 +29,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
 import net.sf.bt747.j2se.app.utils.BrowserControl;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
@@ -1172,7 +1173,8 @@ public class BT747Main extends javax.swing.JFrame implements
     }//GEN-LAST:event_mMap4ActionPerformed
 
     private void mnSiteLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSiteLinkActionPerformed
-        BrowserControl.displayURL("http://bt747.free.fr");
+        BareBonesBrowserLaunch.openURL("http://bt747.free.fr");
+        //BrowserControl.displayURL("http://bt747.free.fr");
     }//GEN-LAST:event_mnSiteLinkActionPerformed
 
     private void btToolLogOpsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btToolLogOpsActionPerformed
