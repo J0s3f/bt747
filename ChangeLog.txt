@@ -1,3 +1,6 @@
+Version 1.67.6
+* Fix in KMZ output regarding track naming.
+
 Version 1.67.5
 * Toolbar now vertical.
 * Icons in main menu removed.
