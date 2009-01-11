@@ -169,7 +169,7 @@ public final class GPSRxTxPort extends GPSPort {
         if (os_name.toLowerCase().startsWith("mac")) {
             for (int i = 0; !portFound && (i < 3); i++) {
                 // /dev/tty.HOLUX_M-241-SPPSlave-1
-                freeTextPort = "/dev/tty.HOLUX_M-241-SSPSlave-" + i;
+                freeTextPort = "/dev/tty.HOLUX_M-241-SPPSlave-" + i;
                 portFound = (new File(freeTextPort)).exists();
             }
             for (int i = 0; !portFound && (i < 3); i++) {
@@ -221,11 +221,11 @@ public final class GPSRxTxPort extends GPSPort {
         if (!portFound && os_name.toLowerCase().startsWith("lin")) {
             for (int i = 0; !portFound && (i < 6); i++) {
                 freeTextPort = "/dev/ttyUSB" + i;
-                portFound = (new File(freeTextPort)).canRead();
+                portFound = (new File(freeTextPort)).exists();
             }
             for (int i = 0; !portFound && (i < 6); i++) {
                 freeTextPort = "/dev/ttyACM" + i;
-                portFound = (new File(freeTextPort)).canRead();
+                portFound = (new File(freeTextPort)).exists();
             }
         }
         if (!portFound) {
