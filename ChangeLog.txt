@@ -1,3 +1,9 @@
+Version 1.67.5
+* Toolbar now vertical.
+* Icons in main menu removed.
+* Icons changed.
+* Chinese added.
+
 Version 1.67.4
 * More work on icons.
 * Possibly resolved ',' problem in GPX output (for <ele>) in J2SE.
