@@ -1,16 +1,16 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                  (c)2008 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//********************************************************************
+// ********************************************************************
+// *** BT 747 ***
+// *** (c)2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// ********************************************************************
 package net.sf.bt747.j2se.system;
 
 import java.text.DecimalFormat;
@@ -32,7 +32,8 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
         return new J2SEDate();
     }
 
-    public final BT747Date getDateInstance(final int d, final int m, final int y) {
+    public final BT747Date getDateInstance(final int d, final int m,
+            final int y) {
         return new J2SEDate(d, m, y);
     }
 
@@ -53,15 +54,16 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
         return new J2SETime();
     }
 
-    public final BT747File getFileInstance(String path) {
+    public final BT747File getFileInstance(final String path) {
         return new J2SEFile(path);
     }
 
-    public final BT747File getFileInstance(String path, int mode, int card) {
+    public final BT747File getFileInstance(final String path, final int mode,
+            final int card) {
         return new J2SEFile(path, mode, card);
     }
 
-    public final BT747File getFileInstance(String path, int mode) {
+    public final BT747File getFileInstance(final String path, final int mode) {
         return new J2SEFile(path, mode);
     }
 
@@ -114,10 +116,11 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
     private static final String DECIMALSTRING = "#######0.0000000000000000";
 
     static {
-        Locale l = Locale.getDefault();
+        final Locale l = Locale.getDefault();
         Locale.setDefault(Locale.US);
         for (int i = 0; i < nf.length; i++) {
-            nf[i] = new DecimalFormat(DECIMALSTRING.substring(0,9+i));
+            nf[i] = new DecimalFormat(DECIMALSTRING.substring(0, 9 + i));
+            nf[i].setGroupingUsed(false);
         }
         Locale.setDefault(l);
     }
@@ -129,7 +132,7 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
     private static final String ZEROSTRING = "0000000000000000";
 
     public final String unsigned2hex(final int p, final int i) {
-        String s = Integer.toHexString(p).toUpperCase();
+        final String s = Integer.toHexString(p).toUpperCase();
         if (s.length() == i) {
             return s;
         } else if (s.length() < i) {
@@ -185,7 +188,7 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
 
     /**
      * @param appSettings
-     *            the appSettings to set
+     *                the appSettings to set
      */
     public final void setAppSettings(final String settings) {
         appSettings = settings;
@@ -195,13 +198,13 @@ public final class J2SEJavaTranslations implements JavaTranslationsInterface {
         return new J2SESemaphore(value);
     }
 
-    public final BT747StringTokenizer getStringTokenizer(final String a, final char b) {
-        return new J2SEStringTokenizer(a,b);
+    public final BT747StringTokenizer getStringTokenizer(final String a,
+            final char b) {
+        return new J2SEStringTokenizer(a, b);
     }
-    
+
     public final BT747HashSet getHashSetInstance() {
         return new J2SEHashSet();
     }
-
 
 }

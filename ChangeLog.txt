@@ -1,3 +1,7 @@
+Version 1.67.4
+* More work on icons.
+* Possibly resolved ',' problem in GPX output (for <ele>) in J2SE.
+
 Version 1.67.3
 * Improvement to array extraction from track.
 * Correction in GMAPS output for bad track info label.
