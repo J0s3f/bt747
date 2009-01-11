@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.log.out;
 
 import gps.BT747Constants;
@@ -102,7 +102,7 @@ public class GPSKMLFile extends GPSFile {
      * @see gps.log.out.GPSFile#writeFileHeader(java.lang.String)
      */
     public final void writeFileHeader(final String name) {
-        StringBuffer header = new StringBuffer(2048);
+        final StringBuffer header = new StringBuffer(2048);
         header.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
                 // + "<kml xmlns=\"http://schemas.opengis.net/kml/2.2.0\""
                 // opengis was not understood by google maps
@@ -110,14 +110,14 @@ public class GPSKMLFile extends GPSFile {
                 + "<Document"
                 + " xmlns:atom=\"http://www.w3.org/2005/Atom\" >\r\n"
                 + "<atom:generator uri=\"http://sf.net/projects/bt747\" "
-                + "version=\"" + Version.VERSION_NUMBER + "\"" + ">" + "BT747"
-                + "</atom:generator>\r\n" + "<name>" + name + "</name>\r\n"
-                + "  <open>1</open>\r\n");
+                + "version=\"" + Version.VERSION_NUMBER + "\"" + ">"
+                + "BT747" + "</atom:generator>\r\n" + "<name>" + name
+                + "</name>\r\n" + "  <open>1</open>\r\n");
 
         WayPointStyleSet iter;
         iter = CommonOut.getWayPointStyles().iterator();
         while (iter.hasNext()) {
-            WayPointStyle style = iter.next();
+            final WayPointStyle style = iter.next();
             for (int j = 0; j < 2; j++) {
                 header.append("  <Style id=\"Style" + style.getKey() + j
                         + "\">\r\n" + "    <IconStyle>\r\n"
@@ -132,15 +132,16 @@ public class GPSKMLFile extends GPSFile {
 
         iter = CommonOut.getWayPointStyles().iterator();
         while (iter.hasNext()) {
-            WayPointStyle style = iter.next();
+            final WayPointStyle style = iter.next();
             String x = "";
             if (style.getKey().length() > 1) {
                 x = "X";
             }
             header.append("  <StyleMap id=\"Style" + x + style.getKey()
                     + "\">\r\n" + "    <Pair>\r\n"
-                    + "      <key>normal</key>\r\n" + "      <styleUrl>#Style"
-                    + style.getKey() + "0</styleUrl>\r\n" + "    </Pair>\r\n"
+                    + "      <key>normal</key>\r\n"
+                    + "      <styleUrl>#Style" + style.getKey()
+                    + "0</styleUrl>\r\n" + "    </Pair>\r\n"
                     + "    <Pair>\r\n" + "      <key>highlight</key>\r\n"
                     + "      <styleUrl>#Style" + style.getKey()
                     + "1</styleUrl>\r\n" + "    </Pair>\r\n"
@@ -165,7 +166,8 @@ public class GPSKMLFile extends GPSFile {
         } else if (isTrackType) {
             header = "  <Folder>\r\n"// " <name>My Tracks</name>\r\n"+
                     + "    <name>My Trackpoints</name>\r\n"
-                    + "    <Folder>\r\n"// " <name>Track-"+m_name+"</name>\r\n"+
+                    + "    <Folder>\r\n"// "
+                    // <name>Track-"+m_name+"</name>\r\n"+
                     + "    <name>Trackpoints" + trackName
                     + "</name>\r\n"
                     + "      <open>0</open>\r\n" + "\r\n";
@@ -262,10 +264,8 @@ public class GPSKMLFile extends GPSFile {
                 String dateString = "";
                 if (activeFields.hasUtc()) {
                     dateString = t.getYear() + "-"
-                            + (t.getMonth() < 10 ? "0" : "")
-                            + t.getMonth() + "-"
-                            + (t.getDay() < 10 ? "0" : "")
-                            + t.getDay();
+                            + (t.getMonth() < 10 ? "0" : "") + t.getMonth()
+                            + "-" + (t.getDay() < 10 ? "0" : "") + t.getDay();
                 }
 
                 if (isWayType
@@ -288,7 +288,8 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("<name>");
                         if ((activeFields.hasUtc())
                                 && (selectedFileFields.hasUtc())) {
-                            rec.append("TIME: " + (t.getHour() < 10 ? "0" : "")
+                            rec.append("TIME: "
+                                    + (t.getHour() < 10 ? "0" : "")
                                     + t.getHour() + ":"
                                     + (t.getMinute() < 10 ? "0" : "")
                                     + t.getMinute() + ":"
@@ -342,7 +343,7 @@ public class GPSKMLFile extends GPSFile {
                         rec.append("<styleUrl>");
                         String style = CommonOut.getRCRstr(s);
 
-                        if (style.length() > 1
+                        if ((style.length() > 1)
                                 && ((s.rcr & BT747Constants.RCR_ALL_APP_MASK) == 0)) {
                             style = "M";
                         }
@@ -441,24 +442,39 @@ public class GPSKMLFile extends GPSFile {
         } // activeFields!=null
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.out.GPSFile#createFile(int, java.lang.String, boolean)
      */
     // @Override
-    protected int createFile(int utc, String extra_ext, boolean createNewFile) {
-        /* This is called every time a file is opened or reopened.
-         * Recover the extension for the trackname label in the KML file.
+    protected int createFile(final int utc, final String extra_ext,
+            final boolean createNewFile) {
+        /*
+         * This is called every time a file is opened or reopened. Recover the
+         * extension for the trackname label in the KML file.
          */
         trackName = extra_ext;
         return super.createFile(utc, extra_ext, createNewFile);
     }
+
+    /**
+     * Added to be able to set the track name in case the createFile method is
+     * overridden.
+     * 
+     * @param extra_ext
+     */
+    public void setTrackName(final String extra_ext) {
+        trackName = extra_ext;
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see gps.GPSFile#FinaliseFile()
      */
     public void finaliseFile() {
-        if (this.isOpen()) {
+        if (isOpen()) {
             String footer;
             writeDataFooter();
             footer = "</Document>\r\n" + "</kml>";

@@ -1,32 +1,31 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.j2se_view;
 
 import gps.BT747Constants;
 import gps.log.out.GPSKMLFile;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import net.sf.bt747.j2se.system.J2SEHashtable;
 
-import java.io.File;
 import bt747.sys.Generic;
-import bt747.sys.interfaces.BT747Hashtable;
 
 /**
  * Class to write a KML file.
@@ -89,8 +88,9 @@ public final class GPSKMZFile extends GPSKMLFile {
     protected int createFile(int utc, String extra_ext, boolean createNewFile) {
         String zipFileName;
         String zipEntryFileName;
-        zipFileName = filenameBuilder.getOutputFileName(basename, utc, ".kmz",
-                extra_ext);
+        setTrackName(extra_ext);
+        zipFileName = filenameBuilder.getOutputFileName(basename, utc,
+                ".kmz", extra_ext);
         zipEntryFileName = basename + extra_ext + ".kml";
         int l;
         l = zipEntryFileName.lastIndexOf('/');
@@ -124,7 +124,8 @@ public final class GPSKMZFile extends GPSKMLFile {
         try {
             currentZipStream = null;
             if (createNewFile) {
-                FileOutputStream fos = new FileOutputStream(zipFileName, false);
+                FileOutputStream fos = new FileOutputStream(zipFileName,
+                        false);
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
                 currentZipStream = new ZipOutputStream(bos);
                 ZipEntry e = new ZipEntry(zipEntryFileName);
