@@ -34,8 +34,7 @@ import waba.ui.TabPanel;
 import waba.ui.Window;
 
 import gps.GpsEvent;
-import gps.connection.GPSPort;
-import gps.connection.GPSrxtx;
+import gps.connection.*;
 import net.sf.bt747.waba.system.WabaJavaTranslations;
 
 import bt747.Txt;
