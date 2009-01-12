@@ -1,3 +1,6 @@
+Version 1.67.8
+* Filename for tagged file is configureable
+
 Version 1.67.7
 * Other method used to open external browser.
 * Getting closer to configureable filename for tagged files.

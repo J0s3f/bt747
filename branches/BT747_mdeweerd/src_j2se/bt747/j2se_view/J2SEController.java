@@ -3,8 +3,12 @@
  */
 package bt747.j2se_view;
 
+import java.io.File;
+import java.io.IOException;
+
 import gps.log.in.GPSLogConvertInterface;
 
+import bt747.j2se_view.model.ImageData;
 import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.sys.Generic;
@@ -85,6 +89,32 @@ public class J2SEController extends Controller {
         } else {
             return super.getInputConversionInstance(logType);
         }
+    }
+
+    /**
+     * @param fpf
+     * @param w
+     * @throws IOException
+     */
+    public final static void convertImage(final TaggedFilePathFactory fpf, final ImageData img)
+            throws IOException {
+        final String p = img.getPath();
+        final String newPath = fpf.getTaggedFilePath(p, img);
+
+        String f1 = (new File(newPath)).getCanonicalPath();
+        String f2 = (new File(p)).getCanonicalPath();
+        String orgPath = p;
+        if (f1.equals(f2)) {
+            // Target path and origin path are the same.
+            // We may need to move the original file.
+            orgPath = fpf.getOrgFilePath(p, img);
+            File d = new File(orgPath);
+            if (!d.exists()) {
+                (new File(p)).renameTo(d);
+            }
+        }
+        // now convert from orgPath to newPath.
+        img.writeImage(orgPath, newPath, 0);
     }
 
 }

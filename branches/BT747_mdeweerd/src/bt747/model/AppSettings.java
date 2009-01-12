@@ -237,6 +237,7 @@ public class AppSettings {
     public final static int GPXTRKSEGBIG = 42;
     public final static int COLOR_VALIDTRACK = 43;
     public final static int COLOR_INVALIDTRACK = 44;
+    public final static int TAGGEDFILE_TEMPLATE = 45;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -399,14 +400,17 @@ public class AppSettings {
             /* fall through */
         case 30:
             setBooleanOpt(DISABLELOGDURINGDOWNLOAD, true);
-
+            /* fall through */
         case 31:
             setStringOpt(MAPCACHEDIRECTORY, "/temp/mapcache");
-
+            /* fall through */
         case 32:
             setIntOpt(MAPTYPE, 0);
-            setStringOpt(VERSION, "0.33");
-
+            /* fall through */
+        case 33:
+            setStringOpt(TAGGEDFILE_TEMPLATE, "%p%f_tagged%e");
+            setStringOpt(VERSION, "0.34");
+            /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
             // for
@@ -1307,7 +1311,11 @@ public class AppSettings {
     private static final int C_MAPTYPE_IDX = C_MAPCACHEDIRECTORY_IDX
             + C_MAPCACHEDIRECTORY_SIZE;
     private static final int C_MAPTYPE_SIZE = 1;
-    private static final int C_NEXT_IDX = C_MAPTYPE_IDX + C_MAPTYPE_SIZE;
+    private static final int C_TAGGED_TEMPLATE_IDX = C_MAPTYPE_IDX
+            + C_MAPTYPE_SIZE;
+    private static final int C_TAGGED_TEMPLATE_SIZE = 255;
+    private static final int C_NEXT_IDX = C_TAGGED_TEMPLATE_IDX
+            + C_TAGGED_TEMPLATE_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1383,6 +1391,8 @@ public class AppSettings {
                     C_COLOR_VALIDTRACK_SIZE },
             { STRING, COLOR_INVALIDTRACK, C_COLOR_INVALIDTRACK_IDX,
                     C_COLOR_INVALIDTRACK_SIZE },
+            { STRING, TAGGEDFILE_TEMPLATE, C_TAGGED_TEMPLATE_IDX,
+                    C_TAGGED_TEMPLATE_SIZE },
     // End of list
     };
 }

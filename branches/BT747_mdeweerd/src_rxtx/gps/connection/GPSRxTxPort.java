@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.connection;
 
 import gnu.io.CommPort;
@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import bt747.sys.Convert;
 import bt747.sys.Generic;
 
 /**
@@ -83,13 +82,13 @@ public final class GPSRxTxPort extends GPSPort {
             try {
                 in.close();
                 in = null;
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("", e);
             }
             try {
                 ds.close();
                 ds = null;
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("", e);
             }
             try {
@@ -97,7 +96,7 @@ public final class GPSRxTxPort extends GPSPort {
                     sp.close();
                     sp = null;
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("", e);
             }
         }
@@ -127,13 +126,13 @@ public final class GPSRxTxPort extends GPSPort {
             CommPortIdentifier portIdentifier;
             portIdentifier = CommPortIdentifier.getPortIdentifier(portStr);
             if (portIdentifier.isCurrentlyOwned()) {
-                Generic.debug("Error: Port " + portStr + "is currently in use",
-                        null);
+                Generic.debug("Error: Port " + portStr
+                        + "is currently in use", null);
             } else {
-                CommPort commPort = portIdentifier.open(getClass().getName(),
-                        2000);
+                final CommPort commPort = portIdentifier.open(getClass()
+                        .getName(), 2000);
                 if (commPort instanceof SerialPort) {
-                    SerialPort serialPort = (SerialPort) commPort;
+                    final SerialPort serialPort = (SerialPort) commPort;
                     sp = serialPort;
                     serialPort.setSerialPortParams(getSpeed(), 8, 1, 0);
                     in = sp.getInputStream();
@@ -143,20 +142,32 @@ public final class GPSRxTxPort extends GPSPort {
                     sp = null;
                     in = null;
                     ds = null;
-                    System.out.println("Error: Only serial ports are handled.");
+                    System.out
+                            .println("Error: Only serial ports are handled.");
                 }
             }
-        } catch (NoSuchPortException e) {
+        } catch (final NoSuchPortException e) {
             Generic.debug("", e);
-        } catch (PortInUseException e) {
+        } catch (final PortInUseException e) {
             Generic.debug("", e);
-        } catch (UnsupportedCommOperationException e) {
+        } catch (final UnsupportedCommOperationException e) {
             Generic.debug("", e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Generic.debug("", e);
         }
 
         return result;
+    }
+
+    private final boolean isValidPort(final String path) {
+        try {
+            return (new File(path)).exists()
+                    && (CommPortIdentifier.getPortIdentifier(path)
+                            .getPortType() == CommPortIdentifier.PORT_SERIAL);
+        } catch (final Exception e) {
+            return false;
+        }
+
     }
 
     /**
@@ -170,23 +181,23 @@ public final class GPSRxTxPort extends GPSPort {
             for (int i = 0; !portFound && (i < 3); i++) {
                 // /dev/tty.HOLUX_M-241-SPPSlave-1
                 freeTextPort = "/dev/tty.HOLUX_M-241-SPPSlave-" + i;
-                portFound = (new File(freeTextPort)).exists();
+                portFound = isValidPort(freeTextPort);
             }
             for (int i = 0; !portFound && (i < 3); i++) {
                 freeTextPort = "/dev/tty.iBT-GPS-SPPSlave-" + i;
-                portFound = (new File(freeTextPort)).exists();
+                portFound = isValidPort(freeTextPort);
             }
             for (int i = 0; !portFound && (i < 3); i++) {
                 freeTextPort = "/dev/tty.iBT-GPS-SPPslave-" + i;
-                portFound = (new File(freeTextPort)).exists();
+                portFound = isValidPort(freeTextPort);
             }
             for (int i = 0; !portFound && (i < 3); i++) {
                 freeTextPort = "/dev/cu.QstarzGPS-SPPslave-" + i;
-                portFound = (new File(freeTextPort)).exists();
+                portFound = isValidPort(freeTextPort);
             }
             for (int i = 0; !portFound && (i < 3); i++) {
                 freeTextPort = "/dev/tty.QstarzGPS-SPPslave-" + i;
-                portFound = (new File(freeTextPort)).exists();
+                portFound = isValidPort(freeTextPort);
             }
         }
         if (!portFound) {
@@ -208,24 +219,24 @@ public final class GPSRxTxPort extends GPSPort {
         boolean portFound = false;
         if (!portFound) {
             freeTextPort = "/dev/cu.serial-0001";
-            portFound = (new File(freeTextPort)).exists();
+            portFound = isValidPort(freeTextPort);
         }
         if (!portFound) {
             freeTextPort = "/dev/cu.SLAB_USBtoUART";
-            portFound = (new File(freeTextPort)).exists();
+            portFound = isValidPort(freeTextPort);
         }
         if (!portFound) {
-           freeTextPort = "/dev/cu.usbmodem1b10";
-           portFound = (new File(freeTextPort)).exists();
+            freeTextPort = "/dev/cu.usbmodem1b10";
+            portFound = isValidPort(freeTextPort);
         }
         if (!portFound && os_name.toLowerCase().startsWith("lin")) {
             for (int i = 0; !portFound && (i < 6); i++) {
                 freeTextPort = "/dev/ttyUSB" + i;
-                portFound = (new File(freeTextPort)).exists();
+                portFound = isValidPort(freeTextPort);
             }
             for (int i = 0; !portFound && (i < 6); i++) {
                 freeTextPort = "/dev/ttyACM" + i;
-                portFound = (new File(freeTextPort)).exists();
+                portFound = isValidPort(freeTextPort);
             }
         }
         if (!portFound) {
@@ -253,14 +264,14 @@ public final class GPSRxTxPort extends GPSPort {
     public final synchronized void write(final byte[] b) {
         try {
             ds.write(b);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("", e);
         }
         if (GPS_FILE_LOG && (debugFile != null)) {
             try {
                 debugFile.writeBytes("\nWrite:".getBytes(), 0, 2);
                 debugFile.writeBytes(b, 0, b.length);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("", e);
             }
         }
@@ -276,7 +287,7 @@ public final class GPSRxTxPort extends GPSPort {
                 // System.err.println("Available: "+in.available());
                 // return 100;
                 return in.available();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("", e);
                 return 0;
             }
@@ -289,7 +300,7 @@ public final class GPSRxTxPort extends GPSPort {
             final int max) {
         try {
             return in.read(b, start, max);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("", e);
             return 0;
         }

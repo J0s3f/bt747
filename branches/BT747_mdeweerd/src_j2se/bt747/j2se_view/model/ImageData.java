@@ -49,7 +49,7 @@ public class ImageData extends BT747Waypoint {
     private int card;
 
     public void setPath(final String path, final int card) {
-        this.setCard(card);
+        setCard(card);
         setPath(path);
     }
 
@@ -62,12 +62,12 @@ public class ImageData extends BT747Waypoint {
         return path;
     }
 
-    private double getLatOrLon(ExifAttribute atr) {
+    private double getLatOrLon(final ExifAttribute atr) {
         double xtitude = -99999;
         if (atr.getCount() == 3) {
-            double a = atr.getFloatValue(0);
-            double b = atr.getFloatValue(1);
-            double c = atr.getFloatValue(2);
+            final double a = atr.getFloatValue(0);
+            final double b = atr.getFloatValue(1);
+            final double c = atr.getFloatValue(2);
             xtitude = a + b / 60 + c / 3600;
 
         } else {
@@ -80,7 +80,7 @@ public class ImageData extends BT747Waypoint {
         getGpsRecord().voxStr = path;
         // TODO: change path setting.
         int idx1 = getGpsRecord().voxStr.lastIndexOf('/');
-        int idx2 = getGpsRecord().voxStr.lastIndexOf('\\');
+        final int idx2 = getGpsRecord().voxStr.lastIndexOf('\\');
         if (idx2 > idx1) {
             idx1 = idx2;
         }
@@ -89,10 +89,10 @@ public class ImageData extends BT747Waypoint {
         // TODO Replace by constant to define in AllWayPointStyles
         // Default = document
         getGpsRecord().rcr = 0x0104;
-        if (idx1 >= 0 && idx1 < getGpsRecord().voxStr.length()) {
+        if ((idx1 >= 0) && (idx1 < getGpsRecord().voxStr.length())) {
             getGpsRecord().voxStr = getGpsRecord().voxStr.substring(idx1 + 1);
         }
-        ExifJPG exifJpg = new ExifJPG();
+        final ExifJPG exifJpg = new ExifJPG();
         if (exifJpg.setPath(getPath())) {
             // bt747.sys.Generic.debug(exifJpg.toString());
             // TODO Replace by constant to define in AllWayPointStyles
@@ -153,13 +153,13 @@ public class ImageData extends BT747Waypoint {
                 boolean hasData = false;
                 atr = exifJpg.getGpsAttribute(ExifConstants.TAG_GPSDATESTAMP);
                 if (atr != null) {
-                    String dateStr = atr.getStringValue();
+                    final String dateStr = atr.getStringValue();
                     try {
                         year = Integer.valueOf(dateStr.substring(0, 4));
                         month = Integer.valueOf(dateStr.substring(5, 6));
                         day = Integer.valueOf(dateStr.substring(7, 8));
                         hasData = true;
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         // TODO: handle exception
                     }
                 }
@@ -171,7 +171,7 @@ public class ImageData extends BT747Waypoint {
                         minutes = (int) atr.getFloatValue(1);
                         seconds = (int) atr.getFloatValue(2);
                         hasData = true;
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         // TODO: handle exception
                     }
                 }
@@ -215,13 +215,14 @@ public class ImageData extends BT747Waypoint {
                             * 3600
                             + Convert.toInt(DateTime.substring(14, 16)) * 60
                             + Convert.toInt(DateTime.substring(17, 19));
-                    BT747Date d = Interface.getDateInstance(day, month, year);
+                    final BT747Date d = Interface.getDateInstance(day, month,
+                            year);
                     setUtc(d.dateToUTCepoch1970() + seconds);
                 }
             } else {
                 // Get file date & time.
-                File f = new File(path);
-                int u = f.getModificationTime();
+                final File f = new File(path);
+                final int u = f.getModificationTime();
                 if (u != 0) {
                     setUtc(u);
                 }
@@ -230,10 +231,15 @@ public class ImageData extends BT747Waypoint {
     }
 
     public final void writeImage(final String destPath, final int card) {
+        writeImage(getPath(), destPath, card);
+    }
+
+    public final void writeImage(final String orgPath, final String destPath,
+            final int card) {
         if (getGpsRecord().hasLatitude() && getGpsRecord().hasLongitude()) {
-            ExifJPG exifJpg = new ExifJPG();
-            exifJpg.setPath(getPath()); // Get exif data from file
-            GPSRecord g = getGpsRecord();
+            final ExifJPG exifJpg = new ExifJPG();
+            exifJpg.setPath(orgPath); // Get exif data from file
+            final GPSRecord g = getGpsRecord();
             if (g.hasPosition()) {
                 exifJpg.setGpsPosition(g.latitude, g.longitude);
             }
@@ -243,7 +249,7 @@ public class ImageData extends BT747Waypoint {
                 exifJpg.setGpsHDOP(g.hdop);
             }
             if (g.hasUtc()) {
-                BT747Time t = Interface.getTimeInstance();
+                final BT747Time t = Interface.getTimeInstance();
                 t.setUTCTime(g.utc);
                 exifJpg.setGpsTime(t.getYear(), t.getMonth(), t.getDay(), t
                         .getHour(), t.getMinute(), t.getSecond());
@@ -285,9 +291,9 @@ public class ImageData extends BT747Waypoint {
         }
     }
 
-    private final static String nsatInfoToString(GPSRecord r) {
+    private final static String nsatInfoToString(final GPSRecord r) {
         final char satSeperator = ';';
-        StringBuffer rec = new StringBuffer();
+        final StringBuffer rec = new StringBuffer();
         if (r.hasSid()) {
             int j = 0;
             if (r.hasSid()) {
@@ -337,7 +343,7 @@ public class ImageData extends BT747Waypoint {
      * @param utc
      *                the utc to set
      */
-    private void setUtc(int utc) {
+    private void setUtc(final int utc) {
         getGpsRecord().tagutc = utc;
         this.utc = utc;
     }
@@ -353,7 +359,7 @@ public class ImageData extends BT747Waypoint {
      * @param width
      *                the width to set
      */
-    private void setWidth(int width) {
+    private void setWidth(final int width) {
         this.width = width;
     }
 
@@ -368,7 +374,7 @@ public class ImageData extends BT747Waypoint {
      * @param height
      *                the height to set
      */
-    private void setHeight(int height) {
+    private void setHeight(final int height) {
         this.height = height;
     }
 
@@ -383,7 +389,7 @@ public class ImageData extends BT747Waypoint {
      * @param card
      *                the card to set
      */
-    private void setCard(int card) {
+    private void setCard(final int card) {
         this.card = card;
     }
 
