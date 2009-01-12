@@ -167,7 +167,12 @@ public class BT747cmd implements bt747.model.ModelListener {
      * Photo time offset option.
      */
     private static final String OPT_FILE_TIMEZONE = "tz";
-    
+
+    /**
+     * Specify the format for the tagged filename.
+     */
+    private static final String OPT_TARGET_TAGGED_FILENAME = "template-taggedfilename";
+
     /**
      * Set up system specific classes.
      */
@@ -442,6 +447,8 @@ public class BT747cmd implements bt747.model.ModelListener {
         return rcrds;
     }
 
+    private TaggedFilePathFactory fpf = new TaggedFilePathFactory();
+
     public final int convertLog(final int logType) {
         int error = 0;
         System.out
@@ -470,15 +477,12 @@ public class BT747cmd implements bt747.model.ModelListener {
         /* TODO code to move elsewhere */
         if (error == 0 && waypointsToTag.size() != 0) {
             for (BT747Waypoint wpt : waypointsToTag) {
-                if (ImageData.class.isInstance(wpt)) {
-                    final ImageData img = (ImageData) wpt;
-                    String p = img.getPath();
-                    int ptIndex = p.lastIndexOf('.');
-                    String newPath;
-                    newPath = p.substring(0, ptIndex);
-                    newPath += "_tagged";
-                    newPath += p.substring(ptIndex);
-                    img.writeImage(newPath, 0);
+                try {
+                    if (ImageData.class.isInstance(wpt)) {
+                        J2SEController.convertImage(fpf, (ImageData) wpt);
+                    }
+                } catch (Exception e) {
+                    bt747.sys.Generic.debug("Problem converting", e);
                 }
             }
         }
@@ -590,37 +594,42 @@ public class BT747cmd implements bt747.model.ModelListener {
             final Integer offset = (Integer) options.valueOf(OPT_UTC);
             c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, offset);
             // Default value for filetime offset
-            c.setIntOpt(Model.FILETIMEOFFSET, offset*3600);
+            c.setIntOpt(Model.FILETIMEOFFSET, offset * 3600);
         }
-        
-        if(options.has(OPT_FILE_TIMEZONE)) {
+
+        if (options.has(OPT_FILE_TIMEZONE)) {
             final String tz = (String) options.valueOf(OPT_FILE_TIMEZONE);
             int hour = 0;
             int minute = 0;
             int seconds = 0;
-            if(tz.matches("(-?[0-9][0-9]):([0-9][0-9])")) {
-                hour = Integer.valueOf(tz.substring(0,tz.length()-4));
-                minute = Integer.valueOf(tz.substring(tz.length()-3));
+            if (tz.matches("(-?[0-9][0-9]):([0-9][0-9])")) {
+                hour = Integer.valueOf(tz.substring(0, tz.length() - 4));
+                minute = Integer.valueOf(tz.substring(tz.length() - 3));
             } else {
-                if(tz.matches("(-?[0-9][0-9]):([0-9][0-9]):([0-9][0-9])")) {
-                    hour = Integer.valueOf(tz.substring(0,tz.length()-7));
-                    minute = Integer.valueOf(tz.substring(tz.length()-6,tz.length()-3));
-                    seconds = Integer.valueOf(tz.substring(tz.length()-3));
+                if (tz.matches("(-?[0-9][0-9]):([0-9][0-9]):([0-9][0-9])")) {
+                    hour = Integer.valueOf(tz.substring(0, tz.length() - 7));
+                    minute = Integer.valueOf(tz.substring(tz.length() - 6, tz
+                            .length() - 3));
+                    seconds = Integer.valueOf(tz.substring(tz.length() - 3));
                 }
 
             }
-            c.setIntOpt(Model.FILETIMEOFFSET, hour*3600 + minute*60 + seconds);
+            c.setIntOpt(Model.FILETIMEOFFSET, hour * 3600 + minute * 60
+                    + seconds);
         }
 
         if (options.has(OPT_COLOR)) {
-            c.setStringOpt(AppSettings.COLOR_VALIDTRACK, ((String) options.valueOf(OPT_COLOR)));
+            c.setStringOpt(AppSettings.COLOR_VALIDTRACK, ((String) options
+                    .valueOf(OPT_COLOR)));
             // Default: bad color is the same
-            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, ((String) options.valueOf(OPT_COLOR)));
+            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, ((String) options
+                    .valueOf(OPT_COLOR)));
         }
 
         if (options.has(OPT_BADCOLOR)) {
             // Overrides previous default setting in "color"
-            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, ((String) options.valueOf(OPT_BADCOLOR)));
+            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, ((String) options
+                    .valueOf(OPT_BADCOLOR)));
         }
 
         if (options.has(OPT_SPLITTYPE)) {
@@ -925,6 +934,13 @@ public class BT747cmd implements bt747.model.ModelListener {
             c.closeGPS();
         }
 
+        if (options.has(OPT_TARGET_TAGGED_FILENAME)) {
+            fpf.setDestTemplate(options
+                    .argumentOf(OPT_TARGET_TAGGED_FILENAME));
+            System.out.println("Output filename template is \""
+                    + fpf.getDestTemplate() + "\"");
+        }
+
         if (options.has(OPT_CREATE_GPX_TRACKS)) {
             System.out.println("Converting to GPX (trackpoints)");
             c
@@ -1169,9 +1185,24 @@ public class BT747cmd implements bt747.model.ModelListener {
                         .withRequiredArg().describedAs("FULL|SMART|REPORTED");
                 accepts(OPT_OVERWRITE,
                         "Overwrite data even if downloaded data is different");
-                accepts(OPT_FILE_TIMEZONE,
-                "Time zone expressed in difference to Greenwhich time (e.g. -01:00)." +
-                "Defaults to UTC value.").withRequiredArg().describedAs("TIME");
+                accepts(
+                        OPT_FILE_TIMEZONE,
+                        "Time zone expressed in difference to Greenwhich time (e.g. -01:00)."
+                                + "Defaults to UTC value.").withRequiredArg()
+                        .describedAs("TIME");
+                accepts(
+                        OPT_TARGET_TAGGED_FILENAME,
+                        "Specify the template for the tagged filename.  Default is \"%p"
+                                + File.separator
+                                + "%f_tagged%e\".\n"
+                                + "%p is replace by the directory of the original file.\n"
+                                + "%e is replaced by the extension of the original file.\n"
+                                + "%f is replace with the base of the original file.\n"
+                                + "So the default will convert a file \"BT747"
+                                + File.separator + "org.jpg\" to \"BT747"
+                                + File.separator + "org_tagged\".")
+                        .withRequiredArg().describedAs("FORMAT");
+
             }
         };
 

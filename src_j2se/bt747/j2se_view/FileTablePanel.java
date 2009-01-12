@@ -45,7 +45,7 @@ public class FileTablePanel extends javax.swing.JPanel implements
         initComponents();
         lbBusySpinner.setVisible(false);
     }
-
+    
     private J2SEAppController c;
     private J2SEAppModel m;
 
@@ -81,6 +81,8 @@ public class FileTablePanel extends javax.swing.JPanel implements
                 + m.getIntOpt(AppSettings.TAG_MAXTIMEDIFFERENCE));
         cbOverridePositions.setSelected(m
                 .getBooleanOpt(AppSettings.TAG_OVERRIDEPOSITIONS));
+        
+        updateGuiData();
 
         DropListener dl;
         dl = new DropListener() {
@@ -120,14 +122,56 @@ public class FileTablePanel extends javax.swing.JPanel implements
         }
     }
 
+    private final static String OPT_INPLACE_TAGGING = "TAG_INPLACE";
+    private final static String OPT_RENAME_TAGGING = "TAG_RENAME";
+    private final static String SAMPLE_TEMPLATE = "TAG_EXAMPLETEMPLATE";
+
+
+    private void updateGuiData() {
+        cbTargetTemplate.setModel(new javax.swing.DefaultComboBoxModel(new String[]{
+                    getString(OPT_INPLACE_TAGGING), getString(OPT_RENAME_TAGGING),
+                    getString(SAMPLE_TEMPLATE)}));
+        cbTargetTemplate.setSelectedItem(getString(OPT_INPLACE_TAGGING));
+        setTargetTemplateComboBox();
+    }
+    
+    private TaggedFilePathFactory fpf = new TaggedFilePathFactory();
+
+    private void updateTargetTemplate() {
+        String s = (String) cbTargetTemplate.getSelectedItem();
+        String t;
+        if (s.equals(getString(OPT_INPLACE_TAGGING))) {
+            t = "%p%f%e";
+
+        } else if (s.equals(getString(OPT_RENAME_TAGGING))) {
+            t = "%p%f_tagged%e";
+        } else {
+            t = s;
+        }
+        fpf.setDestTemplate(t);
+        c.setStringOpt(J2SEAppModel.TAGGEDFILE_TEMPLATE, t);
+    }
+    
+    private void setTargetTemplateComboBox() {
+        String t = m.getStringOpt(J2SEAppModel.TAGGEDFILE_TEMPLATE);
+        if(t.equals("%p%f%e")) {
+            cbTargetTemplate.setSelectedItem(getString(OPT_INPLACE_TAGGING));
+        } else if(t.equals("%p%f_tagged%e")) {
+            cbTargetTemplate.setSelectedItem(getString(OPT_RENAME_TAGGING));
+        } else {
+            cbTargetTemplate.setSelectedItem(t);
+        }
+    }
+    
     private void doSavePositions() {
-        TaggedFilePathFactory fpf = new TaggedFilePathFactory();
+
         for (final BT747Waypoint w : m.getPositionData().getUserWayPoints()) {
-            if (ImageData.class.isInstance(w)) {
-                final ImageData img = (ImageData) w;
-                final String p = img.getPath();
-                final String newPath = fpf.getTaggedFilePath(p, img);
-                img.writeImage(newPath, 0);
+            try {
+                if (ImageData.class.isInstance(w)) {
+                    J2SEController.convertImage(fpf, (ImageData)w);
+                }
+            } catch (Exception e) {
+                Generic.debug("Problem while converting", e);
             }
         }
         // doLogConversion(getSelectedFormat(cbFormat.getSelectedItem().toString()));
@@ -203,14 +247,6 @@ public class FileTablePanel extends javax.swing.JPanel implements
         spValues = new javax.swing.JScrollPane();
         tbImageList = new javax.swing.JTable();
         btnPanel = new javax.swing.JPanel();
-        lbInformationMessage = new javax.swing.JLabel();
-        btSelectImages = new javax.swing.JButton();
-        btSelectDestinationDir = new javax.swing.JButton();
-        tfDestinationDirectory = new javax.swing.JTextField();
-        btClearList = new javax.swing.JButton();
-        btTagFromTable = new javax.swing.JButton();
-        btTagFromFile = new javax.swing.JButton();
-        btSaveTaggedFiles = new javax.swing.JButton();
         pnTimeOffset = new javax.swing.JPanel();
         lbMinutes = new javax.swing.JLabel();
         lbHour = new javax.swing.JLabel();
@@ -223,96 +259,32 @@ public class FileTablePanel extends javax.swing.JPanel implements
         lbSeconds1 = new javax.swing.JLabel();
         pnTagOptions = new javax.swing.JPanel();
         cbOverridePositions = new javax.swing.JCheckBox();
+        jPanel1 = new javax.swing.JPanel();
+        cbTargetTemplate = new javax.swing.JComboBox();
         lbBusySpinner = new org.jdesktop.swingx.JXBusyLabel();
+        btSaveTaggedFiles = new javax.swing.JButton();
+        btTagFromFile = new javax.swing.JButton();
+        btSelectDestinationDir = new javax.swing.JButton();
+        btClearList = new javax.swing.JButton();
+        btSelectImages = new javax.swing.JButton();
+        btTagFromTable = new javax.swing.JButton();
+        tfDestinationDirectory = new javax.swing.JTextField();
 
         tbImageList.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {
+            new Object [][] {
 
-                }, new String[] {
+            },
+            new String [] {
 
-                }));
+            }
+        ));
         tbImageList.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tbImageList.setColumnSelectionAllowed(true);
         spValues.setViewportView(tbImageList);
 
-        final java.util.ResourceBundle bundle = java.util.ResourceBundle
-                .getBundle("bt747/j2se_view/Bundle"); // NOI18N
-        lbInformationMessage.setText(bundle
-                .getString("ImageTablePanel.lbInformationMessage.text")); // NOI18N
-
-        btSelectImages.setText(bundle
-                .getString("ImageTablePanel.btSelectImages.text")); // NOI18N
-        btSelectImages.setToolTipText(bundle
-                .getString("FileTablePanel.btSelectImages.toolTipText")); // NOI18N
-        btSelectImages.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(final java.awt.event.ActionEvent evt) {
-                btSelectImagesActionPerformed(evt);
-            }
-        });
-
-        btSelectDestinationDir.setText(bundle
-                .getString("ImageTablePanel.btSelectDestinationDir.text")); // NOI18N
-        btSelectDestinationDir
-                .addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(
-                            final java.awt.event.ActionEvent evt) {
-                        btSelectDestinationDirActionPerformed(evt);
-                    }
-                });
-
-        tfDestinationDirectory.setText(bundle
-                .getString("ImageTablePanel.tfDestinationDirectory.text")); // NOI18N
-        tfDestinationDirectory
-                .addFocusListener(new java.awt.event.FocusAdapter() {
-                    public void focusLost(final java.awt.event.FocusEvent evt) {
-                        tfDestinationDirectoryFocusLost(evt);
-                    }
-                });
-
-        btClearList.setText(bundle
-                .getString("ImageTablePanel.btClearList.text")); // NOI18N
-        btClearList.setToolTipText(bundle
-                .getString("FileTablePanel.btClearList.toolTipText")); // NOI18N
-        btClearList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(final java.awt.event.ActionEvent evt) {
-                btClearListActionPerformed(evt);
-            }
-        });
-
-        btTagFromTable.setText(bundle
-                .getString("ImageTablePanel.btTagFromTable.text")); // NOI18N
-        btTagFromTable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(final java.awt.event.ActionEvent evt) {
-                btTagFromTableActionPerformed(evt);
-            }
-        });
-
-        btTagFromFile.setText(bundle
-                .getString("ImageTablePanel.btTagFromFile.text")); // NOI18N
-        btTagFromFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(final java.awt.event.ActionEvent evt) {
-                btTagFromFileActionPerformed(evt);
-            }
-        });
-
-        btSaveTaggedFiles.setText(bundle
-                .getString("FileTablePanel.btSaveTaggedFiles.text")); // NOI18N
-        btSaveTaggedFiles.setToolTipText(bundle
-                .getString("FileTablePanel.btSaveTaggedFiles.toolTipText")); // NOI18N
-        btSaveTaggedFiles
-                .addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(
-                            final java.awt.event.ActionEvent evt) {
-                        btSaveTaggedFilesActionPerformed(evt);
-                    }
-                });
-
-        pnTimeOffset
-                .setBorder(javax.swing.BorderFactory
-                        .createTitledBorder(bundle
-                                .getString("FileTablePanel.pnTimeOffset.border.title"))); // NOI18N
-        pnTimeOffset.setToolTipText(bundle
-                .getString("FileTablePanel.pnTimeOffset.toolTipText")); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
+        pnTimeOffset.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("FileTablePanel.pnTimeOffset.border.title"))); // NOI18N
+        pnTimeOffset.setToolTipText(bundle.getString("FileTablePanel.pnTimeOffset.toolTipText")); // NOI18N
 
         lbMinutes.setText(bundle.getString("FileTablePanel.lbMinutes.text")); // NOI18N
 
@@ -320,348 +292,247 @@ public class FileTablePanel extends javax.swing.JPanel implements
 
         lbSeconds.setText(bundle.getString("FileTablePanel.lbSeconds.text")); // NOI18N
 
-        spTimeOffsetHours.setModel(new javax.swing.SpinnerNumberModel(0, -48,
-                48, 1));
-        spTimeOffsetHours
-                .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(
-                            final javax.swing.event.ChangeEvent evt) {
-                        spTimeOffsetHoursStateChanged(evt);
-                    }
-                });
+        spTimeOffsetHours.setModel(new javax.swing.SpinnerNumberModel(0, -48, 48, 1));
+        spTimeOffsetHours.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spTimeOffsetHoursStateChanged(evt);
+            }
+        });
 
-        spTimeOffsetMinutes.setModel(new javax.swing.SpinnerNumberModel(0, 0,
-                59, 1));
-        spTimeOffsetMinutes
-                .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(
-                            final javax.swing.event.ChangeEvent evt) {
-                        spTimeOffsetMinutesStateChanged(evt);
-                    }
-                });
+        spTimeOffsetMinutes.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
+        spTimeOffsetMinutes.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spTimeOffsetMinutesStateChanged(evt);
+            }
+        });
 
-        spTimeOffsetSeconds.setModel(new javax.swing.SpinnerNumberModel(0, 0,
-                59, 1));
-        spTimeOffsetSeconds
-                .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(
-                            final javax.swing.event.ChangeEvent evt) {
-                        spTimeOffsetSecondsStateChanged(evt);
-                    }
-                });
+        spTimeOffsetSeconds.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
+        spTimeOffsetSeconds.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spTimeOffsetSecondsStateChanged(evt);
+            }
+        });
 
         jLabel1.setText(bundle.getString("FileTablePanel.jLabel1.text")); // NOI18N
 
-        tfMaxTimeDiff.setText(bundle
-                .getString("FileTablePanel.tfMaxTimeDiff.text")); // NOI18N
-        tfMaxTimeDiff.setToolTipText(bundle
-                .getString("FileTablePanel.tfMaxTimeDiff.toolTipText")); // NOI18N
+        tfMaxTimeDiff.setText(bundle.getString("FileTablePanel.tfMaxTimeDiff.text")); // NOI18N
+        tfMaxTimeDiff.setToolTipText(bundle.getString("FileTablePanel.tfMaxTimeDiff.toolTipText")); // NOI18N
         tfMaxTimeDiff.setInputVerifier(J2SEAppController.IntVerifier);
         tfMaxTimeDiff.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(final java.awt.event.FocusEvent evt) {
+            public void focusLost(java.awt.event.FocusEvent evt) {
                 tfMaxTimeDiffFocusLost(evt);
             }
         });
 
-        lbSeconds1
-                .setText(bundle.getString("FileTablePanel.lbSeconds1.text")); // NOI18N
+        lbSeconds1.setText(bundle.getString("FileTablePanel.lbSeconds1.text")); // NOI18N
 
-        final org.jdesktop.layout.GroupLayout pnTimeOffsetLayout = new org.jdesktop.layout.GroupLayout(
-                pnTimeOffset);
+        org.jdesktop.layout.GroupLayout pnTimeOffsetLayout = new org.jdesktop.layout.GroupLayout(pnTimeOffset);
         pnTimeOffset.setLayout(pnTimeOffsetLayout);
-        pnTimeOffsetLayout
-                .setHorizontalGroup(pnTimeOffsetLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                pnTimeOffsetLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                spTimeOffsetHours,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                lbHour,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                12,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                spTimeOffsetMinutes,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(lbMinutes)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                spTimeOffsetSeconds,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(lbSeconds))
-                        .add(
-                                pnTimeOffsetLayout
-                                        .createSequentialGroup()
-                                        .add(jLabel1)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                tfMaxTimeDiff,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                90, Short.MAX_VALUE)
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(lbSeconds1)));
-        pnTimeOffsetLayout
-                .setVerticalGroup(pnTimeOffsetLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                pnTimeOffsetLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                pnTimeOffsetLayout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.BASELINE)
-                                                        .add(
-                                                                spTimeOffsetHours,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                                        .add(lbHour)
-                                                        .add(
-                                                                spTimeOffsetMinutes,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                                        .add(lbMinutes)
-                                                        .add(
-                                                                spTimeOffsetSeconds,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                                        .add(lbSeconds))
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                pnTimeOffsetLayout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.BASELINE)
-                                                        .add(jLabel1)
-                                                        .add(lbSeconds1)
-                                                        .add(
-                                                                tfMaxTimeDiff,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))));
+        pnTimeOffsetLayout.setHorizontalGroup(
+            pnTimeOffsetLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnTimeOffsetLayout.createSequentialGroup()
+                .add(spTimeOffsetHours, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbHour, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 12, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(spTimeOffsetMinutes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbMinutes)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(spTimeOffsetSeconds, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbSeconds))
+            .add(pnTimeOffsetLayout.createSequentialGroup()
+                .add(jLabel1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(tfMaxTimeDiff, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbSeconds1))
+        );
+        pnTimeOffsetLayout.setVerticalGroup(
+            pnTimeOffsetLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnTimeOffsetLayout.createSequentialGroup()
+                .add(pnTimeOffsetLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(spTimeOffsetHours, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbHour)
+                    .add(spTimeOffsetMinutes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbMinutes)
+                    .add(spTimeOffsetSeconds, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbSeconds))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnTimeOffsetLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel1)
+                    .add(lbSeconds1)
+                    .add(tfMaxTimeDiff, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+        );
 
-        pnTagOptions
-                .setBorder(javax.swing.BorderFactory
-                        .createTitledBorder(bundle
-                                .getString("FileTablePanel.pnTagOptions.border.title"))); // NOI18N
+        pnTagOptions.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("FileTablePanel.pnTagOptions.border.title"))); // NOI18N
 
-        cbOverridePositions.setText(bundle
-                .getString("FileTablePanel.cbOverridePositions.text")); // NOI18N
-        cbOverridePositions.setToolTipText(bundle
-                .getString("FileTablePanel.cbOverridePositions.toolTipText")); // NOI18N
-        cbOverridePositions
-                .addChangeListener(new javax.swing.event.ChangeListener() {
-                    public void stateChanged(
-                            final javax.swing.event.ChangeEvent evt) {
-                        cbOverridePositionsStateChanged(evt);
-                    }
-                });
+        cbOverridePositions.setText(bundle.getString("FileTablePanel.cbOverridePositions.text")); // NOI18N
+        cbOverridePositions.setToolTipText(bundle.getString("FileTablePanel.cbOverridePositions.toolTipText")); // NOI18N
+        cbOverridePositions.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                cbOverridePositionsStateChanged(evt);
+            }
+        });
 
-        final org.jdesktop.layout.GroupLayout pnTagOptionsLayout = new org.jdesktop.layout.GroupLayout(
-                pnTagOptions);
+        org.jdesktop.layout.GroupLayout pnTagOptionsLayout = new org.jdesktop.layout.GroupLayout(pnTagOptions);
         pnTagOptions.setLayout(pnTagOptionsLayout);
-        pnTagOptionsLayout.setHorizontalGroup(pnTagOptionsLayout
-                .createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(cbOverridePositions));
-        pnTagOptionsLayout.setVerticalGroup(pnTagOptionsLayout
-                .createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(cbOverridePositions));
+        pnTagOptionsLayout.setHorizontalGroup(
+            pnTagOptionsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(cbOverridePositions)
+        );
+        pnTagOptionsLayout.setVerticalGroup(
+            pnTagOptionsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(cbOverridePositions)
+        );
 
-        lbBusySpinner.setText(bundle
-                .getString("FileTablePanel.lbBusySpinner.text")); // NOI18N
+        cbTargetTemplate.setEditable(true);
+        cbTargetTemplate.setToolTipText(bundle.getString("FileTablePanel.cbTargetTemplate.toolTipText")); // NOI18N
+        cbTargetTemplate.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbTargetTemplateItemStateChanged(evt);
+            }
+        });
+
+        lbBusySpinner.setText(bundle.getString("FileTablePanel.lbBusySpinner.text")); // NOI18N
         lbBusySpinner.setOpaque(true);
 
-        final org.jdesktop.layout.GroupLayout btnPanelLayout = new org.jdesktop.layout.GroupLayout(
-                btnPanel);
-        btnPanel.setLayout(btnPanelLayout);
-        btnPanelLayout
-                .setHorizontalGroup(btnPanelLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                btnPanelLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                btnPanelLayout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.LEADING)
-                                                        .add(
-                                                                btnPanelLayout
-                                                                        .createSequentialGroup()
-                                                                        .add(
-                                                                                btTagFromFile)
-                                                                        .addPreferredGap(
-                                                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                                                        .add(
-                                                                                lbBusySpinner,
-                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                                                        .addPreferredGap(
-                                                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                                                        .add(
-                                                                                btTagFromTable))
-                                                        .add(
-                                                                btnPanelLayout
-                                                                        .createSequentialGroup()
-                                                                        .add(
-                                                                                btnPanelLayout
-                                                                                        .createParallelGroup(
-                                                                                                org.jdesktop.layout.GroupLayout.LEADING,
-                                                                                                false)
-                                                                                        .add(
-                                                                                                btnPanelLayout
-                                                                                                        .createSequentialGroup()
-                                                                                                        .add(
-                                                                                                                btSelectImages)
-                                                                                                        .addPreferredGap(
-                                                                                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                                                                                        .add(
-                                                                                                                btClearList)
-                                                                                                        .addPreferredGap(
-                                                                                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                                                                                        .add(
-                                                                                                                btSaveTaggedFiles))
-                                                                                        .add(
-                                                                                                btnPanelLayout
-                                                                                                        .createSequentialGroup()
-                                                                                                        .add(
-                                                                                                                btSelectDestinationDir)
-                                                                                                        .addPreferredGap(
-                                                                                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                                                                                        .add(
-                                                                                                                tfDestinationDirectory)))
-                                                                        .addPreferredGap(
-                                                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                                                        .add(
-                                                                                pnTagOptions,
-                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(
-                                                pnTimeOffset,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .add(lbInformationMessage));
-        btnPanelLayout
-                .setVerticalGroup(btnPanelLayout
-                        .createParallelGroup(
-                                org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(
-                                btnPanelLayout
-                                        .createSequentialGroup()
-                                        .add(
-                                                btnPanelLayout
-                                                        .createParallelGroup(
-                                                                org.jdesktop.layout.GroupLayout.LEADING)
-                                                        .add(
-                                                                btnPanelLayout
-                                                                        .createSequentialGroup()
-                                                                        .add(
-                                                                                btnPanelLayout
-                                                                                        .createParallelGroup(
-                                                                                                org.jdesktop.layout.GroupLayout.BASELINE)
-                                                                                        .add(
-                                                                                                btSelectImages)
-                                                                                        .add(
-                                                                                                btClearList)
-                                                                                        .add(
-                                                                                                btSaveTaggedFiles))
-                                                                        .addPreferredGap(
-                                                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                                                        .add(
-                                                                                btnPanelLayout
-                                                                                        .createParallelGroup(
-                                                                                                org.jdesktop.layout.GroupLayout.BASELINE)
-                                                                                        .add(
-                                                                                                btSelectDestinationDir)
-                                                                                        .add(
-                                                                                                tfDestinationDirectory,
-                                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                                                        .addPreferredGap(
-                                                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                                                        .add(
-                                                                                btnPanelLayout
-                                                                                        .createParallelGroup(
-                                                                                                org.jdesktop.layout.GroupLayout.TRAILING)
-                                                                                        .add(
-                                                                                                btnPanelLayout
-                                                                                                        .createParallelGroup(
-                                                                                                                org.jdesktop.layout.GroupLayout.BASELINE)
-                                                                                                        .add(
-                                                                                                                btTagFromFile)
-                                                                                                        .add(
-                                                                                                                btTagFromTable))
-                                                                                        .add(
-                                                                                                lbBusySpinner,
-                                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                                                        .add(
-                                                                pnTagOptions,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                                        .add(
-                                                                pnTimeOffset,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                                                                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(
-                                                org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(lbInformationMessage)));
+        btSaveTaggedFiles.setText(bundle.getString("FileTablePanel.btSaveTaggedFiles.text")); // NOI18N
+        btSaveTaggedFiles.setToolTipText(bundle.getString("FileTablePanel.btSaveTaggedFiles.toolTipText")); // NOI18N
+        btSaveTaggedFiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSaveTaggedFilesActionPerformed(evt);
+            }
+        });
 
-        final org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
-                this);
-        setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(
-                layout.createSequentialGroup().add(10, 10, 10).add(btnPanel,
-                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)).add(
-                spValues, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 608,
-                Short.MAX_VALUE));
-        layout.setVerticalGroup(layout.createParallelGroup(
-                org.jdesktop.layout.GroupLayout.LEADING).add(
-                org.jdesktop.layout.GroupLayout.TRAILING,
-                layout.createSequentialGroup().add(spValues,
-                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 104,
-                        Short.MAX_VALUE).addPreferredGap(
-                        org.jdesktop.layout.LayoutStyle.RELATED).add(
-                        btnPanel,
-                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-                        org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-                        org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)));
+        btTagFromFile.setText(bundle.getString("ImageTablePanel.btTagFromFile.text")); // NOI18N
+        btTagFromFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btTagFromFileActionPerformed(evt);
+            }
+        });
+
+        btSelectDestinationDir.setText(bundle.getString("ImageTablePanel.btSelectDestinationDir.text")); // NOI18N
+        btSelectDestinationDir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSelectDestinationDirActionPerformed(evt);
+            }
+        });
+
+        btClearList.setText(bundle.getString("ImageTablePanel.btClearList.text")); // NOI18N
+        btClearList.setToolTipText(bundle.getString("FileTablePanel.btClearList.toolTipText")); // NOI18N
+        btClearList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btClearListActionPerformed(evt);
+            }
+        });
+
+        btSelectImages.setText(bundle.getString("ImageTablePanel.btSelectImages.text")); // NOI18N
+        btSelectImages.setToolTipText(bundle.getString("FileTablePanel.btSelectImages.toolTipText")); // NOI18N
+        btSelectImages.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSelectImagesActionPerformed(evt);
+            }
+        });
+
+        btTagFromTable.setText(bundle.getString("ImageTablePanel.btTagFromTable.text")); // NOI18N
+        btTagFromTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btTagFromTableActionPerformed(evt);
+            }
+        });
+
+        tfDestinationDirectory.setText(bundle.getString("ImageTablePanel.tfDestinationDirectory.text")); // NOI18N
+        tfDestinationDirectory.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfDestinationDirectoryFocusLost(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(btTagFromFile)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(lbBusySpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btTagFromTable)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbTargetTemplate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(btSelectImages)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btClearList)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btSaveTaggedFiles))
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(btSelectDestinationDir)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(tfDestinationDirectory)))
+                .add(105, 105, 105))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(btSelectImages)
+                    .add(btClearList)
+                    .add(btSaveTaggedFiles))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(btSelectDestinationDir)
+                    .add(tfDestinationDirectory, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(btTagFromFile)
+                        .add(btTagFromTable)
+                        .add(cbTargetTemplate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(lbBusySpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        org.jdesktop.layout.GroupLayout btnPanelLayout = new org.jdesktop.layout.GroupLayout(btnPanel);
+        btnPanel.setLayout(btnPanelLayout);
+        btnPanelLayout.setHorizontalGroup(
+            btnPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, btnPanelLayout.createSequentialGroup()
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(6, 6, 6)
+                .add(pnTagOptions, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnTimeOffset, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        );
+        btnPanelLayout.setVerticalGroup(
+            btnPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(btnPanelLayout.createSequentialGroup()
+                .add(btnPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnTagOptions, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnTimeOffset, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(0, Short.MAX_VALUE))
+        );
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(10, 10, 10)
+                .add(btnPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            .add(spValues, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 713, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                .add(spValues, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(btnPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        );
     }//GEN-END:initComponents
 
     private void cbOverridePositionsStateChanged(
@@ -728,6 +599,10 @@ public class FileTablePanel extends javax.swing.JPanel implements
         // TODO add your handling code here:
     }//GEN-LAST:event_tfDestinationDirectoryFocusLost
 
+    private void cbTargetTemplateItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbTargetTemplateItemStateChanged
+        updateTargetTemplate();
+    }//GEN-LAST:event_cbTargetTemplateItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btClearList;
     private javax.swing.JButton btSaveTaggedFiles;
@@ -737,10 +612,11 @@ public class FileTablePanel extends javax.swing.JPanel implements
     private javax.swing.JButton btTagFromTable;
     private javax.swing.JPanel btnPanel;
     private javax.swing.JCheckBox cbOverridePositions;
+    private javax.swing.JComboBox cbTargetTemplate;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private org.jdesktop.swingx.JXBusyLabel lbBusySpinner;
     private javax.swing.JLabel lbHour;
-    private javax.swing.JLabel lbInformationMessage;
     private javax.swing.JLabel lbMinutes;
     private javax.swing.JLabel lbSeconds;
     private javax.swing.JLabel lbSeconds1;

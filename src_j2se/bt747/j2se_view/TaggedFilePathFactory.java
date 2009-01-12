@@ -112,4 +112,20 @@ public class TaggedFilePathFactory {
         return newPath;
     }
 
+    public final String getDestTemplate() {
+        return this.destTemplate;
+    }
+
+    public final void setDestTemplate(String destTemplate) {
+        this.destTemplate = destTemplate;
+    }
+
+    public final String getOrgTemplate() {
+        return this.orgTemplate;
+    }
+
+    public final void setOrgTemplate(String orgTemplate) {
+        this.orgTemplate = orgTemplate;
+    }
+
 }
