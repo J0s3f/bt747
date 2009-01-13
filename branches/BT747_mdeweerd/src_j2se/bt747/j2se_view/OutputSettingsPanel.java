@@ -92,7 +92,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         cbLanguage.setModel(new DefaultComboBoxModel(Calendar.getAvailableLocales()));
         setLocale(m.getStringOpt(Model.LANGUAGE));
 
-        tfTrackSeparationTime.setText(Integer.toString(m.getTrkSep()));
+        tfTrackSeparationTime.setText(Integer.toString(m.getIntOpt(AppSettings.TRKSEP)));
         int index = 0;
         switch (m.getOutputFileSplitType()) {
         case 0:
@@ -858,7 +858,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
     }//GEN-LAST:event_cbImperialUnitsFocusLost
 
     private void tfTrackSeparationTimeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfTrackSeparationTimeFocusLost
-        c.setTrkSep(Integer.parseInt(tfTrackSeparationTime.getText()));
+        c.setIntOpt(AppSettings.TRKSEP, Integer.parseInt(tfTrackSeparationTime.getText()));
     }//GEN-LAST:event_tfTrackSeparationTimeFocusLost
 
     private void cbNoFixColorActionPerformed(java.awt.event.ActionEvent evt) {                                           

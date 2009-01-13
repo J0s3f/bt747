@@ -141,7 +141,7 @@ public final class GPSLogGet extends Container implements ModelListener {
         add(edTrkSep = new Edit("00000"), AFTER, SAME); //$NON-NLS-1$
         edTrkSep.setValidChars(Edit.numbersSet);
         add(new Label(Txt.getString(Txt.MIN)), AFTER, SAME); //$NON-NLS-1$
-        edTrkSep.setText("" + m.getTrkSep());
+        edTrkSep.setText("" + m.getIntOpt(AppSettings.TRKSEP));
         edTrkSep.alignment = RIGHT;
 
         int offsetIdx = m.getIntOpt(AppSettings.GPSTIMEOFFSETHOURS) + 12;
@@ -302,8 +302,8 @@ public final class GPSLogGet extends Container implements ModelListener {
             break;
         case ControlEvent.FOCUS_OUT:
             if (event.target == edTrkSep) {
-                c.setTrkSep(Convert.toInt(edTrkSep.getText()));
-                edTrkSep.setText("" + m.getTrkSep());
+                c.setIntOpt(AppSettings.TRKSEP, Convert.toInt(edTrkSep.getText()));
+                edTrkSep.setText("" + m.getIntOpt(AppSettings.TRKSEP));
             }
             break;
 

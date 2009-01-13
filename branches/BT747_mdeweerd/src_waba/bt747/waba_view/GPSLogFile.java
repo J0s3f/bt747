@@ -100,7 +100,7 @@ public final class GPSLogFile extends Container implements ModelListener {
         edChunkSize.setValidChars(Edit.numbersSet);
         add(new Label(Txt.getString(Txt.CHUNK_AHEAD)), LEFT, AFTER);
         add(cblogReqAhead = new ComboBox(C_LOG_REQ_AHEAD), AFTER, SAME);
-        idx = m.getLogRequestAhead();
+        idx = m.getIntOpt(AppSettings.LOGAHEAD);
         if (idx > cblogReqAhead.size() - 1) {
             idx = cblogReqAhead.size() - 1;
         }

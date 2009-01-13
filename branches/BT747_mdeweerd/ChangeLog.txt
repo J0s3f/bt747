@@ -1,6 +1,7 @@
 Version 1.67.9
 * Listing known ports when connection fails.
 * [Internal: created parameter object for some conversion parameters]
+* KML configuration for track representation added.
 
 Version 1.67.8
 * Filename for tagged file is configurable

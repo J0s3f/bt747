@@ -238,6 +238,16 @@ public class AppSettings {
     public final static int COLOR_VALIDTRACK = 43;
     public final static int COLOR_INVALIDTRACK = 44;
     public final static int TAGGEDFILE_TEMPLATE = 45;
+    public final static int KML_ALTITUDEMODE = 46;
+    /**
+     * Set the track separation time. When two positions are separated by this
+     * time or more, a track separation is inserted.
+     * 
+     * @param value
+     *                Time in minutes for a track separation.
+     */
+    public final static int TRKSEP = 47;
+    public final static int LOGAHEAD = 48;
 
     private final static int TYPE_IDX = 0;
     private final static int PARAM_IDX = 1;
@@ -300,7 +310,7 @@ public class AppSettings {
             setHeightConversionMode(HEIGHT_AUTOMATIC);
             /* fall through */
         case 4:
-            setLogRequestAhead(C_DEFAULT_LOG_REQUEST_AHEAD);
+            setIntOpt(LOGAHEAD, C_DEFAULT_LOG_REQUEST_AHEAD);
             /* fall through */
         case 5:
             setNMEAset(0x0002000A);
@@ -309,7 +319,7 @@ public class AppSettings {
             setBooleanOpt(GPXUTC0, false);
             /* fall through */
         case 7:
-            setTrkSep(60);
+            setIntOpt(TRKSEP, 60);
             /* fall through */
         case 8:
             setBooleanOpt(ADVFILTACTIVE, false);
@@ -409,7 +419,10 @@ public class AppSettings {
             /* fall through */
         case 33:
             setStringOpt(TAGGEDFILE_TEMPLATE, "%p%f_tagged%e");
-            setStringOpt(VERSION, "0.34");
+            /* fall through */
+        case 34:
+            setIntOpt(KML_ALTITUDEMODE, 0);
+            setStringOpt(VERSION, "0.35");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
@@ -474,7 +487,7 @@ public class AppSettings {
                     paramsList[param][SIZE_IDX]);
         } else {
             // TODO: throw something
-            Generic.debug("Invalid parameter index " + param);
+            Generic.debug("Invalid parameter @ index " + param);
             return 0;
         }
     }
@@ -698,18 +711,6 @@ public class AppSettings {
         setLocalIntOpt(0, value, C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
     }
 
-    public final int getLogRequestAhead() {
-        return getLocalIntOpt(C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
-    }
-
-    /**
-     * @param value
-     *                The default value for opening the port.
-     */
-    protected final void setLogRequestAhead(final int value) {
-        setLocalIntOpt(0, value, C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE);
-    }
-
     /**
      * Gets the NMEA string types to write to the NMEA output file format.
      * 
@@ -756,14 +757,6 @@ public class AppSettings {
      */
     protected final void setNMEAset(final int formatNMEA) {
         setLocalIntOpt(0, formatNMEA, C_NMEASET_IDX, C_NMEASET_SIZE);
-    }
-
-    public final int getTrkSep() {
-        return getLocalIntOpt(C_TRKSEP_IDX, C_TRKSEP_SIZE);
-    }
-
-    protected final void setTrkSep(final int value) {
-        setLocalIntOpt(0, value, C_TRKSEP_IDX, C_TRKSEP_SIZE);
     }
 
     /**
@@ -1314,8 +1307,11 @@ public class AppSettings {
     private static final int C_TAGGED_TEMPLATE_IDX = C_MAPTYPE_IDX
             + C_MAPTYPE_SIZE;
     private static final int C_TAGGED_TEMPLATE_SIZE = 255;
-    private static final int C_NEXT_IDX = C_TAGGED_TEMPLATE_IDX
+    private static final int C_KML_ALTITUDEMODE_IDX = C_TAGGED_TEMPLATE_IDX
             + C_TAGGED_TEMPLATE_SIZE;
+    private static final int C_KML_ALTITUDEMODE_SIZE = 1;
+    private static final int C_NEXT_IDX = C_KML_ALTITUDEMODE_IDX
+            + C_KML_ALTITUDEMODE_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
@@ -1393,6 +1389,11 @@ public class AppSettings {
                     C_COLOR_INVALIDTRACK_SIZE },
             { STRING, TAGGEDFILE_TEMPLATE, C_TAGGED_TEMPLATE_IDX,
                     C_TAGGED_TEMPLATE_SIZE },
+            { INT, KML_ALTITUDEMODE, C_KML_ALTITUDEMODE_IDX,
+                    C_KML_ALTITUDEMODE_SIZE },
+            { INT, TRKSEP, C_TRKSEP_IDX, C_TRKSEP_SIZE },
+            { INT, LOGAHEAD, C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE },
     // End of list
     };
+
 }
