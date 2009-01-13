@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 import javax.microedition.io.Connector;
-import javax.microedition.io.file.FileConnection;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 
@@ -19,7 +18,6 @@ import net.sf.bt747.j4me.app.screens.FileManager;
 
 import org.j4me.logging.Log;
 
-import bt747.model.AppSettings;
 import bt747.model.Controller;
 import bt747.sys.File;
 import bt747.sys.Settings;
@@ -284,9 +282,9 @@ public class AppController extends Controller {
                 try {
                     String fn = "file://" + m.getStringOpt(AppModel.OUTPUTDIRPATH)
                             + File.separatorStr + "BT747Console.log";
-                    FileConnection fc;
+                    javax.microedition.io.file.FileConnection fc;
                     try {
-                        fc = (FileConnection) Connector.open(fn);
+                        fc = (javax.microedition.io.file.FileConnection) Connector.open(fn);
                         if (fc.exists()) {
                             fc.delete();
                         }
@@ -296,9 +294,9 @@ public class AppController extends Controller {
                     }
 
                     try {
-                        fc = (FileConnection) Connector.open(fn);
+                        fc = (javax.microedition.io.file.FileConnection) Connector.open(fn);
                         fc.create();
-                        fc = (FileConnection) Connector.open(fn,
+                        fc = (javax.microedition.io.file.FileConnection) Connector.open(fn,
                                 Connector.WRITE);
                         Log.setOutputStream(fc.openOutputStream());
                     } catch (IOException e) {

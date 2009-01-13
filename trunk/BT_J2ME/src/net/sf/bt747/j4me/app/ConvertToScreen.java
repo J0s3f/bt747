@@ -168,7 +168,7 @@ public final class ConvertToScreen extends
             tbTrackSeparation.setForNumericOnly();
             tbTrackSeparation.setLabel("Trk separation time (min)");
             tbTrackSeparation.setString(Integer.toString(m()
-                    .getTrkSep()));
+                    .getIntOpt(AppModel.TRKSEP)));
             append(tbTrackSeparation);
 
             rbTimeOffsetHours = new RadioButton();
@@ -211,7 +211,7 @@ public final class ConvertToScreen extends
             c.setHeightConversionMode(Model.HEIGHT_MSL_TO_WGS84);
             break;
         }
-        c.setTrkSep(Integer.parseInt(tbTrackSeparation.getString()));
+        c.setIntOpt(Model.TRKSEP,Integer.parseInt(tbTrackSeparation.getString()));
         c.setBooleanOpt(Model.FORCE_HOLUXM241, rbDevice.getSelectedIndex() == 1);
         int index = 0;
         // Work around superwaba bug
