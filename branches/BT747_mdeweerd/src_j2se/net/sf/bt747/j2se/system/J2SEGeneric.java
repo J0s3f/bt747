@@ -1,8 +1,8 @@
 /*
  * Created on 14 nov. 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated file go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 package net.sf.bt747.j2se.system;
 
@@ -31,14 +31,14 @@ public final class J2SEGeneric {
     // TODO: Improve next code - for the moment it is functional.
 
     public static void addThread(final BT747Thread t, final boolean b) {
-        if(oos.contains(t)) {
+        if (oos.contains(t)) {
             removeIfStoppedThread(t);
         }
         if (!oos.contains(t)) {
             if (Generic.isDebug()) {
                 Generic.debug("Adding " + t, null);
             }
-            J2SEThread mt = new J2SEThread(t);
+            final J2SEThread mt = new J2SEThread(t);
             t.started();
             mt.jvThread = new java.lang.Thread(mt, t.toString());
             if (mt != null) {
@@ -60,7 +60,7 @@ public final class J2SEGeneric {
         // MainWindow.getMainWindow().removeThread(t);
         final Iterator<Object> it = h.iterator();
         while (it.hasNext()) {
-            J2SEThread tt = (J2SEThread) it.next();
+            final J2SEThread tt = (J2SEThread) it.next();
             if (tt.btThread.equals(t)) {
                 tt.setRunning(false);
                 h.remove(tt);
@@ -74,7 +74,7 @@ public final class J2SEGeneric {
         // MainWindow.getMainWindow().removeThread(t);
         final Iterator<Object> it = h.iterator();
         while (it.hasNext()) {
-            J2SEThread tt = (J2SEThread) it.next();
+            final J2SEThread tt = (J2SEThread) it.next();
             if (tt.btThread.equals(t)) {
                 if (!tt.isRunning()) {
                     h.remove(tt);
@@ -100,23 +100,23 @@ public final class J2SEGeneric {
                 e.printStackTrace();
             }
         } else {
-            Writer result = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(result);
+            final Writer result = new StringWriter();
+            final PrintWriter printWriter = new PrintWriter(result);
             printWriter.println(s);
             if (e != null) {
                 e.printStackTrace(printWriter);
             }
-            String message = result.toString();
+            final String message = result.toString();
 
             System.out.print(message);
 
-            Iterator<J2SEMessageListener> it = listeners.iterator();
+            final Iterator<J2SEMessageListener> it = listeners.iterator();
             while (it.hasNext()) {
                 try {
                     J2SEMessageListener l;
                     l = it.next();
                     l.postMessage(message);
-                } catch (Exception ee) {
+                } catch (final Exception ee) {
                     ee.printStackTrace();
                 }
             }

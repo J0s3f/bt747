@@ -21,14 +21,14 @@ public class AGPSSatRecord {
         // TODO Auto-generated constructor stub
     }
 
-    public AGPSSatRecord(byte[] buffer, int index) {
+    public AGPSSatRecord(final byte[] buffer, final int index) {
         satRecord = new byte[60];
         for (int i = 0; i < 60; i++) {
             satRecord[i] = buffer[index + i];
         }
     }
-    
-    public int fillbuffer(byte[] buffer, int index) {
+
+    public int fillbuffer(final byte[] buffer, final int index) {
         int bufidx = index;
         for (int i = 0; i < 60; i++) {
             buffer[bufidx++] = satRecord[i];

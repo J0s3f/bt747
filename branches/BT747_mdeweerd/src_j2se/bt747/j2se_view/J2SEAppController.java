@@ -238,7 +238,7 @@ public final class J2SEAppController extends J2SEController {
 
     public final void convertLog(final int logType) {
         c.setUserWayPoints(m.getPositionData().getSortedGPSRecords());
-        if (logType == J2SEAppModel.KMZ_LOGTYPE) {
+        if (logType == Model.KMZ_LOGTYPE) {
             if (doConvertLog(logType, new GPSKMZFile(), ".kmz") != 0) {
                 reportError(c.getLastError(), c.getLastErrorInfo());
             }
@@ -293,7 +293,7 @@ public final class J2SEAppController extends J2SEController {
             final URL u = BT747Main.class
                     .getResource("/bt747/j2se_view/resources/" + iconPath);
             i = new javax.swing.ImageIcon(u);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // TODO: handle exception
         }
         return i;
@@ -534,7 +534,7 @@ public final class J2SEAppController extends J2SEController {
      */
     protected final void performOperationsAfterGPSConnect() {
         if (m.isConnected()) {
-            if (m.getBooleanOpt(J2SEAppModel.IS_STOP_LOGGING_ON_CONNECT)) {
+            if (m.getBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT)) {
                 c.setLoggingActive(false); // First command could fail, so
                 // repeat.
                 c.setLoggingActive(false);
@@ -978,7 +978,7 @@ public final class J2SEAppController extends J2SEController {
         this.timeOffset = timeOffset;
     }
 
-    public final void setChangeToMap(boolean changeToMap) {
+    public final void setChangeToMap(final boolean changeToMap) {
         this.changeToMap = changeToMap;
     }
 

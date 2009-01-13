@@ -20,19 +20,19 @@ import bt747.sys.Generic;
 public class BT747WaypointListCellRenderer implements
         javax.swing.ListCellRenderer {
 
-    private static Hashtable<Class<?>, WaypointListCellComponent> renderHash = new Hashtable<Class<?>, WaypointListCellComponent>();
+    private static final Hashtable<Class<?>, WaypointListCellComponent> renderHash = new Hashtable<Class<?>, WaypointListCellComponent>();
     private static final java.util.Vector<WaypointListCellComponent> renderers = new Vector<WaypointListCellComponent>();
 
     static {
         renderers.add(new ImageListCellRenderer());
     }
 
-    public final WaypointListCellComponent getRenderer(Object waypoint) {
-        WaypointListCellComponent renderer;
-        renderer = renderHash.get(waypoint.getClass());
+    public final WaypointListCellComponent getRenderer(final Object waypoint) {
+        final WaypointListCellComponent renderer = renderHash.get(waypoint
+                .getClass());
         if (renderer == null) {
             for (int i = renderers.size() - 1; i >= 0; i--) {
-                WaypointListCellComponent r = renderers.get(i);
+                final WaypointListCellComponent r = renderers.get(i);
                 if (r.isRendererOf(waypoint)) {
                     renderHash.put(waypoint.getClass(), r);
                     return r;
@@ -48,17 +48,18 @@ public class BT747WaypointListCellRenderer implements
      * @see javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax.swing.JList,
      *      java.lang.Object, int, boolean, boolean)
      */
-    public Component getListCellRendererComponent(JList list, Object value,
-            int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(final JList list,
+            final Object value, final int index, final boolean isSelected,
+            final boolean cellHasFocus) {
 
         try {
-        WaypointListCellComponent c;
-        c = getRenderer(value);
-        return c.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        } catch (Exception e) {
+            final WaypointListCellComponent c = getRenderer(value);
+            return c.getListCellRendererComponent(list, value, index,
+                    isSelected, cellHasFocus);
+        } catch (final Exception e) {
             Generic.debug("ListCellRender " + value, e);
         }
-        JLabel lb = new JLabel();
+        final JLabel lb = new JLabel();
         lb.setText(value.toString());
         return lb;
     }

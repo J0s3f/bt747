@@ -22,10 +22,11 @@ public class MyTileFactoryInfo extends TileFactoryInfo {
      * @param yparam
      * @param zparam
      */
-    public MyTileFactoryInfo(String name, int minimumZoomLevel,
-            int maximumZoomLevel, int totalMapZoom, int tileSize,
-            boolean xr2l, boolean yt2b, String baseURL, String xparam,
-            String yparam, String zparam, String description, String url) {
+    public MyTileFactoryInfo(final String name, final int minimumZoomLevel,
+            final int maximumZoomLevel, final int totalMapZoom,
+            final int tileSize, final boolean xr2l, final boolean yt2b,
+            final String baseURL, final String xparam, final String yparam,
+            final String zparam, final String description, final String url) {
         super(name, minimumZoomLevel, maximumZoomLevel, totalMapZoom,
                 tileSize, xr2l, yt2b, baseURL, xparam, yparam, zparam);
         this.url = url;

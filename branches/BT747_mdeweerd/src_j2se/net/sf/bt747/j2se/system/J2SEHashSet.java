@@ -13,22 +13,21 @@ public final class J2SEHashSet implements BT747HashSet {
         iterator = hs.iterator();
         return this;
     }
-    
+
     public final void add(final Object o) {
         hs.add(o);
     }
-    
+
     public final void remove(final Object o) {
         hs.remove(o);
     }
-    
+
     public final boolean hasNext() {
         return iterator.hasNext();
     }
-    
+
     public final Object next() {
         return iterator.next();
     }
-
 
 }

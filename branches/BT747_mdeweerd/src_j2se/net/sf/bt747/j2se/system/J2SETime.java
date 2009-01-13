@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j2se.system;
 
 import java.util.Calendar;
@@ -50,7 +50,7 @@ public final class J2SETime implements BT747Time {
         return cal.get(Calendar.HOUR_OF_DAY);
     }
 
-    public void setHour(int hours) {
+    public void setHour(final int hours) {
         cal.set(Calendar.HOUR_OF_DAY, hours);
     }
 
@@ -58,7 +58,7 @@ public final class J2SETime implements BT747Time {
         return cal.get(Calendar.MINUTE);
     }
 
-    public void setMinute(int hours) {
+    public void setMinute(final int hours) {
         cal.set(Calendar.MINUTE, hours);
     }
 
@@ -66,11 +66,11 @@ public final class J2SETime implements BT747Time {
         return cal.get(Calendar.SECOND);
     }
 
-    public void setSecond(int hours) {
+    public void setSecond(final int hours) {
         cal.set(Calendar.SECOND, hours);
     }
 
-    public void setDay(int date) {
+    public void setDay(final int date) {
         cal.set(Calendar.DAY_OF_MONTH, date);
     }
 
@@ -78,7 +78,7 @@ public final class J2SETime implements BT747Time {
         return cal.get(Calendar.YEAR);
     }
 
-    public void setYear(int year) {
+    public void setYear(final int year) {
         cal.set(Calendar.YEAR, year);
     }
 
@@ -86,7 +86,7 @@ public final class J2SETime implements BT747Time {
         return cal.get(Calendar.MONTH) + 1;
     }
 
-    public void setMonth(int month) {
+    public void setMonth(final int month) {
         cal.set(Calendar.MONTH, month - 1);
     }
 

@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT747                              ***
-//***                 (c)2007-2008 Mario De Weerd                  ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***                                                              ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT747 ***
+// *** (c)2007-2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j2se.app.exif;
 
 import bt747.sys.Interface;
@@ -62,10 +62,11 @@ public class ExifIfdBlock {
         // Interoperability = 2 bytes
         size = 2;
         // Each record individually = 12 bytes + payload
-        BT747Hashtable iter = atrs.iterator();
+        final BT747Hashtable iter = atrs.iterator();
         while (iter.hasNext()) {
             size += 12;
-            ExifAttribute atr = (ExifAttribute) atrs.get(iter.nextKey());
+            final ExifAttribute atr = (ExifAttribute) atrs
+                    .get(iter.nextKey());
             size += atr.getPayloadSize();
         }
 
@@ -74,8 +75,8 @@ public class ExifIfdBlock {
     }
 
     public final void fillBuffer(final byte[] buffer,
-            final int tiffHeaderStart, boolean bigEndian, final int offset,
-            final int nextIfdOffset) {
+            final int tiffHeaderStart, final boolean bigEndian,
+            final int offset, final int nextIfdOffset) {
         int payloadOffset;
         // Payload start is
         // Current position in buffer
@@ -86,36 +87,39 @@ public class ExifIfdBlock {
         payloadOffset += 12 * atrs.size();
         // .. plus bytes needed for nextIfdOffset
         payloadOffset += 4;
-        
-        // Interoperability number (= count) System.err.println(this.toString())
-        ExifUtils.addShort2byte(buffer, offset, bigEndian,atrs.size());
+
+        // Interoperability number (= count)
+        // System.err.println(this.toString())
+        ExifUtils.addShort2byte(buffer, offset, bigEndian, atrs.size());
         int recordOffset = offset + 2;
         // TODO - needs to be in sorted order.
-        BT747Hashtable iter = atrs.iterator();
+        final BT747Hashtable iter = atrs.iterator();
         // Very simple sort.
-        int[] sortedKeys = new int[atrs.size()];
+        final int[] sortedKeys = new int[atrs.size()];
         int idx = 0;
         while (iter.hasNext()) {
-            int key = ((ExifAttribute) (atrs.get(iter.nextKey()))).getTag();
+            final int key = ((ExifAttribute) (atrs.get(iter.nextKey())))
+                    .getTag();
             int i;
-            for (i = idx-1; i >= 0; i--) {
-                if(sortedKeys[i]>key) {
-                    sortedKeys[i+1] = sortedKeys[i];
+            for (i = idx - 1; i >= 0; i--) {
+                if (sortedKeys[i] > key) {
+                    sortedKeys[i + 1] = sortedKeys[i];
                 } else {
                     break;
                 }
             }
-            sortedKeys[i+1] = key;
+            sortedKeys[i + 1] = key;
             idx++;
         }
         for (int i = 0; i < sortedKeys.length; i++) {
-            int key = sortedKeys[i];
-            ExifAttribute atr = (ExifAttribute) (atrs.get(key));
+            final int key = sortedKeys[i];
+            final ExifAttribute atr = (ExifAttribute) (atrs.get(key));
             payloadOffset += atr.fillBuffer(buffer, recordOffset, bigEndian,
                     payloadOffset, tiffHeaderStart);
             recordOffset += 12;
         }
-        ExifUtils.addLong4byte(buffer, recordOffset, bigEndian, nextIfdOffset);
+        ExifUtils
+                .addLong4byte(buffer, recordOffset, bigEndian, nextIfdOffset);
     }
 
     public final boolean hasTag(final int tag) {
@@ -134,12 +138,12 @@ public class ExifIfdBlock {
      * @return the nextIfdBlockOffset
      */
     public final int getNextIfdBlockOffset() {
-        return this.nextIfdBlockOffset;
+        return nextIfdBlockOffset;
     }
 
     /**
      * @param nextIfdBlockOffset
-     *            the nextIfdBlockOffset to set
+     *                the nextIfdBlockOffset to set
      */
     public final void setNextIfdBlockOffset(final int nextIfdBlockOffset) {
         this.nextIfdBlockOffset = nextIfdBlockOffset;
@@ -153,7 +157,7 @@ public class ExifIfdBlock {
     @Override
     public String toString() {
         String r = "";
-        BT747Hashtable iter = atrs.iterator();
+        final BT747Hashtable iter = atrs.iterator();
         while (iter.hasNext()) {
             r += atrs.get(iter.nextKey()).toString();
             r += "\n";

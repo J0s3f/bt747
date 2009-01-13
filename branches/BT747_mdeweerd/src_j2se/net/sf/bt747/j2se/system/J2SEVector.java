@@ -1,8 +1,8 @@
 /*
  * Created on 14 nov. 2007
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * TODO To change the template for this generated file go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 package net.sf.bt747.j2se.system;
 
@@ -14,7 +14,8 @@ import bt747.sys.interfaces.BT747Vector;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public final class J2SEVector extends java.util.Stack<Object> implements BT747Vector {
+public final class J2SEVector extends java.util.Stack<Object> implements
+        BT747Vector {
 
     /**
      * 
@@ -22,17 +23,17 @@ public final class J2SEVector extends java.util.Stack<Object> implements BT747Ve
     private static final long serialVersionUID = 1L;
 
     public int getCount() {
-        return this.elementCount;
+        return elementCount;
     }
 
-    public void del(Object o) {
+    public void del(final Object o) {
         remove(o);
     }
 
-    public void del(int i) {
+    public void del(final int i) {
         try {
             remove(i);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // return false;
         }
 
@@ -43,7 +44,7 @@ public final class J2SEVector extends java.util.Stack<Object> implements BT747Ve
     }
 
     public String[] toStringArray() {
-        String[] s = new String[elementCount];
+        final String[] s = new String[elementCount];
         for (int i = 0; i < s.length; i++) {
             s[i] = (String) elementData[i];
             // System.out.println(s[i]);
@@ -52,7 +53,7 @@ public final class J2SEVector extends java.util.Stack<Object> implements BT747Ve
         return s;
     }
 
-    public final void mypush(Object item) {
+    public final void mypush(final Object item) {
         super.push(item);
     }
 }

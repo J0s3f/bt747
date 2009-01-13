@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT747                              ***
-//***                 (c)2007-2008 Mario De Weerd                  ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***                                                              ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT747 ***
+// *** (c)2007-2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j2se.app.exif;
 
 /**
@@ -89,9 +89,9 @@ public class ExifConstants {
     /** White point chromaticity WhitePoint 318 13E O O O O */
     /** Chromaticities of primaries PrimaryChromaticities 319 13F O O O O */
     /** Offset to JPEG SOI JPEGInterchangeFormat 513 201 N N N N */
-    public static final int TAG_JPEGINTERCHANGEFORMAT = 0x201; 
+    public static final int TAG_JPEGINTERCHANGEFORMAT = 0x201;
     /** Bytes of JPEG data JPEGInterchangeFormatLength 514 202 N N N N */
-    public static final int TAG_JPEGINTERCHANGEFORMATLENGTH = 0x202; 
+    public static final int TAG_JPEGINTERCHANGEFORMATLENGTH = 0x202;
     /** Color space transformation matrix */
     /** coefficients YCbCrCoefficients 529 211 N N O O */
     /** Subsampling ratio of Y to C YCbCrSubSampling 530 212 N N M J */
@@ -139,9 +139,9 @@ public class ExifConstants {
     /** User comments UserComment 37510 9286 O O O O */
     public static final int TAG_USERCOMMENT = 0x9286;
     /** DateTime subseconds SubSecTime 37520 9290 O O O O */
-    public static final int TAG_SUBSECTIME= 0x9290;
+    public static final int TAG_SUBSECTIME = 0x9290;
     /** DateTimeOriginal subseconds SubSecTimeOriginal 37521 9291 O O O O */
-    public static final int TAG_SUBSECTIMEORIGINAL= 0x9291;
+    public static final int TAG_SUBSECTIMEORIGINAL = 0x9291;
     /** DateTimeDigitized subseconds SubSecTimeDigitized 37522 9292 O O O O */
     public static final int TAG_SUBSECTIMEDIGITIZED = 0x9292;
     /** Supported Flashpix version FlashpixVersion 40960 A000 M M M M */
@@ -232,7 +232,10 @@ public class ExifConstants {
     public static final int TAG_GPSDESTLATITUTEREF = 0x0013;
     /** Latitude of destination GPSDestLatitude 20 14 RATIONAL 3 */
     public static final int TAG_GPSDESTLATITUDE = 0x0014;
-    /** Reference for longitude of destination GPSDestLongitudeRef 21 15 ASCII 2 */
+    /**
+     * Reference for longitude of destination GPSDestLongitudeRef 21 15 ASCII
+     * 2
+     */
     public static final int TAG_GPSDESTLONGITUDEREF = 0x0015;
     /** Longitude of destination GPSDestLongitude 22 16 RATIONAL 3 */
     public static final int TAG_GPSDESTLONGITUDE = 0x0016;

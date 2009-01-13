@@ -30,7 +30,7 @@ import bt747.j2se_view.model.ImageData;
 @SuppressWarnings("serial")
 public final class ImageListCellRenderer implements WaypointListCellComponent {
 
-    static final java.util.HashMap<String, SoftReference<ImageListPanel>> panels = new java.util.HashMap<String, SoftReference<ImageListPanel>>();
+    private static final java.util.HashMap<String, SoftReference<ImageListPanel>> panels = new java.util.HashMap<String, SoftReference<ImageListPanel>>();
 
     private static ExecutorService loader = Executors
             .newCachedThreadPool(new ThreadFactory() {
@@ -42,12 +42,13 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
                     return t;
                 }
             });
-    private Semaphore availThreads = new Semaphore(4);
+    private final Semaphore availThreads = new Semaphore(4);
 
-    public Component getListCellRendererComponent(JList list, Object value,
-            int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(final JList list,
+            final Object value, final int index, final boolean isSelected,
+            final boolean cellHasFocus) {
         String path;
-        ImageData v = (ImageData) value;
+        final ImageData v = (ImageData) value;
         path = v.getPath();
         SoftReference<ImageListPanel> s;
         synchronized (panels) {
@@ -87,7 +88,8 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
         private JList c;
         private int index;
 
-        IconLoader(ImageListPanel pn, String path, JList c, int index) {
+        IconLoader(final ImageListPanel pn, final String path, final JList c,
+                final int index) {
             synchronized (panels) {
                 panels.put(path, new SoftReference<ImageListPanel>(pn));
             }
@@ -106,7 +108,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
                 availThreads.acquire();
                 try {
                     Icon icon;
-                    java.io.File file = new java.io.File(path);
+                    final java.io.File file = new java.io.File(path);
                     FileInputStream fis = new FileInputStream(file);
                     icon = new ImageIcon(GraphicsUtilities.createThumbnail(
                             ImageIO.read(fis), 80));
@@ -117,10 +119,10 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
                     // c.doLayout();
                     c.repaint();
 
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     bt747.sys.Generic.debug("Icon creation", e);
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
 
             }
             availThreads.release();
@@ -132,8 +134,8 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
      * 
      * @see net.sf.bt747.j2se.app.list.WaypointListCellComponent#getText()
      */
-    public final String getText(Object wp) {
-        String path = ((ImageData) wp).getPath();
+    public final String getText(final Object wp) {
+        final String path = ((ImageData) wp).getPath();
         int li = 0;
         int n;
         n = path.lastIndexOf('/');
@@ -152,8 +154,8 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
      * 
      * @see net.sf.bt747.j2se.app.list.WaypointListCellComponent#getTooltip()
      */
-    public final String getTooltip(Object wp) {
-        ImageData w = (ImageData) wp;
+    public final String getTooltip(final Object wp) {
+        final ImageData w = (ImageData) wp;
         return "<html>" + CommonOut.getHtml(w.getGpsRecord());
     }
 
@@ -162,7 +164,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
      * 
      * @see net.sf.bt747.j2se.app.list.WaypointListCellComponent#isRendererOf(java.lang.Object)
      */
-    public final boolean isRendererOf(Object wp) {
+    public final boolean isRendererOf(final Object wp) {
         return ImageData.class.isInstance(wp);
     }
 
