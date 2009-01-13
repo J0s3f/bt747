@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 // Thanks to Marcus Schmidke for modifications to the output format
 // making it compatible with MapSource that requires specific field
 // ordering.<br>This was undone, but implemented differently
@@ -55,6 +55,8 @@ public final class GPSGPXFile extends GPSFile {
     public final void initialiseFile(final String basename, final String ext,
             final int Card, final int oneFilePerDay) {
         super.initialiseFile(basename, ext, Card, oneFilePerDay);
+        isTrkSegSplitOnlyWhenSmall = getParamObject().getBoolParam(
+                GPSConversionParameters.TRACK_SPLIT_IF_SMALL_BOOL);
         currentFilter = GPSFilter.WAYPT;
         isWayType = true;
     }
@@ -174,7 +176,8 @@ public final class GPSGPXFile extends GPSFile {
                 String fixStr = ""; // String that will represent fix type
                 String rcrStr = ""; // String that will represent log reason
                 String hdopStr = ""; // String that will represent HDOP
-                String nsatStr = ""; // String that will represent number of
+                String nsatStr = ""; // String that will represent number
+                // of
                 // sats
 
                 if ((activeFields.hasValid())
@@ -218,10 +221,12 @@ public final class GPSGPXFile extends GPSFile {
                     rec.append("</type>\r\n");
                 }
 
-                if ((activeFields.hasHdop()) && (selectedFileFields.hasHdop())) {
+                if ((activeFields.hasHdop())
+                        && (selectedFileFields.hasHdop())) {
                     hdopStr = Convert.toString(r.hdop / 100.0, 2);
                 }
-                if ((activeFields.hasNsat()) && (selectedFileFields.hasNsat())) {
+                if ((activeFields.hasNsat())
+                        && (selectedFileFields.hasNsat())) {
                     nsatStr += (r.nsat / 256);
                 }
 
@@ -229,15 +234,12 @@ public final class GPSGPXFile extends GPSFile {
                 rec.setLength(0);
                 if ((activeFields.hasUtc()) && (selectedFileFields.hasUtc())) {
                     timeStr += t.getYear() + "-"
-                            + (t.getMonth() < 10 ? "0" : "")
-                            + t.getMonth() + "-"
-                            + (t.getDay() < 10 ? "0" : "")
-                            + t.getDay() + "T"
-                            + (t.getHour() < 10 ? "0" : "")
+                            + (t.getMonth() < 10 ? "0" : "") + t.getMonth()
+                            + "-" + (t.getDay() < 10 ? "0" : "") + t.getDay()
+                            + "T" + (t.getHour() < 10 ? "0" : "")
                             + t.getHour() + ":"
-                            + (t.getMinute() < 10 ? "0" : "")
-                            + t.getMinute() + ":"
-                            + (t.getSecond() < 10 ? "0" : "")
+                            + (t.getMinute() < 10 ? "0" : "") + t.getMinute()
+                            + ":" + (t.getSecond() < 10 ? "0" : "")
                             + t.getSecond();
                     if ((activeFields.hasMillisecond())
                             && (selectedFileFields.hasMillisecond())) {
@@ -256,8 +258,7 @@ public final class GPSGPXFile extends GPSFile {
                         nZeros = 0;
                     }
                     tx.append(zeros, 0, nZeros);
-                    trackName = "#" + tx.toString()
-                            + r.recCount + "#";
+                    trackName = "#" + tx.toString() + r.recCount + "#";
                     if ((activeFields.hasUtc())
                             && (selectedFileFields.hasUtc())) {
                         trackName += " " + timeStr;
@@ -358,31 +359,35 @@ public final class GPSGPXFile extends GPSFile {
                                 || hdopStr.length() != 0 || nsatStr.length() != 0)) {
                     rec.append("<cmt>");
                     rec.append("<![CDATA[");
-                    CommonOut.getHtml(rec, r, activeFields, selectedFileFields,
-                            t, recordNbrInLogs, imperial);
+                    CommonOut.getHtml(rec, r, activeFields,
+                            selectedFileFields, t, recordNbrInLogs, imperial);
                     rec.append("]]>");
                     rec.append("</cmt>\r\n");
                 }
 
                 // <desc> xsd:string </desc> [0..1] ?
                 // A text description of the element. Holds additional
-                // information about the element intended for the user, not the
+                // information about the element intended for the user, not
+                // the
                 // GPS.
 
                 // <src> xsd:string </src> [0..1] ?
                 // Source of data. Included to give user some idea of
-                // reliability and accuracy of data. "Garmin eTrex", "USGS quad
+                // reliability and accuracy of data. "Garmin eTrex", "USGS
+                // quad
                 // Boston North", e.g
 
                 // <sym> xsd:string </sym> [0..1] ?
-                // Text of GPS symbol name. For interchange with other programs,
-                // use the exact spelling of the symbol as displayed on the GPS.
+                // Text of GPS symbol name. For interchange with other
+                // programs,
+                // use the exact spelling of the symbol as displayed on the
+                // GPS.
                 // If the GPS abbreviates words, spell them out.
 
                 // <type> xsd:string </type> [0..1] ?
                 // Type (classification) of route. (for tracks)
                 // Type (classification) of waypoint. (for waypoints)
-                
+
                 if ((activeFields.hasRcr()) && (selectedFileFields.hasRcr())) {
                     rec.append("<sym>");
                     rec.append(CommonOut.getRcrSymbolText(r));
@@ -400,7 +405,8 @@ public final class GPSGPXFile extends GPSFile {
                 }
 
                 // <sat> xsd:nonNegativeInteger </sat> [0..1] ?
-                if ((activeFields.hasNsat()) && (selectedFileFields.hasNsat())) {
+                if ((activeFields.hasNsat())
+                        && (selectedFileFields.hasNsat())) {
                     rec.append("<sat>");
                     rec.append(nsatStr); // Sat used
                     rec.append("</sat>\r\n");
@@ -410,34 +416,39 @@ public final class GPSGPXFile extends GPSFile {
                 }
 
                 // <hdop> xsd:decimal </hdop> [0..1] ?
-                if ((activeFields.hasHdop()) && (selectedFileFields.hasHdop())) {
+                if ((activeFields.hasHdop())
+                        && (selectedFileFields.hasHdop())) {
                     rec.append("<hdop>");
                     rec.append(hdopStr);
                     rec.append("</hdop>\r\n");
                 }
                 // <vdop> xsd:decimal </vdop> [0..1] ?
-                if ((activeFields.hasVdop()) && (selectedFileFields.hasVdop())) {
+                if ((activeFields.hasVdop())
+                        && (selectedFileFields.hasVdop())) {
                     rec.append("<vdop>");
                     rec.append(Convert.toString(r.vdop / 100.0, 2));
                     rec.append("</vdop>\r\n");
                 }
                 // <pdop> xsd:decimal </pdop> [0..1] ?
                 // // <pdop> xsd:decimal </pdop> [0..1] ?
-                if ((activeFields.hasPdop()) && (selectedFileFields.hasPdop())) {
+                if ((activeFields.hasPdop())
+                        && (selectedFileFields.hasPdop())) {
                     rec.append("<pdop>");
                     rec.append(Convert.toString(r.pdop / 100.0, 2));
                     rec.append("</pdop>\r\n");
                 }
 
                 // <ageofdgpsdata> xsd:decimal </ageofdgpsdata> [0..1] ?
-                if ((activeFields.hasDage()) && (selectedFileFields.hasDage())) {
+                if ((activeFields.hasDage())
+                        && (selectedFileFields.hasDage())) {
                     rec.append("<ageofdgpsdata>");
                     rec.append(r.dage);
                     rec.append("</ageofdgpsdata>\r\n");
                 }
 
                 // <dgpsid> dgpsStationType </dgpsid> [0..1] ?
-                if ((activeFields.hasDsta()) && (selectedFileFields.hasDsta())) {
+                if ((activeFields.hasDsta())
+                        && (selectedFileFields.hasDsta())) {
                     rec.append("<dgpsid>");
                     rec.append(r.dsta);
                     rec.append("</dgpsid>\r\n");
@@ -495,22 +506,5 @@ public final class GPSGPXFile extends GPSFile {
             writeTxt(footer);
         }
         super.finaliseFile();
-
-    }
-
-    /**
-     * @return Returns the m_TrkSegSplitOnlyWhenSmall.
-     */
-    public final boolean isTrkSegSplitOnlyWhenSmall() {
-        return isTrkSegSplitOnlyWhenSmall;
-    }
-
-    /**
-     * @param trkSegSplitOnlyWhenSmall
-     *            The m_TrkSegSplitOnlyWhenSmall to set.
-     */
-    public final void setTrkSegSplitOnlyWhenSmall(
-            final boolean trkSegSplitOnlyWhenSmall) {
-        isTrkSegSplitOnlyWhenSmall = trkSegSplitOnlyWhenSmall;
     }
 }

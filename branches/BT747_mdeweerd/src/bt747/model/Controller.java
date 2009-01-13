@@ -31,6 +31,7 @@ import gps.log.out.CommonOut;
 import gps.log.out.GPSArray;
 import gps.log.out.GPSCSVFile;
 import gps.log.out.GPSCompoGPSTrkFile;
+import gps.log.out.GPSConversionParameters;
 import gps.log.out.GPSFile;
 import gps.log.out.GPSGPXFile;
 import gps.log.out.GPSGmapsHTMLEncodedFile;
@@ -243,7 +244,6 @@ public class Controller {
     }
 
     private GPSFile getOutFileHandler(final int logType) {
-        String parameters = ""; // For debug
         GPSFile gpsFile = null;
         switch (logType) {
         case Model.CSV_LOGTYPE:
@@ -260,17 +260,12 @@ public class Controller {
             break;
         case Model.GPX_LOGTYPE:
             gpsFile = new GPSGPXFile();
-            ((GPSGPXFile) gpsFile).setTrkSegSplitOnlyWhenSmall(m
-                    .getBooleanOpt(AppSettings.GPXTRKSEGBIG));
             break;
         case Model.NMEA_LOGTYPE:
             gpsFile = new GPSNMEAFile();
-            ((GPSNMEAFile) gpsFile).setNMEAoutput(m.getNMEAset());
             break;
         case Model.GMAP_LOGTYPE:
             gpsFile = new GPSGmapsHTMLEncodedFile();
-            ((GPSGmapsHTMLEncodedFile) gpsFile).setGoogleKeyCode(m
-                    .getStringOpt(AppSettings.GOOGLEMAPKEY));
             break;
         case Model.ARRAY_LOGTYPE:
             gpsFile = new GPSArray();
@@ -312,6 +307,15 @@ public class Controller {
                     .getIntOpt(Model.FILEFIELDFORMAT)));
             gpsFile.setTrackSepTime(m.getTrkSep() * SECONDS_PER_MINUTE);
             gpsFile.setUserWayPointList(userWayPoints);
+            gpsFile.getParamObject().setBoolParam(
+                    GPSConversionParameters.TRACK_SPLIT_IF_SMALL_BOOL,
+                    m.getBooleanOpt(AppSettings.GPXTRKSEGBIG));
+            gpsFile.getParamObject().setParam(
+                    GPSConversionParameters.GOOGLEMAPKEY_STRING,
+                    m.getStringOpt(AppSettings.GOOGLEMAPKEY));
+            gpsFile.getParamObject().setIntParam(
+                    GPSConversionParameters.NMEA_OUTFIELDS, m.getNMEAset());
+
         }
     }
 

@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.log.out;
 
 import gps.BT747Constants;
@@ -32,10 +32,24 @@ public final class GPSNMEAFile extends GPSFile {
     private final StringBuffer rec = new StringBuffer(1024); // reused
     // stringbuffer
 
-    private int m_NMEAout;
+    private int fieldsNmeaOut;
 
-    public final void setNMEAoutput(final int NMEAout) {
-        m_NMEAout = NMEAout;
+    // getParamObject().getIntParam( GPSConversionParameters.NMEA_OUTFIELDS);
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.log.out.GPSFile#initialiseFile(java.lang.String,
+     *      java.lang.String, int, int)
+     */
+    @Override
+    public void initialiseFile(final String baseName, final String extension,
+            final int fileCard, final int fileSeparationFreq) {
+        // TODO Auto-generated method stub
+        super.initialiseFile(baseName, extension, fileCard,
+                fileSeparationFreq);
+        fieldsNmeaOut = getParamObject().getIntParam(
+                GPSConversionParameters.NMEA_OUTFIELDS);
     }
 
     private final void writeNMEA(final String s) {
@@ -65,15 +79,12 @@ public final class GPSNMEAFile extends GPSFile {
     public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
         String timeStr = "";
-        if (activeFields != null && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
+        if ((activeFields != null) && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
 
             if ((activeFields.hasUtc())) {
-                timeStr = (t.getHour() < 10 ? "0" : "")
-                        + t.getHour()
-                        + (t.getMinute() < 10 ? "0" : "")
-                        + t.getMinute()
-                        + (t.getSecond() < 10 ? "0" : "")
-                        + t.getSecond();
+                timeStr = (t.getHour() < 10 ? "0" : "") + t.getHour()
+                        + (t.getMinute() < 10 ? "0" : "") + t.getMinute()
+                        + (t.getSecond() < 10 ? "0" : "") + t.getSecond();
                 if (activeFields.hasMillisecond()) {
                     timeStr += "." + ((s.milisecond < 100) ? "0" : "")
                             + ((s.milisecond < 10) ? "0" : "")
@@ -81,19 +92,19 @@ public final class GPSNMEAFile extends GPSFile {
                 }
             }
 
-            if ((m_NMEAout & (1 << BT747Constants.NMEA_SEN_RMC_IDX)) != 0) {
+            if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_RMC_IDX)) != 0) {
                 writeRMC(s, timeStr);
             }
-            if ((m_NMEAout & (1 << BT747Constants.NMEA_SEN_GGA_IDX)) != 0) {
+            if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GGA_IDX)) != 0) {
                 writeGGA(s, timeStr);
             }
-            if ((m_NMEAout & (1 << BT747Constants.NMEA_SEN_ZDA_IDX)) != 0) {
+            if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_ZDA_IDX)) != 0) {
                 writeZDA(s, timeStr);
             }
-            if ((m_NMEAout & (1 << BT747Constants.NMEA_SEN_GSA_IDX)) != 0) {
+            if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GSA_IDX)) != 0) {
                 writeGSA(s, timeStr);
             }
-            if ((m_NMEAout & (1 << BT747Constants.NMEA_SEN_GSV_IDX)) != 0) {
+            if ((fieldsNmeaOut & (1 << BT747Constants.NMEA_SEN_GSV_IDX)) != 0) {
                 writeGSV(s, timeStr);
             }
 
@@ -157,7 +168,7 @@ public final class GPSNMEAFile extends GPSFile {
                 sl = ",S,";
                 l = -s.latitude;
             }
-            int a = (int) Math.floor(l);
+            final int a = (int) Math.floor(l);
             rec.append(((a < 10) ? "0" : "") + a);
             l -= a;
             l *= 60;
@@ -180,7 +191,7 @@ public final class GPSNMEAFile extends GPSFile {
                 sl = ",W,";
                 l = -s.longitude;
             }
-            int a = (int) Math.floor(l);
+            final int a = (int) Math.floor(l);
             rec.append(((a < 100) ? "0" : "") + ((a < 10) ? "0" : "") + a);
             l -= a;
             l *= 60;
@@ -208,10 +219,8 @@ public final class GPSNMEAFile extends GPSFile {
         rec.append(",");
         if ((activeFields.hasUtc())) {
             // DATE & TIME
-            rec.append((t.getDay() < 10 ? "0" : "")
-                    + t.getDay()
-                    + (t.getMonth() < 10 ? "0" : "")
-                    + t.getMonth()
+            rec.append((t.getDay() < 10 ? "0" : "") + t.getDay()
+                    + (t.getMonth() < 10 ? "0" : "") + t.getMonth()
                     + (((t.getYear() % 100) < 10) ? "0" : "")
                     + (t.getYear() % 100));
         }
@@ -245,7 +254,7 @@ public final class GPSNMEAFile extends GPSFile {
                 sl = ",S,";
                 l = -s.latitude;
             }
-            int a = (int) Math.floor(l);
+            final int a = (int) Math.floor(l);
             rec.append(((a < 10) ? "0" : "") + a);
             l -= a;
             l *= 60;
@@ -266,7 +275,7 @@ public final class GPSNMEAFile extends GPSFile {
                 sl = ",W,";
                 l = -s.longitude;
             }
-            int a = (int) Math.floor(l);
+            final int a = (int) Math.floor(l);
             rec.append(((a < 100) ? "0" : "") + ((a < 10) ? "0" : "") + a);
             l -= a;
             l *= 60;
@@ -336,7 +345,8 @@ public final class GPSNMEAFile extends GPSFile {
         // - 133.4,M is the altitude, in meters, above mean sea level
         if ((activeFields.hasHeight())) {
             float separation = 0.0f;
-            boolean hasLatLon = ((activeFields.hasLatitude()) && (activeFields.hasLongitude()));
+            final boolean hasLatLon = ((activeFields.hasLatitude()) && (activeFields
+                    .hasLongitude()));
             if (hasLatLon) {
                 separation = ((long) (10 * Conv.wgs84Separation(s.latitude,
                         s.longitude))) / 10.f;
@@ -462,10 +472,8 @@ public final class GPSNMEAFile extends GPSFile {
 
             // DATE & TIME
             rec.append(timeStr);
-            rec.append("," + (t.getDay() < 10 ? "0" : "")
-                    + t.getDay() + ","
-                    + (t.getMonth() < 10 ? "0" : "")
-                    + t.getMonth() + ","
+            rec.append("," + (t.getDay() < 10 ? "0" : "") + t.getDay() + ","
+                    + (t.getMonth() < 10 ? "0" : "") + t.getMonth() + ","
                     + t.getYear() + ",,");
 
             writeNMEA(rec.toString());

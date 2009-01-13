@@ -36,7 +36,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
      * Local StringBuffer for output.
      */
     private final StringBuffer rec = new StringBuffer(1024); // reused
-                                                                // stringbuffer
+    // stringbuffer
 
     /**
      * When true, currently handling waypoints, otherwise trackpoints.
@@ -51,7 +51,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
     private int trackIndex = 0; // Index for tracks
 
     private String trackOnClickFuncCalls = ""; // Javascript function calls
-                                                // if
+    // if
     // click.
     private final StringBuffer infoHtmls = new StringBuffer(1024);
     private final BT747Vector iconList = Interface.getVectorInstance();
@@ -105,10 +105,10 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         }
     }
 
-    private String googleKeyCode = ""; // Google key code for web
-
     private final String keyCode() {
-        if (googleKeyCode.length() != 0) {
+        final String googleKeyCode = getParamObject().getStringParam(
+                GPSConversionParameters.GOOGLEMAPKEY_STRING);
+        if ((googleKeyCode != null) && (googleKeyCode.length() != 0)) {
             return ";key=" + googleKeyCode;
         }
         return ""; // default
@@ -433,7 +433,7 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
                         rec.append(iconList.elementAt(i));
                     }
                     rec.append("),"); // Last char must be ',' to erase it
-                                        // below
+                    // below
 
                 }
                 rec.setCharAt(rec.length() - 1, ']'); // Delete last ','
@@ -692,20 +692,5 @@ public final class GPSGmapsHTMLEncodedFile extends GPSFile {
         }
         super.finaliseFile();
 
-    }
-
-    /**
-     * @return Returns the googleKeyCode.
-     */
-    public final String getGoogleKeyCode() {
-        return googleKeyCode;
-    }
-
-    /**
-     * @param sGoogleKeyCode
-     *                The googleKeyCode to set.
-     */
-    public final void setGoogleKeyCode(final String sGoogleKeyCode) {
-        googleKeyCode = sGoogleKeyCode;
     }
 }
