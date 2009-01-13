@@ -34,6 +34,8 @@ import bt747.sys.interfaces.BT747Time;
  * they implement.
  */
 public abstract class GPSFile implements GPSFileConverterInterface {
+
+    
     /**
      * The track filters used.
      */
@@ -864,4 +866,19 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         this.overridePreviousTag = overridePreviousTag;
     }
 
+    /**
+     * Generic parameter object.
+     */
+    protected GPSConversionParameters paramObject =
+        new GPSConversionParameters();
+
+    public final GPSConversionParameters getParamObject() {
+        return this.paramObject;
+    }
+
+    public final void setParamObject(final GPSConversionParameters paramObject) {
+        this.paramObject = paramObject;
+    }
+    
+    
 }

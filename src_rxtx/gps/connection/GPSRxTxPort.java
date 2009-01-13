@@ -25,7 +25,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Enumeration;
 
+import bt747.Version;
 import bt747.sys.Generic;
 
 /**
@@ -121,7 +123,7 @@ public final class GPSRxTxPort extends GPSPort {
 
         try {
             if (Generic.isDebug()) {
-                Generic.debug("Info: trying to open " + portStr, null);
+                Generic.debug("Info: trying to open '" + portStr + "'", null);
             }
             CommPortIdentifier portIdentifier;
             portIdentifier = CommPortIdentifier.getPortIdentifier(portStr);
@@ -129,8 +131,9 @@ public final class GPSRxTxPort extends GPSPort {
                 Generic.debug("Error: Port " + portStr
                         + "is currently in use", null);
             } else {
-                final CommPort commPort = portIdentifier.open(getClass()
-                        .getName(), 2000);
+                final CommPort commPort = portIdentifier.open(
+                        "BT747 " + Version.VERSION_NUMBER + " "
+                                + getClass().getName(), 2000);
                 if (commPort instanceof SerialPort) {
                     final SerialPort serialPort = (SerialPort) commPort;
                     sp = serialPort;
@@ -148,6 +151,40 @@ public final class GPSRxTxPort extends GPSPort {
             }
         } catch (final NoSuchPortException e) {
             Generic.debug("", e);
+            Generic.debug("\nListing known ports:");
+            try {
+                final Enumeration<?> list = CommPortIdentifier
+                        .getPortIdentifiers();
+                while (list.hasMoreElements()) {
+                    final CommPortIdentifier iden = (CommPortIdentifier) list
+                            .nextElement();
+                    String type;
+                    switch (iden.getPortType()) {
+                    case CommPortIdentifier.PORT_SERIAL: // rs232 Port
+                        type = "SER  :";
+                        break;
+                    case CommPortIdentifier.PORT_PARALLEL: // Parallel Port
+                        type = "PAR  :";
+                        break;
+                    case CommPortIdentifier.PORT_I2C: // i2c Port
+                        type = "I2C  :";
+                        break;
+                    case CommPortIdentifier.PORT_RS485: // rs485 Port
+                        type = "RS485:";
+                        break;
+                    case CommPortIdentifier.PORT_RAW: // Raw
+                        // Port
+                        type = "RAW  :";
+                        break;
+                    default:
+                        type = "UNK  :";
+                    }
+                    Generic.debug(type + iden.getName());
+                }
+            } catch (Exception exp) {
+                // Do not care.
+
+            }
         } catch (final PortInUseException e) {
             Generic.debug("", e);
         } catch (final UnsupportedCommOperationException e) {

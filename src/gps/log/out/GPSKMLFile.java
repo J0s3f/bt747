@@ -30,6 +30,12 @@ import bt747.sys.Convert;
 public class GPSKMLFile extends GPSFile {
     private final StringBuffer rec = new StringBuffer(1024); // reused
     // stringbuffer
+    /**
+     * Values for {@link GPSConversionParameters#KML_TRACK_ALTITUDE_STRING}.
+     */
+    public static final String ABSOLUTE_HEIGHT = "absolute";
+    public static final String RELATIVE_HEIGHT = "relativeToGround";
+    public static final String CLAMPED_HEIGHT = "clampToGround";
 
     private boolean isWayType;
     private boolean isTrackType;
@@ -37,6 +43,7 @@ public class GPSKMLFile extends GPSFile {
     private int currentFilter;
     private String trackName;
     private int altitudeMode = 0; // 0 = altitude.
+    private String altitudeModeIfHeight = ABSOLUTE_HEIGHT;
 
     /**
      * 
@@ -58,6 +65,11 @@ public class GPSKMLFile extends GPSFile {
         isWayType = true;
         isTrackType = false;
         isPathType = false;
+        String am = getParamObject().getStringParam(
+                GPSConversionParameters.KML_TRACK_ALTITUDE_STRING);
+        if (am != null) {
+            altitudeModeIfHeight = am;
+        }
     }
 
     /*
@@ -416,9 +428,9 @@ public class GPSKMLFile extends GPSFile {
                                     && (selectedFileFields.hasHeight())) {
                                 altitudeMode = 0;
                                 // clampToGround, relativeToGround, absolute
-                                rec.append("absolute");
+                                rec.append(altitudeModeIfHeight);
                             } else {
-                                rec.append("clampToGround");
+                                rec.append(CLAMPED_HEIGHT);
                                 altitudeMode = 1;
                             }
                             rec.append("</altitudeMode><coordinates>\r\n");

@@ -48,4 +48,4 @@ CLASSPATH=${RXTXJAR}:$CLASSPATH
 
 #strace -e trace=file -f -o trace.log
 MEM_HEAP_OPTION=-Xmx192m
-$JAVA $MEM_HEAP_OPTION -Djava.library.path=${RXTXLIBPATH} -jar ${ROOT_DIR}/dist/BT747_j2se.jar &
+$JAVA $MEM_HEAP_OPTION -Djava.library.path=${RXTXLIBPATH} -jar ${ROOT_DIR}/dist/BT747_j2se.jar $* &
