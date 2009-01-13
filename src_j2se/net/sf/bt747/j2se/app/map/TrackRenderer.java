@@ -13,11 +13,13 @@ import org.jdesktop.swingx.JXMapViewer;
 public interface TrackRenderer {
     /**
      * paint the specified waypoint on the specified map and graphics context
-     * @param g 
-     * @param map 
-     * @param waypoint 
-     * @return 
+     * 
+     * @param g
+     * @param map
+     * @param waypoint
+     * @return
      */
-    public boolean paintTrack(Graphics2D g, JXMapViewer map, Collection<GPSRecord> track);
-    
+    public boolean paintTrack(Graphics2D g, JXMapViewer map,
+            Collection<GPSRecord> track);
+
 }

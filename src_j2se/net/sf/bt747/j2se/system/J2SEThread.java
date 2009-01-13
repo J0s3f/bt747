@@ -18,14 +18,14 @@ public final class J2SEThread implements java.lang.Runnable {
         while (running) {
             try {
                 btThread.run();
-                //J2SEGeneric.debug("Thread waiting", null);
+                // J2SEGeneric.debug("Thread waiting", null);
                 java.lang.Thread.sleep(2);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("Thread " + this, e);
             }
         }
         running = false;
-        //J2SEGeneric.debug("Thread " + this + " ended", null);
+        // J2SEGeneric.debug("Thread " + this + " ended", null);
         // Vm.debug("Thread ended");
     }
 
@@ -33,7 +33,7 @@ public final class J2SEThread implements java.lang.Runnable {
      * @param running
      *                the running to set
      */
-    protected void setRunning(boolean running) {
+    protected void setRunning(final boolean running) {
         this.running = running;
     }
 
@@ -41,6 +41,6 @@ public final class J2SEThread implements java.lang.Runnable {
      * @return the running
      */
     protected boolean isRunning() {
-        return this.running;
+        return running;
     }
 }

@@ -1,17 +1,17 @@
-//********************************************************************
-//***                            BT747                             ***
-//***                 (c)2007-2008 Mario De Weerd                  ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***                                                              ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT747 ***
+// *** (c)2007-2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j2se.app.exif;
 
 import gps.log.in.WindowedFile;
@@ -33,7 +33,8 @@ import bt747.sys.Generic;
  * Writing Exif data consists in replacing the APP1 Block and updating the SOI
  * Marker.
  * 
- * Specification at http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf
+ * Specification at
+ * http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf
  */
 public class ExifTIFF {
 
@@ -58,7 +59,7 @@ public class ExifTIFF {
         try {
             // bt747.sys.Generic.debug(Path);
             p = new WindowedFile(Path, File.READ_ONLY, card);
-            if (p != null && p.isOpen()) {
+            if ((p != null) && p.isOpen()) {
                 byte[] buffer;
                 int sz;
                 p.setBufferSize(64 * 1024 + 10);
@@ -71,7 +72,7 @@ public class ExifTIFF {
                 // bt747.sys.Generic.debug(this.toString());
                 success = true;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // TODO: handle exception
             Generic.debug("EXIFTiff", e);
         }
@@ -84,7 +85,7 @@ public class ExifTIFF {
     private ExifApp1 exifApp1;
 
     private final void examineBuffer(final byte[] buffer, final int sz) {
-        int currentIdxInBuffer = 0;
+        final int currentIdxInBuffer = 0;
 
         int result;
         exifApp1 = new ExifApp1();
@@ -202,7 +203,7 @@ public class ExifTIFF {
         try {
             // bt747.sys.Generic.debug(Path);
             fromFile = new WindowedFile(Path, File.READ_ONLY, card);
-            if (exifApp1 != null && fromFile != null && fromFile.isOpen()) {
+            if ((exifApp1 != null) && (fromFile != null) && fromFile.isOpen()) {
                 // setUsedSoftWare();
                 byte[] buffer;
                 int sz;
@@ -237,7 +238,7 @@ public class ExifTIFF {
                 fromFile = null;
                 success = true;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // TODO: handle exception
             Generic.debug("EXIFTiff", e);
         }

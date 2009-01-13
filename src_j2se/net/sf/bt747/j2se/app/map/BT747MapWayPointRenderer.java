@@ -48,11 +48,11 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
     }
 
     static {
-        Line2D l1 = new Line2D.Float(0.f, 0.f, -1 * scale, -2 * scale);
+        final Line2D l1 = new Line2D.Float(0.f, 0.f, -1 * scale, -2 * scale);
         gp.append(l1, true);
         final float diam = 2 * scale;
-        Arc2D cc = new Arc2D.Float(-scale, -2 * scale - (diam / 2), diam,
-                diam, 180.f, -180.f, Arc2D.OPEN);
+        final Arc2D cc = new Arc2D.Float(-scale, -2 * scale - (diam / 2),
+                diam, diam, 180.f, -180.f, Arc2D.OPEN);
         gp.append(cc, true);
         // Line2D l2 = new Line2D.Float(100.0f, 100.0f, 0.0f, 0.0f);
         gp.closePath();
@@ -67,7 +67,7 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
      * 
      * @see net.sf.bt747.j2se.map.BT747WaypointRenderer#isRendererOf(java.lang.Object)
      */
-    public boolean isRendererOf(Object o) {
+    public boolean isRendererOf(final Object o) {
         return true || BT747Waypoint.class.isInstance(o);
     }
 
@@ -83,8 +83,8 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
      * @return
      */
     // @Override
-    public boolean paintWaypoint(Graphics2D g, JXMapViewer map,
-            Waypoint waypoint) {
+    public boolean paintWaypoint(final Graphics2D g, final JXMapViewer map,
+            final Waypoint waypoint) {
         try {
             g.setColor(color);
             if (BT747Waypoint.class.isInstance(waypoint)) {
@@ -100,7 +100,7 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
             if (((BT747Waypoint) waypoint).isShowTag()) {
                 paintWaypointSummary(g, map, (BT747Waypoint) waypoint);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // TODO: handle exception
         }
         return false;
@@ -114,8 +114,8 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
      * @param waypoint
      * @return
      */
-    public boolean paintInfoWindow(Graphics2D g, JXMapViewer map,
-            Waypoint waypoint) {
+    public boolean paintInfoWindow(final Graphics2D g, final JXMapViewer map,
+            final Waypoint waypoint) {
         return false;
     }
 
@@ -124,7 +124,7 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
      *                relative to position of waypoint.
      * @return
      */
-    public boolean contains(Point pt) {
+    public boolean contains(final Point pt) {
         return gp.contains(pt);
     }
 
@@ -141,8 +141,8 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
     // return new Rectangle(x - 55, y + 20, 170, 90);
     // }
 
-    private static void trimAndPaint(Graphics2D g, String title, int length,
-            int x, int y) {
+    private static void trimAndPaint(final Graphics2D g, String title,
+            final int length, final int x, final int y) {
         if (title != null) {
             if (title.length() > length) {
                 title = title.substring(0, length) + "...";
@@ -151,9 +151,9 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
         }
     }
 
-    protected void paintWaypointSummary(Graphics2D g, JXMapViewer map,
-            BT747Waypoint waypoint) {
-        Composite old_comp = g.getComposite();
+    protected void paintWaypointSummary(final Graphics2D g,
+            final JXMapViewer map, final BT747Waypoint waypoint) {
+        final Composite old_comp = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 0.75f));
 
@@ -171,7 +171,7 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
         // ap.paintBackground(g, dummy);
 
         g.setFont(g.getFont().deriveFont(Font.BOLD, 14f));
-        int width = (int) g.getFontMetrics().getStringBounds(
+        final int width = (int) g.getFontMetrics().getStringBounds(
                 waypoint.getDescription(), g).getWidth();
         g.fillRoundRect(1, 1, width + 20, 30, 10, 10);
 

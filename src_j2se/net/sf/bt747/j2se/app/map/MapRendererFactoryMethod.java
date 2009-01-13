@@ -21,26 +21,29 @@ import bt747.j2se_view.model.BT747Waypoint;
 public class MapRendererFactoryMethod implements WaypointRenderer {
 
     private static MapRendererFactoryMethod factory = new MapRendererFactoryMethod();
-//    private static final BT747WaypointRenderer defaultRenderer = new DefaultBT747WaypointRenderer();
-//    private static class DefaultBT747WaypointRenderer extends DefaultWaypointRenderer implements BT747WaypointRenderer {
-//        /* (non-Javadoc)
-//         * @see bt747.j2se_view.model.BT747WaypointRenderer#isRendererOf(java.lang.Object)
-//         */
-//        public boolean isRendererOf(Object o) {
-//            // Renders every waypoint
-//            return true;
-//        }
-//        
-//    }
-    
-    private static Hashtable<Class<?>, BT747WaypointRenderer> renderHash = new Hashtable<Class<?>, BT747WaypointRenderer>();
+    // private static final BT747WaypointRenderer defaultRenderer = new
+    // DefaultBT747WaypointRenderer();
+    // private static class DefaultBT747WaypointRenderer extends
+    // DefaultWaypointRenderer implements BT747WaypointRenderer {
+    // /* (non-Javadoc)
+    // * @see
+    // bt747.j2se_view.model.BT747WaypointRenderer#isRendererOf(java.lang.Object)
+    // */
+    // public boolean isRendererOf(Object o) {
+    // // Renders every waypoint
+    // return true;
+    // }
+    //        
+    // }
+
+    private static final Hashtable<Class<?>, BT747WaypointRenderer> renderHash = new Hashtable<Class<?>, BT747WaypointRenderer>();
     private static final java.util.Vector<BT747WaypointRenderer> renderers = new Vector<BT747WaypointRenderer>();
-    
 
     static {
-        //renderers.add(defaultRenderer);
+        // renderers.add(defaultRenderer);
         renderers.add(new BT747MapWayPointRenderer());
     }
+
     final static public MapRendererFactoryMethod getInstance() {
         return factory;
     }
@@ -52,36 +55,37 @@ public class MapRendererFactoryMethod implements WaypointRenderer {
      *      org.jdesktop.swingx.JXMapViewer,
      *      org.jdesktop.swingx.mapviewer.Waypoint)
      */
-    public final boolean paintWaypoint(Graphics2D g, JXMapViewer map,
-            Waypoint waypoint) {
+    public final boolean paintWaypoint(final Graphics2D g,
+            final JXMapViewer map, final Waypoint waypoint) {
 
         return getRenderer(waypoint).paintWaypoint(g, map, waypoint);
     }
-    
-    public final BT747WaypointRenderer getRenderer(Waypoint waypoint) {
+
+    public final BT747WaypointRenderer getRenderer(final Waypoint waypoint) {
         BT747WaypointRenderer renderer;
         renderer = renderHash.get(waypoint.getClass());
-        if(renderer == null) {
-            for(int i = renderers.size()-1; i>=0 ; i --) {
-                BT747WaypointRenderer r = renderers.get(i);
-                if(r.isRendererOf(waypoint)) {
-                    renderHash.put(waypoint.getClass(),r);
+        if (renderer == null) {
+            for (int i = renderers.size() - 1; i >= 0; i--) {
+                final BT747WaypointRenderer r = renderers.get(i);
+                if (r.isRendererOf(waypoint)) {
+                    renderHash.put(waypoint.getClass(), r);
                     return r;
                 }
             }
         }
         return renderer;
     }
-    
-    public final boolean rendererContains(Waypoint waypoint, Point pt) {
+
+    public final boolean rendererContains(final Waypoint waypoint,
+            final Point pt) {
         return getRenderer(waypoint).contains(pt);
     }
 
-    public final void toggleSelected(Waypoint waypoint) {
+    public final void toggleSelected(final Waypoint waypoint) {
         try {
-            ((BT747Waypoint)(waypoint)).toggleShowTag();
-        } catch (ClassCastException e) {
-            
+            ((BT747Waypoint) (waypoint)).toggleShowTag();
+        } catch (final ClassCastException e) {
+
         }
     }
 }

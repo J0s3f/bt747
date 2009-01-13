@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT747                             ***
-//***                 (c)2007-2008 Mario De Weerd                  ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***                                                              ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT747 ***
+// *** (c)2007-2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j2se.app.exif;
 
 import bt747.sys.Convert;
@@ -62,7 +62,7 @@ public class ExifAttribute {
         case ExifConstants.SSHORT:
             return 2;
         case ExifConstants.SBYTE:
-        return 1;
+            return 1;
         case ExifConstants.FLOAT:
             return 4;
         case ExifConstants.DOUBLE:
@@ -88,7 +88,7 @@ public class ExifAttribute {
                     bigEndian));
             setCount(ExifUtils.getLong4byte(buffer, currentIdxInBuffer + 4,
                     bigEndian));
-            int size = getValueUnitSize(getType()) * count;
+            final int size = getValueUnitSize(getType()) * count;
             int valueIdx;
             boolean usePointer = false;
             // switch (getType()) {
@@ -144,7 +144,7 @@ public class ExifAttribute {
         case ExifConstants.ASCII:
             sb = new StringBuffer(value.length + 10);
             sb.append(" ASCII:");
-            for (int i = 0; i < value.length && value[i] != 0; i++) {
+            for (int i = 0; (i < value.length) && (value[i] != 0); i++) {
                 sb.append((char) value[i]);
             }
             s = sb.toString();
@@ -156,7 +156,7 @@ public class ExifAttribute {
                 sb.append(Convert.unsigned2hex(value[i], 2));
             }
             sb.append("  (");
-            for (int i = 0; i < value.length && value[i] != 0; i++) {
+            for (int i = 0; (i < value.length) && (value[i] != 0); i++) {
                 sb.append((char) value[i]);
             }
             sb.append(')');
@@ -213,7 +213,7 @@ public class ExifAttribute {
 
     /**
      * @param tag
-     *            the tag to set
+     *                the tag to set
      */
     public final void setTag(final int tag) {
         this.tag = tag;
@@ -228,7 +228,7 @@ public class ExifAttribute {
 
     /**
      * @param type
-     *            the type to set
+     *                the type to set
      */
     public final void setType(final int type) {
         this.type = type;
@@ -243,7 +243,7 @@ public class ExifAttribute {
 
     /**
      * @param count
-     *            the count to set
+     *                the count to set
      */
     public final void setCount(final int count) {
         this.count = count;
@@ -258,7 +258,7 @@ public class ExifAttribute {
 
     /**
      * @param value
-     *            the value to set
+     *                the value to set
      */
     public final void setValue(final byte[] value) {
         this.value = value;
@@ -272,21 +272,23 @@ public class ExifAttribute {
     }
 
     public final float getFloatValue(final int idx) {
-        if (type == ExifConstants.RATIONAL || type == ExifConstants.SRATIONAL) {
-            int offset = 8 * idx;
+        if ((type == ExifConstants.RATIONAL)
+                || (type == ExifConstants.SRATIONAL)) {
+            final int offset = 8 * idx;
             if (offset + 8 <= value.length) {
-                int nom = ExifUtils.getLong4byte(value, offset, bigEndian);
-                int denominator = ExifUtils.getLong4byte(value, offset + 4,
+                final int nom = ExifUtils.getLong4byte(value, offset,
                         bigEndian);
+                final int denominator = ExifUtils.getLong4byte(value,
+                        offset + 4, bigEndian);
                 if (denominator == 0) {
                     Generic.debug("Invalid EXIF atribute value");
-                    return (float) nom;
+                    return nom;
                 }
-                if ((nom < 0 & denominator < 0)
-                        || (nom >= 0 && denominator > 0)) {
+                if (((nom < 0) & (denominator < 0))
+                        || ((nom >= 0) && (denominator > 0))) {
                     return ((float) nom) / ((float) (denominator));
                 } else {
-                    return (-(float) nom) / ((float) (denominator));
+                    return (-(float) nom) / ((denominator));
                 }
             }
         } else {
@@ -296,7 +298,7 @@ public class ExifAttribute {
     }
 
     public final String getStringValue() {
-        StringBuffer sb = new StringBuffer(value.length);
+        final StringBuffer sb = new StringBuffer(value.length);
         for (int i = 0; i < value.length; i++) {
             sb.append((char) value[i]);
         }
@@ -304,8 +306,8 @@ public class ExifAttribute {
     }
 
     public final int getIntValue(final int idx) {
-        int unitSize = getValueUnitSize(type);
-        int offset = unitSize * idx;
+        final int unitSize = getValueUnitSize(type);
+        final int offset = unitSize * idx;
         if (offset + unitSize <= value.length) {
             switch (type) {
             case ExifConstants.BYTE:
@@ -323,8 +325,8 @@ public class ExifAttribute {
     }
 
     public final void setIntValue(final int idx, final int val) {
-        int unitSize = getValueUnitSize(type);
-        int offset = unitSize * idx;
+        final int unitSize = getValueUnitSize(type);
+        final int offset = unitSize * idx;
         if (offset + unitSize <= value.length) {
             switch (type) {
             case ExifConstants.BYTE:
@@ -343,9 +345,11 @@ public class ExifAttribute {
         }
     }
 
-    public final void setFloatValue(final int idx, final int nom, final int den) {
-        if (type == ExifConstants.RATIONAL || type == ExifConstants.SRATIONAL) {
-            int offset = 8 * idx;
+    public final void setFloatValue(final int idx, final int nom,
+            final int den) {
+        if ((type == ExifConstants.RATIONAL)
+                || (type == ExifConstants.SRATIONAL)) {
+            final int offset = 8 * idx;
             if (offset + 8 <= value.length) {
                 ExifUtils.addLong4byte(value, offset, bigEndian, nom);
                 ExifUtils.addLong4byte(value, offset + 4, bigEndian, den);
@@ -357,7 +361,7 @@ public class ExifAttribute {
 
     public final float setGpsFloatValue(final double d) {
         double g;
-        if (type == ExifConstants.RATIONAL && count == 3) {
+        if ((type == ExifConstants.RATIONAL) && (count == 3)) {
 
             if (d < 0) {
                 g = -d;
@@ -374,7 +378,7 @@ public class ExifAttribute {
 
             den = 1;
             g *= 60;
-            g*=den;
+            g *= den;
             nom = (int) g;
             g -= nom;
             setFloatValue(1, nom, den);
@@ -398,7 +402,7 @@ public class ExifAttribute {
                 count = s.length() + 1;
                 newValue(count);
             }
-            char[] carr = s.toCharArray();
+            final char[] carr = s.toCharArray();
             for (int i = 0; i < carr.length; i++) {
                 value[i] = (byte) carr[i];
             }

@@ -7,7 +7,7 @@ public final class J2SEStringTokenizer implements BT747StringTokenizer {
     private char delim;
 
     public J2SEStringTokenizer(final String s, final char delim) {
-        this.left = s;
+        left = s;
         this.delim = delim;
     }
 
@@ -19,13 +19,13 @@ public final class J2SEStringTokenizer implements BT747StringTokenizer {
         if (left == null) {
             return null;
         }
-        StringBuffer s = new StringBuffer();
+        final StringBuffer s = new StringBuffer();
         boolean done = false;
         int pos = 0;
         boolean end = false;
         while (!done) {
             if (left.length() > pos) {
-                char c = left.charAt(pos);
+                final char c = left.charAt(pos);
                 if (c != delim) {
                     s.append(c);
                 } else {
@@ -37,7 +37,7 @@ public final class J2SEStringTokenizer implements BT747StringTokenizer {
             }
             pos++;
         }
-        String token = s.toString();
+        final String token = s.toString();
         if (end) {
             left = null;
         } else {

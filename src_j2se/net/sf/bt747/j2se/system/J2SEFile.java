@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j2se.system;
 
 import java.io.RandomAccessFile;
@@ -43,22 +43,22 @@ public final class J2SEFile implements BT747File {
      * Initializer called by the Interface.
      * 
      * @param path
-     *            The path to the file to operate on.
+     *                The path to the file to operate on.
      */
     public J2SEFile(final String path) {
-        this.filePath = path;
+        filePath = path;
     }
 
     /**
      * Initializer called by the Interface.
      * 
      * @param path
-     *            The path to the file to operate on.
+     *                The path to the file to operate on.
      * @param mode
-     *            The way the file should be opened.
+     *                The way the file should be opened.
      * @param card
-     *            The card where the file is located. Not applicable on this
-     *            system.
+     *                The card where the file is located. Not applicable on
+     *                this system.
      */
     public J2SEFile(final String path, final int mode, final int card) {
         this(path, mode);
@@ -68,14 +68,14 @@ public final class J2SEFile implements BT747File {
      * Initializer called by the Interface.
      * 
      * @param path
-     *            The path to the file to operate on.
+     *                The path to the file to operate on.
      * @param mode
-     *            The way the file should be opened.
+     *                The way the file should be opened.
      */
     public J2SEFile(final String path, final int mode) {
         try {
             String modeStr = "";
-            this.filePath = path;
+            filePath = path;
             switch (mode) {
             case READ_ONLY:
                 modeStr = "r";
@@ -86,9 +86,9 @@ public final class J2SEFile implements BT747File {
             case CREATE:
                 modeStr = "rw";
                 try {
-                    java.io.File tmp = new java.io.File(path);
+                    final java.io.File tmp = new java.io.File(path);
                     tmp.createNewFile();
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     Generic.debug("File creation failed:" + path, e);
                 }
                 break;
@@ -103,15 +103,15 @@ public final class J2SEFile implements BT747File {
                 if (mode == WRITE_ONLY) {
                     raf.seek(raf.length()); // To append
                 }
-                if(Generic.isDebug()) {
+                if (Generic.isDebug()) {
                     Generic.debug("Opened file " + path + " in mode " + mode
-                        + " " + modeStr,null);
+                            + " " + modeStr, null);
                 }
                 isopen = true;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("Problem in file open " + path, e);
-            this.filePath = null;
+            filePath = null;
             lastError = -1;
         }
     }
@@ -129,7 +129,7 @@ public final class J2SEFile implements BT747File {
             } else {
                 return (int) raf.length();
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("getSize", e);
             return 0;
         }
@@ -138,7 +138,7 @@ public final class J2SEFile implements BT747File {
     public boolean exists() {
         try {
             return (new java.io.File(filePath).exists());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("exists", e);
             return false;
         }
@@ -147,7 +147,7 @@ public final class J2SEFile implements BT747File {
     public boolean delete() {
         try {
             return new java.io.File(filePath).delete();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("delete", e);
             return false;
         }
@@ -156,7 +156,7 @@ public final class J2SEFile implements BT747File {
     public boolean createDir() {
         try {
             return new java.io.File(filePath).mkdir();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("createDir", e);
             return false;
         }
@@ -166,12 +166,12 @@ public final class J2SEFile implements BT747File {
 
     public boolean close() {
         try {
-            if (isopen && raf != null) {
+            if (isopen && (raf != null)) {
                 isopen = false;
                 raf.close();
             }
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("close", e);
             e.printStackTrace();
             // TODO: handle exceptions
@@ -182,11 +182,11 @@ public final class J2SEFile implements BT747File {
     public boolean setPos(final int pos) {
         try {
             if (raf != null) {
-                raf.seek((long) pos);
+                raf.seek(pos);
                 return true;
             }
             return false;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("setPos", e);
             return false;
         }
@@ -210,7 +210,7 @@ public final class J2SEFile implements BT747File {
         try {
             raf.write(b, off, len);
             return len;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("writeBytes", e);
             // TODO: handle exceptions
             return 0;
@@ -220,7 +220,7 @@ public final class J2SEFile implements BT747File {
     public int readBytes(final byte[] b, final int off, final int len) {
         try {
             return raf.read(b, off, len);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("writeBytes", e);
             // TODO: handle exceptions
             return 0;
@@ -235,11 +235,13 @@ public final class J2SEFile implements BT747File {
         return filePath;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see bt747.sys.interfaces.BT747File#getModificationTime()
      */
     public int getModificationTime() {
-        return (int)(new java.io.File(filePath).lastModified()/1000L);
+        return (int) (new java.io.File(filePath).lastModified() / 1000L);
     }
 
     // Kept for reference - unused.

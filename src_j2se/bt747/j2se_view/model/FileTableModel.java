@@ -21,16 +21,18 @@ public class FileTableModel extends AbstractTableModel {
     /**
      * The columns currently shown.
      */
-    private int[] columns = { PositionData.FILE_DATE, PositionData.FILE_TIME,
-            PositionData.GPS_TIME, //PositionData.TAG_TIME,
+    private int[] columns = {
+            PositionData.FILE_DATE,
+            PositionData.FILE_TIME,
+            PositionData.GPS_TIME, // PositionData.TAG_TIME,
             PositionData.IMAGE_PATH, PositionData.GEOMETRY,
             PositionData.LATITUDE, PositionData.LONGITUDE,
-            PositionData.HEIGHT_METERS};
+            PositionData.HEIGHT_METERS };
 
     /**
      * 
      */
-    public FileTableModel(UserWayPointListModel m) {
+    public FileTableModel(final UserWayPointListModel m) {
         wpListModel = m;
         wpListModel.addListDataListener(new WPListDataListener());
     }
@@ -42,7 +44,7 @@ public class FileTableModel extends AbstractTableModel {
          * 
          * @see javax.swing.event.ListDataListener#contentsChanged(javax.swing.event.ListDataEvent)
          */
-        public void contentsChanged(ListDataEvent e) {
+        public void contentsChanged(final ListDataEvent e) {
             fireTableRowsUpdated(e.getIndex0(), e.getIndex1());
         }
 
@@ -51,7 +53,7 @@ public class FileTableModel extends AbstractTableModel {
          * 
          * @see javax.swing.event.ListDataListener#intervalAdded(javax.swing.event.ListDataEvent)
          */
-        public void intervalAdded(ListDataEvent e) {
+        public void intervalAdded(final ListDataEvent e) {
             fireTableRowsInserted(e.getIndex0(), e.getIndex1());
         }
 
@@ -60,14 +62,14 @@ public class FileTableModel extends AbstractTableModel {
          * 
          * @see javax.swing.event.ListDataListener#intervalRemoved(javax.swing.event.ListDataEvent)
          */
-        public void intervalRemoved(ListDataEvent e) {
+        public void intervalRemoved(final ListDataEvent e) {
             fireTableRowsDeleted(e.getIndex0(), e.getIndex1());
 
         }
 
     }
 
-    public void add(String path) {
+    public void add(final String path) {
         wpListModel.add(path);
     }
 
@@ -83,7 +85,7 @@ public class FileTableModel extends AbstractTableModel {
      * 
      * @see javax.swing.table.TableModel#getColumnClass(int)
      */
-    public Class<?> getColumnClass(int columnIndex) {
+    public Class<?> getColumnClass(final int columnIndex) {
         return PositionData
                 .getDataDisplayClass(columnToDataType(columnIndex));
     }
@@ -102,7 +104,7 @@ public class FileTableModel extends AbstractTableModel {
      * 
      * @see javax.swing.table.TableModel#getColumnName(int)
      */
-    public String getColumnName(int columnIndex) {
+    public String getColumnName(final int columnIndex) {
         return PositionData.getDataDisplayName(columnToDataType(columnIndex));
     }
 
@@ -128,7 +130,7 @@ public class FileTableModel extends AbstractTableModel {
      * 
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public Object getValueAt(final int rowIndex, final int columnIndex) {
         return PositionData.getData((ImageData) wpListModel
                 .getElementAt(rowIndex), columnToDataType(columnIndex));
     }
@@ -138,7 +140,7 @@ public class FileTableModel extends AbstractTableModel {
      * 
      * @see javax.swing.table.TableModel#isCellEditable(int, int)
      */
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
+    public boolean isCellEditable(final int rowIndex, final int columnIndex) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -149,7 +151,8 @@ public class FileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int,
      *      int)
      */
-    public void setValueAt(Object value, int rowIndex, int columnIndex) {
+    public void setValueAt(final Object value, final int rowIndex,
+            final int columnIndex) {
         // TODO Auto-generated method stub
 
     }

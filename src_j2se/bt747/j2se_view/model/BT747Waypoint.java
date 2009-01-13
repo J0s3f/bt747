@@ -19,10 +19,10 @@ public class BT747Waypoint extends Waypoint {
     private Object data;
 
     public Object getData() {
-        return this.data;
+        return data;
     }
 
-    public void setData(Object data) {
+    public void setData(final Object data) {
         this.data = data;
     }
 
@@ -54,7 +54,7 @@ public class BT747Waypoint extends Waypoint {
      * @return the selected
      */
     public final boolean isShowTag() {
-        return this.showTag;
+        return showTag;
     }
 
     /**
@@ -97,7 +97,7 @@ public class BT747Waypoint extends Waypoint {
      * @see org.jdesktop.swingx.mapviewer.Waypoint#setPosition(org.jdesktop.swingx.mapviewer.GeoPosition)
      */
     @Override
-    public void setPosition(GeoPosition coordinate) {
+    public void setPosition(final GeoPosition coordinate) {
         gpsRec.latitude = coordinate.getLatitude();
         gpsRec.longitude = coordinate.getLongitude();
     }
@@ -106,14 +106,14 @@ public class BT747Waypoint extends Waypoint {
      * @return the gpsRec
      */
     public final GPSRecord getGpsRecord() {
-        return this.gpsRec;
+        return gpsRec;
     }
 
     /**
      * @param gpsRec
      *                the gpsRec to set
      */
-    public final void setGpsRec(GPSRecord gpsRec) {
+    public final void setGpsRec(final GPSRecord gpsRec) {
         this.gpsRec = gpsRec;
     }
 

@@ -38,7 +38,7 @@ import org.jdesktop.swingx.mapviewer.GeoPosition;
  */
 public class BT747TrackRenderer implements TrackRenderer {
 
-    //private final static GeneralPath gp = new GeneralPath();
+    // private final static GeneralPath gp = new GeneralPath();
     private final static BT747TrackRenderer instance = new BT747TrackRenderer();
 
     public static BT747TrackRenderer getInstance() {
@@ -61,7 +61,7 @@ public class BT747TrackRenderer implements TrackRenderer {
             final Collection<GPSRecord> track) {
         if (track.size() > 0) {
             final Rectangle viewportBounds = map.getViewportBounds();
-            //final int zoom = map.getZoom();
+            // final int zoom = map.getZoom();
             // Dimension sizeInTiles = map.getTileFactory().getMapSize(zoom);
             // int tileSize = map.getTileFactory().getTileSize(zoom);
             // Dimension sizeInPixels = new Dimension(sizeInTiles.width
@@ -177,9 +177,10 @@ public class BT747TrackRenderer implements TrackRenderer {
     }
 
     /**
-     * @param color the color to set
+     * @param color
+     *                the color to set
      */
-    public void setColor(Color color) {
+    public void setColor(final Color color) {
         this.color = color;
     }
 }

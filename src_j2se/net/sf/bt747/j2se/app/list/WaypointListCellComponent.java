@@ -7,13 +7,13 @@ import java.awt.Component;
 
 import javax.swing.JList;
 
-
 /**
  * @author Mario
- *
+ * 
  */
 public interface WaypointListCellComponent {
     boolean isRendererOf(Object wp);
+
     Component getListCellRendererComponent(JList list, Object value,
-            int index, boolean isSelected, boolean cellHasFocus);    
+            int index, boolean isSelected, boolean cellHasFocus);
 }

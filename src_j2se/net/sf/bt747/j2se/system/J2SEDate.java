@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j2se.system;
 
 import java.text.DateFormat;
@@ -48,7 +48,7 @@ public final class J2SEDate implements BT747Date {
      * 
      */
     public J2SEDate() {
-        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.MILLISECOND, 0);
@@ -57,7 +57,7 @@ public final class J2SEDate implements BT747Date {
     /**
      * @param sentDate
      */
-    public J2SEDate(int sentDate) {
+    public J2SEDate(final int sentDate) {
         cal.set(sentDate / 10000, sentDate / 100 % 100 - 1, sentDate % 100,
                 0, 0, 0);
     }
@@ -67,14 +67,14 @@ public final class J2SEDate implements BT747Date {
      * @param sentMonth
      * @param sentYear
      */
-    public J2SEDate(int sentDay, int sentMonth, int sentYear) {
+    public J2SEDate(final int sentDay, final int sentMonth, final int sentYear) {
         cal.set(sentYear, sentMonth - 1, sentDay, 0, 0, 0);
     }
 
     /**
      * @param strDate
      */
-    public J2SEDate(String strDate) {
+    public J2SEDate(final String strDate) {
         this(strDate, Settings.DATE_YMD);
     }
 
@@ -82,7 +82,7 @@ public final class J2SEDate implements BT747Date {
      * @param strDate
      * @param dateFormat
      */
-    public J2SEDate(String strDate, byte dateFormat) {
+    public J2SEDate(final String strDate, final byte dateFormat) {
         DateFormat df;
         if (dateFormat == Settings.DATE_YMD) {
             df = FORMAT_YYYYMMDD;
@@ -92,7 +92,7 @@ public final class J2SEDate implements BT747Date {
         df.setTimeZone(GMT_ZONE);
         try {
             cal.setTime(df.parse(strDate));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // TODO: handle exception
             e.printStackTrace();
         }
@@ -104,16 +104,16 @@ public final class J2SEDate implements BT747Date {
     // public Date(Time t) {
     // super(t);
     // }
-    public void advance(int s) {
+    public void advance(final int s) {
         cal.add(java.util.Calendar.SECOND, s);
 
     }
 
-    public J2SEDate(java.util.Date d) {
+    public J2SEDate(final java.util.Date d) {
         cal.setTime(d);
     }
 
-    public J2SEDate(J2SEDate d) {
+    public J2SEDate(final J2SEDate d) {
         cal.setTime(d.getTime());
     }
 
@@ -134,7 +134,7 @@ public final class J2SEDate implements BT747Date {
     // private static final int DAYS_Julian_1970 = (new
     // Date(1,1,1970)).getJulianDay();
     public final int getJulianDay() {
-        return this.dateToUTCepoch1970();
+        return dateToUTCepoch1970();
     }
 
     public final int getYear() {

@@ -66,13 +66,13 @@ public final class GPSKMZFile extends GPSKMLFile {
         if (currentZipStream != null) {
             try {
                 zips.remove(currentZipStream);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("zip stream removal", e);
             }
             try {
                 currentZipStream.closeEntry();
                 currentZipStream.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("finaliseFile", e);
             }
             currentZipStream = null;
@@ -85,7 +85,8 @@ public final class GPSKMZFile extends GPSKMLFile {
      * @see gps.log.out.GPSFile#createFile(int, java.lang.String)
      */
     @Override
-    protected int createFile(int utc, String extra_ext, boolean createNewFile) {
+    protected int createFile(final int utc, final String extra_ext,
+            final boolean createNewFile) {
         String zipFileName;
         String zipEntryFileName;
         setTrackName(extra_ext);
@@ -111,12 +112,12 @@ public final class GPSKMZFile extends GPSKMLFile {
         // Check if file exists and delete - not needed in KMZ
         try {
             if (createNewFile) {
-                File tmpFile = new File(zipFileName);
+                final File tmpFile = new File(zipFileName);
                 if (tmpFile.exists()) {
                     tmpFile.delete();
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("File deletion", e);
             // TODO: handle problem
         }
@@ -124,11 +125,11 @@ public final class GPSKMZFile extends GPSKMLFile {
         try {
             currentZipStream = null;
             if (createNewFile) {
-                FileOutputStream fos = new FileOutputStream(zipFileName,
-                        false);
-                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                final FileOutputStream fos = new FileOutputStream(
+                        zipFileName, false);
+                final BufferedOutputStream bos = new BufferedOutputStream(fos);
                 currentZipStream = new ZipOutputStream(bos);
-                ZipEntry e = new ZipEntry(zipEntryFileName);
+                final ZipEntry e = new ZipEntry(zipEntryFileName);
                 currentZipStream.putNextEntry(e);
                 zips.put(zipFileName, currentZipStream);
             } else {
@@ -144,7 +145,7 @@ public final class GPSKMZFile extends GPSKMLFile {
             // try {
             // int mode = createNewFile ? File.CREATE : File.WRITE_ONLY;
             // outFile = new File(fileName, mode, card);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("Zip Entry Creation", e);
             // TODO: handle exception
         }
@@ -159,7 +160,7 @@ public final class GPSKMZFile extends GPSKMLFile {
             } else {
                 Generic.debug("Write to closed file", null);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("writeTxt", e);
         }
     }

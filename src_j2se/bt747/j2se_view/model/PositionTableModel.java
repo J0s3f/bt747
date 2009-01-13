@@ -37,8 +37,7 @@ public class PositionTableModel extends AbstractTableModel {
             PositionData.RCR, PositionData.RCR_DESCRIPTION,
             PositionData.FIX_VALID, PositionData.LATITUDE,
             PositionData.LONGITUDE, PositionData.HEIGHT_METERS,
-            PositionData.HDOP, PositionData.PDOP,
-            PositionData.VOX };
+            PositionData.HDOP, PositionData.PDOP, PositionData.VOX };
 
     private volatile List<List<GPSRecord>> gpsData;
 
@@ -54,7 +53,6 @@ public class PositionTableModel extends AbstractTableModel {
      *                the gpsData to set
      */
     public final void setGpsData(final GPSRecord[] gpsdata) {
-        gpsData = null;
         final Vector<List<GPSRecord>> tmp = new Vector<List<GPSRecord>>(1);
         final Vector<GPSRecord> tmpList = new Vector<GPSRecord>(
                 gpsdata.length);

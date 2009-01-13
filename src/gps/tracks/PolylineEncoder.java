@@ -1,7 +1,7 @@
 /**
- * Reimplementation of Mark McClure's Javascript PolylineEncoder
- * All the mathematical logic is more or less copied by McClure
- *  
+ * Reimplementation of Mark McClure's Javascript PolylineEncoder All the
+ * mathematical logic is more or less copied by McClure
+ * 
  * @author Mark Rambow, Mario De Weerd
  * @e-mail markrambow[at]gmail[dot]com
  * @version 0.1
@@ -31,17 +31,16 @@ public final class PolylineEncoder {
     // constructor
     public PolylineEncoder(final int pNumLevels, final int pZoomFactor,
             final double pVerySmall, final boolean forceEndpoints) {
-        this.numLevels = pNumLevels;
-        this.zoomFactor = pZoomFactor;
-        this.verySmall = pVerySmall;
+        numLevels = pNumLevels;
+        zoomFactor = pZoomFactor;
+        verySmall = pVerySmall;
         this.forceEndpoints = forceEndpoints;
 
-        this.zoomLevelBreaks = new double[pNumLevels];
+        zoomLevelBreaks = new double[pNumLevels];
 
         for (int i = 0; i < pNumLevels; i++) {
-            this.zoomLevelBreaks[i] = pVerySmall
-                    * bt747.sys.Generic
-                            .pow(this.zoomFactor, pNumLevels - i - 1);
+            zoomLevelBreaks[i] = pVerySmall
+                    * bt747.sys.Generic.pow(zoomFactor, pNumLevels - i - 1);
         }
     }
 
@@ -51,11 +50,11 @@ public final class PolylineEncoder {
         verySmall = 0.00001;
         forceEndpoints = true;
 
-        this.zoomLevelBreaks = new double[numLevels];
+        zoomLevelBreaks = new double[numLevels];
 
         for (int i = 0; i < numLevels; i++) {
-            this.zoomLevelBreaks[i] = verySmall
-                    * bt747.sys.Generic.pow(this.zoomFactor, numLevels - i - 1);
+            zoomLevelBreaks[i] = verySmall
+                    * bt747.sys.Generic.pow(zoomFactor, numLevels - i - 1);
         }
     }
 
@@ -85,14 +84,15 @@ public final class PolylineEncoder {
      */
     public final BT747Hashtable dpEncode(final Track track) {
         int i, maxLoc = 0;
-        BT747Vector stack = Interface.getVectorInstance();
-        double[] dists = new double[track.getTrackpoints().size()];
+        final BT747Vector stack = Interface.getVectorInstance();
+        final double[] dists = new double[track.getTrackpoints().size()];
         double maxDist, absMaxDist = 0.0, temp = 0.0;
         int[] current;
         String encodedPoints, encodedLevels;
 
         if (track.getTrackpoints().size() > 2) {
-            int[] stackVal = new int[] { 0, (track.getTrackpoints().size() - 1) };
+            final int[] stackVal = new int[] { 0,
+                    (track.getTrackpoints().size() - 1) };
             stack.mypush(stackVal);
 
             while (stack.size() > 0) {
@@ -101,9 +101,10 @@ public final class PolylineEncoder {
 
                 for (i = current[0] + 1; i < current[1]; i++) {
                     temp = distance((Trackpoint) track.getTrackpoints()
-                            .elementAt(i), (Trackpoint) track.getTrackpoints()
-                            .elementAt(current[0]), (Trackpoint) track
-                            .getTrackpoints().elementAt(current[1]));
+                            .elementAt(i), (Trackpoint) track
+                            .getTrackpoints().elementAt(current[0]),
+                            (Trackpoint) track.getTrackpoints().elementAt(
+                                    current[1]));
                     if (temp > maxDist) {
                         maxDist = temp;
                         maxLoc = i;
@@ -112,17 +113,18 @@ public final class PolylineEncoder {
                         }
                     }
                 }
-                if (maxDist > this.verySmall) {
+                if (maxDist > verySmall) {
                     dists[maxLoc] = maxDist;
-                    int[] stackValCurMax = { current[0], maxLoc };
+                    final int[] stackValCurMax = { current[0], maxLoc };
                     stack.mypush(stackValCurMax);
-                    int[] stackValMaxCur = { maxLoc, current[1] };
+                    final int[] stackValMaxCur = { maxLoc, current[1] };
                     stack.mypush(stackValMaxCur);
                 }
             }
         }
 
-        // System.out.println("createEncodings(" + track.getTrackpoints().size()
+        // System.out.println("createEncodings(" +
+        // track.getTrackpoints().size()
         // + "," + dists.length + ")");
         encodedPoints = createEncodings(track, dists);
         // System.out.println("encodedPoints \t\t: " + encodedPoints);
@@ -133,7 +135,7 @@ public final class PolylineEncoder {
         encodedLevels = encodeLevels(track, dists, absMaxDist);
         // System.out.println("encodedLevels: " + encodedLevels);
 
-        BT747Hashtable hm = Interface.getHashtableInstance(0);
+        final BT747Hashtable hm = Interface.getHashtableInstance(0);
         hm.put("encodedPoints", encodedPoints);
         hm.put("encodedLevels", encodedLevels);
         return hm;
@@ -160,23 +162,23 @@ public final class PolylineEncoder {
 
     /**
      * distance(p0, p1, p2) computes the distance between the point p0 and the
-     * segment [p1,p2]. This could probably be replaced with something that is a
-     * bit more numerically stable.
+     * segment [p1,p2]. This could probably be replaced with something that is
+     * a bit more numerically stable.
      * 
      * @param p0
-     *            Point.
+     *                Point.
      * @param p1
-     *            First point of segment.
+     *                First point of segment.
      * @param p2
-     *            Second point of segment.
+     *                Second point of segment.
      * @return Distance between point p0 and the segment [p1,p2].
      */
     public final static double distance(final Trackpoint p0,
             final Trackpoint p1, final Trackpoint p2) {
         double u, out = 0.0;
 
-        if (p1.getLatDouble() == p2.getLatDouble()
-                && p1.getLonDouble() == p2.getLonDouble()) {
+        if ((p1.getLatDouble() == p2.getLatDouble())
+                && (p1.getLonDouble() == p2.getLonDouble())) {
             out = Math.sqrt(bt747.sys.Generic.pow(p2.getLatDouble()
                     - p0.getLatDouble(), 2)
                     + bt747.sys.Generic.pow(p2.getLonDouble()
@@ -187,9 +189,8 @@ public final class PolylineEncoder {
                     .getLonDouble() - p1.getLonDouble())
                     * (p2.getLonDouble() - p1.getLonDouble()))
                     / (bt747.sys.Generic.pow(p2.getLatDouble()
-                            - p1.getLatDouble(), 2) + bt747.sys.Generic.pow(p2
-                            .getLonDouble()
-                            - p1.getLonDouble(), 2));
+                            - p1.getLatDouble(), 2) + bt747.sys.Generic.pow(
+                            p2.getLonDouble() - p1.getLonDouble(), 2));
 
             if (u <= 0) {
                 out = Math.sqrt(bt747.sys.Generic.pow(p0.getLatDouble()
@@ -203,13 +204,16 @@ public final class PolylineEncoder {
                         + bt747.sys.Generic.pow(p0.getLonDouble()
                                 - p2.getLonDouble(), 2));
             }
-            if (0 < u && u < 1) {
-                out = Math.sqrt(bt747.sys.Generic.pow(p0.getLatDouble()
-                        - p1.getLatDouble() - u
-                        * (p2.getLatDouble() - p1.getLatDouble()), 2)
-                        + bt747.sys.Generic.pow(p0.getLonDouble()
-                                - p1.getLonDouble() - u
-                                * (p2.getLonDouble() - p1.getLonDouble()), 2));
+            if ((0 < u) && (u < 1)) {
+                out = Math
+                        .sqrt(bt747.sys.Generic.pow(p0.getLatDouble()
+                                - p1.getLatDouble() - u
+                                * (p2.getLatDouble() - p1.getLatDouble()), 2)
+                                + bt747.sys.Generic.pow(p0.getLonDouble()
+                                        - p1.getLonDouble()
+                                        - u
+                                        * (p2.getLonDouble() - p1
+                                                .getLonDouble()), 2));
             }
         }
         return out;
@@ -282,7 +286,7 @@ public final class PolylineEncoder {
     }
 
     private final static String encodeNumber(final int num) {
-        StringBuffer encodeString = new StringBuffer();
+        final StringBuffer encodeString = new StringBuffer();
         int value = num;
         int nextValue;
 
@@ -299,32 +303,32 @@ public final class PolylineEncoder {
     }
 
     /**
-     * Now we can use the previous function to march down the list of points and
-     * encode the levels. Like createEncodings, we ignore points whose distance
-     * (in dists) is undefined.
+     * Now we can use the previous function to march down the list of points
+     * and encode the levels. Like createEncodings, we ignore points whose
+     * distance (in dists) is undefined.
      */
-    private final String encodeLevels(final Track points, final double[] dists,
-            final double absMaxDist) {
+    private final String encodeLevels(final Track points,
+            final double[] dists, final double absMaxDist) {
         int i;
-        StringBuffer encodedLevels = new StringBuffer();
+        final StringBuffer encodedLevels = new StringBuffer();
 
-        if (this.forceEndpoints) {
-            encodedLevels.append(encodeNumber(this.numLevels - 1));
+        if (forceEndpoints) {
+            encodedLevels.append(encodeNumber(numLevels - 1));
         } else {
-            encodedLevels.append(encodeNumber(this.numLevels
+            encodedLevels.append(encodeNumber(numLevels
                     - computeLevel(absMaxDist) - 1));
         }
         for (i = 1; i < points.size() - 1; i++) {
             if (dists[i] != 0) {
-                encodedLevels.append(encodeNumber(this.numLevels
+                encodedLevels.append(encodeNumber(numLevels
                         - computeLevel(dists[i]) - 1));
             }
         }
         if ((points.size() > 1)) {
-            if (this.forceEndpoints) {
-                encodedLevels.append(encodeNumber(this.numLevels - 1));
+            if (forceEndpoints) {
+                encodedLevels.append(encodeNumber(numLevels - 1));
             } else {
-                encodedLevels.append(encodeNumber(this.numLevels
+                encodedLevels.append(encodeNumber(numLevels
                         - computeLevel(absMaxDist) - 1));
             }
         }
@@ -334,15 +338,15 @@ public final class PolylineEncoder {
 
     /**
      * This computes the appropriate zoom level of a point in terms of it's
-     * distance from the relevant segment in the DP algorithm. Could be done in
-     * terms of a logarithm, but this approach makes it a bit easier to ensure
-     * that the level is not too large.
+     * distance from the relevant segment in the DP algorithm. Could be done
+     * in terms of a logarithm, but this approach makes it a bit easier to
+     * ensure that the level is not too large.
      */
     private int computeLevel(final double absMaxDist) {
         int lev = 0;
-        if (absMaxDist > this.verySmall) {
+        if (absMaxDist > verySmall) {
             lev = 0;
-            while (absMaxDist < this.zoomLevelBreaks[lev]) {
+            while (absMaxDist < zoomLevelBreaks[lev]) {
                 lev++;
             }
         }
@@ -350,7 +354,7 @@ public final class PolylineEncoder {
     }
 
     private String createEncodings(final Track points, final double[] dists) {
-        StringBuffer encodedPoints = new StringBuffer();
+        final StringBuffer encodedPoints = new StringBuffer();
 
         double maxlat = 0, minlat = 0, maxlon = 0, minlon = 0;
 
@@ -375,14 +379,14 @@ public final class PolylineEncoder {
                 }
             }
 
-            if (dists[i] != 0 || i == 0 || i == points.size() - 1) {
-                Trackpoint point = points.get(i);
+            if ((dists[i] != 0) || (i == 0) || (i == points.size() - 1)) {
+                final Trackpoint point = points.get(i);
 
-                int late5 = floor1e5(point.getLatDouble());
-                int lnge5 = floor1e5(point.getLonDouble());
+                final int late5 = floor1e5(point.getLatDouble());
+                final int lnge5 = floor1e5(point.getLonDouble());
 
-                int dlat = late5 - plat;
-                int dlng = lnge5 - plng;
+                final int dlat = late5 - plat;
+                final int dlng = lnge5 - plng;
 
                 plat = late5;
                 plng = lnge5;
@@ -393,44 +397,44 @@ public final class PolylineEncoder {
             }
         }
 
-        BT747Hashtable lbounds = Interface.getHashtableInstance(0);
+        final BT747Hashtable lbounds = Interface.getHashtableInstance(0);
         lbounds.put("maxlat", Convert.toString(maxlat));
         lbounds.put("minlat", Convert.toString(minlat));
         lbounds.put("maxlon", Convert.toString(maxlon));
         lbounds.put("minlon", Convert.toString(minlon));
 
-        this.setBounds(lbounds);
+        setBounds(lbounds);
         return encodedPoints.toString();
     }
 
     private final void setBounds(final BT747Hashtable pbounds) {
-        this.bounds = pbounds;
+        bounds = pbounds;
     }
 
-    public final BT747Hashtable createEncodings(final Track track, final int level,
-            final int step) {
+    public final BT747Hashtable createEncodings(final Track track,
+            final int level, final int step) {
 
-        BT747Hashtable resultMap = Interface.getHashtableInstance(0);
-        StringBuffer encodedPoints = new StringBuffer();
-        StringBuffer encodedLevels = new StringBuffer();
+        final BT747Hashtable resultMap = Interface.getHashtableInstance(0);
+        final StringBuffer encodedPoints = new StringBuffer();
+        final StringBuffer encodedLevels = new StringBuffer();
 
         int plat = 0;
         int plng = 0;
         int counter = 0;
 
-        int listSize = track.size();
+        final int listSize = track.size();
 
         Trackpoint trackpoint;
 
         for (int i = 0; i < listSize; i += step) {
             counter++;
-            trackpoint = (Trackpoint) track.get(i);
+            trackpoint = track.get(i);
 
-            int late5 = floor1e5(trackpoint.getLatDouble());
-            int lnge5 = floor1e5(trackpoint.getLonDouble());
+            final int late5 = floor1e5(trackpoint.getLatDouble());
+            final int lnge5 = floor1e5(trackpoint.getLonDouble());
 
-            int dlat = late5 - plat;
-            int dlng = lnge5 - plng;
+            final int dlat = late5 - plat;
+            final int dlng = lnge5 - plng;
 
             plat = late5;
             plng = lnge5;
@@ -444,8 +448,8 @@ public final class PolylineEncoder {
         // System.out.println("listSize: " + listSize + " step: " + step
         // + " counter: " + counter);
 
-        resultMap.put("encodedPoints", replace(encodedPoints.toString(), "\\",
-                "\\\\"));
+        resultMap.put("encodedPoints", replace(encodedPoints.toString(),
+                "\\", "\\\\"));
         resultMap.put("encodedLevels", encodedLevels.toString());
 
         return resultMap;
