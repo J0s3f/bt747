@@ -264,7 +264,7 @@ public class ImageData extends BT747Waypoint {
             }
             String satInfo = "";
             if (g.hasNsat()) {
-                satInfo = ((g.nsat >> 256) & 0xFF) + "(" + (g.nsat & 0xFF)
+                satInfo = ((g.nsat >> 8) & 0xFF) + "(" + (g.nsat & 0xFF)
                         + ")";
             }
             if (g.hasSid()) {

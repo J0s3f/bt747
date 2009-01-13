@@ -59,7 +59,7 @@ public final class GPSConversionParameters {
     }
 
     // Superwaba does not have an integer class.
-    private final class MyInt {
+    private final static class MyInt {
         final int i;
 
         public MyInt(int i) {

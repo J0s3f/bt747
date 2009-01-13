@@ -30,10 +30,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
-
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
 
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.ImageData;

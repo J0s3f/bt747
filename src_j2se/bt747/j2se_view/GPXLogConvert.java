@@ -230,6 +230,7 @@ public class GPXLogConvert implements GPSLogConvertInterface {
                         case ELE:
                             r.height = Float.valueOf(nodeText);
                             activeFileFields.height = 0;
+                            break;
                         case TIME:
                             // >2008-09-15T20:25:03.000Z<
                             // See NMEA???

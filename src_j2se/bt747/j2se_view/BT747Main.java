@@ -301,7 +301,7 @@ public class BT747Main extends javax.swing.JFrame implements
 
     private final void updateSerialSpeed() {
         final int speed = m.getIntOpt(AppSettings.BAUDRATE);
-        cbSerialSpeed.setSelectedItem(new Integer(speed));
+        cbSerialSpeed.setSelectedItem(Integer.valueOf(speed));
     }
 
     @SuppressWarnings("unchecked")

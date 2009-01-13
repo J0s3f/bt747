@@ -204,15 +204,12 @@ public class ExifTIFF {
             // bt747.sys.Generic.debug(Path);
             fromFile = new WindowedFile(Path, File.READ_ONLY, card);
             if ((exifApp1 != null) && (fromFile != null) && fromFile.isOpen()) {
+                
+                // TODO: This code is not validated and surely incorrect.
                 // setUsedSoftWare();
-                byte[] buffer;
-                int sz;
                 // bt747.sys.Generic.debug(this.toString());
                 fromFile.setBufferSize(64 * 1024);
-                fromFile.fillBuffer(0);
-                buffer = fromFile.getBuffer();
 
-                sz = fromFile.getBufferFill();
                 toFile = new File(path, File.CREATE, card);
                 // buffer = null;
                 byte[] exif;
@@ -225,6 +222,9 @@ public class ExifTIFF {
                 // }
                 // }
                 toFile.writeBytes(exif, 0, exif.length);
+
+                // TODO: Next should be usefull data
+                fromFile.fillBuffer(0);
 
                 while (fromFile.getBufferFill() >= 0) {
                     toFile.writeBytes(fromFile.getBuffer(), 0, fromFile

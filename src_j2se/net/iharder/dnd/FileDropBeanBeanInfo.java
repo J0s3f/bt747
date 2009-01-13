@@ -173,7 +173,7 @@ public class FileDropBeanBeanInfo extends SimpleBeanInfo {
             if (iconNameM32 == null) {
                 return null;
             } else {
-                if (iconNameM32 == null) {
+                if (iconMono32 == null) {
                     iconMono32 = loadImage(iconNameM32);
                 }
                 return iconMono32;

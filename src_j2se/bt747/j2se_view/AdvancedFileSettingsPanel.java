@@ -60,8 +60,7 @@ public class AdvancedFileSettingsPanel extends javax.swing.JPanel implements
 
     public void modelEvent(final ModelEvent e) {
         // TODO Auto-generated method stub
-        final int type = e.getType();
-        switch (type) {
+        switch (e.getType()) {
 
         }
     }

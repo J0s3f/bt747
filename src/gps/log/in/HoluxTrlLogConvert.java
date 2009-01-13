@@ -37,7 +37,7 @@ public final class HoluxTrlLogConvert implements GPSLogConvertInterface {
             | (1 << BT747Constants.FMT_HEIGHT_IDX);;
     private File inFile = null;
     protected boolean passToFindFieldsActivatedInLog = false;
-    protected int activeFileFields = logFormat;
+    protected final int activeFileFields = logFormat;
 
     /**
      * When -1, if old height was WGS84, new height will be MSL.
