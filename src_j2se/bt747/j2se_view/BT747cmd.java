@@ -37,7 +37,6 @@ import joptsimple.OptionSet;
 
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.ImageData;
-import bt747.model.AppSettings;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Interface;
@@ -493,12 +492,12 @@ public class BT747cmd implements bt747.model.ModelListener {
         m.init();
         // Set up the paths
         // Common to in/out
-        c.setStringOpt(AppSettings.OUTPUTDIRPATH, ".");
+        c.setStringOpt(Model.OUTPUTDIRPATH, ".");
         c.setOutputFileRelPath("GPSDATA");
         c.setIntOpt(Model.FILEFIELDFORMAT, 0xFFFFFFFF); // All fields
-        c.setTrkSep(60);
-        c.setStringOpt(AppSettings.COLOR_VALIDTRACK, "0000FF");
-        c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, "0000FF");
+        c.setIntOpt(Model.TRKSEP, 60);
+        c.setStringOpt(Model.COLOR_VALIDTRACK, "0000FF");
+        c.setStringOpt(Model.COLOR_INVALIDTRACK, "0000FF");
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_COMMENT, false);
         c.setBooleanOpt(Model.IS_WRITE_TRACKPOINT_NAME, false);
         c.setOutputFileSplitType(0);
@@ -528,7 +527,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         // Default value
-        c.setStringOpt(AppSettings.LOGFILEPATH, "BT747_log.bin");
+        c.setStringOpt(Model.LOGFILEPATH, "BT747_log.bin");
 
         if (options.has(OPT_FILE_BASENAME)) {
             // Basename of files.
@@ -547,16 +546,16 @@ public class BT747cmd implements bt747.model.ModelListener {
                 basename = fullname;
             }
             if (path.length() != 0) {
-                c.setStringOpt(AppSettings.OUTPUTDIRPATH, path);
+                c.setStringOpt(Model.OUTPUTDIRPATH, path);
             }
-            c.setStringOpt(AppSettings.LOGFILEPATH, basename + ".bin");
+            c.setStringOpt(Model.LOGFILEPATH, basename + ".bin");
             c.setOutputFileRelPath(basename);
 
         }
 
         // Input is "/BT747/BT747_sample.bin"
         if (options.has(OPT_BINARY_FILE)) {
-            c.setStringOpt(AppSettings.LOGFILEPATH, options
+            c.setStringOpt(Model.LOGFILEPATH, options
                     .argumentOf(OPT_BINARY_FILE));
         }
 
@@ -592,7 +591,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (options.has(OPT_UTC)) {
             final Integer offset = (Integer) options.valueOf(OPT_UTC);
-            c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, offset);
+            c.setIntOpt(Model.GPSTIMEOFFSETHOURS, offset);
             // Default value for filetime offset
             c.setIntOpt(Model.FILETIMEOFFSET, offset * 3600);
         }
@@ -619,16 +618,16 @@ public class BT747cmd implements bt747.model.ModelListener {
         }
 
         if (options.has(OPT_COLOR)) {
-            c.setStringOpt(AppSettings.COLOR_VALIDTRACK, ((String) options
+            c.setStringOpt(Model.COLOR_VALIDTRACK, ((String) options
                     .valueOf(OPT_COLOR)));
             // Default: bad color is the same
-            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, ((String) options
+            c.setStringOpt(Model.COLOR_INVALIDTRACK, ((String) options
                     .valueOf(OPT_COLOR)));
         }
 
         if (options.has(OPT_BADCOLOR)) {
             // Overrides previous default setting in "color"
-            c.setStringOpt(AppSettings.COLOR_INVALIDTRACK, ((String) options
+            c.setStringOpt(Model.COLOR_INVALIDTRACK, ((String) options
                     .valueOf(OPT_BADCOLOR)));
         }
 
@@ -654,7 +653,7 @@ public class BT747cmd implements bt747.model.ModelListener {
 
         if (options.has(OPT_TIMESPLIT)) {
             final Integer split = (Integer) options.valueOf(OPT_TIMESPLIT);
-            c.setTrkSep(split);
+            c.setIntOpt(Model.TRKSEP, split);
         }
 
         // Options for which a connection is needed.
@@ -684,7 +683,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                 deviceType = Model.GPS_TYPE_DEFAULT;
                 c.setBooleanOpt(Model.FORCE_HOLUXM241, true);
             }
-            c.setIntOpt(AppSettings.GPSTYPE, deviceType);
+            c.setIntOpt(Model.GPSTYPE, deviceType);
         }
 
         if (options.has(OPT_TRKPTINFO)) {
@@ -1272,11 +1271,11 @@ public class BT747cmd implements bt747.model.ModelListener {
     }
 
     // private void initAppSettings() {
-    // // AppSettings.defaultBaseDirPath = java.lang.System
+    // // Model.defaultBaseDirPath = java.lang.System
     // // .getProperty("user.home");
     //
     // try {
-    // AppSettings.defaultBaseDirPath = (new File(".")).getCanonicalPath();
+    // Model.defaultBaseDirPath = (new File(".")).getCanonicalPath();
     // } catch (Exception e) {
     // // TODO: handle exception
     // }

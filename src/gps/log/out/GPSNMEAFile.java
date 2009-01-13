@@ -42,7 +42,6 @@ public final class GPSNMEAFile extends GPSFile {
      * @see gps.log.out.GPSFile#initialiseFile(java.lang.String,
      *      java.lang.String, int, int)
      */
-    @Override
     public void initialiseFile(final String baseName, final String extension,
             final int fileCard, final int fileSeparationFreq) {
         // TODO Auto-generated method stub

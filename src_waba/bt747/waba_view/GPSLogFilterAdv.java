@@ -179,7 +179,7 @@ public final class GPSLogFilterAdv extends Container implements ModelListener {
             } else if (event.target == btClear) {
                 clearSettings();
             } else if (event.target == pbPtType) {
-                c.setAdvFilterActive(pbPtType.getSelected() == 0);
+                c.setBooleanOpt(Model.ADVFILTACTIVE, pbPtType.getSelected() == 0);
 
             } else if (event.target == this) {
                 // m_GPSstate.getFlashUserOption();

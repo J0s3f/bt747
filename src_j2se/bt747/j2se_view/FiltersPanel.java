@@ -1056,7 +1056,7 @@ private void cbTrkUser1TrkRCRAction(javax.swing.event.ChangeEvent evt) {//GEN-FI
 
     
 private void cbAdvancedActiveStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_cbAdvancedActiveStateChanged
-        c.setAdvFilterActive(cbAdvancedActive.isSelected());
+        c.setBooleanOpt(Model.ADVFILTACTIVE, cbAdvancedActive.isSelected());
         updateAdvancedFilter();
 }//GEN-LAST:event_cbAdvancedActiveStateChanged
 
