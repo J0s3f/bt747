@@ -211,6 +211,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                     // Seems to be valid position
                     mapViewer.setCenterPosition(new GeoPosition(
                             r.latitude, r.longitude));
+                    mapViewer.setZoom(4);
                 }
             }
             //updateRMCData((GPSRecord) e.getArg());

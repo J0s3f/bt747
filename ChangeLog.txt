@@ -1,3 +1,7 @@
+Version 1.67.10
+* Centering map on position from GPS on initial connection and if no other
+  position data is available.
+
 Version 1.67.9
 * Listing known ports when connection fails.
 * [Internal: created parameter object for some conversion parameters]
