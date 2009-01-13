@@ -86,7 +86,7 @@ public final class PolylineEncoder {
         int i, maxLoc = 0;
         final BT747Vector stack = Interface.getVectorInstance();
         final double[] dists = new double[track.getTrackpoints().size()];
-        double maxDist, absMaxDist = 0.0, temp = 0.0;
+        double maxDist, absMaxDist = 0.0;
         int[] current;
         String encodedPoints, encodedLevels;
 
@@ -100,7 +100,7 @@ public final class PolylineEncoder {
                 maxDist = 0;
 
                 for (i = current[0] + 1; i < current[1]; i++) {
-                    temp = distance((Trackpoint) track.getTrackpoints()
+                    final double temp = distance((Trackpoint) track.getTrackpoints()
                             .elementAt(i), (Trackpoint) track
                             .getTrackpoints().elementAt(current[0]),
                             (Trackpoint) track.getTrackpoints().elementAt(
@@ -175,7 +175,7 @@ public final class PolylineEncoder {
      */
     public final static double distance(final Trackpoint p0,
             final Trackpoint p1, final Trackpoint p2) {
-        double u, out = 0.0;
+        double out = 0.0;
 
         if ((p1.getLatDouble() == p2.getLatDouble())
                 && (p1.getLonDouble() == p2.getLonDouble())) {
@@ -184,7 +184,7 @@ public final class PolylineEncoder {
                     + bt747.sys.Generic.pow(p2.getLonDouble()
                             - p0.getLonDouble(), 2));
         } else {
-            u = ((p0.getLatDouble() - p1.getLatDouble())
+            final double u = ((p0.getLatDouble() - p1.getLatDouble())
                     * (p2.getLatDouble() - p1.getLatDouble()) + (p0
                     .getLonDouble() - p1.getLonDouble())
                     * (p2.getLonDouble() - p1.getLonDouble()))
