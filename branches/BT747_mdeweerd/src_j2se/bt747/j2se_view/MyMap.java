@@ -11,6 +11,7 @@
 
 package bt747.j2se_view;
 
+import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 
@@ -43,7 +44,6 @@ import net.sf.bt747.j2se.app.map.MapFactoryInfos;
 import net.sf.bt747.j2se.app.map.MapRendererFactoryMethod;
 import net.sf.bt747.j2se.app.map.MyTileFactoryInfo;
 import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
-import net.sf.bt747.j2se.app.utils.BrowserControl;
 
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.hyperlink.LinkAction;
@@ -153,7 +153,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             try {
-                BT747Waypoint w = (BT747Waypoint) evt.getNewValue();
+                final BT747Waypoint w = (BT747Waypoint) evt.getNewValue();
                 if (w != waypointList.getSelectedValue()) {
                     waypointList.setSelectedValue(w, true);
                     ml.selectedWaypoint(w);
@@ -169,6 +169,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
     };
 
+    private boolean positionIsSet = false;
     /*
      * (non-Javadoc)
      * 
@@ -197,6 +198,22 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                 Generic.debug("MyMap modelevent", ex);
                 // TODO: handle exception
             }
+            break;
+        case ModelEvent.GPRMC:
+            if(!positionIsSet) {
+                // Center on the current GPS position.
+                final GPSRecord r = (GPSRecord) e.getArg();
+                if (r.hasPosition()
+                        && r.hasValid()
+                        && (r.valid & BT747Constants.VALID_NO_FIX_MASK) == 0
+                    ) {
+                    positionIsSet = true;
+                    // Seems to be valid position
+                    mapViewer.setCenterPosition(new GeoPosition(
+                            r.latitude, r.longitude));
+                }
+            }
+            //updateRMCData((GPSRecord) e.getArg());
             break;
         case J2SEAppModel.UPDATE_TRACKPOINT_LIST:
             setZoom();
@@ -311,6 +328,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
         if (hasPositions) {
             final Set<GeoPosition> bounds = new HashSet<GeoPosition>();
+            positionIsSet = true;
             bounds.add(new GeoPosition(minlat, minlon));
             bounds.add(new GeoPosition(maxlat, maxlon));
             mapViewer.calculateZoomFrom(bounds);
@@ -330,7 +348,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
     }
 
-    private class MyLinkAction extends LinkAction<String> {
+    private static class MyLinkAction extends LinkAction<String> {
 
         /**
          * 
@@ -411,7 +429,6 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
         map.setAddressLocationShown(false);
         mapViewer.calculateZoomFrom(bounds);
-        System.gc();
     }
 
     private class MyWaypointPainter<T extends JXMapViewer> extends
@@ -613,8 +630,6 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
     private class mouseListener implements MouseListener, MouseMotionListener {
 
-        Point previous;
-
         /*
          * (non-Javadoc)
          * 
@@ -703,7 +718,6 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
                         currentWaypoint = w;
                         w.setSelected(true);
-                        previous = pt;
                         final Point2D p = mapViewer
                                 .convertGeoPositionToPoint(w.getPosition());
                         xOffset = (int) (pt.getX() - p.getX());

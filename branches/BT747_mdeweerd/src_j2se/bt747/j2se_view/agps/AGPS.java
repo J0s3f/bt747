@@ -66,7 +66,11 @@ public class AGPS {
          */
         @Override
         public boolean equals(final Object obj) {
-            return time == ((TimeInt) obj).getTime();
+            if ((obj != null) && (obj instanceof TimeInt)) {
+                return time == ((TimeInt) obj).getTime();
+            } else {
+                return false;
+            }
         }
     }
 

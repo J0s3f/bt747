@@ -54,8 +54,8 @@ public class AppBT747 extends MainWindow implements ModelListener {
     /*
      * Using Model, AppController, View.
      */
-    protected static Model m;
-    protected static AppController c;
+    protected static final Model m;
+    protected static final AppController c;
 
     static {
         // Set the low level interface.

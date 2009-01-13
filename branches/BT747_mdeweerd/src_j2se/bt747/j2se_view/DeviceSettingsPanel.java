@@ -109,6 +109,7 @@ public class DeviceSettingsPanel extends javax.swing.JPanel implements
             break;
         case ModelEvent.DISCONNECTED:
             updateConnected(false);
+            break;
         case ModelEvent.UPDATE_SBAS:
             cbUseSBAS.setSelected(m.isSBASEnabled());
             break;

@@ -5,8 +5,6 @@ package net.sf.bt747.j2se.app.map;
 
 import java.awt.geom.Point2D;
 
-import org.jdesktop.swingx.mapviewer.util.MercatorUtils;
-
 /**
  * @author Mario
  * 
@@ -93,16 +91,16 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
     // &&BBOX=-152.40234375,-89.12777169565308,-152.314453125,-89.12643273928488&width=512&height=512&SRS=WMS&Styles=
     public String toWMSURL(final int xx, final int yy, final int zoom) {
         // styles="default";
-        srs = "EPSG:4326";
-        styles = "";
+        //srs = "EPSG:4326";
+        //styles = "";
         final int ts = getTileSize(zoom);
         // GeoPosition gp1 = getPosition(new Point2D.Double(xx*ts,yy*ts), zoom, this);
         // GeoPosition gp2 = getPosition(new Point2D.Double((xx+1)*ts,(yy+1)*ts),
         // zoom, this);
-        final double ulx = MercatorUtils.xToLong(xx * ts, radiusAtZoom[zoom]);
-        final double uly;// = MercatorUtils.yToLat(y * ts, radius);
-        final double lrx;// = MercatorUtils.xToLong((x + 1) * ts, radius);
-        final double lry;// = MercatorUtils.yToLat((y + 1) * ts, radius);
+        //final double ulx = MercatorUtils.xToLong(xx * ts, radiusAtZoom[zoom]);
+        //final double uly;// = MercatorUtils.yToLat(y * ts, radius);
+        //final double lrx;// = MercatorUtils.xToLong((x + 1) * ts, radius);
+        //final double lry;// = MercatorUtils.yToLat((y + 1) * ts, radius);
         final String bbox = "";
         // ulx = gp1.getLongitude();
         // uly= gp1.getLatitude();
@@ -137,9 +135,9 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
         layer = "GlobeXplorer%20Image";
         // service="WMS";
         format = "image/png&BGCOLOR=0xFFFFFF&TRANSPARENT=TRUE";
-        final int x = xx - mapWidthInTilesAtZoom[zoom] / 2;
-        final int y = mapWidthInTilesAtZoom[zoom] / 2 - yy - 1;
-        final double radius = radiusAtZoom[zoom];
+        //final int x = xx - mapWidthInTilesAtZoom[zoom] / 2;
+        //final int y = mapWidthInTilesAtZoom[zoom] / 2 - yy - 1;
+        //final double radius = radiusAtZoom[zoom];
         // GeoUtil.getBitmapCoordinate(c, zoomLevel, info);
         // String bbox = ulx + "," + uly + "," + lrx + "," + lry;
         // bbox =
@@ -204,7 +202,7 @@ public class WMSTileFactoryInfo extends MyTileFactoryInfo {
             final int t2 = getTileSize(z) / 2;
             mapCenterInPixelsAtZoom[z] = new Point2D.Double(t2, t2);
             mapWidthInTilesAtZoom[z] = tilesize / getTileSize(z);
-            radiusAtZoom[z] = (mapWidthInTilesAtZoom[z] / 2) / Math.PI;
+            radiusAtZoom[z] = mapWidthInTilesAtZoom[z] / ( 2 * Math.PI);
             tilesize *= 2;
         }
     }

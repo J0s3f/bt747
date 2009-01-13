@@ -690,61 +690,61 @@ public class PositionData extends AbstractBean {
             break;
         case LATITUDE:
             if (g.hasLatitude()) {
-                return new Double(g.latitude);
+                return Double.valueOf(g.latitude);
             }
             break;
         case LONGITUDE:
             if (g.hasLongitude()) {
-                return new Double(g.longitude);
+                return Double.valueOf(g.longitude);
             }
             break;
         case HEIGHT_METERS:
             if (g.hasHeight()) {
-                return new Float(g.height);
+                return Float.valueOf(g.height);
             }
             break;
         case HEIGHT_FEET:
             break;
         case SPEED:
             if (g.hasSpeed()) {
-                return new Float(g.speed);
+                return Float.valueOf(g.speed);
             }
             break;
         case SPEED_MPH:
             break;
         case HEADING:
             if (g.hasHeading()) {
-                return new Float(g.heading);
+                return Float.valueOf(g.heading);
             }
             break;
         case DSTA:
             if (g.hasDsta()) {
-                return new Integer(g.dsta);
+                return Integer.valueOf(g.dsta);
             }
             break;
         case DAGE:
             if (g.hasDage()) {
-                return new Integer(g.dage);
+                return Integer.valueOf(g.dage);
             }
             break;
         case PDOP:
             if (g.hasPdop()) {
-                return new Float(g.pdop / 100.0f);
+                return Float.valueOf(g.pdop / 100.0f);
             }
             break;
         case HDOP:
             if (g.hasHdop()) {
-                return new Float(g.hdop / 100.0f);
+                return Float.valueOf(g.hdop / 100.0f);
             }
             break;
         case VDOP:
             if (g.hasVdop()) {
-                return new Float(g.vdop / 100.0f);
+                return Float.valueOf(g.vdop / 100.0f);
             }
             break;
         case NSAT:
             if (g.hasNsat()) {
-                return new Integer(g.nsat);
+                return Integer.valueOf(g.nsat);
             }
             break;
         case FIXMODE:
@@ -772,12 +772,12 @@ public class PositionData extends AbstractBean {
             break;
         case MILLISECOND:
             if (g.hasMillisecond()) {
-                return new Integer(g.milisecond);
+                return Integer.valueOf(g.milisecond);
             }
             break;
         case DISTANCE:
             if (g.hasDistance()) {
-                return new Double(g.distance);
+                return Double.valueOf(g.distance);
             }
             break;
         case DISTANCE_FEET:

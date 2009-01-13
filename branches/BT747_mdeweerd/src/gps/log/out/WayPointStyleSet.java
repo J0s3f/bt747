@@ -51,6 +51,7 @@ public class WayPointStyleSet {
                 switch (stylesList[i].length) {
                 case 3:
                     style.setIconUrl(stylesList[i][2]);
+                    /* fall through */
                 case 2:
                     style.setSymbolText(stylesList[i][1]);
                     style.setKey(stylesList[i][0]);

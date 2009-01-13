@@ -37,7 +37,10 @@ public final class J2SEDate implements BT747Date {
     static private final SimpleDateFormat FORMAT_DDMMYYYY = new SimpleDateFormat(
             "dd/MM/yyyy");
     static private final TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
-    static private final Date INIT_DATE = new Date(0);
+
+    static {
+        FORMAT_DDMMYYYY.setTimeZone(GMT_ZONE);
+    }
 
     /**
      * Calendar cal = Calendar.getInstance();
@@ -126,9 +129,7 @@ public final class J2SEDate implements BT747Date {
     }
 
     public String getDateString() {
-        FORMAT_DDMMYYYY.setTimeZone(GMT_ZONE);
         return FORMAT_DDMMYYYY.format(cal.getTime());
-
     }
 
     // private static final int DAYS_Julian_1970 = (new

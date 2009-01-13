@@ -443,6 +443,7 @@ public final class GPSrxtx {
                         // EOL found, start is ok.
                         current_state = C_START_STATE;
                     }
+                    break;
                 case C_DPL700_STATE:
                     // Vm.debug("INIT_STATE");
                     // System.err.print(c);

@@ -86,7 +86,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
         private ImageListPanel pn;
         private String path;
         private JList c;
-        private int index;
+        //private int index;
 
         IconLoader(final ImageListPanel pn, final String path, final JList c,
                 final int index) {
@@ -96,7 +96,7 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
             this.pn = pn;
             this.path = path;
             this.c = c;
-            this.index = index;
+            //this.index = index;
             pn.setIconPreferredSize(dim);
         }
 
@@ -122,10 +122,10 @@ public final class ImageListCellRenderer implements WaypointListCellComponent {
                 } catch (final Exception e) {
                     bt747.sys.Generic.debug("Icon creation", e);
                 }
+                availThreads.release();
             } catch (final Exception e) {
 
             }
-            availThreads.release();
         }
     }
 

@@ -37,7 +37,7 @@ public class BrowserControl {
             if (windows) {
                 // cmd = 'rundll32 url.dll,FileProtocolHandler http://...'
                 cmd = WIN_PATH + " " + WIN_FLAG + " " + url;
-                Process p = Runtime.getRuntime().exec(cmd);
+                Runtime.getRuntime().exec(cmd);
             } else {
                 // Under Unix, Netscape has to be running for the "-remote"
                 // command to work. So, we try sending the command and
@@ -54,7 +54,7 @@ public class BrowserControl {
                         // Command failed, start up the browser
                         // cmd = 'netscape http://www.javaworld.com'
                         cmd = UNIX_PATH + " " + url;
-                        p = Runtime.getRuntime().exec(cmd);
+                        Runtime.getRuntime().exec(cmd);
                     }
                 } catch (InterruptedException x) {
                     System.err.println("Error bringing up browser, cmd='" + cmd
