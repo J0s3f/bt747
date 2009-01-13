@@ -36,6 +36,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
     private static AppController c;
 
     private volatile boolean ok = false;
+
     /**
      * Constructs the midlet. This is called before
      * &lt;code&gt;startApp&lt;/code&gt;.
@@ -72,7 +73,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
      * @see javax.microedition.midlet.MIDlet#startApp()
      */
     protected final void startApp() throws MIDletStateChangeException {
-        if(!ok) {
+        if (!ok) {
             return;
         }
         // Initialize the J4ME UI manager.
