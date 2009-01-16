@@ -53,12 +53,12 @@ public class GPSRecord {
     public int milisecond = NO_MILISECOND;
     public double distance = NO_DISTANCE;
 
-    public float geoid; // Value returned by GPS.
+    public float geoid = NO_GEIOD; // Value returned by GPS.
     public int recCount = NO_RECCOUNT;
 
-    public int logPeriod; // Programmed period between logged points
-    public int logSpeed; // Programmed minimum speed
-    public int logDistance; // Programmed distance between logged points
+    public int logPeriod = NO_LOGCONSTRAINT; // Programmed period between logged points
+    public int logSpeed = NO_LOGCONSTRAINT; // Programmed minimum speed
+    public int logDistance = NO_LOGCONSTRAINT; // Programmed distance between logged points
 
     public String voxStr; // Voice recording reference.
 
@@ -88,6 +88,12 @@ public class GPSRecord {
 
     private static final float NO_HEADING = -100000;
     private static final float HAS_HEADING = 0;
+
+    private static final float NO_GEIOD = -100000;
+    private static final float HAS_GEOID = 0;
+
+    private static final int NO_LOGCONSTRAINT = 0;
+    //private static final int LOG_CONSTRAINT = 0;
 
     private static final int NO_XDOP = -1;
     private static final int HAS_XDOP = 0;
@@ -168,6 +174,108 @@ public class GPSRecord {
         logPeriod = r.logPeriod;
         logSpeed = r.logSpeed;
         if (r.voxStr != null) {
+            voxStr = r.voxStr;
+        }
+    }
+
+    public final void cloneActiveFields(final GPSRecord r) {
+        if (r.hasUtc()) {
+            utc = r.utc;
+        }
+        if (r.hasUtc()) {
+            tagutc = r.tagutc;
+        }
+        if (r.hasValid()) {
+            valid = r.valid;
+        }
+        if (r.hasLatitude()) {
+            latitude = r.latitude;
+        }
+        if (r.hasLongitude()) {
+            longitude = r.longitude;
+        }
+        if (r.hasHeight()) {
+            height = r.height;
+        }
+        if (r.hasSpeed()) {
+            speed = r.speed;
+        }
+        if (r.hasHeading()) {
+            heading = r.heading;
+        }
+        if (r.hasDsta()) {
+            dsta = r.dsta;
+        }
+        if (r.hasDage()) {
+            dage = r.dage;
+        }
+        if (r.hasPdop()) {
+            pdop = r.pdop;
+        }
+        if (r.hasHdop()) {
+            hdop = r.hdop;
+        }
+        if (r.hasVdop()) {
+            vdop = r.vdop;
+        }
+        if (r.hasNsat()) {
+            nsat = r.nsat;
+        }
+        if (r.hasSid()) {
+            // Object method clone() does not work on device for arrays.
+            // Doing explicit copy until better method found.
+            int i = r.sid.length;
+            sid = new int[i];
+            sidinuse = new boolean[i];
+            if (r.hasEle()) {
+                ele = new int[i];
+            }
+            if (r.hasAzi()) {
+                azi = new int[i];
+            }
+            if (r.hasSnr()) {
+                snr = new int[i];
+            }
+
+            for (i -= 1; i >= 0; i--) {
+                sid[i] = r.sid[i];
+                sidinuse[i] = r.sidinuse[i];
+                if (r.hasEle()) {
+                    ele[i] = r.ele[i];
+                }
+                if (r.hasAzi()) {
+                    azi[i] = r.azi[i];
+                }
+                if (r.hasSnr()) {
+                    snr[i] = r.snr[i];
+                }
+            }
+        }
+        if (r.hasRcr()) {
+            rcr = r.rcr;
+        }
+        if (r.hasMillisecond()) {
+            milisecond = r.milisecond;
+        }
+        if (r.hasDistance()) {
+            distance = r.distance;
+        }
+        if (r.hasGeoid()) {
+            geoid = r.geoid;
+        }
+        if (r.hasRecCount()) {
+            recCount = r.recCount;
+        }
+        if (r.hasLogDistance()) {
+            logDistance = r.logDistance;
+        }
+        if (r.hasLogPeriod()) {
+            logPeriod = r.logPeriod;
+        }
+        if (r.hasLogSpeed()) {
+            logSpeed = r.logSpeed;
+        }
+        if (r.hasVoxStr()) {
             voxStr = r.voxStr;
         }
     }
@@ -411,23 +519,48 @@ public class GPSRecord {
         return voxStr != null;
     }
 
+    public final boolean hasGeoid() {
+        return geoid != NO_GEIOD;
+    }
+
+    public final boolean hasLogDistance() {
+        return logDistance != NO_LOGCONSTRAINT;
+    }
+
+    public final boolean hasLogPeriod() {
+        return logPeriod != NO_LOGCONSTRAINT;
+    }
+
+    public final boolean hasLogSpeed() {
+        return logSpeed != NO_LOGCONSTRAINT;
+    }
+
     public final boolean equalsFormat(final GPSRecord r) {
-        return (hasUtc() == r.hasUtc()) && (hasValid() == r.hasValid())
+        return (hasUtc() == r.hasUtc())
+                && (hasValid() == r.hasValid())
                 && (hasLatitude() == r.hasLatitude())
                 && (hasLongitude() == r.hasLongitude())
                 && (hasHeight() == r.hasHeight())
                 && (hasSpeed() == r.hasSpeed())
                 && (hasHeading() == r.hasHeading())
-                && (hasDsta() == r.hasDsta()) && (hasDage() == r.hasDage())
-                && (hasPdop() == r.hasPdop()) && (hasHdop() == r.hasHdop())
-                && (hasVdop() == r.hasVdop()) && (hasNsat() == r.hasNsat())
+                && (hasDsta() == r.hasDsta())
+                && (hasDage() == r.hasDage())
+                && (hasPdop() == r.hasPdop())
+                && (hasHdop() == r.hasHdop())
+                && (hasVdop() == r.hasVdop())
+                && (hasNsat() == r.hasNsat())
                 && (hasSid() == r.hasSid())
                 && (hasSidInUse() == r.hasSidInUse())
-                && (hasEle() == r.hasEle()) && (hasAzi() == r.hasAzi())
-                && (hasSnr() == r.hasSnr()) && (hasRcr() == r.hasRcr())
+                && (hasEle() == r.hasEle())
+                && (hasAzi() == r.hasAzi())
+                && (hasSnr() == r.hasSnr())
+                && (hasRcr() == r.hasRcr())
                 && (hasMillisecond() == r.hasMillisecond())
                 && (hasDistance() == r.hasDistance())
-                && (hasVoxStr() == r.hasVoxStr());
+                && ((hasVoxStr() == r.hasVoxStr())
+                        && (hasLogDistance() == r.hasLogDistance())
+                        && (hasLogSpeed() == r.hasLogSpeed()) && (hasLogPeriod() == r
+                        .hasLogSpeed()));
     }
 
     public final BT747Time getBT747Time() {
