@@ -1,6 +1,11 @@
+Version 1.67.11
+* Modification(s) in CSV reader to cope with 'bugs' in the log written by
+  the Columbus V-900.
+
 Version 1.67.10
 * Centering map on position from GPS on initial connection and if no other
   position data is available.
+ * Code changes following FindBugs feedback.
 
 Version 1.67.9
 * Listing known ports when connection fails.
