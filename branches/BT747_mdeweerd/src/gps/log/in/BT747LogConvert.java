@@ -30,19 +30,13 @@ import bt747.sys.Interface;
  * 
  * @author Mario De Weerd
  */
-public final class BT747LogConvert implements GPSLogConvertInterface {
+public final class BT747LogConvert extends GPSLogConvertInterface {
     private int minRecordSize;
     private int maxRecordSize;
     private int logFormat;
-    private WindowedFile mFile = null;
     protected boolean passToFindFieldsActivatedInLog = false;
     protected int activeFileFields = 0;
     private boolean firstBlockDone = false;
-
-    /**
-     * When -1, if old height was WGS84, new height will be MSL.
-     */
-    private int factorConversionWGS84ToMSL = 0;
 
     private int satIdxOffset;
     private int satRecSize;
@@ -76,12 +70,6 @@ public final class BT747LogConvert implements GPSLogConvertInterface {
      */
     private static final int BUF_SIZE = 0x800;
 
-    private boolean stop = false;
-
-    public final void stopConversion() {
-        stop = true;
-    }
-
     private static final int minValidUtcTime = Interface.getDateInstance(1,
             1, 1995).dateToUTCepoch1970();
 
@@ -94,7 +82,9 @@ public final class BT747LogConvert implements GPSLogConvertInterface {
      *                object doing actual write to files
      * 
      */
-    public final int parseFile(final GPSFileConverterInterface gpsFile) {
+    public final int parseFile(final Object file,
+            final GPSFileConverterInterface gpsFile) {
+        final WindowedFile mFile = (WindowedFile) file;
         GPSRecord r = GPSRecord.getLogFormatRecord(0);
         byte[] bytes;
         int sizeToRead;
@@ -473,29 +463,24 @@ public final class BT747LogConvert implements GPSLogConvertInterface {
             initialBlock = smallestBlock;
         }
         if (passToFindFirstBlockInLog && !passToFindFieldsActivatedInLog) {
-            return parseFile(gpsFile);
+            return parseFile(mFile, gpsFile);
         } else {
             return BT747Constants.NO_ERROR;
         }
     }
 
-    public final void setConvertWGS84ToMSL(final int mode) {
-        factorConversionWGS84ToMSL = mode;
-    }
+    private int error;
 
-    private String errorInfo;
-
-    public final String getErrorInfo() {
-        return errorInfo;
-    }
-
-    public final int toGPSFile(final String fileName,
-            final GPSFileConverterInterface gpsFile, final int Card) {
-        int error = BT747Constants.NO_ERROR;
-        stop = false;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.log.in.GPSLogConvertInterface#getFileObject()
+     */
+    protected Object getFileObject(String fileName, int card) {
+        WindowedFile mFile = null;
         if (File.isAvailable()) {
             try {
-                mFile = new WindowedFile(fileName, File.READ_ONLY, Card);
+                mFile = new WindowedFile(fileName, File.READ_ONLY, card);
                 mFile.setBufferSize(BUF_SIZE);
                 errorInfo = fileName + "|" + mFile.getLastError();
             } catch (final Exception e) {
@@ -508,35 +493,49 @@ public final class BT747LogConvert implements GPSLogConvertInterface {
                 }
                 error = BT747Constants.ERROR_COULD_NOT_OPEN;
                 mFile = null;
-            } else {
-                passToFindFieldsActivatedInLog = gpsFile
-                        .needPassToFindFieldsActivatedInLog();
-                if (passToFindFieldsActivatedInLog) {
-                    activeFileFields = 0;
-                    error = parseFile(gpsFile);
-                    gpsFile.setActiveFileFields(GPSRecord
-                            .getLogFormatRecord(activeFileFields));
-                }
-                passToFindFieldsActivatedInLog = false;
-                if (error == BT747Constants.NO_ERROR) {
-                    do {
-                        error = parseFile(gpsFile);
-                    } while ((error == BT747Constants.NO_ERROR)
-                            && gpsFile.nextPass());
-                }
-                gpsFile.finaliseFile();
-                if (gpsFile.getFilesCreated() == 0) {
-                    error = BT747Constants.ERROR_NO_FILES_WERE_CREATED;
-                }
             }
+        }
+        return mFile;
+    }
 
-            if (mFile != null) {
-                try {
-                    mFile.close();
-                } catch (final Exception e) {
-                    Generic.debug("close", e);
-                    // TODO: handle exception
-                }
+    /* (non-Javadoc)
+     * @see gps.log.in.GPSLogConvertInterface#closeFileObject(java.lang.Object)
+     */
+    protected void closeFileObject(Object o) {
+        ((WindowedFile)o).close();
+    }
+    
+    public final int toGPSFile(final String fileName,
+            final GPSFileConverterInterface gpsFile, final int card) {
+        Object mFile = null;
+        error = BT747Constants.NO_ERROR;
+        stop = false;
+        mFile = getFileObject(fileName, card);
+        if (mFile != null) {
+            passToFindFieldsActivatedInLog = gpsFile
+                    .needPassToFindFieldsActivatedInLog();
+            if (passToFindFieldsActivatedInLog) {
+                activeFileFields = 0;
+                error = parseFile(mFile, gpsFile);
+                gpsFile.setActiveFileFields(GPSRecord
+                        .getLogFormatRecord(activeFileFields));
+            }
+            passToFindFieldsActivatedInLog = false;
+            if (error == BT747Constants.NO_ERROR) {
+                do {
+                    error = parseFile(mFile, gpsFile);
+                } while ((error == BT747Constants.NO_ERROR)
+                        && gpsFile.nextPass());
+            }
+            gpsFile.finaliseFile();
+            if (gpsFile.getFilesCreated() == 0) {
+                error = BT747Constants.ERROR_NO_FILES_WERE_CREATED;
+            }
+            try {
+                closeFileObject(mFile);
+            } catch (final Exception e) {
+                Generic.debug("close", e);
+                // TODO: handle exception
             }
         }
         Generic.debug("Conversion done", null);

@@ -31,34 +31,18 @@ import bt747.sys.Interface;
  * @author Mario
  * 
  */
-public class GPXLogConvert implements GPSLogConvertInterface {
+public class GPXLogConvert extends GPSLogConvertInterface {
 
-    private String errorInfo = "";
     private GPSRecord activeFields = GPSRecord.getLogFormatRecord(0);
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see gps.log.in.GPSLogConvertInterface#getErrorInfo()
-     */
-    public String getErrorInfo() {
-        return errorInfo;
-    }
 
     /*
      * (non-Javadoc)
      * 
      * @see gps.log.in.GPSLogConvertInterface#parseFile(gps.log.in.GPSFileConverterInterface)
      */
-    public int parseFile(final GPSFileConverterInterface gpsFile) {
-        Node gpx;
-        try {
-            gpx = (Node) xpath.evaluate("//gpx", doc, XPathConstants.NODE);
-        } catch (final Exception e) {
-            Generic.debug("Did not find 'gpx' path", e);
-            errorInfo = "Did not find 'gpx' path in gpx file";
-            return BT747Constants.ERROR_READING_FILE;
-        }
+    public int parseFile(final Object file,
+            final GPSFileConverterInterface gpsFile) {
+        Node gpx = (Node) file;
         final NodeList gpxElements = gpx.getChildNodes();
         int reccount = 0;
         for (int i = 0; i < gpxElements.getLength(); i++) {
@@ -101,38 +85,57 @@ public class GPXLogConvert implements GPSLogConvertInterface {
         return 0;
     }
 
-    private int factorConversionWGS84ToMSL = 0;
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see gps.log.in.GPSLogConvertInterface#setConvertWGS84ToMSL(int)
-     */
-    public void setConvertWGS84ToMSL(final int mode) {
-        factorConversionWGS84ToMSL = mode;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see gps.log.in.GPSLogConvertInterface#stopConversion()
-     */
-    public void stopConversion() {
-        stop = true;
-    }
-
-    private volatile boolean stop;
-    private java.io.File mFile = null;
-
     private enum infoType {
         ELE, TIME, SPEED, HDOP, VDOP, PDOP, FIX, TYPE, SYM, COURSE, CMT, SAT, NAME, DGPSID, AGEOFDGPSDATA
     };
 
-    private Document doc;
-    private XPath xpath;
     private boolean passToFindFieldsActivatedInLog;
     private final GPSRecord activeFileFields = GPSRecord
             .getLogFormatRecord(0);
+
+    private Node gpx;
+    private int error;
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.log.in.GPSLogConvertInterface#getFileObject()
+     */
+    protected Object getFileObject(String fileName, int card) {
+        if (gpx == null && File.isAvailable()) {
+            try {
+                final java.io.File mFile = new java.io.File(fileName);
+                final DocumentBuilder builder = DocumentBuilderFactory
+                        .newInstance().newDocumentBuilder();
+                final Document doc = builder.parse(mFile);
+                final XPath xpath = XPathFactory.newInstance().newXPath();
+                try {
+                    gpx = (Node) xpath.evaluate("//gpx", doc,
+                            XPathConstants.NODE);
+                } catch (final Exception e) {
+                    Generic.debug("Did not find 'gpx' path", e);
+                    errorInfo = "Did not find 'gpx' path in gpx file";
+                    return BT747Constants.ERROR_READING_FILE;
+                }
+            } catch (final Exception e) {
+                Generic.debug("Initialising GPX reading " + fileName, e);
+                errorInfo = fileName + "\n" + e.getMessage();
+                error = BT747Constants.ERROR_COULD_NOT_OPEN;
+                return error;
+            }
+        }
+        return gpx;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.log.in.GPSLogConvertInterface#closeFileObject(java.lang.Object)
+     */
+    protected void closeFileObject(Object o) {
+        gpx = null;
+        //((File) o).close();
+    }
 
     /*
      * (non-Javadoc)
@@ -142,38 +145,25 @@ public class GPXLogConvert implements GPSLogConvertInterface {
      */
     public int toGPSFile(final String fileName,
             GPSFileConverterInterface gpsFile, final int card) {
-        int error = BT747Constants.NO_ERROR;
-        stop = false;
-        if (File.isAvailable()) {
-            mFile = new java.io.File(fileName);
-            try {
-                DocumentBuilder builder = DocumentBuilderFactory
-                        .newInstance().newDocumentBuilder();
-                doc = builder.parse(mFile);
-                builder = null;
-                xpath = XPathFactory.newInstance().newXPath();
-            } catch (final Exception e) {
-                Generic.debug("Initialising GPX reading " + fileName, e);
-                errorInfo = fileName + "\n" + e.getMessage();
-                error = BT747Constants.ERROR_COULD_NOT_OPEN;
-                doc = null;
-                xpath = null;
-                return error;
-            }
+        error = BT747Constants.NO_ERROR;
+        Object gpx;
 
-            passToFindFieldsActivatedInLog = gpsFile
-                    .needPassToFindFieldsActivatedInLog();
-            if (passToFindFieldsActivatedInLog) {
-                error = parseFile(gpsFile);
-                gpsFile.setActiveFileFields(activeFileFields);
-            }
-            passToFindFieldsActivatedInLog = false;
-            do {
-                error = parseFile(gpsFile);
-            } while ((error == BT747Constants.NO_ERROR) && gpsFile.nextPass());
+        gpx = getFileObject(fileName, card);
+        if (gpx == null) {
+            return error;
         }
-        doc = null;
-        xpath = null;
+        passToFindFieldsActivatedInLog = gpsFile
+                .needPassToFindFieldsActivatedInLog();
+        if (passToFindFieldsActivatedInLog) {
+            error = parseFile(gpx, gpsFile);
+            gpsFile.setActiveFileFields(activeFileFields);
+        }
+        passToFindFieldsActivatedInLog = false;
+        do {
+            error = parseFile(gpx, gpsFile);
+        } while ((error == BT747Constants.NO_ERROR) && gpsFile.nextPass());
+
+        closeFileObject(gpx);
         gpsFile.finaliseFile();
         if (gpsFile.getFilesCreated() == 0) {
             error = BT747Constants.ERROR_NO_FILES_WERE_CREATED;

@@ -44,8 +44,7 @@ public class GPSFilterAdvanced extends GPSFilter {
     public boolean doFilter(final GPSRecord r) {
 
         // Filter the record information
-        boolean z_Result;
-        z_Result = super.doFilter(r)
+        final boolean result = super.doFilter(r)
                 && ((r.recCount <= 0) || ((minRecCount <= 0) || (r.recCount >= minRecCount)))
                 && ((r.recCount <= 0) || ((maxRecCount <= 0) || (r.recCount <= maxRecCount)))
                 && ((r.speed <= 0) || ((minSpeed <= 0) || (r.speed >= minSpeed)))
@@ -57,7 +56,7 @@ public class GPSFilterAdvanced extends GPSFilter {
                 && ((r.vdop <= 0) || ((maxVDOP <= 0) || (r.vdop <= maxVDOP)))
                 && ((r.nsat < 0) || ((minNSAT <= 0) || (((r.nsat & 0xFF00) >> 8) >= minNSAT)));
 
-        return z_Result;
+        return result;
     }
 
     /**
