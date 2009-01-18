@@ -268,6 +268,13 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
         pnBluetoothMacAdr = new javax.swing.JPanel();
         tfBluetoothMacAddress = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        pnDownloadSettings = new javax.swing.JPanel();
+        lbChunkSize = new javax.swing.JLabel();
+        spChunkSize = new javax.swing.JSpinner();
+        lbChunkRequests = new javax.swing.JLabel();
+        spChunkRequests = new javax.swing.JSpinner();
+        jLabel3 = new javax.swing.JLabel();
+        jSpinner3 = new javax.swing.JSpinner();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         pnFlashSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFlashSettings.border.title"))); // NOI18N
@@ -698,6 +705,59 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
                 .add(jButton1))
         );
 
+        pnDownloadSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AdvancedDeviceSettingsPanel.pnDownloadSettings.border.title"))); // NOI18N
+        pnDownloadSettings.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.pnDownloadSettings.toolTipText")); // NOI18N
+
+        lbChunkSize.setText(bundle.getString("AdvancedDeviceSettingsPanel.lbChunkSize.text")); // NOI18N
+
+        spChunkSize.setModel(new javax.swing.SpinnerNumberModel(0, 0, 65536, 128));
+        spChunkSize.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.spChunkSize.toolTipText")); // NOI18N
+
+        lbChunkRequests.setText(bundle.getString("AdvancedDeviceSettingsPanel.lbChunkRequests.text")); // NOI18N
+
+        spChunkRequests.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
+        spChunkRequests.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.spChunkRequests.toolTipText")); // NOI18N
+
+        jLabel3.setText(bundle.getString("AdvancedDeviceSettingsPanel.jLabel3.text")); // NOI18N
+
+        jSpinner3.setModel(new javax.swing.SpinnerNumberModel(0, 0, 60000, 250));
+        jSpinner3.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.jSpinner3.toolTipText")); // NOI18N
+
+        org.jdesktop.layout.GroupLayout pnDownloadSettingsLayout = new org.jdesktop.layout.GroupLayout(pnDownloadSettings);
+        pnDownloadSettings.setLayout(pnDownloadSettingsLayout);
+        pnDownloadSettingsLayout.setHorizontalGroup(
+            pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnDownloadSettingsLayout.createSequentialGroup()
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(lbChunkSize)
+                    .add(lbChunkRequests)
+                    .add(jLabel3))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(spChunkSize, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(spChunkRequests, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jSpinner3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        pnDownloadSettingsLayout.linkSize(new java.awt.Component[] {jSpinner3, spChunkRequests, spChunkSize}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
+        pnDownloadSettingsLayout.setVerticalGroup(
+            pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(pnDownloadSettingsLayout.createSequentialGroup()
+                .add(pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lbChunkSize)
+                    .add(spChunkSize, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(lbChunkRequests)
+                    .add(spChunkRequests, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jSpinner3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel3)))
+        );
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -707,13 +767,18 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(pnBluetoothMacAdr, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(pnDownloadSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pnBluetoothMacAdr, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(pnNMEAOutput, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .add(pnFlashSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .add(pnBluetoothMacAdr, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(layout.createSequentialGroup()
+                .add(pnBluetoothMacAdr, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(pnDownloadSettings, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
     }//GEN-END:initComponents
 
@@ -777,7 +842,11 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JLabel cbType9Out;
     private javax.swing.JLabel cbVTGOut1;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JSpinner jSpinner3;
     private javax.swing.JLabel lbBaudRate;
+    private javax.swing.JLabel lbChunkRequests;
+    private javax.swing.JLabel lbChunkSize;
     private javax.swing.JLabel lbFlashZDA;
     private javax.swing.JLabel lbGLLOut;
     private javax.swing.JLabel lbGLLOut1;
@@ -796,8 +865,11 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JLabel lbUpdateRate;
     private javax.swing.JLabel lbVTGOut;
     private javax.swing.JPanel pnBluetoothMacAdr;
+    private javax.swing.JPanel pnDownloadSettings;
     private javax.swing.JPanel pnFlashSettings;
     private javax.swing.JPanel pnNMEAOutput;
+    private javax.swing.JSpinner spChunkRequests;
+    private javax.swing.JSpinner spChunkSize;
     private javax.swing.JTextField tfBluetoothMacAddress;
     private javax.swing.JTextField txtFlashBaudRate;
     private javax.swing.JTextField txtFlashTimesLeft;
