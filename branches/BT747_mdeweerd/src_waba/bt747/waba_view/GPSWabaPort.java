@@ -1,22 +1,22 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
-//***  The application was written using the SuperWaba toolset.    ***
-//***  This is a proprietary development environment based in      ***
-//***  part on the Waba development environment developed by       ***                                   
-//***  WabaSoft, Inc.                                              ***
-//********************************************************************  
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
+// *** The application was written using the SuperWaba toolset. ***
+// *** This is a proprietary development environment based in ***
+// *** part on the Waba development environment developed by ***
+// *** WabaSoft, Inc. ***
+// ********************************************************************
 package bt747.waba_view;
 
 import waba.ui.MessageBox;
@@ -41,7 +41,7 @@ public final class GPSWabaPort extends GPSPort {
      * @return <code>true</code> if the device is connected.
      */
     public final boolean isConnected() {
-        return (sp != null && sp.isOpen());
+        return ((sp != null) && sp.isOpen());
     }
 
     /**
@@ -50,7 +50,7 @@ public final class GPSWabaPort extends GPSPort {
      * 
      */
     public final void closePort() {
-        if (sp != null && sp.isOpen()) {
+        if ((sp != null) && sp.isOpen()) {
             portIsOK = false;
             sp.close();
         }
@@ -68,18 +68,22 @@ public final class GPSWabaPort extends GPSPort {
             Generic.debug("opening " + spPortNbr + "@" + spSpeed, null);
             sp = new waba.io.SerialPort(spPortNbr, spSpeed);
             result = sp.lastError;
+            Generic.debug(sp.getStatus(), null);
             portIsOK = sp.isOpen();
             if (portIsOK) {
-                // Read time out gives problems on windows: data is skipped!!!O
-                sp.setReadTimeout(0);// small to read data in chunks and have
+                // Read time out gives problems on windows: data is
+                // skipped!!!O
+                sp.setReadTimeout(0);// small to read data in chunks and
+                                        // have
                 // good resp.
-                // sp.setReadTimeout(50);//small to read data in chunks and have
+                // sp.setReadTimeout(50);//small to read data in chunks and
+                // have
                 // good resp.
                 // sp.setFlowControl(true);
             } else {
                 sp = null;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             new MessageBox("waba.io.SerialPort open",
                     "Unexpected exception catched").popupBlockingModal();
             // port\n");};
@@ -117,7 +121,7 @@ public final class GPSWabaPort extends GPSPort {
             try {
                 debugFile.writeBytes("W:".getBytes(), 0, 2);
                 debugFile.writeBytes(b, 0, b.length);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // TODO: handle exception
             }
         }
