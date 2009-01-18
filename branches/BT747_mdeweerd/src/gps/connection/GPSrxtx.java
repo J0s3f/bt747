@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package gps.connection;
 
 import bt747.sys.Convert;
@@ -21,16 +21,17 @@ import bt747.sys.interfaces.BT747Semaphore;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
- * This class implements the low level driver of the GPS device. It extracs NMEA
- * strings. The getResponse function should be called regurarly to get the GPS
- * device's response.
+ * This class implements the low level driver of the GPS device. It extracs
+ * NMEA strings. The getResponse function should be called regurarly to get
+ * the GPS device's response.
  * 
  * @author Mario De Weerd
  */
 public final class GPSrxtx {
     private static GPSPort gpsPort;
 
-    private final BT747Semaphore writeOngoing =  Interface.getSemaphoreInstance(1);
+    private final BT747Semaphore writeOngoing = Interface
+            .getSemaphoreInstance(1);
 
     private boolean ignoreNMEA = false;
 
@@ -54,26 +55,26 @@ public final class GPSrxtx {
      * @param port
      * @param speed
      */
-    public void setDefaults(final int port, final int speed) {
+    public final void setDefaults(final int port, final int speed) {
         gpsPort.setPort(port);
         gpsPort.setSpeed(speed);
     }
 
-    public void setBluetoothAndOpen() {
+    public final void setBluetoothAndOpen() {
         gpsPort.setBlueTooth();
         gpsPort.openPort();
     }
 
-    public void setUSBAndOpen() {
+    public final void setUSBAndOpen() {
         gpsPort.setUSB();
         gpsPort.openPort();
     }
 
-    public void closePort() {
+    public final void closePort() {
         gpsPort.closePort();
     }
 
-    public void openPort() {
+    public final void openPort() {
         closePort();
         gpsPort.openPort();
     }
@@ -82,32 +83,32 @@ public final class GPSrxtx {
      * Set and open a normal port (giving the port number)
      * 
      * @param port
-     *            Port number of the port to open
+     *                Port number of the port to open
      * @return result of opening the port, 0 if success.
      */
-    public int setPortAndOpen(final int port) {
+    public final int setPortAndOpen(final int port) {
         gpsPort.setPort(port);
         return gpsPort.openPort();
     }
 
-    public int setFreeTextPortAndOpen(final String s) {
+    public final int setFreeTextPortAndOpen(final String s) {
         gpsPort.setFreeTextPort(s);
         return gpsPort.openPort();
     }
 
-    public String getFreeTextPort() {
+    public final String getFreeTextPort() {
         return gpsPort.getFreeTextPort();
     }
 
-    public int getPort() {
+    public final int getPort() {
         return gpsPort.getPort();
     }
 
-    public int getSpeed() {
+    public final int getSpeed() {
         return gpsPort.getSpeed();
     }
 
-    public void setBaudRate(final int speed) {
+    public final void setBaudRate(final int speed) {
         gpsPort.setSpeed(speed);
     }
 
@@ -127,7 +128,8 @@ public final class GPSrxtx {
     private static final int C_DPL700_END_STATE = 13;
     private static final int C_DPL700_TICK_STATE = 14;
 
-    // The maximum length of each packet is restricted to 255 bytes (except for
+    // The maximum length of each packet is restricted to 255 bytes (except
+    // for
     // logger)
     private static final int C_BUF_SIZE = 0x1100;
     private static final int C_CMDBUF_SIZE = 0x1100;
@@ -153,11 +155,11 @@ public final class GPSrxtx {
 
     private final StringBuffer rec = new StringBuffer(256);
 
-    public boolean isConnected() {
+    public final boolean isConnected() {
         return (gpsPort != null) && gpsPort.isConnected();
     }
 
-    public void sendPacket(final String p_Packet) {
+    public final void sendPacket(final String p_Packet) {
         if (isConnected()) {
             // Calculate checksum
             int z_Index = p_Packet.length();
@@ -182,7 +184,7 @@ public final class GPSrxtx {
 
                 rec.append(EOL_BYTES);
                 gpsPort.write(rec.toString());
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("sendPacket", e);
             }
             writeOngoing.up(); // Semaphore - release link
@@ -200,18 +202,19 @@ public final class GPSrxtx {
     private int DPL700_buffer_idx;
     private final byte[] DPL700_EndString = new byte[200];
     private int endStringIdx;
-    
-    public byte[] getDPL700_buffer() {
+
+    public final byte[] getDPL700_buffer() {
         return DPL700_buffer;
     }
-    
-    public int getDPL700_buffer_idx() {
+
+    public final int getDPL700_buffer_idx() {
         return DPL700_buffer_idx;
     }
 
-    public void sendCmdAndGetDPL700Response(final int cmd, final int buffer_size) {
+    public final void sendCmdAndGetDPL700Response(final int cmd,
+            final int buffer_size) {
         if (isConnected()) {
-            byte[] sendbuffer = new byte[7];
+            final byte[] sendbuffer = new byte[7];
             writeOngoing.down(); // Semaphore - reserve link
             try {
                 DPL700_buffer = new byte[buffer_size];
@@ -231,14 +234,15 @@ public final class GPSrxtx {
                 sendbuffer[5] = 0;
                 sendbuffer[6] = 0;
                 gpsPort.write(sendbuffer);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("sendAndGetDPL700", e);
             }
             writeOngoing.up(); // Semaphore - release link
         }
     }
 
-    public void sendCmdAndGetDPL700Response(final String cmd, final int buffer_size) {
+    public final void sendCmdAndGetDPL700Response(final String cmd,
+            final int buffer_size) {
         if (isConnected()) {
             writeOngoing.down(); // Semaphore - reserve link
             try {
@@ -254,14 +258,14 @@ public final class GPSrxtx {
                 rec.append(cmd);
                 rec.append("\0");
                 gpsPort.write(rec.toString());
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("send and get resp", e);
             }
             writeOngoing.up(); // Semaphore - release link
         }
     }
 
-    public void sendDPL700Cmd(final String cmd) {
+    public final void sendDPL700Cmd(final String cmd) {
         if (isConnected()) {
             writeOngoing.down(); // Semaphore - reserve link
             try {
@@ -274,7 +278,7 @@ public final class GPSrxtx {
                 rec.append(cmd);
                 rec.append("\0");
                 gpsPort.write(rec.toString());
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("sendDPL700Cmd", e);
             }
             writeOngoing.up(); // Semaphore - release link
@@ -284,7 +288,7 @@ public final class GPSrxtx {
     // Implemention to allow 'virtual debug' of protocol
     private StringBuffer virtualInput = null;
 
-    public void virtualReceive(final String rvd) {
+    public final void virtualReceive(final String rvd) {
         if (virtualInput == null) {
             virtualInput = new StringBuffer(rvd);
         } else {
@@ -292,7 +296,8 @@ public final class GPSrxtx {
         }
     }
 
-    private final BT747Semaphore getResponseOngoing = Interface.getSemaphoreInstance(1);
+    private final BT747Semaphore getResponseOngoing = Interface
+            .getSemaphoreInstance(1);
 
     public String[] getResponse() {
         boolean continueReading;
@@ -304,8 +309,7 @@ public final class GPSrxtx {
         getResponseOngoing.down();
         if (gpsPort.debugActive()) {
             // Test to avoid unnecessary lost time
-            gpsPort.writeDebug("\r\nR:"
-                    + Generic.getTimeStamp() + ":");
+            gpsPort.writeDebug("\r\nR:" + Generic.getTimeStamp() + ":");
         }
 
         if (current_state == C_FOUND_STATE) {
@@ -398,12 +402,12 @@ public final class GPSrxtx {
                 case C_STAR_STATE:
                     if ((c == 10) || (c == 13)) {
                         current_state = C_ERROR_STATE;
-                    } else if (((c >= '0' && c <= '9')
-                            || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))) {
+                    } else if ((((c >= '0') && (c <= '9'))
+                            || ((c >= 'A') && (c <= 'F')) || ((c >= 'a') && (c <= 'f')))) {
                         // cmd_buf[cmd_buf_p++]= c;
-                        if (c >= '0' && c <= '9') {
+                        if ((c >= '0') && (c <= '9')) {
                             read_checksum = (c - '0') << 4;
-                        } else if (c >= 'A' && c <= 'F') {
+                        } else if ((c >= 'A') && (c <= 'F')) {
                             read_checksum = (c - 'A' + 10) << 4;
                         } else {
                             read_checksum = (c - 'a' + 10) << 4;
@@ -418,11 +422,11 @@ public final class GPSrxtx {
                     if ((c == 10) || (c == 13)) {
                         myError = ERR_INCOMPLETE;
                         current_state = C_ERROR_STATE;
-                    } else if (((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'))) {
+                    } else if ((((c >= '0') && (c <= '9')) || ((c >= 'A') && (c <= 'F')))) {
                         // cmd_buf[cmd_buf_p++]= c;
-                        if (c >= '0' && c <= '9') {
+                        if ((c >= '0') && (c <= '9')) {
                             read_checksum += c - '0';
-                        } else if (c >= 'A' && c <= 'F') {
+                        } else if ((c >= 'A') && (c <= 'F')) {
                             read_checksum += c - 'A' + 10;
                         } else {
                             read_checksum += c - 'a' + 10;
@@ -508,8 +512,9 @@ public final class GPSrxtx {
                         current_state = C_DPL700_END_STATE;
                         Generic.debug("End DPL700");
                         continueReading = false;
-                    } else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
-                            || c == ' ' || c == '+' || c == '\'') {
+                    } else if (((c >= 'A') && (c <= 'Z'))
+                            || ((c >= 'a') && (c <= 'z')) || (c == ' ')
+                            || (c == '+') || (c == '\'')) {
                         DPL700_EndString[endStringIdx++] = (byte) c;
                     } else {
                         current_state = C_DPL700_STATE;
@@ -540,7 +545,7 @@ public final class GPSrxtx {
                 bytesRead = 0;
                 if (isConnected()) { // && rxtxMode != DPL700_MODE) {
                     if (virtualInput != null) {
-                        byte[] ns = virtualInput.toString().getBytes();
+                        final byte[] ns = virtualInput.toString().getBytes();
                         int l = ns.length;
                         if (l > read_buf.length) {
                             l = read_buf.length;
@@ -568,8 +573,8 @@ public final class GPSrxtx {
 
                                 // gpsPort.writeDebug("\r\nC2:" + max + ":");
                                 if (max > 0) {
-                                    bytesRead = gpsPort.readBytes(read_buf, 0,
-                                            max);
+                                    bytesRead = gpsPort.readBytes(read_buf,
+                                            0, max);
                                     // if (bytesRead != 0) {
                                     // String sb = new String(read_buf, 0,
                                     // bytesRead);
@@ -585,7 +590,7 @@ public final class GPSrxtx {
                             }
                             // if(prevReadCheck!=0)
                             // {System.out.println("prev:"+prevReadCheck+":");}
-                        } catch (Exception e) {
+                        } catch (final Exception e) {
                             // new
                             // MessageBox("Waiting","Exception").popupBlockingModal();
                             bytesRead = 0;
@@ -595,8 +600,8 @@ public final class GPSrxtx {
                         continueReading = false;
                     } else {
                         if (gpsPort.debugActive()) {
-                            String q = "("
-                                    + Generic.getTimeStamp() + ")";
+                            final String q = "(" + Generic.getTimeStamp()
+                                    + ")";
                             gpsPort.writeDebug(q.getBytes(), 0, q.length());
                             gpsPort.writeDebug(read_buf, 0, bytesRead);
                         }
@@ -641,7 +646,7 @@ public final class GPSrxtx {
             return Interface.toStringArrayAndEmpty(vCmd);
         } else if (current_state == C_DPL700_END_STATE) {
             current_state = C_FOUND_STATE;
-            String[] resp = new String[1];
+            final String[] resp = new String[1];
             resp[0] = new String(DPL700_EndString, 0, endStringIdx - 1);
             if (gpsPort.debugActive()) {
                 // Test to avoid unnecessary lost time
@@ -658,19 +663,19 @@ public final class GPSrxtx {
     /**
      * @return Returns the ignoreNMEA.
      */
-    public boolean isIgnoreNMEA() {
+    public final boolean isIgnoreNMEA() {
         return ignoreNMEA;
     }
 
     /**
      * @param ignoreNMEA
-     *            The ignoreNMEA to set.
+     *                The ignoreNMEA to set.
      */
-    public void setIgnoreNMEA(final boolean ignoreNMEA) {
+    public final void setIgnoreNMEA(final boolean ignoreNMEA) {
         this.ignoreNMEA = ignoreNMEA;
     }
 
-    public void setDebugConn(final boolean gps_debug, final String s) {
+    public final void setDebugConn(final boolean gps_debug, final String s) {
         gpsPort.setDebugFileName(s + "/gpsRawDebug.txt");
         if (gps_debug) {
             gpsPort.startDebug();
@@ -679,7 +684,7 @@ public final class GPSrxtx {
         }
     }
 
-    public boolean isDebugConn() {
+    public final boolean isDebugConn() {
         return gpsPort.debugActive();
     }
 

@@ -50,7 +50,7 @@ public class AppSettings {
      */
     public static final int GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR = 2;
 
-    private static final int C_DEFAULT_DEVICE_TIMEOUT = 3500; // ms
+    private static final int C_DEFAULT_DEVICE_TIMEOUT = 4000; // ms
     private static final int C_DEFAULT_LOG_REQUEST_AHEAD = 3;
 
     // Parameter types
