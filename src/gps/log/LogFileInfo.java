@@ -34,6 +34,11 @@ public class LogFileInfo {
         this.card = card;
     }
 
+    public LogFileInfo(final String path, final int card) {
+        this.path = path;
+        this.card = card;
+    }
+
     public final String getPath() {
         return path;
     }

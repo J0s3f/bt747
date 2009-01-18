@@ -1,3 +1,7 @@
+Version 1.67.12
+* Refactoring to prepare for multiple input files.
+* Extra message for wabaport.
+
 Version 1.67.11
 * Modification(s) in CSV reader to cope with 'bugs' in the log written by
   the Columbus V-900.
