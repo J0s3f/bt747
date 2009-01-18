@@ -1,4 +1,4 @@
-#Wed Sep 10 01:20:36 CEST 2008
+#Sun Jan 18 00:33:43 CET 2009
 eclipse.preferences.version=1
 obfuscate_use_project=true
 pkg_autoversion=true
@@ -6,5 +6,5 @@ pkg_use_project=true
 preverify_config_location=jad
 preverify_config_value=CLDC-1.1
 proguard_keep=public class net.sf.bt747.j4me.app.MTKMidlet extends javax.microedition.midlet.MIDlet|public class BluetoothGPS extends gps.connection.GPSPort
-proguard_options=-allowaccessmodification  -microedition -repackage classes -dontusemixedcaseclassnames -repackageclasses -optimizationpasses 2
+proguard_options=-microedition -repackage classes -dontusemixedcaseclassnames -repackageclasses -optimizationpasses 2
 proguard_use_specified=true
