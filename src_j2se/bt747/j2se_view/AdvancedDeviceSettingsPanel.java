@@ -1,56 +1,62 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.j2se_view;
 
 import gps.BT747Constants;
+
+import javax.swing.JPanel;
 
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
+
 /**
- *
- * @author  Mario De Weerd
+ * 
+ * @author Mario De Weerd
  */
-public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implements
-    ModelListener
-{
+public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel
+        implements ModelListener {
 
     /**
      * 
      */
     private static final long serialVersionUID = 9139717181351131626L;
-    
+
     private J2SEAppController c;
     private Model m;
+
     /** Creates new form AdvancedDeviceSettingsPanel */
     public AdvancedDeviceSettingsPanel() {
         initComponents();
-        
+
     }
 
-    public void init(J2SEAppController pC) {
+    public void init(final J2SEAppController pC) {
         c = pC;
         m = c.getModel();
         m.addListener(this);
+
+        spChunkRequests.setValue(m.getIntOpt(Model.LOGAHEAD));
+        spChunkSize.setValue(Integer.valueOf(m.getChunkSize()));
+        spTimeout.setValue(m.getDownloadTimeOut());
     }
 
-   
     public void modelEvent(final ModelEvent e) {
         // TODO Auto-generated method stub
-        int type = e.getType();
+        final int type = e.getType();
         switch (type) {
         case ModelEvent.UPDATE_OUTPUT_NMEA_PERIOD:
             getNMEAOutPeriods();
@@ -60,13 +66,26 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
             break;
         case ModelEvent.UPDATE_BT_MAC_ADDR:
             tfBluetoothMacAddress.setText(m.getBTAddr());
+            break;
+        case ModelEvent.CONNECTED:
+        case ModelEvent.DISCONNECTED:
+            updateConnected();
         }
     }
 
-    void getFlashConfig() {
-        txtFlashTimesLeft.setText(""+m.getDtUserOptionTimesLeft());
-        txtFlashUpdateRate.setText(""+m.getDtUpdateRate());
-        txtFlashBaudRate.setText(""+m.getDtBaudRate());
+    private final void updateConnected() {
+        final JPanel[] panels = { pnBluetoothMacAdr, pnFlashSettings,
+                pnNMEAOutput };
+
+        for (final JPanel panel : panels) {
+            J2SEAppController.disablePanel(panel, m.isConnected());
+        }
+    }
+
+    private final void getFlashConfig() {
+        txtFlashTimesLeft.setText("" + m.getDtUserOptionTimesLeft());
+        txtFlashUpdateRate.setText("" + m.getDtUpdateRate());
+        txtFlashBaudRate.setText("" + m.getDtBaudRate());
         cbFlashGLL.setSelectedIndex(m.getDtGLL_Period());
         cbFlashRMC.setSelectedIndex(m.getDtRMC_Period());
         cbFlashVTG.setSelectedIndex(m.getDtVTG_Period());
@@ -77,36 +96,24 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
         cbFlashMCHN.setSelectedIndex(m.getDtMCHN_Period());
     }
 
-    void setFlashConfig() {
-        boolean lock;
-        int updateRate;
-        int baudRate;
-        int periodGLL;
-        int periodRMC;
-        int periodVTG;
-        int periodGSA;
-        int periodGSV;
-        int periodGGA;
-        int periodZDA;
-        int periodMCHN;
-        lock = false;
-        updateRate = Convert.toInt(txtFlashUpdateRate.getText());
-        baudRate = Convert.toInt(txtFlashBaudRate.getText());
-        periodGLL = cbFlashGLL.getSelectedIndex();
-        periodRMC = cbFlashRMC.getSelectedIndex();
-        periodVTG = cbFlashVTG.getSelectedIndex();
-        periodGSA = cbFlashGSA.getSelectedIndex();
-        periodGSV = cbFlashGSV.getSelectedIndex();
-        periodGGA = cbFlashGGA.getSelectedIndex();
-        periodZDA = cbFlashZDA.getSelectedIndex();
-        periodMCHN = cbFlashMCHN.getSelectedIndex();
+    private final void setFlashConfig() {
+        final boolean lock = false;
+        final int updateRate = Convert.toInt(txtFlashUpdateRate.getText());
+        final int baudRate = Convert.toInt(txtFlashBaudRate.getText());
+        final int periodGLL = cbFlashGLL.getSelectedIndex();
+        final int periodRMC = cbFlashRMC.getSelectedIndex();
+        final int periodVTG = cbFlashVTG.getSelectedIndex();
+        final int periodGSA = cbFlashGSA.getSelectedIndex();
+        final int periodGSV = cbFlashGSV.getSelectedIndex();
+        final int periodGGA = cbFlashGGA.getSelectedIndex();
+        final int periodZDA = cbFlashZDA.getSelectedIndex();
+        final int periodMCHN = cbFlashMCHN.getSelectedIndex();
         c.setFlashConfig(lock, updateRate, baudRate, periodGLL, periodRMC,
                 periodVTG, periodGSA, periodGSV, periodGGA, periodZDA,
                 periodMCHN);
     }
 
-
-        void getNMEAOutPeriods() {
+    void getNMEAOutPeriods() {
         cbNMEAOutGLL.setSelectedIndex(m
                 .getNMEAPeriod(BT747Constants.NMEA_SEN_GLL_IDX));
         cbNMEAOutRMC.setSelectedIndex(m
@@ -147,8 +154,8 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
                 .getNMEAPeriod(BT747Constants.NMEA_SEN_MCHN_IDX));
     }
 
-    void setNMEAOutPeriods() {
-        int[] Periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
+    private final void setNMEAOutPeriods() {
+        final int[] Periods = new int[BT747Constants.C_NMEA_SEN_COUNT];
 
         Periods[BT747Constants.NMEA_SEN_GLL_IDX] = cbNMEAOutGLL
                 .getSelectedIndex();
@@ -192,9 +199,9 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
         c.setNMEAPeriods(Periods);
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
+    /**
+     * This method is called from within the constructor to initialize the
+     * form. WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
@@ -273,8 +280,8 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
         spChunkSize = new javax.swing.JSpinner();
         lbChunkRequests = new javax.swing.JLabel();
         spChunkRequests = new javax.swing.JSpinner();
-        jLabel3 = new javax.swing.JLabel();
-        jSpinner3 = new javax.swing.JSpinner();
+        lbTimeout = new javax.swing.JLabel();
+        spTimeout = new javax.swing.JSpinner();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("bt747/j2se_view/Bundle"); // NOI18N
         pnFlashSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("BT747Main.pnFlashSettings.border.title"))); // NOI18N
@@ -691,11 +698,8 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
         pnBluetoothMacAdr.setLayout(pnBluetoothMacAdrLayout);
         pnBluetoothMacAdrLayout.setHorizontalGroup(
             pnBluetoothMacAdrLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(pnBluetoothMacAdrLayout.createSequentialGroup()
-                .add(pnBluetoothMacAdrLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, tfBluetoothMacAddress)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jButton1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(tfBluetoothMacAddress, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+            .add(jButton1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         pnBluetoothMacAdrLayout.setVerticalGroup(
             pnBluetoothMacAdrLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -712,16 +716,34 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
 
         spChunkSize.setModel(new javax.swing.SpinnerNumberModel(0, 0, 65536, 128));
         spChunkSize.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.spChunkSize.toolTipText")); // NOI18N
+        spChunkSize.setEditor(new javax.swing.JSpinner.NumberEditor(spChunkSize, "#####"));
+        spChunkSize.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spChunkSizeStateChanged(evt);
+            }
+        });
 
         lbChunkRequests.setText(bundle.getString("AdvancedDeviceSettingsPanel.lbChunkRequests.text")); // NOI18N
 
         spChunkRequests.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
         spChunkRequests.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.spChunkRequests.toolTipText")); // NOI18N
+        spChunkRequests.setEditor(new javax.swing.JSpinner.NumberEditor(spChunkRequests, "#####"));
+        spChunkRequests.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spChunkRequestsStateChanged(evt);
+            }
+        });
 
-        jLabel3.setText(bundle.getString("AdvancedDeviceSettingsPanel.jLabel3.text")); // NOI18N
+        lbTimeout.setText(bundle.getString("AdvancedDeviceSettingsPanel.lbTimeout.text")); // NOI18N
 
-        jSpinner3.setModel(new javax.swing.SpinnerNumberModel(0, 0, 60000, 250));
-        jSpinner3.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.jSpinner3.toolTipText")); // NOI18N
+        spTimeout.setModel(new javax.swing.SpinnerNumberModel(0, 0, 60000, 250));
+        spTimeout.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.spTimeout.toolTipText")); // NOI18N
+        spTimeout.setEditor(new javax.swing.JSpinner.NumberEditor(spTimeout, "#####"));
+        spTimeout.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spTimeoutStateChanged(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout pnDownloadSettingsLayout = new org.jdesktop.layout.GroupLayout(pnDownloadSettings);
         pnDownloadSettings.setLayout(pnDownloadSettingsLayout);
@@ -732,15 +754,15 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
                 .add(pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(lbChunkSize)
                     .add(lbChunkRequests)
-                    .add(jLabel3))
+                    .add(lbTimeout))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(spChunkSize, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(spChunkRequests, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jSpinner3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(spTimeout, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         );
 
-        pnDownloadSettingsLayout.linkSize(new java.awt.Component[] {jSpinner3, spChunkRequests, spChunkSize}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+        pnDownloadSettingsLayout.linkSize(new java.awt.Component[] {spChunkRequests, spChunkSize, spTimeout}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
 
         pnDownloadSettingsLayout.setVerticalGroup(
             pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -754,8 +776,8 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
                     .add(spChunkRequests, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(pnDownloadSettingsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jSpinner3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel3)))
+                    .add(spTimeout, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(lbTimeout)))
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
@@ -782,22 +804,47 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel implem
         );
     }//GEN-END:initComponents
 
-private void btSetFlashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSetFlashActionPerformed
-     setFlashConfig();
-}//GEN-LAST:event_btSetFlashActionPerformed
+    private void btSetFlashActionPerformed(
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSetFlashActionPerformed
+        setFlashConfig();
+    }//GEN-LAST:event_btSetFlashActionPerformed
 
-private void btSetNMEAOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSetNMEAOutputActionPerformed
-     setNMEAOutPeriods();
-}//GEN-LAST:event_btSetNMEAOutputActionPerformed
+    private void btSetNMEAOutputActionPerformed(
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSetNMEAOutputActionPerformed
+        setNMEAOutPeriods();
+    }//GEN-LAST:event_btSetNMEAOutputActionPerformed
 
-private void btSetNMEAOutputDefaultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSetNMEAOutputDefaultsActionPerformed
-     c.setNMEADefaultPeriods();
-}//GEN-LAST:event_btSetNMEAOutputDefaultsActionPerformed
+    private void btSetNMEAOutputDefaultsActionPerformed(
+            final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSetNMEAOutputDefaultsActionPerformed
+        c.setNMEADefaultPeriods();
+    }//GEN-LAST:event_btSetNMEAOutputDefaultsActionPerformed
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-     c.setBTMacAddr(tfBluetoothMacAddress.getText());
-}//GEN-LAST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        c.setBTMacAddr(tfBluetoothMacAddress.getText());
+    }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void spChunkSizeStateChanged(
+            final javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spChunkSizeStateChanged
+        final int newValue = (Integer) spChunkSize.getValue();
+        if (newValue != m.getChunkSize()) {
+            c.setChunkSize(newValue);
+        }
+    }//GEN-LAST:event_spChunkSizeStateChanged
+
+    private void spChunkRequestsStateChanged(
+            final javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spChunkRequestsStateChanged
+        final int newValue = (Integer) spChunkRequests.getValue();
+        if (newValue != m.getIntOpt(Model.LOGAHEAD)) {
+            c.setIntOpt(Model.LOGAHEAD, newValue);
+        }
+    }//GEN-LAST:event_spChunkRequestsStateChanged
+
+    private void spTimeoutStateChanged(final javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spTimeoutStateChanged
+        final int newValue = (Integer) spTimeout.getValue();
+        if (newValue != m.getDownloadTimeOut()) {
+            c.setDownloadTimeOut(newValue);
+        }
+    }//GEN-LAST:event_spTimeoutStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btSetFlash;
@@ -842,8 +889,6 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JLabel cbType9Out;
     private javax.swing.JLabel cbVTGOut1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JSpinner jSpinner3;
     private javax.swing.JLabel lbBaudRate;
     private javax.swing.JLabel lbChunkRequests;
     private javax.swing.JLabel lbChunkSize;
@@ -862,6 +907,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JLabel lbPeriodType12;
     private javax.swing.JLabel lbRMCOut;
     private javax.swing.JLabel lbRMCOut1;
+    private javax.swing.JLabel lbTimeout;
     private javax.swing.JLabel lbUpdateRate;
     private javax.swing.JLabel lbVTGOut;
     private javax.swing.JPanel pnBluetoothMacAdr;
@@ -870,6 +916,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JPanel pnNMEAOutput;
     private javax.swing.JSpinner spChunkRequests;
     private javax.swing.JSpinner spChunkSize;
+    private javax.swing.JSpinner spTimeout;
     private javax.swing.JTextField tfBluetoothMacAddress;
     private javax.swing.JTextField txtFlashBaudRate;
     private javax.swing.JTextField txtFlashTimesLeft;

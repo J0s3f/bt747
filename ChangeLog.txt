@@ -1,3 +1,7 @@
+Version 1.67.13
+* German translation update.
+* J2SE can configure timeout, chunk size and chunk ahead.
+
 Version 1.67.12
 * Refactoring to prepare for multiple input files.
 * Extra message for wabaport.
