@@ -287,16 +287,6 @@ public class BT747Main extends javax.swing.JFrame implements
                 c.showLicense();
             }
         });
-
-        updateConnected(m.isConnected());
-    }
-
-    private final void updateConnected(final boolean connected) {
-        final JPanel[] panels = { pnAdvancedSettingsPanel };
-
-        for (final JPanel panel : panels) {
-            J2SEAppController.disablePanel(panel, connected);
-        }
     }
 
     private final void updateSerialSpeed() {
@@ -427,8 +417,6 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.CONNECTED:
             btConnect.setText(getString("Disconnect"));
             btConnectFunctionIsConnect = false;
-            updateConnected(true);
-
             // TODO: Find the way to do this on tab entry.
             c.reqHoluxName();
             c.reqFlashUserOption();
@@ -450,7 +438,6 @@ public class BT747Main extends javax.swing.JFrame implements
         case ModelEvent.DISCONNECTED:
             btConnect.setText(getString("Connect"));
             btConnectFunctionIsConnect = true;
-            updateConnected(false);
             break;
         case ModelEvent.DOWNLOAD_STATE_CHANGE:
         case ModelEvent.LOG_DOWNLOAD_DONE:
