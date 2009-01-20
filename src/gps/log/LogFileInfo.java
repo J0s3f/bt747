@@ -14,6 +14,15 @@ public class LogFileInfo {
     private int card; // For some systems
     private int startTime;
     private int endTime;
+    private GPSRecord activeFileFields;
+
+    public final GPSRecord getActiveFileFields() {
+        return this.activeFileFields;
+    }
+
+    public final void setActiveFileFields(GPSRecord activeFileFields) {
+        this.activeFileFields = activeFileFields;
+    }
 
     /**
      * 
@@ -70,4 +79,5 @@ public class LogFileInfo {
     public final void setEndTime(final int endTime) {
         this.endTime = endTime;
     }
+    
 }
