@@ -138,12 +138,17 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
             }
         }
 
+        final GPSRecord activeFileFields = GPSRecord.getLogFormatRecord(0);
         /**
          * First pass to find time range of each log file.
          */
         {
             final BT747Hashtable iter = converters.iterator();
             final TrackStatsConverter statsConv = new TrackStatsConverter();
+            if (gpsFile instanceof GPSFile) {
+                GPSFile gf = (GPSFile) gpsFile;
+                statsConv.setUserWayPointList(gf.getUserWayPointList());
+            }
             while (!stop && iter.hasNext()) {
                 final Object key = iter.nextKey();
                 final GPSLogConvertInterface i = (GPSLogConvertInterface) iter
@@ -156,6 +161,9 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
                 // Get date range.
                 loginfo.setStartTime(statsConv.minTime);
                 loginfo.setEndTime(statsConv.maxTime);
+                loginfo.setActiveFileFields(statsConv.getActiveFileFields());
+                
+                activeFileFields.cloneActiveFields(loginfo.getActiveFileFields());
             }
         }
 
@@ -183,29 +191,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
         /**
          * Actual reading.
          */
-        {
-            final BT747Hashtable iter = converters.iterator();
-            while (!stop && iter.hasNext()) {
-                final Object key = iter.nextKey();
-                final GPSLogConvertInterface i = (GPSLogConvertInterface) iter
-                        .get(key);
-                // TODO: manage cards on different volumes.
-                i.parseFile(i.getFileObject((String) key, card), gpsFile);
-                // Get date range.
-            }
-        }
-        /*
-         * Actual conversions.
-         */
-        boolean passToFindFieldsActivatedInLog;
-        // passToFindFieldsActivatedInLog = gpsFile
-        // .needPassToFindFieldsActivatedInLog();
-        // if (passToFindFieldsActivatedInLog) {
-        // error = parseFile(file, gpsFile);
-        // // gpsFile.setActiveFileFields(GPSRecord
-        // // .getLogFormatRecord(activeFileFields));
-        // }
-        passToFindFieldsActivatedInLog = false;
+        gpsFile.setActiveFileFields(activeFileFields);
         final BT747Hashtable iter = converters.iterator();
         if (error == BT747Constants.NO_ERROR) {
             do {
@@ -242,10 +228,34 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
     private static final class TrackStatsConverter extends GPSFile {
         protected int minTime;
         protected int maxTime;
+        protected GPSRecord fileFields;
 
-        public final void initStats() {
+        protected final void initStats() {
             minTime = 0x7FFFFFFF;
             maxTime = 0;
+            fileFields = GPSRecord.getLogFormatRecord(0);
+        }
+        
+        /* (non-Javadoc)
+         * @see gps.log.out.GPSFile#writeLogFmtHeader(gps.log.GPSRecord)
+         */
+        @Override
+        public void writeLogFmtHeader(GPSRecord f) {
+            fileFields.cloneActiveFields(f);
+            super.writeLogFmtHeader(f);
+        }
+        
+        protected final GPSRecord getActiveFileFields() {
+            return fileFields;
+        }
+        
+        /* (non-Javadoc)
+         * @see gps.log.out.GPSFile#finaliseFile()
+         */
+        @Override
+        public void finaliseFile() {
+            // TODO Auto-generated method stub
+            super.finaliseFile();
         }
 
         /*

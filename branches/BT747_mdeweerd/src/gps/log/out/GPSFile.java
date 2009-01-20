@@ -249,7 +249,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * 
      * @param f
      */
-    public final void writeLogFmtHeader(final GPSRecord f) {
+    public void writeLogFmtHeader(final GPSRecord f) {
         activeFields = new GPSRecord(f);
     };
 

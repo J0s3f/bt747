@@ -1,3 +1,6 @@
+Version 1.67.14
+* Multiple input files handling available in command line mode.
+
 Version 1.67.13
 * German translation update.
 * J2SE can configure timeout, chunk size and chunk ahead.
