@@ -31,17 +31,17 @@ public final class WabaSemaphore implements BT747Semaphore {
         this.value = value;
     }
 
-    public void down() {
+    public final void down() {
         while (value <= 0) {
             try {
                 wait();
-            } catch (Exception e) {
+            } catch (final Exception e) {
             }
         }
         --value;
     }
 
-    public void up() {
+    public final void up() {
         ++value;
         //notify();
     }

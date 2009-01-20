@@ -14,7 +14,9 @@ public interface BT747Vector {
 
     void removeElementAt(final int index);
 
-    void mypush(Object item);
+    void insertElementAt(final Object o, final int index);
+
+    void mypush(final Object item);
 
     String[] toStringArray();
 

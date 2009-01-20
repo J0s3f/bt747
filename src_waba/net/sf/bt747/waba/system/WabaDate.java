@@ -62,7 +62,7 @@ public final class WabaDate extends waba.util.Date implements BT747Date {
         super(strDate, dateFormatToWaba(dateFormat));
     }
 
-    public String getDateString() {
+    public final String getDateString() {
         return getDate();
     }
 
@@ -77,7 +77,7 @@ public final class WabaDate extends waba.util.Date implements BT747Date {
      */
     private static final int SECONDS_IN_DAY = 24 * 60 * 60;
 
-    public int dateToUTCepoch1970() {
+    public final int dateToUTCepoch1970() {
         return (getJulianDay() - JULIAN_DAY_1_1_1970_OFFSET) * SECONDS_IN_DAY;
     }
 }

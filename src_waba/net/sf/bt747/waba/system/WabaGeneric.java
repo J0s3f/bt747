@@ -55,7 +55,7 @@ public final class WabaGeneric {
         }
         if (!oos.contains(t)) {
             // Log.debug("Adding " + t);
-            WabaThread mt = new WabaThread(t);
+            final WabaThread mt = new WabaThread(t);
             MainWindow.getMainWindow().addThread(mt, b);
             t.started();
             if (mt != null) {
@@ -74,9 +74,9 @@ public final class WabaGeneric {
 
     public final static void removeThread(final BT747Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
-        Enumeration e = h.keys();
+        final Enumeration e = h.keys();
         while (e.hasMoreElements()) {
-            WabaThread tt = (WabaThread) e.nextElement();
+            final WabaThread tt = (WabaThread) e.nextElement();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
                 tt.btThread = null; // When this is null, the thread stops.
@@ -89,9 +89,9 @@ public final class WabaGeneric {
 
     public final static void removeIfStoppedThread(final BT747Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
-        Enumeration e = h.keys();
+        final Enumeration e = h.keys();
         while (e.hasMoreElements()) {
-            WabaThread tt = (WabaThread) e.nextElement();
+            final WabaThread tt = (WabaThread) e.nextElement();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
                 if (tt.running) {
