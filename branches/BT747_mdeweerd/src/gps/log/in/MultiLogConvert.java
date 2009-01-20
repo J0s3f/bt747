@@ -6,6 +6,7 @@ package gps.log.in;
 import gps.BT747Constants;
 import gps.log.LogFileInfo;
 
+import bt747.model.Model;
 import bt747.sys.Generic;
 import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Hashtable;
@@ -73,11 +74,28 @@ public class MultiLogConvert extends GPSLogConvertInterface {
 
     }
 
-    private GPSLogConvertInterface getConvertInstance(final String fileName,
-            final GPSFileConverterInterface gpsFile, final int card) {
-        final GPSLogConvertInterface o = new BT747LogConvert();
-        o.setConvertWGS84ToMSL(factorConversionWGS84ToMSL);
-        return o;
+    private final GPSLogConvertInterface getConvertInstance(
+            final String fileName, final GPSFileConverterInterface gpsFile,
+            final int card) {
+        final GPSLogConvertInterface lc = GPSInputConversionFactory
+                .getHandler().getInputConversionInstance(fileName);
+        final int sourceHeightReference = BT747Constants
+                .getHeightReference(lc.getType());
+        final int destinationHeightReference = BT747Constants
+                .getHeightReference(this.getType());
+
+        // Supposing automatic mode here... - should be consistent anyway.
+        if (sourceHeightReference == BT747Constants.HEIGHT_MSL
+                && destinationHeightReference == BT747Constants.HEIGHT_WGS84) {
+            lc.setConvertWGS84ToMSL(+1);
+        } else if (sourceHeightReference == BT747Constants.HEIGHT_WGS84
+                && destinationHeightReference == BT747Constants.HEIGHT_MSL) {
+            lc.setConvertWGS84ToMSL(-1);
+        } else {
+            /* Do nothing */
+            lc.setConvertWGS84ToMSL(0);
+        }
+        return lc;
     }
 
     /*
@@ -109,14 +127,14 @@ public class MultiLogConvert extends GPSLogConvertInterface {
             }
         }
 
-        
         /**
          * First pass to find time range of each log file.
          */
         BT747Hashtable iter = converters.iterator();
-        while(!stop && iter.hasNext() ) {
+        while (!stop && iter.hasNext()) {
             final Object key = iter.nextKey();
-            final GPSLogConvertInterface i = (GPSLogConvertInterface) iter.get(key);
+            final GPSLogConvertInterface i = (GPSLogConvertInterface) iter
+                    .get(key);
             // TODO: manage cards on different volumes.
             i.parseFile(i.getFileObject((String) key, card), gpsFile);
             // Get date range.
@@ -125,21 +143,23 @@ public class MultiLogConvert extends GPSLogConvertInterface {
          * Actual conversions.
          */
         boolean passToFindFieldsActivatedInLog;
-//        passToFindFieldsActivatedInLog = gpsFile
-//                .needPassToFindFieldsActivatedInLog();
-//        if (passToFindFieldsActivatedInLog) {
-//            error = parseFile(file, gpsFile);
-//            // gpsFile.setActiveFileFields(GPSRecord
-//            // .getLogFormatRecord(activeFileFields));
-//        }
+        // passToFindFieldsActivatedInLog = gpsFile
+        // .needPassToFindFieldsActivatedInLog();
+        // if (passToFindFieldsActivatedInLog) {
+        // error = parseFile(file, gpsFile);
+        // // gpsFile.setActiveFileFields(GPSRecord
+        // // .getLogFormatRecord(activeFileFields));
+        // }
         passToFindFieldsActivatedInLog = false;
         if (error == BT747Constants.NO_ERROR) {
             do {
-                while(!stop && iter.hasNext() ) {
+                while (!stop && iter.hasNext()) {
                     final Object key = iter.nextKey();
-                    final GPSLogConvertInterface i = (GPSLogConvertInterface) iter.get(key);
+                    final GPSLogConvertInterface i = (GPSLogConvertInterface) iter
+                            .get(key);
                     // TODO: manage cards on different volumes.
-                    error = i.parseFile(i.getFileObject((String) key, card), gpsFile);
+                    error = i.parseFile(i.getFileObject((String) key, card),
+                            gpsFile);
                     // Get date range.
                 }
             } while ((error == BT747Constants.NO_ERROR) && gpsFile.nextPass());
@@ -152,6 +172,15 @@ public class MultiLogConvert extends GPSLogConvertInterface {
         /* Finish file conversions */
         Generic.debug("Conversion done", null);
         return error;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gps.log.in.GPSLogConvertInterface#getType()
+     */
+    public int getType() {
+        return Model.MULTI_LOGTYPE;
     }
 
 }

@@ -109,6 +109,15 @@ public class Model extends AppSettings implements GPSListener {
      */
     public static final int ARRAY_LOGTYPE = 12;
 
+    
+    /**
+     * log type (Array log type - must call specific function to get array).<br>
+     * Not provided by the default controller since not implemented on all
+     * systems.<br>
+     * Log type provided for application implementation.
+     */
+    public static final int MULTI_LOGTYPE = 13;
+
     /**
      * The number of seconds in a day.
      */

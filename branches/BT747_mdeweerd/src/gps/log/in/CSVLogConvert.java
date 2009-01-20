@@ -18,6 +18,7 @@ import gps.BT747Constants;
 import gps.convert.Conv;
 import gps.log.GPSRecord;
 
+import bt747.model.Model;
 import bt747.sys.Convert;
 import bt747.sys.File;
 import bt747.sys.Generic;
@@ -778,4 +779,13 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
             }
         }
     }
+    
+    /* (non-Javadoc)
+     * @see gps.log.in.GPSLogConvertInterface#getType()
+     */
+    public int getType() {
+        return Model.CSV_LOGTYPE;
+    }
+
+
 }

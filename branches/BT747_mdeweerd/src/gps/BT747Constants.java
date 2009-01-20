@@ -14,6 +14,7 @@
 // *** *********************************************************** ***
 package gps;
 
+import bt747.model.Model;
 import bt747.sys.Generic;
 
 /**
@@ -851,4 +852,47 @@ public final class BT747Constants { // dev as in device
      * The requested output format is unknown.
      */
     public static final int ERROR_UNKNOWN_OUTPUT_FORMAT = -4;
+    public final static int HEIGHT_MSL = 0;
+    public final static int HEIGHT_WGS84 = 1;
+    /**
+     * Initialization of references for the height.
+     */
+    private static final int[][] INIT_REFERENCE_LIST = {
+            { Model.CSV_LOGTYPE, HEIGHT_WGS84 },
+            { Model.TRK_LOGTYPE, HEIGHT_MSL },
+            { Model.KML_LOGTYPE, HEIGHT_MSL },
+            { Model.PLT_LOGTYPE, HEIGHT_MSL },
+            { Model.GPX_LOGTYPE, HEIGHT_MSL },
+            { Model.NMEA_LOGTYPE, HEIGHT_WGS84 },
+            { Model.GMAP_LOGTYPE, HEIGHT_MSL },
+            { Model.TRL_LOGTYPE, HEIGHT_WGS84 },
+            { Model.BIN_LOGTYPE, HEIGHT_WGS84 },
+            { Model.SR_LOGTYPE, HEIGHT_MSL },
+            { Model.KMZ_LOGTYPE, HEIGHT_MSL },
+            { Model.ARRAY_LOGTYPE, HEIGHT_MSL },
+            { Model.MULTI_LOGTYPE, HEIGHT_WGS84 },
+            };
+    /**
+     * The reference for the height in the given format
+     */
+    private final static int[] heightReferenceList = new int[20];
+
+    public final static int getHeightReference(final int type) {
+        if ((type >= 0) && (type < heightReferenceList.length)) {
+            return heightReferenceList[type];
+        }
+        return HEIGHT_WGS84;
+    }
+    
+    static {
+        initValues();
+    }
+    
+    private final static void initValues() {
+        for (int i = 0; i < INIT_REFERENCE_LIST.length; i++) {
+            if (INIT_REFERENCE_LIST[i][0] < heightReferenceList.length) {
+                heightReferenceList[INIT_REFERENCE_LIST[i][0]] = INIT_REFERENCE_LIST[i][1];
+            }
+        }
+    }
 }

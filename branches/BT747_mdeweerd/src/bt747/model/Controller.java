@@ -22,11 +22,9 @@ import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
 import gps.log.TracksAndWayPoints;
 import gps.log.in.BT747LogConvert;
-import gps.log.in.CSVLogConvert;
 import gps.log.in.DPL700LogConvert;
+import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
-import gps.log.in.HoluxTrlLogConvert;
-import gps.log.in.NMEALogConvert;
 import gps.log.out.CommonOut;
 import gps.log.out.GPSArray;
 import gps.log.out.GPSCSVFile;
@@ -76,51 +74,10 @@ public class Controller {
     private Model m;
 
     /**
-     * The reference for the height in the given format
-     */
-    private final int[] heightReferenceList = new int[20];
-
-    public final static int HEIGHT_MSL = 0;
-    public final static int HEIGHT_WGS84 = 1;
-
-    /**
-     * Initialization of references for the height.
-     */
-    private static final int[][] INIT_REFERENCE_LIST = {
-            { Model.CSV_LOGTYPE, HEIGHT_WGS84 },
-            { Model.TRK_LOGTYPE, HEIGHT_MSL },
-            { Model.KML_LOGTYPE, HEIGHT_MSL },
-            { Model.PLT_LOGTYPE, HEIGHT_MSL },
-            { Model.GPX_LOGTYPE, HEIGHT_MSL }, // Output in <ele> field
-            { Model.NMEA_LOGTYPE, HEIGHT_WGS84 },
-            { Model.GMAP_LOGTYPE, HEIGHT_MSL },
-            { Model.TRL_LOGTYPE, HEIGHT_WGS84 },
-            { Model.BIN_LOGTYPE, HEIGHT_WGS84 },
-            { Model.SR_LOGTYPE, HEIGHT_MSL },
-            { Model.KMZ_LOGTYPE, HEIGHT_MSL },
-            { Model.ARRAY_LOGTYPE, HEIGHT_MSL }, };
-
-    private final void initValues() {
-        for (int i = 0; i < INIT_REFERENCE_LIST.length; i++) {
-            if (INIT_REFERENCE_LIST[i][0] < heightReferenceList.length) {
-                heightReferenceList[INIT_REFERENCE_LIST[i][0]] = INIT_REFERENCE_LIST[i][1];
-            }
-        }
-    }
-
-    public int getHeightReference(final int type) {
-        if ((type >= 0) && (type < heightReferenceList.length)) {
-            return heightReferenceList[type];
-        }
-        return HEIGHT_WGS84;
-    }
-
-    /**
      * @param model
      *                The model to associate with this controller.
      */
     public Controller(final Model model) {
-        initValues();
         setModel(model);
     }
 
@@ -128,7 +85,6 @@ public class Controller {
      * Currently needed because class is extended.
      */
     public Controller() {
-        initValues();
     }
 
     public void setModel(final Model model) {
@@ -389,55 +345,24 @@ public class Controller {
                 getOutFileExt(logType));
     }
 
-    public GPSLogConvertInterface getInputConversionInstance(final int logType) {
-        GPSLogConvertInterface lc;
-        String parameters = "";
-        int sourceHeightReference;
-        int destinationHeightReference = getHeightReference(logType);
+    public int getHeightReference(final int logType) {
+        return BT747Constants.getHeightReference(logType);
+    }
 
-        /*
-         * Check the input file
-         */
-        String logFileLC = m.getStringOpt(Model.LOGFILEPATH).toLowerCase();
-        if (logFileLC.endsWith(".trl")) {
-            lc = new HoluxTrlLogConvert();
-            parameters += "HoluxTRL\n";
-            sourceHeightReference = heightReferenceList[Model.TRL_LOGTYPE];
-        } else if (logFileLC.endsWith(".csv")) {
-            lc = new CSVLogConvert();
-            parameters += "CSV\n";
-            sourceHeightReference = heightReferenceList[Model.CSV_LOGTYPE];
-        } else if (logFileLC.endsWith(".nmea") || logFileLC.endsWith(".nme")
-                || logFileLC.endsWith(".nma") || logFileLC.endsWith(".txt")
-                || logFileLC.endsWith(".log")) {
-            lc = new NMEALogConvert();
-            parameters += "NMEA\n";
-            sourceHeightReference = heightReferenceList[Model.NMEA_LOGTYPE];
-        } else if (logFileLC.endsWith(".sr")) {
-            lc = new DPL700LogConvert();
-            // / TODO: set SR Log type correctly.
-            ((DPL700LogConvert) lc)
-                    .setLogType(m.getIntOpt(Model.GPSTYPE) == Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR ? 0
-                            : 1);
-            parameters += "DPL700\n";
-            sourceHeightReference = heightReferenceList[Model.SR_LOGTYPE];
-        } else {
-            lc = new BT747LogConvert();
-            ((BT747LogConvert) lc).setHolux(m
-                    .getBooleanOpt(Model.FORCE_HOLUXM241));
-            parameters += "Force Holux:"
-                    + m.getBooleanOpt(Model.FORCE_HOLUXM241) + "\n";
-            sourceHeightReference = heightReferenceList[Model.BIN_LOGTYPE];
-        }
-        destinationHeightReference = getHeightReference(logType);
+    public GPSLogConvertInterface getInputConversionInstance(final int logType) {
+        final GPSLogConvertInterface lc = getInputConversionInstance();
+        final int destinationHeightReference = getHeightReference(logType);
+        final int sourceHeightReference = getHeightReference(lc.getType());
+        String parameters = "";
+
         switch (m.getHeightConversionMode()) {
         case Model.HEIGHT_AUTOMATIC:
-            if (sourceHeightReference == HEIGHT_MSL
-                    && destinationHeightReference == HEIGHT_WGS84) {
+            if (sourceHeightReference == BT747Constants.HEIGHT_MSL
+                    && destinationHeightReference == BT747Constants.HEIGHT_WGS84) {
                 /* Need to add the height in automatic mode */
                 lc.setConvertWGS84ToMSL(+1);
-            } else if (sourceHeightReference == HEIGHT_WGS84
-                    && destinationHeightReference == HEIGHT_MSL) {
+            } else if (sourceHeightReference == BT747Constants.HEIGHT_WGS84
+                    && destinationHeightReference == BT747Constants.HEIGHT_MSL) {
                 /* Need to substract the height in automatic mode */
                 lc.setConvertWGS84ToMSL(-1);
             } else {
@@ -456,11 +381,27 @@ public class Controller {
             break;
         }
 
+        if (lc instanceof BT747LogConvert) {
+            final BT747LogConvert b = (BT747LogConvert) lc;
+            b.setHolux(m.getBooleanOpt(Model.FORCE_HOLUXM241));
+            parameters += "Force Holux:"
+                    + m.getBooleanOpt(Model.FORCE_HOLUXM241) + "\n";
+        } else if (lc instanceof DPL700LogConvert) {
+            final DPL700LogConvert b = (DPL700LogConvert) lc;
+            // / TODO: set SR Log type correctly.
+            b
+                    .setLogType(m.getIntOpt(Model.GPSTYPE) == Model.GPS_TYPE_GISTEQ_ITRACKU_PHOTOTRACKR ? 0
+                            : 1);
+        }
         if (Generic.isDebug()) {
             Generic.debug(parameters);
         }
 
         return lc;
+    }
+
+    public final GPSLogConvertInterface getInputConversionInstance() {
+        return GPSInputConversionFactory.getHandler().getInputConversionInstance(m.getStringOpt(Model.LOGFILEPATH));
     }
 
     public final GPSFilter[] getLogFiltersToUse() {

@@ -23,6 +23,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.Interface;
@@ -352,4 +353,12 @@ public class GPXLogConvert extends GPSLogConvertInterface {
         x.toGPSFile("c:/BT747/20080915_2010.gpx", null, 0);
     }
 
+    /* (non-Javadoc)
+     * @see gps.log.in.GPSLogConvertInterface#getType()
+     */
+    public int getType() {
+        return Model.GPX_LOGTYPE;
+    }
+
+    
 }
