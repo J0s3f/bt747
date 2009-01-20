@@ -35,7 +35,6 @@ import bt747.sys.interfaces.BT747Time;
  */
 public abstract class GPSFile implements GPSFileConverterInterface {
 
-    
     /**
      * The track filters used.
      */
@@ -282,12 +281,17 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * @return true if the record is needed.
      */
     protected boolean recordIsNeeded(final GPSRecord r) {
-        boolean result = false;
-        for (int i = ptFilters.length - 1; i >= 0; i--) {
-            if (ptFilters[i].doFilter(r)) {
-                result = true;
-                break;
+        boolean result;
+        if (ptFilters != null) {
+            result = false;
+            for (int i = ptFilters.length - 1; i >= 0; i--) {
+                if (ptFilters[i].doFilter(r)) {
+                    result = true;
+                    break;
+                }
             }
+        } else {
+            result = true;
         }
         return result;
     }
@@ -363,7 +367,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         if (r.hasUtc()) {
             r.utc += timeOffsetSeconds;
         }
-        if (currentWayPointListIdx >= 0 && cachedRecordIsNeeded(r) && r.hasUtc()) {
+        if (currentWayPointListIdx >= 0 && cachedRecordIsNeeded(r)
+                && r.hasUtc()) {
             GPSRecord prevActiveFields = activeFields;
             if (prevRecord != null) {
                 boolean continueLoop;
@@ -373,12 +378,13 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                     boolean doWriteRecord = false;
                     int userWayPointUTC = userWayPoint.tagutc
                             + waypointTimeCorrection; // UTC time now //
-                                                        // CommonOut.getDateTimeStr(userWayPointUTC)
+                    // CommonOut.getDateTimeStr(userWayPointUTC)
                     int diffPrevious = userWayPointUTC - prevRecord.utc // CommonOut.getDateTimeStr(prevRecord.utc)
                             + timeOffsetSeconds; // - prevRecord.utc +
-                                                    // r.utc
-                                                    // +timeOffsetSeconds
-                    int diffNext = userWayPointUTC - r.utc + timeOffsetSeconds; // If > 0, current
+                    // r.utc
+                    // +timeOffsetSeconds
+                    int diffNext = userWayPointUTC - r.utc
+                            + timeOffsetSeconds; // If > 0, current
                     // position is
                     // earlier.
 
@@ -398,7 +404,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                         }
                         if ((diff <= maxDiff)
                                 && (overridePreviousTag || (!userWayPoint
-                                        .hasPosition() ))) {
+                                        .hasPosition()))) {
                             userWayPoint.tagFromRecord(ref);
                             userWayPoint.utc = gpstime;
                         }
@@ -415,7 +421,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                             if (!activeFields.equalsFormat(userWayPoint)) {
                                 writeLogFmtHeader(userWayPoint);
                             }
-                            userWayPoint.utc-=timeOffsetSeconds;
+                            userWayPoint.utc -= timeOffsetSeconds;
                             if (userWayPoint.hasUtc()) {
                                 userWayPoint.utc += timeOffsetSeconds;
                             }
@@ -869,8 +875,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     /**
      * Generic parameter object.
      */
-    protected GPSConversionParameters paramObject =
-        new GPSConversionParameters();
+    protected GPSConversionParameters paramObject = new GPSConversionParameters();
 
     public final GPSConversionParameters getParamObject() {
         return this.paramObject;
@@ -879,6 +884,5 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     public final void setParamObject(final GPSConversionParameters paramObject) {
         this.paramObject = paramObject;
     }
-    
-    
+
 }

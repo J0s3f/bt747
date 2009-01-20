@@ -131,13 +131,6 @@
 	</target>
 
 	<!-- ======================================== -->
-	<!-- all.lang.* - language package building   -->
-	<!-- ======================================== -->
-	<target name="all.lang">
-		<antcall target="all.package"/>
-	</target>
-
-	<!-- ======================================== -->
 	<!-- j2sewaba.* - run and build for j2se      -->
 	<!--              + waba in one launch        -->
 	<!-- ======================================== -->
@@ -565,6 +558,7 @@
                         -keep public class * implements gps.log.in.GPSLogConvert { *; }
                         -keep public class * implements gps.log.out.GPSFile { *; }
                         -keep public class gps.log.out.GPSFile { *; }
+                        -keep public class gps.log.in.GPSInputConversionFactory { *; }
                         -keep public class * extends gps.connection.GPSPort { *; }
 			            -keep public class bt747.Version { *; }
             -keep public class net.sf.bt747.j2se.filefilters.* { *; }

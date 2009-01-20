@@ -4,7 +4,9 @@
 package gps.log.in;
 
 import gps.BT747Constants;
+import gps.log.GPSRecord;
 import gps.log.LogFileInfo;
+import gps.log.out.GPSFile;
 
 import bt747.model.Model;
 import bt747.sys.Generic;
@@ -16,7 +18,7 @@ import bt747.sys.interfaces.BT747Vector;
  * @author Mario
  * 
  */
-public class MultiLogConvert extends GPSLogConvertInterface {
+public final class MultiLogConvert extends GPSLogConvertInterface {
 
     /**
      * The converter that is currently converting.
@@ -70,8 +72,14 @@ public class MultiLogConvert extends GPSLogConvertInterface {
 
     private BT747Vector logFiles;
 
+    /**
+     * Set the logfiles to convert.
+     * 
+     * @param logFiles
+     *                Vector of LogFileInfo
+     */
     public void setLogFiles(final BT747Vector logFiles) {
-
+        this.logFiles = logFiles;
     }
 
     private final GPSLogConvertInterface getConvertInstance(
@@ -112,32 +120,79 @@ public class MultiLogConvert extends GPSLogConvertInterface {
         logFileInfoLookup = Interface
                 .getHashtableInstance(logFiles.size() + 1);
 
-        converters.put(fileName, getConvertInstance(fileName, gpsFile, card));
-        logFileInfoLookup.put(fileName, new LogFileInfo(fileName, card));
+        if (fileName != null && fileName.length() != 0) {
+            converters.put(fileName, getConvertInstance(fileName, gpsFile,
+                    card));
+            logFileInfoLookup.put(fileName, new LogFileInfo(fileName, card));
+        }
         /*
          * Create a conversion instance for each file.
          */
         for (int fileIdx = 0; !stop && (fileIdx < logFiles.size()); fileIdx++) {
             final LogFileInfo li = (LogFileInfo) (logFiles.elementAt(fileIdx));
             final String fn = li.getPath();
-            if (converters.get(fn) != null) {
+            if (converters.get(fn) == null) {
                 converters.put(fn,
-                        getConvertInstance(fileName, gpsFile, card));
-                logFileInfoLookup.put(fileName, li);
+                        getConvertInstance(fn, gpsFile, card));
+                logFileInfoLookup.put(fn, li);
             }
         }
 
         /**
          * First pass to find time range of each log file.
          */
-        BT747Hashtable iter = converters.iterator();
-        while (!stop && iter.hasNext()) {
-            final Object key = iter.nextKey();
-            final GPSLogConvertInterface i = (GPSLogConvertInterface) iter
-                    .get(key);
-            // TODO: manage cards on different volumes.
-            i.parseFile(i.getFileObject((String) key, card), gpsFile);
-            // Get date range.
+        {
+            final BT747Hashtable iter = converters.iterator();
+            final TrackStatsConverter statsConv = new TrackStatsConverter();
+            while (!stop && iter.hasNext()) {
+                final Object key = iter.nextKey();
+                final GPSLogConvertInterface i = (GPSLogConvertInterface) iter
+                        .get(key);
+                final LogFileInfo loginfo = (LogFileInfo) logFileInfoLookup
+                        .get(key);
+                statsConv.initStats();
+                // TODO: manage cards on different volumes.
+                i.parseFile(i.getFileObject((String) key, card), statsConv);
+                // Get date range.
+                loginfo.setStartTime(statsConv.minTime);
+                loginfo.setEndTime(statsConv.maxTime);
+            }
+        }
+
+        /**
+         * Not expecting a lot of logs, so very simple ordering.
+         */
+        {
+            final BT747Hashtable iter = logFileInfoLookup.iterator();
+            final BT747Vector orderedLogs = Interface.getVectorInstance();
+            while (iter.hasNext()) {
+                final Object key = iter.nextKey();
+                final LogFileInfo loginfo = (LogFileInfo) logFileInfoLookup
+                        .get(key);
+                final int startTime = loginfo.getStartTime();
+                int insertIdx = 0;
+                while ((insertIdx < orderedLogs.size())
+                        && startTime < ((LogFileInfo) orderedLogs
+                                .elementAt(insertIdx)).getStartTime()) {
+                    insertIdx++;
+                }
+                orderedLogs.insertElementAt(loginfo, insertIdx);
+            }
+        }
+
+        /**
+         * Actual reading.
+         */
+        {
+            final BT747Hashtable iter = converters.iterator();
+            while (!stop && iter.hasNext()) {
+                final Object key = iter.nextKey();
+                final GPSLogConvertInterface i = (GPSLogConvertInterface) iter
+                        .get(key);
+                // TODO: manage cards on different volumes.
+                i.parseFile(i.getFileObject((String) key, card), gpsFile);
+                // Get date range.
+            }
         }
         /*
          * Actual conversions.
@@ -151,6 +206,7 @@ public class MultiLogConvert extends GPSLogConvertInterface {
         // // .getLogFormatRecord(activeFileFields));
         // }
         passToFindFieldsActivatedInLog = false;
+        final BT747Hashtable iter = converters.iterator();
         if (error == BT747Constants.NO_ERROR) {
             do {
                 while (!stop && iter.hasNext()) {
@@ -183,4 +239,31 @@ public class MultiLogConvert extends GPSLogConvertInterface {
         return Model.MULTI_LOGTYPE;
     }
 
+    private static final class TrackStatsConverter extends GPSFile {
+        protected int minTime;
+        protected int maxTime;
+
+        public final void initStats() {
+            minTime = 0x7FFFFFFF;
+            maxTime = 0;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see gps.log.out.GPSFile#writeRecord(gps.log.GPSRecord)
+         */
+        public final void writeRecord(final GPSRecord r) {
+            if (r.hasUtc()) {
+                if (r.getUtc() < minTime) {
+                    minTime = r.getUtc();
+                }
+                if (r.getUtc() > maxTime) {
+                    maxTime = r.getUtc();
+                }
+            }
+            // TODO Auto-generated method stub
+            super.writeRecord(r);
+        }
+    }
 }

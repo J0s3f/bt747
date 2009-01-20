@@ -58,7 +58,7 @@ public final class WabaFile extends waba.io.File implements BT747File {
         }
     }
 
-    public static String getCardVolumePath() {
+    public static final String getCardVolumePath() {
         if (getCardVolume() != null) {
             return getCardVolume().getPath();
         } else {
@@ -66,17 +66,17 @@ public final class WabaFile extends waba.io.File implements BT747File {
         }
     }
 
-    public int getLastError() {
+    public final int getLastError() {
         return lastError;
     }
 
     /* (non-Javadoc)
      * @see bt747.sys.interfaces.BT747File#getModificationTime()
      */
-    public int getModificationTime() {
-        super.getTime(TIME_MODIFIED);
-        // TODO Auto-generated method stub
-        return 0;
+    public final int getModificationTime() {
+        final waba.sys.Time t = super.getTime(TIME_MODIFIED);
+        final WabaDate d = new WabaDate(t.day,t.month,t.year);
+        return d.dateToUTCepoch1970() + t.hour*3600 + t.minute*60 + t.second;
     }
 
 }

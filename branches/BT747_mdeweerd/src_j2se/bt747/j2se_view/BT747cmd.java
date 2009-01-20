@@ -24,15 +24,22 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
+import gps.log.LogFileInfo;
+import gps.log.in.GPSInputConversionFactory;
+import gps.log.in.GPSLogConvertInterface;
+import gps.log.in.MultiLogConvert;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
+import net.sf.bt747.j2se.system.J2SEVector;
 
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.ImageData;
@@ -41,6 +48,7 @@ import bt747.model.ModelEvent;
 import bt747.sys.Interface;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747FileName;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * 
@@ -447,6 +455,27 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     private TaggedFilePathFactory fpf = new TaggedFilePathFactory();
 
+    static {
+        GPSInputConversionFactory.addHandler(new GPSInputConversionFactory() {
+            /*
+             * (non-Javadoc)
+             * 
+             * @see gps.log.in.GPSInputConversionFactory#getInputConversionInstance(java.lang.String)
+             */
+            @Override
+            public final GPSLogConvertInterface getInputConversionInstance(
+                    final String logFile) {
+                if (logFile.length() == 0) {
+                    final MultiLogConvert lc = new MultiLogConvert();
+                    lc.setLogFiles(logFiles);
+                    return lc;
+                } else {
+                    return super.getInputConversionInstance(logFile);
+                }
+            }
+        });
+    }
+
     public final int convertLog(final int logType) {
         int error = 0;
         System.out
@@ -455,6 +484,10 @@ public class BT747cmd implements bt747.model.ModelListener {
                 + m.getStringOpt(Model.OUTPUTDIRPATH));
         System.out.println("Output basename: "
                 + m.getStringOpt(Model.REPORTFILEBASE));
+
+        if (logFiles.size() != 0) {
+            c.setStringOpt(Model.LOGFILEPATH, "");
+        }
 
         // TODO code to move elsewhere
         if (filesToTag.size() != 0) {
@@ -1074,6 +1107,21 @@ public class BT747cmd implements bt747.model.ModelListener {
     }
 
     /**
+     * Vector of LogFileInfo.
+     */
+    private final static BT747Vector logFiles = Interface.getVectorInstance();
+
+    private final static void addLogFile(final File f) {
+        try {
+            final LogFileInfo loginfo = new LogFileInfo(f.getCanonicalPath(),
+                    0);
+            logFiles.addElement(loginfo);
+        } catch (final Exception e) {
+            bt747.sys.Generic.debug("Problem adding log file", e);
+        }
+    }
+
+    /**
      * @param args
      *                the command line arguments
      */
@@ -1193,9 +1241,9 @@ public class BT747cmd implements bt747.model.ModelListener {
                         "Specify the template for the tagged filename.  Default is \"%p"
                                 + File.separator
                                 + "%f_tagged%e\".\n"
-                                + "%p is replace by the directory of the original file.\n"
+                                + "%p is replaced by the directory of the original file.\n"
                                 + "%e is replaced by the extension of the original file.\n"
-                                + "%f is replace with the base of the original file.\n"
+                                + "%f is replaced with the base of the original file.\n"
                                 + "So the default will convert a file \"BT747"
                                 + File.separator + "org.jpg\" to \"BT747"
                                 + File.separator + "org_tagged\".")
@@ -1216,9 +1264,15 @@ public class BT747cmd implements bt747.model.ModelListener {
             } else {
                 for (Object s : options.nonOptionArguments()) {
                     String arg = (String) s;
+                    final FileFilter filter = new KnownFileFilter();
                     File f = new File(arg);
                     if (f.exists()) {
-                        filesToTag.add(f);
+                        if (filter.accept(f)) {
+                            // Log file
+                            addLogFile(f);
+                        } else {
+                            filesToTag.add(f);
+                        }
                     } else {
                         System.err.println("File not found: "
                                 + f.getCanonicalPath());

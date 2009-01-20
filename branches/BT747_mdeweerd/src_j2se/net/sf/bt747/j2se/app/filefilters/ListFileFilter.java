@@ -24,7 +24,7 @@ import bt747.j2se_view.J2SEAppController;
  * @author Mario
  * 
  */
-public class ListFileFilter extends FileFilter {
+public class ListFileFilter extends FileFilter implements java.io.FileFilter {
 
     /**
      * Lower case list of accepted extensions.

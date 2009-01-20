@@ -21,8 +21,8 @@ package net.sf.bt747.waba.system;
 
 public final class WabaThread implements waba.sys.Thread {
 
-    public bt747.sys.interfaces.BT747Thread btThread = null;
-    public boolean running = false;
+    protected bt747.sys.interfaces.BT747Thread btThread = null;
+    protected boolean running = false;
 
     public WabaThread(final bt747.sys.interfaces.BT747Thread t) {
         btThread = t;
