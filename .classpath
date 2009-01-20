@@ -23,5 +23,6 @@
 			<attribute name="javadoc_location" value="jar:file:/C:/Download/swingx-2008_11_30-javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/jdic.jar" sourcepath="C:/Download/jdic-0.9.5-src.zip"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

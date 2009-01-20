@@ -18,6 +18,7 @@ package gps.log.in;
 import gps.BT747Constants;
 import gps.log.GPSRecord;
 
+import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Generic;
 import bt747.sys.Interface;
@@ -362,4 +363,10 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
         return GPSRecord.getLogFormatRecord(logfmt);
     }
 
+    /* (non-Javadoc)
+     * @see gps.log.in.GPSLogConvertInterface#getType()
+     */
+    public int getType() {
+        return Model.SR_LOGTYPE;
+    }
 }

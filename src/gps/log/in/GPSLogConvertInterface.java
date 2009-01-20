@@ -14,6 +14,8 @@
 // *** *********************************************************** ***
 package gps.log.in;
 
+import bt747.model.Model;
+
 import gps.log.out.GPSFile;
 
 /**
@@ -77,4 +79,9 @@ public abstract class GPSLogConvertInterface {
     public void stopConversion() {
         stop = true;
     }
+    
+    /**
+     * @return log type such as {@link Model#TRL_LOGTYPE}.
+     */
+    public abstract int getType();
 }
