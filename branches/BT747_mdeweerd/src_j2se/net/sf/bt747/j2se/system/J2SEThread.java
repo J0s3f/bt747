@@ -33,14 +33,14 @@ public final class J2SEThread implements java.lang.Runnable {
      * @param running
      *                the running to set
      */
-    protected void setRunning(final boolean running) {
+    protected final void setRunning(final boolean running) {
         this.running = running;
     }
 
     /**
      * @return the running
      */
-    protected boolean isRunning() {
+    protected final boolean isRunning() {
         return running;
     }
 }
