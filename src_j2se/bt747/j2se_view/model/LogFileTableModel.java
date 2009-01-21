@@ -8,6 +8,10 @@ import gps.log.out.CommonOut;
 
 import javax.swing.table.AbstractTableModel;
 
+import bt747.j2se_view.J2SEController;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Vector;
+
 /**
  * @author Mario
  * 
@@ -21,24 +25,36 @@ public class LogFileTableModel extends AbstractTableModel {
     private int[] columns = { DataTypes.LOG_FILENAME,
             DataTypes.LOG_START_TIME, DataTypes.LOG_END_TIME };
 
-    private java.util.Vector<LogFileInfo> logfileInfos;
 
     /**
      * 
      */
-    public LogFileTableModel(java.util.Vector<LogFileInfo> logfileinfos) {
-        this.logfileInfos = logfileinfos;
+    public LogFileTableModel() {
+    }
+
+    public final BT747Vector getLogfileInfos() {
+        return J2SEController.logFiles;
+    }
+
+    public final void setLogfileInfos(
+            bt747.sys.interfaces.BT747Vector logfileInfos) {
+        //this.logfileInfos = logfileInfos;
+        fireTableStructureChanged();
+        fireTableDataChanged();
     }
 
     public void add(final String path) {
-        logfileInfos.add(new LogFileInfo(path, 0));
+        getLogfileInfos().addElement(new LogFileInfo(path, 0));
     }
 
+    public void notifyUpdate() {
+        fireTableDataChanged();
+    }
     /**
      * 
      */
     public void clear() {
-        logfileInfos.clear();
+        getLogfileInfos().removeAllElements();
     }
 
     /*
@@ -74,7 +90,7 @@ public class LogFileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getRowCount()
      */
     public int getRowCount() {
-        return logfileInfos.size();
+        return getLogfileInfos().size();
     }
 
     private int columnToDataType(final int column) {
@@ -85,18 +101,25 @@ public class LogFileTableModel extends AbstractTableModel {
         }
     }
 
-    private final Object getData(final LogFileInfo logfileinfo, final int dt) {
-        switch (dt) {
-        case DataTypes.LOG_START_TIME:
-            return CommonOut.getDateTimeStr(logfileinfo.getStartTime());
-        case DataTypes.LOG_END_TIME:
-            return CommonOut.getDateTimeStr(logfileinfo.getStartTime());
-        case DataTypes.LOG_COLOR:
-            // label = "TAB_TITLE_Color";
-            return null;
-        case DataTypes.LOG_FILENAME:
-            return logfileinfo.getPath();
-        default:
+    private final Object getData(final Object o, final int dt) {
+        // final LogFileInfo logfileinfo
+        if (o instanceof LogFileInfo) {
+            LogFileInfo logfileinfo = (LogFileInfo) o;
+
+            switch (dt) {
+            case DataTypes.LOG_START_TIME:
+                return CommonOut.getDateTimeStr(logfileinfo.getStartTime());
+            case DataTypes.LOG_END_TIME:
+                return CommonOut.getDateTimeStr(logfileinfo.getStartTime());
+            case DataTypes.LOG_COLOR:
+                // label = "TAB_TITLE_Color";
+                return null;
+            case DataTypes.LOG_FILENAME:
+                return logfileinfo.getPath();
+            default:
+                return null;
+            }
+        } else {
             return null;
         }
     }
@@ -107,7 +130,7 @@ public class LogFileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     public Object getValueAt(final int rowIndex, final int columnIndex) {
-        return getData(logfileInfos.get(rowIndex),
+        return getData(getLogfileInfos().elementAt(rowIndex),
                 columnToDataType(columnIndex));
     }
 

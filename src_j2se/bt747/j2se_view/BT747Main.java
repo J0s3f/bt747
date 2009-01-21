@@ -30,7 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
-import net.sf.bt747.j2se.app.utils.BrowserControl;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
 
@@ -122,7 +121,8 @@ public class BT747Main extends javax.swing.JFrame implements
     private FiltersPanel pnFiltersPanel;
     private OutputSettingsPanel pnOutputSettingsPanel;
     private AdvancedFileSettingsPanel pnAdvancedFileSettingsPanel;
-    private FileTablePanel pnFilesToTagPanel;
+    //private FileTablePanel pnFilesToTagPanel;
+    private FilesPanel pnFilesToTagPanel;
     private MyMap pnMap = new MyMap();
 
     private final Component inScrollPane(final JPanel p) {
@@ -179,7 +179,8 @@ public class BT747Main extends javax.swing.JFrame implements
                         getIcon("page_right.gif"), inScrollPane(pnAdvancedFileSettingsPanel),
                         null, 5);
 
-        pnFilesToTagPanel = new FileTablePanel();
+        //pnFilesToTagPanel = new FileTablePanel();
+        pnFilesToTagPanel = new FilesPanel();
         tabbedPanelAll.insertTab(getString("FilesToTagPanel.title"),
                 getIcon("images.png"), pnFilesToTagPanel, null, 1);
         try {
@@ -823,7 +824,7 @@ public class BT747Main extends javax.swing.JFrame implements
             InfoPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(InfoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -844,9 +845,10 @@ public class BT747Main extends javax.swing.JFrame implements
                 .add(0, 0, 0)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel2Layout.createSequentialGroup()
-                        .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(22, Short.MAX_VALUE))
-                    .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)))
+                        .add(32, 32, 32)
+                        .add(jToolBar1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+                        .addContainerGap(15, Short.MAX_VALUE))
+                    .add(tabbedPanelAll, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)))
         );
 
         tabbedPanelAll.getAccessibleContext().setAccessibleName(bundle.getString("Log_download_&_Convert")); // NOI18N
