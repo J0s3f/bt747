@@ -3,6 +3,7 @@
  */
 package bt747.j2se_view;
 
+import gps.log.LogFileInfo;
 import gps.log.in.GPSLogConvertInterface;
 import gps.log.in.GPSInputConversionFactory;
 
@@ -12,6 +13,9 @@ import java.io.IOException;
 import bt747.j2se_view.model.ImageData;
 import bt747.model.Controller;
 import bt747.model.Model;
+import bt747.sys.Generic;
+import bt747.sys.Interface;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * @author Mario
@@ -23,6 +27,10 @@ public class J2SEController extends Controller {
      * Reference to the model.
      */
     private Model m;
+    /**
+     * Vector of LogFileInfo.
+     */
+    public final static BT747Vector logFiles = Interface.getVectorInstance();
 
     /**
      * @param model
@@ -45,6 +53,17 @@ public class J2SEController extends Controller {
     public void setModel(Model m) {
         super.setModel(m);
         this.m = m;
+    }
+
+
+    public final static void addLogFile(final File f) {
+        try {
+            final LogFileInfo loginfo = new LogFileInfo(f.getCanonicalPath(),
+                    0);
+            logFiles.addElement(loginfo);
+        } catch (final Exception e) {
+            bt747.sys.Generic.debug("Problem adding log file", e);
+        }
     }
 
 

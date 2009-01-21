@@ -24,7 +24,6 @@ package bt747.j2se_view;
 import gps.BT747Constants;
 import gps.connection.GPSrxtx;
 import gps.log.GPSRecord;
-import gps.log.LogFileInfo;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
 import gps.log.in.MultiLogConvert;
@@ -48,7 +47,6 @@ import bt747.model.ModelEvent;
 import bt747.sys.Interface;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747FileName;
-import bt747.sys.interfaces.BT747Vector;
 
 /**
  * 
@@ -467,7 +465,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                     final String logFile) {
                 if (logFile.length() == 0) {
                     final MultiLogConvert lc = new MultiLogConvert();
-                    lc.setLogFiles(logFiles);
+                    lc.setLogFiles(J2SEController.logFiles);
                     return lc;
                 } else {
                     return super.getInputConversionInstance(logFile);
@@ -485,7 +483,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         System.out.println("Output basename: "
                 + m.getStringOpt(Model.REPORTFILEBASE));
 
-        if (logFiles.size() != 0) {
+        if (J2SEController.logFiles.size() != 0) {
             c.setStringOpt(Model.LOGFILEPATH, "");
         }
 
@@ -1107,21 +1105,6 @@ public class BT747cmd implements bt747.model.ModelListener {
     }
 
     /**
-     * Vector of LogFileInfo.
-     */
-    private final static BT747Vector logFiles = Interface.getVectorInstance();
-
-    private final static void addLogFile(final File f) {
-        try {
-            final LogFileInfo loginfo = new LogFileInfo(f.getCanonicalPath(),
-                    0);
-            logFiles.addElement(loginfo);
-        } catch (final Exception e) {
-            bt747.sys.Generic.debug("Problem adding log file", e);
-        }
-    }
-
-    /**
      * @param args
      *                the command line arguments
      */
@@ -1262,14 +1245,14 @@ public class BT747cmd implements bt747.model.ModelListener {
                 parser.printHelpOn(System.out);
             } else if (options.has(OPT_VERSION_ONLY)) {
             } else {
+                final FileFilter filter = new KnownFileFilter();
                 for (Object s : options.nonOptionArguments()) {
                     String arg = (String) s;
-                    final FileFilter filter = new KnownFileFilter();
                     File f = new File(arg);
                     if (f.exists()) {
                         if (filter.accept(f)) {
                             // Log file
-                            addLogFile(f);
+                            J2SEController.addLogFile(f);
                         } else {
                             filesToTag.add(f);
                         }

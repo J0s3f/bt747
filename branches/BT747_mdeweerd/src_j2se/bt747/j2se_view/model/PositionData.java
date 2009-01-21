@@ -9,6 +9,7 @@ import gps.log.out.CommonOut;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.List;
@@ -16,11 +17,13 @@ import java.util.Vector;
 
 import javax.swing.AbstractListModel;
 
+import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
 
 import org.jdesktop.beans.AbstractBean;
 
 import bt747.j2se_view.J2SEAppModel;
+import bt747.j2se_view.J2SEController;
 import bt747.model.ModelEvent;
 import bt747.sys.Generic;
 
@@ -36,6 +39,7 @@ public class PositionData extends AbstractBean {
     private List<List<GPSRecord>> trks = new Vector<List<GPSRecord>>();
     private final Vector<BT747Waypoint> wayPoints = new Vector<BT747Waypoint>();
     private final Vector<BT747Waypoint> userWayPoints = new Vector<BT747Waypoint>();
+
     // private GPSRecord[] wayPoints = null;
     // private GPSRecord[] userWayPoints = null;
 
@@ -153,16 +157,35 @@ public class PositionData extends AbstractBean {
         java.util.Arrays.sort(rcrds, new GPSRecordTimeComparator());
         return rcrds;
     }
+    
+    private void fireLogFileUpdate() {
+        postEvent(new ModelEvent(J2SEAppModel.UPDATE_LOG_FILE_LIST, null));
+    }
+
 
     public final void addFiles(final File[] files) {
         if (files != null) {
+            final FileFilter filter = new KnownFileFilter();
             for (int i = 0; i < files.length; i++) {
                 try {
-                    userWpListModel.add(files[i].getCanonicalPath());
+                    final File f = files[i];
+                    if (f.exists()) {
+                        if (filter.accept(f)) {
+                            // Log file
+                            J2SEController.addLogFile(f);
+                        } else {
+                            userWpListModel.add(files[i].getCanonicalPath());
+                        }
+                    } else {
+                        System.err.println("File not found: "
+                                + f.getCanonicalPath());
+                    }
+
                 } catch (final IOException e) {
                     // TODO: handle exception
                 }
             }
+            fireLogFileUpdate();
         }
     }
 

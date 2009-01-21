@@ -17,6 +17,7 @@ public class J2SEAppModel extends Model {
     public static final int UPDATE_TRACKPOINT_LIST = 1001;
     public static final int UPDATE_USERWAYPOINT_LIST = 1002;
     public static final int CHANGE_TO_MAP = 1003;
+    public static final int UPDATE_LOG_FILE_LIST = 1004;
 
     private final PositionData positionData = new PositionData(this);
 

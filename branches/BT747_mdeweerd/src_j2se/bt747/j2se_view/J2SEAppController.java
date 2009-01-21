@@ -28,6 +28,7 @@ import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.URL;
@@ -48,6 +49,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
+import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 
 import bt747.Version;
 import bt747.model.AppSettings;
@@ -981,5 +984,4 @@ public final class J2SEAppController extends J2SEController {
     public final void setChangeToMap(final boolean changeToMap) {
         this.changeToMap = changeToMap;
     }
-
 }
