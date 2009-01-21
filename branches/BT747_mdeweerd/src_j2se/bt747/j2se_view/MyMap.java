@@ -56,6 +56,7 @@ import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.painter.CompoundPainter;
 
 import bt747.j2se_view.model.BT747Waypoint;
+import bt747.j2se_view.model.DataTypes;
 import bt747.j2se_view.model.PositionData;
 import bt747.model.AppSettings;
 import bt747.model.ModelEvent;

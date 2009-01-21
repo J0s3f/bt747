@@ -22,12 +22,12 @@ public class FileTableModel extends AbstractTableModel {
      * The columns currently shown.
      */
     private int[] columns = {
-            PositionData.FILE_DATE,
-            PositionData.FILE_TIME,
-            PositionData.GPS_TIME, // PositionData.TAG_TIME,
-            PositionData.IMAGE_PATH, PositionData.GEOMETRY,
-            PositionData.LATITUDE, PositionData.LONGITUDE,
-            PositionData.HEIGHT_METERS };
+            DataTypes.FILE_DATE,
+            DataTypes.FILE_TIME,
+            DataTypes.GPS_TIME, // PositionData.TAG_TIME,
+            DataTypes.IMAGE_PATH, DataTypes.GEOMETRY,
+            DataTypes.LATITUDE, DataTypes.LONGITUDE,
+            DataTypes.HEIGHT_METERS };
 
     /**
      * 
@@ -86,7 +86,7 @@ public class FileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getColumnClass(int)
      */
     public Class<?> getColumnClass(final int columnIndex) {
-        return PositionData
+        return DataTypes
                 .getDataDisplayClass(columnToDataType(columnIndex));
     }
 
@@ -105,7 +105,7 @@ public class FileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getColumnName(int)
      */
     public String getColumnName(final int columnIndex) {
-        return PositionData.getDataDisplayName(columnToDataType(columnIndex));
+        return DataTypes.getDataDisplayName(columnToDataType(columnIndex));
     }
 
     /*
@@ -121,7 +121,7 @@ public class FileTableModel extends AbstractTableModel {
         if (column < columns.length) {
             return columns[column];
         } else {
-            return PositionData.NONE;
+            return DataTypes.NONE;
         }
     }
 

@@ -29,15 +29,15 @@ import javax.swing.table.AbstractTableModel;
 public class PositionTableModel extends AbstractTableModel {
 
     private int[] columnTypes = {
-            PositionData.RECORDNUMBER,
-            PositionData.GPS_DATE,
-            PositionData.GPS_TIME,
+            DataTypes.RECORDNUMBER,
+            DataTypes.GPS_DATE,
+            DataTypes.GPS_TIME,
             // PositionData.FMT_UTC_IDX,
             // FMT_UTC_VALUE,
-            PositionData.RCR, PositionData.RCR_DESCRIPTION,
-            PositionData.FIX_VALID, PositionData.LATITUDE,
-            PositionData.LONGITUDE, PositionData.HEIGHT_METERS,
-            PositionData.HDOP, PositionData.PDOP, PositionData.VOX };
+            DataTypes.RCR, DataTypes.RCR_DESCRIPTION,
+            DataTypes.FIX_VALID, DataTypes.LATITUDE,
+            DataTypes.LONGITUDE, DataTypes.HEIGHT_METERS,
+            DataTypes.HDOP, DataTypes.PDOP, DataTypes.VOX };
 
     private volatile List<List<GPSRecord>> gpsData;
 
@@ -86,7 +86,7 @@ public class PositionTableModel extends AbstractTableModel {
         if (index < columnTypes.length) {
             return columnTypes[index];
         } else {
-            return PositionData.NONE;
+            return DataTypes.NONE;
         }
     }
 
@@ -97,7 +97,7 @@ public class PositionTableModel extends AbstractTableModel {
      */
     public String getColumnName(final int columnIndex) {
         if (columnIndex < columnTypes.length) {
-            return PositionData.getDataDisplayName(columnToType(columnIndex));
+            return DataTypes.getDataDisplayName(columnToType(columnIndex));
         }
         return null;
     }
@@ -175,7 +175,7 @@ public class PositionTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getColumnClass(int)
      */
     public Class<?> getColumnClass(final int columnIndex) {
-        return PositionData.getDataDisplayClass(columnToType(columnIndex));
+        return DataTypes.getDataDisplayClass(columnToType(columnIndex));
     }
 
 }

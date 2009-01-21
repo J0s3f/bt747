@@ -20,7 +20,6 @@ import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
 
 import org.jdesktop.beans.AbstractBean;
 
-import bt747.j2se_view.J2SEAppController;
 import bt747.j2se_view.J2SEAppModel;
 import bt747.model.ModelEvent;
 import bt747.sys.Generic;
@@ -31,61 +30,14 @@ import bt747.sys.Generic;
  */
 @SuppressWarnings("serial")
 public class PositionData extends AbstractBean {
+    public static final String WAYPOINTSELECTED = "selectedwaypoint";
+    public final static String WPDISPLAYCHANGE = "wpdisplaychange";
     J2SEAppModel m;
     private List<List<GPSRecord>> trks = new Vector<List<GPSRecord>>();
     private final Vector<BT747Waypoint> wayPoints = new Vector<BT747Waypoint>();
     private final Vector<BT747Waypoint> userWayPoints = new Vector<BT747Waypoint>();
     // private GPSRecord[] wayPoints = null;
     // private GPSRecord[] userWayPoints = null;
-
-    public static final int NONE = 0;
-    public static final int FIX_VALID = 1;
-    public static final int LATITUDE = 2;
-    public static final int LONGITUDE = 3;
-    public static final int HEIGHT_METERS = 4;
-    public static final int SPEED = 5;
-    public static final int HEADING = 6;
-    public static final int DSTA = 7;
-    public static final int DAGE = 8;
-    public static final int PDOP = 9;
-    public static final int HDOP = 10;
-    public static final int VDOP = 11;
-    public static final int NSAT = 12;
-    public static final int SID = 13;
-    public static final int ELEVATION = 14;
-    public static final int AZIMUTH = 15;
-    public static final int SNR = 16;
-    public static final int RCR = 17;
-    public static final int MILLISECOND = 18;
-    public static final int DISTANCE = 19;
-    public static final int LOGDIST = 20;
-    public static final int LOGSPD = 21;
-    public static final int LOGTIME = 22;
-    public static final int DISTANCE_FEET = 23;
-    public static final int EW = 24;
-    public static final int FIXMODE = 25;
-    public static final int HEIGHT_FEET = 26;
-    public static final int LATITUDE_POSITIVE = 27;
-    public static final int LONGITUDE_POSITIVE = 28;
-    public static final int NS = 29;
-    public static final int RCR_DESCRIPTION = 30;
-    public static final int RECORDNUMBER = 31;
-    public static final int SPEED_MPH = 32;
-    public static final int UTC_VALUE = 33;
-    public static final int VOX = 34;
-    public static final int IMAGE_PATH = 35;
-    public static final int IMAGE_WIDTH = 36;
-    public static final int IMAGE_HEIGHT = 37;
-    public static final int GEOMETRY = 38;
-    public static final int GPS_DATETIME = 39;
-    public static final int GPS_DATE = 40;
-    public static final int GPS_TIME = 41;
-    public static final int TAG_DATETIME = 42;
-    public static final int TAG_DATE = 43;
-    public static final int TAG_TIME = 44;
-    public static final int FILE_DATETIME = 45;
-    public static final int FILE_DATE = 46;
-    public static final int FILE_TIME = 47;
 
     /**
      * 
@@ -214,8 +166,6 @@ public class PositionData extends AbstractBean {
         }
     }
 
-    public final static String WPDISPLAYCHANGE = "wpdisplaychange";
-
     private void fireWpDisplayChange() {
         firePropertyChange(WPDISPLAYCHANGE, null, Boolean.TRUE);
     }
@@ -342,244 +292,8 @@ public class PositionData extends AbstractBean {
 
     }
 
-    public static final String WAYPOINTSELECTED = "selectedwaypoint";
-
     private void fireWpSelected(final BT747Waypoint w) {
         firePropertyChange(WAYPOINTSELECTED, null, w);
-    }
-
-    public static final Class<?> getDataDisplayClass(final int datatype) {
-        switch (datatype) {
-        case NONE:
-            return null;
-        case IMAGE_PATH:
-            return String.class;
-        case IMAGE_WIDTH:
-            return Integer.class;
-        case IMAGE_HEIGHT:
-            return Integer.class;
-        case GEOMETRY:
-            return String.class;
-        case LATITUDE:
-            return Object.class;// return Double.class;
-        case LONGITUDE:
-            return Object.class;// return Double.class;
-        case FILE_DATE:
-        case FILE_DATETIME:
-        case FILE_TIME:
-        case TAG_DATE:
-        case TAG_DATETIME:
-        case TAG_TIME:
-        case GPS_DATETIME:
-        case GPS_DATE:
-        case GPS_TIME:
-            return String.class;
-        case LOGTIME:
-            return Float.class;
-        case LOGDIST:
-            return Float.class;
-        case LOGSPD:
-            return Float.class;
-        case NS:
-            return String.class;
-        case EW:
-            return String.class;
-        case RECORDNUMBER:
-            return Integer.class;
-        case UTC_VALUE:
-            return Long.class;
-        case FIX_VALID:
-            return String.class;
-        case LATITUDE_POSITIVE:
-            return String.class;
-        case LONGITUDE_POSITIVE:
-            return String.class;
-        case HEIGHT_METERS:
-            break;
-        case HEIGHT_FEET:
-            break;
-        case SPEED:
-            return Float.class;
-        case SPEED_MPH:
-            return Float.class;
-        case HEADING:
-            return Float.class;
-        case DSTA:
-            return Integer.class;
-        case DAGE:
-            return Integer.class;
-        case PDOP:
-            return Float.class;
-        case HDOP:
-            return Float.class;
-        case VDOP:
-            return Float.class;
-        case NSAT:
-            return Integer.class;
-        case FIXMODE:
-            return String.class;
-        case SID:
-            break;
-        case VOX:
-            return String.class;
-        case RCR:
-            return String.class;
-        case RCR_DESCRIPTION:
-            return String.class;
-        case MILLISECOND:
-            return Integer.class;
-        case DISTANCE:
-            return Float.class;
-        case DISTANCE_FEET:
-            return Float.class;
-        default:
-            return Object.class;
-        }
-        return Object.class;
-    }
-
-    public static final String getDataDisplayName(final int datatype) {
-        String label = null;
-        switch (datatype) {
-        case NONE:
-            label = "TAB_TITLE_None";
-            break;
-        case IMAGE_PATH:
-            label = "TAB_TITLE_Image_path";
-            break;
-        case IMAGE_WIDTH:
-            label = "TAB_TITLE_Width";
-            break;
-        case IMAGE_HEIGHT:
-            label = "TAB_TITLE_Height";
-            break;
-        case GEOMETRY:
-            label = "TAB_TITLE_Geometry";
-            break;
-        case LATITUDE:
-            label = "TAB_TITLE_Latitude";
-            break;
-        case LONGITUDE:
-            label = "TAB_TITLE_Longitude";
-            break;
-        case FILE_DATETIME:
-            label = "TAB_TITLE_File_Date_Time";
-            break;
-        case FILE_DATE:
-            label = "TAB_TITLE_File_Date";
-            break;
-        case FILE_TIME:
-            label = "TAB_TITLE_File_Time";
-            break;
-        case TAG_DATETIME:
-            label = "TAB_TITLE_Tag_Date_Time";
-            break;
-        case TAG_DATE:
-            label = "TAB_TITLE_Tag_Date";
-            break;
-        case TAG_TIME:
-            label = "TAB_TITLE_Tag_Time";
-            break;
-        case GPS_DATETIME:
-            label = "TAB_TITLE_GPS_Date_Time";
-            break;
-        case GPS_DATE:
-            label = "TAB_TITLE_GPS_Date";
-            break;
-        case GPS_TIME:
-            label = "TAB_TITLE_GPS_Time";
-            break;
-        case LOGTIME:
-            label = "TAB_TITLE_Log_time";
-            break;
-        case LOGDIST:
-            label = "TAB_TITLE_Log_Dist";
-            break;
-        case LOGSPD:
-            label = "TAB_TITLE_Log_speed";
-            break;
-        case NS:
-            label = "TAB_TITLE_NS";
-            break;
-        case EW:
-            label = "TAB_TITLE_EW";
-            break;
-        case RECORDNUMBER:
-            label = "TAB_TITLE_Record_nbr";
-            break;
-        case UTC_VALUE:
-            label = "TAB_TITLE_UTC_Value";
-            break;
-        case FIX_VALID:
-            label = "TAB_TITLE_Valid";
-            break;
-        case LATITUDE_POSITIVE:
-            break;
-        case LONGITUDE_POSITIVE:
-            break;
-        case HEIGHT_METERS:
-            label = "TAB_TITLE_Height_m";
-            break;
-        case HEIGHT_FEET:
-            label = "TAB_TITLE_Height_ft";
-            break;
-        case SPEED:
-            label = "TAB_TITLE_Speed_kmh";
-            break;
-        case SPEED_MPH:
-            label = "TAB_TITLE_Speed_mph";
-            break;
-        case HEADING:
-            label = "TAB_TITLE_Heading";
-            break;
-        case DSTA:
-            label = "TAB_TITLE_DSTA";
-            break;
-        case DAGE:
-            label = "TAB_TITLE_DAGE";
-            break;
-        case PDOP:
-            label = "TAB_TITLE_PDOP";
-            break;
-        case HDOP:
-            label = "TAB_TITLE_HDOP";
-            break;
-        case VDOP:
-            label = "TAB_TITLE_VDOP";
-            break;
-        case NSAT:
-            label = "TAB_TITLE_NSAT";
-            break;
-        case FIXMODE:
-            label = "TAB_TITLE_Fix";
-            break;
-        case SID:
-            label = "TAB_TITLE_SID";
-            break;
-        case VOX:
-            label = "TAB_TITLE_VOX_File";
-            break;
-        case RCR:
-            label = "TAB_TITLE_RCR";
-            break;
-        case RCR_DESCRIPTION:
-            label = "TAB_TITLE_RCR_Description";
-            break;
-        case MILLISECOND:
-            label = "TAB_TITLE_MS";
-            break;
-        case DISTANCE:
-            label = "TAB_TITLE_Distance_m";
-            break;
-        case DISTANCE_FEET:
-            label = "TAB_TITLE_Distance_ft";
-            break;
-        default:
-        }
-        if (label != null) {
-            label = J2SEAppController.getString(label);
-        }
-        return label;
     }
 
     public static final Object getData(final BT747Waypoint w, final int type) {
@@ -589,19 +303,19 @@ public class PositionData extends AbstractBean {
             if (ImageData.class.isInstance(w)) {
                 final ImageData img = (ImageData) w;
                 switch (type) {
-                case FILE_DATE:
+                case DataTypes.FILE_DATE:
                     return CommonOut.getDateStr(img.getUtc());
-                case FILE_TIME:
+                case DataTypes.FILE_TIME:
                     return CommonOut.getTimeStr(img.getUtc());
-                case FILE_DATETIME:
+                case DataTypes.FILE_DATETIME:
                     return CommonOut.getDateTimeStr(img.getUtc());
-                case IMAGE_PATH:
+                case DataTypes.IMAGE_PATH:
                     return img.getPath();
-                case IMAGE_WIDTH:
+                case DataTypes.IMAGE_WIDTH:
                     return Integer.valueOf(img.getWidth());
-                case IMAGE_HEIGHT:
+                case DataTypes.IMAGE_HEIGHT:
                     return Integer.valueOf(img.getHeight());
-                case GEOMETRY:
+                case DataTypes.GEOMETRY:
                     if (img.getWidth() != 0) {
                         return img.getWidth() + "x" + img.getHeight();
                     }
@@ -614,63 +328,63 @@ public class PositionData extends AbstractBean {
 
     public static final Object getValue(final GPSRecord g, final int type) {
         switch (type) {
-        case LOGTIME:
+        case DataTypes.LOGTIME:
             break;
-        case LOGDIST:
+        case DataTypes.LOGDIST:
             break;
-        case LOGSPD:
+        case DataTypes.LOGSPD:
             break;
-        case NS:
+        case DataTypes.NS:
             break;
-        case EW:
+        case DataTypes.EW:
             break;
-        case RECORDNUMBER:
+        case DataTypes.RECORDNUMBER:
             if (g.hasRecCount()) {
                 return Integer.valueOf(g.recCount);
             }
             break;
-        case UTC_VALUE:
+        case DataTypes.UTC_VALUE:
             if (g.hasUtc()) {
                 return Long.valueOf(g.utc);
             }
             break;
-        case GPS_DATE:
+        case DataTypes.GPS_DATE:
             if (g.hasUtc()) {
                 return CommonOut.getDateStr(g.utc);
             }
             break;
-        case GPS_TIME:
+        case DataTypes.GPS_TIME:
             if (g.hasUtc()) {
                 return CommonOut.getTimeStr(g.utc);
             }
             break;
-        case GPS_DATETIME:
+        case DataTypes.GPS_DATETIME:
             if (g.hasUtc()) {
                 return CommonOut.getDateTimeStr(g.utc);
             }
             break;
 
-        case TAG_DATE:
+        case DataTypes.TAG_DATE:
             if (g.hasTagUtc()) {
                 return CommonOut.getDateStr(g.tagutc);
             }
             break;
-        case TAG_TIME:
+        case DataTypes.TAG_TIME:
             if (g.hasTagUtc()) {
                 return CommonOut.getTimeStr(g.tagutc);
             }
             break;
-        case TAG_DATETIME:
+        case DataTypes.TAG_DATETIME:
             if (g.hasTagUtc()) {
                 return CommonOut.getDateTimeStr(g.tagutc);
             }
             break;
-        case FIX_VALID:
+        case DataTypes.FIX_VALID:
             if (g.hasValid()) {
                 return CommonOut.getFixText(g.valid);
             }
             break;
-        case LATITUDE_POSITIVE:
+        case DataTypes.LATITUDE_POSITIVE:
             if (g.hasLatitude()) {
                 if (g.latitude < 0.) {
                     return -g.latitude;
@@ -679,7 +393,7 @@ public class PositionData extends AbstractBean {
                 }
             }
             break;
-        case LONGITUDE_POSITIVE:
+        case DataTypes.LONGITUDE_POSITIVE:
             if (g.hasLongitude()) {
                 if (g.longitude < 0.) {
                     return -g.longitude;
@@ -688,99 +402,99 @@ public class PositionData extends AbstractBean {
                 }
             }
             break;
-        case LATITUDE:
+        case DataTypes.LATITUDE:
             if (g.hasLatitude()) {
                 return Double.valueOf(g.latitude);
             }
             break;
-        case LONGITUDE:
+        case DataTypes.LONGITUDE:
             if (g.hasLongitude()) {
                 return Double.valueOf(g.longitude);
             }
             break;
-        case HEIGHT_METERS:
+        case DataTypes.HEIGHT_METERS:
             if (g.hasHeight()) {
                 return Float.valueOf(g.height);
             }
             break;
-        case HEIGHT_FEET:
+        case DataTypes.HEIGHT_FEET:
             break;
-        case SPEED:
+        case DataTypes.SPEED:
             if (g.hasSpeed()) {
                 return Float.valueOf(g.speed);
             }
             break;
-        case SPEED_MPH:
+        case DataTypes.SPEED_MPH:
             break;
-        case HEADING:
+        case DataTypes.HEADING:
             if (g.hasHeading()) {
                 return Float.valueOf(g.heading);
             }
             break;
-        case DSTA:
+        case DataTypes.DSTA:
             if (g.hasDsta()) {
                 return Integer.valueOf(g.dsta);
             }
             break;
-        case DAGE:
+        case DataTypes.DAGE:
             if (g.hasDage()) {
                 return Integer.valueOf(g.dage);
             }
             break;
-        case PDOP:
+        case DataTypes.PDOP:
             if (g.hasPdop()) {
                 return Float.valueOf(g.pdop / 100.0f);
             }
             break;
-        case HDOP:
+        case DataTypes.HDOP:
             if (g.hasHdop()) {
                 return Float.valueOf(g.hdop / 100.0f);
             }
             break;
-        case VDOP:
+        case DataTypes.VDOP:
             if (g.hasVdop()) {
                 return Float.valueOf(g.vdop / 100.0f);
             }
             break;
-        case NSAT:
+        case DataTypes.NSAT:
             if (g.hasNsat()) {
                 return Integer.valueOf(g.nsat);
             }
             break;
-        case FIXMODE:
+        case DataTypes.FIXMODE:
             if (g.hasValid()) {
                 return CommonOut.getFixText(g.valid);
             }
             break;
-        case SID:
+        case DataTypes.SID:
 
             break;
-        case VOX:
+        case DataTypes.VOX:
             if (g.hasVoxStr()) {
                 return g.voxStr;
             }
             break;
-        case RCR:
+        case DataTypes.RCR:
             if (g.hasRcr()) {
                 return CommonOut.getRCRstr(g);
             }
             break;
-        case RCR_DESCRIPTION:
+        case DataTypes.RCR_DESCRIPTION:
             if (g.hasRcr()) {
                 return CommonOut.getRcrSymbolText(g);
             }
             break;
-        case MILLISECOND:
+        case DataTypes.MILLISECOND:
             if (g.hasMillisecond()) {
                 return Integer.valueOf(g.milisecond);
             }
             break;
-        case DISTANCE:
+        case DataTypes.DISTANCE:
             if (g.hasDistance()) {
                 return Double.valueOf(g.distance);
             }
             break;
-        case DISTANCE_FEET:
+        case DataTypes.DISTANCE_FEET:
             break;
         // Image specific
         }
@@ -791,72 +505,72 @@ public class PositionData extends AbstractBean {
             final GPSRecord g, final int type) {
         try {
             switch (type) {
-            case LOGTIME:
+            case DataTypes.LOGTIME:
                 break;
-            case LOGDIST:
+            case DataTypes.LOGDIST:
                 break;
-            case LOGSPD:
+            case DataTypes.LOGSPD:
                 break;
-            case NS:
+            case DataTypes.NS:
                 break;
-            case EW:
+            case DataTypes.EW:
                 break;
-            case RECORDNUMBER:
+            case DataTypes.RECORDNUMBER:
                 g.recCount = (Integer) value;
                 break;
-            case GPS_DATE:
+            case DataTypes.GPS_DATE:
                 break;
-            case GPS_TIME:
+            case DataTypes.GPS_TIME:
                 break;
-            case FIX_VALID:
+            case DataTypes.FIX_VALID:
                 break;
-            case LATITUDE_POSITIVE:
+            case DataTypes.LATITUDE_POSITIVE:
                 break;
-            case LONGITUDE_POSITIVE:
+            case DataTypes.LONGITUDE_POSITIVE:
                 break;
-            case LATITUDE:
+            case DataTypes.LATITUDE:
                 g.latitude = (Double) value;
                 break;
-            case LONGITUDE:
+            case DataTypes.LONGITUDE:
                 g.longitude = g.longitude;
                 break;
-            case HEIGHT_METERS:
+            case DataTypes.HEIGHT_METERS:
                 break;
-            case HEIGHT_FEET:
+            case DataTypes.HEIGHT_FEET:
                 break;
-            case SPEED:
+            case DataTypes.SPEED:
                 break;
-            case SPEED_MPH:
+            case DataTypes.SPEED_MPH:
                 break;
-            case HEADING:
+            case DataTypes.HEADING:
                 break;
-            case DSTA:
+            case DataTypes.DSTA:
                 break;
-            case DAGE:
+            case DataTypes.DAGE:
                 break;
-            case PDOP:
+            case DataTypes.PDOP:
                 break;
-            case HDOP:
+            case DataTypes.HDOP:
                 break;
-            case VDOP:
+            case DataTypes.VDOP:
                 break;
-            case NSAT:
+            case DataTypes.NSAT:
                 break;
-            case FIXMODE:
+            case DataTypes.FIXMODE:
                 break;
-            case SID:
+            case DataTypes.SID:
                 break;
-            case VOX:
+            case DataTypes.VOX:
                 break;
-            case RCR:
+            case DataTypes.RCR:
                 break;
-            case RCR_DESCRIPTION:
+            case DataTypes.RCR_DESCRIPTION:
                 break;
-            case MILLISECOND:
+            case DataTypes.MILLISECOND:
                 break;
-            case DISTANCE:
+            case DataTypes.DISTANCE:
                 break;
-            case DISTANCE_FEET:
+            case DataTypes.DISTANCE_FEET:
                 break;
             }
             return true;
