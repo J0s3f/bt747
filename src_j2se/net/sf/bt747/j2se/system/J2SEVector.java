@@ -22,15 +22,15 @@ public final class J2SEVector extends java.util.Stack<Object> implements
      */
     private static final long serialVersionUID = 1L;
 
-    public int getCount() {
+    public final int getCount() {
         return elementCount;
     }
 
-    public void del(final Object o) {
+    public final void del(final Object o) {
         remove(o);
     }
 
-    public void del(final int i) {
+    public final void del(final int i) {
         try {
             remove(i);
         } catch (final Exception e) {
@@ -39,11 +39,11 @@ public final class J2SEVector extends java.util.Stack<Object> implements
 
     }
 
-    public Object[] toObjectArray() {
+    public final Object[] toObjectArray() {
         return toArray();
     }
 
-    public String[] toStringArray() {
+    public final String[] toStringArray() {
         final String[] s = new String[elementCount];
         for (int i = 0; i < s.length; i++) {
             s[i] = (String) elementData[i];

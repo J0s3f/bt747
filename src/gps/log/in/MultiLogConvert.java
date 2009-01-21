@@ -239,7 +239,6 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
         /* (non-Javadoc)
          * @see gps.log.out.GPSFile#writeLogFmtHeader(gps.log.GPSRecord)
          */
-        @Override
         public void writeLogFmtHeader(GPSRecord f) {
             fileFields.cloneActiveFields(f);
             super.writeLogFmtHeader(f);
@@ -252,7 +251,6 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
         /* (non-Javadoc)
          * @see gps.log.out.GPSFile#finaliseFile()
          */
-        @Override
         public void finaliseFile() {
             // TODO Auto-generated method stub
             super.finaliseFile();

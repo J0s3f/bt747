@@ -556,6 +556,7 @@
                         -keep public class gps.convert.FileUtil {*; }
                         -keep public class gps.log.in.GPSLogConvert { *; }
                         -keep public class * implements gps.log.in.GPSLogConvert { *; }
+			            -keep public class gps.log.in.MultiLogConvert { *; }
                         -keep public class * implements gps.log.out.GPSFile { *; }
                         -keep public class gps.log.out.GPSFile { *; }
                         -keep public class gps.log.in.GPSInputConversionFactory { *; }
