@@ -64,7 +64,7 @@
             <Component class="javax.swing.JTable" name="tbLogFile">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new LogFileTableModel()" type="code"/>
+                  <Connection code="logFileModel" type="code"/>
                 </Property>
                 <Property name="autoResizeMode" type="int" value="1"/>
               </Properties>

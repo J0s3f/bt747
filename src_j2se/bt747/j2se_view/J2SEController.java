@@ -4,8 +4,8 @@
 package bt747.j2se_view;
 
 import gps.log.LogFileInfo;
-import gps.log.in.GPSLogConvertInterface;
 import gps.log.in.GPSInputConversionFactory;
+import gps.log.in.GPSLogConvertInterface;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,13 +13,13 @@ import java.io.IOException;
 import bt747.j2se_view.model.ImageData;
 import bt747.model.Controller;
 import bt747.model.Model;
-import bt747.sys.Generic;
+import bt747.model.ModelEvent;
 import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
  * @author Mario
- *
+ * 
  */
 public class J2SEController extends Controller {
 
@@ -46,7 +46,7 @@ public class J2SEController extends Controller {
     public J2SEController() {
         super();
     }
-    
+
     /**
      * 
      */
@@ -54,7 +54,6 @@ public class J2SEController extends Controller {
         super.setModel(m);
         this.m = m;
     }
-
 
     public final static void addLogFile(final File f) {
         try {
@@ -66,9 +65,11 @@ public class J2SEController extends Controller {
         }
     }
 
-
-    private static final class GPXHandlerFactory extends GPSInputConversionFactory {
-        /* (non-Javadoc)
+    private static final class GPXHandlerFactory extends
+            GPSInputConversionFactory {
+        /*
+         * (non-Javadoc)
+         * 
          * @see bt747.model.GPSOutputFactory#getInputConversionInstance(java.lang.String)
          */
         @Override
@@ -76,13 +77,13 @@ public class J2SEController extends Controller {
                 final String logFile) {
             final String logFileLC = logFile.toLowerCase();
             if (logFileLC.endsWith(".gpx")) {
-                return new GPXLogConvert();   
+                return new GPXLogConvert();
             } else {
                 return super.getInputConversionInstance(logFile);
             }
         }
     }
-    
+
     static {
         GPSInputConversionFactory.addHandler(new GPXHandlerFactory());
     }
@@ -92,8 +93,8 @@ public class J2SEController extends Controller {
      * @param w
      * @throws IOException
      */
-    public final static void convertImage(final TaggedFilePathFactory fpf, final ImageData img)
-            throws IOException {
+    public final static void convertImage(final TaggedFilePathFactory fpf,
+            final ImageData img) throws IOException {
         final String p = img.getPath();
         final String newPath = fpf.getTaggedFilePath(p, img);
 

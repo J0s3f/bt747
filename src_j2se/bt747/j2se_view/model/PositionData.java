@@ -131,7 +131,7 @@ public class PositionData extends AbstractBean {
 
     private final void postEvent(final ModelEvent e) {
         if (m != null) {
-            m.postModelEvent(e);
+            m.postEvent(e);
         }
     }
 
@@ -159,7 +159,7 @@ public class PositionData extends AbstractBean {
     }
     
     private void fireLogFileUpdate() {
-        postEvent(new ModelEvent(J2SEAppModel.UPDATE_LOG_FILE_LIST, null));
+        postEvent(new ModelEvent(ModelEvent.UPDATE_LOG_FILE_LIST, null));
     }
 
 
