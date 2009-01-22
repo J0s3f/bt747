@@ -941,7 +941,7 @@ public final class J2SEAppController extends J2SEController {
                         m.getPositionData().setTracks(null);
                     }
                     if (changeToMap) {
-                        m.postModelEvent(new ModelEvent(
+                        m.postEvent(new ModelEvent(
                                 J2SEAppModel.CHANGE_TO_MAP, null));
                     }
                     break;

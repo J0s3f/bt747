@@ -42,7 +42,7 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
     
     public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
-        case J2SEAppModel.UPDATE_LOG_FILE_LIST:
+        case ModelEvent.UPDATE_LOG_FILE_LIST:
             logFileModel.notifyUpdate();
             break;
         }
@@ -67,7 +67,7 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setOneTouchExpandable(true);
 
-        tbLogFile.setModel(new LogFileTableModel());
+        tbLogFile.setModel(logFileModel);
         tbLogFile.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
         jScrollPane1.setViewportView(tbLogFile);
 

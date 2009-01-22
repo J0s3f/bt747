@@ -1,3 +1,6 @@
+Version 1.67.15
+* LogFile list is now available in the GUI too.
+
 Version 1.67.14
 * Multiple input files handling available in command line mode.
 

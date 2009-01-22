@@ -9,7 +9,6 @@ import gps.log.out.CommonOut;
 import javax.swing.table.AbstractTableModel;
 
 import bt747.j2se_view.J2SEController;
-import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -37,7 +36,7 @@ public class LogFileTableModel extends AbstractTableModel {
     }
 
     public final void setLogfileInfos(
-            bt747.sys.interfaces.BT747Vector logfileInfos) {
+         bt747.sys.interfaces.BT747Vector logfileInfos) {
         //this.logfileInfos = logfileInfos;
         fireTableStructureChanged();
         fireTableDataChanged();
@@ -48,6 +47,7 @@ public class LogFileTableModel extends AbstractTableModel {
     }
 
     public void notifyUpdate() {
+        bt747.sys.Generic.debug("Notified logTableChange");
         fireTableDataChanged();
     }
     /**
@@ -90,6 +90,7 @@ public class LogFileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getRowCount()
      */
     public int getRowCount() {
+        bt747.sys.Generic.debug("Row count "+getLogfileInfos().size());
         return getLogfileInfos().size();
     }
 
@@ -103,6 +104,7 @@ public class LogFileTableModel extends AbstractTableModel {
 
     private final Object getData(final Object o, final int dt) {
         // final LogFileInfo logfileinfo
+        bt747.sys.Generic.debug("GetData "+getLogfileInfos().size());
         if (o instanceof LogFileInfo) {
             LogFileInfo logfileinfo = (LogFileInfo) o;
 

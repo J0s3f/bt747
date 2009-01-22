@@ -1104,7 +1104,7 @@ public class AppSettings {
         }
     }
 
-    protected final void postEvent(final ModelEvent e) {
+    public final void postEvent(final ModelEvent e) {
         final BT747HashSet it = listeners.iterator();
         while (it.hasNext()) {
             final ModelListener l = (ModelListener) it.next();
