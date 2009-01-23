@@ -12,6 +12,7 @@
 package bt747.j2se_view;
 
 import bt747.j2se_view.model.LogFileTableModel;
+import bt747.model.Controller;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 
@@ -35,7 +36,7 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
     public void init(final J2SEAppController pC) {
         c = pC;
         m = c.getAppModel();
-        logFileModel.setLogfileInfos(J2SEController.logFiles);       
+        logFileModel.setLogfileInfos(Controller.logFiles);       
         fileTablePanel.init(pC);
         m.addListener(this);
     }

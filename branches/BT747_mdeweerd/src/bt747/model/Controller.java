@@ -14,17 +14,21 @@
 // *** *********************************************************** ***
 package bt747.model;
 
+import java.io.File;
+
 import gps.BT747Constants;
 import gps.GPSstate;
 import gps.GpsEvent;
 import gps.log.GPSFilter;
 import gps.log.GPSFilterAdvanced;
 import gps.log.GPSRecord;
+import gps.log.LogFileInfo;
 import gps.log.TracksAndWayPoints;
 import gps.log.in.BT747LogConvert;
 import gps.log.in.DPL700LogConvert;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
+import gps.log.in.MultiLogConvert;
 import gps.log.out.CommonOut;
 import gps.log.out.GPSArray;
 import gps.log.out.GPSCSVFile;
@@ -40,7 +44,9 @@ import gps.log.out.WayPointStyle;
 import gps.log.out.WayPointStyleSet;
 
 import bt747.sys.Generic;
+import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747FileName;
+import bt747.sys.interfaces.BT747Vector;
 
 /**
  * @author Mario De Weerd
@@ -351,9 +357,16 @@ public class Controller {
     public int getHeightReference(final int logType) {
         return BT747Constants.getHeightReference(logType);
     }
-
+    
     public GPSLogConvertInterface getInputConversionInstance(final int logType) {
-        final GPSLogConvertInterface lc = getInputConversionInstance();
+        final GPSLogConvertInterface lc;
+        if (Controller.logFiles.size() != 0) {
+            final MultiLogConvert mlc  = new MultiLogConvert();
+            mlc.setLogFiles(Controller.logFiles);
+            lc = mlc;
+        } else {
+            lc = getInputConversionInstance();
+        }
         final int destinationHeightReference = getHeightReference(logType);
         final int sourceHeightReference = getHeightReference(lc.getType());
         String parameters = "";
@@ -498,6 +511,10 @@ public class Controller {
 
     private int lastError;
     private String lastErrorInfo = "";
+    /**
+     * Vector of LogFileInfo.
+     */
+    public final static BT747Vector logFiles = Interface.getVectorInstance();
 
     /**
      * Convert the log into an array of trackpoints.
@@ -1609,6 +1626,16 @@ public class Controller {
 
     public void setStringOpt(final int param, final String value) {
         m.setStringOpt(param, value);
+    }
+
+    public final static void addLogFile(final File f) {
+        try {
+            final LogFileInfo loginfo = new LogFileInfo(f.getCanonicalPath(),
+                    0);
+            logFiles.addElement(loginfo);
+        } catch (final Exception e) {
+            bt747.sys.Generic.debug("Problem adding log file", e);
+        }
     }
 
 }

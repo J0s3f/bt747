@@ -42,6 +42,7 @@ import net.sf.bt747.j2se.system.J2SEVector;
 
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.ImageData;
+import bt747.model.Controller;
 import bt747.model.Model;
 import bt747.model.ModelEvent;
 import bt747.sys.Interface;
@@ -453,27 +454,6 @@ public class BT747cmd implements bt747.model.ModelListener {
 
     private TaggedFilePathFactory fpf = new TaggedFilePathFactory();
 
-    static {
-        GPSInputConversionFactory.addHandler(new GPSInputConversionFactory() {
-            /*
-             * (non-Javadoc)
-             * 
-             * @see gps.log.in.GPSInputConversionFactory#getInputConversionInstance(java.lang.String)
-             */
-            @Override
-            public final GPSLogConvertInterface getInputConversionInstance(
-                    final String logFile) {
-                if (logFile.length() == 0) {
-                    final MultiLogConvert lc = new MultiLogConvert();
-                    lc.setLogFiles(J2SEController.logFiles);
-                    return lc;
-                } else {
-                    return super.getInputConversionInstance(logFile);
-                }
-            }
-        });
-    }
-
     public final int convertLog(final int logType) {
         int error = 0;
         System.out
@@ -483,7 +463,7 @@ public class BT747cmd implements bt747.model.ModelListener {
         System.out.println("Output basename: "
                 + m.getStringOpt(Model.REPORTFILEBASE));
 
-        if (J2SEController.logFiles.size() != 0) {
+        if (Controller.logFiles.size() != 0) {
             c.setStringOpt(Model.LOGFILEPATH, "");
         }
 
@@ -1252,7 +1232,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                     if (f.exists()) {
                         if (filter.accept(f)) {
                             // Log file
-                            J2SEController.addLogFile(f);
+                            Controller.addLogFile(f);
                         } else {
                             filesToTag.add(f);
                         }
