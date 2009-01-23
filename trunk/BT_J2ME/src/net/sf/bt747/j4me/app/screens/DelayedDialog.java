@@ -4,7 +4,6 @@ import javax.microedition.lcdui.Graphics;
 
 import net.sf.bt747.j4me.app.AppController;
 
-import org.j4me.logging.Log;
 import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 
@@ -15,12 +14,13 @@ public final class DelayedDialog extends Dialog {
     private final DeviceScreen next;
     private final Class diaglogClass;
 
-    public DelayedDialog(final Class DeviceScreenClass, final AppController c,
-            final DeviceScreen previous, final DeviceScreen next) {
+    public DelayedDialog(final Class DeviceScreenClass,
+            final AppController c, final DeviceScreen previous,
+            final DeviceScreen next) {
         this.c = c;
         this.previous = previous;
         this.next = next;
-        this.diaglogClass = DeviceScreenClass;
+        diaglogClass = DeviceScreenClass;
     }
 
     public void showNotify() {
@@ -31,7 +31,7 @@ public final class DelayedDialog extends Dialog {
             deviceScreen.setNext(next);
             deviceScreen.setPrevious(previous);
             deviceScreen.show();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }

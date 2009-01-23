@@ -1,9 +1,8 @@
 package org.j4me.ui;
 
 /**
- * Changes by Mario De Weerd
- *   Added #KEY_RETURN and #returnNotify to take into account the related key
- *   on SonyEricsson devices.
+ * Changes by Mario De Weerd Added #KEY_RETURN and #returnNotify to take into
+ * account the related key on SonyEricsson devices.
  */
 
 import java.util.Timer;
@@ -19,16 +18,18 @@ import org.j4me.logging.Log;
 
 /**
  * The <code>DeviceScreen</code> class is a base class for any screen that
- * needs complete control over how it is painted. It is based on and similar to
- * the MIDP <code>Canvas</code> class.
+ * needs complete control over how it is painted. It is based on and similar
+ * to the MIDP <code>Canvas</code> class.
  * <p>
  * This class removes the following methods from the MIDP <code>Canvas</code>
  * class:
  * <ul>
- * <li><code>isDoubleBuffered</code> - This class is always double buffered.
- * <li><code>hasPointerEvents</code> and <code>hasPointerMotionEvents</code> -
- * There is no use for this method. Implement the pointer event methods and if
- * the device has no pointer they will be ignored.
+ * <li><code>isDoubleBuffered</code> - This class is always double
+ * buffered.
+ * <li><code>hasPointerEvents</code> and
+ * <code>hasPointerMotionEvents</code> - There is no use for this method.
+ * Implement the pointer event methods and if the device has no pointer they
+ * will be ignored.
  * <li> - Same reason as <code>hasPointerEvents</code>.
  * <li><code>hasRepeatEvents</code> - This class always has key repeat
  * events.
@@ -60,7 +61,8 @@ public abstract class DeviceScreen {
     /**
      * Constant for the <code>RIGHT</code> game action.
      */
-    public static final int RIGHT = -1 * javax.microedition.lcdui.Canvas.RIGHT;
+    public static final int RIGHT = -1
+            * javax.microedition.lcdui.Canvas.RIGHT;
 
     /**
      * Constant for the <code>UP</code> game action.
@@ -227,8 +229,8 @@ public abstract class DeviceScreen {
 
     /**
      * The text for the right menu button. This is the positive side used for
-     * accepting input, invoking menus, and moving forward in the application's
-     * state.
+     * accepting input, invoking menus, and moving forward in the
+     * application's state.
      */
     private String rightMenu;
 
@@ -264,10 +266,10 @@ public abstract class DeviceScreen {
     }
 
     /**
-     * Checks if this screen is actually visible on the display. In order for a
-     * screen to be visible, all of the following must be true: the MIDlet must
-     * be running in the foreground, the screen must be the current one, and the
-     * screen must not be obscured by a system screen.
+     * Checks if this screen is actually visible on the display. In order for
+     * a screen to be visible, all of the following must be true: the MIDlet
+     * must be running in the foreground, the screen must be the current one,
+     * and the screen must not be obscured by a system screen.
      * 
      * @return <code>true</code> if this screen is currently visible;
      *         <code>false</code> otherwise.
@@ -281,11 +283,11 @@ public abstract class DeviceScreen {
     }
 
     /**
-     * The implementation calls <code>showNotify()</code> immediately prior to
-     * this <code>Canvas</code> being made visible on the display.
+     * The implementation calls <code>showNotify()</code> immediately prior
+     * to this <code>Canvas</code> being made visible on the display.
      * <code>Canvas</code> subclasses may override this method to perform
-     * tasks before being shown, such as setting up animations, starting timers,
-     * etc. The default implementation of this method in class
+     * tasks before being shown, such as setting up animations, starting
+     * timers, etc. The default implementation of this method in class
      * <code>Canvas</code> is empty.
      */
     public void showNotify() {
@@ -295,8 +297,8 @@ public abstract class DeviceScreen {
      * The implementation calls <code>hideNotify()</code> shortly after the
      * <code>Canvas</code> has been removed from the display.
      * <code>Canvas</code> subclasses may override this method in order to
-     * pause animations, revoke timers, etc. The default implementation of this
-     * method in class <code>Canvas</code> is empty.
+     * pause animations, revoke timers, etc. The default implementation of
+     * this method in class <code>Canvas</code> is empty.
      */
     public void hideNotify() {
     }
@@ -305,11 +307,12 @@ public abstract class DeviceScreen {
      * Shows or hides the menu bar at the bottom of the screen.
      * 
      * @param mode
-     *            is <code>true</code> if the <code>DeviceScreen</code> is
-     *            to be in full screen mode, <code>false</code> otherwise.
+     *                is <code>true</code> if the <code>DeviceScreen</code>
+     *                is to be in full screen mode, <code>false</code>
+     *                otherwise.
      */
-    public void setFullScreenMode(boolean mode) {
-        this.fullScreenMode = mode;
+    public void setFullScreenMode(final boolean mode) {
+        fullScreenMode = mode;
     }
 
     /**
@@ -333,16 +336,16 @@ public abstract class DeviceScreen {
     }
 
     /**
-     * Sets the title of this screen. The default is <code>null</code> meaning
-     * no title.
+     * Sets the title of this screen. The default is <code>null</code>
+     * meaning no title.
      * <p>
      * For the title to be visible full screen mode must be off. This can be
      * done with the <code>setFullScreenMode</code> method.
      * 
      * @param title
-     *            is the new title for the screen.
+     *                is the new title for the screen.
      */
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
 
         // Notify the slave screen.
@@ -352,8 +355,8 @@ public abstract class DeviceScreen {
 
     /**
      * Returns if this screen displays a title bar at the top. Title bars
-     * require both setting a title (through <code>setTitle</code>) and that
-     * full screen mode is off (<code>setFullScreenMode(false)</code>).
+     * require both setting a title (through <code>setTitle</code>) and
+     * that full screen mode is off (<code>setFullScreenMode(false)</code>).
      * 
      * @return <code>true</code> if the screen has a title bar;
      *         <code>false</code> if it does not.
@@ -391,24 +394,25 @@ public abstract class DeviceScreen {
     /**
      * Sets the menu bar text.
      * <p>
-     * For the menu to be visible full screen mode must be off. This can be done
-     * with the <code>setFullScreenMode</code> method.
+     * For the menu to be visible full screen mode must be off. This can be
+     * done with the <code>setFullScreenMode</code> method.
      * 
      * @param left
-     *            is the text for the negative menu option or <code>null</code>
-     *            to remove the button. Negative menu options are things like
-     *            canceling a form and moving back to a previous screen.
+     *                is the text for the negative menu option or
+     *                <code>null</code> to remove the button. Negative menu
+     *                options are things like canceling a form and moving back
+     *                to a previous screen.
      * @param right
-     *            is the text for the positive menu option or <code>null</code>
-     *            to remove the button. Positive menu options are things like
-     *            accepting a form, advancing to the next screen, or displaying
-     *            a menu.
+     *                is the text for the positive menu option or
+     *                <code>null</code> to remove the button. Positive menu
+     *                options are things like accepting a form, advancing to
+     *                the next screen, or displaying a menu.
      * @see #declineNotify()
      * @see #acceptNotify()
      */
-    public void setMenuText(String left, String right) {
-        this.leftMenu = left;
-        this.rightMenu = right;
+    public void setMenuText(final String left, final String right) {
+        leftMenu = left;
+        rightMenu = right;
 
         // Notify the slave screen.
         slave.setMenuText(left, right);
@@ -417,8 +421,8 @@ public abstract class DeviceScreen {
 
     /**
      * Returns the text for the left menu button. The left menu button is for
-     * negative operations such as canceling a form and going back to a previous
-     * screen.
+     * negative operations such as canceling a form and going back to a
+     * previous screen.
      * 
      * @return The text for the left menu button. If there is no button this
      *         returns <code>null</code>.
@@ -428,8 +432,8 @@ public abstract class DeviceScreen {
     }
 
     /**
-     * Returns the text for the right menu button. The right menu button is for
-     * positive operations such as accepting a form and opening a menu.
+     * Returns the text for the right menu button. The right menu button is
+     * for positive operations such as accepting a form and opening a menu.
      * 
      * @return The text for the right menu button. If there is no button this
      *         returns <code>null</code>.
@@ -464,7 +468,8 @@ public abstract class DeviceScreen {
 
     /**
      * Returns the width of the usuable portion of this canvas. The usable
-     * portion excludes anything on the sides of the screen such as scroll bars.
+     * portion excludes anything on the sides of the screen such as scroll
+     * bars.
      * 
      * @return The number of pixels wide the usable portion of the canvas is.
      */
@@ -474,13 +479,13 @@ public abstract class DeviceScreen {
 
     /**
      * Returns the height of the usuable portion of this canvas. The usable
-     * portion excludes the title area and menu bar unless this canvas has been
-     * set to full screen mode.
+     * portion excludes the title area and menu bar unless this canvas has
+     * been set to full screen mode.
      * 
      * @return The number of pixels high the usable portion of the canvas is.
      */
     public int getHeight() {
-        Theme theme = UIManager.getTheme();
+        final Theme theme = UIManager.getTheme();
 
         // Get the height of the entire canvas.
         int height = getScreenHeight();
@@ -502,10 +507,10 @@ public abstract class DeviceScreen {
      * Gets the width of the entire screen in pixels.
      * <p>
      * <i>Platform bug note.</i> Motorola and early Nokia phones return the
-     * incorrect size until after the first screen has actually been displayed.
-     * So, for example, calling this from a constructor before any screen has
-     * been displayed will give incorrect data. The workaround is to put up
-     * another screen first, such as a splash screen.
+     * incorrect size until after the first screen has actually been
+     * displayed. So, for example, calling this from a constructor before any
+     * screen has been displayed will give incorrect data. The workaround is
+     * to put up another screen first, such as a splash screen.
      * 
      * @return The number of pixels wide the entire screen is.
      */
@@ -519,10 +524,10 @@ public abstract class DeviceScreen {
      * <code>getHeight</code> to get the actual usable area of the canvas.
      * <p>
      * <i>Platform bug note.</i> Motorola and early Nokia phones return the
-     * incorrect size until after the first screen has actually been displayed.
-     * So, for example, calling this from a constructor before any screen has
-     * been displayed will give incorrect data. The workaround is to put up
-     * another screen first, such as a splash screen.
+     * incorrect size until after the first screen has actually been
+     * displayed. So, for example, calling this from a constructor before any
+     * screen has been displayed will give incorrect data. The workaround is
+     * to put up another screen first, such as a splash screen.
      * 
      * @return The number of pixels high the entire screen is.
      */
@@ -564,36 +569,38 @@ public abstract class DeviceScreen {
      * Special keys, like the joystick and menu buttons, have negative values.
      * Input characters, like the number keys, are positive.
      * <p>
-     * Unlike the MIDP <code>Canvas</code> class which requires tranlation of
-     * game keys this implementation does not. The <code>keyCode</code> value
-     * will match the constants of this class.
+     * Unlike the MIDP <code>Canvas</code> class which requires tranlation
+     * of game keys this implementation does not. The <code>keyCode</code>
+     * value will match the constants of this class.
      * 
      * @param keyCode
-     *            is the key code of the key that was pressed. Negative values
-     *            are special keys like the joystick and menu buttons.
+     *                is the key code of the key that was pressed. Negative
+     *                values are special keys like the joystick and menu
+     *                buttons.
      */
-    protected void keyPressed(int keyCode) {
+    protected void keyPressed(final int keyCode) {
     }
 
     /**
-     * Called when a key is repeated (held down). It can be identified using the
-     * constants defined in this class.
+     * Called when a key is repeated (held down). It can be identified using
+     * the constants defined in this class.
      * <p>
      * Special keys, like the joystick and menu buttons, have negative values.
      * Input characters, like the number keys, are positive.
      * <p>
-     * Unlike the MIDP <code>Canvas</code> class which requires tranlation of
-     * game keys this implementation does not. The <code>keyCode</code> value
-     * will match the constants of this class.
+     * Unlike the MIDP <code>Canvas</code> class which requires tranlation
+     * of game keys this implementation does not. The <code>keyCode</code>
+     * value will match the constants of this class.
      * <p>
      * Also unlike the MIDP <code>Canvas</code> class, this implementation
      * always supports this method and does so the same across all devices.
      * 
      * @param keyCode
-     *            is the key code of the key that was held down. Negative values
-     *            are special keys like the joystick and menu buttons.
+     *                is the key code of the key that was held down. Negative
+     *                values are special keys like the joystick and menu
+     *                buttons.
      */
-    protected void keyRepeated(int keyCode) {
+    protected void keyRepeated(final int keyCode) {
     }
 
     /**
@@ -603,60 +610,61 @@ public abstract class DeviceScreen {
      * Special keys, like the joystick and menu buttons, have negative values.
      * Input characters, like the number keys, are positive.
      * <p>
-     * Unlike the MIDP <code>Canvas</code> class which requires tranlation of
-     * game keys this implementation does not. The <code>keyCode</code> value
-     * will match the constants of this class.
+     * Unlike the MIDP <code>Canvas</code> class which requires tranlation
+     * of game keys this implementation does not. The <code>keyCode</code>
+     * value will match the constants of this class.
      * 
      * @param keyCode
-     *            is the key code of the key that was released. Negative values
-     *            are special keys like the joystick and menu buttons.
+     *                is the key code of the key that was released. Negative
+     *                values are special keys like the joystick and menu
+     *                buttons.
      */
-    protected void keyReleased(int keyCode) {
+    protected void keyReleased(final int keyCode) {
     }
 
     /**
      * Called when the pointer is pressed.
      * 
      * @param x
-     *            is the horizontal location where the pointer was pressed
-     *            relative to the canvas area (i.e. does not include the title
-     *            or menu bars).
+     *                is the horizontal location where the pointer was pressed
+     *                relative to the canvas area (i.e. does not include the
+     *                title or menu bars).
      * @param y
-     *            is the vertical location where the pointer was pressed
-     *            relative to the canvas area (i.e. does not include the title
-     *            or menu bars).
+     *                is the vertical location where the pointer was pressed
+     *                relative to the canvas area (i.e. does not include the
+     *                title or menu bars).
      */
-    protected void pointerPressed(int x, int y) {
+    protected void pointerPressed(final int x, final int y) {
     }
 
     /**
      * Called when the pointer is released.
      * 
      * @param x
-     *            is the horizontal location where the pointer was pressed
-     *            relative to the canvas area (i.e. does not include the title
-     *            or menu bars).
+     *                is the horizontal location where the pointer was pressed
+     *                relative to the canvas area (i.e. does not include the
+     *                title or menu bars).
      * @param y
-     *            is the vertical location where the pointer was pressed
-     *            relative to the canvas area (i.e. does not include the title
-     *            or menu bars).
+     *                is the vertical location where the pointer was pressed
+     *                relative to the canvas area (i.e. does not include the
+     *                title or menu bars).
      */
-    protected void pointerReleased(int x, int y) {
+    protected void pointerReleased(final int x, final int y) {
     }
 
     /**
      * Called when the pointer is dragged.
      * 
      * @param x
-     *            is the horizontal location where the pointer was pressed
-     *            relative to the canvas area (i.e. does not include the title
-     *            or menu bars).
+     *                is the horizontal location where the pointer was pressed
+     *                relative to the canvas area (i.e. does not include the
+     *                title or menu bars).
      * @param y
-     *            is the vertical location where the pointer was pressed
-     *            relative to the canvas area (i.e. does not include the title
-     *            or menu bars).
+     *                is the vertical location where the pointer was pressed
+     *                relative to the canvas area (i.e. does not include the
+     *                title or menu bars).
      */
-    protected void pointerDragged(int x, int y) {
+    protected void pointerDragged(final int x, final int y) {
     }
 
     /**
@@ -703,11 +711,11 @@ public abstract class DeviceScreen {
      * @param height is the height of the rectangle to be repainted.
      * @see Canvas#serviceRepaints()
      */
-    public void repaint(int x, int y, int width, int height) {
+    public void repaint(final int x, int y, final int width, final int height) {
         if (hasTitleBar()) {
             // Offset the user's y by the height of the title bar.
-            Theme theme = UIManager.getTheme();
-            int titleHeight = theme.getTitleHeight();
+            final Theme theme = UIManager.getTheme();
+            final int titleHeight = theme.getTitleHeight();
             y += titleHeight;
         }
 
@@ -716,9 +724,9 @@ public abstract class DeviceScreen {
 
     /**
      * Forces any pending repaint requests to be serviced immediately. This
-     * method blocks until the pending requests have been serviced. If there are
-     * no pending repaints, or if this canvas is not visible on the display,
-     * this call does nothing and returns immediately.
+     * method blocks until the pending requests have been serviced. If there
+     * are no pending repaints, or if this canvas is not visible on the
+     * display, this call does nothing and returns immediately.
      */
     public void serviceRepaints() {
         slave.serviceRepaints();
@@ -727,8 +735,8 @@ public abstract class DeviceScreen {
     /**
      * Paints the background of the main section of the screen. This includes
      * everything except for the title bar at the top and menu bar at the
-     * bottom. However, if this canvas is in full screen mode, then this method
-     * paints the entire screen.
+     * bottom. However, if this canvas is in full screen mode, then this
+     * method paints the entire screen.
      * <p>
      * After this method is called, the <code>paintCanvas</code> method will
      * be.
@@ -738,17 +746,18 @@ public abstract class DeviceScreen {
      * for the entire application.
      * 
      * @param g
-     *            is the <code>Graphics</code> object to paint with.
+     *                is the <code>Graphics</code> object to paint with.
      * @see #paint(Graphics)
      */
-    protected void paintBackground(Graphics g) {
+    protected void paintBackground(final Graphics g) {
         UIManager.getTheme().paintBackground(g);
     }
 
     /**
      * Paints the main section of the screen. This includes everything except
-     * for the title bar at the top and menu bar at the bottom. However, if this
-     * canvas is in full screen mode, then this method paints the entire screen.
+     * for the title bar at the top and menu bar at the bottom. However, if
+     * this canvas is in full screen mode, then this method paints the entire
+     * screen.
      * <p>
      * Before this method is called, the <code>paintBackground</code> method
      * will be. Any painting done here will go over the background.
@@ -756,30 +765,32 @@ public abstract class DeviceScreen {
      * Override this method to paint the main area of the screen.
      * 
      * @param g
-     *            is the <code>Graphics</code> object to paint with.
+     *                is the <code>Graphics</code> object to paint with.
      * @see #paintBackground(Graphics)
      */
     protected abstract void paint(Graphics g);
 
     /**
      * Paints the title bar of the canvas. This method is called only when the
-     * title has been set through <code>setTitle</code> and the canvas is not
-     * in full screen mode.
+     * title has been set through <code>setTitle</code> and the canvas is
+     * not in full screen mode.
      * <p>
      * Override this method to change the appearance of the title bar for just
      * this canvas. To change them for the entire application, override
      * <code>Theme.paintTitleBar</code>.
      * 
      * @param g
-     *            is the <code>Graphics</code> object to paint with.
+     *                is the <code>Graphics</code> object to paint with.
      * @param title
-     *            is the text for the title bar as defined by the canvas class.
+     *                is the text for the title bar as defined by the canvas
+     *                class.
      * @param width
-     *            is the width of the title bar in pixels.
+     *                is the width of the title bar in pixels.
      * @param height
-     *            is the height of the title bar in pixels.
+     *                is the height of the title bar in pixels.
      */
-    protected void paintTitleBar(Graphics g, String title, int width, int height) {
+    protected void paintTitleBar(final Graphics g, final String title,
+            final int width, final int height) {
         UIManager.getTheme().paintTitleBar(g, title, width, height);
     }
 
@@ -793,30 +804,31 @@ public abstract class DeviceScreen {
      * strings that are too long and will not fit on the menu bar.
      * 
      * @param g
-     *            is the <code>Graphics</code> object to paint with.
+     *                is the <code>Graphics</code> object to paint with.
      * @param left
-     *            is the text to write on the left side of the menu bar. The
-     *            left side is associated with dismissing input such as a
-     *            "Cancel" button.
+     *                is the text to write on the left side of the menu bar.
+     *                The left side is associated with dismissing input such
+     *                as a "Cancel" button.
      * @param highlightLeft
-     *            is <code>true</code> if the menu text <code>left</code>
-     *            should be highlighted to indicate the left menu button is
-     *            currently pressed.
+     *                is <code>true</code> if the menu text
+     *                <code>left</code> should be highlighted to indicate
+     *                the left menu button is currently pressed.
      * @param right
-     *            is the text to write on the right side of the menu bar. The
-     *            right side is associated with accepting input such as an "OK"
-     *            button.
+     *                is the text to write on the right side of the menu bar.
+     *                The right side is associated with accepting input such
+     *                as an "OK" button.
      * @param highlightRight
-     *            is <code>true</code> if the menu text <code>right</code>
-     *            should be highlighted to indicate the right menu button is
-     *            currently pressed.
+     *                is <code>true</code> if the menu text
+     *                <code>right</code> should be highlighted to indicate
+     *                the right menu button is currently pressed.
      * @param width
-     *            is the width of the menu bar in pixels.
+     *                is the width of the menu bar in pixels.
      * @param height
-     *            is the height of the menu bar in pixels.
+     *                is the height of the menu bar in pixels.
      */
-    protected void paintMenuBar(Graphics g, String left, boolean highlightLeft,
-            String right, boolean highlightRight, int width, int height) {
+    protected void paintMenuBar(final Graphics g, final String left,
+            final boolean highlightLeft, final String right,
+            final boolean highlightRight, final int width, final int height) {
         UIManager.getTheme().paintMenuBar(g, left, highlightLeft, right,
                 highlightRight, width, height);
     }
@@ -826,23 +838,24 @@ public abstract class DeviceScreen {
      * rectangle.
      * 
      * @param g
-     *            is the current <code>Graphics</code> object for a
-     *            <code>paint</code> operation.
+     *                is the current <code>Graphics</code> object for a
+     *                <code>paint</code> operation.
      * @param x
-     *            is the pixel at the left edge of the rectangle.
+     *                is the pixel at the left edge of the rectangle.
      * @param y
-     *            is the pixel at the top edge of the rectangle.
+     *                is the pixel at the top edge of the rectangle.
      * @param w
-     *            is width of the rectangle in pixels.
+     *                is width of the rectangle in pixels.
      * @param h
-     *            is height of the rectangle in pixels.
+     *                is height of the rectangle in pixels.
      * @return <code>true</code> if the rectangle is to be painted by
      *         <code>g</code>; <code>false</code> otherwise.
      */
-    public static boolean intersects(Graphics g, int x, int y, int w, int h) {
+    public static boolean intersects(final Graphics g, final int x,
+            final int y, int w, int h) {
         // Get the graphic's clip dimensions.
-        int gx = g.getClipX();
-        int gy = g.getClipY();
+        final int gx = g.getClipX();
+        final int gy = g.getClipY();
         int gw = g.getClipWidth();
         int gh = g.getClipHeight();
 
@@ -854,8 +867,9 @@ public abstract class DeviceScreen {
 
         // Check for intersections.
         // (overflow || intersect)
-        boolean intersects = (w < x || w > gx) && (h < y || h > gy)
-                && (gw < gx || gw > x) && (gh < gy || gh > y);
+        final boolean intersects = ((w < x) || (w > gx))
+                && ((h < y) || (h > gy)) && ((gw < gx) || (gw > x))
+                && ((gh < gy) || (gh > y));
         return intersects;
     }
 }
@@ -868,9 +882,9 @@ public abstract class DeviceScreen {
 final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
         CommandListener {
     /**
-     * The interval, in milliseconds, between signaling repeat events. It can be
-     * thought of as events raised per second by taking 1000 and dividing it by
-     * this number (e.g. 1000 / 250 = 4 events per second).
+     * The interval, in milliseconds, between signaling repeat events. It can
+     * be thought of as events raised per second by taking 1000 and dividing
+     * it by this number (e.g. 1000 / 250 = 4 events per second).
      */
     private static final short REPEAT_PERIOD = 200;
 
@@ -881,26 +895,26 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * BlackBerry phones have limited native MIDlet support. The biggest issue
      * is they do not have the left and right menu buttons on other MIDP 2.0
      * phones. Instead they have a "Menu" key and a "Return" key that are big
-     * parts of the overall BlackBerry experience. To capture these key events,
-     * and make the application consistent with the BlackBerry experience, we
-     * need to create a standard LCDUI menu which the BlackBerry framework ties
-     * to these buttons.
+     * parts of the overall BlackBerry experience. To capture these key
+     * events, and make the application consistent with the BlackBerry
+     * experience, we need to create a standard LCDUI menu which the
+     * BlackBerry framework ties to these buttons.
      */
     private static boolean blackberry;
 
     /**
      * When <code>true</code> this is running in IBM's J9 JVM (also known as
-     * WEME or WebSphere Everyplace Micro Edition). When <code>false</code> it
-     * is not.
+     * WEME or WebSphere Everyplace Micro Edition). When <code>false</code>
+     * it is not.
      * <p>
-     * For Windows Mobile and Palm phones the only reliable J2ME JVM is IBM's J9
-     * JVM. There are some other good implementations that come with some
+     * For Windows Mobile and Palm phones the only reliable J2ME JVM is IBM's
+     * J9 JVM. There are some other good implementations that come with some
      * phones, such as the Motorola Q which uses Motorola's JVM.
      * <p>
-     * J9 does not support detecting soft menu buttons. We need to use its title
-     * area and menu bar instead of our own to capture these events. This also
-     * hooks into the design of these devices more closely so the application
-     * resembles others on the phone.
+     * J9 does not support detecting soft menu buttons. We need to use its
+     * title area and menu bar instead of our own to capture these events.
+     * This also hooks into the design of these devices more closely so the
+     * application resembles others on the phone.
      */
     private static boolean ibmJ9;
 
@@ -915,20 +929,20 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
     /**
      * The screen that uses this object for screen operations.
      * <p>
-     * This should only be <code>null</code> when using a dummy screen to get
-     * the dimensions. For more information see the <code>sizeChanged</code>
-     * method's comments for more information.
+     * This should only be <code>null</code> when using a dummy screen to
+     * get the dimensions. For more information see the
+     * <code>sizeChanged</code> method's comments for more information.
      */
     private final DeviceScreen master;
 
     /**
      * Executes the <code>keyRepeated</code> job every
-     * <code>REPEAT_PERIOD</code>. This value will be <code>null</code> if
-     * the user is not holding down any keys.
+     * <code>REPEAT_PERIOD</code>. This value will be <code>null</code>
+     * if the user is not holding down any keys.
      * <p>
      * Note we have to create new <code>Timer</code> objects every time we
-     * repeat keys. It does not work to create a timer once here and then try to
-     * reuse it. <i>To prevent multiple timer objects synchronize access on
+     * repeat keys. It does not work to create a timer once here and then try
+     * to reuse it. <i>To prevent multiple timer objects synchronize access on
      * <code>this</code> when dealing with <code>keyRepeatTimer</code>.</i>
      */
     private Timer keyRepeatTimer = null;
@@ -936,22 +950,22 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
     /**
      * If <code>true</code> the left menu button text should be highlighted.
      * This happens when the user presses the left menu button to indicate the
-     * event was received. Normally this will be <code>false</code> showing no
-     * menu work is in progress.
+     * event was received. Normally this will be <code>false</code> showing
+     * no menu work is in progress.
      */
     private boolean highlightLeftMenu;
 
     /**
-     * If <code>true</code> the right menu button text should be highlighted.
-     * This happens when the user presses the right menu button to indicate the
-     * event was received. Normally this will be <code>false</code> showing no
-     * menu work is in progress.
+     * If <code>true</code> the right menu button text should be
+     * highlighted. This happens when the user presses the right menu button
+     * to indicate the event was received. Normally this will be
+     * <code>false</code> showing no menu work is in progress.
      */
     private boolean highlightRightMenu;
 
     /**
-     * When we do not paint the menu bar, such as with BlackBerries and IBM's J9
-     * JVM, this contains the left menu choice. Otherwise this will be
+     * When we do not paint the menu bar, such as with BlackBerries and IBM's
+     * J9 JVM, this contains the left menu choice. Otherwise this will be
      * <code>null</code>.
      * 
      * @see #lcduiRightMenuCommand
@@ -959,8 +973,8 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
     private Command lcduiLeftMenuCommand;
 
     /**
-     * When we do not paint the menu bar, such as with BlackBerries and IBM's J9
-     * JVM, this contains the right menu choice. Otherwise this will be
+     * When we do not paint the menu bar, such as with BlackBerries and IBM's
+     * J9 JVM, this contains the right menu choice. Otherwise this will be
      * <code>null</code>.
      * 
      * @see #lcduiLeftMenuCommand
@@ -977,26 +991,28 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
         // Check if running on a BlackBerry.
         try {
             Class.forName("net.rim.device.api.ui.UiApplication");
-            blackberry = true;
-        } catch (Throwable e) // ClassNotFoundException, NoClassDefFoundError
+            CanvasWrapper.blackberry = true;
+        } catch (final Throwable e) // ClassNotFoundException,
+                                    // NoClassDefFoundError
         {
-            blackberry = false;
+            CanvasWrapper.blackberry = false;
         }
 
         // Check if running on IBM's J9 JVM.
         try {
             Class.forName("java.lang.J9VMInternals");
-            ibmJ9 = true;
-        } catch (Throwable e) // ClassNotFoundException, NoClassDefFoundError
+            CanvasWrapper.ibmJ9 = true;
+        } catch (final Throwable e) // ClassNotFoundException,
+                                    // NoClassDefFoundError
         {
-            ibmJ9 = false;
+            CanvasWrapper.ibmJ9 = false;
         }
 
         // Check if running on Tao's JVM.
         if (platform.indexOf("intent") > -1) {
-            tao = true;
+            CanvasWrapper.tao = true;
         } else {
-            tao = false;
+            CanvasWrapper.tao = false;
         }
     }
 
@@ -1004,9 +1020,9 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * Constructs a wrapper for a <code>Canvas</code>.
      * 
      * @param master
-     *            is the J4ME screen that uses this object.
+     *                is the J4ME screen that uses this object.
      */
-    public CanvasWrapper(DeviceScreen master) {
+    public CanvasWrapper(final DeviceScreen master) {
         this.master = master;
 
         // Always remove the menu bar and replace with our own.
@@ -1026,7 +1042,7 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
     private final class KeyRepeater extends TimerTask {
         private int key;
 
-        public KeyRepeater(int key) {
+        public KeyRepeater(final int key) {
             this.key = key;
         }
 
@@ -1034,7 +1050,7 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
             if (master.isShown()) {
                 try {
                     master.keyRepeated(key);
-                } catch (Throwable t) {
+                } catch (final Throwable t) {
                     t.printStackTrace();
                 }
             }
@@ -1056,10 +1072,10 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * movements which work the Yardage Anywhere cursor.
      * 
      * @param key
-     *            is code of the key that was pressed.
+     *                is code of the key that was pressed.
      */
-    protected void keyPressed(int key) {
-        int translatedKey = translateKeyCode(key);
+    protected void keyPressed(final int key) {
+        final int translatedKey = translateKeyCode(key);
 
         // Stop simulating key repeated events.
         // Holding a key down, then pressing another key, will stop
@@ -1092,12 +1108,14 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
         // w810i they can turn on the music player or browser.
 
         // Start a timer for generating key repeat events.
-        synchronized (this) // synchronize so we don't ever create more than one
+        synchronized (this) // synchronize so we don't ever create more than
+                            // one
         // timer
         {
             keyRepeatTimer = new Timer();
             keyRepeatTimer.schedule(new KeyRepeater(translatedKey),
-                    REPEAT_PERIOD*2, REPEAT_PERIOD);
+                    CanvasWrapper.REPEAT_PERIOD * 2,
+                    CanvasWrapper.REPEAT_PERIOD);
         }
     }
 
@@ -1105,14 +1123,14 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * Called when the user releases any key.
      * 
      * @param key
-     *            is code of the key that was released.
+     *                is code of the key that was released.
      */
-    protected void keyReleased(int key) {
+    protected void keyReleased(final int key) {
         // Stop simulating key repeated events.
         stopRepeatTimer();
 
         // Notify the master.
-        int translatedKey = translateKeyCode(key);
+        final int translatedKey = translateKeyCode(key);
         master.keyReleased(translatedKey);
 
         // If this is a menu key stop highlighting it.
@@ -1144,12 +1162,12 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * Maps key values to the constants defined in the outter class.
      * 
      * @param key
-     *            is code of the button pressed.
+     *                is code of the button pressed.
      * @return The integer value for the key.
      */
-    private int translateKeyCode(int key) {
+    private int translateKeyCode(final int key) {
         // Some phones have a bug where they treat the FIRE key as "Enter".
-        if (tao && (key == 13)) {
+        if (CanvasWrapper.tao && (key == 13)) {
             return DeviceScreen.FIRE;
         }
 
@@ -1167,7 +1185,7 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
 
         try {
             action = getGameAction(key);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Some phones throw an exception for unsupported keys.
             // For example the Sony Ericsson K700.
             return key;
@@ -1207,7 +1225,8 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
         // Sony Ericsson "Camera" key on side of phone: -25
         // Sony Ericsson "Volume Up" key on side of phone: -36
         // Sony Ericsson "Volume Down" key on side of phone: -37
-        // Sony Ericsson "Play/Pause Music" key on side of phone: -23 (Note this
+        // Sony Ericsson "Play/Pause Music" key on side of phone: -23 (Note
+        // this
         // is the same as Motorola's center menu button)
         // Sony Ericsson "Music Player" key: -22 (Note this is the same as
         // Motorola's right menu button)
@@ -1219,22 +1238,22 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * Called when a stylus presses the screen.
      * 
      * @param x
-     *            is the horizontal location where the pointer was pressed
+     *                is the horizontal location where the pointer was pressed
      * @param y
-     *            is the vertical location where the pointer was pressed
+     *                is the vertical location where the pointer was pressed
      */
-    protected void pointerPressed(int x, int y) {
-        Theme theme = UIManager.getTheme();
+    protected void pointerPressed(final int x, final int y) {
+        final Theme theme = UIManager.getTheme();
         boolean processed = false;
 
         // Was the stylus pressed over a menu item?
         if (master.hasMenuBar()) {
-            int menuHeight = theme.getMenuHeight();
-            int menuStart = super.getHeight() - menuHeight;
+            final int menuHeight = theme.getMenuHeight();
+            final int menuStart = super.getHeight() - menuHeight;
 
             if (y > menuStart) {
                 // The user clicked on the menu.
-                int width = super.getWidth();
+                final int width = super.getWidth();
 
                 if (x < (width / 2)) {
                     // The left menu item was clicked.
@@ -1249,10 +1268,10 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
         }
 
         // Was the stylus pressed over the title bar?
-        boolean hasTitle = master.hasTitleBar();
+        final boolean hasTitle = master.hasTitleBar();
 
         if ((processed == false) && (hasTitle == true)) {
-            int titleHeight = theme.getTitleHeight();
+            final int titleHeight = theme.getTitleHeight();
 
             if (y < titleHeight) {
                 // Ignore clicks on the title bar.
@@ -1281,16 +1300,16 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * Called when a stylus drags across the screen.
      * 
      * @param x
-     *            is the horizontal location where the pointer was pressed
+     *                is the horizontal location where the pointer was pressed
      * @param y
-     *            is the vertical location where the pointer was pressed
+     *                is the vertical location where the pointer was pressed
      */
-    protected void pointerDragged(int x, int y) {
+    protected void pointerDragged(final int x, final int y) {
         // Adjust the press location to fit in the canvas area.
         int py = y;
 
         if (master.hasTitleBar()) {
-            Theme theme = UIManager.getTheme();
+            final Theme theme = UIManager.getTheme();
             py -= theme.getTitleHeight();
         }
 
@@ -1305,16 +1324,16 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * Called when a stylus is lifted off the screen.
      * 
      * @param x
-     *            is the horizontal location where the pointer was pressed
+     *                is the horizontal location where the pointer was pressed
      * @param y
-     *            is the vertical location where the pointer was pressed
+     *                is the vertical location where the pointer was pressed
      */
-    protected void pointerReleased(int x, int y) {
+    protected void pointerReleased(final int x, final int y) {
         // Adjust the press location to fit in the canvas area.
         int py = y;
 
         if (master.hasTitleBar()) {
-            Theme theme = UIManager.getTheme();
+            final Theme theme = UIManager.getTheme();
             py -= theme.getTitleHeight();
         }
 
@@ -1326,16 +1345,16 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
     }
 
     /**
-     * Sets the title bar text. This is called by the <code>master</code> when
-     * its title is changed.
+     * Sets the title bar text. This is called by the <code>master</code>
+     * when its title is changed.
      * 
      * @param title
-     *            is the text that appears in the title bar across the top of
-     *            the screen.
+     *                is the text that appears in the title bar across the top
+     *                of the screen.
      * 
      * @see DeviceScreen#setTitle(String)
      */
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         // Does this JVM support our title bar feature?
         if (supportsTitleBar() == false) {
             // These JVMs always shows a title bar. We might as well use that
@@ -1348,22 +1367,23 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
     }
 
     /**
-     * Sets the menu bar text. This is called by the <code>master</code> when
-     * its menu is changed.
+     * Sets the menu bar text. This is called by the <code>master</code>
+     * when its menu is changed.
      * 
      * @param left
-     *            is the text for the negative menu option or <code>null</code>
-     *            to remove the button. Negative menu options are things like
-     *            canceling a form and moving back to a previous screen.
+     *                is the text for the negative menu option or
+     *                <code>null</code> to remove the button. Negative menu
+     *                options are things like canceling a form and moving back
+     *                to a previous screen.
      * @param right
-     *            is the text for the positive menu option or <code>null</code>
-     *            to remove the button. Positive menu options are things like
-     *            accepting a form, advancing to the next screen, or displaying
-     *            a menu.
+     *                is the text for the positive menu option or
+     *                <code>null</code> to remove the button. Positive menu
+     *                options are things like accepting a form, advancing to
+     *                the next screen, or displaying a menu.
      * 
      * @see DeviceScreen#setMenuText(String, String)
      */
-    public void setMenuText(String left, String right) {
+    public void setMenuText(final String left, final String right) {
         // Does this JVM support our own menu bar?
         if (supportsMenuBar() == false) {
             // BlackBerry phones do not have MIDP 2.0 left and right menu
@@ -1372,7 +1392,8 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
             // buttons
             // using the LCDUI menu functionality.
             //
-            // IBM's J9 does not forward the left and right menu button codes to
+            // IBM's J9 does not forward the left and right menu button codes
+            // to
             // us. We have to use LCDUI menu functionality.
 
             // Remove the existing menu commands.
@@ -1390,13 +1411,14 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
             if (left != null) {
                 int position;
 
-                if (blackberry) {
+                if (CanvasWrapper.blackberry) {
                     // This will be hooked up to the "Return" key and appear
                     // second on the BlackBerry menu.
                     position = 2;
                 } else // ibmJ9
                 {
-                    // This will make the button appear on the left side of the
+                    // This will make the button appear on the left side of
+                    // the
                     // menu.
                     position = 1;
                 }
@@ -1409,22 +1431,25 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
             if (right != null) {
                 int position;
 
-                if (blackberry) {
+                if (CanvasWrapper.blackberry) {
                     // This will appear first on the BlackBerry menu.
                     position = 1;
                 } else // ibmJ9
                 {
-                    // This will make the button appear on the right side of the
+                    // This will make the button appear on the right side of
+                    // the
                     // menu.
                     position = 2;
                 }
 
-                lcduiRightMenuCommand = new Command(right, Command.OK, position);
+                lcduiRightMenuCommand = new Command(right, Command.OK,
+                        position);
                 addCommand(lcduiRightMenuCommand);
 
                 // Add a dummy left menu for IBM's J9 JVM. Otherwise the right
                 // menu would actually be on the left.
-                if ((ibmJ9 || tao) && (left == null)) {
+                if ((CanvasWrapper.ibmJ9 || CanvasWrapper.tao)
+                        && (left == null)) {
                     lcduiLeftMenuCommand = new Command("", Command.CANCEL, 1);
                     addCommand(lcduiLeftMenuCommand);
                 }
@@ -1442,7 +1467,7 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      *  
      * @see javax.microedition.lcdui.CommandListener#commandAction(javax.microedition.lcdui.Command, javax.microedition.lcdui.Displayable)
      */
-    public void commandAction(Command c, Displayable d) {
+    public void commandAction(final Command c, final Displayable d) {
         // Was it our left menu command?
         if ((lcduiLeftMenuCommand != null) && (c == lcduiLeftMenuCommand)) {
             keyPressed(DeviceScreen.MENU_LEFT);
@@ -1458,14 +1483,15 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
 
     /**
      * Returns if the device supports having a menu bar at the bottom of the
-     * screen. If not then no menu bar will painted at the bottom of the screen
-     * and a standard LCDUI menu will be used instead.
+     * screen. If not then no menu bar will painted at the bottom of the
+     * screen and a standard LCDUI menu will be used instead.
      * 
      * @return <code>true</code> if the device supports a menu bar or
      *         <code>false</code> if it does not.
      */
     public boolean supportsMenuBar() {
-        if (blackberry || ibmJ9 || tao) {
+        if (CanvasWrapper.blackberry || CanvasWrapper.ibmJ9
+                || CanvasWrapper.tao) {
             // These JVMs do not show our menu bar at the bottom of the
             // screen. Instead they use the LCDUI menu system.
             return false;
@@ -1484,7 +1510,7 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      *         <code>false</code> if it does not.
      */
     public boolean supportsTitleBar() {
-        if (ibmJ9 || tao) {
+        if (CanvasWrapper.ibmJ9 || CanvasWrapper.tao) {
             // These JVMs always show a title bar. We might as well use it.
             return false;
         } else {
@@ -1502,7 +1528,8 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
         // If the key repeat timer is running, stop it.
         stopRepeatTimer();
 
-        // Don't highlight the menu options (in case we return to this screen).
+        // Don't highlight the menu options (in case we return to this
+        // screen).
         highlightLeftMenu = false;
         highlightRightMenu = false;
 
@@ -1514,19 +1541,19 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * Forces a repaint of the menu bar.
      * 
      * @param immediate
-     *            when <code>true</code> finishes the painting before this
-     *            method returns; <code>false</code> does it in the normal
-     *            paint cycle.
+     *                when <code>true</code> finishes the painting before
+     *                this method returns; <code>false</code> does it in the
+     *                normal paint cycle.
      */
-    private void repaintMenuBar(boolean immediate) {
-        Theme theme = UIManager.getTheme();
-        int menuHeight = theme.getMenuHeight();
-        int y = getHeight() - menuHeight;
+    private void repaintMenuBar(final boolean immediate) {
+        final Theme theme = UIManager.getTheme();
+        final int menuHeight = theme.getMenuHeight();
+        final int y = getHeight() - menuHeight;
 
         this.repaint(0, y, getWidth(), menuHeight);
 
         if (immediate) {
-            this.serviceRepaints();
+            serviceRepaints();
         }
     }
 
@@ -1538,18 +1565,18 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
      * <code>paintCanvas</code> method.
      * 
      * @param g
-     *            is the <code>Graphics</code> object to paint with.
+     *                is the <code>Graphics</code> object to paint with.
      * @see #paintTitleBar(Graphics, String, int, int, int, int)
      * @see #paintBackground(Graphics, int, int, int, int)
      * @see #paintCanvas(Graphics, int, int, int, int)
      * @see #paintMenuBar(Graphics, String, String, int, int, int, int)
      */
-    protected void paint(Graphics g) {
+    protected void paint(final Graphics g) {
         try {
             // Get some painting attributes.
-            Theme theme = UIManager.getTheme();
+            final Theme theme = UIManager.getTheme();
 
-            int width = getWidth();
+            final int width = getWidth();
             int height = getHeight();
 
             int titleHeight = 0;
@@ -1560,10 +1587,10 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
             String rightMenuText = null;
 
             // Get the original clip.
-            int clipX = g.getClipX();
-            int clipY = g.getClipY();
-            int clipWidth = g.getClipWidth();
-            int clipHeight = g.getClipHeight();
+            final int clipX = g.getClipX();
+            final int clipY = g.getClipY();
+            final int clipWidth = g.getClipWidth();
+            final int clipHeight = g.getClipHeight();
 
             // Paint the title bar and/or menu bar?
             if (master.isFullScreenMode() == false) {
@@ -1643,7 +1670,8 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
                     // over the menu space can show through gradient
                     // backgrounds.
                     // Clear the area completely first.
-                    int menuBackgroundColor = theme.getMenuBarBackgroundColor();
+                    final int menuBackgroundColor = theme
+                            .getMenuBarBackgroundColor();
                     g.setColor(menuBackgroundColor);
                     g.fillRect(0, 0, width, menuHeight);
 
@@ -1657,8 +1685,9 @@ final class CanvasWrapper extends javax.microedition.lcdui.Canvas implements
                     g.setClip(clipX, clipY, clipWidth, clipHeight);
                 }
             }
-        } catch (Throwable t) {
-            // Unhandled exception in paint() will crash an application and not
+        } catch (final Throwable t) {
+            // Unhandled exception in paint() will crash an application and
+            // not
             // tell you why. This lets the programmer know what caused the
             // problem.
             Log.warn("Unhandled exception in paint for " + master, t);

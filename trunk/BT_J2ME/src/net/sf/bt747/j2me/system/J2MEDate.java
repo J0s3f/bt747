@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j2me.system;
 
 import java.util.Calendar;
@@ -23,7 +23,8 @@ import bt747.sys.Generic;
 import bt747.sys.Settings;
 import bt747.sys.interfaces.BT747Date;
 
-/** J2ME Implementation for BT747Date.
+/**
+ * J2ME Implementation for BT747Date.
  * 
  * @author Mario De Weerd
  */
@@ -53,7 +54,7 @@ public final class J2MEDate implements BT747Date {
      * every time.
      */
     private static final TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
-    
+
     private static final Date INIT_DATE = new Date(0);
 
     /**
@@ -66,7 +67,7 @@ public final class J2MEDate implements BT747Date {
      */
     public J2MEDate() {
         long t = System.currentTimeMillis();
-        t -= t % (1000L*24*60*60);
+        t -= t % (1000L * 24 * 60 * 60);
         date = new java.util.Date(t);
     }
 
@@ -74,16 +75,16 @@ public final class J2MEDate implements BT747Date {
      * Constructor with date in integer format.
      * 
      * @param sentDate
-     *            Date expressed as an integer in the format DDMMYY. Where YY is
-     *            base 2000.
+     *                Date expressed as an integer in the format DDMMYY. Where
+     *                YY is base 2000.
      */
     public J2MEDate(final int sentDate) {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
-        cal.set(Calendar.DAY_OF_MONTH, sentDate / INT_10000);
-        cal
-                .set(Calendar.MONTH, sentDate / INT_100 % INT_100
-                        - (1 + Calendar.JANUARY));
-        cal.set(Calendar.YEAR, YEAR_2000 + sentDate % INT_100);
+        final Calendar cal = Calendar.getInstance(J2MEDate.GMT_ZONE);
+        cal.set(Calendar.DAY_OF_MONTH, sentDate / J2MEDate.INT_10000);
+        cal.set(Calendar.MONTH, sentDate / J2MEDate.INT_100
+                % J2MEDate.INT_100 - (1 + Calendar.JANUARY));
+        cal.set(Calendar.YEAR, J2MEDate.YEAR_2000 + sentDate
+                % J2MEDate.INT_100);
         date = cal.getTime();
     }
 
@@ -91,15 +92,15 @@ public final class J2MEDate implements BT747Date {
      * Constructor.
      * 
      * @param sentDay
-     *            Day of month.
+     *                Day of month.
      * @param sentMonth
-     *            Month (January = 1).
+     *                Month (January = 1).
      * @param sentYear
-     *            Year (full year like 1980).
+     *                Year (full year like 1980).
      */
     public J2MEDate(final int sentDay, final int sentMonth, final int sentYear) {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
-        cal.setTime(INIT_DATE);
+        final Calendar cal = Calendar.getInstance(J2MEDate.GMT_ZONE);
+        cal.setTime(J2MEDate.INIT_DATE);
         cal.set(Calendar.DAY_OF_MONTH, sentDay);
         cal.set(Calendar.MONTH, sentMonth - (1 + Calendar.JANUARY));
         cal.set(Calendar.YEAR, sentYear);
@@ -110,7 +111,7 @@ public final class J2MEDate implements BT747Date {
      * Constructor.
      * 
      * @param strDate
-     *            Date in YYMMDD format.
+     *                Date in YYMMDD format.
      */
     public J2MEDate(final String strDate) {
         this(strDate, Settings.DATE_YMD);
@@ -120,19 +121,19 @@ public final class J2MEDate implements BT747Date {
      * Constructor.
      * 
      * @param strDate
-     *            Date in 'AA/BB/CC' format.
+     *                Date in 'AA/BB/CC' format.
      * @param dateFormat
-     *            The format used for the date {@link Settings#DATE_DMY} or
-     *            {@link Settings#DATE_YMD}.
+     *                The format used for the date {@link Settings#DATE_DMY}
+     *                or {@link Settings#DATE_YMD}.
      */
     public J2MEDate(final String strDate, final byte dateFormat) {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
-        cal.setTime(INIT_DATE);
+        final Calendar cal = Calendar.getInstance(J2MEDate.GMT_ZONE);
+        cal.setTime(J2MEDate.INIT_DATE);
         java.util.Date tmp = null;
 
         try {
-            J2MEStringTokenizer fields = new J2MEStringTokenizer(strDate,
-                    '/');
+            final J2MEStringTokenizer fields = new J2MEStringTokenizer(
+                    strDate, '/');
             int arg0;
             int arg1;
             int arg2;
@@ -152,41 +153,42 @@ public final class J2MEDate implements BT747Date {
                 cal.set(Calendar.YEAR, arg2);
             }
             tmp = cal.getTime();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("Date", e);
         }
         date = tmp;
     }
 
     /**
-     * Date constructor. Application specific to be able to use the native type
-     * to construct.
+     * Date constructor. Application specific to be able to use the native
+     * type to construct.
      * 
      * @param d
-     *            The date to initialise with.
+     *                The date to initialise with.
      */
     public J2MEDate(final java.util.Date d) {
         date = new java.util.Date(d.getTime());
     }
 
-//    /**
-//     * Date constructor. Application specific to be able to use the native type
-//     * to construct.
-//     * 
-//     * @param d
-//     *            The date to initialise with.
-//     */
-//    public J2MEDate(final J2MEDate d) {
-//        date.setTime(d.getTime().getTime());
-//    }
+    // /**
+    // * Date constructor. Application specific to be able to use the native
+    // type
+    // * to construct.
+    // *
+    // * @param d
+    // * The date to initialise with.
+    // */
+    // public J2MEDate(final J2MEDate d) {
+    // date.setTime(d.getTime().getTime());
+    // }
 
     /**
      * @see bt747.util.BT747Date#advance(int)
      * @param s
-     *            number of seconds to advance the time.
+     *                number of seconds to advance the time.
      */
     public final void advance(final int s) {
-        date.setTime(date.getTime() + s * MILLISECONDS_PER_SECOND);
+        date.setTime(date.getTime() + s * J2MEDate.MILLISECONDS_PER_SECOND);
     }
 
     /**
@@ -203,7 +205,7 @@ public final class J2MEDate implements BT747Date {
      * @return number of seconds since epoch.
      */
     public final int dateToUTCepoch1970() {
-        return (int) (date.getTime() / MILLISECONDS_PER_SECOND);
+        return (int) (date.getTime() / J2MEDate.MILLISECONDS_PER_SECOND);
     }
 
     /**
@@ -219,7 +221,7 @@ public final class J2MEDate implements BT747Date {
      * @return year for current date.
      */
     public final int getYear() {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
+        final Calendar cal = Calendar.getInstance(J2MEDate.GMT_ZONE);
         cal.setTime(date);
         return cal.get(Calendar.YEAR);
     }
@@ -229,7 +231,7 @@ public final class J2MEDate implements BT747Date {
      * @return month for current date.
      */
     public final int getMonth() {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
+        final Calendar cal = Calendar.getInstance(J2MEDate.GMT_ZONE);
         cal.setTime(date);
         return cal.get(Calendar.MONTH + (1 + Calendar.JANUARY));
     }
@@ -239,7 +241,7 @@ public final class J2MEDate implements BT747Date {
      * @return day for current date.
      */
     public final int getDay() {
-        Calendar cal = Calendar.getInstance(GMT_ZONE);
+        final Calendar cal = Calendar.getInstance(J2MEDate.GMT_ZONE);
         cal.setTime(date);
         return cal.get(Calendar.DAY_OF_MONTH);
     }

@@ -1,19 +1,20 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j4me.app;
 
+import gps.GpsEvent;
 import gps.log.GPSRecord;
 
 import java.util.Date;
@@ -135,12 +136,12 @@ public final class GpsPositionScreen extends
      * Adds components for a new section of information.
      * 
      * @param title
-     *            is the name of the section.
+     *                is the name of the section.
      */
     private void createNewSection(final String title) {
         append(new HorizontalRule());
 
-        Label header = new Label();
+        final Label header = new Label();
         header.setFont(UIManager.getTheme().getMenuFont());
         header.setLabel(title);
         append(header);
@@ -164,7 +165,7 @@ public final class GpsPositionScreen extends
      * @see org.j4me.ui.DeviceScreen#acceptNotify()
      */
     protected final void acceptNotify() {
-        Menu menu = new Menu("Menu", this);
+        final Menu menu = new Menu("Menu", this);
 
         menu.show();
 
@@ -203,17 +204,17 @@ public final class GpsPositionScreen extends
         }
 
         public final void setLabel(final double d, final int i) {
-            String s = Convert.toString(d, i);
+            final String s = Convert.toString(d, i);
             setLabel(s);
         }
 
         public final void setLabel(final float f, final int i) {
-            String s = Convert.toString(f, i);
+            final String s = Convert.toString(f, i);
             setLabel(s);
         }
 
         public final void setLabel(final long l) {
-            String s = (new Date(l)).toString();
+            final String s = (new Date(l)).toString();
             setLabel(s);
         }
     }
@@ -224,7 +225,7 @@ public final class GpsPositionScreen extends
      * @param valid
      */
     private void updateValidColor(final int valid) {
-        int currentColor = latitude.getFontColor();
+        final int currentColor = latitude.getFontColor();
         int newColor;
         if (valid != 0x0001) {
             newColor = UIManager.getTheme().getFontColor();
@@ -249,19 +250,19 @@ public final class GpsPositionScreen extends
     public final void modelEvent(final ModelEvent e) {
         GPSRecord g;
         switch (e.getType()) {
-        case ModelEvent.GPRMC:
+        case GpsEvent.GPRMC:
             // GPRMC string received. Taking GPRMC parameters from GPS record.
             g = (GPSRecord) e.getArg();
             latitude.setLabel(g.latitude, 6);
             longitude.setLabel(g.longitude, 6);
-            fvTime.setLabel(((long) g.utc) * 1000L + g.milisecond);
+            fvTime.setLabel((g.utc) * 1000L + g.milisecond);
             fvSpeed.setLabel(g.speed, 1);
             fvCourse.setLabel(g.heading, 1);
             updateValidColor(g.valid);
             // Log.info("GPRMC");
             repaint();
             break;
-        case ModelEvent.GPGGA:
+        case GpsEvent.GPGGA:
             // GPGGA string received. Taking GPGGA parameters from GPS record.
             g = (GPSRecord) e.getArg();
             latitude.setLabel(g.latitude, 6);

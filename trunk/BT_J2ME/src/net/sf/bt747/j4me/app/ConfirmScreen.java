@@ -7,8 +7,8 @@ import org.j4me.ui.components.HorizontalRule;
 import org.j4me.ui.components.Label;
 
 /**
- * The "Log" screen. This shows the contents of the application's log. It is an
- * advanced screen intended for us to diagnose the application.
+ * The "Log" screen. This shows the contents of the application's log. It is
+ * an advanced screen intended for us to diagnose the application.
  */
 public final class ConfirmScreen extends Dialog {
     private Label lbText;
@@ -28,11 +28,11 @@ public final class ConfirmScreen extends Dialog {
      * Constructs the "Log" screen.
      * 
      * @param previous
-     *            is the screen that invoked this one. If this is <c>null</c>
-     *            the application will exit when this screen is dismissed.
+     *                is the screen that invoked this one. If this is <c>null</c>
+     *                the application will exit when this screen is dismissed.
      */
     public ConfirmScreen(final String title, final String textYes,
-            final String textNo, DeviceScreen ds) {
+            final String textNo, final DeviceScreen ds) {
         setTitle(title);
         previous = ds;
         this.textYes = textYes;
@@ -115,7 +115,7 @@ public final class ConfirmScreen extends Dialog {
                 isAcceptNotifyAConfirmation = false;
                 lbText.setLabel(next);
                 next = null;
-                this.show();
+                show();
             } else {
                 confirmation = true;
                 previous.show();

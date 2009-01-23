@@ -1,12 +1,15 @@
 package net.sf.bt747.j4me.app;
 
-import org.j4me.ui.*;
-import org.j4me.ui.components.*;
+import org.j4me.ui.DeviceScreen;
+import org.j4me.ui.Dialog;
+import org.j4me.ui.MenuItem;
+import org.j4me.ui.components.Component;
+import org.j4me.ui.components.MenuOption;
 
 /**
- * The "Select GPS Device" screen. When the GPS is an external Bluetooth device,
- * and more than one are available within the area of the user, this screen will
- * be shown to let them select which device is theirs.
+ * The "Select GPS Device" screen. When the GPS is an external Bluetooth
+ * device, and more than one are available within the area of the user, this
+ * screen will be shown to let them select which device is theirs.
  */
 public final class SelectGPSScreen extends Dialog {
     /**
@@ -23,9 +26,9 @@ public final class SelectGPSScreen extends Dialog {
      * Constructs the "Select GPS Device" screen.
      * 
      * @param model
-     *            is the application's location data.
+     *                is the application's location data.
      * @param previous
-     *            is the screen to return to if this one is canceled.
+     *                is the screen to return to if this one is canceled.
      */
     public SelectGPSScreen(final AppController c, final DeviceScreen previous) {
         setTitle("Select GPS Device");
@@ -36,13 +39,13 @@ public final class SelectGPSScreen extends Dialog {
 
     /**
      * Called by the Bluetooth device discovery process once completed to set
-     * the list of nearby devices. These will be displayed to the user to select
-     * from.
+     * the list of nearby devices. These will be displayed to the user to
+     * select from.
      * 
      * @param devices
-     *            are the available devices as returned from the
-     *            <c>LocationProvider.discoverBluetoothDevices</c> method. This
-     *            may not be <c>null</c>.
+     *                are the available devices as returned from the
+     *                <c>LocationProvider.discoverBluetoothDevices</c>
+     *                method. This may not be <c>null</c>.
      * @see org.j4me.bluetoothgps.LocationProvider#discoverBluetoothDevices()
      */
     public final void setAvailableDevices(final String[][] devices) {
@@ -50,11 +53,11 @@ public final class SelectGPSScreen extends Dialog {
         deleteAll();
 
         for (int i = 0; i < devices.length; i++) {
-            String[] device = devices[i];
-            String name = device[0];
-            String address = device[1];
+            final String[] device = devices[i];
+            final String name = device[0];
+            final String address = device[1];
 
-            GPSDeviceOption option = new GPSDeviceOption(name, address);
+            final GPSDeviceOption option = new GPSDeviceOption(name, address);
             append(new MenuOption(option));
         }
 
@@ -65,16 +68,16 @@ public final class SelectGPSScreen extends Dialog {
             }
 
             public void onSelection() {
-                FindingGPSDevicesAlert alert = new FindingGPSDevicesAlert(c,
-                        previous);
+                final FindingGPSDevicesAlert alert = new FindingGPSDevicesAlert(
+                        c, previous);
                 alert.show();
             }
         }));
     }
 
     /**
-     * The left menu button takes the user back to the previous screen. If there
-     * is no previous screen it has no effect.
+     * The left menu button takes the user back to the previous screen. If
+     * there is no previous screen it has no effect.
      * 
      * @see DeviceScreen#declineNotify()
      */
@@ -93,11 +96,11 @@ public final class SelectGPSScreen extends Dialog {
      */
     protected final void acceptNotify() {
         // Go to the highlighted screen.
-        int highlighted = getSelected();
-        Component component = get(highlighted);
+        final int highlighted = getSelected();
+        final Component component = get(highlighted);
 
         if (component instanceof MenuOption) {
-            MenuOption option = (MenuOption) component;
+            final MenuOption option = (MenuOption) component;
             option.select();
         }
 
@@ -123,9 +126,9 @@ public final class SelectGPSScreen extends Dialog {
          * Constructs a menu option for choosing a Bluetooth device.
          * 
          * @param name
-         *            is the name of the Bluetooth device.
+         *                is the name of the Bluetooth device.
          * @param address
-         *            is the Bluetooth URL for the device.
+         *                is the Bluetooth URL for the device.
          */
         public GPSDeviceOption(final String name, final String address) {
             this.name = name;

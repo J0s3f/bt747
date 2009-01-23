@@ -1,18 +1,20 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j4me.app;
+
+import gps.GpsEvent;
 
 import javax.microedition.lcdui.Graphics;
 
@@ -36,10 +38,10 @@ import bt747.model.ModelListener;
 
 /**
  * This is a base class for alert screens. It provides a background thread for
- * doing lengthy tasks such as retrieving data from the network. While the task
- * runs this screen shows an indefinite progress bar (a spinner) with some text
- * about what operation is going on. When the background thread completes the
- * screen dismisses itself and goes to the next screen.
+ * doing lengthy tasks such as retrieving data from the network. While the
+ * task runs this screen shows an indefinite progress bar (a spinner) with
+ * some text about what operation is going on. When the background thread
+ * completes the screen dismisses itself and goes to the next screen.
  * <p>
  * Alerts have a "Cancel" button on them if the user wants to stop the
  * operation.
@@ -77,11 +79,12 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
      * Constructs an alert screen.
      * 
      * @param title
-     *            is the alert's title.
+     *                is the alert's title.
      * @param text
-     *            is the alert message.
+     *                is the alert message.
      */
-    public LogDownloadScreen(final AppController c, final DeviceScreen previous) {
+    public LogDownloadScreen(final AppController c,
+            final DeviceScreen previous) {
         this.c = c;
         this.previous = previous;
         setTitle("Download Log");
@@ -116,7 +119,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
 
             // createNewSection("Log conditions");
             file.setLabel("Bin file:");
-            AppModel r = m();
+            final AppModel r = m();
             file.setLabel(r.getStringOpt(AppSettings.LOGFILEPATH));
             append(file);
 
@@ -142,12 +145,12 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
             m().addListener(this);
             c.startDefaultDownload();
             Log.info("Download requested");
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             Log.error("Unhandled exception in UI worker thread for "
                     + getTitle(), t);
 
             // Display the error.
-            ErrorAlert error = new ErrorAlert("Unhandled Exception", t
+            final ErrorAlert error = new ErrorAlert("Unhandled Exception", t
                     .toString(), this);
             error.show();
         }
@@ -156,7 +159,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
     private final void startDownload() {
         if (!m().isDownloadOnGoing()) {
             m().addListener(this);
-            Thread worker = new Thread(this);
+            final Thread worker = new Thread(this);
             worker.start();
         }
     }
@@ -172,7 +175,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
             progressUpdate();
             // Log.info("Download ongoing");
         } else {
-            AppModel r = m();
+            final AppModel r = m();
             file.setLabel(r.getStringOpt(AppSettings.LOGFILEPATH));
             file.repaint();
         }
@@ -196,7 +199,9 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
         Menu menu = new Menu("Log menu", this) {
             public void showNotify() {
                 if (tb.getString().length() != 0) {
-                    c.setStringOpt(AppModel.LOGFILERELPATH, tb.getString());
+                    c
+                            .setStringOpt(AppSettings.LOGFILERELPATH, tb
+                                    .getString());
                     c.setPaths();
                     tb.setString(null);
                     logDownload.show();
@@ -223,7 +228,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
 
             public void onSelection() {
                 tb.setForAnyText();
-                tb.setString(m().getStringOpt(AppModel.LOGFILERELPATH));
+                tb.setString(m().getStringOpt(AppSettings.LOGFILERELPATH));
                 // Simulate selection for entry
                 tb.keyPressed(DeviceScreen.FIRE);
                 tb.keyReleased(DeviceScreen.FIRE);
@@ -267,7 +272,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
         previous.show();
     }
 
-    protected void keyReleased(int keyCode) {
+    protected void keyReleased(final int keyCode) {
         if (keyCode == DeviceScreen.RIGHT) {
             // Show the menu
             declineNotify();
@@ -276,7 +281,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
             acceptNotify();
         } else if (keyCode == DeviceScreen.FIRE) {
             startDownload();
-        } 
+        }
         super.keyReleased(keyCode);
     }
 
@@ -312,12 +317,13 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
         // min = m().getStartAddr();
         max = m().getEndAddr();
         value = m().getNextReadAddr();
-        if (value > 0 && value < startDataIndex) {
+        if ((value > 0) && (value < startDataIndex)) {
             startDataIndex = value;
         }
 
-        long currentTime = System.currentTimeMillis();
-        if (!isShown() || !m().isDownloadOnGoing() || currentTime >= nextUpdate) {
+        final long currentTime = System.currentTimeMillis();
+        if (!isShown() || !m().isDownloadOnGoing()
+                || (currentTime >= nextUpdate)) {
             nextUpdate = currentTime + 50L;
             bar.setMaxValue(max);
             bar.setValue(value);
@@ -327,7 +333,8 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
                 bytesDownloaded.repaint();
             }
 
-            if (currentTime > smallIntervalEndTime || !m().isDownloadOnGoing()) {
+            if ((currentTime > smallIntervalEndTime)
+                    || !m().isDownloadOnGoing()) {
                 long smallSpeedBytesPerSecond;
                 long bytesPerSecond;
                 int minutes;
@@ -336,7 +343,8 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
                 int secondsDone;
                 smallSpeedBytesPerSecond = (long) ((1000. * (value - smallIntervalStartDataIndex)) / (currentTime - smallIntervalStartTime));
                 bytesPerSecond = (long) ((1000. * (value - startDataIndex)) / (currentTime - downloadStartTime));
-                // Log.debug(bytesPerSecond + " " + value + " "+ startDataIndex
+                // Log.debug(bytesPerSecond + " " + value + " "+
+                // startDataIndex
                 // + " " +currentTime + " " + downloadStartTime);
                 if (bytesPerSecond > 0) {
                     seconds = (max - value) / (bytesPerSecond);
@@ -364,7 +372,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
 
     public final void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
-        case ModelEvent.LOG_DOWNLOAD_STARTED:
+        case GpsEvent.LOG_DOWNLOAD_STARTED:
             Log.debug("Download started");
             synchronized (lock) {
                 success = false;
@@ -376,11 +384,11 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
             progressUpdate();
             break;
         /* fall through */
-        case ModelEvent.DOWNLOAD_STATE_CHANGE:
+        case GpsEvent.DOWNLOAD_STATE_CHANGE:
             // Log.debug("Progress update");
             progressUpdate();
             break;
-        case ModelEvent.LOG_DOWNLOAD_DONE:
+        case GpsEvent.LOG_DOWNLOAD_DONE:
             synchronized (lock) {
                 progressUpdate();
                 if (!success) {
@@ -391,7 +399,7 @@ public final class LogDownloadScreen extends Dialog implements ModelListener,
             }
             downloadDone();
             break;
-        case ModelEvent.LOG_DOWNLOAD_SUCCESS:
+        case GpsEvent.LOG_DOWNLOAD_SUCCESS:
             synchronized (lock) {
                 success = true;
             }

@@ -1,20 +1,21 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j4me.app;
 
 import gps.BT747Constants;
+import gps.GpsEvent;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,13 +36,15 @@ import org.j4me.ui.Theme;
 import org.j4me.ui.UIManager;
 import org.j4me.ui.components.Label;
 
+import bt747.model.AppSettings;
 import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 
 /**
  * The "Main" screen. This is the application's entry screen. It will show the
  * available special waypoints when the device is available. It will show a
- * message remembering that the device must be available if it is not available.
+ * message remembering that the device must be available if it is not
+ * available.
  */
 public final class MainScreen extends Dialog implements ModelListener {
     /**
@@ -72,12 +75,12 @@ public final class MainScreen extends Dialog implements ModelListener {
     private TimerTask ttLabels;
 
     /**
-     * We use only one instantiation of the confirmation screen (sequence). This
-     * property says what it is for. This information is required when the
-     * confirm screen sequence hands over control to the main screen again where
-     * the result is analyzed. {@link #NO_CONFIRM} indicates the screen is
-     * unused. {@link #ERASE_CONFIRM} indicates that the confirmScreen is used
-     * for erase confirmation.
+     * We use only one instantiation of the confirmation screen (sequence).
+     * This property says what it is for. This information is required when
+     * the confirm screen sequence hands over control to the main screen again
+     * where the result is analyzed. {@link #NO_CONFIRM} indicates the screen
+     * is unused. {@link #ERASE_CONFIRM} indicates that the confirmScreen is
+     * used for erase confirmation.
      */
     private int confirmScreenOption = 0;
     private final int NO_CONFIRM = 0;
@@ -101,14 +104,14 @@ public final class MainScreen extends Dialog implements ModelListener {
      * Constructs the "Main" screen.
      * 
      * @param c
-     *            Reference to the application controller
+     *                Reference to the application controller
      * @param midlet
-     *            Reference to the midlet object.
+     *                Reference to the midlet object.
      */
     public MainScreen(final AppController c, final MTKMidlet midlet) {
         this.c = c;
         this.midlet = midlet;
-        //UIManager.init(midlet);
+        // UIManager.init(midlet);
         UIManager.setTheme(new BlueTheme(getScreenWidth()));
 
         // Set the title.
@@ -121,23 +124,23 @@ public final class MainScreen extends Dialog implements ModelListener {
         setMenuText("Logger Menu", "App Menu");
 
         downloadLogScreen = new LogDownloadScreen(c, this);
-        loggerInfoScreen = new DelayedDialog(LoggerStatusScreen.class, c, this,
-                this);
+        loggerInfoScreen = new DelayedDialog(LoggerStatusScreen.class, c,
+                this, this);
         logScreen = new LogScreen(this);
         debugConfigScreen = new DebugConfigScreen(c, this);
         initialiseGPSAlert = new InitializingGPSAlert(c, this);
         findingGPSDevicesAlert = new FindingGPSDevicesAlert(c,
                 initialiseGPSAlert);
         baseDirScreen = new PathSelectionScreen("Base directory", this, m()
-                .getStringOpt(AppModel.OUTPUTDIRPATH), true) {
+                .getStringOpt(AppSettings.OUTPUTDIRPATH), true) {
             protected void notifyPathSelected(final String path) {
-                c.setStringOpt(AppModel.OUTPUTDIRPATH, path);
+                c.setStringOpt(AppSettings.OUTPUTDIRPATH, path);
                 c.setPaths();
             }
         };
         creditsScreen = new CreditsScreen(this);
-        logFieldSelectScreen = new DelayedDialog(LogFieldSelectScreen.class, c,
-                this, this);
+        logFieldSelectScreen = new DelayedDialog(LogFieldSelectScreen.class,
+                c, this, this);
 
         // Call here for debug
         // c.doConvertLog(Model.GPX_LOGTYPE);
@@ -211,7 +214,8 @@ public final class MainScreen extends Dialog implements ModelListener {
                         "Confirm erasal",
                         "Do you confirm erasal of all data in memory ???\n"
                                 + "If you did not download, YOU WILL REMOVE ALL DATA LOGGED BY THE LOGGER.",
-                        "Do you confirm erasal?\nYOU MIGHT LOOSE DATA.", myself);
+                        "Do you confirm erasal?\nYOU MIGHT LOOSE DATA.",
+                        myself);
                 confirmScreen.show();
             }
         });
@@ -224,7 +228,7 @@ public final class MainScreen extends Dialog implements ModelListener {
     /**
      * Indicates which data is shown
      */
-    private int dataShown = SHOWN_NOTHING;
+    private int dataShown = MainScreen.SHOWN_NOTHING;
     private final static int SHOWN_NOTHING = 0;
     private final static int SHOWN_WAYPOINTS_DATA = 1;
     private final static int SHOWN_NOCONNECTION = 2;
@@ -233,8 +237,8 @@ public final class MainScreen extends Dialog implements ModelListener {
 
     private void setupScreen() {
         if ((m().getLogFormat() & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
-            if (dataShown != SHOWN_WAYPOINTS_DATA) {
-                dataShown = SHOWN_WAYPOINTS_DATA;
+            if (dataShown != MainScreen.SHOWN_WAYPOINTS_DATA) {
+                dataShown = MainScreen.SHOWN_WAYPOINTS_DATA;
                 labels = null;
                 deleteAll();
                 Label[] tmpLabels = new Label[12];
@@ -263,8 +267,8 @@ public final class MainScreen extends Dialog implements ModelListener {
                 }
             }
         } else {
-            if (dataShown != SHOWN_NOCONNECTION) {
-                dataShown = SHOWN_NOCONNECTION;
+            if (dataShown != MainScreen.SHOWN_NOCONNECTION) {
+                dataShown = MainScreen.SHOWN_NOCONNECTION;
                 deleteAll();
                 append(new Label("Enable the RCR log field to enable"
                         + " advanced waypoint selection.\n"
@@ -305,8 +309,8 @@ public final class MainScreen extends Dialog implements ModelListener {
         // When this screen is shown, we are no longer waiting for erasal end
         // whatever happens.
         waitErase = false;
-        if (isFirstLaunch) {
-            isFirstLaunch = false;
+        if (MainScreen.isFirstLaunch) {
+            MainScreen.isFirstLaunch = false;
             if (m().getBluetoothGPSURL() != null) {
                 Log.debug("Port:" + m().getBluetoothGPSURL());
 
@@ -425,7 +429,7 @@ public final class MainScreen extends Dialog implements ModelListener {
                 c.closeGPS();
                 try {
                     midlet.destroyApp(true);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     Log.debug("When closing app", e);
                 }
             }
@@ -442,7 +446,7 @@ public final class MainScreen extends Dialog implements ModelListener {
      * This is synchronized to avoid potential problems from multiple threads.
      * 
      * @param i
-     *            The index of the label to be highlighted.
+     *                The index of the label to be highlighted.
      */
     private synchronized void hightlightLabel(final int i) {
         if ((labels != null) && (i < labels.length)) {
@@ -460,9 +464,10 @@ public final class MainScreen extends Dialog implements ModelListener {
      */
     private synchronized void resetLabels() {
         if (labels != null) {
-            int color = UIManager.getTheme().getFontColor();
+            final int color = UIManager.getTheme().getFontColor();
             for (int i = 0; i < labels.length; i++) {
-                if ((labels[i] != null) && (labels[i].getFontColor() != color)) {
+                if ((labels[i] != null)
+                        && (labels[i].getFontColor() != color)) {
                     labels[i].setFontColor(color);
                     labels[i].repaint();
                 }
@@ -475,7 +480,7 @@ public final class MainScreen extends Dialog implements ModelListener {
      * 
      * @see org.j4me.ui.Dialog#keyReleased(int)
      */
-    protected void keyReleased(int keyCode) {
+    protected void keyReleased(final int keyCode) {
         if (keyCode == DeviceScreen.RIGHT) {
             rootMenu.show();
         } else {
@@ -543,7 +548,7 @@ public final class MainScreen extends Dialog implements ModelListener {
      * 
      * @see org.j4me.ui.Dialog#keyPressed(int)
      */
-    protected void keyPressed(int keyCode) {
+    protected void keyPressed(final int keyCode) {
         waypointFromKey(keyCode);
         super.keyPressed(keyCode);
     }
@@ -553,7 +558,7 @@ public final class MainScreen extends Dialog implements ModelListener {
      * 
      * @see org.j4me.ui.Dialog#keyRepeated(int)
      */
-    protected void keyRepeated(int keyCode) {
+    protected void keyRepeated(final int keyCode) {
         waypointFromKey(keyCode);
         super.keyRepeated(keyCode);
     }
@@ -571,8 +576,8 @@ public final class MainScreen extends Dialog implements ModelListener {
     public void timedRun() {
         try {
             resetLabels();
-        } catch (Exception e) {
-            Log.error("timedRun in MainScreen",e);
+        } catch (final Exception e) {
+            Log.error("timedRun in MainScreen", e);
         }
     }
 
@@ -593,19 +598,19 @@ public final class MainScreen extends Dialog implements ModelListener {
             Display.getDisplay(midlet).vibrate(200);
             // com.nokia.mid.ui.DeviceControl
             break;
-        case ModelEvent.ERASE_DONE_REMOVE_POPUP:
+        case GpsEvent.ERASE_DONE_REMOVE_POPUP:
             if (waitErase) {
-                this.show();
+                show();
             }
             break;
-        case ModelEvent.UPDATE_LOG_FORMAT:
+        case GpsEvent.UPDATE_LOG_FORMAT:
             setupScreen();
             break;
         case ModelEvent.CONNECTED:
             c.reqLogFormat();
             c.reqLogStatus();
             break;
-        case ModelEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
+        case GpsEvent.DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY:
             interruptedScreen = UIManager.getScreen();
             confirmScreenOption = DOWNLOAD_OVERWRITE_CONFIRM;
             confirmScreen = new ConfirmScreen("Overwrite previous data",

@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j4me.app;
 
 import gps.BT747Constants;
@@ -25,7 +25,7 @@ public final class LogFieldSelectScreen extends BT747Dialog {
 
     private static final int C_LOG_FMT_COUNT = 21;
 
-    private CheckBox[] chkLogFmtItems = new CheckBox[C_LOG_FMT_COUNT];
+    private CheckBox[] chkLogFmtItems = new CheckBox[LogFieldSelectScreen.C_LOG_FMT_COUNT];
 
     private boolean screenSetup = false;
 
@@ -35,7 +35,7 @@ public final class LogFieldSelectScreen extends BT747Dialog {
             deleteAll();
             setTitle("Set GPS Log Format");
 
-            for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
+            for (int i = 0; i < LogFieldSelectScreen.C_LOG_FMT_COUNT; i++) {
                 chkLogFmtItems[i] = new CheckBox();
                 chkLogFmtItems[i].setLabel(Txt.logFmtItems[i]);
                 append(chkLogFmtItems[i]);
@@ -47,14 +47,15 @@ public final class LogFieldSelectScreen extends BT747Dialog {
     private int getSelectedLogFormat() {
         int bitMask = 1;
         int logFormat = 0;
-        for (int i = 0; i < C_LOG_FMT_COUNT - 1; i++) {
+        for (int i = 0; i < LogFieldSelectScreen.C_LOG_FMT_COUNT - 1; i++) {
             if (chkLogFmtItems[i].isChecked()) {
                 logFormat |= bitMask;
             }
             bitMask <<= 1;
         }
         // Special case : valid fix only
-        if (chkLogFmtItems[C_LOG_FMT_COUNT - 1].isChecked()) {
+        if (chkLogFmtItems[LogFieldSelectScreen.C_LOG_FMT_COUNT - 1]
+                .isChecked()) {
             logFormat |= (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX);
         }
         Log.debug("getSelectedLogFormat:"
@@ -84,17 +85,17 @@ public final class LogFieldSelectScreen extends BT747Dialog {
      * settings.
      * 
      * @param pLogFormat
-     *            LogFormat to set
+     *                LogFormat to set
      */
     private void updateLogFormat(final int pLogFormat) {
         Log.debug("updateLogFormat");
         int bitMask = 1;
-        for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
+        for (int i = 0; i < LogFieldSelectScreen.C_LOG_FMT_COUNT; i++) {
             chkLogFmtItems[i].setChecked((pLogFormat & bitMask) != 0);
             // chkLogFmtItems[i].repaintNow();
             bitMask <<= 1;
         }
-        chkLogFmtItems[C_LOG_FMT_COUNT - 1]
+        chkLogFmtItems[LogFieldSelectScreen.C_LOG_FMT_COUNT - 1]
                 .setChecked((pLogFormat & (1 << BT747Constants.FMT_LOG_PTS_WITH_VALID_FIX_ONLY_IDX)) != 0);
         setLogFormatControls();
     }
@@ -108,7 +109,8 @@ public final class LogFieldSelectScreen extends BT747Dialog {
             prevLogFormat = curLogFormat;
             // Should enable/disable sat settings
             // boolean sidSet;
-            // sidSet = chkLogFmtItems[BT747Constants.FMT_SID_IDX].isChecked();
+            // sidSet =
+            // chkLogFmtItems[BT747Constants.FMT_SID_IDX].isChecked();
             // chkLogFmtItems[BT747Constants.FMT_ELEVATION_IDX].
             // setEnabled(sidSet);
             // chkLogFmtItems[BT747Constants.FMT_AZIMUTH_IDX].setEnabled(sidSet);
@@ -120,12 +122,12 @@ public final class LogFieldSelectScreen extends BT747Dialog {
         }
     }
 
-    protected void keyReleased(int keyCode) {
+    protected void keyReleased(final int keyCode) {
         setLogFormatControls();
         super.keyReleased(keyCode);
     }
 
-    protected void pointerReleased(int x, int y) {
+    protected void pointerReleased(final int x, final int y) {
         setLogFormatControls();
         super.pointerReleased(x, y);
     }

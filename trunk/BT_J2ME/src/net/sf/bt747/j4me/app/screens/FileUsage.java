@@ -4,8 +4,9 @@
 
 package net.sf.bt747.j4me.app.screens;
 
-import java.util.*;
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Enumeration;
 
 // optional package wrapper interface
 // technique described in Chapter 8 of JSR 248
@@ -13,8 +14,11 @@ import java.io.*;
 public interface FileUsage {
 
     public Enumeration listRoots();
+
     public Enumeration getFiles(String path) throws IOException;
+
     public DataOutputStream open(String filename) throws IOException;
+
     public void close() throws IOException;
 
 }

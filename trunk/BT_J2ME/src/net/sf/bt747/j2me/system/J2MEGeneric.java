@@ -1,16 +1,16 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                  (c)2008 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//********************************************************************
+// ********************************************************************
+// *** BT 747 ***
+// *** (c)2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// ********************************************************************
 package net.sf.bt747.j2me.system;
 
 import java.util.Enumeration;
@@ -37,12 +37,12 @@ public final class J2MEGeneric {
 
     public static void addThread(final BT747Thread t, final boolean b) {
         // MainWindow.getMainWindow().addThread(t, b);
-        if (!oos.contains(t)) {
-            removeIfStoppedThread(t);
+        if (!J2MEGeneric.oos.contains(t)) {
+            J2MEGeneric.removeIfStoppedThread(t);
         }
-        if (!oos.contains(t)) {
+        if (!J2MEGeneric.oos.contains(t)) {
             Log.debug("Adding " + t);
-            J2METhread mt = new J2METhread(t);
+            final J2METhread mt = new J2METhread(t);
             t.started();
             mt.jvThread = new java.lang.Thread(mt);
             if (mt != null) {
@@ -51,8 +51,8 @@ public final class J2MEGeneric {
                 Log.debug("new Thread() failed");
             }
             mt.jvThread.start();
-            h.put(mt, h);
-            oos.put(t, oos);
+            J2MEGeneric.h.put(mt, J2MEGeneric.h);
+            J2MEGeneric.oos.put(t, J2MEGeneric.oos);
         } else {
             Log.debug("Already present thread " + t);
         }
@@ -60,14 +60,14 @@ public final class J2MEGeneric {
 
     public static void removeThread(final BT747Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
-        Enumeration e = h.keys();
+        final Enumeration e = J2MEGeneric.h.keys();
         while (e.hasMoreElements()) {
-            J2METhread tt = (J2METhread) e.nextElement();
+            final J2METhread tt = (J2METhread) e.nextElement();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
                 tt.btThread = null; // When this is null, the thread stops.
-                h.remove(tt);
-                oos.remove(t);
+                J2MEGeneric.h.remove(tt);
+                J2MEGeneric.oos.remove(t);
             }
         }
 
@@ -75,15 +75,15 @@ public final class J2MEGeneric {
 
     public static void removeIfStoppedThread(final BT747Thread t) {
         // MainWindow.getMainWindow().removeThread(t);
-        Enumeration e = h.keys();
+        final Enumeration e = J2MEGeneric.h.keys();
         while (e.hasMoreElements()) {
-            J2METhread tt = (J2METhread) e.nextElement();
+            final J2METhread tt = (J2METhread) e.nextElement();
             if (tt.btThread.equals(t)) {
                 // tt.jvThread.stop();
                 if (tt.running) {
                     // When this is null, the thread stops.)
-                    h.remove(tt);
-                    oos.remove(t);
+                    J2MEGeneric.h.remove(tt);
+                    J2MEGeneric.oos.remove(t);
                 }
             }
         }

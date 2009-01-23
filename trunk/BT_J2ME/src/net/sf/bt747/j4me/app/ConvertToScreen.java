@@ -3,13 +3,9 @@ package net.sf.bt747.j4me.app;
 import net.sf.bt747.j4me.app.screens.PathSelectionScreen;
 
 import org.j4me.ui.DeviceScreen;
-import org.j4me.ui.MenuItem;
-import org.j4me.ui.components.CheckBox;
 import org.j4me.ui.components.Label;
 import org.j4me.ui.components.RadioButton;
 import org.j4me.ui.components.TextBox;
-
-import com.sun.midp.io.j2me.storage.File;
 
 import bt747.model.AppSettings;
 import bt747.model.Model;
@@ -17,9 +13,9 @@ import bt747.sys.Convert;
 
 /**
  * The "Initializing GPS..." alert screen. This screen is used to get the
- * <code>LocationProvider</code> for the application. It first tries to get a
- * provider on the device. But if it cannot it will get a GPS provider through a
- * Bluetooth connection.
+ * <code>LocationProvider</code> for the application. It first tries to get
+ * a provider on the device. But if it cannot it will get a GPS provider
+ * through a Bluetooth connection.
  */
 public final class ConvertToScreen extends
         net.sf.bt747.j4me.app.screens.BT747Dialog {
@@ -72,17 +68,18 @@ public final class ConvertToScreen extends
             setTitle("Convert Log");
 
             Label l;
-            l = new Label("'" + getRightMenuText() + "' to start conversion of:");
+            l = new Label("'" + getRightMenuText()
+                    + "' to start conversion of:");
             append(l);
             tbBinFile = new TextBox() {
-                public void keyReleased(int keyCode) {
+                public void keyReleased(final int keyCode) {
                     if ((keyCode > 0) || (keyCode == DeviceScreen.FIRE)) {
                         selectBaseFile();
                     }
                 }
             };
             tbBinFile.setString(c.getAppModel().getStringOpt(
-                    AppModel.LOGFILERELPATH));
+                    AppSettings.LOGFILERELPATH));
             append(tbBinFile);
             l = new Label("Select output format:");
             append(l);
@@ -129,7 +126,7 @@ public final class ConvertToScreen extends
             rbDevice = new RadioButton();
             rbDevice.append("Default device");
             rbDevice.append("Holux M-241");
-            if (!c.getAppModel().getBooleanOpt(Model.FORCE_HOLUXM241)) {
+            if (!c.getAppModel().getBooleanOpt(AppSettings.FORCE_HOLUXM241)) {
                 rbDevice.setSelectedIndex(0);
             } else {
                 rbDevice.setSelectedIndex(1);
@@ -148,17 +145,17 @@ public final class ConvertToScreen extends
             rbHeightCorrection.append("Keep height");
             rbHeightCorrection.append("WGS84 to MSL");
             rbHeightCorrection.append("MSL to WGS84");
-            switch(m().getHeightConversionMode()) {
-            case Model.HEIGHT_AUTOMATIC:
+            switch (m().getHeightConversionMode()) {
+            case AppSettings.HEIGHT_AUTOMATIC:
                 rbFiles.setSelectedIndex(0);
                 break;
-            case Model.HEIGHT_NOCHANGE:
+            case AppSettings.HEIGHT_NOCHANGE:
                 rbFiles.setSelectedIndex(1);
                 break;
-            case Model.HEIGHT_WGS84_TO_MSL:
+            case AppSettings.HEIGHT_WGS84_TO_MSL:
                 rbFiles.setSelectedIndex(2);
                 break;
-            case Model.HEIGHT_MSL_TO_WGS84:
+            case AppSettings.HEIGHT_MSL_TO_WGS84:
                 rbFiles.setSelectedIndex(3);
                 break;
             }
@@ -167,17 +164,20 @@ public final class ConvertToScreen extends
             tbTrackSeparation = new TextBox();
             tbTrackSeparation.setForNumericOnly();
             tbTrackSeparation.setLabel("Trk separation time (min)");
-            tbTrackSeparation.setString(Integer.toString(m()
-                    .getIntOpt(AppModel.TRKSEP)));
+            tbTrackSeparation.setString(Integer.toString(m().getIntOpt(
+                    AppSettings.TRKSEP)));
             append(tbTrackSeparation);
 
             rbTimeOffsetHours = new RadioButton();
-            for (int i = 0; i < offsetStr.length; i++) {
-                rbTimeOffsetHours.append(offsetStr[i]);
+            for (int i = 0; i < ConvertToScreen.offsetStr.length; i++) {
+                rbTimeOffsetHours.append(ConvertToScreen.offsetStr[i]);
             }
-            int offsetIdx = m().getIntOpt(Model.GPSTIMEOFFSETHOURS) + 12;
+            int offsetIdx = m().getIntOpt(AppSettings.GPSTIMEOFFSETHOURS) + 12;
             if (offsetIdx > 26) {
-                c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, 0); // TODO: Change in call to control
+                c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, 0); // TODO:
+                                                                // Change in
+                                                                // call to
+                                                                // control
                 offsetIdx = 12;
             }
             rbTimeOffsetHours.setSelectedIndex(offsetIdx);
@@ -188,6 +188,7 @@ public final class ConvertToScreen extends
     private final AppModel m() {
         return c.getAppModel();
     }
+
     public void show() {
         setUpScreen();
         super.show();
@@ -199,27 +200,30 @@ public final class ConvertToScreen extends
         c.setOutputFileSplitType(rbFiles.getSelectedIndex());
         switch (rbHeightCorrection.getSelectedIndex()) {
         case 0:
-            c.setHeightConversionMode(Model.HEIGHT_AUTOMATIC);
+            c.setHeightConversionMode(AppSettings.HEIGHT_AUTOMATIC);
             break;
         case 1:
-            c.setHeightConversionMode(Model.HEIGHT_NOCHANGE);
+            c.setHeightConversionMode(AppSettings.HEIGHT_NOCHANGE);
             break;
         case 2:
-            c.setHeightConversionMode(Model.HEIGHT_WGS84_TO_MSL);
+            c.setHeightConversionMode(AppSettings.HEIGHT_WGS84_TO_MSL);
             break;
         case 3:
-            c.setHeightConversionMode(Model.HEIGHT_MSL_TO_WGS84);
+            c.setHeightConversionMode(AppSettings.HEIGHT_MSL_TO_WGS84);
             break;
         }
-        c.setIntOpt(Model.TRKSEP,Integer.parseInt(tbTrackSeparation.getString()));
-        c.setBooleanOpt(Model.FORCE_HOLUXM241, rbDevice.getSelectedIndex() == 1);
+        c.setIntOpt(AppSettings.TRKSEP, Integer.parseInt(tbTrackSeparation
+                .getString()));
+        c.setBooleanOpt(AppSettings.FORCE_HOLUXM241, rbDevice
+                .getSelectedIndex() == 1);
         int index = 0;
         // Work around superwaba bug
-        String tmp = (String) rbTimeOffsetHours.getSelectedValue();
+        final String tmp = rbTimeOffsetHours.getSelectedValue();
         if (tmp.charAt(0) == '+') {
             index = 1;
         }
-        c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Convert.toInt((String) tmp.substring(index)));
+        c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Convert.toInt(tmp
+                .substring(index)));
 
         progressScreen = new ConvertToProgressScreen(c, previous,
                 getSelectedLogType());
@@ -237,15 +241,16 @@ public final class ConvertToScreen extends
     // TODO: to generalise
     private void selectBaseFile() {
         DeviceScreen d;
-        d = new PathSelectionScreen("Input file", this, m()
-                .getStringOpt(AppModel.LOGFILEPATH), false) {
+        d = new PathSelectionScreen("Input file", this, m().getStringOpt(
+                AppSettings.LOGFILEPATH), false) {
             protected void notifyPathSelected(final String path) {
-                c.setStringOpt(AppModel.LOGFILERELPATH, gps.convert.FileUtil
-                        .getRelativePath(m().getStringOpt(
-                                AppModel.OUTPUTDIRPATH), path, '/'));
+                c.setStringOpt(AppSettings.LOGFILERELPATH,
+                        gps.convert.FileUtil.getRelativePath(m()
+                                .getStringOpt(AppSettings.OUTPUTDIRPATH),
+                                path, '/'));
                 c.setPaths();
                 tbBinFile.setString(m().getStringOpt(
-                        AppModel.LOGFILERELPATH));
+                        AppSettings.LOGFILERELPATH));
             }
         };
         d.show();
@@ -257,40 +262,40 @@ public final class ConvertToScreen extends
             /**
              * CSV log type (Comma Separated Values).
              */
-            return (AppModel.CSV_LOGTYPE);
+            return (Model.CSV_LOGTYPE);
         case 1:
             /**
              * GMAP log type (Google Map - html output).
              */
-            return (AppModel.GMAP_LOGTYPE);
+            return (Model.GMAP_LOGTYPE);
         case 2:
             /**
              * GPX log type (gpx format).
              */
-            return (AppModel.GPX_LOGTYPE);
+            return (Model.GPX_LOGTYPE);
         case 3:
             /**
              * KML log type ('Google Earth' format).
              */
-            return (AppModel.KML_LOGTYPE);
+            return (Model.KML_LOGTYPE);
         case 4:
             /**
              * NMEA log type (NMEA strings - text format - similar to GPS
              * output).
              */
-            return (AppModel.NMEA_LOGTYPE);
+            return (Model.NMEA_LOGTYPE);
         case 5:
             /**
              * Compe GPS log type (Writes PLT and WPT files).
              */
-            return (AppModel.PLT_LOGTYPE);
+            return (Model.PLT_LOGTYPE);
         case 6:
             /**
              * log type (Writes TRK and WPT files).
              */
-            return (AppModel.TRK_LOGTYPE);
+            return (Model.TRK_LOGTYPE);
         default:
-            return (AppModel.CSV_LOGTYPE);
+            return (Model.CSV_LOGTYPE);
         }
     }
 }

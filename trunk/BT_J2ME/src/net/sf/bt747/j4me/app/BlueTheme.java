@@ -15,9 +15,9 @@ public final class BlueTheme extends Theme {
 
     public BlueTheme(final int width) {
         Log.debug("BlueTheme");
-        if (MEDIUM_FONT == null) {
+        if (BlueTheme.MEDIUM_FONT == null) {
             Font base;
-            int baseFace = Font.getDefaultFont().getFace();
+            final int baseFace = Font.getDefaultFont().getFace();
             int maxsize;
             Log.debug("Default size " + Font.getDefaultFont().charWidth('0'));
             Log.debug("Width " + width);
@@ -34,141 +34,141 @@ public final class BlueTheme extends Theme {
             }
             Log.debug("New size " + base.charWidth('0'));
 
-            MEDIUM_FONT = base;
-            MEDIUM_FONT_BOLD = Font.getFont(base.getFace(), Font.STYLE_BOLD
-                    | Font.STYLE_PLAIN, base.getSize());
+            BlueTheme.MEDIUM_FONT = base;
+            BlueTheme.MEDIUM_FONT_BOLD = Font.getFont(base.getFace(),
+                    Font.STYLE_BOLD | Font.STYLE_PLAIN, base.getSize());
         }
     }
 
     public final Font getFont() {
-        return MEDIUM_FONT;
+        return BlueTheme.MEDIUM_FONT;
     }
 
     public final Font getMenuFont() {
-        return MEDIUM_FONT;
+        return BlueTheme.MEDIUM_FONT;
     }
 
     public final Font getTitleFont() {
-        return MEDIUM_FONT_BOLD;
+        return BlueTheme.MEDIUM_FONT_BOLD;
     }
 
     /**
      * @see Theme#getBackgroundColor()
      */
     public final int getBackgroundColor() {
-        return WHITE;
+        return Theme.WHITE;
     }
 
     /**
      * @see Theme#getFontColor()
      */
     public final int getFontColor() {
-        return NAVY;
+        return Theme.NAVY;
     }
 
     /**
      * @see Theme#getBorderColor()
      */
     public final int getBorderColor() {
-        return NAVY;
+        return Theme.NAVY;
     }
 
     /**
      * @see Theme#getHighlightColor()
      */
     public final int getHighlightColor() {
-        return LIGHT_BLUE;
+        return Theme.LIGHT_BLUE;
     }
 
     /**
      * @see Theme#getMenuBarBackgroundColor()
      */
     public final int getMenuBarBackgroundColor() {
-        return NAVY;
+        return Theme.NAVY;
     }
 
     /**
      * @see Theme#getMenuBarHighlightColor()
      */
     public final int getMenuBarHighlightColor() {
-        return LIGHT_BLUE;
+        return Theme.LIGHT_BLUE;
     }
 
     /**
      * @see Theme#getMenuBarBorderColor()
      */
     public final int getMenuBarBorderColor() {
-        return WHITE;
+        return Theme.WHITE;
     }
 
     /**
      * @see Theme#getMenuFontColor()
      */
     public final int getMenuFontColor() {
-        return WHITE;
+        return Theme.WHITE;
     }
 
     /**
      * @see Theme#getMenuFontHighlightColor()
      */
     public final int getMenuFontHighlightColor() {
-        return SILVER;
+        return Theme.SILVER;
     }
 
     /**
      * @see Theme#getTitleBarBackgroundColor()
      */
     public final int getTitleBarBackgroundColor() {
-        return NAVY;
+        return Theme.NAVY;
     }
 
     /**
      * @see Theme#getTitleBarHighlightColor()
      */
     public final int getTitleBarHighlightColor() {
-        return BLUE;
+        return Theme.BLUE;
     }
 
     /**
      * @see Theme#getTitleBarBorderColor()
      */
     public final int getTitleBarBorderColor() {
-        return LIGHT_BLUE;
+        return Theme.LIGHT_BLUE;
     }
 
     /**
      * @see Theme#getTitleFontColor()
      */
     public final int getTitleFontColor() {
-        return WHITE;
+        return Theme.WHITE;
     }
 
     /**
      * @see Theme#getScrollbarBackgroundColor()
      */
     public final int getScrollbarBackgroundColor() {
-        return BLUE;
+        return Theme.BLUE;
     }
 
     /**
      * @see Theme#getScrollbarHighlightColor()
      */
     public final int getScrollbarHighlightColor() {
-        return SILVER;
+        return Theme.SILVER;
     }
 
     /**
      * @see Theme#getScrollbarBorderColor()
      */
     public final int getScrollbarBorderColor() {
-        return BLUE;
+        return Theme.BLUE;
     }
 
     /**
      * @see Theme#getScrollbarTrackbarColor()
      */
     public final int getScrollbarTrackbarColor() {
-        return BLUE;
+        return Theme.BLUE;
     }
 
     public final String getMenuTextForCancel() {

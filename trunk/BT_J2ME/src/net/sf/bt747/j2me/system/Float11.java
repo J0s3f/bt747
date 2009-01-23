@@ -2,16 +2,19 @@ package net.sf.bt747.j2me.system;
 
 /*
  * <p>Title: Class for float-point calculations in J2ME applications CLDC 1.1</p>
- * <p>Description: Useful methods for float-point calculations which absent in native Math class</p>
- * <p>Copyright: Copyright (c) 2004 Nick Henson</p>
- * <p>Company: UNTEH</p>
- * <p>License: Free use only for non-commercial purpose</p>
- * <p>If you want to use all or part of this class for commercial applications then take into account these conditions:</p>
- * <p>1. I need a one copy of your product which includes my class with license key and so on</p>
- * <p>2. Please append my copyright information henson.midp.Float (C) by Nikolay Klimchuk on 'About' screen of your product</p>
- * <p>3. If you have web site please append link <a href="http://henson.newmail.ru">Nikolay Klimchuk</a> on the page with description of your product</p>
- * <p>That's all, thank you!</p>
- * @author Nikolay Klimchuk http://henson.newmail.ru
+ * <p>Description: Useful methods for float-point calculations which absent
+ * in native Math class</p> <p>Copyright: Copyright (c) 2004 Nick Henson</p>
+ * <p>Company: UNTEH</p> <p>License: Free use only for non-commercial
+ * purpose</p> <p>If you want to use all or part of this class for
+ * commercial applications then take into account these conditions:</p> <p>1.
+ * I need a one copy of your product which includes my class with license key
+ * and so on</p> <p>2. Please append my copyright information
+ * henson.midp.Float (C) by Nikolay Klimchuk on 'About' screen of your product</p>
+ * <p>3. If you have web site please append link <a
+ * href="http://henson.newmail.ru">Nikolay Klimchuk</a> on the page with
+ * description of your product</p> <p>That's all, thank you!</p> @author
+ * Nikolay Klimchuk http://henson.newmail.ru
+ * 
  * @version 0.5
  */
 
@@ -25,7 +28,7 @@ final class Float11 {
 
     //
     public static double acos(final double x) {
-        double f = asin(x);
+        final double f = Float11.asin(x);
         if (f == Double.NaN) {
             return f;
         }
@@ -33,7 +36,7 @@ final class Float11 {
     }
 
     public static double asin(final double x) {
-        if (x < -1. || x > 1.) {
+        if ((x < -1.) || (x > 1.)) {
             return Double.NaN;
         }
         if (x == -1.) {
@@ -42,7 +45,7 @@ final class Float11 {
         if (x == 1) {
             return Math.PI / 2;
         }
-        return atan(x / Math.sqrt(1 - x * x));
+        return Float11.atan(x / Math.sqrt(1 - x * x));
     }
 
     public static double atan(final double arg) {
@@ -66,9 +69,9 @@ final class Float11 {
         // process shrinking the domain until x<PI/12
         while (x > Math.PI / 12) {
             sp++;
-            a = x + SQRT3;
+            a = x + Float11.SQRT3;
             a = 1 / a;
-            x = x * SQRT3;
+            x = x * Float11.SQRT3;
             x = x - 1;
             x = x * a;
         }
@@ -98,19 +101,19 @@ final class Float11 {
 
     public static double atan2(final double y, final double x) {
         // if x=y=0
-        if (y == 0. && x == 0.) {
+        if ((y == 0.) && (x == 0.)) {
             return 0.;
         }
         // if x>0 atan(y/x)
         if (x > 0.) {
-            return atan(y / x);
+            return Float11.atan(y / x);
         }
         // if x<0 sign(y)*(pi - atan(|y/x|))
         if (x < 0.) {
             if (y < 0.) {
-                return -(Math.PI - atan(y / x));
+                return -(Math.PI - Float11.atan(y / x));
             } else {
-                return Math.PI - atan(-y / x);
+                return Math.PI - Float11.atan(-y / x);
             }
         }
         // if x=0 y!=0 sign(y)*pi/2
@@ -121,15 +124,15 @@ final class Float11 {
         }
     }
 
-    public static double exp( double x) {
+    public static double exp(double x) {
         if (x == 0.) {
             return 1.;
         }
         //
         double f = 1;
-        long d = 1;
+        final long d = 1;
         double k;
-        boolean isless = (x < 0.);
+        final boolean isless = (x < 0.);
         if (isless) {
             x = -x;
         }
@@ -155,7 +158,7 @@ final class Float11 {
         double f = 0.0;
         //
         int appendix = 0;
-        while (x > 0.0 && x <= 1.0) {
+        while ((x > 0.0) && (x <= 1.0)) {
             x *= 2.0;
             appendix++;
         }
@@ -163,9 +166,9 @@ final class Float11 {
         x /= 2.0;
         appendix--;
         //
-        double y1 = x - 1.;
+        final double y1 = x - 1.;
         double y2 = x + 1.;
-        double y = y1 / y2;
+        final double y = y1 / y2;
         //
         double k = y;
         y2 = k * y;
@@ -177,7 +180,7 @@ final class Float11 {
         //
         f *= 2.0;
         for (int i = 0; i < appendix; i++) {
-            f += LOGdiv2;
+            f += Float11.LOGdiv2;
         }
         //
         return f;
@@ -194,20 +197,20 @@ final class Float11 {
         // Argument of _log must be (0; 1]
         if (x > 1.) {
             x = 1 / x;
-            return -_log(x);
+            return -Float11._log(x);
         }//
-        return _log(x);
+        return Float11._log(x);
     }
 
     public static double log10(final double x) {
-        return log(x) / LOG10;
+        return Float11.log(x) / Float11.LOG10;
     }
 
     /*
      * static public double log10(double x) { if(!(x>0.)) return Double.NaN; //
-     * boolean neg=false; if(x<0) { neg=true; x=-x; } // int index=0; if(x>1.) { //
-     * Great 1 while(x>1.) { x=x/10; index++; } } else { // Less 1 while(x<1.) {
-     * x=x*10.; index--; } } // double res=index; if(x!=1.)
+     * boolean neg=false; if(x<0) { neg=true; x=-x; } // int index=0;
+     * if(x>1.) { // Great 1 while(x>1.) { x=x/10; index++; } } else { // Less
+     * 1 while(x<1.) { x=x*10.; index--; } } // double res=index; if(x!=1.)
      * res=res+(log(x)/LOG10); // if(neg) return 1./res; else return res; }
      */
     public static double pow(final double x, final double y) {
@@ -225,7 +228,7 @@ final class Float11 {
         }
         //
         long l = (long) Math.floor(y);
-        boolean integerValue = (y == (double) l);
+        final boolean integerValue = (y == l);
         //
         if (integerValue) {
             boolean neg = false;
@@ -245,7 +248,7 @@ final class Float11 {
             }
         } else {
             if (x > 0.) {
-                return exp(y * log(x));
+                return Float11.exp(y * Float11.log(x));
             } else {
                 return Double.NaN;
             }

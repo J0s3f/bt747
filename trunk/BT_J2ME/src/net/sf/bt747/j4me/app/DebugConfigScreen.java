@@ -4,6 +4,8 @@ import org.j4me.ui.DeviceScreen;
 import org.j4me.ui.Dialog;
 import org.j4me.ui.components.CheckBox;
 
+import bt747.model.Model;
+
 public final class DebugConfigScreen extends Dialog {
 
     private DeviceScreen previous;
@@ -17,11 +19,12 @@ public final class DebugConfigScreen extends Dialog {
 
     private boolean screenSetup = false;
 
-    public DebugConfigScreen(AppController c, DeviceScreen previous) {
+    public DebugConfigScreen(final AppController c,
+            final DeviceScreen previous) {
         this.previous = previous;
         this.c = c;
     }
-    
+
     private void setupScreen() {
         if (!screenSetup) {
             screenSetup = true;
@@ -38,7 +41,7 @@ public final class DebugConfigScreen extends Dialog {
             append(cbGpsRawDebug);
 
             cbGeneralDebug = new CheckBox();
-            cbGeneralDebug.setChecked(AppModel.isDebug());
+            cbGeneralDebug.setChecked(Model.isDebug());
             cbGeneralDebug.setLabel("Enable extra debug console info");
             append(cbGeneralDebug);
 

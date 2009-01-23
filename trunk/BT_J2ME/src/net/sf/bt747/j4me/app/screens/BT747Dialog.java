@@ -14,15 +14,15 @@ public abstract class BT747Dialog extends Dialog {
     public BT747Dialog() {
     }
 
-    public final void setController(AppController c) {
+    public final void setController(final AppController c) {
         this.c = c;
     }
 
-    public final void setPrevious(DeviceScreen previous) {
+    public final void setPrevious(final DeviceScreen previous) {
         this.previous = previous;
     }
 
-    public final void setNext(DeviceScreen next) {
+    public final void setNext(final DeviceScreen next) {
         this.next = next;
     }
 }

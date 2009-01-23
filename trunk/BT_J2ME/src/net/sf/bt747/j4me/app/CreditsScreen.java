@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j4me.app;
 
 import org.j4me.ui.DeviceScreen;
@@ -35,13 +35,14 @@ public class CreditsScreen extends Dialog {
      * Constructs the "Credits" screen.
      * 
      * @param previous
-     *            is the screen that invoked this one. If this is <c>null</c>
-     *            the application will exit when this screen is dismissed.
+     *                is the screen that invoked this one. If this is <c>null</c>
+     *                the application will exit when this screen is dismissed.
      */
     public CreditsScreen(final DeviceScreen previous) {
         this.previous = previous;
 
     }
+
     private void setupScreen() {
         if (!screenSetup) {
             setTitle("Credits");
@@ -66,7 +67,7 @@ public class CreditsScreen extends Dialog {
             append(lbText);
         }
     }
-    
+
     public void showNotify() {
         setupScreen();
     }
