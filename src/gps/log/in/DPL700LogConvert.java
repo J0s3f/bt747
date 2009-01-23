@@ -45,7 +45,7 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
     static final int PHOTOTRACKR = 1;
     static final int ITRACKU_SIRFIII = 2;
 
-    private int logType = ITRACKU_NUMERIX;
+    private int logType = DPL700LogConvert.ITRACKU_NUMERIX;
 
     public DPL700LogConvert() {
         super();
@@ -81,10 +81,10 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
     public int parseFile(final Object file,
             final GPSFileConverterInterface gpsFile) {
         try {
-            File inFile = (File) file;
+            final File inFile = (File) file;
             GPSRecord r = GPSRecord.getLogFormatRecord(0);
             final int C_BUF_SIZE = 0x800;
-            byte[] bytes = new byte[C_BUF_SIZE];
+            final byte[] bytes = new byte[C_BUF_SIZE];
             int sizeToRead;
             int nextAddrToRead;
             int recCount;
@@ -100,7 +100,7 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
             logFormat = 0;
             nextAddrToRead = 0;
             fileSize = inFile.getSize();
-            while (!stop && nextAddrToRead + recordSize + 1 < fileSize) {
+            while (!stop && (nextAddrToRead + recordSize + 1 < fileSize)) {
                 sizeToRead = C_BUF_SIZE;
                 if ((sizeToRead + nextAddrToRead) > fileSize) {
                     sizeToRead = fileSize - nextAddrToRead;
@@ -198,47 +198,47 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                             case ITRACKU_SIRFIII:
                                 // NEMERIX
                                 // Get information from log file
-                                longitude = (X_FF & bytes[recIdx++]) << 0
-                                        | (X_FF & bytes[recIdx++]) << 8
-                                        | (X_FF & bytes[recIdx++]) << 16
-                                        | (X_FF & bytes[recIdx++]) << 24;
-                                latitude = (X_FF & bytes[recIdx++]) << 0
-                                        | (X_FF & bytes[recIdx++]) << 8
-                                        | (X_FF & bytes[recIdx++]) << 16
-                                        | (X_FF & bytes[recIdx++]) << 24;
-                                r.utc = (X_FF & bytes[recIdx++]) << 0
-                                        | (X_FF & bytes[recIdx++]) << 8
-                                        | (X_FF & bytes[recIdx++]) << 16
-                                        | (X_FF & bytes[recIdx++]) << 24;
-                                altitude = (X_FF & bytes[recIdx++]) << 0
-                                        | (X_FF & bytes[recIdx++]) << 8;
+                                longitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
+                                latitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
+                                r.utc = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
+                                altitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8;
                                 r.height = altitude;
                                 CommonIn
                                         .convertHeight(r,
                                                 factorConversionWGS84ToMSL,
                                                 logFormat);
-                                speed = (X_FF & bytes[recIdx++]) << 0;
-                                tag = (X_FF & bytes[recIdx++]) << 0;
+                                speed = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                tag = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
                                 break;
                             default:
                                 // NEMERIX
                                 // Get information from log file
-                                longitude = (X_FF & bytes[recIdx++]) << 0
-                                        | (X_FF & bytes[recIdx++]) << 8
-                                        | (X_FF & bytes[recIdx++]) << 16
-                                        | (X_FF & bytes[recIdx++]) << 24;
-                                latitude = (X_FF & bytes[recIdx++]) << 0
-                                        | (X_FF & bytes[recIdx++]) << 8
-                                        | (X_FF & bytes[recIdx++]) << 16
-                                        | (X_FF & bytes[recIdx++]) << 24;
-                                year = (X_FF & bytes[recIdx++]) << 0;
-                                month = (X_FF & bytes[recIdx++]) << 0;
-                                day = (X_FF & bytes[recIdx++]) << 0;
-                                hour = (X_FF & bytes[recIdx++]) << 0;
-                                minutes = (X_FF & bytes[recIdx++]) << 0;
-                                seconds = (X_FF & bytes[recIdx++]) << 0;
-                                speed = (X_FF & bytes[recIdx++]) << 0;
-                                tag = (X_FF & bytes[recIdx++]) << 0;
+                                longitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
+                                latitude = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 8
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 16
+                                        | (DPL700LogConvert.X_FF & bytes[recIdx++]) << 24;
+                                year = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                month = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                day = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                hour = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                minutes = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                seconds = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                speed = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
+                                tag = (DPL700LogConvert.X_FF & bytes[recIdx++]) << 0;
                                 r.utc = (Interface.getDateInstance(day,
                                         month, year + 2000))
                                         .dateToUTCepoch1970();
@@ -263,9 +263,9 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                             // on longitude to get an integer result!
                             // The objective is to get the first digits
                             // of the number.
-                            r.longitude = ((double) ((int) (longitude / 1000000)))
+                            r.longitude = (((longitude / 1000000)))
                                     + ((longitude % 1000000) / 600000.0);
-                            r.latitude = ((double) ((int) (latitude / 1000000)))
+                            r.latitude = (((latitude / 1000000)))
                                     + ((latitude % 1000000) / 600000.0);
                             r.speed = speed * 1.852f;
 
@@ -278,7 +278,7 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
                 } /* ContinueInBuffer */
                 nextAddrToRead -= (sizeToRead - offsetInBuffer);
             } /* nextAddrToRead<fileSize */
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("", e);
         }
         return BT747Constants.NO_ERROR;
@@ -291,7 +291,7 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#getFileObject()
      */
-    protected Object getFileObject(String fileName, int card) {
+    protected Object getFileObject(final String fileName, final int card) {
         File inFile = null;
 
         if (File.isAvailable()) {
@@ -310,7 +310,7 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#closeFileObject(java.lang.Object)
      */
-    protected void closeFileObject(Object o) {
+    protected void closeFileObject(final Object o) {
         ((File) o).close();
     }
 
@@ -338,7 +338,7 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
 
                 closeFileObject(inFile);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("", e);
         }
         return error;
@@ -363,7 +363,9 @@ public final class DPL700LogConvert extends GPSLogConvertInterface {
         return GPSRecord.getLogFormatRecord(logfmt);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.in.GPSLogConvertInterface#getType()
      */
     public int getType() {

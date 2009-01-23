@@ -46,7 +46,7 @@ public final class GPSConversionParameters {
         return ((MyInt) getParam(param)).i;
     }
 
-    public final void setIntParam(final String param, int i) {
+    public final void setIntParam(final String param, final int i) {
         setParam(param, new MyInt(i));
     }
 
@@ -54,7 +54,7 @@ public final class GPSConversionParameters {
         return ((MyInt) getParam(param)).i != 0;
     }
 
-    public final void setBoolParam(final String param, boolean b) {
+    public final void setBoolParam(final String param, final boolean b) {
         setParam(param, new MyInt(b ? 1 : 0));
     }
 
@@ -62,7 +62,7 @@ public final class GPSConversionParameters {
     private final static class MyInt {
         final int i;
 
-        public MyInt(int i) {
+        public MyInt(final int i) {
             this.i = i;
         }
     }

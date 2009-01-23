@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package bt747.sys;
 
 import bt747.sys.interfaces.BT747Thread;
@@ -32,7 +32,7 @@ public final class Generic {
     }
 
     public static final void debug(final String s) {
-        Interface.tr.debug(getTimeStamp() + " - " + s);
+        Interface.tr.debug(Generic.getTimeStamp() + " - " + s);
     }
 
     /**
@@ -41,7 +41,7 @@ public final class Generic {
      * @return debug level.
      */
     public static int getDebugLevel() {
-        return debugLevel;
+        return Generic.debugLevel;
     }
 
     /**
@@ -50,26 +50,26 @@ public final class Generic {
      * @return true if debug level is not 0.
      */
     public static final boolean isDebug() {
-        return debugLevel != 0;
+        return Generic.debugLevel != 0;
     }
 
     /**
      * Set the debug level.
      * 
      * @param level
-     *            Level.
+     *                Level.
      */
     public static final void setDebugLevel(final int level) {
-        debugLevel = level;
+        Generic.debugLevel = level;
     }
 
     /**
      * Calculate x^^y. (x to the power of y)
      * 
      * @param x
-     *            x.
+     *                x.
      * @param y
-     *            y.
+     *                y.
      * @return x^^y.
      */
     public final static double pow(final double x, final double y) {
@@ -80,7 +80,7 @@ public final class Generic {
      * Calculate inverse cosinus
      * 
      * @param x
-     *            x.
+     *                x.
      * 
      * @return acos(x)
      */
@@ -92,9 +92,9 @@ public final class Generic {
      * Add a thread to the thread list.
      * 
      * @param o
-     *            The thread.
+     *                The thread.
      * @param highPrio
-     *            True if high priority.
+     *                True if high priority.
      */
     public final static void addThread(final BT747Thread o,
             final boolean highPrio) {
@@ -105,12 +105,12 @@ public final class Generic {
      * Remove a thread from the thread list.
      * 
      * @param o
-     *            Thread to remove.
+     *                Thread to remove.
      */
     public final static void removeThread(final BT747Thread o) {
         Interface.tr.removeThread(o);
     }
-    
+
     public static final int getTimeStamp() {
         return Interface.tr.getTimeStamp();
     }

@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.log.out;
 
 import gps.log.GPSFilter;
@@ -42,7 +42,8 @@ public final class GPSPLTFile extends GPSFile {
     // Field 4 : track description (no commas allowed)
     // Field 5 : track skip value - reduces number of track points plotted,
     // usually set to 1
-    // Field 6 : track type - 0 = normal , 10 = closed polygon , 20 = Alarm Zone
+    // Field 6 : track type - 0 = normal , 10 = closed polygon , 20 = Alarm
+    // Zone
     // Field 7 : track fill style - 0 =bsSolid; 1 =bsClear; 2 =bsBdiagonal; 3
     // =bsFdiagonal; 4 =bsCross;
     // 5 =bsDiagCross; 6 =bsHorizontal; 7 =bsVertical;
@@ -55,8 +56,11 @@ public final class GPSPLTFile extends GPSFile {
     public void writeFileHeader(final String s) {
         super.writeFileHeader(s);
         writeTxt("BT747 Track Point File http://sf.net/projects/bt747 Version "
-                + bt747.Version.VERSION_NUMBER + "\r\n" + "WGS 84\r\n"
-                + "Altitude is in feet\r\n" + "Reserved 3\r\n"
+                + bt747.Version.VERSION_NUMBER
+                + "\r\n"
+                + "WGS 84\r\n"
+                + "Altitude is in feet\r\n"
+                + "Reserved 3\r\n"
                 + "0,2,255,BT747 Track,0,0,2,8421376\r\n" + "50000\r\n" // number
                 // of
         // points
@@ -86,12 +90,14 @@ public final class GPSPLTFile extends GPSFile {
     //
     // One line per trackpoint
     // each field separated by a comma
-    // non essential fields need not be entered but comma separators must still
+    // non essential fields need not be entered but comma separators must
+    // still
     // be used (example ,,)
     // defaults will be used for empty fields
     //
     //
-    // Note that OziExplorer reads the Date/Time from field 5, the date and time
+    // Note that OziExplorer reads the Date/Time from field 5, the date and
+    // time
     // in fields 6 & 7 are ignored.
     //
     // Example
@@ -106,7 +112,7 @@ public final class GPSPLTFile extends GPSFile {
     public final void writeRecord(final GPSRecord s) {
         super.writeRecord(s);
 
-        if (activeFields != null && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
+        if ((activeFields != null) && ptFilters[GPSFilter.TRKPT].doFilter(s)) {
             String rec = "";
 
             // Field 1 : Latitude - decimal degrees.
@@ -122,10 +128,12 @@ public final class GPSPLTFile extends GPSFile {
             }
             rec += ",";
             // Field 3 : Code - 0 if normal, 1 if break in track line
-            rec += "0,"; // Normal for the moment - could detect break later
+            rec += "0,"; // Normal for the moment - could detect break
+            // later
             // ...
             // Field 4 : Altitude in feet (-777 if not valid)
-            if ((activeFields.hasHeight()) && (selectedFileFields.hasHeight())) {
+            if ((activeFields.hasHeight())
+                    && (selectedFileFields.hasHeight())) {
                 rec += ((int) (s.height * 3.2808398950131233595800524934383));
             } else {
                 rec += "-777";
@@ -143,23 +151,19 @@ public final class GPSPLTFile extends GPSFile {
                 rec += Convert
                         .toString(
                                 (s.utc + ((activeFields.hasMillisecond())
-                                        && (selectedFileFields.hasMillisecond()) ? (s.milisecond / 1000.0)
+                                        && (selectedFileFields
+                                                .hasMillisecond()) ? (s.milisecond / 1000.0)
                                         : 0)) / 86400.0 + 25569, // Days
                                 // since
                                 // 30/12/1899
                                 7); // 7 fractional digits
                 rec += ",";
-                rec += (t.getMonth() < 10 ? "0" : "")
-                         + t.getMonth() + "/"
-                        + (t.getDay() < 10 ? "0" : "")
-                        + t.getDay() + "/"
-                        + t.getYear() + ","
-                        + (t.getHour() < 10 ? "0" : "")
-                        + t.getHour() + ":"
-                        + (t.getMinute() < 10 ? "0" : "")
+                rec += (t.getMonth() < 10 ? "0" : "") + t.getMonth() + "/"
+                        + (t.getDay() < 10 ? "0" : "") + t.getDay() + "/"
+                        + t.getYear() + "," + (t.getHour() < 10 ? "0" : "")
+                        + t.getHour() + ":" + (t.getMinute() < 10 ? "0" : "")
                         + t.getMinute() + ":"
-                        + (t.getSecond() < 10 ? "0" : "")
-                        + t.getSecond();
+                        + (t.getSecond() < 10 ? "0" : "") + t.getSecond();
                 if ((activeFields.hasMillisecond())
                         && (selectedFileFields.hasMillisecond())) {
                     rec += ".";

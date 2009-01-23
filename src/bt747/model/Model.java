@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***  
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package bt747.model;
 
 import gps.BT747Constants;
@@ -35,8 +35,8 @@ import bt747.sys.Interface;
 public class Model extends AppSettings implements GPSListener {
 
     /**
-     * The gpsModel communicates with the GPS device and stores some information
-     * regarding the state of the GPS device.
+     * The gpsModel communicates with the GPS device and stores some
+     * information regarding the state of the GPS device.
      */
     private GPSstate gpsModel;
     /**
@@ -109,7 +109,6 @@ public class Model extends AppSettings implements GPSListener {
      */
     public static final int ARRAY_LOGTYPE = 12;
 
-    
     /**
      * log type (Array log type - must call specific function to get array).<br>
      * Not provided by the default controller since not implemented on all
@@ -124,9 +123,9 @@ public class Model extends AppSettings implements GPSListener {
     private static final int SECONDS_PER_DAY = 24 * 60 * 60;
 
     /**
-     * Start date for the date filter. 01/01/1983 is the earliest date that can
-     * be logged. This ensures that all logged data points are retrieved by
-     * default if the date filter is not changed.
+     * Start date for the date filter. 01/01/1983 is the earliest date that
+     * can be logged. This ensures that all logged data points are retrieved
+     * by default if the date filter is not changed.
      */
     private int filterStartTime;
     /**
@@ -137,7 +136,7 @@ public class Model extends AppSettings implements GPSListener {
     /**
      * Indicate which conversion is ongoing. Helps for GUI interface.
      */
-    private int lastConversionOngoing = NO_LOG_LOGTYPE;
+    private int lastConversionOngoing = Model.NO_LOG_LOGTYPE;
 
     /**
      * True when a log conversion is ongoing.
@@ -152,11 +151,11 @@ public class Model extends AppSettings implements GPSListener {
     /**
      * Standard log filters.
      */
-    private GPSFilter[] logFilters = new GPSFilter[C_NBR_FILTERS];
+    private GPSFilter[] logFilters = new GPSFilter[Model.C_NBR_FILTERS];
     /**
      * Advanced log filters.
      */
-    private GPSFilterAdvanced[] logFiltersAdv = new GPSFilterAdvanced[C_NBR_FILTERS];
+    private GPSFilterAdvanced[] logFiltersAdv = new GPSFilterAdvanced[Model.C_NBR_FILTERS];
 
     /**
      * The default constructor of the model.
@@ -171,7 +170,7 @@ public class Model extends AppSettings implements GPSListener {
         filterStartTime = (Interface.getDateInstance(1, 1, 1983)
                 .dateToUTCepoch1970());
         filterEndTime = (Interface.getDateInstance()).dateToUTCepoch1970()
-                + (SECONDS_PER_DAY - 1);
+                + (Model.SECONDS_PER_DAY - 1);
         gpsRxTx = new GPSrxtx();
         gpsModel = new GPSstate(gpsRxTx);
         gpsModel.addListener(this);
@@ -182,14 +181,14 @@ public class Model extends AppSettings implements GPSListener {
      * @return The gpsModel instantiation.
      */
     protected final GPSstate gpsModel() {
-        return this.gpsModel;
+        return gpsModel;
     }
 
     /**
      * @return The gpsRxTx instantiation (low level communication)
      */
     protected final GPSrxtx gpsRxTx() {
-        return this.gpsRxTx;
+        return gpsRxTx;
     }
 
     /**
@@ -198,14 +197,14 @@ public class Model extends AppSettings implements GPSListener {
      * @return true if the connection is made
      */
     public final boolean isConnected() {
-        return this.gpsRxTx.isConnected();
+        return gpsRxTx.isConnected();
     }
 
     /**
      * @return Get the number of commands waiting for a response.
      */
     public final int getOutstandingCommandsCount() {
-        return this.gpsModel.getOutStandingCmdsCount();
+        return gpsModel.getOutStandingCmdsCount();
     }
 
     /**
@@ -218,11 +217,11 @@ public class Model extends AppSettings implements GPSListener {
 
     /**
      * @param pLastConversionOngoing
-     *            the lastConversionOngoing to set
+     *                the lastConversionOngoing to set
      */
     protected final void setLastConversionOngoing(
             final int pLastConversionOngoing) {
-        this.lastConversionOngoing = pLastConversionOngoing;
+        lastConversionOngoing = pLastConversionOngoing;
     }
 
     /**
@@ -236,11 +235,11 @@ public class Model extends AppSettings implements GPSListener {
      * Get the log point validity mask.
      * 
      * @param logFilterType
-     *            The type of log filter that we request the information for
-     *            (index of the log filter).
+     *                The type of log filter that we request the information
+     *                for (index of the log filter).
      * 
-     * @return The log point validity filter mask. This corresponds to 'no fix',
-     *         '2d fix', '3d fix', 'Estimated', ... filtering.
+     * @return The log point validity filter mask. This corresponds to 'no
+     *         fix', '2d fix', '3d fix', 'Estimated', ... filtering.
      */
     public final int getValidMask(final int logFilterType) {
         switch (logFilterType) {
@@ -257,8 +256,8 @@ public class Model extends AppSettings implements GPSListener {
      * Get the record reason mask.
      * 
      * @param logFilterType
-     *            The type of log filter that we request the information for
-     *            (index of the log filter).
+     *                The type of log filter that we request the information
+     *                for (index of the log filter).
      * 
      * @return The record reason filter mask. This corresponds to time, speed,
      *         distance, button, ... record reasons filtering.
@@ -308,10 +307,10 @@ public class Model extends AppSettings implements GPSListener {
      * Sets up the filters based on settings.
      */
     private void setupAdvancedFilters() {
-        GPSFilterAdvanced[] filters = logFiltersAdv;
+        final GPSFilterAdvanced[] filters = logFiltersAdv;
         setupBasicSettingsFilter(filters);
         for (int i = logFiltersAdv.length - 1; i >= 0; i--) {
-            GPSFilterAdvanced filter = filters[i];
+            final GPSFilterAdvanced filter = filters[i];
             filter.setMinRecCount(getFilterMinRecCount());
             filter.setMaxRecCount(getFilterMaxRecCount());
             filter.setMinSpeed(getFilterMinSpeed());
@@ -319,11 +318,11 @@ public class Model extends AppSettings implements GPSListener {
             filter.setMinDist(getFilterMinDist());
             filter.setMaxDist(getFilterMaxDist());
             filter
-                    .setMaxPDOP((int) (getFilterMaxPDOP() * XDOP_FLOAT_TO_INT_100));
+                    .setMaxPDOP((int) (getFilterMaxPDOP() * Model.XDOP_FLOAT_TO_INT_100));
             filter
-                    .setMaxHDOP((int) (getFilterMaxHDOP() * XDOP_FLOAT_TO_INT_100));
+                    .setMaxHDOP((int) (getFilterMaxHDOP() * Model.XDOP_FLOAT_TO_INT_100));
             filter
-                    .setMaxVDOP((int) (getFilterMaxVDOP() * XDOP_FLOAT_TO_INT_100));
+                    .setMaxVDOP((int) (getFilterMaxVDOP() * Model.XDOP_FLOAT_TO_INT_100));
             filter.setMinNSAT(getFilterMinNSAT());
         }
     }
@@ -341,7 +340,7 @@ public class Model extends AppSettings implements GPSListener {
      * Set the start date for the filters.
      * 
      * @param filterStartTime
-     *            the startDate to set
+     *                the startDate to set
      */
     protected final void setFilterStartTime(final int filterStartTime) {
         this.filterStartTime = filterStartTime;
@@ -360,7 +359,7 @@ public class Model extends AppSettings implements GPSListener {
      * Set the filter end date.
      * 
      * @param filterEndTime
-     *            the endDate to set
+     *                the endDate to set
      */
     protected final void setFilterEndTime(final int filterEndTime) {
         this.filterEndTime = filterEndTime;
@@ -370,11 +369,11 @@ public class Model extends AppSettings implements GPSListener {
      * Indicate that the log conversion started for the given log type.
      * 
      * @param outputLogType
-     *            The log type for which the log conversion started.
+     *                The log type for which the log conversion started.
      */
     protected final void logConversionStarted(final int outputLogType) {
-        this.lastConversionOngoing = outputLogType;
-        this.conversionOngoing = true;
+        lastConversionOngoing = outputLogType;
+        conversionOngoing = true;
         postEvent(ModelEvent.CONVERSION_STARTED);
     }
 
@@ -382,10 +381,10 @@ public class Model extends AppSettings implements GPSListener {
      * Indicate that the log conversion ended for the given log type.
      * 
      * @param outputLogType
-     *            The log type for which the log conversion started.
+     *                The log type for which the log conversion started.
      */
     protected final void logConversionEnded(final int outputLogType) {
-        this.conversionOngoing = false;
+        conversionOngoing = false;
         postEvent(ModelEvent.CONVERSION_ENDED);
     }
 
@@ -429,7 +428,7 @@ public class Model extends AppSettings implements GPSListener {
         return gpsModel.getNextReadAddr();
     }
 
-    private int downloadMethod = DOWNLOAD_SMART;
+    private int downloadMethod = Model.DOWNLOAD_SMART;
 
     /**
      * Get the 'incremental download' status.
@@ -438,7 +437,7 @@ public class Model extends AppSettings implements GPSListener {
      * @return true if the Incremental log download is activated.
      */
     public final boolean isIncremental() {
-        return downloadMethod == DOWNLOAD_SMART;
+        return downloadMethod == Model.DOWNLOAD_SMART;
     }
 
     /**
@@ -446,13 +445,13 @@ public class Model extends AppSettings implements GPSListener {
      * 
      * @deprecated
      * @param incrementalDownload
-     *            true if the log download should be incremental.
+     *                true if the log download should be incremental.
      */
     protected final void setIncremental(final boolean incrementalDownload) {
         if (incrementalDownload) {
-            this.downloadMethod = DOWNLOAD_SMART;
+            downloadMethod = Model.DOWNLOAD_SMART;
         } else {
-            this.downloadMethod = DOWNLOAD_FILLED;
+            downloadMethod = Model.DOWNLOAD_FILLED;
         }
         postEvent(ModelEvent.INCREMENTAL_CHANGE);
     }
@@ -479,7 +478,7 @@ public class Model extends AppSettings implements GPSListener {
      *         {@link #DOWNLOAD_SMART}
      */
     public final int getDownloadMethod() {
-        return this.downloadMethod;
+        return downloadMethod;
     }
 
     /**
@@ -513,8 +512,8 @@ public class Model extends AppSettings implements GPSListener {
     /**
      * Get the amount of memory that is filled with data on the device.
      * 
-     * @return The amount of memory used in bytes. This includes the memory used
-     *         for other information than locations (e.g., headers)
+     * @return The amount of memory used in bytes. This includes the memory
+     *         used for other information than locations (e.g., headers)
      */
     public final int logMemUsed() {
         return gpsModel.getLogMemUsed();
@@ -672,13 +671,13 @@ public class Model extends AppSettings implements GPSListener {
      * 
      * @return true - The device will overwrite data when the logger memory is
      *         full.<br>
-     *         false - The device will stop logging data when the logger memory
-     *         is full.
+     *         false - The device will stop logging data when the logger
+     *         memory is full.
      */
     public final boolean isLogFullOverwrite() {
         return gpsModel.isLogFullOverwrite();
     }
-    
+
     public final boolean isInitialLogOverwrite() {
         return gpsModel.isInitialLogOverwrite();
     }
@@ -700,11 +699,12 @@ public class Model extends AppSettings implements GPSListener {
     }
 
     /**
-     * Get the maximum number of record that can be logged with the provided log
-     * format.
+     * Get the maximum number of record that can be logged with the provided
+     * log format.
      * 
      * @param logFormat
-     *            The log format to use to calculate the number of records.
+     *                The log format to use to calculate the number of
+     *                records.
      * @return The number of records that can be logged at most.
      */
     public final int getEstimatedNbrRecords(final int logFormat) {
@@ -713,7 +713,7 @@ public class Model extends AppSettings implements GPSListener {
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
         forHolux = (isHolux() && gpsRxTx.isConnected())
-                || getBooleanOpt(FORCE_HOLUXM241);
+                || getBooleanOpt(AppSettings.FORCE_HOLUXM241);
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {
@@ -724,7 +724,7 @@ public class Model extends AppSettings implements GPSListener {
             if (size != 0) {
                 count = logMemUsefullSize() / size;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return count;
@@ -737,7 +737,7 @@ public class Model extends AppSettings implements GPSListener {
         // Calculate for a holux either because this is the default setting or
         // because a holux was detected.
         forHolux = (isHolux() && gpsRxTx.isConnected())
-                || getBooleanOpt(FORCE_HOLUXM241);
+                || getBooleanOpt(AppSettings.FORCE_HOLUXM241);
         try {
             int size = BT747Constants.logRecordSize(logFormat, forHolux, 12);
             if (forHolux) {
@@ -748,7 +748,7 @@ public class Model extends AppSettings implements GPSListener {
             if (size != 0) {
                 count = logFreeMemUsefullSize() / size;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("EstRecords", e);
         }
         return count;
@@ -767,7 +767,7 @@ public class Model extends AppSettings implements GPSListener {
      * Indicates if the given data is available.
      * 
      * @param dataType
-     *            {@link GPSstate#DATA_MEM_USED}
+     *                {@link GPSstate#DATA_MEM_USED}
      * @return
      */
     public final boolean isAvailable(final int dataType) {

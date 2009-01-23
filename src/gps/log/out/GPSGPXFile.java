@@ -251,13 +251,13 @@ public final class GPSGPXFile extends GPSFile {
                     timeStr += "Z";
                 }
                 if (isNewTrack) {
-                    StringBuffer tx = new StringBuffer();
-                    String tmp = "" + r.recCount;
+                    final StringBuffer tx = new StringBuffer();
+                    final String tmp = "" + r.recCount;
                     int nZeros = 5 - tmp.length();
                     if (nZeros < 0) {
                         nZeros = 0;
                     }
-                    tx.append(zeros, 0, nZeros);
+                    tx.append(GPSGPXFile.zeros, 0, nZeros);
                     trackName = "#" + tx.toString() + r.recCount + "#";
                     if ((activeFields.hasUtc())
                             && (selectedFileFields.hasUtc())) {
@@ -354,9 +354,10 @@ public final class GPSGPXFile extends GPSFile {
                 // <cmt> xsd:string </cmt> [0..1] ?
                 // No comments, so commented out.
                 if (isTrkComment
-                        && (recordNbrInLogs || fixStr.length() != 0
-                                || rcrStr.length() != 0
-                                || hdopStr.length() != 0 || nsatStr.length() != 0)) {
+                        && (recordNbrInLogs || (fixStr.length() != 0)
+                                || (rcrStr.length() != 0)
+                                || (hdopStr.length() != 0) || (nsatStr
+                                .length() != 0))) {
                     rec.append("<cmt>");
                     rec.append("<![CDATA[");
                     CommonOut.getHtml(rec, r, activeFields,
@@ -481,7 +482,7 @@ public final class GPSGPXFile extends GPSFile {
                 } else {
                     rec.append("</trkpt>\r\n");
                 }
-                String ss = rec.toString();
+                final String ss = rec.toString();
                 if (ss.length() > 21) {
                     writeTxt(ss);
                 }
@@ -499,7 +500,7 @@ public final class GPSGPXFile extends GPSFile {
      * @see gps.GPSFile#FinaliseFile()
      */
     public final void finaliseFile() {
-        if (this.isOpen()) {
+        if (isOpen()) {
             String footer;
             writeDataFooter();
             footer = "</gpx>";

@@ -288,30 +288,35 @@ public final class BT747Constants { // dev as in device
     // PMTK182,1,DATA (DATA_STR = "" + (DATAwhat parameter to
     // set/read/replied)
 
-    public static final String PMTK_LOG_USER_STR = "" + PMTK_LOG_USER;
+    public static final String PMTK_LOG_USER_STR = ""
+            + BT747Constants.PMTK_LOG_USER;
     public static final String PMTK_LOG_FLASH_STAT_STR = ""
-            + PMTK_LOG_FLASH_STAT;
-    public static final String PMTK_LOG_FORMAT_STR = "" + PMTK_LOG_FORMAT;
+            + BT747Constants.PMTK_LOG_FLASH_STAT;
+    public static final String PMTK_LOG_FORMAT_STR = ""
+            + BT747Constants.PMTK_LOG_FORMAT;
     public static final String PMTK_LOG_TIME_INTERVAL_STR = ""
-            + PMTK_LOG_TIME_INTERVAL;
+            + BT747Constants.PMTK_LOG_TIME_INTERVAL;
     public static final String PMTK_LOG_DISTANCE_INTERVAL_STR = ""
-            + PMTK_LOG_DISTANCE_INTERVAL;
+            + BT747Constants.PMTK_LOG_DISTANCE_INTERVAL;
     public static final String PMTK_LOG_SPEED_INTERVAL_STR = ""
-            + PMTK_LOG_SPEED_INTERVAL;
+            + BT747Constants.PMTK_LOG_SPEED_INTERVAL;
     public static final String PMTK_LOG_REC_METHOD_STR = ""
-            + PMTK_LOG_REC_METHOD;
+            + BT747Constants.PMTK_LOG_REC_METHOD;
     public static final String PMTK_LOG_LOG_STATUS_STR = ""
-            + PMTK_LOG_LOG_STATUS;
-    public static final String PMTK_LOG_MEM_USED_STR = "" + PMTK_LOG_MEM_USED; // bit
+            + BT747Constants.PMTK_LOG_LOG_STATUS;
+    public static final String PMTK_LOG_MEM_USED_STR = ""
+            + BT747Constants.PMTK_LOG_MEM_USED; // bit
     // 2 =
     // logging
     // on/off
-    public static final String PMTK_LOG_FLASH_STR = "" + PMTK_LOG_FLASH;
+    public static final String PMTK_LOG_FLASH_STR = ""
+            + BT747Constants.PMTK_LOG_FLASH;
     public static final String PMTK_LOG_NBR_LOG_PTS_STR = ""
-            + PMTK_LOG_NBR_LOG_PTS;
+            + BT747Constants.PMTK_LOG_NBR_LOG_PTS;
     public static final String PMTK_LOG_FLASH_SECTORS_STR = ""
-            + PMTK_LOG_FLASH_SECTORS;
-    public static final String PMTK_LOG_VERSION_STR = "" + PMTK_LOG_VERSION;
+            + BT747Constants.PMTK_LOG_FLASH_SECTORS;
+    public static final String PMTK_LOG_VERSION_STR = ""
+            + BT747Constants.PMTK_LOG_VERSION;
 
     /** Mask for bit in log status indicating that log is active */
     public static final int PMTK_LOG_STATUS_LOGISFULL_MASK = 0x800; // bit 11
@@ -331,82 +336,96 @@ public final class BT747Constants { // dev as in device
     public static final String PMTK_SYS_MSG_STR = "010"; // "" +
     // PMTK_SYS_MSG;
     public static final String PMTK_CMD_HOT_START_STR = ""
-            + PMTK_CMD_HOT_START;
+            + BT747Constants.PMTK_CMD_HOT_START;
     public static final String PMTK_CMD_WARM_START_STR = ""
-            + PMTK_CMD_WARM_START;
+            + BT747Constants.PMTK_CMD_WARM_START;
     public static final String PMTK_CMD_COLD_START_STR = ""
-            + PMTK_CMD_COLD_START;
+            + BT747Constants.PMTK_CMD_COLD_START;
     public static final String PMTK_CMD_FULL_COLD_START_STR = ""
-            + PMTK_CMD_FULL_COLD_START;
-    public static final String PMTK_CMD_LOG_STR = "" + PMTK_CMD_LOG;
+            + BT747Constants.PMTK_CMD_FULL_COLD_START;
+    public static final String PMTK_CMD_LOG_STR = ""
+            + BT747Constants.PMTK_CMD_LOG;
     public static final String PMTK_SET_NMEA_BAUD_RATE_STR = ""
-            + PMTK_SET_NMEA_BAUD_RATE;
+            + BT747Constants.PMTK_SET_NMEA_BAUD_RATE;
     public static final String PMTK_API_SET_FIX_CTL_STR = ""
-            + PMTK_API_SET_FIX_CTL;
+            + BT747Constants.PMTK_API_SET_FIX_CTL;
     public static final String PMTK_API_SET_DGPS_MODE_STR = ""
-            + PMTK_API_SET_DGPS_MODE;
-    public static final String PMTK_API_SET_SBAS_STR = "" + PMTK_API_SET_SBAS;
+            + BT747Constants.PMTK_API_SET_DGPS_MODE;
+    public static final String PMTK_API_SET_SBAS_STR = ""
+            + BT747Constants.PMTK_API_SET_SBAS;
     public static final String PMTK_API_SET_NMEA_OUTPUT_STR = ""
-            + PMTK_API_SET_NMEA_OUTPUT;
+            + BT747Constants.PMTK_API_SET_NMEA_OUTPUT;
     public static final String PMTK_API_SET_SBAS_TEST_STR = ""
-            + PMTK_API_SET_SBAS_TEST;
+            + BT747Constants.PMTK_API_SET_SBAS_TEST;
     public static final String PMTK_API_SET_PWR_SAV_MODE_STR = ""
-            + PMTK_API_SET_PWR_SAV_MODE;
+            + BT747Constants.PMTK_API_SET_PWR_SAV_MODE;
     public static final String PMTK_API_SET_DATUM_STR = ""
-            + PMTK_API_SET_DATUM;
+            + BT747Constants.PMTK_API_SET_DATUM;
     public static final String PMTK_API_SET_DATUM_ADVANCE_STR = ""
-            + PMTK_API_SET_DATUM_ADVANCE;
+            + BT747Constants.PMTK_API_SET_DATUM_ADVANCE;
     public static final String PMTK_API_SET_USER_OPTION_STR = ""
-            + PMTK_API_SET_USER_OPTION;
+            + BT747Constants.PMTK_API_SET_USER_OPTION;
     public static final String PMTK_API_Q_FIX_CTL_STR = ""
-            + PMTK_API_Q_FIX_CTL;
+            + BT747Constants.PMTK_API_Q_FIX_CTL;
     public static final String PMTK_API_Q_DGPS_MODE_STR = ""
-            + PMTK_API_Q_DGPS_MODE;
-    public static final String PMTK_API_Q_SBAS_STR = "" + PMTK_API_Q_SBAS;
+            + BT747Constants.PMTK_API_Q_DGPS_MODE;
+    public static final String PMTK_API_Q_SBAS_STR = ""
+            + BT747Constants.PMTK_API_Q_SBAS;
     public static final String PMTK_API_Q_NMEA_OUTPUT_STR = ""
-            + PMTK_API_Q_NMEA_OUTPUT;
+            + BT747Constants.PMTK_API_Q_NMEA_OUTPUT;
     public static final String PMTK_API_Q_SBAS_TEST_STR = ""
-            + PMTK_API_Q_SBAS_TEST;
+            + BT747Constants.PMTK_API_Q_SBAS_TEST;
     public static final String PMTK_API_Q_PWR_SAV_MOD_STR = ""
-            + PMTK_API_Q_PWR_SAV_MOD;
-    public static final String PMTK_API_Q_DATUM_STR = "" + PMTK_API_Q_DATUM;
+            + BT747Constants.PMTK_API_Q_PWR_SAV_MOD;
+    public static final String PMTK_API_Q_DATUM_STR = ""
+            + BT747Constants.PMTK_API_Q_DATUM;
     public static final String PMTK_API_Q_DATUM_ADVANCE_STR = ""
-            + PMTK_API_Q_DATUM_ADVANCE;
+            + BT747Constants.PMTK_API_Q_DATUM_ADVANCE;
     public static final String PMTK_API_GET_USER_OPTION_STR = ""
-            + PMTK_API_Q_GET_USER_OPTION;
-    public static final String PMTK_DT_FIX_CTL_STR = "" + PMTK_DT_FIX_CTL;
-    public static final String PMTK_DT_DGPS_MODE_STR = "" + PMTK_DT_DGPS_MODE;
-    public static final String PMTK_DT_SBAS_STR = "" + PMTK_DT_SBAS;
+            + BT747Constants.PMTK_API_Q_GET_USER_OPTION;
+    public static final String PMTK_DT_FIX_CTL_STR = ""
+            + BT747Constants.PMTK_DT_FIX_CTL;
+    public static final String PMTK_DT_DGPS_MODE_STR = ""
+            + BT747Constants.PMTK_DT_DGPS_MODE;
+    public static final String PMTK_DT_SBAS_STR = ""
+            + BT747Constants.PMTK_DT_SBAS;
     public static final String PMTK_DT_NMEA_OUTPUT_STR = ""
-            + PMTK_DT_NMEA_OUTPUT;
-    public static final String PMTK_DT_SBAS_TEST_STR = "" + PMTK_DT_SBAS_TEST;
+            + BT747Constants.PMTK_DT_NMEA_OUTPUT;
+    public static final String PMTK_DT_SBAS_TEST_STR = ""
+            + BT747Constants.PMTK_DT_SBAS_TEST;
     public static final String PMTK_DT_PWR_SAV_MODE_STR = ""
-            + PMTK_DT_PWR_SAV_MODE;
-    public static final String PMTK_DT_DATUM_STR = "" + PMTK_DT_DATUM;
+            + BT747Constants.PMTK_DT_PWR_SAV_MODE;
+    public static final String PMTK_DT_DATUM_STR = ""
+            + BT747Constants.PMTK_DT_DATUM;
     public static final String PMTK_DT_FLASH_USER_OPTION_STR = ""
-            + PMTK_DT_FLASH_USER_OPTION;
-    public static final String PMTK_Q_VERSION_STR = "" + PMTK_Q_VERSION;
-    public static final String PMTK_Q_RELEASE_STR = "" + PMTK_Q_RELEASE;
-    public static final String PMTK_Q_DGPS_INFO_STR = "" + PMTK_Q_DGPS_INFO;
+            + BT747Constants.PMTK_DT_FLASH_USER_OPTION;
+    public static final String PMTK_Q_VERSION_STR = ""
+            + BT747Constants.PMTK_Q_VERSION;
+    public static final String PMTK_Q_RELEASE_STR = ""
+            + BT747Constants.PMTK_Q_RELEASE;
+    public static final String PMTK_Q_DGPS_INFO_STR = ""
+            + BT747Constants.PMTK_Q_DGPS_INFO;
 
     /**
      * Parameter 1 of PMTK_ACK reply. Packet invalid.
      */
-    public static final String PMTK_ACK_INVALID_STR = "" + PMTK_ACK_INVALID;
+    public static final String PMTK_ACK_INVALID_STR = ""
+            + BT747Constants.PMTK_ACK_INVALID;
     /**
      * Parameter 1 of PMTK_ACK reply. Packet not supported by device.
      */
     public static final String PMTK_ACK_UNSUPPORTED_STR = ""
-            + PMTK_ACK_UNSUPPORTED;
+            + BT747Constants.PMTK_ACK_UNSUPPORTED;
     /**
      * Parameter 1 of PMTK_ACK reply. Packet supported, but action failed.
      */
-    public static final String PMTK_ACK_FAILED_STR = "" + PMTK_ACK_FAILED;
+    public static final String PMTK_ACK_FAILED_STR = ""
+            + BT747Constants.PMTK_ACK_FAILED;
     /**
      * Parameter 1 of PMTK_ACK reply. Packet success.
      */
     public static final String PMTK_ACK_SUCCEEDED_STR = ""
-            + PMTK_ACK_SUCCEEDED;
+            + BT747Constants.PMTK_ACK_SUCCEEDED;
 
     /*************************************************************************
      * Holux specific
@@ -450,9 +469,9 @@ public final class BT747Constants { // dev as in device
             int index = 0;
             int[] byteSizes;
             if (holux) {
-                byteSizes = logFmtByteSizesHolux;
+                byteSizes = BT747Constants.logFmtByteSizesHolux;
             } else {
-                byteSizes = logFmtByteSizes;
+                byteSizes = BT747Constants.logFmtByteSizes;
             }
             do {
                 if ((bits & 1) != 0) {
@@ -470,7 +489,7 @@ public final class BT747Constants { // dev as in device
                 }
                 index++;
             } while ((bits >>>= 1) != 0);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Should not happen, but catch it anyway.
             Generic.debug(Txt.C_BAD_LOG_FORMAT, e);
         }
@@ -493,26 +512,27 @@ public final class BT747Constants { // dev as in device
         int cnt = 0;
         int[] byteSizes;
         if (holux) {
-            byteSizes = logFmtByteSizesHolux;
+            byteSizes = BT747Constants.logFmtByteSizesHolux;
         } else {
-            byteSizes = logFmtByteSizes;
+            byteSizes = BT747Constants.logFmtByteSizes;
         }
-        if ((logFormat & (1 << FMT_SID_IDX)) != 0) {
-            cnt += byteSizes[FMT_SID_IDX];
-            cnt += (logFormat & (1 << FMT_ELEVATION_IDX)) != 0 ? byteSizes[FMT_ELEVATION_IDX]
+        if ((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0) {
+            cnt += byteSizes[BT747Constants.FMT_SID_IDX];
+            cnt += (logFormat & (1 << BT747Constants.FMT_ELEVATION_IDX)) != 0 ? byteSizes[BT747Constants.FMT_ELEVATION_IDX]
                     : 0;
-            cnt += (logFormat & (1 << FMT_AZIMUTH_IDX)) != 0 ? byteSizes[FMT_AZIMUTH_IDX]
+            cnt += (logFormat & (1 << BT747Constants.FMT_AZIMUTH_IDX)) != 0 ? byteSizes[BT747Constants.FMT_AZIMUTH_IDX]
                     : 0;
-            cnt += (logFormat & (1 << FMT_SNR_IDX)) != 0 ? byteSizes[FMT_SNR_IDX]
+            cnt += (logFormat & (1 << BT747Constants.FMT_SNR_IDX)) != 0 ? byteSizes[BT747Constants.FMT_SNR_IDX]
                     : 0;
             cnt *= sats - 1;
         }
-        return cnt + logRecordMinSize(logFormat, holux);
+        return cnt + BT747Constants.logRecordMinSize(logFormat, holux);
     }
 
     public static final int logRecordMaxSize(final int p_logFormat,
             final boolean holux) {
-        return logRecordSize(p_logFormat, holux, FMT_MAX_SATS);
+        return BT747Constants.logRecordSize(p_logFormat, holux,
+                BT747Constants.FMT_MAX_SATS);
     }
 
     public static final int[] logRecordSatOffsetAndSize(final int logFormat,
@@ -558,7 +578,7 @@ public final class BT747Constants { // dev as in device
             }
             index++;
         } while ((bits >>>= 1) != 0);
-        int[] result = { total, satRecSize };
+        final int[] result = { total, satRecSize };
         return result;
     }
 
@@ -858,40 +878,39 @@ public final class BT747Constants { // dev as in device
      * Initialization of references for the height.
      */
     private static final int[][] INIT_REFERENCE_LIST = {
-            { Model.CSV_LOGTYPE, HEIGHT_WGS84 },
-            { Model.TRK_LOGTYPE, HEIGHT_MSL },
-            { Model.KML_LOGTYPE, HEIGHT_MSL },
-            { Model.PLT_LOGTYPE, HEIGHT_MSL },
-            { Model.GPX_LOGTYPE, HEIGHT_MSL },
-            { Model.NMEA_LOGTYPE, HEIGHT_WGS84 },
-            { Model.GMAP_LOGTYPE, HEIGHT_MSL },
-            { Model.TRL_LOGTYPE, HEIGHT_WGS84 },
-            { Model.BIN_LOGTYPE, HEIGHT_WGS84 },
-            { Model.SR_LOGTYPE, HEIGHT_MSL },
-            { Model.KMZ_LOGTYPE, HEIGHT_MSL },
-            { Model.ARRAY_LOGTYPE, HEIGHT_MSL },
-            { Model.MULTI_LOGTYPE, HEIGHT_WGS84 },
-            };
+            { Model.CSV_LOGTYPE, BT747Constants.HEIGHT_WGS84 },
+            { Model.TRK_LOGTYPE, BT747Constants.HEIGHT_MSL },
+            { Model.KML_LOGTYPE, BT747Constants.HEIGHT_MSL },
+            { Model.PLT_LOGTYPE, BT747Constants.HEIGHT_MSL },
+            { Model.GPX_LOGTYPE, BT747Constants.HEIGHT_MSL },
+            { Model.NMEA_LOGTYPE, BT747Constants.HEIGHT_WGS84 },
+            { Model.GMAP_LOGTYPE, BT747Constants.HEIGHT_MSL },
+            { Model.TRL_LOGTYPE, BT747Constants.HEIGHT_WGS84 },
+            { Model.BIN_LOGTYPE, BT747Constants.HEIGHT_WGS84 },
+            { Model.SR_LOGTYPE, BT747Constants.HEIGHT_MSL },
+            { Model.KMZ_LOGTYPE, BT747Constants.HEIGHT_MSL },
+            { Model.ARRAY_LOGTYPE, BT747Constants.HEIGHT_MSL },
+            { Model.MULTI_LOGTYPE, BT747Constants.HEIGHT_WGS84 }, };
     /**
      * The reference for the height in the given format
      */
     private final static int[] heightReferenceList = new int[20];
 
     public final static int getHeightReference(final int type) {
-        if ((type >= 0) && (type < heightReferenceList.length)) {
-            return heightReferenceList[type];
+        if ((type >= 0) && (type < BT747Constants.heightReferenceList.length)) {
+            return BT747Constants.heightReferenceList[type];
         }
-        return HEIGHT_WGS84;
+        return BT747Constants.HEIGHT_WGS84;
     }
-    
+
     static {
-        initValues();
+        BT747Constants.initValues();
     }
-    
+
     private final static void initValues() {
-        for (int i = 0; i < INIT_REFERENCE_LIST.length; i++) {
-            if (INIT_REFERENCE_LIST[i][0] < heightReferenceList.length) {
-                heightReferenceList[INIT_REFERENCE_LIST[i][0]] = INIT_REFERENCE_LIST[i][1];
+        for (int i = 0; i < BT747Constants.INIT_REFERENCE_LIST.length; i++) {
+            if (BT747Constants.INIT_REFERENCE_LIST[i][0] < BT747Constants.heightReferenceList.length) {
+                BT747Constants.heightReferenceList[BT747Constants.INIT_REFERENCE_LIST[i][0]] = BT747Constants.INIT_REFERENCE_LIST[i][1];
             }
         }
     }

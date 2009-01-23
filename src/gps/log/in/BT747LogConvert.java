@@ -132,8 +132,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
             }
             final int endOfBlock = (nextAddrToRead & 0xFFFF0000) | 0xFFFF;
             sizeToRead = endOfBlock + 1 - nextAddrToRead;
-            if (sizeToRead > BUF_SIZE) {
-                sizeToRead = BUF_SIZE;
+            if (sizeToRead > BT747LogConvert.BUF_SIZE) {
+                sizeToRead = BT747LogConvert.BUF_SIZE;
             }
             if ((sizeToRead + nextAddrToRead) > fileSize) {
                 sizeToRead = fileSize - nextAddrToRead;
@@ -372,7 +372,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                                         gpsFile.addLogRecord(r);
                                         r = GPSRecord.getLogFormatRecord(0);
                                     } else {
-                                        if (r.utc >= minValidUtcTime) {
+                                        if (r.utc >= BT747LogConvert.minValidUtcTime) {
                                             if (r.utc > biggestBlockUtc) {
                                                 biggestBlockUtc = r.utc;
                                             }
@@ -477,12 +477,12 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#getFileObject()
      */
-    protected Object getFileObject(String fileName, int card) {
+    protected Object getFileObject(final String fileName, final int card) {
         WindowedFile mFile = null;
         if (File.isAvailable()) {
             try {
                 mFile = new WindowedFile(fileName, File.READ_ONLY, card);
-                mFile.setBufferSize(BUF_SIZE);
+                mFile.setBufferSize(BT747LogConvert.BUF_SIZE);
                 errorInfo = fileName + "|" + mFile.getLastError();
             } catch (final Exception e) {
                 Generic.debug("Error during initial open", e);
@@ -499,13 +499,15 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
         return mFile;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.in.GPSLogConvertInterface#closeFileObject(java.lang.Object)
      */
-    protected void closeFileObject(Object o) {
-        ((WindowedFile)o).close();
+    protected void closeFileObject(final Object o) {
+        ((WindowedFile) o).close();
     }
-    
+
     public final int toGPSFile(final String fileName,
             final GPSFileConverterInterface gpsFile, final int card) {
         Object mFile = null;
@@ -910,7 +912,9 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.in.GPSLogConvertInterface#getType()
      */
     public int getType() {

@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package bt747.sys.interfaces;
 
 /**
@@ -76,11 +76,11 @@ public interface BT747File {
      * Write bytes from byte buffer to file.
      * 
      * @param b
-     *            Byte buffer.
+     *                Byte buffer.
      * @param off
-     *            Start offset in buffer to start writing to file.
+     *                Start offset in buffer to start writing to file.
      * @param len
-     *            Number of bytes to write to file.
+     *                Number of bytes to write to file.
      * @return number of bytes written.
      */
     int writeBytes(final byte[] b, final int off, final int len);
@@ -89,11 +89,11 @@ public interface BT747File {
      * Read bytes from file to buffer.
      * 
      * @param b
-     *            Byte buffer.
+     *                Byte buffer.
      * @param off
-     *            Start offset in buffer to start reading from file.
+     *                Start offset in buffer to start reading from file.
      * @param len
-     *            Number of bytes to read from file.
+     *                Number of bytes to read from file.
      * @return number of bytes read.
      */
     int readBytes(final byte[] b, final int off, final int len);
@@ -111,7 +111,7 @@ public interface BT747File {
      * @return
      */
     int getLastError();
-    
+
     /**
      * Get modification time (UTC)
      */

@@ -42,10 +42,10 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
     public final int parseFile(final Object file,
             final GPSFileConverterInterface gpsFile) {
         try {
-            File inFile = (File) file;
+            final File inFile = (File) file;
             GPSRecord r = GPSRecord.getLogFormatRecord(0);
             final int C_BUF_SIZE = 0x800;
-            byte[] bytes = new byte[C_BUF_SIZE];
+            final byte[] bytes = new byte[C_BUF_SIZE];
             int sizeToRead;
             int nextAddrToRead;
             int recCount;
@@ -61,7 +61,7 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
             recCount = 0;
             nextAddrToRead = 0;
             fileSize = inFile.getSize();
-            while (!stop && (nextAddrToRead + recordSize + 1) < fileSize) {
+            while (!stop && ((nextAddrToRead + recordSize + 1) < fileSize)) {
                 sizeToRead = C_BUF_SIZE;
                 if ((sizeToRead + nextAddrToRead) > fileSize) {
                     sizeToRead = (fileSize - nextAddrToRead);
@@ -122,19 +122,19 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
 
-                            int latitude = (0xFF & bytes[recIdx++]) << 0
+                            final int latitude = (0xFF & bytes[recIdx++]) << 0
                                     | (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
                             r.latitude = Convert.toFloatBitwise(latitude);
 
-                            int longitude = (0xFF & bytes[recIdx++]) << 0
+                            final int longitude = (0xFF & bytes[recIdx++]) << 0
                                     | (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
                                     | (0xFF & bytes[recIdx++]) << 24;
                             r.longitude = Convert.toFloatBitwise(longitude);// *1.0;
 
-                            int height =
+                            final int height =
 
                             (0xFF & bytes[recIdx++]) << 8
                                     | (0xFF & bytes[recIdx++]) << 16
@@ -149,7 +149,7 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
                 } /* ContinueInBuffer */
                 nextAddrToRead -= (sizeToRead - offsetInBuffer);
             } /* nextAddrToRead<fileSize */
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("", e);
         }
         return BT747Constants.NO_ERROR;
@@ -162,7 +162,7 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#getFileObject()
      */
-    protected Object getFileObject(String fileName, int card) {
+    protected Object getFileObject(final String fileName, final int card) {
         File inFile = null;
 
         if (File.isAvailable()) {
@@ -181,7 +181,7 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#closeFileObject(java.lang.Object)
      */
-    protected void closeFileObject(Object o) {
+    protected void closeFileObject(final Object o) {
         ((File) o).close();
     }
 
@@ -208,18 +208,19 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
                 gpsFile.finaliseFile();
                 closeFileObject(inFile);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("", e);
         }
         return error;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.in.GPSLogConvertInterface#getType()
      */
     public int getType() {
         return Model.TRL_LOGTYPE;
     }
-
 
 }

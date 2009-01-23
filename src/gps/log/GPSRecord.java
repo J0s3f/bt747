@@ -26,20 +26,20 @@ import bt747.sys.interfaces.BT747Time;
  * @author Mario De Weerd
  */
 public class GPSRecord {
-    public int utc = NO_UTC;
-    public int tagutc = NO_UTC; // UTC used to tag.
-    public int valid = NO_VALID;
-    public double latitude = NO_LAT_LON;
-    public double longitude = NO_LAT_LON;
-    public float height = NO_HEIGHT;
-    public float speed = NO_SPEED;
-    public float heading = NO_HEADING;
-    public int dsta = NO_DSTA;
-    public int dage = NO_DAGE;
-    public int pdop = NO_XDOP;
-    public int hdop = NO_XDOP;
-    public int vdop = NO_XDOP;
-    public int nsat = NO_NSAT;
+    public int utc = GPSRecord.NO_UTC;
+    public int tagutc = GPSRecord.NO_UTC; // UTC used to tag.
+    public int valid = GPSRecord.NO_VALID;
+    public double latitude = GPSRecord.NO_LAT_LON;
+    public double longitude = GPSRecord.NO_LAT_LON;
+    public float height = GPSRecord.NO_HEIGHT;
+    public float speed = GPSRecord.NO_SPEED;
+    public float heading = GPSRecord.NO_HEADING;
+    public int dsta = GPSRecord.NO_DSTA;
+    public int dage = GPSRecord.NO_DAGE;
+    public int pdop = GPSRecord.NO_XDOP;
+    public int hdop = GPSRecord.NO_XDOP;
+    public int vdop = GPSRecord.NO_XDOP;
+    public int nsat = GPSRecord.NO_NSAT;
 
     public int[] sid = null;
     public boolean[] sidinuse = null;
@@ -48,17 +48,23 @@ public class GPSRecord {
     public int[] snr = null;
 
     /** Recorder reason */
-    public int rcr = NO_RCR;
+    public int rcr = GPSRecord.NO_RCR;
 
-    public int milisecond = NO_MILISECOND;
-    public double distance = NO_DISTANCE;
+    public int milisecond = GPSRecord.NO_MILISECOND;
+    public double distance = GPSRecord.NO_DISTANCE;
 
-    public float geoid = NO_GEIOD; // Value returned by GPS.
-    public int recCount = NO_RECCOUNT;
+    public float geoid = GPSRecord.NO_GEIOD; // Value returned by GPS.
+    public int recCount = GPSRecord.NO_RECCOUNT;
 
-    public int logPeriod = NO_LOGCONSTRAINT; // Programmed period between logged points
-    public int logSpeed = NO_LOGCONSTRAINT; // Programmed minimum speed
-    public int logDistance = NO_LOGCONSTRAINT; // Programmed distance between logged points
+    public int logPeriod = GPSRecord.NO_LOGCONSTRAINT; // Programmed period
+    // between logged
+    // points
+    public int logSpeed = GPSRecord.NO_LOGCONSTRAINT; // Programmed minimum
+    // speed
+    public int logDistance = GPSRecord.NO_LOGCONSTRAINT; // Programmed
+    // distance
+    // between logged
+    // points
 
     public String voxStr; // Voice recording reference.
 
@@ -93,7 +99,7 @@ public class GPSRecord {
     private static final float HAS_GEOID = 0;
 
     private static final int NO_LOGCONSTRAINT = 0;
-    //private static final int LOG_CONSTRAINT = 0;
+    // private static final int LOG_CONSTRAINT = 0;
 
     private static final int NO_XDOP = -1;
     private static final int HAS_XDOP = 0;
@@ -353,43 +359,43 @@ public class GPSRecord {
     public final static GPSRecord getLogFormatRecord(final int logFormat) {
         final GPSRecord gpsRec = new GPSRecord();
         if ((logFormat & (1 << BT747Constants.FMT_UTC_IDX)) != 0) {
-            gpsRec.utc = HAS_UTC;
+            gpsRec.utc = GPSRecord.HAS_UTC;
         }
         if ((logFormat & (1 << BT747Constants.FMT_VALID_IDX)) != 0) {
-            gpsRec.valid = HAS_VALID;
+            gpsRec.valid = GPSRecord.HAS_VALID;
         }
         if ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0) {
-            gpsRec.latitude = HAS_LAT_LON;
+            gpsRec.latitude = GPSRecord.HAS_LAT_LON;
         }
         if ((logFormat & (1 << BT747Constants.FMT_LONGITUDE_IDX)) != 0) {
-            gpsRec.longitude = HAS_LAT_LON;
+            gpsRec.longitude = GPSRecord.HAS_LAT_LON;
         }
         if ((logFormat & (1 << BT747Constants.FMT_HEIGHT_IDX)) != 0) {
-            gpsRec.height = HAS_HEIGHT;
+            gpsRec.height = GPSRecord.HAS_HEIGHT;
         }
         if ((logFormat & (1 << BT747Constants.FMT_SPEED_IDX)) != 0) {
-            gpsRec.speed = HAS_SPEED;
+            gpsRec.speed = GPSRecord.HAS_SPEED;
         }
         if ((logFormat & (1 << BT747Constants.FMT_HEADING_IDX)) != 0) {
-            gpsRec.heading = HAS_HEADING;
+            gpsRec.heading = GPSRecord.HAS_HEADING;
         }
         if ((logFormat & (1 << BT747Constants.FMT_DSTA_IDX)) != 0) {
-            gpsRec.dsta = HAS_DSTA;
+            gpsRec.dsta = GPSRecord.HAS_DSTA;
         }
         if ((logFormat & (1 << BT747Constants.FMT_DAGE_IDX)) != 0) {
-            gpsRec.dage = HAS_DAGE;
+            gpsRec.dage = GPSRecord.HAS_DAGE;
         }
         if ((logFormat & (1 << BT747Constants.FMT_PDOP_IDX)) != 0) {
-            gpsRec.pdop = HAS_XDOP;
+            gpsRec.pdop = GPSRecord.HAS_XDOP;
         }
         if ((logFormat & (1 << BT747Constants.FMT_HDOP_IDX)) != 0) {
-            gpsRec.hdop = HAS_XDOP;
+            gpsRec.hdop = GPSRecord.HAS_XDOP;
         }
         if ((logFormat & (1 << BT747Constants.FMT_VDOP_IDX)) != 0) {
-            gpsRec.vdop = HAS_XDOP;
+            gpsRec.vdop = GPSRecord.HAS_XDOP;
         }
         if ((logFormat & (1 << BT747Constants.FMT_NSAT_IDX)) != 0) {
-            gpsRec.nsat = HAS_NSAT;
+            gpsRec.nsat = GPSRecord.HAS_NSAT;
         }
         if ((logFormat & (1 << BT747Constants.FMT_SID_IDX)) != 0) {
             gpsRec.sid = new int[0];
@@ -406,13 +412,13 @@ public class GPSRecord {
             gpsRec.snr = new int[0];
         }
         if ((logFormat & (1 << BT747Constants.FMT_RCR_IDX)) != 0) {
-            gpsRec.rcr = HAS_RCR;
+            gpsRec.rcr = GPSRecord.HAS_RCR;
         }
         if ((logFormat & (1 << BT747Constants.FMT_MILLISECOND_IDX)) != 0) {
-            gpsRec.milisecond = HAS_MILISECOND;
+            gpsRec.milisecond = GPSRecord.HAS_MILISECOND;
         }
         if ((logFormat & (1 << BT747Constants.FMT_DISTANCE_IDX)) != 0) {
-            gpsRec.distance = HAS_DISTANCE;
+            gpsRec.distance = GPSRecord.HAS_DISTANCE;
         }
 
         /* End handling record */
@@ -420,19 +426,19 @@ public class GPSRecord {
     }
 
     public final boolean hasRecCount() {
-        return recCount != NO_RECCOUNT;
+        return recCount != GPSRecord.NO_RECCOUNT;
     }
 
     public final boolean hasUtc() {
-        return utc != NO_UTC;
+        return utc != GPSRecord.NO_UTC;
     }
 
     public final boolean hasTagUtc() {
-        return tagutc != NO_UTC;
+        return tagutc != GPSRecord.NO_UTC;
     }
 
     public final boolean hasValid() {
-        return valid != NO_VALID;
+        return valid != GPSRecord.NO_VALID;
     }
 
     public final boolean hasPosition() {
@@ -440,47 +446,47 @@ public class GPSRecord {
     }
 
     public final boolean hasLatitude() {
-        return latitude != NO_LAT_LON;
+        return latitude != GPSRecord.NO_LAT_LON;
     }
 
     public final boolean hasLongitude() {
-        return longitude != NO_LAT_LON;
+        return longitude != GPSRecord.NO_LAT_LON;
     }
 
     public final boolean hasHeight() {
-        return height != NO_HEIGHT;
+        return height != GPSRecord.NO_HEIGHT;
     }
 
     public final boolean hasSpeed() {
-        return speed != NO_SPEED;
+        return speed != GPSRecord.NO_SPEED;
     }
 
     public final boolean hasHeading() {
-        return heading != NO_HEADING;
+        return heading != GPSRecord.NO_HEADING;
     }
 
     public final boolean hasDsta() {
-        return dsta != NO_DSTA;
+        return dsta != GPSRecord.NO_DSTA;
     }
 
     public final boolean hasDage() {
-        return dage != NO_DAGE;
+        return dage != GPSRecord.NO_DAGE;
     }
 
     public final boolean hasPdop() {
-        return pdop != NO_XDOP;
+        return pdop != GPSRecord.NO_XDOP;
     }
 
     public final boolean hasHdop() {
-        return hdop != NO_XDOP;
+        return hdop != GPSRecord.NO_XDOP;
     }
 
     public final boolean hasVdop() {
-        return vdop != NO_XDOP;
+        return vdop != GPSRecord.NO_XDOP;
     }
 
     public final boolean hasNsat() {
-        return nsat != NO_NSAT;
+        return nsat != GPSRecord.NO_NSAT;
     }
 
     public final boolean hasSid() {
@@ -504,15 +510,15 @@ public class GPSRecord {
     }
 
     public final boolean hasRcr() {
-        return rcr != NO_RCR;
+        return rcr != GPSRecord.NO_RCR;
     }
 
     public final boolean hasMillisecond() {
-        return milisecond != NO_MILISECOND;
+        return milisecond != GPSRecord.NO_MILISECOND;
     }
 
     public final boolean hasDistance() {
-        return distance != NO_DISTANCE;
+        return distance != GPSRecord.NO_DISTANCE;
     }
 
     public final boolean hasVoxStr() {
@@ -520,19 +526,19 @@ public class GPSRecord {
     }
 
     public final boolean hasGeoid() {
-        return geoid != NO_GEIOD;
+        return geoid != GPSRecord.NO_GEIOD;
     }
 
     public final boolean hasLogDistance() {
-        return logDistance != NO_LOGCONSTRAINT;
+        return logDistance != GPSRecord.NO_LOGCONSTRAINT;
     }
 
     public final boolean hasLogPeriod() {
-        return logPeriod != NO_LOGCONSTRAINT;
+        return logPeriod != GPSRecord.NO_LOGCONSTRAINT;
     }
 
     public final boolean hasLogSpeed() {
-        return logSpeed != NO_LOGCONSTRAINT;
+        return logSpeed != GPSRecord.NO_LOGCONSTRAINT;
     }
 
     public final boolean equalsFormat(final GPSRecord r) {

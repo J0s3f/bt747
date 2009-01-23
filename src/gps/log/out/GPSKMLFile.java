@@ -43,7 +43,7 @@ public class GPSKMLFile extends GPSFile {
     private int currentFilter;
     private String trackName;
     private int altitudeMode = 0; // 0 = altitude.
-    private String altitudeModeIfHeight = ABSOLUTE_HEIGHT;
+    private String altitudeModeIfHeight = GPSKMLFile.ABSOLUTE_HEIGHT;
 
     /**
      * 
@@ -65,7 +65,7 @@ public class GPSKMLFile extends GPSFile {
         isWayType = true;
         isTrackType = false;
         isPathType = false;
-        String am = getParamObject().getStringParam(
+        final String am = getParamObject().getStringParam(
                 GPSConversionParameters.KML_TRACK_ALTITUDE_STRING);
         if (am != null) {
             altitudeModeIfHeight = am;
@@ -430,7 +430,7 @@ public class GPSKMLFile extends GPSFile {
                                 // clampToGround, relativeToGround, absolute
                                 rec.append(altitudeModeIfHeight);
                             } else {
-                                rec.append(CLAMPED_HEIGHT);
+                                rec.append(GPSKMLFile.CLAMPED_HEIGHT);
                                 altitudeMode = 1;
                             }
                             rec.append("</altitudeMode><coordinates>\r\n");

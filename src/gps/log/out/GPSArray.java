@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.log.out;
 
 import gps.BT747Constants;
@@ -43,9 +43,10 @@ public final class GPSArray extends GPSFile {
      * @see gps.log.out.GPSFile#initialiseFile(java.lang.String,
      *      java.lang.String, int, int)
      */
-    public void initialiseFile(String baseName, String extension, int fileCard,
-            int fileSeparationFreq) {
-        super.initialiseFile(baseName, extension, fileCard, fileSeparationFreq);
+    public void initialiseFile(final String baseName, final String extension,
+            final int fileCard, final int fileSeparationFreq) {
+        super.initialiseFile(baseName, extension, fileCard,
+                fileSeparationFreq);
         result = new TracksAndWayPoints();
         gpsWayPoints = result.waypoints;
         track = Interface.getVectorInstance();
@@ -113,7 +114,8 @@ public final class GPSArray extends GPSFile {
             if (!isNewTrack && !firstRecord && !ignoreBadPoints) {
                 isNewTrack = true;
                 if (track.size() != 0) {
-                    // Get the last position of previous track for the bad track.
+                    // Get the last position of previous track for the bad
+                    // track.
                     // Trackpoint tp = track.get(track.size() - 1);
                     endTrack();
                     // Not logging bad tracks here! [currently at least]
@@ -169,6 +171,6 @@ public final class GPSArray extends GPSFile {
      * @return the result
      */
     public final TracksAndWayPoints getResult() {
-        return this.result;
+        return result;
     }
 }

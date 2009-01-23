@@ -13,13 +13,13 @@ public final class FileUtil {
      * directory.
      * 
      * @param base
-     *            base directory as returned by File.getCanonicalPath()
+     *                base directory as returned by File.getCanonicalPath()
      * @param target
-     *            target file
+     *                target file
      * @param separator
-     *            path separator on the system
-     * @return relative path of target file. Returns targetFile if there were no
-     *         commonalities between the base and the target
+     *                path separator on the system
+     * @return relative path of target file. Returns targetFile if there were
+     *         no commonalities between the base and the target
      * 
      */
     public final static String getRelativePath(final String base,
@@ -30,8 +30,8 @@ public final class FileUtil {
             //
             String canonicalBase = base;
 
-            if (base.charAt(base.length() - 1) == '/'
-                    || base.charAt(base.length() - 1) == '\\') {
+            if ((base.charAt(base.length() - 1) == '/')
+                    || (base.charAt(base.length() - 1) == '\\')) {
                 canonicalBase = base.substring(0, base.length() - 1);
             }
 
@@ -43,10 +43,10 @@ public final class FileUtil {
 
             canonicalTarget = target;
 
-            if (canonicalTarget.charAt(canonicalTarget.length() - 1) == '/'
+            if ((canonicalTarget.charAt(canonicalTarget.length() - 1) == '/')
                     || (canonicalTarget.charAt(canonicalTarget.length() - 1) == '\\')) {
-                canonicalTarget = canonicalTarget.substring(0, canonicalTarget
-                        .length() - 1);
+                canonicalTarget = canonicalTarget.substring(0,
+                        canonicalTarget.length() - 1);
             }
 
             if (canonicalTarget.equals(canonicalBase)) {
@@ -60,17 +60,20 @@ public final class FileUtil {
                 //
                 // UNC file name, if target file doesn't also start with same
                 // server name, don't go there
-                int endPrefix = canonicalBase.indexOf('\\', 2);
-                String prefix1 = canonicalBase.substring(0, endPrefix);
-                String prefix2 = canonicalTarget.substring(0, endPrefix);
+                final int endPrefix = canonicalBase.indexOf('\\', 2);
+                final String prefix1 = canonicalBase.substring(0, endPrefix);
+                final String prefix2 = canonicalTarget
+                        .substring(0, endPrefix);
                 if (!prefix1.equals(prefix2)) {
                     return canonicalTarget;
                 }
             } else {
                 if (canonicalBase.substring(1, 3).equals(":\\")) {
-                    int endPrefix = 2;
-                    String prefix1 = canonicalBase.substring(0, endPrefix);
-                    String prefix2 = canonicalTarget.substring(0, endPrefix);
+                    final int endPrefix = 2;
+                    final String prefix1 = canonicalBase.substring(0,
+                            endPrefix);
+                    final String prefix2 = canonicalTarget.substring(0,
+                            endPrefix);
                     if (!prefix1.equals(prefix2)) {
                         return canonicalTarget;
                     }
@@ -98,8 +101,8 @@ public final class FileUtil {
             // finding the last separator they have in common
             for (int i = 0; i < minLength; i++) {
                 if (canonicalTarget.charAt(i) == canonicalBase.charAt(i)) {
-                    if (canonicalTarget.charAt(i) == '/'
-                            || canonicalTarget.charAt(i) == '\\') {
+                    if ((canonicalTarget.charAt(i) == '/')
+                            || (canonicalTarget.charAt(i) == '\\')) {
                         lastSeparator = i;
                     }
                 } else {
@@ -108,7 +111,7 @@ public final class FileUtil {
                 }
             }
 
-            StringBuffer relativePath = new StringBuffer(50);
+            final StringBuffer relativePath = new StringBuffer(50);
 
             //
             // walk from the first difference to the end of the base
@@ -117,8 +120,8 @@ public final class FileUtil {
             if (canonicalBase.length() > firstDifference) {
                 relativePath.append("..");
                 for (int i = firstDifference; i < canonicalBase.length(); i++) {
-                    if (canonicalBase.charAt(i) == '/'
-                            || canonicalBase.charAt(i) == '\\') {
+                    if ((canonicalBase.charAt(i) == '/')
+                            || (canonicalBase.charAt(i) == '\\')) {
                         relativePath.append(separator);
                         relativePath.append("..");
                     }
@@ -133,11 +136,12 @@ public final class FileUtil {
                 if (relativePath.length() > 0) {
                     relativePath.append(separator);
                 }
-                relativePath.append(canonicalTarget.substring(firstDifference));
+                relativePath.append(canonicalTarget
+                        .substring(firstDifference));
             }
 
             return relativePath.toString();
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             // TODO more handling
         }
         return target;

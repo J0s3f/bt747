@@ -1,20 +1,22 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package gps;
 
 import gps.log.GPSRecord;
+
+import bt747.model.Controller;
 
 /**
  * Event implementation for signaling the application.
@@ -34,8 +36,8 @@ public class GpsEvent {
      */
     public static final int LOG_DOWNLOAD_STARTED = 5;
     /**
-     * Indicates that there was some progress of the download - the application
-     * can update its progress bar.
+     * Indicates that there was some progress of the download - the
+     * application can update its progress bar.
      */
     public static final int DOWNLOAD_STATE_CHANGE = 6;
     /**
@@ -44,9 +46,9 @@ public class GpsEvent {
     public static final int LOG_DOWNLOAD_DONE = 7;
     /**
      * A log download was initiated. An incremental download was selected and
-     * data was already present but does not correspond to the data currently in
-     * the device. The application should request user confirmation to overwrite
-     * this data and respond with
+     * data was already present but does not correspond to the data currently
+     * in the device. The application should request user confirmation to
+     * overwrite this data and respond with
      * {@link Controller#replyToOkToOverwrite(boolean)}.
      */
     public static final int DOWNLOAD_DATA_NOT_SAME_NEEDS_REPLY = 8;
@@ -70,8 +72,8 @@ public class GpsEvent {
     /**
      * Indicates flash configuration data is available.<br>
      * dtUserOptionTimesLeft , dtUpdateRate , dtBaudRate , dtGLL_Period ,
-     * dtRMC_Period , dtVTG_Period , dtGSA_Period , dtGSV_Period , dtGGA_Period
-     * , dtZDA_Period , dtMCHN_Period ,
+     * dtRMC_Period , dtVTG_Period , dtGSA_Period , dtGSV_Period ,
+     * dtGGA_Period , dtZDA_Period , dtMCHN_Period ,
      */
     public static final int UPDATE_FLASH_CONFIG = 16;
     /**
@@ -98,8 +100,8 @@ public class GpsEvent {
     /** logFullOverwrite update notification. */
     public static final int UPDATE_LOG_REC_METHOD = 27;
     /**
-     * logStatus, loggingActive, loggerIsFull, loggerNeedsInit, loggerIsDisabled
-     * update notification.
+     * logStatus, loggingActive, loggerIsFull, loggerNeedsInit,
+     * loggerIsDisabled update notification.
      * 
      * @see GPSstate#isLoggingActive()
      */
@@ -137,7 +139,7 @@ public class GpsEvent {
      * Constructor of new Event with given type and no argument.
      * 
      * @param type
-     *            Type of event.
+     *                Type of event.
      */
     public GpsEvent(final int type) {
         this.type = type;
@@ -148,9 +150,9 @@ public class GpsEvent {
      * Constructor of new Event with given type and argument.
      * 
      * @param type
-     *            Type number.
+     *                Type number.
      * @param arg
-     *            Argument.
+     *                Argument.
      */
     public GpsEvent(final int type, final Object arg) {
         this.type = type;

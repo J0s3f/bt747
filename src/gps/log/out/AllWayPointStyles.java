@@ -23,10 +23,14 @@ public class AllWayPointStyles extends WayPointStyleSet {
                     "http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png" },
             { "M", "MixStamp",
                     "http://maps.google.com/mapfiles/kml/paddle/M.png" },
-            // { "0001", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
-            // { "0002", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
-            // { "0004", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
-            // { "0008", "", "http://maps.google.com/mapfiles/kml/pal4/.png" },
+            // { "0001", "", "http://maps.google.com/mapfiles/kml/pal4/.png"
+            // },
+            // { "0002", "", "http://maps.google.com/mapfiles/kml/pal4/.png"
+            // },
+            // { "0004", "", "http://maps.google.com/mapfiles/kml/pal4/.png"
+            // },
+            // { "0008", "", "http://maps.google.com/mapfiles/kml/pal4/.png"
+            // },
             { "0010", "Picture",
                     "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
             { "0020", "Gaz Station",
@@ -65,18 +69,18 @@ public class AllWayPointStyles extends WayPointStyleSet {
             { "0101", "Picture",
                     "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
             /** 0x0102 Audio recording: Whatever audio recording */
-//            { "0102", "Audio recording",
-//                    "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
+            // { "0102", "Audio recording",
+            // "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
             /** 0x0103 Note: A simple text note. */
-//            { "0103", "Text note",
-//                    "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
+            // { "0103", "Text note",
+            // "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
             /**
              * 0x0104 Document: A more advanced document (could be openoffice
-             * document, pdf, ...). IN general anything that does not fall under
-             * another specific type in this category.
+             * document, pdf, ...). IN general anything that does not fall
+             * under another specific type in this category.
              */
-//            { "0104", "Document",
-//                    "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
+            // { "0104", "Document",
+            // "http://maps.google.com/mapfiles/kml/shapes/camera.png" },
             /** 0x0105 Phone Call */
             { "0108", "Phone Call",
                     "http://maps.google.com/mapfiles/kml/shapes/phone.png" },
@@ -104,6 +108,6 @@ public class AllWayPointStyles extends WayPointStyleSet {
      * 
      */
     public AllWayPointStyles() {
-        super(IconStyles);
+        super(AllWayPointStyles.IconStyles);
     }
 }

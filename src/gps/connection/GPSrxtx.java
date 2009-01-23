@@ -46,7 +46,7 @@ public final class GPSrxtx {
     }
 
     public static void setGpsPortInstance(final GPSPort portInstance) {
-        gpsPort = portInstance;
+        GPSrxtx.gpsPort = portInstance;
     }
 
     /**
@@ -56,27 +56,27 @@ public final class GPSrxtx {
      * @param speed
      */
     public final void setDefaults(final int port, final int speed) {
-        gpsPort.setPort(port);
-        gpsPort.setSpeed(speed);
+        GPSrxtx.gpsPort.setPort(port);
+        GPSrxtx.gpsPort.setSpeed(speed);
     }
 
     public final void setBluetoothAndOpen() {
-        gpsPort.setBlueTooth();
-        gpsPort.openPort();
+        GPSrxtx.gpsPort.setBlueTooth();
+        GPSrxtx.gpsPort.openPort();
     }
 
     public final void setUSBAndOpen() {
-        gpsPort.setUSB();
-        gpsPort.openPort();
+        GPSrxtx.gpsPort.setUSB();
+        GPSrxtx.gpsPort.openPort();
     }
 
     public final void closePort() {
-        gpsPort.closePort();
+        GPSrxtx.gpsPort.closePort();
     }
 
     public final void openPort() {
         closePort();
-        gpsPort.openPort();
+        GPSrxtx.gpsPort.openPort();
     }
 
     /**
@@ -87,29 +87,29 @@ public final class GPSrxtx {
      * @return result of opening the port, 0 if success.
      */
     public final int setPortAndOpen(final int port) {
-        gpsPort.setPort(port);
-        return gpsPort.openPort();
+        GPSrxtx.gpsPort.setPort(port);
+        return GPSrxtx.gpsPort.openPort();
     }
 
     public final int setFreeTextPortAndOpen(final String s) {
-        gpsPort.setFreeTextPort(s);
-        return gpsPort.openPort();
+        GPSrxtx.gpsPort.setFreeTextPort(s);
+        return GPSrxtx.gpsPort.openPort();
     }
 
     public final String getFreeTextPort() {
-        return gpsPort.getFreeTextPort();
+        return GPSrxtx.gpsPort.getFreeTextPort();
     }
 
     public final int getPort() {
-        return gpsPort.getPort();
+        return GPSrxtx.gpsPort.getPort();
     }
 
     public final int getSpeed() {
-        return gpsPort.getSpeed();
+        return GPSrxtx.gpsPort.getSpeed();
     }
 
     public final void setBaudRate(final int speed) {
-        gpsPort.setSpeed(speed);
+        GPSrxtx.gpsPort.setSpeed(speed);
     }
 
     private static final int C_INITIAL_STATE = 0;
@@ -134,10 +134,10 @@ public final class GPSrxtx {
     private static final int C_BUF_SIZE = 0x1100;
     private static final int C_CMDBUF_SIZE = 0x1100;
 
-    private int current_state = C_INITIAL_STATE;
+    private int current_state = GPSrxtx.C_INITIAL_STATE;
 
-    private final byte[] read_buf = new byte[C_BUF_SIZE];
-    private final char[] cmd_buf = new char[C_CMDBUF_SIZE];
+    private final byte[] read_buf = new byte[GPSrxtx.C_BUF_SIZE];
+    private final char[] cmd_buf = new char[GPSrxtx.C_CMDBUF_SIZE];
 
     private int read_buf_p = 0;
     private int cmd_buf_p = 0;
@@ -156,7 +156,7 @@ public final class GPSrxtx {
     private final StringBuffer rec = new StringBuffer(256);
 
     public final boolean isConnected() {
-        return (gpsPort != null) && gpsPort.isConnected();
+        return (GPSrxtx.gpsPort != null) && GPSrxtx.gpsPort.isConnected();
     }
 
     public final void sendPacket(final String p_Packet) {
@@ -179,11 +179,11 @@ public final class GPSrxtx {
                     Generic.debug(">" + rec.toString());
                 }
                 if (Generic.isDebug()) {
-                    gpsPort.writeDebug(">" + rec.toString());
+                    GPSrxtx.gpsPort.writeDebug(">" + rec.toString());
                 }
 
-                rec.append(EOL_BYTES);
-                gpsPort.write(rec.toString());
+                rec.append(GPSrxtx.EOL_BYTES);
+                GPSrxtx.gpsPort.write(rec.toString());
             } catch (final Exception e) {
                 Generic.debug("sendPacket", e);
             }
@@ -196,7 +196,7 @@ public final class GPSrxtx {
     private static final int NORMAL_MODE = 0;
     private static final int DPL700_MODE = 1;
 
-    private int rxtxMode = NORMAL_MODE;
+    private int rxtxMode = GPSrxtx.NORMAL_MODE;
 
     private byte[] DPL700_buffer;
     private int DPL700_buffer_idx;
@@ -218,9 +218,9 @@ public final class GPSrxtx {
             writeOngoing.down(); // Semaphore - reserve link
             try {
                 DPL700_buffer = new byte[buffer_size];
-                rxtxMode = DPL700_MODE;
+                rxtxMode = GPSrxtx.DPL700_MODE;
                 endStringIdx = 0;
-                current_state = C_DPL700_STATE;
+                current_state = GPSrxtx.C_DPL700_STATE;
                 DPL700_buffer_idx = 0;
                 if (Generic.isDebug()) {
                     Generic.debug(">0x" + Convert.unsigned2hex(cmd, 8)
@@ -233,7 +233,7 @@ public final class GPSrxtx {
                 sendbuffer[4] = 0;
                 sendbuffer[5] = 0;
                 sendbuffer[6] = 0;
-                gpsPort.write(sendbuffer);
+                GPSrxtx.gpsPort.write(sendbuffer);
             } catch (final Exception e) {
                 Generic.debug("sendAndGetDPL700", e);
             }
@@ -247,9 +247,9 @@ public final class GPSrxtx {
             writeOngoing.down(); // Semaphore - reserve link
             try {
                 DPL700_buffer = new byte[buffer_size];
-                rxtxMode = DPL700_MODE;
+                rxtxMode = GPSrxtx.DPL700_MODE;
                 endStringIdx = 0;
-                current_state = C_DPL700_STATE;
+                current_state = GPSrxtx.C_DPL700_STATE;
                 DPL700_buffer_idx = 0;
                 if (Generic.isDebug()) {
                     Generic.debug(">" + cmd);
@@ -257,7 +257,7 @@ public final class GPSrxtx {
                 rec.setLength(0);
                 rec.append(cmd);
                 rec.append("\0");
-                gpsPort.write(rec.toString());
+                GPSrxtx.gpsPort.write(rec.toString());
             } catch (final Exception e) {
                 Generic.debug("send and get resp", e);
             }
@@ -269,15 +269,15 @@ public final class GPSrxtx {
         if (isConnected()) {
             writeOngoing.down(); // Semaphore - reserve link
             try {
-                current_state = C_DPL700_STATE;
-                rxtxMode = DPL700_MODE;
+                current_state = GPSrxtx.C_DPL700_STATE;
+                rxtxMode = GPSrxtx.DPL700_MODE;
                 if (Generic.isDebug()) {
                     Generic.debug(">" + cmd);
                 }
                 rec.setLength(0);
                 rec.append(cmd);
                 rec.append("\0");
-                gpsPort.write(rec.toString());
+                GPSrxtx.gpsPort.write(rec.toString());
             } catch (final Exception e) {
                 Generic.debug("sendDPL700Cmd", e);
             }
@@ -302,18 +302,19 @@ public final class GPSrxtx {
     public String[] getResponse() {
         boolean continueReading;
         boolean readAgain = true;
-        int myError = ERR_NOERROR;
+        int myError = GPSrxtx.ERR_NOERROR;
         final boolean skipError = true;
-        continueReading = gpsPort.isConnected();
+        continueReading = GPSrxtx.gpsPort.isConnected();
 
         getResponseOngoing.down();
-        if (gpsPort.debugActive()) {
+        if (GPSrxtx.gpsPort.debugActive()) {
             // Test to avoid unnecessary lost time
-            gpsPort.writeDebug("\r\nR:" + Generic.getTimeStamp() + ":");
+            GPSrxtx.gpsPort.writeDebug("\r\nR:" + Generic.getTimeStamp()
+                    + ":");
         }
 
-        if (current_state == C_FOUND_STATE) {
-            current_state = C_START_STATE;
+        if (current_state == GPSrxtx.C_FOUND_STATE) {
+            current_state = GPSrxtx.C_START_STATE;
         }
 
         while (continueReading) {
@@ -328,7 +329,7 @@ public final class GPSrxtx {
                 // bt747.sys.Vm.debug(Convert.toString(c));
                 // System.err.print("["+c+"]");
                 // }
-                if (rxtxMode == DPL700_MODE) {
+                if (rxtxMode == GPSrxtx.DPL700_MODE) {
                     if (DPL700_buffer_idx < DPL700_buffer.length) {
                         DPL700_buffer[DPL700_buffer_idx++] = (byte) c;
                         // } else {
@@ -345,7 +346,7 @@ public final class GPSrxtx {
                     // if(GPS_DEBUG)
                     // {bt747.sys.Vm.debug(sb.toString()+"\n");};
                     if (((c == 10) || (c == 13))) {
-                        current_state = C_FOUND_STATE;
+                        current_state = GPSrxtx.C_FOUND_STATE;
                         continueReading = false;
                         // System.err.println("[NEW]");
 
@@ -355,36 +356,36 @@ public final class GPSrxtx {
                                     .startsWith("GP");
                         }
                     } else {
-                        current_state = C_ERROR_STATE;
+                        current_state = GPSrxtx.C_ERROR_STATE;
                     }
                     break;
 
                 case C_FOUND_STATE:
-                    current_state = C_START_STATE;
+                    current_state = GPSrxtx.C_START_STATE;
                     /* Fall through */
                 case C_INITIAL_STATE:
                 case C_START_STATE:
                     vCmd.removeAllElements();
                     if (c == '$') {
                         // First character of NMEA string found
-                        current_state = C_FIELD_STATE;
+                        current_state = GPSrxtx.C_FIELD_STATE;
                         cmd_buf_p = 0;
 
                         // cmd_and_param=new String()[];
                         // cmd_buf[cmd_buf_p++]= c;
                         checksum = 0;
                     } else if (!((c == 10) || (c == 13))) {
-                        if (current_state == C_START_STATE) {
-                            myError = ERR_INCOMPLETE;
-                            current_state = C_ERROR_STATE;
+                        if (current_state == GPSrxtx.C_START_STATE) {
+                            myError = GPSrxtx.ERR_INCOMPLETE;
+                            current_state = GPSrxtx.C_ERROR_STATE;
                         }
                     }
                     break;
                 case C_FIELD_STATE:
                     if ((c == 10) || (c == 13)) {
-                        current_state = C_EOL_STATE;
+                        current_state = GPSrxtx.C_EOL_STATE;
                     } else if (c == '*') {
-                        current_state = C_STAR_STATE;
+                        current_state = GPSrxtx.C_STAR_STATE;
                         vCmd.addElement(new String(cmd_buf, 0, cmd_buf_p));
                         // if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P')
                         // {
@@ -401,7 +402,7 @@ public final class GPSrxtx {
                     break;
                 case C_STAR_STATE:
                     if ((c == 10) || (c == 13)) {
-                        current_state = C_ERROR_STATE;
+                        current_state = GPSrxtx.C_ERROR_STATE;
                     } else if ((((c >= '0') && (c <= '9'))
                             || ((c >= 'A') && (c <= 'F')) || ((c >= 'a') && (c <= 'f')))) {
                         // cmd_buf[cmd_buf_p++]= c;
@@ -412,16 +413,16 @@ public final class GPSrxtx {
                         } else {
                             read_checksum = (c - 'a' + 10) << 4;
                         }
-                        current_state = C_CHECKSUM_CHAR1_STATE;
+                        current_state = GPSrxtx.C_CHECKSUM_CHAR1_STATE;
                     } else {
-                        myError = ERR_INCOMPLETE;
-                        current_state = C_ERROR_STATE;
+                        myError = GPSrxtx.ERR_INCOMPLETE;
+                        current_state = GPSrxtx.C_ERROR_STATE;
                     }
                     break;
                 case C_CHECKSUM_CHAR1_STATE:
                     if ((c == 10) || (c == 13)) {
-                        myError = ERR_INCOMPLETE;
-                        current_state = C_ERROR_STATE;
+                        myError = GPSrxtx.ERR_INCOMPLETE;
+                        current_state = GPSrxtx.C_ERROR_STATE;
                     } else if ((((c >= '0') && (c <= '9')) || ((c >= 'A') && (c <= 'F')))) {
                         // cmd_buf[cmd_buf_p++]= c;
                         if ((c >= '0') && (c <= '9')) {
@@ -433,19 +434,19 @@ public final class GPSrxtx {
                         }
 
                         if (read_checksum != checksum) {
-                            myError = ERR_CHECKSUM;
-                            current_state = C_ERROR_STATE;
+                            myError = GPSrxtx.ERR_CHECKSUM;
+                            current_state = GPSrxtx.C_ERROR_STATE;
                         }
-                        current_state = C_EOL_STATE;
+                        current_state = GPSrxtx.C_EOL_STATE;
                     } else {
-                        myError = ERR_INCOMPLETE;
-                        current_state = C_ERROR_STATE;
+                        myError = GPSrxtx.ERR_INCOMPLETE;
+                        current_state = GPSrxtx.C_ERROR_STATE;
                     }
                     break;
                 case C_ERROR_STATE:
                     if (((c == 10) || (c == 13))) {
                         // EOL found, start is ok.
-                        current_state = C_START_STATE;
+                        current_state = GPSrxtx.C_START_STATE;
                     }
                     break;
                 case C_DPL700_STATE:
@@ -454,52 +455,52 @@ public final class GPSrxtx {
                     if (c == 'W') {
                         endStringIdx = 0;
                         DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = C_DPL700_W_STATE;
+                        current_state = GPSrxtx.C_DPL700_W_STATE;
                     } else {
-                        current_state = C_DPL700_STATE;
+                        current_state = GPSrxtx.C_DPL700_STATE;
                     }
                     break;
                 case C_DPL700_W_STATE:
                     // Vm.debug("W_STATE");
                     if (c == 'P') {
                         DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = C_DPL700_P_STATE;
+                        current_state = GPSrxtx.C_DPL700_P_STATE;
                         break;
                     } else if (c == 'W') {
                         endStringIdx = 0;
                         DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = C_DPL700_W_STATE;
+                        current_state = GPSrxtx.C_DPL700_W_STATE;
                     } else if (c == '\'') {
                         DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = C_DPL700_TICK_STATE;
+                        current_state = GPSrxtx.C_DPL700_TICK_STATE;
                     } else {
-                        current_state = C_DPL700_STATE;
+                        current_state = GPSrxtx.C_DPL700_STATE;
                     }
                     break;
                 case C_DPL700_TICK_STATE:
                     // Vm.debug("TICK_STATE");
                     if (c == 'P') {
                         DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = C_DPL700_P_STATE;
+                        current_state = GPSrxtx.C_DPL700_P_STATE;
                         break;
                     } else if (c == 'W') {
                         endStringIdx = 0;
                         DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = C_DPL700_W_STATE;
+                        current_state = GPSrxtx.C_DPL700_W_STATE;
                     } else {
-                        current_state = C_DPL700_STATE;
+                        current_state = GPSrxtx.C_DPL700_STATE;
                     }
                     break;
                 case C_DPL700_P_STATE:
                     // Vm.debug("P_STATE");
                     if (c == ' ') {
                         DPL700_EndString[endStringIdx++] = (byte) c;
-                        current_state = C_DPL700_TEXT_STATE;
+                        current_state = GPSrxtx.C_DPL700_TEXT_STATE;
                         break;
                     } else if (c == 'W') {
-                        current_state = C_DPL700_W_STATE;
+                        current_state = GPSrxtx.C_DPL700_W_STATE;
                     } else {
-                        current_state = C_DPL700_STATE;
+                        current_state = GPSrxtx.C_DPL700_STATE;
                     }
                     break;
                 case C_DPL700_TEXT_STATE:
@@ -508,8 +509,8 @@ public final class GPSrxtx {
                     if (c == 0) {
                         DPL700_EndString[endStringIdx++] = (byte) c;
                         DPL700_buffer_idx -= endStringIdx;
-                        rxtxMode = NORMAL_MODE;
-                        current_state = C_DPL700_END_STATE;
+                        rxtxMode = GPSrxtx.NORMAL_MODE;
+                        current_state = GPSrxtx.C_DPL700_END_STATE;
                         Generic.debug("End DPL700");
                         continueReading = false;
                     } else if (((c >= 'A') && (c <= 'Z'))
@@ -517,20 +518,20 @@ public final class GPSrxtx {
                             || (c == '+') || (c == '\'')) {
                         DPL700_EndString[endStringIdx++] = (byte) c;
                     } else {
-                        current_state = C_DPL700_STATE;
+                        current_state = GPSrxtx.C_DPL700_STATE;
                     }
                     break;
                 default:
-                    rxtxMode = NORMAL_MODE;
-                    current_state = C_ERROR_STATE;
+                    rxtxMode = GPSrxtx.NORMAL_MODE;
+                    current_state = GPSrxtx.C_ERROR_STATE;
                     break;
                 }
-                if (cmd_buf_p > (C_BUF_SIZE - 1)) {
-                    myError = ERR_TOO_LONG;
-                    current_state = C_ERROR_STATE;
+                if (cmd_buf_p > (GPSrxtx.C_BUF_SIZE - 1)) {
+                    myError = GPSrxtx.ERR_TOO_LONG;
+                    current_state = GPSrxtx.C_ERROR_STATE;
                 }
-                if (current_state == C_ERROR_STATE) {
-                    current_state = C_INITIAL_STATE;
+                if (current_state == GPSrxtx.C_ERROR_STATE) {
+                    current_state = GPSrxtx.C_INITIAL_STATE;
                     vCmd.removeAllElements();
                     if (!skipError) {
                         continueReading = false;
@@ -559,22 +560,22 @@ public final class GPSrxtx {
                     } else if (readAgain) {
                         readAgain = false;
                         try {
-                            int max = gpsPort.readCheck();
+                            int max = GPSrxtx.gpsPort.readCheck();
                             if (!stableStrategy || (prevReadCheck == max)
-                                    || (max > C_BUF_SIZE)) {
+                                    || (max > GPSrxtx.C_BUF_SIZE)) {
 
                                 // gpsPort.writeDebug("\r\nC1:" + max + ":");
-                                if ((max > C_BUF_SIZE)) {
-                                    prevReadCheck = max - C_BUF_SIZE;
-                                    max = C_BUF_SIZE;
+                                if ((max > GPSrxtx.C_BUF_SIZE)) {
+                                    prevReadCheck = max - GPSrxtx.C_BUF_SIZE;
+                                    max = GPSrxtx.C_BUF_SIZE;
                                 } else {
                                     prevReadCheck = 0;
                                 }
 
                                 // gpsPort.writeDebug("\r\nC2:" + max + ":");
                                 if (max > 0) {
-                                    bytesRead = gpsPort.readBytes(read_buf,
-                                            0, max);
+                                    bytesRead = GPSrxtx.gpsPort.readBytes(
+                                            read_buf, 0, max);
                                     // if (bytesRead != 0) {
                                     // String sb = new String(read_buf, 0,
                                     // bytesRead);
@@ -599,17 +600,19 @@ public final class GPSrxtx {
                     if (bytesRead == 0) {
                         continueReading = false;
                     } else {
-                        if (gpsPort.debugActive()) {
+                        if (GPSrxtx.gpsPort.debugActive()) {
                             final String q = "(" + Generic.getTimeStamp()
                                     + ")";
-                            gpsPort.writeDebug(q.getBytes(), 0, q.length());
-                            gpsPort.writeDebug(read_buf, 0, bytesRead);
+                            GPSrxtx.gpsPort.writeDebug(q.getBytes(), 0, q
+                                    .length());
+                            GPSrxtx.gpsPort
+                                    .writeDebug(read_buf, 0, bytesRead);
                         }
                     }
                 }
             } // continueReading
         }
-        if (myError == C_ERROR_STATE) {
+        if (myError == GPSrxtx.C_ERROR_STATE) {
             // bt747.sys.Vm.debug("Error on reception");
             //
             // if(GPS_DEBUG&&(vCmd.getCount()!=0)) {
@@ -632,7 +635,7 @@ public final class GPSrxtx {
         // };
         // bt747.sys.Vm.debug(s);
         // }
-        if (current_state == C_FOUND_STATE) {
+        if (current_state == GPSrxtx.C_FOUND_STATE) {
             // if((vCmd.getCount()!=0)&&((String[])vCmd.toObjectArray())[0].charAt(0)=='P')
             // {
             // // return (String[])vCmd.toObjectArray();
@@ -644,13 +647,13 @@ public final class GPSrxtx {
             // }
             getResponseOngoing.up();
             return Interface.toStringArrayAndEmpty(vCmd);
-        } else if (current_state == C_DPL700_END_STATE) {
-            current_state = C_FOUND_STATE;
+        } else if (current_state == GPSrxtx.C_DPL700_END_STATE) {
+            current_state = GPSrxtx.C_FOUND_STATE;
             final String[] resp = new String[1];
             resp[0] = new String(DPL700_EndString, 0, endStringIdx - 1);
-            if (gpsPort.debugActive()) {
+            if (GPSrxtx.gpsPort.debugActive()) {
                 // Test to avoid unnecessary lost time
-                gpsPort.writeDebug("\r\nDPL700:" + resp[0]);
+                GPSrxtx.gpsPort.writeDebug("\r\nDPL700:" + resp[0]);
             }
             getResponseOngoing.up();
             return resp;
@@ -676,16 +679,16 @@ public final class GPSrxtx {
     }
 
     public final void setDebugConn(final boolean gps_debug, final String s) {
-        gpsPort.setDebugFileName(s + "/gpsRawDebug.txt");
+        GPSrxtx.gpsPort.setDebugFileName(s + "/gpsRawDebug.txt");
         if (gps_debug) {
-            gpsPort.startDebug();
+            GPSrxtx.gpsPort.startDebug();
         } else {
-            gpsPort.endDebug();
+            GPSrxtx.gpsPort.endDebug();
         }
     }
 
     public final boolean isDebugConn() {
-        return gpsPort.debugActive();
+        return GPSrxtx.gpsPort.debugActive();
     }
 
 }

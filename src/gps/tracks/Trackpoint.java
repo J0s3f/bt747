@@ -1,7 +1,7 @@
 /**
- * Reimplementation of Mark McClures Javascript PolylineEncoder
- * All the mathematical logic is more or less copied by McClure
- *  
+ * Reimplementation of Mark McClures Javascript PolylineEncoder All the
+ * mathematical logic is more or less copied by McClure
+ * 
  * @author Mark Rambow, Mario De Weerd
  * @e-mail markrambow[at]gmail[dot]com
  * @version 0.1
@@ -20,9 +20,7 @@ public final class Trackpoint {
         setLonDouble(lon);
     }
 
-    public Trackpoint(
-            final double lat,
-            final double lon,
+    public Trackpoint(final double lat, final double lon,
             final double altitude) {
         setLatDouble(lat);
         setLonDouble(lon);
@@ -30,7 +28,7 @@ public final class Trackpoint {
     }
 
     public final void setLatDouble(final double latDouble) {
-        if (latDouble > 90.0 || latDouble < -90.0) {
+        if ((latDouble > 90.0) || (latDouble < -90.0)) {
             this.latDouble = 0.0;
         } else {
             this.latDouble = latDouble;
@@ -38,7 +36,7 @@ public final class Trackpoint {
     }
 
     public final void setLonDouble(final double lonDouble) {
-        if (lonDouble > 180.0 || latDouble < -180.0) {
+        if ((lonDouble > 180.0) || (latDouble < -180.0)) {
             this.lonDouble = 0.0;
         } else {
             this.lonDouble = lonDouble;

@@ -1,6 +1,5 @@
 package bt747.sys.interfaces;
 
-
 public interface BT747HashSet {
 
     /**
@@ -16,5 +15,5 @@ public interface BT747HashSet {
 
     public boolean hasNext();
 
-    public Object next();   
+    public Object next();
 }
