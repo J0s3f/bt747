@@ -6,7 +6,7 @@ import org.j4me.logging.Log;
 import org.j4me.ui.components.RadioButton;
 import org.j4me.ui.components.TextBox;
 
-import bt747.model.Model;
+import bt747.model.AppSettings;
 import bt747.sys.Convert;
 
 public final class LogDownloadConfigScreen extends BT747Dialog {
@@ -55,7 +55,8 @@ public final class LogDownloadConfigScreen extends BT747Dialog {
 
     private final void updateButtons() {
         tbChunkSize.setString(Convert.toString(m().getChunkSize()));
-        tbChunkAhead.setString(Convert.toString(m().getIntOpt(Model.LOGAHEAD)));
+        tbChunkAhead.setString(Convert.toString(m().getIntOpt(
+                AppSettings.LOGAHEAD)));
         rbDownloadMethod.setSelectedIndex(m().getDownloadMethod());
         repaint();
     }

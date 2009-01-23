@@ -1,6 +1,5 @@
 package net.sf.bt747.j2me.system;
 
-
 import java.util.Enumeration;
 
 import bt747.sys.interfaces.BT747HashSet;
@@ -13,22 +12,21 @@ public final class J2MEHashSet implements BT747HashSet {
         iterator = hs.keys();
         return this;
     }
-    
+
     public final void add(final Object o) {
-        hs.put(o,o);
+        hs.put(o, o);
     }
-    
+
     public final void remove(final Object o) {
         hs.remove(o);
     }
-    
+
     public final boolean hasNext() {
         return iterator.hasMoreElements();
     }
-    
+
     public final Object next() {
         return iterator.nextElement();
     }
-
 
 }

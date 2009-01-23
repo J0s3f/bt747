@@ -1,16 +1,16 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                  (c)2008 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//********************************************************************
+// ********************************************************************
+// *** BT 747 ***
+// *** (c)2008 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// ********************************************************************
 package net.sf.bt747.j2me.system;
 
 import org.j4me.logging.Log;
@@ -31,11 +31,13 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
         return new J2MEDate();
     }
 
-    public final BT747Date getDateInstance(final int d, final int m, final int y) {
+    public final BT747Date getDateInstance(final int d, final int m,
+            final int y) {
         return new J2MEDate(d, m, y);
     }
 
-    public final BT747Date getDateInstance(final String strDate, final byte dateFormat) {
+    public final BT747Date getDateInstance(final String strDate,
+            final byte dateFormat) {
         return new J2MEDate(strDate, dateFormat);
     }
 
@@ -70,8 +72,8 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
         return new J2MEFile(path);
     }
 
-    public final BT747File getBufFileInstance(final String path, final int mode,
-            final int card) {
+    public final BT747File getBufFileInstance(final String path,
+            final int mode, final int card) {
         return new J2MEFile(path, mode, card);
     }
 
@@ -139,7 +141,7 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
 
     public final String toString(final double p, final int i) {
         StringBuffer s;
-        if (p >= 1. || p <= -1.) {
+        if ((p >= 1.) || (p <= -1.)) {
             s = new StringBuffer(Double.toString(p));
         } else if (p >= 0.) {
             s = new StringBuffer(Double.toString(p + 1.));
@@ -156,9 +158,9 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
         if (diff == 0) {
             // Do nothing
         } else if (diff > 0) {
-            s.append(ZEROCHARS, 1, diff);
+            s.append(J2MEJavaTranslations.ZEROCHARS, 1, diff);
         } else if (dotPos == 0) {
-            s.append(ZEROCHARS, 0, i + 1);
+            s.append(J2MEJavaTranslations.ZEROCHARS, 0, i + 1);
         } else {
             // Truncate - some limited notion of rounding.
             // TODO: generalize this.
@@ -184,12 +186,14 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
             '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', };
 
     public final String unsigned2hex(final int p, final int i) {
-        String s = Integer.toHexString(p).toUpperCase();
+        final String s = Integer.toHexString(p).toUpperCase();
         if (s.length() == i) {
             return s;
         } else if (s.length() < i) {
-            return ZEROSTRING.substring(ZEROSTRING.length() - i + s.length())
-                    .concat(s);
+            return J2MEJavaTranslations.ZEROSTRING
+                    .substring(
+                            J2MEJavaTranslations.ZEROSTRING.length() - i
+                                    + s.length()).concat(s);
         } else {
             return s.substring(s.length() - i);
         }
@@ -229,7 +233,7 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
 
     public final int getTimeStamp() {
         // Returns the time in ms since the program started.
-        return (int) (System.currentTimeMillis() - appStartTime);
+        return (int) (System.currentTimeMillis() - J2MEJavaTranslations.appStartTime);
     }
 
     private static String appSettings = ""; // TODO: Implement other solution
@@ -238,31 +242,30 @@ public final class J2MEJavaTranslations implements JavaTranslationsInterface {
      * @return the appSettings
      */
     public final String getAppSettings() {
-        return appSettings;
+        return J2MEJavaTranslations.appSettings;
     }
 
     /**
      * @param settings
-     *            the appSettings to set
+     *                the appSettings to set
      */
     public final void setAppSettings(final String settings) {
-        appSettings = settings;
+        J2MEJavaTranslations.appSettings = settings;
     }
 
     public final BT747Semaphore getSemaphoreInstance(final int value) {
         return new J2MESemaphore(value);
     }
 
-    public final BT747StringTokenizer getStringTokenizer(final String a, final char b) {
+    public final BT747StringTokenizer getStringTokenizer(final String a,
+            final char b) {
         // TODO Auto-generated method stub
-        return new J2MEStringTokenizer(a,b);
+        return new J2MEStringTokenizer(a, b);
     }
 
     public final BT747HashSet getHashSetInstance() {
         // TODO Auto-generated method stub
         return new J2MEHashSet();
     }
-    
-    
 
 }

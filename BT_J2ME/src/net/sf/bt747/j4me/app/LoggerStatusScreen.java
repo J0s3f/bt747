@@ -1,5 +1,7 @@
 package net.sf.bt747.j4me.app;
 
+import gps.GpsEvent;
+
 import java.util.Date;
 
 import net.sf.bt747.j4me.app.screens.BT747Dialog;
@@ -22,13 +24,15 @@ public final class LoggerStatusScreen extends BT747Dialog implements
     private FieldValue logActive = new FieldValue("Logging is:");
     private FieldValue logRCRTime = new FieldValue("Time interval (s)");
     private FieldValue logRCRSpeed = new FieldValue("Speed interval (km/h)");
-    private FieldValue logRCRDistance = new FieldValue("Distance interval (m)");
+    private FieldValue logRCRDistance = new FieldValue(
+            "Distance interval (m)");
 
     private FieldValue memoryTotal = new FieldValue("Size (bytes)");
     private FieldValue memoryUsed = new FieldValue("Used (bytes)");
     private FieldValue memoryUsedPercent = new FieldValue("Used (%)");
     private FieldValue memoryUsedRecords = new FieldValue("Logged pos (#)");
-    private FieldValue memoryAvailRecords = new FieldValue("Available pos (#)");
+    private FieldValue memoryAvailRecords = new FieldValue(
+            "Available pos (#)");
 
     private boolean screenSetup = false;
 
@@ -67,12 +71,12 @@ public final class LoggerStatusScreen extends BT747Dialog implements
      * Adds components for a new section of information.
      * 
      * @param title
-     *            is the name of the section.
+     *                is the name of the section.
      */
     private void createNewSection(final String title) {
         append(new HorizontalRule());
 
-        Label header = new Label();
+        final Label header = new Label();
         header.setFont(UIManager.getTheme().getMenuFont());
         header.setLabel(title);
         append(header);
@@ -85,7 +89,7 @@ public final class LoggerStatusScreen extends BT747Dialog implements
         planUpdateLock.down();
         planUpdate = true;
         planUpdateLock.up();
-        Thread worker = new Thread(this);
+        final Thread worker = new Thread(this);
         worker.start();
         // updateData();
         super.showNotify();
@@ -136,22 +140,22 @@ public final class LoggerStatusScreen extends BT747Dialog implements
         }
 
         public void setLabel(final double d) {
-            String s = Double.toString(d);
+            final String s = Double.toString(d);
             setLabel(s);
         }
 
         public void setLabel(final float f) {
-            String s = Float.toString(f);
+            final String s = Float.toString(f);
             setLabel(s);
         }
 
         public void setLabel(final Date d) {
-            String s = d.toString();
+            final String s = d.toString();
             setLabel(s);
         }
 
         public void setLabel(final int i) {
-            String s = Integer.toString(i);
+            final String s = Integer.toString(i);
             setLabel(s);
         }
     }
@@ -162,7 +166,7 @@ public final class LoggerStatusScreen extends BT747Dialog implements
 
     private void updateData() {
         try {
-            logActive.setLabel(m().isLoggingActive()?"ON":"OFF");
+            logActive.setLabel(m().isLoggingActive() ? "ON" : "OFF");
             // Log.debug(System.currentTimeMillis()+" Update data");
             logRCRTime.setLabel(Convert.toString(
                     m().getLogTimeInterval() / 10., 1));
@@ -176,7 +180,7 @@ public final class LoggerStatusScreen extends BT747Dialog implements
             memoryUsedRecords.setLabel(m().logNbrLogPts());
             memoryAvailRecords.setLabel(m().getEstimatedNbrRecordsFree(
                     m().getLogFormat()));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("updateData", e);
         }
         repaint();
@@ -187,12 +191,12 @@ public final class LoggerStatusScreen extends BT747Dialog implements
 
     public final void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
-        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
-        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
-        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
-        case ModelEvent.UPDATE_LOG_MEM_USED:
-        case ModelEvent.UPDATE_LOG_FLASH:
-        case ModelEvent.UPDATE_LOG_NBR_LOG_PTS:
+        case GpsEvent.UPDATE_LOG_TIME_INTERVAL:
+        case GpsEvent.UPDATE_LOG_SPEED_INTERVAL:
+        case GpsEvent.UPDATE_LOG_DISTANCE_INTERVAL:
+        case GpsEvent.UPDATE_LOG_MEM_USED:
+        case GpsEvent.UPDATE_LOG_FLASH:
+        case GpsEvent.UPDATE_LOG_NBR_LOG_PTS:
             planUpdateLock.down();
             planUpdate = true;
             planUpdateLock.up();
@@ -207,7 +211,7 @@ public final class LoggerStatusScreen extends BT747Dialog implements
         while (isShown()) {
             try {
                 Thread.sleep(100);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // TODO: handle exception
             }
             planUpdateLock.down();

@@ -8,9 +8,9 @@ import org.j4me.ui.components.RadioButton;
 
 /**
  * The "Initializing GPS..." alert screen. This screen is used to get the
- * <code>LocationProvider</code> for the application. It first tries to get a
- * provider on the device. But if it cannot it will get a GPS provider through a
- * Bluetooth connection.
+ * <code>LocationProvider</code> for the application. It first tries to get
+ * a provider on the device. But if it cannot it will get a GPS provider
+ * through a Bluetooth connection.
  */
 public final class ConvertToProgressScreen extends ProgressAlert {
     /**
@@ -19,24 +19,25 @@ public final class ConvertToProgressScreen extends ProgressAlert {
     private final AppController c;
 
     /**
-     * The screen that came before this one. If the user cancels the the process
-     * or if it fails it will be returned to.
+     * The screen that came before this one. If the user cancels the the
+     * process or if it fails it will be returned to.
      */
     private final DeviceScreen previous;
 
     private RadioButton rbFormats;
-    
+
     private int convertType;
 
     /**
      * Constructs the "Initializing GPS..." alert screen.
      * 
      * @param model
-     *            is the application's location data.
+     *                is the application's location data.
      * @param previous
-     *            is the screen that came before this one.
+     *                is the screen that came before this one.
      */
-    public ConvertToProgressScreen(final AppController c, final DeviceScreen previous, final int convertType) {
+    public ConvertToProgressScreen(final AppController c,
+            final DeviceScreen previous, final int convertType) {
         super("Convert Log", "Converting Log File");
         this.convertType = convertType;
         this.c = c;
@@ -64,7 +65,7 @@ public final class ConvertToProgressScreen extends ProgressAlert {
      * will set the next screen when it is done.
      */
     protected final DeviceScreen doWork() {
-        DeviceScreen next = previous;
+        final DeviceScreen next = previous;
 
         // String text = getText() + "\n" + "Using device: " + deviceName;
         // setText(text);
@@ -82,7 +83,7 @@ public final class ConvertToProgressScreen extends ProgressAlert {
             if (error != 0) {
                 Log.error(c.getLastError() + " " + c.getLastErrorInfo());
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("Exception during log convert", e);
         }
 

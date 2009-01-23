@@ -5,11 +5,13 @@ import net.sf.bt747.j4me.app.screens.BT747Dialog;
 
 import org.j4me.ui.components.CheckBox;
 
+import bt747.model.AppSettings;
+
 public final class FileFieldSelectScreen extends BT747Dialog {
 
     private static final int C_LOG_FMT_COUNT = 21 - 1;
 
-    private CheckBox[] chkLogFmtItems = new CheckBox[C_LOG_FMT_COUNT];
+    private CheckBox[] chkLogFmtItems = new CheckBox[FileFieldSelectScreen.C_LOG_FMT_COUNT];
     private CheckBox commentCheck;
     private CheckBox nameCheck;
 
@@ -19,7 +21,7 @@ public final class FileFieldSelectScreen extends BT747Dialog {
         if (!screenSetup) {
             screenSetup = true;
             deleteAll();
-            for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
+            for (int i = 0; i < FileFieldSelectScreen.C_LOG_FMT_COUNT; i++) {
                 chkLogFmtItems[i] = new CheckBox();
                 chkLogFmtItems[i].setLabel(Txt.logFmtItems[i]);
                 append(chkLogFmtItems[i]);
@@ -37,7 +39,7 @@ public final class FileFieldSelectScreen extends BT747Dialog {
     private int getSelectedLogFormat() {
         int bitMask = 1;
         int logFormat = 0;
-        for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
+        for (int i = 0; i < FileFieldSelectScreen.C_LOG_FMT_COUNT; i++) {
             if (chkLogFmtItems[i].isChecked()) {
                 logFormat |= bitMask;
             }
@@ -49,11 +51,11 @@ public final class FileFieldSelectScreen extends BT747Dialog {
 
     public void show() {
         setupScreen();
-        updateLogFormat(m().getIntOpt(AppModel.FILEFIELDFORMAT));
+        updateLogFormat(m().getIntOpt(AppSettings.FILEFIELDFORMAT));
         commentCheck.setChecked(m().getBooleanOpt(
-                AppModel.IS_WRITE_TRACKPOINT_COMMENT));
+                AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
         nameCheck.setChecked(m().getBooleanOpt(
-                AppModel.IS_WRITE_TRACKPOINT_NAME));
+                AppSettings.IS_WRITE_TRACKPOINT_NAME));
         invalidate();
         super.show();
     }
@@ -73,31 +75,31 @@ public final class FileFieldSelectScreen extends BT747Dialog {
      * settings.
      * 
      * @param pLogFormat
-     *            LogFormat to set
+     *                LogFormat to set
      */
     private void updateLogFormat(final int pLogFormat) {
         // Log.debug("Update FileFieldFormat:" +
         // bt747.sys.Convert.unsigned2hex(pLogFormat, 8));
         int bitMask = 1;
-        for (int i = 0; i < C_LOG_FMT_COUNT; i++) {
+        for (int i = 0; i < FileFieldSelectScreen.C_LOG_FMT_COUNT; i++) {
             chkLogFmtItems[i].setChecked((pLogFormat & bitMask) != 0);
             // chkLogFmtItems[i].repaintNow();
             bitMask <<= 1;
         }
         commentCheck.setChecked(m().getBooleanOpt(
-                AppModel.IS_WRITE_TRACKPOINT_COMMENT));
+                AppSettings.IS_WRITE_TRACKPOINT_COMMENT));
         nameCheck.setChecked(m().getBooleanOpt(
-                AppModel.IS_WRITE_TRACKPOINT_NAME));
+                AppSettings.IS_WRITE_TRACKPOINT_NAME));
         invalidate();
         repaint();
     }
 
     private void saveLogFormat() {
-        c.setBooleanOpt(AppModel.IS_WRITE_TRACKPOINT_COMMENT, commentCheck
+        c.setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT, commentCheck
                 .isChecked());
-        c.setBooleanOpt(AppModel.IS_WRITE_TRACKPOINT_NAME, nameCheck
+        c.setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME, nameCheck
                 .isChecked());
-        c.setIntOpt(AppModel.FILEFIELDFORMAT, getSelectedLogFormat());
+        c.setIntOpt(AppSettings.FILEFIELDFORMAT, getSelectedLogFormat());
         // Log.debug("FileFieldFormat:" +
         // bt747.sys.Convert.unsigned2hex(getSelectedLogFormat(), 8));
     }

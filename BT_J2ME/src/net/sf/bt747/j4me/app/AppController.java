@@ -18,7 +18,9 @@ import net.sf.bt747.j4me.app.screens.FileManager;
 
 import org.j4me.logging.Log;
 
+import bt747.model.AppSettings;
 import bt747.model.Controller;
+import bt747.model.Model;
 import bt747.sys.File;
 import bt747.sys.Settings;
 
@@ -31,7 +33,8 @@ public class AppController extends Controller {
         super.setModel(m);
         appInit();
         super.init();
-        Log.info("Basedir set to:" + m.getStringOpt(AppModel.OUTPUTDIRPATH));
+        Log.info("Basedir set to:"
+                + m.getStringOpt(AppSettings.OUTPUTDIRPATH));
 
     }
 
@@ -63,12 +66,12 @@ public class AppController extends Controller {
             }
             bytes = recordStore.getRecord(2);
             // Log.debug("Size:"+bytes.length);
-            DataInputStream is = new DataInputStream(new ByteArrayInputStream(
-                    bytes));
+            final DataInputStream is = new DataInputStream(
+                    new ByteArrayInputStream(bytes));
             int settingsVersion = -1;
             try {
-                String BtHost = restoreNull(is.readUTF());
-                String BtURL = restoreNull(is.readUTF());
+                final String BtHost = restoreNull(is.readUTF());
+                final String BtURL = restoreNull(is.readUTF());
                 m.setBluetoothGPS(BtHost, BtURL);
                 Log.debug("Recovered BT URL " + BtHost + " " + BtURL);
 
@@ -93,7 +96,7 @@ public class AppController extends Controller {
                 default:
                     break;
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
             }
 
             recordStore.closeRecordStore();
@@ -111,7 +114,7 @@ public class AppController extends Controller {
             // mEmailAddress = restoreNull(inputStream.readUTF());
             // mUserName = restoreNull(inputStream.readUTF());
             // inputStream.close();
-        } catch (RecordStoreException exception) {
+        } catch (final RecordStoreException exception) {
             m.setBluetoothGPS(null, null);
             // mUnitType = UNITTYPE_METRIC;
             // mBacklightSeconds = 0;
@@ -134,15 +137,16 @@ public class AppController extends Controller {
     }
 
     public final void setPaths() {
-        setStringOpt(AppModel.LOGFILEPATH,
-                m.getStringOpt(AppModel.OUTPUTDIRPATH)+
-                File.separatorStr+ m.getStringOpt(AppModel.LOGFILERELPATH));
+        setStringOpt(AppSettings.LOGFILEPATH, m
+                .getStringOpt(AppSettings.OUTPUTDIRPATH)
+                + File.separatorStr
+                + m.getStringOpt(AppSettings.LOGFILERELPATH));
     }
-    
+
     private void resetSettings() {
         try {
-            FileManager fm = new FileManager();
-            Enumeration roots = fm.listRoots();
+            final FileManager fm = new FileManager();
+            final Enumeration roots = fm.listRoots();
             String dir = "";
             while (roots.hasMoreElements()) {
                 dir = "/" + (String) roots.nextElement();
@@ -152,16 +156,17 @@ public class AppController extends Controller {
             }
             fm.close();
             // Log.info("Setting basedir set to:" + dir);
-            setStringOpt(AppModel.OUTPUTDIRPATH, dir);
-        } catch (Exception e) {
+            setStringOpt(AppSettings.OUTPUTDIRPATH, dir);
+        } catch (final Exception e) {
             Log.debug("Problem finding root", e);
             // TODO: handle exception
         }
         setChunkSize(500);
         setLogRequestAhead(4); // For trial, small size for data.
-        Log.info("Reset basedir set to:" + m.getStringOpt(AppModel.OUTPUTDIRPATH));
+        Log.info("Reset basedir set to:"
+                + m.getStringOpt(AppSettings.OUTPUTDIRPATH));
         // Input is "/BT747/BT747_sample.bin"
-        setStringOpt(AppModel.LOGFILERELPATH, "BT747_sample.bin");
+        setStringOpt(AppSettings.LOGFILERELPATH, "BT747_sample.bin");
         setPaths();
 
         // Output is "/BT747/GPSDATA*"
@@ -196,17 +201,18 @@ public class AppController extends Controller {
     public final void saveSettings() {
         RecordStore recordStore;
         Log.debug("Store settings");
-        m.getIntOpt(AppModel.FILEFIELDFORMAT);
+        m.getIntOpt(AppSettings.FILEFIELDFORMAT);
         try {
             byte[] bytes;
             recordStore = RecordStore.openRecordStore(RECORDSTORENAME, true);
 
             // Save original BT747 settings
             bytes = Settings.getAppSettings().getBytes();
-            if (recordStore.getNumRecords() == 0)
+            if (recordStore.getNumRecords() == 0) {
                 recordStore.addRecord(bytes, 0, bytes.length);
-            else
+            } else {
                 recordStore.setRecord(1, bytes, 0, bytes.length);
+            }
 
             // Save application settings
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -218,7 +224,7 @@ public class AppController extends Controller {
                 os.writeInt(appSettingsVersion);
                 os.writeBoolean(isPersistentDebug());
                 if (isPersistentDebug()) {
-                    os.writeBoolean(AppModel.isDebug());
+                    os.writeBoolean(Model.isDebug());
                     os.writeBoolean(m.isDebugConn());
                     os.writeBoolean(isUseConsoleFile());
                 } else {
@@ -240,21 +246,21 @@ public class AppController extends Controller {
                 bos = null;
                 Log.debug("Stored BT URL " + m.getBluetoothGPSName() + " "
                         + m.getBluetoothGPSURL());
-            } catch (Exception exception) {
+            } catch (final Exception exception) {
                 Log.error("While BT save", exception);
             }
             recordStore.closeRecordStore();
-        } catch (Throwable exception) {
+        } catch (final Throwable exception) {
             Log.error("Problem saving settings", exception);
         }
-        m.getIntOpt(AppModel.FILEFIELDFORMAT);
+        m.getIntOpt(AppSettings.FILEFIELDFORMAT);
     }
 
-    private String removeNull(String text) {
+    private String removeNull(final String text) {
         return text != null ? text : "";
     }
 
-    private String restoreNull(String text) {
+    private String restoreNull(final String text) {
         return text.length() > 0 ? text : null;
     }
 
@@ -280,30 +286,33 @@ public class AppController extends Controller {
         } else {
             if (!consoleIsOpen) {
                 try {
-                    String fn = "file://" + m.getStringOpt(AppModel.OUTPUTDIRPATH)
+                    final String fn = "file://"
+                            + m.getStringOpt(AppSettings.OUTPUTDIRPATH)
                             + File.separatorStr + "BT747Console.log";
                     javax.microedition.io.file.FileConnection fc;
                     try {
-                        fc = (javax.microedition.io.file.FileConnection) Connector.open(fn);
+                        fc = (javax.microedition.io.file.FileConnection) Connector
+                                .open(fn);
                         if (fc.exists()) {
                             fc.delete();
                         }
                         fc.close();
-                    } catch (Throwable e) {
+                    } catch (final Throwable e) {
                         Log.debug("Delete", e);
                     }
 
                     try {
-                        fc = (javax.microedition.io.file.FileConnection) Connector.open(fn);
+                        fc = (javax.microedition.io.file.FileConnection) Connector
+                                .open(fn);
                         fc.create();
-                        fc = (javax.microedition.io.file.FileConnection) Connector.open(fn,
-                                Connector.WRITE);
+                        fc = (javax.microedition.io.file.FileConnection) Connector
+                                .open(fn, Connector.WRITE);
                         Log.setOutputStream(fc.openOutputStream());
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         Log.debug("Open " + fn, e);
                     }
                     consoleIsOpen = true;
-                } catch (Throwable e) {
+                } catch (final Throwable e) {
                     Log.debug("Open console", e);
                 }
             }
@@ -319,7 +328,7 @@ public class AppController extends Controller {
         return persistentDebug;
     }
 
-    public final void setPersistentDebug(boolean persistentDebug) {
+    public final void setPersistentDebug(final boolean persistentDebug) {
         this.persistentDebug = persistentDebug;
     }
 

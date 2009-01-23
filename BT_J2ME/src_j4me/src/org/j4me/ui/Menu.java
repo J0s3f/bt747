@@ -1,16 +1,17 @@
 package org.j4me.ui;
 
 import org.j4me.logging.Log;
-import org.j4me.ui.components.*;
+import org.j4me.ui.components.Component;
+import org.j4me.ui.components.MenuOption;
 
 /**
  * The <code>Menu</code> class is used for creating the application's menus.
  * <p>
- * J2ME devices have small screens and are not all very responsive to scrolling.
- * However, they do have keypads. The <code>Menu</code> class respects this
- * and limits menus to a total of 9 possible choices (1-9) plus "Exit". Usually
- * all the choices can be seen on a single screen and selected with a single
- * button.
+ * J2ME devices have small screens and are not all very responsive to
+ * scrolling. However, they do have keypads. The <code>Menu</code> class
+ * respects this and limits menus to a total of 9 possible choices (1-9) plus
+ * "Exit". Usually all the choices can be seen on a single screen and selected
+ * with a single button.
  * <p>
  * Override this class to change how the menu is painted for your application.
  */
@@ -30,8 +31,8 @@ public class Menu extends Dialog {
         setSpacing(0);
 
         // Add the menu bar.
-        Theme theme = UIManager.getTheme();
-        String rightMenuText = theme.getMenuTextForOK();
+        final Theme theme = UIManager.getTheme();
+        final String rightMenuText = theme.getMenuTextForOK();
         setMenuText(null, rightMenuText);
     }
 
@@ -39,12 +40,12 @@ public class Menu extends Dialog {
      * Constructs a menu.
      * 
      * @param name
-     *            is the title for this menu, for example "Main Menu". It
-     *            appears at the top of the screen in the title area.
+     *                is the title for this menu, for example "Main Menu". It
+     *                appears at the top of the screen in the title area.
      * @param previous
-     *            is the screen to return to if the user cancels this.
+     *                is the screen to return to if the user cancels this.
      */
-    public Menu(String name, DeviceScreen previous) {
+    public Menu(final String name, final DeviceScreen previous) {
         this();
 
         this.previous = previous;
@@ -59,17 +60,17 @@ public class Menu extends Dialog {
      * "Cancel" button.
      * 
      * @param previous
-     *            is the screen to go to if the user presses "Cancel".
+     *                is the screen to go to if the user presses "Cancel".
      */
-    public void setPrevious(DeviceScreen previous) {
+    public void setPrevious(final DeviceScreen previous) {
         // Record the previous screen.
         this.previous = previous;
 
         // Set the menu text.
-        Theme theme = UIManager.getTheme();
-        String leftMenuText = (previous == null ? null : theme
+        final Theme theme = UIManager.getTheme();
+        final String leftMenuText = (previous == null ? null : theme
                 .getMenuTextForCancel());
-        String rightMenuText = theme.getMenuTextForOK();
+        final String rightMenuText = theme.getMenuTextForOK();
         setMenuText(leftMenuText, rightMenuText);
     }
 
@@ -77,35 +78,36 @@ public class Menu extends Dialog {
      * Appends a new menu option to this menu.
      * 
      * @param option
-     *            is the menu item to add.
+     *                is the menu item to add.
      */
-    public void appendMenuOption(MenuItem option) {
-        MenuOption choice = new MenuOption(option);
+    public void appendMenuOption(final MenuItem option) {
+        final MenuOption choice = new MenuOption(option);
         append(choice);
     }
 
     /**
-     * Appends a screen as a menu option. If selected the screen will be shown.
-     * The screen's title is used as its text.
+     * Appends a screen as a menu option. If selected the screen will be
+     * shown. The screen's title is used as its text.
      * 
      * @param option
-     *            is screen to add as a menu item.
+     *                is screen to add as a menu item.
      */
-    public void appendMenuOption(DeviceScreen option) {
-        MenuOption choice = new MenuOption(option);
+    public void appendMenuOption(final DeviceScreen option) {
+        final MenuOption choice = new MenuOption(option);
         append(choice);
     }
 
     /**
-     * Appends a screen as a menu option. If selected the screen will be shown.
+     * Appends a screen as a menu option. If selected the screen will be
+     * shown.
      * 
      * @param text
-     *            is string that appears in the menu option.
+     *                is string that appears in the menu option.
      * @param option
-     *            is screen to add as a menu item.
+     *                is screen to add as a menu item.
      */
-    public void appendMenuOption(String text, DeviceScreen option) {
-        MenuOption choice = new MenuOption(text, option);
+    public void appendMenuOption(final String text, final DeviceScreen option) {
+        final MenuOption choice = new MenuOption(text, option);
         append(choice);
     }
 
@@ -117,16 +119,16 @@ public class Menu extends Dialog {
      * <code>appendMenuOption</code> method instead.
      * 
      * @param submenu
-     *            is the screen to add as a menu item.
+     *                is the screen to add as a menu item.
      */
-    public void appendSubmenu(Menu submenu) {
-        MenuOption choice = new MenuOption(submenu, true);
+    public void appendSubmenu(final Menu submenu) {
+        final MenuOption choice = new MenuOption(submenu, true);
         append(choice);
     }
 
     /**
-     * The left menu button takes the user back to the previous screen. If there
-     * is no previous screen it has no effect.
+     * The left menu button takes the user back to the previous screen. If
+     * there is no previous screen it has no effect.
      */
     protected void declineNotify() {
         // Go back to the previous screen.
@@ -143,7 +145,7 @@ public class Menu extends Dialog {
      */
     protected void acceptNotify() {
         // Go to the highlighted screen.
-        int highlighted = getSelected();
+        final int highlighted = getSelected();
         selection(highlighted);
 
         // Continue processing the event.
@@ -155,13 +157,13 @@ public class Menu extends Dialog {
      * 
      * @see org.j4me.ui.Dialog#keyReleased(int)
      */
-    protected void keyReleased(int keyCode) {
+    protected void keyReleased(final int keyCode) {
         boolean select = false;
         boolean back = false;
-        if (keyCode == RIGHT) {
-            Component component = get(getSelected());
+        if (keyCode == DeviceScreen.RIGHT) {
+            final Component component = get(getSelected());
             if (component instanceof MenuOption) {
-                MenuOption mo = (MenuOption) component;
+                final MenuOption mo = (MenuOption) component;
                 if (mo.isSubmenu()) {
                     select = true;
                 }
@@ -169,7 +171,7 @@ public class Menu extends Dialog {
             // Object get(getS)
             // if(get(getSelected()).)
 
-        } else if (keyCode == LEFT) {
+        } else if (keyCode == DeviceScreen.LEFT) {
             back = true;
         }
 
@@ -184,15 +186,15 @@ public class Menu extends Dialog {
 
     /**
      * Responds to key press events that are specific to menu screens. Selects
-     * the highlighted menu choice if the joystick's <code>FIRE</code> key is
-     * pressed. Scrolls from the last choice to the first choice if
+     * the highlighted menu choice if the joystick's <code>FIRE</code> key
+     * is pressed. Scrolls from the last choice to the first choice if
      * <code>DOWN</code> is pressed and from the first to the last if
      * <code>UP</code> is pressed.
      * 
      * @param keyCode
-     *            is the key code of the button the user pressed.
+     *                is the key code of the button the user pressed.
      */
-    protected void keyPressed(int keyCode) {
+    protected void keyPressed(final int keyCode) {
         handleKeyPressOrRepeat(keyCode, false);
     }
 
@@ -201,24 +203,24 @@ public class Menu extends Dialog {
      * 
      * @see org.j4me.ui.Dialog#keyRepeated(int)
      */
-    protected void keyRepeated(int keyCode) {
+    protected void keyRepeated(final int keyCode) {
         handleKeyPressOrRepeat(keyCode, true);
     }
 
     private final void handleKeyPressOrRepeat(final int keyCode,
             final boolean isRepeated) {
-        int initialSize = size();
+        final int initialSize = size();
         int nextPos = -100; // Negative value means no movement
 
         // Wrap the scroll around the screen?
-        if (keyCode == DOWN) {
+        if (keyCode == DeviceScreen.DOWN) {
             if (getSelected() == size() - 1) {
                 // Go to the first menu choice.
                 nextPos = 0;
             } else if (isRepeated) {
                 nextPos = getSelected() + 1;
             }
-        } else if (keyCode == UP) {
+        } else if (keyCode == DeviceScreen.UP) {
             if ((getSelected() == 0) && (size() > 1)) {
                 // Go to the last menu choice.
                 nextPos = size() - 1;
@@ -238,7 +240,7 @@ public class Menu extends Dialog {
         // keyPressed() will scroll again so we'll actually wind
         // up on the second or second-to-last menu choice.
         if ((nextPos >= 0) && (size() == initialSize)) {
-            Log.debug(isRepeated?"KeyRepeated":"KeyPressed");
+            Log.debug(isRepeated ? "KeyRepeated" : "KeyPressed");
             setSelected(nextPos);
         }
     }
@@ -247,13 +249,13 @@ public class Menu extends Dialog {
      * Selects a menu item.
      * 
      * @param selection
-     *            is the index of <code>choice</code> that is selected.
+     *                is the index of <code>choice</code> that is selected.
      */
-    private void selection(int selection) {
-        Component component = get(selection);
+    private void selection(final int selection) {
+        final Component component = get(selection);
 
         if (component instanceof MenuOption) {
-            MenuOption chosen = (MenuOption) component;
+            final MenuOption chosen = (MenuOption) component;
 
             // Record this as the selection.
             setSelected(selection);

@@ -61,7 +61,7 @@ public final class J2MEFile implements BT747File {
                 lMode = Connector.READ;
             }
             if (mode != bt747.sys.File.DONT_OPEN) {
-                String urlPath = "file://" + path;
+                final String urlPath = "file://" + path;
                 Log.debug("Try to open " + path);
                 fileConnection = (javax.microedition.io.file.FileConnection) Connector
                         .open(urlPath, lMode);
@@ -72,19 +72,19 @@ public final class J2MEFile implements BT747File {
                     is = fileConnection.openInputStream();
                     break;
                 case bt747.sys.File.WRITE_ONLY:
-                    os = fileConnection.openOutputStream(this.getSize());
+                    os = fileConnection.openOutputStream(getSize());
                     break;
                 case bt747.sys.File.CREATE:
-                    os = fileConnection.openOutputStream(this.getSize());
+                    os = fileConnection.openOutputStream(getSize());
                     break;
                 case bt747.sys.File.READ_WRITE:
                     is = fileConnection.openInputStream();
-                    os = fileConnection.openOutputStream(this.getSize());
+                    os = fileConnection.openOutputStream(getSize());
                     break;
                 default:
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("new", e);
             lastError = -1;
         }
@@ -92,10 +92,10 @@ public final class J2MEFile implements BT747File {
 
     private Object tmpFileConnection(final String path) throws IOException {
         try {
-            String urlPath = "file://" + path;
+            final String urlPath = "file://" + path;
             Log.debug("File: " + urlPath);
             return (Connector.open(urlPath));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("file connection", e);
             return null;
         }
@@ -103,14 +103,14 @@ public final class J2MEFile implements BT747File {
 
     public int getSize() {
         try {
-            javax.microedition.io.file.FileConnection fileConnection = (javax.microedition.io.file.FileConnection) fileObject;
+            final javax.microedition.io.file.FileConnection fileConnection = (javax.microedition.io.file.FileConnection) fileObject;
             if (fileConnection == null) {
                 return (int) ((javax.microedition.io.file.FileConnection) tmpFileConnection(path))
                         .fileSize();
             } else {
                 return (int) fileConnection.fileSize();
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("getSize", e);
             lastError = -1;
             return 0;
@@ -121,7 +121,7 @@ public final class J2MEFile implements BT747File {
         try {
             return ((javax.microedition.io.file.FileConnection) tmpFileConnection(path))
                     .exists();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("exists", e);
             lastError = -1;
             return false;
@@ -133,7 +133,7 @@ public final class J2MEFile implements BT747File {
             ((javax.microedition.io.file.FileConnection) tmpFileConnection(path))
                     .delete();
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("delete", e);
             lastError = -1;
             return false;
@@ -145,7 +145,7 @@ public final class J2MEFile implements BT747File {
             ((javax.microedition.io.file.FileConnection) tmpFileConnection(path))
                     .mkdir();
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("createDir", e);
             lastError = -1;
             return false;
@@ -168,14 +168,14 @@ public final class J2MEFile implements BT747File {
     public boolean close() {
         try {
             javax.microedition.io.file.FileConnection fileConnection = (javax.microedition.io.file.FileConnection) fileObject;
-            if (isopen && fileConnection != null) {
+            if (isopen && (fileConnection != null)) {
                 isopen = false;
                 try {
                     if (is != null) {
                         is.close();
                         is = null;
                     }
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     Log.error("inputstream close", e);
                     // TODO: handle exceptions
                     return false;
@@ -185,7 +185,7 @@ public final class J2MEFile implements BT747File {
                         os.close();
                         os = null;
                     }
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     Log.error("outputstream close", e);
                     // TODO: handle exceptions
                     return false;
@@ -194,7 +194,7 @@ public final class J2MEFile implements BT747File {
                 fileConnection = null;
             }
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("File close", e);
             return false;
         }
@@ -205,7 +205,7 @@ public final class J2MEFile implements BT747File {
 
     public boolean setPos(final int pos) {
         try {
-            javax.microedition.io.file.FileConnection fileConnection = (javax.microedition.io.file.FileConnection) fileObject;
+            final javax.microedition.io.file.FileConnection fileConnection = (javax.microedition.io.file.FileConnection) fileObject;
             if (fileConnection != null) {
                 if (is != null) {
                     is.close();
@@ -219,7 +219,7 @@ public final class J2MEFile implements BT747File {
                 return true;
             }
             return false;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("setPos", e);
             return false;
         }
@@ -244,7 +244,7 @@ public final class J2MEFile implements BT747File {
                 Log.error("Write stream is closed");
                 return 0;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("writeBytes", e);
             lastError = -1;
             return 0;
@@ -259,7 +259,7 @@ public final class J2MEFile implements BT747File {
                 Log.error("Read stream is closed");
                 return 0;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.error("readBytes", e);
             lastError = -1;
             return 0;
@@ -284,7 +284,7 @@ public final class J2MEFile implements BT747File {
         try {
             return (int) (((javax.microedition.io.file.FileConnection) tmpFileConnection(path))
                     .lastModified() / 1000L);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return 0;
         }
     }

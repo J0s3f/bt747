@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package net.sf.bt747.j4me.app.screens;
 
 import java.util.Enumeration;
@@ -34,8 +34,8 @@ public class PathSelectionScreen extends Menu {
     private FileUsage fileUsage = new FileManager();
     private boolean isGetDir;
 
-    public PathSelectionScreen(String title, DeviceScreen previous,
-            String path, boolean dir) {
+    public PathSelectionScreen(final String title,
+            final DeviceScreen previous, final String path, final boolean dir) {
         super("Select path", previous);
         fileUsage = new FileManager();
         currentPath = path;
@@ -43,8 +43,8 @@ public class PathSelectionScreen extends Menu {
         if (!isGetDir) {
             if (currentPath.endsWith("/")) {
                 // Selection done
-                currentPath = currentPath
-                        .substring(0, currentPath.length() - 1);
+                currentPath = currentPath.substring(0,
+                        currentPath.length() - 1);
             } else {
                 currentPath = currentPath.substring(0, currentPath
                         .lastIndexOf('/'));
@@ -109,7 +109,7 @@ public class PathSelectionScreen extends Menu {
         if (currentPath.endsWith("/")) {
             currentPath = currentPath.substring(0, currentPath.length() - 1);
         }
-        this.show();
+        show();
     }
 
     protected void removePath() {
@@ -117,13 +117,13 @@ public class PathSelectionScreen extends Menu {
         // Log.info("Up from " + currentPath);
         index = currentPath.lastIndexOf('/');
         if (index > 0) {
-            currentPath = currentPath
-                    .substring(0, currentPath.lastIndexOf('/'));
+            currentPath = currentPath.substring(0, currentPath
+                    .lastIndexOf('/'));
         } else {
             currentPath = "";
         }
         // Log.info("Up to " + currentPath);
-        this.show();
+        show();
     }
 
     public void show() {
@@ -134,8 +134,8 @@ public class PathSelectionScreen extends Menu {
     // static final String fs = System.getProperty("file.separator");
 
     private void setup() {
-        this.deleteAll();
-        this.setTitle(currentPath);
+        deleteAll();
+        setTitle(currentPath);
         // // Log.info(System.getProperty("file.separator"));
         // Log.info(currentPath);
         // Log.info("Before enum");
@@ -153,7 +153,7 @@ public class PathSelectionScreen extends Menu {
                 // Log.info("Get dir " + url);
                 Enumeration files = fileUsage.getFiles(url);
                 while (files.hasMoreElements()) {
-                    String p = (String) files.nextElement();
+                    final String p = (String) files.nextElement();
                     // Log.info("Add " + p);
                     if (p.endsWith("/")) {
                         appendDirItem(p);
@@ -162,26 +162,26 @@ public class PathSelectionScreen extends Menu {
                     }
                 }
                 files = null;
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // TODO: handle exception
                 // Log.error(currentPath, e);
             }
         } else {
             try {
-                Enumeration roots = fileUsage.listRoots();
+                final Enumeration roots = fileUsage.listRoots();
                 while (roots.hasMoreElements()) {
-                    String p = (String) roots.nextElement();
+                    final String p = (String) roots.nextElement();
                     // Log.info("Add " + p);
                     appendDirItem(p);
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // TODO: handle exception
                 // Log.error(currentPath, e);
             }
         }
         try {
             fileUsage.close();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // TODO: handle exception
         }
         // Log.info("End ");
@@ -193,8 +193,8 @@ public class PathSelectionScreen extends Menu {
     }
 
     private void pathSelected() {
-        MenuOption s = (MenuOption) get(getSelected());
-        String p = s.getLabel();
+        final MenuOption s = (MenuOption) get(getSelected());
+        final String p = s.getLabel();
         Log.debug("pathSelected0");
         if (isGetDir && p.endsWith("/")) {
             // Selection done

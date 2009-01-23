@@ -1,6 +1,5 @@
 package net.sf.bt747.j4me.app;
 
-
 import org.j4me.logging.Log;
 
 import bt747.model.Model;
@@ -16,9 +15,9 @@ public class AppModel extends Model {
     /**
      * The URL for communicating with the user's Bluetooth GPS device.
      * <p>
-     * A separate Bluetooth GPS device is only used when the current device does
-     * not have accurate enough GPS. When the device's GPS is used this will be
-     * <code>null</code>.
+     * A separate Bluetooth GPS device is only used when the current device
+     * does not have accurate enough GPS. When the device's GPS is used this
+     * will be <code>null</code>.
      */
     private String gpsBluetoothURL;
 
@@ -37,27 +36,27 @@ public class AppModel extends Model {
 
     /**
      * @param gpsBluetoothConnection
-     *            the gpsBluetoothConnection to set
+     *                the gpsBluetoothConnection to set
      */
     public final void setGpsBluetoothConnection(
-            BluetoothGPS gpsBluetoothConnection) {
+            final BluetoothGPS gpsBluetoothConnection) {
         this.gpsBluetoothConnection = gpsBluetoothConnection;
     }
 
     /**
      * Records the URL of the Bluetooth GPS device so that on next startup it
-     * can be used again automatically. If the device supports GPS with accurate
-     * enough resolution (+/- 1 meter) this will be ignored.
+     * can be used again automatically. If the device supports GPS with
+     * accurate enough resolution (+/- 1 meter) this will be ignored.
      * 
      * @param name
-     *            is the friendly name of the Bluetooth GPS device.
+     *                is the friendly name of the Bluetooth GPS device.
      * @param url
-     *            is the connection URL to the Bluetooth GPS device.
+     *                is the connection URL to the Bluetooth GPS device.
      */
-    public void setBluetoothGPS(String name, String url) {
+    public void setBluetoothGPS(final String name, final String url) {
         // Record the Bluetooth information.
-        this.gpsBluetoothName = name;
-        this.gpsBluetoothURL = url;
+        gpsBluetoothName = name;
+        gpsBluetoothURL = url;
 
         Log.info("GPS set to Bluetooth " + name);
     }
@@ -67,9 +66,9 @@ public class AppModel extends Model {
      * displayed on screens to the user.
      * <p>
      * Before calling this method you should check that Bluetooth GPS is being
-     * used. If <code>isGPSOnDevice</code> returns <code>Boolean.FALSE</code>
-     * then you can call this method. Otherwise GPS information has not been set
-     * or the GPS is on the local device.
+     * used. If <code>isGPSOnDevice</code> returns
+     * <code>Boolean.FALSE</code> then you can call this method. Otherwise
+     * GPS information has not been set or the GPS is on the local device.
      * 
      * @return The human-readable name of the Bluetooth GPS device.
      */
@@ -78,13 +77,13 @@ public class AppModel extends Model {
     }
 
     /**
-     * Returns the URL of the Bluetooth GPS device. This can be used to connect
-     * to the remote GPS device through Bluetooth.
+     * Returns the URL of the Bluetooth GPS device. This can be used to
+     * connect to the remote GPS device through Bluetooth.
      * <p>
      * Before calling this method you should check that Bluetooth GPS is being
-     * used. If <code>isGPSOnDevice</code> returns <code>Boolean.FALSE</code>
-     * then you can call this method. Otherwise GPS information has not been set
-     * or the GPS is on the local device.
+     * used. If <code>isGPSOnDevice</code> returns
+     * <code>Boolean.FALSE</code> then you can call this method. Otherwise
+     * GPS information has not been set or the GPS is on the local device.
      * 
      * @return The URL of the Bluetooth GPS device.
      */
@@ -92,11 +91,11 @@ public class AppModel extends Model {
         return gpsBluetoothURL;
     }
 
-    
-    private int selectedOutputFormat = AppModel.GPX_LOGTYPE;
+    private int selectedOutputFormat = Model.GPX_LOGTYPE;
 
     /**
-     * @param selectedOutputFormat the selectedOutputFormat to set
+     * @param selectedOutputFormat
+     *                the selectedOutputFormat to set
      */
     public void setSelectedOutputFormat(final int selectedOutputFormat) {
         this.selectedOutputFormat = selectedOutputFormat;
@@ -108,6 +107,5 @@ public class AppModel extends Model {
     public int getSelectedOutputFormat() {
         return selectedOutputFormat;
     }
-
 
 }

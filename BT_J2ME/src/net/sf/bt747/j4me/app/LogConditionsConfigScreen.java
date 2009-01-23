@@ -1,5 +1,6 @@
 package net.sf.bt747.j4me.app;
 
+import gps.GpsEvent;
 import net.sf.bt747.j4me.app.screens.BT747Dialog;
 
 import org.j4me.logging.Log;
@@ -9,7 +10,8 @@ import bt747.model.ModelEvent;
 import bt747.model.ModelListener;
 import bt747.sys.Convert;
 
-public final class LogConditionsConfigScreen extends BT747Dialog implements ModelListener {
+public final class LogConditionsConfigScreen extends BT747Dialog implements
+        ModelListener {
 
     // private final RadioButton source; // (elements with source.append);
     private TextBox tbTime;
@@ -20,7 +22,7 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements Mode
     boolean screenSetup = false;
 
     private void setupScreen() {
-        if(!screenSetup) {
+        if (!screenSetup) {
             screenSetup = true;
             setTitle("Configure log conditions");
 
@@ -57,7 +59,7 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements Mode
         if (!isDataRequested) {
             isDataRequested = true;
             c.reqLogReasonStatus(); // TODO: Should be done on actual initial
-                                    // entry
+            // entry
             c.reqFixInterval();
             updateButtons();
         }
@@ -80,11 +82,13 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements Mode
     }
 
     public final void setSettings() {
-        c.setLogTimeInterval((int) (10 * Convert.toFloat(tbTime.getString())));
+        c
+                .setLogTimeInterval((int) (10 * Convert.toFloat(tbTime
+                        .getString())));
         c.setLogSpeedInterval(Convert.toInt(tbSpeed.getString()));
         c.setLogDistanceInterval((int) (10 * Convert.toFloat(tbDistance
                 .getString())));
-        c.setFixInterval((int) (Convert.toInt(tbFix.getString())));
+        c.setFixInterval((Convert.toInt(tbFix.getString())));
         Log.debug("Log condition settings updated");
         // c.setFixInterval(Convert.toInt(edFix.getText()));
         c.reqLogReasonStatus();
@@ -104,12 +108,12 @@ public final class LogConditionsConfigScreen extends BT747Dialog implements Mode
         super.declineNotify();
     }
 
-    public void modelEvent(ModelEvent e) {
+    public void modelEvent(final ModelEvent e) {
         switch (e.getType()) {
-        case ModelEvent.UPDATE_LOG_TIME_INTERVAL:
-        case ModelEvent.UPDATE_LOG_DISTANCE_INTERVAL:
-        case ModelEvent.UPDATE_LOG_SPEED_INTERVAL:
-        case ModelEvent.UPDATE_FIX_PERIOD:
+        case GpsEvent.UPDATE_LOG_TIME_INTERVAL:
+        case GpsEvent.UPDATE_LOG_DISTANCE_INTERVAL:
+        case GpsEvent.UPDATE_LOG_SPEED_INTERVAL:
+        case GpsEvent.UPDATE_FIX_PERIOD:
             updateButtons();
             repaint();
             break;

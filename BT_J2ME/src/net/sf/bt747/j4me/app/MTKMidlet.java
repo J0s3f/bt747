@@ -10,7 +10,6 @@ import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import net.sf.bt747.j2me.system.J2MEJavaTranslations;
-import net.sf.bt747.j4me.app.log.LogScreen;
 
 import org.j4me.logging.Level;
 import org.j4me.logging.Log;
@@ -46,13 +45,13 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             UIManager.init(this);
             MTKMidlet.setInstance(this);
             ok = true;
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             displayThrowable(t, "MTKMidlet");
         }
     }
 
     private static void setInstance(final MTKMidlet midlet) {
-        instance = midlet;
+        MTKMidlet.instance = midlet;
     }
 
     /**
@@ -78,10 +77,10 @@ public class MTKMidlet extends MIDlet implements CommandListener {
         }
         // Initialize the J4ME UI manager.
         try {
-            m = new AppModel();
-            c = new AppController(m);
+            MTKMidlet.m = new AppModel();
+            MTKMidlet.c = new AppController(MTKMidlet.m);
 
-            DeviceScreen main = new MainScreen(c, this);
+            final DeviceScreen main = new MainScreen(MTKMidlet.c, this);
             // Change the theme.
             // Show the first screen.
 
@@ -92,17 +91,17 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             // (new ConvertTo(c, main)).doWork(); // Debug conversion
             main.show();
             // (new ConvertTo(c, main)).show();
-        } catch (Exception t) {
+        } catch (final Exception t) {
             displayThrowable(t, "MainScreen");
         }
     }
 
-    public final void displayThrowable(Throwable t, String n) {
-        if (t != null || n != null) {
+    public final void displayThrowable(final Throwable t, final String n) {
+        if ((t != null) || (n != null)) {
             try {
                 try {
                     UIManager.getDisplay();
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     UIManager.init(this);
                     Log.setLevel(Level.DEBUG);
                     if (t != null) {
@@ -110,7 +109,7 @@ public class MTKMidlet extends MIDlet implements CommandListener {
                     }
                 }
 
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // Log.warn("Exception in display throwable");
                 // Don't care
             }
@@ -139,8 +138,8 @@ public class MTKMidlet extends MIDlet implements CommandListener {
             tb = new TextField("", "", 250, TextField.ANY);
             String f = "";
             if (t != null) {
-                String s = t.getMessage();
-                String b = t.toString();
+                final String s = t.getMessage();
+                final String b = t.toString();
                 if (b != null) {
                     f += b;
                 }
@@ -177,8 +176,8 @@ public class MTKMidlet extends MIDlet implements CommandListener {
     protected final void destroyApp(final boolean arg0)
             throws MIDletStateChangeException {
         // Add cleanup code here.
-        if (c != null) {
-            c.saveSettings();
+        if (MTKMidlet.c != null) {
+            MTKMidlet.c.saveSettings();
         }
         // Exit the application.
         notifyDestroyed();
@@ -189,8 +188,8 @@ public class MTKMidlet extends MIDlet implements CommandListener {
      */
     public static void exit() {
         try {
-            instance.destroyApp(true);
-        } catch (MIDletStateChangeException e) {
+            MTKMidlet.instance.destroyApp(true);
+        } catch (final MIDletStateChangeException e) {
             // Ignore.
         }
     }
@@ -201,13 +200,13 @@ public class MTKMidlet extends MIDlet implements CommandListener {
      * @see javax.microedition.lcdui.CommandListener#commandAction(javax.microedition.lcdui.Command,
      *      javax.microedition.lcdui.Displayable)
      */
-    public void commandAction(Command c, Displayable s) {
+    public void commandAction(final Command c, final Displayable s) {
         // lors du clic sur le bouton Exit
         if (c == commandExit) {
             // appel manuel à la fonction de fermeture
             try {
                 destroyApp(false);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // TODO: handle exception
             }
             // on demande au manager de fermer l'application

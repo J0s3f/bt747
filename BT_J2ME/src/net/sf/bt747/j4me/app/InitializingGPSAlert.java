@@ -8,9 +8,9 @@ import org.j4me.ui.DeviceScreen;
 
 /**
  * The "Initializing GPS..." alert screen. This screen is used to get the
- * <code>LocationProvider</code> for the application. It first tries to get a
- * provider on the device. But if it cannot it will get a GPS provider through a
- * Bluetooth connection.
+ * <code>LocationProvider</code> for the application. It first tries to get
+ * a provider on the device. But if it cannot it will get a GPS provider
+ * through a Bluetooth connection.
  */
 public class InitializingGPSAlert extends ProgressAlert {
     /**
@@ -19,8 +19,8 @@ public class InitializingGPSAlert extends ProgressAlert {
     private final AppController c;
 
     /**
-     * The screen that came before this one. If the user cancels the the process
-     * or if it fails it will be returned to.
+     * The screen that came before this one. If the user cancels the the
+     * process or if it fails it will be returned to.
      */
     private DeviceScreen previous;
 
@@ -28,9 +28,9 @@ public class InitializingGPSAlert extends ProgressAlert {
      * Constructs the "Initializing GPS..." alert screen.
      * 
      * @param model
-     *            is the application's location data.
+     *                is the application's location data.
      * @param previous
-     *            is the screen that came before this one.
+     *                is the screen that came before this one.
      */
     public InitializingGPSAlert(final AppController c,
             final DeviceScreen previous) {
@@ -58,9 +58,10 @@ public class InitializingGPSAlert extends ProgressAlert {
         BluetoothGPS provider = null;
 
         DeviceScreen next = previous;
-        String deviceName = c.getAppModel().getBluetoothGPSName();
+        final String deviceName = c.getAppModel().getBluetoothGPSName();
 
-        String text = "Connecting to the location provider.\n" + "Using device:  " + deviceName;
+        final String text = "Connecting to the location provider.\n"
+                + "Using device:  " + deviceName;
         setText(text);
 
         try {
@@ -71,10 +72,12 @@ public class InitializingGPSAlert extends ProgressAlert {
             // GPS.
             synchronized (FindingGPSDevicesAlert.BLUETOOTH_LOCK) {
                 // First close any open provider.
-                // For example if connected to one GPS device and are switching
+                // For example if connected to one GPS device and are
+                // switching
                 // to
                 // another.
-                BluetoothGPS old = c.getAppModel().getGpsBluetoothConnection();
+                final BluetoothGPS old = c.getAppModel()
+                        .getGpsBluetoothConnection();
 
                 if (old != null) {
                     old.close();
@@ -102,9 +105,10 @@ public class InitializingGPSAlert extends ProgressAlert {
                 // There was no location provider that matched the criteria.
                 Log.info("No location provider matched the criteria.");
                 next = new ErrorAlert("GPS Error",
-                        "No location provider matched the criteria.", previous);
+                        "No location provider matched the criteria.",
+                        previous);
             }
-        } catch (SecurityException e) {
+        } catch (final SecurityException e) {
             Log.error("The user blocked access to the location provider.", e);
             next = new ErrorAlert(
                     "GPS Error",
