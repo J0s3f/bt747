@@ -3,7 +3,6 @@
  */
 package bt747.j2se_view;
 
-import gps.log.LogFileInfo;
 import gps.log.in.GPSInputConversionFactory;
 import gps.log.in.GPSLogConvertInterface;
 
@@ -13,9 +12,6 @@ import java.io.IOException;
 import bt747.j2se_view.model.ImageData;
 import bt747.model.Controller;
 import bt747.model.Model;
-import bt747.model.ModelEvent;
-import bt747.sys.Interface;
-import bt747.sys.interfaces.BT747Vector;
 
 /**
  * @author Mario
@@ -27,15 +23,11 @@ public class J2SEController extends Controller {
      * Reference to the model.
      */
     private Model m;
-    /**
-     * Vector of LogFileInfo.
-     */
-    public final static BT747Vector logFiles = Interface.getVectorInstance();
 
     /**
      * @param model
      */
-    public J2SEController(Model model) {
+    public J2SEController(final Model model) {
         super(model);
         m = model;
     }
@@ -50,19 +42,9 @@ public class J2SEController extends Controller {
     /**
      * 
      */
-    public void setModel(Model m) {
+    public void setModel(final Model m) {
         super.setModel(m);
         this.m = m;
-    }
-
-    public final static void addLogFile(final File f) {
-        try {
-            final LogFileInfo loginfo = new LogFileInfo(f.getCanonicalPath(),
-                    0);
-            logFiles.addElement(loginfo);
-        } catch (final Exception e) {
-            bt747.sys.Generic.debug("Problem adding log file", e);
-        }
     }
 
     private static final class GPXHandlerFactory extends
@@ -98,14 +80,14 @@ public class J2SEController extends Controller {
         final String p = img.getPath();
         final String newPath = fpf.getTaggedFilePath(p, img);
 
-        String f1 = (new File(newPath)).getCanonicalPath();
-        String f2 = (new File(p)).getCanonicalPath();
+        final String f1 = (new File(newPath)).getCanonicalPath();
+        final String f2 = (new File(p)).getCanonicalPath();
         String orgPath = p;
         if (f1.equals(f2)) {
             // Target path and origin path are the same.
             // We may need to move the original file.
             orgPath = fpf.getOrgFilePath(p, img);
-            File d = new File(orgPath);
+            final File d = new File(orgPath);
             if (!d.exists()) {
                 (new File(p)).renameTo(d);
             }

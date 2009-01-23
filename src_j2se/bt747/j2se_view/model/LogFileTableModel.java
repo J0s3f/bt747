@@ -8,7 +8,7 @@ import gps.log.out.CommonOut;
 
 import javax.swing.table.AbstractTableModel;
 
-import bt747.j2se_view.J2SEController;
+import bt747.model.Controller;
 import bt747.sys.interfaces.BT747Vector;
 
 /**
@@ -24,7 +24,6 @@ public class LogFileTableModel extends AbstractTableModel {
     private int[] columns = { DataTypes.LOG_FILENAME,
             DataTypes.LOG_START_TIME, DataTypes.LOG_END_TIME };
 
-
     /**
      * 
      */
@@ -32,12 +31,12 @@ public class LogFileTableModel extends AbstractTableModel {
     }
 
     public final BT747Vector getLogfileInfos() {
-        return J2SEController.logFiles;
+        return Controller.logFiles;
     }
 
     public final void setLogfileInfos(
-         bt747.sys.interfaces.BT747Vector logfileInfos) {
-        //this.logfileInfos = logfileInfos;
+            bt747.sys.interfaces.BT747Vector logfileInfos) {
+        // this.logfileInfos = logfileInfos;
         fireTableStructureChanged();
         fireTableDataChanged();
     }
@@ -47,9 +46,10 @@ public class LogFileTableModel extends AbstractTableModel {
     }
 
     public void notifyUpdate() {
-        bt747.sys.Generic.debug("Notified logTableChange");
+        // bt747.sys.Generic.debug("Notified logTableChange");
         fireTableDataChanged();
     }
+
     /**
      * 
      */
@@ -90,7 +90,7 @@ public class LogFileTableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getRowCount()
      */
     public int getRowCount() {
-        bt747.sys.Generic.debug("Row count "+getLogfileInfos().size());
+        // bt747.sys.Generic.debug("Row count "+getLogfileInfos().size());
         return getLogfileInfos().size();
     }
 
@@ -104,15 +104,25 @@ public class LogFileTableModel extends AbstractTableModel {
 
     private final Object getData(final Object o, final int dt) {
         // final LogFileInfo logfileinfo
-        bt747.sys.Generic.debug("GetData "+getLogfileInfos().size());
+        // bt747.sys.Generic.debug("GetData "+getLogfileInfos().size());
         if (o instanceof LogFileInfo) {
             LogFileInfo logfileinfo = (LogFileInfo) o;
 
             switch (dt) {
             case DataTypes.LOG_START_TIME:
-                return CommonOut.getDateTimeStr(logfileinfo.getStartTime());
+                final int st = logfileinfo.getStartTime();
+                if (st != 0x7FFFFFFF) {
+                    return CommonOut.getDateTimeStr(st);
+                } else {
+                    return null;
+                }
             case DataTypes.LOG_END_TIME:
-                return CommonOut.getDateTimeStr(logfileinfo.getStartTime());
+                final int et = logfileinfo.getEndTime();
+                if (et != 0x7FFFFFFF) {
+                    return CommonOut.getDateTimeStr(et);
+                } else {
+                    return null;
+                }
             case DataTypes.LOG_COLOR:
                 // label = "TAB_TITLE_Color";
                 return null;

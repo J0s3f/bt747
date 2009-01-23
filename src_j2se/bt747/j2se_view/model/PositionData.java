@@ -23,7 +23,7 @@ import net.sf.bt747.j2se.app.utils.GPSRecordTimeComparator;
 import org.jdesktop.beans.AbstractBean;
 
 import bt747.j2se_view.J2SEAppModel;
-import bt747.j2se_view.J2SEController;
+import bt747.model.Controller;
 import bt747.model.ModelEvent;
 import bt747.sys.Generic;
 
@@ -172,7 +172,7 @@ public class PositionData extends AbstractBean {
                     if (f.exists()) {
                         if (filter.accept(f)) {
                             // Log file
-                            J2SEController.addLogFile(f);
+                            Controller.addLogFile(f);
                         } else {
                             userWpListModel.add(files[i].getCanonicalPath());
                         }

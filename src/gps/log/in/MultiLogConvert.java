@@ -170,18 +170,20 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
         /**
          * Not expecting a lot of logs, so very simple ordering.
          */
+        final BT747Vector orderedLogs = Interface.getVectorInstance();
         {
             final BT747Hashtable iter = logFileInfoLookup.iterator();
-            final BT747Vector orderedLogs = Interface.getVectorInstance();
             while (iter.hasNext()) {
                 final Object key = iter.nextKey();
                 final LogFileInfo loginfo = (LogFileInfo) logFileInfoLookup
                         .get(key);
                 final int startTime = loginfo.getStartTime();
                 int insertIdx = 0;
-                while ((insertIdx < orderedLogs.size())
-                        && (startTime < ((LogFileInfo) orderedLogs
-                                .elementAt(insertIdx)).getStartTime())) {
+                while ((insertIdx < orderedLogs.size())) {
+                    if(startTime < ((LogFileInfo) orderedLogs
+                                .elementAt(insertIdx)).getStartTime()) {
+                        break;
+                    }
                     insertIdx++;
                 }
                 orderedLogs.insertElementAt(loginfo, insertIdx);
@@ -192,12 +194,11 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
          * Actual reading.
          */
         gpsFile.setActiveFileFields(activeFileFields);
-        final BT747Hashtable iter = converters.iterator();
         if (error == BT747Constants.NO_ERROR) {
             do {
-                while (!stop && iter.hasNext()) {
-                    final Object key = iter.nextKey();
-                    final GPSLogConvertInterface i = (GPSLogConvertInterface) iter
+                for(int j = 0; !stop&&j<orderedLogs.size();j++) {
+                    final Object key = ((LogFileInfo)orderedLogs.elementAt(j)).getPath();
+                    final GPSLogConvertInterface i = (GPSLogConvertInterface) converters
                             .get(key);
                     // TODO: manage cards on different volumes.
                     error = i.parseFile(i.getFileObject((String) key, card),
