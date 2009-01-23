@@ -1,3 +1,6 @@
+Version 1.67.16
+* GUI functionality for multiple log files somewhat debugged (seems to work).
+
 Version 1.67.15
 * LogFile list is now available in the GUI too.
 
