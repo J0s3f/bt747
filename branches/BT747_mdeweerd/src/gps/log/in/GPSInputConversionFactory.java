@@ -3,7 +3,6 @@
  */
 package gps.log.in;
 
-
 /**
  * @author Mario De Weerd
  * 
@@ -18,7 +17,7 @@ public class GPSInputConversionFactory {
      * @return first handler.
      */
     public static final GPSInputConversionFactory getHandler() {
-        return head;
+        return GPSInputConversionFactory.head;
     }
 
     /**
@@ -42,9 +41,10 @@ public class GPSInputConversionFactory {
      * 
      * @param newFactory
      */
-    public static final void addHandler(final GPSInputConversionFactory newFactory) {
-        newFactory.next = head;
-        head = newFactory;
+    public static final void addHandler(
+            final GPSInputConversionFactory newFactory) {
+        newFactory.next = GPSInputConversionFactory.head;
+        GPSInputConversionFactory.head = newFactory;
     }
 
     /**

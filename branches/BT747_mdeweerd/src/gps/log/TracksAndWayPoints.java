@@ -1,6 +1,5 @@
 package gps.log;
 
-
 import bt747.sys.Interface;
 import bt747.sys.interfaces.BT747Vector;
 
@@ -32,7 +31,7 @@ final public class TracksAndWayPoints {
         int j;
         j = 0;
         for (int i = 0; i < tracks.size(); i++) {
-            BT747Vector tr = (BT747Vector) (tracks.elementAt(i));
+            final BT747Vector tr = (BT747Vector) (tracks.elementAt(i));
             for (int x = 0; x < tr.size(); x++) {
                 t[j] = (GPSRecord) tr.elementAt(x);
                 j++;

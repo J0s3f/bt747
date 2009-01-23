@@ -209,7 +209,8 @@ public final class GPSNMEAFile extends GPSFile {
         // 11 = E or W
         // 12 = Checksum
         if (activeFields.hasSpeed()) {
-            rec.append(Convert.toString(s.speed * KMH_PER_KNOT, 3));
+            rec.append(Convert
+                    .toString(s.speed * GPSNMEAFile.KMH_PER_KNOT, 3));
         }
         rec.append(",");
         if (activeFields.hasHeading()) {

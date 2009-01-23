@@ -270,13 +270,13 @@ public class AppSettings {
         String mVersion;
         int VersionX100 = 0;
         // Sanity check of paramList
-        for (int i = 0; i < paramsList.length; i++) {
-            if (paramsList[i][PARAM_IDX] != i) {
+        for (int i = 0; i < AppSettings.paramsList.length; i++) {
+            if (AppSettings.paramsList[i][AppSettings.PARAM_IDX] != i) {
                 Generic.debug("ASSERT:Problem with param index " + i);
             }
         }
 
-        mVersion = getStringOpt(VERSION);
+        mVersion = getStringOpt(AppSettings.VERSION);
         if ((mVersion.length() == 4) && (mVersion.charAt(1) == '.')) {
             VersionX100 = Convert.toInt(mVersion.charAt(0)
                     + mVersion.substring(2, 4));
@@ -289,15 +289,16 @@ public class AppSettings {
     private void updateSettings(final int versionX100) {
         switch (versionX100) {
         case 0:
-            setIntOpt(PORTNBR, -1);
-            setIntOpt(BAUDRATE, 115200);
+            setIntOpt(AppSettings.PORTNBR, -1);
+            setIntOpt(AppSettings.BAUDRATE, 115200);
             setCard(-1);
-            setStringOpt(OUTPUTDIRPATH, defaultBaseDirPath);
-            setStringOpt(LOGFILERELPATH, "BT747log.bin");
-            setStringOpt(REPORTFILEBASE, "GPSDATA");
-            setBooleanOpt(OPENPORTATSTARTUP, false);
-            setChunkSize(defaultChunkSize);
-            setDownloadTimeOut(C_DEFAULT_DEVICE_TIMEOUT);
+            setStringOpt(AppSettings.OUTPUTDIRPATH,
+                    AppSettings.defaultBaseDirPath);
+            setStringOpt(AppSettings.LOGFILERELPATH, "BT747log.bin");
+            setStringOpt(AppSettings.REPORTFILEBASE, "GPSDATA");
+            setBooleanOpt(AppSettings.OPENPORTATSTARTUP, false);
+            setChunkSize(AppSettings.defaultChunkSize);
+            setDownloadTimeOut(AppSettings.C_DEFAULT_DEVICE_TIMEOUT);
             /* fall through */
         case 1:
             setFilterDefaults();
@@ -307,22 +308,23 @@ public class AppSettings {
             setOutputFileSplitType(0);
             /* fall through */
         case 3:
-            setHeightConversionMode(HEIGHT_AUTOMATIC);
+            setHeightConversionMode(AppSettings.HEIGHT_AUTOMATIC);
             /* fall through */
         case 4:
-            setIntOpt(LOGAHEAD, C_DEFAULT_LOG_REQUEST_AHEAD);
+            setIntOpt(AppSettings.LOGAHEAD,
+                    AppSettings.C_DEFAULT_LOG_REQUEST_AHEAD);
             /* fall through */
         case 5:
             setNMEAset(0x0002000A);
             /* fall through */
         case 6:
-            setBooleanOpt(GPXUTC0, false);
+            setBooleanOpt(AppSettings.GPXUTC0, false);
             /* fall through */
         case 7:
-            setIntOpt(TRKSEP, 60);
+            setIntOpt(AppSettings.TRKSEP, 60);
             /* fall through */
         case 8:
-            setBooleanOpt(ADVFILTACTIVE, false);
+            setBooleanOpt(AppSettings.ADVFILTACTIVE, false);
             setFilterMinRecCount(0);
             setFilterMaxRecCount(0);
             setFilterMinSpeed(0);
@@ -335,50 +337,52 @@ public class AppSettings {
             setFilterMinNSAT(0);
             /* fall through */
         case 9:
-            setBooleanOpt(GPXTRKSEGBIG, true);
+            setBooleanOpt(AppSettings.GPXTRKSEGBIG, true);
             /* fall through */
         case 10:
-            setBooleanOpt(DECODEGPS, true);
+            setBooleanOpt(AppSettings.DECODEGPS, true);
             /* fall through */
         case 11:
-            setStringOpt(COLOR_INVALIDTRACK, "0000FF");
+            setStringOpt(AppSettings.COLOR_INVALIDTRACK, "0000FF");
             /* fall through */
         case 12:
-            setBooleanOpt(IS_TRAVERSABLE, defaultTraversable);
+            setBooleanOpt(AppSettings.IS_TRAVERSABLE,
+                    AppSettings.defaultTraversable);
             /* fall through */
         case 13:
-            setBooleanOpt(IS_RECORDNBR_IN_LOGS, false);
+            setBooleanOpt(AppSettings.IS_RECORDNBR_IN_LOGS, false);
             /* fall through */
         case 14:
-            setBooleanOpt(FORCE_HOLUXM241, false);
+            setBooleanOpt(AppSettings.FORCE_HOLUXM241, false);
             /* fall through */
         case 15:
             /* Value interpretation changed */
-            setIntOpt(SETTING1_DIST, getIntOpt(SETTING1_DIST) * 10);
+            setIntOpt(AppSettings.SETTING1_DIST,
+                    getIntOpt(AppSettings.SETTING1_DIST) * 10);
             /* fall through */
         case 16:
-            setBooleanOpt(IMPERIAL, false);
+            setBooleanOpt(AppSettings.IMPERIAL, false);
             /* fall through */
         case 18:
-            setStringOpt(FREETEXTPORT, "");
+            setStringOpt(AppSettings.FREETEXTPORT, "");
             /* fall through */
         case 19:
             // setBinDecoder(0); // No longer used
-            setIntOpt(GPSTYPE, 0);
+            setIntOpt(AppSettings.GPSTYPE, 0);
         case 20:
-            setBooleanOpt(OUTPUTLOGCONDITIONS, false);
+            setBooleanOpt(AppSettings.OUTPUTLOGCONDITIONS, false);
             /* fall through */
 
         case 21:
-            setBooleanOpt(IS_WRITE_TRACKPOINT_COMMENT, true);
-            setBooleanOpt(IS_WRITE_TRACKPOINT_NAME, true);
+            setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_COMMENT, true);
+            setBooleanOpt(AppSettings.IS_WRITE_TRACKPOINT_NAME, true);
             /* fall through */
         case 22:
-            setIntOpt(FILEFIELDFORMAT, -1);
+            setIntOpt(AppSettings.FILEFIELDFORMAT, -1);
             /* fall through */
         case 23:
             /* Next line is application specific */
-            setBooleanOpt(IS_STOP_LOGGING_ON_CONNECT, false);
+            setBooleanOpt(AppSettings.IS_STOP_LOGGING_ON_CONNECT, false);
             /* fall through */
 
             /*
@@ -386,53 +390,56 @@ public class AppSettings {
              * version
              */
         case 24:
-            setStringOpt(COLOR_VALIDTRACK, "0000FF");
+            setStringOpt(AppSettings.COLOR_VALIDTRACK, "0000FF");
             /* fall through */
 
         case 25:
-            setStringOpt(LOGFILEPATH, getStringOpt(AppSettings.OUTPUTDIRPATH)
-                    + bt747.sys.File.separatorStr
-                    + getStringOpt(AppSettings.LOGFILERELPATH));
+            setStringOpt(AppSettings.LOGFILEPATH,
+                    getStringOpt(AppSettings.OUTPUTDIRPATH)
+                            + bt747.sys.File.separatorStr
+                            + getStringOpt(AppSettings.LOGFILERELPATH));
             /* fall through */
 
         case 26:
-            setStringOpt(LANGUAGE, "");
+            setStringOpt(AppSettings.LANGUAGE, "");
             /* fall through */
         case 27:
-            setStringOpt(IMAGEDIR, getStringOpt(LOGFILEPATH));
+            setStringOpt(AppSettings.IMAGEDIR,
+                    getStringOpt(AppSettings.LOGFILEPATH));
             /* fall through */
         case 28:
-            setIntOpt(FILETIMEOFFSET, 0);
+            setIntOpt(AppSettings.FILETIMEOFFSET, 0);
             /* fall through */
         case 29:
-            setBooleanOpt(TAG_OVERRIDEPOSITIONS, false);
-            setIntOpt(TAG_MAXTIMEDIFFERENCE, 300);
+            setBooleanOpt(AppSettings.TAG_OVERRIDEPOSITIONS, false);
+            setIntOpt(AppSettings.TAG_MAXTIMEDIFFERENCE, 300);
             /* fall through */
         case 30:
-            setBooleanOpt(DISABLELOGDURINGDOWNLOAD, true);
+            setBooleanOpt(AppSettings.DISABLELOGDURINGDOWNLOAD, true);
             /* fall through */
         case 31:
-            setStringOpt(MAPCACHEDIRECTORY, "/temp/mapcache");
+            setStringOpt(AppSettings.MAPCACHEDIRECTORY, "/temp/mapcache");
             /* fall through */
         case 32:
-            setIntOpt(MAPTYPE, 0);
+            setIntOpt(AppSettings.MAPTYPE, 0);
             /* fall through */
         case 33:
-            setStringOpt(TAGGEDFILE_TEMPLATE, "%p%f_tagged%e");
+            setStringOpt(AppSettings.TAGGEDFILE_TEMPLATE, "%p%f_tagged%e");
             /* fall through */
         case 34:
-            setIntOpt(KML_ALTITUDEMODE, 0);
-            setStringOpt(VERSION, "0.35");
+            setIntOpt(AppSettings.KML_ALTITUDEMODE, 0);
+            setStringOpt(AppSettings.VERSION, "0.35");
             /* fall through */
         default:
             // Always force lat and lon and utc and height active on restart
             // for
             // basic users.
-            setIntOpt(FILEFIELDFORMAT, getIntOpt(FILEFIELDFORMAT)
-                    | (1 << BT747Constants.FMT_LATITUDE_IDX)
-                    | (1 << BT747Constants.FMT_LONGITUDE_IDX)
-                    | (1 << BT747Constants.FMT_UTC_IDX)
-                    | (1 << BT747Constants.FMT_HEIGHT_IDX));
+            setIntOpt(AppSettings.FILEFIELDFORMAT,
+                    getIntOpt(AppSettings.FILEFIELDFORMAT)
+                            | (1 << BT747Constants.FMT_LATITUDE_IDX)
+                            | (1 << BT747Constants.FMT_LONGITUDE_IDX)
+                            | (1 << BT747Constants.FMT_UTC_IDX)
+                            | (1 << BT747Constants.FMT_HEIGHT_IDX));
             break;
         }
         // Generic.debug(
@@ -451,10 +458,11 @@ public class AppSettings {
     // the new way of setting parameters - not a method per parameter, but an
     // index ;-).
     public final boolean getBooleanOpt(final int param) {
-        if ((param < paramsList.length)
-                && (paramsList[param][TYPE_IDX] == BOOL)) {
-            return getLocalIntOpt(paramsList[param][START_IDX],
-                    paramsList[param][SIZE_IDX]) == 1;
+        if ((param < AppSettings.paramsList.length)
+                && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.BOOL)) {
+            return getLocalIntOpt(
+                    AppSettings.paramsList[param][AppSettings.START_IDX],
+                    AppSettings.paramsList[param][AppSettings.SIZE_IDX]) == 1;
         } else {
             // TODO: throw something
             Generic.debug("Invalid parameter index " + param);
@@ -463,10 +471,11 @@ public class AppSettings {
     }
 
     protected final void setBooleanOpt(final int param, final boolean value) {
-        if ((param < paramsList.length)
-                && (paramsList[param][TYPE_IDX] == BOOL)) {
+        if ((param < AppSettings.paramsList.length)
+                && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.BOOL)) {
             setStringOpt(param, (value ? "1" : "0"),
-                    paramsList[param][START_IDX], paramsList[param][SIZE_IDX]);
+                    AppSettings.paramsList[param][AppSettings.START_IDX],
+                    AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
             Generic.debug("Invalid parameter index " + param);
@@ -481,10 +490,11 @@ public class AppSettings {
         // paramsList[param][SIZE_IDX]),8), null);
         //
         // }
-        if ((param < paramsList.length)
-                && (paramsList[param][TYPE_IDX] == INT)) {
-            return getLocalIntOpt(paramsList[param][START_IDX],
-                    paramsList[param][SIZE_IDX]);
+        if ((param < AppSettings.paramsList.length)
+                && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.INT)) {
+            return getLocalIntOpt(
+                    AppSettings.paramsList[param][AppSettings.START_IDX],
+                    AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
             Generic.debug("Invalid parameter @ index " + param);
@@ -500,10 +510,11 @@ public class AppSettings {
         // + bt747.sys.Convert.unsigned2hex(value, 8), null);
         //
         // }
-        if ((param < paramsList.length)
-                && (paramsList[param][TYPE_IDX] == INT)) {
-            setLocalIntOpt(param, value, paramsList[param][START_IDX],
-                    paramsList[param][SIZE_IDX]);
+        if ((param < AppSettings.paramsList.length)
+                && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.INT)) {
+            setLocalIntOpt(param, value,
+                    AppSettings.paramsList[param][AppSettings.START_IDX],
+                    AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
             Generic.debug("Invalid parameter index " + param);
@@ -518,10 +529,11 @@ public class AppSettings {
         default:
             break;
         }
-        if ((param < paramsList.length)
-                && (paramsList[param][TYPE_IDX] == STRING)) {
-            return getStringOpt(paramsList[param][START_IDX],
-                    paramsList[param][SIZE_IDX]);
+        if ((param < AppSettings.paramsList.length)
+                && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.STRING)) {
+            return getStringOpt(
+                    AppSettings.paramsList[param][AppSettings.START_IDX],
+                    AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
             Generic.debug("Invalid parameter index " + param);
@@ -530,10 +542,11 @@ public class AppSettings {
     }
 
     protected final void setStringOpt(final int param, final String value) {
-        if ((param < paramsList.length)
-                && (paramsList[param][TYPE_IDX] == STRING)) {
-            setStringOpt(param, value, paramsList[param][START_IDX],
-                    paramsList[param][SIZE_IDX]);
+        if ((param < AppSettings.paramsList.length)
+                && (AppSettings.paramsList[param][AppSettings.TYPE_IDX] == AppSettings.STRING)) {
+            setStringOpt(param, value,
+                    AppSettings.paramsList[param][AppSettings.START_IDX],
+                    AppSettings.paramsList[param][AppSettings.SIZE_IDX]);
         } else {
             // TODO: throw something
             Generic.debug("Invalid parameter index " + param);
@@ -547,7 +560,8 @@ public class AppSettings {
      */
     public final int getChunkSize() {
         // ChunkSize must be multiple of 2
-        int chunkSize = getLocalIntOpt(C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE) & 0xFFFFFFFE;
+        int chunkSize = getLocalIntOpt(AppSettings.C_CHUNKSIZE_IDX,
+                AppSettings.C_CHUNKSIZE_SIZE) & 0xFFFFFFFE;
         if (chunkSize < 16) {
             chunkSize = 0x200;
         }
@@ -561,15 +575,17 @@ public class AppSettings {
      *                The ChunkSize to set as a default.
      */
     public final void setChunkSize(final int chunkSize) {
-        setLocalIntOpt(0, chunkSize, C_CHUNKSIZE_IDX, C_CHUNKSIZE_SIZE);
+        setLocalIntOpt(0, chunkSize, AppSettings.C_CHUNKSIZE_IDX,
+                AppSettings.C_CHUNKSIZE_SIZE);
     }
 
     /**
      * @return The default chunk size
      */
     public final int getDownloadTimeOut() {
-        int DownloadTimeOut = getLocalIntOpt(C_DOWNLOADTIMEOUT_IDX,
-                C_DOWNLOADTIMEOUT_SIZE);
+        int DownloadTimeOut = getLocalIntOpt(
+                AppSettings.C_DOWNLOADTIMEOUT_IDX,
+                AppSettings.C_DOWNLOADTIMEOUT_SIZE);
         if (DownloadTimeOut <= 0) {
             DownloadTimeOut = 0x200;
         }
@@ -581,15 +597,16 @@ public class AppSettings {
      *                The DownloadTimeOut to set as a default.
      */
     public final void setDownloadTimeOut(final int downloadTimeOut) {
-        setLocalIntOpt(0, downloadTimeOut, C_DOWNLOADTIMEOUT_IDX,
-                C_DOWNLOADTIMEOUT_SIZE);
+        setLocalIntOpt(0, downloadTimeOut, AppSettings.C_DOWNLOADTIMEOUT_IDX,
+                AppSettings.C_DOWNLOADTIMEOUT_SIZE);
     }
 
     /**
      * @return The default chunk size
      */
     public final int getCard() {
-        int card = getLocalIntOpt(C_CARD_IDX, C_CARD_SIZE);
+        int card = getLocalIntOpt(AppSettings.C_CARD_IDX,
+                AppSettings.C_CARD_SIZE);
         if ((card <= 0) || (card >= 255)) {
             card = -1;
         }
@@ -601,16 +618,18 @@ public class AppSettings {
      *                The Card to set as a default.
      */
     public final void setCard(final int card) {
-        setLocalIntOpt(0, card, C_CARD_IDX, C_CARD_SIZE);
+        setLocalIntOpt(0, card, AppSettings.C_CARD_IDX,
+                AppSettings.C_CARD_SIZE);
     }
 
     public final String getReportFileBasePath() {
-        return getStringOpt(OUTPUTDIRPATH) + "/"
-                + getStringOpt(REPORTFILEBASE);
+        return getStringOpt(AppSettings.OUTPUTDIRPATH) + "/"
+                + getStringOpt(AppSettings.REPORTFILEBASE);
     }
 
     public final int getWayPtRCR() {
-        return getLocalIntOpt(C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
+        return getLocalIntOpt(AppSettings.C_WAYPT_RCR_IDX,
+                AppSettings.C_WAYPT_RCR_SIZE);
     }
 
     /**
@@ -618,12 +637,14 @@ public class AppSettings {
      *                The default value for opening the port.
      */
     protected final void setWayPtRCR(final int value) {
-        setLocalIntOpt(0, value, C_WAYPT_RCR_IDX, C_WAYPT_RCR_SIZE);
+        setLocalIntOpt(0, value, AppSettings.C_WAYPT_RCR_IDX,
+                AppSettings.C_WAYPT_RCR_SIZE);
         postEvent(ModelEvent.WAY_RCR_CHANGE);
     }
 
     public final int getWayPtValid() {
-        return getLocalIntOpt(C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
+        return getLocalIntOpt(AppSettings.C_WAYPT_VALID_IDX,
+                AppSettings.C_WAYPT_VALID_SIZE);
     }
 
     /**
@@ -631,12 +652,14 @@ public class AppSettings {
      *                The default value for opening the port.
      */
     protected final void setWayPtValid(final int value) {
-        setLocalIntOpt(0, value, C_WAYPT_VALID_IDX, C_WAYPT_VALID_SIZE);
+        setLocalIntOpt(0, value, AppSettings.C_WAYPT_VALID_IDX,
+                AppSettings.C_WAYPT_VALID_SIZE);
         postEvent(ModelEvent.WAY_VALID_CHANGE);
     }
 
     public final int getTrkPtRCR() {
-        return getLocalIntOpt(C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
+        return getLocalIntOpt(AppSettings.C_TRKPT_RCR_IDX,
+                AppSettings.C_TRKPT_RCR_SIZE);
     }
 
     /**
@@ -644,12 +667,14 @@ public class AppSettings {
      *                The default value for opening the port.
      */
     protected final void setTrkPtRCR(final int value) {
-        setLocalIntOpt(0, value, C_TRKPT_RCR_IDX, C_TRKPT_RCR_SIZE);
+        setLocalIntOpt(0, value, AppSettings.C_TRKPT_RCR_IDX,
+                AppSettings.C_TRKPT_RCR_SIZE);
         postEvent(ModelEvent.TRK_RCR_CHANGE);
     }
 
     public final int getTrkPtValid() {
-        return getLocalIntOpt(C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
+        return getLocalIntOpt(AppSettings.C_TRKPT_VALID_IDX,
+                AppSettings.C_TRKPT_VALID_SIZE);
     }
 
     /**
@@ -657,7 +682,8 @@ public class AppSettings {
      *                The default value for opening the port.
      */
     protected final void setTrkPtValid(final int value) {
-        setLocalIntOpt(0, value, C_TRKPT_VALID_IDX, C_TRKPT_VALID_SIZE);
+        setLocalIntOpt(0, value, AppSettings.C_TRKPT_VALID_IDX,
+                AppSettings.C_TRKPT_VALID_SIZE);
         postEvent(ModelEvent.TRK_VALID_CHANGE);
     }
 
@@ -670,7 +696,8 @@ public class AppSettings {
      * @return Current setting.
      */
     public final int getOutputFileSplitType() {
-        return getLocalIntOpt(C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
+        return getLocalIntOpt(AppSettings.C_ONEFILEPERDAY_IDX,
+                AppSettings.C_ONEFILEPERDAY_SIZE);
     }
 
     /**
@@ -683,7 +710,8 @@ public class AppSettings {
      *                New setting
      */
     protected final void setOutputFileSplitType(final int value) {
-        setLocalIntOpt(0, value, C_ONEFILEPERDAY_IDX, C_ONEFILEPERDAY_SIZE);
+        setLocalIntOpt(0, value, AppSettings.C_ONEFILEPERDAY_IDX,
+                AppSettings.C_ONEFILEPERDAY_SIZE);
     }
 
     public final static int HEIGHT_NOCHANGE = 0;
@@ -699,7 +727,8 @@ public class AppSettings {
      * @see #HEIGHT_NOCHANGE
      */
     public final int getHeightConversionMode() {
-        return getLocalIntOpt(C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
+        return getLocalIntOpt(AppSettings.C_WGS84_TO_MSL_IDX,
+                AppSettings.C_WGS84_TO_MSL_SIZE);
     }
 
     /**
@@ -708,7 +737,8 @@ public class AppSettings {
      *                WGS84 height to MSL height.
      */
     public final void setHeightConversionMode(final int value) {
-        setLocalIntOpt(0, value, C_WGS84_TO_MSL_IDX, C_WGS84_TO_MSL_SIZE);
+        setLocalIntOpt(0, value, AppSettings.C_WGS84_TO_MSL_IDX,
+                AppSettings.C_WGS84_TO_MSL_SIZE);
     }
 
     /**
@@ -732,7 +762,8 @@ public class AppSettings {
      */
 
     public final int getNMEAset() {
-        return getLocalIntOpt(C_NMEASET_IDX, C_NMEASET_SIZE);
+        return getLocalIntOpt(AppSettings.C_NMEASET_IDX,
+                AppSettings.C_NMEASET_SIZE);
     }
 
     /**
@@ -756,14 +787,16 @@ public class AppSettings {
      *                {@link BT747Constants#NMEA_SEN_MCHN_IDX}<br>
      */
     protected final void setNMEAset(final int formatNMEA) {
-        setLocalIntOpt(0, formatNMEA, C_NMEASET_IDX, C_NMEASET_SIZE);
+        setLocalIntOpt(0, formatNMEA, AppSettings.C_NMEASET_IDX,
+                AppSettings.C_NMEASET_SIZE);
     }
 
     /**
      * @return Returns the maxDist.
      */
     public final float getFilterMaxDist() {
-        return getFloatOpt(C_MAX_DISTANCE_IDX, C_MAX_DISTANCE_SIZE);
+        return getFloatOpt(AppSettings.C_MAX_DISTANCE_IDX,
+                AppSettings.C_MAX_DISTANCE_SIZE);
     }
 
     /**
@@ -771,14 +804,16 @@ public class AppSettings {
      *                The maxDist to setFilter.
      */
     protected final void setFilterMaxDist(final float maxDist) {
-        setFloatOpt(0, maxDist, C_MAX_DISTANCE_IDX, C_MAX_DISTANCE_SIZE);
+        setFloatOpt(0, maxDist, AppSettings.C_MAX_DISTANCE_IDX,
+                AppSettings.C_MAX_DISTANCE_SIZE);
     }
 
     /**
      * @return Returns the maxHDOP.
      */
     public final float getFilterMaxHDOP() {
-        return getFloatOpt(C_maxHDOP_IDX, C_maxHDOP_SIZE);
+        return getFloatOpt(AppSettings.C_maxHDOP_IDX,
+                AppSettings.C_maxHDOP_SIZE);
     }
 
     /**
@@ -786,14 +821,16 @@ public class AppSettings {
      *                The maxHDOP to setFilter.
      */
     protected final void setFilterMaxHDOP(final float maxHDOP) {
-        setFloatOpt(0, maxHDOP, C_maxHDOP_IDX, C_maxHDOP_SIZE);
+        setFloatOpt(0, maxHDOP, AppSettings.C_maxHDOP_IDX,
+                AppSettings.C_maxHDOP_SIZE);
     }
 
     /**
      * @return Returns the maxPDOP.
      */
     public final float getFilterMaxPDOP() {
-        return getFloatOpt(C_maxPDOP_IDX, C_maxPDOP_SIZE);
+        return getFloatOpt(AppSettings.C_maxPDOP_IDX,
+                AppSettings.C_maxPDOP_SIZE);
     }
 
     /**
@@ -801,14 +838,16 @@ public class AppSettings {
      *                The maxPDOP to setFilter.
      */
     protected final void setFilterMaxPDOP(final float maxPDOP) {
-        setFloatOpt(0, maxPDOP, C_maxPDOP_IDX, C_maxPDOP_SIZE);
+        setFloatOpt(0, maxPDOP, AppSettings.C_maxPDOP_IDX,
+                AppSettings.C_maxPDOP_SIZE);
     }
 
     /**
      * @return Returns the maxRecCnt.
      */
     public final int getFilterMaxRecCount() {
-        return getLocalIntOpt(C_maxRecCount_IDX, C_maxRecCount_SIZE);
+        return getLocalIntOpt(AppSettings.C_maxRecCount_IDX,
+                AppSettings.C_maxRecCount_SIZE);
     }
 
     /**
@@ -816,14 +855,16 @@ public class AppSettings {
      *                The maxRecCnt to setFilter.
      */
     protected final void setFilterMaxRecCount(final int maxRecCnt) {
-        setLocalIntOpt(0, maxRecCnt, C_maxRecCount_IDX, C_maxRecCount_SIZE);
+        setLocalIntOpt(0, maxRecCnt, AppSettings.C_maxRecCount_IDX,
+                AppSettings.C_maxRecCount_SIZE);
     }
 
     /**
      * @return Returns the maxSpeed.
      */
     public final float getFilterMaxSpeed() {
-        return getFloatOpt(C_maxSpeed_IDX, C_maxSpeed_SIZE);
+        return getFloatOpt(AppSettings.C_maxSpeed_IDX,
+                AppSettings.C_maxSpeed_SIZE);
     }
 
     /**
@@ -831,14 +872,16 @@ public class AppSettings {
      *                The maxSpeed to setFilter.
      */
     protected final void setFilterMaxSpeed(final float maxSpeed) {
-        setFloatOpt(0, maxSpeed, C_maxSpeed_IDX, C_maxSpeed_SIZE);
+        setFloatOpt(0, maxSpeed, AppSettings.C_maxSpeed_IDX,
+                AppSettings.C_maxSpeed_SIZE);
     }
 
     /**
      * @return Returns the maxVDOP.
      */
     public final float getFilterMaxVDOP() {
-        return getFloatOpt(C_maxVDOP_IDX, C_maxVDOP_SIZE);
+        return getFloatOpt(AppSettings.C_maxVDOP_IDX,
+                AppSettings.C_maxVDOP_SIZE);
     }
 
     /**
@@ -846,14 +889,16 @@ public class AppSettings {
      *                The maxVDOP to setFilter.
      */
     protected final void setFilterMaxVDOP(final float maxVDOP) {
-        setFloatOpt(0, maxVDOP, C_maxVDOP_IDX, C_maxVDOP_SIZE);
+        setFloatOpt(0, maxVDOP, AppSettings.C_maxVDOP_IDX,
+                AppSettings.C_maxVDOP_SIZE);
     }
 
     /**
      * @return Returns the minDist.
      */
     public final float getFilterMinDist() {
-        return getFloatOpt(C_minDist_IDX, C_minDist_SIZE);
+        return getFloatOpt(AppSettings.C_minDist_IDX,
+                AppSettings.C_minDist_SIZE);
     }
 
     /**
@@ -861,14 +906,16 @@ public class AppSettings {
      *                The minDist to setFilter.
      */
     protected final void setFilterMinDist(final float minDist) {
-        setFloatOpt(0, minDist, C_minDist_IDX, C_minDist_SIZE);
+        setFloatOpt(0, minDist, AppSettings.C_minDist_IDX,
+                AppSettings.C_minDist_SIZE);
     }
 
     /**
      * @return Returns the minNSAT.
      */
     public final int getFilterMinNSAT() {
-        return getLocalIntOpt(C_minNSAT_IDX, C_minNSAT_SIZE);
+        return getLocalIntOpt(AppSettings.C_minNSAT_IDX,
+                AppSettings.C_minNSAT_SIZE);
     }
 
     /**
@@ -876,14 +923,16 @@ public class AppSettings {
      *                The minNSAT to setFilter.
      */
     protected final void setFilterMinNSAT(final int minNSAT) {
-        setLocalIntOpt(0, minNSAT, C_minNSAT_IDX, C_minNSAT_SIZE);
+        setLocalIntOpt(0, minNSAT, AppSettings.C_minNSAT_IDX,
+                AppSettings.C_minNSAT_SIZE);
     }
 
     /**
      * @return Returns the minRecCnt.
      */
     public final int getFilterMinRecCount() {
-        return getLocalIntOpt(C_minRecCount_IDX, C_minRecCount_SIZE);
+        return getLocalIntOpt(AppSettings.C_minRecCount_IDX,
+                AppSettings.C_minRecCount_SIZE);
     }
 
     /**
@@ -891,14 +940,16 @@ public class AppSettings {
      *                The minRecCnt to setFilter.
      */
     protected final void setFilterMinRecCount(final int minRecCnt) {
-        setLocalIntOpt(0, minRecCnt, C_minRecCount_IDX, C_minRecCount_SIZE);
+        setLocalIntOpt(0, minRecCnt, AppSettings.C_minRecCount_IDX,
+                AppSettings.C_minRecCount_SIZE);
     }
 
     /**
      * @return Returns the minSpeed.
      */
     public final float getFilterMinSpeed() {
-        return getFloatOpt(C_minSpeed_IDX, C_minSpeed_SIZE);
+        return getFloatOpt(AppSettings.C_minSpeed_IDX,
+                AppSettings.C_minSpeed_SIZE);
     }
 
     /**
@@ -906,14 +957,15 @@ public class AppSettings {
      *                The minSpeed to setFilter.
      */
     protected final void setFilterMinSpeed(final float minSpeed) {
-        setFloatOpt(0, minSpeed, C_minSpeed_IDX, C_minSpeed_SIZE);
+        setFloatOpt(0, minSpeed, AppSettings.C_minSpeed_IDX,
+                AppSettings.C_minSpeed_SIZE);
     }
 
     /**
      * @return Returns the solveMacLagProblem.
      */
     public final static boolean isSolveMacLagProblem() {
-        return solveMacLagProblem;
+        return AppSettings.solveMacLagProblem;
     }
 
     /**
@@ -921,11 +973,11 @@ public class AppSettings {
      *                The solveMacLagProblem to set.
      */
     public final static void setSolveMacLagProblem(final boolean arg) {
-        solveMacLagProblem = arg;
+        AppSettings.solveMacLagProblem = arg;
     }
 
     public final boolean isStoredSetting1() {
-        return getStringOpt(SETTING1_NMEA).length() > 15;
+        return getStringOpt(AppSettings.SETTING1_NMEA).length() > 15;
     }
 
     /**
@@ -947,10 +999,10 @@ public class AppSettings {
                 // path = CONFIG_FILE_NAME;
                 // break;
             case 1:
-                path = getStringOpt(OUTPUTDIRPATH) + "/";
+                path = getStringOpt(AppSettings.OUTPUTDIRPATH) + "/";
                 break;
             case 2:
-                path = getStringOpt(LOGFILEPATH);
+                path = getStringOpt(AppSettings.LOGFILEPATH);
                 break;
             case 3:
                 path = getReportFileBasePath();
@@ -963,7 +1015,8 @@ public class AppSettings {
                 path = path.substring(0, path.lastIndexOf('/'));
             }
             try {
-                final String gmapPath = path + "/" + C_GMAP_KEY_FILENAME;
+                final String gmapPath = path + "/"
+                        + AppSettings.C_GMAP_KEY_FILENAME;
                 if (new File(gmapPath).exists()) {
                     final File gmap = new File(gmapPath, File.READ_ONLY);
 
@@ -1114,285 +1167,354 @@ public class AppSettings {
 
     private static final int C_PORTNBR_IDX = 0;
     private static final int C_PORTNBR_SIZE = 8;
-    private static final int C_BAUDRATE_IDX = C_PORTNBR_IDX + C_PORTNBR_SIZE;
+    private static final int C_BAUDRATE_IDX = AppSettings.C_PORTNBR_IDX
+            + AppSettings.C_PORTNBR_SIZE;
     private static final int C_BAUDRATE_SIZE = 8;
-    private static final int C_VERSION_IDX = C_BAUDRATE_IDX + C_BAUDRATE_SIZE;
+    private static final int C_VERSION_IDX = AppSettings.C_BAUDRATE_IDX
+            + AppSettings.C_BAUDRATE_SIZE;
     private static final int C_VERSION_SIZE = 8;
-    private static final int C_BASEDIRPATH_IDX = C_VERSION_IDX
-            + C_VERSION_SIZE;
+    private static final int C_BASEDIRPATH_IDX = AppSettings.C_VERSION_IDX
+            + AppSettings.C_VERSION_SIZE;
     private static final int C_BASEDIRPATH_SIZE = 256;
-    private static final int C_REPORTFILEBASE_IDX = C_BASEDIRPATH_IDX
-            + C_BASEDIRPATH_SIZE;
+    private static final int C_REPORTFILEBASE_IDX = AppSettings.C_BASEDIRPATH_IDX
+            + AppSettings.C_BASEDIRPATH_SIZE;
     private static final int C_REPORTFILEBASE_SIZE = 40;
-    private static final int C_LOGFILERELPATH_IDX = C_REPORTFILEBASE_IDX
-            + C_REPORTFILEBASE_SIZE;
+    private static final int C_LOGFILERELPATH_IDX = AppSettings.C_REPORTFILEBASE_IDX
+            + AppSettings.C_REPORTFILEBASE_SIZE;
     private static final int C_LOGFILERELPATH_SIZE = 40;
-    private static final int C_OPENSTARTUP_IDX = C_LOGFILERELPATH_IDX
-            + C_LOGFILERELPATH_SIZE;
+    private static final int C_OPENSTARTUP_IDX = AppSettings.C_LOGFILERELPATH_IDX
+            + AppSettings.C_LOGFILERELPATH_SIZE;
     private static final int C_OPENSTARTUP_SIZE = 40;
-    private static final int C_CHUNKSIZE_IDX = C_OPENSTARTUP_IDX
-            + C_OPENSTARTUP_SIZE;
+    private static final int C_CHUNKSIZE_IDX = AppSettings.C_OPENSTARTUP_IDX
+            + AppSettings.C_OPENSTARTUP_SIZE;
     private static final int C_CHUNKSIZE_SIZE = 8;
-    private static final int C_DOWNLOADTIMEOUT_IDX = C_CHUNKSIZE_IDX
-            + C_CHUNKSIZE_SIZE;
+    private static final int C_DOWNLOADTIMEOUT_IDX = AppSettings.C_CHUNKSIZE_IDX
+            + AppSettings.C_CHUNKSIZE_SIZE;
     private static final int C_DOWNLOADTIMEOUT_SIZE = 8;
-    private static final int C_CARD_IDX = C_DOWNLOADTIMEOUT_IDX
-            + C_DOWNLOADTIMEOUT_SIZE;
+    private static final int C_CARD_IDX = AppSettings.C_DOWNLOADTIMEOUT_IDX
+            + AppSettings.C_DOWNLOADTIMEOUT_SIZE;
     private static final int C_CARD_SIZE = 4;
-    private static final int C_GPSTIMEOFFSETHOURS_IDX = C_CARD_IDX
-            + C_CARD_SIZE;
+    private static final int C_GPSTIMEOFFSETHOURS_IDX = AppSettings.C_CARD_IDX
+            + AppSettings.C_CARD_SIZE;
     private static final int C_GPSTIMEOFFSETHOURS_SIZE = 4;
-    private static final int C_WAYPT_RCR_IDX = C_GPSTIMEOFFSETHOURS_IDX
-            + C_GPSTIMEOFFSETHOURS_SIZE;
+    private static final int C_WAYPT_RCR_IDX = AppSettings.C_GPSTIMEOFFSETHOURS_IDX
+            + AppSettings.C_GPSTIMEOFFSETHOURS_SIZE;
     private static final int C_WAYPT_RCR_SIZE = 4;
-    private static final int C_WAYPT_VALID_IDX = C_WAYPT_RCR_IDX
-            + C_WAYPT_RCR_SIZE;
+    private static final int C_WAYPT_VALID_IDX = AppSettings.C_WAYPT_RCR_IDX
+            + AppSettings.C_WAYPT_RCR_SIZE;
     private static final int C_WAYPT_VALID_SIZE = 4;
-    private static final int C_TRKPT_RCR_IDX = C_WAYPT_VALID_IDX
-            + C_WAYPT_VALID_SIZE;
+    private static final int C_TRKPT_RCR_IDX = AppSettings.C_WAYPT_VALID_IDX
+            + AppSettings.C_WAYPT_VALID_SIZE;
     private static final int C_TRKPT_RCR_SIZE = 4;
-    private static final int C_TRKPT_VALID_IDX = C_TRKPT_RCR_IDX
-            + C_TRKPT_RCR_SIZE;
+    private static final int C_TRKPT_VALID_IDX = AppSettings.C_TRKPT_RCR_IDX
+            + AppSettings.C_TRKPT_RCR_SIZE;
     private static final int C_TRKPT_VALID_SIZE = 4;
-    private static final int C_ONEFILEPERDAY_IDX = C_TRKPT_VALID_IDX
-            + C_TRKPT_VALID_SIZE;
+    private static final int C_ONEFILEPERDAY_IDX = AppSettings.C_TRKPT_VALID_IDX
+            + AppSettings.C_TRKPT_VALID_SIZE;
     private static final int C_ONEFILEPERDAY_SIZE = 1;
-    private static final int C_WGS84_TO_MSL_IDX = C_ONEFILEPERDAY_IDX
-            + C_ONEFILEPERDAY_SIZE;
+    private static final int C_WGS84_TO_MSL_IDX = AppSettings.C_ONEFILEPERDAY_IDX
+            + AppSettings.C_ONEFILEPERDAY_SIZE;
     private static final int C_WGS84_TO_MSL_SIZE = 4;
-    private static final int C_LOGAHEAD_IDX = C_WGS84_TO_MSL_IDX
-            + C_WGS84_TO_MSL_SIZE;
+    private static final int C_LOGAHEAD_IDX = AppSettings.C_WGS84_TO_MSL_IDX
+            + AppSettings.C_WGS84_TO_MSL_SIZE;
     private static final int C_LOGAHEAD_SIZE = 1;
-    private static final int C_NMEASET_IDX = C_LOGAHEAD_IDX + C_LOGAHEAD_SIZE;
+    private static final int C_NMEASET_IDX = AppSettings.C_LOGAHEAD_IDX
+            + AppSettings.C_LOGAHEAD_SIZE;
     private static final int C_NMEASET_SIZE = 8;
-    private static final int C_GPXUTC0_IDX = C_NMEASET_IDX + C_NMEASET_SIZE;
+    private static final int C_GPXUTC0_IDX = AppSettings.C_NMEASET_IDX
+            + AppSettings.C_NMEASET_SIZE;
     private static final int C_GPXUTC0_SIZE = 1;
-    private static final int C_TRKSEP_IDX = C_GPXUTC0_IDX + C_GPXUTC0_SIZE;
+    private static final int C_TRKSEP_IDX = AppSettings.C_GPXUTC0_IDX
+            + AppSettings.C_GPXUTC0_SIZE;
     private static final int C_TRKSEP_SIZE = 4;
-    private static final int C_ADVFILTACTIVE_IDX = C_TRKSEP_IDX
-            + C_TRKSEP_SIZE;
+    private static final int C_ADVFILTACTIVE_IDX = AppSettings.C_TRKSEP_IDX
+            + AppSettings.C_TRKSEP_SIZE;
     private static final int C_ADVFILTACTIVE_SIZE = 1;
-    private static final int C_minDist_IDX = C_ADVFILTACTIVE_IDX
-            + C_ADVFILTACTIVE_SIZE;
+    private static final int C_minDist_IDX = AppSettings.C_ADVFILTACTIVE_IDX
+            + AppSettings.C_ADVFILTACTIVE_SIZE;
     private static final int C_minDist_SIZE = 8;
-    private static final int C_MAX_DISTANCE_IDX = C_minDist_IDX
-            + C_minDist_SIZE;
+    private static final int C_MAX_DISTANCE_IDX = AppSettings.C_minDist_IDX
+            + AppSettings.C_minDist_SIZE;
     private static final int C_MAX_DISTANCE_SIZE = 8;
-    private static final int C_minSpeed_IDX = C_MAX_DISTANCE_IDX
-            + C_MAX_DISTANCE_SIZE;
+    private static final int C_minSpeed_IDX = AppSettings.C_MAX_DISTANCE_IDX
+            + AppSettings.C_MAX_DISTANCE_SIZE;
     private static final int C_minSpeed_SIZE = 8;
-    private static final int C_maxSpeed_IDX = C_minSpeed_IDX
-            + C_minSpeed_SIZE;
+    private static final int C_maxSpeed_IDX = AppSettings.C_minSpeed_IDX
+            + AppSettings.C_minSpeed_SIZE;
     private static final int C_maxSpeed_SIZE = 8;
-    private static final int C_maxHDOP_IDX = C_maxSpeed_IDX + C_maxSpeed_SIZE;
+    private static final int C_maxHDOP_IDX = AppSettings.C_maxSpeed_IDX
+            + AppSettings.C_maxSpeed_SIZE;
     private static final int C_maxHDOP_SIZE = 8;
-    private static final int C_maxPDOP_IDX = C_maxHDOP_IDX + C_maxHDOP_SIZE;
+    private static final int C_maxPDOP_IDX = AppSettings.C_maxHDOP_IDX
+            + AppSettings.C_maxHDOP_SIZE;
     private static final int C_maxPDOP_SIZE = 8;
-    private static final int C_maxVDOP_IDX = C_maxPDOP_IDX + C_maxPDOP_SIZE;
+    private static final int C_maxVDOP_IDX = AppSettings.C_maxPDOP_IDX
+            + AppSettings.C_maxPDOP_SIZE;
     private static final int C_maxVDOP_SIZE = 8;
-    private static final int C_minRecCount_IDX = C_maxVDOP_IDX
-            + C_maxVDOP_SIZE;
+    private static final int C_minRecCount_IDX = AppSettings.C_maxVDOP_IDX
+            + AppSettings.C_maxVDOP_SIZE;
     private static final int C_minRecCount_SIZE = 8;
-    private static final int C_maxRecCount_IDX = C_minRecCount_IDX
-            + C_minRecCount_SIZE;
+    private static final int C_maxRecCount_IDX = AppSettings.C_minRecCount_IDX
+            + AppSettings.C_minRecCount_SIZE;
     private static final int C_maxRecCount_SIZE = 8;
-    private static final int C_minNSAT_IDX = C_maxRecCount_IDX
-            + C_maxRecCount_SIZE;
+    private static final int C_minNSAT_IDX = AppSettings.C_maxRecCount_IDX
+            + AppSettings.C_maxRecCount_SIZE;
     private static final int C_minNSAT_SIZE = 4;
-    private static final int C_GPXTRKSEGBIG_IDX = C_minNSAT_IDX
-            + C_minNSAT_SIZE;
+    private static final int C_GPXTRKSEGBIG_IDX = AppSettings.C_minNSAT_IDX
+            + AppSettings.C_minNSAT_SIZE;
     private static final int C_GPXTRKSEGBIG_SIZE = 1;
-    private static final int C_DECODEGPS_IDX = C_GPXTRKSEGBIG_IDX
-            + C_GPXTRKSEGBIG_SIZE;
+    private static final int C_DECODEGPS_IDX = AppSettings.C_GPXTRKSEGBIG_IDX
+            + AppSettings.C_GPXTRKSEGBIG_SIZE;
     private static final int C_DECODEGPS_SIZE = 4;
-    private static final int C_COLOR_INVALIDTRACK_IDX = C_DECODEGPS_IDX
-            + C_DECODEGPS_SIZE;
+    private static final int C_COLOR_INVALIDTRACK_IDX = AppSettings.C_DECODEGPS_IDX
+            + AppSettings.C_DECODEGPS_SIZE;
     private static final int C_COLOR_INVALIDTRACK_SIZE = 8;
-    private static final int C_ISTRAVERSABLE_IDX = C_COLOR_INVALIDTRACK_IDX
-            + C_COLOR_INVALIDTRACK_SIZE;
+    private static final int C_ISTRAVERSABLE_IDX = AppSettings.C_COLOR_INVALIDTRACK_IDX
+            + AppSettings.C_COLOR_INVALIDTRACK_SIZE;
     private static final int C_ISTRAVERSABLE_SIZE = 4;
-    private static final int C_SETTING1_TIME_IDX = C_ISTRAVERSABLE_IDX
-            + C_ISTRAVERSABLE_SIZE;
+    private static final int C_SETTING1_TIME_IDX = AppSettings.C_ISTRAVERSABLE_IDX
+            + AppSettings.C_ISTRAVERSABLE_SIZE;
     private static final int C_SETTING1_TIME_SIZE = 8;
-    private static final int C_SETTING1_SPEED_IDX = C_SETTING1_TIME_IDX
-            + C_SETTING1_TIME_SIZE;
+    private static final int C_SETTING1_SPEED_IDX = AppSettings.C_SETTING1_TIME_IDX
+            + AppSettings.C_SETTING1_TIME_SIZE;
     private static final int C_SETTING1_SPEED_SIZE = 8;
-    private static final int C_SETTING1_DIST_IDX = C_SETTING1_SPEED_IDX
-            + C_SETTING1_SPEED_SIZE;
+    private static final int C_SETTING1_DIST_IDX = AppSettings.C_SETTING1_SPEED_IDX
+            + AppSettings.C_SETTING1_SPEED_SIZE;
     private static final int C_SETTING1_DIST_SIZE = 8;
-    private static final int C_SETTING1_FIX_IDX = C_SETTING1_DIST_IDX
-            + C_SETTING1_DIST_SIZE;
+    private static final int C_SETTING1_FIX_IDX = AppSettings.C_SETTING1_DIST_IDX
+            + AppSettings.C_SETTING1_DIST_SIZE;
     private static final int C_SETTING1_FIX_SIZE = 8;
-    private static final int C_SETTING1_NMEA_IDX = C_SETTING1_FIX_IDX
-            + C_SETTING1_FIX_SIZE;
+    private static final int C_SETTING1_NMEA_IDX = AppSettings.C_SETTING1_FIX_IDX
+            + AppSettings.C_SETTING1_FIX_SIZE;
     private static final int C_SETTING1_NMEA_SIZE = 20;
-    private static final int C_SETTING1_DGPS_IDX = C_SETTING1_NMEA_IDX
-            + C_SETTING1_NMEA_SIZE;
+    private static final int C_SETTING1_DGPS_IDX = AppSettings.C_SETTING1_NMEA_IDX
+            + AppSettings.C_SETTING1_NMEA_SIZE;
     private static final int C_SETTING1_DGPS_SIZE = 8;
-    private static final int C_SETTING1_TEST_IDX = C_SETTING1_DGPS_IDX
-            + C_SETTING1_DGPS_SIZE;
+    private static final int C_SETTING1_TEST_IDX = AppSettings.C_SETTING1_DGPS_IDX
+            + AppSettings.C_SETTING1_DGPS_SIZE;
     private static final int C_SETTING1_TEST_SIZE = 2;
-    private static final int C_SETTING1_LOG_OVR_IDX = C_SETTING1_TEST_IDX
-            + C_SETTING1_TEST_SIZE;
+    private static final int C_SETTING1_LOG_OVR_IDX = AppSettings.C_SETTING1_TEST_IDX
+            + AppSettings.C_SETTING1_TEST_SIZE;
     private static final int C_SETTING1_LOG_OVR_SIZE = 1;
-    private static final int C_SETTING1_LOG_FORMAT_IDX = C_SETTING1_LOG_OVR_IDX
-            + C_SETTING1_LOG_OVR_SIZE;
+    private static final int C_SETTING1_LOG_FORMAT_IDX = AppSettings.C_SETTING1_LOG_OVR_IDX
+            + AppSettings.C_SETTING1_LOG_OVR_SIZE;
     private static final int C_SETTING1_LOG_FORMAT_SIZE = 8;
-    private static final int C_SETTING1_SBAS_IDX = C_SETTING1_LOG_FORMAT_IDX
-            + C_SETTING1_LOG_FORMAT_SIZE;
+    private static final int C_SETTING1_SBAS_IDX = AppSettings.C_SETTING1_LOG_FORMAT_IDX
+            + AppSettings.C_SETTING1_LOG_FORMAT_SIZE;
     private static final int C_SETTING1_SBAS_SIZE = 1;
-    private static final int C_RECORDNBR_IN_LOGS_IDX = C_SETTING1_SBAS_IDX
-            + C_SETTING1_SBAS_SIZE;
+    private static final int C_RECORDNBR_IN_LOGS_IDX = AppSettings.C_SETTING1_SBAS_IDX
+            + AppSettings.C_SETTING1_SBAS_SIZE;
     private static final int C_RECORDNBR_IN_LOGS_SIZE = 4;
-    private static final int C_HOLUX241_IDX = C_RECORDNBR_IN_LOGS_IDX
-            + C_RECORDNBR_IN_LOGS_SIZE;
+    private static final int C_HOLUX241_IDX = AppSettings.C_RECORDNBR_IN_LOGS_IDX
+            + AppSettings.C_RECORDNBR_IN_LOGS_SIZE;
     private static final int C_HOLUX241_SIZE = 1;
-    private static final int C_IMPERIAL_IDX = C_HOLUX241_IDX
-            + C_HOLUX241_SIZE;
+    private static final int C_IMPERIAL_IDX = AppSettings.C_HOLUX241_IDX
+            + AppSettings.C_HOLUX241_SIZE;
     private static final int C_IMPERIAL_SIZE = 1;
-    private static final int C_FREETEXTPORT_IDX = C_IMPERIAL_IDX
-            + C_IMPERIAL_SIZE;
+    private static final int C_FREETEXTPORT_IDX = AppSettings.C_IMPERIAL_IDX
+            + AppSettings.C_IMPERIAL_SIZE;
     private static final int C_FREETEXTPORT_SIZE = 50;
-    private static final int C_NOT_USED1_IDX = C_FREETEXTPORT_IDX
-            + C_FREETEXTPORT_SIZE;
+    private static final int C_NOT_USED1_IDX = AppSettings.C_FREETEXTPORT_IDX
+            + AppSettings.C_FREETEXTPORT_SIZE;
     private static final int C_NOT_USED1_SIZE = 4;
-    private static final int C_GPSTYPE_IDX = C_NOT_USED1_IDX
-            + C_NOT_USED1_SIZE;
+    private static final int C_GPSTYPE_IDX = AppSettings.C_NOT_USED1_IDX
+            + AppSettings.C_NOT_USED1_SIZE;
     private static final int C_GPSTYPE_SIZE = 1;
-    private static final int C_OUTPUTLOGCONDITIONS_IDX = C_GPSTYPE_IDX
-            + C_GPSTYPE_SIZE;
+    private static final int C_OUTPUTLOGCONDITIONS_IDX = AppSettings.C_GPSTYPE_IDX
+            + AppSettings.C_GPSTYPE_SIZE;
     private static final int C_OUTPUTLOGCONDITIONS_SIZE = 1;
-    private static final int C_IS_WRITE_TRACKPOINT_COMMENT_IDX = C_OUTPUTLOGCONDITIONS_IDX
-            + C_OUTPUTLOGCONDITIONS_SIZE;
+    private static final int C_IS_WRITE_TRACKPOINT_COMMENT_IDX = AppSettings.C_OUTPUTLOGCONDITIONS_IDX
+            + AppSettings.C_OUTPUTLOGCONDITIONS_SIZE;
     private static final int C_IS_WRITE_TRACKPOINT_COMMENT_SIZE = 4;
-    private static final int C_IS_WRITE_TRACKPOINT_NAME_IDX = C_IS_WRITE_TRACKPOINT_COMMENT_IDX
-            + C_IS_WRITE_TRACKPOINT_COMMENT_SIZE;
+    private static final int C_IS_WRITE_TRACKPOINT_NAME_IDX = AppSettings.C_IS_WRITE_TRACKPOINT_COMMENT_IDX
+            + AppSettings.C_IS_WRITE_TRACKPOINT_COMMENT_SIZE;
     private static final int C_IS_WRITE_TRACKPOINT_NAME_SIZE = 4;
-    private static final int C_FILEFIELDFORMAT_IDX = C_IS_WRITE_TRACKPOINT_NAME_IDX
-            + C_IS_WRITE_TRACKPOINT_NAME_SIZE;
+    private static final int C_FILEFIELDFORMAT_IDX = AppSettings.C_IS_WRITE_TRACKPOINT_NAME_IDX
+            + AppSettings.C_IS_WRITE_TRACKPOINT_NAME_SIZE;
     private static final int C_FILEFIELDFORMAT_SIZE = 8;
-    private static final int C_STOP_LOG_ON_CONNECT_IDX = C_FILEFIELDFORMAT_IDX
-            + C_FILEFIELDFORMAT_SIZE;
+    private static final int C_STOP_LOG_ON_CONNECT_IDX = AppSettings.C_FILEFIELDFORMAT_IDX
+            + AppSettings.C_FILEFIELDFORMAT_SIZE;
     private static final int C_STOP_LOG_ON_CONNECT_SIZE = 1;
-    private static final int C_COLOR_VALIDTRACK_IDX = C_STOP_LOG_ON_CONNECT_IDX
-            + C_STOP_LOG_ON_CONNECT_SIZE;
+    private static final int C_COLOR_VALIDTRACK_IDX = AppSettings.C_STOP_LOG_ON_CONNECT_IDX
+            + AppSettings.C_STOP_LOG_ON_CONNECT_SIZE;
     private static final int C_COLOR_VALIDTRACK_SIZE = 8;
-    private static final int C_LOGFILEPATH_IDX = C_COLOR_VALIDTRACK_IDX
-            + C_COLOR_VALIDTRACK_SIZE;
+    private static final int C_LOGFILEPATH_IDX = AppSettings.C_COLOR_VALIDTRACK_IDX
+            + AppSettings.C_COLOR_VALIDTRACK_SIZE;
     private static final int C_LOGFILEPATH_SIZE = 300;
-    private static final int C_LANGUAGE_IDX = C_LOGFILEPATH_IDX
-            + C_LOGFILEPATH_SIZE;
+    private static final int C_LANGUAGE_IDX = AppSettings.C_LOGFILEPATH_IDX
+            + AppSettings.C_LOGFILEPATH_SIZE;
     private static final int C_LANGUAGE_SIZE = 8;
-    private static final int C_IMAGEDIR_IDX = C_LANGUAGE_IDX
-            + C_LANGUAGE_SIZE;
+    private static final int C_IMAGEDIR_IDX = AppSettings.C_LANGUAGE_IDX
+            + AppSettings.C_LANGUAGE_SIZE;
     private static final int C_IMAGEDIR_SIZE = 256;
-    private static final int C_FILETIMEOFFSET_IDX = C_IMAGEDIR_IDX
-            + C_IMAGEDIR_SIZE;
+    private static final int C_FILETIMEOFFSET_IDX = AppSettings.C_IMAGEDIR_IDX
+            + AppSettings.C_IMAGEDIR_SIZE;
     private static final int C_FILETIMEOFFSET_SIZE = 4;
-    private static final int C_TAG_OVERRIDEPOSITIONS_IDX = C_FILETIMEOFFSET_IDX
-            + C_FILETIMEOFFSET_SIZE;
+    private static final int C_TAG_OVERRIDEPOSITIONS_IDX = AppSettings.C_FILETIMEOFFSET_IDX
+            + AppSettings.C_FILETIMEOFFSET_SIZE;
     private static final int C_TAG_OVERRIDEPOSITIONS_SIZE = 1;
-    private static final int C_TAG_MAXTIMEDIFFERENCE_IDX = C_TAG_OVERRIDEPOSITIONS_IDX
-            + C_TAG_OVERRIDEPOSITIONS_SIZE;
+    private static final int C_TAG_MAXTIMEDIFFERENCE_IDX = AppSettings.C_TAG_OVERRIDEPOSITIONS_IDX
+            + AppSettings.C_TAG_OVERRIDEPOSITIONS_SIZE;
     private static final int C_TAG_MAXTIMEDIFFERENCE_SIZE = 4;
-    private static final int C_DISABLELOGDURINGDOWNLOAD_IDX = C_TAG_MAXTIMEDIFFERENCE_IDX
-            + C_TAG_MAXTIMEDIFFERENCE_SIZE;
+    private static final int C_DISABLELOGDURINGDOWNLOAD_IDX = AppSettings.C_TAG_MAXTIMEDIFFERENCE_IDX
+            + AppSettings.C_TAG_MAXTIMEDIFFERENCE_SIZE;
     private static final int C_DISABLELOGDURINGDOWNLOAD_SIZE = 1;
-    private static final int C_MAPCACHEDIRECTORY_IDX = C_DISABLELOGDURINGDOWNLOAD_IDX
-            + C_DISABLELOGDURINGDOWNLOAD_SIZE;
+    private static final int C_MAPCACHEDIRECTORY_IDX = AppSettings.C_DISABLELOGDURINGDOWNLOAD_IDX
+            + AppSettings.C_DISABLELOGDURINGDOWNLOAD_SIZE;
     private static final int C_MAPCACHEDIRECTORY_SIZE = 255;
-    private static final int C_MAPTYPE_IDX = C_MAPCACHEDIRECTORY_IDX
-            + C_MAPCACHEDIRECTORY_SIZE;
+    private static final int C_MAPTYPE_IDX = AppSettings.C_MAPCACHEDIRECTORY_IDX
+            + AppSettings.C_MAPCACHEDIRECTORY_SIZE;
     private static final int C_MAPTYPE_SIZE = 1;
-    private static final int C_TAGGED_TEMPLATE_IDX = C_MAPTYPE_IDX
-            + C_MAPTYPE_SIZE;
+    private static final int C_TAGGED_TEMPLATE_IDX = AppSettings.C_MAPTYPE_IDX
+            + AppSettings.C_MAPTYPE_SIZE;
     private static final int C_TAGGED_TEMPLATE_SIZE = 255;
-    private static final int C_KML_ALTITUDEMODE_IDX = C_TAGGED_TEMPLATE_IDX
-            + C_TAGGED_TEMPLATE_SIZE;
+    private static final int C_KML_ALTITUDEMODE_IDX = AppSettings.C_TAGGED_TEMPLATE_IDX
+            + AppSettings.C_TAGGED_TEMPLATE_SIZE;
     private static final int C_KML_ALTITUDEMODE_SIZE = 1;
-    private static final int C_NEXT_IDX = C_KML_ALTITUDEMODE_IDX
-            + C_KML_ALTITUDEMODE_SIZE;
+    private static final int C_NEXT_IDX = AppSettings.C_KML_ALTITUDEMODE_IDX
+            + AppSettings.C_KML_ALTITUDEMODE_SIZE;
 
     // Next lines just to add new items faster using replace functions
     private static final int C_NEXT_SIZE = 4;
-    private static final int C_NEW_NEXT_IDX = C_NEXT_IDX + C_NEXT_SIZE;
+    private static final int C_NEW_NEXT_IDX = AppSettings.C_NEXT_IDX
+            + AppSettings.C_NEXT_SIZE;
 
     private static final int[][] paramsList =
     // Type, idx, start, size
     {
-            { BOOL, IS_WRITE_TRACKPOINT_COMMENT,
-                    C_IS_WRITE_TRACKPOINT_COMMENT_IDX,
-                    C_IS_WRITE_TRACKPOINT_COMMENT_SIZE },
-            { BOOL, IS_WRITE_TRACKPOINT_NAME, C_IS_WRITE_TRACKPOINT_NAME_IDX,
-                    C_IS_WRITE_TRACKPOINT_NAME_SIZE },
-            { BOOL, OUTPUTLOGCONDITIONS, C_OUTPUTLOGCONDITIONS_IDX,
-                    C_OUTPUTLOGCONDITIONS_SIZE },
-            { BOOL, IMPERIAL, C_IMPERIAL_IDX, C_IMPERIAL_SIZE },
-            { BOOL, FORCE_HOLUXM241, C_HOLUX241_IDX, C_HOLUX241_SIZE },
-            { BOOL, IS_RECORDNBR_IN_LOGS, C_RECORDNBR_IN_LOGS_IDX,
-                    C_RECORDNBR_IN_LOGS_SIZE },
-            { BOOL, IS_TRAVERSABLE, C_ISTRAVERSABLE_IDX, C_ISTRAVERSABLE_SIZE },
-            { INT, FILEFIELDFORMAT, C_FILEFIELDFORMAT_IDX,
-                    C_FILEFIELDFORMAT_SIZE },
+            { AppSettings.BOOL, AppSettings.IS_WRITE_TRACKPOINT_COMMENT,
+                    AppSettings.C_IS_WRITE_TRACKPOINT_COMMENT_IDX,
+                    AppSettings.C_IS_WRITE_TRACKPOINT_COMMENT_SIZE },
+            { AppSettings.BOOL, AppSettings.IS_WRITE_TRACKPOINT_NAME,
+                    AppSettings.C_IS_WRITE_TRACKPOINT_NAME_IDX,
+                    AppSettings.C_IS_WRITE_TRACKPOINT_NAME_SIZE },
+            { AppSettings.BOOL, AppSettings.OUTPUTLOGCONDITIONS,
+                    AppSettings.C_OUTPUTLOGCONDITIONS_IDX,
+                    AppSettings.C_OUTPUTLOGCONDITIONS_SIZE },
+            { AppSettings.BOOL, AppSettings.IMPERIAL,
+                    AppSettings.C_IMPERIAL_IDX, AppSettings.C_IMPERIAL_SIZE },
+            { AppSettings.BOOL, AppSettings.FORCE_HOLUXM241,
+                    AppSettings.C_HOLUX241_IDX, AppSettings.C_HOLUX241_SIZE },
+            { AppSettings.BOOL, AppSettings.IS_RECORDNBR_IN_LOGS,
+                    AppSettings.C_RECORDNBR_IN_LOGS_IDX,
+                    AppSettings.C_RECORDNBR_IN_LOGS_SIZE },
+            { AppSettings.BOOL, AppSettings.IS_TRAVERSABLE,
+                    AppSettings.C_ISTRAVERSABLE_IDX,
+                    AppSettings.C_ISTRAVERSABLE_SIZE },
+            { AppSettings.INT, AppSettings.FILEFIELDFORMAT,
+                    AppSettings.C_FILEFIELDFORMAT_IDX,
+                    AppSettings.C_FILEFIELDFORMAT_SIZE },
             // Application parameter
-            { BOOL, IS_STOP_LOGGING_ON_CONNECT, C_STOP_LOG_ON_CONNECT_IDX,
-                    C_STOP_LOG_ON_CONNECT_SIZE },
-            { STRING, OUTPUTDIRPATH, C_BASEDIRPATH_IDX, C_BASEDIRPATH_SIZE },
-            { STRING, REPORTFILEBASE, C_REPORTFILEBASE_IDX,
-                    C_REPORTFILEBASE_SIZE },
-            { STRING, LOGFILERELPATH, C_LOGFILERELPATH_IDX,
-                    C_LOGFILERELPATH_SIZE },
-            { STRING, LOGFILEPATH, C_LOGFILEPATH_IDX, C_LOGFILEPATH_SIZE },
-            { STRING, LANGUAGE, C_LANGUAGE_IDX, C_LANGUAGE_SIZE },
-            { STRING, IMAGEDIR, C_IMAGEDIR_IDX, C_IMAGEDIR_SIZE },
-            { INT, FILETIMEOFFSET, C_FILETIMEOFFSET_IDX,
-                    C_FILETIMEOFFSET_SIZE },
-            { INT, PORTNBR, C_PORTNBR_IDX, C_PORTNBR_SIZE },
-            { INT, BAUDRATE, C_BAUDRATE_IDX, C_BAUDRATE_SIZE },
-            { STRING, FREETEXTPORT, C_FREETEXTPORT_IDX, C_FREETEXTPORT_SIZE },
-            { BOOL, OPENPORTATSTARTUP, C_OPENSTARTUP_IDX, C_OPENSTARTUP_SIZE },
-            { INT, GPSTIMEOFFSETHOURS, C_GPSTIMEOFFSETHOURS_IDX,
-                    C_GPSTIMEOFFSETHOURS_SIZE },
-            { BOOL, TAG_OVERRIDEPOSITIONS, C_TAG_OVERRIDEPOSITIONS_IDX,
-                    C_TAG_OVERRIDEPOSITIONS_SIZE },
-            { INT, TAG_MAXTIMEDIFFERENCE, C_TAG_MAXTIMEDIFFERENCE_IDX,
-                    C_TAG_MAXTIMEDIFFERENCE_SIZE },
-            { INT, GPSTYPE, C_GPSTYPE_IDX, C_GPSTYPE_SIZE },
-            { BOOL, DISABLELOGDURINGDOWNLOAD, C_DISABLELOGDURINGDOWNLOAD_IDX,
-                    C_DISABLELOGDURINGDOWNLOAD_SIZE },
-            { STRING, MAPCACHEDIRECTORY, C_MAPCACHEDIRECTORY_IDX,
-                    C_MAPCACHEDIRECTORY_SIZE },
-            { STRING, VERSION, C_VERSION_IDX, C_VERSION_SIZE },
-            { INT, MAPTYPE, C_MAPTYPE_IDX, C_MAPTYPE_SIZE },
-            { STRING, GOOGLEMAPKEY, 0, 0 },
-            { STRING, SETTING1_NMEA, C_SETTING1_NMEA_IDX,
-                    C_SETTING1_NMEA_SIZE },
-            { INT, SETTING1_TIME, C_SETTING1_TIME_IDX, C_SETTING1_TIME_SIZE },
-            { INT, SETTING1_SPEED, C_SETTING1_SPEED_IDX,
-                    C_SETTING1_SPEED_SIZE },
-            { INT, SETTING1_DIST, C_SETTING1_DIST_IDX, C_SETTING1_DIST_SIZE },
-            { INT, SETTING1_FIX, C_SETTING1_FIX_IDX, C_SETTING1_FIX_SIZE },
-            { INT, SETTING1_DGPS, C_SETTING1_DGPS_IDX, C_SETTING1_DGPS_SIZE },
-            { BOOL, SETTING1_TEST, C_SETTING1_TEST_IDX, C_SETTING1_TEST_SIZE },
-            { BOOL, SETTING1_LOG_OVR, C_SETTING1_LOG_OVR_IDX,
-                    C_SETTING1_LOG_OVR_SIZE },
-            { INT, SETTING1_LOG_FORMAT, C_SETTING1_LOG_FORMAT_IDX,
-                    C_SETTING1_LOG_FORMAT_SIZE },
-            { BOOL, SETTING1_SBAS, C_SETTING1_SBAS_IDX, C_SETTING1_SBAS_SIZE },
-            { BOOL, ADVFILTACTIVE, C_ADVFILTACTIVE_IDX, C_ADVFILTACTIVE_SIZE },
-            { BOOL, GPXUTC0, C_GPXUTC0_IDX, C_GPXUTC0_SIZE },
-            { BOOL, DECODEGPS, C_DECODEGPS_IDX, C_DECODEGPS_SIZE },
-            { BOOL, GPXTRKSEGBIG, C_GPXTRKSEGBIG_IDX, C_GPXTRKSEGBIG_SIZE },
-            { STRING, COLOR_VALIDTRACK, C_COLOR_VALIDTRACK_IDX,
-                    C_COLOR_VALIDTRACK_SIZE },
-            { STRING, COLOR_INVALIDTRACK, C_COLOR_INVALIDTRACK_IDX,
-                    C_COLOR_INVALIDTRACK_SIZE },
-            { STRING, TAGGEDFILE_TEMPLATE, C_TAGGED_TEMPLATE_IDX,
-                    C_TAGGED_TEMPLATE_SIZE },
-            { INT, KML_ALTITUDEMODE, C_KML_ALTITUDEMODE_IDX,
-                    C_KML_ALTITUDEMODE_SIZE },
-            { INT, TRKSEP, C_TRKSEP_IDX, C_TRKSEP_SIZE },
-            { INT, LOGAHEAD, C_LOGAHEAD_IDX, C_LOGAHEAD_SIZE },
+            { AppSettings.BOOL, AppSettings.IS_STOP_LOGGING_ON_CONNECT,
+                    AppSettings.C_STOP_LOG_ON_CONNECT_IDX,
+                    AppSettings.C_STOP_LOG_ON_CONNECT_SIZE },
+            { AppSettings.STRING, AppSettings.OUTPUTDIRPATH,
+                    AppSettings.C_BASEDIRPATH_IDX,
+                    AppSettings.C_BASEDIRPATH_SIZE },
+            { AppSettings.STRING, AppSettings.REPORTFILEBASE,
+                    AppSettings.C_REPORTFILEBASE_IDX,
+                    AppSettings.C_REPORTFILEBASE_SIZE },
+            { AppSettings.STRING, AppSettings.LOGFILERELPATH,
+                    AppSettings.C_LOGFILERELPATH_IDX,
+                    AppSettings.C_LOGFILERELPATH_SIZE },
+            { AppSettings.STRING, AppSettings.LOGFILEPATH,
+                    AppSettings.C_LOGFILEPATH_IDX,
+                    AppSettings.C_LOGFILEPATH_SIZE },
+            { AppSettings.STRING, AppSettings.LANGUAGE,
+                    AppSettings.C_LANGUAGE_IDX, AppSettings.C_LANGUAGE_SIZE },
+            { AppSettings.STRING, AppSettings.IMAGEDIR,
+                    AppSettings.C_IMAGEDIR_IDX, AppSettings.C_IMAGEDIR_SIZE },
+            { AppSettings.INT, AppSettings.FILETIMEOFFSET,
+                    AppSettings.C_FILETIMEOFFSET_IDX,
+                    AppSettings.C_FILETIMEOFFSET_SIZE },
+            { AppSettings.INT, AppSettings.PORTNBR,
+                    AppSettings.C_PORTNBR_IDX, AppSettings.C_PORTNBR_SIZE },
+            { AppSettings.INT, AppSettings.BAUDRATE,
+                    AppSettings.C_BAUDRATE_IDX, AppSettings.C_BAUDRATE_SIZE },
+            { AppSettings.STRING, AppSettings.FREETEXTPORT,
+                    AppSettings.C_FREETEXTPORT_IDX,
+                    AppSettings.C_FREETEXTPORT_SIZE },
+            { AppSettings.BOOL, AppSettings.OPENPORTATSTARTUP,
+                    AppSettings.C_OPENSTARTUP_IDX,
+                    AppSettings.C_OPENSTARTUP_SIZE },
+            { AppSettings.INT, AppSettings.GPSTIMEOFFSETHOURS,
+                    AppSettings.C_GPSTIMEOFFSETHOURS_IDX,
+                    AppSettings.C_GPSTIMEOFFSETHOURS_SIZE },
+            { AppSettings.BOOL, AppSettings.TAG_OVERRIDEPOSITIONS,
+                    AppSettings.C_TAG_OVERRIDEPOSITIONS_IDX,
+                    AppSettings.C_TAG_OVERRIDEPOSITIONS_SIZE },
+            { AppSettings.INT, AppSettings.TAG_MAXTIMEDIFFERENCE,
+                    AppSettings.C_TAG_MAXTIMEDIFFERENCE_IDX,
+                    AppSettings.C_TAG_MAXTIMEDIFFERENCE_SIZE },
+            { AppSettings.INT, AppSettings.GPSTYPE,
+                    AppSettings.C_GPSTYPE_IDX, AppSettings.C_GPSTYPE_SIZE },
+            { AppSettings.BOOL, AppSettings.DISABLELOGDURINGDOWNLOAD,
+                    AppSettings.C_DISABLELOGDURINGDOWNLOAD_IDX,
+                    AppSettings.C_DISABLELOGDURINGDOWNLOAD_SIZE },
+            { AppSettings.STRING, AppSettings.MAPCACHEDIRECTORY,
+                    AppSettings.C_MAPCACHEDIRECTORY_IDX,
+                    AppSettings.C_MAPCACHEDIRECTORY_SIZE },
+            { AppSettings.STRING, AppSettings.VERSION,
+                    AppSettings.C_VERSION_IDX, AppSettings.C_VERSION_SIZE },
+            { AppSettings.INT, AppSettings.MAPTYPE,
+                    AppSettings.C_MAPTYPE_IDX, AppSettings.C_MAPTYPE_SIZE },
+            { AppSettings.STRING, AppSettings.GOOGLEMAPKEY, 0, 0 },
+            { AppSettings.STRING, AppSettings.SETTING1_NMEA,
+                    AppSettings.C_SETTING1_NMEA_IDX,
+                    AppSettings.C_SETTING1_NMEA_SIZE },
+            { AppSettings.INT, AppSettings.SETTING1_TIME,
+                    AppSettings.C_SETTING1_TIME_IDX,
+                    AppSettings.C_SETTING1_TIME_SIZE },
+            { AppSettings.INT, AppSettings.SETTING1_SPEED,
+                    AppSettings.C_SETTING1_SPEED_IDX,
+                    AppSettings.C_SETTING1_SPEED_SIZE },
+            { AppSettings.INT, AppSettings.SETTING1_DIST,
+                    AppSettings.C_SETTING1_DIST_IDX,
+                    AppSettings.C_SETTING1_DIST_SIZE },
+            { AppSettings.INT, AppSettings.SETTING1_FIX,
+                    AppSettings.C_SETTING1_FIX_IDX,
+                    AppSettings.C_SETTING1_FIX_SIZE },
+            { AppSettings.INT, AppSettings.SETTING1_DGPS,
+                    AppSettings.C_SETTING1_DGPS_IDX,
+                    AppSettings.C_SETTING1_DGPS_SIZE },
+            { AppSettings.BOOL, AppSettings.SETTING1_TEST,
+                    AppSettings.C_SETTING1_TEST_IDX,
+                    AppSettings.C_SETTING1_TEST_SIZE },
+            { AppSettings.BOOL, AppSettings.SETTING1_LOG_OVR,
+                    AppSettings.C_SETTING1_LOG_OVR_IDX,
+                    AppSettings.C_SETTING1_LOG_OVR_SIZE },
+            { AppSettings.INT, AppSettings.SETTING1_LOG_FORMAT,
+                    AppSettings.C_SETTING1_LOG_FORMAT_IDX,
+                    AppSettings.C_SETTING1_LOG_FORMAT_SIZE },
+            { AppSettings.BOOL, AppSettings.SETTING1_SBAS,
+                    AppSettings.C_SETTING1_SBAS_IDX,
+                    AppSettings.C_SETTING1_SBAS_SIZE },
+            { AppSettings.BOOL, AppSettings.ADVFILTACTIVE,
+                    AppSettings.C_ADVFILTACTIVE_IDX,
+                    AppSettings.C_ADVFILTACTIVE_SIZE },
+            { AppSettings.BOOL, AppSettings.GPXUTC0,
+                    AppSettings.C_GPXUTC0_IDX, AppSettings.C_GPXUTC0_SIZE },
+            { AppSettings.BOOL, AppSettings.DECODEGPS,
+                    AppSettings.C_DECODEGPS_IDX, AppSettings.C_DECODEGPS_SIZE },
+            { AppSettings.BOOL, AppSettings.GPXTRKSEGBIG,
+                    AppSettings.C_GPXTRKSEGBIG_IDX,
+                    AppSettings.C_GPXTRKSEGBIG_SIZE },
+            { AppSettings.STRING, AppSettings.COLOR_VALIDTRACK,
+                    AppSettings.C_COLOR_VALIDTRACK_IDX,
+                    AppSettings.C_COLOR_VALIDTRACK_SIZE },
+            { AppSettings.STRING, AppSettings.COLOR_INVALIDTRACK,
+                    AppSettings.C_COLOR_INVALIDTRACK_IDX,
+                    AppSettings.C_COLOR_INVALIDTRACK_SIZE },
+            { AppSettings.STRING, AppSettings.TAGGEDFILE_TEMPLATE,
+                    AppSettings.C_TAGGED_TEMPLATE_IDX,
+                    AppSettings.C_TAGGED_TEMPLATE_SIZE },
+            { AppSettings.INT, AppSettings.KML_ALTITUDEMODE,
+                    AppSettings.C_KML_ALTITUDEMODE_IDX,
+                    AppSettings.C_KML_ALTITUDEMODE_SIZE },
+            { AppSettings.INT, AppSettings.TRKSEP, AppSettings.C_TRKSEP_IDX,
+                    AppSettings.C_TRKSEP_SIZE },
+            { AppSettings.INT, AppSettings.LOGAHEAD,
+                    AppSettings.C_LOGAHEAD_IDX, AppSettings.C_LOGAHEAD_SIZE },
     // End of list
     };
 

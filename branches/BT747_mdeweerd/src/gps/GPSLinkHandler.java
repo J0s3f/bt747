@@ -73,7 +73,7 @@ final class GPSLinkHandler {
                 && (Generic.getTimeStamp() > nextCmdSendTime)) {
             // All sent commands were acknowledged, send cmd immediately
             doSendNMEA(cmd);
-        } else if (cmdsWaiting < C_MAX_TOSEND_COMMANDS) {
+        } else if (cmdsWaiting < GPSLinkHandler.C_MAX_TOSEND_COMMANDS) {
             // Ok to buffer more cmds
             cmdBuffersAccess.down();
             toSendCmds.addElement(cmd);
@@ -106,11 +106,11 @@ final class GPSLinkHandler {
                 Generic.debug(">" + cmd + " " + gpsRxTx.isConnected());
             }
             nextCmdSendTime = Generic.getTimeStamp()
-                    + C_MIN_TIME_BETWEEN_CMDS;
-            if (sentCmds.size() > C_MAX_SENT_COMMANDS) {
+                    + GPSLinkHandler.C_MIN_TIME_BETWEEN_CMDS;
+            if (sentCmds.size() > GPSLinkHandler.C_MAX_SENT_COMMANDS) {
                 sentCmds.removeElementAt(0);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("doSendNMEA", e);
         }
         cmdBuffersAccess.up();
@@ -120,16 +120,17 @@ final class GPSLinkHandler {
     private int downloadTimeOut = 3500;
 
     protected final void initConnected() {
-        nextCmdSendTime = Generic.getTimeStamp() + INITIAL_WAIT;
+        nextCmdSendTime = Generic.getTimeStamp()
+                + GPSLinkHandler.INITIAL_WAIT;
     }
 
     protected final void checkSendCmdFromQueue() {
-        int cTime = Generic.getTimeStamp();
+        final int cTime = Generic.getTimeStamp();
         if (!isEraseOngoing()) {
             cmdBuffersAccess.down();
             try {
                 if ((sentCmds.size() != 0)
-                        && (cTime - logTimer) >= downloadTimeOut) {
+                        && ((cTime - logTimer) >= downloadTimeOut)) {
                     // TimeOut!!
                     if (Generic.isDebug()) {
                         Generic.debug("Timeout: " + cTime + "-" + logTimer
@@ -143,7 +144,7 @@ final class GPSLinkHandler {
                     logTimer = cTime;
                 }
                 if ((toSendCmds.size() != 0)
-                        && (sentCmds.size() < C_MAX_CMDS_SENT)
+                        && (sentCmds.size() < GPSLinkHandler.C_MAX_CMDS_SENT)
                         && (Generic.getTimeStamp() > nextCmdSendTime)) {
                     // No more commands waiting for acknowledge
                     cmdBuffersAccess.up();
@@ -151,7 +152,7 @@ final class GPSLinkHandler {
                     cmdBuffersAccess.down();
                     toSendCmds.removeElementAt(0);
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("checkSendCmdFromQueue", e);
             }
             cmdBuffersAccess.up();
@@ -175,7 +176,7 @@ final class GPSLinkHandler {
                 // }
                 sentCmds.removeElementAt(0);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("removeFromSentCmds", e);
         }
         cmdBuffersAccess.up();

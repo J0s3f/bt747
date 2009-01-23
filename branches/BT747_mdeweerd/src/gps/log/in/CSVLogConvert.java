@@ -88,9 +88,11 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
         int fileSize;
 
         boolean firstline = true;
-        final int[] records = new int[MAX_RECORDS];
+        final int[] records = new int[CSVLogConvert.MAX_RECORDS];
         try {
-            records[0] = FMT_NO_FIELD; // Indicates that there are no records
+            records[0] = CSVLogConvert.FMT_NO_FIELD; // Indicates that
+            // there are no
+            // records
 
             recCount = 0;
             logFormatRecord = GPSRecord.getLogFormatRecord(0);
@@ -108,7 +110,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                  * Read data from the data file into the local buffer.
                  */
                 // Determine size to read
-                sizeToRead = BUF_SIZE;
+                sizeToRead = CSVLogConvert.BUF_SIZE;
                 if ((sizeToRead + nextAddrToRead) > fileSize) {
                     sizeToRead = fileSize - nextAddrToRead;
                 }
@@ -150,8 +152,8 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                     int eolPos;
                     // Find end of line
                     for (eolPos = offsetInBuffer; (eolPos < sizeToRead)
-                            && (bytes[eolPos] != CR)
-                            && (bytes[eolPos] != EOL); eolPos++) {
+                            && (bytes[eolPos] != CSVLogConvert.CR)
+                            && (bytes[eolPos] != CSVLogConvert.EOL); eolPos++) {
                         ; // Empty on purpose
                     }
                     continueInBuffer = (eolPos < sizeToRead); // True when
@@ -169,7 +171,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                                 .getStringTokenizerInstance(s.toString(), ',');
                         offsetInBuffer = eolPos;
                         for (; (offsetInBuffer < sizeToRead)
-                                && ((bytes[offsetInBuffer] == CR) || (bytes[offsetInBuffer] == EOL)); offsetInBuffer++) {
+                                && ((bytes[offsetInBuffer] == CSVLogConvert.CR) || (bytes[offsetInBuffer] == CSVLogConvert.EOL)); offsetInBuffer++) {
                             ; // Empty on purpose
                         }
                         if (s.length() != 0) {
@@ -181,23 +183,23 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                                         .getLogFormatRecord(0);
 
                                 for (int i = 0; fields.hasMoreTokens()
-                                        && (i < MAX_RECORDS); i++) {
+                                        && (i < CSVLogConvert.MAX_RECORDS); i++) {
                                     final String string = fields.nextToken();
                                     if (string.equals("INDEX")) {
-                                        records[i] = FMT_REC_NBR;
+                                        records[i] = CSVLogConvert.FMT_REC_NBR;
 
                                     } else if (string.equals("RCR")
                                             || string.equals("TAG")) {
                                         records[i] = BT747Constants.FMT_RCR_IDX;
                                         activeFileFields |= (1 << BT747Constants.FMT_RCR_IDX);
                                     } else if (string.equals("TIME")) {
-                                        records[i] = FMT_TIME;
+                                        records[i] = CSVLogConvert.FMT_TIME;
                                         activeFileFields |= (1 << BT747Constants.FMT_UTC_IDX);
                                     } else if (string.equals("DATE")) {
-                                        records[i] = FMT_DATE;
+                                        records[i] = CSVLogConvert.FMT_DATE;
                                         activeFileFields |= (1 << BT747Constants.FMT_UTC_IDX);
                                     } else if (string.equals("FIX MODE")) {
-                                        records[i] = FMT_FIXMODE;
+                                        records[i] = CSVLogConvert.FMT_FIXMODE;
                                         activeFileFields |= (1 << BT747Constants.FMT_VALID_IDX);
                                     } else if (string.equals("VALID")) {
                                         records[i] = BT747Constants.FMT_VALID_IDX;
@@ -206,22 +208,22 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                                         records[i] = BT747Constants.FMT_LATITUDE_IDX;
                                         activeFileFields |= (1 << BT747Constants.FMT_LATITUDE_IDX);
                                     } else if (string.equals("N/S")) {
-                                        records[i] = FMT_NS;
+                                        records[i] = CSVLogConvert.FMT_NS;
                                     } else if (string.equals("LONGITUDE")) {
                                         records[i] = BT747Constants.FMT_LONGITUDE_IDX;
                                         activeFileFields |= (1 << BT747Constants.FMT_LONGITUDE_IDX);
                                     } else if (string.equals("E/W")) {
-                                        records[i] = FMT_EW;
+                                        records[i] = CSVLogConvert.FMT_EW;
                                     } else if (string
                                             .startsWith("HEIGHT(ft)")) {
-                                        records[i] = FMT_HEIGHT_FT_IDX;
+                                        records[i] = CSVLogConvert.FMT_HEIGHT_FT_IDX;
                                         activeFileFields |= (1 << BT747Constants.FMT_HEIGHT_IDX);
                                     } else if (string.startsWith("HEIGHT")) {
                                         records[i] = BT747Constants.FMT_HEIGHT_IDX;
                                         activeFileFields |= (1 << BT747Constants.FMT_HEIGHT_IDX);
                                     } else if (string
                                             .startsWith("SPEED(mph)")) {
-                                        records[i] = FMT_SPEED_MPH_IDX;
+                                        records[i] = CSVLogConvert.FMT_SPEED_MPH_IDX;
                                         activeFileFields |= (1 << BT747Constants.FMT_SPEED_IDX);
                                     } else if (string.startsWith("SPEED")) {
                                         records[i] = BT747Constants.FMT_SPEED_IDX;
@@ -250,7 +252,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                                         activeFileFields |= (1 << BT747Constants.FMT_NSAT_IDX);
                                     } else if (string
                                             .startsWith("DISTANCE(ft)")) {
-                                        records[i] = FMT_DISTANCE_FT_IDX;
+                                        records[i] = CSVLogConvert.FMT_DISTANCE_FT_IDX;
                                         activeFileFields |= (1 << BT747Constants.FMT_DISTANCE_IDX);
                                     } else if (string.startsWith("DISTANCE")) {
                                         records[i] = BT747Constants.FMT_DISTANCE_IDX;
@@ -269,27 +271,27 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                                             activeFileFields |= (1 << BT747Constants.FMT_SNR_IDX);
                                         }
                                     } else if (string.equals("LATITUDE N/S")) {
-                                        records[i] = FMT_LATNS;
+                                        records[i] = CSVLogConvert.FMT_LATNS;
                                         activeFileFields |= (1 << BT747Constants.FMT_LATITUDE_IDX);
                                     } else if (string.equals("LONGITUDE E/W")) {
-                                        records[i] = FMT_LONEW;
+                                        records[i] = CSVLogConvert.FMT_LONEW;
                                         activeFileFields |= (1 << BT747Constants.FMT_LONGITUDE_IDX);
                                     } else if (string.startsWith("LOGTIME")) {
-                                        records[i] = C_LOGTIME;
+                                        records[i] = CSVLogConvert.C_LOGTIME;
                                         activeFileFieldsRecord.logPeriod = 1;
                                     } else if (string.startsWith("LOGDIST")) {
-                                        records[i] = C_LOGDIST;
+                                        records[i] = CSVLogConvert.C_LOGDIST;
                                         activeFileFieldsRecord.logDistance = 1;
                                     } else if (string.startsWith("LOGSPD")) {
-                                        records[i] = C_LOGSPD;
+                                        records[i] = CSVLogConvert.C_LOGSPD;
                                         activeFileFieldsRecord.logSpeed = 1;
                                     } else if (string.equals("VOX")) {
-                                        records[i] = FMT_VOX;
+                                        records[i] = CSVLogConvert.FMT_VOX;
                                         activeFileFieldsRecord.voxStr = "";
                                     } else {
                                         records[i] = -100;// FMT_UNKNOWN_FIELD;
                                     }
-                                    records[i + 1] = FMT_NO_FIELD;
+                                    records[i + 1] = CSVLogConvert.FMT_NO_FIELD;
 
                                 }
                                 activeFileFieldsRecord
@@ -318,8 +320,8 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
                                 // default = time
 
                                 while (fields.hasMoreTokens()
-                                        && (fieldNbr < MAX_RECORDS)
-                                        && (records[fieldNbr] != FMT_NO_FIELD)) {
+                                        && (fieldNbr < CSVLogConvert.MAX_RECORDS)
+                                        && (records[fieldNbr] != CSVLogConvert.FMT_NO_FIELD)) {
                                     final String field = fields.nextToken()
                                             .trim();
                                     if (field.length() != 0) {
@@ -706,12 +708,12 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#getFileObject()
      */
-    protected Object getFileObject(String fileName, int card) {
+    protected Object getFileObject(final String fileName, final int card) {
         WindowedFile mFile = null;
         if (File.isAvailable()) {
             try {
                 mFile = new WindowedFile(fileName, File.READ_ONLY, card);
-                mFile.setBufferSize(BUF_SIZE);
+                mFile.setBufferSize(CSVLogConvert.BUF_SIZE);
                 errorInfo = fileName + "|" + mFile.getLastError();
             } catch (final Exception e) {
                 Generic.debug("Error during initial open", e);
@@ -733,7 +735,7 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#closeFileObject(java.lang.Object)
      */
-    protected void closeFileObject(Object o) {
+    protected void closeFileObject(final Object o) {
         ((WindowedFile) o).close();
     }
 
@@ -779,13 +781,14 @@ public final class CSVLogConvert extends GPSLogConvertInterface {
             }
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.in.GPSLogConvertInterface#getType()
      */
     public int getType() {
         return Model.CSV_LOGTYPE;
     }
-
 
 }

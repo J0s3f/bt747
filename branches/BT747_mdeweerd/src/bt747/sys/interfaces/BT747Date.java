@@ -6,13 +6,13 @@ public interface BT747Date {
      * Advance the time.
      * 
      * @param s
-     *            The number of seconds to advance.
+     *                The number of seconds to advance.
      */
     void advance(final int s);
 
     /**
-     * Return the date in the format usually used in the GPS devices: number of
-     * seconds since the epoch 1970.
+     * Return the date in the format usually used in the GPS devices: number
+     * of seconds since the epoch 1970.
      * 
      * @return number of seconds since the epoch.
      */

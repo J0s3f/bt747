@@ -24,7 +24,7 @@ import bt747.sys.Generic;
 final class MTKLogDownloadHandler {
 
     private final GPSstate gpsState;
-    private int logState = C_LOG_NOLOGGING;
+    private int logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
 
     /** File handle for binary log being downloaded. */
     private File logFile = null;
@@ -81,7 +81,7 @@ final class MTKLogDownloadHandler {
     private static final int C_LOGERASE_TIMEOUT = 2000;
 
     protected MTKLogDownloadHandler(final GPSstate state) {
-        this.gpsState = state;
+        gpsState = state;
     }
 
     private boolean incremental = true;
@@ -103,7 +103,7 @@ final class MTKLogDownloadHandler {
     protected final void getLogInit(final int startAddr, final int endAddr,
             final int requestStep, final String fileName, final int card,
             final boolean isIncremental) {
-        if (logState == C_LOG_NOLOGGING) {
+        if (logState == MTKLogDownloadHandler.C_LOG_NOLOGGING) {
             // Disable device logging while downloading to improve
             // performance.
             loggingIsActiveBeforeDownload = gpsState.isLoggingActive();
@@ -144,7 +144,7 @@ final class MTKLogDownloadHandler {
 
         incremental = isIncremental;
 
-        logState = C_LOG_START;
+        logState = MTKLogDownloadHandler.C_LOG_START;
     }
 
     private final void realDownloadStart() {
@@ -160,12 +160,12 @@ final class MTKLogDownloadHandler {
 
                 // Storing the file specifics - needed in subsequent opens.
                 // Opening the existing log file in read only mode.
-                WindowedFile windowedLogFile = new WindowedFile(logFileName,
-                        File.READ_ONLY, logFileCard);
+                final WindowedFile windowedLogFile = new WindowedFile(
+                        logFileName, File.READ_ONLY, logFileCard);
                 windowedLogFile.setBufferSize(0x200);
-                if (windowedLogFile != null && windowedLogFile.isOpen()) {
+                if ((windowedLogFile != null) && windowedLogFile.isOpen()) {
                     // There is a file with data.
-                    if (windowedLogFile.getSize() >= (C_BLOCKVERIF_START + C_BLOCKVERIF_SIZE)) {
+                    if (windowedLogFile.getSize() >= (MTKLogDownloadHandler.C_BLOCKVERIF_START + MTKLogDownloadHandler.C_BLOCKVERIF_SIZE)) {
                         // There are enough bytes in the saved file.
 
                         int blockHeadPos = 0;
@@ -206,7 +206,7 @@ final class MTKLogDownloadHandler {
                             continueLoop = true;
                             // Find a block
                             do {
-                                byte[] rBuffer = windowedLogFile
+                                final byte[] rBuffer = windowedLogFile
                                         .fillBuffer(logNextReadAddr);
                                 continueLoop = (windowedLogFile
                                         .getBufferFill() >= 0x200);
@@ -243,7 +243,7 @@ final class MTKLogDownloadHandler {
                         }
 
                         // Adjust the end address.
-                        int potentialEndAddress = ((logNextReadAddr + 0xFFFF) & 0xFFFF0000) - 1;
+                        final int potentialEndAddress = ((logNextReadAddr + 0xFFFF) & 0xFFFF0000) - 1;
                         if (potentialEndAddress > logDownloadEndAddr) {
                             if (Generic.isDebug()) {
                                 Generic.debug("Adjusted end address from "
@@ -256,13 +256,14 @@ final class MTKLogDownloadHandler {
                             logDownloadEndAddr = potentialEndAddress;
                         }
 
-                        expectedResult = new byte[C_BLOCKVERIF_SIZE];
+                        expectedResult = new byte[MTKLogDownloadHandler.C_BLOCKVERIF_SIZE];
                         byte[] b;
-                        b = windowedLogFile.fillBuffer(C_BLOCKVERIF_START);
+                        b = windowedLogFile
+                                .fillBuffer(MTKLogDownloadHandler.C_BLOCKVERIF_START);
                         for (int i = expectedResult.length - 1; i >= 0; i--) {
                             expectedResult[i] = b[i];
                         }
-                        logState = C_LOG_CHECK;
+                        logState = MTKLogDownloadHandler.C_LOG_CHECK;
                         gpsState.resetLogTimeOut();
                         requestCheckBlock();
                     }
@@ -270,7 +271,7 @@ final class MTKLogDownloadHandler {
                 gpsState.updateIgnoreNMEA();
                 windowedLogFile.close();
             }
-            if (!(logState == C_LOG_CHECK)) {
+            if (!(logState == MTKLogDownloadHandler.C_LOG_CHECK)) {
                 // File could not be opened or is not incremental.
                 openNewLog(logFileName, logFileCard);
                 if (Generic.isDebug()) {
@@ -279,19 +280,19 @@ final class MTKLogDownloadHandler {
                             + " to "
                             + Convert.unsigned2hex(logDownloadEndAddr, 8));
                 }
-                logState = C_LOG_ACTIVE;
+                logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
             }
-            if (logState == C_LOG_NOLOGGING) {
+            if (logState == MTKLogDownloadHandler.C_LOG_NOLOGGING) {
                 gpsState.postEvent(GpsEvent.LOG_DOWNLOAD_DONE);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("getLogInit", e);
         }
     }
 
     protected final void openNewLog(final String fileName, final int card) {
         try {
-            if (logFile != null && logFile.isOpen()) {
+            if ((logFile != null) && logFile.isOpen()) {
                 logFile.close();
             }
 
@@ -314,7 +315,7 @@ final class MTKLogDownloadHandler {
             if ((logFile == null) || !(logFile.isOpen())) {
                 gpsState.postGpsEvent(GpsEvent.COULD_NOT_OPEN_FILE, fileName);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("openNewLog", e);
         }
     }
@@ -325,14 +326,14 @@ final class MTKLogDownloadHandler {
             logFile = new File(fileName, File.WRITE_ONLY, card);
             logFileName = fileName;
             logFileCard = card;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("reOpenLogWrite", e);
         }
     }
 
     // Called regularly
     private void getNextLogPart() {
-        if (logState != C_LOG_NOLOGGING) {
+        if (logState != MTKLogDownloadHandler.C_LOG_NOLOGGING) {
             int z_Step;
 
             z_Step = logDownloadEndAddr - logNextReqAddr + 1;
@@ -367,7 +368,7 @@ final class MTKLogDownloadHandler {
                 if (z_Step > logRequestStep) {
                     z_Step = logRequestStep;
                 }
-                int stepUntilBoundary = ((logNextReqAddr + 0x10000) & ~0xFFFF)
+                final int stepUntilBoundary = ((logNextReqAddr + 0x10000) & ~0xFFFF)
                         - logNextReqAddr;
                 if (z_Step > stepUntilBoundary) {
                     // Avoid crossing 0x10000 boundaries that seem to result
@@ -376,7 +377,7 @@ final class MTKLogDownloadHandler {
                 }
                 readLog(logNextReqAddr, z_Step);
                 logNextReqAddr += z_Step;
-                if (logState == C_LOG_ACTIVE) {
+                if (logState == MTKLogDownloadHandler.C_LOG_ACTIVE) {
                     getNextLogPart(); // Recursive to get requests 'ahead'
                 }
             }
@@ -405,7 +406,8 @@ final class MTKLogDownloadHandler {
     private void recoverFromLogError() {
         // TODO: Make sure that is not called in C_LOG_CHECK mode.
         // logNextReqAddr = logNextReadAddr;
-        logState = C_LOG_RECOVER; // recover through timeout.
+        logState = MTKLogDownloadHandler.C_LOG_RECOVER; // recover through
+        // timeout.
     }
 
     protected final void analyzeLogPart(final int startAddr,
@@ -419,13 +421,13 @@ final class MTKLogDownloadHandler {
         case C_LOG_ACTIVE:
         case C_LOG_RECOVER:
             if (logNextReadAddr == startAddr) {
-                logState = C_LOG_ACTIVE;
+                logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
                 int j = 0;
 
                 // The Palm platform showed problems writing 0x800 blocks.
                 // This splits it in smaller blocks and solves that problem.
-                if (dataLength != 0x800
-                        && dataLength != logRequestStep
+                if ((dataLength != 0x800)
+                        && (dataLength != logRequestStep)
                         && ((logNextReadAddr + dataLength) != logNextReqAddr)
                         // Datalength is up to 0x10000 boundary
                         && (dataLength != ((logNextReadAddr + 0x10000) & ~0xFFFF)
@@ -437,13 +439,13 @@ final class MTKLogDownloadHandler {
                         Generic.debug("Unexpected datalength: "
                                 + Convert.unsigned2hex(dataLength, 8));
                     }
-                    logState = C_LOG_RECOVER;
+                    logState = MTKLogDownloadHandler.C_LOG_RECOVER;
                 } else {
                     // Data seems ok
-                    for (int i = dataLength; i > 0; i -= C_MAX_FILEBLOCK_WRITE) {
+                    for (int i = dataLength; i > 0; i -= MTKLogDownloadHandler.C_MAX_FILEBLOCK_WRITE) {
                         int l = i;
-                        if (l > C_MAX_FILEBLOCK_WRITE) {
-                            l = C_MAX_FILEBLOCK_WRITE;
+                        if (l > MTKLogDownloadHandler.C_MAX_FILEBLOCK_WRITE) {
+                            l = MTKLogDownloadHandler.C_MAX_FILEBLOCK_WRITE;
                         }
                         // debugMsg("Writing("+Convert.toString(p_StartAddr)+"):
                         // "+Convert.toString(j)+" "+Convert.toString(l));
@@ -455,7 +457,7 @@ final class MTKLogDownloadHandler {
                                 cancelGetLog();
                                 // debugMsg(Convert.toString(q));
                             }
-                        } catch (Exception e) {
+                        } catch (final Exception e) {
                             Generic.debug("analyzeLogPart", e);
                             cancelGetLog();
                         }
@@ -466,7 +468,7 @@ final class MTKLogDownloadHandler {
                     if (getFullLogBlocks
                             && (((startAddr - 1 + dataLength) & 0xFFFF0000) >= startAddr)) {
                         // Block boundery (0xX0000) is inside data.
-                        int blockStart = 0xFFFF & (0x10000 - (startAddr & 0xFFFF));
+                        final int blockStart = 0xFFFF & (0x10000 - (startAddr & 0xFFFF));
                         if (!(((readDataBuffer[blockStart] & 0xFF) == 0xFF) && ((readDataBuffer[blockStart + 1] & 0xFF) == 0xFF))) {
                             // This block is full, next block is still data
                             int minEndAddr;
@@ -496,9 +498,9 @@ final class MTKLogDownloadHandler {
             }
             break;
         case C_LOG_CHECK:
-            logState = C_LOG_NOLOGGING; // Default.
-            if ((startAddr == C_BLOCKVERIF_START)
-                    && (dataLength == C_BLOCKVERIF_SIZE)) {
+            logState = MTKLogDownloadHandler.C_LOG_NOLOGGING; // Default.
+            if ((startAddr == MTKLogDownloadHandler.C_BLOCKVERIF_START)
+                    && (dataLength == MTKLogDownloadHandler.C_BLOCKVERIF_SIZE)) {
                 // The block we got should be the block to check
                 // byte[] dataBuffer = new byte[dataLength];
                 boolean success;
@@ -517,7 +519,7 @@ final class MTKLogDownloadHandler {
                     reOpenLogWrite(logFileName, logFileCard);
                     try {
                         logFile.setPos(logNextReadAddr);
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         Generic.debug("C_LOG_CHECK", e);
                     }
                     if (Generic.isDebug()) {
@@ -529,10 +531,10 @@ final class MTKLogDownloadHandler {
                                         + Convert.unsigned2hex(
                                                 logDownloadEndAddr, 8));
                     }
-                    logState = C_LOG_ACTIVE;
+                    logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
                     getNextLogPart();
                 } else {
-                    logState = C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY;
+                    logState = MTKLogDownloadHandler.C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY;
                     if (Generic.isDebug()) {
                         Generic
                                 .debug("Different data - requesting overwrite confirmation");
@@ -542,13 +544,22 @@ final class MTKLogDownloadHandler {
                 }
             } else {
                 if (Generic.isDebug()) {
-                    Generic.debug("Expected:"
-                            + Convert.unsigned2hex(C_BLOCKVERIF_START, 8)
-                            + " Got:" + Convert.unsigned2hex(startAddr, 8)
-                            + " (" + Convert.unsigned2hex(dataLength, 8)
-                            + ")", null);
+                    Generic
+                            .debug(
+                                    "Expected:"
+                                            + Convert
+                                                    .unsigned2hex(
+                                                            MTKLogDownloadHandler.C_BLOCKVERIF_START,
+                                                            8)
+                                            + " Got:"
+                                            + Convert.unsigned2hex(startAddr,
+                                                    8)
+                                            + " ("
+                                            + Convert.unsigned2hex(
+                                                    dataLength, 8) + ")",
+                                    null);
                 }
-                logState = C_LOG_CHECK;
+                logState = MTKLogDownloadHandler.C_LOG_CHECK;
                 // recoverFromLogError();
             }
             break;
@@ -565,12 +576,12 @@ final class MTKLogDownloadHandler {
      * @param overwrite
      */
     protected final void replyToOkToOverwrite(final boolean overwrite) {
-        if (logState == C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
+        if (logState == MTKLogDownloadHandler.C_LOG_DATA_NOT_SAME_WAITING_FOR_REPLY) {
             if (overwrite) {
                 openNewLog(logFileName, logFileCard);
                 logNextReadAddr = 0;
                 logNextReadAddr = 0;
-                logState = C_LOG_ACTIVE;
+                logState = MTKLogDownloadHandler.C_LOG_ACTIVE;
             } else {
                 endGetLog();
             }
@@ -598,7 +609,8 @@ final class MTKLogDownloadHandler {
      */
     private void requestCheckBlock() {
         // Read 200 bytes, just past header.
-        readLog(C_BLOCKVERIF_START, C_BLOCKVERIF_SIZE);
+        readLog(MTKLogDownloadHandler.C_BLOCKVERIF_START,
+                MTKLogDownloadHandler.C_BLOCKVERIF_SIZE);
     }
 
     private void closeLog() {
@@ -609,13 +621,13 @@ final class MTKLogDownloadHandler {
                     logFile = null;
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("CloseLog", e);
         }
     }
 
     private void endGetLog() {
-        logState = C_LOG_NOLOGGING;
+        logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
         closeLog();
 
         if (loggingIsActiveBeforeDownload) {
@@ -626,8 +638,8 @@ final class MTKLogDownloadHandler {
     }
 
     protected final boolean isLogDownloadOnGoing() {
-        return (logState != C_LOG_NOLOGGING)
-                && (logState != C_LOG_ERASE_STATE);
+        return (logState != MTKLogDownloadHandler.C_LOG_NOLOGGING)
+                && (logState != MTKLogDownloadHandler.C_LOG_ERASE_STATE);
     }
 
     protected final int getStartAddr() {
@@ -669,7 +681,7 @@ final class MTKLogDownloadHandler {
         gpsState.stopLog(); // Stop logging for this operation
         gpsState.reqLogStatus(); // Check status
         gpsState.reqLogFlashSectorStatus(); // Get flash sector information
-                                            // from
+        // from
         // device
         // TODO:
         gpsState.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
@@ -685,34 +697,35 @@ final class MTKLogDownloadHandler {
     private void postRecoveryEraseLog() {
         gpsState.reqLogStatus();
         gpsState.reqLogFlashSectorStatus(); // Get flash sector information
-                                            // from
+        // from
         // device
 
         gpsState.sendNMEA("PMTK" + BT747Constants.PMTK_CMD_LOG_STR + ","
                 + BT747Constants.PMTK_LOG_INIT);
 
         gpsState.reqLogFlashSectorStatus(); // Get flash sector information
-                                            // from
+        // from
         // device
         gpsState.reqLogStatus();
     }
 
     private void waitEraseDone() {
         gpsState.setEraseOngoing(true);
-        logState = C_LOG_ERASE_STATE;
+        logState = MTKLogDownloadHandler.C_LOG_ERASE_STATE;
         gpsState.resetLogTimeOut();
         gpsState.postEvent(GpsEvent.ERASE_ONGOING_NEED_POPUP);
         // readLogFlashStatus(); - Will be done after timeout
     }
 
     private void signalEraseDone() {
-        logState = C_LOG_NOLOGGING;
+        logState = MTKLogDownloadHandler.C_LOG_NOLOGGING;
         gpsState.setEraseOngoing(false);
         gpsState.postEvent(GpsEvent.ERASE_DONE_REMOVE_POPUP);
     }
 
     protected final void stopErase() {
-        if (gpsState.isEraseOngoing() && (logState == C_LOG_ERASE_STATE)) {
+        if (gpsState.isEraseOngoing()
+                && (logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE)) {
             gpsState.updateIgnoreNMEA();
             signalEraseDone();
         }
@@ -723,28 +736,28 @@ final class MTKLogDownloadHandler {
      */
     protected void notifyRun() {
         if ((gpsState.getOutStandingCmdsCount() == 0)
-                && (logState != C_LOG_NOLOGGING)
-                && (logState != C_LOG_ERASE_STATE)) {
+                && (logState != MTKLogDownloadHandler.C_LOG_NOLOGGING)
+                && (logState != MTKLogDownloadHandler.C_LOG_ERASE_STATE)) {
             // Sending command on next timer adds some delay after
             // the end of the previous command (reception)
             getLogPartNoOutstandingRequests();
-        } else if (logState == C_LOG_ACTIVE) {
+        } else if (logState == MTKLogDownloadHandler.C_LOG_ACTIVE) {
             getNextLogPart();
-        } else if (logState == C_LOG_ERASE_STATE) {
-            if (gpsState.timeSinceLastStamp() > C_LOGERASE_TIMEOUT) {
+        } else if (logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE) {
+            if (gpsState.timeSinceLastStamp() > MTKLogDownloadHandler.C_LOGERASE_TIMEOUT) {
                 gpsState.reqLogFlashStatus();
             }
         }
     }
 
     protected final void notifyDisconnected() {
-        if (logState != C_LOG_NOLOGGING) {
+        if (logState != MTKLogDownloadHandler.C_LOG_NOLOGGING) {
             endGetLog();
         }
     }
 
     protected final void handleLogFlashStatReply(final String s) {
-        if (logState == C_LOG_ERASE_STATE) {
+        if (logState == MTKLogDownloadHandler.C_LOG_ERASE_STATE) {
             switch (Convert.toInt(s)) {
             case 1:
                 if (gpsState.isEraseOngoing()) {

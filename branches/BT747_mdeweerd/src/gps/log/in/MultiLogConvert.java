@@ -90,14 +90,14 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
         final int sourceHeightReference = BT747Constants
                 .getHeightReference(lc.getType());
         final int destinationHeightReference = BT747Constants
-                .getHeightReference(this.getType());
+                .getHeightReference(getType());
 
         // Supposing automatic mode here... - should be consistent anyway.
-        if (sourceHeightReference == BT747Constants.HEIGHT_MSL
-                && destinationHeightReference == BT747Constants.HEIGHT_WGS84) {
+        if ((sourceHeightReference == BT747Constants.HEIGHT_MSL)
+                && (destinationHeightReference == BT747Constants.HEIGHT_WGS84)) {
             lc.setConvertWGS84ToMSL(+1);
-        } else if (sourceHeightReference == BT747Constants.HEIGHT_WGS84
-                && destinationHeightReference == BT747Constants.HEIGHT_MSL) {
+        } else if ((sourceHeightReference == BT747Constants.HEIGHT_WGS84)
+                && (destinationHeightReference == BT747Constants.HEIGHT_MSL)) {
             lc.setConvertWGS84ToMSL(-1);
         } else {
             /* Do nothing */
@@ -120,7 +120,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
         logFileInfoLookup = Interface
                 .getHashtableInstance(logFiles.size() + 1);
 
-        if (fileName != null && fileName.length() != 0) {
+        if ((fileName != null) && (fileName.length() != 0)) {
             converters.put(fileName, getConvertInstance(fileName, gpsFile,
                     card));
             logFileInfoLookup.put(fileName, new LogFileInfo(fileName, card));
@@ -132,8 +132,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
             final LogFileInfo li = (LogFileInfo) (logFiles.elementAt(fileIdx));
             final String fn = li.getPath();
             if (converters.get(fn) == null) {
-                converters.put(fn,
-                        getConvertInstance(fn, gpsFile, card));
+                converters.put(fn, getConvertInstance(fn, gpsFile, card));
                 logFileInfoLookup.put(fn, li);
             }
         }
@@ -146,7 +145,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
             final BT747Hashtable iter = converters.iterator();
             final TrackStatsConverter statsConv = new TrackStatsConverter();
             if (gpsFile instanceof GPSFile) {
-                GPSFile gf = (GPSFile) gpsFile;
+                final GPSFile gf = (GPSFile) gpsFile;
                 statsConv.setUserWayPointList(gf.getUserWayPointList());
             }
             while (!stop && iter.hasNext()) {
@@ -162,8 +161,9 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
                 loginfo.setStartTime(statsConv.minTime);
                 loginfo.setEndTime(statsConv.maxTime);
                 loginfo.setActiveFileFields(statsConv.getActiveFileFields());
-                
-                activeFileFields.cloneActiveFields(loginfo.getActiveFileFields());
+
+                activeFileFields.cloneActiveFields(loginfo
+                        .getActiveFileFields());
             }
         }
 
@@ -180,8 +180,8 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
                 final int startTime = loginfo.getStartTime();
                 int insertIdx = 0;
                 while ((insertIdx < orderedLogs.size())
-                        && startTime < ((LogFileInfo) orderedLogs
-                                .elementAt(insertIdx)).getStartTime()) {
+                        && (startTime < ((LogFileInfo) orderedLogs
+                                .elementAt(insertIdx)).getStartTime())) {
                     insertIdx++;
                 }
                 orderedLogs.insertElementAt(loginfo, insertIdx);
@@ -235,20 +235,24 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
             maxTime = 0;
             fileFields = GPSRecord.getLogFormatRecord(0);
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
+         * 
          * @see gps.log.out.GPSFile#writeLogFmtHeader(gps.log.GPSRecord)
          */
-        public void writeLogFmtHeader(GPSRecord f) {
+        public void writeLogFmtHeader(final GPSRecord f) {
             fileFields.cloneActiveFields(f);
             super.writeLogFmtHeader(f);
         }
-        
+
         protected final GPSRecord getActiveFileFields() {
             return fileFields;
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
+         * 
          * @see gps.log.out.GPSFile#finaliseFile()
          */
         public void finaliseFile() {

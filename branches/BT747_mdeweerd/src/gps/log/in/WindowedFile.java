@@ -77,7 +77,7 @@ public final class WindowedFile {
 
     private final boolean readBytes(final int bytesToRead) {
         currentPosition += bufferFill;
-        int read = file.readBytes(buffer, 0, bytesToRead);
+        final int read = file.readBytes(buffer, 0, bytesToRead);
         if (read <= 0) {
             bufferFill = 0;
             return false;
@@ -105,18 +105,18 @@ public final class WindowedFile {
                 if (bytesToRead > bufferSize) {
                     bytesToRead = bufferSize;
                 }
-                if (!readBytes(bytesToRead) || bufferFill == 0) {
+                if (!readBytes(bytesToRead) || (bufferFill == 0)) {
                     return buffer;
                 }
                 bytesToSkip -= bufferFill;
             } while (bytesToSkip > 0);
         }
-        if (newPosition > currentPosition
-                && newPosition < currentPosition + bufferFill) {
+        if ((newPosition > currentPosition)
+                && (newPosition < currentPosition + bufferFill)) {
             // New position is already in buffer - copy bytes that are
             // present.
             int j = 0;
-            int bytesToSkip = newPosition - currentPosition;
+            final int bytesToSkip = newPosition - currentPosition;
             for (int i = bytesToSkip; i < bufferFill; j++, i++) {
                 buffer[j] = buffer[i];
             }
@@ -139,7 +139,7 @@ public final class WindowedFile {
                 if (extraBytes > 0) {
                     bufferFill += extraBytes;
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("Read problem during fillBuffer", e);
                 return null;
             }

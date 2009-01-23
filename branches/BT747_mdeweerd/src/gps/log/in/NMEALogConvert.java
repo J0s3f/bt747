@@ -85,7 +85,7 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
                  * Read data from the data file into the local buffer.
                  */
                 // Determine size to read
-                sizeToRead = BUF_SIZE;
+                sizeToRead = NMEALogConvert.BUF_SIZE;
                 if ((sizeToRead + nextAddrToRead) > fileSize) {
                     sizeToRead = fileSize - nextAddrToRead;
                 }
@@ -124,12 +124,13 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
                     eolPos = offsetInBuffer;
                     // Skip initial white space.
                     while ((eolPos < sizeToRead)
-                            && ((bytes[eolPos] == CR) || (bytes[eolPos] == EOL))) {
+                            && ((bytes[eolPos] == NMEALogConvert.CR) || (bytes[eolPos] == NMEALogConvert.EOL))) {
                         eolPos++;
                     }
                     // Find first EOL.
-                    while ((eolPos < sizeToRead) && (bytes[eolPos] != CR)
-                            && (bytes[eolPos] != EOL)) {
+                    while ((eolPos < sizeToRead)
+                            && (bytes[eolPos] != NMEALogConvert.CR)
+                            && (bytes[eolPos] != NMEALogConvert.EOL)) {
                         eolPos++;
                     }
                     continueInBuffer = (eolPos < sizeToRead); // True when
@@ -159,7 +160,7 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
                                 .getStringTokenizerInstance(s.toString(), ',');
                         offsetInBuffer = eolPos;
                         for (; (offsetInBuffer < sizeToRead)
-                                && ((bytes[offsetInBuffer] == CR) || (bytes[offsetInBuffer] == EOL)); offsetInBuffer++) {
+                                && ((bytes[offsetInBuffer] == NMEALogConvert.CR) || (bytes[offsetInBuffer] == NMEALogConvert.EOL)); offsetInBuffer++) {
                             ; // Empty on purpose
                         }
                         if ((firstChar == '$') && (bytes[eolPos - 3] == '*')
@@ -263,12 +264,12 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#getFileObject()
      */
-    protected Object getFileObject(String fileName, int card) {
+    protected Object getFileObject(final String fileName, final int card) {
         WindowedFile mFile = null;
         if (File.isAvailable()) {
             try {
                 mFile = new WindowedFile(fileName, File.READ_ONLY, card);
-                mFile.setBufferSize(BUF_SIZE);
+                mFile.setBufferSize(NMEALogConvert.BUF_SIZE);
                 errorInfo = fileName + "|" + mFile.getLastError();
             } catch (final Exception e) {
                 Generic.debug("Error during initial open", e);
@@ -290,7 +291,7 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
      * 
      * @see gps.log.in.GPSLogConvertInterface#closeFileObject(java.lang.Object)
      */
-    protected void closeFileObject(Object o) {
+    protected void closeFileObject(final Object o) {
         ((WindowedFile) o).close();
     }
 
@@ -337,13 +338,14 @@ public final class NMEALogConvert extends GPSLogConvertInterface {
                             .getLogFormatRecord(logFormat));
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see gps.log.in.GPSLogConvertInterface#getType()
      */
     public int getType() {
         return Model.NMEA_LOGTYPE;
     }
-
 
 }

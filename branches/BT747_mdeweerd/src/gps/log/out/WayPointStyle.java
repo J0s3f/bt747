@@ -16,7 +16,8 @@ public class WayPointStyle {
      */
     private static final String DEFAULT_URL = "http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png";
     /**
-     * The key for the way point. T, S, D or B, or a hex number of four letters.
+     * The key for the way point. T, S, D or B, or a hex number of four
+     * letters.
      */
     private String key;
     /**
@@ -32,14 +33,14 @@ public class WayPointStyle {
      * @return the key
      */
     public final String getKey() {
-        return this.key;
+        return key;
     }
 
     /**
      * @param key
-     *            the key to set
+     *                the key to set
      */
-    public final void setKey(String key) {
+    public final void setKey(final String key) {
         this.key = key;
     }
 
@@ -47,14 +48,14 @@ public class WayPointStyle {
      * @return the description
      */
     public final String getSymbolText() {
-        return this.symbol;
+        return symbol;
     }
 
     /**
      * @param symbol
-     *            the description to set
+     *                the description to set
      */
-    public final void setSymbolText(String symbol) {
+    public final void setSymbolText(final String symbol) {
         this.symbol = symbol;
     }
 
@@ -62,18 +63,18 @@ public class WayPointStyle {
      * @return the iconUrl
      */
     public final String getIconUrl() {
-        if (this.iconUrl != null) {
-            return this.iconUrl;
+        if (iconUrl != null) {
+            return iconUrl;
         } else {
-            return DEFAULT_URL;
+            return WayPointStyle.DEFAULT_URL;
         }
     }
 
     /**
      * @param iconUrl
-     *            the iconUrl to set
+     *                the iconUrl to set
      */
-    public final void setIconUrl(String iconUrl) {
+    public final void setIconUrl(final String iconUrl) {
         this.iconUrl = iconUrl;
     }
 

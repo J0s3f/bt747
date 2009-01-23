@@ -14,9 +14,9 @@
 // *** *********************************************************** ***
 package gps.log.in;
 
-import bt747.model.Model;
-
 import gps.log.out.GPSFile;
+
+import bt747.model.Model;
 
 /**
  * Interface defining a Log conversion class.
@@ -41,7 +41,8 @@ public abstract class GPSLogConvertInterface {
      * 
      * @return
      */
-    protected abstract Object getFileObject(final String filename, final int card);
+    protected abstract Object getFileObject(final String filename,
+            final int card);
 
     protected abstract void closeFileObject(final Object file);
 
@@ -79,7 +80,7 @@ public abstract class GPSLogConvertInterface {
     public void stopConversion() {
         stop = true;
     }
-    
+
     /**
      * @return log type such as {@link Model#TRL_LOGTYPE}.
      */

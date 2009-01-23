@@ -66,7 +66,7 @@ public class WayPointStyleSet {
 
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("Issue with wayPointStyleSet initialisation", e);
         }
         style = null;

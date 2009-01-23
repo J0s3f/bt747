@@ -1,17 +1,17 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER.                                     ***
-//***  See the GNU General Public License Version 3 for details.   ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. ***
+// *** See the GNU General Public License Version 3 for details. ***
+// *** *********************************************************** ***
 package gps.log.out;
 
 import gps.log.GPSFilter;
@@ -29,7 +29,8 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
 
     // The next information is from gpsbabel:
 
-    // the meaning of leading characters in CompeGPS data lines (enhanced PCX):
+    // the meaning of leading characters in CompeGPS data lines (enhanced
+    // PCX):
     //
     // header lines:
     //    
@@ -92,12 +93,14 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
     //
     // One line per trackpoint
     // each field separated by a comma
-    // non essential fields need not be entered but comma separators must still
+    // non essential fields need not be entered but comma separators must
+    // still
     // be used (example ,,)
     // defaults will be used for empty fields
     //
     //
-    // Note that OziExplorer reads the Date/Time from field 5, the date and time
+    // Note that OziExplorer reads the Date/Time from field 5, the date and
+    // time
     // in fields 6 & 7 are ignored.
     //
     // Example
@@ -127,11 +130,11 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
             if ((activeFields.hasLatitude())
                     && (selectedFileFields.hasLatitude())) {
                 if (s.latitude >= 0) {
-                    rec.append(Convert.toString(s.latitude, 8) + ((char) 0xBA)
-                            + "N");
+                    rec.append(Convert.toString(s.latitude, 8)
+                            + ((char) 0xBA) + "N");
                 } else {
-                    rec.append(Convert.toString(-s.latitude, 8) + ((char) 0xBA)
-                            + "S");
+                    rec.append(Convert.toString(-s.latitude, 8)
+                            + ((char) 0xBA) + "S");
                 }
             } else {
                 rec.append("0" + ((char) 0xBA) + "N");
@@ -141,8 +144,8 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
             if ((activeFields.hasLongitude())
                     && (selectedFileFields.hasLongitude())) {
                 if (s.longitude >= 0) {
-                    rec.append(Convert.toString(s.longitude, 8) + ((char) 0xBA)
-                            + "E");
+                    rec.append(Convert.toString(s.longitude, 8)
+                            + ((char) 0xBA) + "E");
                 } else {
                     rec.append(Convert.toString(-s.longitude, 8)
                             + ((char) 0xBA) + "W");
@@ -199,7 +202,8 @@ public final class GPSCompoGPSTrkFile extends GPSFile {
             }
             rec.append("s ");
 
-            if ((activeFields.hasHeight()) && (selectedFileFields.hasHeight())) {
+            if ((activeFields.hasHeight())
+                    && (selectedFileFields.hasHeight())) {
                 rec.append(Convert.toString(s.height, 1));
                 if (waypt) {
                     wrec.append(Convert.toString(s.height, 1));

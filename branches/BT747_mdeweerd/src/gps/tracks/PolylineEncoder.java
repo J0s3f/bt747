@@ -100,11 +100,11 @@ public final class PolylineEncoder {
                 maxDist = 0;
 
                 for (i = current[0] + 1; i < current[1]; i++) {
-                    final double temp = distance((Trackpoint) track.getTrackpoints()
-                            .elementAt(i), (Trackpoint) track
-                            .getTrackpoints().elementAt(current[0]),
+                    final double temp = PolylineEncoder.distance(
+                            (Trackpoint) track.getTrackpoints().elementAt(i),
                             (Trackpoint) track.getTrackpoints().elementAt(
-                                    current[1]));
+                                    current[0]), (Trackpoint) track
+                                    .getTrackpoints().elementAt(current[1]));
                     if (temp > maxDist) {
                         maxDist = temp;
                         maxLoc = i;
@@ -129,7 +129,7 @@ public final class PolylineEncoder {
         encodedPoints = createEncodings(track, dists);
         // System.out.println("encodedPoints \t\t: " + encodedPoints);
         // encodedPoints.replace("\\","\\\\");
-        encodedPoints = replace(encodedPoints, "\\", "\\\\");
+        encodedPoints = PolylineEncoder.replace(encodedPoints, "\\", "\\\\");
         // System.out.println("encodedPoints slashy?\t\t: " + encodedPoints);
 
         encodedLevels = encodeLevels(track, dists, absMaxDist);
@@ -282,7 +282,7 @@ public final class PolylineEncoder {
         if (num < 0) {
             sgnNum = ~(sgnNum);
         }
-        return (encodeNumber(sgnNum));
+        return (PolylineEncoder.encodeNumber(sgnNum));
     }
 
     private final static String encodeNumber(final int num) {
@@ -313,22 +313,23 @@ public final class PolylineEncoder {
         final StringBuffer encodedLevels = new StringBuffer();
 
         if (forceEndpoints) {
-            encodedLevels.append(encodeNumber(numLevels - 1));
+            encodedLevels.append(PolylineEncoder.encodeNumber(numLevels - 1));
         } else {
-            encodedLevels.append(encodeNumber(numLevels
+            encodedLevels.append(PolylineEncoder.encodeNumber(numLevels
                     - computeLevel(absMaxDist) - 1));
         }
         for (i = 1; i < points.size() - 1; i++) {
             if (dists[i] != 0) {
-                encodedLevels.append(encodeNumber(numLevels
+                encodedLevels.append(PolylineEncoder.encodeNumber(numLevels
                         - computeLevel(dists[i]) - 1));
             }
         }
         if ((points.size() > 1)) {
             if (forceEndpoints) {
-                encodedLevels.append(encodeNumber(numLevels - 1));
+                encodedLevels.append(PolylineEncoder
+                        .encodeNumber(numLevels - 1));
             } else {
-                encodedLevels.append(encodeNumber(numLevels
+                encodedLevels.append(PolylineEncoder.encodeNumber(numLevels
                         - computeLevel(absMaxDist) - 1));
             }
         }
@@ -382,8 +383,10 @@ public final class PolylineEncoder {
             if ((dists[i] != 0) || (i == 0) || (i == points.size() - 1)) {
                 final Trackpoint point = points.get(i);
 
-                final int late5 = floor1e5(point.getLatDouble());
-                final int lnge5 = floor1e5(point.getLonDouble());
+                final int late5 = PolylineEncoder.floor1e5(point
+                        .getLatDouble());
+                final int lnge5 = PolylineEncoder.floor1e5(point
+                        .getLonDouble());
 
                 final int dlat = late5 - plat;
                 final int dlng = lnge5 - plng;
@@ -391,8 +394,10 @@ public final class PolylineEncoder {
                 plat = late5;
                 plng = lnge5;
 
-                encodedPoints.append(encodeSignedNumber(dlat));
-                encodedPoints.append(encodeSignedNumber(dlng));
+                encodedPoints
+                        .append(PolylineEncoder.encodeSignedNumber(dlat));
+                encodedPoints
+                        .append(PolylineEncoder.encodeSignedNumber(dlng));
 
             }
         }
@@ -430,8 +435,10 @@ public final class PolylineEncoder {
             counter++;
             trackpoint = track.get(i);
 
-            final int late5 = floor1e5(trackpoint.getLatDouble());
-            final int lnge5 = floor1e5(trackpoint.getLonDouble());
+            final int late5 = PolylineEncoder.floor1e5(trackpoint
+                    .getLatDouble());
+            final int lnge5 = PolylineEncoder.floor1e5(trackpoint
+                    .getLonDouble());
 
             final int dlat = late5 - plat;
             final int dlng = lnge5 - plng;
@@ -439,17 +446,17 @@ public final class PolylineEncoder {
             plat = late5;
             plng = lnge5;
 
-            encodedPoints.append(encodeSignedNumber(dlat)).append(
-                    encodeSignedNumber(dlng));
-            encodedLevels.append(encodeNumber(level));
+            encodedPoints.append(PolylineEncoder.encodeSignedNumber(dlat))
+                    .append(PolylineEncoder.encodeSignedNumber(dlng));
+            encodedLevels.append(PolylineEncoder.encodeNumber(level));
 
         }
 
         // System.out.println("listSize: " + listSize + " step: " + step
         // + " counter: " + counter);
 
-        resultMap.put("encodedPoints", replace(encodedPoints.toString(),
-                "\\", "\\\\"));
+        resultMap.put("encodedPoints", PolylineEncoder.replace(encodedPoints
+                .toString(), "\\", "\\\\"));
         resultMap.put("encodedLevels", encodedLevels.toString());
 
         return resultMap;

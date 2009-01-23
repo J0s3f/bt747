@@ -271,7 +271,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      *                when true, use imperial units.
      */
     public final void setImperial(final boolean useImperial) {
-        this.imperial = useImperial;
+        imperial = useImperial;
     }
 
     /**
@@ -300,11 +300,11 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     private static boolean previousResult = false;
 
     public final boolean cachedRecordIsNeeded(final GPSRecord r) {
-        if (r == previousRecord) {
-            return previousResult;
+        if (r == GPSFile.previousRecord) {
+            return GPSFile.previousResult;
         } else {
-            previousRecord = r;
-            return (previousResult = recordIsNeeded(r));
+            GPSFile.previousRecord = r;
+            return (GPSFile.previousResult = recordIsNeeded(r));
         }
     }
 
@@ -321,7 +321,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     }
 
     private void initWayPointUserListSetup() {
-        if (userWayPointList != null && userWayPointList.length >= 1) {
+        if ((userWayPointList != null) && (userWayPointList.length >= 1)) {
             currentWayPointListIdx = 0;
         } else {
             currentWayPointListIdx = -1;
@@ -367,19 +367,19 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         if (r.hasUtc()) {
             r.utc += timeOffsetSeconds;
         }
-        if (currentWayPointListIdx >= 0 && cachedRecordIsNeeded(r)
+        if ((currentWayPointListIdx >= 0) && cachedRecordIsNeeded(r)
                 && r.hasUtc()) {
-            GPSRecord prevActiveFields = activeFields;
+            final GPSRecord prevActiveFields = activeFields;
             if (prevRecord != null) {
                 boolean continueLoop;
                 do {
                     continueLoop = false;
-                    GPSRecord userWayPoint = userWayPointList[currentWayPointListIdx];
+                    final GPSRecord userWayPoint = userWayPointList[currentWayPointListIdx];
                     boolean doWriteRecord = false;
-                    int userWayPointUTC = userWayPoint.tagutc
+                    final int userWayPointUTC = userWayPoint.tagutc
                             + waypointTimeCorrection; // UTC time now //
                     // CommonOut.getDateTimeStr(userWayPointUTC)
-                    int diffPrevious = userWayPointUTC - prevRecord.utc // CommonOut.getDateTimeStr(prevRecord.utc)
+                    final int diffPrevious = userWayPointUTC - prevRecord.utc // CommonOut.getDateTimeStr(prevRecord.utc)
                             + timeOffsetSeconds; // - prevRecord.utc +
                     // r.utc
                     // +timeOffsetSeconds
@@ -469,7 +469,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
     private final void addUntreatedWayPoints() {
         while (currentWayPointListIdx >= 0) {
-            GPSRecord userWayPoint = userWayPointList[currentWayPointListIdx];
+            final GPSRecord userWayPoint = userWayPointList[currentWayPointListIdx];
             if (userWayPoint.hasLatitude() && userWayPoint.hasLongitude()) {
                 if (!activeFields.equalsFormat(userWayPoint)) {
                     writeLogFmtHeader(userWayPoint);
@@ -520,8 +520,8 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
         }
 
-        if (((((oneFilePerDay && newDate) && activeFields.utc != 0) || firstRecord) || (oneFilePerTrack
-                && activeFields.utc != 0 && (r.utc > previousTime
+        if (((((oneFilePerDay && newDate) && (activeFields.utc != 0)) || firstRecord) || (oneFilePerTrack
+                && (activeFields.utc != 0) && (r.utc > previousTime
                 + trackSepTime)))
                 && cachedRecordIsNeeded(r)) {
             boolean createOK = true;
@@ -560,9 +560,9 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             }
 
             if (createOK) {
-                boolean createNewFile = numberOfPasses - 1 == nbrOfPassesToGo;
+                final boolean createNewFile = numberOfPasses - 1 == nbrOfPassesToGo;
 
-                int error = createFile(r.utc, extraExt, createNewFile);
+                final int error = createFile(r.utc, extraExt, createNewFile);
 
                 if (error == BT747Constants.NO_ERROR) {
                     filesCreated += 1;
@@ -580,7 +580,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
                         }
                         writeLogFmtHeader(activeFields);
                         writeDataHeader();
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         Generic.debug("Initial header or append", e);
                         // TODO: handle exception
                     }
@@ -589,7 +589,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             }
         }
 
-        if (activeFields.utc != 0 && recordIsNeeded(r)) {
+        if ((activeFields.utc != 0) && recordIsNeeded(r)) {
             nextPreviousTime = r.utc;
         }
     };
@@ -604,7 +604,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         if (outFile != null) {
             try {
                 outFile.close();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 Generic.debug("finaliseFile", e);
                 // TODO: handle exception
             }
@@ -682,23 +682,23 @@ public abstract class GPSFile implements GPSFileConverterInterface {
 
         try {
             if (createNewFile) {
-                File tmpFile = new File(fileName, File.DONT_OPEN, card);
+                final File tmpFile = new File(fileName, File.DONT_OPEN, card);
                 if (tmpFile.exists()) {
                     tmpFile.delete();
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("File deletion", e);
             // TODO: handle problem
         }
         try {
-            int mode = createNewFile ? File.CREATE : File.WRITE_ONLY;
+            final int mode = createNewFile ? File.CREATE : File.WRITE_ONLY;
             outFile = new File(fileName, mode, card);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("File creation", e);
             // TODO: handle exception
         }
-        if (outFile != null && !outFile.isOpen()) {
+        if ((outFile != null) && !outFile.isOpen()) {
             errorInfo = fileName + "|" + outFile.getLastError();
             error = BT747Constants.ERROR_COULD_NOT_OPEN;
             outFile = null;
@@ -712,7 +712,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             if (outFile != null) {
                 outFile.close();
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("closeFile", e);
             // TODO: handle exception
         }
@@ -729,7 +729,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
             } else {
                 Generic.debug(Txt.WRITING_CLOSED, null);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Generic.debug("writeTxt", e);
         }
     }
@@ -846,14 +846,14 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * @return the maxDiff
      */
     public final int getMaxDiff() {
-        return this.maxDiff;
+        return maxDiff;
     }
 
     /**
      * @param maxDiff
      *                the maxDiff to set
      */
-    public final void setMaxDiff(int maxDiff) {
+    public final void setMaxDiff(final int maxDiff) {
         this.maxDiff = maxDiff;
     }
 
@@ -861,14 +861,14 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * @return the overridePreviousTag
      */
     public final boolean isOverridePreviousTag() {
-        return this.overridePreviousTag;
+        return overridePreviousTag;
     }
 
     /**
      * @param overridePreviousTag
      *                the overridePreviousTag to set
      */
-    public final void setOverridePreviousTag(boolean overridePreviousTag) {
+    public final void setOverridePreviousTag(final boolean overridePreviousTag) {
         this.overridePreviousTag = overridePreviousTag;
     }
 
@@ -878,7 +878,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
     protected GPSConversionParameters paramObject = new GPSConversionParameters();
 
     public final GPSConversionParameters getParamObject() {
-        return this.paramObject;
+        return paramObject;
     }
 
     public final void setParamObject(final GPSConversionParameters paramObject) {

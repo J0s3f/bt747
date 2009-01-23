@@ -1,31 +1,28 @@
-//********************************************************************
-//***                           BT 747                             ***
-//***                      April 14, 2007                          ***
-//***                  (c)2007 Mario De Weerd                      ***
-//***                     m.deweerd@ieee.org                       ***
-//***  **********************************************************  ***
-//***  Software is provided "AS IS," without a warranty of any     ***
-//***  kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
-//***  INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS  ***
-//***  FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY    ***
-//***  EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
-//***  IS ASSUMED BY THE USER. See the GNU General Public License  ***
-//***  for more details.                                           ***
-//***  *********************************************************** ***
+// ********************************************************************
+// *** BT 747 ***
+// *** April 14, 2007 ***
+// *** (c)2007 Mario De Weerd ***
+// *** m.deweerd@ieee.org ***
+// *** ********************************************************** ***
+// *** Software is provided "AS IS," without a warranty of any ***
+// *** kind. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES,***
+// *** INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS ***
+// *** FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY ***
+// *** EXCLUDED. THE ENTIRE RISK ARISING OUT OF USING THE SOFTWARE ***
+// *** IS ASSUMED BY THE USER. See the GNU General Public License ***
+// *** for more details. ***
+// *** *********************************************************** ***
 package bt747.sys.interfaces;
 
 public interface JavaTranslationsInterface {
 
     BT747Date getDateInstance();
 
-    BT747Date getDateInstance(final int d, final int m,
-            final int y);
+    BT747Date getDateInstance(final int d, final int m, final int y);
 
-    BT747Date getDateInstance(final String strDate,
-            final byte dateFormat);
+    BT747Date getDateInstance(final String strDate, final byte dateFormat);
 
-    BT747Hashtable getHashtableInstance(
-            final int initialCapacity);
+    BT747Hashtable getHashtableInstance(final int initialCapacity);
 
     BT747Vector getVectorInstance();
 
@@ -53,7 +50,7 @@ public interface JavaTranslationsInterface {
      * System method to convert a boolean to a string.
      * 
      * @param p
-     *            boolean to convert.
+     *                boolean to convert.
      * @return String corresponding to boolean.
      */
     String toString(final boolean p);
@@ -62,16 +59,15 @@ public interface JavaTranslationsInterface {
      * System method to convert an int to a string.
      * 
      * @param p
-     *            int to convert.
+     *                int to convert.
      * @return String corresponding to boolean.
      */
-    //String toString(final int p);
-
+    // String toString(final int p);
     /**
      * System method to convert a float to a string.
      * 
      * @param p
-     *            float to convert.
+     *                float to convert.
      * @return String corresponding to floating number.
      */
     String toString(final float p);
@@ -80,7 +76,7 @@ public interface JavaTranslationsInterface {
      * System method to convert a double to a string.
      * 
      * @param p
-     *            double to convert.
+     *                double to convert.
      * @return String corresponding to double number.
      */
     String toString(final double p);
@@ -89,9 +85,9 @@ public interface JavaTranslationsInterface {
      * System method to convert a double to a string.
      * 
      * @param p
-     *            double to convert.
+     *                double to convert.
      * @param i
-     *            Number of digits after the decimal point.
+     *                Number of digits after the decimal point.
      * @return String corresponding to double number.
      */
     String toString(final double p, final int i);
@@ -100,11 +96,11 @@ public interface JavaTranslationsInterface {
      * System method to convert an integer to a hexadecimal string.
      * 
      * @param p
-     *            The integer to convert. Interpreted as an unsigned.
+     *                The integer to convert. Interpreted as an unsigned.
      * @param i
-     *            The number of characters in the hexadecimal string. For
-     *            instance, if this value is 8, a value of 0x123 would be
-     *            converted to "00000123"
+     *                The number of characters in the hexadecimal string. For
+     *                instance, if this value is 8, a value of 0x123 would be
+     *                converted to "00000123"
      * @return String value containing the hex representation of the integer
      */
     String unsigned2hex(final int p, final int i);
@@ -113,7 +109,7 @@ public interface JavaTranslationsInterface {
      * System method to convert a string to an integer.
      * 
      * @param s
-     *            The string to convert.
+     *                The string to convert.
      * @return The integer corresponding to the string.
      */
     int toInt(final String s);
@@ -122,7 +118,7 @@ public interface JavaTranslationsInterface {
      * System method to convert a string to a float.
      * 
      * @param s
-     *            The string to convert.
+     *                The string to convert.
      * @return The float corresponding to the string.
      */
     float toFloat(final String s);
@@ -131,17 +127,18 @@ public interface JavaTranslationsInterface {
      * System method to convert a string to a double.
      * 
      * @param s
-     *            The string to convert.
+     *                The string to convert.
      * @return The double corresponding to the string.
      */
     double toDouble(final String s);
 
     /**
-     * System method to bitwise convert a long to a double. The long corresponds
-     * to 8 bytes that represent a floating number in IEEE ... format.
+     * System method to bitwise convert a long to a double. The long
+     * corresponds to 8 bytes that represent a floating number in IEEE ...
+     * format.
      * 
      * @param l
-     *            The value to bitwise convert.
+     *                The value to bitwise convert.
      * @return The double corresponding to the bitwise conversion.
      */
     double longBitsToDouble(final long l);
@@ -151,17 +148,17 @@ public interface JavaTranslationsInterface {
      * to 4 bytes that represent a floating number in IEEE ... format.
      * 
      * @param l
-     *            The value to bitwise convert.
+     *                The value to bitwise convert.
      * @return The float corresponding to the bitwise conversion.
      */
     float toFloatBitwise(final int l);
 
     /**
-     * System method to bitwise convert a float to an int.
-     * The int can then be written to a byte array for example.
+     * System method to bitwise convert a float to an int. The int can then be
+     * written to a byte array for example.
      * 
      * @param l
-     *            The value to bitwise convert.
+     *                The value to bitwise convert.
      * @return The float corresponding to the bitwise conversion.
      */
     int toIntBitwise(final float f);

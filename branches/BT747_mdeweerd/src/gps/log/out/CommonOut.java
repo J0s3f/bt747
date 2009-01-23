@@ -26,7 +26,7 @@ public final class CommonOut {
             "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
     public final static String getRCRKey(final String r) {
-        if (r.length() > 0 && r.charAt(0) == 'X') {
+        if ((r.length() > 0) && (r.charAt(0) == 'X')) {
             return (r.substring(1));
         } else if (r.length() > 1) {
             return "M";
@@ -36,20 +36,22 @@ public final class CommonOut {
     }
 
     public final static String getRcrSymbolText(final GPSRecord r) {
-        WayPointStyle w = wayPointStyles.get(getRCRKey(getRCRstr(r)));
+        final WayPointStyle w = CommonOut.wayPointStyles.get(CommonOut
+                .getRCRKey(CommonOut.getRCRstr(r)));
         if (w != null) {
-            return wayPointStyles.get(getRCRKey(getRCRstr(r)))
+            return CommonOut.wayPointStyles.get(
+                    CommonOut.getRCRKey(CommonOut.getRCRstr(r)))
                     .getSymbolText();
         } else {
             return null;
         }
     }
 
-    public final static String getHtml(GPSRecord s) {
+    public final static String getHtml(final GPSRecord s) {
         StringBuffer rec = new StringBuffer(200);
         CommonOut
                 .getHtml(rec, s, s, s, s.getBT747Time(), true, false /* imperial */);
-        String r = rec.toString();
+        final String r = rec.toString();
         rec = null;
         return r;
     }
@@ -65,18 +67,18 @@ public final class CommonOut {
         }
         if ((activeFields.hasUtc()) && (selectedFields.hasUtc())) {
             rec.append("TIME: ");
-            rec.append(getDateTimeStr(t));
+            rec.append(CommonOut.getDateTimeStr(t));
         }
         WayPointStyle style = null;
         if ((activeFields.hasRcr()) && (selectedFields.hasRcr())) {
             rec.append("<br>RCR: ");
-            String rcr = getRCRstr(s);
+            final String rcr = CommonOut.getRCRstr(s);
             rec.append(rcr);
-            style = wayPointStyles.get(getRCRKey(rcr));
+            style = CommonOut.wayPointStyles.get(CommonOut.getRCRKey(rcr));
         }
         if (s.voxStr != null) {
-            String upperVox = s.voxStr.toUpperCase();
-            boolean isPicture = upperVox.endsWith(".JPG")
+            final String upperVox = s.voxStr.toUpperCase();
+            final boolean isPicture = upperVox.endsWith(".JPG")
                     || upperVox.endsWith("PNG");
             rec.append("<br>");
             if (style != null) {
@@ -128,7 +130,7 @@ public final class CommonOut {
         if ((activeFields.hasValid()) && (selectedFields.hasValid())) {
             // rec.append("<br>VALID: ");
             rec.append("<br>VALID: ");
-            rec.append(getFixText(s.valid));
+            rec.append(CommonOut.getFixText(s.valid));
         }
         if ((activeFields.hasLatitude()) && (selectedFields.hasLatitude())) {
             rec.append("<br>LATITUDE: ");
@@ -208,36 +210,34 @@ public final class CommonOut {
     }
 
     public final static String getDateTimeStr(final int utcTime) {
-        BT747Time t = Interface.getTimeInstance();
+        final BT747Time t = Interface.getTimeInstance();
         t.setUTCTime(utcTime);
-        return getDateTimeStr(t);
+        return CommonOut.getDateTimeStr(t);
     }
 
     public final static String getDateStr(final int utcTime) {
-        BT747Time t = Interface.getTimeInstance();
+        final BT747Time t = Interface.getTimeInstance();
         t.setUTCTime(utcTime);
-        return getDateStr(t);
+        return CommonOut.getDateStr(t);
     }
 
     public final static String getTimeStr(final int utcTime) {
-        BT747Time t = Interface.getTimeInstance();
+        final BT747Time t = Interface.getTimeInstance();
         t.setUTCTime(utcTime);
-        return getTimeStr(t);
+        return CommonOut.getTimeStr(t);
     }
 
     public final static String getDateTimeStr(final GPSRecord activeFields,
             final BT747Time time) {
         if ((activeFields.hasUtc())) {
-            return getDateTimeStr(time);
+            return CommonOut.getDateTimeStr(time);
         } else {
             return "";
         }
     }
 
     public final static String getTimeStr(final BT747Time time) {
-        return ((time.getHour() < 10) ? "0" : "")
-                + time.getHour()
-                + ":"
+        return ((time.getHour() < 10) ? "0" : "") + time.getHour() + ":"
                 // Minute
                 + ((time.getMinute() < 10) ? "0" : "")
                 + time.getMinute() // +":"
@@ -247,21 +247,20 @@ public final class CommonOut {
     }
 
     public final static String getDateStr(final BT747Time time) {
-        return ((time.getDay() < 10) ? "0" : "")
-                + time.getDay()
+        return ((time.getDay() < 10) ? "0" : "") + time.getDay()
                 + "-"
                 // Month
                 + CommonOut.MONTHS_AS_TEXT[time.getMonth() - 1] + "-"
-                + (((time.getYear() % 100)) < 10 ? "0" : "")
-                + time.getYear() % 100;
+                + (((time.getYear() % 100)) < 10 ? "0" : "") + time.getYear()
+                % 100;
     }
 
     public final static String getDateTimeStr(final BT747Time time) {
-        return getDateStr(time) + " " + getTimeStr(time);
+        return CommonOut.getDateStr(time) + " " + CommonOut.getTimeStr(time);
     }
 
     public final static String getRCRstr(final GPSRecord s) {
-        StringBuffer rcrStr = new StringBuffer(15);
+        final StringBuffer rcrStr = new StringBuffer(15);
         rcrStr.setLength(0);
         if ((s.rcr & BT747Constants.RCR_ALL_APP_MASK) == 0) {
             if ((s.rcr & BT747Constants.RCR_TIME_MASK) != 0) {
@@ -385,13 +384,14 @@ public final class CommonOut {
                     "http://maps.google.com/mapfiles/kml/pal4/icon29.png" }, };
 
     private static WayPointStyleSet wayPointStyles = new WayPointStyleSet(
-            IconStyles);
+            CommonOut.IconStyles);
 
     /**
      * @param wayPointStyles
      *                the wayPointStyles to set
      */
-    public static final void setWayPointStyles(WayPointStyleSet wayPointStyles) {
+    public static final void setWayPointStyles(
+            final WayPointStyleSet wayPointStyles) {
         CommonOut.wayPointStyles = wayPointStyles;
     }
 
@@ -399,7 +399,7 @@ public final class CommonOut {
      * @return the wayPointStyles
      */
     public static final WayPointStyleSet getWayPointStyles() {
-        return wayPointStyles;
+        return CommonOut.wayPointStyles;
     }
 
 }

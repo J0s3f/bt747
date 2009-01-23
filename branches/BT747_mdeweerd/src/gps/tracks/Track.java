@@ -1,7 +1,7 @@
 /**
- * Reimplementation of Mark McClures Javascript PolylineEncoder
- * All the mathematical logic is more or less copied by McClure
- *  
+ * Reimplementation of Mark McClures Javascript PolylineEncoder All the
+ * mathematical logic is more or less copied by McClure
+ * 
  * @author Mark Rambow, Mario De Weerd
  * @e-mail markrambow[at]gmail[dot]com
  * @version 0.1
@@ -18,7 +18,7 @@ public final class Track {
     private BT747Vector trackpoints = Interface.getVectorInstance();
 
     public final BT747Vector getTrackpoints() {
-        return this.trackpoints;
+        return trackpoints;
     }
 
     public final void setTrackpoints(final BT747Vector trackpoints) {
@@ -26,17 +26,17 @@ public final class Track {
     }
 
     public final void addTrackpoint(final Trackpoint trkpt) {
-        this.trackpoints.addElement(trkpt);
+        trackpoints.addElement(trkpt);
     }
-    
+
     public final Trackpoint get(final int i) {
-        return (Trackpoint) this.trackpoints.elementAt(i);
+        return (Trackpoint) trackpoints.elementAt(i);
     }
-    
+
     public final int size() {
-        return this.trackpoints.size();
+        return trackpoints.size();
     }
-    
+
     public final void removeAll() {
         trackpoints.removeAllElements();
     }
