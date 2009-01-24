@@ -363,7 +363,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
      * 
      * @param r
      */
-    public final void addLogRecord(final GPSRecord r) {
+    public void addLogRecord(final GPSRecord r) {
         if (r.hasUtc()) {
             r.utc += timeOffsetSeconds;
         }
@@ -830,7 +830,7 @@ public abstract class GPSFile implements GPSFileConverterInterface {
         this.filenameBuilder = filenameBuilder;
     }
 
-    private int timeOffsetSeconds = 0;
+    protected int timeOffsetSeconds = 0;
 
     /**
      * The time offset to apply to the output records in seconds.

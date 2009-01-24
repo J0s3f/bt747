@@ -19,9 +19,8 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
 
-import net.iharder.dnd.DropListener;
-import net.iharder.dnd.FileDrop;
 import net.sf.bt747.j2se.app.filefilters.JpgFileFilter;
+import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
 
 import bt747.j2se_view.model.BT747Waypoint;
 import bt747.j2se_view.model.FileTableModel;
@@ -83,19 +82,6 @@ public class FileTablePanel extends javax.swing.JPanel implements
                 .getBooleanOpt(AppSettings.TAG_OVERRIDEPOSITIONS));
         
         updateGuiData();
-
-        DropListener dl;
-        dl = new DropListener() {
-            /*
-             * (non-Javadoc)
-             * 
-             * @see net.iharder.dnd.FileDrop.Listener#filesDropped(java.io.File[])
-             */
-            public void filesDropped(final java.io.File[] files) {
-                m.getPositionData().addFiles(files);
-            }
-        };
-        new FileDrop(this, dl);
     }
 
     /*
@@ -191,8 +177,9 @@ public class FileTablePanel extends javax.swing.JPanel implements
         // }
         ImageFileChooser.setCurrentDirectory(new File(m
                 .getStringOpt(AppSettings.IMAGEDIR)));
-        ImageFileChooser.setAcceptAllFileFilterUsed(true);
         ImageFileChooser.addChoosableFileFilter(new JpgFileFilter());
+        ImageFileChooser.addChoosableFileFilter(new KnownFileFilter());
+        ImageFileChooser.setAcceptAllFileFilterUsed(true);
         // RawLogFileChooser.addChoosableFileFilter(new CSVFileFilter());
         // RawLogFileChooser.addChoosableFileFilter(new HoluxTRLFileFilter());
         // RawLogFileChooser.addChoosableFileFilter(new NMEAFileFilter());

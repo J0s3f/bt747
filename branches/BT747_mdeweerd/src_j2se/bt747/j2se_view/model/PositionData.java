@@ -170,11 +170,12 @@ public class PositionData extends AbstractBean {
                 try {
                     final File f = files[i];
                     if (f.exists()) {
+                        final String path = files[i].getCanonicalPath();
                         if (filter.accept(f)) {
                             // Log file
-                            Controller.addLogFile(f);
+                            Controller.addLogFile(path, -1);
                         } else {
-                            userWpListModel.add(files[i].getCanonicalPath());
+                            userWpListModel.add(path);
                         }
                     } else {
                         System.err.println("File not found: "

@@ -96,4 +96,13 @@ public class J2SEController extends Controller {
         img.writeImage(orgPath, newPath, 0);
     }
 
+    public final static void addLogFile(final File f) {
+        try {
+            addLogFile(f.getCanonicalPath(), 0);
+        } catch (final Exception e) {
+            bt747.sys.Generic.debug("Problem adding log file", e);
+        }
+    }
+
+
 }
