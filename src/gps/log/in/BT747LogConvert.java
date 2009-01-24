@@ -184,8 +184,8 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
                 // + isBlockStartOverwrite);
                 if (isBlockStartOverwrite && !firstBlockDone) {
                     passToFindFirstBlockInLog = true;
-                    firstBlockDone = true;
                 }
+                firstBlockDone = true;
 
                 logPeriod = (0xFF & bytes[8]) << 0 | (0xFF & bytes[9]) << 8
                         | (0xFF & bytes[10]) << 16 | (0xFF & bytes[11]) << 24;

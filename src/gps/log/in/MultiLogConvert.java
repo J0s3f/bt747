@@ -266,17 +266,18 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
          * 
          * @see gps.log.out.GPSFile#writeRecord(gps.log.GPSRecord)
          */
-        public final void writeRecord(final GPSRecord r) {
+        public final void addLogRecord(final GPSRecord r) {
             if (r.hasUtc()) {
-                if (r.getUtc() < minTime) {
-                    minTime = r.getUtc();
+                final int time = r.getUtc() + timeOffsetSeconds; 
+                if (time < minTime) {
+                    minTime = time;
                 }
-                if (r.getUtc() > maxTime) {
-                    maxTime = r.getUtc();
+                if (time > maxTime) {
+                    maxTime = time;
                 }
             }
             // TODO Auto-generated method stub
-            super.writeRecord(r);
+            super.addLogRecord(r);
         }
     }
 }

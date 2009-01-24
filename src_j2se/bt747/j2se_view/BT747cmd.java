@@ -1232,7 +1232,7 @@ public class BT747cmd implements bt747.model.ModelListener {
                     if (f.exists()) {
                         if (filter.accept(f)) {
                             // Log file
-                            Controller.addLogFile(f);
+                            J2SEController.addLogFile(f);
                         } else {
                             filesToTag.add(f);
                         }

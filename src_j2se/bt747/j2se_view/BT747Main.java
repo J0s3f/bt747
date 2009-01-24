@@ -29,6 +29,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import net.iharder.dnd.DropListener;
+import net.iharder.dnd.FileDrop;
 import net.sf.bt747.j2se.app.utils.BareBonesBrowserLaunch;
 import net.sf.bt747.j2se.system.J2SEGeneric;
 import net.sf.bt747.j2se.system.J2SEMessageListener;
@@ -210,6 +212,18 @@ public class BT747Main extends javax.swing.JFrame implements
     private void initAppData() {
         c.setRootFrame(this);
         completeGui();
+        final DropListener dl = new DropListener() {
+            /*
+             * (non-Javadoc)
+             * 
+             * @see net.iharder.dnd.FileDrop.Listener#filesDropped(java.io.File[])
+             */
+            public void filesDropped(final java.io.File[] files) {
+                m.getPositionData().addFiles(files);
+            }
+        };
+        new FileDrop(this, dl);
+
         pnMap.init(c);
         pnFilesToTagPanel.init(c);
         pnAdvancedSettingsPanel.init(c);

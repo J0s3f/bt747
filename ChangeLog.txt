@@ -1,3 +1,10 @@
+Version 1.67.17
+* Drag drop of files possible 'anywhere'.
+* Fixed problem with multiple files when there were tagged files already and
+  and these files were not in first log file's date range.
+* Fixed problem in reordering algorithm for bin files that occurred when
+  the method changed from normal to overwrite inside the log.
+
 Version 1.67.16
 * GUI functionality for multiple log files somewhat debugged (seems to work).
 

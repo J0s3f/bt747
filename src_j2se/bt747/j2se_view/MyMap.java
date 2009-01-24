@@ -36,8 +36,6 @@ import java.util.Set;
 
 import javax.swing.ScrollPaneConstants;
 
-import net.iharder.dnd.DropListener;
-import net.iharder.dnd.FileDrop;
 import net.sf.bt747.j2se.app.list.BT747WaypointListCellRenderer;
 import net.sf.bt747.j2se.app.map.BT747TrackRenderer;
 import net.sf.bt747.j2se.app.map.MapFactoryInfos;
@@ -127,19 +125,6 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                 PositionData.WPDISPLAYCHANGE, wpChangeListener);
         m.getPositionData().addPropertyChangeListener(
                 PositionData.WAYPOINTSELECTED, wpSelectedListener);
-
-        DropListener dl;
-        dl = new DropListener() {
-            /*
-             * (non-Javadoc)
-             * 
-             * @see net.iharder.dnd.FileDrop.Listener#filesDropped(java.io.File[])
-             */
-            public void filesDropped(final java.io.File[] files) {
-                m.getPositionData().addFiles(files);
-            }
-        };
-        new FileDrop(this, dl);
     }
 
     private PropertyChangeListener wpChangeListener = new PropertyChangeListener() {

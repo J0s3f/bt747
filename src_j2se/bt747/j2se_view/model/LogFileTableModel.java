@@ -111,14 +111,14 @@ public class LogFileTableModel extends AbstractTableModel {
             switch (dt) {
             case DataTypes.LOG_START_TIME:
                 final int st = logfileinfo.getStartTime();
-                if (st != 0x7FFFFFFF) {
+                if (st != 0x7FFFFFFF && st != 0) {
                     return CommonOut.getDateTimeStr(st);
                 } else {
                     return null;
                 }
             case DataTypes.LOG_END_TIME:
                 final int et = logfileinfo.getEndTime();
-                if (et != 0x7FFFFFFF) {
+                if (et != 0x7FFFFFFF && et != 0) {
                     return CommonOut.getDateTimeStr(et);
                 } else {
                     return null;

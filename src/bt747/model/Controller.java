@@ -14,8 +14,6 @@
 // *** *********************************************************** ***
 package bt747.model;
 
-import java.io.File;
-
 import gps.BT747Constants;
 import gps.GPSstate;
 import gps.GpsEvent;
@@ -1628,14 +1626,8 @@ public class Controller {
         m.setStringOpt(param, value);
     }
 
-    public final static void addLogFile(final File f) {
-        try {
-            final LogFileInfo loginfo = new LogFileInfo(f.getCanonicalPath(),
-                    0);
-            logFiles.addElement(loginfo);
-        } catch (final Exception e) {
-            bt747.sys.Generic.debug("Problem adding log file", e);
-        }
+    public final static void addLogFile(final String path, final int card) {
+        final LogFileInfo loginfo = new LogFileInfo(path, card);
+        logFiles.addElement(loginfo);
     }
-
 }
