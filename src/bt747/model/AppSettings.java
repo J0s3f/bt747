@@ -1078,9 +1078,10 @@ public class AppSettings {
     }
 
     /**
-     * @param defaultBaseDirPath the defaultBaseDirPath to set
+     * @param defaultBaseDirPath
+     *                the defaultBaseDirPath to set
      */
-    public static void setDefaultBaseDirPath(String defaultBaseDirPath) {
+    public static void setDefaultBaseDirPath(final String defaultBaseDirPath) {
         AppSettings.defaultBaseDirPath = defaultBaseDirPath;
     }
 
@@ -1088,7 +1089,7 @@ public class AppSettings {
      * @return the defaultBaseDirPath
      */
     public static String getDefaultBaseDirPath() {
-        return defaultBaseDirPath;
+        return AppSettings.defaultBaseDirPath;
     }
 
     private void setFilterDefaults() {

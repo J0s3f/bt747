@@ -180,8 +180,8 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
                 final int startTime = loginfo.getStartTime();
                 int insertIdx = 0;
                 while ((insertIdx < orderedLogs.size())) {
-                    if(startTime < ((LogFileInfo) orderedLogs
-                                .elementAt(insertIdx)).getStartTime()) {
+                    if (startTime < ((LogFileInfo) orderedLogs
+                            .elementAt(insertIdx)).getStartTime()) {
                         break;
                     }
                     insertIdx++;
@@ -196,8 +196,9 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
         gpsFile.setActiveFileFields(activeFileFields);
         if (error == BT747Constants.NO_ERROR) {
             do {
-                for(int j = 0; !stop&&j<orderedLogs.size();j++) {
-                    final Object key = ((LogFileInfo)orderedLogs.elementAt(j)).getPath();
+                for (int j = 0; !stop && (j < orderedLogs.size()); j++) {
+                    final Object key = ((LogFileInfo) orderedLogs
+                            .elementAt(j)).getPath();
                     final GPSLogConvertInterface i = (GPSLogConvertInterface) converters
                             .get(key);
                     // TODO: manage cards on different volumes.
@@ -268,7 +269,7 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
          */
         public final void addLogRecord(final GPSRecord r) {
             if (r.hasUtc()) {
-                final int time = r.getUtc() + timeOffsetSeconds; 
+                final int time = r.getUtc() + timeOffsetSeconds;
                 if (time < minTime) {
                     minTime = time;
                 }

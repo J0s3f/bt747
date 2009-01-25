@@ -238,12 +238,12 @@ public final class Conv {
      * @return list of bytes
      */
     public static final int hex2SignedInt(final String hexStr) {
-        int result = hex2Int(hexStr);
+        int result = Conv.hex2Int(hexStr);
         if (result > 0) {
             final int highNibble = (result >> (4 * (hexStr.length() - 1)));
             if (highNibble >= 8) {
                 // sign extension
-                result |= (-1<<(32-4 * hexStr.length()));
+                result |= (-1 << (32 - 4 * hexStr.length()));
             }
         }
         return result;
