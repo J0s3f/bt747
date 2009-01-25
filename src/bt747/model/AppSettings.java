@@ -284,7 +284,7 @@ public class AppSettings {
         updateSettings(VersionX100);
     }
 
-    public static String defaultBaseDirPath = "";
+    private static String defaultBaseDirPath = "";
 
     private void updateSettings(final int versionX100) {
         switch (versionX100) {
@@ -1077,6 +1077,20 @@ public class AppSettings {
         return AppSettings.defaultChunkSize;
     }
 
+    /**
+     * @param defaultBaseDirPath the defaultBaseDirPath to set
+     */
+    public static void setDefaultBaseDirPath(String defaultBaseDirPath) {
+        AppSettings.defaultBaseDirPath = defaultBaseDirPath;
+    }
+
+    /**
+     * @return the defaultBaseDirPath
+     */
+    public static String getDefaultBaseDirPath() {
+        return defaultBaseDirPath;
+    }
+
     private void setFilterDefaults() {
         setTrkPtValid(0xFFFFFFFF & (~(BT747Constants.VALID_NO_FIX_MASK | BT747Constants.VALID_ESTIMATED_MASK)));
         setTrkPtRCR(0xFFFFFFFF);
@@ -1122,7 +1136,8 @@ public class AppSettings {
     }
 
     private final int getLocalIntOpt(final int idx, final int size) {
-        return Conv.hex2Int(getStringOpt(idx, size));
+        final String str = getStringOpt(idx, size);
+        return Conv.hex2SignedInt(str);
     }
 
     private final void setFloatOpt(final int eventType, final float src,

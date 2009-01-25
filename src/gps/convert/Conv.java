@@ -155,77 +155,96 @@ public final class Conv {
     }
 
     /**
-     * Convert a string in hexadecimal to the corresponding int
+     * Convert a string in hexadecimal to the corresponding int.
      * 
      * @param hexStr
      *                Hexadecimal representation of bytes
      * @return list of bytes
      */
     public static final int hex2Int(final String hexStr) {
-        int result = 0;
         final int length = hexStr.length();
+        int result = 0;
         for (int i = 0; i < length; i++) {
-            int nibble;
+            result <<= 4;
             switch (hexStr.charAt(i)) {
             case '0':
-                nibble = 0;
+                result += 0;
                 break;
             case '1':
-                nibble = 1;
+                result += 1;
                 break;
             case '2':
-                nibble = 2;
+                result += 2;
                 break;
             case '3':
-                nibble = 3;
+                result += 3;
                 break;
             case '4':
-                nibble = 4;
+                result += 4;
                 break;
             case '5':
-                nibble = 5;
+                result += 5;
                 break;
             case '6':
-                nibble = 6;
+                result += 6;
                 break;
             case '7':
-                nibble = 7;
+                result += 7;
                 break;
             case '8':
-                nibble = 8;
+                result += 8;
                 break;
             case '9':
-                nibble = 9;
+                result += 9;
                 break;
             case 'a':
             case 'A':
-                nibble = 0xA;
+                result += 0xA;
                 break;
             case 'b':
             case 'B':
-                nibble = 0xB;
+                result += 0xB;
                 break;
             case 'c':
             case 'C':
-                nibble = 0xC;
+                result += 0xC;
                 break;
             case 'd':
             case 'D':
-                nibble = 0xD;
+                result += 0xD;
                 break;
             case 'e':
             case 'E':
-                nibble = 0xE;
+                result += 0xE;
                 break;
             case 'f':
             case 'F':
-                nibble = 0xF;
+                result += 0xF;
                 break;
             default:
-                nibble = 0;
+                result += 0;
             }
-            result <<= 4;
-            result += nibble;
+        }
+        return result;
+    }
+
+    /**
+     * Convert a string in hexadecimal to the corresponding int. Consider hex
+     * signed.
+     * 
+     * 
+     * @param hexStr
+     *                Hexadecimal representation of bytes
+     * @return list of bytes
+     */
+    public static final int hex2SignedInt(final String hexStr) {
+        int result = hex2Int(hexStr);
+        if (result > 0) {
+            final int highNibble = (result >> (4 * (hexStr.length() - 1)));
+            if (highNibble >= 8) {
+                // sign extension
+                result |= (-1<<(32-4 * hexStr.length()));
+            }
         }
         return result;
     }

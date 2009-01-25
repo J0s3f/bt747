@@ -551,8 +551,8 @@ public final class J2SEAppController extends J2SEController {
      * Initialise the application settings.
      */
     private void initAppSettings() {
-        J2SEAppModel.defaultBaseDirPath = java.lang.System
-                .getProperty("user.home");
+        J2SEAppModel.setDefaultBaseDirPath(java.lang.System
+                .getProperty("user.home"));
 
         if ((Settings.getAppSettings() == null)
                 || (Settings.getAppSettings().length() < 100)

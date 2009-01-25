@@ -617,6 +617,7 @@ public final class BT747Constants { // dev as in device
             mdStr = "747/Q1000/BGL-32";
             break;
         case 0x0023:
+        case 0x0033:
             mdStr = "Holux M-241";
             break;
         case 0x0131:
