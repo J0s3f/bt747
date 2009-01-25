@@ -273,10 +273,10 @@ public final class AppController extends Controller {
     }
 
     private void initAppSettings() {
-        AppSettings.defaultChunkSize = waba.sys.Settings.onDevice ? 220
-                : 0x10000;
-        AppSettings.defaultTraversable = waba.sys.Settings.onDevice
-                && (!waba.sys.Settings.platform.startsWith("Palm"));
+        AppSettings.setDefaultChunkSize(waba.sys.Settings.onDevice ? 220
+                : 0x10000);
+        AppSettings.setDefaultTraversable(waba.sys.Settings.onDevice
+                && (!waba.sys.Settings.platform.startsWith("Palm")));
 
         if (waba.sys.Settings.platform.startsWith("Palm")) {
             AppSettings.defaultBaseDirPath = "/Palm";

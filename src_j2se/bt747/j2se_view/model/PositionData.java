@@ -82,9 +82,10 @@ public class PositionData extends AbstractBean {
 
     public final void setWayPoints(final GPSRecord[] waypoints) {
         wayPoints.removeAllElements();
-
-        for (final GPSRecord wp : waypoints) {
-            wayPoints.add(new BT747Waypoint(wp));
+        if (waypoints != null) {
+            for (final GPSRecord wp : waypoints) {
+                wayPoints.add(new BT747Waypoint(wp));
+            }
         }
         fireWaypointListUpdate();
     }
@@ -157,11 +158,10 @@ public class PositionData extends AbstractBean {
         java.util.Arrays.sort(rcrds, new GPSRecordTimeComparator());
         return rcrds;
     }
-    
+
     private void fireLogFileUpdate() {
         postEvent(new ModelEvent(ModelEvent.UPDATE_LOG_FILE_LIST, null));
     }
-
 
     public final void addFiles(final File[] files) {
         if (files != null) {

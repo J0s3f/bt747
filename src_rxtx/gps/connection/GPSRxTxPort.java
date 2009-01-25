@@ -221,6 +221,11 @@ public final class GPSRxTxPort extends GPSPort {
                 portFound = isValidPort(freeTextPort);
             }
             for (int i = 0; !portFound && (i < 3); i++) {
+                // /dev/tty.HOLUX_M-241-SPPSlave-1
+                freeTextPort = "/dev/tty.HoluxM-1000C-SPPslave-" + i;
+                portFound = isValidPort(freeTextPort);
+            }
+            for (int i = 0; !portFound && (i < 3); i++) {
                 freeTextPort = "/dev/tty.iBT-GPS-SPPSlave-" + i;
                 portFound = isValidPort(freeTextPort);
             }
@@ -264,6 +269,10 @@ public final class GPSRxTxPort extends GPSPort {
         }
         if (!portFound) {
             freeTextPort = "/dev/cu.usbmodem1b10";
+            portFound = isValidPort(freeTextPort);
+        }
+        if (!portFound) {
+            freeTextPort = "/dev/cu.usbmodem1d10";                                    
             portFound = isValidPort(freeTextPort);
         }
         if (!portFound && os_name.toLowerCase().startsWith("lin")) {

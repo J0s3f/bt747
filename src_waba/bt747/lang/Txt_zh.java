@@ -130,13 +130,13 @@ public class Txt_zh implements TxtInterface {
 
 
 //     BT747_dev\u7C7B
-    public static final String[]C_STR_RCR = {
+    private static final String[]C_STR_RCR = {
     "\u65F6\u95F4", "\u901F\u5EA6", "\u8DDD\u79BB", "\u6309\u94AE",
     "Picture", "Gas Stat", "Phone", "ATM",
     "Bus stop", "Parking", "Post Box", "Railway",
     "Rstaurnt", "Bridge", "View", "Other"
     };
-    public static final String  [] logFmtItems = {
+    private static final String  [] logFmtItems = {
     "UTC", // = 0x00001 // 0
     "\u5408\u6CD5", // = 0x00002 // 1
     "\u7EAC\u5EA6", // = 0x00004 // 2
@@ -195,7 +195,7 @@ public class Txt_zh implements TxtInterface {
     public static final String DEFAULT_SET = "\u7F3A\u7701\u8BBE\u7F6E";
 
 //    \u65E5\u5FD7\u8FC7\u6EE4\u5668
-    public static final String[] STR_VALID= {
+    private static final String[] STR_VALID= {
     "\u6CA1\u6709\u56FA\u5B9A",
     "SPS",
     "DGPS",

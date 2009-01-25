@@ -118,6 +118,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
                 utcOffsetIdx = 12;
             }
             cbUTCOffset.setSelectedIndex(utcOffsetIdx);
+            updateUTCOffsetFromGUI();
         } catch (final Exception e) {
             Generic.debug(getString("Problem_with_UTC_offset"), e);
         }
@@ -1282,8 +1283,7 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
         cbNoFixColor.setOpaque(true);
     }
 
-    private void cbUTCOffsetFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbUTCOffsetFocusLost
-        // TODO: Initialise offset
+    private void updateUTCOffsetFromGUI() {
         final String tmp = (String) cbUTCOffset.getSelectedItem();
         if (tmp.charAt(4) == '+') {
             c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Integer
@@ -1292,7 +1292,10 @@ public class OutputSettingsPanel extends javax.swing.JPanel implements
             c.setIntOpt(AppSettings.GPSTIMEOFFSETHOURS, Integer.parseInt(tmp
                     .substring(4)));
         }
-
+    }
+    
+    private void cbUTCOffsetFocusLost(final java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbUTCOffsetFocusLost
+        updateUTCOffsetFromGUI();
     }//GEN-LAST:event_cbUTCOffsetFocusLost
 
     private void cbStandardOrDaylightSavingFocusLost(
