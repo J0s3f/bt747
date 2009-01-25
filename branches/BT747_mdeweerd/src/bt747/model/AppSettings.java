@@ -254,8 +254,8 @@ public class AppSettings {
     private final static int START_IDX = 2;
     private final static int SIZE_IDX = 3;
 
-    public static boolean defaultTraversable = false;
-    public static int defaultChunkSize = 0x10000;
+    private static boolean defaultTraversable = false;
+    private static int defaultChunkSize = 0x10000;
 
     private static boolean solveMacLagProblem = false;
 
@@ -1045,6 +1045,36 @@ public class AppSettings {
             }
         }
         return gkey;
+    }
+
+    /**
+     * @param defaultTraversable
+     *                the defaultTraversable to set
+     */
+    public static void setDefaultTraversable(final boolean defaultTraversable) {
+        AppSettings.defaultTraversable = defaultTraversable;
+    }
+
+    /**
+     * @return the defaultTraversable
+     */
+    public static boolean isDefaultTraversable() {
+        return AppSettings.defaultTraversable;
+    }
+
+    /**
+     * @param defaultChunkSize
+     *                the defaultChunkSize to set
+     */
+    public static void setDefaultChunkSize(final int defaultChunkSize) {
+        AppSettings.defaultChunkSize = defaultChunkSize;
+    }
+
+    /**
+     * @return the defaultChunkSize
+     */
+    public static int getDefaultChunkSize() {
+        return AppSettings.defaultChunkSize;
     }
 
     private void setFilterDefaults() {

@@ -183,7 +183,7 @@ public class GPSFilter {
         final boolean result = (((r.utc >= 0) && (r.utc <= 3600 * 24)) || ((r.utc >= startTime) && (r.utc <= endTime)))
                 && (!r.hasValid() || ((r.valid & validMask) != 0))
                 && (!r.hasRcr() || ((r.rcr & rcrMask) != 0));
-
+        //bt747.sys.Generic.debug(r.toString()+" "+result);
         return result;
     }
 

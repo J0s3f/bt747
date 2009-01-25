@@ -32,10 +32,10 @@ import bt747.sys.Generic;
  */
 public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
     private int recordSize;
-    private final int logFormat = (1 << BT747Constants.FMT_UTC_IDX)
+    private final static int logFormat = (1 << BT747Constants.FMT_UTC_IDX)
             | (1 << BT747Constants.FMT_LATITUDE_IDX)
             | (1 << BT747Constants.FMT_LONGITUDE_IDX)
-            | (1 << BT747Constants.FMT_HEIGHT_IDX);;
+            | (1 << BT747Constants.FMT_HEIGHT_IDX);
     protected boolean passToFindFieldsActivatedInLog = false;
     protected final int activeFileFields = logFormat;
 

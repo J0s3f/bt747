@@ -260,6 +260,9 @@ public final class BT747Constants { // dev as in device
     /* Special requests * SW ? */
     public static final int PMTK_Q_DGPS_INFO = 602;
     public static final int PMTK_Q_VERSION = 604;
+    /**
+     * Requests release data 605.
+     */
     public static final int PMTK_Q_RELEASE = 605;
 
     public static final int PMTK_DT_DGPS_INFO = 702;
@@ -622,6 +625,9 @@ public final class BT747Constants { // dev as in device
         case 0x1388:
             mdStr = "757/ZI v1";
             // logMemSize = 8 * 1024 * 1024 / 8; //8Mb -> 1MB
+            break;
+        case 0x231B:
+            mdStr = "ML7";
             break;
         case 0x5202:
             mdStr = "757/ZI v2";

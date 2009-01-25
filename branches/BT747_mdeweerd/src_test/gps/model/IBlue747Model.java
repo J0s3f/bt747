@@ -33,6 +33,10 @@ import bt747.sys.Interface;
 public class IBlue747Model {
 
     private int logFormat = 0x3E;
+    enum Model {
+        ML7
+    };
+    private Model model = Model.ML7; 
 
     private GPSrxtx gpsRxTx = null;
 
@@ -255,6 +259,8 @@ public class IBlue747Model {
             case BT747Constants.PMTK_API_Q_DGPS_MODE: // CMD 401
             case BT747Constants.PMTK_API_Q_SBAS: // CMD 413
             case BT747Constants.PMTK_API_Q_NMEA_OUTPUT: // CMD 414
+                gpsRxTx.sendPacket("PMTK514,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0");
+                break;
             case BT747Constants.PMTK_API_Q_PWR_SAV_MOD: // CMD 420
             case BT747Constants.PMTK_API_Q_DATUM: // CMD 430
             case BT747Constants.PMTK_API_Q_DATUM_ADVANCE: // CMD 431
@@ -275,12 +281,18 @@ public class IBlue747Model {
                 // BT747Constants.PMTK_DT_RELEASE
                 // + "," + "AXN_1.0-B_1.3_C01" + "," + "0001" + ","
                 // + "TSI_747A+" + "," + "1.0");
+                switch(model) {
+                case ML7:
+                    gpsRxTx.sendPacket("PMTK705,M-core_2.02,231B,,1.0");
+                    break;
+                   default:
                 gpsRxTx.sendPacket("PMTK" + BT747Constants.PMTK_DT_RELEASE
                         + "," + "AXN_1.0-B_1.3_C01" + "," + "8805" + ","
                         + "QST1300" + "," + "1.0");
 
                 // AXN_0.3-B_1.3_C01
                 break;
+                }
             case BT747Constants.PMTK_Q_VERSION:
                 break;
             } // End switch

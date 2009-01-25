@@ -135,11 +135,13 @@ public final class GPSKMZFile extends GPSKMLFile {
             } else {
                 if (zips == null) {
                     Generic.debug("Zip name is null ");
-                }
-                currentZipStream = (ZipOutputStream) zips.get(zipFileName);
-                if (currentZipStream == null) {
-                    Generic.debug("Could not find " + zipFileName
-                            + " zip stream.");
+                } else {
+                    currentZipStream = (ZipOutputStream) zips
+                            .get(zipFileName);
+                    if (currentZipStream == null) {
+                        Generic.debug("Could not find " + zipFileName
+                                + " zip stream.");
+                    }
                 }
             }
             // try {

@@ -45,7 +45,7 @@ public class AGPS {
         return size;
     }
 
-    private class TimeInt {
+    private static class TimeInt {
         private int time;
 
         /**

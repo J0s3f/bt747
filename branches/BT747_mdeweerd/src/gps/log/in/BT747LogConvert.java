@@ -713,7 +713,7 @@ public final class BT747LogConvert extends GPSLogConvertInterface {
             r.valid = (0xFF & bytes[recIdx++]) << 0
                     | (0xFF & bytes[recIdx++]) << 8;
         } else {
-            r.valid = 0xFFFF;
+            //r.valid = 0xFFFF;
         }
         if ((logFormat & (1 << BT747Constants.FMT_LATITUDE_IDX)) != 0) {
             if (!holux) {
