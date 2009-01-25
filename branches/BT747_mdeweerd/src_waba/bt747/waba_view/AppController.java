@@ -279,16 +279,16 @@ public final class AppController extends Controller {
                 && (!waba.sys.Settings.platform.startsWith("Palm")));
 
         if (waba.sys.Settings.platform.startsWith("Palm")) {
-            AppSettings.defaultBaseDirPath = "/Palm";
+            AppSettings.setDefaultBaseDirPath("/Palm");
         } else if (isWin32LikeDevice()) {
             if (WabaFile.getCardVolumePath() == null) {
-                AppSettings.defaultBaseDirPath = "/EnterYourDir";
+                AppSettings.setDefaultBaseDirPath("/EnterYourDir");
             } else {
-                AppSettings.defaultBaseDirPath = WabaFile.getCardVolumePath();
+                AppSettings.setDefaultBaseDirPath(WabaFile.getCardVolumePath());
 
             }
         } else {
-            AppSettings.defaultBaseDirPath = "/BT747";
+            AppSettings.setDefaultBaseDirPath("/BT747");
         }
 
         if ((bt747.sys.Settings.getAppSettings() == null)
