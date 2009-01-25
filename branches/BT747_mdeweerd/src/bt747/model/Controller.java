@@ -355,11 +355,11 @@ public class Controller {
     public int getHeightReference(final int logType) {
         return BT747Constants.getHeightReference(logType);
     }
-    
+
     public GPSLogConvertInterface getInputConversionInstance(final int logType) {
         final GPSLogConvertInterface lc;
         if (Controller.logFiles.size() != 0) {
-            final MultiLogConvert mlc  = new MultiLogConvert();
+            final MultiLogConvert mlc = new MultiLogConvert();
             mlc.setLogFiles(Controller.logFiles);
             lc = mlc;
         } else {
@@ -1628,6 +1628,6 @@ public class Controller {
 
     public final static void addLogFile(final String path, final int card) {
         final LogFileInfo loginfo = new LogFileInfo(path, card);
-        logFiles.addElement(loginfo);
+        Controller.logFiles.addElement(loginfo);
     }
 }

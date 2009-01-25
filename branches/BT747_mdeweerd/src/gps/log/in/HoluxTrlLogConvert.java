@@ -37,7 +37,7 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
             | (1 << BT747Constants.FMT_LONGITUDE_IDX)
             | (1 << BT747Constants.FMT_HEIGHT_IDX);
     protected boolean passToFindFieldsActivatedInLog = false;
-    protected final int activeFileFields = logFormat;
+    protected final int activeFileFields = HoluxTrlLogConvert.logFormat;
 
     public final int parseFile(final Object file,
             final GPSFileConverterInterface gpsFile) {
@@ -53,7 +53,7 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
 
             if (!passToFindFieldsActivatedInLog) {
                 gpsFile.writeLogFmtHeader(GPSRecord
-                        .getLogFormatRecord(logFormat));
+                        .getLogFormatRecord(HoluxTrlLogConvert.logFormat));
             }
 
             recordSize = 15;
@@ -141,7 +141,8 @@ public final class HoluxTrlLogConvert extends GPSLogConvertInterface {
                                     | (0xFF & bytes[recIdx++]) << 24;
                             r.height = Convert.toFloatBitwise(height);
                             CommonIn.convertHeight(r,
-                                    factorConversionWGS84ToMSL, logFormat);
+                                    factorConversionWGS84ToMSL,
+                                    HoluxTrlLogConvert.logFormat);
                             gpsFile.addLogRecord(r);
                             r = GPSRecord.getLogFormatRecord(0);
                         }
