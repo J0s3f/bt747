@@ -54,6 +54,7 @@ import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.painter.CompoundPainter;
 
 import bt747.j2se_view.model.BT747Waypoint;
+import bt747.j2se_view.model.GPSPositionWaypoint;
 import bt747.j2se_view.model.PositionData;
 import bt747.model.AppSettings;
 import bt747.model.ModelEvent;
@@ -154,7 +155,8 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
     };
 
-    private boolean positionIsSet = false;
+    private volatile GPSPositionWaypoint gpsPosition = null;
+
     /*
      * (non-Javadoc)
      * 
@@ -185,21 +187,22 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             }
             break;
         case ModelEvent.GPRMC:
-            if(!positionIsSet) {
-                // Center on the current GPS position.
-                final GPSRecord r = (GPSRecord) e.getArg();
-                if (r.hasPosition()
-                        && r.hasValid()
-                        && (r.valid & BT747Constants.VALID_NO_FIX_MASK) == 0
-                    ) {
-                    positionIsSet = true;
+            // Center on the current GPS position.
+            final GPSRecord r = (GPSRecord) e.getArg();
+            if (r.hasPosition() && r.hasValid()
+                    && (r.valid & BT747Constants.VALID_NO_FIX_MASK) == 0) {
+                if (gpsPosition == null) {
                     // Seems to be valid position
-                    mapViewer.setCenterPosition(new GeoPosition(
-                            r.latitude, r.longitude));
+                    mapViewer.setCenterPosition(new GeoPosition(r.latitude,
+                            r.longitude));
                     mapViewer.setZoom(4);
+                    gpsPosition = new GPSPositionWaypoint(r);
+                } else {
+                    gpsPosition.setGpsRec(r);
                 }
+                mapViewer.repaint();
             }
-            //updateRMCData((GPSRecord) e.getArg());
+            // updateRMCData((GPSRecord) e.getArg());
             break;
         case J2SEAppModel.UPDATE_TRACKPOINT_LIST:
             setZoom();
@@ -314,7 +317,6 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
 
         if (hasPositions) {
             final Set<GeoPosition> bounds = new HashSet<GeoPosition>();
-            positionIsSet = true;
             bounds.add(new GeoPosition(minlat, minlon));
             bounds.add(new GeoPosition(maxlat, maxlon));
             mapViewer.calculateZoomFrom(bounds);
@@ -359,7 +361,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
          */
         public void actionPerformed(final ActionEvent e) {
             BareBonesBrowserLaunch.openURL(url);
-            //BrowserControl.displayURL(url);
+            // BrowserControl.displayURL(url);
         }
     };
 
@@ -543,6 +545,10 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
     }
 
+    private enum WaypointTypes {
+        GpsPosition, Waypoints, UserWaypoints
+    };
+
     private class wpIterable implements Iterable<Waypoint> {
 
         /**
@@ -562,11 +568,11 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         }
 
         private class I implements Iterator<Waypoint> {
-            private Iterator<BT747Waypoint> i;
-            private int type = 0;
+            private Iterator<BT747Waypoint> i = null;
+            private WaypointTypes type = WaypointTypes.GpsPosition;
 
             public I() {
-                i = m.getPositionData().getBT747Waypoints().iterator();
+                // i = m.getPositionData().getBT747Waypoints().iterator();
             }
 
             /*
@@ -575,18 +581,31 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
              * @see java.util.Iterator#hasNext()
              */
             public boolean hasNext() {
-                if (i.hasNext()) {
+                if (i!=null && i.hasNext()) {
                     return true;
                 } else {
-                    if (type == 0) {
-                        type = 1;
+                    switch (type) {
+                    case GpsPosition:
+                        if (gpsPosition != null) {
+                            return true;
+                        }
+                        type = WaypointTypes.Waypoints;
+                        i = m.getPositionData().getBT747Waypoints()
+                                .iterator();
+                        if (i.hasNext()) {
+                            return true;
+                        }
+                        /* fall through */
+                    case Waypoints:
+                        type = WaypointTypes.UserWaypoints;
                         i = m.getPositionData().getBT747UserWaypoints()
                                 .iterator();
                         return i.hasNext();
-                    } else {
+                    case UserWaypoints:
                         return false;
                     }
                 }
+                return false;
             }
 
             /*
@@ -595,7 +614,16 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
              * @see java.util.Iterator#next()
              */
             public Waypoint next() {
-                return i.next();
+                if (type == WaypointTypes.GpsPosition) {
+                    type = WaypointTypes.Waypoints;
+                    i = m.getPositionData().getBT747Waypoints()
+                            .iterator();
+                    return gpsPosition;
+                }
+                if (i != null) {
+                    return i.next();
+                }
+                return null;
             }
 
             /*
@@ -604,8 +632,10 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
              * @see java.util.Iterator#remove()
              */
             public void remove() {
-                i.remove();
-                i = null;
+                if (i != null) {
+                    i.remove();
+                    i = null;
+                }
             }
         }
     }
@@ -783,7 +813,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    private void initComponents() {//GEN-BEGIN:initComponents
+    private void initComponents() {// GEN-BEGIN:initComponents
 
         splitPane = new javax.swing.JSplitPane();
         map = new org.jdesktop.swingx.JXMapKit();
@@ -827,7 +857,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         layout.setVerticalGroup(layout.createParallelGroup(
                 org.jdesktop.layout.GroupLayout.LEADING).add(
                 layout.createSequentialGroup().add(0, 0, 0).add(splitPane)));
-    }//GEN-END:initComponents
+    }// GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.jdesktop.swingx.JXMapKit map;

@@ -668,7 +668,7 @@ public final class BT747Constants { // dev as in device
      * Number of NMEA sentence types.
      */
     public static final int C_NMEA_SEN_COUNT = 19;
-    public static final String[] NMEA_STRINGS = { "GLL", // 0 // GPGLL
+    private static final String[] NMEA_STRINGS = { "GLL", // 0 // GPGLL
             // interval -
             // Geographic
             // Position -
@@ -696,6 +696,10 @@ public final class BT747Constants { // dev as in device
             "ZDA", // 17 // GPZDA interval - Time & Date
             "MCHN", // 18 // PMTKCHN interval - GPS channel status
     };
+    
+    public static final String getNmeaDescription(final int idx) {
+        return NMEA_STRINGS[idx];
+    }
     /** GPGLL interval - Geographic Position - Latitude longitude. */
     public static final int NMEA_SEN_GLL_IDX = 0;
     /** GPRMC interval - Recommended Min. specic - GNSS sentence. */
