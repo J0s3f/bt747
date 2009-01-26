@@ -714,9 +714,9 @@ public final class AdvancedDeviceSettingsPanel extends javax.swing.JPanel
 
         lbChunkSize.setText(bundle.getString("AdvancedDeviceSettingsPanel.lbChunkSize.text")); // NOI18N
 
-        spChunkSize.setModel(new javax.swing.SpinnerNumberModel(0, 0, 65536, 128));
+        spChunkSize.setModel(new javax.swing.SpinnerNumberModel(0, 0, 16*65536, 128));
         spChunkSize.setToolTipText(bundle.getString("AdvancedDeviceSettingsPanel.spChunkSize.toolTipText")); // NOI18N
-        spChunkSize.setEditor(new javax.swing.JSpinner.NumberEditor(spChunkSize, "#####"));
+        spChunkSize.setEditor(new javax.swing.JSpinner.NumberEditor(spChunkSize, "#######"));
         spChunkSize.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spChunkSizeStateChanged(evt);

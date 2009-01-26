@@ -87,8 +87,9 @@ public class BT747MapWayPointRenderer implements BT747WaypointRenderer {
             final Waypoint waypoint) {
         try {
             g.setColor(color);
-            if (BT747Waypoint.class.isInstance(waypoint)) {
-                if (((BT747Waypoint) waypoint).isSelected()) {
+            if (waypoint instanceof BT747Waypoint) {
+                final BT747Waypoint wp = (BT747Waypoint) waypoint;
+                if (wp.isSelected()) {
                     g.setColor(selectedColor);
                 }
             }
