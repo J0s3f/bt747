@@ -1143,13 +1143,13 @@
         <Component class="javax.swing.JSpinner" name="spChunkSize">
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-              <SpinnerModel initial="0" maximum="65536" minimum="0" numberType="java.lang.Integer" stepSize="128" type="number"/>
+              <SpinnerModel initial="0" maximum="1048576" minimum="0" numberType="java.lang.Integer" stepSize="128" type="number"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="bt747/j2se_view/Bundle.properties" key="AdvancedDeviceSettingsPanel.spChunkSize.toolTipText" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="editor" type="javax.swing.JComponent" editor="org.netbeans.modules.form.editors.SpinnerEditorEditor">
-              <SpinnerEditor format="#####" type="3"/>
+              <SpinnerEditor format="#######" type="3"/>
             </Property>
           </Properties>
           <Events>

@@ -1,3 +1,6 @@
+Version 1.67.21
+* Changed chunk size limit.
+
 Version 1.67.20
 * Show the current GPS position on the map.
 
