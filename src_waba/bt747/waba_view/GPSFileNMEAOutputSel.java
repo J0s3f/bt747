@@ -61,7 +61,7 @@ public final class GPSFileNMEAOutputSel extends Container implements
     protected final void onStart() {
         int bit = 1;
         for (int i = 0; i < BT747Constants.C_NMEA_SEN_COUNT; i++) {
-            chkNMEAItems[i] = new MyCheck(BT747Constants.NMEA_STRINGS[i]);
+            chkNMEAItems[i] = new MyCheck(BT747Constants.getNmeaDescription(i));
             add(chkNMEAItems[i]);
             chkNMEAItems[i]
                     .setRect(

@@ -156,8 +156,10 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
                         .get(key);
                 statsConv.initStats();
                 // TODO: manage cards on different volumes.
+                currentConverter = i;
                 i.parseFile(i.getFileObject((String) key, card), statsConv);
                 // Get date range.
+                currentConverter = null;
                 loginfo.setStartTime(statsConv.minTime);
                 loginfo.setEndTime(statsConv.maxTime);
                 loginfo.setActiveFileFields(statsConv.getActiveFileFields());
@@ -201,9 +203,11 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
                             .elementAt(j)).getPath();
                     final GPSLogConvertInterface i = (GPSLogConvertInterface) converters
                             .get(key);
+                    currentConverter = i;
                     // TODO: manage cards on different volumes.
                     error = i.parseFile(i.getFileObject((String) key, card),
                             gpsFile);
+                    currentConverter = null;
                     // Get date range.
                 }
             } while ((error == BT747Constants.NO_ERROR) && gpsFile.nextPass());

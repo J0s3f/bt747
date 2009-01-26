@@ -42,6 +42,7 @@ public class MapRendererFactoryMethod implements WaypointRenderer {
     static {
         // renderers.add(defaultRenderer);
         renderers.add(new BT747MapWayPointRenderer());
+        renderers.add(new IconWayPointRenderer());
     }
 
     final static public MapRendererFactoryMethod getInstance() {

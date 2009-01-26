@@ -1,3 +1,6 @@
+Version 1.67.20
+* Show the current GPS position on the map.
+
 Version 1.67.19
 * Negative timezones did not work correctly.  Fixed.
 
