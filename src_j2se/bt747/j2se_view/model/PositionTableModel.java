@@ -16,6 +16,7 @@ package bt747.j2se_view.model;
 
 import gps.log.GPSRecord;
 
+import java.awt.FontMetrics;
 import java.util.List;
 import java.util.Vector;
 
@@ -178,4 +179,7 @@ public class PositionTableModel extends AbstractTableModel {
         return DataTypes.getDataDisplayClass(columnToType(columnIndex));
     }
 
+    public final int getPreferredWidth(final FontMetrics fm, final int columnIndex) {
+        return DataTypes.defaultDataWidth(columnToType(columnIndex), fm);
+    }
 }

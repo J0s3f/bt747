@@ -6,6 +6,7 @@ package bt747.j2se_view.model;
 import gps.log.GPSRecord;
 import gps.log.out.CommonOut;
 
+import java.awt.FontMetrics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -603,5 +604,4 @@ public class PositionData extends AbstractBean {
         }
         return false;
     }
-
 }

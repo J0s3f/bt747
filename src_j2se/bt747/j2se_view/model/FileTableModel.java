@@ -3,6 +3,8 @@
  */
 package bt747.j2se_view.model;
 
+import java.awt.FontMetrics;
+
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.table.AbstractTableModel;
@@ -155,6 +157,10 @@ public class FileTableModel extends AbstractTableModel {
             final int columnIndex) {
         // TODO Auto-generated method stub
 
+    }
+
+    public final int getPreferredWidth(final FontMetrics fm, final int columnIndex) {
+        return DataTypes.defaultDataWidth(columnToDataType(columnIndex), fm);
     }
 
 }

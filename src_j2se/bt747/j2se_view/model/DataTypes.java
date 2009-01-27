@@ -3,6 +3,8 @@
  */
 package bt747.j2se_view.model;
 
+import java.awt.FontMetrics;
+
 import bt747.j2se_view.J2SEAppController;
 
 /**
@@ -60,8 +62,8 @@ public final class DataTypes {
     public static final int FILE_DATETIME = 45;
     public static final int FILE_DATE = 46;
     public static final int FILE_TIME = 47;
-    public static final int LOG_START_TIME = 48;
-    public static final int LOG_END_TIME = 49;
+    public static final int LOG_START_DATETIME = 48;
+    public static final int LOG_END_DATETIME = 49;
     public static final int LOG_COLOR = 50;
     public static final int LOG_FILENAME = 51;
 
@@ -149,8 +151,8 @@ public final class DataTypes {
             return Float.class;
         case DISTANCE_FEET:
             return Float.class;
-        case LOG_START_TIME:
-        case LOG_END_TIME:
+        case LOG_START_DATETIME:
+        case LOG_END_DATETIME:
             return String.class;
         case LOG_COLOR:
             return Object.class;
@@ -160,6 +162,132 @@ public final class DataTypes {
             return Object.class;
         }
         return Object.class;
+    }
+
+    /** Provide sample data to determine the width of the column
+     * @param dataType
+     * @return
+     */
+    public static final String getSampleData(final int dataType) {
+        String sample = " ";
+        switch (dataType) {
+        case NONE:
+            sample = " ";
+            break;
+        case IMAGE_PATH:
+            sample = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+            break;
+        case IMAGE_WIDTH:
+            sample = "0000";
+            break;
+        case IMAGE_HEIGHT:
+            sample = "0000";
+            break;
+        case GEOMETRY:
+            sample = "0000x0000";
+            break;
+        case LATITUDE:
+        case LONGITUDE:
+            sample = "000.00000000";
+            break;
+        case FILE_DATETIME:
+        case GPS_DATETIME:
+        case TAG_DATETIME:
+        case LOG_START_DATETIME:
+        case LOG_END_DATETIME:
+            sample = "2000/00/00 00:00:00";
+            break;
+        case FILE_DATE:
+        case TAG_DATE:
+        case GPS_DATE:
+            sample = "2000/00/00";
+            break;
+        case FILE_TIME:
+        case TAG_TIME:
+        case GPS_TIME:
+            sample = "00:00:00";
+            break;
+        case LOGTIME:
+            sample = "0000";
+            break;
+        case LOGDIST:
+            sample = "TAB_TITLE_Log_Dist";
+            break;
+        case LOGSPD:
+            sample = "TAB_TITLE_Log_speed";
+            break;
+        case NS:
+            sample = "TAB_TITLE_NS";
+            break;
+        case EW:
+            sample = "TAB_TITLE_EW";
+            break;
+        case RECORDNUMBER:
+            sample = "#######";
+            break;
+        case UTC_VALUE:
+            sample = "00000000";
+            break;
+        case FIX_VALID:
+            sample = "#0000";
+            break;
+        case LATITUDE_POSITIVE:
+            break;
+        case LONGITUDE_POSITIVE:
+            break;
+        case HEIGHT_METERS:
+        case HEIGHT_FEET:
+        case SPEED:
+        case SPEED_MPH:
+            sample = "-0000.00000";
+            break;
+        case HEADING:
+            sample = "000.0";
+            break;
+        case DSTA:
+            sample = "00";
+            break;
+        case DAGE:
+            sample = "00";
+            break;
+        case PDOP:
+        case HDOP:
+        case VDOP:
+            sample = "XDOP";
+            break;
+        case NSAT:
+            sample = "00";
+            break;
+        case FIXMODE:
+            sample = "XXXX";
+            break;
+        case SID:
+            sample = "00";
+            break;
+        case VOX:
+            sample = "XXXXXXXXXXXXXXXXXXXXXXXX";
+            break;
+        case RCR:
+            sample = "XXXXX";
+            break;
+        case RCR_DESCRIPTION:
+            sample = "XXXXXXXXXXXXXXXXXXXXXXXX";
+            break;
+        case MILLISECOND:
+            sample = "000";
+            break;
+        case DISTANCE:
+        case DISTANCE_FEET:
+            sample = "000000";
+            break;
+        case LOG_COLOR:
+            sample = "XXXXXXXX";
+            break;
+        case LOG_FILENAME:
+            sample = "XXXXXXXXXXXXXXXXXXXXXXXX";
+            break;
+        }
+        return sample;
     }
 
     public static final String getDataDisplayName(final int datatype) {
@@ -298,10 +426,10 @@ public final class DataTypes {
         case DISTANCE_FEET:
             label = "TAB_TITLE_Distance_ft";
             break;
-        case LOG_START_TIME:
+        case LOG_START_DATETIME:
             label = "TAB_TITLE_StartTime";
             break;
-        case LOG_END_TIME:
+        case LOG_END_DATETIME:
             label = "TAB_TITLE_EndTime";
             break;
         case LOG_COLOR:
@@ -315,6 +443,14 @@ public final class DataTypes {
             label = J2SEAppController.getString(label);
         }
         return label;
+    }
+
+    /**
+     * @param fontMetrics
+     * @return the default date string width
+     */
+    public final static int defaultDataWidth(final int dataType, FontMetrics fontMetrics) {
+      return fontMetrics.stringWidth(getSampleData(dataType)); //$NON-NLS-1$
     }
 
 }

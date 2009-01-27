@@ -24,15 +24,6 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
      * The converter that is currently converting.
      */
     private GPSLogConvertInterface currentConverter;
-    /**
-     * Table of {@link GPSLogConvertInterface} used to convert input files.
-     */
-    private BT747Hashtable converters;
-
-    /**
-     * Lookup list for LogFileInfo.
-     */
-    private BT747Hashtable logFileInfoLookup;
 
     protected Object getFileObject(final String fileName, final int card) {
         return null;
@@ -115,16 +106,18 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
     public int toGPSFile(final String fileName,
             final GPSFileConverterInterface gpsFile, final int card) {
         int error = BT747Constants.NO_ERROR;
-
-        converters = Interface.getHashtableInstance(logFiles.size() + 1);
-        logFileInfoLookup = Interface
+        /**
+         * Table of {@link GPSLogConvertInterface} used to convert input
+         * files.
+         */
+        final BT747Hashtable converters = Interface
+                .getHashtableInstance(logFiles.size() + 1);
+        /**
+         * Lookup list for LogFileInfo.
+         */
+        final BT747Hashtable logFileInfoLookup = Interface
                 .getHashtableInstance(logFiles.size() + 1);
 
-        if ((fileName != null) && (fileName.length() != 0)) {
-            converters.put(fileName, getConvertInstance(fileName, gpsFile,
-                    card));
-            logFileInfoLookup.put(fileName, new LogFileInfo(fileName, card));
-        }
         /*
          * Create a conversion instance for each file.
          */
@@ -134,6 +127,15 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
             if (converters.get(fn) == null) {
                 converters.put(fn, getConvertInstance(fn, gpsFile, card));
                 logFileInfoLookup.put(fn, li);
+            }
+        }
+
+        if ((fileName != null) && (fileName.length() != 0)) {
+            if (converters.get(fileName) == null) {
+                converters.put(fileName, getConvertInstance(fileName,
+                        gpsFile, card));
+                logFileInfoLookup.put(fileName, new LogFileInfo(fileName,
+                        card));
             }
         }
 
@@ -272,7 +274,8 @@ public final class MultiLogConvert extends GPSLogConvertInterface {
          * @see gps.log.out.GPSFile#writeRecord(gps.log.GPSRecord)
          */
         public final void addLogRecord(final GPSRecord r) {
-            if (r.hasUtc()) {
+            if (r.hasUtc()
+                    && (!r.hasValid() || ((r.valid & BT747Constants.VALID_NO_FIX_MASK) == 0))) {
                 final int time = r.getUtc() + timeOffsetSeconds;
                 if (time < minTime) {
                     minTime = time;

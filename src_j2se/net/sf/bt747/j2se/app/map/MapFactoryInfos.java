@@ -59,6 +59,20 @@ public class MapFactoryInfos {
             return url;
         }
     };
+    /* Can not use due to licensing limitations ? => not used */
+    public final static MyTileFactoryInfo tfiGOOGLEMAPS = new MyTileFactoryInfo(
+            "gmaps", 1, 16, 17, 256, false, true,
+            "http://mt.google.com/mt?n=404&v=w2.999", "x", "y", "zoom",
+            "Google Maps",
+            "http://www.google.com/maps") {
+//        public String getTileUrl(int x, int y, int zoom) {
+//            zoom = getTotalMapZoom() - zoom;
+//            String url = baseURL + "/" + zoom + "/" + x + "/" + y + ".png";
+//            return url;
+//        }
+    };
+     
+
     public final static MyTileFactoryInfo tfiWMS = new MyTileFactoryInfo(
             "WMS", 1, 15, 19, 512, true, true,
             "http://wms.jpl.nasa.gov/wms.cgi?", "x", "y", "z", "NASA",
@@ -269,6 +283,8 @@ public class MapFactoryInfos {
             return "image/jpeg";
         }
     };
+
+
 
     // Key needed:
     // Get key:

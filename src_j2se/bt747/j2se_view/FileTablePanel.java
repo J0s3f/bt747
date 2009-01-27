@@ -14,10 +14,12 @@
 // *** *********************************************************** ***
 package bt747.j2se_view;
 
+import java.awt.FontMetrics;
 import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 
 import net.sf.bt747.j2se.app.filefilters.JpgFileFilter;
 import net.sf.bt747.j2se.app.filefilters.KnownFileFilter;
@@ -58,6 +60,11 @@ public class FileTablePanel extends javax.swing.JPanel implements
         tbImageList.setModel(fileTableModel);
         tbImageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         // m.addListener(this);
+        final FontMetrics fm = tbImageList.getFontMetrics(tbImageList.getFont());
+        for (int i = tbImageList.getColumnCount() - 1; i >= 0; i--) {
+            final TableColumn col = tbImageList.getColumnModel().getColumn(i);
+            col.setPreferredWidth(fileTableModel.getPreferredWidth(fm, i) + 4);
+        }
 
         // dt = new DropTarget(tbImageList,this);
         // tbImageList.setDropTarget(dt);

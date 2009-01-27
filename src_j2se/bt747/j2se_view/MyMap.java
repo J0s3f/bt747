@@ -34,6 +34,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.ScrollPaneConstants;
 
 import net.sf.bt747.j2se.app.list.BT747WaypointListCellRenderer;
@@ -255,9 +257,10 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         double maxlon = -90f;
         boolean hasPositions = false;
         final PositionData pd = m.getPositionData();
+        final List<List<GPSRecord>> trks = pd.getTracks();
 
-        if (pd.getTracks().size() != 0) {
-            for (final List<GPSRecord> trk : pd.getTracks()) {
+        if (trks != null && trks.size() != 0) {
+            for (final List<GPSRecord> trk : trks) {
                 for (final GPSRecord r : trk) {
                     if (r.latitude < minlat) {
                         minlat = r.latitude;
@@ -372,6 +375,10 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         TileFactoryInfo info = null;
 
         switch (maptype) {
+        // Not used because that would likely be a license violation.
+        // case GoogleMaps:
+        // info = MapFactoryInfos.tfiGOOGLEMAPS;
+        // break;
         case OsmaRender:
             info = MapFactoryInfos.tfiOSM_OSMARENDER;
             break;
@@ -434,9 +441,12 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
         @Override
         protected void doPaint(final Graphics2D g, final JXMapViewer map,
                 final int width, final int height) {
-            for (final List<GPSRecord> track : m.getPositionData()
-                    .getTracks()) {
-                trackRenderer.paintTrack(g, map, track);
+            final List<List<GPSRecord>> trks = m.getPositionData()
+                    .getTracks();
+            if (trks != null) {
+                for (final List<GPSRecord> track : trks) {
+                    trackRenderer.paintTrack(g, map, track);
+                }
             }
 
             // Paint waypoints
@@ -581,7 +591,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
              * @see java.util.Iterator#hasNext()
              */
             public boolean hasNext() {
-                if (i!=null && i.hasNext()) {
+                if (i != null && i.hasNext()) {
                     return true;
                 } else {
                     switch (type) {
@@ -616,8 +626,7 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
             public Waypoint next() {
                 if (type == WaypointTypes.GpsPosition) {
                     type = WaypointTypes.Waypoints;
-                    i = m.getPositionData().getBT747Waypoints()
-                            .iterator();
+                    i = m.getPositionData().getBT747Waypoints().iterator();
                     return gpsPosition;
                 }
                 if (i != null) {
@@ -662,7 +671,18 @@ public class MyMap extends javax.swing.JPanel implements ModelListener {
                     w.toggleShowTag();
                     map.repaint();
                     e.consume();
+                    if (false) {
+                        GPSRecord g = w.getGpsRecord();
+                        JFrame wpframe = new JFrame("Waypoint");
+                        JLabel wpInfo = new JLabel("<html>"
+                                + g.toString().replaceAll("\n", "<br>"));
+                        wpframe.getContentPane().add(wpInfo);
+                        wpframe.pack();
+                        wpframe.setLocation(e.getPoint());
+                        wpframe.setVisible(true);
+                    }
                 }
+
                 break;
             }
             }
