@@ -3,6 +3,8 @@
  */
 package bt747.j2se_view.model;
 
+import java.awt.FontMetrics;
+
 import gps.log.LogFileInfo;
 import gps.log.out.CommonOut;
 
@@ -22,7 +24,7 @@ public class LogFileTableModel extends AbstractTableModel {
      * The columns currently shown.
      */
     private int[] columns = { DataTypes.LOG_FILENAME,
-            DataTypes.LOG_START_TIME, DataTypes.LOG_END_TIME };
+            DataTypes.LOG_START_DATETIME, DataTypes.LOG_END_DATETIME };
 
     /**
      * 
@@ -109,14 +111,14 @@ public class LogFileTableModel extends AbstractTableModel {
             LogFileInfo logfileinfo = (LogFileInfo) o;
 
             switch (dt) {
-            case DataTypes.LOG_START_TIME:
+            case DataTypes.LOG_START_DATETIME:
                 final int st = logfileinfo.getStartTime();
                 if (st != 0x7FFFFFFF && st != 0) {
                     return CommonOut.getDateTimeStr(st);
                 } else {
                     return null;
                 }
-            case DataTypes.LOG_END_TIME:
+            case DataTypes.LOG_END_DATETIME:
                 final int et = logfileinfo.getEndTime();
                 if (et != 0x7FFFFFFF && et != 0) {
                     return CommonOut.getDateTimeStr(et);
@@ -166,6 +168,10 @@ public class LogFileTableModel extends AbstractTableModel {
             final int columnIndex) {
         // TODO Auto-generated method stub
 
+    }
+
+    public final int getPreferredWidth(final FontMetrics fm, final int columnIndex) {
+        return DataTypes.defaultDataWidth(columnToDataType(columnIndex), fm);
     }
 
 }

@@ -11,6 +11,11 @@
 
 package bt747.j2se_view;
 
+import java.awt.FontMetrics;
+
+import javax.swing.JTable;
+import javax.swing.table.TableColumn;
+
 import bt747.j2se_view.model.LogFileTableModel;
 import bt747.model.Controller;
 import bt747.model.ModelEvent;
@@ -36,8 +41,16 @@ public class FilesPanel extends javax.swing.JPanel implements ModelListener {
     public void init(final J2SEAppController pC) {
         c = pC;
         m = c.getAppModel();
-        logFileModel.setLogfileInfos(Controller.logFiles);       
+        logFileModel.setLogfileInfos(Controller.logFiles);
         fileTablePanel.init(pC);
+        tbLogFile.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        final FontMetrics fm = tbLogFile.getFontMetrics(tbLogFile.getFont());
+        for (int i = tbLogFile.getColumnCount() - 1; i >= 0; i--) {
+            final TableColumn col = tbLogFile.getColumnModel().getColumn(i);
+            col.setPreferredWidth(logFileModel.getPreferredWidth(fm, i) + 4);
+        }
+
+
         m.addListener(this);
     }
     

@@ -271,9 +271,9 @@ public class BT747Main extends javax.swing.JFrame implements
         updateSerialSpeed();
         updateMapType();
 
-        c.setDebug(true);
+        //c.setDebug(true);
         btGPSDebug.setSelected(Model.isDebug());
-        c.setDebugConn(false);
+        //c.setDebugConn(false);
         btGPSConnectDebug.setSelected(m.isDebugConn());
         // c.setChunkSize(256); // Small for debug
         setTitle(getTitle() + " V" + Version.VERSION_NUMBER);

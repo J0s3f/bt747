@@ -1,3 +1,7 @@
+Version
+* Fix in MultiLogConvert
+* Table Column Widths adjusted.
+
 Version 1.67.21
 * Changed chunk size limit.
 
